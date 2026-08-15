@@ -2,17 +2,17 @@
 # ChangeRequestManager.psm1 - Multi-Repository Change Request Manager
 # =====================================================================
 # Module: ChangeRequestManager
-# Purpose: Indexing, registering, searching, and managing Change Requests
-#          and proposal lifecycles across the entire workspace.
+# Purpose: Manages 1-file-per-CR Markdown documents mirrored via NTFS junctions,
+#          CR bundling for batch test sequences, querying, and dashboard export.
 # Authors: Rolf, Workspace_AI Engine
-# Version: 1.0.0
+# Version: 2.0.0
 # Date: 2026-08-15
 # =====================================================================
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-function Get-ChangeRequestsFile {
+function Get-CRMirrorRoot {
     [CmdletBinding()]
     param()
     
@@ -21,7 +21,6 @@ function Get-ChangeRequestsFile {
         $scriptRoot = (Get-Location).Path
     }
     
-    # Climb up to find Workspace_Inventory root
     $item = Get-Item $scriptRoot
     while ($item -ne $null -and $item.Name -ne 'Workspace_Inventory' -and $item.Name -ne 'Git_Repositories') {
         $item = $item.Parent
@@ -29,26 +28,129 @@ function Get-ChangeRequestsFile {
     
     if ($item -ne $null) {
         if ($item.Name -eq 'Workspace_Inventory') {
-            return (Join-Path $item.FullName 'data\change_requests.json')
+            return (Join-Path $item.FullName 'change_requests')
         } elseif ($item.Name -eq 'Git_Repositories') {
-            return (Join-Path $item.FullName 'Workspace_Inventory\data\change_requests.json')
+            return (Join-Path $item.FullName 'Workspace_Inventory\change_requests')
         }
     }
     
-    return 'D:\Git_Repositories\Workspace_Inventory\data\change_requests.json'
+    return 'D:\Git_Repositories\Workspace_Inventory\change_requests'
+}
+
+function Get-BundlesDir {
+    [CmdletBinding()]
+    param()
+    
+    $crRoot = Get-CRMirrorRoot
+    $wiRoot = (Get-Item $crRoot).Parent.FullName
+    $bundlesDir = Join-Path $wiRoot 'data\bundles'
+    if (-not (Test-Path $bundlesDir)) {
+        New-Item -ItemType Directory -Path $bundlesDir -Force | Out-Null
+    }
+    return $bundlesDir
+}
+
+function Sync-CRJunctions {
+    [CmdletBinding()]
+    param(
+        [string]$WorkspaceRoot = 'D:\Git_Repositories'
+    )
+    
+    $crRoot = Get-CRMirrorRoot
+    if (-not (Test-Path $crRoot)) {
+        New-Item -ItemType Directory -Path $crRoot -Force | Out-Null
+    }
+    
+    $childDirs = Get-ChildItem -Path $WorkspaceRoot -Directory
+    $linkedCount = 0
+    
+    foreach ($dir in $childDirs) {
+        $repoName = $dir.Name
+        $targetProposals = Join-Path $dir.FullName 'Docs\Methods\Proposals'
+        if (-not (Test-Path $targetProposals)) {
+            $altProposals = Join-Path $dir.FullName 'docs\Proposals'
+            if (Test-Path $altProposals) {
+                $targetProposals = $altProposals
+            }
+        }
+        
+        if (Test-Path $targetProposals) {
+            $junctionPath = Join-Path $crRoot $repoName
+            if (-not (Test-Path $junctionPath)) {
+                cmd /c mklink /J "$junctionPath" "$targetProposals" 2>$null | Out-Null
+                $linkedCount++
+            }
+        }
+    }
+    
+    return $linkedCount
+}
+
+function Parse-CRFrontmatter {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)] [string]$FilePath
+    )
+    
+    $content = Get-Content -Path $FilePath -Raw -Encoding UTF8
+    $cr = [ordered]@{
+        cr_id              = [System.IO.Path]::GetFileNameWithoutExtension($FilePath)
+        legacy_id          = '-'
+        origin_repo        = 'Unknown'
+        title              = [System.IO.Path]::GetFileNameWithoutExtension($FilePath)
+        status             = 'proposed'
+        target_lcm_version = '4.1.0'
+        bundle_id          = 'unassigned'
+        affected_repos     = @()
+        author             = 'Rolf'
+        created_at         = (Get-Item $FilePath).CreationTime.ToString('yyyy-MM-dd')
+        file_path          = $FilePath
+    }
+    
+    if ($content -match '(?s)^---\r?\n(.*?)\r?\n---') {
+        $yaml = $Matches[1]
+        foreach ($line in ($yaml -split '\r?\n')) {
+            if ($line -match '^\s*([^:]+)\s*:\s*(.*)$') {
+                $k = $Matches[1].Trim().ToLowerInvariant()
+                $v = $Matches[2].Trim().Trim('"').Trim("'")
+                
+                if ($k -eq 'cr_id') { $cr['cr_id'] = $v }
+                elseif ($k -eq 'legacy_id') { $cr['legacy_id'] = $v }
+                elseif ($k -eq 'origin_repo') { $cr['origin_repo'] = $v }
+                elseif ($k -eq 'title') { $cr['title'] = $v }
+                elseif ($k -eq 'status') { $cr['status'] = $v }
+                elseif ($k -eq 'target_lcm_version') { $cr['target_lcm_version'] = $v }
+                elseif ($k -eq 'bundle_id') { $cr['bundle_id'] = $v }
+                elseif ($k -eq 'author') { $cr['author'] = $v }
+                elseif ($k -eq 'created_at') { $cr['created_at'] = $v }
+            }
+        }
+    }
+    
+    return [PSCustomObject]$cr
 }
 
 function Get-ChangeRequests {
     [CmdletBinding()]
     param()
     
-    $file = Get-ChangeRequestsFile
-    if (-not (Test-Path $file)) {
+    $crRoot = Get-CRMirrorRoot
+    if (-not (Test-Path $crRoot)) {
         return @()
     }
     
-    $data = Get-Content -Path $file -Raw | ConvertFrom-Json
-    return @($data.change_requests)
+    $dirs = @(Get-ChildItem -Path $crRoot)
+    $results = @()
+    
+    foreach ($d in $dirs) {
+        $files = @(Get-ChildItem -Path $d.FullName -Filter '*.md')
+        foreach ($file in $files) {
+            $parsed = Parse-CRFrontmatter -FilePath $file.FullName
+            $results += $parsed
+        }
+    }
+    
+    return @($results | Sort-Object cr_id)
 }
 
 function Find-ChangeRequest {
@@ -57,6 +159,7 @@ function Find-ChangeRequest {
         [string]$Query,
         [string]$Repository,
         [string]$Status,
+        [string]$BundleId,
         [string]$Author
     )
     
@@ -68,15 +171,15 @@ function Find-ChangeRequest {
             ($_.cr_id -and $_.cr_id.ToLowerInvariant().Contains($q)) -or
             ($_.title -and $_.title.ToLowerInvariant().Contains($q)) -or
             ($_.origin_repo -and $_.origin_repo.ToLowerInvariant().Contains($q)) -or
-            ($_.legacy_id -and $_.legacy_id.ToLowerInvariant().Contains($q))
+            ($_.legacy_id -and $_.legacy_id.ToLowerInvariant().Contains($q)) -or
+            ($_.bundle_id -and $_.bundle_id.ToLowerInvariant().Contains($q))
         })
     }
     
     if (-not [string]::IsNullOrWhiteSpace($Repository)) {
         $r = $Repository.ToLowerInvariant()
         $records = @($records | Where-Object {
-            ($_.origin_repo -and $_.origin_repo.ToLowerInvariant().Contains($r)) -or
-            ($_.affected_repos -and ($_.affected_repos | ForEach-Object { $_.ToLowerInvariant() }) -contains $r)
+            $_.origin_repo -and $_.origin_repo.ToLowerInvariant().Contains($r)
         })
     }
     
@@ -84,6 +187,13 @@ function Find-ChangeRequest {
         $s = $Status.ToLowerInvariant()
         $records = @($records | Where-Object {
             $_.status -and $_.status.ToLowerInvariant() -eq $s
+        })
+    }
+    
+    if (-not [string]::IsNullOrWhiteSpace($BundleId)) {
+        $b = $BundleId.ToLowerInvariant()
+        $records = @($records | Where-Object {
+            $_.bundle_id -and $_.bundle_id.ToLowerInvariant().Contains($b)
         })
     }
     
@@ -97,102 +207,194 @@ function Find-ChangeRequest {
     return $records
 }
 
-function Register-ChangeRequest {
+function New-ChangeRequest {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory=$true)] [string]$Title,
         [Parameter(Mandatory=$true)] [string]$OriginRepo,
         [string]$Status = 'proposed',
         [string]$TargetLCMVersion = '4.1.0',
-        [string[]]$AffectedRepos = @($OriginRepo),
+        [string]$BundleId = 'unassigned',
         [string]$Author = 'Rolf',
-        [string]$DocumentationPath,
-        [string]$LegacyId
+        [string]$Summary = '',
+        [string]$LegacyId = '-'
     )
     
-    $file = Get-ChangeRequestsFile
-    $data = if (Test-Path $file) {
-        Get-Content -Path $file -Raw | ConvertFrom-Json
-    } else {
-        [PSCustomObject]@{
-            '$schema' = 'https://json-schema.org/draft/2020-12/schema'
-            title = 'Workspace Change Requests Index'
-            generated_at = (Get-Date).ToString('o')
-            total_records = 0
-            change_requests = @()
+    $existing = Get-ChangeRequests
+    $nextNum = @($existing).Count + 1
+    $crId = "CR-$((Get-Date).ToString('yyyy'))-$($nextNum.ToString('000'))"
+    
+    $targetProposals = "D:\Git_Repositories\$OriginRepo\Docs\Methods\Proposals"
+    if (-not (Test-Path $targetProposals)) {
+        New-Item -ItemType Directory -Path $targetProposals -Force | Out-Null
+    }
+    
+    Sync-CRJunctions | Out-Null
+    
+    $filePath = Join-Path $targetProposals "$crId.md"
+    $dateStr = (Get-Date).ToString('yyyy-MM-dd')
+    
+    $content = @"
+---
+cr_id: $crId
+legacy_id: $LegacyId
+origin_repo: $OriginRepo
+title: $Title
+status: $Status
+target_lcm_version: $TargetLCMVersion
+bundle_id: $BundleId
+author: $Author
+created_at: $dateStr
+---
+
+# ${crId}: $Title
+
+- **Origin Repository**: ``$OriginRepo``
+- **Target LCM Version**: ``v$TargetLCMVersion``
+- **Status**: **$Status**
+- **Bundle**: ``$BundleId``
+
+## Summary
+$Summary
+"@
+    Set-Content -Path $filePath -Value $content -Encoding UTF8
+    Write-Host "Created single-file Change Request: $filePath" -ForegroundColor Green
+    
+    return Parse-CRFrontmatter -FilePath $filePath
+}
+
+function Get-CRBundles {
+    [CmdletBinding()]
+    param()
+    
+    $bDir = Get-BundlesDir
+    $files = @(Get-ChildItem -Path $bDir -Filter '*.json')
+    $bundles = @()
+    
+    foreach ($f in $files) {
+        try {
+            $data = Get-Content -Path $f.FullName -Raw | ConvertFrom-Json
+            $bundles += $data
+        } catch { }
+    }
+    
+    return $bundles
+}
+
+function New-CRBundle {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)] [string]$BundleId,
+        [Parameter(Mandatory=$true)] [string]$Name,
+        [string[]]$CRIds = @(),
+        [string]$TestSuite = 'Test-WorkspaceReadiness.ps1',
+        [string]$TargetLCMVersion = '4.1.0',
+        [string]$Status = 'draft'
+    )
+    
+    $bDir = Get-BundlesDir
+    $bundlePath = Join-Path $bDir "$BundleId.json"
+    
+    $bObj = [ordered]@{
+        '$schema'            = 'https://json-schema.org/draft/2020-12/schema'
+        bundle_id            = $BundleId
+        name                 = $Name
+        status               = $Status
+        target_lcm_version   = $TargetLCMVersion
+        test_suite           = $TestSuite
+        created_at           = (Get-Date).ToString('o')
+        change_request_ids   = $CRIds
+    }
+    
+    $bObj | ConvertTo-Json -Depth 5 | Set-Content -Path $bundlePath -Encoding UTF8
+    Write-Host "Created CR Bundle: $BundleId ($Name)" -ForegroundColor Green
+    return [PSCustomObject]$bObj
+}
+
+function Add-CRToBundle {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)] [string]$BundleId,
+        [Parameter(Mandatory=$true)] [string[]]$CRIds
+    )
+    
+    $bDir = Get-BundlesDir
+    $bundlePath = Join-Path $bDir "$BundleId.json"
+    if (-not (Test-Path $bundlePath)) {
+        throw "Bundle $BundleId not found at $bundlePath"
+    }
+    
+    $bObj = Get-Content -Path $bundlePath -Raw | ConvertFrom-Json
+    $list = [System.Collections.Generic.List[string]]::new(@($bObj.change_request_ids))
+    
+    foreach ($id in $CRIds) {
+        if (-not $list.Contains($id)) {
+            $list.Add($id)
         }
     }
     
-    $existing = [System.Collections.Generic.List[PSObject]]::new(@($data.change_requests))
-    $nextNum = $existing.Count + 1
-    $crId = "CR-$((Get-Date).ToString('yyyy'))-$($nextNum.ToString('000'))"
-    
-    $newCR = [ordered]@{
-        cr_id              = $crId
-        legacy_id          = $LegacyId
-        origin_repo        = $OriginRepo
-        title              = $Title
-        status             = $Status
-        target_lcm_version = $TargetLCMVersion
-        affected_repos     = $AffectedRepos
-        created_at         = (Get-Date).ToString('o')
-        closed_at          = if ($Status -in @('closed', 'implemented', 'verified')) { (Get-Date).ToString('o') } else { $null }
-        author             = $Author
-        documentation_path = $DocumentationPath
-    }
-    
-    $existing.Add([PSCustomObject]$newCR)
-    
-    $outObj = [ordered]@{
-        '$schema'         = 'https://json-schema.org/draft/2020-12/schema'
-        title             = 'Workspace Change Requests Index'
-        generated_at      = (Get-Date).ToString('o')
-        total_records     = $existing.Count
-        change_requests   = $existing
-    }
-    
-    $outObj | ConvertTo-Json -Depth 5 | Set-Content -Path $file -Encoding UTF8
-    Write-Host "Registered Change Request: $crId ($Title)" -ForegroundColor Green
-    
-    return [PSCustomObject]$newCR
+    $bObj.change_request_ids = @($list)
+    $bObj | ConvertTo-Json -Depth 5 | Set-Content -Path $bundlePath -Encoding UTF8
+    Write-Host "Updated Bundle $BundleId with $($CRIds.Count) CR(s)." -ForegroundColor Green
 }
 
 function Export-ChangeRequestDashboard {
     [CmdletBinding()]
     param()
     
+    Sync-CRJunctions | Out-Null
     $records = Get-ChangeRequests
-    $file = Get-ChangeRequestsFile
-    $dir = (Get-Item $file).Directory.Parent.FullName
-    $outPath = Join-Path $dir 'docs\CHANGE_REQUEST_INDEX.md'
+    $bundles = Get-CRBundles
+    
+    $crRoot = Get-CRMirrorRoot
+    $wiRoot = (Get-Item $crRoot).Parent.FullName
+    $dashPath = Join-Path $wiRoot 'docs\CHANGE_REQUEST_INDEX.md'
     
     $sb = [System.Text.StringBuilder]::new()
-    [void]$sb.AppendLine('# Master Change Request (CR) Index')
+    [void]$sb.AppendLine('# Master Change Request (CR) & Bundle Index')
     [void]$sb.AppendLine('')
     [void]$sb.AppendLine("Module: docs/CHANGE_REQUEST_INDEX.md")
     [void]$sb.AppendLine("Updated: $((Get-Date).ToString('yyyy-MM-dd HH:mm:ss'))")
-    [void]$sb.AppendLine("Total Tracked CRs: **$($records.Count)**")
+    [void]$sb.AppendLine("Storage Architecture: **NTFS Junction Mirrored (1 File per CR)**")
+    [void]$sb.AppendLine("Total Tracked CRs: **$(@($records).Count)** | Bundles: **$(@($bundles).Count)**")
     [void]$sb.AppendLine('')
     [void]$sb.AppendLine('---')
     [void]$sb.AppendLine('')
-    [void]$sb.AppendLine('| CR ID | Legacy ID | Origin Repo | Title | Status | Target Ver | Author | Created |')
-    [void]$sb.AppendLine('| :--- | :--- | :--- | :--- | :---: | :---: | :--- | :--- |')
+    [void]$sb.AppendLine('## 1. Change Request Bundles (Batch Test Suites)')
+    [void]$sb.AppendLine('')
+    [void]$sb.AppendLine('| Bundle ID | Bundle Name | Target Ver | Test Suite | Status | Included CRs |')
+    [void]$sb.AppendLine('| :--- | :--- | :---: | :--- | :---: | :--- |')
+    
+    foreach ($b in $bundles) {
+        $codeBId = '`' + $b.bundle_id + '`'
+        $codeSuite = '`' + $b.test_suite + '`'
+        $crList = ($b.change_request_ids | ForEach-Object { '`' + $_ + '`' }) -join ', '
+        [void]$sb.AppendLine("| **$codeBId** | $($b.name) | v$($b.target_lcm_version) | $codeSuite | **$($b.status)** | $crList |")
+    }
+    
+    [void]$sb.AppendLine('')
+    [void]$sb.AppendLine('---')
+    [void]$sb.AppendLine('')
+    [void]$sb.AppendLine('## 2. Individual Change Requests (1 File per CR)')
+    [void]$sb.AppendLine('')
+    [void]$sb.AppendLine('| CR ID | Origin Repo | Bundle | Title | Status | Target Ver | Author | Created |')
+    [void]$sb.AppendLine('| :--- | :--- | :---: | :--- | :---: | :---: | :--- | :--- |')
     
     foreach ($cr in $records) {
         $codeCrId = '`' + $cr.cr_id + '`'
-        $leg = if ($cr.legacy_id) { '`' + $cr.legacy_id + '`' } else { '-' }
         $codeOrig = '`' + $cr.origin_repo + '`'
+        $codeBundle = if ($cr.bundle_id -and $cr.bundle_id -ne 'unassigned') { '`' + $cr.bundle_id + '`' } else { '-' }
         $title = $cr.title
         $stat = $cr.status
         $tVer = $cr.target_lcm_version
         $author = $cr.author
-        $created = if ($cr.created_at) { $cr.created_at.Substring(0,10) } else { '-' }
-        [void]$sb.AppendLine("| **$codeCrId** | $leg | $codeOrig | $title | **$stat** | v$tVer | $author | $created |")
+        $created = if ($cr.created_at) { $cr.created_at } else { '-' }
+        [void]$sb.AppendLine("| **$codeCrId** | $codeOrig | $codeBundle | $title | **$stat** | v$tVer | $author | $created |")
     }
     
-    $sb.ToString() | Set-Content -Path $outPath -Encoding UTF8
-    Write-Host "Exported CR Index to: $outPath" -ForegroundColor Green
-    return $outPath
+    $sb.ToString() | Set-Content -Path $dashPath -Encoding UTF8
+    Write-Host "Exported Change Request Dashboard: $dashPath" -ForegroundColor Green
+    return $dashPath
 }
 
-Export-ModuleMember -Function Get-ChangeRequestsFile, Get-ChangeRequests, Find-ChangeRequest, Register-ChangeRequest, Export-ChangeRequestDashboard
+Export-ModuleMember -Function Get-CRMirrorRoot, Get-BundlesDir, Sync-CRJunctions, Parse-CRFrontmatter, Get-ChangeRequests, Find-ChangeRequest, New-ChangeRequest, Get-CRBundles, New-CRBundle, Add-CRToBundle, Export-ChangeRequestDashboard
