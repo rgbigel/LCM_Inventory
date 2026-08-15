@@ -173,13 +173,19 @@ function Get-RepoCMState {
         $absorbedVersion = $GlobalLCMVersion
         $currentVersion = $GlobalLCMVersion
     } elseif (Test-Path $lcmConfigFile) {
+        $classification = 'lcm-governed'
         $lcmStatus = 'governed'
         try {
             $cfg = Get-Content -Path $lcmConfigFile -Raw | ConvertFrom-Json
-            if ($cfg.lcm_version) {
+            if ($cfg.governance -and $cfg.governance.lcm_version) {
+                $currentVersion = [string]$cfg.governance.lcm_version
+            } elseif ($cfg.lcm_version) {
                 $currentVersion = [string]$cfg.lcm_version
             }
-            if ($cfg.absorbed_lcm_version) {
+            
+            if ($cfg.governance -and $cfg.governance.absorbed_lcm_version) {
+                $absorbedVersion = [string]$cfg.governance.absorbed_lcm_version
+            } elseif ($cfg.absorbed_lcm_version) {
                 $absorbedVersion = [string]$cfg.absorbed_lcm_version
             } else {
                 $absorbedVersion = $currentVersion
@@ -196,10 +202,6 @@ function Get-RepoCMState {
         if ($currentVersion -ne $GlobalLCMVersion) {
             $lcmStatus = 'outdated'
         }
-    } elseif ($repoName -eq 'VolumeInventory') {
-        $lcmStatus = 'candidate'
-        $absorbedVersion = '4.0.0'
-        $currentVersion = '4.0.0'
     }
     
     return [PSCustomObject]@{

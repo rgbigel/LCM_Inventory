@@ -4,3 +4,7 @@
 [2026-08-15 22:17:19] [INFO] [ALL] AUDIT_COMPLETE - Audited 34 repositories. Governed: 2
 [2026-08-15 22:17:19] [INFO] [ALL] BASELINE_CREATED - Created baseline snapshot: BASELINE-v4.1.0-20260815
 [2026-08-15 23:06:01] [INFO] [ALL] AUDIT_COMPLETE - Audited 34 repositories. Governed: 2
+[2026-08-15 23:11:29] [INFO] [VolumeInventory] LCM_UPGRADE_PROPOSED - Proposed upgrade to v4.1.0 via CR-20260815_231129
+[2026-08-15 23:13:08] [INFO] [VolumeInventory] LCM_UPGRADE_EXECUTED - Upgraded to LCM v4.1.0
+[2026-08-15 23:13:12] [INFO] [ALL] AUDIT_COMPLETE - Audited 34 repositories. Governed: 2
+[2026-08-15 23:13:32] [INFO] [ALL] AUDIT_COMPLETE - Audited 34 repositories. Governed: 3

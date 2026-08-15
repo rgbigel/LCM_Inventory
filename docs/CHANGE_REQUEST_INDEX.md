@@ -1,9 +1,9 @@
 # Master Change Request (CR) & Bundle Index
 
 Module: docs/CHANGE_REQUEST_INDEX.md
-Updated: 2026-08-15 23:08:21
+Updated: 2026-08-15 23:13:12
 Storage Architecture: **NTFS Junction Mirrored (1 File per CR)**
-Total Tracked CRs: **13** | Bundles: **2**
+Total Tracked CRs: **14** | Bundles: **2**
 
 ---
 
@@ -32,5 +32,6 @@ Total Tracked CRs: **13** | Bundles: **2**
 | **`CR-2026-009`** | `Workspace_AI` | `BUNDLE-2026-01` | Codify Junction Link Magic visual GUI and cross-volume link standard | **closed** | v4.1.0 | Rolf | 2026-08-15 |
 | **`CR-2026-010`** | `Workspace_AI` | `BUNDLE-2026-01` | Bump to LCM pre-release Version 4.1.0 and create repository inventory matrix | **closed** | v4.1.0 | Rolf | 2026-08-15 |
 | **`CR-2026-011`** | `Workspace_Inventory` | `BUNDLE-2026-02` | Establish Workspace_Inventory as authoritative CM system | **implemented** | v4.1.0 | Rolf | 2026-08-15 |
+| **`CR-20260815_231129`** | `VolumeInventory` | - | Upgrade VolumeInventory to LCM Version 4.1.0 | **implemented** | v4.1.0 | Rolf | 2026-08-15 23:11:29 |
 | **`README`** | `Unknown` | - | README | **proposed** | v4.1.0 | Rolf | 2026-08-13 |
 

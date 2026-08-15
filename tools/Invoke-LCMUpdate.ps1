@@ -78,7 +78,7 @@ if (-not $Execute) {
 } else {
     # Approved Execution Mode
     Write-Host "`nExecuting approved LCM version upgrade on $repoName..." -ForegroundColor Yellow
-    & $onboardEngine -TargetRepositoryPath $targetPath -Update
+    & $onboardEngine -TargetRepositoryPath $targetPath -Update -Force
     
     # Update CR status in target repo
     $crRecords = Find-ChangeRequest -Repository $repoName -Query "Upgrade $repoName"
