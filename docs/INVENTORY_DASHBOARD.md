@@ -1,7 +1,7 @@
 # Workspace Configuration Management (CM) Inventory Dashboard
 
 Module: docs/INVENTORY_DASHBOARD.md
-Generated: 2026-08-15 23:13:32
+Generated: 2026-08-15 23:36:53
 Global Baseline Version: **v4.1.0** (Source: Workspace_AI)
 
 ---
@@ -32,7 +32,7 @@ Global Baseline Version: **v4.1.0** (Source: Workspace_AI)
 | **`AuthorizeMasterUser`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | non-git |
 | **`BackgroundModifier`** | Git | `main` | `-` | modified (14 files) | **not-lcm** | - | - | standard-git |
 | **`BackgroundModifier_AC`** | Git | `main` | `-` | modified (14 files) | **not-lcm** | - | - | standard-git |
-| **`BootEntryManager`** | Git | `main` | `-` | modified (4 files) | **not-lcm** | - | - | standard-git |
+| **`BootEntryManager`** | Git | `main` | `-` | modified (5 files) | **not-lcm** | - | - | standard-git |
 | **`BootOpsHub`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | non-git |
 | **`CommandHub`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | non-git |
 | **`DeviceInventory`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | non-git |
@@ -55,7 +55,7 @@ Global Baseline Version: **v4.1.0** (Source: Workspace_AI)
 | **`TimeStamper`** | Git | `main` | `-` | modified (4 files) | **not-lcm** | - | - | standard-git |
 | **`VolumeInventory`** | Git | `main` | `c70554c` | modified (1 files) | **governed** | - | v4.1.0 | lcm-governed |
 | **`Workspace_AC`** | Git | `main` | `eb35191` | clean | **not-lcm** | - | - | legacy-retired |
-| **`Workspace_AI`** | Git | `main` | `9f22dc5` | clean | **governed** | v4.1.0 | v4.1.0 | active-design-workshop |
+| **`Workspace_AI`** | Git | `main` | `9f22dc5` | modified (5 files) | **governed** | v4.1.0 | v4.1.0 | active-design-workshop |
 | **`Workspace_GC`** | Git | `main` | `5576337` | clean | **not-lcm** | - | - | legacy-retired |
-| **`Workspace_Inventory`** | Git | `main` | `9f730a4` | modified (7 files) | **governed** | v4.1.0 | v4.1.0 | configuration-management |
+| **`Workspace_Inventory`** | Git | `main` | `d291b71` | modified (3 files) | **governed** | v4.1.0 | v4.1.0 | configuration-management |
 
