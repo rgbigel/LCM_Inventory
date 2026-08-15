@@ -1,0 +1,20 @@
+# Workspace_Inventory .gitignore
+# PowerShell
+*.ps1xml
+*.log.temp
+
+# Environment & OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary data / Scratchpad
+Working/
+scratch/
+tmp/
+*.tmp
+
+# VS Code local workspace state
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
