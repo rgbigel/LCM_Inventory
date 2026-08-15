@@ -1,7 +1,7 @@
-﻿# Master Change Request (CR) & Bundle Index
+# Master Change Request (CR) & Bundle Index
 
 Module: docs/CHANGE_REQUEST_INDEX.md
-Updated: 2026-08-15 22:26:32
+Updated: 2026-08-15 23:08:21
 Storage Architecture: **NTFS Junction Mirrored (1 File per CR)**
 Total Tracked CRs: **13** | Bundles: **2**
 

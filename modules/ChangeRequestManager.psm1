@@ -220,9 +220,8 @@ function New-ChangeRequest {
         [string]$LegacyId = '-'
     )
     
-    $existing = Get-ChangeRequests
-    $nextNum = @($existing).Count + 1
-    $crId = "CR-$((Get-Date).ToString('yyyy'))-$($nextNum.ToString('000'))"
+    $timestamp = (Get-Date).ToString('yyyyMMdd_HHmmss')
+    $crId = "CR-$timestamp"
     
     $targetProposals = "D:\Git_Repositories\$OriginRepo\Docs\Methods\Proposals"
     if (-not (Test-Path $targetProposals)) {
@@ -232,7 +231,7 @@ function New-ChangeRequest {
     Sync-CRJunctions | Out-Null
     
     $filePath = Join-Path $targetProposals "$crId.md"
-    $dateStr = (Get-Date).ToString('yyyy-MM-dd')
+    $dateStr = (Get-Date).ToString('yyyy-MM-dd HH:mm:ss')
     
     $content = @"
 ---

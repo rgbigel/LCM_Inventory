@@ -1,13 +1,12 @@
 <#
-.SYNOPSIS
-    Evaluates workspace repositories for configuration drift.
-
-.DESCRIPTION
-    Checks for uncommitted/dirty working copies, unpushed commits, outdated LCM versions,
-    broken junctions, and unabsorbed components.
-
-.EXAMPLE
-    .\tools\Test-WorkspaceDrift.ps1
+Module: tools/Test-WorkspaceDrift.ps1
+Purpose: Evaluates workspace repositories for configuration drift (dirty copies, unpushed commits, outdated LCM).
+Path: tools/Test-WorkspaceDrift.ps1
+Authors: Rolf, Workspace_AI Engine
+Version: 1.0.0
+Date: 2026-08-15
+Changelog:
+- 2026-08-15: Initial versioned implementation of configuration drift tester.
 #>
 
 [CmdletBinding()]

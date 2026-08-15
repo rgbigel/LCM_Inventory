@@ -1,22 +1,20 @@
 <#
-.SYNOPSIS
-    Captures a full configuration baseline snapshot of all workspace repositories.
-
-.PARAMETER BaselineId
-    Identifier for the baseline (e.g. BASELINE-v4.1.0-20260815).
-
-.PARAMETER Description
-    Human-readable description of the baseline event.
-
-.EXAMPLE
-    .\tools\New-WorkspaceBaseline.ps1 -BaselineId "BASELINE-v4.1.0"
+Module: tools/New-WorkspaceBaseline.ps1
+Purpose: Captures a full configuration baseline snapshot of all workspace repositories.
+Path: tools/New-WorkspaceBaseline.ps1
+Authors: Rolf, Workspace_AI Engine
+Version: 1.0.0
+Date: 2026-08-15
+Changelog:
+- 2026-08-15: Initial versioned implementation for multi-repo CM baseline capture.
 #>
 
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory=$true, Position=0)]
+    [Parameter(Mandatory=$true, Position=0, HelpMessage='Unique baseline identifier (e.g. BASELINE-v4.1.0-20260815)')]
     [string]$BaselineId,
     
+    [Parameter(Mandatory=$false, HelpMessage='Description of baseline release')]
     [string]$Description
 )
 

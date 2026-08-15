@@ -1,14 +1,12 @@
 <#
-.SYNOPSIS
-    Runs a complete multi-repository Configuration Management audit across D:\Git_Repositories.
-
-.DESCRIPTION
-    Scans all sibling directories, detects Git status, branch heads, dirty working copy state,
-    LCM governance status, absorbed version, and current version. Updates data/inventory.json
-    and docs/INVENTORY_DASHBOARD.md.
-
-.EXAMPLE
-    .\tools\Invoke-WorkspaceAudit.ps1
+Module: tools/Invoke-WorkspaceAudit.ps1
+Purpose: Runs a complete multi-repository Configuration Management audit across D:\Git_Repositories.
+Path: tools/Invoke-WorkspaceAudit.ps1
+Authors: Rolf, Workspace_AI Engine
+Version: 1.0.0
+Date: 2026-08-15
+Changelog:
+- 2026-08-15: Initial versioned implementation of the multi-repo CM audit runner.
 #>
 
 [CmdletBinding()]
