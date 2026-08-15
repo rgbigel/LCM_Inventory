@@ -1,7 +1,7 @@
 # Workspace Configuration Management (CM) Inventory Dashboard
 
 Module: docs/INVENTORY_DASHBOARD.md
-Generated: 2026-08-15 23:36:53
+Generated: 2026-08-15 23:56:46
 Global Baseline Version: **v4.1.0** (Source: Workspace_AI)
 
 ---
@@ -55,7 +55,7 @@ Global Baseline Version: **v4.1.0** (Source: Workspace_AI)
 | **`TimeStamper`** | Git | `main` | `-` | modified (4 files) | **not-lcm** | - | - | standard-git |
 | **`VolumeInventory`** | Git | `main` | `c70554c` | modified (1 files) | **governed** | - | v4.1.0 | lcm-governed |
 | **`Workspace_AC`** | Git | `main` | `eb35191` | clean | **not-lcm** | - | - | legacy-retired |
-| **`Workspace_AI`** | Git | `main` | `9f22dc5` | modified (5 files) | **governed** | v4.1.0 | v4.1.0 | active-design-workshop |
+| **`Workspace_AI`** | Git | `main` | `87b59ae` | clean | **governed** | v4.1.0 | v4.1.0 | active-design-workshop |
 | **`Workspace_GC`** | Git | `main` | `5576337` | clean | **not-lcm** | - | - | legacy-retired |
-| **`Workspace_Inventory`** | Git | `main` | `d291b71` | modified (3 files) | **governed** | v4.1.0 | v4.1.0 | configuration-management |
+| **`Workspace_Inventory`** | Git | `main` | `dc6f0ed` | modified (4 files) | **governed** | v4.1.0 | v4.1.0 | configuration-management |
 

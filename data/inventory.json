@@ -1,13 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Workspace Repository Inventory & CM State",
-  "generated_at": "2026-08-15T23:36:53.9061062+02:00",
+  "generated_at": "2026-08-15T23:56:46.8453574+02:00",
   "workspace_ai_baseline": {
     "Status": "Active",
     "LifecycleState": "State1_ActiveWorkshop",
     "GlobalLCMVersion": "4.1.0",
     "Branch": "main",
-    "HeadCommit": "9f22dc5",
+    "HeadCommit": "87b59ae",
     "Path": "D:\\Git_Repositories\\Workspace_AI"
   },
   "total_directories": 34,
@@ -31,7 +31,7 @@
       "AbsorbedLCMVersion": null,
       "CurrentLCMVersion": null,
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-15 23:36:49"
+      "LastAuditTimestamp": "2026-08-15 23:56:42"
     },
     {
       "RepositoryName": ".copilot",
@@ -47,7 +47,7 @@
       "AbsorbedLCMVersion": null,
       "CurrentLCMVersion": null,
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-15 23:36:49"
+      "LastAuditTimestamp": "2026-08-15 23:56:42"
     },
     {
       "RepositoryName": ".github",
@@ -63,7 +63,7 @@
       "AbsorbedLCMVersion": null,
       "CurrentLCMVersion": null,
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-15 23:36:49"
+      "LastAuditTimestamp": "2026-08-15 23:56:42"
     },
     {
       "RepositoryName": ".venv",
@@ -79,7 +79,7 @@
       "AbsorbedLCMVersion": null,
       "CurrentLCMVersion": null,
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-15 23:36:49"
+      "LastAuditTimestamp": "2026-08-15 23:56:42"
     },
     {
       "RepositoryName": ".vscode",
@@ -95,7 +95,7 @@
       "AbsorbedLCMVersion": null,
       "CurrentLCMVersion": null,
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-15 23:36:49"
+      "LastAuditTimestamp": "2026-08-15 23:56:42"
     },
     {
       "RepositoryName": "AuthorizeMasterUser",
@@ -111,7 +111,7 @@
       "AbsorbedLCMVersion": null,
       "CurrentLCMVersion": null,
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-15 23:36:49"
+      "LastAuditTimestamp": "2026-08-15 23:56:42"
     },
     {
       "RepositoryName": "BackgroundModifier",
@@ -127,7 +127,7 @@
       "AbsorbedLCMVersion": null,
       "CurrentLCMVersion": null,
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-15 23:36:49"
+      "LastAuditTimestamp": "2026-08-15 23:56:43"
     },
     {
       "RepositoryName": "BackgroundModifier_AC",
@@ -143,7 +143,7 @@
       "AbsorbedLCMVersion": null,
       "CurrentLCMVersion": null,
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-15 23:36:50"
+      "LastAuditTimestamp": "2026-08-15 23:56:43"
     },
     {
       "RepositoryName": "BootEntryManager",
@@ -159,7 +159,7 @@
       "AbsorbedLCMVersion": null,
       "CurrentLCMVersion": null,
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-15 23:36:50"
+      "LastAuditTimestamp": "2026-08-15 23:56:43"
     },
     {
       "RepositoryName": "BootOpsHub",
@@ -175,7 +175,7 @@
       "AbsorbedLCMVersion": null,
       "CurrentLCMVersion": null,
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-15 23:36:50"
+      "LastAuditTimestamp": "2026-08-15 23:56:43"
     },
     {
       "RepositoryName": "CommandHub",
@@ -191,7 +191,7 @@
       "AbsorbedLCMVersion": null,
       "CurrentLCMVersion": null,
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-15 23:36:50"
+      "LastAuditTimestamp": "2026-08-15 23:56:43"
     },
     {
       "RepositoryName": "DeviceInventory",
@@ -207,7 +207,7 @@
       "AbsorbedLCMVersion": null,
       "CurrentLCMVersion": null,
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-15 23:36:50"
+      "LastAuditTimestamp": "2026-08-15 23:56:43"
     },
     {
       "RepositoryName": "DiskAssignmentStatus",
@@ -223,7 +223,7 @@
       "AbsorbedLCMVersion": null,
       "CurrentLCMVersion": null,
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-15 23:36:50"
+      "LastAuditTimestamp": "2026-08-15 23:56:43"
     },
     {
       "RepositoryName": "DiskAssignmentStatus_AC",
@@ -239,7 +239,7 @@
       "AbsorbedLCMVersion": null,
       "CurrentLCMVersion": null,
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-15 23:36:50"
+      "LastAuditTimestamp": "2026-08-15 23:56:43"
     },
     {
       "RepositoryName": "DiskAssignmentStatus_S1",
@@ -255,7 +255,7 @@
       "AbsorbedLCMVersion": null,
       "CurrentLCMVersion": null,
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-15 23:36:50"
+      "LastAuditTimestamp": "2026-08-15 23:56:43"
     },
     {
       "RepositoryName": "EnvironmentTools",
@@ -271,7 +271,7 @@
       "AbsorbedLCMVersion": null,
       "CurrentLCMVersion": null,
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-15 23:36:50"
+      "LastAuditTimestamp": "2026-08-15 23:56:43"
     },
     {
       "RepositoryName": "FileUtilities",
@@ -287,7 +287,7 @@
       "AbsorbedLCMVersion": null,
       "CurrentLCMVersion": null,
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-15 23:36:50"
+      "LastAuditTimestamp": "2026-08-15 23:56:43"
     },
     {
       "RepositoryName": "GetRecoveryVolume",
@@ -303,7 +303,7 @@
       "AbsorbedLCMVersion": null,
       "CurrentLCMVersion": null,
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-15 23:36:50"
+      "LastAuditTimestamp": "2026-08-15 23:56:43"
     },
     {
       "RepositoryName": "GitTools",
@@ -319,7 +319,7 @@
       "AbsorbedLCMVersion": null,
       "CurrentLCMVersion": null,
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-15 23:36:50"
+      "LastAuditTimestamp": "2026-08-15 23:56:43"
     },
     {
       "RepositoryName": "InstallFonts",
@@ -335,7 +335,7 @@
       "AbsorbedLCMVersion": null,
       "CurrentLCMVersion": null,
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-15 23:36:51"
+      "LastAuditTimestamp": "2026-08-15 23:56:44"
     },
     {
       "RepositoryName": "MacriumTemplateUpdater",
@@ -351,7 +351,7 @@
       "AbsorbedLCMVersion": null,
       "CurrentLCMVersion": null,
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-15 23:36:51"
+      "LastAuditTimestamp": "2026-08-15 23:56:44"
     },
     {
       "RepositoryName": "MSG file conversion",
@@ -367,7 +367,7 @@
       "AbsorbedLCMVersion": null,
       "CurrentLCMVersion": null,
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-15 23:36:51"
+      "LastAuditTimestamp": "2026-08-15 23:56:44"
     },
     {
       "RepositoryName": "NextBootTray",
@@ -383,7 +383,7 @@
       "AbsorbedLCMVersion": null,
       "CurrentLCMVersion": null,
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-15 23:36:51"
+      "LastAuditTimestamp": "2026-08-15 23:56:44"
     },
     {
       "RepositoryName": "OutlookVBAConversion",
@@ -399,7 +399,7 @@
       "AbsorbedLCMVersion": null,
       "CurrentLCMVersion": null,
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-15 23:36:51"
+      "LastAuditTimestamp": "2026-08-15 23:56:45"
     },
     {
       "RepositoryName": "PowerBGInfo",
@@ -415,7 +415,7 @@
       "AbsorbedLCMVersion": null,
       "CurrentLCMVersion": null,
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-15 23:36:52"
+      "LastAuditTimestamp": "2026-08-15 23:56:45"
     },
     {
       "RepositoryName": "ReEnableRadeonRx580",
@@ -431,7 +431,7 @@
       "AbsorbedLCMVersion": null,
       "CurrentLCMVersion": null,
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-15 23:36:52"
+      "LastAuditTimestamp": "2026-08-15 23:56:45"
     },
     {
       "RepositoryName": "SharedModules",
@@ -447,7 +447,7 @@
       "AbsorbedLCMVersion": null,
       "CurrentLCMVersion": null,
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-15 23:36:52"
+      "LastAuditTimestamp": "2026-08-15 23:56:45"
     },
     {
       "RepositoryName": "SystemConfiguration",
@@ -463,7 +463,7 @@
       "AbsorbedLCMVersion": null,
       "CurrentLCMVersion": null,
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-15 23:36:52"
+      "LastAuditTimestamp": "2026-08-15 23:56:45"
     },
     {
       "RepositoryName": "TimeStamper",
@@ -479,7 +479,7 @@
       "AbsorbedLCMVersion": null,
       "CurrentLCMVersion": null,
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-15 23:36:52"
+      "LastAuditTimestamp": "2026-08-15 23:56:45"
     },
     {
       "RepositoryName": "VolumeInventory",
@@ -495,7 +495,7 @@
       "AbsorbedLCMVersion": null,
       "CurrentLCMVersion": "4.1.0",
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-15 23:36:53"
+      "LastAuditTimestamp": "2026-08-15 23:56:46"
     },
     {
       "RepositoryName": "Workspace_AC",
@@ -511,7 +511,7 @@
       "AbsorbedLCMVersion": null,
       "CurrentLCMVersion": null,
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-15 23:36:53"
+      "LastAuditTimestamp": "2026-08-15 23:56:46"
     },
     {
       "RepositoryName": "Workspace_AI",
@@ -519,15 +519,15 @@
       "Classification": "active-design-workshop",
       "GitStatus": "Git",
       "Branch": "main",
-      "HeadCommit": "9f22dc5",
-      "DirtyState": "modified (5 files)",
+      "HeadCommit": "87b59ae",
+      "DirtyState": "clean",
       "AheadBehind": "synced",
       "HasUnpushed": false,
       "LCMStatus": "governed",
       "AbsorbedLCMVersion": "4.1.0",
       "CurrentLCMVersion": "4.1.0",
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-15 23:36:53"
+      "LastAuditTimestamp": "2026-08-15 23:56:46"
     },
     {
       "RepositoryName": "Workspace_GC",
@@ -543,7 +543,7 @@
       "AbsorbedLCMVersion": null,
       "CurrentLCMVersion": null,
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-15 23:36:53"
+      "LastAuditTimestamp": "2026-08-15 23:56:46"
     },
     {
       "RepositoryName": "Workspace_Inventory",
@@ -551,15 +551,15 @@
       "Classification": "configuration-management",
       "GitStatus": "Git",
       "Branch": "main",
-      "HeadCommit": "d291b71",
-      "DirtyState": "modified (3 files)",
+      "HeadCommit": "dc6f0ed",
+      "DirtyState": "modified (4 files)",
       "AheadBehind": "synced",
       "HasUnpushed": false,
       "LCMStatus": "governed",
       "AbsorbedLCMVersion": "4.1.0",
       "CurrentLCMVersion": "4.1.0",
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-15 23:36:53"
+      "LastAuditTimestamp": "2026-08-15 23:56:46"
     }
   ]
 }
