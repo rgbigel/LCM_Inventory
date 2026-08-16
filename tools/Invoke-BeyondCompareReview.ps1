@@ -90,4 +90,4 @@ Write-Host "Launching Beyond Compare 5..." -ForegroundColor Green
 Write-Host ("  Left (Baseline {0}): {1}" -f $commitSha, $tempReviewRoot)
 Write-Host ("  Right (Current Live):       {0}" -f $repoPath)
 
-Start-Process -FilePath $BeyondComparePath -ArgumentList "`"$tempReviewRoot`" `"$repoPath`""
+Start-Process -FilePath $BeyondComparePath -ArgumentList @($tempReviewRoot, $repoPath)
