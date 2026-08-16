@@ -455,4 +455,17 @@ function New-WorkspaceBaseline {
     return $outPath
 }
 
-Export-ModuleMember -Function Get-WorkspaceRoot, Write-CMLog, Get-WorkspaceAIState, Get-RepoCMState, Update-WorkspaceInventory, Test-WorkspaceDrift, New-WorkspaceBaseline
+function Invoke-BeyondCompareReview {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true, Position = 0)]
+        [string]$RepositoryName,
+        [string]$BaseCommit,
+        [string]$BeyondComparePath = 'C:\Program Files\Beyond Compare 5\BCompare.exe'
+    )
+
+    $toolScript = Join-Path (Get-WorkspaceRoot) "Workspace_Inventory\tools\Invoke-BeyondCompareReview.ps1"
+    & $toolScript -RepositoryName $RepositoryName -BaseCommit $BaseCommit -BeyondComparePath $BeyondComparePath
+}
+
+Export-ModuleMember -Function Get-WorkspaceRoot, Write-CMLog, Get-WorkspaceAIState, Get-RepoCMState, Update-WorkspaceInventory, Test-WorkspaceDrift, New-WorkspaceBaseline, Invoke-BeyondCompareReview
