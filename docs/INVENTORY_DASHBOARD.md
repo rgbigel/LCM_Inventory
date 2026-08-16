@@ -1,7 +1,7 @@
 # Workspace Configuration Management (CM) Inventory Dashboard
 
 Module: docs/INVENTORY_DASHBOARD.md
-Generated: 2026-08-16 14:16:16
+Generated: 2026-08-16 14:42:49
 Global Baseline Version: **v4.2.0** (Source: Workspace_AI)
 
 ---
@@ -31,8 +31,8 @@ Global Baseline Version: **v4.2.0** (Source: Workspace_AI)
 | **`.venv`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | User | parent-infra |
 | **`.vscode`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | User | parent-infra |
 | **`AuthorizeMasterUser`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | **Admin** | non-git |
-| **`BackgroundModifier`** | Git | `main` | `68f8dc7` | modified (4 files) | **governed** | - | v4.2.0 | **Admin** | lcm-governed |
-| **`BGMSAMVInv`** | Git | `main` | `2c98073` | modified (4 files) | **governed** | - | v4.2.0 | **Admin** | lcm-governed |
+| **`BackgroundModifier`** | Git | `main` | `882b160` | clean | **governed** | - | v4.2.0 | **Admin** | lcm-governed |
+| **`BGMSAMVInv`** | Git | `main` | `55aa95f` | clean | **governed** | - | v4.2.0 | **Admin** | lcm-governed |
 | **`BootEntryManager`** | Git | `HEAD` | `` | modified (5 files) | **not-lcm** | - | - | **Admin** | standard-git |
 | **`BootOpsHub`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | **Admin** | non-git |
 | **`CommandHub`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | User | non-git |
@@ -54,9 +54,9 @@ Global Baseline Version: **v4.2.0** (Source: Workspace_AI)
 | **`SharedModules`** | Git | `HEAD` | `` | modified (3 files) | **not-lcm** | - | - | User | standard-git |
 | **`SystemConfiguration`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | **Admin** | non-git |
 | **`TimeStamper`** | Git | `HEAD` | `` | modified (4 files) | **not-lcm** | - | - | User | standard-git |
-| **`VolumeInventory`** | Git | `main` | `3235d46` | modified (3 files) | **governed** | - | v4.2.0 | **Admin** | lcm-governed |
+| **`VolumeInventory`** | Git | `main` | `852d693` | clean | **governed** | - | v4.2.0 | **Admin** | lcm-governed |
 | **`Workspace_AC`** | Git | `main` | `eb35191` | clean | **not-lcm** | - | - | User | legacy-retired |
-| **`Workspace_AI`** | Git | `main` | `ad2ead7` | modified (16 files) | **governed** | v4.2.0 | v4.2.0 | User | active-design-workshop |
+| **`Workspace_AI`** | Git | `main` | `4704278` | clean | **governed** | v4.2.0 | v4.2.0 | User | active-design-workshop |
 | **`Workspace_GC`** | Git | `main` | `5576337` | clean | **not-lcm** | - | - | User | legacy-retired |
-| **`Workspace_Inventory`** | Git | `main` | `1e3f644` | modified (4 files) | **governed** | v4.2.0 | v4.2.0 | **Admin** | configuration-management |
+| **`Workspace_Inventory`** | Git | `main` | `f31ed6b` | clean | **governed** | v4.2.0 | v4.2.0 | **Admin** | configuration-management |
 
