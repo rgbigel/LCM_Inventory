@@ -1,7 +1,7 @@
 # Workspace Configuration Management (CM) Inventory Dashboard
 
 Module: docs/INVENTORY_DASHBOARD.md
-Generated: 2026-08-16 14:42:49
+Generated: 2026-08-16 14:49:30
 Global Baseline Version: **v4.2.0** (Source: Workspace_AI)
 
 ---
@@ -32,7 +32,7 @@ Global Baseline Version: **v4.2.0** (Source: Workspace_AI)
 | **`.vscode`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | User | parent-infra |
 | **`AuthorizeMasterUser`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | **Admin** | non-git |
 | **`BackgroundModifier`** | Git | `main` | `882b160` | clean | **governed** | - | v4.2.0 | **Admin** | lcm-governed |
-| **`BGMSAMVInv`** | Git | `main` | `55aa95f` | clean | **governed** | - | v4.2.0 | **Admin** | lcm-governed |
+| **`BGMSAMVInv`** | Git | `main` | `5ca3ba3` | clean | **governed** | - | v4.2.0 | **Admin** | lcm-governed |
 | **`BootEntryManager`** | Git | `HEAD` | `` | modified (5 files) | **not-lcm** | - | - | **Admin** | standard-git |
 | **`BootOpsHub`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | **Admin** | non-git |
 | **`CommandHub`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | User | non-git |
@@ -58,5 +58,5 @@ Global Baseline Version: **v4.2.0** (Source: Workspace_AI)
 | **`Workspace_AC`** | Git | `main` | `eb35191` | clean | **not-lcm** | - | - | User | legacy-retired |
 | **`Workspace_AI`** | Git | `main` | `4704278` | clean | **governed** | v4.2.0 | v4.2.0 | User | active-design-workshop |
 | **`Workspace_GC`** | Git | `main` | `5576337` | clean | **not-lcm** | - | - | User | legacy-retired |
-| **`Workspace_Inventory`** | Git | `main` | `f31ed6b` | clean | **governed** | v4.2.0 | v4.2.0 | **Admin** | configuration-management |
+| **`Workspace_Inventory`** | Git | `main` | `d91fcc1` | clean | **governed** | v4.2.0 | v4.2.0 | **Admin** | configuration-management |
 
