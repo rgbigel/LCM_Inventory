@@ -1,7 +1,7 @@
 # Workspace Configuration Management (CM) Inventory Dashboard
 
 Module: docs/INVENTORY_DASHBOARD.md
-Generated: 2026-08-16 13:22:10
+Generated: 2026-08-16 13:26:53
 Global Baseline Version: **v4.1.0** (Source: Workspace_AI)
 
 ---
@@ -53,9 +53,9 @@ Global Baseline Version: **v4.1.0** (Source: Workspace_AI)
 | **`SharedModules`** | Git | `main` | `-` | modified (3 files) | **not-lcm** | - | - | standard-git |
 | **`SystemConfiguration`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | non-git |
 | **`TimeStamper`** | Git | `main` | `-` | modified (4 files) | **not-lcm** | - | - | standard-git |
-| **`VolumeInventory`** | Git | `main` | `c70554c` | modified (1 files) | **governed** | - | v4.1.0 | lcm-governed |
+| **`VolumeInventory`** | Git | `main` | `435c4d7` | clean | **governed** | - | v4.1.0 | lcm-governed |
 | **`Workspace_AC`** | Git | `main` | `eb35191` | clean | **not-lcm** | - | - | legacy-retired |
 | **`Workspace_AI`** | Git | `main` | `87b59ae` | clean | **governed** | v4.1.0 | v4.1.0 | active-design-workshop |
 | **`Workspace_GC`** | Git | `main` | `5576337` | clean | **not-lcm** | - | - | legacy-retired |
-| **`Workspace_Inventory`** | Git | `main` | `de9a121` | modified (2 files) | **governed** | v4.1.0 | v4.1.0 | configuration-management |
+| **`Workspace_Inventory`** | Git | `main` | `fcb5270` | clean | **governed** | v4.1.0 | v4.1.0 | configuration-management |
 
