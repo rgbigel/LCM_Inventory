@@ -1,7 +1,7 @@
 # Workspace Configuration Management (CM) Inventory Dashboard
 
 Module: docs/INVENTORY_DASHBOARD.md
-Generated: 2026-08-16 13:43:02
+Generated: 2026-08-16 13:45:08
 Global Baseline Version: **v4.1.0** (Source: Workspace_AI)
 
 ---
@@ -33,7 +33,7 @@ Global Baseline Version: **v4.1.0** (Source: Workspace_AI)
 | **`AuthorizeMasterUser`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | **Admin** | non-git |
 | **`BackgroundModifier`** | Git | `main` | `61dabef` | modified (1 files) | **governed** | - | v4.1.0 | **Admin** | lcm-governed |
 | **`BGMSAMVInv`** | Git | `main` | `532840f` | clean | **governed** | - | v4.1.0 | User | lcm-governed |
-| **`BootEntryManager`** | Git | `main` | `-` | modified (5 files) | **not-lcm** | - | - | **Admin** | standard-git |
+| **`BootEntryManager`** | Git | `HEAD` | `` | modified (5 files) | **not-lcm** | - | - | **Admin** | standard-git |
 | **`BootOpsHub`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | **Admin** | non-git |
 | **`CommandHub`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | User | non-git |
 | **`DeviceInventory`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | User | non-git |
@@ -42,21 +42,21 @@ Global Baseline Version: **v4.1.0** (Source: Workspace_AI)
 | **`DiskAssignmentStatus_S1`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | User | non-git |
 | **`EnvironmentTools`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | User | non-git |
 | **`FileUtilities`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | User | non-git |
-| **`GetRecoveryVolume`** | Git | `main` | `-` | modified (3 files) | **not-lcm** | - | - | **Admin** | standard-git |
+| **`GetRecoveryVolume`** | Git | `HEAD` | `` | modified (3 files) | **not-lcm** | - | - | **Admin** | standard-git |
 | **`GitTools`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | User | non-git |
-| **`InstallFonts`** | Git | `main` | `-` | modified (4 files) | **not-lcm** | - | - | User | standard-git |
-| **`MacriumTemplateUpdater`** | Git | `main` | `-` | modified (8 files) | **not-lcm** | - | - | User | standard-git |
-| **`MSG file conversion`** | Git | `main` | `-` | modified (5 files) | **not-lcm** | - | - | User | standard-git |
-| **`NextBootTray`** | Git | `main` | `-` | modified (11 files) | **not-lcm** | - | - | **Admin** | standard-git |
-| **`OutlookVBAConversion`** | Git | `main` | `-` | modified (19 files) | **not-lcm** | - | - | User | standard-git |
-| **`PowerBGInfo`** | Git | `main` | `-` | modified (16 files) | **not-lcm** | - | - | **Admin** | standard-git |
-| **`ReEnableRadeonRx580`** | Git | `main` | `-` | modified (3 files) | **not-lcm** | - | - | User | standard-git |
-| **`SharedModules`** | Git | `main` | `-` | modified (3 files) | **not-lcm** | - | - | User | standard-git |
+| **`InstallFonts`** | Git | `HEAD` | `` | modified (4 files) | **not-lcm** | - | - | User | standard-git |
+| **`MacriumTemplateUpdater`** | Git | `HEAD` | `` | modified (8 files) | **not-lcm** | - | - | User | standard-git |
+| **`MSG file conversion`** | Git | `HEAD` | `` | modified (5 files) | **not-lcm** | - | - | User | standard-git |
+| **`NextBootTray`** | Git | `HEAD` | `` | modified (11 files) | **not-lcm** | - | - | **Admin** | standard-git |
+| **`OutlookVBAConversion`** | Git | `HEAD` | `` | modified (19 files) | **not-lcm** | - | - | User | standard-git |
+| **`PowerBGInfo`** | Git | `HEAD` | `` | modified (16 files) | **not-lcm** | - | - | **Admin** | standard-git |
+| **`ReEnableRadeonRx580`** | Git | `HEAD` | `` | modified (3 files) | **not-lcm** | - | - | User | standard-git |
+| **`SharedModules`** | Git | `HEAD` | `` | modified (3 files) | **not-lcm** | - | - | User | standard-git |
 | **`SystemConfiguration`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | **Admin** | non-git |
-| **`TimeStamper`** | Git | `main` | `-` | modified (4 files) | **not-lcm** | - | - | User | standard-git |
-| **`VolumeInventory`** | Git | `main` | `435c4d7` | modified (5 files) | **governed** | - | v4.1.0 | **Admin** | lcm-governed |
+| **`TimeStamper`** | Git | `HEAD` | `` | modified (4 files) | **not-lcm** | - | - | User | standard-git |
+| **`VolumeInventory`** | Git | `main` | `4cf8312` | modified (1 files) | **governed** | - | v4.1.0 | **Admin** | lcm-governed |
 | **`Workspace_AC`** | Git | `main` | `eb35191` | clean | **not-lcm** | - | - | User | legacy-retired |
-| **`Workspace_AI`** | Git | `main` | `87b59ae` | modified (3 files) | **governed** | v4.1.0 | v4.1.0 | User | active-design-workshop |
+| **`Workspace_AI`** | Git | `main` | `cc0d5ef` | modified (1 files) | **governed** | v4.1.0 | v4.1.0 | User | active-design-workshop |
 | **`Workspace_GC`** | Git | `main` | `5576337` | clean | **not-lcm** | - | - | User | legacy-retired |
-| **`Workspace_Inventory`** | Git | `main` | `0f4d8f9` | modified (1 files) | **governed** | v4.1.0 | v4.1.0 | **Admin** | configuration-management |
+| **`Workspace_Inventory`** | Git | `main` | `733f43d` | modified (1 files) | **governed** | v4.1.0 | v4.1.0 | **Admin** | configuration-management |
 

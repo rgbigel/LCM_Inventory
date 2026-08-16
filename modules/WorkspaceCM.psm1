@@ -98,11 +98,10 @@ function Get-WorkspaceAIState {
     }
 }
 
-function Get-RepoCMState {
+function Get-RepoClassification {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory=$true)] [string]$DirectoryPath,
-        [string]$GlobalLCMVersion = '4.1.0'
+        [Parameter(Mandatory=$true)] [string]$DirectoryPath
     )
     
     $dirItem = Get-Item $DirectoryPath
@@ -116,35 +115,43 @@ function Get-RepoCMState {
     $nonGitIgnored = @('AuthorizeMasterUser', 'BootOpsHub', 'CommandHub', 'DeviceInventory',
                        'DiskAssignmentStatus_AC', 'DiskAssignmentStatus_S1', 'EnvironmentTools',
                        'FileUtilities', 'GitTools', 'SystemConfiguration')
+    if ($repoName -eq 'Workspace_AI') { return 'active-design-workshop' }
+    if ($repoName -eq 'Workspace_Inventory') { return 'configuration-management' }
+    if ($retiredList -contains $repoName) { return 'legacy-retired' }
+    if ($parentInfraList -contains $repoName) { return 'parent-infra' }
+    if (-not $isGit -or ($nonGitIgnored -contains $repoName)) { return 'non-git' }
+    return 'standard-git'
+}
+
+function Get-RepoCMState {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]$DirectoryPath,
+        
+        [Parameter(Mandatory=$false)]
+        [string]$GlobalLCMVersion = '4.1.0',
+        
+        [Parameter(Mandatory=$false)]
+        [PSCustomObject]$CachedRepoState = $null
+    )
     
-    if ($repoName -eq 'Workspace_AI') {
-        $classification = 'active-design-workshop'
-    } elseif ($repoName -eq 'Workspace_Inventory') {
-        $classification = 'configuration-management'
-    } elseif ($retiredList -contains $repoName) {
-        $classification = 'legacy-retired'
-    } elseif ($parentInfraList -contains $repoName) {
-        $classification = 'parent-infra'
-    } elseif (-not $isGit -or ($nonGitIgnored -contains $repoName)) {
-        $classification = 'non-git'
-    }
+    $repoName = Split-Path $DirectoryPath -Leaf
+    $gitDir = Join-Path $DirectoryPath '.git'
+    $isGit = Test-Path $gitDir
     
-    # Git Metadata
+    $classification = Get-RepoClassification -DirectoryPath $DirectoryPath
+    $gitStatus = if ($isGit) { 'Git' } else { 'Non-Git' }
     $branch = '-'
     $headCommit = '-'
-    $gitStatus = if ($isGit) { 'Git' } else { 'Non-Git' }
     $dirtyState = 'clean'
     $aheadBehind = 'synced'
     $hasUnpushed = $false
     
     if ($isGit) {
         try {
-            $b = (git -C $DirectoryPath branch --show-current 2>$null)
-            if ($b) { $branch = $b.Trim() }
-            
-            $h = (git -C $DirectoryPath rev-parse --short HEAD 2>$null)
-            if ($h) { $headCommit = $h.Trim() }
-            
+            $branch = (git -C $DirectoryPath rev-parse --abbrev-ref HEAD 2>$null)
+            $headCommit = (git -C $DirectoryPath rev-parse --short HEAD 2>$null)
             $statusLines = @(git -C $DirectoryPath status --porcelain 2>$null)
             if ($statusLines.Count -gt 0) {
                 $dirtyState = "modified ($($statusLines.Count) files)"
@@ -161,7 +168,6 @@ function Get-RepoCMState {
         } catch { }
     }
     
-    # LCM Status & Absorption Check
     $lcmStatus = 'not-lcm'
     $absorbedVersion = $null
     $currentVersion = $null
@@ -177,22 +183,10 @@ function Get-RepoCMState {
         $lcmStatus = 'governed'
         try {
             $cfg = Get-Content -Path $lcmConfigFile -Raw | ConvertFrom-Json
-            if ($cfg.governance -and $cfg.governance.lcm_version) {
-                $currentVersion = [string]$cfg.governance.lcm_version
-            } elseif ($cfg.lcm_version) {
-                $currentVersion = [string]$cfg.lcm_version
-            }
-            
-            if ($cfg.governance -and $cfg.governance.absorbed_lcm_version) {
-                $absorbedVersion = [string]$cfg.governance.absorbed_lcm_version
-            } elseif ($cfg.absorbed_lcm_version) {
-                $absorbedVersion = [string]$cfg.absorbed_lcm_version
-            } else {
-                $absorbedVersion = $currentVersion
-            }
+            $currentVersion = if ($cfg.governance.lcm_version) { [string]$cfg.governance.lcm_version } else { [string]$cfg.lcm_version }
+            $absorbedVersion = if ($cfg.governance.absorbed_lcm_version) { [string]$cfg.governance.absorbed_lcm_version } else { if ($cfg.absorbed_lcm_version) { [string]$cfg.absorbed_lcm_version } else { $currentVersion } }
         } catch { }
         
-        # Junction verification
         $agentJunction = Join-Path $DirectoryPath '.agents\rules\core'
         $copilotJunction = Join-Path $DirectoryPath '.copilot\Rules\core'
         if ((-not (Test-Path $agentJunction)) -or (-not (Test-Path $copilotJunction))) {
@@ -204,37 +198,36 @@ function Get-RepoCMState {
         }
     }
     
-    # Elevation Requirement Detection (Config or Static Code Scan)
     $elevationRequired = $false
     $elevationReason = ''
     $minPrivilege = 'User'
+    $elevationDetermined = $false
     
     if (Test-Path $lcmConfigFile) {
         try {
             $cfg = Get-Content -Path $lcmConfigFile -Raw | ConvertFrom-Json
-            if ($cfg.execution_context -and $cfg.execution_context.elevation_required -eq $true) {
-                $elevationRequired = $true
-                $minPrivilege = if ($cfg.execution_context.minimum_privilege) { [string]$cfg.execution_context.minimum_privilege } else { 'Administrator' }
+            if ($cfg.execution_context -and ($null -ne $cfg.execution_context.elevation_required)) {
+                $elevationRequired = [bool]$cfg.execution_context.elevation_required
+                $minPrivilege = if ($cfg.execution_context.minimum_privilege) { [string]$cfg.execution_context.minimum_privilege } else { if ($elevationRequired) { 'Administrator' } else { 'User' } }
                 $elevationReason = if ($cfg.execution_context.reason) { [string]$cfg.execution_context.reason } else { 'Configured in .lcm/config.json' }
+                $elevationDetermined = $true
             }
         } catch { }
     }
     
-    # Static code inspection fallback for privileged patterns
-    if (-not $elevationRequired) {
+    if (-not $elevationDetermined -and $CachedRepoState -and ($null -ne $CachedRepoState.ElevationRequired)) {
+        $elevationRequired = [bool]$CachedRepoState.ElevationRequired
+        $minPrivilege = if ($CachedRepoState.MinimumPrivilege) { [string]$CachedRepoState.MinimumPrivilege } else { if ($elevationRequired) { 'Administrator' } else { 'User' } }
+        $elevationReason = if ($CachedRepoState.ElevationReason) { [string]$CachedRepoState.ElevationReason } else { 'Known in Workspace_Inventory' }
+        $elevationDetermined = $true
+    }
+    
+    if (-not $elevationDetermined) {
         $srcDir = Join-Path $DirectoryPath 'src'
         if (-not (Test-Path $srcDir)) { $srcDir = Join-Path $DirectoryPath 'Source' }
         if (-not (Test-Path $srcDir)) { $srcDir = $DirectoryPath }
         
-        $privilegedPatterns = @(
-            'bcdedit',
-            'fltmc',
-            'fsutil\s+fsinfo',
-            'DiskPart',
-            'Start-Process.*-Verb\s+RunAs',
-            'Get-Partition\b',
-            'Add-BitLockerKeyProtector'
-        )
+        $privilegedPatterns = @('bcdedit', 'fltmc', 'fsutil\s+fsinfo', 'DiskPart', 'Start-Process.*-Verb\s+RunAs', 'Get-Partition\b', 'Add-BitLockerKeyProtector')
         $codeFiles = Get-ChildItem -Path $srcDir -Include '*.ps1', '*.psm1', '*.cs', '*.cpp' -Recurse -File -ErrorAction SilentlyContinue | Where-Object { $_.FullName -notmatch '\\\.git\\' }
         foreach ($cf in $codeFiles) {
             $text = Get-Content -Path $cf.FullName -Raw -ErrorAction SilentlyContinue
@@ -283,16 +276,29 @@ function Update-WorkspaceInventory {
     $aiState = Get-WorkspaceAIState
     $globalLCM = $aiState.GlobalLCMVersion
     
+    $invDir = Join-Path $WorkspaceRoot 'Workspace_Inventory\data'
+    $invPath = Join-Path $invDir 'inventory.json'
+    $cachedRepos = @{}
+    if (Test-Path $invPath) {
+        try {
+            $existingInv = Get-Content -Path $invPath -Raw | ConvertFrom-Json
+            if ($existingInv.repositories) {
+                foreach ($r in $existingInv.repositories) {
+                    $cachedRepos[$r.RepositoryName] = $r
+                }
+            }
+        } catch { }
+    }
+    
     $childDirs = Get-ChildItem -Path $WorkspaceRoot -Directory | Sort-Object Name
     $results = @()
     
     foreach ($dir in $childDirs) {
-        $repoState = Get-RepoCMState -DirectoryPath $dir.FullName -GlobalLCMVersion $globalLCM
+        $cached = if ($cachedRepos.ContainsKey($dir.Name)) { $cachedRepos[$dir.Name] } else { $null }
+        $repoState = Get-RepoCMState -DirectoryPath $dir.FullName -GlobalLCMVersion $globalLCM -CachedRepoState $cached
         $results += $repoState
     }
     
-    # Save JSON database
-    $invDir = Join-Path $WorkspaceRoot 'Workspace_Inventory\data'
     if (-not (Test-Path $invDir)) {
         New-Item -ItemType Directory -Path $invDir -Force | Out-Null
     }
