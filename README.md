@@ -73,16 +73,36 @@ graph TB
 # Check workspace for configuration drift (dirty repos, outdated LCM, broken junctions)
 .\tools\Test-WorkspaceDrift.ps1
 
+# Launch isolated Beyond Compare 5 visual comparison against baseline
+.\tools\Invoke-BeyondCompareReview.ps1 -RepositoryName "BootEntryManager"
+
+# Record formal review outcome (Accepted, AcceptedWithEdits, Rejected, Deferred)
+.\tools\Submit-ReviewResult.ps1 -RepositoryPath "BootEntryManager"
+# (Or using the root alias: .\RR.ps1 BootEntryManager)
+
 # Upgrade a target repository to the latest LCM baseline
 .\tools\Invoke-LCMUpdate.ps1 -TargetRepository "VolumeInventory"
 
 # Snapshot a new configuration management baseline
-.\tools\New-WorkspaceBaseline.ps1 -BaselineId "BASELINE-v4.1.0"
+.\tools\New-WorkspaceBaseline.ps1 -BaselineId "BASELINE-v4.2.0"
 ```
 
 ---
 
-## 4. Directory Layout
+## 4. Beyond Compare 5 Integration ("RR" Command)
+
+You can wire the **`RR`** review result command directly into Beyond Compare 5 so you can record acceptance without leaving the diff window:
+
+1. In Beyond Compare 5, navigate to **Tools** ➔ **Options** ➔ **Open With**.
+2. Click **Add...** and configure:
+   * **Description**: `LCM Review Result (RR)`
+   * **Command**: `pwsh.exe -ExecutionPolicy Bypass -NoExit -File D:\Git_Repositories\RR.ps1 %p`
+   * **Shortcut**: `Ctrl+Shift+R` (or your choice)
+3. Now, while reviewing in Beyond Compare, pressing the shortcut opens the interactive review outcome menu directly.
+
+---
+
+## 5. Directory Layout
 
 * `data/` - Machine-readable CM databases (`inventory.json`, `change_requests.json`, `baselines/`).
 * `docs/` - Human-readable documentation, policies, and generated dashboards (`INVENTORY_DASHBOARD.md`).
