@@ -1,13 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Workspace Repository Inventory & CM State",
-  "generated_at": "2026-08-16T17:33:08.3841650+02:00",
+  "generated_at": "2026-08-16T17:34:15.6221328+02:00",
   "workspace_ai_baseline": {
     "Status": "Active",
     "GlobalLCMVersion": "4.3.0",
     "LifecycleState": "Governed",
     "Branch": "main",
-    "HeadCommit": "485c031",
+    "HeadCommit": "1f61285",
     "Path": "D:\\Git_Repositories\\Workspace_AI"
   },
   "total_directories": 34,
@@ -16,7 +16,7 @@
   "candidate_count": 0,
   "standard_git_count": 10,
   "non_git_count": 10,
-  "elevation_required_count": 12,
+  "elevation_required_count": 7,
   "repositories": [
     {
       "RepositoryName": ".agents",
@@ -35,7 +35,7 @@
       "MinimumPrivilege": "User",
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-16 17:33:04"
+      "LastAuditTimestamp": "2026-08-16 17:34:11"
     },
     {
       "RepositoryName": ".copilot",
@@ -54,7 +54,7 @@
       "MinimumPrivilege": "User",
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-16 17:33:04"
+      "LastAuditTimestamp": "2026-08-16 17:34:11"
     },
     {
       "RepositoryName": ".github",
@@ -73,7 +73,7 @@
       "MinimumPrivilege": "User",
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-16 17:33:04"
+      "LastAuditTimestamp": "2026-08-16 17:34:11"
     },
     {
       "RepositoryName": ".venv",
@@ -92,7 +92,7 @@
       "MinimumPrivilege": "User",
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-16 17:33:04"
+      "LastAuditTimestamp": "2026-08-16 17:34:11"
     },
     {
       "RepositoryName": ".vscode",
@@ -111,7 +111,7 @@
       "MinimumPrivilege": "User",
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-16 17:33:04"
+      "LastAuditTimestamp": "2026-08-16 17:34:11"
     },
     {
       "RepositoryName": "AuthorizeMasterUser",
@@ -130,7 +130,7 @@
       "MinimumPrivilege": "Administrator",
       "ElevationReason": "Auto-detected privileged pattern 'Start-Process.*-Verb\\s+RunAs' in ACL-Check-NoElev.ps1",
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-16 17:33:04"
+      "LastAuditTimestamp": "2026-08-16 17:34:11"
     },
     {
       "RepositoryName": "BackgroundModifier",
@@ -138,18 +138,18 @@
       "Classification": "lcm-governed",
       "GitStatus": "Git",
       "Branch": "main",
-      "HeadCommit": "b0072ad",
+      "HeadCommit": "64bae74",
       "DirtyState": "clean",
       "AheadBehind": "synced",
       "HasUnpushed": false,
       "LCMStatus": "outdated",
       "AbsorbedLCMVersion": null,
       "CurrentLCMVersion": "4.2.0",
-      "ElevationRequired": true,
-      "MinimumPrivilege": "Administrator",
-      "ElevationReason": "Requires low-level access to system registry and desktop background rendering APIs",
+      "ElevationRequired": false,
+      "MinimumPrivilege": "User",
+      "ElevationReason": "Standard user execution",
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-16 17:33:04"
+      "LastAuditTimestamp": "2026-08-16 17:34:11"
     },
     {
       "RepositoryName": "BGMSAMVInv",
@@ -157,18 +157,18 @@
       "Classification": "lcm-governed",
       "GitStatus": "Git",
       "Branch": "main",
-      "HeadCommit": "0efb29a",
+      "HeadCommit": "7c175fe",
       "DirtyState": "clean",
       "AheadBehind": "synced",
       "HasUnpushed": false,
       "LCMStatus": "outdated",
       "AbsorbedLCMVersion": null,
       "CurrentLCMVersion": "4.2.0",
-      "ElevationRequired": true,
-      "MinimumPrivilege": "Administrator",
-      "ElevationReason": "Requires low-level access to VolumeInventory storage layout, S.M.A.R.T. sensors, and network interfaces",
+      "ElevationRequired": false,
+      "MinimumPrivilege": "User",
+      "ElevationReason": "Standard user execution",
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-16 17:33:04"
+      "LastAuditTimestamp": "2026-08-16 17:34:11"
     },
     {
       "RepositoryName": "BootEntryManager",
@@ -176,18 +176,18 @@
       "Classification": "lcm-governed",
       "GitStatus": "Git",
       "Branch": "main",
-      "HeadCommit": "e2fd8f6",
+      "HeadCommit": "1c42769",
       "DirtyState": "clean",
       "AheadBehind": "synced",
       "HasUnpushed": false,
       "LCMStatus": "outdated",
       "AbsorbedLCMVersion": null,
       "CurrentLCMVersion": "4.2.0",
-      "ElevationRequired": true,
-      "MinimumPrivilege": "Administrator",
-      "ElevationReason": "Requires Administrator privileges to query and modify BCD boot manager entries via bcdedit",
+      "ElevationRequired": false,
+      "MinimumPrivilege": "User",
+      "ElevationReason": "Standard user execution",
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-16 17:33:04"
+      "LastAuditTimestamp": "2026-08-16 17:34:12"
     },
     {
       "RepositoryName": "BootOpsHub",
@@ -206,7 +206,7 @@
       "MinimumPrivilege": "Administrator",
       "ElevationReason": "Auto-detected privileged pattern 'bcdedit' in BootTools.psm1",
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-16 17:33:04"
+      "LastAuditTimestamp": "2026-08-16 17:34:12"
     },
     {
       "RepositoryName": "CommandHub",
@@ -225,7 +225,7 @@
       "MinimumPrivilege": "User",
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-16 17:33:04"
+      "LastAuditTimestamp": "2026-08-16 17:34:12"
     },
     {
       "RepositoryName": "DeviceInventory",
@@ -244,7 +244,7 @@
       "MinimumPrivilege": "User",
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-16 17:33:04"
+      "LastAuditTimestamp": "2026-08-16 17:34:12"
     },
     {
       "RepositoryName": "DiskAssignmentStatus",
@@ -263,7 +263,7 @@
       "MinimumPrivilege": "User",
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-16 17:33:05"
+      "LastAuditTimestamp": "2026-08-16 17:34:12"
     },
     {
       "RepositoryName": "DiskAssignmentStatus_AC",
@@ -282,7 +282,7 @@
       "MinimumPrivilege": "User",
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-16 17:33:05"
+      "LastAuditTimestamp": "2026-08-16 17:34:12"
     },
     {
       "RepositoryName": "DiskAssignmentStatus_S1",
@@ -301,7 +301,7 @@
       "MinimumPrivilege": "User",
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-16 17:33:05"
+      "LastAuditTimestamp": "2026-08-16 17:34:12"
     },
     {
       "RepositoryName": "EnvironmentTools",
@@ -320,7 +320,7 @@
       "MinimumPrivilege": "User",
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-16 17:33:05"
+      "LastAuditTimestamp": "2026-08-16 17:34:12"
     },
     {
       "RepositoryName": "FileUtilities",
@@ -339,7 +339,7 @@
       "MinimumPrivilege": "User",
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-16 17:33:05"
+      "LastAuditTimestamp": "2026-08-16 17:34:12"
     },
     {
       "RepositoryName": "GetRecoveryVolume",
@@ -358,7 +358,7 @@
       "MinimumPrivilege": "Administrator",
       "ElevationReason": "Auto-detected privileged pattern 'Get-Partition\\b' in Get-RecoveryVolume.ps1",
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-16 17:33:05"
+      "LastAuditTimestamp": "2026-08-16 17:34:12"
     },
     {
       "RepositoryName": "GitTools",
@@ -377,7 +377,7 @@
       "MinimumPrivilege": "User",
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-16 17:33:05"
+      "LastAuditTimestamp": "2026-08-16 17:34:12"
     },
     {
       "RepositoryName": "InstallFonts",
@@ -396,7 +396,7 @@
       "MinimumPrivilege": "User",
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-16 17:33:05"
+      "LastAuditTimestamp": "2026-08-16 17:34:12"
     },
     {
       "RepositoryName": "MacriumTemplateUpdater",
@@ -415,7 +415,7 @@
       "MinimumPrivilege": "User",
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-16 17:33:05"
+      "LastAuditTimestamp": "2026-08-16 17:34:13"
     },
     {
       "RepositoryName": "MSG file conversion",
@@ -434,7 +434,7 @@
       "MinimumPrivilege": "User",
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-16 17:33:05"
+      "LastAuditTimestamp": "2026-08-16 17:34:13"
     },
     {
       "RepositoryName": "NextBootTray",
@@ -453,7 +453,7 @@
       "MinimumPrivilege": "Administrator",
       "ElevationReason": "Auto-detected privileged pattern 'Start-Process.*-Verb\\s+RunAs' in Install-NextBootTray.ps1",
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-16 17:33:06"
+      "LastAuditTimestamp": "2026-08-16 17:34:13"
     },
     {
       "RepositoryName": "OutlookVBAConversion",
@@ -472,7 +472,7 @@
       "MinimumPrivilege": "User",
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-16 17:33:06"
+      "LastAuditTimestamp": "2026-08-16 17:34:13"
     },
     {
       "RepositoryName": "PowerBGInfo",
@@ -491,7 +491,7 @@
       "MinimumPrivilege": "Administrator",
       "ElevationReason": "Auto-detected privileged pattern 'Get-Partition\\b' in Run.BGInfo1.ps1",
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-16 17:33:06"
+      "LastAuditTimestamp": "2026-08-16 17:34:13"
     },
     {
       "RepositoryName": "ReEnableRadeonRx580",
@@ -510,7 +510,7 @@
       "MinimumPrivilege": "User",
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-16 17:33:06"
+      "LastAuditTimestamp": "2026-08-16 17:34:14"
     },
     {
       "RepositoryName": "SharedModules",
@@ -518,18 +518,18 @@
       "Classification": "lcm-governed",
       "GitStatus": "Git",
       "Branch": "main",
-      "HeadCommit": "f7bd3ab",
+      "HeadCommit": "1e030fb",
       "DirtyState": "clean",
       "AheadBehind": "synced",
       "HasUnpushed": false,
       "LCMStatus": "outdated",
       "AbsorbedLCMVersion": null,
       "CurrentLCMVersion": "4.2.0",
-      "ElevationRequired": true,
-      "MinimumPrivilege": "Administrator",
-      "ElevationReason": "VolumeAtoms and BcdAtoms query low-level volume serials, fltmc filters, and bcdedit store",
+      "ElevationRequired": false,
+      "MinimumPrivilege": "User",
+      "ElevationReason": "Standard user execution",
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-16 17:33:07"
+      "LastAuditTimestamp": "2026-08-16 17:34:14"
     },
     {
       "RepositoryName": "SystemConfiguration",
@@ -548,7 +548,7 @@
       "MinimumPrivilege": "Administrator",
       "ElevationReason": "Auto-detected privileged pattern 'Start-Process.*-Verb\\s+RunAs' in GoAdm.ps1",
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-16 17:33:07"
+      "LastAuditTimestamp": "2026-08-16 17:34:14"
     },
     {
       "RepositoryName": "TimeStamper",
@@ -567,7 +567,7 @@
       "MinimumPrivilege": "User",
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-16 17:33:07"
+      "LastAuditTimestamp": "2026-08-16 17:34:14"
     },
     {
       "RepositoryName": "VolumeInventory",
@@ -575,18 +575,18 @@
       "Classification": "lcm-governed",
       "GitStatus": "Git",
       "Branch": "main",
-      "HeadCommit": "41583a7",
+      "HeadCommit": "9c10deb",
       "DirtyState": "clean",
       "AheadBehind": "synced",
       "HasUnpushed": false,
       "LCMStatus": "outdated",
       "AbsorbedLCMVersion": null,
       "CurrentLCMVersion": "4.2.0",
-      "ElevationRequired": true,
-      "MinimumPrivilege": "Administrator",
-      "ElevationReason": "Requires low-level access to bcdedit, fltmc volumes, and storage IOCTLs",
+      "ElevationRequired": false,
+      "MinimumPrivilege": "User",
+      "ElevationReason": "Standard user execution",
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-16 17:33:07"
+      "LastAuditTimestamp": "2026-08-16 17:34:14"
     },
     {
       "RepositoryName": "Workspace_AC",
@@ -605,7 +605,7 @@
       "MinimumPrivilege": "User",
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-16 17:33:07"
+      "LastAuditTimestamp": "2026-08-16 17:34:14"
     },
     {
       "RepositoryName": "Workspace_AI",
@@ -613,8 +613,8 @@
       "Classification": "active-design-workshop",
       "GitStatus": "Git",
       "Branch": "main",
-      "HeadCommit": "485c031",
-      "DirtyState": "modified (7 files)",
+      "HeadCommit": "1f61285",
+      "DirtyState": "clean",
       "AheadBehind": "synced",
       "HasUnpushed": false,
       "LCMStatus": "governed",
@@ -624,7 +624,7 @@
       "MinimumPrivilege": "User",
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-16 17:33:07"
+      "LastAuditTimestamp": "2026-08-16 17:34:15"
     },
     {
       "RepositoryName": "Workspace_GC",
@@ -643,7 +643,7 @@
       "MinimumPrivilege": "User",
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-16 17:33:08"
+      "LastAuditTimestamp": "2026-08-16 17:34:15"
     },
     {
       "RepositoryName": "Workspace_Inventory",
@@ -651,8 +651,8 @@
       "Classification": "configuration-management",
       "GitStatus": "Git",
       "Branch": "main",
-      "HeadCommit": "1bc0372",
-      "DirtyState": "modified (4 files)",
+      "HeadCommit": "bfad22a",
+      "DirtyState": "clean",
       "AheadBehind": "synced",
       "HasUnpushed": false,
       "LCMStatus": "governed",
@@ -662,7 +662,7 @@
       "MinimumPrivilege": "Administrator",
       "ElevationReason": "Auto-detected privileged pattern 'bcdedit' in WorkspaceCM.psm1",
       "JunctionsHealthy": true,
-      "LastAuditTimestamp": "2026-08-16 17:33:08"
+      "LastAuditTimestamp": "2026-08-16 17:34:15"
     }
   ]
 }
