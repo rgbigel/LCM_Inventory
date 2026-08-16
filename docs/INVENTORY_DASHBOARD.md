@@ -1,7 +1,7 @@
 # Workspace Configuration Management (CM) Inventory Dashboard
 
 Module: docs/INVENTORY_DASHBOARD.md
-Generated: 2026-08-16 15:29:59
+Generated: 2026-08-16 15:41:46
 Global Baseline Version: **v4.2.0** (Source: Workspace_AI)
 
 ---
@@ -13,9 +13,9 @@ Global Baseline Version: **v4.2.0** (Source: Workspace_AI)
 | **Total Directories Audited** | **34** | All child directories under D:\Git_Repositories\ |
 | **Active Design Workshop** | **1** | Workspace_AI (v4.2.0) |
 | **CM Repository** | **1** | Workspace_Inventory |
-| **LCM Governed / Candidates** | **6** | Actively governed under LCM |
-| **Elevation Required Repositories** | **11** | Repositories requiring Administrator privileges |
-| **Standard Git Repositories** | **11** | Un-onboarded Git repos |
+| **LCM Governed / Candidates** | **7** | Actively governed under LCM |
+| **Elevation Required Repositories** | **12** | Repositories requiring Administrator privileges |
+| **Standard Git Repositories** | **10** | Un-onboarded Git repos |
 | **Non-Git Component Folders** | **10** | Non-Git folders (git.ignoredRepositories) |
 | **Retired Legacy Baselines** | **2** | Workspace_AC, Workspace_GC |
 
@@ -33,7 +33,7 @@ Global Baseline Version: **v4.2.0** (Source: Workspace_AI)
 | **`AuthorizeMasterUser`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | **Admin** | non-git |
 | **`BackgroundModifier`** | Git | `main` | `b0072ad` | modified (17 files) | **governed** | - | v4.2.0 | **Admin** | lcm-governed |
 | **`BGMSAMVInv`** | Git | `main` | `0efb29a` | modified (17 files) | **governed** | - | v4.2.0 | **Admin** | lcm-governed |
-| **`BootEntryManager`** | Git | `main` | `644ba40` | modified (1 files) | **governed** | - | v4.2.0 | **Admin** | lcm-governed |
+| **`BootEntryManager`** | Git | `main` | `489cc02` | clean | **governed** | - | v4.2.0 | **Admin** | lcm-governed |
 | **`BootOpsHub`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | **Admin** | non-git |
 | **`CommandHub`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | User | non-git |
 | **`DeviceInventory`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | User | non-git |
@@ -51,12 +51,12 @@ Global Baseline Version: **v4.2.0** (Source: Workspace_AI)
 | **`OutlookVBAConversion`** | Git | `HEAD` | `` | modified (19 files) | **not-lcm** | - | - | User | standard-git |
 | **`PowerBGInfo`** | Git | `HEAD` | `` | modified (16 files) | **not-lcm** | - | - | **Admin** | standard-git |
 | **`ReEnableRadeonRx580`** | Git | `HEAD` | `` | modified (3 files) | **not-lcm** | - | - | User | standard-git |
-| **`SharedModules`** | Git | `HEAD` | `` | modified (3 files) | **not-lcm** | - | - | User | standard-git |
+| **`SharedModules`** | Git | `main` | `2f72277` | clean | **governed** | - | v4.2.0 | **Admin** | lcm-governed |
 | **`SystemConfiguration`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | **Admin** | non-git |
 | **`TimeStamper`** | Git | `HEAD` | `` | modified (4 files) | **not-lcm** | - | - | User | standard-git |
-| **`VolumeInventory`** | Git | `main` | `5ec0323` | modified (17 files) | **governed** | - | v4.2.0 | **Admin** | lcm-governed |
+| **`VolumeInventory`** | Git | `main` | `195518b` | clean | **governed** | - | v4.2.0 | **Admin** | lcm-governed |
 | **`Workspace_AC`** | Git | `main` | `eb35191` | clean | **not-lcm** | - | - | User | legacy-retired |
 | **`Workspace_AI`** | Git | `main` | `14f0a7c` | modified (17 files) | **governed** | v4.2.0 | v4.2.0 | User | active-design-workshop |
 | **`Workspace_GC`** | Git | `main` | `5576337` | clean | **not-lcm** | - | - | User | legacy-retired |
-| **`Workspace_Inventory`** | Git | `main` | `84900fd` | modified (18 files) | **governed** | v4.2.0 | v4.2.0 | **Admin** | configuration-management |
+| **`Workspace_Inventory`** | Git | `main` | `5dd6959` | clean | **governed** | v4.2.0 | v4.2.0 | **Admin** | configuration-management |
 
