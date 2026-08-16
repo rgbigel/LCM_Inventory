@@ -8,7 +8,10 @@ param(
     [string]$Result,
 
     [Parameter(Mandatory = $false)]
-    [string]$Notes
+    [string]$Notes,
+
+    [Parameter(Mandatory = $false)]
+    [switch]$Force
 )
 
 <#
