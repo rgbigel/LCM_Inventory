@@ -70,7 +70,7 @@ function Get-WorkspaceAIState {
         }
     }
     
-    $lcmVersion = '4.2.0'
+    $lcmVersion = '4.3.0'
     $reqDoc = Join-Path $WorkspacePath 'docs\Requirements.md'
     if (Test-Path $reqDoc) {
         $match = Select-String -Path $reqDoc -Pattern '^Version:\s*(\S+)' | Select-Object -First 1
