@@ -70,10 +70,10 @@ function Get-WorkspaceAIState {
         }
     }
     
-    $lcmVersion = '4.1.0'
-    $invDoc = Join-Path $WorkspacePath 'docs\LCM-Repository-Inventory.md'
-    if (Test-Path $invDoc) {
-        $match = Select-String -Path $invDoc -Pattern '^Version:\s*(\S+)' | Select-Object -First 1
+    $lcmVersion = '4.2.0'
+    $reqDoc = Join-Path $WorkspacePath 'docs\Requirements.md'
+    if (Test-Path $reqDoc) {
+        $match = Select-String -Path $reqDoc -Pattern '^Version:\s*(\S+)' | Select-Object -First 1
         if ($match -and $match.Matches.Groups.Count -gt 1) {
             $lcmVersion = $match.Matches.Groups[1].Value
         }
@@ -83,15 +83,17 @@ function Get-WorkspaceAIState {
     $headSha = 'unknown'
     if (Test-Path (Join-Path $WorkspacePath '.git')) {
         try {
-            $gitBranch = (git -C $WorkspacePath branch --show-current 2>$null).Trim()
-            $headSha = (git -C $WorkspacePath rev-parse --short HEAD 2>$null).Trim()
+            $b = (git -C $WorkspacePath branch --show-current 2>$null)
+            if ($b) { $gitBranch = $b.Trim() }
+            $h = (git -C $WorkspacePath rev-parse --short HEAD 2>$null)
+            if ($h) { $headSha = $h.Trim() }
         } catch { }
     }
     
     return [PSCustomObject]@{
         Status = 'Active'
-        LifecycleState = 'State1_ActiveWorkshop'
         GlobalLCMVersion = $lcmVersion
+        LifecycleState = 'Governed'
         Branch = $gitBranch
         HeadCommit = $headSha
         Path = $WorkspacePath
@@ -109,7 +111,6 @@ function Get-RepoClassification {
     $isGit = Test-Path (Join-Path $DirectoryPath '.git')
     
     # Classifications
-    $classification = 'standard-git'
     $retiredList = @('Workspace_AC', 'Workspace_GC')
     $parentInfraList = @('.agents', '.copilot', '.github', '.venv', '.vscode')
     $nonGitIgnored = @('AuthorizeMasterUser', 'BootOpsHub', 'CommandHub', 'DeviceInventory',
@@ -130,7 +131,7 @@ function Get-RepoCMState {
         [string]$DirectoryPath,
         
         [Parameter(Mandatory=$false)]
-        [string]$GlobalLCMVersion = '4.1.0',
+        [string]$GlobalLCMVersion = '4.2.0',
         
         [Parameter(Mandatory=$false)]
         [PSCustomObject]$CachedRepoState = $null
