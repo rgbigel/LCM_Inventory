@@ -78,7 +78,7 @@ if (Test-Path -LiteralPath $tempReviewRoot) {
 }
 New-Item -ItemType Directory -Path $tempReviewRoot -Force | Out-Null
 
-Write-Host "Exporting baseline commit [$commitSha: $commitMsg] to temp review directory..." -ForegroundColor Cyan
+Write-Host "Exporting baseline commit [${commitSha}: ${commitMsg}] to temp review directory..." -ForegroundColor Cyan
 
 # Export git archive of the base commit
 $tarPath = Join-Path $env:TEMP "BC_Review_$repoName-$commitSha.tar"
