@@ -1,7 +1,7 @@
 # Workspace Configuration Management (CM) Inventory Dashboard
 
 Module: docs/INVENTORY_DASHBOARD.md
-Generated: 2026-08-15 23:56:46
+Generated: 2026-08-16 12:12:08
 Global Baseline Version: **v4.1.0** (Source: Workspace_AI)
 
 ---
@@ -10,10 +10,10 @@ Global Baseline Version: **v4.1.0** (Source: Workspace_AI)
 
 | Metric | Count | Description |
 | :--- | :---: | :--- |
-| **Total Directories Audited** | **34** | All child directories under D:\Git_Repositories\ |
+| **Total Directories Audited** | **35** | All child directories under D:\Git_Repositories\ |
 | **Active Design Workshop** | **1** | Workspace_AI (v4.1.0) |
 | **CM Repository** | **1** | Workspace_Inventory |
-| **LCM Governed / Candidates** | **3** | Actively governed under LCM |
+| **LCM Governed / Candidates** | **4** | Actively governed under LCM |
 | **Standard Git Repositories** | **14** | Un-onboarded Git repos |
 | **Non-Git Component Folders** | **10** | Non-Git folders (git.ignoredRepositories) |
 | **Retired Legacy Baselines** | **2** | Workspace_AC, Workspace_GC |
@@ -30,8 +30,9 @@ Global Baseline Version: **v4.1.0** (Source: Workspace_AI)
 | **`.venv`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | parent-infra |
 | **`.vscode`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | parent-infra |
 | **`AuthorizeMasterUser`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | non-git |
-| **`BackgroundModifier`** | Git | `main` | `-` | modified (14 files) | **not-lcm** | - | - | standard-git |
+| **`BackgroundModifier`** | Git | `main` | `1d4bf5a` | modified (1 files) | **not-lcm** | - | - | standard-git |
 | **`BackgroundModifier_AC`** | Git | `main` | `-` | modified (14 files) | **not-lcm** | - | - | standard-git |
+| **`BGMSAMVInv`** | Git | `main` | `532840f` | clean | **governed** | - | v4.1.0 | lcm-governed |
 | **`BootEntryManager`** | Git | `main` | `-` | modified (5 files) | **not-lcm** | - | - | standard-git |
 | **`BootOpsHub`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | non-git |
 | **`CommandHub`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | non-git |
@@ -57,5 +58,5 @@ Global Baseline Version: **v4.1.0** (Source: Workspace_AI)
 | **`Workspace_AC`** | Git | `main` | `eb35191` | clean | **not-lcm** | - | - | legacy-retired |
 | **`Workspace_AI`** | Git | `main` | `87b59ae` | clean | **governed** | v4.1.0 | v4.1.0 | active-design-workshop |
 | **`Workspace_GC`** | Git | `main` | `5576337` | clean | **not-lcm** | - | - | legacy-retired |
-| **`Workspace_Inventory`** | Git | `main` | `dc6f0ed` | modified (4 files) | **governed** | v4.1.0 | v4.1.0 | configuration-management |
+| **`Workspace_Inventory`** | Git | `main` | `c3fad54` | modified (3 files) | **governed** | v4.1.0 | v4.1.0 | configuration-management |
 
