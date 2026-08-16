@@ -1,7 +1,7 @@
 # Workspace Configuration Management (CM) Inventory Dashboard
 
 Module: docs/INVENTORY_DASHBOARD.md
-Generated: 2026-08-16 13:45:08
+Generated: 2026-08-16 13:52:21
 Global Baseline Version: **v4.1.0** (Source: Workspace_AI)
 
 ---
@@ -14,7 +14,7 @@ Global Baseline Version: **v4.1.0** (Source: Workspace_AI)
 | **Active Design Workshop** | **1** | Workspace_AI (v4.1.0) |
 | **CM Repository** | **1** | Workspace_Inventory |
 | **LCM Governed / Candidates** | **5** | Actively governed under LCM |
-| **Elevation Required Repositories** | **10** | Repositories requiring Administrator privileges |
+| **Elevation Required Repositories** | **11** | Repositories requiring Administrator privileges |
 | **Standard Git Repositories** | **12** | Un-onboarded Git repos |
 | **Non-Git Component Folders** | **10** | Non-Git folders (git.ignoredRepositories) |
 | **Retired Legacy Baselines** | **2** | Workspace_AC, Workspace_GC |
@@ -31,8 +31,8 @@ Global Baseline Version: **v4.1.0** (Source: Workspace_AI)
 | **`.venv`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | User | parent-infra |
 | **`.vscode`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | User | parent-infra |
 | **`AuthorizeMasterUser`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | **Admin** | non-git |
-| **`BackgroundModifier`** | Git | `main` | `61dabef` | modified (1 files) | **governed** | - | v4.1.0 | **Admin** | lcm-governed |
-| **`BGMSAMVInv`** | Git | `main` | `532840f` | clean | **governed** | - | v4.1.0 | User | lcm-governed |
+| **`BackgroundModifier`** | Git | `main` | `61dabef` | modified (7 files) | **governed** | - | v4.1.0 | **Admin** | lcm-governed |
+| **`BGMSAMVInv`** | Git | `main` | `532840f` | modified (6 files) | **governed** | - | v4.1.0 | **Admin** | lcm-governed |
 | **`BootEntryManager`** | Git | `HEAD` | `` | modified (5 files) | **not-lcm** | - | - | **Admin** | standard-git |
 | **`BootOpsHub`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | **Admin** | non-git |
 | **`CommandHub`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | User | non-git |
@@ -54,9 +54,9 @@ Global Baseline Version: **v4.1.0** (Source: Workspace_AI)
 | **`SharedModules`** | Git | `HEAD` | `` | modified (3 files) | **not-lcm** | - | - | User | standard-git |
 | **`SystemConfiguration`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | **Admin** | non-git |
 | **`TimeStamper`** | Git | `HEAD` | `` | modified (4 files) | **not-lcm** | - | - | User | standard-git |
-| **`VolumeInventory`** | Git | `main` | `4cf8312` | modified (1 files) | **governed** | - | v4.1.0 | **Admin** | lcm-governed |
+| **`VolumeInventory`** | Git | `main` | `4da7fbb` | modified (3 files) | **governed** | - | v4.1.0 | **Admin** | lcm-governed |
 | **`Workspace_AC`** | Git | `main` | `eb35191` | clean | **not-lcm** | - | - | User | legacy-retired |
-| **`Workspace_AI`** | Git | `main` | `cc0d5ef` | modified (1 files) | **governed** | v4.1.0 | v4.1.0 | User | active-design-workshop |
+| **`Workspace_AI`** | Git | `main` | `0bd7303` | modified (8 files) | **governed** | v4.1.0 | v4.1.0 | User | active-design-workshop |
 | **`Workspace_GC`** | Git | `main` | `5576337` | clean | **not-lcm** | - | - | User | legacy-retired |
-| **`Workspace_Inventory`** | Git | `main` | `733f43d` | modified (1 files) | **governed** | v4.1.0 | v4.1.0 | **Admin** | configuration-management |
+| **`Workspace_Inventory`** | Git | `main` | `ad6f1fd` | modified (2 files) | **governed** | v4.1.0 | v4.1.0 | **Admin** | configuration-management |
 
