@@ -1,7 +1,7 @@
 # Master Change Request (CR) & Bundle Index
 
 Module: docs/CHANGE_REQUEST_INDEX.md
-Updated: 2026-08-16 12:10:58
+Updated: 2026-08-16 13:22:10
 Storage Architecture: **NTFS Junction Mirrored (1 File per CR)**
 Total Tracked CRs: **16** | Bundles: **2**
 
@@ -34,6 +34,6 @@ Total Tracked CRs: **16** | Bundles: **2**
 | **`CR-2026-011`** | `Workspace_Inventory` | `BUNDLE-2026-02` | Establish Workspace_Inventory as authoritative CM system | **implemented** | v4.1.0 | Rolf | 2026-08-15 |
 | **`CR-20260815_231129`** | `VolumeInventory` | - | Upgrade VolumeInventory to LCM Version 4.1.0 | **implemented** | v4.1.0 | Rolf | 2026-08-15 23:11:29 |
 | **`CR-20260815_233413`** | `BootEntryManager` | - | Upgrade BootEntryManager to LCM Version 4.1.0 | **proposed** | v4.1.0 | Rolf | 2026-08-15 23:34:13 |
-| **`CR-20260816_121058`** | `BackgroundModifier` | - | Upgrade BackgroundModifier to LCM Version 4.1.0 | **proposed** | v4.1.0 | Rolf | 2026-08-16 12:10:58 |
+| **`CR-20260816_121058`** | `BackgroundModifier` | - | Upgrade BackgroundModifier to LCM Version 4.1.0 | **implemented** | v4.1.0 | Rolf | 2026-08-16 12:10:58 |
 | **`README`** | `Unknown` | - | README | **proposed** | v4.1.0 | Rolf | 2026-08-13 |
 
