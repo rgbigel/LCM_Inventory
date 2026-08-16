@@ -204,6 +204,54 @@ function Get-RepoCMState {
         }
     }
     
+    # Elevation Requirement Detection (Config or Static Code Scan)
+    $elevationRequired = $false
+    $elevationReason = ''
+    $minPrivilege = 'User'
+    
+    if (Test-Path $lcmConfigFile) {
+        try {
+            $cfg = Get-Content -Path $lcmConfigFile -Raw | ConvertFrom-Json
+            if ($cfg.execution_context -and $cfg.execution_context.elevation_required -eq $true) {
+                $elevationRequired = $true
+                $minPrivilege = if ($cfg.execution_context.minimum_privilege) { [string]$cfg.execution_context.minimum_privilege } else { 'Administrator' }
+                $elevationReason = if ($cfg.execution_context.reason) { [string]$cfg.execution_context.reason } else { 'Configured in .lcm/config.json' }
+            }
+        } catch { }
+    }
+    
+    # Static code inspection fallback for privileged patterns
+    if (-not $elevationRequired) {
+        $srcDir = Join-Path $DirectoryPath 'src'
+        if (-not (Test-Path $srcDir)) { $srcDir = Join-Path $DirectoryPath 'Source' }
+        if (-not (Test-Path $srcDir)) { $srcDir = $DirectoryPath }
+        
+        $privilegedPatterns = @(
+            'bcdedit',
+            'fltmc',
+            'fsutil\s+fsinfo',
+            'DiskPart',
+            'Start-Process.*-Verb\s+RunAs',
+            'Get-Partition\b',
+            'Add-BitLockerKeyProtector'
+        )
+        $codeFiles = Get-ChildItem -Path $srcDir -Include '*.ps1', '*.psm1', '*.cs', '*.cpp' -Recurse -File -ErrorAction SilentlyContinue | Where-Object { $_.FullName -notmatch '\\\.git\\' }
+        foreach ($cf in $codeFiles) {
+            $text = Get-Content -Path $cf.FullName -Raw -ErrorAction SilentlyContinue
+            if ($text) {
+                foreach ($pattern in $privilegedPatterns) {
+                    if ($text -match "(?im)$pattern") {
+                        $elevationRequired = $true
+                        $minPrivilege = 'Administrator'
+                        $elevationReason = "Auto-detected privileged pattern '$pattern' in $($cf.Name)"
+                        break
+                    }
+                }
+            }
+            if ($elevationRequired) { break }
+        }
+    }
+    
     return [PSCustomObject]@{
         RepositoryName        = $repoName
         Path                  = $DirectoryPath
@@ -217,6 +265,9 @@ function Get-RepoCMState {
         LCMStatus             = $lcmStatus
         AbsorbedLCMVersion    = $absorbedVersion
         CurrentLCMVersion     = $currentVersion
+        ElevationRequired     = $elevationRequired
+        MinimumPrivilege      = $minPrivilege
+        ElevationReason       = $elevationReason
         JunctionsHealthy      = $junctionsHealthy
         LastAuditTimestamp    = (Get-Date).ToString('yyyy-MM-dd HH:mm:ss')
     }
@@ -257,6 +308,7 @@ function Update-WorkspaceInventory {
         candidate_count       = @($results | Where-Object { $_.LCMStatus -eq 'candidate' }).Count
         standard_git_count    = @($results | Where-Object { $_.Classification -eq 'standard-git' }).Count
         non_git_count         = @($results | Where-Object { $_.Classification -eq 'non-git' }).Count
+        elevation_required_count = @($results | Where-Object { $_.ElevationRequired -eq $true }).Count
         repositories          = $results
     }
     
@@ -274,6 +326,7 @@ function Update-WorkspaceInventory {
     $govCandCount = @($results | Where-Object { $_.LCMStatus -in @('governed', 'candidate') }).Count
     $stdGitCount = @($results | Where-Object { $_.Classification -eq 'standard-git' }).Count
     $nonGitCount = @($results | Where-Object { $_.Classification -eq 'non-git' }).Count
+    $elevCount = @($results | Where-Object { $_.ElevationRequired -eq $true }).Count
 
     $sb = [System.Text.StringBuilder]::new()
     [void]$sb.AppendLine('# Workspace Configuration Management (CM) Inventory Dashboard')
@@ -292,6 +345,7 @@ function Update-WorkspaceInventory {
     [void]$sb.AppendLine("| **Active Design Workshop** | **1** | `Workspace_AI` (v$globalLCM) |")
     [void]$sb.AppendLine("| **CM Repository** | **1** | `Workspace_Inventory` |")
     [void]$sb.AppendLine("| **LCM Governed / Candidates** | **$govCandCount** | Actively governed under LCM |")
+    [void]$sb.AppendLine("| **Elevation Required Repositories** | **$elevCount** | Repositories requiring Administrator privileges |")
     [void]$sb.AppendLine("| **Standard Git Repositories** | **$stdGitCount** | Un-onboarded Git repos |")
     [void]$sb.AppendLine("| **Non-Git Component Folders** | **$nonGitCount** | Non-Git folders (`git.ignoredRepositories`) |")
     [void]$sb.AppendLine("| **Retired Legacy Baselines** | **2** | `Workspace_AC`, `Workspace_GC` |")
@@ -300,8 +354,8 @@ function Update-WorkspaceInventory {
     [void]$sb.AppendLine('')
     [void]$sb.AppendLine('## 2. Comprehensive Repository CM Matrix')
     [void]$sb.AppendLine('')
-    [void]$sb.AppendLine('| Repository Name | Git Status | Branch | HEAD SHA | Working Copy | LCM Status | Absorbed Ver | Current Ver | Classification |')
-    [void]$sb.AppendLine('| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |')
+    [void]$sb.AppendLine('| Repository Name | Git Status | Branch | HEAD SHA | Working Copy | LCM Status | Absorbed Ver | Current Ver | Elevation | Classification |')
+    [void]$sb.AppendLine('| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |')
     
     foreach ($r in $results) {
         $absVer = if ($r.AbsorbedLCMVersion) { "v$($r.AbsorbedLCMVersion)" } else { '-' }
@@ -313,7 +367,8 @@ function Update-WorkspaceInventory {
         $rLcm = $r.LCMStatus
         $rClass = $r.Classification
         $rGit = $r.GitStatus
-        [void]$sb.AppendLine("| **$codeName** | $rGit | $codeBranch | $codeHead | $rDirty | **$rLcm** | $absVer | $curVer | $rClass |")
+        $rElev = if ($r.ElevationRequired) { "**Admin**" } else { "User" }
+        [void]$sb.AppendLine("| **$codeName** | $rGit | $codeBranch | $codeHead | $rDirty | **$rLcm** | $absVer | $curVer | $rElev | $rClass |")
     }
     
     $dashPath = Join-Path $dashDir 'INVENTORY_DASHBOARD.md'
