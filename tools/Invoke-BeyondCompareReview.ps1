@@ -78,7 +78,7 @@ if (Test-Path -LiteralPath $tempReviewRoot) {
 }
 New-Item -ItemType Directory -Path $tempReviewRoot -Force | Out-Null
 
-Write-Host "Exporting baseline commit [${commitSha}: ${commitMsg}] to temp review directory..." -ForegroundColor Cyan
+Write-Host ("Exporting baseline commit [{0}: {1}] to temp review directory..." -f $commitSha, $commitMsg) -ForegroundColor Cyan
 
 # Export git archive of the base commit
 $tarPath = Join-Path $env:TEMP "BC_Review_$repoName-$commitSha.tar"
@@ -87,7 +87,7 @@ tar -xf $tarPath -C $tempReviewRoot
 Remove-Item -LiteralPath $tarPath -Force -ErrorAction SilentlyContinue
 
 Write-Host "Launching Beyond Compare 5..." -ForegroundColor Green
-Write-Host "  Left (Baseline $commitSha): $tempReviewRoot"
-Write-Host "  Right (Current Live):       $repoPath"
+Write-Host ("  Left (Baseline {0}): {1}" -f $commitSha, $tempReviewRoot)
+Write-Host ("  Right (Current Live):       {0}" -f $repoPath)
 
 Start-Process -FilePath $BeyondComparePath -ArgumentList "`"$tempReviewRoot`"", "`"$repoPath`"" -NoNewWindow
