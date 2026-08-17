@@ -1,7 +1,7 @@
 # Workspace Configuration Management (CM) Inventory Dashboard
 
 Module: docs/INVENTORY_DASHBOARD.md
-Generated: 2026-08-16 18:28:48
+Generated: 2026-08-17 20:48:45
 Global Baseline Version: **v4.3.0** (Source: Workspace_AI)
 
 ---
@@ -10,13 +10,13 @@ Global Baseline Version: **v4.3.0** (Source: Workspace_AI)
 
 | Metric | Count | Description |
 | :--- | :---: | :--- |
-| **Total Directories Audited** | **31** | All child directories under D:\Git_Repositories\ |
+| **Total Directories Audited** | **33** | All child directories under D:\Git_Repositories\ |
 | **Active Design Workshop** | **1** | Workspace_AI (v4.3.0) |
 | **CM Repository** | **1** | Workspace_Inventory |
 | **LCM Governed / Candidates** | **3** | Actively governed under LCM |
 | **Elevation Required Repositories** | **8** | Repositories requiring Administrator privileges |
 | **Standard Git Repositories** | **10** | Un-onboarded Git repos |
-| **Non-Git Component Folders** | **9** | Non-Git folders (git.ignoredRepositories) |
+| **Non-Git Component Folders** | **11** | Non-Git folders (git.ignoredRepositories) |
 | **Retired Legacy Baselines** | **2** | Workspace_AC, Workspace_GC |
 
 ---
@@ -39,10 +39,12 @@ Global Baseline Version: **v4.3.0** (Source: Workspace_AI)
 | **`DeviceInventory`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | User | non-git |
 | **`DiskAssignmentStatus`** | Git | `DocPhase` | `f6dcc42` | modified (46 files) | **not-lcm** | - | - | User | standard-git |
 | **`DiskAssignmentStatus_S1`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | User | non-git |
+| **`docs`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | User | non-git |
 | **`EnvironmentTools`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | User | non-git |
 | **`FileUtilities`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | User | non-git |
 | **`GetRecoveryVolume`** | Git | `HEAD` | `` | modified (3 files) | **not-lcm** | - | - | **Admin** | standard-git |
 | **`GitTools`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | User | non-git |
+| **`HaSSD06`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | User | non-git |
 | **`InstallFonts`** | Git | `HEAD` | `` | modified (4 files) | **not-lcm** | - | - | User | standard-git |
 | **`MacriumTemplateUpdater`** | Git | `HEAD` | `` | modified (8 files) | **not-lcm** | - | - | User | standard-git |
 | **`MSG file conversion`** | Git | `HEAD` | `` | modified (5 files) | **not-lcm** | - | - | User | standard-git |
@@ -54,6 +56,6 @@ Global Baseline Version: **v4.3.0** (Source: Workspace_AI)
 | **`SystemConfiguration`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | **Admin** | non-git |
 | **`TimeStamper`** | Git | `HEAD` | `` | modified (4 files) | **not-lcm** | - | - | User | standard-git |
 | **`VolumeInventory`** | Git | `main` | `46951d9` | clean | **outdated** | - | v4.2.0 | User | lcm-governed |
-| **`Workspace_AI`** | Git | `main` | `905b6ef` | clean | **governed** | v4.3.0 | v4.3.0 | User | active-design-workshop |
-| **`Workspace_Inventory`** | Git | `main` | `8310b1f` | clean | **governed** | v4.3.0 | v4.3.0 | **Admin** | configuration-management |
+| **`Workspace_AI`** | Git | `main` | `ce1bb1e` | clean | **governed** | v4.3.0 | v4.3.0 | User | active-design-workshop |
+| **`Workspace_Inventory`** | Git | `main` | `1b5fe03` | modified (5 files) | **governed** | v4.3.0 | v4.3.0 | **Admin** | configuration-management |
 

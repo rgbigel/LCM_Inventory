@@ -1,0 +1,9 @@
+{
+  "RepositoryName": "Workspace_AI",
+  "RepositoryPath": "Workspace_AI",
+  "ReviewResult": "Accepted",
+  "Reviewer": "rgbig",
+  "Timestamp": "2026-08-17 20:47:55",
+  "HeadCommit": "94bfcc3",
+  "Notes": "Decoupled git.ignoredRepositories from Workspace_AI to root container; LCM v4.3.1 version increments"
+}
