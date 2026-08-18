@@ -1,0 +1,28 @@
+{
+  "SnapshotTimestamp": "2026-08-18T22:45:00+02:00",
+  "LCMVersion": "4.1.0",
+  "Author": "Rolf & Antigravity AI Assistant",
+  "ToolPaths": {
+    "BeyondCompare5": "D:\\Tools\\Beyond Compare 5\\BCompare.exe",
+    "Everything": "D:\\Tools\\Everything 1.5a\\Everything.exe",
+    "EverythingTarget": "D:\\Tools\\Everything\\Everything.exe",
+    "EverythingVersion": "1.5.0.1418b (x64)+",
+    "EverythingIndexDB": "A:\\EverythingIndex\\Everything.db",
+    "EverythingPipe": "\\\\.\\pipe\\Everything IPC",
+    "PowerShell7": "D:\\Tools\\PowerShell\\7\\pwsh.exe",
+    "PythonBase": "D:\\Tools\\Python314\\python.exe",
+    "PythonVenv": "D:\\Git_Repositories\\.venv\\Scripts\\python.exe"
+  },
+  "RepositoriesSynced": [
+    "VolumeInventory",
+    "BootEntryManager",
+    "SharedModules",
+    "Workspace_AI",
+    "Workspace_Inventory"
+  ],
+  "PendingStreams": [
+    "HaSSD06 SSD deployment & boot testing",
+    "LCM 4.1.0 batch onboarding for remaining repositories (BGMSAMVInv, DiskAssignmentStatus, NextBootTray, PowerBGInfo)",
+    "Everything.exe directory rename to D:\\Tools\\Everything\\ when ready"
+  ]
+}
