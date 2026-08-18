@@ -1,0 +1,9 @@
+{
+  "RepositoryName": "BootEntryManager",
+  "RepositoryPath": "BootEntryManager",
+  "ReviewResult": "Accepted",
+  "Reviewer": "rgbig",
+  "Timestamp": "2026-08-18 22:18:19",
+  "HeadCommit": "585c0a9",
+  "Notes": "Pester v5 modernization and pre-push hook"
+}

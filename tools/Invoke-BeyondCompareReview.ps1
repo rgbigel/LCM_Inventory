@@ -7,7 +7,7 @@ param(
     [string]$BaseCommit,
 
     [Parameter(Mandatory = $false)]
-    [string]$BeyondComparePath = 'C:\Program Files\Beyond Compare 5\BCompare.exe'
+    [string]$BeyondComparePath = 'D:\Tools\Beyond Compare 5\BCompare.exe'
 )
 
 <#
@@ -15,54 +15,47 @@ Module: Invoke-BeyondCompareReview.ps1
 Purpose: Compares a repository's current state against any prior commit/baseline in Beyond Compare 5.
 Path: tools/Invoke-BeyondCompareReview.ps1
 Authors: Rolf, Workspace_AI Engine
-Version: 1.0.0
-Date: 2026-08-16
+Version: 1.1.0
+Date: 2026-08-18
 #>
 
 $workspaceRoot = Split-Path $PSScriptRoot -Parent | Split-Path -Parent
-$repoPath = if (Test-Path -LiteralPath $RepositoryName) {
+$resolvedTarget = if (Test-Path -LiteralPath $RepositoryName) {
     $RepositoryName
 } else {
     Join-Path $workspaceRoot $RepositoryName
 }
 
-if (-not (Test-Path -LiteralPath $repoPath)) {
-    throw "Repository path not found: $repoPath"
+if (-not (Test-Path -LiteralPath $resolvedTarget)) {
+    throw "Repository path not found: $resolvedTarget"
 }
+
+# ALWAYS resolve to fully-qualified absolute path (guarantees correct resolution when launched via schtasks/explorer)
+$repoPath = (Get-Item -LiteralPath $resolvedTarget).FullName
 
 if (-not (Test-Path -LiteralPath (Join-Path $repoPath '.git'))) {
     throw "Directory is not a Git repository: $repoPath"
 }
 
-# Resolve Beyond Compare executable
+# Validate Beyond Compare executable
 if (-not (Test-Path -LiteralPath $BeyondComparePath)) {
-    $candidates = @(
-        'C:\Program Files\Beyond Compare 5\BCompare.exe',
-        'C:\Program Files\Beyond Compare 4\BCompare.exe',
-        'C:\Program Files (x86)\Beyond Compare 4\BCompare.exe'
-    )
-    foreach ($c in $candidates) {
-        if (Test-Path -LiteralPath $c) {
-            $BeyondComparePath = $c
-            break
-        }
-    }
+    throw "Beyond Compare executable not found at: $BeyondComparePath. Please verify the tool path."
 }
 
-if (-not (Test-Path -LiteralPath $BeyondComparePath)) {
-    throw "Beyond Compare executable not found at: $BeyondComparePath"
-}
 
-# If BaseCommit is not specified, find the root commit or morning baseline
+# If BaseCommit is not specified, default to HEAD to review uncommitted working tree changes
 if ([string]::IsNullOrWhiteSpace($BaseCommit)) {
+    $BaseCommit = 'HEAD'
+}
+elseif ($BaseCommit -eq 'root') {
     $logCommits = @(git -C $repoPath log --oneline | ForEach-Object { ($_ -split ' ')[0] })
-    if ($logCommits.Count -gt 1) {
-        # Default to root/earliest commit for visual whole-history review
+    if ($logCommits.Count -gt 0) {
         $BaseCommit = $logCommits[-1]
     } else {
         $BaseCommit = 'HEAD'
     }
 }
+
 
 $commitSha = (git -C $repoPath rev-parse --short $BaseCommit 2>$null)
 if (-not $commitSha) {
@@ -86,8 +79,22 @@ git -C $repoPath archive -o $tarPath $commitSha
 tar -xf $tarPath -C $tempReviewRoot
 Remove-Item -LiteralPath $tarPath -Force -ErrorAction SilentlyContinue
 
-Write-Host "Launching Beyond Compare 5..." -ForegroundColor Green
+Write-Host "Launching Beyond Compare 5 on interactive desktop..." -ForegroundColor Green
 Write-Host ("  Left (Baseline {0}): {1}" -f $commitSha, $tempReviewRoot)
 Write-Host ("  Right (Current Live):       {0}" -f $repoPath)
 
-Start-Process -FilePath $BeyondComparePath -ArgumentList @($tempReviewRoot, $repoPath)
+$taskName = "LCM_BeyondCompare_Review"
+$actionCmd = "`"$BeyondComparePath`" `"$tempReviewRoot`" `"$repoPath`""
+
+try {
+    # Method 1: Launch via interactive Windows Task Scheduler (forces GUI into active user Session 1)
+    schtasks.exe /create /tn $taskName /tr $actionCmd /sc once /st "23:59" /it /f 2>&1 | Out-Null
+    schtasks.exe /run /tn $taskName 2>&1 | Out-Null
+    Start-Sleep -Milliseconds 500
+    schtasks.exe /delete /tn $taskName /f 2>&1 | Out-Null
+}
+catch {
+    # Method 2: Standard Start-Process fallback
+    Start-Process -FilePath $BeyondComparePath -ArgumentList @($tempReviewRoot, $repoPath)
+}
+

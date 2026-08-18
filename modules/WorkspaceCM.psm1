@@ -461,7 +461,7 @@ function Invoke-BeyondCompareReview {
         [Parameter(Mandatory = $true, Position = 0)]
         [string]$RepositoryName,
         [string]$BaseCommit,
-        [string]$BeyondComparePath = 'C:\Program Files\Beyond Compare 5\BCompare.exe'
+        [string]$BeyondComparePath = 'D:\Tools\Beyond Compare 5\BCompare.exe'
     )
 
     $toolScript = Join-Path (Get-WorkspaceRoot) "Workspace_Inventory\tools\Invoke-BeyondCompareReview.ps1"
