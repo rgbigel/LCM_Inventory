@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "LCM Workspace Proposals Ledger",
+  "updated_at": "2026-08-20T15:20:00+02:00",
+  "review_granularity": "coarse",
+  "lcm_mode": "active",
+  "last_proposal_id": 1,
+  "proposals": [
+    {
+      "id": 1,
+      "timestamp": "2026-08-20 15:20:00",
+      "title": "Implement LCM Two-Tier Proposal and Review Governance Engine",
+      "origin_repo": "Workspace_Inventory",
+      "cr_id": "CR-2026-012",
+      "state": "processed",
+      "bundle_id": "BUNDLE-2026-03",
+      "author": "Rolf",
+      "details": "Two-tier proposal tracking, BC5 review integration, multi-repo staging, granularity controls, and dual-commit sync."
+    }
+  ]
+}

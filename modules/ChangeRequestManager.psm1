@@ -139,11 +139,14 @@ function Get-ChangeRequests {
         return @()
     }
     
-    $dirs = @(Get-ChildItem -Path $crRoot)
+    $dirs = @(Get-ChildItem -Path $crRoot -ErrorAction SilentlyContinue)
     $results = @()
     
     foreach ($d in $dirs) {
-        $files = @(Get-ChildItem -Path $d.FullName -Filter '*.md')
+        if (-not (Test-Path -LiteralPath $d.FullName)) {
+            continue
+        }
+        $files = @(Get-ChildItem -Path $d.FullName -Filter '*.md' -ErrorAction SilentlyContinue)
         foreach ($file in $files) {
             $parsed = Parse-CRFrontmatter -FilePath $file.FullName
             $results += $parsed
