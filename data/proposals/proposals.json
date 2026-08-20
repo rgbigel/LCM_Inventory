@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-08-20T16:37:00+02:00",
+  "updated_at": "2026-08-20T18:01:00+02:00",
   "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 2,
+  "last_proposal_id": 3,
   "proposals": [
     {
       "id": 1,
@@ -23,10 +23,21 @@
       "title": "Implement Automated LCM Rule Health Diagnostics and Repair Engine",
       "origin_repo": "Workspace_Inventory",
       "cr_id": "CR-2026-013",
-      "state": "processed",
+      "state": "completed",
       "bundle_id": "BUNDLE-2026-03",
       "author": "Rolf",
       "details": "Add Test-LCMRuleHealth.ps1 and Repair-LCMRules.ps1 to detect and clean up governance drift, redundant static rule files, and broken junctions across pulled repositories."
+    },
+    {
+      "id": 3,
+      "timestamp": "2026-08-20 18:01:00",
+      "title": "Mandate Tripartite Repository Documentation Standard (Architecture, Requirements, Implementation)",
+      "origin_repo": "Workspace_Inventory",
+      "cr_id": "CR-2026-014",
+      "state": "deferred",
+      "bundle_id": "unassigned",
+      "author": "Rolf",
+      "details": "Codify tripartite repo-level documentation distinguishing Architecture (user view), Requirements (technical aspects of design), and Implementation (code representation)."
     }
   ]
 }
