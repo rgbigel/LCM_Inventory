@@ -1,7 +1,7 @@
 # Workspace Configuration Management (CM) Inventory Dashboard
 
 Module: docs/INVENTORY_DASHBOARD.md
-Generated: 2026-08-20 22:22:09
+Generated: 2026-08-20 22:27:58
 Global Baseline Version: **v5.0.1** (Source: Workspace_AI)
 
 ---
@@ -13,10 +13,10 @@ Global Baseline Version: **v5.0.1** (Source: Workspace_AI)
 | **Total Directories Audited** | **33** | All child directories under D:\Git_Repositories\ |
 | **Active Design Workshop** | **1** | Workspace_AI (v5.0.1) |
 | **CM Repository** | **1** | Workspace_Inventory |
-| **LCM Governed / Candidates** | **2** | Actively governed under LCM |
+| **LCM Governed / Candidates** | **3** | Actively governed under LCM |
 | **Elevation Required Repositories** | **8** | Repositories requiring Administrator privileges |
 | **Standard Git Repositories** | **10** | Un-onboarded Git repos |
-| **Non-Git Component Folders** | **11** | Non-Git folders (git.ignoredRepositories) |
+| **Non-Git Component Folders** | **10** | Non-Git folders (git.ignoredRepositories) |
 | **Retired Legacy Baselines** | **2** | Workspace_AC, Workspace_GC |
 
 ---
@@ -31,7 +31,7 @@ Global Baseline Version: **v5.0.1** (Source: Workspace_AI)
 | **`.github`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | User | parent-infra |
 | **`.venv`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | User | parent-infra |
 | **`.vscode`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | User | parent-infra |
-| **`AuthorizeMasterUser`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | **Admin** | non-git |
+| **`AuthorizeMasterUser`** | Git | `main` | `86f35ed` | clean | **governed** | v5.0.1 | v5.0.1 | **Admin** | lcm-governed |
 | **`BackgroundModifier`** | Git | `main` | `de855b0` | modified (3 files) | **outdated** | v5.0.0 | v4.3.0 | **Admin** | lcm-governed |
 | **`BGMSAMVInv`** | Git | `main` | `10351be` | modified (1 files) | **outdated** | v5.0.0 | v4.2.0 | User | lcm-governed |
 | **`BootEntryManager`** | Git | `main` | `ed63ce3` | modified (1 files) | **outdated** | v5.0.0 | v4.2.0 | User | lcm-governed |
@@ -57,5 +57,5 @@ Global Baseline Version: **v5.0.1** (Source: Workspace_AI)
 | **`TimeStamper`** | Git | `HEAD` | `` | modified (4 files) | **not-lcm** | - | - | User | standard-git |
 | **`VolumeInventory`** | Git | `main` | `c5f5d41` | modified (5 files) | **outdated** | v5.0.0 | v4.2.0 | User | lcm-governed |
 | **`Workspace_AI`** | Git | `main` | `91b5c90` | clean | **governed** | v5.0.1 | v5.0.1 | User | active-design-workshop |
-| **`Workspace_Inventory`** | Git | `main` | `8d2c24e` | modified (6 files) | **governed** | v5.0.1 | v5.0.1 | **Admin** | configuration-management |
+| **`Workspace_Inventory`** | Git | `main` | `4f4c398` | clean | **governed** | v5.0.1 | v5.0.1 | **Admin** | configuration-management |
 
