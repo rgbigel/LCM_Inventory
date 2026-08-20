@@ -66,9 +66,9 @@ function Update-CRJunctions {
     
     foreach ($dir in $childDirs) {
         $repoName = $dir.Name
-        $targetProposals = Join-Path $dir.FullName 'Docs\Methods\Proposals'
+        $targetProposals = Join-Path $dir.FullName 'docs\Proposals'
         if (-not (Test-Path $targetProposals)) {
-            $altProposals = Join-Path $dir.FullName 'docs\Proposals'
+            $altProposals = Join-Path $dir.FullName 'Docs\Methods\Proposals'
             if (Test-Path $altProposals) {
                 $targetProposals = $altProposals
             }
@@ -76,6 +76,13 @@ function Update-CRJunctions {
         
         if (Test-Path $targetProposals) {
             $junctionPath = Join-Path $crRoot $repoName
+            if (Test-Path $junctionPath) {
+                $item = Get-Item -LiteralPath $junctionPath -Force
+                $isJunction = ($item.LinkType -eq 'Junction' -or $item.Attributes.HasFlag([System.IO.FileAttributes]::ReparsePoint))
+                if ($isJunction -and [string]$item.Target -ne (Get-Item $targetProposals).FullName) {
+                    cmd /c rmdir "$junctionPath" 2>$null | Out-Null
+                }
+            }
             if (-not (Test-Path $junctionPath)) {
                 cmd /c mklink /J "$junctionPath" "$targetProposals" 2>$null | Out-Null
                 $linkedCount++
