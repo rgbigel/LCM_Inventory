@@ -54,3 +54,6 @@
 [2026-08-20 18:02:06] [REVIEW_SUBMITTED] Target: Git_Repositories | Outcome: Accepted | Reviewer: rgbig | Notes: User reviewed and accepted root container cleanup and v5.0.0 governance policies.
 [2026-08-20 18:42:11] [REVIEW_SUBMITTED] Target: Workspace_AI | Outcome: Accepted | Reviewer: rgbig | Notes: User accepted CR-2026-014 (Tripartite Documentation Standard).
 [2026-08-20 18:42:11] [REVIEW_SUBMITTED] Target: Git_Repositories | Outcome: Accepted | Reviewer: rgbig | Notes: User accepted CR-2026-014 policy codification and AGENTS.md update.
+[2026-08-20 22:09:20] [INFO] [Root] SYNC_IGNORED_REPOS - Updated git.ignoredRepositories to match current 10 non-git directory(ies).
+[2026-08-20 22:21:48] [REVIEW_SUBMITTED] Target: Workspace_AI | Outcome: Accepted | Reviewer: rgbig | Notes: Approved v5.0.1 baseline: install/ runbook standard, BC review session folder consent & right-side modification detection, automated ignored repos sync, and tripartite documentation specifications.
+[2026-08-20 22:22:09] [INFO] [ALL] AUDIT_COMPLETE - Audited 33 repositories. Governed: 2

@@ -322,6 +322,9 @@ function Update-WorkspaceInventory {
     $jsonPath = Join-Path $invDir 'inventory.json'
     $jsonObj | ConvertTo-Json -Depth 5 | Set-Content -Path $jsonPath -Encoding UTF8
     Write-Host "Updated inventory JSON: $jsonPath" -ForegroundColor Green
+
+    # Automatically synchronize git.ignoredRepositories in root .vscode/settings.json
+    Sync-IgnoredRepositories -WorkspaceRoot $WorkspaceRoot
     
     # Generate Markdown Dashboard
     $dashDir = Join-Path $WorkspaceRoot 'Workspace_Inventory\docs'
@@ -468,4 +471,38 @@ function Invoke-BeyondCompareReview {
     & $toolScript -RepositoryName $RepositoryName -BaseCommit $BaseCommit -BeyondComparePath $BeyondComparePath
 }
 
-Export-ModuleMember -Function Get-WorkspaceRoot, Write-CMLog, Get-WorkspaceAIState, Get-RepoCMState, Update-WorkspaceInventory, Test-WorkspaceDrift, New-WorkspaceBaseline, Invoke-BeyondCompareReview
+function Sync-IgnoredRepositories {
+    [CmdletBinding()]
+    param(
+        [string]$WorkspaceRoot = (Get-WorkspaceRoot)
+    )
+
+    $settingsPath = Join-Path $WorkspaceRoot '.vscode\settings.json'
+    if (-not (Test-Path -LiteralPath $settingsPath)) {
+        Write-Warning "Root settings file not found: $settingsPath"
+        return
+    }
+
+    $nonGitDirs = Get-ChildItem -Path $WorkspaceRoot -Directory | Where-Object {
+        -not $_.Name.StartsWith('.') -and -not (Test-Path -LiteralPath (Join-Path $_.FullName '.git'))
+    } | Sort-Object Name | ForEach-Object { $_.FullName }
+
+    try {
+        $settings = Get-Content -LiteralPath $settingsPath -Raw | ConvertFrom-Json
+        $currentIgnored = @($settings.'git.ignoredRepositories')
+
+        $diff = Compare-Object -ReferenceObject $currentIgnored -DifferenceObject $nonGitDirs
+        if ($diff) {
+            $settings.'git.ignoredRepositories' = @($nonGitDirs)
+            $json = $settings | ConvertTo-Json -Depth 5
+            Set-Content -LiteralPath $settingsPath -Value $json -Encoding UTF8
+            Write-CMLog -Action 'SYNC_IGNORED_REPOS' -TargetRepo 'Root' -Details "Updated git.ignoredRepositories to match current $(@($nonGitDirs).Count) non-git directory(ies)."
+            Write-Host "Reconciled .vscode/settings.json git.ignoredRepositories ($(@($nonGitDirs).Count) non-git repos)." -ForegroundColor Green
+        }
+    }
+    catch {
+        Write-Warning "Failed to reconcile git.ignoredRepositories: $_"
+    }
+}
+
+Export-ModuleMember -Function Get-WorkspaceRoot, Write-CMLog, Get-WorkspaceAIState, Get-RepoCMState, Update-WorkspaceInventory, Test-WorkspaceDrift, New-WorkspaceBaseline, Invoke-BeyondCompareReview, Sync-IgnoredRepositories

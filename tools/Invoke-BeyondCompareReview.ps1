@@ -15,8 +15,8 @@ Module: Invoke-BeyondCompareReview.ps1
 Purpose: Compares a repository's current state against any prior commit/baseline in Beyond Compare 5.
 Path: tools/Invoke-BeyondCompareReview.ps1
 Authors: Rolf, Workspace_AI Engine
-Version: 1.1.0
-Date: 2026-08-18
+Version: 1.3.0
+Date: 2026-08-20
 #>
 
 $workspaceRoot = Split-Path $PSScriptRoot -Parent | Split-Path -Parent
@@ -42,7 +42,6 @@ if (-not (Test-Path -LiteralPath $BeyondComparePath)) {
     throw "Beyond Compare executable not found at: $BeyondComparePath. Please verify the tool path."
 }
 
-
 # If BaseCommit is not specified, default to HEAD to review uncommitted working tree changes
 if ([string]::IsNullOrWhiteSpace($BaseCommit)) {
     $BaseCommit = 'HEAD'
@@ -56,7 +55,6 @@ elseif ($BaseCommit -eq 'root') {
     }
 }
 
-
 $commitSha = (git -C $repoPath rev-parse --short $BaseCommit 2>$null)
 if (-not $commitSha) {
     throw "Invalid Git commit reference: $BaseCommit"
@@ -64,7 +62,12 @@ if (-not $commitSha) {
 
 $commitMsg = (git -C $repoPath log -n 1 --pretty=format:"%s" $commitSha)
 $repoName = Split-Path $repoPath -Leaf
-$tempReviewRoot = Join-Path $env:TEMP "BC_Review\$repoName-$commitSha"
+$tempParent = Join-Path $env:TEMP "BC_Review"
+if (-not (Test-Path -LiteralPath $tempParent)) {
+    New-Item -ItemType Directory -Path $tempParent -Force | Out-Null
+}
+
+$tempReviewRoot = Join-Path $tempParent "$repoName-$commitSha"
 
 if (Test-Path -LiteralPath $tempReviewRoot) {
     Remove-Item -LiteralPath $tempReviewRoot -Recurse -Force -ErrorAction SilentlyContinue
@@ -78,6 +81,17 @@ $tarPath = Join-Path $env:TEMP "BC_Review_$repoName-$commitSha.tar"
 git -C $repoPath archive -o $tarPath $commitSha
 tar -xf $tarPath -C $tempReviewRoot
 Remove-Item -LiteralPath $tarPath -Force -ErrorAction SilentlyContinue
+
+# Record immutable review session metadata
+$sessionMeta = [ordered]@{
+    RepositoryName   = $repoName
+    RepositoryPath   = $repoPath
+    BaseCommit       = $commitSha
+    CommitMessage    = $commitMsg
+    CommitDate       = (git -C $repoPath log -n 1 --pretty=format:"%cI" $commitSha)
+    SessionStartedAt = (Get-Date).ToString("o")
+}
+$sessionMeta | ConvertTo-Json -Depth 3 | Set-Content -LiteralPath (Join-Path $tempReviewRoot ".lcm_review.json") -Encoding utf8
 
 Write-Host "Launching Beyond Compare 5 on interactive desktop..." -ForegroundColor Green
 Write-Host ("  Left (Baseline {0}): {1}" -f $commitSha, $tempReviewRoot)
@@ -97,4 +111,3 @@ catch {
     # Method 2: Standard Start-Process fallback
     Start-Process -FilePath $BeyondComparePath -ArgumentList @($tempReviewRoot, $repoPath)
 }
-
