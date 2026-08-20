@@ -6,7 +6,7 @@
 #          batch operations, review granularity ('coarse' | 'tight'), repo review queue inspection,
 #          and persistent ledger storage in Workspace_Inventory.
 # Authors: Rolf, Workspace_AI Engine
-# Version: 1.0.0
+# Version: 1.0.1
 # Date: 2026-08-20
 # =====================================================================
 
@@ -43,7 +43,7 @@ function Get-ProposalStorePath {
     return (Join-Path $proposalsDir 'proposals.json')
 }
 
-function Read-ProposalStore {
+function Get-ProposalStore {
     [CmdletBinding()]
     param()
 
@@ -66,7 +66,7 @@ function Read-ProposalStore {
     return ($json | ConvertFrom-Json)
 }
 
-function Save-ProposalStore {
+function Set-ProposalStore {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
@@ -87,7 +87,7 @@ function Get-WorkspaceProposals {
         [switch]$OpenOnly
     )
 
-    $store = Read-ProposalStore
+    $store = Get-ProposalStore
     $items = @($store.proposals)
 
     if ($OpenOnly) {
@@ -124,7 +124,7 @@ function New-WorkspaceProposal {
         [string]$Author = $env:USERNAME
     )
 
-    $store = Read-ProposalStore
+    $store = Get-ProposalStore
     $newId = [int]$store.last_proposal_id + 1
     $store.last_proposal_id = $newId
 
@@ -145,7 +145,7 @@ function New-WorkspaceProposal {
     $list.Add([PSCustomObject]$proposal)
     $store.proposals = @($list)
 
-    Save-ProposalStore -Store $store
+    Set-ProposalStore -Store $store
     Write-Host ("Created Proposal #{0}: {1} (State: suggested)" -f $newId, $Title) -ForegroundColor Green
     return [PSCustomObject]$proposal
 }
@@ -163,7 +163,7 @@ function Set-WorkspaceProposalState {
         [string]$Details
     )
 
-    $store = Read-ProposalStore
+    $store = Get-ProposalStore
     $found = $null
 
     foreach ($p in $store.proposals) {
@@ -181,12 +181,12 @@ function Set-WorkspaceProposalState {
         throw "Proposal #$Id not found in proposals store."
     }
 
-    Save-ProposalStore -Store $store
+    Set-ProposalStore -Store $store
     Write-Host "Proposal #$Id state updated -> $State" -ForegroundColor Green
     return $found
 }
 
-function Parse-ProposalIdExpression {
+function Resolve-ProposalIdExpression {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
@@ -194,7 +194,7 @@ function Parse-ProposalIdExpression {
     )
 
     $cleaned = $Expression.Trim().TrimStart('#').ToLowerInvariant()
-    $store = Read-ProposalStore
+    $store = Get-ProposalStore
 
     if ($cleaned -eq 'all') {
         return @($store.proposals | Where-Object { $_.state -in @('suggested', 'processed', 'deferred') } | Select-Object -ExpandProperty id)
@@ -241,7 +241,7 @@ function Invoke-ProposalBatchAction {
         [string]$Details = ''
     )
 
-    $targetIds = @(Parse-ProposalIdExpression -Expression $TargetExpression)
+    $targetIds = @(Resolve-ProposalIdExpression -Expression $TargetExpression)
     if ($targetIds.Count -eq 0) {
         Write-Warning ("No valid proposal IDs resolved from expression: '{0}'" -f $TargetExpression)
         return @()
@@ -276,9 +276,9 @@ function Set-ReviewGranularity {
         [string]$Granularity
     )
 
-    $store = Read-ProposalStore
+    $store = Get-ProposalStore
     $store.review_granularity = $Granularity.ToLowerInvariant()
-    Save-ProposalStore -Store $store
+    Set-ProposalStore -Store $store
     Write-Host "Review granularity configured to: $($store.review_granularity)" -ForegroundColor Green
     return $store.review_granularity
 }
@@ -287,7 +287,7 @@ function Get-ReviewGranularity {
     [CmdletBinding()]
     param()
 
-    $store = Read-ProposalStore
+    $store = Get-ProposalStore
     if ($store.review_granularity) {
         return $store.review_granularity
     }
@@ -302,9 +302,9 @@ function Set-LCMMode {
         [string]$Mode
     )
 
-    $store = Read-ProposalStore
+    $store = Get-ProposalStore
     $store.lcm_mode = $Mode.ToLowerInvariant()
-    Save-ProposalStore -Store $store
+    Set-ProposalStore -Store $store
     Write-Host "LCM Mode configured to: $($store.lcm_mode)" -ForegroundColor Green
     return $store.lcm_mode
 }
@@ -313,7 +313,7 @@ function Get-LCMMode {
     [CmdletBinding()]
     param()
 
-    $store = Read-ProposalStore
+    $store = Get-ProposalStore
     if ($store.lcm_mode) {
         return $store.lcm_mode
     }
@@ -465,8 +465,11 @@ function Format-ReposUnderReviewTable {
     Write-Host "==========================================================================================" -ForegroundColor Cyan
 }
 
-Export-ModuleMember -Function Get-ProposalStorePath, Read-ProposalStore, Save-ProposalStore, `
+Set-Alias -Name Parse-ProposalIdExpression -Value Resolve-ProposalIdExpression
+
+Export-ModuleMember -Function Get-ProposalStorePath, Get-ProposalStore, Set-ProposalStore, `
     Get-WorkspaceProposals, New-WorkspaceProposal, Set-WorkspaceProposalState, `
-    Parse-ProposalIdExpression, Invoke-ProposalBatchAction, `
+    Resolve-ProposalIdExpression, Invoke-ProposalBatchAction, `
     Set-ReviewGranularity, Get-ReviewGranularity, Set-LCMMode, Get-LCMMode, `
-    Get-ReposUnderReview, Format-ProposalsTable, Format-ReposUnderReviewTable
+    Get-ReposUnderReview, Format-ProposalsTable, Format-ReposUnderReviewTable `
+    -Alias Parse-ProposalIdExpression

@@ -50,7 +50,7 @@ function Get-BundlesDir {
     return $bundlesDir
 }
 
-function Sync-CRJunctions {
+function Update-CRJunctions {
     [CmdletBinding()]
     param(
         [string]$WorkspaceRoot = 'D:\Git_Repositories'
@@ -86,7 +86,7 @@ function Sync-CRJunctions {
     return $linkedCount
 }
 
-function Parse-CRFrontmatter {
+function ConvertFrom-CRFrontmatter {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory=$true)] [string]$FilePath
@@ -148,7 +148,7 @@ function Get-ChangeRequests {
         }
         $files = @(Get-ChildItem -Path $d.FullName -Filter '*.md' -ErrorAction SilentlyContinue)
         foreach ($file in $files) {
-            $parsed = Parse-CRFrontmatter -FilePath $file.FullName
+            $parsed = ConvertFrom-CRFrontmatter -FilePath $file.FullName
             $results += $parsed
         }
     }
@@ -231,7 +231,7 @@ function New-ChangeRequest {
         New-Item -ItemType Directory -Path $targetProposals -Force | Out-Null
     }
     
-    Sync-CRJunctions | Out-Null
+    Update-CRJunctions | Out-Null
     
     $filePath = Join-Path $targetProposals "$crId.md"
     $dateStr = (Get-Date).ToString('yyyy-MM-dd HH:mm:ss')
@@ -262,7 +262,7 @@ $Summary
     Set-Content -Path $filePath -Value $content -Encoding UTF8
     Write-Host "Created single-file Change Request: $filePath" -ForegroundColor Green
     
-    return Parse-CRFrontmatter -FilePath $filePath
+    return ConvertFrom-CRFrontmatter -FilePath $filePath
 }
 
 function Get-CRBundles {
@@ -344,7 +344,7 @@ function Export-ChangeRequestDashboard {
     [CmdletBinding()]
     param()
     
-    Sync-CRJunctions | Out-Null
+    Update-CRJunctions | Out-Null
     $records = Get-ChangeRequests
     $bundles = Get-CRBundles
     
@@ -399,4 +399,9 @@ function Export-ChangeRequestDashboard {
     return $dashPath
 }
 
-Export-ModuleMember -Function Get-CRMirrorRoot, Get-BundlesDir, Sync-CRJunctions, Parse-CRFrontmatter, Get-ChangeRequests, Find-ChangeRequest, New-ChangeRequest, Get-CRBundles, New-CRBundle, Add-CRToBundle, Export-ChangeRequestDashboard
+Set-Alias -Name Sync-CRJunctions -Value Update-CRJunctions
+Set-Alias -Name Parse-CRFrontmatter -Value ConvertFrom-CRFrontmatter
+
+Export-ModuleMember -Function Get-CRMirrorRoot, Get-BundlesDir, Update-CRJunctions, ConvertFrom-CRFrontmatter, `
+    Get-ChangeRequests, Find-ChangeRequest, New-ChangeRequest, Get-CRBundles, New-CRBundle, Add-CRToBundle, Export-ChangeRequestDashboard `
+    -Alias Sync-CRJunctions, Parse-CRFrontmatter
