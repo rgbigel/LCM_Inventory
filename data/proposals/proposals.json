@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-08-20T18:38:00+02:00",
+  "updated_at": "2026-08-21T16:21:37+02:00",
   "review_granularity": "coarse",
   "lcm_mode": "active",
   "last_proposal_id": 4,
@@ -45,7 +45,7 @@
       "title": "Mandate Universal install/ Directory and Installation.md Lifecycle Runbook Standard",
       "origin_repo": "Workspace_Inventory",
       "cr_id": "CR-2026-015",
-      "state": "suggested",
+      "state": "completed",
       "bundle_id": "unassigned",
       "author": "Rolf",
       "details": "Codify mandatory install/ directory and Installation.md runbook covering prerequisites, customization, preflight, deployment, health checks, updates, and target folder layout."
