@@ -15,17 +15,111 @@ param(
 )
 
 <#
-Module: Submit-ReviewResult.ps1 (RR)
-Purpose: Interactive review response recorder for Beyond Compare 5 and LCM CM audit trail.
-Path: tools/Submit-ReviewResult.ps1
-Authors: Rolf, Workspace_AI Engine
-Version: 1.0.0
-Date: 2026-08-16
+.SYNOPSIS
+    Interactive review response recorder for Beyond Compare 5 and LCM CM audit trail.
+.DESCRIPTION
+    Module: tools/Submit-ReviewResult.ps1
+    Purpose: Interactive review response recorder for Beyond Compare 5 and LCM CM audit trail with automatic review window closure upon acceptance.
+    Path: Workspace_Inventory/tools/Submit-ReviewResult.ps1
+    Authors: Rolf, Workspace_AI Engine
+    Version: 1.1.0
+    Date: 2026-08-21
 #>
+
+Set-StrictMode -Version Latest
+$ErrorActionPreference = 'Stop'
+
+function Close-BeyondCompareReviewWindow {
+    [CmdletBinding()]
+    param(
+        [string]$TargetRepoName,
+        [string]$TargetRepoPath
+    )
+
+    try {
+        $csharpCode = @'
+using System;
+using System.Text;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
+
+public class BCWindowCloser {
+    public delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
+
+    [DllImport("user32.dll")]
+    public static extern bool EnumWindows(EnumWindowsProc enumProc, IntPtr lParam);
+
+    [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    public static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
+
+    [DllImport("user32.dll")]
+    public static extern bool IsWindowVisible(IntPtr hWnd);
+
+    [DllImport("user32.dll", CharSet = CharSet.Auto)]
+    public static extern IntPtr PostMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+
+    public const uint WM_CLOSE = 0x0010;
+
+    public static int CloseMatchingWindows(string targetName, string targetPath) {
+        int closedCount = 0;
+        EnumWindows((hWnd, lParam) => {
+            if (IsWindowVisible(hWnd)) {
+                StringBuilder sb = new StringBuilder(512);
+                GetWindowText(hWnd, sb, 512);
+                string title = sb.ToString();
+                if (!string.IsNullOrEmpty(title) && title.Contains("Beyond Compare")) {
+                    bool match = false;
+                    if (!string.IsNullOrEmpty(targetName) && title.IndexOf(targetName, StringComparison.OrdinalIgnoreCase) >= 0) {
+                        match = true;
+                    }
+                    if (!match && !string.IsNullOrEmpty(targetPath) && title.IndexOf(targetPath, StringComparison.OrdinalIgnoreCase) >= 0) {
+                        match = true;
+                    }
+                    if (!match && (title.IndexOf("BC_Review", StringComparison.OrdinalIgnoreCase) >= 0 || title.IndexOf("LCM_Review", StringComparison.OrdinalIgnoreCase) >= 0)) {
+                        match = true;
+                    }
+
+                    if (match) {
+                        PostMessage(hWnd, WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
+                        closedCount++;
+                    }
+                }
+            }
+            return true;
+        }, IntPtr.Zero);
+        return closedCount;
+    }
+}
+'@
+        if (-not ('BCWindowCloser' -as [type])) {
+            Add-Type -TypeDefinition $csharpCode -ErrorAction SilentlyContinue
+        }
+        
+        if ('BCWindowCloser' -as [type]) {
+            $closed = [BCWindowCloser]::CloseMatchingWindows($TargetRepoName, $TargetRepoPath)
+            if ($closed -gt 0) {
+                Write-Host "Closed $closed Beyond Compare review window(s) for '$TargetRepoName'." -ForegroundColor Green
+                return
+            }
+        }
+
+        # Fallback: Process MainWindowTitle match
+        $bcProcs = @(Get-Process -Name BCompare -ErrorAction SilentlyContinue)
+        foreach ($p in $bcProcs) {
+            if ($p.MainWindowTitle -like "*$TargetRepoName*" -or $p.MainWindowTitle -like "*BC_Review*" -or $p.MainWindowTitle -like "*LCM_Review*") {
+                $null = $p.CloseMainWindow()
+                Write-Host "Closed Beyond Compare window: $($p.MainWindowTitle)" -ForegroundColor Green
+            }
+        }
+    } catch {
+        Write-Verbose "Could not automatically close Beyond Compare window: $($_.Exception.Message)"
+    }
+}
 
 $workspaceRoot = Split-Path $PSScriptRoot -Parent | Split-Path -Parent
 
 # If path is passed from BC (%p or %f), resolve to repository root
+$targetRepoPath = $null
 if (-not [string]::IsNullOrWhiteSpace($RepositoryPath)) {
     $resolvedPath = $RepositoryPath.Trim('"', "'")
     if (Test-Path -LiteralPath $resolvedPath) {
@@ -45,7 +139,7 @@ if (-not [string]::IsNullOrWhiteSpace($RepositoryPath)) {
 } else {
     # If not passed, prompt user to select active repository
     Write-Host "Select Repository for Review Submission:" -ForegroundColor Cyan
-    $repos = Get-ChildItem -Path $workspaceRoot -Directory | Where-Object { Test-Path (Join-Path $_.FullName '.git') }
+    $repos = @(Get-ChildItem -Path $workspaceRoot -Directory | Where-Object { Test-Path (Join-Path $_.FullName '.git') })
     for ($i = 0; $i -lt $repos.Count; $i++) {
         Write-Host ("  [{0}] {1}" -f ($i + 1), $repos[$i].Name)
     }
@@ -109,7 +203,7 @@ $reviewRecord = [ordered]@{
 # Save review record to Workspace_Inventory/data/reviews/
 $reviewsDir = Join-Path $workspaceRoot "Workspace_Inventory\data\reviews"
 if (-not (Test-Path -LiteralPath $reviewsDir)) {
-    New-Item -ItemType Directory -Path $reviewsDir -Force | Out-Null
+    $null = New-Item -ItemType Directory -Path $reviewsDir -Force
 }
 $reviewFile = Join-Path $reviewsDir ("REVIEW-{0}-{1}.json" -f $repoName, (Get-Date).ToString('yyyyMMdd_HHmmss'))
 $reviewRecord | ConvertTo-Json -Depth 3 | Set-Content -Path $reviewFile -Encoding UTF8
@@ -122,6 +216,11 @@ $logLine | Out-File -FilePath $cmLog -Append -Encoding UTF8
 Write-Host "`n-------------------------------------------------------------" -ForegroundColor Cyan
 Write-Host ("Review Result Recorded: {0}" -f $Result) -ForegroundColor Green
 Write-Host ("Evidence Saved:        {0}" -f $reviewFile)
+
+# Automatically close the Beyond Compare review window upon Acceptance
+if ($Result -in @("Accepted", "AcceptedWithEdits")) {
+    Close-BeyondCompareReviewWindow -TargetRepoName $repoName -TargetRepoPath $targetRepoPath
+}
 
 # If Accepted with Edits: run readiness test and auto-commit
 if ($Result -eq "AcceptedWithEdits") {

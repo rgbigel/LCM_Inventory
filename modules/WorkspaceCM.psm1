@@ -263,6 +263,7 @@ function Get-RepoCMState {
         MinimumPrivilege      = $minPrivilege
         ElevationReason       = $elevationReason
         JunctionsHealthy      = $junctionsHealthy
+        Disposition           = if ($CachedRepoState -and $CachedRepoState.PSObject.Properties['Disposition'] -and $CachedRepoState.Disposition) { $CachedRepoState.Disposition } else { $null }
         LastAuditTimestamp    = (Get-Date).ToString('yyyy-MM-dd HH:mm:ss')
     }
 }
@@ -468,5 +469,74 @@ function Invoke-BeyondCompareReview {
     & $toolScript -RepositoryName $RepositoryName -BaseCommit $BaseCommit -BeyondComparePath $BeyondComparePath
 }
 
-Export-ModuleMember -Function Get-WorkspaceRoot, Write-CMLog, Get-WorkspaceAIState, Get-RepoCMState, Update-WorkspaceInventory, Test-WorkspaceDrift, New-WorkspaceBaseline, Invoke-BeyondCompareReview
+function Set-RepoDisposition {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true, Position = 0)]
+        [string]$RepositoryName,
+        
+        [Parameter(Mandatory = $true, Position = 1)]
+        [ValidateSet('governed', 'ignored', 'retired', 'pending', 'deleted')]
+        [string]$State,
+        
+        [Parameter(Mandatory = $false, Position = 2)]
+        [string]$Reason = '',
+        
+        [Parameter(Mandatory = $false)]
+        [string]$WorkspaceRoot = (Get-WorkspaceRoot)
+    )
+
+    $invPath = Join-Path $WorkspaceRoot 'Workspace_Inventory\data\inventory.json'
+    if (-not (Test-Path -LiteralPath $invPath)) {
+        throw "Inventory database not found: $invPath"
+    }
+
+    $inv = Get-Content -LiteralPath $invPath -Raw | ConvertFrom-Json
+    $target = $inv.repositories | Where-Object { $_.RepositoryName -eq $RepositoryName } | Select-Object -First 1
+
+    if (-not $target) {
+        throw "Repository '$RepositoryName' not found in inventory."
+    }
+
+    $disposition = [ordered]@{
+        State       = $State
+        Reason      = $Reason
+        RecordedAt  = (Get-Date).ToString('o')
+    }
+
+    $target.Disposition = [pscustomobject]$disposition
+    if ($State -eq 'ignored' -or $State -eq 'retired') {
+        $target.LCMStatus = $State
+    }
+
+    $inv | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $invPath -Encoding UTF8
+    Write-CMLog -Action 'SET_DISPOSITION' -TargetRepo $RepositoryName -Details "Set disposition to '$State'. Reason: $Reason"
+    Write-Host "Updated disposition for '$RepositoryName' -> $State ($Reason)" -ForegroundColor Green
+}
+
+function Get-UngovernedRepositories {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $false)]
+        [string]$WorkspaceRoot = (Get-WorkspaceRoot)
+    )
+
+    $invPath = Join-Path $WorkspaceRoot 'Workspace_Inventory\data\inventory.json'
+    if (-not (Test-Path -LiteralPath $invPath)) {
+        throw "Inventory database not found: $invPath"
+    }
+
+    $inv = Get-Content -LiteralPath $invPath -Raw | ConvertFrom-Json
+    
+    # Filter for non-governed repos that are NOT already dispositioned as 'ignored' or 'retired'
+    $ungoverned = @($inv.repositories | Where-Object {
+        $_.LCMStatus -notin @('governed', 'active-design-workshop', 'configuration-management') -and
+        (-not $_.PSObject.Properties['Disposition'] -or -not $_.Disposition -or ($_.Disposition.State -notin @('ignored', 'retired', 'governed')))
+    } | Sort-Object RepositoryName)
+
+    return $ungoverned
+}
+
+Export-ModuleMember -Function Get-WorkspaceRoot, Write-CMLog, Get-WorkspaceAIState, Get-RepoCMState, Update-WorkspaceInventory, Test-WorkspaceDrift, New-WorkspaceBaseline, Invoke-BeyondCompareReview, Set-RepoDisposition, Get-UngovernedRepositories
+
 

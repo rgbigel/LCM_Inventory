@@ -1,7 +1,7 @@
 # Workspace Configuration Management (CM) Inventory Dashboard
 
 Module: docs/INVENTORY_DASHBOARD.md
-Generated: 2026-08-21 12:16:29
+Generated: 2026-08-21 13:55:55
 Global Baseline Version: **v5.0.1** (Source: Workspace_AI)
 
 ---
@@ -56,6 +56,6 @@ Global Baseline Version: **v5.0.1** (Source: Workspace_AI)
 | **`SystemConfiguration`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | **Admin** | non-git |
 | **`TimeStamper`** | Git | `HEAD` | `` | modified (4 files) | **not-lcm** | - | - | User | standard-git |
 | **`VolumeInventory`** | Git | `main` | `c5f5d41` | modified (5 files) | **outdated** | v5.0.0 | v4.2.0 | User | lcm-governed |
-| **`Workspace_AI`** | Git | `main` | `16a8015` | clean | **governed** | v5.0.1 | v5.0.1 | User | active-design-workshop |
-| **`Workspace_Inventory`** | Git | `main` | `78b77f5` | modified (2 files) | **governed** | v5.0.1 | v5.0.1 | **Admin** | configuration-management |
+| **`Workspace_AI`** | Git | `main` | `16a8015` | modified (1 files) | **governed** | v5.0.1 | v5.0.1 | User | active-design-workshop |
+| **`Workspace_Inventory`** | Git | `main` | `92027c8` | modified (6 files) | **governed** | v5.0.1 | v5.0.1 | **Admin** | configuration-management |
 

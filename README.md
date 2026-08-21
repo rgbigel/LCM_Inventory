@@ -4,8 +4,8 @@ Module: Workspace_Inventory
 Purpose: Authoritative Configuration Management (CM), multi-repository state tracking, LCM version lifecycle management, commit/push audit logging, and centralized Change Request (CR) management across `D:\Git_Repositories\`.
 Path: D:\Git_Repositories\Workspace_Inventory\README.md
 Authors: Rolf, Workspace_AI Engine
-Version: 1.0.0
-Date: 2026-08-15
+Version: 1.0.1
+Date: 2026-08-21
 
 ---
 
