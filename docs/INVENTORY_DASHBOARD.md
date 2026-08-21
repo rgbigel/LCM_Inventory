@@ -1,7 +1,7 @@
 # Workspace Configuration Management (CM) Inventory Dashboard
 
 Module: docs/INVENTORY_DASHBOARD.md
-Generated: 2026-08-20 22:27:58
+Generated: 2026-08-21 12:16:29
 Global Baseline Version: **v5.0.1** (Source: Workspace_AI)
 
 ---
@@ -31,7 +31,7 @@ Global Baseline Version: **v5.0.1** (Source: Workspace_AI)
 | **`.github`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | User | parent-infra |
 | **`.venv`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | User | parent-infra |
 | **`.vscode`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | User | parent-infra |
-| **`AuthorizeMasterUser`** | Git | `main` | `86f35ed` | clean | **governed** | v5.0.1 | v5.0.1 | **Admin** | lcm-governed |
+| **`AuthorizeMasterUser`** | Git | `main` | `20d1378` | clean | **governed** | v5.0.1 | v5.0.1 | **Admin** | lcm-governed |
 | **`BackgroundModifier`** | Git | `main` | `de855b0` | modified (3 files) | **outdated** | v5.0.0 | v4.3.0 | **Admin** | lcm-governed |
 | **`BGMSAMVInv`** | Git | `main` | `10351be` | modified (1 files) | **outdated** | v5.0.0 | v4.2.0 | User | lcm-governed |
 | **`BootEntryManager`** | Git | `main` | `ed63ce3` | modified (1 files) | **outdated** | v5.0.0 | v4.2.0 | User | lcm-governed |
@@ -56,6 +56,6 @@ Global Baseline Version: **v5.0.1** (Source: Workspace_AI)
 | **`SystemConfiguration`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | **Admin** | non-git |
 | **`TimeStamper`** | Git | `HEAD` | `` | modified (4 files) | **not-lcm** | - | - | User | standard-git |
 | **`VolumeInventory`** | Git | `main` | `c5f5d41` | modified (5 files) | **outdated** | v5.0.0 | v4.2.0 | User | lcm-governed |
-| **`Workspace_AI`** | Git | `main` | `91b5c90` | clean | **governed** | v5.0.1 | v5.0.1 | User | active-design-workshop |
-| **`Workspace_Inventory`** | Git | `main` | `4f4c398` | clean | **governed** | v5.0.1 | v5.0.1 | **Admin** | configuration-management |
+| **`Workspace_AI`** | Git | `main` | `16a8015` | clean | **governed** | v5.0.1 | v5.0.1 | User | active-design-workshop |
+| **`Workspace_Inventory`** | Git | `main` | `78b77f5` | modified (2 files) | **governed** | v5.0.1 | v5.0.1 | **Admin** | configuration-management |
 
