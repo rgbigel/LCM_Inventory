@@ -206,10 +206,18 @@ if ([string]::IsNullOrWhiteSpace($BaseCommit)) {
 
 $commitSha = (git -C $repoPath rev-parse --short $BaseCommit 2>$null)
 if (-not $commitSha) {
-    throw "Invalid Git commit reference: $BaseCommit"
+    # Check if this is an unborn branch (newly initialized repository without commits)
+    $hasAnyCommit = (git -C $repoPath rev-parse --verify HEAD 2>$null)
+    if (-not $hasAnyCommit) {
+        $commitSha = 'unborn'
+        $commitMsg = 'Initial Onboarding Baseline (Empty)'
+    } else {
+        throw "Invalid Git commit reference: $BaseCommit"
+    }
+} else {
+    $commitMsg = (git -C $repoPath log -n 1 --pretty=format:"%s" $commitSha)
 }
 
-$commitMsg = (git -C $repoPath log -n 1 --pretty=format:"%s" $commitSha)
 $repoName = Split-Path $repoPath -Leaf
 $tempParent = Join-Path $env:TEMP "BC_Review"
 if (-not (Test-Path -LiteralPath $tempParent)) {
@@ -225,11 +233,12 @@ $null = New-Item -ItemType Directory -Path $tempReviewRoot -Force
 
 Write-Host ("Exporting baseline commit [{0}: {1}] to temp review directory..." -f $commitSha, $commitMsg) -ForegroundColor Cyan
 
-# Export git archive of the base commit
-$tarPath = Join-Path $env:TEMP "BC_Review_$repoName-$commitSha.tar"
-git -C $repoPath archive -o $tarPath $commitSha
-tar -xf $tarPath -C $tempReviewRoot
-Remove-Item -LiteralPath $tarPath -Force -ErrorAction SilentlyContinue
+if ($commitSha -ne 'unborn') {
+    $tarPath = Join-Path $tempReviewRoot "archive.tar"
+    git -C $repoPath archive $commitSha -o $tarPath
+    tar -xf $tarPath -C $tempReviewRoot
+    Remove-Item -LiteralPath $tarPath -Force -ErrorAction SilentlyContinue
+}
 
 # Construct exclusion filter list
 $filterList = [System.Collections.Generic.List[string]]::new()
@@ -271,7 +280,7 @@ $sessionMeta = [ordered]@{
     RepositoryPath   = $repoPath
     BaseCommit       = $commitSha
     CommitMessage    = $commitMsg
-    CommitDate       = (git -C $repoPath log -n 1 --pretty=format:"%cI" $commitSha)
+    CommitDate       = if ($commitSha -ne 'unborn') { (git -C $repoPath log -n 1 --pretty=format:"%cI" $commitSha) } else { (Get-Date).ToString("o") }
     SessionStartedAt = (Get-Date).ToString("o")
     FilterMask       = $filterMask
 }
