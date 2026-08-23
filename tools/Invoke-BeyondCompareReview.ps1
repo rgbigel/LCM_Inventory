@@ -254,6 +254,10 @@ if ($repoPath -eq $workspaceRoot) {
 }
 
 # Standard LCM exclusions
+$filterList.Add("-*\.git\")
+$filterList.Add("-*\__pycache__\")
+$filterList.Add("-*.pyc")
+$filterList.Add("-*.pyo")
 $filterList.Add("-*.inventory")
 $filterList.Add("-data\inventory.json")
 $filterList.Add("-inventory.json")
@@ -291,19 +295,17 @@ Write-Host ("  Left (Baseline {0}): {1}" -f $commitSha, $tempReviewRoot)
 Write-Host ("  Right (Current Live):       {0}" -f $repoPath)
 Write-Host ("  Filters Applied:            {0}" -f $filterMask)
 
-$title1 = "Baseline ($commitSha)"
-$title2 = "Current Live ($repoName)"
-$taskName = "LCM_BeyondCompare_Review"
-$actionCmd = "`"$BeyondComparePath`" /title1=`"$title1`" /title2=`"$title2`" /filters=`"$filterMask`" `"$tempReviewRoot`" `"$repoPath`""
+# Format clean folder comparison arguments for ShellExecute
+$bcArgs = "`"$tempReviewRoot`" `"$repoPath`""
 
 try {
-    # Method 1: Launch via interactive Windows Task Scheduler (forces GUI into active user Session 1)
-    schtasks.exe /create /tn $taskName /tr $actionCmd /sc once /st "23:59" /it /f 2>&1 | Out-Null
-    schtasks.exe /run /tn $taskName 2>&1 | Out-Null
+    # Method 1 (Authoritative): Launch via Windows Explorer Shell COM Object
+    # Shell.Application delegates process creation to explorer.exe (Session 1), ensuring visible foreground GUI window on the desktop.
+    $shellApp = New-Object -ComObject Shell.Application
+    $shellApp.ShellExecute($BeyondComparePath, $bcArgs, "", "open", 1)
     Start-Sleep -Milliseconds 500
-    schtasks.exe /delete /tn $taskName /f 2>&1 | Out-Null
 }
 catch {
-    # Method 2: Standard Start-Process fallback
-    Start-Process -FilePath $BeyondComparePath -ArgumentList @("/title1=$title1", "/title2=$title2", "/filters=$filterMask", "`"$tempReviewRoot`"", "`"$repoPath`"")
+    # Method 2: Fallback to Start-Process
+    Start-Process -FilePath $BeyondComparePath -ArgumentList @("`"$tempReviewRoot`"", "`"$repoPath`"")
 }
