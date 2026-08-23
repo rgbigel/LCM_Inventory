@@ -180,17 +180,35 @@ function Get-RepoCMState {
         $absorbedVersion = $GlobalLCMVersion
         $currentVersion = $GlobalLCMVersion
     } elseif (Test-Path $lcmConfigFile) {
-        $classification = 'lcm-governed'
         $lcmStatus = 'governed'
         try {
             $cfg = Get-Content -Path $lcmConfigFile -Raw | ConvertFrom-Json
-            $currentVersion = if ($cfg.governance.lcm_version) { [string]$cfg.governance.lcm_version } else { [string]$cfg.lcm_version }
-            $absorbedVersion = if ($cfg.governance.absorbed_lcm_version) { [string]$cfg.governance.absorbed_lcm_version } else { if ($cfg.absorbed_lcm_version) { [string]$cfg.absorbed_lcm_version } else { $currentVersion } }
-        } catch { }
+            if ($cfg.PSObject.Properties['classification']) {
+                $classification = [string]$cfg.classification
+            } else {
+                $classification = 'lcm-governed'
+            }
+            if ($cfg.PSObject.Properties['current_lcm_version']) {
+                $currentVersion = [string]$cfg.current_lcm_version
+            } elseif ($cfg.PSObject.Properties['governance'] -and $cfg.governance.PSObject.Properties['lcm_version']) {
+                $currentVersion = [string]$cfg.governance.lcm_version
+            } elseif ($cfg.PSObject.Properties['lcm_version']) {
+                $currentVersion = [string]$cfg.lcm_version
+            }
+
+            if ($cfg.PSObject.Properties['absorbed_lcm_version']) {
+                $absorbedVersion = [string]$cfg.absorbed_lcm_version
+            } elseif ($cfg.PSObject.Properties['governance'] -and $cfg.governance.PSObject.Properties['absorbed_lcm_version']) {
+                $absorbedVersion = [string]$cfg.governance.absorbed_lcm_version
+            } else {
+                $absorbedVersion = $currentVersion
+            }
+        } catch {
+            $classification = 'lcm-governed'
+        }
         
-        $agentJunction = Join-Path $DirectoryPath '.agents\rules\core'
-        $copilotJunction = Join-Path $DirectoryPath '.copilot\Rules\core'
-        if ((-not (Test-Path $agentJunction)) -or (-not (Test-Path $copilotJunction))) {
+        $agentJunction = Join-Path $DirectoryPath '.agents\rules'
+        if (-not (Test-Path $agentJunction)) {
             $junctionsHealthy = $false
         }
         

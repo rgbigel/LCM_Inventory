@@ -97,7 +97,11 @@ foreach ($dir in $childDirs) {
             $cfg = Get-Content -Path $cfgPath -Raw -Encoding UTF8 | ConvertFrom-Json
             $gov = if ($cfg.PSObject.Properties['governance']) { $cfg.governance } else { $null }
             
-            if ($gov -and $gov.PSObject.Properties['absorbed_lcm_version']) {
+            if ($cfg.PSObject.Properties['absorbed_lcm_version']) {
+                $absorbedVersion = [string]$cfg.absorbed_lcm_version
+            } elseif ($cfg.PSObject.Properties['current_lcm_version']) {
+                $absorbedVersion = [string]$cfg.current_lcm_version
+            } elseif ($gov -and $gov.PSObject.Properties['absorbed_lcm_version']) {
                 $absorbedVersion = [string]$gov.absorbed_lcm_version
             } elseif ($gov -and $gov.PSObject.Properties['lcm_version']) {
                 $absorbedVersion = [string]$gov.lcm_version
