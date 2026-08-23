@@ -295,8 +295,11 @@ Write-Host ("  Left (Baseline {0}): {1}" -f $commitSha, $tempReviewRoot)
 Write-Host ("  Right (Current Live):       {0}" -f $repoPath)
 Write-Host ("  Filters Applied:            {0}" -f $filterMask)
 
-# Format clean folder comparison arguments for ShellExecute
-$bcArgs = "`"$tempReviewRoot`" `"$repoPath`""
+$title1 = "Baseline ($commitSha)"
+$title2 = "Current Live ($repoName)"
+
+# Format full folder comparison arguments including titles and LCM exclusion filters
+$bcArgs = "`"$tempReviewRoot`" `"$repoPath`" `"/title1=$title1`" `"/title2=$title2`" `"/filters=$filterMask`""
 
 try {
     # Method 1 (Authoritative): Launch via Windows Explorer Shell COM Object
@@ -307,5 +310,5 @@ try {
 }
 catch {
     # Method 2: Fallback to Start-Process
-    Start-Process -FilePath $BeyondComparePath -ArgumentList @("`"$tempReviewRoot`"", "`"$repoPath`"")
+    Start-Process -FilePath $BeyondComparePath -ArgumentList @("`"$tempReviewRoot`"", "`"$repoPath`"", "`"/title1=$title1`"", "`"/title2=$title2`"", "`"/filters=$filterMask`"")
 }
