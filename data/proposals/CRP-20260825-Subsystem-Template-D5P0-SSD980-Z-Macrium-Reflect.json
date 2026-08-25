@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "crp_id": "CRP-20260825-Subsystem-Template-D5P0-SSD980-Z-Macrium-Reflect",
+  "cr_id": "CR-2026-014",
+  "title": "Establish Subsystem Architecture Template D5P0-SSD980-Z with Macrium Reflect Backup Definition Inventory",
+  "origin_repo": "Workspace_Inventory",
+  "status": "APPROVED_QUEUED",
+  "target_lcm_version": "6.0.0",
+  "affected_repos": ["Workspace_Inventory", "Workspace_AI", "tools"],
+  "author": "Rolf, Workspace_AI Engine",
+  "created_at": "2026-08-25T18:21:00+02:00",
+  "description": "Establishes a dedicated multi-boot OS subsystem template for D5P0-SSD980-Z (and sibling boot volumes), modeled on the HaSSD06 subsystem architecture, containing Macrium Reflect backup XML definitions, execution tools, and an interactive inventory explorer.",
+  "implementation_tool": "tools/Initialize-Subsystem-D5P0-SSD980-Z.ps1",
+  "verification": "Test-RepoReadiness.ps1 and Show-SubsystemInventory"
+}

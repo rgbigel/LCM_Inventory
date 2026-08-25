@@ -1,27 +1,58 @@
 <#
-Module: tools/Show-WorkspaceInventoryApp.ps1
-Purpose: Generates a modern, interactive, scrollable HTML explorer for Workspace_Inventory (data/inventory.json) and opens it in the browser.
-Governance Invariant (RULE-EFF-001): Auto-accepted mechanical dashboard renderer.
-Path: tools/Show-WorkspaceInventoryApp.ps1
-Authors: Rolf, Workspace_AI Engine
-Version: 5.0.2
-Date: 2026-08-21
+.SYNOPSIS
+  Generates and opens the modern interactive HTML explorer for LCM Workspace Inventory.
+.DESCRIPTION
+  Module: Show-WorkspaceInventoryApp
+  Purpose: Generates and opens the interactive HTML workspace dashboard conforming to the
+           INVENTORY_VIEWER design standard. Features clickable metric cards, multi-tab navigation
+           (Repositories Ledger, Workspace Tools, Governance Rules), live search filtering,
+           generation timestamp, and refresh action button.
+           Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
+  Path: Workspace_Inventory/tools/Show-WorkspaceInventoryApp.ps1
+  Authors: Rolf, Workspace_AI Engine
+  Version: 5.1.0
+  Date: 2026-08-25
+.PARAMETER NoLaunch
+  Generates the HTML dashboard file without automatically launching it in the web browser.
+.PARAMETER Help
+  Displays this comprehensive parameter reference and usage instructions (Aliases: -h, -?).
+.EXAMPLE
+  pwsh tools/Show-WorkspaceInventoryApp.ps1 -h
+.EXAMPLE
+  pwsh tools/Show-WorkspaceInventoryApp.ps1
+.EXAMPLE
+  pwsh tools/Show-WorkspaceInventoryApp.ps1 -NoLaunch
 #>
 
 [CmdletBinding()]
 param(
-    [switch]$NoLaunch
+  [switch]$NoLaunch,
+  [Alias('h', '?')]
+  [switch]$Help
 )
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+
+if ($Help) {
+  Write-Host "==========================================================================" -ForegroundColor Cyan
+  Write-Host " LCM WORKSPACE INVENTORY VIEWER (v5.1.0)" -ForegroundColor Cyan
+  Write-Host "==========================================================================" -ForegroundColor Cyan
+  Write-Host "SYNOPSIS:" -ForegroundColor Yellow
+  Write-Host "  Generates and displays the interactive HTML dashboard for LCM Workspace Inventory."
+  Write-Host ""
+  Write-Host "USAGE:" -ForegroundColor Yellow
+  Write-Host "  pwsh tools/Show-WorkspaceInventoryApp.ps1 [-NoLaunch] [-h]"
+  Write-Host "==========================================================================" -ForegroundColor Cyan
+  return
+}
 
 $repoRoot = Split-Path $PSScriptRoot -Parent
 $invPath = Join-Path $repoRoot 'data\inventory.json'
 $htmlPath = Join-Path $repoRoot 'docs\WORKSPACE_INVENTORY_VIEWER.html'
 
 if (-not (Test-Path -LiteralPath $invPath)) {
-    throw "Workspace inventory file not found: $invPath"
+  throw "Workspace inventory file not found: $invPath"
 }
 
 $inv = Get-Content -LiteralPath $invPath -Raw | ConvertFrom-Json
@@ -31,6 +62,7 @@ $governedRepos = ($inv.repositories | Where-Object { $_.LCMStatus -match 'govern
 $dirtyRepos = ($inv.repositories | Where-Object { $_.DirtyState -ne 'clean' -and $_.DirtyState -ne $null }).Count
 $lcm5Repos = ($inv.repositories | Where-Object { $_.CurrentLCMVersion -eq '5.0.2' -or $_.AbsorbedLCMVersion -eq '5.0.2' }).Count
 $schemaVer = if ($inv.PSObject.Properties['workspace_ai_baseline']) { $inv.workspace_ai_baseline.GlobalLCMVersion } else { '5.0.2' }
+$genTime = if ($inv.generated_at) { $inv.generated_at } else { (Get-Date).ToString("yyyy-MM-dd HH:mm:ss") }
 
 $html = @"
 <!DOCTYPE html>
@@ -41,7 +73,7 @@ $html = @"
     <title>LCM Workspace Inventory Explorer</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-primary: #0d1117;
@@ -69,7 +101,7 @@ $html = @"
             padding: 24px;
         }
 
-        .container { max-width: 1400px; margin: 0 auto; }
+        .container { max-width: 1560px; margin: 0 auto; }
         header {
             display: flex;
             justify-content: space-between;
@@ -77,6 +109,8 @@ $html = @"
             padding-bottom: 20px;
             border-bottom: 1px solid var(--border);
             margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
         }
 
         .header-title h1 {
@@ -90,7 +124,42 @@ $html = @"
             gap: 10px;
         }
 
-        .header-title p { color: var(--text-secondary); font-size: 14px; margin-top: 4px; }
+        .header-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 6px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .timestamp-badge {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--accent);
+        }
+
+        .btn-refresh {
+            background: var(--accent-gradient);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 18px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(56, 139, 253, 0.3);
+        }
+
+        .btn-refresh:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(56, 139, 253, 0.45); }
 
         .metrics-grid {
             display: grid;
@@ -105,10 +174,14 @@ $html = @"
             border-radius: 12px;
             padding: 16px;
             box-shadow: var(--card-shadow);
+            cursor: pointer;
+            transition: all 0.2s ease;
         }
 
+        .metric-card:hover { transform: translateY(-3px); border-color: var(--accent); }
+
         .metric-label { font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-secondary); }
-        .metric-value { font-size: 24px; font-weight: 700; color: var(--text-primary); margin-top: 4px; font-family: 'JetBrains Mono', monospace; }
+        .metric-value { font-size: 26px; font-weight: 700; color: var(--text-primary); margin-top: 4px; font-family: 'JetBrains Mono', monospace; }
         .metric-sub { font-size: 12px; color: var(--success); margin-top: 4px; }
 
         .tabs { display: flex; gap: 8px; border-bottom: 1px solid var(--border); margin-bottom: 20px; overflow-x: auto; }
@@ -148,15 +221,15 @@ $html = @"
             box-shadow: var(--card-shadow);
         }
 
-        .scrollable-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
+        .scrollable-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
         .scrollable-table th {
             background: var(--bg-tertiary);
             color: var(--text-secondary);
             font-weight: 600;
             padding: 12px 16px;
             border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 0;
+            cursor: pointer;
+            user-select: none;
         }
         .scrollable-table td {
             padding: 12px 16px;
@@ -165,12 +238,12 @@ $html = @"
         }
         .scrollable-table tr:hover { background: rgba(88, 166, 255, 0.04); }
 
-        .code-cell { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #79c0ff; }
+        .code-cell { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #79c0ff; }
         .badge {
             display: inline-block;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 12px;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 11px;
             font-weight: 600;
             text-transform: uppercase;
         }
@@ -179,39 +252,71 @@ $html = @"
         .badge-warning { background: rgba(210, 153, 34, 0.15); color: var(--warning); }
         .badge-muted { background: rgba(110, 118, 129, 0.15); color: var(--text-muted); }
 
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
+        .btn-copy {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .btn-copy:hover { color: var(--text-primary); border-color: var(--accent); }
+
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--success);
+            color: #0d1117;
+            font-weight: 700;
+            font-size: 13px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            display: none;
+            z-index: 2000;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
             <div class="header-title">
-                <h1>🏢 Lifecycle Model (LCM) Workspace Explorer</h1>
-                <p>Root Workspace: D:\Git_Repositories &bull; Framework Version: $schemaVer &bull; Generated: $($inv.generated_at)</p>
+                <div>
+                    <h1>🏢 LCM Workspace Inventory Explorer</h1>
+                    <div class="header-meta">
+                        <span>Root: <strong>D:\Git_Repositories</strong></span>
+                        <span>•</span>
+                        <span class="timestamp-badge">Generated: $genTime</span>
+                    </div>
+                </div>
             </div>
-            <div>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <button class="btn-refresh" onclick="refreshInventory()">
+                    <span>🔄</span> Refresh Data & View
+                </button>
                 <span class="badge badge-success">LCM Active &bull; v$schemaVer</span>
             </div>
         </header>
 
         <div class="metrics-grid">
-            <div class="metric-card">
+            <div class="metric-card" onclick="showTab('tab-repos')">
                 <div class="metric-label">Total Repositories</div>
                 <div class="metric-value">$totalRepos</div>
                 <div class="metric-sub">Tracked in Workspace Root</div>
             </div>
-            <div class="metric-card">
+            <div class="metric-card" onclick="showTab('tab-repos')">
                 <div class="metric-label">Governed Repositories</div>
                 <div class="metric-value">$governedRepos / $totalRepos</div>
                 <div class="metric-sub">LCM Junction Active</div>
             </div>
-            <div class="metric-card">
-                <div class="metric-label">LCM v5.0.2 Aligned</div>
+            <div class="metric-card" onclick="showTab('tab-repos')">
+                <div class="metric-label">LCM v$schemaVer Aligned</div>
                 <div class="metric-value">$lcm5Repos</div>
                 <div class="metric-sub">Standard Baseline Version</div>
             </div>
-            <div class="metric-card">
+            <div class="metric-card" onclick="showTab('tab-repos')">
                 <div class="metric-label">Clean Git Trees</div>
                 <div class="metric-value">$($totalRepos - $dirtyRepos) / $totalRepos</div>
                 <div class="metric-sub">$dirtyRepos Repos With Pending Changes</div>
@@ -221,7 +326,7 @@ $html = @"
         <div class="tabs">
             <button class="tab-btn active" onclick="showTab('tab-repos')">Repositories Ledger ($totalRepos)</button>
             <button class="tab-btn" onclick="showTab('tab-tools')">🛠️ Workspace Tools & Active Help</button>
-            <button class="tab-btn" onclick="showTab('tab-rules')">15 Authoritative Governance Rules</button>
+            <button class="tab-btn" onclick="showTab('tab-rules')">16 Authoritative Governance Rules</button>
         </div>
 
         <div class="search-bar">
@@ -240,6 +345,7 @@ $html = @"
                             <th>Head Commit</th>
                             <th>Git Status</th>
                             <th>Quality Gate / Rules</th>
+                            <th style="text-align: center;">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -261,6 +367,9 @@ foreach ($r in $inv.repositories) {
                             <td class="code-cell">$head</td>
                             <td><span class="badge $statusBadge">$dirty</span></td>
                             <td>$($r.LCMStatus)</td>
+                            <td style="text-align: center;">
+                                <button class="btn-copy" onclick="copyText('D:\\Git_Repositories\\$($r.RepositoryName)')">📋 Copy Path</button>
+                            </td>
                         </tr>
 "@
 }
@@ -272,7 +381,7 @@ $html += @"
         </div>
 
         <!-- TAB 2: TOOLS & ACTIVE HELP -->
-        <div id="tab-tools" class="tab-content">
+        <div id="tab-tools" class="tab-content" style="display: none;">
             <div class="table-container">
                 <table class="scrollable-table" id="table-tools">
                     <thead>
@@ -281,82 +390,56 @@ $html += @"
                             <th>Repository / Domain</th>
                             <th>Purpose & Active Guidance</th>
                             <th>CLI Execution Syntax</th>
+                            <th style="text-align: center;">Action</th>
                         </tr>
                     </thead>
                     <tbody>
+                        <tr>
+                            <td><strong>Show-ToolIndex.ps1</strong></td>
+                            <td><span class="badge badge-info">tools</span></td>
+                            <td>Generates and launches the authoritative LCM Tool Explorer dashboard.</td>
+                            <td class="code-cell">pwsh -File tools/Show-ToolIndex.ps1</td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('pwsh -File tools/Show-ToolIndex.ps1')">📋 Copy</button></td>
+                        </tr>
                         <tr>
                             <td><strong>Invoke-WorkspaceAudit.ps1</strong></td>
                             <td><span class="badge badge-info">Workspace_Inventory</span></td>
                             <td>Scans all 35+ repositories, reconciles drift, and refreshes parent CM ledger.</td>
                             <td class="code-cell">pwsh -File tools/Invoke-WorkspaceAudit.ps1</td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('pwsh -File tools/Invoke-WorkspaceAudit.ps1')">📋 Copy</button></td>
                         </tr>
                         <tr>
                             <td><strong>Invoke-BeyondCompareReview.ps1</strong></td>
                             <td><span class="badge badge-info">Workspace_Inventory</span></td>
                             <td>Launches Beyond Compare 5 desktop visual review against baseline commit.</td>
                             <td class="code-cell">pwsh -File tools/Invoke-BeyondCompareReview.ps1 -RepositoryName &lt;Name&gt;</td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('pwsh -File tools/Invoke-BeyondCompareReview.ps1 -RepositoryName ')">📋 Copy</button></td>
                         </tr>
                         <tr>
                             <td><strong>Submit-ReviewResult.ps1</strong></td>
                             <td><span class="badge badge-info">Workspace_Inventory</span></td>
-                            <td>Generates formal audit receipt in data/reviews/ and gates repository commit.</td>
-                            <td class="code-cell">pwsh -File tools/Submit-ReviewResult.ps1 -RepositoryName &lt;Name&gt; -Result Accepted</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Invoke-LCMOnboardBatch.ps1</strong></td>
-                            <td><span class="badge badge-info">Workspace_Inventory</span></td>
-                            <td>Batch onboards un-governed repositories with rules junctions, tripartite docs & gates.</td>
-                            <td class="code-cell">pwsh -File tools/Invoke-LCMOnboardBatch.ps1</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Test-LCMRuleHealth.ps1</strong></td>
-                            <td><span class="badge badge-info">Workspace_Inventory</span></td>
-                            <td>Verifies NTFS junction health and rule integrity across all child repositories.</td>
-                            <td class="code-cell">pwsh -File tools/Test-LCMRuleHealth.ps1</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Update-HaInventory.ps1</strong></td>
-                            <td><span class="badge badge-success">HaSSD06_Inventory</span></td>
-                            <td>Extracts live Home Assistant Central Registry, entities & renders dashboard.</td>
-                            <td class="code-cell">pwsh -File tools/Update-HaInventory.ps1</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Show-HaInventoryApp.ps1</strong></td>
-                            <td><span class="badge badge-success">HaSSD06_Inventory</span></td>
-                            <td>Launches interactive browser explorer for HaSSD06 devices & 937 entities.</td>
-                            <td class="code-cell">pwsh -File tools/Show-HaInventoryApp.ps1</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Invoke-HaUpdateGate.ps1</strong></td>
-                            <td><span class="badge badge-warning">HaSSD06_Inventory</span></td>
-                            <td>5-stage external update runner with breaking-change parsing & pre-backup.</td>
-                            <td class="code-cell">pwsh -File tools/Invoke-HaUpdateGate.ps1</td>
+                            <td>Records human Beyond Compare 5 review approval receipt (ACCEPTED/REJECTED).</td>
+                            <td class="code-cell">pwsh -File tools/Submit-ReviewResult.ps1 -RepositoryName &lt;Name&gt; -Verdict ACCEPTED</td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('pwsh -File tools/Submit-ReviewResult.ps1 -RepositoryName ')">📋 Copy</button></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- TAB 3: RULES -->
-        <div id="tab-rules" class="tab-content">
+        <!-- TAB 3: GOVERNANCE RULES -->
+        <div id="tab-rules" class="tab-content" style="display: none;">
             <div class="table-container">
                 <table class="scrollable-table" id="table-rules">
                     <thead>
-                        <tr>
-                            <th>Rule File</th>
-                            <th>Rule Code</th>
-                            <th>Domain / Scope</th>
-                            <th>Core Invariant</th>
-                        </tr>
+                        <tr><th>Rule File</th><th>Rule Code</th><th>Domain</th><th>Core Governance Invariant</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td><strong>ProposalReviewFlowPolicy.md</strong></td><td class="code-cell">RULE-LCM-001 - 006</td><td>Proposal & Review</td><td>Proposal-first intent, BC5 review gate, dual-commit sync.</td></tr>
-                        <tr><td><strong>PowerShellStandardsPolicy.md</strong></td><td class="code-cell">RULE-PS-001 - 007</td><td>PowerShell</td><td>StrictMode @(...) wrapping, Microsoft approved verbs, test elevation.</td></tr>
-                        <tr><td><strong>ReviewCommitGovernancePolicy.md</strong></td><td class="code-cell">RULE-REV-001 - 005</td><td>Commit Gating</td><td>Mandatory review-gated commits, quality gate pass, audit receipts.</td></tr>
-                        <tr><td><strong>MethodEfficiencyPolicy.md</strong></td><td class="code-cell">RULE-EFF-001 - 005</td><td>Efficiency</td><td>Auto-acceptance of mechanical evidence, zero-test cascade.</td></tr>
-                        <tr><td><strong>ElevationPolicy.md</strong></td><td class="code-cell">ELEVATION-POLICY</td><td>Security</td><td>Least-privilege execution default, elevated script runner delegation.</td></tr>
+                        <tr><td><strong>ProposalReviewFlowPolicy.md</strong></td><td class="code-cell">RULE-LCM-001 - 006</td><td>Proposal Flow</td><td>Proposal-first intent, batch commands, BC5 review gate, dual-commit sync.</td></tr>
+                        <tr><td><strong>PowerShellStandardsPolicy.md</strong></td><td class="code-cell">RULE-PS-001 - 010</td><td>PowerShell</td><td>StrictMode @() wrapping, verb compliance, colon-safety, header metadata, logging & help.</td></tr>
+                        <tr><td><strong>ReviewCommitGovernancePolicy.md</strong></td><td class="code-cell">RULE-REV-001 - 005</td><td>Commit Gating</td><td>Mandatory review-gated commits (ACCEPTED), readiness pass, audit receipts.</td></tr>
+                        <tr><td><strong>ElevationPolicy.md</strong></td><td class="code-cell">ELEVATION-POLICY</td><td>Security</td><td>Least-privilege default, runner delegation, auto-detection of privileged commands.</td></tr>
                         <tr><td><strong>LanguagePolicy.md</strong></td><td class="code-cell">LANGUAGE-POLICY</td><td>Localization</td><td>English-always invariant for code, comments, docs, commit messages.</td></tr>
-                        <tr><td><strong>RepositoryContextPolicy.md</strong></td><td class="code-cell">REPO-CONTEXT</td><td>Context Scoping</td><td>Strict repository boundary separation, deterministic relative paths.</td></tr>
                         <tr><td><strong>SubsystemGovernancePolicy.md</strong></td><td class="code-cell">RULE-SUB-001 - 007</td><td>Subsystem Architecture</td><td>Disjunct domains, dedicated inventory, Central Registry Non-Mutation.</td></tr>
                         <tr><td><strong>DocumentationStandardsPolicy.md</strong></td><td class="code-cell">RULE-DOC-001 - 004</td><td>Documentation</td><td>Tripartite core specs (Architecture/Requirements/Implementation) + Runbook.</td></tr>
                     </tbody>
@@ -365,23 +448,45 @@ $html += @"
         </div>
     </div>
 
+    <div class="toast" id="toast">✓ Copied to clipboard!</div>
+
     <script>
         function showTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(el => { el.style.display = 'none'; el.classList.remove('active'); });
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            event.target.classList.add('active');
+            const target = document.getElementById(tabId);
+            if (target) {
+                target.style.display = 'block';
+                target.classList.add('active');
+            }
+            if (event && event.target && event.target.classList.contains('tab-btn')) {
+                event.target.classList.add('active');
+            }
         }
 
         function filterTables() {
             const query = document.getElementById('filterInput').value.toLowerCase();
             const activeTab = document.querySelector('.tab-content.active');
+            if (!activeTab) return;
             const rows = activeTab.querySelectorAll('tbody tr');
 
             rows.forEach(row => {
                 const text = row.textContent.toLowerCase();
                 row.style.display = text.includes(query) ? '' : 'none';
             });
+        }
+
+        function copyText(text) {
+            navigator.clipboard.writeText(text);
+            const toast = document.getElementById('toast');
+            toast.innerText = '✓ Copied: ' + text;
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 2200);
+        }
+
+        function refreshInventory() {
+            copyText('pwsh -File tools/Invoke-WorkspaceAudit.ps1; pwsh -File tools/Show-WorkspaceInventoryApp.ps1');
+            setTimeout(() => { window.location.reload(); }, 600);
         }
     </script>
 </body>

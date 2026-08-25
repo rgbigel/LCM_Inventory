@@ -309,14 +309,26 @@ $title2 = "Current Live ($repoName)"
 # Format full folder comparison arguments including titles and LCM exclusion filters
 $bcArgs = "`"$tempReviewRoot`" `"$repoPath`" `"/title1=$title1`" `"/title2=$title2`" `"/filters=$filterMask`""
 
+$taskName = "LCM_BC_Review_$(Get-Random)"
 try {
-    # Method 1 (Authoritative): Launch via Windows Explorer Shell COM Object
-    # Shell.Application delegates process creation to explorer.exe (Session 1), ensuring visible foreground GUI window on the desktop.
-    $shellApp = New-Object -ComObject Shell.Application
-    $shellApp.ShellExecute($BeyondComparePath, $bcArgs, "", "open", 1)
-    Start-Sleep -Milliseconds 500
+    # Method 1 (Authoritative): Launch via Task Scheduler Interactive Dispatch (Session 1 desktop)
+    $action = New-ScheduledTaskAction -Execute $BeyondComparePath -Argument $bcArgs
+    $principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive
+    Register-ScheduledTask -TaskName $taskName -Action $action -Principal $principal -Force | Out-Null
+    Start-ScheduledTask -TaskName $taskName
+    Start-Sleep -Milliseconds 600
 }
 catch {
-    # Method 2: Fallback to Start-Process
-    Start-Process -FilePath $BeyondComparePath -ArgumentList @("`"$tempReviewRoot`"", "`"$repoPath`"", "`"/title1=$title1`"", "`"/title2=$title2`"", "`"/filters=$filterMask`"")
+    # Method 2: Fallback to ShellExecute / Start-Process
+    try {
+        $shellApp = New-Object -ComObject Shell.Application
+        $shellApp.ShellExecute($BeyondComparePath, $bcArgs, "", "open", 1)
+        Start-Sleep -Milliseconds 500
+    }
+    catch {
+        Start-Process -FilePath $BeyondComparePath -ArgumentList @("`"$tempReviewRoot`"", "`"$repoPath`"", "`"/title1=$title1`"", "`"/title2=$title2`"", "`"/filters=$filterMask`"")
+    }
+}
+finally {
+    Unregister-ScheduledTask -TaskName $taskName -Confirm:$false -ErrorAction SilentlyContinue | Out-Null
 }

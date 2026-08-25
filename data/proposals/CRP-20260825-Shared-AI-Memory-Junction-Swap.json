@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "crp_id": "CRP-20260825-Shared-AI-Memory-Junction-Swap",
+  "cr_id": "CR-2026-013",
+  "title": "Migrate %USERPROFILE%\\.gemini to Shared Persistent Drive A:\\.gemini via NTFS Junction",
+  "origin_repo": "SystemConfiguration",
+  "status": "APPROVED_PENDING_SWAP",
+  "target_lcm_version": "6.0.0",
+  "affected_repos": ["SystemConfiguration", "Workspace_Inventory", "tools"],
+  "author": "Rolf, Workspace_AI Engine",
+  "created_at": "2026-08-25T18:21:00+02:00",
+  "description": "Pre-sync of 819 memory files (217.95 MB) to A:\\.gemini is complete and verified with locked ACLs. The final execution step will swap C:\\Users\\rgbig\\.gemini to an NTFS Junction targeting A:\\.gemini upon IDE/background process restart.",
+  "implementation_tool": "tools/Initialize-SharedAiMemory.ps1",
+  "verification": "Test-Path -Path 'A:\\.gemini' and Test-Path -Path 'C:\\Users\\rgbig\\.gemini'"
+}

@@ -140,12 +140,38 @@
       "origin_repo": "Workspace_Inventory",
       "title": "Establish Workspace_Inventory as authoritative CM system",
       "status": "implemented",
-      "target_lcm_version": "4.1.0",
+      "target_lcm_version": "6.0.0",
       "affected_repos": ["Workspace_Inventory", "Workspace_AI"],
       "created_at": "2026-08-15T22:00:00+02:00",
-      "closed_at": null,
+      "closed_at": "2026-08-25T18:20:00+02:00",
       "author": "Rolf",
       "documentation_path": "Workspace_Inventory/README.md"
+    },
+    {
+      "cr_id": "CR-2026-013",
+      "legacy_id": "IDEA-1",
+      "origin_repo": "SystemConfiguration",
+      "title": "Migrate %USERPROFILE%\\.gemini to Shared Persistent Drive A:\\.gemini via NTFS Junction",
+      "status": "approved_pending_swap",
+      "target_lcm_version": "6.0.0",
+      "affected_repos": ["SystemConfiguration", "Workspace_Inventory", "tools"],
+      "created_at": "2026-08-25T18:20:00+02:00",
+      "closed_at": null,
+      "author": "Rolf",
+      "documentation_path": "Workspace_Inventory/data/proposals/CRP-20260825-Shared-AI-Memory-Junction-Swap.json"
+    },
+    {
+      "cr_id": "CR-2026-014",
+      "legacy_id": "IDEA-3",
+      "origin_repo": "Workspace_Inventory",
+      "title": "Establish Subsystem Architecture Template D5P0-SSD980-Z with Macrium Reflect Backup Definition Inventory",
+      "status": "approved_queued",
+      "target_lcm_version": "6.0.0",
+      "affected_repos": ["Workspace_Inventory", "Workspace_AI", "tools"],
+      "created_at": "2026-08-25T18:20:00+02:00",
+      "closed_at": null,
+      "author": "Rolf",
+      "documentation_path": "Workspace_Inventory/data/proposals/CRP-20260825-Subsystem-Template-D5P0-SSD980-Z-Macrium-Reflect.json"
     }
   ]
 }
