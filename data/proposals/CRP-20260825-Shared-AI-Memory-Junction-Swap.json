@@ -4,7 +4,7 @@
   "cr_id": "CR-2026-013",
   "title": "Migrate %USERPROFILE%\\.gemini to Shared Persistent Drive A:\\.gemini via NTFS Junction",
   "origin_repo": "SystemConfiguration",
-  "status": "APPROVED_PENDING_SWAP",
+  "status": "COMPLETED",
   "target_lcm_version": "6.0.0",
   "affected_repos": ["SystemConfiguration", "Workspace_Inventory", "tools"],
   "author": "Rolf, Workspace_AI Engine",
