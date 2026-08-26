@@ -100,7 +100,7 @@
       "title": "Implement Export-LCMRules (SaveLCMRules) Governance Exporter and Gemini Sync Tool",
       "origin_repo": "Root (tools)",
       "cr_id": "CR-2026-020",
-      "state": "suggested",
+      "state": "completed",
       "bundle_id": "unassigned",
       "author": "Rolf",
       "details": "Implement Export-LCMRules.ps1 (with Save-LCMRules and SaveLCMRules aliases) to aggregate all 16 canonical LCM rule policies from .agents/rules/, AGENTS.md, and GEMINI.md into a single structured, clean markdown bundle (with frontmatter stripped and clear section banners), supporting -ToClipboard for 1-click pasting into Gemini Gems and configurable file export targets."
