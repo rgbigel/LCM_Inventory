@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-08-26T14:28:45+02:00",
+  "updated_at": "2026-08-26T15:42:35+02:00",
   "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 7,
+  "last_proposal_id": 8,
   "proposals": [
     {
       "id": 1,
@@ -82,6 +82,17 @@
       "bundle_id": "unassigned",
       "author": "Rolf",
       "details": "Add an interactive toggle switch in Show-ToolIndex.ps1 (TOOLS_VIEWER.html) to switch the Tool Name column into 'Chat Short-Names Only' mode. In this mode, displays clean extension-less chat short names, filters to User-exposed tools, deduplicates across environments (.ps1/.cmd) and repository mirrors, and preserves click-to-run execution."
+    },
+    {
+      "id": 8,
+      "timestamp": "2026-08-26 15:42:35",
+      "title": "Modernize BackgroundModifier Architecture via Dynamic Rainmeter Skin Engine",
+      "origin_repo": "BackgroundModifier",
+      "cr_id": "CR-2026-019",
+      "state": "suggested",
+      "bundle_id": "unassigned",
+      "author": "Rolf",
+      "details": "Revive and redesign BackgroundModifier modernization using a dynamic Rainmeter telemetry skin architecture, resolving previous development bottlenecks: 1) Replace brittle GDI+ bitmap wallpaper baking and cache-busting with live desktop widget overlay, 2) Dynamically generate multi-drive meter configurations from state.json (supporting 13+ drives), 3) Implement lightweight event-driven Rainmeter refresh signaling, 4) Ensure DPI scaling and icon-safe screen positioning."
     }
   ]
 }
