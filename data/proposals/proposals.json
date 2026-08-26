@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-08-26T14:11:55+02:00",
+  "updated_at": "2026-08-26T14:28:45+02:00",
   "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 6,
+  "last_proposal_id": 7,
   "proposals": [
     {
       "id": 1,
@@ -71,6 +71,17 @@
       "bundle_id": "unassigned",
       "author": "Rolf",
       "details": "Merge the robust modern UAC elevation mechanism from Enter-CmdAdmin.cmd into GoAdm.cmd (replacing legacy runas /user:Administrator with PowerShell Start-Process cmd.exe -Verb RunAs and SID S-1-5-32-544 check), unifying CMD elevation under GoAdm and archiving/consolidating Enter-CmdAdmin.cmd."
+    },
+    {
+      "id": 7,
+      "timestamp": "2026-08-26 14:28:45",
+      "title": "Add Deduplicated Chat Short-Name View Toggle to Show-Tools (TOOLS_VIEWER)",
+      "origin_repo": "Root (tools)",
+      "cr_id": "CR-2026-018",
+      "state": "suggested",
+      "bundle_id": "unassigned",
+      "author": "Rolf",
+      "details": "Add an interactive toggle switch in Show-ToolIndex.ps1 (TOOLS_VIEWER.html) to switch the Tool Name column into 'Chat Short-Names Only' mode. In this mode, displays clean extension-less chat short names, filters to User-exposed tools, deduplicates across environments (.ps1/.cmd) and repository mirrors, and preserves click-to-run execution."
     }
   ]
 }
