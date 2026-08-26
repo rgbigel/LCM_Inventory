@@ -10,8 +10,8 @@
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
   Path: Workspace_Inventory/tools/Show-WorkspaceInventoryApp.ps1
   Authors: Rolf, Workspace_AI Engine
-  Version: 5.1.0
-  Date: 2026-08-25
+  Version: 5.2.0
+  Date: 2026-08-26
 .PARAMETER NoLaunch
   Generates the HTML dashboard file without automatically launching it in the web browser.
 .PARAMETER Help
@@ -36,7 +36,7 @@ $ErrorActionPreference = 'Stop'
 
 if ($Help) {
   Write-Host "==========================================================================" -ForegroundColor Cyan
-  Write-Host " LCM WORKSPACE INVENTORY VIEWER (v5.1.0)" -ForegroundColor Cyan
+  Write-Host " LCM WORKSPACE INVENTORY VIEWER (v5.2.0)" -ForegroundColor Cyan
   Write-Host "==========================================================================" -ForegroundColor Cyan
   Write-Host "SYNOPSIS:" -ForegroundColor Yellow
   Write-Host "  Generates and displays the interactive HTML dashboard for LCM Workspace Inventory."
