@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-08-26T14:08:15+02:00",
+  "updated_at": "2026-08-26T14:11:55+02:00",
   "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 5,
+  "last_proposal_id": 6,
   "proposals": [
     {
       "id": 1,
@@ -60,6 +60,17 @@
       "bundle_id": "unassigned",
       "author": "Rolf",
       "details": "Add -Path parameter (with default 'D:\\OneDrive\\cmd') to tools/Show-CmdFolderAnalysis.ps1, supporting dynamic analysis of arbitrary script directories (e.g. D:\\@cmd, D:\\OneDrive\\cmd\\@Repair, staging paths), updating CLI parameter binding, help banner, existence checks, and dynamic HTML report header."
+    },
+    {
+      "id": 6,
+      "timestamp": "2026-08-26 14:11:55",
+      "title": "Merge Enter-CmdAdmin UAC Elevation Functionality into GoAdm.cmd",
+      "origin_repo": "SystemConfiguration",
+      "cr_id": "CR-2026-017",
+      "state": "suggested",
+      "bundle_id": "unassigned",
+      "author": "Rolf",
+      "details": "Merge the robust modern UAC elevation mechanism from Enter-CmdAdmin.cmd into GoAdm.cmd (replacing legacy runas /user:Administrator with PowerShell Start-Process cmd.exe -Verb RunAs and SID S-1-5-32-544 check), unifying CMD elevation under GoAdm and archiving/consolidating Enter-CmdAdmin.cmd."
     }
   ]
 }
