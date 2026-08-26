@@ -497,6 +497,11 @@ $html | Set-Content -LiteralPath $htmlPath -Encoding UTF8
 Write-Host "Generated Workspace Inventory Viewer: $htmlPath" -ForegroundColor Green
 
 if (-not $NoLaunch) {
-    Write-Host "Opening workspace dashboard in default web browser..." -ForegroundColor Cyan
-    Start-Process $htmlPath
+    Write-Host "Opening workspace dashboard in default web browser on Desktop (Session 1)..." -ForegroundColor Cyan
+    $dispatcher = "D:\Git_Repositories\tools\Invoke-InteractiveDesktop.ps1"
+    if (Test-Path $dispatcher) {
+        & pwsh -File $dispatcher -FilePath "explorer.exe" -ArgumentList "`"$htmlPath`"" | Out-Null
+    } else {
+        Start-Process $htmlPath
+    }
 }
