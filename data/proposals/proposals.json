@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-08-21T16:21:37+02:00",
+  "updated_at": "2026-08-26T14:08:15+02:00",
   "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 4,
+  "last_proposal_id": 5,
   "proposals": [
     {
       "id": 1,
@@ -49,6 +49,17 @@
       "bundle_id": "unassigned",
       "author": "Rolf",
       "details": "Codify mandatory install/ directory and Installation.md runbook covering prerequisites, customization, preflight, deployment, health checks, updates, and target folder layout."
+    },
+    {
+      "id": 5,
+      "timestamp": "2026-08-26 14:08:15",
+      "title": "Enable Configurable Target Path Parameter in Show-CmdFolderAnalysis.ps1",
+      "origin_repo": "Root (tools)",
+      "cr_id": "CR-2026-016",
+      "state": "suggested",
+      "bundle_id": "unassigned",
+      "author": "Rolf",
+      "details": "Add -Path parameter (with default 'D:\\OneDrive\\cmd') to tools/Show-CmdFolderAnalysis.ps1, supporting dynamic analysis of arbitrary script directories (e.g. D:\\@cmd, D:\\OneDrive\\cmd\\@Repair, staging paths), updating CLI parameter binding, help banner, existence checks, and dynamic HTML report header."
     }
   ]
 }
