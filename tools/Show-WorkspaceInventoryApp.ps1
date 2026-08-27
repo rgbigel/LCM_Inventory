@@ -57,12 +57,17 @@ if (-not (Test-Path -LiteralPath $invPath)) {
 
 $inv = Get-Content -LiteralPath $invPath -Raw | ConvertFrom-Json
 
-$totalRepos = $inv.repositories.Count
-$governedRepos = ($inv.repositories | Where-Object { $_.LCMStatus -match 'governed' }).Count
-$dirtyRepos = ($inv.repositories | Where-Object { $_.DirtyState -ne 'clean' -and $_.DirtyState -ne $null }).Count
-$lcm5Repos = ($inv.repositories | Where-Object { $_.CurrentLCMVersion -eq '5.0.2' -or $_.AbsorbedLCMVersion -eq '5.0.2' }).Count
+$reposList = @($inv.repositories)
+$totalRepos = $reposList.Count
+$governedRepos = @($reposList | Where-Object { $_.LCMStatus -match 'governed' }).Count
+$dirtyRepos = @($reposList | Where-Object { $_.DirtyState -ne 'clean' -and $_.DirtyState -ne $null }).Count
+$lcm5Repos = @($reposList | Where-Object { $_.CurrentLCMVersion -eq '5.0.2' -or $_.AbsorbedLCMVersion -eq '5.0.2' }).Count
 $schemaVer = if ($inv.PSObject.Properties['workspace_ai_baseline']) { $inv.workspace_ai_baseline.GlobalLCMVersion } else { '5.0.2' }
 $genTime = if ($inv.generated_at) { $inv.generated_at } else { (Get-Date).ToString("yyyy-MM-dd HH:mm:ss") }
+
+$workspaceRoot = 'D:\Git_Repositories'
+$atomJsPath = Join-Path $workspaceRoot 'tools\assets\lcm-table-print-atom.js'
+$atomJsContent = if (Test-Path -LiteralPath $atomJsPath) { Get-Content -LiteralPath $atomJsPath -Raw -Encoding UTF8 } else { "" }
 
 $html = @"
 <!DOCTYPE html>
@@ -293,6 +298,9 @@ $html = @"
                 </div>
             </div>
             <div style="display: flex; align-items: center; gap: 12px;">
+                <button class="btn-refresh" style="background: var(--bg-secondary); border: 1px solid var(--accent); color: var(--accent);" onclick="if(window.openLcmPrintModal) openLcmPrintModal({ title: 'LCM Workspace Inventory', defaultFilename: 'WORKSPACE_INVENTORY' })">
+                    <span>🖨️</span> Print / PDF
+                </button>
                 <button class="btn-refresh" onclick="refreshInventory()">
                     <span>🔄</span> Refresh Data & View
                 </button>
@@ -436,7 +444,7 @@ $html += @"
                     </thead>
                     <tbody>
                         <tr><td><strong>ProposalReviewFlowPolicy.md</strong></td><td class="code-cell">RULE-LCM-001 - 006</td><td>Proposal Flow</td><td>Proposal-first intent, batch commands, BC5 review gate, dual-commit sync.</td></tr>
-                        <tr><td><strong>PowerShellStandardsPolicy.md</strong></td><td class="code-cell">RULE-PS-001 - 010</td><td>PowerShell</td><td>StrictMode @() wrapping, verb compliance, colon-safety, header metadata, logging & help.</td></tr>
+                        <tr><td><strong>PowerShellStandardsPolicy.md</strong></td><td class="code-cell">RULE-PS-001 - 013</td><td>PowerShell</td><td>StrictMode @() wrapping, verb compliance, colon-safety, header metadata, logging, help, inline (if) ban.</td></tr>
                         <tr><td><strong>ReviewCommitGovernancePolicy.md</strong></td><td class="code-cell">RULE-REV-001 - 005</td><td>Commit Gating</td><td>Mandatory review-gated commits (ACCEPTED), readiness pass, audit receipts.</td></tr>
                         <tr><td><strong>ElevationPolicy.md</strong></td><td class="code-cell">ELEVATION-POLICY</td><td>Security</td><td>Least-privilege default, runner delegation, auto-detection of privileged commands.</td></tr>
                         <tr><td><strong>LanguagePolicy.md</strong></td><td class="code-cell">LANGUAGE-POLICY</td><td>Localization</td><td>English-always invariant for code, comments, docs, commit messages.</td></tr>
@@ -464,15 +472,33 @@ $html += @"
             }
         }
 
+        function matchQuery(text, query) {
+            if (!query || query === 'All') return true;
+            const target = (text || '').toLowerCase();
+            const q = query.toLowerCase().trim();
+            if (!q) return true;
+
+            const tokens = q.split(/\s+/);
+            for (const token of tokens) {
+                if (token.startsWith('!') || token.startsWith('-')) {
+                    const exclude = token.slice(1);
+                    if (exclude && target.includes(exclude)) return false;
+                } else {
+                    if (!target.includes(token)) return false;
+                }
+            }
+            return true;
+        }
+
         function filterTables() {
-            const query = document.getElementById('filterInput').value.toLowerCase();
+            const query = (document.getElementById('filterInput') ? document.getElementById('filterInput').value : '').trim();
             const activeTab = document.querySelector('.tab-content.active');
             if (!activeTab) return;
             const rows = activeTab.querySelectorAll('tbody tr');
 
             rows.forEach(row => {
-                const text = row.textContent.toLowerCase();
-                row.style.display = text.includes(query) ? '' : 'none';
+                const text = row.textContent;
+                row.style.display = matchQuery(text, query) ? '' : 'none';
             });
         }
 
@@ -488,6 +514,8 @@ $html += @"
             copyText('pwsh -File tools/Invoke-WorkspaceAudit.ps1; pwsh -File tools/Show-WorkspaceInventoryApp.ps1');
             setTimeout(() => { window.location.reload(); }, 600);
         }
+
+        $atomJsContent
     </script>
 </body>
 </html>
