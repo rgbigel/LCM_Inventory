@@ -532,4 +532,10 @@ if (-not $NoLaunch) {
     } else {
         Start-Process $htmlPath
     }
+
+    try {
+        Start-Sleep -Milliseconds 350
+        $wsh = New-Object -ComObject WScript.Shell
+        $null = $wsh.AppActivate("LCM Workspace Inventory Explorer")
+    } catch {}
 }
