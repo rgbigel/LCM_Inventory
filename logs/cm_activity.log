@@ -114,3 +114,5 @@
 [2026-08-28 17:09:59] [REVIEW_SUBMITTED] Target: AuthorizeMasterUser | Outcome: Accepted | Reviewer: rgbig | Notes: Elevated worker parameter forwarding and caller summary display fix approved.
 [2026-08-28 17:12:43] [REVIEW_SUBMITTED] Target: AuthorizeMasterUser | Outcome: Accepted | Reviewer: rgbig | Notes: Enforced RULE-ELEV-005 Elevated Console Non-Auto-Close Invariant (-NoExit).
 [2026-08-28 17:12:47] [REVIEW_SUBMITTED] Target: Git_Repositories | Outcome: Accepted | Reviewer: rgbig | Notes: Added RULE-ELEV-005 to ElevationPolicy.md and updated AGENTS.md index table.
+[2026-08-28 17:13:25] [REVIEW_SUBMITTED] Target: AuthorizeMasterUser | Outcome: Accepted | Reviewer: rgbig | Notes: RULE-ELEV-005 Caller & Worker Notification Standard implemented.
+[2026-08-28 17:13:39] [REVIEW_SUBMITTED] Target: Git_Repositories | Outcome: Accepted | Reviewer: rgbig | Notes: RULE-ELEV-005 Caller & Worker Notification Standard added to ElevationPolicy.md.
