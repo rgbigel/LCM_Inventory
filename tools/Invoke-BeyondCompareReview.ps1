@@ -1,29 +1,89 @@
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory = $true, Position = 0, HelpMessage = 'Name or path of the repository to review')]
+    [Parameter(Mandatory = $false, Position = 0, HelpMessage = 'Name or path of the repository to review')]
     [string]$RepositoryName,
 
-    [Parameter(Mandatory = $false, HelpMessage = 'Base Git commit or reference to compare against (e.g., HEAD~1, root, SHA, tag)')]
+    [Parameter(Mandatory = $false, Position = 1, HelpMessage = 'Base Git commit or reference to compare against (e.g., HEAD~1, root, SHA, tag)')]
     [string]$BaseCommit,
 
+    [Parameter(Mandatory = $false, HelpMessage = 'Additional directory or file exclusions to filter from review display')]
+    [Alias('Exclude', 'Filters')]
+    [string[]]$Exclusions = @(),
+
     [Parameter(Mandatory = $false)]
-    [string]$BeyondComparePath = 'D:\Tools\Beyond Compare 5\BCompare.exe'
+    [string]$BeyondComparePath = 'D:\Tools\Beyond Compare 5\BCompare.exe',
+
+    [Alias('h', '?')]
+    [switch]$Help
 )
 
 <#
 .SYNOPSIS
-    Compares a repository's current state against any prior commit/baseline in Beyond Compare 5.
+    Compares a repository's current state against any prior commit/baseline in Beyond Compare 5 with configurable exclusions.
 .DESCRIPTION
     Module: tools/Invoke-BeyondCompareReview.ps1
-    Purpose: Compares a repository's current state against any prior commit/baseline in Beyond Compare 5 with automated content-based comparison, empty folder suppression, and out-of-scope filter exclusions.
+    Purpose: Compares a repository's current state against any prior commit/baseline in Beyond Compare 5 with automated content-based comparison, empty folder suppression, and out-of-scope filter exclusions (.git, logs, scratch, __pycache__, binaries).
     Path: Workspace_Inventory/tools/Invoke-BeyondCompareReview.ps1
     Authors: Rolf, Workspace_AI Engine
-    Version: 1.4.0
-    Date: 2026-08-21
+    Version: 1.5.0
+    Date: 2026-08-28
+.PARAMETER RepositoryName
+    The name or directory path of the Git repository to review (e.g. 'AuthorizeMasterUser', 'Git_Repositories', '.').
+.PARAMETER BaseCommit
+    The base Git commit to compare against (e.g. 'HEAD~1', 'HEAD', 'root', SHA). Defaults to 'HEAD'.
+.PARAMETER Exclusions
+    Additional file or directory exclusion masks (Aliases: -Exclude, -Filters). Standard LCM exclusions (.git, __pycache__, scratch, logs, node_modules, temp files) are always included.
+.PARAMETER BeyondComparePath
+    Path to BCompare.exe executable. Defaults to 'D:\Tools\Beyond Compare 5\BCompare.exe'.
+.PARAMETER Help
+    Displays this parameter reference (Aliases: -h, -?).
+.EXAMPLE
+    pwsh tools/Invoke-BeyondCompareReview.ps1 -RepositoryName AuthorizeMasterUser -BaseCommit HEAD~1
+.EXAMPLE
+    pwsh tools/Invoke-BeyondCompareReview.ps1 -RepositoryName Git_Repositories -Exclusions @('custom_dir\', '*.bak')
 #>
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+
+$scriptVersion = "1.5.0"
+$scriptName = "Invoke-BeyondCompareReview"
+
+# ------------------------------------------------------------------------------
+# 0. Help Handler (-h / -Help / -?) per RULE-PS-010
+# ------------------------------------------------------------------------------
+if ($Help -or [string]::IsNullOrWhiteSpace($RepositoryName)) {
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    Write-Host " BEYOND COMPARE 5 REPOSITORY REVIEW LAUNCHER (v$scriptVersion)" -ForegroundColor Cyan
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    Write-Host "SYNOPSIS:" -ForegroundColor Yellow
+    Write-Host "  Exports the specified Git baseline to a temporary inspection tree and opens"
+    Write-Host "  Beyond Compare 5 on your interactive desktop with out-of-scope filter exclusions."
+    Write-Host ""
+    Write-Host "USAGE:" -ForegroundColor Yellow
+    Write-Host "  pwsh tools/Invoke-BeyondCompareReview.ps1 -RepositoryName <repo> [-BaseCommit <commit>] [-Exclusions <array>] [-h]"
+    Write-Host ""
+    Write-Host "PARAMETERS:" -ForegroundColor Yellow
+    Write-Host "  -RepositoryName <str> : Name or path of repository (e.g. 'AuthorizeMasterUser', '.')."
+    Write-Host "  -BaseCommit <str>     : Git commit to compare against (Default: 'HEAD')."
+    Write-Host "  -Exclusions <arr>     : Additional exclusion masks (Aliases: -Exclude, -Filters)."
+    Write-Host "  -BeyondComparePath    : Path to BCompare.exe (Default: 'D:\Tools\Beyond Compare 5\BCompare.exe')."
+    Write-Host "  -h, -Help, -?         : Displays this parameter reference."
+    Write-Host ""
+    Write-Host "STANDARD BASELINE EXCLUSIONS (ALWAYS APPLIED):" -ForegroundColor Yellow
+    Write-Host "  - Version Control    : .git\, *\.git\*, .git*"
+    Write-Host "  - Python Bytecode    : __pycache__\, *\.pyc, *\.pyo"
+    Write-Host "  - Scratch & Logs     : scratch\, logs\, work\, *.log, *.tmp, *.bak, *.swp, *.lock"
+    Write-Host "  - Inventory/Telemetry: inventory.json, *.inventory, data\inventory.json"
+    Write-Host "  - Dependencies/Build : node_modules\, bin\, obj\"
+    Write-Host "  - Container Scope    : Child repositories excluded when reviewing root container"
+    Write-Host ""
+    Write-Host "EXAMPLES:" -ForegroundColor Yellow
+    Write-Host "  pwsh tools/Invoke-BeyondCompareReview.ps1 -RepositoryName AuthorizeMasterUser -BaseCommit HEAD~1"
+    Write-Host "  pwsh tools/Invoke-BeyondCompareReview.ps1 -RepositoryName Git_Repositories -Exclude @('build\')"
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    return
+}
 
 function Update-BCReviewSession {
     [CmdletBinding()]
@@ -140,7 +200,7 @@ function Update-BCReviewSession {
                 $defNf = $xml.CreateElement('NameFilter')
                 $null = $defFilters.AppendChild($defNf)
             }
-            $defNf.SetAttribute('Value', '-*.inventory;-data\inventory.json;-inventory.json;-*\logs\;-*\scratch\;-*\work\;-*.log;-*.tmp;-*.bak;-*.swp;-*.lock;-node_modules\;-bin\;-obj\')
+            $defNf.SetAttribute('Value', $FilterMask)
 
             $defRules = $defaultSession.SelectSingleNode('Rules')
             if (-not $defRules) {
@@ -167,7 +227,11 @@ function Update-BCReviewSession {
     }
 }
 
-$workspaceRoot = Split-Path $PSScriptRoot -Parent | Split-Path -Parent
+$workspaceRoot = 'D:\Git_Repositories'
+if (-not (Test-Path -LiteralPath $workspaceRoot)) {
+    $workspaceRoot = Split-Path $PSScriptRoot -Parent | Split-Path -Parent
+}
+
 $resolvedTarget = if ($RepositoryName -in @('.', 'Root', 'Git_Repositories', 'WorkspaceRoot')) {
     $workspaceRoot
 } elseif (Test-Path -LiteralPath $RepositoryName) {
@@ -180,7 +244,7 @@ if (-not (Test-Path -LiteralPath $resolvedTarget)) {
     throw "Repository path not found: $resolvedTarget"
 }
 
-# ALWAYS resolve to fully-qualified absolute path (guarantees correct resolution when launched via schtasks/explorer)
+# ALWAYS resolve to fully-qualified absolute path
 $repoPath = (Get-Item -LiteralPath $resolvedTarget).FullName
 
 if (-not (Test-Path -LiteralPath (Join-Path $repoPath '.git'))) {
@@ -206,7 +270,6 @@ if ([string]::IsNullOrWhiteSpace($BaseCommit)) {
 
 $commitSha = (git -C $repoPath rev-parse --short $BaseCommit 2>$null)
 if (-not $commitSha) {
-    # Check if this is an unborn branch (newly initialized repository without commits)
     $hasAnyCommit = (git -C $repoPath rev-parse --verify HEAD 2>$null)
     if (-not $hasAnyCommit) {
         $commitSha = 'unborn'
@@ -240,7 +303,9 @@ if ($commitSha -ne 'unborn') {
     Remove-Item -LiteralPath $tarPath -Force -ErrorAction SilentlyContinue
 }
 
-# Construct exclusion filter list
+# ------------------------------------------------------------------------------
+# Construct Authoritative Exclusion Filter List
+# ------------------------------------------------------------------------------
 $filterList = [System.Collections.Generic.List[string]]::new()
 
 # If reviewing the Root Container, exclude all child repositories that are not the root itself
@@ -253,33 +318,40 @@ if ($repoPath -eq $workspaceRoot) {
     }
 }
 
-# Standard LCM exclusions
-$filterList.Add("-__pycache__\")
-$filterList.Add("-*\__pycache__\")
-$filterList.Add("-*.pyc")
-$filterList.Add("-*.pyo")
-$filterList.Add("-.git\")
-$filterList.Add("-*\.git\")
-$filterList.Add("-scratch\")
-$filterList.Add("-*\scratch\")
-$filterList.Add("-logs\")
-$filterList.Add("-*\logs\")
-$filterList.Add("-work\")
-$filterList.Add("-*\work\")
-$filterList.Add("-*.inventory")
-$filterList.Add("-data\inventory.json")
-$filterList.Add("-inventory.json")
-$filterList.Add("-*.log")
-$filterList.Add("-*.tmp")
-$filterList.Add("-*.bak")
-$filterList.Add("-*.swp")
-$filterList.Add("-*.lock")
-$filterList.Add("-node_modules\")
-$filterList.Add("-*\node_modules\")
-$filterList.Add("-bin\")
-$filterList.Add("-*\bin\")
-$filterList.Add("-obj\")
-$filterList.Add("-*\obj\")
+# Standard Baseline LCM Exclusions
+$standardExclusions = @(
+    '-.git\', '-*\.git\*', '-.git*',
+    '-__pycache__\', '-*\__pycache__\*', '-*.pyc', '-*.pyo',
+    '-scratch\', '-*\scratch\*',
+    '-logs\', '-*\logs\*',
+    '-work\', '-*\work\*',
+    '-*.inventory', '-data\inventory.json', '-inventory.json',
+    '-*.log', '-*.tmp', '-*.bak', '-*.swp', '-*.lock',
+    '-node_modules\', '-*\node_modules\*',
+    '-bin\', '-*\bin\*',
+    '-obj\', '-*\obj\*'
+)
+
+foreach ($ex in $standardExclusions) {
+    if (-not $filterList.Contains($ex)) {
+        $filterList.Add($ex)
+    }
+}
+
+# Append User-Specified Custom Exclusions
+if ($Exclusions -and $Exclusions.Count -gt 0) {
+    foreach ($userEx in $Exclusions) {
+        if (-not [string]::IsNullOrWhiteSpace($userEx)) {
+            $formatted = $userEx.Trim()
+            if (-not $formatted.StartsWith('-') -and -not $formatted.StartsWith('+')) {
+                $formatted = "-$formatted"
+            }
+            if (-not $filterList.Contains($formatted)) {
+                $filterList.Add($formatted)
+            }
+        }
+    }
+}
 
 $filterMask = ($filterList -join ';')
 

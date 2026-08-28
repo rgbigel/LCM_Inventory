@@ -1,6 +1,7 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $false, Position = 0, HelpMessage = 'Name or path of the repository')]
+    [Alias('RepositoryName', 'Repo', 'Name')]
     [string]$RepositoryPath,
 
     [Parameter(Mandatory = $false)]
@@ -116,13 +117,18 @@ public class BCWindowCloser {
     }
 }
 
-$workspaceRoot = Split-Path $PSScriptRoot -Parent | Split-Path -Parent
+$workspaceRoot = 'D:\Git_Repositories'
+if (-not (Test-Path -LiteralPath $workspaceRoot)) {
+    $workspaceRoot = Split-Path $PSScriptRoot -Parent | Split-Path -Parent
+}
 
 # If path is passed from BC (%p or %f), resolve to repository root
 $targetRepoPath = $null
 if (-not [string]::IsNullOrWhiteSpace($RepositoryPath)) {
     $resolvedPath = $RepositoryPath.Trim('"', "'")
-    if (Test-Path -LiteralPath $resolvedPath) {
+    if ($resolvedPath -in @('.', 'root', 'Git_Repositories', (Split-Path $workspaceRoot -Leaf))) {
+        $targetRepoPath = $workspaceRoot
+    } elseif (Test-Path -LiteralPath $resolvedPath) {
         # Check if this path is within a repository
         $curr = $resolvedPath
         while ($curr -and $curr -ne (Split-Path $curr -Parent)) {
@@ -134,7 +140,10 @@ if (-not [string]::IsNullOrWhiteSpace($RepositoryPath)) {
         }
     }
     if (-not $targetRepoPath) {
-        $targetRepoPath = Join-Path $workspaceRoot $resolvedPath
+        $candidatePath = Join-Path $workspaceRoot $resolvedPath
+        if (Test-Path -LiteralPath $candidatePath) {
+            $targetRepoPath = $candidatePath
+        }
     }
 } else {
     # If not passed, prompt user to select active repository
@@ -210,6 +219,10 @@ $reviewRecord | ConvertTo-Json -Depth 3 | Set-Content -Path $reviewFile -Encodin
 
 # Log CM Activity
 $cmLog = Join-Path $workspaceRoot "Workspace_Inventory\logs\cm_activity.log"
+$cmLogDir = Split-Path $cmLog -Parent
+if (-not (Test-Path -LiteralPath $cmLogDir)) {
+    $null = New-Item -ItemType Directory -Path $cmLogDir -Force
+}
 $logLine = ("[{0}] [REVIEW_SUBMITTED] Target: {1} | Outcome: {2} | Reviewer: {3} | Notes: {4}" -f $timestamp, $repoName, $Result, $env:USERNAME, $Notes)
 $logLine | Out-File -FilePath $cmLog -Append -Encoding UTF8
 

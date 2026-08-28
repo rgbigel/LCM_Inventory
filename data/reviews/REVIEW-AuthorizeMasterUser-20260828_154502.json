@@ -1,0 +1,9 @@
+{
+  "RepositoryName": "AuthorizeMasterUser",
+  "RepositoryPath": "AuthorizeMasterUser",
+  "ReviewResult": "Accepted",
+  "Reviewer": "rgbig",
+  "Timestamp": "2026-08-28 15:45:02",
+  "HeadCommit": "8963974",
+  "Notes": "Quad-Principal Standard, Granular OS Protection, Dynamic Volume Discovery, ProgramData\\Microsoft blanket exclusion, persistent log destination in Einstellungen\\Authorizations\\logs, and Smart Inheritance (RULE-PS-014 / AMU-REQ-009) approved."
+}
