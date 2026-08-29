@@ -121,7 +121,9 @@ function New-WorkspaceProposal {
         [string]$Details = '',
         [string]$BundleId = 'unassigned',
         [string]$CrId = '',
-        [string]$Author = $env:USERNAME
+        [string]$Author = $env:USERNAME,
+        [string]$PlanPath = '',
+        [string]$WalkthroughPath = ''
     )
 
     $store = Get-ProposalStore
@@ -129,16 +131,29 @@ function New-WorkspaceProposal {
     $store.last_proposal_id = $newId
 
     $timestamp = (Get-Date).ToString('yyyy-MM-dd HH:mm:ss')
+    $cleanCrId = if ($CrId) { $CrId } else { "CR-PROP-$newId" }
+    $safeCrId = $cleanCrId -replace '[^a-zA-Z0-9_-]', '_'
+
+    if ([string]::IsNullOrWhiteSpace($PlanPath)) {
+        $PlanPath = "Workspace_Inventory/data/proposals/plans/Proposal-{0:D3}_{1}_Plan.md" -f $newId, $safeCrId
+    }
+    if ([string]::IsNullOrWhiteSpace($WalkthroughPath)) {
+        $WalkthroughPath = "Workspace_Inventory/data/proposals/plans/Proposal-{0:D3}_{1}_Walkthrough.md" -f $newId, $safeCrId
+    }
+
     $proposal = [ordered]@{
-        id          = $newId
-        timestamp   = $timestamp
-        title       = $Title
-        origin_repo = $OriginRepo
-        cr_id       = if ($CrId) { $CrId } else { "CR-PROP-$newId" }
-        state       = 'suggested'
-        bundle_id   = $BundleId
-        author      = if ($Author) { $Author } else { 'Rolf' }
-        details     = $Details
+        id               = $newId
+        timestamp        = $timestamp
+        title            = $Title
+        origin_repo      = $OriginRepo
+        cr_id            = $cleanCrId
+        state            = 'suggested'
+        progress_state   = 'undecided'
+        bundle_id        = $BundleId
+        author           = if ($Author) { $Author } else { 'Rolf' }
+        details          = $Details
+        plan_path        = $PlanPath
+        walkthrough_path = $WalkthroughPath
     }
 
     $list = [System.Collections.Generic.List[object]]::new(@($store.proposals))
@@ -146,7 +161,7 @@ function New-WorkspaceProposal {
     $store.proposals = @($list)
 
     Set-ProposalStore -Store $store
-    Write-Host ("Created Proposal #{0}: {1} (State: suggested)" -f $newId, $Title) -ForegroundColor Green
+    Write-Host ("Created Proposal #{0}: {1} (Plan State: suggested | Progress: undecided)" -f $newId, $Title) -ForegroundColor Green
     return [PSCustomObject]$proposal
 }
 
@@ -157,7 +172,7 @@ function Set-WorkspaceProposalState {
         [int]$Id,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet('suggested', 'processed', 'deferred', 'deleted', 'completed')]
+        [ValidateSet('suggested', 'processed', 'approved', 'deferred', 'deleted', 'completed')]
         [string]$State,
 
         [string]$Details
@@ -178,12 +193,124 @@ function Set-WorkspaceProposalState {
     }
 
     if (-not $found) {
-        throw "Proposal #$Id not found in proposals store."
+        Write-Error "Proposal #$Id not found in proposals store."
+        return $null
     }
 
     Set-ProposalStore -Store $store
-    Write-Host "Proposal #$Id state updated -> $State" -ForegroundColor Green
+    Write-Host ("Updated Proposal #{0} state to '{1}'." -f $Id, $State) -ForegroundColor Green
     return $found
+}
+
+function Set-WorkspaceProposalProgress {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [int]$Id,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('undecided', 'queued', 'in_progress', 'verification', 'completed', 'blocked', 'failed')]
+        [string]$ProgressState,
+
+        [string]$Details
+    )
+
+    $store = Get-ProposalStore
+    $found = $null
+
+    foreach ($p in $store.proposals) {
+        if ($p.id -eq $Id) {
+            $p | Add-Member -NotePropertyName "progress_state" -NotePropertyValue $ProgressState -Force
+            if ($Details) {
+                $p.details = $Details
+            }
+            $found = $p
+            break
+        }
+    }
+
+    if (-not $found) {
+        Write-Error "Proposal #$Id not found in proposals store."
+        return $null
+    }
+
+    Set-ProposalStore -Store $store
+    Write-Host ("Updated Proposal #{0} progress state to '{1}'." -f $Id, $ProgressState) -ForegroundColor Green
+    return $found
+}
+
+function Save-ProposalPlan {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [int]$Id,
+
+        [string]$PlanContent = '',
+        [string]$SourceFilePath = ''
+    )
+
+    $store = Get-ProposalStore
+    $target = $store.proposals | Where-Object { $_.id -eq $Id } | Select-Object -First 1
+    if (-not $target) {
+        throw "Proposal #$Id not found."
+    }
+
+    $wiRoot = (Get-Item (Get-ProposalStorePath)).Directory.Parent.FullName
+    $relPath = if ($target.plan_path) { $target.plan_path } else { "Workspace_Inventory/data/proposals/plans/Proposal-{0:D3}_Plan.md" -f $Id }
+    $fullPath = Join-Path $wiRoot ($relPath -replace '^Workspace_Inventory[\\\/]', '')
+
+    $dir = [System.IO.Path]::GetDirectoryName($fullPath)
+    if (-not (Test-Path -LiteralPath $dir)) {
+        New-Item -ItemType Directory -Path $dir -Force | Out-Null
+    }
+
+    if (-not [string]::IsNullOrWhiteSpace($SourceFilePath) -and (Test-Path -LiteralPath $SourceFilePath)) {
+        Copy-Item -LiteralPath $SourceFilePath -Destination $fullPath -Force
+    } elseif (-not [string]::IsNullOrWhiteSpace($PlanContent)) {
+        Set-Content -LiteralPath $fullPath -Value $PlanContent -Encoding UTF8
+    } else {
+        throw "Either -PlanContent or -SourceFilePath must be provided."
+    }
+
+    Write-Host "Archived Proposal #$Id Implementation Plan to CM: $fullPath" -ForegroundColor Green
+    return $fullPath
+}
+
+function Save-ProposalWalkthrough {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [int]$Id,
+
+        [string]$WalkthroughContent = '',
+        [string]$SourceFilePath = ''
+    )
+
+    $store = Get-ProposalStore
+    $target = $store.proposals | Where-Object { $_.id -eq $Id } | Select-Object -First 1
+    if (-not $target) {
+        throw "Proposal #$Id not found."
+    }
+
+    $wiRoot = (Get-Item (Get-ProposalStorePath)).Directory.Parent.FullName
+    $relPath = if ($target.walkthrough_path) { $target.walkthrough_path } else { "Workspace_Inventory/data/proposals/plans/Proposal-{0:D3}_Walkthrough.md" -f $Id }
+    $fullPath = Join-Path $wiRoot ($relPath -replace '^Workspace_Inventory[\\\/]', '')
+
+    $dir = [System.IO.Path]::GetDirectoryName($fullPath)
+    if (-not (Test-Path -LiteralPath $dir)) {
+        New-Item -ItemType Directory -Path $dir -Force | Out-Null
+    }
+
+    if (-not [string]::IsNullOrWhiteSpace($SourceFilePath) -and (Test-Path -LiteralPath $SourceFilePath)) {
+        Copy-Item -LiteralPath $SourceFilePath -Destination $fullPath -Force
+    } elseif (-not [string]::IsNullOrWhiteSpace($WalkthroughContent)) {
+        Set-Content -LiteralPath $fullPath -Value $WalkthroughContent -Encoding UTF8
+    } else {
+        throw "Either -WalkthroughContent or -SourceFilePath must be provided."
+    }
+
+    Write-Host "Archived Proposal #$Id Walkthrough to CM: $fullPath" -ForegroundColor Green
+    return $fullPath
 }
 
 function Resolve-ProposalIdExpression {
@@ -407,13 +534,14 @@ function Format-ProposalsTable {
         return
     }
 
-    Write-Host (" {0,-5} | {1,-19} | {2,-11} | {3,-20} | {4}" -f 'ID', 'Timestamp', 'State', 'Origin Repo', 'Title') -ForegroundColor Yellow
-    Write-Host "-------+---------------------+-------------+----------------------+-----------------------" -ForegroundColor DarkGray
+    Write-Host (" {0,-5} | {1,-19} | {2,-11} | {3,-13} | {4,-20} | {5}" -f 'ID', 'Timestamp', 'Plan State', 'Progress', 'Origin Repo', 'Title') -ForegroundColor Yellow
+    Write-Host "-------+---------------------+-------------+---------------+----------------------+-----------------------" -ForegroundColor DarkGray
 
     foreach ($p in $Proposals) {
         $color = switch ($p.state) {
             'suggested' { [ConsoleColor]::White }
             'processed' { [ConsoleColor]::Green }
+            'approved'  { [ConsoleColor]::Green }
             'deferred'  { [ConsoleColor]::Yellow }
             'completed' { [ConsoleColor]::Cyan }
             'deleted'   { [ConsoleColor]::DarkGray }
@@ -421,7 +549,8 @@ function Format-ProposalsTable {
         }
 
         $idStr = "#$($p.id)"
-        Write-Host (" {0,-5} | {1,-19} | {2,-11} | {3,-20} | {4}" -f $idStr, $p.timestamp, $p.state, $p.origin_repo, $p.title) -ForegroundColor $color
+        $prog = if ($p.progress_state) { $p.progress_state } else { 'undecided' }
+        Write-Host (" {0,-5} | {1,-19} | {2,-11} | {3,-13} | {4,-20} | {5}" -f $idStr, $p.timestamp, $p.state, $prog, $p.origin_repo, $p.title) -ForegroundColor $color
     }
 
     Write-Host "==========================================================================================" -ForegroundColor Cyan
@@ -468,7 +597,8 @@ function Format-ReposUnderReviewTable {
 Set-Alias -Name Parse-ProposalIdExpression -Value Resolve-ProposalIdExpression
 
 Export-ModuleMember -Function Get-ProposalStorePath, Get-ProposalStore, Set-ProposalStore, `
-    Get-WorkspaceProposals, New-WorkspaceProposal, Set-WorkspaceProposalState, `
+    Get-WorkspaceProposals, New-WorkspaceProposal, Set-WorkspaceProposalState, Set-WorkspaceProposalProgress, `
+    Save-ProposalPlan, Save-ProposalWalkthrough, `
     Resolve-ProposalIdExpression, Invoke-ProposalBatchAction, `
     Set-ReviewGranularity, Get-ReviewGranularity, Set-LCMMode, Get-LCMMode, `
     Get-ReposUnderReview, Format-ProposalsTable, Format-ReposUnderReviewTable `

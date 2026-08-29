@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-08-26T15:57:30+02:00",
+  "updated_at": "2026-08-29T18:50:04+02:00",
   "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 9,
+  "last_proposal_id": 15,
   "proposals": [
     {
       "id": 1,
@@ -15,7 +15,10 @@
       "state": "completed",
       "bundle_id": "BUNDLE-2026-03",
       "author": "Rolf",
-      "details": "Two-tier proposal tracking, BC5 review integration, multi-repo staging, granularity controls, and dual-commit sync."
+      "details": "Two-tier proposal tracking, BC5 review integration, multi-repo staging, granularity controls, and dual-commit sync.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-001_CR-2026-012_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-001_CR-2026-012_Walkthrough.md",
+      "progress_state": "completed"
     },
     {
       "id": 2,
@@ -26,7 +29,10 @@
       "state": "completed",
       "bundle_id": "BUNDLE-2026-03",
       "author": "Rolf",
-      "details": "Add Test-LCMRuleHealth.ps1 and Repair-LCMRules.ps1 to detect and clean up governance drift, redundant static rule files, and broken junctions across pulled repositories."
+      "details": "Add Test-LCMRuleHealth.ps1 and Repair-LCMRules.ps1 to detect and clean up governance drift, redundant static rule files, and broken junctions across pulled repositories.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-002_CR-2026-013_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-002_CR-2026-013_Walkthrough.md",
+      "progress_state": "completed"
     },
     {
       "id": 3,
@@ -37,7 +43,10 @@
       "state": "completed",
       "bundle_id": "BUNDLE-2026-03",
       "author": "Rolf",
-      "details": "Codify tripartite repo-level documentation distinguishing Architecture (user view), Requirements (technical aspects of design), and Implementation (code representation)."
+      "details": "Codify tripartite repo-level documentation distinguishing Architecture (user view), Requirements (technical aspects of design), and Implementation (code representation).",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-003_CR-2026-014_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-003_CR-2026-014_Walkthrough.md",
+      "progress_state": "completed"
     },
     {
       "id": 4,
@@ -48,7 +57,10 @@
       "state": "completed",
       "bundle_id": "unassigned",
       "author": "Rolf",
-      "details": "Codify mandatory install/ directory and Installation.md runbook covering prerequisites, customization, preflight, deployment, health checks, updates, and target folder layout."
+      "details": "Codify mandatory install/ directory and Installation.md runbook covering prerequisites, customization, preflight, deployment, health checks, updates, and target folder layout.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-004_CR-2026-015_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-004_CR-2026-015_Walkthrough.md",
+      "progress_state": "completed"
     },
     {
       "id": 5,
@@ -59,7 +71,10 @@
       "state": "completed",
       "bundle_id": "unassigned",
       "author": "Rolf",
-      "details": "Add -Path parameter (with default 'D:\\OneDrive\\cmd') to tools/Show-CmdFolderAnalysis.ps1, supporting dynamic analysis of arbitrary script directories (e.g. D:\\@cmd, D:\\OneDrive\\cmd\\@Repair, staging paths), updating CLI parameter binding, help banner, existence checks, and dynamic HTML report header."
+      "details": "Add -Path parameter (with default 'D:\\OneDrive\\cmd') to tools/Show-CmdFolderAnalysis.ps1, supporting dynamic analysis of arbitrary script directories (e.g. D:\\@cmd, D:\\OneDrive\\cmd\\@Repair, staging paths), updating CLI parameter binding, help banner, existence checks, and dynamic HTML report header.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-005_CR-2026-016_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-005_CR-2026-016_Walkthrough.md",
+      "progress_state": "completed"
     },
     {
       "id": 6,
@@ -70,7 +85,10 @@
       "state": "completed",
       "bundle_id": "unassigned",
       "author": "Rolf",
-      "details": "Merge the robust modern UAC elevation mechanism from Enter-CmdAdmin.cmd into GoAdm.cmd (replacing legacy runas /user:Administrator with PowerShell Start-Process cmd.exe -Verb RunAs and SID S-1-5-32-544 check), unifying CMD elevation under GoAdm and archiving/consolidating Enter-CmdAdmin.cmd."
+      "details": "Merge the robust modern UAC elevation mechanism from Enter-CmdAdmin.cmd into GoAdm.cmd (replacing legacy runas /user:Administrator with PowerShell Start-Process cmd.exe -Verb RunAs and SID S-1-5-32-544 check), unifying CMD elevation under GoAdm and archiving/consolidating Enter-CmdAdmin.cmd.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-006_CR-2026-017_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-006_CR-2026-017_Walkthrough.md",
+      "progress_state": "completed"
     },
     {
       "id": 7,
@@ -81,7 +99,10 @@
       "state": "completed",
       "bundle_id": "unassigned",
       "author": "Rolf",
-      "details": "Add an interactive toggle switch in Show-ToolIndex.ps1 (TOOLS_VIEWER.html) to switch the Tool Name column into 'Chat Short-Names Only' mode. In this mode, displays clean extension-less chat short names, filters to User-exposed tools, deduplicates across environments (.ps1/.cmd) and repository mirrors, and preserves click-to-run execution."
+      "details": "Add an interactive toggle switch in Show-ToolIndex.ps1 (TOOLS_VIEWER.html) to switch the Tool Name column into 'Chat Short-Names Only' mode. In this mode, displays clean extension-less chat short names, filters to User-exposed tools, deduplicates across environments (.ps1/.cmd) and repository mirrors, and preserves click-to-run execution.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-007_CR-2026-018_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-007_CR-2026-018_Walkthrough.md",
+      "progress_state": "completed"
     },
     {
       "id": 8,
@@ -92,7 +113,10 @@
       "state": "completed",
       "bundle_id": "unassigned",
       "author": "Rolf",
-      "details": "Revive and redesign BackgroundModifier modernization using a dynamic Rainmeter telemetry skin architecture, resolving previous development bottlenecks: 1) Replace brittle GDI+ bitmap wallpaper baking and cache-busting with live desktop widget overlay, 2) Dynamically generate multi-drive meter configurations from state.json (supporting 13+ drives), 3) Implement lightweight event-driven Rainmeter refresh signaling, 4) Ensure DPI scaling and icon-safe screen positioning."
+      "details": "Revive and redesign BackgroundModifier modernization using a dynamic Rainmeter telemetry skin architecture, resolving previous development bottlenecks: 1) Replace brittle GDI+ bitmap wallpaper baking and cache-busting with live desktop widget overlay, 2) Dynamically generate multi-drive meter configurations from state.json (supporting 13+ drives), 3) Implement lightweight event-driven Rainmeter refresh signaling, 4) Ensure DPI scaling and icon-safe screen positioning.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-008_CR-2026-019_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-008_CR-2026-019_Walkthrough.md",
+      "progress_state": "completed"
     },
     {
       "id": 9,
@@ -103,7 +127,94 @@
       "state": "completed",
       "bundle_id": "unassigned",
       "author": "Rolf",
-      "details": "Implement Export-LCMRules.ps1 (with Save-LCMRules and SaveLCMRules aliases) to aggregate all 16 canonical LCM rule policies from .agents/rules/, AGENTS.md, and GEMINI.md into a single structured, clean markdown bundle (with frontmatter stripped and clear section banners), supporting -ToClipboard for 1-click pasting into Gemini Gems and configurable file export targets."
+      "details": "Implement Export-LCMRules.ps1 (with Save-LCMRules and SaveLCMRules aliases) to aggregate all 16 canonical LCM rule policies from .agents/rules/, AGENTS.md, and GEMINI.md into a single structured, clean markdown bundle (with frontmatter stripped and clear section banners), supporting -ToClipboard for 1-click pasting into Gemini Gems and configurable file export targets.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-009_CR-2026-020_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-009_CR-2026-020_Walkthrough.md",
+      "progress_state": "completed"
+    },
+    {
+      "id": 10,
+      "timestamp": "2026-08-29 18:00:41",
+      "title": "Align LCM Module and Documentation Versioning with Major Baseline Invariant (v6.1.0 / M.Y.Z)",
+      "origin_repo": "Workspace_AI / Workspace_Inventory",
+      "cr_id": "CR-2026-021",
+      "state": "completed",
+      "bundle_id": "unassigned",
+      "author": "Rolf",
+      "details": "Codify and enforce LCM Major Version Alignment Invariant: when a major LCM version M is established, all contained module/spec versions become M.Y.Z (preserving minor/patch evolution). Synchronize all outdated documentation and config references in .github, .copilot, .vscode, .agents/rules, docs, tools, and child repos to LCM v6.1.0.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-010_CR-2026-021_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-010_CR-2026-021_Walkthrough.md",
+      "progress_state": "completed"
+    },
+    {
+      "id": 11,
+      "timestamp": "2026-08-29 18:12:35",
+      "title": "Establish Major Release Retention Horizon Policy and Standardized History Log Naming Scheme",
+      "origin_repo": "Workspace_AI / Workspace_Inventory",
+      "cr_id": "CR-2026-022",
+      "state": "completed",
+      "bundle_id": "unassigned",
+      "author": "rgbig",
+      "details": "Codify the 2-Major-Release Horizon retention rule for pruning transient logs and deletions upon major release pushes while preserving permanent macro-evolution history logs under a standardized naming taxonomy (##_<Era>-Evolution, Classification: permanent-evolution-history).",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-011_CR-2026-022_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-011_CR-2026-022_Walkthrough.md",
+      "progress_state": "completed"
+    },
+    {
+      "id": 12,
+      "timestamp": "2026-08-29 18:34:51",
+      "title": "Design and Implement LCM Universal Installation Path, Packaging Agent, Preflight Engine, and UX Verification Suite",
+      "origin_repo": "Workspace_AI / Workspace_Inventory",
+      "cr_id": "CR-2026-023",
+      "state": "completed",
+      "bundle_id": "unassigned",
+      "author": "rgbig",
+      "details": "Comprehensive design and implementation of the LCM Installation Path: payload extraction from LCM workspace (excluding subsystems), analogous subsystem install contract, configurable target root directory structure, Setup packaging agent, interactive Pre-Installation Check Tool with unified completion log, separate Onboarding function, and post-installation UX verification tool.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-012_CR-2026-023_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-012_CR-2026-023_Walkthrough.md",
+      "progress_state": "completed"
+    },
+    {
+      "id": 13,
+      "timestamp": "2026-08-29 18:40:22",
+      "title": "Enhance Pre-Installation Check with Modular Tool Selection & Conditional Deployment Engine",
+      "origin_repo": "Workspace_AI / Workspace_Inventory",
+      "cr_id": "CR-2026-024",
+      "state": "completed",
+      "bundle_id": "unassigned",
+      "author": "rgbig",
+      "details": "Extend Pre-Installation Check Tool and Setup Engine to support modular, user-controlled tool selection (Everything search, AI orchestration variants, Beyond Compare 5, local database backends, REST daemon) with manifest serialization and conditional post-install verification.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-013_CR-2026-024_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-013_CR-2026-024_Walkthrough.md",
+      "progress_state": "completed"
+    },
+    {
+      "id": 14,
+      "timestamp": "2026-08-29 18:45:23",
+      "title": "Establish Dual-State Proposal Lifecycle (Plan State & Implementation Progress State) and CM Plan Archive",
+      "origin_repo": "Workspace_Inventory / Workspace_AI",
+      "cr_id": "CR-2026-025",
+      "state": "completed",
+      "bundle_id": "unassigned",
+      "author": "rgbig",
+      "details": "Evolve proposal schema to track both Governance Plan State (suggested, approved, deferred, completed) and Implementation Progress State (undecided, queued, in_progress, verification, completed, blocked), and establish dedicated CM archive in Workspace_Inventory/data/proposals/plans/ for all implementation plans and walkthroughs.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-014_CR-2026-025_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-014_CR-2026-025_Walkthrough.md",
+      "progress_state": "completed"
+    },
+    {
+      "id": 15,
+      "timestamp": "2026-08-29 18:50:04",
+      "title": "Establish Dedicated Installation_LCD Governed Repository for LCM Platform Packaging & Deployment",
+      "origin_repo": "Installation_LCD",
+      "cr_id": "CR-2026-026",
+      "state": "completed",
+      "progress_state": "completed",
+      "bundle_id": "unassigned",
+      "author": "rgbig",
+      "details": "Provision dedicated child repository Installation_LCD under LCM governance (.agents/rules junction, .lcm/config.json baseline 6.1.0, tripartite specs) to isolate packaging agent, preflight checker, modular setup deployer, onboarding engine, and UX verifier outside core LCM until release.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-015_CR-2026-026_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-015_CR-2026-026_Walkthrough.md"
     }
   ]
 }

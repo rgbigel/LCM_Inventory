@@ -16,6 +16,12 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 $cmModule = Join-Path $PSScriptRoot '..\modules\WorkspaceCM.psm1'
+if (-not (Test-Path $cmModule)) {
+    $cmModule = Join-Path (Split-Path $PSScriptRoot -Parent) 'Workspace_Inventory\modules\WorkspaceCM.psm1'
+}
+if (-not (Test-Path $cmModule)) {
+    $cmModule = Join-Path $PSScriptRoot '..\Workspace_Inventory\modules\WorkspaceCM.psm1'
+}
 Import-Module $cmModule -Force
 
 Write-Host "=================================================================" -ForegroundColor Cyan
