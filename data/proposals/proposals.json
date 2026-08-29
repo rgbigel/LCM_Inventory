@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-08-29T18:50:04+02:00",
+  "updated_at": "2026-08-29T19:35:34+02:00",
   "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 15,
+  "last_proposal_id": 16,
   "proposals": [
     {
       "id": 1,
@@ -215,6 +215,20 @@
       "details": "Provision dedicated child repository Installation_LCD under LCM governance (.agents/rules junction, .lcm/config.json baseline 6.1.0, tripartite specs) to isolate packaging agent, preflight checker, modular setup deployer, onboarding engine, and UX verifier outside core LCM until release.",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-015_CR-2026-026_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-015_CR-2026-026_Walkthrough.md"
+    },
+    {
+      "id": 16,
+      "timestamp": "2026-08-29 19:35:34",
+      "title": "Design and Author Comprehensive Tripartite Specifications and Normative Runbook for Installation_LCD",
+      "origin_repo": "Installation_LCD",
+      "cr_id": "CR-2026-027",
+      "state": "completed",
+      "progress_state": "completed",
+      "bundle_id": "unassigned",
+      "author": "rgbig",
+      "details": "Author full normative tripartite documentation suite (docs/Architecture.md, docs/Requirements.md, docs/Implementation.md) and 7-phase runbook (install/Installation.md) in Installation_LCD, establishing complete design specifications for IDE review before code implementation.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-016_CR-2026-027_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-016_CR-2026-027_Walkthrough.md"
     }
   ]
 }
