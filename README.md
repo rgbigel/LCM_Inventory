@@ -84,7 +84,7 @@ graph TB
 .\tools\Invoke-LCMUpdate.ps1 -TargetRepository "VolumeInventory"
 
 # Snapshot a new configuration management baseline
-.\tools\New-WorkspaceBaseline.ps1 -BaselineId "BASELINE-v4.2.0"
+.\tools\Create-WorkspaceBaseline.ps1 -BaselineId "BASELINE-v4.2.0"
 ```
 
 ---

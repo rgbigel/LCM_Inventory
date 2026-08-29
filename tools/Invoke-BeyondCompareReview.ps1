@@ -13,40 +13,47 @@ param(
     [Parameter(Mandatory = $false)]
     [string]$BeyondComparePath = 'D:\Tools\Beyond Compare 5\BCompare.exe',
 
+    [Parameter(Mandatory = $false)]
+    [switch]$Wait,
+
     [Alias('h', '?')]
     [switch]$Help
 )
 
 <#
 .SYNOPSIS
-    Compares a repository's current state against any prior commit/baseline in Beyond Compare 5 with configurable exclusions.
+    Compares a repository's current state against any prior commit in Beyond Compare 5 with interactive review staging.
 .DESCRIPTION
     Module: tools/Invoke-BeyondCompareReview.ps1
-    Purpose: Compares a repository's current state against any prior commit/baseline in Beyond Compare 5 with automated content-based comparison, empty folder suppression, and out-of-scope filter exclusions (.git, logs, scratch, __pycache__, binaries).
-    Path: Workspace_Inventory/tools/Invoke-BeyondCompareReview.ps1
+    Purpose: Compares a repository's current state against any prior commit in Beyond Compare 5 with interactive review staging,
+             automatic exclusion of .venv/cache/scratch directories, 4-directive action parsing (Accept, Delete, Rename, Defer),
+             and SHA-256 staging manifest generation.
+    Path: tools/Invoke-BeyondCompareReview.ps1
     Authors: Rolf, Workspace_AI Engine
-    Version: 1.5.0
-    Date: 2026-08-28
+    Version: 2.0.0
+    Date: 2026-08-29
 .PARAMETER RepositoryName
     The name or directory path of the Git repository to review (e.g. 'AuthorizeMasterUser', 'Git_Repositories', '.').
 .PARAMETER BaseCommit
     The base Git commit to compare against (e.g. 'HEAD~1', 'HEAD', 'root', SHA). Defaults to 'HEAD'.
 .PARAMETER Exclusions
-    Additional file or directory exclusion masks (Aliases: -Exclude, -Filters). Standard LCM exclusions (.git, __pycache__, scratch, logs, node_modules, temp files) are always included.
+    Additional file or directory exclusion masks (Aliases: -Exclude, -Filters). Standard LCM exclusions are always applied.
 .PARAMETER BeyondComparePath
     Path to BCompare.exe executable. Defaults to 'D:\Tools\Beyond Compare 5\BCompare.exe'.
+.PARAMETER Wait
+    Wait synchronously for the Beyond Compare review session to close before evaluating staging.
 .PARAMETER Help
     Displays this parameter reference (Aliases: -h, -?).
 .EXAMPLE
-    pwsh tools/Invoke-BeyondCompareReview.ps1 -RepositoryName AuthorizeMasterUser -BaseCommit HEAD~1
+    pwsh tools/Invoke-BeyondCompareReview.ps1 -RepositoryName Git_Repositories
 .EXAMPLE
-    pwsh tools/Invoke-BeyondCompareReview.ps1 -RepositoryName Git_Repositories -Exclusions @('custom_dir\', '*.bak')
+    pwsh tools/Invoke-BeyondCompareReview.ps1 -RepositoryName AuthorizeMasterUser -BaseCommit HEAD~1
 #>
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$scriptVersion = "1.5.0"
+$scriptVersion = "2.0.0"
 $scriptName = "Invoke-BeyondCompareReview"
 
 # ------------------------------------------------------------------------------
@@ -61,26 +68,13 @@ if ($Help -or [string]::IsNullOrWhiteSpace($RepositoryName)) {
     Write-Host "  Beyond Compare 5 on your interactive desktop with out-of-scope filter exclusions."
     Write-Host ""
     Write-Host "USAGE:" -ForegroundColor Yellow
-    Write-Host "  pwsh tools/Invoke-BeyondCompareReview.ps1 -RepositoryName <repo> [-BaseCommit <commit>] [-Exclusions <array>] [-h]"
+    Write-Host "  pwsh tools/Invoke-BeyondCompareReview.ps1 -RepositoryName <repo> [-BaseCommit <commit>] [-Exclusions <array>] [-Wait] [-h]"
     Write-Host ""
-    Write-Host "PARAMETERS:" -ForegroundColor Yellow
-    Write-Host "  -RepositoryName <str> : Name or path of repository (e.g. 'AuthorizeMasterUser', '.')."
-    Write-Host "  -BaseCommit <str>     : Git commit to compare against (Default: 'HEAD')."
-    Write-Host "  -Exclusions <arr>     : Additional exclusion masks (Aliases: -Exclude, -Filters)."
-    Write-Host "  -BeyondComparePath    : Path to BCompare.exe (Default: 'D:\Tools\Beyond Compare 5\BCompare.exe')."
-    Write-Host "  -h, -Help, -?         : Displays this parameter reference."
-    Write-Host ""
-    Write-Host "STANDARD BASELINE EXCLUSIONS (ALWAYS APPLIED):" -ForegroundColor Yellow
-    Write-Host "  - Version Control    : .git\, *\.git\*, .git*"
-    Write-Host "  - Python Bytecode    : __pycache__\, *\.pyc, *\.pyo"
-    Write-Host "  - Scratch & Logs     : scratch\, logs\, work\, *.log, *.tmp, *.bak, *.swp, *.lock"
-    Write-Host "  - Inventory/Telemetry: inventory.json, *.inventory, data\inventory.json"
-    Write-Host "  - Dependencies/Build : node_modules\, bin\, obj\"
-    Write-Host "  - Container Scope    : Child repositories excluded when reviewing root container"
-    Write-Host ""
-    Write-Host "EXAMPLES:" -ForegroundColor Yellow
-    Write-Host "  pwsh tools/Invoke-BeyondCompareReview.ps1 -RepositoryName AuthorizeMasterUser -BaseCommit HEAD~1"
-    Write-Host "  pwsh tools/Invoke-BeyondCompareReview.ps1 -RepositoryName Git_Repositories -Exclude @('build\')"
+    Write-Host "REVIEW DIRECTIVES (APPLIED IN LEFT PANE):" -ForegroundColor Yellow
+    Write-Host "  1. Copy Right -> Left     : Staged for ACCEPTANCE upon 'ACCEPT' command."
+    Write-Host "  2. Line 'Delete' on Left  : Permanently DELETE file on disk and in Git."
+    Write-Host "  3. Line 'Rename [to] X'   : RENAME file on disk and in Git to X (cleans up old file)."
+    Write-Host "  4. Leave Left Untouched   : Skipped / remains uncommitted in working directory."
     Write-Host "==========================================================================" -ForegroundColor Cyan
     return
 }
@@ -102,9 +96,7 @@ function Update-BCReviewSession {
     )
 
     $bcSessionsPath = Join-Path $env:APPDATA 'Scooter Software\Beyond Compare 5\BCSessions.xml'
-    if (-not (Test-Path -LiteralPath $bcSessionsPath)) {
-        return
-    }
+    if (-not (Test-Path -LiteralPath $bcSessionsPath)) { return }
 
     try {
         $xml = [xml](Get-Content -LiteralPath $bcSessionsPath -Raw)
@@ -152,7 +144,6 @@ function Update-BCReviewSession {
             $nf.SetAttribute('Value', $FilterMask)
         }
 
-        # Helper to set attributes
         $setAttr = {
             param($parent, $name, $val)
             $n = $parent.SelectSingleNode($name)
@@ -163,7 +154,7 @@ function Update-BCReviewSession {
             $n.SetAttribute('Value', $val)
         }
 
-        # Rules (Content Comparison: Rules-Based)
+        # Rules
         $rules = $sessionNode.SelectSingleNode('Rules')
         if (-not $rules) {
             $rules = $xml.CreateElement('Rules')
@@ -174,7 +165,7 @@ function Update-BCReviewSession {
         & $setAttr $rules 'UseSizeComparison' 'True'
         & $setAttr $rules 'UseTimestampComparison' 'True'
 
-        # State (Ignore empty dirs, display differences/orphans, ignore unimportant)
+        # State
         $state = $sessionNode.SelectSingleNode('State')
         if (-not $state) {
             $state = $xml.CreateElement('State')
@@ -187,102 +178,285 @@ function Update-BCReviewSession {
         & $setAttr $state 'InsigIgnored' 'True'
         & $setAttr $state 'SortCol' 'colModified'
 
-        # Also update default TDirCompareSession so standard launches benefit too
-        $defaultSession = $itemsFolder.TDirCompareSession
-        if ($defaultSession) {
-            $defFilters = $defaultSession.SelectSingleNode('Filters')
-            if (-not $defFilters) {
-                $defFilters = $xml.CreateElement('Filters')
-                $null = $defaultSession.AppendChild($defFilters)
-            }
-            $defNf = $defFilters.SelectSingleNode('NameFilter')
-            if (-not $defNf) {
-                $defNf = $xml.CreateElement('NameFilter')
-                $null = $defFilters.AppendChild($defNf)
-            }
-            $defNf.SetAttribute('Value', $FilterMask)
+        $xml.Save($bcSessionsPath)
+    }
+    catch {
+        Write-Verbose "Could not update BCSessions.xml: $($_.Exception.Message)"
+    }
+}
 
-            $defRules = $defaultSession.SelectSingleNode('Rules')
-            if (-not $defRules) {
-                $defRules = $xml.CreateElement('Rules')
-                $null = $defaultSession.AppendChild($defRules)
-            }
-            & $setAttr $defRules 'ContentCompareKind' 'ccRulesBased'
-            & $setAttr $defRules 'UseContentComparison' 'True'
-            & $setAttr $defRules 'UseSizeComparison' 'True'
-            & $setAttr $defRules 'UseTimestampComparison' 'True'
+function Audit-BeyondCompareReviewStaging {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$TempReviewRoot,
 
-            $defState = $defaultSession.SelectSingleNode('State')
-            if (-not $defState) {
-                $defState = $xml.CreateElement('State')
-                $null = $defaultSession.AppendChild($defState)
+        [Parameter(Mandatory = $true)]
+        [string]$RepoPath,
+
+        [Parameter(Mandatory = $true)]
+        [string]$RepoName,
+
+        [Parameter(Mandatory = $true)]
+        [string]$CommitSha
+    )
+
+    $reviewsDir = "D:\Git_Repositories\Workspace_Inventory\data\reviews"
+    if (-not (Test-Path $reviewsDir)) { New-Item -ItemType Directory -Path $reviewsDir -Force | Out-Null }
+
+    $baselineManifestPath = Join-Path $TempReviewRoot ".lcm_baseline_manifest.json"
+    $baselineManifest = @{}
+    if (Test-Path -LiteralPath $baselineManifestPath) {
+        try {
+            $json = Get-Content -LiteralPath $baselineManifestPath -Raw -Encoding UTF8 | ConvertFrom-Json
+            if ($json) {
+                foreach ($prop in $json.PSObject.Properties) {
+                    $baselineManifest[$prop.Name] = [string]$prop.Value
+                }
             }
-            & $setAttr $defState 'DirHandling' 'dirCompareFilesOnly'
-            & $setAttr $defState 'InsigIgnored' 'True'
+        } catch {}
+    }
+
+    function Get-FileSha256([string]$filePath) {
+        if (-not (Test-Path -LiteralPath $filePath)) { return $null }
+        $sha = [System.Security.Cryptography.SHA256]::Create()
+        $bytes = [System.IO.File]::ReadAllBytes($filePath)
+        $hashBytes = $sha.ComputeHash($bytes)
+        return [System.BitConverter]::ToString($hashBytes).Replace('-', '').ToLowerInvariant()
+    }
+
+    function Test-PathExcluded([string]$relPath) {
+        if ($relPath -like ".git*" -or $relPath -like "*\.git\*" -or $relPath -like "*\logs\*" -or $relPath -like "logs\*" -or $relPath -like "*\scratch\*" -or $relPath -like "scratch\*" -or $relPath -like "*.log" -or $relPath -like "*.tmp" -or $relPath -like ".venv*" -or $relPath -like "*\.venv\*") {
+            return $true
+        }
+        return $false
+    }
+
+    # Scan Right files
+    $rightFiles = @(Get-ChildItem -LiteralPath $RepoPath -Recurse -File | Where-Object {
+        $rel = $_.FullName.Substring($RepoPath.Length).TrimStart('\')
+        -not (Test-PathExcluded $rel)
+    })
+
+    # Scan Left files
+    $leftFiles = @(Get-ChildItem -LiteralPath $TempReviewRoot -Recurse -File | Where-Object {
+        $_.Name -ne '.lcm_review.json' -and $_.Name -ne '.lcm_baseline_manifest.json' -and $_.Name -ne 'archive.tar'
+    })
+
+    $acceptedFiles = [System.Collections.Generic.List[PSCustomObject]]::new()
+    $renameFiles   = [System.Collections.Generic.List[PSCustomObject]]::new()
+    $deleteFiles   = [System.Collections.Generic.List[PSCustomObject]]::new()
+    $uncopiedFiles = [System.Collections.Generic.List[PSCustomObject]]::new()
+    $rejectedEmpty = [System.Collections.Generic.List[PSCustomObject]]::new()
+
+    $evaluatedLeftRelPaths = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+
+    foreach ($lf in $leftFiles) {
+        $rel = $lf.FullName.Substring($TempReviewRoot.Length).TrimStart('\')
+        $null = $evaluatedLeftRelPaths.Add($rel)
+
+        $rfPath = Join-Path $RepoPath $rel
+        $leftContent = [System.IO.File]::ReadAllText($lf.FullName, [System.Text.Encoding]::UTF8)
+
+        if ([string]::IsNullOrWhiteSpace($leftContent)) {
+            $rejectedEmpty.Add([PSCustomObject]@{ RelativePath = $rel; FullPath = $lf.FullName; Reason = "Empty content" })
+            continue
         }
 
-        $xml.Save($bcSessionsPath)
-    } catch {
-        Write-Verbose "Could not update Beyond Compare session settings: $($_.Exception.Message)"
+        $lines = $leftContent.Trim().Split("`n") | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne "" }
+        
+        # Check Delete
+        if ($lines.Count -eq 1 -and ($lines[0] -match '^(?i)(?:#|//|;|--)?\s*delete\s*$')) {
+            $deleteFiles.Add([PSCustomObject]@{
+                RelativePath = $rel
+                LivePath     = $rfPath
+                Directive    = "DELETE"
+            })
+            continue
+        }
+
+        # Check Rename
+        if ($lines.Count -eq 1 -and ($lines[0] -match '^(?i)(?:#|//|;|--)?\s*rename\s+(?:to\s+)?([^\s\r\n]+)\s*$')) {
+            $rawTarget = $Matches[1]
+            $sourceExt = [System.IO.Path]::GetExtension($rel)
+            $targetExt = [System.IO.Path]::GetExtension($rawTarget)
+            $targetName = if ([string]::IsNullOrWhiteSpace($targetExt) -and -not [string]::IsNullOrWhiteSpace($sourceExt)) {
+                $rawTarget + $sourceExt
+            } else {
+                $rawTarget
+            }
+            $targetRel = if ($rel -match '^(.*\\)[^\\]+$') { $Matches[1] + $targetName } else { $targetName }
+            $targetLivePath = Join-Path $RepoPath $targetRel
+
+            $renameFiles.Add([PSCustomObject]@{
+                OldRelativePath = $rel
+                OldLivePath     = $rfPath
+                NewRelativePath = $targetRel
+                NewLivePath     = $targetLivePath
+                Directive       = "RENAME"
+            })
+            continue
+        }
+
+        $leftHash = Get-FileSha256 $lf.FullName
+        $rightHash = if (Test-Path -LiteralPath $rfPath) { Get-FileSha256 $rfPath } else { $null }
+        $baselineHash = if ($baselineManifest.ContainsKey($rel)) { $baselineManifest[$rel] } else { $null }
+
+        if ($leftHash -and $rightHash -and $leftHash -eq $rightHash) {
+            if ($leftHash -ne $baselineHash) {
+                $acceptedFiles.Add([PSCustomObject]@{
+                    RelativePath = $rel
+                    LivePath     = $rfPath
+                    Hash         = $leftHash
+                    Status       = "ACCEPTED"
+                })
+            }
+        } elseif ($leftHash -eq $baselineHash -and $rightHash -and $leftHash -ne $rightHash) {
+            $uncopiedFiles.Add([PSCustomObject]@{
+                RelativePath = $rel
+                LivePath     = $rfPath
+                Status       = "UNCOPIED_MODIFIED"
+            })
+        }
     }
+
+    foreach ($rf in $rightFiles) {
+        $rel = $rf.FullName.Substring($RepoPath.Length).TrimStart('\')
+        if (-not $evaluatedLeftRelPaths.Contains($rel)) {
+            $uncopiedFiles.Add([PSCustomObject]@{
+                RelativePath = $rel
+                LivePath     = $rf.FullName
+                Status       = "UNCOPIED_NEW"
+            })
+        }
+    }
+
+    $stagingManifest = [ordered]@{
+        RepositoryName  = $RepoName
+        RepositoryPath  = $RepoPath
+        BaselineCommit  = $CommitSha
+        TempReviewRoot  = $TempReviewRoot
+        Timestamp       = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+        Accepted        = $acceptedFiles
+        Renames         = $renameFiles
+        Deletions       = $deleteFiles
+        Uncopied        = $uncopiedFiles
+        RejectedEmpty   = $rejectedEmpty
+    }
+
+    $manifestFile = Join-Path $reviewsDir "staged_review_${RepoName}.json"
+    $stagingManifest | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath $manifestFile -Encoding UTF8
+
+    Write-Host ""
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    Write-Host " BEYOND COMPARE INTERACTIVE REVIEW STAGING EVALUATION" -ForegroundColor Cyan
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    Write-Host " Repository      : $RepoName"
+    Write-Host " Baseline Commit : $CommitSha"
+    Write-Host " Staging Record  : $manifestFile" -ForegroundColor DarkCyan
+    Write-Host "--------------------------------------------------------------------------"
+
+    if ($acceptedFiles.Count -gt 0) {
+        Write-Host " [STAGED FOR ACCEPTANCE] ($($acceptedFiles.Count) files):" -ForegroundColor Green
+        foreach ($af in $acceptedFiles) { Write-Host "   + $($af.RelativePath)" -ForegroundColor Green }
+    }
+
+    if ($renameFiles.Count -gt 0) {
+        Write-Host " [RENAMES REQUESTED] ($($renameFiles.Count) files):" -ForegroundColor Yellow
+        foreach ($rf in $renameFiles) { Write-Host "   -> $($rf.OldRelativePath) => $($rf.NewRelativePath)" -ForegroundColor Yellow }
+    }
+
+    if ($deleteFiles.Count -gt 0) {
+        Write-Host " [MARKED FOR DELETION] ($($deleteFiles.Count) files):" -ForegroundColor Red
+        foreach ($df in $deleteFiles) { Write-Host "   x $($df.RelativePath)" -ForegroundColor Red }
+    }
+
+    if ($uncopiedFiles.Count -gt 0) {
+        Write-Host "--------------------------------------------------------------------------" -ForegroundColor DarkYellow
+        Write-Host " [UNCOPIED FILES DETECTED] ($($uncopiedFiles.Count) files):" -ForegroundColor DarkYellow
+        Write-Host " (These files were modified/created on Right but NOT copied to Left)" -ForegroundColor DarkGray
+        foreach ($uf in $uncopiedFiles) { Write-Host "   ? $($uf.RelativePath) [$($uf.Status)]" -ForegroundColor DarkYellow }
+    }
+
+    if ($rejectedEmpty.Count -gt 0) {
+        Write-Host " [REJECTED - EMPTY] ($($rejectedEmpty.Count) files):" -ForegroundColor Magenta
+        foreach ($re in $rejectedEmpty) { Write-Host "   ! $($re.RelativePath) (0 bytes)" -ForegroundColor Magenta }
+    }
+
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    Write-Host " Awaiting Operator Command:" -ForegroundColor Yellow
+    Write-Host "   - 'ACCEPT'        -> Commits staged files, executes renames & clean deletions."
+    if ($uncopiedFiles.Count -gt 0) {
+        Write-Host "   - 'ACCEPT ALL'    -> Commits staged files PLUS all uncopied files above."
+    }
+    Write-Host "   - 'REJECT'        -> Discards review staging; zero changes committed."
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+
+    return $stagingManifest
 }
 
+# ------------------------------------------------------------------------------
+# 1. Resolve Target Repository & Workspace Root
+# ------------------------------------------------------------------------------
 $workspaceRoot = 'D:\Git_Repositories'
 if (-not (Test-Path -LiteralPath $workspaceRoot)) {
-    $workspaceRoot = Split-Path $PSScriptRoot -Parent | Split-Path -Parent
+    $workspaceRoot = Split-Path $PSScriptRoot -Parent
 }
 
-$resolvedTarget = if ($RepositoryName -in @('.', 'Root', 'Git_Repositories', 'WorkspaceRoot')) {
-    $workspaceRoot
+$repoPath = $null
+if ($RepositoryName -in @('.', 'root', 'Git_Repositories', (Split-Path $workspaceRoot -Leaf))) {
+    $repoPath = $workspaceRoot
 } elseif (Test-Path -LiteralPath $RepositoryName) {
-    $RepositoryName
+    $repoPath = (Resolve-Path $RepositoryName).Path
 } else {
-    Join-Path $workspaceRoot $RepositoryName
-}
-
-if (-not (Test-Path -LiteralPath $resolvedTarget)) {
-    throw "Repository path not found: $resolvedTarget"
-}
-
-# ALWAYS resolve to fully-qualified absolute path
-$repoPath = (Get-Item -LiteralPath $resolvedTarget).FullName
-
-if (-not (Test-Path -LiteralPath (Join-Path $repoPath '.git'))) {
-    throw "Directory is not a Git repository: $repoPath"
-}
-
-# Validate Beyond Compare executable
-if (-not (Test-Path -LiteralPath $BeyondComparePath)) {
-    throw "Beyond Compare executable not found at: $BeyondComparePath. Please verify the tool path."
-}
-
-# If BaseCommit is not specified, default to HEAD to review uncommitted working tree changes
-if ([string]::IsNullOrWhiteSpace($BaseCommit)) {
-    $BaseCommit = 'HEAD'
-} elseif ($BaseCommit -eq 'root') {
-    $logCommits = @(git -C $repoPath log --oneline | ForEach-Object { ($_ -split ' ')[0] })
-    if ($logCommits.Count -gt 0) {
-        $BaseCommit = $logCommits[-1]
-    } else {
-        $BaseCommit = 'HEAD'
+    $candidatePath = Join-Path $workspaceRoot $RepositoryName
+    if (Test-Path -LiteralPath $candidatePath) {
+        $repoPath = $candidatePath
     }
 }
 
-$commitSha = (git -C $repoPath rev-parse --short $BaseCommit 2>$null)
-if (-not $commitSha) {
-    $hasAnyCommit = (git -C $repoPath rev-parse --verify HEAD 2>$null)
-    if (-not $hasAnyCommit) {
-        $commitSha = 'unborn'
-        $commitMsg = 'Initial Onboarding Baseline (Empty)'
-    } else {
-        throw "Invalid Git commit reference: $BaseCommit"
-    }
-} else {
-    $commitMsg = (git -C $repoPath log -n 1 --pretty=format:"%s" $commitSha)
+if (-not $repoPath -or -not (Test-Path -LiteralPath $repoPath)) {
+    throw "Repository path not found for input: '$RepositoryName'"
 }
 
 $repoName = Split-Path $repoPath -Leaf
-$tempParent = Join-Path $env:TEMP "BC_Review"
+
+if (-not (Test-Path -LiteralPath (Join-Path $repoPath '.git'))) {
+    throw "Target folder is not a valid Git repository: '$repoPath'"
+}
+
+if (-not (Test-Path -LiteralPath $BeyondComparePath)) {
+    throw "Beyond Compare executable not found at: '$BeyondComparePath'"
+}
+
+# ------------------------------------------------------------------------------
+# 2. Resolve Base Commit
+# ------------------------------------------------------------------------------
+$commitSha = $null
+$commitMsg = ""
+
+if ([string]::IsNullOrWhiteSpace($BaseCommit)) {
+    $BaseCommit = 'HEAD'
+}
+
+try {
+    $commitSha = (git -C $repoPath rev-parse --short $BaseCommit 2>$null).Trim()
+    $commitMsg = (git -C $repoPath log -n 1 --pretty=format:"%s" $BaseCommit 2>$null).Trim()
+}
+catch {
+    $commitSha = 'unborn'
+    $commitMsg = 'Initial Empty Baseline'
+}
+
+if (-not $commitSha) {
+    $commitSha = 'unborn'
+    $commitMsg = 'Initial Empty Baseline'
+}
+
+# ------------------------------------------------------------------------------
+# 3. Export Baseline Commit into Temporary Review Inspection Tree
+# ------------------------------------------------------------------------------
+$tempParent = Join-Path $env:LOCALAPPDATA "Temp\BC_Review"
 if (-not (Test-Path -LiteralPath $tempParent)) {
     $null = New-Item -ItemType Directory -Path $tempParent -Force
 }
@@ -304,11 +478,28 @@ if ($commitSha -ne 'unborn') {
 }
 
 # ------------------------------------------------------------------------------
-# Construct Authoritative Exclusion Filter List
+# 4. Generate Baseline Manifest for Staging Audits
+# ------------------------------------------------------------------------------
+$baselineManifest = @{}
+$baselineFiles = @(Get-ChildItem -LiteralPath $tempReviewRoot -Recurse -File | Where-Object { $_.Name -ne 'archive.tar' })
+$sha = [System.Security.Cryptography.SHA256]::Create()
+foreach ($bf in $baselineFiles) {
+    try {
+        $rel = $bf.FullName.Substring($tempReviewRoot.Length).TrimStart('\')
+        if ([System.IO.File]::Exists($bf.FullName)) {
+            $bytes = [System.IO.File]::ReadAllBytes($bf.FullName)
+            $hash = [System.BitConverter]::ToString($sha.ComputeHash($bytes)).Replace('-', '').ToLowerInvariant()
+            $baselineManifest[$rel] = $hash
+        }
+    } catch {}
+}
+$baselineManifest | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $tempReviewRoot ".lcm_baseline_manifest.json") -Encoding UTF8
+
+# ------------------------------------------------------------------------------
+# 5. Construct Authoritative Exclusion Filter List
 # ------------------------------------------------------------------------------
 $filterList = [System.Collections.Generic.List[string]]::new()
 
-# If reviewing the Root Container, exclude all child repositories that are not the root itself
 if ($repoPath -eq $workspaceRoot) {
     $childRepos = @(Get-ChildItem -LiteralPath $workspaceRoot -Directory | Where-Object { 
         (Test-Path -LiteralPath (Join-Path $_.FullName '.git')) -and ($_.FullName -ne $workspaceRoot)
@@ -318,9 +509,10 @@ if ($repoPath -eq $workspaceRoot) {
     }
 }
 
-# Standard Baseline LCM Exclusions
 $standardExclusions = @(
     '-.git\', '-*\.git\*', '-.git*',
+    '-.venv\', '-*\.venv\*', '-venv\', '-*\venv\*',
+    '-.env\', '-*\.env\*',
     '-__pycache__\', '-*\__pycache__\*', '-*.pyc', '-*.pyo',
     '-scratch\', '-*\scratch\*',
     '-logs\', '-*\logs\*',
@@ -338,7 +530,6 @@ foreach ($ex in $standardExclusions) {
     }
 }
 
-# Append User-Specified Custom Exclusions
 if ($Exclusions -and $Exclusions.Count -gt 0) {
     foreach ($userEx in $Exclusions) {
         if (-not [string]::IsNullOrWhiteSpace($userEx)) {
@@ -355,10 +546,8 @@ if ($Exclusions -and $Exclusions.Count -gt 0) {
 
 $filterMask = ($filterList -join ';')
 
-# Dynamically configure Beyond Compare LCM_Review session
 Update-BCReviewSession -LeftPath $tempReviewRoot -RightPath $repoPath -FilterMask $filterMask -SessionName 'LCM_Review'
 
-# Record immutable review session metadata
 $sessionMeta = [ordered]@{
     RepositoryName   = $repoName
     RepositoryPath   = $repoPath
@@ -377,30 +566,12 @@ Write-Host ("  Filters Applied:            {0}" -f $filterMask)
 
 $title1 = "Baseline ($commitSha)"
 $title2 = "Current Live ($repoName)"
-
-# Format full folder comparison arguments including titles and LCM exclusion filters
 $bcArgs = "`"$tempReviewRoot`" `"$repoPath`" `"/title1=$title1`" `"/title2=$title2`" `"/filters=$filterMask`""
 
-$taskName = "LCM_BC_Review_$(Get-Random)"
-try {
-    # Method 1 (Authoritative): Launch via Task Scheduler Interactive Dispatch (Session 1 desktop)
-    $action = New-ScheduledTaskAction -Execute $BeyondComparePath -Argument $bcArgs
-    $principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive
-    Register-ScheduledTask -TaskName $taskName -Action $action -Principal $principal -Force | Out-Null
-    Start-ScheduledTask -TaskName $taskName
-    Start-Sleep -Milliseconds 600
-}
-catch {
-    # Method 2: Fallback to ShellExecute / Start-Process
-    try {
-        $shellApp = New-Object -ComObject Shell.Application
-        $shellApp.ShellExecute($BeyondComparePath, $bcArgs, "", "open", 1)
-        Start-Sleep -Milliseconds 500
-    }
-    catch {
-        Start-Process -FilePath $BeyondComparePath -ArgumentList @("`"$tempReviewRoot`"", "`"$repoPath`"", "`"/title1=$title1`"", "`"/title2=$title2`"", "`"/filters=$filterMask`"")
-    }
-}
-finally {
-    Unregister-ScheduledTask -TaskName $taskName -Confirm:$false -ErrorAction SilentlyContinue | Out-Null
+$proc = Start-Process -FilePath $BeyondComparePath -ArgumentList @("`"$tempReviewRoot`"", "`"$repoPath`"", "`"/title1=$title1`"", "`"/title2=$title2`"", "`"/filters=$filterMask`"") -PassThru
+
+if ($Wait) {
+    Write-Host "Waiting for Beyond Compare review session to close..." -ForegroundColor DarkGray
+    $proc.WaitForExit()
+    Audit-BeyondCompareReviewStaging -TempReviewRoot $tempReviewRoot -RepoPath $repoPath -RepoName $repoName -CommitSha $commitSha
 }

@@ -1,0 +1,106 @@
+# Change Request Proposal (CRP): Daemon Log Maintenance & ShowDaemon Utility
+
+Module: Workspace_Inventory/docs/Proposals/CRP-2026-001-Daemon-Enhancements.md  
+Purpose: Change Request Proposal for accumulating low-impact enhancements for the LCM Desktop REST Bridge Daemon.  
+Path: Workspace_Inventory/docs/Proposals/CRP-2026-001-Daemon-Enhancements.md  
+Authors: Rolf, Workspace_AI Engine  
+Version: 1.0.0 (LCM Baseline: 6.0.0)  
+Status: PROPOSED / QUEUED_LOW_IMPACT  
+Date: 2026-08-28  
+
+---
+
+## 1. Executive Summary & Impact Classification
+
+* **Proposal ID**: `CRP-2026-001`
+* **Target Domain**: `LCM Tooling & Desktop Daemon Infrastructure`
+* **Impact Level**: `LOW` (Zero breaking changes to existing APIs; purely operational telemetry & maintenance).
+* **Target Milestone**: `LCM v6.1.0`
+
+---
+
+## 2. Itemized Change Queue
+
+### Item 1: Automated Daemon Log Cleanup & Retention Threshold
+* **Location**: `tools/LcmDesktopDaemon.ps1` (`Invoke-DaemonLogMaintenance`)
+* **Objective**: Prevent unbounded disk growth in `tools/logs/LcmDesktopDaemon-*.log`.
+* **Specification**:
+  * Implement automatic startup and periodic log sweep purging daemon log files older than **7 days** (`-MaxLogAgeDays 7`).
+  * Implement automatic log file rotation if active log file exceeds **10 MB**.
+  * Add telemetry log entry to record count of purged log files.
+
+### Item 2: Dedicated Diagnostic & Monitoring Tool (`Show-LcmDaemon.ps1` / `ShowDaemon.cmd`)
+* **Location**: `tools/Show-LcmDaemon.ps1`, `tools/Cmd/ShowDaemon.cmd`
+* **Objective**: Provide instantaneous operator visibility into daemon state without opening log files manually.
+* **Specification**:
+  * Probe `GET http://127.0.0.1:9876/status` to extract:
+    * Process ID (`PID`)
+    * Memory Working Set (`workingSetMB`)
+    * Interactive Session ID (`sessionId`)
+    * Formatted Uptime (`uptimeSec`)
+    * Active log file path
+  * Support live log tailing via `ShowDaemon -Tail` (or `-Follow` / `-f`).
+  * Support instant lifecycle restart via `ShowDaemon -Restart` or `ShowDaemon -Stop`.
+
+### Item 3: Clean Out Superseded Legacy Tools from `D:\OneDrive\cmd`
+* **Target Location**: `D:\OneDrive\cmd` (Legacy script hub).
+* **Reference Tool**: [`tools/Show-CmdFolderAnalysis.ps1`](file:///D:/Git_Repositories/tools/Show-CmdFolderAnalysis.ps1) (`ShowCmdAnalysis`).
+* **Objective**: Remove obsolete, duplicate, and superseded legacy `.cmd` / `.bat` / `.ps1` tools in `D:\OneDrive\cmd` that have been ported, modernized, and canonicalized into `tools/` and `tools/Cmd/`.
+* **Specification**:
+  * Cross-reference all scripts in `D:\OneDrive\cmd` against `tools/tool_catalog.json` and `tools/Cmd/`.
+  * Safely archive or remove scripts with 100% functional parity in modern LCM tooling (e.g. anti-flicker tweaks, Logitech suppressions, chkdsk parsers, ASUS debloaters, network diagnostics).
+  * Leave unique, un-ported scripts untouched pending individual reviews.
+
+### Item 4: Decompose `LcmDaemonCore` into Atomized Module Structure
+* **Target Location**: `tools/modules/LcmDaemon/` (Replacing monolithic `LcmDaemonCore.psm1`).
+* **Objective**: Align daemon codebase with LCM Atom principles and C#/C++ class-per-file modularity.
+* **Specification**:
+  * Create standard module manifest and root loader: `tools/modules/LcmDaemon/LcmDaemon.psm1` & `.psd1`.
+  * Externalize DTOs into `Classes/DaemonDto.ps1` and `Classes/DaemonEnvironment.ps1`.
+  * Externalize action handlers into discrete, focused action files in `Actions/` (e.g. `Invoke-DaemonRename.ps1`, `Invoke-DaemonCleanup.ps1`, `Invoke-DaemonOpen.ps1`, `Invoke-DaemonArchive.ps1`).
+  * Ensure strict dependency dot-sourcing order (`Classes/` loaded before `Actions/`).
+
+### Item 5: Modern Coding Methodology, Design Patterns & Language Evolution
+* **Target Scope**: Workspace-Wide Governance & LCM Architecture Policies (`.agents/rules/`).
+* **Objective**: Formulate and apply modernized "rules of conduct" for software engineering, domain modeling, and language selection across all workspace tools.
+* **Specification**:
+  * **Language-Specific Best Practices & Design Patterns**: Codify domain-driven design, object-oriented encapsulation, typed DTOs/interfaces, and commonly used architectural patterns (e.g. Repository, Controller, Dispatcher).
+  * **Data Design & Leveraging Pre-Existing Tools**: Prioritize structured schema validation, standardized data models, and integration of robust external tools over ad-hoc scripting.
+  * **Language Limitation Research & Migration Triggers**: When PowerShell or legacy scripting exhibits severe limitations (e.g. lack of true threading, complex class scope hoisting, GUI latency, or runtime overhead), mandate structured technical spikes to evaluate re-implementation in dedicated, better-suited languages (e.g. C#, Rust, Python, C++).
+
+### Item 6: Tripartite Documentation Specification for Root Tooling Hub
+* **Target Location**: `tools/docs/` (`Architecture.md`, `Requirements.md`, `Implementation.md`, `README.md`).
+* **Objective**: Establish authoritative DOX tripartite specifications for the 140+ shared workspace tools, aligning `tools/` with `RULE-DOC-001` through `004`.
+* **Specification**:
+  * **`tools/docs/Architecture.md`**: System topology of the Tooling Hub, Short-Name Trampoline hub (`tools/Cmd/`), Session 1 REST Bridge Daemon (`LcmDesktopDaemon.ps1`), AST synchronization engine (`Update-ToolCatalog.ps1`), and interactive dashboards.
+  * **`tools/docs/Requirements.md`**: Normative functional requirements covering tool archetypes (`REQ-TOOL-CREATOR`, `REQ-TOOL-SETTER`, `REQ-TOOL-SHOWER`, `REQ-TOOL-GETTER`, `REQ-TOOL-RUNNER`), elevation governance (`REQ-TOOL-ELEVATION`), daemon REST APIs (`REQ-TOOL-DAEMON`), and trampoline resolution (`REQ-TOOL-CMD-HUB`).
+  * **`tools/docs/Implementation.md`**: Concrete mapping of modules (`LcmDaemonCore.psm1`, `LcmToolCatalog.psm1`), DTO schemas, short-name taxonomy parser, and launcher generation rules.
+  * **`tools/docs/README.md`**: Tooling hub directory index linking the tripartite specifications.
+
+### Item 7: Future Low-Impact Daemon Polish (Backlog)
+* Dynamic port auto-discovery fallback if port 9876 is occupied by an external service.
+* Windows Notification Toast alert upon unexpected daemon crash/recovery.
+
+### Item 8: Early Stage Environment PATH Provisioning in Universal Installer
+* **Target Scope**: Universal Workspace Installer (`install/Installation.md` / `tools/Initialize-*`).
+* **Requirement Reference**: `REQ-TOOL-013` in `tools/docs/Requirements.md`.
+* **Specification**: The installation runbook must enforce that `tools/Cmd/` (and `tools/`) are registered in User and Machine Environment PATH at Stage 0 (early bootstrap) before executing subsequent deployment phases or running downstream trampolines.
+
+### Item 9: Environment PATH Strategy & Generated Dashboard Storage Architecture
+* **Target Scope**: Tool execution mechanics and generated artifact locations (`tools/scratch/`, `tools/Cmd/`).
+* **Objective**: Evaluate holistic directory architecture for generated interactive web dashboards and PATH-independent command execution.
+* **Specification**:
+  * Assess optimal canonical location for transient/generated web dashboards (e.g. evaluating `tools/temp/`, `tools/web/`, or dedicated viewer structures vs `tools/scratch/`).
+  * Verify seamless CLI command dispatch independence from active shell working directories when PATH is globally active.
+
+---
+
+## 3. Implementation Status & Verification Harness
+
+1. `LcmDesktopDaemon.ps1` refactored into modular route handlers with `[hashtable]$Context` interface structure.
+2. `Show-LcmDaemon.ps1` (`tools/Cmd/ShowDaemon.cmd`) created and validated against live daemon.
+3. Quality gates validated via `Test-WorkspaceReadiness.ps1`.
+4. `D:\OneDrive\cmd` reconciliation complete: 21 superseded files safely snapshotted to `archive/superseded_20260828/` and cleaned from `D:\OneDrive\cmd\`.
+5. Module atomization and language evolution research queued for future LCM milestone.
+6. Tripartite specifications for `tools/` created and validated in `tools/docs/` (`Architecture.md`, `Requirements.md`, `Implementation.md`, `README.md`).
+7. Dynamic parameter drawer with full comment-based docstrings, boolean switch toggles, CORS preflight routing, and -NoExit interactive console dispatch operational.
