@@ -1,7 +1,7 @@
 # Workspace Configuration Management (CM) Inventory Dashboard
 
 Module: docs/INVENTORY_DASHBOARD.md
-Generated: 2026-08-29 19:04:22
+Generated: 2026-08-29 19:05:06
 Global Baseline Version: **v6.1.1** (Source: Workspace_AI)
 
 ---
@@ -51,5 +51,5 @@ Global Baseline Version: **v6.1.1** (Source: Workspace_AI)
 | **`tools`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | **Admin** | non-git |
 | **`VolumeInventory`** | Git | `main` | `8058b8e` | clean | **governed** | v6.1.1 | v6.1.1 | **Admin** | lcm-governed |
 | **`Workspace_AI`** | Git | `main` | `6639578` | clean | **governed** | v6.1.1 | v6.1.1 | User | active-design-workshop |
-| **`Workspace_Inventory`** | Git | `main` | `7e173a6` | modified (15 files) | **governed** | v6.1.1 | v6.1.1 | **Admin** | configuration-management |
+| **`Workspace_Inventory`** | Git | `main` | `bc82d86` | clean | **governed** | v6.1.1 | v6.1.1 | **Admin** | configuration-management |
 
