@@ -21,3 +21,5 @@ tmp/
 
 # LCM Local Governance Link
 .agents/
+
+temp/
