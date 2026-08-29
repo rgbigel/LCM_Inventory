@@ -1,0 +1,10 @@
+{
+  "RepositoryName": "Workspace_Inventory",
+  "RepositoryPath": "Workspace_Inventory",
+  "CommitSha": "a9a6bbf",
+  "ReviewResult": "AcceptedAll",
+  "Reviewer": "rgbig",
+  "Timestamp": "2026-08-29 18:58:20",
+  "Message": "feat(lcm): dual-state proposal lifecycle, CM plan archive, and review receipts",
+  "ActionsExecuted": []
+}
