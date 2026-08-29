@@ -1,0 +1,10 @@
+{
+  "RepositoryName": "BootEntryManager",
+  "RepositoryPath": "BootEntryManager",
+  "CommitSha": "355bd2e",
+  "ReviewResult": "AcceptedAll",
+  "Reviewer": "rgbig",
+  "Timestamp": "2026-08-29 19:04:11",
+  "Message": "feat(lcm): bump LCM platform baseline to v6.1.1 per RULE-DOC-005",
+  "ActionsExecuted": []
+}
