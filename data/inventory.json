@@ -1,22 +1,22 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Workspace Repository Inventory & CM State",
-  "generated_at": "2026-08-29T19:05:06.9264092+02:00",
+  "generated_at": "2026-08-29T22:44:55.7893984+02:00",
   "workspace_ai_baseline": {
     "Status": "Active",
-    "GlobalLCMVersion": "6.1.1",
+    "GlobalLCMVersion": "7.0.0",
     "LifecycleState": "Governed",
     "Branch": "main",
-    "HeadCommit": "6639578",
+    "HeadCommit": "c19f2e0",
     "Path": "D:\\Git_Repositories\\Workspace_AI"
   },
-  "total_directories": 27,
+  "total_directories": 28,
   "governed_count": 12,
   "outdated_count": 0,
   "candidate_count": 0,
   "standard_git_count": 8,
-  "non_git_count": 2,
-  "elevation_required_count": 9,
+  "non_git_count": 3,
+  "elevation_required_count": 10,
   "repositories": [
     {
       "RepositoryName": ".agents",
@@ -36,7 +36,7 @@
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-29 19:05:02"
+      "LastAuditTimestamp": "2026-08-29 22:44:50"
     },
     {
       "RepositoryName": ".copilot",
@@ -56,7 +56,7 @@
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-29 19:05:02"
+      "LastAuditTimestamp": "2026-08-29 22:44:50"
     },
     {
       "RepositoryName": ".git",
@@ -76,7 +76,7 @@
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-29 19:05:02"
+      "LastAuditTimestamp": "2026-08-29 22:44:50"
     },
     {
       "RepositoryName": ".github",
@@ -96,7 +96,27 @@
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-29 19:05:02"
+      "LastAuditTimestamp": "2026-08-29 22:44:50"
+    },
+    {
+      "RepositoryName": ".lcd",
+      "Path": "D:\\Git_Repositories\\.lcd",
+      "Classification": "non-git",
+      "GitStatus": "Non-Git",
+      "Branch": "-",
+      "HeadCommit": "-",
+      "DirtyState": "clean",
+      "AheadBehind": "synced",
+      "HasUnpushed": false,
+      "LCMStatus": "not-lcm",
+      "AbsorbedLCMVersion": null,
+      "CurrentLCMVersion": null,
+      "ElevationRequired": true,
+      "MinimumPrivilege": "Administrator",
+      "ElevationReason": "Auto-detected privileged pattern 'Start-Process.*-Verb\\s+RunAs' in LcmDaemonCore.ps1",
+      "JunctionsHealthy": true,
+      "Disposition": null,
+      "LastAuditTimestamp": "2026-08-29 22:44:50"
     },
     {
       "RepositoryName": ".venv",
@@ -116,7 +136,7 @@
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-29 19:05:02"
+      "LastAuditTimestamp": "2026-08-29 22:44:50"
     },
     {
       "RepositoryName": ".vscode",
@@ -136,7 +156,7 @@
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-29 19:05:02"
+      "LastAuditTimestamp": "2026-08-29 22:44:50"
     },
     {
       "RepositoryName": "AuthorizeMasterUser",
@@ -145,18 +165,18 @@
       "GitStatus": "Git",
       "Branch": "main",
       "HeadCommit": "775beaf",
-      "DirtyState": "clean",
+      "DirtyState": "modified (1 files)",
       "AheadBehind": "synced",
       "HasUnpushed": false,
       "LCMStatus": "governed",
-      "AbsorbedLCMVersion": "6.1.1",
-      "CurrentLCMVersion": "6.1.1",
+      "AbsorbedLCMVersion": "7.0.0",
+      "CurrentLCMVersion": "7.0.0",
       "ElevationRequired": true,
       "MinimumPrivilege": "Administrator",
       "ElevationReason": "Performs administrative NTFS security descriptor modifications and ACL fixes across mounted drives.",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-29 19:05:02"
+      "LastAuditTimestamp": "2026-08-29 22:44:51"
     },
     {
       "RepositoryName": "BackgroundModifier",
@@ -165,18 +185,18 @@
       "GitStatus": "Git",
       "Branch": "main",
       "HeadCommit": "3b3dca0",
-      "DirtyState": "clean",
+      "DirtyState": "modified (1 files)",
       "AheadBehind": "synced",
       "HasUnpushed": false,
       "LCMStatus": "governed",
-      "AbsorbedLCMVersion": "6.1.1",
-      "CurrentLCMVersion": "6.1.1",
+      "AbsorbedLCMVersion": "7.0.0",
+      "CurrentLCMVersion": "7.0.0",
       "ElevationRequired": true,
       "MinimumPrivilege": "Administrator",
       "ElevationReason": "Requires Administrator privilege for bcdedit and desktop background rendering APIs",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-29 19:05:02"
+      "LastAuditTimestamp": "2026-08-29 22:44:51"
     },
     {
       "RepositoryName": "BGMSAMVInv",
@@ -185,18 +205,18 @@
       "GitStatus": "Git",
       "Branch": "main",
       "HeadCommit": "ff72fc9",
-      "DirtyState": "clean",
+      "DirtyState": "modified (1 files)",
       "AheadBehind": "synced",
       "HasUnpushed": false,
       "LCMStatus": "governed",
-      "AbsorbedLCMVersion": "6.1.1",
-      "CurrentLCMVersion": "6.1.1",
+      "AbsorbedLCMVersion": "7.0.0",
+      "CurrentLCMVersion": "7.0.0",
       "ElevationRequired": false,
       "MinimumPrivilege": "User",
       "ElevationReason": "Standard user execution",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-29 19:05:03"
+      "LastAuditTimestamp": "2026-08-29 22:44:51"
     },
     {
       "RepositoryName": "BootEntryManager",
@@ -205,18 +225,18 @@
       "GitStatus": "Git",
       "Branch": "main",
       "HeadCommit": "355bd2e",
-      "DirtyState": "clean",
+      "DirtyState": "modified (1 files)",
       "AheadBehind": "synced",
       "HasUnpushed": false,
       "LCMStatus": "governed",
-      "AbsorbedLCMVersion": "6.1.1",
-      "CurrentLCMVersion": "6.1.1",
+      "AbsorbedLCMVersion": "7.0.0",
+      "CurrentLCMVersion": "7.0.0",
       "ElevationRequired": true,
       "MinimumPrivilege": "Administrator",
       "ElevationReason": "Requires administrative privileges to manage Windows BCD and system boot entries.",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-29 19:05:03"
+      "LastAuditTimestamp": "2026-08-29 22:44:51"
     },
     {
       "RepositoryName": "HaSSD06",
@@ -225,18 +245,18 @@
       "GitStatus": "Git",
       "Branch": "main",
       "HeadCommit": "e40bb4c",
-      "DirtyState": "clean",
+      "DirtyState": "modified (17 files)",
       "AheadBehind": "synced",
       "HasUnpushed": false,
       "LCMStatus": "governed",
-      "AbsorbedLCMVersion": "6.1.1",
-      "CurrentLCMVersion": "6.1.1",
+      "AbsorbedLCMVersion": "7.0.0",
+      "CurrentLCMVersion": "7.0.0",
       "ElevationRequired": false,
       "MinimumPrivilege": "User",
       "ElevationReason": "Subsystem operations communicate over network REST/WebSocket and Python runtime.",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-29 19:05:03"
+      "LastAuditTimestamp": "2026-08-29 22:44:52"
     },
     {
       "RepositoryName": "HaSSD06_Inventory",
@@ -245,18 +265,18 @@
       "GitStatus": "Git",
       "Branch": "main",
       "HeadCommit": "5972d7b",
-      "DirtyState": "clean",
+      "DirtyState": "modified (17 files)",
       "AheadBehind": "synced",
       "HasUnpushed": false,
       "LCMStatus": "governed",
-      "AbsorbedLCMVersion": "6.1.1",
-      "CurrentLCMVersion": "6.1.1",
+      "AbsorbedLCMVersion": "7.0.0",
+      "CurrentLCMVersion": "7.0.0",
       "ElevationRequired": false,
       "MinimumPrivilege": "User",
       "ElevationReason": "Subsystem inventory reads telemetry over network REST/WebSocket and maintains state databases.",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-29 19:05:03"
+      "LastAuditTimestamp": "2026-08-29 22:44:52"
     },
     {
       "RepositoryName": "Installation_LCD",
@@ -264,19 +284,19 @@
       "Classification": "lcm-governed",
       "GitStatus": "Git",
       "Branch": "main",
-      "HeadCommit": "ab0775a",
-      "DirtyState": "clean",
+      "HeadCommit": "3dac106",
+      "DirtyState": "modified (17 files)",
       "AheadBehind": "synced",
       "HasUnpushed": false,
       "LCMStatus": "governed",
-      "AbsorbedLCMVersion": "6.1.1",
-      "CurrentLCMVersion": "6.1.1",
+      "AbsorbedLCMVersion": "7.0.0",
+      "CurrentLCMVersion": "7.0.0",
       "ElevationRequired": false,
       "MinimumPrivilege": "User",
       "ElevationReason": "Standard user execution with UAC delegation for system setup",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-29 19:05:03"
+      "LastAuditTimestamp": "2026-08-29 22:44:52"
     },
     {
       "RepositoryName": "InstallFonts",
@@ -296,7 +316,7 @@
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-29 19:05:04"
+      "LastAuditTimestamp": "2026-08-29 22:44:52"
     },
     {
       "RepositoryName": "MacriumTemplateUpdater",
@@ -316,7 +336,7 @@
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-29 19:05:04"
+      "LastAuditTimestamp": "2026-08-29 22:44:53"
     },
     {
       "RepositoryName": "MSG file conversion",
@@ -336,7 +356,7 @@
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-29 19:05:04"
+      "LastAuditTimestamp": "2026-08-29 22:44:53"
     },
     {
       "RepositoryName": "NextBootTray",
@@ -356,7 +376,7 @@
       "ElevationReason": "Auto-detected privileged pattern 'Start-Process.*-Verb\\s+RunAs' in Install-NextBootTray.ps1",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-29 19:05:04"
+      "LastAuditTimestamp": "2026-08-29 22:44:53"
     },
     {
       "RepositoryName": "OutlookVBAConversion",
@@ -376,7 +396,7 @@
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-29 19:05:05"
+      "LastAuditTimestamp": "2026-08-29 22:44:53"
     },
     {
       "RepositoryName": "PowerBGInfo",
@@ -396,7 +416,7 @@
       "ElevationReason": "Auto-detected privileged pattern 'Get-Partition\\b' in Run.BGInfo1.ps1",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-29 19:05:05"
+      "LastAuditTimestamp": "2026-08-29 22:44:54"
     },
     {
       "RepositoryName": "ReEnableRadeonRx580",
@@ -416,7 +436,7 @@
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-29 19:05:05"
+      "LastAuditTimestamp": "2026-08-29 22:44:54"
     },
     {
       "RepositoryName": "SharedModules",
@@ -425,18 +445,18 @@
       "GitStatus": "Git",
       "Branch": "main",
       "HeadCommit": "3e3c2f9",
-      "DirtyState": "clean",
+      "DirtyState": "modified (1 files)",
       "AheadBehind": "synced",
       "HasUnpushed": false,
       "LCMStatus": "governed",
-      "AbsorbedLCMVersion": "6.1.1",
-      "CurrentLCMVersion": "6.1.1",
+      "AbsorbedLCMVersion": "7.0.0",
+      "CurrentLCMVersion": "7.0.0",
       "ElevationRequired": false,
       "MinimumPrivilege": "User",
       "ElevationReason": "Standard user execution",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-29 19:05:05"
+      "LastAuditTimestamp": "2026-08-29 22:44:54"
     },
     {
       "RepositoryName": "SystemConfiguration",
@@ -444,19 +464,19 @@
       "Classification": "lcm-governed",
       "GitStatus": "Git",
       "Branch": "main",
-      "HeadCommit": "ff620cc",
-      "DirtyState": "clean",
+      "HeadCommit": "fe096ea",
+      "DirtyState": "modified (1 files)",
       "AheadBehind": "synced",
       "HasUnpushed": false,
       "LCMStatus": "governed",
-      "AbsorbedLCMVersion": "6.1.1",
-      "CurrentLCMVersion": "6.1.1",
+      "AbsorbedLCMVersion": "7.0.0",
+      "CurrentLCMVersion": "7.0.0",
       "ElevationRequired": true,
       "MinimumPrivilege": "Administrator",
       "ElevationReason": "System configuration, registry manipulation, and hardware invariant settings require Administrator elevation",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-29 19:05:05"
+      "LastAuditTimestamp": "2026-08-29 22:44:54"
     },
     {
       "RepositoryName": "TimeStamper",
@@ -476,7 +496,7 @@
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-29 19:05:06"
+      "LastAuditTimestamp": "2026-08-29 22:44:55"
     },
     {
       "RepositoryName": "tools",
@@ -496,7 +516,7 @@
       "ElevationReason": "Auto-detected privileged pattern 'Start-Process.*-Verb\\s+RunAs' in @00-ApplyAllCustomizations.ps1",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-29 19:05:06"
+      "LastAuditTimestamp": "2026-08-29 22:44:55"
     },
     {
       "RepositoryName": "VolumeInventory",
@@ -505,18 +525,18 @@
       "GitStatus": "Git",
       "Branch": "main",
       "HeadCommit": "8058b8e",
-      "DirtyState": "clean",
+      "DirtyState": "modified (1 files)",
       "AheadBehind": "synced",
       "HasUnpushed": false,
       "LCMStatus": "governed",
-      "AbsorbedLCMVersion": "6.1.1",
-      "CurrentLCMVersion": "6.1.1",
+      "AbsorbedLCMVersion": "7.0.0",
+      "CurrentLCMVersion": "7.0.0",
       "ElevationRequired": true,
       "MinimumPrivilege": "Administrator",
       "ElevationReason": "Requires administrative privileges for volume inspection, partition queries, and BCD enumeration.",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-29 19:05:06"
+      "LastAuditTimestamp": "2026-08-29 22:44:55"
     },
     {
       "RepositoryName": "Workspace_AI",
@@ -524,19 +544,19 @@
       "Classification": "active-design-workshop",
       "GitStatus": "Git",
       "Branch": "main",
-      "HeadCommit": "6639578",
-      "DirtyState": "clean",
+      "HeadCommit": "c19f2e0",
+      "DirtyState": "modified (22 files)",
       "AheadBehind": "synced",
       "HasUnpushed": false,
       "LCMStatus": "governed",
-      "AbsorbedLCMVersion": "6.1.1",
-      "CurrentLCMVersion": "6.1.1",
+      "AbsorbedLCMVersion": "7.0.0",
+      "CurrentLCMVersion": "7.0.0",
       "ElevationRequired": false,
       "MinimumPrivilege": "User",
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-29 19:05:06"
+      "LastAuditTimestamp": "2026-08-29 22:44:55"
     },
     {
       "RepositoryName": "Workspace_Inventory",
@@ -544,19 +564,19 @@
       "Classification": "configuration-management",
       "GitStatus": "Git",
       "Branch": "main",
-      "HeadCommit": "bc82d86",
-      "DirtyState": "clean",
+      "HeadCommit": "dd510a4",
+      "DirtyState": "modified (9 files)",
       "AheadBehind": "synced",
       "HasUnpushed": false,
       "LCMStatus": "governed",
-      "AbsorbedLCMVersion": "6.1.1",
-      "CurrentLCMVersion": "6.1.1",
+      "AbsorbedLCMVersion": "7.0.0",
+      "CurrentLCMVersion": "7.0.0",
       "ElevationRequired": true,
       "MinimumPrivilege": "Administrator",
       "ElevationReason": "Auto-detected privileged pattern 'bcdedit' in WorkspaceCM.psm1",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-29 19:05:06"
+      "LastAuditTimestamp": "2026-08-29 22:44:55"
     }
   ]
 }

@@ -23,10 +23,17 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$canonicalRulesDir = Join-Path $WorkspaceRoot '.agents\rules'
+$canonicalRulesCandidates = @(
+    (Join-Path $WorkspaceRoot '.lcd\.agents\rules'),
+    (Join-Path $WorkspaceRoot '.agents\rules')
+)
+$canonicalRulesDir = $canonicalRulesCandidates | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
+if (-not $canonicalRulesDir) {
+    $canonicalRulesDir = Join-Path $WorkspaceRoot '.lcd\.agents\rules'
+}
 
 # Read global LCM baseline
-$globalVersion = '4.3.0'
+$globalVersion = '6.1.1'
 $reqDoc = Join-Path $WorkspaceRoot 'Workspace_AI\docs\Requirements.md'
 if (Test-Path $reqDoc) {
     $match = Select-String -Path $reqDoc -Pattern '^Version:\s*(\S+)' | Select-Object -First 1
@@ -64,7 +71,14 @@ foreach ($dir in $childDirs) {
             $target = $item.Target
             if ($target) {
                 $targetStr = [string]$target
-                if ($targetStr -eq $canonicalRulesDir -or $targetStr -eq (Get-Item $canonicalRulesDir).FullName) {
+                $isValid = $false
+                foreach ($c in $canonicalRulesCandidates) {
+                    if ($targetStr -eq $c -or (Test-Path -LiteralPath $c -and $targetStr -eq (Get-Item $c).FullName)) {
+                        $isValid = $true
+                        break
+                    }
+                }
+                if ($isValid) {
                     $junctionState = 'Junction Valid'
                     $junctionTarget = 'Canonical Hub'
                 } else {

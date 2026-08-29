@@ -4,7 +4,7 @@
   "updated_at": "2026-08-29T19:35:34+02:00",
   "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 19,
+  "last_proposal_id": 20,
   "proposals": [
     {
       "id": 1,
@@ -271,6 +271,20 @@
       "details": "Automatically link resolved CRP corrections to an interactive pending review queue via Show-OpenReviews (DoReview / DOR). Support multi-item and ALL selection, forwarding to Beyond Compare Review, live acceptance status tracking upon session close, and batch ACCEPT / ACCEPT ALL commit execution.",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-019_CR-2026-030_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-019_CR-2026-030_Walkthrough.md"
+    },
+    {
+      "id": 20,
+      "timestamp": "2026-08-29 22:37:00",
+      "title": "Consolidate LCD Platform Engine into Encapsulated .lcd Structure with tools/internal and tools/links Separation",
+      "origin_repo": "Root / .lcd",
+      "cr_id": "CR-2026-031",
+      "state": "completed",
+      "progress_state": "completed",
+      "bundle_id": "unassigned",
+      "author": "rgbig",
+      "details": "Consolidate LCD platform governance rules, internal tools, modules, and docs into an encapsulated .lcd/ structure with separate .lcd/tools/internal (real code) and .lcd/tools/links (gitignored symlinks), update %PATH% to .lcd/Cmd, update child repository junctions, and provide root compatibility junctions.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-020_CR-2026-031_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-020_CR-2026-031_Walkthrough.md"
     }
   ]
 }

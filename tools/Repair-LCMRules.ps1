@@ -29,13 +29,17 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$canonicalRulesDir = Join-Path $WorkspaceRoot '.agents\rules'
-if (-not (Test-Path $canonicalRulesDir)) {
-    throw "Canonical Rule Hub not found at: $canonicalRulesDir"
+$canonicalRulesCandidates = @(
+    (Join-Path $WorkspaceRoot '.lcd\.agents\rules'),
+    (Join-Path $WorkspaceRoot '.agents\rules')
+)
+$canonicalRulesDir = $canonicalRulesCandidates | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
+if (-not $canonicalRulesDir) {
+    throw "Canonical Rule Hub not found across candidate paths: $($canonicalRulesCandidates -join ', ')"
 }
 
 # Read global LCM baseline
-$globalVersion = '4.3.0'
+$globalVersion = '6.1.1'
 $reqDoc = Join-Path $WorkspaceRoot 'Workspace_AI\docs\Requirements.md'
 if (Test-Path $reqDoc) {
     $match = Select-String -Path $reqDoc -Pattern '^Version:\s*(\S+)' | Select-Object -First 1
