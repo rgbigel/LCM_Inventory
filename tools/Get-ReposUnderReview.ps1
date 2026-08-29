@@ -17,8 +17,23 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$modulePath = Join-Path $PSScriptRoot '..\modules\ProposalManager.psm1'
-Import-Module $modulePath -Force
+$moduleCandidates = @(
+    (Join-Path $WorkspaceRoot 'Workspace_Inventory\modules\ProposalManager.psm1'),
+    (Join-Path $PSScriptRoot '..\Workspace_Inventory\modules\ProposalManager.psm1'),
+    (Join-Path $PSScriptRoot '..\modules\ProposalManager.psm1')
+)
+$modulePath = $null
+foreach ($c in $moduleCandidates) {
+    if (Test-Path -LiteralPath $c) {
+        $modulePath = $c
+        break
+    }
+}
+if ($modulePath) {
+    Import-Module $modulePath -Force
+} else {
+    throw "ProposalManager module not found in candidate paths."
+}
 
 $repos = Get-ReposUnderReview -WorkspaceRoot $WorkspaceRoot
 Format-ReposUnderReviewTable -Repos $repos
