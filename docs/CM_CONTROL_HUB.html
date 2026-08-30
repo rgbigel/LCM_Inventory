@@ -1409,6 +1409,40 @@
       renderTable();
     }
 
+    // Multi-Repository Push Engine
+    async function executePushRepositories() {
+      const chks = getSelectedCheckboxes();
+      let defaultReason = "feat(cm): implement Proposal #19 (CRP-2026-006) CM Control Hub and Proposal #24 (BUG-2026-001)";
+
+      if (chks.length > 0) {
+        const firstId = parseInt(chks[0].value, 10);
+        const p = proposalsData.proposals.find(item => item.id === firstId);
+        if (p) {
+          defaultReason = `feat(cm): ${p.bundle_id || p.cr_id || ('Proposal #' + p.id)} - ${p.title}`;
+        }
+      }
+
+      const promptReason = prompt("Enter push reason / commit tag (defaults to CRP Title):", defaultReason);
+      if (!promptReason) return;
+
+      appendConsole(`Dispatching Multi-Repository Push engine across governed repositories...`, "msg-info");
+      appendConsole(`Push Reason: ${promptReason}`, "msg-info");
+
+      const cmd = `pwsh -File Workspace_Inventory/tools/Invoke-WorkspacePush.ps1 -Reason "${promptReason.replace(/"/g, '`"')}"`;
+
+      try {
+        await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ command: cmd, elevated: false, noExit: false })
+        });
+        showToast("Git Push triggered across repositories.");
+        appendConsole("Triggered Invoke-WorkspacePush via Desktop Daemon.", "msg-info");
+      } catch (err) {
+        appendConsole(`Failed to trigger push: ${err.message}`, "msg-err");
+      }
+    }
+
     function refreshData() {
       location.reload();
     }
