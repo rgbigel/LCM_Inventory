@@ -4,7 +4,7 @@
   "updated_at": "2026-08-30T14:16:15+02:00",
   "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 24,
+  "last_proposal_id": 25,
   "proposals": [
     {
       "id": 1,
@@ -365,6 +365,21 @@
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-024_BUG-2026-001_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-024_BUG-2026-001_Walkthrough.md",
       "pushed_at": "2026-08-30 15:29:48"
+    },
+    {
+      "id": 25,
+      "timestamp": "2026-08-30 15:45:00",
+      "title": "Single-Instance Control Hub Tab Lifecycle Coordination, Auto-Retirement, and Quiet Render Engine",
+      "origin_repo": "Workspace_Inventory",
+      "cr_id": "CR-2026-036",
+      "state": "pushed",
+      "progress_state": "pushed",
+      "bundle_id": "CRP-2026-007-Workspace_Inventory-v7.1.0-Single-Instance-Dashboard-Tab-Coordination",
+      "author": "rgbig",
+      "details": "BroadcastChannel single-instance tab coordination in CM_CONTROL_HUB.html to auto-retire obsolete dashboard tabs, unconditional preservation of documentation sub-tabs and desktop editors, and -NoLaunch parameter in Show-CmControlHub.ps1.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-025_CR-2026-036_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-025_CR-2026-036_Walkthrough.md",
+      "pushed_at": "2026-08-30 15:47:00"
     }
   ]
 }
