@@ -1,7 +1,7 @@
 # Workspace Configuration Management (CM) Inventory Dashboard
 
 Module: docs/INVENTORY_DASHBOARD.md
-Generated: 2026-08-29 22:57:24
+Generated: 2026-08-30 15:50:25
 Global Baseline Version: **v7.0.0** (Source: Workspace_AI)
 
 ---
@@ -36,9 +36,9 @@ Global Baseline Version: **v7.0.0** (Source: Workspace_AI)
 | **`BackgroundModifier`** | Git | `main` | `879b1fd` | clean | **governed** | v7.0.0 | v7.0.0 | **Admin** | lcm-governed |
 | **`BGMSAMVInv`** | Git | `main` | `6c8174b` | clean | **governed** | v7.0.0 | v7.0.0 | User | lcm-governed |
 | **`BootEntryManager`** | Git | `main` | `9615824` | clean | **governed** | v7.0.0 | v7.0.0 | **Admin** | lcm-governed |
-| **`HaSSD06`** | Git | `main` | `8aba262` | clean | **governed** | v7.0.0 | v7.0.0 | User | subsystem |
-| **`HaSSD06_Inventory`** | Git | `main` | `89c5601` | clean | **governed** | v7.0.0 | v7.0.0 | User | subsystem-inventory |
-| **`Installation_LCD`** | Git | `main` | `f7467d9` | clean | **governed** | v7.0.0 | v7.0.0 | User | lcm-governed |
+| **`HaSSD06`** | Git | `main` | `8aba262` | modified (2 files) | **governed** | v7.0.0 | v7.0.0 | User | subsystem |
+| **`HaSSD06_Inventory`** | Git | `main` | `89c5601` | modified (2 files) | **governed** | v7.0.0 | v7.0.0 | User | subsystem-inventory |
+| **`Installation_LCD`** | Git | `main` | `0f29c01` | modified (1 files) | **governed** | v7.0.0 | v7.0.0 | User | lcm-governed |
 | **`InstallFonts`** | Git | `main` | `37a275a` | clean | **not-lcm** | - | - | User | standard-git |
 | **`MacriumTemplateUpdater`** | Git | `main` | `d12bf3e` | clean | **not-lcm** | - | - | User | standard-git |
 | **`MSG file conversion`** | Git | `main` | `457624b` | clean | **not-lcm** | - | - | User | standard-git |
@@ -50,6 +50,6 @@ Global Baseline Version: **v7.0.0** (Source: Workspace_AI)
 | **`SystemConfiguration`** | Git | `main` | `7f40a1a` | clean | **governed** | v7.0.0 | v7.0.0 | **Admin** | lcm-governed |
 | **`TimeStamper`** | Git | `main` | `586f41d` | clean | **not-lcm** | - | - | User | standard-git |
 | **`VolumeInventory`** | Git | `main` | `8ad2861` | clean | **governed** | v7.0.0 | v7.0.0 | **Admin** | lcm-governed |
-| **`Workspace_AI`** | Git | `main` | `194db84` | clean | **governed** | v7.0.0 | v7.0.0 | User | active-design-workshop |
-| **`Workspace_Inventory`** | Git | `main` | `c85b903` | clean | **governed** | v7.0.0 | v7.0.0 | **Admin** | configuration-management |
+| **`Workspace_AI`** | Git | `main` | `d909375` | modified (4 files) | **governed** | v7.0.0 | v7.0.0 | User | active-design-workshop |
+| **`Workspace_Inventory`** | Git | `main` | `7415fbf` | modified (1 files) | **governed** | v7.0.0 | v7.0.0 | **Admin** | configuration-management |
 

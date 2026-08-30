@@ -526,16 +526,13 @@ Write-Host "Generated Workspace Inventory Viewer: $htmlPath" -ForegroundColor Gr
 
 if (-not $NoLaunch) {
     Write-Host "Opening workspace dashboard in default web browser on Desktop (Session 1)..." -ForegroundColor Cyan
-    $dispatcher = "D:\Git_Repositories\tools\Invoke-InteractiveDesktop.ps1"
-    if (Test-Path $dispatcher) {
-        & pwsh -File $dispatcher -FilePath "explorer.exe" -ArgumentList "`"$htmlPath`"" | Out-Null
+    $dispatcher = Join-Path $repoRoot "..\.lcd\tools\internal\Invoke-InteractiveDesktop.ps1"
+    if (-not (Test-Path -LiteralPath $dispatcher)) {
+        $dispatcher = Join-Path $repoRoot "..\tools\Invoke-InteractiveDesktop.ps1"
+    }
+    if (Test-Path -LiteralPath $dispatcher) {
+        & pwsh -File $dispatcher -FilePath $htmlPath | Out-Null
     } else {
         Start-Process $htmlPath
     }
-
-    try {
-        Start-Sleep -Milliseconds 350
-        $wsh = New-Object -ComObject WScript.Shell
-        $null = $wsh.AppActivate("LCM Workspace Inventory Explorer")
-    } catch {}
 }
