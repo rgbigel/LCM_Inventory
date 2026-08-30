@@ -1,7 +1,7 @@
 # Workspace Configuration Management (CM) Inventory Dashboard
 
 Module: docs/INVENTORY_DASHBOARD.md
-Generated: 2026-08-30 15:50:25
+Generated: 2026-08-30 16:10:41
 Global Baseline Version: **v7.0.0** (Source: Workspace_AI)
 
 ---
@@ -13,10 +13,10 @@ Global Baseline Version: **v7.0.0** (Source: Workspace_AI)
 | **Total Directories Audited** | **27** | All child directories under D:\Git_Repositories\ |
 | **Active Design Workshop** | **1** | Workspace_AI (v7.0.0) |
 | **CM Repository** | **1** | Workspace_Inventory |
-| **LCM Governed / Candidates** | **12** | Actively governed under LCM |
+| **LCM Governed / Candidates** | **13** | Actively governed under LCM |
 | **Elevation Required Repositories** | **9** | Repositories requiring Administrator privileges |
 | **Standard Git Repositories** | **8** | Un-onboarded Git repos |
-| **Non-Git Component Folders** | **2** | Non-Git folders (git.ignoredRepositories) |
+| **Non-Git Component Folders** | **1** | Non-Git folders (git.ignoredRepositories) |
 | **Retired Legacy Baselines** | **2** | Workspace_AC, Workspace_GC |
 
 ---
@@ -29,7 +29,7 @@ Global Baseline Version: **v7.0.0** (Source: Workspace_AI)
 | **`.copilot`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | User | parent-infra |
 | **`.git`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | User | non-git |
 | **`.github`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | User | parent-infra |
-| **`.lcd`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | **Admin** | non-git |
+| **`.lcd`** | Non-Git | `-` | `-` | clean | **governed** | v7.0.0 | v7.0.0 | **Admin** | platform-engine |
 | **`.venv`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | User | parent-infra |
 | **`.vscode`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | User | parent-infra |
 | **`AuthorizeMasterUser`** | Git | `main` | `d095758` | clean | **governed** | v7.0.0 | v7.0.0 | **Admin** | lcm-governed |
@@ -38,7 +38,7 @@ Global Baseline Version: **v7.0.0** (Source: Workspace_AI)
 | **`BootEntryManager`** | Git | `main` | `9615824` | clean | **governed** | v7.0.0 | v7.0.0 | **Admin** | lcm-governed |
 | **`HaSSD06`** | Git | `main` | `8aba262` | modified (2 files) | **governed** | v7.0.0 | v7.0.0 | User | subsystem |
 | **`HaSSD06_Inventory`** | Git | `main` | `89c5601` | modified (2 files) | **governed** | v7.0.0 | v7.0.0 | User | subsystem-inventory |
-| **`Installation_LCD`** | Git | `main` | `0f29c01` | modified (1 files) | **governed** | v7.0.0 | v7.0.0 | User | lcm-governed |
+| **`Installation_LCD`** | Git | `main` | `4fb2fbb` | modified (1 files) | **governed** | v7.0.0 | v7.0.0 | User | lcm-governed |
 | **`InstallFonts`** | Git | `main` | `37a275a` | clean | **not-lcm** | - | - | User | standard-git |
 | **`MacriumTemplateUpdater`** | Git | `main` | `d12bf3e` | clean | **not-lcm** | - | - | User | standard-git |
 | **`MSG file conversion`** | Git | `main` | `457624b` | clean | **not-lcm** | - | - | User | standard-git |
@@ -50,6 +50,6 @@ Global Baseline Version: **v7.0.0** (Source: Workspace_AI)
 | **`SystemConfiguration`** | Git | `main` | `7f40a1a` | clean | **governed** | v7.0.0 | v7.0.0 | **Admin** | lcm-governed |
 | **`TimeStamper`** | Git | `main` | `586f41d` | clean | **not-lcm** | - | - | User | standard-git |
 | **`VolumeInventory`** | Git | `main` | `8ad2861` | clean | **governed** | v7.0.0 | v7.0.0 | **Admin** | lcm-governed |
-| **`Workspace_AI`** | Git | `main` | `d909375` | modified (4 files) | **governed** | v7.0.0 | v7.0.0 | User | active-design-workshop |
-| **`Workspace_Inventory`** | Git | `main` | `7415fbf` | modified (1 files) | **governed** | v7.0.0 | v7.0.0 | **Admin** | configuration-management |
+| **`Workspace_AI`** | Git | `main` | `9ee920f` | modified (4 files) | **governed** | v7.0.0 | v7.0.0 | User | active-design-workshop |
+| **`Workspace_Inventory`** | Git | `main` | `63877e9` | modified (8 files) | **governed** | v7.0.0 | v7.0.0 | **Admin** | configuration-management |
 

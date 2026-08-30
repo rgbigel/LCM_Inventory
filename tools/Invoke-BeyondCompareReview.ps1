@@ -1,6 +1,7 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $false, Position = 0, HelpMessage = 'Name or path of the repository to review')]
+    [Alias('RepositoryPath', 'Path', 'Repo', 'Name')]
     [string]$RepositoryName,
 
     [Parameter(Mandatory = $false, Position = 1, HelpMessage = 'Base Git commit or reference to compare against (e.g., HEAD~1, root, SHA, tag)')]
@@ -11,7 +12,7 @@ param(
     [string[]]$Exclusions = @(),
 
     [Parameter(Mandatory = $false, HelpMessage = 'CRP or Change Request identifier (e.g. CRP-2026-005, CR-2026-034)')]
-    [Alias('Cr', 'ChangeRequest', 'Proposal')]
+    [Alias('Cr', 'ChangeRequest', 'Proposal', 'ProposalId')]
     [string]$CRP = '',
 
     [Parameter(Mandatory = $false)]

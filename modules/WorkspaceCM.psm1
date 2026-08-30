@@ -135,6 +135,7 @@ function Get-RepoClassification {
                        'FileUtilities', 'GitTools', 'SystemConfiguration')
     if ($repoName -eq 'Workspace_AI') { return 'active-design-workshop' }
     if ($repoName -eq 'Workspace_Inventory') { return 'configuration-management' }
+    if ($repoName -in @('.lcd', '.lcm')) { return 'platform-engine' }
     if ($retiredList -contains $repoName) { return 'legacy-retired' }
     if ($parentInfraList -contains $repoName) { return 'parent-infra' }
     if (-not $isGit -or ($nonGitIgnored -contains $repoName)) { return 'non-git' }
@@ -192,7 +193,7 @@ function Get-RepoCMState {
     $lcmConfigFile = Join-Path $DirectoryPath '.lcm\config.json'
     $junctionsHealthy = $true
     
-    if ($classification -eq 'active-design-workshop' -or $classification -eq 'configuration-management') {
+    if ($classification -eq 'active-design-workshop' -or $classification -eq 'configuration-management' -or $classification -eq 'platform-engine') {
         $lcmStatus = 'governed'
         $absorbedVersion = $GlobalLCMVersion
         $currentVersion = $GlobalLCMVersion
