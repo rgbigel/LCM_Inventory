@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Workspace Repository Inventory & CM State",
-  "generated_at": "2026-08-30T19:00:39.8376394+02:00",
+  "generated_at": "2026-08-30T19:03:14.5716779+02:00",
   "workspace_ai_baseline": {
     "Status": "Active",
     "GlobalLCMVersion": "7.1.1",
@@ -36,7 +36,7 @@
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-30 19:00:34"
+      "LastAuditTimestamp": "2026-08-30 19:03:09"
     },
     {
       "RepositoryName": ".copilot",
@@ -56,7 +56,7 @@
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-30 19:00:34"
+      "LastAuditTimestamp": "2026-08-30 19:03:09"
     },
     {
       "RepositoryName": ".git",
@@ -76,7 +76,7 @@
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-30 19:00:34"
+      "LastAuditTimestamp": "2026-08-30 19:03:09"
     },
     {
       "RepositoryName": ".github",
@@ -96,7 +96,7 @@
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-30 19:00:34"
+      "LastAuditTimestamp": "2026-08-30 19:03:09"
     },
     {
       "RepositoryName": ".lcm",
@@ -116,7 +116,7 @@
       "ElevationReason": "Auto-detected privileged pattern 'Start-Process.*-Verb\\s+RunAs' in DaemonActionController.ps1",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-30 19:00:34"
+      "LastAuditTimestamp": "2026-08-30 19:03:09"
     },
     {
       "RepositoryName": ".venv",
@@ -136,7 +136,7 @@
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-30 19:00:34"
+      "LastAuditTimestamp": "2026-08-30 19:03:09"
     },
     {
       "RepositoryName": ".vscode",
@@ -156,7 +156,7 @@
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-30 19:00:34"
+      "LastAuditTimestamp": "2026-08-30 19:03:09"
     },
     {
       "RepositoryName": "AuthorizeMasterUser",
@@ -176,7 +176,7 @@
       "ElevationReason": "Performs administrative NTFS security descriptor modifications and ACL fixes across mounted drives.",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-30 19:00:34"
+      "LastAuditTimestamp": "2026-08-30 19:03:10"
     },
     {
       "RepositoryName": "BackgroundModifier",
@@ -196,7 +196,7 @@
       "ElevationReason": "Requires Administrator privilege for bcdedit and desktop background rendering APIs",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-30 19:00:35"
+      "LastAuditTimestamp": "2026-08-30 19:03:10"
     },
     {
       "RepositoryName": "BGMSAMVInv",
@@ -216,7 +216,7 @@
       "ElevationReason": "Standard user execution",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-30 19:00:35"
+      "LastAuditTimestamp": "2026-08-30 19:03:10"
     },
     {
       "RepositoryName": "BootEntryManager",
@@ -236,7 +236,7 @@
       "ElevationReason": "Requires administrative privileges to manage Windows BCD and system boot entries.",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-30 19:00:35"
+      "LastAuditTimestamp": "2026-08-30 19:03:10"
     },
     {
       "RepositoryName": "HaSSD06",
@@ -244,10 +244,10 @@
       "Classification": "subsystem",
       "GitStatus": "Git",
       "Branch": "main",
-      "HeadCommit": "0f22c29",
-      "DirtyState": "modified (1 files)",
-      "AheadBehind": "synced",
-      "HasUnpushed": false,
+      "HeadCommit": "1ef37d9",
+      "DirtyState": "clean",
+      "AheadBehind": "ahead 1",
+      "HasUnpushed": true,
       "LCMStatus": "governed",
       "AbsorbedLCMVersion": "7.1.1",
       "CurrentLCMVersion": "7.1.1",
@@ -256,7 +256,7 @@
       "ElevationReason": "Subsystem operations communicate over network REST/WebSocket and Python runtime.",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-30 19:00:35"
+      "LastAuditTimestamp": "2026-08-30 19:03:11"
     },
     {
       "RepositoryName": "HaSSD06_Inventory",
@@ -276,7 +276,7 @@
       "ElevationReason": "Subsystem inventory reads telemetry over network REST/WebSocket and maintains state databases.",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-30 19:00:36"
+      "LastAuditTimestamp": "2026-08-30 19:03:11"
     },
     {
       "RepositoryName": "Installation_LCD",
@@ -284,8 +284,8 @@
       "Classification": "lcm-governed",
       "GitStatus": "Git",
       "Branch": "main",
-      "HeadCommit": "9fdc2e2",
-      "DirtyState": "modified (1 files)",
+      "HeadCommit": "e7981aa",
+      "DirtyState": "clean",
       "AheadBehind": "synced",
       "HasUnpushed": false,
       "LCMStatus": "governed",
@@ -296,7 +296,7 @@
       "ElevationReason": "Standard user execution with UAC delegation for system setup",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-30 19:00:36"
+      "LastAuditTimestamp": "2026-08-30 19:03:11"
     },
     {
       "RepositoryName": "InstallFonts",
@@ -316,7 +316,7 @@
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-30 19:00:36"
+      "LastAuditTimestamp": "2026-08-30 19:03:11"
     },
     {
       "RepositoryName": "MacriumTemplateUpdater",
@@ -336,7 +336,7 @@
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-30 19:00:36"
+      "LastAuditTimestamp": "2026-08-30 19:03:12"
     },
     {
       "RepositoryName": "MSG file conversion",
@@ -356,7 +356,7 @@
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-30 19:00:37"
+      "LastAuditTimestamp": "2026-08-30 19:03:12"
     },
     {
       "RepositoryName": "NextBootTray",
@@ -376,7 +376,7 @@
       "ElevationReason": "Auto-detected privileged pattern 'Start-Process.*-Verb\\s+RunAs' in Install-NextBootTray.ps1",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-30 19:00:37"
+      "LastAuditTimestamp": "2026-08-30 19:03:12"
     },
     {
       "RepositoryName": "OutlookVBAConversion",
@@ -396,7 +396,7 @@
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-30 19:00:37"
+      "LastAuditTimestamp": "2026-08-30 19:03:12"
     },
     {
       "RepositoryName": "PowerBGInfo",
@@ -416,7 +416,7 @@
       "ElevationReason": "Auto-detected privileged pattern 'Get-Partition\\b' in Run.BGInfo1.ps1",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-30 19:00:37"
+      "LastAuditTimestamp": "2026-08-30 19:03:12"
     },
     {
       "RepositoryName": "ReEnableRadeonRx580",
@@ -436,7 +436,7 @@
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-30 19:00:38"
+      "LastAuditTimestamp": "2026-08-30 19:03:13"
     },
     {
       "RepositoryName": "SharedModules",
@@ -456,7 +456,7 @@
       "ElevationReason": "Standard user execution",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-30 19:00:38"
+      "LastAuditTimestamp": "2026-08-30 19:03:13"
     },
     {
       "RepositoryName": "SystemConfiguration",
@@ -476,7 +476,7 @@
       "ElevationReason": "System configuration, registry manipulation, and hardware invariant settings require Administrator elevation",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-30 19:00:38"
+      "LastAuditTimestamp": "2026-08-30 19:03:13"
     },
     {
       "RepositoryName": "TimeStamper",
@@ -496,7 +496,7 @@
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-30 19:00:39"
+      "LastAuditTimestamp": "2026-08-30 19:03:13"
     },
     {
       "RepositoryName": "VolumeInventory",
@@ -516,7 +516,7 @@
       "ElevationReason": "Requires administrative privileges for volume inspection, partition queries, and BCD enumeration.",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-30 19:00:39"
+      "LastAuditTimestamp": "2026-08-30 19:03:14"
     },
     {
       "RepositoryName": "Workspace_AI",
@@ -536,7 +536,7 @@
       "ElevationReason": "Known in Workspace_Inventory",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-30 19:00:39"
+      "LastAuditTimestamp": "2026-08-30 19:03:14"
     },
     {
       "RepositoryName": "Workspace_Inventory",
@@ -544,10 +544,10 @@
       "Classification": "configuration-management",
       "GitStatus": "Git",
       "Branch": "main",
-      "HeadCommit": "f755514",
-      "DirtyState": "modified (15 files)",
-      "AheadBehind": "synced",
-      "HasUnpushed": false,
+      "HeadCommit": "90831ff",
+      "DirtyState": "modified (3 files)",
+      "AheadBehind": "ahead 1",
+      "HasUnpushed": true,
       "LCMStatus": "governed",
       "AbsorbedLCMVersion": "7.1.1",
       "CurrentLCMVersion": "7.1.1",
@@ -556,7 +556,7 @@
       "ElevationReason": "Auto-detected privileged pattern 'bcdedit' in WorkspaceCM.psm1",
       "JunctionsHealthy": true,
       "Disposition": null,
-      "LastAuditTimestamp": "2026-08-30 19:00:39"
+      "LastAuditTimestamp": "2026-08-30 19:03:14"
     }
   ]
 }

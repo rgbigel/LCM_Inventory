@@ -4,7 +4,7 @@
   "updated_at": "2026-08-30T14:16:15+02:00",
   "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 35,
+  "last_proposal_id": 36,
   "proposals": [
     {
       "id": 1,
@@ -508,6 +508,20 @@
       "details": "Hash-based deduplication, archival of redundant scratch snapshots/baselines, refactoring of .lcm/tools/links, and deletion of legacy .lcd junction.",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-035_CR-2026-046_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-035_CR-2026-046_Walkthrough.md"
+    },
+    {
+      "id": 36,
+      "timestamp": "2026-08-30 19:22:00",
+      "title": "Disable Raspberry Pi Onboard Bluetooth Adapter & Consolidate BLE to Shelly Gateway",
+      "origin_repo": "HaSSD06",
+      "cr_id": "CR-2026-047",
+      "state": "completed",
+      "progress_state": "completed",
+      "bundle_id": "CRP-2026-014-HaSSD06-v7.1.1-Disable-Host-Bluetooth-Adapter-and-Consolidate-to-Shelly-Gateway",
+      "author": "rgbig",
+      "details": "Deactivate onboard bcm43438-bt adapter in Home Assistant to eliminate dual-scanner packet jitter, consolidating all BLE devices to shellyblugwg3.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-036_CR-2026-047_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-036_CR-2026-047_Walkthrough.md"
     }
   ]
 }
