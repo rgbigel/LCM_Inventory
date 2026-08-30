@@ -4,7 +4,7 @@
   "updated_at": "2026-08-30T14:16:15+02:00",
   "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 26,
+  "last_proposal_id": 34,
   "proposals": [
     {
       "id": 1,
@@ -395,6 +395,102 @@
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-026_CR-2026-037_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-026_CR-2026-037_Walkthrough.md",
       "pushed_at": "2026-08-30 16:34:00"
+    },
+    {
+      "id": 27,
+      "timestamp": "2026-08-30 16:37:00",
+      "title": "Unescaped $timestamp Variable Interpolation in Show-HaInventoryApp.ps1",
+      "origin_repo": "HaSSD06_Inventory",
+      "cr_id": "CR-2026-038",
+      "state": "suggested",
+      "progress_state": "in_progress",
+      "bundle_id": "BUG-2026-002-HaSSD06_Inventory-v5.3.0-Unescaped-Timestamp-Variable-Interpolation",
+      "author": "rgbig",
+      "details": "Fix strict mode uninitialized variable error when generating HTML viewer print atom."
+    },
+    {
+      "id": 28,
+      "timestamp": "2026-08-30 16:38:00",
+      "title": "Spook 👻 Your Homie Custom Integration Update (v5.0.0 -> v5.1.0)",
+      "origin_repo": "HaSSD06",
+      "cr_id": "CR-2026-039",
+      "state": "suggested",
+      "progress_state": "in_progress",
+      "bundle_id": "CRP-2026-009-HaSSD06-v5.1.0-Spook-Homie-Integration-Update",
+      "author": "rgbig",
+      "details": "Software update for Spook custom integration via HACS."
+    },
+    {
+      "id": 29,
+      "timestamp": "2026-08-30 16:38:10",
+      "title": "Shelly BLU Gateway Firmware Stabilization (2.0.1-beta1 -> 2.0.0 Stable)",
+      "origin_repo": "HaSSD06",
+      "cr_id": "CR-2026-040",
+      "state": "suggested",
+      "progress_state": "in_progress",
+      "bundle_id": "CRP-2026-010-HaSSD06-v2.0.0-Shelly-Blu-Gateway-Firmware-Stabilization",
+      "author": "rgbig",
+      "details": "Transition Shelly BLU gateway from beta firmware to production stable 2.0.0."
+    },
+    {
+      "id": 30,
+      "timestamp": "2026-08-30 16:38:20",
+      "title": "FRITZ!Box Deprecated Button Entities Cleanup (Breaks in HA 2026.11.0)",
+      "origin_repo": "HaSSD06",
+      "cr_id": "CR-2026-041",
+      "state": "suggested",
+      "progress_state": "in_progress",
+      "bundle_id": "CRP-2026-011-HaSSD06-v2026.11.0-FritzBox-Deprecated-Button-Entities-Removal",
+      "author": "rgbig",
+      "details": "Resolve deprecated cleanup and firmware update button entities before HA Core 2026.11.0."
+    },
+    {
+      "id": 31,
+      "timestamp": "2026-08-30 16:38:30",
+      "title": "Active Notification Count Template Sensor Default Value Fix",
+      "origin_repo": "HaSSD06",
+      "cr_id": "CR-2026-042",
+      "state": "suggested",
+      "progress_state": "in_progress",
+      "bundle_id": "CRP-2026-012-HaSSD06-v7.1.1-Active-Notification-Count-Template-Filter-Fix",
+      "author": "rgbig",
+      "details": "Append default(0) and int(0) filter to eliminate invalid sensor state validation errors."
+    },
+    {
+      "id": 32,
+      "timestamp": "2026-08-30 16:38:40",
+      "title": "Alexa Devices HTTP/2 Push DNS Resolution Timeout (ClientConnectorDNSError)",
+      "origin_repo": "HaSSD06",
+      "cr_id": "CR-2026-043",
+      "state": "suggested",
+      "progress_state": "in_progress",
+      "bundle_id": "BUG-2026-003-HaSSD06-v2026.8.3-Alexa-Devices-DNS-Timeout-During-HTTP2-Push",
+      "author": "rgbig",
+      "details": "Upstream DNS timeout during high-concurrency HTTP/2 push events in aioamazondevices."
+    },
+    {
+      "id": 33,
+      "timestamp": "2026-08-30 16:38:50",
+      "title": "Tuya Device Handlers Invalid Enum Value for Datapoint relay_status",
+      "origin_repo": "HaSSD06",
+      "cr_id": "CR-2026-044",
+      "state": "suggested",
+      "progress_state": "in_progress",
+      "bundle_id": "BUG-2026-004-HaSSD06-v2026.8.3-Tuya-Device-Handlers-Relay-Status-Enum-Mismatch",
+      "author": "rgbig",
+      "details": "Upstream schema mismatch in tuya-device-handlers for smart plug product 9zynrkxe5tys0rja."
+    },
+    {
+      "id": 34,
+      "timestamp": "2026-08-30 16:39:00",
+      "title": "Tuya Local Unregistered Product IDs in Smart Plug Device Profiles",
+      "origin_repo": "HaSSD06",
+      "cr_id": "CR-2026-045",
+      "state": "suggested",
+      "progress_state": "in_progress",
+      "bundle_id": "BUG-2026-005-HaSSD06-v2026.8.3-Tuya-Local-Unregistered-Product-ID-SmartPlug",
+      "author": "rgbig",
+      "details": "Hardware product IDs keym9qkuywghyrvs and keyjup78v54myhan unlisted in tuya_local config."
     }
   ]
 }
