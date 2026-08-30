@@ -387,13 +387,14 @@
       "title": "Workspace Inventory Viewer Interactive Actions Suite, Non-Git Visibility, and Data Versioning Exemption",
       "origin_repo": "Workspace_Inventory",
       "cr_id": "CR-2026-037",
-      "state": "suggested",
-      "progress_state": "in_progress",
+      "state": "pushed",
+      "progress_state": "pushed",
       "bundle_id": "CRP-2026-008-Workspace_Inventory-v7.1.1-Inventory-Viewer-Interactive-Actions-and-Data-Versioning-Exemption",
       "author": "rgbig",
       "details": "Interactive row actions (Open, Onboard, Un-Git, Rename, Delete), .lcd platform and non-Git directory visibility, filter tabs, and Workspace_Inventory data versioning exemption in RULE-REV-007.",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-026_CR-2026-037_Plan.md",
-      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-026_CR-2026-037_Walkthrough.md"
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-026_CR-2026-037_Walkthrough.md",
+      "pushed_at": "2026-08-30 16:34:00"
     }
   ]
 }
