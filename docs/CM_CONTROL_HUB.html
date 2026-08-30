@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LCM Configuration Management Control Hub</title>
+  <style>
+    :root {
+      --bg-primary: #0d1117;
+      --bg-secondary: #161b22;
+      --bg-tertiary: #21262d;
+      --bg-card: rgba(22, 27, 34, 0.9);
+      --border-color: #30363d;
+      --text-primary: #f0f6fc;
+      --text-secondary: #8b949e;
+      --text-muted: #6e7681;
+      --accent-blue: #58a6ff;
+      --accent-cyan: #39c5bb;
+      --accent-green: #3fb950;
+      --accent-purple: #bc8cff;
+      --accent-amber: #d29922;
+      --accent-red: #f85149;
+      --accent-orange: #f0883e;
+      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--font-family);
+      line-height: 1.5;
+      padding: 16px 24px 280px 24px; /* Extra padding for bottom docked console */
+      min-height: 100vh;
+    }
+
+    /* Header & Top Bar */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 16px;
+    }
+    .header-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .header-title h1 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      background: linear-gradient(90deg, #58a6ff, #bc8cff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .daemon-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: rgba(63, 185, 80, 0.15);
+      border: 1px solid rgba(63, 185, 80, 0.4);
+      color: var(--accent-green);
+    }
+    .daemon-badge.offline {
+      background: rgba(248, 81, 73, 0.15);
+      border-color: rgba(248, 81, 73, 0.4);
+      color: var(--accent-red);
+    }
+    .daemon-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+      box-shadow: 0 0 8px currentColor;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Stat Cards */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 10px 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(8px);
+    }
+    .stat-card:hover, .stat-card.active {
+      border-color: var(--accent-blue);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    .stat-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: var(--text-secondary);
+      letter-spacing: 0.5px;
+    }
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-top: 2px;
+      color: var(--text-primary);
+    }
+
+    /* Controls Panel */
+    .controls-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+    .search-input {
+      flex: 1 1 280px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 7px 12px;
+      color: var(--text-primary);
+      font-size: 0.85rem;
+      outline: none;
+    }
+    .search-input:focus {
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.2);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid var(--border-color);
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      transition: all 0.15s ease;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .btn:hover {
+      background: #30363d;
+      border-color: #8b949e;
+    }
+    .btn-primary {
+      background: #238636;
+      border-color: rgba(240,246,252,0.1);
+      color: #ffffff;
+    }
+    .btn-primary:hover { background: #2ea043; }
+    .btn-blue {
+      background: rgba(88, 166, 255, 0.15);
+      border-color: rgba(88, 166, 255, 0.4);
+      color: var(--accent-blue);
+    }
+    .btn-blue:hover { background: rgba(88, 166, 255, 0.25); }
+    .btn-amber {
+      background: rgba(210, 153, 34, 0.15);
+      border-color: rgba(210, 153, 34, 0.4);
+      color: var(--accent-amber);
+    }
+    .btn-amber:hover { background: rgba(210, 153, 34, 0.25); }
+    .btn-red {
+      background: rgba(248, 81, 73, 0.15);
+      border-color: rgba(248, 81, 73, 0.4);
+      color: var(--accent-red);
+    }
+    .btn-red:hover { background: rgba(248, 81, 73, 0.25); }
+    .btn-purple {
+      background: rgba(188, 140, 255, 0.15);
+      border-color: rgba(188, 140, 255, 0.4);
+      color: var(--accent-purple);
+    }
+    .btn-purple:hover { background: rgba(188, 140, 255, 0.25); }
+
+    /* Batch Bar */
+    .batch-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .batch-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Data Table */
+    .table-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+      margin-bottom: 24px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.82rem;
+    }
+    th {
+      background: var(--bg-secondary);
+      padding: 8px 10px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border-color);
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      letter-spacing: 0.5px;
+      vertical-align: middle;
+    }
+    .th-header-filter {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .th-select {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      padding: 3px 6px;
+      color: var(--text-primary);
+      font-size: 0.72rem;
+      cursor: pointer;
+      outline: none;
+      max-width: 100%;
+    }
+    .th-select:focus { border-color: var(--accent-blue); }
+
+    td {
+      padding: 8px 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      vertical-align: middle;
+    }
+    tr:hover {
+      background: rgba(88, 166, 255, 0.04);
+    }
+    tr.state-bug { border-left: 3px solid var(--accent-red); }
+    tr.state-verification { border-left: 3px solid var(--accent-amber); }
+    tr.state-in_progress { border-left: 3px solid var(--accent-cyan); }
+    tr.state-completed { border-left: 3px solid var(--accent-green); }
+    tr.state-deferred { border-left: 3px solid var(--text-muted); }
+
+    .id-badge {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: var(--accent-blue);
+    }
+    .scope-tag {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(188, 140, 255, 0.12);
+      border: 1px solid rgba(188, 140, 255, 0.3);
+      color: var(--accent-purple);
+      white-space: nowrap;
+    }
+    .crp-tag {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+      display: block;
+    }
+
+    /* Badges & Dropdowns */
+    .state-select {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 3px 6px;
+      border-radius: 4px;
+      border: 1px solid transparent;
+      outline: none;
+      cursor: pointer;
+      width: 100%;
+    }
+    .state-plan-bug { background: rgba(248, 81, 73, 0.2); color: var(--accent-red); border-color: rgba(248, 81, 73, 0.4); }
+    .state-plan-suggested { background: rgba(88, 166, 255, 0.2); color: var(--accent-blue); border-color: rgba(88, 166, 255, 0.4); }
+    .state-plan-approved { background: rgba(188, 140, 255, 0.2); color: var(--accent-purple); border-color: rgba(188, 140, 255, 0.4); }
+    .state-plan-completed { background: rgba(63, 185, 80, 0.2); color: var(--accent-green); border-color: rgba(63, 185, 80, 0.4); }
+    .state-plan-deferred { background: rgba(110, 118, 129, 0.2); color: var(--text-muted); border-color: rgba(110, 118, 129, 0.4); }
+    .state-plan-rejected { background: rgba(248, 81, 73, 0.15); color: var(--accent-red); border-color: rgba(248, 81, 73, 0.3); text-decoration: line-through; }
+
+    .state-prog-verification { background: rgba(210, 153, 34, 0.25); color: var(--accent-amber); border-color: rgba(210, 153, 34, 0.5); font-weight: 700; }
+    .state-prog-in_progress { background: rgba(57, 197, 187, 0.2); color: var(--accent-cyan); border-color: rgba(57, 197, 187, 0.4); }
+    .state-prog-queued { background: rgba(188, 140, 255, 0.18); color: var(--accent-purple); border-color: rgba(188, 140, 255, 0.4); }
+    .state-prog-completed { background: rgba(63, 185, 80, 0.2); color: var(--accent-green); border-color: rgba(63, 185, 80, 0.4); }
+    .state-prog-undecided { background: rgba(110, 118, 129, 0.2); color: var(--text-secondary); border-color: rgba(110, 118, 129, 0.4); }
+
+    .action-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      align-items: center;
+    }
+    .action-btn {
+      padding: 3px 7px;
+      font-size: 0.72rem;
+      border-radius: 4px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-weight: 500;
+    }
+    .action-btn:hover {
+      background: #30363d;
+      border-color: #8b949e;
+    }
+    .action-btn-bc {
+      background: rgba(210, 153, 34, 0.18);
+      border-color: rgba(210, 153, 34, 0.4);
+      color: var(--accent-amber);
+      font-weight: 600;
+    }
+    .action-btn-bc:hover { background: rgba(210, 153, 34, 0.3); }
+
+    /* Bottom Docked Interactive CM Console */
+    .cm-console-dock {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #11161d;
+      border-top: 2px solid var(--border-color);
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
+      z-index: 900;
+      display: flex;
+      flex-direction: column;
+    }
+    .console-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 16px;
+      background: #161b22;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    .console-header-chips {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .console-chip {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-size: 0.7rem;
+      cursor: pointer;
+      color: var(--accent-blue);
+      font-family: var(--font-mono);
+    }
+    .console-chip:hover { background: #30363d; }
+
+    .console-stream {
+      height: 110px;
+      overflow-y: auto;
+      padding: 8px 16px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      background: #090d13;
+      color: #7ee787;
+      white-space: pre-wrap;
+    }
+    .console-stream .msg-err { color: #f85149; }
+    .console-stream .msg-info { color: #58a6ff; }
+    .console-stream .msg-warn { color: #d29922; }
+
+    .console-input-row {
+      display: flex;
+      gap: 8px;
+      padding: 8px 16px;
+      background: #161b22;
+      align-items: center;
+    }
+    .console-input {
+      flex: 1;
+      background: #0d1117;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 7px 12px;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text-primary);
+      outline: none;
+    }
+    .console-input:focus {
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.2);
+    }
+
+    /* Modal Viewer */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(4px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      width: 100%;
+      max-width: 950px;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    }
+    .modal-header {
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-header h3 { font-size: 1rem; color: var(--text-primary); }
+    .modal-body {
+      padding: 16px 20px;
+      overflow-y: auto;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      white-space: pre-wrap;
+      background: var(--bg-primary);
+      color: #c9d1d9;
+    }
+    .modal-footer {
+      padding: 10px 20px;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    /* Toast Notification */
+    /* Print & Export PDF Styling */
+    @media print {
+      body { background: #ffffff !important; color: #000000 !important; padding: 0 !important; }
+      header, .stats-row, .controls-panel, .table-container, .cm-console-dock, .modal-footer, #toast, .top-actions { display: none !important; }
+      .modal-overlay { position: static !important; display: block !important; background: transparent !important; backdrop-filter: none !important; padding: 0 !important; }
+      .modal-card { max-width: 100% !important; max-height: none !important; border: none !important; box-shadow: none !important; background: transparent !important; }
+      .modal-body { background: #ffffff !important; color: #111111 !important; font-size: 10.5pt !important; overflow: visible !important; white-space: pre-wrap !important; font-family: var(--font-family) !important; padding: 10px 0 !important; }
+      .modal-header { border-bottom: 2px solid #222222 !important; padding: 8px 0 !important; }
+      .modal-header h3 { color: #000000 !important; font-size: 15pt !important; font-weight: 700 !important; }
+    }
+
+    /* Markdown Callout Alerts */
+    .callout-note { border-left: 4px solid var(--accent-blue); background: rgba(88, 166, 255, 0.1); padding: 8px 12px; border-radius: 4px; margin: 8px 0; }
+    .callout-important { border-left: 4px solid var(--accent-purple); background: rgba(188, 140, 255, 0.1); padding: 8px 12px; border-radius: 4px; margin: 8px 0; }
+    .callout-warning { border-left: 4px solid var(--accent-amber); background: rgba(210, 153, 34, 0.1); padding: 8px 12px; border-radius: 4px; margin: 8px 0; }
+    .callout-tip { border-left: 4px solid var(--accent-green); background: rgba(63, 185, 80, 0.1); padding: 8px 12px; border-radius: 4px; margin: 8px 0; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="header-title">
+      <h1>LCM Configuration Management Control Hub</h1>
+      <span class="daemon-badge" id="daemonBadge">
+        <span class="daemon-dot"></span>
+        <span id="daemonText">REST Daemon: Checking...</span>
+      </span>
+    </div>
+    <div class="top-actions">
+      <button class="btn btn-primary" onclick="executePushRepositories()" title="Push completed commits to remote Git tracking branches">🚀 Push / Sync Repos</button>
+      <button class="btn btn-blue" onclick="openLogsModal('active')">📜 Active CM Log</button>
+      <button class="btn btn-purple" onclick="openLogsModal('history')">🏛️ Historical Log Archive</button>
+      <button class="btn" onclick="openHelpModal()">❓ Help / Guide</button>
+      <button class="btn" onclick="refreshData()">🔄 Refresh</button>
+    </div>
+  </header>
+
+  <!-- Metric Stat Cards -->
+  <div class="stats-row">
+    <div class="stat-card" id="cardTotal" onclick="setPresetFilter('all')">
+      <div class="stat-label">Total Proposals</div>
+      <div class="stat-value" id="valTotal">0</div>
+    </div>
+    <div class="stat-card" id="cardBugs" onclick="setPresetFilter('bug')">
+      <div class="stat-label">🐛 Bug Intake</div>
+      <div class="stat-value" id="valBugs" style="color: var(--accent-red);">0</div>
+    </div>
+    <div class="stat-card" id="cardSuggested" onclick="setPresetFilter('suggested')">
+      <div class="stat-label">💡 Suggested</div>
+      <div class="stat-value" id="valSuggested" style="color: var(--accent-blue);">0</div>
+    </div>
+    <div class="stat-card" id="cardReview" onclick="setPresetFilter('verification')">
+      <div class="stat-label">⏳ Pending Review</div>
+      <div class="stat-value" id="valReview" style="color: var(--accent-amber);">0</div>
+    </div>
+    <div class="stat-card" id="cardCompleted" onclick="setPresetFilter('completed')">
+      <div class="stat-label">✅ Completed</div>
+      <div class="stat-value" id="valCompleted" style="color: var(--accent-green);">0</div>
+    </div>
+    <div class="stat-card" id="cardDeferred" onclick="setPresetFilter('deferred')">
+      <div class="stat-label">⏸️ Deferred</div>
+      <div class="stat-value" id="valDeferred" style="color: var(--text-muted);">0</div>
+    </div>
+  </div>
+
+  <!-- Controls Panel -->
+  <div class="controls-panel">
+    <div class="filter-row">
+      <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search proposals (ID, Title, Scope, CR/CRP, Details)..." oninput="renderTable()">
+      
+      <button class="btn" onclick="resetFilters()">🔄 Reset to SHOW ALL</button>
+    </div>
+
+    <!-- Batch Actions Bar -->
+    <div class="batch-bar">
+      <div class="batch-actions">
+        <button class="btn btn-amber" onclick="executeBatchReview()" title="Launch Beyond Compare review for all checked items">🔍 Batch BC5 Review</button>
+        <button class="btn btn-primary" onclick="executeBatchAccept()" title="Accept and dual-commit sync selected actionable proposals">✅ ACCEPT SELECTED</button>
+        <button class="btn btn-blue" onclick="executeBatchMarkReviewed()" title="One-shot: Mark selected items as reviewed without Beyond Compare visual gate">⚡ Mark Selected Reviewed (Bypass BC5)</button>
+        <button class="btn" onclick="executeBatchDefer()">⏸️ Defer Selected</button>
+        <button class="btn btn-red" onclick="executeBatchDelete()">🗑️ Delete / Undo</button>
+      </div>
+
+      <div style="font-size: 0.75rem; color: var(--text-secondary);">
+        <span id="selectedCount">0</span> item(s) selected
+      </div>
+    </div>
+  </div>
+
+  <!-- Proposals Data Table with Column Header Filters -->
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 32px;"><input type="checkbox" id="chkSelectAll" onchange="toggleSelectAll(this.checked)"></th>
+          <th style="width: 50px;">ID</th>
+          <th style="width: 150px;">
+            <div class="th-header-filter">
+              <span>Scope / Repo</span>
+              <select id="thScopeFilter" class="th-select" onchange="renderTable()">
+                <option value="ALL">All Repos</option>
+              </select>
+            </div>
+          </th>
+          <th style="width: 130px;">CRP / CR ID</th>
+          <th>Title & Details</th>
+          <th style="width: 120px;">
+            <div class="th-header-filter">
+              <span>Plan State</span>
+              <select id="thPlanStateFilter" class="th-select" onchange="renderTable()">
+                <option value="ALL">All States</option>
+                <option value="bug">🐛 Bug</option>
+                <option value="suggested">💡 Suggested</option>
+                <option value="approved">Approved</option>
+                <option value="deferred">⏸️ Deferred</option>
+                <option value="rejected">❌ Rejected</option>
+                <option value="completed">✅ Completed</option>
+              </select>
+            </div>
+          </th>
+          <th style="width: 135px;">
+            <div class="th-header-filter">
+              <span>Progress</span>
+              <select id="thProgStateFilter" class="th-select" onchange="renderTable()">
+                <option value="open" selected>Open (Non-Completed)</option>
+                <option value="ALL">All Progress</option>
+                <option value="verification">⏳ Verification</option>
+                <option value="in_progress">⚡ In Progress</option>
+                <option value="queued">Queued (Ready)</option>
+                <option value="undecided">Undecided</option>
+                <option value="completed">Completed</option>
+                <option value="blocked">Blocked</option>
+                <option value="failed">Failed</option>
+              </select>
+            </div>
+          </th>
+          <th style="width: 250px;">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="proposalsTableBody">
+        <!-- Dynamically Populated by JS -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Bottom Docked Interactive CM Console & Chat-Style Input -->
+  <div class="cm-console-dock">
+    <div class="console-header">
+      <span>🖥️ CM Interactive Console & Response Feed</span>
+      <div class="console-header-chips">
+        <span class="console-chip" onclick="setConsoleCommand('review #19')">🔍 review #19</span>
+        <span class="console-chip" onclick="setConsoleCommand('status')">📊 git status</span>
+        <span class="console-chip" onclick="setConsoleCommand('readiness')">🧪 test readiness</span>
+        <span class="console-chip" onclick="clearConsoleStream()">🧹 clear</span>
+      </div>
+    </div>
+    <div class="console-stream" id="consoleStream">Ready. Type a CM command or action below (e.g., 'do #19', 'review #19', 'accept #19', 'defer #20', 'status', 'help')...</div>
+    <div class="console-input-row">
+      <input type="text" id="consoleInput" class="console-input" placeholder="⌨️ Enter command or review note (Press Enter to execute)..." onkeydown="handleConsoleKey(event)">
+      <button class="btn btn-primary" onclick="submitConsoleCommand()">🚀 Send / Run</button>
+    </div>
+  </div>
+
+  <!-- Document Inspector Modal -->
+  <div class="modal-overlay" id="inspectorModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modalTitle">Proposal Document Viewer</h3>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn btn-primary" onclick="showCurrentInNewTab()" title="Open clean, print-ready document in a new browser tab">🌐 Show in New Tab</button>
+          <button class="btn btn-blue" onclick="printInspectorDocument()">🖨️ Print / Save PDF</button>
+          <button class="btn" onclick="closeInspectorModal()">✕ Close</button>
+        </div>
+      </div>
+      <div class="modal-body" id="modalContent">Loading...</div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" onclick="showCurrentInNewTab()">🌐 Show in New Tab</button>
+        <button class="btn btn-blue" onclick="openCurrentInNotepad()">✏️ Open in Notepad++</button>
+        <button class="btn" onclick="printInspectorDocument()">🖨️ Print Document</button>
+        <button class="btn" onclick="closeInspectorModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Repository Documentation Review Modal -->
+  <div class="modal-overlay" id="repoDocsModal">
+    <div class="modal-card" style="max-width: 1050px;">
+      <div class="modal-header">
+        <h3 id="repoDocsTitle">📚 Repository Tripartite Documentation Review</h3>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn btn-primary" onclick="showRepoDocInNewTab()" title="Open clean, print-ready repository documentation in a new browser tab">🌐 Show in New Tab</button>
+          <button class="btn btn-blue" onclick="printRepoDocs()">🖨️ Print / Save PDF</button>
+          <button class="btn" onclick="closeRepoDocsModal()">✕ Close</button>
+        </div>
+      </div>
+      <div style="padding: 10px 20px 0 20px;">
+        <div class="modal-tabs" id="repoDocTabs">
+          <div class="modal-tab active" onclick="switchRepoDocTab('Architecture.md')">Architecture.md</div>
+          <div class="modal-tab" onclick="switchRepoDocTab('Requirements.md')">Requirements.md</div>
+          <div class="modal-tab" onclick="switchRepoDocTab('Implementation.md')">Implementation.md</div>
+          <div class="modal-tab" onclick="switchRepoDocTab('install/Installation.md')">Installation.md</div>
+          <div class="modal-tab" onclick="switchRepoDocTab('README.md')">README.md</div>
+        </div>
+      </div>
+      <div class="modal-body" id="repoDocBody">Loading repository documentation...</div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" onclick="showRepoDocInNewTab()">🌐 Show in New Tab</button>
+        <button class="btn btn-blue" id="btnEditRepoDoc" onclick="openCurrentRepoDocInNotepad()">✏️ Edit in Notepad++</button>
+        <button class="btn" onclick="closeRepoDocsModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Logs & History Modal -->
+  <div class="modal-overlay" id="logsModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="logsModalTitle">Configuration Management Audit Ledger</h3>
+        <button class="btn" onclick="closeLogsModal()">✕ Close</button>
+      </div>
+      <div class="modal-body" id="logContent">Loading logs...</div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeLogsModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Help & User Guide Modal -->
+  <div class="modal-overlay" id="helpModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>📖 CM Control Hub User Guide & Operational Manual</h3>
+        <button class="btn" onclick="closeHelpModal()">✕ Close</button>
+      </div>
+      <div class="modal-body" style="font-family: var(--font-family); line-height: 1.6; font-size: 0.82rem;">
+        <h4 style="color: var(--accent-blue); margin-bottom: 6px;">1. Two-Tier Proposal & Progress State Lifecycle</h4>
+        <p><strong>Plan State:</strong></p>
+        <ul style="margin-left: 20px; margin-bottom: 10px;">
+          <li><code>🐛 Bug</code>: Raw error intake / issue feedback below suggested. Can be promoted to Suggested or Approved.</li>
+          <li><code>💡 Suggested</code>: Idea registered for review; requires operator approval before execution.</li>
+          <li><code>Approved</code>: Formally approved; queued for AI agent implementation.</li>
+          <li><code>⏸️ Deferred</code>: Postponed to future milestone.</li>
+          <li><code>❌ Rejected</code>: Dropped / cancelled.</li>
+          <li><code>✅ Completed</code>: Formally reviewed, accepted, and committed in Git.</li>
+        </ul>
+
+        <p><strong>Progress State:</strong></p>
+        <ul style="margin-left: 20px; margin-bottom: 10px;">
+          <li><code>Undecided</code>: Initial unstarted state.</li>
+          <li><code>Queued (Ready)</code>: Approved and placed in implementation queue.</li>
+          <li><code>⚡ In Progress</code>: Active implementation / agent development.</li>
+          <li><code>⏳ Verification</code>: Implementation complete; awaiting Beyond Compare visual review.</li>
+          <li><code>Completed</code>: Review accepted and dual-commit sync complete.</li>
+        </ul>
+
+        <h4 style="color: var(--accent-blue); margin-bottom: 6px;">2. Beyond Compare 5 Visual Review Gate</h4>
+        <p>Click <strong>🔍 BC5</strong> to open Beyond Compare 5 with the Variant A baseline:
+        <br><code>Left: Workspace_Inventory\scratch\BC_Review\&lt;CRP&gt;_&lt;Repo&gt;_&lt;CommitSha&gt;</code> (Baseline)
+        <br><code>Right: Target Repository Working Directory</code> (Current Live)</p>
+        <ul style="margin-left: 20px; margin-bottom: 10px;">
+          <li><strong>Copy Right &rarr; Left:</strong> Stages modifications for acceptance.</li>
+          <li><strong>Type 'Delete' on Left:</strong> Permanently deletes file on disk and in Git.</li>
+          <li><strong>Type 'Rename to X' on Left:</strong> Renames file and cleans up old file.</li>
+        </ul>
+
+        <h4 style="color: var(--accent-blue); margin-bottom: 6px;">3. ACCEPT Gating Invariants</h4>
+        <p>The <strong>ACCEPT</strong> and <strong>ACCEPT SELECTED</strong> actions are strictly gated:</p>
+        <ul style="margin-left: 20px; margin-bottom: 10px;">
+          <li>Only proposals in <code>⏳ Verification</code>, <code>⚡ In Progress</code>, or <code>Approved</code> state can be accepted.</li>
+          <li>Proposals in <code>Undecided</code>, <code>Deferred</code>, <code>Blocked</code>, or <code>Rejected</code> state cannot be accidentally accepted.</li>
+        </ul>
+
+        <h4 style="color: var(--accent-blue); margin-bottom: 6px;">4. Interactive CM Console (Bottom Dock)</h4>
+        <p>Type commands directly into the bottom console to control the CM engine:
+        <br><code>do #&lt;id&gt;</code> &bull; <code>review #&lt;id&gt;</code> &bull; <code>accept #&lt;id&gt;</code> &bull; <code>defer #&lt;id&gt;</code> &bull; <code>status</code> &bull; <code>readiness</code></p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeHelpModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast">Action Executed Successfully</div>
+
+  <!-- Safe Global Data Injection Script -->
+  <script>
+    /*__INJECTED_DATA_PLACEHOLDER__*/
+  </script>
+
+  <!-- Application Logic -->
+  <script>
+    let proposalsData = {
+      last_proposal_id: 23,
+      proposals: []
+    };
+
+    let activeLogText = "";
+    let historyLogText = "";
+    let docsCache = {};
+    let currentModalPath = "";
+    let currentModalTitle = "";
+    let currentModalRaw = "";
+    const DAEMON_PORT = 9876;
+
+    document.addEventListener("DOMContentLoaded", () => {
+      // Ingest injected data if available
+      if (typeof RAW_PROPOSALS !== "undefined" && RAW_PROPOSALS && RAW_PROPOSALS.proposals) {
+        proposalsData = RAW_PROPOSALS;
+      }
+      if (typeof RAW_ACTIVE_LOG !== "undefined" && RAW_ACTIVE_LOG) {
+        activeLogText = RAW_ACTIVE_LOG;
+      }
+      if (typeof RAW_HISTORY_LOG !== "undefined" && RAW_HISTORY_LOG) {
+        historyLogText = RAW_HISTORY_LOG;
+      }
+      if (typeof RAW_DOCS_CACHE !== "undefined" && RAW_DOCS_CACHE) {
+        docsCache = RAW_DOCS_CACHE;
+      }
+
+      checkDaemonHealth();
+      populateScopeDropdown();
+      updateMetricCards();
+      renderTable();
+      setInterval(checkDaemonHealth, 5000);
+
+      appendConsole("CM Control Hub v1.2.0 initialized with " + proposalsData.proposals.length + " proposal(s) and " + Object.keys(docsCache).length + " cached documents.", "msg-info");
+    });
+
+    // Markdown Renderer Helper
+    function formatMarkdown(md) {
+      if (!md) return "<em>(Document is empty)</em>";
+      let html = md
+        .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+        .replace(/^&gt;\s*\[!NOTE\](.*)$/gim, '<div class="callout-note"><strong>ℹ️ Note:</strong>$1</div>')
+        .replace(/^&gt;\s*\[!IMPORTANT\](.*)$/gim, '<div class="callout-important"><strong>⚠️ Important:</strong>$1</div>')
+        .replace(/^&gt;\s*\[!WARNING\](.*)$/gim, '<div class="callout-warning"><strong>⚡ Warning:</strong>$1</div>')
+        .replace(/^&gt;\s*\[!TIP\](.*)$/gim, '<div class="callout-tip"><strong>💡 Tip:</strong>$1</div>')
+        .replace(/^### (.*$)/gim, '<h3 style="color:var(--accent-blue);margin:14px 0 6px 0;">$1</h3>')
+        .replace(/^## (.*$)/gim, '<h2 style="color:var(--accent-purple);margin:18px 0 8px 0;border-bottom:1px solid #30363d;padding-bottom:4px;">$1</h2>')
+        .replace(/^# (.*$)/gim, '<h1 style="color:#ffffff;margin:20px 0 10px 0;border-bottom:2px solid #58a6ff;padding-bottom:6px;">$1</h1>')
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/`([^`]+)`/g, '<code style="background:#21262d;padding:2px 5px;border-radius:4px;color:#79c0ff;font-family:var(--font-mono);">$1</code>')
+        .replace(/```([a-z0-9_-]*)\n([\s\S]*?)```/gim, '<pre style="background:#090d13;border:1px solid #30363d;padding:12px;border-radius:6px;overflow-x:auto;margin:10px 0;"><code style="color:#7ee787;font-family:var(--font-mono);">$2</code></pre>')
+        .replace(/\n\n/g, '<br><br>');
+      return html;
+    }
+
+    // Open Document in New Browser Tab
+    function openInNewBrowserTab(title, content, isMarkdown = true) {
+      const newWin = window.open("", "_blank");
+      if (!newWin) {
+        alert("Popup blocked! Please allow popups for this page to view in a new tab.");
+        return;
+      }
+      const bodyHtml = isMarkdown ? formatMarkdown(content) : `<pre style="font-family:ui-monospace,monospace;font-size:0.85rem;white-space:pre-wrap;background:#090d13;color:#7ee787;padding:16px;border-radius:8px;">${content}</pre>`;
+      
+      newWin.document.write(`<!DOCTYPE html>
+<html>
+<head>
+  <title>${title} - LCM Document Viewer</title>
+  <style>
+    :root { --accent-blue: #58a6ff; --accent-purple: #bc8cff; --accent-amber: #d29922; --accent-green: #3fb950; --font-mono: ui-monospace, monospace; }
+    body { background: #0d1117; color: #f0f6fc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.6; padding: 24px 36px; max-width: 1000px; margin: 0 auto; }
+    header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #30363d; padding-bottom: 12px; margin-bottom: 20px; }
+    .btn { background: #21262d; color: #f0f6fc; border: 1px solid #30363d; padding: 6px 14px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.85rem; text-decoration: none; }
+    .btn-primary { background: #238636; border-color: #2ea043; }
+    .callout-note { border-left: 4px solid var(--accent-blue); background: rgba(88, 166, 255, 0.1); padding: 8px 12px; border-radius: 4px; margin: 8px 0; }
+    .callout-important { border-left: 4px solid var(--accent-purple); background: rgba(188, 140, 255, 0.1); padding: 8px 12px; border-radius: 4px; margin: 8px 0; }
+    .callout-warning { border-left: 4px solid var(--accent-amber); background: rgba(210, 153, 34, 0.1); padding: 8px 12px; border-radius: 4px; margin: 8px 0; }
+    .callout-tip { border-left: 4px solid var(--accent-green); background: rgba(63, 185, 80, 0.1); padding: 8px 12px; border-radius: 4px; margin: 8px 0; }
+    @media print {
+      body { background: #ffffff !important; color: #000000 !important; max-width: 100% !important; padding: 0 !important; }
+      header { display: none !important; }
+      pre { background: #f6f8fa !important; border: 1px solid #d0d7de !important; color: #24292f !important; }
+      code { color: #24292f !important; background: #f6f8fa !important; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h2 style="margin:0;color:#58a6ff;">${title}</h2>
+    <div style="display:flex;gap:10px;">
+      <button class="btn btn-primary" onclick="window.print()">🖨️ Print / Save PDF</button>
+      <button class="btn" onclick="window.close()">✕ Close</button>
+    </div>
+  </header>
+  <main>${bodyHtml}</main>
+</body>
+</html>`);
+      newWin.document.close();
+    }
+
+    function showCurrentInNewTab() {
+      if (currentModalRaw) {
+        openInNewBrowserTab(currentModalTitle, currentModalRaw, true);
+      }
+    }
+
+    function showRepoDocInNewTab() {
+      if (currentRepoDocRaw) {
+        openInNewBrowserTab(`${currentRepoForDocs} - ${currentRepoDocFile}`, currentRepoDocRaw, true);
+      }
+    }
+
+    // Modal Helpers
+    async function openDocumentModal(relPath, title) {
+      currentModalPath = relPath;
+      currentModalTitle = title;
+      document.getElementById("modalTitle").innerText = title;
+      document.getElementById("inspectorModal").classList.add("open");
+
+      let text = docsCache[relPath] || docsCache[relPath.replace(/\//g, '\\')] || docsCache[relPath.replace(/\\/g, '/')];
+
+      if (!text) {
+        // Search by basename
+        const baseName = relPath.split('/').pop().split('\\').pop();
+        for (const k in docsCache) {
+          if (k.endsWith(baseName)) { text = docsCache[k]; break; }
+        }
+      }
+
+      if (text) {
+        currentModalRaw = text;
+        document.getElementById("modalContent").innerHTML = formatMarkdown(text);
+      } else {
+        currentModalRaw = `Document path: ${relPath}\n(Document not found in cache).`;
+        document.getElementById("modalContent").innerText = currentModalRaw;
+      }
+    }
+
+    function closeInspectorModal() {
+      document.getElementById("inspectorModal").classList.remove("open");
+    }
+
+    // CRP Specification Opener
+    function openCrpSpec(bundleId) {
+      if (!bundleId || bundleId === "unassigned") {
+        alert("No formal CRP specification bundle assigned to this proposal.");
+        return;
+      }
+
+      let text = docsCache[bundleId];
+      let foundPath = "";
+
+      if (!text) {
+        for (const k in docsCache) {
+          if (k.includes(bundleId)) {
+            text = docsCache[k];
+            foundPath = k;
+            break;
+          }
+        }
+      }
+
+      if (text) {
+        openDocumentModal(foundPath || bundleId, `CRP Specification (${bundleId})`);
+      } else {
+        alert(`CRP Specification '${bundleId}' not found in docs cache.`);
+      }
+    }
+
+    // Review Receipt Opener
+    function openReceiptForProposal(repoStr, crpBundle) {
+      const primaryRepo = (repoStr || "Workspace_Inventory").split('/')[0].trim();
+      let text = docsCache["receipt_" + primaryRepo];
+      let foundPath = "";
+
+      if (!text) {
+        for (const k in docsCache) {
+          if (k.startsWith("Workspace_Inventory/data/reviews/review_" + primaryRepo)) {
+            text = docsCache[k];
+            foundPath = k;
+            break;
+          }
+        }
+      }
+
+      if (!text) {
+        // Fallback: newest receipt
+        for (const k in docsCache) {
+          if (k.startsWith("Workspace_Inventory/data/reviews/")) {
+            text = docsCache[k];
+            foundPath = k;
+            break;
+          }
+        }
+      }
+
+      if (text) {
+        currentModalPath = foundPath;
+        currentModalTitle = `Review Acceptance Receipt (${primaryRepo})`;
+        currentModalRaw = text;
+        document.getElementById("modalTitle").innerText = currentModalTitle;
+        document.getElementById("modalContent").innerHTML = `<pre style="font-family:var(--font-mono);font-size:0.8rem;background:#090d13;color:#7ee787;padding:12px;border-radius:6px;">${text}</pre>`;
+        document.getElementById("inspectorModal").classList.add("open");
+      } else {
+        alert(`No review acceptance receipt found on disk for ${primaryRepo}. Run a Beyond Compare review and ACCEPT to generate a receipt.`);
+      }
+    }
+
+    // Repository Documentation Review Subpanel
+    let currentRepoForDocs = "Workspace_Inventory";
+    let currentRepoDocFile = "Architecture.md";
+    let currentRepoDocRaw = "";
+
+    async function openRepoDocsReview(repoStr) {
+      currentRepoForDocs = (repoStr || "Workspace_Inventory").split("/")[0].trim();
+      document.getElementById("repoDocsTitle").innerText = `📚 Tripartite Documentation: ${currentRepoForDocs}`;
+      document.getElementById("repoDocsModal").classList.add("open");
+      await switchRepoDocTab("Architecture.md");
+    }
+
+    function closeRepoDocsModal() {
+      document.getElementById("repoDocsModal").classList.remove("open");
+    }
+
+    async function switchRepoDocTab(docName) {
+      currentRepoDocFile = docName;
+      document.querySelectorAll("#repoDocTabs .modal-tab").forEach(t => {
+        t.className = t.innerText.includes(docName.split('/').pop()) ? "modal-tab active" : "modal-tab";
+      });
+
+      const body = document.getElementById("repoDocBody");
+      let key = `${currentRepoForDocs}/${docName}`;
+      let text = docsCache[key];
+
+      if (!text && (currentRepoForDocs === "LCM" || currentRepoForDocs === "Multiple")) {
+        text = docsCache[`Workspace_Inventory/${docName}`];
+      }
+
+      if (text) {
+        currentRepoDocRaw = text;
+        body.innerHTML = formatMarkdown(text);
+      } else {
+        currentRepoDocRaw = `Document '${docName}' not found in ${currentRepoForDocs}.\nKey checked: ${key}`;
+        body.innerText = currentRepoDocRaw;
+      }
+    }
+
+    function openCurrentRepoDocInNotepad() {
+      const docPath = `${currentRepoForDocs}/${currentRepoDocFile}`;
+      editInNotepad(docPath);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      // Ingest injected data if available
+      if (typeof RAW_PROPOSALS !== "undefined" && RAW_PROPOSALS && RAW_PROPOSALS.proposals) {
+        proposalsData = RAW_PROPOSALS;
+      }
+      if (typeof RAW_ACTIVE_LOG !== "undefined" && RAW_ACTIVE_LOG) {
+        activeLogText = RAW_ACTIVE_LOG;
+      }
+      if (typeof RAW_HISTORY_LOG !== "undefined" && RAW_HISTORY_LOG) {
+        historyLogText = RAW_HISTORY_LOG;
+      }
+
+      checkDaemonHealth();
+      populateScopeDropdown();
+      updateMetricCards();
+      renderTable();
+      setInterval(checkDaemonHealth, 5000);
+
+      appendConsole("CM Control Hub v1.1.0 initialized with " + proposalsData.proposals.length + " proposal(s).", "msg-info");
+    });
+
+    async function checkDaemonHealth() {
+      const badge = document.getElementById("daemonBadge");
+      const text = document.getElementById("daemonText");
+      try {
+        const res = await fetch(`http://127.0.0.1:${DAEMON_PORT}/ping`, { method: "GET", signal: AbortSignal.timeout(1500) });
+        if (res.ok) {
+          badge.className = "daemon-badge";
+          text.innerText = `REST Daemon: ONLINE (${DAEMON_PORT})`;
+        } else {
+          throw new Error();
+        }
+      } catch (err) {
+        badge.className = "daemon-badge offline";
+        text.innerText = `REST Daemon: OFFLINE (${DAEMON_PORT})`;
+      }
+    }
+
+    function populateScopeDropdown() {
+      const select = document.getElementById("thScopeFilter");
+      const scopes = new Set();
+      proposalsData.proposals.forEach(p => {
+        if (p.origin_repo) {
+          const parts = p.origin_repo.split("/").map(s => s.trim());
+          parts.forEach(pt => scopes.add(pt));
+        }
+      });
+      select.innerHTML = '<option value="ALL">All Repos</option>';
+      Array.from(scopes).sort().forEach(s => {
+        select.innerHTML += `<option value="${s}">${s}</option>`;
+      });
+    }
+
+    function updateMetricCards() {
+      const list = proposalsData.proposals || [];
+      const openCount = list.filter(p => p.progress_state !== "completed").length;
+      document.getElementById("valTotal").innerText = `${openCount} Open / ${list.length}`;
+      document.getElementById("valBugs").innerText = list.filter(p => p.state === "bug").length;
+      document.getElementById("valSuggested").innerText = list.filter(p => p.state === "suggested").length;
+      document.getElementById("valReview").innerText = list.filter(p => p.progress_state === "verification").length;
+      document.getElementById("valCompleted").innerText = list.filter(p => p.state === "completed").length;
+      document.getElementById("valDeferred").innerText = list.filter(p => p.state === "deferred").length;
+    }
+
+    function renderTable() {
+      const search = document.getElementById("searchInput").value.toLowerCase().trim();
+      const scope = document.getElementById("thScopeFilter").value;
+      const planState = document.getElementById("thPlanStateFilter").value;
+      const progState = document.getElementById("thProgStateFilter").value;
+
+      const tbody = document.getElementById("proposalsTableBody");
+      tbody.innerHTML = "";
+
+      const filtered = proposalsData.proposals.filter(p => {
+        if (scope !== "ALL" && (!p.origin_repo || !p.origin_repo.includes(scope))) return false;
+        if (planState !== "ALL" && p.state !== planState) return false;
+        if (progState === "open" && p.progress_state === "completed") return false;
+        if (progState !== "ALL" && progState !== "open" && p.progress_state !== progState) return false;
+
+        if (search) {
+          const matchId = `#${p.id}`.includes(search) || `${p.id}` === search;
+          const matchTitle = (p.title || "").toLowerCase().includes(search);
+          const matchDetails = (p.details || "").toLowerCase().includes(search);
+          const matchCr = (p.cr_id || "").toLowerCase().includes(search);
+          const matchBundle = (p.bundle_id || "").toLowerCase().includes(search);
+          const matchScope = (p.origin_repo || "").toLowerCase().includes(search);
+          if (!matchId && !matchTitle && !matchDetails && !matchCr && !matchBundle && !matchScope) return false;
+        }
+        return true;
+      });
+
+      filtered.sort((a, b) => b.id - a.id);
+
+      filtered.forEach(p => {
+        const tr = document.createElement("tr");
+        tr.className = `state-${p.state || "suggested"} state-${p.progress_state || "undecided"}`;
+
+        const crpBundle = p.bundle_id && p.bundle_id !== "unassigned" ? p.bundle_id : (p.cr_id || "");
+
+        tr.innerHTML = `
+          <td><input type="checkbox" class="row-chk" value="${p.id}" data-repo="${p.origin_repo || ''}" data-crp="${crpBundle}" data-state="${p.state}" data-prog="${p.progress_state}" onchange="updateSelectedCount()"></td>
+          <td><span class="id-badge">#${p.id}</span></td>
+          <td><span class="scope-tag">${p.origin_repo || 'LCM'}</span></td>
+          <td>
+            <span class="crp-tag" style="font-weight:600; color:var(--accent-blue);">${p.bundle_id || '-'}</span>
+            <span class="crp-tag">${p.cr_id || ''}</span>
+          </td>
+          <td>
+            <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 2px;">${p.title}</div>
+            <div style="font-size: 0.75rem; color: var(--text-secondary);">${p.details || ''}</div>
+          </td>
+          <td>
+            <select class="state-select state-plan-${p.state}" onchange="changePlanState(${p.id}, this.value)">
+              <option value="bug" ${p.state === 'bug' ? 'selected' : ''}>🐛 Bug</option>
+              <option value="suggested" ${p.state === 'suggested' ? 'selected' : ''}>💡 Suggested</option>
+              <option value="approved" ${p.state === 'approved' ? 'selected' : ''}>Approved</option>
+              <option value="deferred" ${p.state === 'deferred' ? 'selected' : ''}>⏸️ Deferred</option>
+              <option value="rejected" ${p.state === 'rejected' ? 'selected' : ''}>❌ Rejected</option>
+              <option value="completed" ${p.state === 'completed' ? 'selected' : ''}>✅ Completed</option>
+            </select>
+          </td>
+          <td>
+            <select class="state-select state-prog-${p.progress_state}" onchange="changeProgressState(${p.id}, this.value)">
+              <option value="undecided" ${p.progress_state === 'undecided' ? 'selected' : ''}>Undecided</option>
+              <option value="queued" ${p.progress_state === 'queued' ? 'selected' : ''}>Queued (Ready)</option>
+              <option value="in_progress" ${p.progress_state === 'in_progress' ? 'selected' : ''}>⚡ In Progress</option>
+              <option value="verification" ${p.progress_state === 'verification' ? 'selected' : ''}>⏳ Verification</option>
+              <option value="completed" ${p.progress_state === 'completed' ? 'selected' : ''}>✅ Completed</option>
+              <option value="blocked" ${p.progress_state === 'blocked' ? 'selected' : ''}>Blocked</option>
+              <option value="failed" ${p.progress_state === 'failed' ? 'selected' : ''}>Failed</option>
+            </select>
+          </td>
+          <td>
+            <div class="action-group">
+              <button class="action-btn action-btn-bc" onclick="launchReviewForProposal(${p.id}, '${p.origin_repo}', '${crpBundle}')">🔍 BC5</button>
+              ${p.bundle_id && p.bundle_id.startsWith('CRP-') ? `<button class="action-btn" onclick="openCrpSpec('${p.bundle_id}')">📜 CRP</button>` : ''}
+              ${p.plan_path ? `<button class="action-btn" onclick="openDocumentModal('${p.plan_path}', 'Plan (#${p.id})')">📄 Plan</button>` : ''}
+              ${p.walkthrough_path ? `<button class="action-btn" onclick="openDocumentModal('${p.walkthrough_path}', 'Walkthrough (#${p.id})')">📋 Walk</button>` : ''}
+              <button class="action-btn" onclick="openRepoDocsReview('${p.origin_repo}')" title="Review Tripartite Documentation for repository">📚 Docs</button>
+              <button class="action-btn" onclick="openReceiptForProposal('${p.origin_repo}', '${crpBundle}')">📜 Rcpt</button>
+              <button class="action-btn" onclick="editInNotepad('${p.plan_path || p.bundle_id || ''}')" title="Edit in Notepad++">✏️ N++</button>
+              ${p.state === 'rejected' ? `<button class="action-btn" style="color:var(--accent-red);" onclick="deleteProposal(${p.id})">🗑️</button>` : ''}
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      updateSelectedCount();
+    }
+
+    function toggleSelectAll(checked) {
+      document.querySelectorAll(".row-chk").forEach(chk => chk.checked = checked);
+      updateSelectedCount();
+    }
+
+    function updateSelectedCount() {
+      const count = document.querySelectorAll(".row-chk:checked").length;
+      document.getElementById("selectedCount").innerText = count;
+    }
+
+    function getSelectedCheckboxes() {
+      return Array.from(document.querySelectorAll(".row-chk:checked"));
+    }
+
+    // State Transitions
+    async function changePlanState(id, newState) {
+      const prop = proposalsData.proposals.find(p => p.id === id);
+      if (prop) {
+        prop.state = newState;
+        updateMetricCards();
+        renderTable();
+        await syncLedgerToServer();
+        appendConsole(`Updated Proposal #${id} plan state to '${newState}'`, "msg-info");
+        showToast(`Proposal #${id} state set to '${newState}'`);
+      }
+    }
+
+    async function changeProgressState(id, newState) {
+      const prop = proposalsData.proposals.find(p => p.id === id);
+      if (prop) {
+        prop.progress_state = newState;
+        updateMetricCards();
+        renderTable();
+        await syncLedgerToServer();
+        appendConsole(`Updated Proposal #${id} progress state to '${newState}'`, "msg-info");
+        showToast(`Proposal #${id} progress set to '${newState}'`);
+      }
+    }
+
+    async function syncLedgerToServer() {
+      try {
+        await fetch(`http://127.0.0.1:${DAEMON_PORT}/sync_json`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ defeatSwitch: true, proposals: proposalsData.proposals })
+        });
+      } catch (err) {
+        console.warn("Daemon sync fallback.", err);
+      }
+    }
+
+    // Launch BC5 Review
+    async function launchReviewForProposal(id, repoStr, crp) {
+      const primaryRepo = (repoStr || "Workspace_Inventory").split("/")[0].trim();
+      const crpArg = crp && crp.startsWith("CRP-") ? `-CRP "${crp}"` : "";
+      const cmd = `pwsh -File tools/Invoke-BeyondCompareReview.ps1 -RepositoryName "${primaryRepo}" ${crpArg}`;
+      
+      appendConsole(`Launching Beyond Compare 5 review for #${id} (${primaryRepo})...`, "msg-info");
+      try {
+        await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ command: cmd, elevated: false, noExit: false })
+        });
+        showToast(`Launched BC5 Review for #${id}`);
+      } catch (err) {
+        appendConsole(`Error launching BC5 review: ${err.message}`, "msg-err");
+      }
+    }
+
+    // Notepad++ Integration
+    async function editInNotepad(relPath) {
+      if (!relPath) { alert("Target document path not found."); return; }
+      appendConsole(`Opening in Notepad++: ${relPath}`, "msg-info");
+      try {
+        await fetch(`http://127.0.0.1:${DAEMON_PORT}/open_editor`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ filePath: relPath, line: 1 })
+        });
+        showToast(`Opened in Notepad++: ${relPath}`);
+      } catch (err) {
+        appendConsole(`Failed to launch Notepad++: ${err.message}`, "msg-err");
+      }
+    }
+
+    function openCurrentInNotepad() {
+      if (currentModalPath) editInNotepad(currentModalPath);
+    }
+
+    // Gated Batch Accept
+    async function executeBatchAccept() {
+      const chks = getSelectedCheckboxes();
+      if (chks.length === 0) {
+        alert("Please select one or more proposals to ACCEPT.");
+        return;
+      }
+
+      const invalid = [];
+      const valid = [];
+
+      chks.forEach(c => {
+        const id = parseInt(c.value, 10);
+        const p = proposalsData.proposals.find(item => item.id === id);
+        if (!p) return;
+
+        // Invariant: Cannot accept undecided, rejected, blocked, or deferred
+        if (['undecided', 'blocked'].includes(p.progress_state) || ['rejected', 'deferred'].includes(p.state)) {
+          invalid.push(`#${p.id} (${p.state} / ${p.progress_state})`);
+        } else {
+          valid.push(p);
+        }
+      });
+
+      if (invalid.length > 0) {
+        alert(`CANNOT ACCEPT: The following ${invalid.length} proposal(s) are in unready states:\n- ${invalid.join('\n- ')}\n\nOnly proposals in 'Verification', 'In Progress', or 'Approved' state can be accepted.`);
+        return;
+      }
+
+      if (!confirm(`Are you sure you want to ACCEPT and dual-commit sync ${valid.length} proposal(s)?`)) return;
+
+      for (const p of valid) {
+        p.state = "completed";
+        p.progress_state = "completed";
+      }
+
+      updateMetricCards();
+      resetFilters();
+      await syncLedgerToServer();
+      appendConsole(`Batch accepted and marked completed: ${valid.map(v => '#' + v.id).join(', ')}`, "msg-info");
+      showToast(`Batch Accepted ${valid.length} proposal(s). View reset to SHOW ALL.`);
+    }
+
+    // One-Shot Mark Reviewed Button
+    async function executeBatchMarkReviewed() {
+      const chks = getSelectedCheckboxes();
+      if (chks.length === 0) {
+        alert("Please select one or more proposals to mark as reviewed.");
+        return;
+      }
+
+      chks.forEach(c => {
+        const id = parseInt(c.value, 10);
+        const p = proposalsData.proposals.find(item => item.id === id);
+        if (p) {
+          p.progress_state = "verification";
+        }
+      });
+
+      updateMetricCards();
+      renderTable();
+      await syncLedgerToServer();
+      appendConsole(`Marked ${chks.length} proposal(s) as reviewed / verification.`, "msg-info");
+      showToast(`Marked ${chks.length} proposal(s) as reviewed.`);
+    }
+
+    async function executeBatchReview() {
+      const chks = getSelectedCheckboxes();
+      if (chks.length === 0) { alert("Please select proposals to review."); return; }
+      for (const c of chks) {
+        const id = parseInt(c.value, 10);
+        const p = proposalsData.proposals.find(item => item.id === id);
+        if (p) await launchReviewForProposal(p.id, p.origin_repo, p.bundle_id);
+      }
+    }
+
+    function executeBatchDefer() {
+      const chks = getSelectedCheckboxes();
+      if (chks.length === 0) return;
+      chks.forEach(c => {
+        const id = parseInt(c.value, 10);
+        const p = proposalsData.proposals.find(item => item.id === id);
+        if (p) p.state = "deferred";
+      });
+      updateMetricCards();
+      renderTable();
+      showToast(`Deferred ${chks.length} proposal(s).`);
+    }
+
+    function executeBatchDelete() {
+      const chks = getSelectedCheckboxes();
+      if (chks.length === 0) return;
+      if (!confirm(`Delete / purge ${chks.length} proposal(s)?`)) return;
+      const ids = new Set(chks.map(c => parseInt(c.value, 10)));
+      proposalsData.proposals = proposalsData.proposals.filter(p => !ids.has(p.id));
+      updateMetricCards();
+      renderTable();
+      showToast(`Deleted ${ids.size} proposal(s).`);
+    }
+
+    function deleteProposal(id) {
+      if (confirm(`Permanently delete rejected Proposal #${id}?`)) {
+        proposalsData.proposals = proposalsData.proposals.filter(p => p.id !== id);
+        updateMetricCards();
+        renderTable();
+        showToast(`Deleted Proposal #${id}.`);
+      }
+    }
+
+    // Preset Filters
+    function setPresetFilter(type) {
+      document.querySelectorAll(".stat-card").forEach(c => c.classList.remove("active"));
+      if (type === 'all') {
+        document.getElementById("thPlanStateFilter").value = "ALL";
+        document.getElementById("thProgStateFilter").value = "ALL";
+        document.getElementById("cardTotal").classList.add("active");
+      } else if (type === 'bug') {
+        document.getElementById("thPlanStateFilter").value = "bug";
+        document.getElementById("cardBugs").classList.add("active");
+      } else if (type === 'suggested') {
+        document.getElementById("thPlanStateFilter").value = "suggested";
+        document.getElementById("cardSuggested").classList.add("active");
+      } else if (type === 'verification') {
+        document.getElementById("thProgStateFilter").value = "verification";
+        document.getElementById("cardReview").classList.add("active");
+      } else if (type === 'completed') {
+        document.getElementById("thPlanStateFilter").value = "completed";
+        document.getElementById("cardCompleted").classList.add("active");
+      } else if (type === 'deferred') {
+        document.getElementById("thPlanStateFilter").value = "deferred";
+        document.getElementById("cardDeferred").classList.add("active");
+      }
+      renderTable();
+    }
+
+    function refreshData() {
+      location.reload();
+    }
+  </script>
+</body>
+</html>

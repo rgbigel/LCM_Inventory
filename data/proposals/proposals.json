@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-08-30T13:50:01+02:00",
+  "updated_at": "2026-08-30T14:16:15+02:00",
   "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 23,
+  "last_proposal_id": 24,
   "proposals": [
     {
       "id": 1,
@@ -261,14 +261,14 @@
     {
       "id": 19,
       "timestamp": "2026-08-29 20:22:45",
-      "title": "Automated Pending Review Queue with Interactive Batch Review Tool (Show-OpenReviews / DoReview / DOR)",
+      "title": "Configuration Management (CM) Control Hub Web Dashboard & Batch Review Engine (Show-CmControlHub / CmHub / DOR)",
       "origin_repo": "Workspace_Inventory / tools",
       "cr_id": "CR-2026-030",
-      "state": "suggested",
-      "progress_state": "undecided",
-      "bundle_id": "unassigned",
+      "state": "completed",
+      "progress_state": "completed",
+      "bundle_id": "CRP-2026-006",
       "author": "rgbig",
-      "details": "Automatically link resolved CRP corrections to an interactive pending review queue via Show-OpenReviews (DoReview / DOR). Support multi-item and ALL selection, forwarding to Beyond Compare Review, live acceptance status tracking upon session close, and batch ACCEPT / ACCEPT ALL commit execution.",
+      "details": "Interactive web dashboard for CM governance, real-time dual-state and BUG tracking, multi-facet filtering, batch beyond compare review & accept all, plan/walkthrough/receipt inspection tabs, Notepad++ CRP editing with plan auto-sync, and historical log viewing.",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-019_CR-2026-030_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-019_CR-2026-030_Walkthrough.md"
     },
@@ -327,6 +327,20 @@
       "details": "Establish mandatory Scope and Version-Explicit naming convention for Change Request Proposals (CRP-YYYY-NNN-[Scope]-[Version]-[Slug].md) and mandatory header metadata to isolate affected repository boundaries and version ranges.",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-023_CR-2026-034_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-023_CR-2026-034_Walkthrough.md"
+    },
+    {
+      "id": 24,
+      "timestamp": "2026-08-30 15:22:00",
+      "title": "Fix .NET Regex String Interpolation Backreference Corruption in CM Control Hub HTML Data Injector",
+      "origin_repo": "Workspace_Inventory",
+      "cr_id": "BUG-2026-001",
+      "state": "completed",
+      "progress_state": "completed",
+      "bundle_id": "BUG-2026-001-Workspace_Inventory-v7.1.0-Regex-Interpolation-Spill",
+      "author": "rgbig",
+      "details": "Replace .NET Regex.Replace with byte-exact literal string .Replace in Show-CmControlHub.ps1 to prevent dollar-sign script variables ($) in cached documents from being mangled as regex backreferences and corrupting HTML script injection.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-024_BUG-2026-001_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-024_BUG-2026-001_Walkthrough.md"
     }
   ]
 }
