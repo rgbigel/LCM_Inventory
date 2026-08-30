@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-08-30T11:26:47+02:00",
+  "updated_at": "2026-08-30T11:34:09+02:00",
   "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 21,
+  "last_proposal_id": 22,
   "proposals": [
     {
       "id": 1,
@@ -299,6 +299,20 @@
       "details": "Establish a controlled, secure intake pipeline for instructions and lightweight BUG reports from Google Gemini via D:\\GDrive\\LCM\\INBOX. Enforce mandatory ISO 8601/local timestamping, route incoming items into the LCM Proposal ledger (suggested state) without immediate execution, archive processed files to INBOX/archive/, and provide Sync-GeminiInbox tool and Gemini Gem intake specification.",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-021_CR-2026-032_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-021_CR-2026-032_Walkthrough.md"
+    },
+    {
+      "id": 22,
+      "timestamp": "2026-08-30 11:34:09",
+      "title": "Codify RULE-REV-006 Mandatory Review Stop and Turn Termination Invariant in Governance Rules",
+      "origin_repo": ".agents / Workspace_AI",
+      "cr_id": "CR-2026-033",
+      "state": "completed",
+      "progress_state": "completed",
+      "bundle_id": "CRP-2026-003",
+      "author": "rgbig",
+      "details": "Codify RULE-REV-006 (Mandatory Review Stop and Turn Termination Invariant) in ReviewCommitGovernancePolicy.md and ProposalReviewFlowPolicy.md, strictly forbidding the AI agent from auto-committing or invoking Submit-ReviewResult.ps1 in the same response turn as Invoke-BeyondCompareReview.ps1.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-022_CR-2026-033_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-022_CR-2026-033_Walkthrough.md"
     }
   ]
 }
