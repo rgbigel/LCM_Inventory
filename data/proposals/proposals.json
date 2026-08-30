@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-08-29T19:35:34+02:00",
+  "updated_at": "2026-08-30T11:26:47+02:00",
   "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 20,
+  "last_proposal_id": 21,
   "proposals": [
     {
       "id": 1,
@@ -285,6 +285,20 @@
       "details": "Consolidate LCD platform governance rules, internal tools, modules, and docs into an encapsulated .lcd/ structure with separate .lcd/tools/internal (real code) and .lcd/tools/links (gitignored symlinks), update %PATH% to .lcd/Cmd, update child repository junctions, and provide root compatibility junctions.",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-020_CR-2026-031_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-020_CR-2026-031_Walkthrough.md"
+    },
+    {
+      "id": 21,
+      "timestamp": "2026-08-30 11:26:00",
+      "title": "Google Drive Gemini Inbox Watcher, Mandatory Timestamping, and Security Intake Queue",
+      "origin_repo": "Workspace_AI / .lcd",
+      "cr_id": "CR-2026-032",
+      "state": "completed",
+      "progress_state": "completed",
+      "bundle_id": "CRP-2026-002",
+      "author": "rgbig",
+      "details": "Establish a controlled, secure intake pipeline for instructions and lightweight BUG reports from Google Gemini via D:\\GDrive\\LCM\\INBOX. Enforce mandatory ISO 8601/local timestamping, route incoming items into the LCM Proposal ledger (suggested state) without immediate execution, archive processed files to INBOX/archive/, and provide Sync-GeminiInbox tool and Gemini Gem intake specification.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-021_CR-2026-032_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-021_CR-2026-032_Walkthrough.md"
     }
   ]
 }
