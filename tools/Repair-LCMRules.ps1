@@ -30,7 +30,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 $canonicalRulesCandidates = @(
-    (Join-Path $WorkspaceRoot '.lcd\.agents\rules'),
+    (Join-Path $WorkspaceRoot '.lcm\.agents\rules'),
     (Join-Path $WorkspaceRoot '.agents\rules')
 )
 $canonicalRulesDir = $canonicalRulesCandidates | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1

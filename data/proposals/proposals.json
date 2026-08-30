@@ -4,7 +4,7 @@
   "updated_at": "2026-08-30T14:16:15+02:00",
   "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 34,
+  "last_proposal_id": 35,
   "proposals": [
     {
       "id": 1,
@@ -402,13 +402,14 @@
       "title": "Unescaped $timestamp Variable Interpolation in Show-HaInventoryApp.ps1",
       "origin_repo": "HaSSD06_Inventory",
       "cr_id": "CR-2026-038",
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "bundle_id": "BUG-2026-002-HaSSD06_Inventory-v5.3.0-Unescaped-Timestamp-Variable-Interpolation",
       "author": "rgbig",
       "details": "Fix strict mode uninitialized variable error when generating HTML viewer print atom.",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-027_CR-2026-038_Plan.md",
-      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-027_CR-2026-038_Walkthrough.md"
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-027_CR-2026-038_Walkthrough.md",
+      "pushed_at": "2026-08-30 16:55:41"
     },
     {
       "id": 28,
@@ -493,6 +494,20 @@
       "bundle_id": "BUG-2026-005-HaSSD06-v2026.8.3-Tuya-Local-Unregistered-Product-ID-SmartPlug",
       "author": "rgbig",
       "details": "Hardware product IDs keym9qkuywghyrvs and keyjup78v54myhan unlisted in tuya_local config."
+    },
+    {
+      "id": 35,
+      "timestamp": "2026-08-30 18:57:00",
+      "title": "Workspace Artifact Deduplication, Archive Consolidation & .lcd Junction Removal",
+      "origin_repo": "Workspace_AI",
+      "cr_id": "CR-2026-046",
+      "state": "completed",
+      "progress_state": "completed",
+      "bundle_id": "CRP-2026-013-Workspace_AI-v7.1.1-Workspace-Deduplication-Archive-and-Lcd-Purge",
+      "author": "rgbig",
+      "details": "Hash-based deduplication, archival of redundant scratch snapshots/baselines, refactoring of .lcm/tools/links, and deletion of legacy .lcd junction.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-035_CR-2026-046_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-035_CR-2026-046_Walkthrough.md"
     }
   ]
 }

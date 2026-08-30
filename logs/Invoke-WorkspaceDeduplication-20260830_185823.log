@@ -1,0 +1,6 @@
+[2026-08-30 18:58:23.427] [INFO] Starting Workspace Deduplication Run in AuditOnly mode.
+[2026-08-30 18:58:23.446] [INFO] Scanning 6 targeted directories for candidate duplicates...
+[2026-08-30 18:58:24.178] [INFO] Discovered 7242 eligible artifacts for hashing analysis.
+[2026-08-30 18:58:24.385] [INFO] Identified 1096 size groups containing candidate duplicates.
+[2026-08-30 18:58:25.822] [SUMMARY] Identified 396 duplicate clusters (834 redundant instances).
+[2026-08-30 18:58:26.845] [SUMMARY] Deduplication finished. Archived: 834, Saved: 7556250 bytes.

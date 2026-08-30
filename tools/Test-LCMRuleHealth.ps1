@@ -24,12 +24,12 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 $canonicalRulesCandidates = @(
-    (Join-Path $WorkspaceRoot '.lcd\.agents\rules'),
+    (Join-Path $WorkspaceRoot '.lcm\.agents\rules'),
     (Join-Path $WorkspaceRoot '.agents\rules')
 )
 $canonicalRulesDir = $canonicalRulesCandidates | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
 if (-not $canonicalRulesDir) {
-    $canonicalRulesDir = Join-Path $WorkspaceRoot '.lcd\.agents\rules'
+    $canonicalRulesDir = Join-Path $WorkspaceRoot '.lcm\.agents\rules'
 }
 
 # Read global LCM baseline
@@ -73,7 +73,7 @@ foreach ($dir in $childDirs) {
                 $targetStr = [string]$target
                 $isValid = $false
                 foreach ($c in $canonicalRulesCandidates) {
-                    if ($targetStr -eq $c -or (Test-Path -LiteralPath $c -and $targetStr -eq (Get-Item $c).FullName)) {
+                    if ($targetStr -eq $c -or ((Test-Path -LiteralPath $c) -and ($targetStr -eq (Get-Item -LiteralPath $c).FullName))) {
                         $isValid = $true
                         break
                     }
