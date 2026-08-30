@@ -89,6 +89,29 @@ if ($pushedRepos.Count -gt 0) {
     $logEntry = "[$pushTimestamp] [SUCCESS] [Target: MULTI] [Version: v7.1.0] [PushDate: $pushTimestamp] [AffectedRepos: $($pushedRepos -join ', ')] PUSH_EXECUTED - Pushed $($pushedRepos.Count) repository/repositories to remote ($($pushedRepos -join ', ')). Reason: $Reason"
     Add-Content -LiteralPath $cmLogFile -Value $logEntry -Encoding UTF8
     Write-Host "`n  -> Appended PUSH_EXECUTED record to cm_activity.log" -ForegroundColor Green
+
+    # Transition completed proposals to 'pushed' state in proposals.json
+    $proposalsFile = Join-Path $workspaceRoot "Workspace_Inventory\data\proposals\proposals.json"
+    if (Test-Path -LiteralPath $proposalsFile) {
+        $ledgerJson = Get-Content -LiteralPath $proposalsFile -Raw -Encoding UTF8 | ConvertFrom-Json
+        $transitionCount = 0
+        foreach ($p in $ledgerJson.proposals) {
+            $origin = if ($p.origin_repo) { $p.origin_repo } else { "" }
+            $matchesPushed = $pushedRepos | Where-Object { $origin -like "*$_*" }
+            if ($matchesPushed -or $pushedRepos -contains "Workspace_Inventory" -or $pushedRepos -contains "Git_Repositories") {
+                if ($p.progress_state -eq "completed" -or $p.state -eq "completed") {
+                    $p.state = "pushed"
+                    $p.progress_state = "pushed"
+                    $p | Add-Member -NotePropertyName "pushed_at" -NotePropertyValue $pushTimestamp -Force
+                    $transitionCount++
+                }
+            }
+        }
+        if ($transitionCount -gt 0) {
+            $ledgerJson | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $proposalsFile -Encoding UTF8
+            Write-Host "  -> Transitioned $transitionCount proposal(s) from 'completed' to 'pushed' state in proposals.json." -ForegroundColor Green
+        }
+    }
 }
 
 Write-Host "==========================================================================" -ForegroundColor Cyan

@@ -318,6 +318,7 @@
     .state-plan-suggested { background: rgba(88, 166, 255, 0.2); color: var(--accent-blue); border-color: rgba(88, 166, 255, 0.4); }
     .state-plan-approved { background: rgba(188, 140, 255, 0.2); color: var(--accent-purple); border-color: rgba(188, 140, 255, 0.4); }
     .state-plan-completed { background: rgba(63, 185, 80, 0.2); color: var(--accent-green); border-color: rgba(63, 185, 80, 0.4); }
+    .state-plan-pushed { background: rgba(188, 140, 255, 0.2); color: var(--accent-purple); border-color: rgba(188, 140, 255, 0.5); }
     .state-plan-deferred { background: rgba(110, 118, 129, 0.2); color: var(--text-muted); border-color: rgba(110, 118, 129, 0.4); }
     .state-plan-rejected { background: rgba(248, 81, 73, 0.15); color: var(--accent-red); border-color: rgba(248, 81, 73, 0.3); text-decoration: line-through; }
 
@@ -325,6 +326,7 @@
     .state-prog-in_progress { background: rgba(57, 197, 187, 0.2); color: var(--accent-cyan); border-color: rgba(57, 197, 187, 0.4); }
     .state-prog-queued { background: rgba(188, 140, 255, 0.18); color: var(--accent-purple); border-color: rgba(188, 140, 255, 0.4); }
     .state-prog-completed { background: rgba(63, 185, 80, 0.2); color: var(--accent-green); border-color: rgba(63, 185, 80, 0.4); }
+    .state-prog-pushed { background: rgba(57, 197, 187, 0.25); color: var(--accent-cyan); border-color: rgba(57, 197, 187, 0.5); font-weight: 700; }
     .state-prog-undecided { background: rgba(110, 118, 129, 0.2); color: var(--text-secondary); border-color: rgba(110, 118, 129, 0.4); }
 
     .action-group {
@@ -547,6 +549,10 @@
       <div class="stat-label">✅ Completed</div>
       <div class="stat-value" id="valCompleted" style="color: var(--accent-green);">0</div>
     </div>
+    <div class="stat-card" id="cardPushed" onclick="setPresetFilter('pushed')">
+      <div class="stat-label">🚀 Pushed</div>
+      <div class="stat-value" id="valPushed" style="color: var(--accent-purple);">0</div>
+    </div>
     <div class="stat-card" id="cardDeferred" onclick="setPresetFilter('deferred')">
       <div class="stat-label">⏸️ Deferred</div>
       <div class="stat-value" id="valDeferred" style="color: var(--text-muted);">0</div>
@@ -605,6 +611,7 @@
                 <option value="deferred">⏸️ Deferred</option>
                 <option value="rejected">❌ Rejected</option>
                 <option value="completed">✅ Completed</option>
+                <option value="pushed">🚀 Pushed</option>
               </select>
             </div>
           </th>
@@ -618,7 +625,8 @@
                 <option value="in_progress">⚡ In Progress</option>
                 <option value="queued">Queued (Ready)</option>
                 <option value="undecided">Undecided</option>
-                <option value="completed">Completed</option>
+                <option value="completed">✅ Completed</option>
+                <option value="pushed">🚀 Pushed</option>
                 <option value="blocked">Blocked</option>
                 <option value="failed">Failed</option>
               </select>
@@ -1088,12 +1096,13 @@
 
     function updateMetricCards() {
       const list = proposalsData.proposals || [];
-      const openCount = list.filter(p => p.progress_state !== "completed").length;
+      const openCount = list.filter(p => p.progress_state !== "completed" && p.progress_state !== "pushed").length;
       document.getElementById("valTotal").innerText = `${openCount} Open / ${list.length}`;
       document.getElementById("valBugs").innerText = list.filter(p => p.state === "bug").length;
       document.getElementById("valSuggested").innerText = list.filter(p => p.state === "suggested").length;
       document.getElementById("valReview").innerText = list.filter(p => p.progress_state === "verification").length;
-      document.getElementById("valCompleted").innerText = list.filter(p => p.state === "completed").length;
+      document.getElementById("valCompleted").innerText = list.filter(p => p.state === "completed" || p.progress_state === "completed").length;
+      document.getElementById("valPushed").innerText = list.filter(p => p.state === "pushed" || p.progress_state === "pushed").length;
       document.getElementById("valDeferred").innerText = list.filter(p => p.state === "deferred").length;
     }
 
@@ -1109,7 +1118,7 @@
       const filtered = proposalsData.proposals.filter(p => {
         if (scope !== "ALL" && (!p.origin_repo || !p.origin_repo.includes(scope))) return false;
         if (planState !== "ALL" && p.state !== planState) return false;
-        if (progState === "open" && p.progress_state === "completed") return false;
+        if (progState === "open" && (p.progress_state === "completed" || p.progress_state === "pushed")) return false;
         if (progState !== "ALL" && progState !== "open" && p.progress_state !== progState) return false;
 
         if (search) {
@@ -1152,6 +1161,7 @@
               <option value="deferred" ${p.state === 'deferred' ? 'selected' : ''}>⏸️ Deferred</option>
               <option value="rejected" ${p.state === 'rejected' ? 'selected' : ''}>❌ Rejected</option>
               <option value="completed" ${p.state === 'completed' ? 'selected' : ''}>✅ Completed</option>
+              <option value="pushed" ${p.state === 'pushed' ? 'selected' : ''}>🚀 Pushed</option>
             </select>
           </td>
           <td>
@@ -1161,6 +1171,7 @@
               <option value="in_progress" ${p.progress_state === 'in_progress' ? 'selected' : ''}>⚡ In Progress</option>
               <option value="verification" ${p.progress_state === 'verification' ? 'selected' : ''}>⏳ Verification</option>
               <option value="completed" ${p.progress_state === 'completed' ? 'selected' : ''}>✅ Completed</option>
+              <option value="pushed" ${p.progress_state === 'pushed' ? 'selected' : ''}>🚀 Pushed</option>
               <option value="blocked" ${p.progress_state === 'blocked' ? 'selected' : ''}>Blocked</option>
               <option value="failed" ${p.progress_state === 'failed' ? 'selected' : ''}>Failed</option>
             </select>
@@ -1402,6 +1413,9 @@
       } else if (type === 'completed') {
         document.getElementById("thPlanStateFilter").value = "completed";
         document.getElementById("cardCompleted").classList.add("active");
+      } else if (type === 'pushed') {
+        document.getElementById("thPlanStateFilter").value = "pushed";
+        document.getElementById("cardPushed").classList.add("active");
       } else if (type === 'deferred') {
         document.getElementById("thPlanStateFilter").value = "deferred";
         document.getElementById("cardDeferred").classList.add("active");
