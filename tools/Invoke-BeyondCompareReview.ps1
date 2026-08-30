@@ -30,8 +30,8 @@ param(
              and SHA-256 staging manifest generation.
     Path: tools/Invoke-BeyondCompareReview.ps1
     Authors: Rolf, Workspace_AI Engine
-    Version: 2.0.0
-    Date: 2026-08-29
+    Version: 2.1.0
+    Date: 2026-08-30
 .PARAMETER RepositoryName
     The name or directory path of the Git repository to review (e.g. 'AuthorizeMasterUser', 'Git_Repositories', '.').
 .PARAMETER BaseCommit
@@ -228,6 +228,11 @@ function Audit-BeyondCompareReviewStaging {
     function Test-PathExcluded([string]$relPath) {
         if ($relPath -like ".git*" -or $relPath -like "*\.git\*" -or $relPath -like "*\logs\*" -or $relPath -like "logs\*" -or $relPath -like "*\scratch\*" -or $relPath -like "scratch\*" -or $relPath -like "*.log" -or $relPath -like "*.tmp" -or $relPath -like ".venv*" -or $relPath -like "*\.venv\*") {
             return $true
+        }
+        if ($RepoPath -ne $workspaceRoot) {
+            if ($relPath -like ".agents\rules*" -or $relPath -like "*\.agents\rules\*" -or $relPath -like ".copilot\Rules*" -or $relPath -like "*\.copilot\Rules\*") {
+                return $true
+            }
         }
         return $false
     }
@@ -507,6 +512,14 @@ if ($repoPath -eq $workspaceRoot) {
     foreach ($child in $childRepos) {
         $filterList.Add("-.\$($child.Name)\")
     }
+} else {
+    # Exclude child repo junction directories
+    $junctionFilters = @('-.agents\rules\', '-*\.agents\rules\*', '-.copilot\Rules\', '-*\.copilot\Rules\*', '-.copilot\skills\', '-*\.copilot\skills\*')
+    foreach ($jf in $junctionFilters) {
+        if (-not $filterList.Contains($jf)) {
+            $filterList.Add($jf)
+        }
+    }
 }
 
 $standardExclusions = @(
@@ -566,12 +579,28 @@ Write-Host ("  Filters Applied:            {0}" -f $filterMask)
 
 $title1 = "Baseline ($commitSha)"
 $title2 = "Current Live ($repoName)"
-$bcArgs = "`"$tempReviewRoot`" `"$repoPath`" `"/title1=$title1`" `"/title2=$title2`" `"/filters=$filterMask`""
+$bcArgString = "`"$tempReviewRoot`" `"$repoPath`" `"/title1=$title1`" `"/title2=$title2`" `"/filters=$filterMask`""
 
-$proc = Start-Process -FilePath $BeyondComparePath -ArgumentList @("`"$tempReviewRoot`"", "`"$repoPath`"", "`"/title1=$title1`"", "`"/title2=$title2`"", "`"/filters=$filterMask`"") -PassThru
+$dispatcherCandidates = @(
+    (Join-Path $workspaceRoot ".lcd\tools\internal\Invoke-InteractiveDesktop.ps1"),
+    (Join-Path $workspaceRoot "tools\Invoke-InteractiveDesktop.ps1")
+)
+
+$dispatcherPath = $null
+foreach ($cand in $dispatcherCandidates) {
+    if (Test-Path -LiteralPath $cand) {
+        $dispatcherPath = $cand
+        break
+    }
+}
+
+if ($dispatcherPath) {
+    & pwsh -File $dispatcherPath -FilePath $BeyondComparePath -ArgumentList $bcArgString | Out-Null
+} else {
+    Start-Process -FilePath $BeyondComparePath -ArgumentList @("`"$tempReviewRoot`"", "`"$repoPath`"", "`"/title1=$title1`"", "`"/title2=$title2`"", "`"/filters=$filterMask`"")
+}
 
 if ($Wait) {
     Write-Host "Waiting for Beyond Compare review session to close..." -ForegroundColor DarkGray
-    $proc.WaitForExit()
     Audit-BeyondCompareReviewStaging -TempReviewRoot $tempReviewRoot -RepoPath $repoPath -RepoName $repoName -CommitSha $commitSha
 }

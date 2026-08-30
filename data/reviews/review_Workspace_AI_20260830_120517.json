@@ -1,0 +1,10 @@
+{
+  "RepositoryName": "Workspace_AI",
+  "RepositoryPath": "Workspace_AI",
+  "CommitSha": "5085788",
+  "ReviewResult": "AcceptedAll",
+  "Reviewer": "rgbig",
+  "Timestamp": "2026-08-30 12:05:17",
+  "Message": "CR-2026-029: Default to Lightweight BUG Report on Error/Unwanted Behavior Feedback",
+  "ActionsExecuted": []
+}
