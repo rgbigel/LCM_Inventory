@@ -1,7 +1,7 @@
 # Workspace Configuration Management (CM) Inventory Dashboard
 
 Module: docs/INVENTORY_DASHBOARD.md
-Generated: 2026-08-30 19:03:14
+Generated: 2026-08-30 19:23:36
 Global Baseline Version: **v7.1.1** (Source: Workspace_AI)
 
 ---
@@ -37,7 +37,7 @@ Global Baseline Version: **v7.1.1** (Source: Workspace_AI)
 | **`BGMSAMVInv`** | Git | `main` | `d0dc246` | clean | **governed** | v7.1.1 | v7.1.1 | User | lcm-governed |
 | **`BootEntryManager`** | Git | `main` | `7278e27` | clean | **governed** | v7.1.1 | v7.1.1 | **Admin** | lcm-governed |
 | **`HaSSD06`** | Git | `main` | `1ef37d9` | clean | **governed** | v7.1.1 | v7.1.1 | User | subsystem |
-| **`HaSSD06_Inventory`** | Git | `main` | `83bf818` | clean | **governed** | v7.1.1 | v7.1.1 | User | subsystem-inventory |
+| **`HaSSD06_Inventory`** | Git | `main` | `22369e1` | clean | **governed** | v7.1.1 | v7.1.1 | User | subsystem-inventory |
 | **`Installation_LCD`** | Git | `main` | `e7981aa` | clean | **governed** | v7.1.1 | v7.1.1 | User | lcm-governed |
 | **`InstallFonts`** | Git | `main` | `37a275a` | clean | **not-lcm** | - | - | User | standard-git |
 | **`MacriumTemplateUpdater`** | Git | `main` | `d12bf3e` | clean | **not-lcm** | - | - | User | standard-git |
@@ -51,5 +51,5 @@ Global Baseline Version: **v7.1.1** (Source: Workspace_AI)
 | **`TimeStamper`** | Git | `main` | `586f41d` | clean | **not-lcm** | - | - | User | standard-git |
 | **`VolumeInventory`** | Git | `main` | `0ea46d1` | clean | **governed** | v7.1.1 | v7.1.1 | **Admin** | lcm-governed |
 | **`Workspace_AI`** | Git | `main` | `639903b` | clean | **governed** | v7.1.1 | v7.1.1 | User | active-design-workshop |
-| **`Workspace_Inventory`** | Git | `main` | `90831ff` | modified (3 files) | **governed** | v7.1.1 | v7.1.1 | **Admin** | configuration-management |
+| **`Workspace_Inventory`** | Git | `main` | `e77d3f0` | clean | **governed** | v7.1.1 | v7.1.1 | **Admin** | configuration-management |
 
