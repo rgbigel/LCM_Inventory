@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-08-30T12:05:28+02:00",
+  "updated_at": "2026-08-30T13:07:19+02:00",
   "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 22,
+  "last_proposal_id": 23,
   "proposals": [
     {
       "id": 1,
@@ -313,6 +313,20 @@
       "details": "Codify RULE-REV-006 (Mandatory Review Stop and Turn Termination Invariant) in ReviewCommitGovernancePolicy.md and ProposalReviewFlowPolicy.md, strictly forbidding the AI agent from auto-committing or invoking Submit-ReviewResult.ps1 in the same response turn as Invoke-BeyondCompareReview.ps1.",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-022_CR-2026-033_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-022_CR-2026-033_Walkthrough.md"
+    },
+    {
+      "id": 23,
+      "timestamp": "2026-08-30 13:07:19",
+      "title": "Scope and Version-Explicit Naming Standard for Change Request Proposals (CRPs)",
+      "origin_repo": "Workspace_Inventory / Governance",
+      "cr_id": "CR-2026-034",
+      "state": "processed",
+      "progress_state": "verification",
+      "bundle_id": "CRP-2026-005",
+      "author": "rgbig",
+      "details": "Establish mandatory Scope and Version-Explicit naming convention for Change Request Proposals (CRP-YYYY-NNN-[Scope]-[Version]-[Slug].md) and mandatory header metadata to isolate affected repository boundaries and version ranges.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-023_CR-2026-034_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-023_CR-2026-034_Walkthrough.md"
     }
   ]
 }

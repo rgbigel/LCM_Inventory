@@ -10,6 +10,10 @@ param(
     [Alias('Exclude', 'Filters')]
     [string[]]$Exclusions = @(),
 
+    [Parameter(Mandatory = $false, HelpMessage = 'CRP or Change Request identifier (e.g. CRP-2026-005, CR-2026-034)')]
+    [Alias('Cr', 'ChangeRequest', 'Proposal')]
+    [string]$CRP = '',
+
     [Parameter(Mandatory = $false)]
     [string]$BeyondComparePath = 'D:\Tools\Beyond Compare 5\BCompare.exe',
 
@@ -30,7 +34,7 @@ param(
              and SHA-256 staging manifest generation.
     Path: tools/Invoke-BeyondCompareReview.ps1
     Authors: Rolf, Workspace_AI Engine
-    Version: 2.1.0
+    Version: 2.2.0
     Date: 2026-08-30
 .PARAMETER RepositoryName
     The name or directory path of the Git repository to review (e.g. 'AuthorizeMasterUser', 'Git_Repositories', '.').
@@ -459,14 +463,20 @@ if (-not $commitSha) {
 }
 
 # ------------------------------------------------------------------------------
-# 3. Export Baseline Commit into Temporary Review Inspection Tree
+# 3. Export Baseline Commit into Workspace Scratch Review Inspection Tree (Variant A)
 # ------------------------------------------------------------------------------
-$tempParent = Join-Path $env:LOCALAPPDATA "Temp\BC_Review"
-if (-not (Test-Path -LiteralPath $tempParent)) {
-    $null = New-Item -ItemType Directory -Path $tempParent -Force
+$scratchReviewDir = Join-Path $workspaceRoot "Workspace_Inventory\scratch\BC_Review"
+if (-not (Test-Path -LiteralPath $scratchReviewDir)) {
+    $null = New-Item -ItemType Directory -Path $scratchReviewDir -Force
 }
 
-$tempReviewRoot = Join-Path $tempParent "$repoName-$commitSha"
+$reviewFolderStem = if (-not [string]::IsNullOrWhiteSpace($CRP)) {
+    "${CRP}_${repoName}_${commitSha}"
+} else {
+    "${repoName}_${commitSha}"
+}
+
+$tempReviewRoot = Join-Path $scratchReviewDir $reviewFolderStem
 
 if (Test-Path -LiteralPath $tempReviewRoot) {
     Remove-Item -LiteralPath $tempReviewRoot -Recurse -Force -ErrorAction SilentlyContinue
@@ -577,7 +587,11 @@ Write-Host ("  Left (Baseline {0}): {1}" -f $commitSha, $tempReviewRoot)
 Write-Host ("  Right (Current Live):       {0}" -f $repoPath)
 Write-Host ("  Filters Applied:            {0}" -f $filterMask)
 
-$title1 = "Baseline ($commitSha)"
+$title1 = if (-not [string]::IsNullOrWhiteSpace($CRP)) {
+    "Baseline $CRP ($commitSha)"
+} else {
+    "Baseline ($commitSha)"
+}
 $title2 = "Current Live ($repoName)"
 $bcArgString = "`"$tempReviewRoot`" `"$repoPath`" `"/title1=$title1`" `"/title2=$title2`" `"/filters=$filterMask`""
 

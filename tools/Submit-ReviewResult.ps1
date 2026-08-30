@@ -205,6 +205,13 @@ if ($status.Count -gt 0) {
     $finalReviewFile = Join-Path $reviewsDir "review_${repoName}_${timeTag}.json"
     $reviewRecord | ConvertTo-Json -Depth 3 | Set-Content -LiteralPath $finalReviewFile -Encoding UTF8
 
+    # Append to active CM activity ledger
+    $cmLogFile = Join-Path $workspaceRoot "Workspace_Inventory\logs\cm_activity.log"
+    if (Test-Path -LiteralPath (Split-Path $cmLogFile -Parent)) {
+        $cmLogEntry = "[$timestamp] [REVIEW_SUBMITTED] [Target: $repoName] [Version: v7.1.0] [PushDate: $timestamp] [AffectedRepos: $repoName, Workspace_Inventory] REVIEW_COMMITTED - Committed review acceptance ($newCommitSha): $commitMsg"
+        Add-Content -LiteralPath $cmLogFile -Value $cmLogEntry -Encoding UTF8
+    }
+
     Write-Host "==========================================================================" -ForegroundColor Cyan
     Write-Host " REVIEW ACCEPTANCE COMMITTED ($newCommitSha)" -ForegroundColor Green
     Write-Host " Repository : $repoName"

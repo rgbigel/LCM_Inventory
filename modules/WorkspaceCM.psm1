@@ -40,7 +40,10 @@ function Write-CMLog {
         [Parameter(Mandatory=$true)] [string]$Action,
         [Parameter(Mandatory=$true)] [string]$TargetRepo,
         [Parameter(Mandatory=$true)] [string]$Details,
-        [string]$Status = 'INFO'
+        [string]$Status = 'INFO',
+        [string]$Version = '',
+        [string[]]$AffectedRepos = @(),
+        [string]$PushDate = ''
     )
     
     $root = Get-WorkspaceRoot
@@ -51,7 +54,21 @@ function Write-CMLog {
     
     $logFile = Join-Path $logDir 'cm_activity.log'
     $timestamp = (Get-Date).ToString('yyyy-MM-dd HH:mm:ss')
-    $entry = "[$timestamp] [$Status] [$TargetRepo] $Action - $Details"
+    if ([string]::IsNullOrWhiteSpace($PushDate)) {
+        $PushDate = $timestamp
+    }
+    if ($AffectedRepos.Count -eq 0 -and -not [string]::IsNullOrWhiteSpace($TargetRepo)) {
+        $AffectedRepos = @($TargetRepo)
+    }
+    $affectedStr = ($AffectedRepos -join ', ')
+    
+    $resolvedVersion = if (-not [string]::IsNullOrWhiteSpace($Version)) {
+        $Version
+    } else {
+        'v7.1.0'
+    }
+    
+    $entry = "[$timestamp] [$Status] [Target: $TargetRepo] [Version: $resolvedVersion] [PushDate: $PushDate] [AffectedRepos: $affectedStr] $Action - $Details"
     
     Add-Content -Path $logFile -Value $entry -Encoding UTF8
 }

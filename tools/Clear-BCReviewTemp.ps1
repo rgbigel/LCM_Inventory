@@ -41,14 +41,23 @@ if ($Purge -and $hasOlderThan) {
     throw "Invalid Parameter Combination: Please choose either '-Purge' (-p) OR '-OlderThanHours' (-o), not both."
 }
 
-$tempParent = Join-Path $env:TEMP "BC_Review"
+$workspaceRoot = 'D:\Git_Repositories'
+$scratchReviewDir = Join-Path $workspaceRoot 'Workspace_Inventory\scratch\BC_Review'
+$legacyTempParent = Join-Path $env:TEMP 'BC_Review'
 
-if (-not (Test-Path -LiteralPath $tempParent)) {
-    Write-Host "BC_Review temp directory does not exist: $tempParent" -ForegroundColor Cyan
+$searchDirs = @()
+if (Test-Path -LiteralPath $scratchReviewDir) { $searchDirs += $scratchReviewDir }
+if (Test-Path -LiteralPath $legacyTempParent) { $searchDirs += $legacyTempParent }
+
+if ($searchDirs.Count -eq 0) {
+    Write-Host "No BC_Review scratch directories found." -ForegroundColor Cyan
     return
 }
 
-$rawDirs = @(Get-ChildItem -Path $tempParent -Directory -ErrorAction SilentlyContinue)
+$rawDirs = @()
+foreach ($sd in $searchDirs) {
+    $rawDirs += @(Get-ChildItem -Path $sd -Directory -ErrorAction SilentlyContinue)
+}
 
 # Load session metadata for each directory
 $sessionEntries = foreach ($dir in $rawDirs) {
