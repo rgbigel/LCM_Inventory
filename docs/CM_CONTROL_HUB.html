@@ -1041,6 +1041,47 @@
       editInNotepad(docPath);
     }
 
+    // -------------------------------------------------------------------------
+    // Single-Instance Tab Coordination
+    // Automatically detects when a new Control Hub tab is opened and closes
+    // or retires older, obsolete dashboard tabs. (Documentation tabs are unaffected).
+    // -------------------------------------------------------------------------
+    const HUB_CHANNEL = ("BroadcastChannel" in window) ? new BroadcastChannel("LCM_CM_CONTROL_HUB_CHANNEL") : null;
+    const INSTANCE_ID = "hub_" + Date.now() + "_" + Math.random().toString(36).substr(2, 7);
+
+    function initTabLifecycle() {
+      if (!HUB_CHANNEL) return;
+
+      // Broadcast our presence to close any earlier Control Hub tabs
+      HUB_CHANNEL.postMessage({ type: "NEW_HUB_OPENED", instanceId: INSTANCE_ID, timestamp: Date.now() });
+
+      HUB_CHANNEL.onmessage = (event) => {
+        if (event.data && event.data.type === "NEW_HUB_OPENED" && event.data.instanceId !== INSTANCE_ID) {
+          console.log("Newer Control Hub instance opened elsewhere (" + event.data.instanceId + "). Retiring obsolete tab...");
+          try {
+            window.close();
+          } catch(e) {}
+          
+          setTimeout(() => {
+            document.body.innerHTML = `
+              <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; background:#0d1117; color:#c9d1d9; font-family:system-ui, sans-serif; text-align:center; padding:20px;">
+                <div style="font-size:3rem; margin-bottom:12px;">🔄</div>
+                <h2 style="color:#58a6ff; margin-bottom:8px;">Control Hub Replaced</h2>
+                <p style="color:#8b949e; max-width:500px; margin-bottom:24px; font-size:0.9rem;">
+                  A newer instance of the CM Control Hub dashboard was opened in another tab.<br>
+                  This obsolete instance was automatically retired to prevent duplicate tabs.
+                </p>
+                <div style="display:flex; gap:12px;">
+                  <button onclick="location.reload()" style="padding:8px 18px; background:#238636; color:#fff; border:none; border-radius:6px; cursor:pointer; font-weight:600; font-size:0.85rem;">🔄 Reactivate Here</button>
+                  <button onclick="window.close()" style="padding:8px 18px; background:#21262d; color:#c9d1d9; border:1px solid #30363d; border-radius:6px; cursor:pointer; font-size:0.85rem;">✖️ Close Tab</button>
+                </div>
+              </div>
+            `;
+          }, 100);
+        }
+      };
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
       // Ingest injected data if available
       if (typeof RAW_PROPOSALS !== "undefined" && RAW_PROPOSALS && RAW_PROPOSALS.proposals) {
@@ -1053,13 +1094,14 @@
         historyLogText = RAW_HISTORY_LOG;
       }
 
+      initTabLifecycle();
       checkDaemonHealth();
       populateScopeDropdown();
       updateMetricCards();
       renderTable();
       setInterval(checkDaemonHealth, 5000);
 
-      appendConsole("CM Control Hub v1.1.0 initialized with " + proposalsData.proposals.length + " proposal(s).", "msg-info");
+      appendConsole("CM Control Hub v1.2.0 initialized with " + proposalsData.proposals.length + " proposal(s).", "msg-info");
     });
 
     async function checkDaemonHealth() {

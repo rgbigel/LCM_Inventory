@@ -11,6 +11,9 @@ param(
     [Parameter(Mandatory = $false, HelpMessage = 'Filter by plan state (bug, suggested, approved, completed, etc.)')]
     [string]$State,
 
+    [Parameter(Mandatory = $false, HelpMessage = 'Render HTML data cache without launching desktop browser')]
+    [switch]$NoLaunch,
+
     [Alias('h', '?')]
     [switch]$Help
 )
@@ -169,15 +172,20 @@ Write-Host " LCM CONFIGURATION MANAGEMENT CONTROL HUB" -ForegroundColor Green
 Write-Host "==========================================================================" -ForegroundColor Cyan
 Write-Host " Dashboard: $renderedHtmlPath"
 Write-Host " Ledger   : $proposalsFile"
-Write-Host " Launching interactive desktop browser..." -ForegroundColor Green
-Write-Host "==========================================================================" -ForegroundColor Cyan
 
 # ------------------------------------------------------------------------------
 # 2. Dispatch to Session 1 Interactive Desktop
 # ------------------------------------------------------------------------------
-$dispatcher = Join-Path $workspaceRoot ".lcd\tools\internal\Invoke-InteractiveDesktop.ps1"
-if (Test-Path -LiteralPath $dispatcher) {
-    & $dispatcher -FilePath $renderedHtmlPath
+if (-not $NoLaunch) {
+    Write-Host " Launching interactive desktop browser..." -ForegroundColor Green
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    $dispatcher = Join-Path $workspaceRoot ".lcd\tools\internal\Invoke-InteractiveDesktop.ps1"
+    if (Test-Path -LiteralPath $dispatcher) {
+        & $dispatcher -FilePath $renderedHtmlPath
+    } else {
+        Start-Process -FilePath $renderedHtmlPath
+    }
 } else {
-    Start-Process -FilePath $renderedHtmlPath
+    Write-Host " Dashboard rendered cleanly (browser launch suppressed via -NoLaunch)." -ForegroundColor DarkGray
+    Write-Host "==========================================================================" -ForegroundColor Cyan
 }
