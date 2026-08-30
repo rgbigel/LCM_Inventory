@@ -84,7 +84,7 @@ Write-Host " Inventory: $invPath"
 if (-not $NoLaunch) {
   Write-Host " Launching interactive desktop browser..." -ForegroundColor Green
   Write-Host "==========================================================================" -ForegroundColor Cyan
-  $dispatcher = Join-Path $workspaceRoot ".lcd\tools\internal\Invoke-InteractiveDesktop.ps1"
+  $dispatcher = Join-Path $workspaceRoot ".lcm\tools\internal\Invoke-InteractiveDesktop.ps1"
   if (-not (Test-Path -LiteralPath $dispatcher)) {
     $dispatcher = Join-Path $workspaceRoot "tools\Invoke-InteractiveDesktop.ps1"
   }

@@ -19,6 +19,9 @@ param(
     [string[]]$Repositories,
 
     [Parameter(Mandatory = $false)]
+    [switch]$SkipGemini,
+
+    [Parameter(Mandatory = $false)]
     [switch]$Force
 )
 
@@ -34,6 +37,26 @@ Write-Host "====================================================================
 Write-Host " Push Reason : $Reason"
 Write-Host " Timestamp   : $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
 Write-Host "==========================================================================" -ForegroundColor Cyan
+
+# ------------------------------------------------------------------------------
+# 0. Synchronize Gemini AI & Knowledge Base Mirror (RULE-LCM-013)
+# ------------------------------------------------------------------------------
+if (-not $SkipGemini) {
+    Write-Host "`n[Pre-Push Pipeline] Executing Update-Gemini Context & Knowledge Base Synchronization..." -ForegroundColor Yellow
+    $updateGeminiScript = Join-Path $workspaceRoot "Workspace_AI\tools\Update-Gemini.ps1"
+    if (Test-Path -LiteralPath $updateGeminiScript) {
+        & pwsh -File $updateGeminiScript
+        # If Workspace_AI updated export files, stage and commit them
+        $aiStatus = git -C (Join-Path $workspaceRoot "Workspace_AI") status --porcelain
+        if ($aiStatus) {
+            git -C (Join-Path $workspaceRoot "Workspace_AI") add -A
+            git -C (Join-Path $workspaceRoot "Workspace_AI") commit -m "chore(gemini): pre-push synchronization of rules export and knowledge base" | Out-Null
+        }
+    } else {
+        Write-Warning "Update-Gemini.ps1 not found at $updateGeminiScript"
+    }
+}
+
 
 $allRepos = @()
 if ($Repositories -and $Repositories.Count -gt 0) {

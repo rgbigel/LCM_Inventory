@@ -402,11 +402,13 @@
       "title": "Unescaped $timestamp Variable Interpolation in Show-HaInventoryApp.ps1",
       "origin_repo": "HaSSD06_Inventory",
       "cr_id": "CR-2026-038",
-      "state": "suggested",
-      "progress_state": "in_progress",
+      "state": "completed",
+      "progress_state": "completed",
       "bundle_id": "BUG-2026-002-HaSSD06_Inventory-v5.3.0-Unescaped-Timestamp-Variable-Interpolation",
       "author": "rgbig",
-      "details": "Fix strict mode uninitialized variable error when generating HTML viewer print atom."
+      "details": "Fix strict mode uninitialized variable error when generating HTML viewer print atom.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-027_CR-2026-038_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-027_CR-2026-038_Walkthrough.md"
     },
     {
       "id": 28,

@@ -179,7 +179,7 @@ Write-Host " Ledger   : $proposalsFile"
 if (-not $NoLaunch) {
     Write-Host " Launching interactive desktop browser..." -ForegroundColor Green
     Write-Host "==========================================================================" -ForegroundColor Cyan
-    $dispatcher = Join-Path $workspaceRoot ".lcd\tools\internal\Invoke-InteractiveDesktop.ps1"
+    $dispatcher = Join-Path $workspaceRoot ".lcm\tools\internal\Invoke-InteractiveDesktop.ps1"
     if (Test-Path -LiteralPath $dispatcher) {
         & $dispatcher -FilePath $renderedHtmlPath
     } else {
