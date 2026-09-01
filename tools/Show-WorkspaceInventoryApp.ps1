@@ -66,11 +66,31 @@ if (-not (Test-Path -LiteralPath $invPath)) {
 if (-not (Test-Path -LiteralPath $templatePath)) {
   throw "Workspace inventory viewer template not found: $templatePath"
 }
-
 $invRaw = Get-Content -LiteralPath $invPath -Raw -Encoding UTF8
 $htmlTemplate = Get-Content -LiteralPath $templatePath -Raw -Encoding UTF8
 
-$injectedDataBlock = "const INVENTORY_DATA = $invRaw;"
+# Load Repo Documentation for Universal Document Table
+$docsCache = @{}
+$governedRepos = @("Workspace_Inventory", ".lcm", "Installation_LCD", "Workspace_AI", "SystemConfiguration", "BackgroundModifier", "VolumeInventory", "HaSSD06", "HaSSD06_Inventory", "AuthorizeMasterUser", "SharedModules", "Git_Repositories")
+$docNames = @("Architecture.md", "Requirements.md", "Implementation.md", "install/Installation.md", "Installation.md", "README.md", "docs/Architecture.md", "docs/Requirements.md", "docs/Implementation.md", "docs/CM_POLICIES.md")
+
+foreach ($r in $governedRepos) {
+    $repoDir = if ($r -eq "Git_Repositories") { $workspaceRoot } else { Join-Path $workspaceRoot $r }
+    if (Test-Path -LiteralPath $repoDir) {
+        foreach ($d in $docNames) {
+            $fullDoc = Join-Path $repoDir $d.Replace('/', '\')
+            if (Test-Path -LiteralPath $fullDoc) {
+                $key = "$r/$d"
+                $docsCache[$key] = Get-Content -LiteralPath $fullDoc -Raw -Encoding UTF8
+            }
+        }
+    }
+}
+
+$injectedDataBlock = @"
+const INVENTORY_DATA = $invRaw;
+const DOCS_CACHE = $($docsCache | ConvertTo-Json -Depth 6);
+"@
 $renderedHtml = $htmlTemplate.Replace('/*__INJECTED_INVENTORY_DATA__*/', $injectedDataBlock)
 
 $renderedHtml | Set-Content -LiteralPath $renderedHtmlPath -Encoding UTF8

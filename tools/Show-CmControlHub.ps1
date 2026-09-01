@@ -133,8 +133,8 @@ foreach ($f in $receiptFiles) {
 }
 
 # Load Repo Documentation
-$governedRepos = @("Workspace_Inventory", "Installation_LCD", "Workspace_AI", "SystemConfiguration", "VolumeInventory", "HaSSD06", "HaSSD06_Inventory", "AuthorizeMasterUser", "SharedModules", "Git_Repositories")
-$docNames = @("Architecture.md", "Requirements.md", "Implementation.md", "install/Installation.md", "Installation.md", "README.md", "docs/CM_POLICIES.md")
+$governedRepos = @("Workspace_Inventory", ".lcm", "Installation_LCD", "Workspace_AI", "SystemConfiguration", "BackgroundModifier", "VolumeInventory", "HaSSD06", "HaSSD06_Inventory", "AuthorizeMasterUser", "SharedModules", "Git_Repositories")
+$docNames = @("Architecture.md", "Requirements.md", "Implementation.md", "install/Installation.md", "Installation.md", "README.md", "docs/Architecture.md", "docs/Requirements.md", "docs/Implementation.md", "docs/CM_POLICIES.md")
 
 foreach ($r in $governedRepos) {
     $repoDir = if ($r -eq "Git_Repositories") { $workspaceRoot } else { Join-Path $workspaceRoot $r }

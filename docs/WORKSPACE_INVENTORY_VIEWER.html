@@ -238,6 +238,12 @@
                 </div>
             </div>
             <div class="header-actions">
+                <button class="btn btn-back-nav" onclick="window.history.length > 1 ? window.history.back() : window.location.href='../../.lcm/tools/internal/scratch/User_Tools_Explorer_LCM.html'" title="Return to LCM Tool Explorer (Windows-style Back)">
+                    <span>⬅️</span> <span>Back</span>
+                </button>
+                <button class="btn" id="btn-theme-toggle" onclick="toggleThemeLocal()" title="Switch Light/Dark display modes">
+                    <span id="theme-icon">☀️</span> <span id="theme-label">Light Mode</span>
+                </button>
                 <button class="btn" onclick="openControlHub()">
                     <span>🎛️</span> Open CM Control Hub
                 </button>
@@ -450,6 +456,7 @@
                     <td>
                         <div class="action-group">
                             <button class="act-btn" onclick="openInExplorer('${r.Path.replace(/\\/g, '\\\\')}')" title="Open directory in Windows File Explorer">📂 Open</button>
+                            <button class="act-btn" onclick="openDocsModal('${r.RepositoryName}')" title="View repository tripartite specifications">📚 Docs</button>
                             ${!isGov && isGit ? `<button class="act-btn act-btn-purple" onclick="onboardRepo('${r.RepositoryName}')" title="Onboard to LCM governance">🛡️ Onboard</button>` : ''}
                             ${isGit ? `<button class="act-btn act-btn-danger" onclick="unGitRepo('${r.RepositoryName}', '${r.Path.replace(/\\/g, '\\\\')}')" title="Convert to non-Git folder by stripping .git">🚫 Un-Git</button>` : ''}
                             <button class="act-btn" onclick="renameRepo('${r.RepositoryName}', '${r.Path.replace(/\\/g, '\\\\')}')" title="Rename repository directory">✏️ Rename</button>
@@ -564,6 +571,249 @@
         function openControlHub() {
             window.open('file:///D:/Git_Repositories/Workspace_Inventory/scratch/CM_CONTROL_HUB.html', '_blank');
         }
+
+        // Universal Document Table Implementation
+        let currentDocsRepo = "";
+        let currentDocsList = [];
+
+        function extractDocMeta(fileName, content) {
+            let version = "v1.0.0";
+            let date = "2026-08-30";
+            let reviewState = "ACCEPTED";
+            let role = "Specification";
+
+            const lower = fileName.toLowerCase();
+            if (lower.includes("architecture")) role = "Architecture";
+            else if (lower.includes("requirements")) role = "Requirements";
+            else if (lower.includes("implementation")) role = "Implementation";
+            else if (lower.includes("installation")) role = "Runbook";
+            else if (lower.includes("readme")) role = "Overview";
+            else if (lower.includes("crp") || lower.includes("proposal")) role = "Proposal";
+            else if (lower.includes("policy") || lower.includes("policies") || lower.includes("rules")) role = "Policy";
+
+            if (content) {
+                const verMatch = content.match(/Version:\s*(v?[0-9.]+)/i) || content.match(/Ver:\s*(v?[0-9.]+)/i);
+                if (verMatch) version = verMatch[1].startsWith('v') ? verMatch[1] : 'v' + verMatch[1];
+                const dateMatch = content.match(/Date:\s*([0-9]{4}-[0-9]{2}-[0-9]{2})/i);
+                if (dateMatch) date = dateMatch[1];
+                const stateMatch = content.match(/Status:\s*([A-Za-z0-9_-]+)/i);
+                if (stateMatch) reviewState = stateMatch[1].toUpperCase();
+            }
+            return { role, version, date, reviewState };
+        }
+
+        function openDocsModal(repoName) {
+            currentDocsRepo = repoName;
+            document.getElementById("docsModalTitle").innerText = `📚 Repository Documentation Table: ${repoName}`;
+            
+            const docsCache = (typeof DOCS_CACHE !== "undefined" && DOCS_CACHE) ? DOCS_CACHE : {};
+            currentDocsList = [];
+
+            const standardFiles = ["Architecture.md", "Requirements.md", "Implementation.md", "install/Installation.md", "Installation.md", "README.md", "docs/Architecture.md", "docs/Requirements.md", "docs/Implementation.md", "docs/CM_POLICIES.md"];
+            
+            standardFiles.forEach(docFile => {
+                let key = `${repoName}/${docFile}`;
+                let text = docsCache[key];
+                if (text) {
+                    const meta = extractDocMeta(docFile, text);
+                    currentDocsList.push({
+                        name: docFile,
+                        key: key,
+                        role: meta.role,
+                        version: meta.version,
+                        date: meta.date,
+                        reviewState: meta.reviewState,
+                        content: text
+                    });
+                }
+            });
+
+            document.getElementById("docsModal").style.display = "flex";
+            renderDocTable();
+        }
+
+        function closeDocsModal() {
+            document.getElementById("docsModal").style.display = "none";
+            document.getElementById("docPreviewPane").style.display = "none";
+        }
+
+        function renderDocTable() {
+            const tbody = document.getElementById("docTbody");
+            const search = (document.getElementById("docSearch") ? document.getElementById("docSearch").value : "").toLowerCase().trim();
+            const roleFilter = document.getElementById("docRoleSel") ? document.getElementById("docRoleSel").value : "ALL";
+
+            tbody.innerHTML = "";
+
+            const filtered = currentDocsList.filter(d => {
+                if (roleFilter !== "ALL" && d.role !== roleFilter) return false;
+                if (search) {
+                    const text = `${d.name} ${d.role} ${d.version} ${d.date} ${d.reviewState}`.toLowerCase();
+                    if (!text.includes(search)) return false;
+                }
+                return true;
+            });
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 24px; color: var(--text-muted);">No documents found for this repository.</td></tr>';
+                updateDocSelection();
+                return;
+            }
+
+            filtered.forEach((d, idx) => {
+                const tr = document.createElement("tr");
+                const stateClass = d.reviewState === "ACCEPTED" ? "badge-success" : (d.reviewState === "STAGED" ? "badge-warning" : "badge-muted");
+                tr.innerHTML = `
+                    <td style="text-align: center;"><input type="checkbox" class="doc-chk" value="${d.key}" onchange="updateDocSelection()"></td>
+                    <td>
+                        <a href="javascript:void(0)" onclick="showDocPreview(${idx})" style="color: var(--accent); font-weight: 600; text-decoration: none;">
+                            📄 ${d.name}
+                        </a>
+                    </td>
+                    <td><span class="badge badge-info">${d.role}</span></td>
+                    <td style="text-align: center;"><span class="badge badge-purple">${d.version}</span></td>
+                    <td><span style="font-size: 11px; color: var(--text-secondary);">${d.date}</span></td>
+                    <td style="text-align: center;"><span class="badge ${stateClass}">${d.reviewState}</span></td>
+                    <td style="text-align: center;">
+                        <div class="action-group" style="justify-content: center;">
+                            <button class="act-btn" onclick="showDocPreview(${idx})" title="Show formatted preview">🔍 Show</button>
+                            <button class="act-btn" onclick="printSingleDoc(${idx})" title="Print / PDF preview">🖨️ Print</button>
+                            <button class="act-btn" onclick="editDocInNotepad('${d.name}')" title="Edit in Notepad++">✏️ Edit</button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            updateDocSelection();
+        }
+
+        function toggleAllDocs(checked) {
+            document.querySelectorAll(".doc-chk").forEach(c => c.checked = checked);
+            updateDocSelection();
+        }
+
+        function updateDocSelection() {
+            const selected = document.querySelectorAll(".doc-chk:checked").length;
+            const total = document.querySelectorAll(".doc-chk").length;
+            const cnt = document.getElementById("docSelCount");
+            if (cnt) cnt.innerText = `${selected} of ${total} selected`;
+            const master = document.getElementById("docMasterCheck");
+            if (master) master.checked = (total > 0 && selected === total);
+        }
+
+        function showDocPreview(idx) {
+            const doc = currentDocsList[idx];
+            if (!doc) return;
+            document.getElementById("docPreviewHeading").innerText = `📄 ${doc.name} (${doc.version} • ${doc.date})`;
+            document.getElementById("docPreviewBody").innerText = doc.content;
+            document.getElementById("docPreviewPane").style.display = "block";
+        }
+
+        function closeDocPreview() {
+            document.getElementById("docPreviewPane").style.display = "none";
+        }
+
+        function printSingleDoc(idx) {
+            const doc = currentDocsList[idx];
+            if (!doc) return;
+            const win = window.open("", "_blank");
+            win.document.write(`<html><head><title>${currentDocsRepo} - ${doc.name}</title><style>body{font-family:sans-serif;padding:30px;line-height:1.6;}pre{white-space:pre-wrap;background:#f6f8fa;padding:16px;border:1px solid #d0d7de;border-radius:6px;}</style></head><body><h2>${currentDocsRepo} / ${doc.name} (${doc.version})</h2><pre>${doc.content.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</pre></body></html>`);
+            win.document.close();
+            win.print();
+        }
+
+        function batchPrintSelected() {
+            const chks = Array.from(document.querySelectorAll(".doc-chk:checked"));
+            if (chks.length === 0) { alert("Please select one or more documents to print."); return; }
+            const combined = chks.map(c => {
+                const doc = currentDocsList.find(d => d.key === c.value);
+                return doc ? `==========================================================================\n DOCUMENT: ${doc.name} (${doc.version} • ${doc.date})\n==========================================================================\n\n${doc.content}\n\n` : "";
+            }).join("\n");
+            const win = window.open("", "_blank");
+            win.document.write(`<html><head><title>Batch Docs - ${currentDocsRepo}</title><style>body{font-family:sans-serif;padding:30px;line-height:1.6;}pre{white-space:pre-wrap;background:#f6f8fa;padding:16px;border:1px solid #d0d7de;border-radius:6px;}</style></head><body><h2>Batch Documentation: ${currentDocsRepo}</h2><pre>${combined.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</pre></body></html>`);
+            win.document.close();
+            win.print();
+        }
+
+        async function editDocInNotepad(docName) {
+            const relPath = `${currentDocsRepo}/${docName}`;
+            try {
+                await fetch(`http://127.0.0.1:${DAEMON_PORT}/open_editor`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ filePath: relPath, line: 1 })
+                });
+                showToast(`✏️ Opened in Notepad++: ${relPath}`);
+            } catch(e) {
+                alert(`Daemon offline. File: ${relPath}`);
+            }
+        }
+
+        function toggleThemeLocal() {
+            const isLight = document.body.classList.toggle("light-theme");
+            localStorage.setItem("lcm_theme_mode", isLight ? "light" : "dark");
+            const icon = document.getElementById("theme-icon");
+            const label = document.getElementById("theme-label");
+            if (icon) icon.textContent = isLight ? "🌙" : "☀️";
+            if (label) label.textContent = isLight ? "Dark Mode" : "Light Mode";
+        }
     </script>
+
+    <!-- Document Table Modal -->
+    <div id="docsModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; padding: 20px;">
+        <div style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; width: 95%; max-width: 1100px; max-height: 85vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.6);">
+            <div style="padding: 12px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+                <h3 id="docsModalTitle" style="font-size: 14px; color: var(--text-primary);">📚 Repository Documentation Table</h3>
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn btn-primary" onclick="batchPrintSelected()">🖨️ Batch Print / PDF</button>
+                    <button class="btn btn-back-nav" onclick="closeDocsModal()" title="Return to Inventory (Windows-style Back)"><span>⬅️</span> <span>Back</span></button>
+                </div>
+            </div>
+
+            <div style="padding: 10px 20px; display: flex; justify-content: space-between; gap: 10px; border-bottom: 1px solid var(--border);">
+                <input type="text" id="docSearch" class="search-input" style="max-width: 320px;" placeholder="🔍 Filter documents..." oninput="renderDocTable()">
+                <select id="docRoleSel" class="col-filter-select" style="max-width: 160px;" onchange="renderDocTable()">
+                    <option value="ALL">All Roles</option>
+                    <option value="Architecture">Architecture</option>
+                    <option value="Requirements">Requirements</option>
+                    <option value="Implementation">Implementation</option>
+                    <option value="Runbook">Runbook</option>
+                    <option value="Overview">Overview (README)</option>
+                    <option value="Proposal">Proposals</option>
+                    <option value="Policy">Policies</option>
+                </select>
+            </div>
+
+            <div style="padding: 10px 20px; overflow-y: auto; max-height: 50vh;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr>
+                            <th style="width: 36px; text-align: center;"><input type="checkbox" id="docMasterCheck" onchange="toggleAllDocs(this.checked)"></th>
+                            <th>Document Name</th>
+                            <th style="width: 120px;">Role / Type</th>
+                            <th style="width: 80px; text-align: center;">Version</th>
+                            <th style="width: 100px;">Date</th>
+                            <th style="width: 90px; text-align: center;">Review State</th>
+                            <th style="width: 180px; text-align: center;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="docTbody"></tbody>
+                </table>
+            </div>
+
+            <div id="docPreviewPane" style="display: none; padding: 12px 20px; border-top: 1px solid var(--border); max-height: 200px; overflow-y: auto; background: var(--bg-primary);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                    <strong id="docPreviewHeading" style="color: var(--accent); font-size: 12px;"></strong>
+                    <button class="btn" onclick="closeDocPreview()" style="padding: 2px 8px; font-size: 10px;">Hide</button>
+                </div>
+                <pre id="docPreviewBody" style="font-family: monospace; font-size: 11px; white-space: pre-wrap; color: var(--text-primary);"></pre>
+            </div>
+
+            <div style="padding: 10px 20px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+                <span id="docSelCount" style="font-size: 11px; color: var(--text-secondary);">0 of 0 selected</span>
+                <button class="btn" onclick="closeDocsModal()">Close</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

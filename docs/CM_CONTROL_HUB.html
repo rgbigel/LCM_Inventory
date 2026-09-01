@@ -519,6 +519,13 @@
       </span>
     </div>
     <div class="top-actions">
+      <button class="btn btn-back-nav" onclick="window.history.length > 1 ? window.history.back() : window.location.href='../WORKSPACE_INVENTORY_VIEWER.html'" title="Return to Workspace Inventory Explorer (Windows-style Back)">
+        <span>⬅️</span> <span>Back</span>
+      </button>
+      <button class="btn" id="btn-theme-toggle" onclick="toggleThemeLocal()" title="Switch Light/Dark display modes">
+        <span id="theme-icon">☀️</span> <span id="theme-label">Light Mode</span>
+      </button>
+      <a href="../../Workspace_Supervision/docs/SUPERVISION_HUB.html" class="btn btn-blue" style="text-decoration: none;" title="Open Workspace Supervision Hub">🛡️ Supervision Hub</a>
       <button class="btn btn-primary" onclick="executePushRepositories()" title="Push completed commits to remote Git tracking branches">🚀 Push / Sync Repos</button>
       <button class="btn btn-blue" onclick="openLogsModal('active')">📜 Active CM Log</button>
       <button class="btn btn-purple" onclick="openLogsModal('history')">🏛️ Historical Log Archive</button>
@@ -680,31 +687,69 @@
     </div>
   </div>
 
-  <!-- Repository Documentation Review Modal -->
+  <!-- Repository Documentation Review Modal (Universal Document Table Standard) -->
   <div class="modal-overlay" id="repoDocsModal">
-    <div class="modal-card" style="max-width: 1050px;">
+    <div class="modal-card" style="max-width: 1180px; width: 95%;">
       <div class="modal-header">
-        <h3 id="repoDocsTitle">📚 Repository Tripartite Documentation Review</h3>
+        <h3 id="repoDocsTitle">📚 Repository Tripartite Documentation & Specifications</h3>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <button class="btn btn-primary" onclick="batchPrintSelectedDocs()" title="Generate combined print document for selected items">🖨️ Batch Print / PDF</button>
+          <button class="btn btn-back-nav" onclick="closeRepoDocsModal()" title="Return to CM Control Hub (Windows-style Back)"><span>⬅️</span> <span>Back</span></button>
+        </div>
+      </div>
+      
+      <!-- Top-Line Filter Panel for Document Table -->
+      <div style="padding: 12px 20px 0 20px; display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+        <input type="text" id="docSearchInput" class="search-input" style="max-width: 380px;" placeholder="🔍 Filter documents (name, role, version)..." oninput="filterDocTable()">
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <select id="docRoleFilter" class="th-select" onchange="filterDocTable()">
+            <option value="ALL">All Roles</option>
+            <option value="Architecture">Architecture</option>
+            <option value="Requirements">Requirements</option>
+            <option value="Implementation">Implementation</option>
+            <option value="Runbook">Runbook</option>
+            <option value="Overview">Overview (README)</option>
+            <option value="Proposal">Proposals</option>
+            <option value="Policy">Policies</option>
+          </select>
+          <button class="btn" onclick="resetDocFilters()">Reset</button>
+        </div>
+      </div>
+
+      <div class="modal-body" style="padding: 12px 20px; overflow-y: auto; max-height: 55vh; background: var(--bg-card);">
+        <table id="docViewerTable" style="width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr>
+              <th style="width: 36px; text-align: center;"><input type="checkbox" id="docMasterChk" onchange="toggleDocSelectAll(this.checked)"></th>
+              <th style="min-width: 220px;">Document Name</th>
+              <th style="width: 140px;">Role / Type</th>
+              <th style="width: 90px; text-align: center;">Version</th>
+              <th style="width: 120px;">Timestamp</th>
+              <th style="width: 110px; text-align: center;">Review State</th>
+              <th style="width: 210px; text-align: center;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="docViewerTbody">
+            <!-- Dynamic rows populated by renderDocTable() -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Preview pane below table when Show is clicked -->
+      <div id="docPreviewPane" style="display: none; padding: 16px 20px; border-top: 1px solid var(--border-color); max-height: 280px; overflow-y: auto; background: var(--bg-primary);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <strong id="docPreviewTitle" style="color: var(--accent-blue);"></strong>
+          <button class="btn" onclick="closeDocPreview()">Hide Preview</button>
+        </div>
+        <div id="docPreviewContent" style="font-family: var(--font-family); font-size: 0.85rem; line-height: 1.5;"></div>
+      </div>
+
+      <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center;">
+        <span id="docSelectedCount" style="font-size: 0.8rem; color: var(--text-secondary);">0 of 0 selected</span>
         <div style="display: flex; gap: 8px;">
-          <button class="btn btn-primary" onclick="showRepoDocInNewTab()" title="Open clean, print-ready repository documentation in a new browser tab">🌐 Show in New Tab</button>
-          <button class="btn btn-blue" onclick="printRepoDocs()">🖨️ Print / Save PDF</button>
-          <button class="btn" onclick="closeRepoDocsModal()">✕ Close</button>
+          <button class="btn btn-blue" onclick="openAllRepoDocsInNotepad()">✏️ Open All in Notepad++</button>
+          <button class="btn" onclick="closeRepoDocsModal()">Close</button>
         </div>
-      </div>
-      <div style="padding: 10px 20px 0 20px;">
-        <div class="modal-tabs" id="repoDocTabs">
-          <div class="modal-tab active" onclick="switchRepoDocTab('Architecture.md')">Architecture.md</div>
-          <div class="modal-tab" onclick="switchRepoDocTab('Requirements.md')">Requirements.md</div>
-          <div class="modal-tab" onclick="switchRepoDocTab('Implementation.md')">Implementation.md</div>
-          <div class="modal-tab" onclick="switchRepoDocTab('install/Installation.md')">Installation.md</div>
-          <div class="modal-tab" onclick="switchRepoDocTab('README.md')">README.md</div>
-        </div>
-      </div>
-      <div class="modal-body" id="repoDocBody">Loading repository documentation...</div>
-      <div class="modal-footer">
-        <button class="btn btn-primary" onclick="showRepoDocInNewTab()">🌐 Show in New Tab</button>
-        <button class="btn btn-blue" id="btnEditRepoDoc" onclick="openCurrentRepoDocInNotepad()">✏️ Edit in Notepad++</button>
-        <button class="btn" onclick="closeRepoDocsModal()">Close</button>
       </div>
     </div>
   </div>
@@ -997,48 +1042,244 @@
       }
     }
 
-    // Repository Documentation Review Subpanel
+    // Universal Document Table Implementation (CRP-2026-019)
     let currentRepoForDocs = "Workspace_Inventory";
     let currentRepoDocFile = "Architecture.md";
     let currentRepoDocRaw = "";
+    let currentRepoDocsList = [];
+
+    function extractDocMetadata(fileName, content) {
+      let version = "v1.0.0";
+      let date = "2026-08-30";
+      let reviewState = "ACCEPTED";
+      let role = "Specification";
+
+      const lower = fileName.toLowerCase();
+      if (lower.includes("architecture")) role = "Architecture";
+      else if (lower.includes("requirements")) role = "Requirements";
+      else if (lower.includes("implementation")) role = "Implementation";
+      else if (lower.includes("installation")) role = "Runbook";
+      else if (lower.includes("readme")) role = "Overview";
+      else if (lower.includes("crp") || lower.includes("proposal")) role = "Proposal";
+      else if (lower.includes("policy") || lower.includes("policies") || lower.includes("rules")) role = "Policy";
+
+      if (content) {
+        const verMatch = content.match(/Version:\s*(v?[0-9.]+)/i) || content.match(/Ver:\s*(v?[0-9.]+)/i);
+        if (verMatch) version = verMatch[1].startsWith('v') ? verMatch[1] : 'v' + verMatch[1];
+        
+        const dateMatch = content.match(/Date:\s*([0-9]{4}-[0-9]{2}-[0-9]{2})/i);
+        if (dateMatch) date = dateMatch[1];
+
+        const stateMatch = content.match(/Status:\s*([A-Za-z0-9_-]+)/i);
+        if (stateMatch) {
+          reviewState = stateMatch[1].toUpperCase();
+        }
+      }
+
+      return { role, version, date, reviewState };
+    }
 
     async function openRepoDocsReview(repoStr) {
       currentRepoForDocs = (repoStr || "Workspace_Inventory").split("/")[0].trim();
-      document.getElementById("repoDocsTitle").innerText = `📚 Tripartite Documentation: ${currentRepoForDocs}`;
+      document.getElementById("repoDocsTitle").innerText = `📚 Repository Documentation Table: ${currentRepoForDocs}`;
+      
+      // Build document catalog for this repository from docsCache
+      currentRepoDocsList = [];
+      const standardFiles = ["Architecture.md", "Requirements.md", "Implementation.md", "install/Installation.md", "README.md", "docs/Architecture.md", "docs/Requirements.md", "docs/Implementation.md", "docs/CM_POLICIES.md"];
+      
+      standardFiles.forEach(docFile => {
+        let key = `${currentRepoForDocs}/${docFile}`;
+        let text = docsCache[key];
+        if (!text && (currentRepoForDocs === "LCM" || currentRepoForDocs === "Multiple")) {
+          text = docsCache[`Workspace_Inventory/${docFile}`];
+          key = `Workspace_Inventory/${docFile}`;
+        }
+        if (text) {
+          const meta = extractDocMetadata(docFile, text);
+          currentRepoDocsList.push({
+            name: docFile,
+            key: key,
+            role: meta.role,
+            version: meta.version,
+            date: meta.date,
+            reviewState: meta.reviewState,
+            content: text
+          });
+        }
+      });
+
+      // Also include any Proposals associated with this repo
+      for (const k in docsCache) {
+        if (k.startsWith("Workspace_Inventory/docs/Proposals/") && k.includes(currentRepoForDocs)) {
+          const docName = k.replace("Workspace_Inventory/docs/Proposals/", "");
+          const text = docsCache[k];
+          const meta = extractDocMetadata(docName, text);
+          currentRepoDocsList.push({
+            name: "Proposals/" + docName,
+            key: k,
+            role: "Proposal",
+            version: meta.version,
+            date: meta.date,
+            reviewState: meta.reviewState,
+            content: text
+          });
+        }
+      }
+
       document.getElementById("repoDocsModal").classList.add("open");
-      await switchRepoDocTab("Architecture.md");
+      renderDocTable();
+    }
+
+    function renderDocTable() {
+      const tbody = document.getElementById("docViewerTbody");
+      const search = (document.getElementById("docSearchInput") ? document.getElementById("docSearchInput").value : "").toLowerCase().trim();
+      const roleFilter = document.getElementById("docRoleFilter") ? document.getElementById("docRoleFilter").value : "ALL";
+
+      tbody.innerHTML = "";
+
+      const filtered = currentRepoDocsList.filter(d => {
+        if (roleFilter !== "ALL" && d.role !== roleFilter) return false;
+        if (search) {
+          const text = `${d.name} ${d.role} ${d.version} ${d.date} ${d.reviewState}`.toLowerCase();
+          if (!text.includes(search)) return false;
+        }
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 24px; color: var(--text-muted);">No matching repository documents found.</td></tr>';
+        updateDocSelectedCount();
+        return;
+      }
+
+      filtered.forEach((d, idx) => {
+        const tr = document.createElement("tr");
+        const stateBadgeClass = d.reviewState === "ACCEPTED" ? "badge-success" : (d.reviewState === "STAGED" ? "badge-warning" : "badge-muted");
+        
+        tr.innerHTML = `
+          <td style="text-align: center;"><input type="checkbox" class="doc-row-chk" value="${d.key}" data-name="${d.name}" onchange="updateDocSelectedCount()"></td>
+          <td>
+            <a href="javascript:void(0)" onclick="showDocPreviewByIndex(${idx})" style="color: var(--accent-blue); font-weight: 600; text-decoration: none;">
+              📄 ${d.name}
+            </a>
+          </td>
+          <td><span class="scope-tag">${d.role}</span></td>
+          <td style="text-align: center;"><span class="badge badge-info">${d.version}</span></td>
+          <td><span style="font-size: 0.75rem; color: var(--text-secondary);">${d.date}</span></td>
+          <td style="text-align: center;"><span class="badge ${stateBadgeClass}">${d.reviewState}</span></td>
+          <td style="text-align: center;">
+            <div class="action-group">
+              <button class="action-btn" onclick="showDocPreviewByIndex(${idx})" title="Show formatted preview">🔍 Show</button>
+              <button class="action-btn" onclick="openInNewBrowserTab('${currentRepoForDocs} - ${d.name}', currentRepoDocsList[${idx}].content, true)" title="Print / PDF preview">🖨️ Print</button>
+              <button class="action-btn" onclick="editInNotepad('${currentRepoForDocs}/${d.name}')" title="Edit in Notepad++">✏️ Edit</button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      updateDocSelectedCount();
+    }
+
+    function filterDocTable() {
+      renderDocTable();
+    }
+
+    function resetDocFilters() {
+      if (document.getElementById("docSearchInput")) document.getElementById("docSearchInput").value = "";
+      if (document.getElementById("docRoleFilter")) document.getElementById("docRoleFilter").value = "ALL";
+      renderDocTable();
+    }
+
+    function toggleDocSelectAll(checked) {
+      document.querySelectorAll(".doc-row-chk").forEach(chk => chk.checked = checked);
+      updateDocSelectedCount();
+    }
+
+    function updateDocSelectedCount() {
+      const selected = document.querySelectorAll(".doc-row-chk:checked").length;
+      const total = document.querySelectorAll(".doc-row-chk").length;
+      const counter = document.getElementById("docSelectedCount");
+      if (counter) counter.innerText = `${selected} of ${total} selected`;
+      const master = document.getElementById("docMasterChk");
+      if (master) master.checked = (total > 0 && selected === total);
+    }
+
+    function showDocPreviewByIndex(idx) {
+      const doc = currentRepoDocsList[idx];
+      if (!doc) return;
+      document.getElementById("docPreviewTitle").innerText = `📄 ${doc.name} (${doc.version} • ${doc.date})`;
+      document.getElementById("docPreviewContent").innerHTML = formatMarkdown(doc.content);
+      document.getElementById("docPreviewPane").style.display = "block";
+    }
+
+    function closeDocPreview() {
+      document.getElementById("docPreviewPane").style.display = "none";
+    }
+
+    function batchPrintSelectedDocs() {
+      const checkedChks = Array.from(document.querySelectorAll(".doc-row-chk:checked"));
+      if (checkedChks.length === 0) {
+        alert("Please select one or more documents to print.");
+        return;
+      }
+      const combinedDocs = checkedChks.map(chk => {
+        const key = chk.value;
+        const doc = currentRepoDocsList.find(d => d.key === key);
+        return doc ? `# Document: ${doc.name} (${doc.version} • ${doc.date})\n\n${doc.content}\n\n---\n` : "";
+      }).join("\n\n");
+
+      openInNewBrowserTab(`Batch Documentation - ${currentRepoForDocs}`, combinedDocs, true);
+    }
+
+    function openAllRepoDocsInNotepad() {
+      currentRepoDocsList.forEach(d => editInNotepad(`${currentRepoForDocs}/${d.name}`));
     }
 
     function closeRepoDocsModal() {
       document.getElementById("repoDocsModal").classList.remove("open");
+      closeDocPreview();
     }
 
-    async function switchRepoDocTab(docName) {
-      currentRepoDocFile = docName;
-      document.querySelectorAll("#repoDocTabs .modal-tab").forEach(t => {
-        t.className = t.innerText.includes(docName.split('/').pop()) ? "modal-tab active" : "modal-tab";
-      });
+    // Modal Handlers for Logs and User Guide
+    function openLogsModal(type) {
+      const modal = document.getElementById("logsModal");
+      const title = document.getElementById("logsModalTitle");
+      const body = document.getElementById("logContent");
+      if (!modal || !body) return;
 
-      const body = document.getElementById("repoDocBody");
-      let key = `${currentRepoForDocs}/${docName}`;
-      let text = docsCache[key];
-
-      if (!text && (currentRepoForDocs === "LCM" || currentRepoForDocs === "Multiple")) {
-        text = docsCache[`Workspace_Inventory/${docName}`];
-      }
-
-      if (text) {
-        currentRepoDocRaw = text;
-        body.innerHTML = formatMarkdown(text);
+      if (type === "active") {
+        if (title) title.innerText = "📜 Active CM Activity Log (cm_activity.log)";
+        body.innerText = activeLogText || "(cm_activity.log is currently empty)";
       } else {
-        currentRepoDocRaw = `Document '${docName}' not found in ${currentRepoForDocs}.\nKey checked: ${key}`;
-        body.innerText = currentRepoDocRaw;
+        if (title) title.innerText = "🏛️ Historical Log Archive (v5 & v6 Archive)";
+        body.innerText = historyLogText || "(Historical log archive is empty)";
       }
+      modal.classList.add("open");
     }
 
-    function openCurrentRepoDocInNotepad() {
-      const docPath = `${currentRepoForDocs}/${currentRepoDocFile}`;
-      editInNotepad(docPath);
+    function closeLogsModal() {
+      const modal = document.getElementById("logsModal");
+      if (modal) modal.classList.remove("open");
+    }
+
+    function openHelpModal() {
+      const modal = document.getElementById("helpModal");
+      if (modal) modal.classList.add("open");
+    }
+
+    function closeHelpModal() {
+      const modal = document.getElementById("helpModal");
+      if (modal) modal.classList.remove("open");
+    }
+
+    function toggleThemeLocal() {
+      const isLight = document.body.classList.toggle("light-theme");
+      localStorage.setItem("lcm_theme_mode", isLight ? "light" : "dark");
+      const icon = document.getElementById("theme-icon");
+      const label = document.getElementById("theme-label");
+      if (icon) icon.textContent = isLight ? "🌙" : "☀️";
+      if (label) label.textContent = isLight ? "Dark Mode" : "Light Mode";
     }
 
     // -------------------------------------------------------------------------
@@ -1160,8 +1401,10 @@
       const filtered = proposalsData.proposals.filter(p => {
         if (scope !== "ALL" && (!p.origin_repo || !p.origin_repo.includes(scope))) return false;
         if (planState !== "ALL" && p.state !== planState) return false;
-        if (progState === "open" && (p.progress_state === "completed" || p.progress_state === "pushed")) return false;
-        if (progState !== "ALL" && progState !== "open" && p.progress_state !== progState) return false;
+        if (progState === "open" && (p.progress_state === "completed" || p.progress_state === "pushed" || p.state === "completed" || p.state === "pushed")) return false;
+        if (progState === "completed" && (p.progress_state !== "completed" && p.state !== "completed" && p.progress_state !== "pushed" && p.state !== "pushed")) return false;
+        if (progState === "pushed" && (p.progress_state !== "pushed" && p.state !== "pushed")) return false;
+        if (progState !== "ALL" && progState !== "open" && progState !== "completed" && progState !== "pushed" && p.progress_state !== progState) return false;
 
         if (search) {
           const matchId = `#${p.id}`.includes(search) || `${p.id}` === search;
@@ -1439,30 +1682,47 @@
     // Preset Filters
     function setPresetFilter(type) {
       document.querySelectorAll(".stat-card").forEach(c => c.classList.remove("active"));
+      const targetCard = document.getElementById("card" + type.charAt(0).toUpperCase() + type.slice(1));
+      if (targetCard) targetCard.classList.add("active");
+
+      const planSel = document.getElementById("thPlanStateFilter");
+      const progSel = document.getElementById("thProgStateFilter");
+
       if (type === 'all') {
-        document.getElementById("thPlanStateFilter").value = "ALL";
-        document.getElementById("thProgStateFilter").value = "ALL";
-        document.getElementById("cardTotal").classList.add("active");
+        planSel.value = "ALL";
+        progSel.value = "ALL";
       } else if (type === 'bug') {
-        document.getElementById("thPlanStateFilter").value = "bug";
-        document.getElementById("cardBugs").classList.add("active");
+        planSel.value = "bug";
+        progSel.value = "ALL";
       } else if (type === 'suggested') {
-        document.getElementById("thPlanStateFilter").value = "suggested";
-        document.getElementById("cardSuggested").classList.add("active");
+        planSel.value = "suggested";
+        progSel.value = "ALL";
       } else if (type === 'verification') {
-        document.getElementById("thProgStateFilter").value = "verification";
-        document.getElementById("cardReview").classList.add("active");
+        planSel.value = "ALL";
+        progSel.value = "verification";
       } else if (type === 'completed') {
-        document.getElementById("thPlanStateFilter").value = "completed";
-        document.getElementById("cardCompleted").classList.add("active");
+        planSel.value = "ALL";
+        progSel.value = "completed";
       } else if (type === 'pushed') {
-        document.getElementById("thPlanStateFilter").value = "pushed";
-        document.getElementById("cardPushed").classList.add("active");
+        planSel.value = "ALL";
+        progSel.value = "pushed";
       } else if (type === 'deferred') {
-        document.getElementById("thPlanStateFilter").value = "deferred";
-        document.getElementById("cardDeferred").classList.add("active");
+        planSel.value = "deferred";
+        progSel.value = "ALL";
       }
       renderTable();
+    }
+
+    function resetFilters() {
+      document.querySelectorAll(".stat-card").forEach(c => c.classList.remove("active"));
+      const cardTotal = document.getElementById("cardTotal");
+      if (cardTotal) cardTotal.classList.add("active");
+      document.getElementById("searchInput").value = "";
+      document.getElementById("thScopeFilter").value = "ALL";
+      document.getElementById("thPlanStateFilter").value = "ALL";
+      document.getElementById("thProgStateFilter").value = "ALL";
+      renderTable();
+      showToast("🔄 Reset to SHOW ALL proposals.");
     }
 
     // Multi-Repository Push Engine

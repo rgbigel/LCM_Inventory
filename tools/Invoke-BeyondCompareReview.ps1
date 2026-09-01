@@ -597,6 +597,7 @@ $title2 = "Current Live ($repoName)"
 $bcArgString = "`"$tempReviewRoot`" `"$repoPath`" `"/title1=$title1`" `"/title2=$title2`" `"/filters=$filterMask`""
 
 $dispatcherCandidates = @(
+    (Join-Path $workspaceRoot ".lcm\tools\internal\Invoke-InteractiveDesktop.ps1"),
     (Join-Path $workspaceRoot ".lcd\tools\internal\Invoke-InteractiveDesktop.ps1"),
     (Join-Path $workspaceRoot "tools\Invoke-InteractiveDesktop.ps1")
 )
