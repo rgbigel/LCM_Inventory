@@ -526,6 +526,7 @@
         <span id="theme-icon">☀️</span> <span id="theme-label">Light Mode</span>
       </button>
       <a href="../../Workspace_Supervision/docs/SUPERVISION_HUB.html" class="btn btn-blue" style="text-decoration: none;" title="Open Workspace Supervision Hub">🛡️ Supervision Hub</a>
+      <button class="btn btn-purple" onclick="showCRPDates(false)" title="Show lifecycle date values and individual state transitions for all proposals">📅 Show CRP Dates</button>
       <button class="btn btn-primary" onclick="executePushRepositories()" title="Push completed commits to remote Git tracking branches">🚀 Push / Sync Repos</button>
       <button class="btn btn-blue" onclick="openLogsModal('active')">📜 Active CM Log</button>
       <button class="btn btn-purple" onclick="openLogsModal('history')">🏛️ Historical Log Archive</button>
@@ -579,6 +580,7 @@
       <div class="batch-actions">
         <button class="btn btn-amber" onclick="executeBatchReview()" title="Launch Beyond Compare review for all checked items">🔍 Batch BC5 Review</button>
         <button class="btn btn-primary" onclick="executeBatchAccept()" title="Accept and dual-commit sync selected actionable proposals">✅ ACCEPT SELECTED</button>
+        <button class="btn btn-purple" onclick="showCRPDates(true)" title="Show state change date values and history for checked proposals">📅 Show Selected Dates</button>
         <button class="btn btn-blue" onclick="executeBatchMarkReviewed()" title="One-shot: Mark selected items as reviewed without Beyond Compare visual gate">⚡ Mark Selected Reviewed (Bypass BC5)</button>
         <button class="btn" onclick="executeBatchDefer()">⏸️ Defer Selected</button>
         <button class="btn btn-red" onclick="executeBatchDelete()">🗑️ Delete / Undo</button>
@@ -750,6 +752,84 @@
           <button class="btn btn-blue" onclick="openAllRepoDocsInNotepad()">✏️ Open All in Notepad++</button>
           <button class="btn" onclick="closeRepoDocsModal()">Close</button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CRP Lifecycle Dates & State Transitions Modal -->
+  <div class="modal-overlay" id="crpDatesModal">
+    <div class="modal-card" style="max-width: 1240px; width: 95%;">
+      <div class="modal-header">
+        <h3 id="crpDatesModalTitle">📅 LCM Proposals & CRPs State Change Dates Timeline</h3>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <button class="btn btn-primary" onclick="printCrpDates()" title="Print / PDF output of CRP state dates">🖨️ Print / Save PDF</button>
+          <button class="btn btn-blue" onclick="openCrpDatesInNewTab()" title="Open clean, print-ready date ledger in a new browser tab">🌐 Show in New Tab</button>
+          <button class="btn btn-back-nav" onclick="closeCrpDatesModal()" title="Return to CM Control Hub (Windows-style Back)"><span>⬅️</span> <span>Back</span></button>
+        </div>
+      </div>
+
+      <!-- Top Filter Controls for CRP Dates -->
+      <div style="padding: 12px 20px 0 20px; display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+        <input type="text" id="crpDateSearchInput" class="search-input" style="max-width: 320px;" placeholder="🔍 Filter by ID, CR/CRP, Title, Scope..." oninput="renderCrpDatesTable()">
+        <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+          <select id="crpDateScopeFilter" class="th-select" onchange="renderCrpDatesTable()">
+            <option value="all">All Proposals (Default)</option>
+            <option value="selected">Selected Items Only</option>
+          </select>
+          <select id="crpDateStateFilter" class="th-select" onchange="renderCrpDatesTable()">
+            <option value="ALL">All Current States</option>
+            <option value="pushed">🚀 Pushed</option>
+            <option value="completed">✅ Completed</option>
+            <option value="in_progress">⚡ In Progress</option>
+            <option value="suggested">💡 Suggested</option>
+            <option value="bug">🐛 Bug</option>
+            <option value="deferred">⏸️ Deferred</option>
+          </select>
+          <select id="crpDateEventFilter" class="th-select" onchange="renderCrpDatesTable()">
+            <option value="ALL">All State Events</option>
+            <option value="created">Created / Suggested</option>
+            <option value="in_progress">In Progress</option>
+            <option value="completed">Completed / Accepted</option>
+            <option value="pushed">Pushed to Remote</option>
+          </select>
+          <button class="btn" onclick="resetCrpDateFilters()">Reset</button>
+        </div>
+      </div>
+
+      <div class="modal-body" style="padding: 12px 20px; overflow-y: auto; max-height: 55vh; background: var(--bg-card);">
+        <table id="crpDatesTable" style="width: 100%; border-collapse: collapse; font-size: 0.8rem;">
+          <thead>
+            <tr>
+              <th style="width: 36px; text-align: center;"><input type="checkbox" id="crpDateMasterChk" onchange="toggleCrpDateSelectAll(this.checked)"></th>
+              <th style="width: 110px;">ID & CR/CRP</th>
+              <th style="width: 140px;">Scope / Repo</th>
+              <th style="min-width: 220px;">Proposal Title</th>
+              <th style="width: 110px; text-align: center;">Current State</th>
+              <th style="width: 135px;">Created / Suggested</th>
+              <th style="width: 135px;">In-Progress Date</th>
+              <th style="width: 135px;">Completed Date</th>
+              <th style="width: 135px;">Pushed Date</th>
+              <th style="width: 100px; text-align: center;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="crpDatesTbody">
+            <!-- Dynamically populated by renderCrpDatesTable() -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Transition History Timeline Drawer below table -->
+      <div id="crpTimelineDrawer" style="display: none; padding: 14px 20px; border-top: 1px solid var(--border-color); max-height: 220px; overflow-y: auto; background: var(--bg-primary);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <strong id="crpTimelineTitle" style="color: var(--accent-blue);"></strong>
+          <button class="btn" onclick="closeCrpTimelineDrawer()">Hide Timeline</button>
+        </div>
+        <div id="crpTimelineContent" style="font-family: var(--font-family); font-size: 0.82rem; line-height: 1.5;"></div>
+      </div>
+
+      <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center;">
+        <span id="crpDateSelectedCount" style="font-size: 0.8rem; color: var(--text-secondary);">Showing 0 of 0 proposals</span>
+        <button class="btn" onclick="closeCrpDatesModal()">Close</button>
       </div>
     </div>
   </div>
@@ -1762,6 +1842,249 @@
     function refreshData() {
       location.reload();
     }
+  
+    // -------------------------------------------------------------------------
+    // CRP Lifecycle Dates & State Transitions Management (Show-CrpDates)
+    // -------------------------------------------------------------------------
+    let crpDateSelectedIds = new Set();
+
+    function showCRPDates(selectedOnly = false) {
+      const modal = document.getElementById("crpDatesModal");
+      if (!modal) return;
+
+      const scopeSelect = document.getElementById("crpDateScopeFilter");
+      if (scopeSelect) {
+        scopeSelect.value = selectedOnly ? "selected" : "all";
+      }
+
+      // Initialize selected set from main table if selectedOnly
+      if (selectedOnly) {
+        crpDateSelectedIds = new Set(selectedProposals);
+      } else {
+        crpDateSelectedIds.clear();
+      }
+
+      renderCrpDatesTable();
+      modal.classList.add("open");
+    }
+
+    function closeCrpDatesModal() {
+      const modal = document.getElementById("crpDatesModal");
+      if (modal) modal.classList.remove("open");
+    }
+
+    function resetCrpDateFilters() {
+      const search = document.getElementById("crpDateSearchInput");
+      const stateSel = document.getElementById("crpDateStateFilter");
+      const eventSel = document.getElementById("crpDateEventFilter");
+      const scopeSel = document.getElementById("crpDateScopeFilter");
+      if (search) search.value = "";
+      if (stateSel) stateSel.value = "ALL";
+      if (eventSel) eventSel.value = "ALL";
+      if (scopeSel) scopeSel.value = "all";
+      renderCrpDatesTable();
+    }
+
+    function toggleCrpDateSelectAll(checked) {
+      const list = proposalsData.proposals || [];
+      if (checked) {
+        list.forEach(p => crpDateSelectedIds.add(p.id));
+      } else {
+        crpDateSelectedIds.clear();
+      }
+      renderCrpDatesTable();
+    }
+
+    function toggleCrpDateRow(id, checked) {
+      if (checked) {
+        crpDateSelectedIds.add(id);
+      } else {
+        crpDateSelectedIds.delete(id);
+      }
+      const countEl = document.getElementById("crpDateSelectedCount");
+      if (countEl) {
+        countEl.innerText = `${crpDateSelectedIds.size} selected`;
+      }
+    }
+
+    function renderCrpDatesTable() {
+      const tbody = document.getElementById("crpDatesTbody");
+      if (!tbody) return;
+
+      const search = (document.getElementById("crpDateSearchInput") ? document.getElementById("crpDateSearchInput").value : "").toLowerCase().trim();
+      const scopeVal = document.getElementById("crpDateScopeFilter") ? document.getElementById("crpDateScopeFilter").value : "all";
+      const stateVal = document.getElementById("crpDateStateFilter") ? document.getElementById("crpDateStateFilter").value : "ALL";
+      const eventVal = document.getElementById("crpDateEventFilter") ? document.getElementById("crpDateEventFilter").value : "ALL";
+
+      const list = proposalsData.proposals || [];
+
+      let filtered = list.filter(p => {
+        // Scope filter
+        if (scopeVal === "selected" && !selectedProposals.has(p.id) && !crpDateSelectedIds.has(p.id)) {
+          return false;
+        }
+
+        // State filter
+        if (stateVal !== "ALL") {
+          const curState = (p.state || "").toLowerCase();
+          const progState = (p.progress_state || "").toLowerCase();
+          if (curState !== stateVal.toLowerCase() && progState !== stateVal.toLowerCase()) {
+            return false;
+          }
+        }
+
+        // State event filter
+        if (eventVal !== "ALL") {
+          const dates = p.dates || {};
+          if (!dates[eventVal] && !(eventVal === "created" && p.timestamp) && !(eventVal === "pushed" && p.pushed_at)) {
+            return false;
+          }
+        }
+
+        // Search text
+        if (search) {
+          const hay = (`#${p.id} ${p.cr_id || ""} ${p.title || ""} ${p.origin_repo || ""} ${p.state || ""}`).toLowerCase();
+          if (!hay.includes(search)) return false;
+        }
+
+        return true;
+      });
+
+      const countEl = document.getElementById("crpDateSelectedCount");
+      if (countEl) {
+        countEl.innerText = `Showing ${filtered.length} of ${list.length} proposals (${crpDateSelectedIds.size} checked)`;
+      }
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="10" style="text-align: center; padding: 24px; color: var(--text-muted);">No proposals match the selected date / state criteria.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(p => {
+        const dates = p.dates || {};
+        const created = dates.created || p.timestamp || "-";
+        const inProg = dates.in_progress || "-";
+        const comp = dates.completed || "-";
+        const pushed = dates.pushed || p.pushed_at || "-";
+        const isChecked = crpDateSelectedIds.has(p.id);
+
+        let stateColor = "var(--accent-blue)";
+        if (p.state === "completed") stateColor = "var(--accent-green)";
+        if (p.state === "pushed") stateColor = "var(--accent-purple)";
+        if (p.state === "bug") stateColor = "var(--accent-red)";
+        if (p.state === "deferred") stateColor = "var(--text-muted)";
+
+        return `
+          <tr style="border-bottom: 1px solid var(--border-color);">
+            <td style="text-align: center;"><input type="checkbox" onchange="toggleCrpDateRow(${p.id}, this.checked)" ${isChecked ? "checked" : ""}></td>
+            <td><strong style="color: var(--accent-blue);">#${p.id}</strong> <span style="font-size: 0.72rem; color: var(--text-secondary);">${p.cr_id || ""}</span></td>
+            <td><span class="badge" style="background: rgba(88,166,255,0.1); color: var(--accent-blue);">${p.origin_repo || "-"}</span></td>
+            <td><div style="font-weight: 500;">${p.title}</div></td>
+            <td style="text-align: center;"><span class="badge" style="border: 1px solid ${stateColor}; color: ${stateColor};">${(p.state || "unknown").toUpperCase()}</span></td>
+            <td style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-secondary);">${created}</td>
+            <td style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-secondary);">${inProg}</td>
+            <td style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-secondary);">${comp}</td>
+            <td style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-secondary);">${pushed}</td>
+            <td style="text-align: center;">
+              <button class="btn btn-icon" style="padding: 2px 6px; font-size: 0.72rem;" onclick="viewCrpTimeline(${p.id})" title="View complete transition timeline">👁️ Details</button>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function viewCrpTimeline(id) {
+      const p = (proposalsData.proposals || []).find(x => x.id === id);
+      if (!p) return;
+
+      const drawer = document.getElementById("crpTimelineDrawer");
+      const titleEl = document.getElementById("crpTimelineTitle");
+      const contentEl = document.getElementById("crpTimelineContent");
+
+      if (!drawer || !titleEl || !contentEl) return;
+
+      titleEl.innerHTML = `📜 State Transition History: #${p.id} (${p.cr_id || "CR-" + p.id}) - ${p.title}`;
+      
+      const history = p.state_history || [];
+      if (history.length === 0) {
+        contentEl.innerHTML = `<p style="color: var(--text-muted);">No detailed transition history recorded for this proposal.</p>`;
+      } else {
+        contentEl.innerHTML = `
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            ${history.map(h => `
+              <div style="display: flex; align-items: baseline; gap: 10px; padding: 4px 0; border-bottom: 1px dashed rgba(255,255,255,0.08);">
+                <span style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-blue); min-width: 140px;">${h.timestamp}</span>
+                <span class="badge" style="font-size: 0.7rem; text-transform: uppercase;">${h.state}</span>
+                <span style="font-size: 0.75rem; color: var(--text-secondary);">by <strong>${h.user || "User"}</strong></span>
+                <span style="font-size: 0.8rem; color: var(--text-primary);">${h.note || ""}</span>
+              </div>
+            `).join("")}
+          </div>
+        `;
+      }
+
+      drawer.style.display = "block";
+    }
+
+    function closeCrpTimelineDrawer() {
+      const drawer = document.getElementById("crpTimelineDrawer");
+      if (drawer) drawer.style.display = "none";
+    }
+
+    function printCrpDates() {
+      window.print();
+    }
+
+    function openCrpDatesInNewTab() {
+      const list = proposalsData.proposals || [];
+      let rows = list.map(p => {
+        const dates = p.dates || {};
+        return `<tr>
+          <td>#${p.id}</td>
+          <td>${p.cr_id || ""}</td>
+          <td>${p.origin_repo || ""}</td>
+          <td>${p.title}</td>
+          <td>${(p.state || "").toUpperCase()}</td>
+          <td>${dates.created || p.timestamp || "-"}</td>
+          <td>${dates.in_progress || "-"}</td>
+          <td>${dates.completed || "-"}</td>
+          <td>${dates.pushed || p.pushed_at || "-"}</td>
+        </tr>`;
+      }).join("");
+
+      const win = window.open("", "_blank");
+      win.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>LCM Proposal Dates Ledger</title>
+          <style>
+            body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; font-size: 12px; color: #1f2328; }
+            h2 { color: #0969da; margin-bottom: 12px; }
+            table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+            th, td { border: 1px solid #d0d7de; padding: 6px 10px; text-align: left; }
+            th { background: #f6f8fa; font-weight: 600; }
+            tr:nth-child(even) { background: #fcfcfc; }
+          </style>
+        </head>
+        <body>
+          <h2>📅 LCM Proposal & CRP Lifecycle Dates Ledger</h2>
+          <p>Generated on: ${new Date().toLocaleString()}</p>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th><th>CR/CRP</th><th>Scope</th><th>Title</th><th>State</th><th>Created</th><th>In-Progress</th><th>Completed</th><th>Pushed</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+          <script>window.onload = function() { window.print(); };</script>
+        </body>
+        </html>
+      `);
+      win.document.close();
+    }
+
   </script>
 </body>
 </html>

@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-08-30T14:16:15+02:00",
+  "updated_at": "2026-09-01T15:50:49.853663+02:00",
   "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 36,
+  "last_proposal_id": 44,
   "proposals": [
     {
       "id": 1,
@@ -19,7 +19,40 @@
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-001_CR-2026-012_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-001_CR-2026-012_Walkthrough.md",
       "progress_state": "pushed",
-      "pushed_at": "2026-08-30 15:29:48"
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-20 15:20:00",
+        "suggested": "2026-08-20 15:20:00",
+        "in_progress": "2026-08-20 15:20:00",
+        "completed": "2026-08-30 15:25:00",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-20 15:20:00",
+          "user": "Rolf",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-20 15:20:00",
+          "user": "Rolf",
+          "note": "Implementation initiated in core framework"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 15:25:00",
+          "user": "Rolf",
+          "note": "Review disposition ACCEPTED"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote repository"
+        }
+      ]
     },
     {
       "id": 2,
@@ -34,7 +67,40 @@
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-002_CR-2026-013_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-002_CR-2026-013_Walkthrough.md",
       "progress_state": "pushed",
-      "pushed_at": "2026-08-30 15:29:48"
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-20 16:37:00",
+        "suggested": "2026-08-20 16:37:00",
+        "in_progress": "2026-08-20 16:37:00",
+        "completed": "2026-08-30 15:25:00",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-20 16:37:00",
+          "user": "Rolf",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-20 16:37:00",
+          "user": "Rolf",
+          "note": "Implementation initiated in core framework"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 15:25:00",
+          "user": "Rolf",
+          "note": "Review disposition ACCEPTED"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote repository"
+        }
+      ]
     },
     {
       "id": 3,
@@ -49,7 +115,40 @@
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-003_CR-2026-014_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-003_CR-2026-014_Walkthrough.md",
       "progress_state": "pushed",
-      "pushed_at": "2026-08-30 15:29:48"
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-20 18:01:00",
+        "suggested": "2026-08-20 18:01:00",
+        "in_progress": "2026-08-20 18:01:00",
+        "completed": "2026-08-30 15:25:00",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-20 18:01:00",
+          "user": "Rolf",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-20 18:01:00",
+          "user": "Rolf",
+          "note": "Implementation initiated in core framework"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 15:25:00",
+          "user": "Rolf",
+          "note": "Review disposition ACCEPTED"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote repository"
+        }
+      ]
     },
     {
       "id": 4,
@@ -64,7 +163,40 @@
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-004_CR-2026-015_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-004_CR-2026-015_Walkthrough.md",
       "progress_state": "pushed",
-      "pushed_at": "2026-08-30 15:29:48"
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-20 18:38:00",
+        "suggested": "2026-08-20 18:38:00",
+        "in_progress": "2026-08-20 18:38:00",
+        "completed": "2026-08-30 15:25:00",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-20 18:38:00",
+          "user": "Rolf",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-20 18:38:00",
+          "user": "Rolf",
+          "note": "Implementation initiated in core framework"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 15:25:00",
+          "user": "Rolf",
+          "note": "Review disposition ACCEPTED"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote repository"
+        }
+      ]
     },
     {
       "id": 5,
@@ -79,7 +211,40 @@
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-005_CR-2026-016_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-005_CR-2026-016_Walkthrough.md",
       "progress_state": "pushed",
-      "pushed_at": "2026-08-30 15:29:48"
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-26 14:08:15",
+        "suggested": "2026-08-26 14:08:15",
+        "in_progress": "2026-08-26 14:08:15",
+        "completed": "2026-08-30 15:25:00",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-26 14:08:15",
+          "user": "Rolf",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-26 14:08:15",
+          "user": "Rolf",
+          "note": "Implementation initiated in core framework"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 15:25:00",
+          "user": "Rolf",
+          "note": "Review disposition ACCEPTED"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote repository"
+        }
+      ]
     },
     {
       "id": 6,
@@ -94,7 +259,40 @@
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-006_CR-2026-017_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-006_CR-2026-017_Walkthrough.md",
       "progress_state": "pushed",
-      "pushed_at": "2026-08-30 15:29:48"
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-26 14:11:55",
+        "suggested": "2026-08-26 14:11:55",
+        "in_progress": "2026-08-26 14:11:55",
+        "completed": "2026-08-30 15:25:00",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-26 14:11:55",
+          "user": "Rolf",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-26 14:11:55",
+          "user": "Rolf",
+          "note": "Implementation initiated in core framework"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 15:25:00",
+          "user": "Rolf",
+          "note": "Review disposition ACCEPTED"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote repository"
+        }
+      ]
     },
     {
       "id": 7,
@@ -109,7 +307,40 @@
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-007_CR-2026-018_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-007_CR-2026-018_Walkthrough.md",
       "progress_state": "pushed",
-      "pushed_at": "2026-08-30 15:29:48"
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-26 14:28:45",
+        "suggested": "2026-08-26 14:28:45",
+        "in_progress": "2026-08-26 14:28:45",
+        "completed": "2026-08-30 15:25:00",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-26 14:28:45",
+          "user": "Rolf",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-26 14:28:45",
+          "user": "Rolf",
+          "note": "Implementation initiated in core framework"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 15:25:00",
+          "user": "Rolf",
+          "note": "Review disposition ACCEPTED"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote repository"
+        }
+      ]
     },
     {
       "id": 8,
@@ -124,7 +355,40 @@
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-008_CR-2026-019_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-008_CR-2026-019_Walkthrough.md",
       "progress_state": "pushed",
-      "pushed_at": "2026-08-30 15:29:48"
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-26 15:42:35",
+        "suggested": "2026-08-26 15:42:35",
+        "in_progress": "2026-08-26 15:42:35",
+        "completed": "2026-08-30 15:25:00",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-26 15:42:35",
+          "user": "Rolf",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-26 15:42:35",
+          "user": "Rolf",
+          "note": "Implementation initiated in core framework"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 15:25:00",
+          "user": "Rolf",
+          "note": "Review disposition ACCEPTED"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote repository"
+        }
+      ]
     },
     {
       "id": 9,
@@ -139,7 +403,40 @@
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-009_CR-2026-020_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-009_CR-2026-020_Walkthrough.md",
       "progress_state": "pushed",
-      "pushed_at": "2026-08-30 15:29:48"
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-26 15:45:40",
+        "suggested": "2026-08-26 15:45:40",
+        "in_progress": "2026-08-26 15:45:40",
+        "completed": "2026-08-30 15:25:00",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-26 15:45:40",
+          "user": "Rolf",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-26 15:45:40",
+          "user": "Rolf",
+          "note": "Implementation initiated in core framework"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 15:25:00",
+          "user": "Rolf",
+          "note": "Review disposition ACCEPTED"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote repository"
+        }
+      ]
     },
     {
       "id": 10,
@@ -154,7 +451,40 @@
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-010_CR-2026-021_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-010_CR-2026-021_Walkthrough.md",
       "progress_state": "pushed",
-      "pushed_at": "2026-08-30 15:29:48"
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-29 18:00:41",
+        "suggested": "2026-08-29 18:00:41",
+        "in_progress": "2026-08-29 18:00:41",
+        "completed": "2026-08-30 16:34:13",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-29 18:00:41",
+          "user": "Rolf",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-29 18:00:41",
+          "user": "Rolf",
+          "note": "Implementation in progress"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 16:34:13",
+          "user": "Rolf",
+          "note": "Review acceptance recorded"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote tracking branch"
+        }
+      ]
     },
     {
       "id": 11,
@@ -169,7 +499,40 @@
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-011_CR-2026-022_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-011_CR-2026-022_Walkthrough.md",
       "progress_state": "pushed",
-      "pushed_at": "2026-08-30 15:29:48"
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-29 18:12:35",
+        "suggested": "2026-08-29 18:12:35",
+        "in_progress": "2026-08-29 18:12:35",
+        "completed": "2026-08-30 16:34:13",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-29 18:12:35",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-29 18:12:35",
+          "user": "Rolf",
+          "note": "Implementation in progress"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 16:34:13",
+          "user": "Rolf",
+          "note": "Review acceptance recorded"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote tracking branch"
+        }
+      ]
     },
     {
       "id": 12,
@@ -184,7 +547,40 @@
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-012_CR-2026-023_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-012_CR-2026-023_Walkthrough.md",
       "progress_state": "pushed",
-      "pushed_at": "2026-08-30 15:29:48"
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-29 18:34:51",
+        "suggested": "2026-08-29 18:34:51",
+        "in_progress": "2026-08-29 18:34:51",
+        "completed": "2026-08-30 16:34:13",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-29 18:34:51",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-29 18:34:51",
+          "user": "Rolf",
+          "note": "Implementation in progress"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 16:34:13",
+          "user": "Rolf",
+          "note": "Review acceptance recorded"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote tracking branch"
+        }
+      ]
     },
     {
       "id": 13,
@@ -199,7 +595,40 @@
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-013_CR-2026-024_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-013_CR-2026-024_Walkthrough.md",
       "progress_state": "pushed",
-      "pushed_at": "2026-08-30 15:29:48"
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-29 18:40:22",
+        "suggested": "2026-08-29 18:40:22",
+        "in_progress": "2026-08-29 18:40:22",
+        "completed": "2026-08-30 16:34:13",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-29 18:40:22",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-29 18:40:22",
+          "user": "Rolf",
+          "note": "Implementation in progress"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 16:34:13",
+          "user": "Rolf",
+          "note": "Review acceptance recorded"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote tracking branch"
+        }
+      ]
     },
     {
       "id": 14,
@@ -214,7 +643,40 @@
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-014_CR-2026-025_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-014_CR-2026-025_Walkthrough.md",
       "progress_state": "pushed",
-      "pushed_at": "2026-08-30 15:29:48"
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-29 18:45:23",
+        "suggested": "2026-08-29 18:45:23",
+        "in_progress": "2026-08-29 18:45:23",
+        "completed": "2026-08-30 16:34:13",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-29 18:45:23",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-29 18:45:23",
+          "user": "Rolf",
+          "note": "Implementation in progress"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 16:34:13",
+          "user": "Rolf",
+          "note": "Review acceptance recorded"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote tracking branch"
+        }
+      ]
     },
     {
       "id": 15,
@@ -229,7 +691,40 @@
       "details": "Provision dedicated child repository Installation_LCD under LCM governance (.agents/rules junction, .lcm/config.json baseline 6.1.0, tripartite specs) to isolate packaging agent, preflight checker, modular setup deployer, onboarding engine, and UX verifier outside core LCM until release.",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-015_CR-2026-026_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-015_CR-2026-026_Walkthrough.md",
-      "pushed_at": "2026-08-30 15:29:48"
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-29 18:50:04",
+        "suggested": "2026-08-29 18:50:04",
+        "in_progress": "2026-08-29 18:50:04",
+        "completed": "2026-08-30 16:34:13",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-29 18:50:04",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-29 18:50:04",
+          "user": "Rolf",
+          "note": "Implementation in progress"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 16:34:13",
+          "user": "Rolf",
+          "note": "Review acceptance recorded"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote tracking branch"
+        }
+      ]
     },
     {
       "id": 16,
@@ -244,7 +739,40 @@
       "details": "Author full normative tripartite documentation suite (docs/Architecture.md, docs/Requirements.md, docs/Implementation.md) and 7-phase runbook (install/Installation.md) in Installation_LCD, establishing complete design specifications for IDE review before code implementation.",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-016_CR-2026-027_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-016_CR-2026-027_Walkthrough.md",
-      "pushed_at": "2026-08-30 15:29:48"
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-29 19:35:34",
+        "suggested": "2026-08-29 19:35:34",
+        "in_progress": "2026-08-29 19:35:34",
+        "completed": "2026-08-30 16:34:13",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-29 19:35:34",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-29 19:35:34",
+          "user": "Rolf",
+          "note": "Implementation in progress"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 16:34:13",
+          "user": "Rolf",
+          "note": "Review acceptance recorded"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote tracking branch"
+        }
+      ]
     },
     {
       "id": 17,
@@ -259,7 +787,40 @@
       "details": "Fix invalid target path resolution in @21-FixMouseFlickerInvariants.ps1 (ShortName FixMouseFlicker) and @20-KillLogitechUpdateFull.ps1 (ShortName KillLogitechFull) where relative fallback ..\\..\\tools\\ resolves to non-existent paths when launched from tools/ or ShowTools web dashboard. Implement dynamic multi-candidate path resolution.",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-017_CR-2026-028_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-017_CR-2026-028_Walkthrough.md",
-      "pushed_at": "2026-08-30 15:29:48"
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-29 19:45:00",
+        "suggested": "2026-08-29 19:45:00",
+        "in_progress": "2026-08-29 19:45:00",
+        "completed": "2026-08-30 16:34:13",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-29 19:45:00",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-29 19:45:00",
+          "user": "Rolf",
+          "note": "Implementation in progress"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 16:34:13",
+          "user": "Rolf",
+          "note": "Review acceptance recorded"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote tracking branch"
+        }
+      ]
     },
     {
       "id": 18,
@@ -274,7 +835,40 @@
       "details": "When reporting errors or unwanted behavior via back channel/prompt, default to generating lightweight BUG report (superficial root cause, criticality assessment, stop) rather than initiating full-blown CRP processing until explicitly commanded.",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-018_CR-2026-029_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-018_CR-2026-029_Walkthrough.md",
-      "pushed_at": "2026-08-30 15:29:48"
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-29 19:59:30",
+        "suggested": "2026-08-29 19:59:30",
+        "in_progress": "2026-08-29 19:59:30",
+        "completed": "2026-08-30 16:34:13",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-29 19:59:30",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-29 19:59:30",
+          "user": "Rolf",
+          "note": "Implementation in progress"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 16:34:13",
+          "user": "Rolf",
+          "note": "Review acceptance recorded"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote tracking branch"
+        }
+      ]
     },
     {
       "id": 19,
@@ -289,7 +883,40 @@
       "details": "Interactive web dashboard for CM governance, real-time dual-state and BUG tracking, multi-facet filtering, batch beyond compare review & accept all, plan/walkthrough/receipt inspection tabs, Notepad++ CRP editing with plan auto-sync, and historical log viewing.",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-019_CR-2026-030_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-019_CR-2026-030_Walkthrough.md",
-      "pushed_at": "2026-08-30 15:29:48"
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-29 20:22:45",
+        "suggested": "2026-08-29 20:22:45",
+        "in_progress": "2026-08-29 20:22:45",
+        "completed": "2026-08-30 16:34:13",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-29 20:22:45",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-29 20:22:45",
+          "user": "Rolf",
+          "note": "Implementation in progress"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 16:34:13",
+          "user": "Rolf",
+          "note": "Review acceptance recorded"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote tracking branch"
+        }
+      ]
     },
     {
       "id": 20,
@@ -304,7 +931,40 @@
       "details": "Consolidate LCD platform governance rules, internal tools, modules, and docs into an encapsulated .lcd/ structure with separate .lcd/tools/internal (real code) and .lcd/tools/links (gitignored symlinks), update %PATH% to .lcd/Cmd, update child repository junctions, and provide root compatibility junctions.",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-020_CR-2026-031_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-020_CR-2026-031_Walkthrough.md",
-      "pushed_at": "2026-08-30 15:29:48"
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-29 22:37:00",
+        "suggested": "2026-08-29 22:37:00",
+        "in_progress": "2026-08-29 22:37:00",
+        "completed": "2026-08-30 16:34:13",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-29 22:37:00",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-29 22:37:00",
+          "user": "Rolf",
+          "note": "Implementation in progress"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 16:34:13",
+          "user": "Rolf",
+          "note": "Review acceptance recorded"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote tracking branch"
+        }
+      ]
     },
     {
       "id": 21,
@@ -319,7 +979,40 @@
       "details": "Establish a controlled, secure intake pipeline for instructions and lightweight BUG reports from Google Gemini via D:\\GDrive\\LCM\\INBOX. Enforce mandatory ISO 8601/local timestamping, route incoming items into the LCM Proposal ledger (suggested state) without immediate execution, archive processed files to INBOX/archive/, and provide Sync-GeminiInbox tool and Gemini Gem intake specification.",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-021_CR-2026-032_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-021_CR-2026-032_Walkthrough.md",
-      "pushed_at": "2026-08-30 15:29:48"
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-30 11:26:00",
+        "suggested": "2026-08-30 11:26:00",
+        "in_progress": "2026-08-30 11:26:00",
+        "completed": "2026-08-30 16:34:13",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-30 11:26:00",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-30 11:26:00",
+          "user": "Rolf",
+          "note": "Implementation in progress"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 16:34:13",
+          "user": "Rolf",
+          "note": "Review acceptance recorded"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote tracking branch"
+        }
+      ]
     },
     {
       "id": 22,
@@ -334,7 +1027,40 @@
       "details": "Codify RULE-REV-006 (Mandatory Review Stop and Turn Termination Invariant) in ReviewCommitGovernancePolicy.md and ProposalReviewFlowPolicy.md, strictly forbidding the AI agent from auto-committing or invoking Submit-ReviewResult.ps1 in the same response turn as Invoke-BeyondCompareReview.ps1.",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-022_CR-2026-033_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-022_CR-2026-033_Walkthrough.md",
-      "pushed_at": "2026-08-30 15:29:48"
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-30 11:34:09",
+        "suggested": "2026-08-30 11:34:09",
+        "in_progress": "2026-08-30 11:34:09",
+        "completed": "2026-08-30 16:34:13",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-30 11:34:09",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-30 11:34:09",
+          "user": "Rolf",
+          "note": "Implementation in progress"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 16:34:13",
+          "user": "Rolf",
+          "note": "Review acceptance recorded"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote tracking branch"
+        }
+      ]
     },
     {
       "id": 23,
@@ -349,7 +1075,40 @@
       "details": "Establish mandatory Scope and Version-Explicit naming convention for Change Request Proposals (CRP-YYYY-NNN-[Scope]-[Version]-[Slug].md) and mandatory header metadata to isolate affected repository boundaries and version ranges.",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-023_CR-2026-034_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-023_CR-2026-034_Walkthrough.md",
-      "pushed_at": "2026-08-30 15:29:48"
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-30 13:07:19",
+        "suggested": "2026-08-30 13:07:19",
+        "in_progress": "2026-08-30 13:07:19",
+        "completed": "2026-08-30 16:34:13",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-30 13:07:19",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-30 13:07:19",
+          "user": "Rolf",
+          "note": "Implementation in progress"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 16:34:13",
+          "user": "Rolf",
+          "note": "Review acceptance recorded"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote tracking branch"
+        }
+      ]
     },
     {
       "id": 24,
@@ -364,7 +1123,40 @@
       "details": "Replace .NET Regex.Replace with byte-exact literal string .Replace in Show-CmControlHub.ps1 to prevent dollar-sign script variables ($) in cached documents from being mangled as regex backreferences and corrupting HTML script injection.",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-024_BUG-2026-001_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-024_BUG-2026-001_Walkthrough.md",
-      "pushed_at": "2026-08-30 15:29:48"
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-30 15:22:00",
+        "suggested": "2026-08-30 15:22:00",
+        "in_progress": "2026-08-30 15:22:00",
+        "completed": "2026-08-30 16:34:13",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-30 15:22:00",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-30 15:22:00",
+          "user": "Rolf",
+          "note": "Implementation in progress"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 16:34:13",
+          "user": "Rolf",
+          "note": "Review acceptance recorded"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote tracking branch"
+        }
+      ]
     },
     {
       "id": 25,
@@ -379,7 +1171,40 @@
       "details": "BroadcastChannel single-instance tab coordination in CM_CONTROL_HUB.html to auto-retire obsolete dashboard tabs, unconditional preservation of documentation sub-tabs and desktop editors, and -NoLaunch parameter in Show-CmControlHub.ps1.",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-025_CR-2026-036_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-025_CR-2026-036_Walkthrough.md",
-      "pushed_at": "2026-08-30 15:47:00"
+      "pushed_at": "2026-08-30 15:47:00",
+      "dates": {
+        "created": "2026-08-30 15:45:00",
+        "suggested": "2026-08-30 15:45:00",
+        "in_progress": "2026-08-30 15:45:00",
+        "completed": "2026-08-30 16:34:13",
+        "pushed": "2026-08-30 15:47:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-30 15:45:00",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-30 15:45:00",
+          "user": "Rolf",
+          "note": "Implementation in progress"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 16:34:13",
+          "user": "Rolf",
+          "note": "Review acceptance recorded"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:47:00",
+          "user": "Rolf",
+          "note": "Pushed to remote tracking branch"
+        }
+      ]
     },
     {
       "id": 26,
@@ -394,7 +1219,40 @@
       "details": "Interactive row actions (Open, Onboard, Un-Git, Rename, Delete), .lcd platform and non-Git directory visibility, filter tabs, and Workspace_Inventory data versioning exemption in RULE-REV-007.",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-026_CR-2026-037_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-026_CR-2026-037_Walkthrough.md",
-      "pushed_at": "2026-08-30 16:34:00"
+      "pushed_at": "2026-08-30 16:34:00",
+      "dates": {
+        "created": "2026-08-30 16:05:00",
+        "suggested": "2026-08-30 16:05:00",
+        "in_progress": "2026-08-30 16:05:00",
+        "completed": "2026-08-30 16:34:13",
+        "pushed": "2026-08-30 16:34:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-30 16:05:00",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-30 16:05:00",
+          "user": "Rolf",
+          "note": "Implementation in progress"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 16:34:13",
+          "user": "Rolf",
+          "note": "Review acceptance recorded"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 16:34:00",
+          "user": "Rolf",
+          "note": "Pushed to remote tracking branch"
+        }
+      ]
     },
     {
       "id": 27,
@@ -409,7 +1267,40 @@
       "details": "Fix strict mode uninitialized variable error when generating HTML viewer print atom.",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-027_CR-2026-038_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-027_CR-2026-038_Walkthrough.md",
-      "pushed_at": "2026-08-30 16:55:41"
+      "pushed_at": "2026-08-30 16:55:41",
+      "dates": {
+        "created": "2026-08-30 16:37:00",
+        "suggested": "2026-08-30 16:37:00",
+        "in_progress": "2026-08-30 16:37:00",
+        "completed": "2026-08-30 16:34:13",
+        "pushed": "2026-08-30 16:55:41"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-30 16:37:00",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-30 16:37:00",
+          "user": "Rolf",
+          "note": "Implementation in progress"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 16:34:13",
+          "user": "Rolf",
+          "note": "Review acceptance recorded"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 16:55:41",
+          "user": "Rolf",
+          "note": "Pushed to remote tracking branch"
+        }
+      ]
     },
     {
       "id": 28,
@@ -417,11 +1308,37 @@
       "title": "Spook 👻 Your Homie Custom Integration Update (v5.0.0 -> v5.1.0)",
       "origin_repo": "HaSSD06",
       "cr_id": "CR-2026-039",
-      "state": "suggested",
-      "progress_state": "in_progress",
+      "state": "completed",
+      "progress_state": "completed",
       "bundle_id": "CRP-2026-009-HaSSD06-v5.1.0-Spook-Homie-Integration-Update",
       "author": "rgbig",
-      "details": "Software update for Spook custom integration via HACS."
+      "details": "Software update for Spook custom integration via HACS.",
+      "dates": {
+        "created": "2026-08-30 16:38:00",
+        "suggested": "2026-08-30 16:38:00",
+        "in_progress": "2026-08-30 16:39:00",
+        "completed": "2026-09-01 15:50:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-30 16:38:00",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-30 16:39:00",
+          "user": "Rolf",
+          "note": "Awaiting execution / subsystem review"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-01 15:50:00",
+          "user": "Rolf",
+          "note": "Accepted and marked completed per operator directive"
+        }
+      ]
     },
     {
       "id": 29,
@@ -429,11 +1346,37 @@
       "title": "Shelly BLU Gateway Firmware Stabilization (2.0.1-beta1 -> 2.0.0 Stable)",
       "origin_repo": "HaSSD06",
       "cr_id": "CR-2026-040",
-      "state": "suggested",
-      "progress_state": "in_progress",
+      "state": "completed",
+      "progress_state": "completed",
       "bundle_id": "CRP-2026-010-HaSSD06-v2.0.0-Shelly-Blu-Gateway-Firmware-Stabilization",
       "author": "rgbig",
-      "details": "Transition Shelly BLU gateway from beta firmware to production stable 2.0.0."
+      "details": "Transition Shelly BLU gateway from beta firmware to production stable 2.0.0.",
+      "dates": {
+        "created": "2026-08-30 16:38:10",
+        "suggested": "2026-08-30 16:38:10",
+        "in_progress": "2026-08-30 16:39:00",
+        "completed": "2026-09-01 15:50:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-30 16:38:10",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-30 16:39:00",
+          "user": "Rolf",
+          "note": "Awaiting execution / subsystem review"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-01 15:50:00",
+          "user": "Rolf",
+          "note": "Accepted and marked completed per operator directive"
+        }
+      ]
     },
     {
       "id": 30,
@@ -441,11 +1384,37 @@
       "title": "FRITZ!Box Deprecated Button Entities Cleanup (Breaks in HA 2026.11.0)",
       "origin_repo": "HaSSD06",
       "cr_id": "CR-2026-041",
-      "state": "suggested",
-      "progress_state": "in_progress",
+      "state": "completed",
+      "progress_state": "completed",
       "bundle_id": "CRP-2026-011-HaSSD06-v2026.11.0-FritzBox-Deprecated-Button-Entities-Removal",
       "author": "rgbig",
-      "details": "Resolve deprecated cleanup and firmware update button entities before HA Core 2026.11.0."
+      "details": "Resolve deprecated cleanup and firmware update button entities before HA Core 2026.11.0.",
+      "dates": {
+        "created": "2026-08-30 16:38:20",
+        "suggested": "2026-08-30 16:38:20",
+        "in_progress": "2026-08-30 16:39:00",
+        "completed": "2026-09-01 15:50:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-30 16:38:20",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-30 16:39:00",
+          "user": "Rolf",
+          "note": "Awaiting execution / subsystem review"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-01 15:50:00",
+          "user": "Rolf",
+          "note": "Accepted and marked completed per operator directive"
+        }
+      ]
     },
     {
       "id": 31,
@@ -453,11 +1422,37 @@
       "title": "Active Notification Count Template Sensor Default Value Fix",
       "origin_repo": "HaSSD06",
       "cr_id": "CR-2026-042",
-      "state": "suggested",
-      "progress_state": "in_progress",
+      "state": "completed",
+      "progress_state": "completed",
       "bundle_id": "CRP-2026-012-HaSSD06-v7.1.1-Active-Notification-Count-Template-Filter-Fix",
       "author": "rgbig",
-      "details": "Append default(0) and int(0) filter to eliminate invalid sensor state validation errors."
+      "details": "Append default(0) and int(0) filter to eliminate invalid sensor state validation errors.",
+      "dates": {
+        "created": "2026-08-30 16:38:30",
+        "suggested": "2026-08-30 16:38:30",
+        "in_progress": "2026-08-30 16:39:00",
+        "completed": "2026-09-01 15:50:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-30 16:38:30",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-30 16:39:00",
+          "user": "Rolf",
+          "note": "Awaiting execution / subsystem review"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-01 15:50:00",
+          "user": "Rolf",
+          "note": "Accepted and marked completed per operator directive"
+        }
+      ]
     },
     {
       "id": 32,
@@ -465,11 +1460,37 @@
       "title": "Alexa Devices HTTP/2 Push DNS Resolution Timeout (ClientConnectorDNSError)",
       "origin_repo": "HaSSD06",
       "cr_id": "CR-2026-043",
-      "state": "suggested",
-      "progress_state": "in_progress",
+      "state": "completed",
+      "progress_state": "completed",
       "bundle_id": "BUG-2026-003-HaSSD06-v2026.8.3-Alexa-Devices-DNS-Timeout-During-HTTP2-Push",
       "author": "rgbig",
-      "details": "Upstream DNS timeout during high-concurrency HTTP/2 push events in aioamazondevices."
+      "details": "Upstream DNS timeout during high-concurrency HTTP/2 push events in aioamazondevices.",
+      "dates": {
+        "created": "2026-08-30 16:38:40",
+        "suggested": "2026-08-30 16:38:40",
+        "in_progress": "2026-08-30 16:39:00",
+        "completed": "2026-09-01 15:50:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-30 16:38:40",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-30 16:39:00",
+          "user": "Rolf",
+          "note": "Awaiting execution / subsystem review"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-01 15:50:00",
+          "user": "Rolf",
+          "note": "Accepted and marked completed per operator directive"
+        }
+      ]
     },
     {
       "id": 33,
@@ -477,11 +1498,37 @@
       "title": "Tuya Device Handlers Invalid Enum Value for Datapoint relay_status",
       "origin_repo": "HaSSD06",
       "cr_id": "CR-2026-044",
-      "state": "suggested",
-      "progress_state": "in_progress",
+      "state": "completed",
+      "progress_state": "completed",
       "bundle_id": "BUG-2026-004-HaSSD06-v2026.8.3-Tuya-Device-Handlers-Relay-Status-Enum-Mismatch",
       "author": "rgbig",
-      "details": "Upstream schema mismatch in tuya-device-handlers for smart plug product 9zynrkxe5tys0rja."
+      "details": "Upstream schema mismatch in tuya-device-handlers for smart plug product 9zynrkxe5tys0rja.",
+      "dates": {
+        "created": "2026-08-30 16:38:50",
+        "suggested": "2026-08-30 16:38:50",
+        "in_progress": "2026-08-30 16:39:00",
+        "completed": "2026-09-01 15:50:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-30 16:38:50",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-30 16:39:00",
+          "user": "Rolf",
+          "note": "Awaiting execution / subsystem review"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-01 15:50:00",
+          "user": "Rolf",
+          "note": "Accepted and marked completed per operator directive"
+        }
+      ]
     },
     {
       "id": 34,
@@ -489,11 +1536,37 @@
       "title": "Tuya Local Unregistered Product IDs in Smart Plug Device Profiles",
       "origin_repo": "HaSSD06",
       "cr_id": "CR-2026-045",
-      "state": "suggested",
-      "progress_state": "in_progress",
+      "state": "completed",
+      "progress_state": "completed",
       "bundle_id": "BUG-2026-005-HaSSD06-v2026.8.3-Tuya-Local-Unregistered-Product-ID-SmartPlug",
       "author": "rgbig",
-      "details": "Hardware product IDs keym9qkuywghyrvs and keyjup78v54myhan unlisted in tuya_local config."
+      "details": "Hardware product IDs keym9qkuywghyrvs and keyjup78v54myhan unlisted in tuya_local config.",
+      "dates": {
+        "created": "2026-08-30 16:39:00",
+        "suggested": "2026-08-30 16:39:00",
+        "in_progress": "2026-08-30 16:39:00",
+        "completed": "2026-09-01 15:50:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-30 16:39:00",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-30 16:39:00",
+          "user": "Rolf",
+          "note": "Awaiting execution / subsystem review"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-01 15:50:00",
+          "user": "Rolf",
+          "note": "Accepted and marked completed per operator directive"
+        }
+      ]
     },
     {
       "id": 35,
@@ -507,7 +1580,41 @@
       "author": "rgbig",
       "details": "Hash-based deduplication, archival of redundant scratch snapshots/baselines, refactoring of .lcm/tools/links, and deletion of legacy .lcd junction.",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-035_CR-2026-046_Plan.md",
-      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-035_CR-2026-046_Walkthrough.md"
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-035_CR-2026-046_Walkthrough.md",
+      "dates": {
+        "created": "2026-08-30 18:57:00",
+        "suggested": "2026-08-30 18:57:00",
+        "in_progress": "2026-08-30 18:57:00",
+        "completed": "2026-08-30 19:02:45",
+        "pushed": "2026-08-30 19:41:10"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-30 18:57:00",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-30 18:57:00",
+          "user": "Rolf",
+          "note": "Execution completed"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 19:02:45",
+          "user": "Rolf",
+          "note": "Validated & accepted"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 19:41:10",
+          "user": "Rolf",
+          "note": "Pushed to remote"
+        }
+      ],
+      "pushed_at": "2026-08-30 19:41:10"
     },
     {
       "id": 36,
@@ -521,7 +1628,425 @@
       "author": "rgbig",
       "details": "Deactivate onboard bcm43438-bt adapter in Home Assistant to eliminate dual-scanner packet jitter, consolidating all BLE devices to shellyblugwg3.",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-036_CR-2026-047_Plan.md",
-      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-036_CR-2026-047_Walkthrough.md"
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-036_CR-2026-047_Walkthrough.md",
+      "dates": {
+        "created": "2026-08-30 19:22:00",
+        "suggested": "2026-08-30 19:22:00",
+        "in_progress": "2026-08-30 19:22:00",
+        "completed": "2026-08-30 19:23:26",
+        "pushed": "2026-08-30 19:41:10"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-30 19:22:00",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-30 19:22:00",
+          "user": "Rolf",
+          "note": "Execution completed"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 19:23:26",
+          "user": "Rolf",
+          "note": "Validated & accepted"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 19:41:10",
+          "user": "Rolf",
+          "note": "Pushed to remote"
+        }
+      ],
+      "pushed_at": "2026-08-30 19:41:10"
+    },
+    {
+      "id": 37,
+      "timestamp": "2026-08-31 16:30:00",
+      "title": "Tool Explorer '@nn-' Prefix Tool Disappearance on Filter Reset",
+      "origin_repo": "LCD / Tool Explorer",
+      "cr_id": "BUG-2026-006",
+      "state": "completed",
+      "bundle_id": "unassigned",
+      "author": "Rolf",
+      "details": "Restores all 25 @00- to @21- customization tools in Tool Explorer, preserving numerical prefixes in filenames while providing clean chat trampolines.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-2026-006-LCM-v2.2.1-Tool-Explorer-AtPrefix-Filter-Exclusion.md",
+      "walkthrough_path": "",
+      "progress_state": "pushed",
+      "pushed_at": "2026-09-01 13:36:59",
+      "dates": {
+        "created": "2026-08-31 16:30:00",
+        "suggested": "2026-08-31 16:30:00",
+        "in_progress": "2026-08-31 17:00:00",
+        "completed": "2026-09-01 13:30:00",
+        "pushed": "2026-09-01 13:36:59"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-31 16:30:00",
+          "user": "Rolf",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-31 17:00:00",
+          "user": "Rolf",
+          "note": "Implemented and validated in working tree"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-01 13:30:00",
+          "user": "Rolf",
+          "note": "Operator authorized ACCEPT ALL"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 13:36:59",
+          "user": "Rolf",
+          "note": "Pushed to remote"
+        }
+      ]
+    },
+    {
+      "id": 38,
+      "timestamp": "2026-08-31 16:45:00",
+      "title": "Excessive Repetitive Windows Notifications during Project Rule Access",
+      "origin_repo": "Workspace_AI",
+      "cr_id": "BUG-2026-007",
+      "state": "completed",
+      "bundle_id": "unassigned",
+      "author": "Rolf",
+      "details": "Suppresses excessive duplicate Windows notification toasts generated when accessing project standards documentation.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-2026-007-Workspace_AI-v7.1.2-Windows-Notification-Spam-Suppression.md",
+      "walkthrough_path": "",
+      "progress_state": "pushed",
+      "pushed_at": "2026-09-01 13:36:59",
+      "dates": {
+        "created": "2026-08-31 16:45:00",
+        "suggested": "2026-08-31 16:45:00",
+        "in_progress": "2026-08-31 17:00:00",
+        "completed": "2026-09-01 13:30:00",
+        "pushed": "2026-09-01 13:36:59"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-31 16:45:00",
+          "user": "Rolf",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-31 17:00:00",
+          "user": "Rolf",
+          "note": "Implemented and validated in working tree"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-01 13:30:00",
+          "user": "Rolf",
+          "note": "Operator authorized ACCEPT ALL"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 13:36:59",
+          "user": "Rolf",
+          "note": "Pushed to remote"
+        }
+      ]
+    },
+    {
+      "id": 39,
+      "timestamp": "2026-08-31 17:00:00",
+      "title": "Tool Explorer Asset Path Resolution, Draggable Help Modal, and Catalog Sync",
+      "origin_repo": "LCD / Tool Explorer",
+      "cr_id": "CRP-2026-015",
+      "state": "completed",
+      "bundle_id": "unassigned",
+      "author": "Rolf",
+      "details": "Repairs asset path fallback candidate arrays, implements non-blocking draggable help modal, and expands catalog to 176 tools.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-2026-015-LCM-v2.2.1-Tool-Explorer-Asset-Path-Resolution-and-Multi-Tab-Launch-Repair.md",
+      "walkthrough_path": "",
+      "progress_state": "pushed",
+      "pushed_at": "2026-09-01 13:36:59",
+      "dates": {
+        "created": "2026-08-31 17:00:00",
+        "suggested": "2026-08-31 17:00:00",
+        "in_progress": "2026-08-31 17:00:00",
+        "completed": "2026-09-01 13:30:00",
+        "pushed": "2026-09-01 13:36:59"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-31 17:00:00",
+          "user": "Rolf",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-31 17:00:00",
+          "user": "Rolf",
+          "note": "Implemented and validated in working tree"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-01 13:30:00",
+          "user": "Rolf",
+          "note": "Operator authorized ACCEPT ALL"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 13:36:59",
+          "user": "Rolf",
+          "note": "Pushed to remote"
+        }
+      ]
+    },
+    {
+      "id": 40,
+      "timestamp": "2026-08-31 17:30:00",
+      "title": "Prevent BLE Packet Collisions via Selective Single-Receiver Ingestion",
+      "origin_repo": "HaSSD06",
+      "cr_id": "CRP-2026-016",
+      "state": "completed",
+      "bundle_id": "unassigned",
+      "author": "Rolf",
+      "details": "Prevents BLE multi-hub collisions across 51 dynamic Bluetooth entities, scheduling twice-daily supervision and logging telemetry.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-2026-016-HaSSD06-v7.1.2-BLE-Selective-Single-Receiver-Routing.md",
+      "walkthrough_path": "",
+      "progress_state": "pushed",
+      "pushed_at": "2026-09-01 13:36:59",
+      "dates": {
+        "created": "2026-08-31 17:30:00",
+        "suggested": "2026-08-31 17:30:00",
+        "in_progress": "2026-08-31 17:00:00",
+        "completed": "2026-09-01 13:30:00",
+        "pushed": "2026-09-01 13:36:59"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-31 17:30:00",
+          "user": "Rolf",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-31 17:00:00",
+          "user": "Rolf",
+          "note": "Implemented and validated in working tree"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-01 13:30:00",
+          "user": "Rolf",
+          "note": "Operator authorized ACCEPT ALL"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 13:36:59",
+          "user": "Rolf",
+          "note": "Pushed to remote"
+        }
+      ]
+    },
+    {
+      "id": 41,
+      "timestamp": "2026-08-31 18:00:00",
+      "title": "Universal Light/Dark Theme Standardization & High-Contrast Design Hardening",
+      "origin_repo": "LCM Workspace",
+      "cr_id": "CRP-2026-017",
+      "state": "completed",
+      "bundle_id": "unassigned",
+      "author": "Rolf",
+      "details": "Standardizes high-contrast light and dark theme color tokens across all 4 LCM dashboards with persistent scrollbars.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-2026-017-LCM-v2.2.2-Universal-Theme-and-High-Contrast-Design-System.md",
+      "walkthrough_path": "",
+      "progress_state": "pushed",
+      "pushed_at": "2026-09-01 13:36:59",
+      "dates": {
+        "created": "2026-08-31 18:00:00",
+        "suggested": "2026-08-31 18:00:00",
+        "in_progress": "2026-08-31 17:00:00",
+        "completed": "2026-09-01 13:30:00",
+        "pushed": "2026-09-01 13:36:59"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-31 18:00:00",
+          "user": "Rolf",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-31 17:00:00",
+          "user": "Rolf",
+          "note": "Implemented and validated in working tree"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-01 13:30:00",
+          "user": "Rolf",
+          "note": "Operator authorized ACCEPT ALL"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 13:36:59",
+          "user": "Rolf",
+          "note": "Pushed to remote"
+        }
+      ]
+    },
+    {
+      "id": 42,
+      "timestamp": "2026-08-31 18:30:00",
+      "title": "CM Control Hub Navigation Hardening, Filter Reconciliation, and Action Engine",
+      "origin_repo": "LCM Workspace",
+      "cr_id": "CRP-2026-018",
+      "state": "completed",
+      "bundle_id": "unassigned",
+      "author": "Rolf",
+      "details": "Adds Windows-style top-right Back navigation, fixes completed metric card filter, and implements batch review action suite.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-2026-018-LCM-v2.2.2-CM-Control-Hub-Navigation-Filter-and-Action-Engine.md",
+      "walkthrough_path": "",
+      "progress_state": "pushed",
+      "pushed_at": "2026-09-01 13:36:59",
+      "dates": {
+        "created": "2026-08-31 18:30:00",
+        "suggested": "2026-08-31 18:30:00",
+        "in_progress": "2026-08-31 17:00:00",
+        "completed": "2026-09-01 13:30:00",
+        "pushed": "2026-09-01 13:36:59"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-31 18:30:00",
+          "user": "Rolf",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-31 17:00:00",
+          "user": "Rolf",
+          "note": "Implemented and validated in working tree"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-01 13:30:00",
+          "user": "Rolf",
+          "note": "Operator authorized ACCEPT ALL"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 13:36:59",
+          "user": "Rolf",
+          "note": "Pushed to remote"
+        }
+      ]
+    },
+    {
+      "id": 43,
+      "timestamp": "2026-08-31 19:00:00",
+      "title": "Universal LCM Table UI/UX Standard & Standardized Interactive Document Viewer",
+      "origin_repo": "LCM Workspace",
+      "cr_id": "CRP-2026-019",
+      "state": "completed",
+      "bundle_id": "unassigned",
+      "author": "Rolf",
+      "details": "Integrates universal table UX standard (selection checkboxes, batch actions, search negation !term, multi-column sorting) across all dashboards.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-2026-019-LCM-v2.2.2-Standardized-Interactive-Document-Table-Viewer.md",
+      "walkthrough_path": "",
+      "progress_state": "pushed",
+      "pushed_at": "2026-09-01 13:36:59",
+      "dates": {
+        "created": "2026-08-31 19:00:00",
+        "suggested": "2026-08-31 19:00:00",
+        "in_progress": "2026-08-31 17:00:00",
+        "completed": "2026-09-01 13:30:00",
+        "pushed": "2026-09-01 13:36:59"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-31 19:00:00",
+          "user": "Rolf",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-31 17:00:00",
+          "user": "Rolf",
+          "note": "Implemented and validated in working tree"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-01 13:30:00",
+          "user": "Rolf",
+          "note": "Operator authorized ACCEPT ALL"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 13:36:59",
+          "user": "Rolf",
+          "note": "Pushed to remote"
+        }
+      ]
+    },
+    {
+      "id": 44,
+      "timestamp": "2026-09-01 13:35:00",
+      "title": "LCM Deterministic Hook Engine & Zero-Trust Tool Execution Boundary",
+      "origin_repo": "Workspace_AI",
+      "cr_id": "CRP-2026-020",
+      "state": "completed",
+      "bundle_id": "unassigned",
+      "author": "Rolf",
+      "details": "Enforces review-gated git commits, repository boundary isolation, UTF-8 formatting, and privilege delegation via PreToolUse/PostToolUse hooks.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-2026-020-Workspace_AI-v7.2.0-LCM-Deterministic-Hook-Engine.md",
+      "walkthrough_path": "",
+      "progress_state": "pushed",
+      "pushed_at": "2026-09-01 13:37:50",
+      "dates": {
+        "created": "2026-09-01 13:35:00",
+        "suggested": "2026-09-01 13:35:00",
+        "in_progress": "2026-09-01 13:35:00",
+        "completed": "2026-09-01 13:37:00",
+        "pushed": "2026-09-01 13:37:50"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-01 13:35:00",
+          "user": "Rolf",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-09-01 13:35:00",
+          "user": "Rolf",
+          "note": "Architecture specified and hook scripts created"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-01 13:37:00",
+          "user": "Rolf",
+          "note": "Hook scripts verified & accepted"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 13:37:50",
+          "user": "Rolf",
+          "note": "Pushed to remote"
+        }
+      ]
     }
   ]
 }

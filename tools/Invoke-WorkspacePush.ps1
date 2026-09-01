@@ -126,6 +126,19 @@ if ($pushedRepos.Count -gt 0) {
                     $p.state = "pushed"
                     $p.progress_state = "pushed"
                     $p | Add-Member -NotePropertyName "pushed_at" -NotePropertyValue $pushTimestamp -Force
+                    if ($p.PSObject.Properties['dates'] -and $p.dates) {
+                        $p.dates | Add-Member -NotePropertyName "pushed" -NotePropertyValue $pushTimestamp -Force
+                    }
+                    if ($p.PSObject.Properties['state_history'] -and $p.state_history) {
+                        $newHist = [System.Collections.Generic.List[object]]::new(@($p.state_history))
+                        $newHist.Add([PSCustomObject]@{
+                            state = "pushed"
+                            timestamp = $pushTimestamp
+                            user = $env:USERNAME
+                            note = "Pushed to remote ($($pushedRepos -join ', '))"
+                        })
+                        $p.state_history = @($newHist)
+                    }
                     $transitionCount++
                 }
             }
