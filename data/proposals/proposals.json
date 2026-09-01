@@ -1308,8 +1308,8 @@
       "title": "Spook 👻 Your Homie Custom Integration Update (v5.0.0 -> v5.1.0)",
       "origin_repo": "HaSSD06",
       "cr_id": "CR-2026-039",
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "bundle_id": "CRP-2026-009-HaSSD06-v5.1.0-Spook-Homie-Integration-Update",
       "author": "rgbig",
       "details": "Software update for Spook custom integration via HACS.",
@@ -1317,7 +1317,8 @@
         "created": "2026-08-30 16:38:00",
         "suggested": "2026-08-30 16:38:00",
         "in_progress": "2026-08-30 16:39:00",
-        "completed": "2026-09-01 15:50:00"
+        "completed": "2026-09-01 15:50:00",
+        "pushed": "2026-09-01 15:53:01"
       },
       "state_history": [
         {
@@ -1337,8 +1338,15 @@
           "timestamp": "2026-09-01 15:50:00",
           "user": "Rolf",
           "note": "Accepted and marked completed per operator directive"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 15:53:01",
+          "user": "rgbig",
+          "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
         }
-      ]
+      ],
+      "pushed_at": "2026-09-01 15:53:01"
     },
     {
       "id": 29,
@@ -1346,8 +1354,8 @@
       "title": "Shelly BLU Gateway Firmware Stabilization (2.0.1-beta1 -> 2.0.0 Stable)",
       "origin_repo": "HaSSD06",
       "cr_id": "CR-2026-040",
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "bundle_id": "CRP-2026-010-HaSSD06-v2.0.0-Shelly-Blu-Gateway-Firmware-Stabilization",
       "author": "rgbig",
       "details": "Transition Shelly BLU gateway from beta firmware to production stable 2.0.0.",
@@ -1355,7 +1363,8 @@
         "created": "2026-08-30 16:38:10",
         "suggested": "2026-08-30 16:38:10",
         "in_progress": "2026-08-30 16:39:00",
-        "completed": "2026-09-01 15:50:00"
+        "completed": "2026-09-01 15:50:00",
+        "pushed": "2026-09-01 15:53:01"
       },
       "state_history": [
         {
@@ -1375,8 +1384,15 @@
           "timestamp": "2026-09-01 15:50:00",
           "user": "Rolf",
           "note": "Accepted and marked completed per operator directive"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 15:53:01",
+          "user": "rgbig",
+          "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
         }
-      ]
+      ],
+      "pushed_at": "2026-09-01 15:53:01"
     },
     {
       "id": 30,
@@ -1384,8 +1400,8 @@
       "title": "FRITZ!Box Deprecated Button Entities Cleanup (Breaks in HA 2026.11.0)",
       "origin_repo": "HaSSD06",
       "cr_id": "CR-2026-041",
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "bundle_id": "CRP-2026-011-HaSSD06-v2026.11.0-FritzBox-Deprecated-Button-Entities-Removal",
       "author": "rgbig",
       "details": "Resolve deprecated cleanup and firmware update button entities before HA Core 2026.11.0.",
@@ -1393,7 +1409,8 @@
         "created": "2026-08-30 16:38:20",
         "suggested": "2026-08-30 16:38:20",
         "in_progress": "2026-08-30 16:39:00",
-        "completed": "2026-09-01 15:50:00"
+        "completed": "2026-09-01 15:50:00",
+        "pushed": "2026-09-01 15:53:01"
       },
       "state_history": [
         {
@@ -1413,8 +1430,15 @@
           "timestamp": "2026-09-01 15:50:00",
           "user": "Rolf",
           "note": "Accepted and marked completed per operator directive"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 15:53:01",
+          "user": "rgbig",
+          "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
         }
-      ]
+      ],
+      "pushed_at": "2026-09-01 15:53:01"
     },
     {
       "id": 31,
@@ -1422,8 +1446,8 @@
       "title": "Active Notification Count Template Sensor Default Value Fix",
       "origin_repo": "HaSSD06",
       "cr_id": "CR-2026-042",
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "bundle_id": "CRP-2026-012-HaSSD06-v7.1.1-Active-Notification-Count-Template-Filter-Fix",
       "author": "rgbig",
       "details": "Append default(0) and int(0) filter to eliminate invalid sensor state validation errors.",
@@ -1431,7 +1455,8 @@
         "created": "2026-08-30 16:38:30",
         "suggested": "2026-08-30 16:38:30",
         "in_progress": "2026-08-30 16:39:00",
-        "completed": "2026-09-01 15:50:00"
+        "completed": "2026-09-01 15:50:00",
+        "pushed": "2026-09-01 15:53:01"
       },
       "state_history": [
         {
@@ -1451,8 +1476,15 @@
           "timestamp": "2026-09-01 15:50:00",
           "user": "Rolf",
           "note": "Accepted and marked completed per operator directive"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 15:53:01",
+          "user": "rgbig",
+          "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
         }
-      ]
+      ],
+      "pushed_at": "2026-09-01 15:53:01"
     },
     {
       "id": 32,
@@ -1460,8 +1492,8 @@
       "title": "Alexa Devices HTTP/2 Push DNS Resolution Timeout (ClientConnectorDNSError)",
       "origin_repo": "HaSSD06",
       "cr_id": "CR-2026-043",
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "bundle_id": "BUG-2026-003-HaSSD06-v2026.8.3-Alexa-Devices-DNS-Timeout-During-HTTP2-Push",
       "author": "rgbig",
       "details": "Upstream DNS timeout during high-concurrency HTTP/2 push events in aioamazondevices.",
@@ -1469,7 +1501,8 @@
         "created": "2026-08-30 16:38:40",
         "suggested": "2026-08-30 16:38:40",
         "in_progress": "2026-08-30 16:39:00",
-        "completed": "2026-09-01 15:50:00"
+        "completed": "2026-09-01 15:50:00",
+        "pushed": "2026-09-01 15:53:01"
       },
       "state_history": [
         {
@@ -1489,8 +1522,15 @@
           "timestamp": "2026-09-01 15:50:00",
           "user": "Rolf",
           "note": "Accepted and marked completed per operator directive"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 15:53:01",
+          "user": "rgbig",
+          "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
         }
-      ]
+      ],
+      "pushed_at": "2026-09-01 15:53:01"
     },
     {
       "id": 33,
@@ -1498,8 +1538,8 @@
       "title": "Tuya Device Handlers Invalid Enum Value for Datapoint relay_status",
       "origin_repo": "HaSSD06",
       "cr_id": "CR-2026-044",
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "bundle_id": "BUG-2026-004-HaSSD06-v2026.8.3-Tuya-Device-Handlers-Relay-Status-Enum-Mismatch",
       "author": "rgbig",
       "details": "Upstream schema mismatch in tuya-device-handlers for smart plug product 9zynrkxe5tys0rja.",
@@ -1507,7 +1547,8 @@
         "created": "2026-08-30 16:38:50",
         "suggested": "2026-08-30 16:38:50",
         "in_progress": "2026-08-30 16:39:00",
-        "completed": "2026-09-01 15:50:00"
+        "completed": "2026-09-01 15:50:00",
+        "pushed": "2026-09-01 15:53:01"
       },
       "state_history": [
         {
@@ -1527,8 +1568,15 @@
           "timestamp": "2026-09-01 15:50:00",
           "user": "Rolf",
           "note": "Accepted and marked completed per operator directive"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 15:53:01",
+          "user": "rgbig",
+          "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
         }
-      ]
+      ],
+      "pushed_at": "2026-09-01 15:53:01"
     },
     {
       "id": 34,
@@ -1536,8 +1584,8 @@
       "title": "Tuya Local Unregistered Product IDs in Smart Plug Device Profiles",
       "origin_repo": "HaSSD06",
       "cr_id": "CR-2026-045",
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "bundle_id": "BUG-2026-005-HaSSD06-v2026.8.3-Tuya-Local-Unregistered-Product-ID-SmartPlug",
       "author": "rgbig",
       "details": "Hardware product IDs keym9qkuywghyrvs and keyjup78v54myhan unlisted in tuya_local config.",
@@ -1545,7 +1593,8 @@
         "created": "2026-08-30 16:39:00",
         "suggested": "2026-08-30 16:39:00",
         "in_progress": "2026-08-30 16:39:00",
-        "completed": "2026-09-01 15:50:00"
+        "completed": "2026-09-01 15:50:00",
+        "pushed": "2026-09-01 15:53:01"
       },
       "state_history": [
         {
@@ -1565,8 +1614,15 @@
           "timestamp": "2026-09-01 15:50:00",
           "user": "Rolf",
           "note": "Accepted and marked completed per operator directive"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 15:53:01",
+          "user": "rgbig",
+          "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
         }
-      ]
+      ],
+      "pushed_at": "2026-09-01 15:53:01"
     },
     {
       "id": 35,
@@ -1574,8 +1630,8 @@
       "title": "Workspace Artifact Deduplication, Archive Consolidation & .lcd Junction Removal",
       "origin_repo": "Workspace_AI",
       "cr_id": "CR-2026-046",
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "bundle_id": "CRP-2026-013-Workspace_AI-v7.1.1-Workspace-Deduplication-Archive-and-Lcd-Purge",
       "author": "rgbig",
       "details": "Hash-based deduplication, archival of redundant scratch snapshots/baselines, refactoring of .lcm/tools/links, and deletion of legacy .lcd junction.",
@@ -1586,7 +1642,7 @@
         "suggested": "2026-08-30 18:57:00",
         "in_progress": "2026-08-30 18:57:00",
         "completed": "2026-08-30 19:02:45",
-        "pushed": "2026-08-30 19:41:10"
+        "pushed": "2026-09-01 15:53:01"
       },
       "state_history": [
         {
@@ -1612,9 +1668,15 @@
           "timestamp": "2026-08-30 19:41:10",
           "user": "Rolf",
           "note": "Pushed to remote"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 15:53:01",
+          "user": "rgbig",
+          "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
         }
       ],
-      "pushed_at": "2026-08-30 19:41:10"
+      "pushed_at": "2026-09-01 15:53:01"
     },
     {
       "id": 36,
@@ -1622,8 +1684,8 @@
       "title": "Disable Raspberry Pi Onboard Bluetooth Adapter & Consolidate BLE to Shelly Gateway",
       "origin_repo": "HaSSD06",
       "cr_id": "CR-2026-047",
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "bundle_id": "CRP-2026-014-HaSSD06-v7.1.1-Disable-Host-Bluetooth-Adapter-and-Consolidate-to-Shelly-Gateway",
       "author": "rgbig",
       "details": "Deactivate onboard bcm43438-bt adapter in Home Assistant to eliminate dual-scanner packet jitter, consolidating all BLE devices to shellyblugwg3.",
@@ -1634,7 +1696,7 @@
         "suggested": "2026-08-30 19:22:00",
         "in_progress": "2026-08-30 19:22:00",
         "completed": "2026-08-30 19:23:26",
-        "pushed": "2026-08-30 19:41:10"
+        "pushed": "2026-09-01 15:53:01"
       },
       "state_history": [
         {
@@ -1660,9 +1722,15 @@
           "timestamp": "2026-08-30 19:41:10",
           "user": "Rolf",
           "note": "Pushed to remote"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 15:53:01",
+          "user": "rgbig",
+          "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
         }
       ],
-      "pushed_at": "2026-08-30 19:41:10"
+      "pushed_at": "2026-09-01 15:53:01"
     },
     {
       "id": 37,
@@ -1670,20 +1738,19 @@
       "title": "Tool Explorer '@nn-' Prefix Tool Disappearance on Filter Reset",
       "origin_repo": "LCD / Tool Explorer",
       "cr_id": "BUG-2026-006",
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "author": "Rolf",
       "details": "Restores all 25 @00- to @21- customization tools in Tool Explorer, preserving numerical prefixes in filenames while providing clean chat trampolines.",
       "plan_path": "Workspace_Inventory/docs/Proposals/BUG-2026-006-LCM-v2.2.1-Tool-Explorer-AtPrefix-Filter-Exclusion.md",
       "walkthrough_path": "",
       "progress_state": "pushed",
-      "pushed_at": "2026-09-01 13:36:59",
       "dates": {
         "created": "2026-08-31 16:30:00",
         "suggested": "2026-08-31 16:30:00",
         "in_progress": "2026-08-31 17:00:00",
         "completed": "2026-09-01 13:30:00",
-        "pushed": "2026-09-01 13:36:59"
+        "pushed": "2026-09-01 15:53:01"
       },
       "state_history": [
         {
@@ -1709,8 +1776,15 @@
           "timestamp": "2026-09-01 13:36:59",
           "user": "Rolf",
           "note": "Pushed to remote"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 15:53:01",
+          "user": "rgbig",
+          "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
         }
-      ]
+      ],
+      "pushed_at": "2026-09-01 15:53:01"
     },
     {
       "id": 38,
@@ -1718,20 +1792,19 @@
       "title": "Excessive Repetitive Windows Notifications during Project Rule Access",
       "origin_repo": "Workspace_AI",
       "cr_id": "BUG-2026-007",
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "author": "Rolf",
       "details": "Suppresses excessive duplicate Windows notification toasts generated when accessing project standards documentation.",
       "plan_path": "Workspace_Inventory/docs/Proposals/BUG-2026-007-Workspace_AI-v7.1.2-Windows-Notification-Spam-Suppression.md",
       "walkthrough_path": "",
       "progress_state": "pushed",
-      "pushed_at": "2026-09-01 13:36:59",
       "dates": {
         "created": "2026-08-31 16:45:00",
         "suggested": "2026-08-31 16:45:00",
         "in_progress": "2026-08-31 17:00:00",
         "completed": "2026-09-01 13:30:00",
-        "pushed": "2026-09-01 13:36:59"
+        "pushed": "2026-09-01 15:53:01"
       },
       "state_history": [
         {
@@ -1757,8 +1830,15 @@
           "timestamp": "2026-09-01 13:36:59",
           "user": "Rolf",
           "note": "Pushed to remote"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 15:53:01",
+          "user": "rgbig",
+          "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
         }
-      ]
+      ],
+      "pushed_at": "2026-09-01 15:53:01"
     },
     {
       "id": 39,
@@ -1766,20 +1846,19 @@
       "title": "Tool Explorer Asset Path Resolution, Draggable Help Modal, and Catalog Sync",
       "origin_repo": "LCD / Tool Explorer",
       "cr_id": "CRP-2026-015",
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "author": "Rolf",
       "details": "Repairs asset path fallback candidate arrays, implements non-blocking draggable help modal, and expands catalog to 176 tools.",
       "plan_path": "Workspace_Inventory/docs/Proposals/CRP-2026-015-LCM-v2.2.1-Tool-Explorer-Asset-Path-Resolution-and-Multi-Tab-Launch-Repair.md",
       "walkthrough_path": "",
       "progress_state": "pushed",
-      "pushed_at": "2026-09-01 13:36:59",
       "dates": {
         "created": "2026-08-31 17:00:00",
         "suggested": "2026-08-31 17:00:00",
         "in_progress": "2026-08-31 17:00:00",
         "completed": "2026-09-01 13:30:00",
-        "pushed": "2026-09-01 13:36:59"
+        "pushed": "2026-09-01 15:53:01"
       },
       "state_history": [
         {
@@ -1805,8 +1884,15 @@
           "timestamp": "2026-09-01 13:36:59",
           "user": "Rolf",
           "note": "Pushed to remote"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 15:53:01",
+          "user": "rgbig",
+          "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
         }
-      ]
+      ],
+      "pushed_at": "2026-09-01 15:53:01"
     },
     {
       "id": 40,
@@ -1814,20 +1900,19 @@
       "title": "Prevent BLE Packet Collisions via Selective Single-Receiver Ingestion",
       "origin_repo": "HaSSD06",
       "cr_id": "CRP-2026-016",
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "author": "Rolf",
       "details": "Prevents BLE multi-hub collisions across 51 dynamic Bluetooth entities, scheduling twice-daily supervision and logging telemetry.",
       "plan_path": "Workspace_Inventory/docs/Proposals/CRP-2026-016-HaSSD06-v7.1.2-BLE-Selective-Single-Receiver-Routing.md",
       "walkthrough_path": "",
       "progress_state": "pushed",
-      "pushed_at": "2026-09-01 13:36:59",
       "dates": {
         "created": "2026-08-31 17:30:00",
         "suggested": "2026-08-31 17:30:00",
         "in_progress": "2026-08-31 17:00:00",
         "completed": "2026-09-01 13:30:00",
-        "pushed": "2026-09-01 13:36:59"
+        "pushed": "2026-09-01 15:53:01"
       },
       "state_history": [
         {
@@ -1853,8 +1938,15 @@
           "timestamp": "2026-09-01 13:36:59",
           "user": "Rolf",
           "note": "Pushed to remote"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 15:53:01",
+          "user": "rgbig",
+          "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
         }
-      ]
+      ],
+      "pushed_at": "2026-09-01 15:53:01"
     },
     {
       "id": 41,
@@ -1862,20 +1954,19 @@
       "title": "Universal Light/Dark Theme Standardization & High-Contrast Design Hardening",
       "origin_repo": "LCM Workspace",
       "cr_id": "CRP-2026-017",
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "author": "Rolf",
       "details": "Standardizes high-contrast light and dark theme color tokens across all 4 LCM dashboards with persistent scrollbars.",
       "plan_path": "Workspace_Inventory/docs/Proposals/CRP-2026-017-LCM-v2.2.2-Universal-Theme-and-High-Contrast-Design-System.md",
       "walkthrough_path": "",
       "progress_state": "pushed",
-      "pushed_at": "2026-09-01 13:36:59",
       "dates": {
         "created": "2026-08-31 18:00:00",
         "suggested": "2026-08-31 18:00:00",
         "in_progress": "2026-08-31 17:00:00",
         "completed": "2026-09-01 13:30:00",
-        "pushed": "2026-09-01 13:36:59"
+        "pushed": "2026-09-01 15:53:01"
       },
       "state_history": [
         {
@@ -1901,8 +1992,15 @@
           "timestamp": "2026-09-01 13:36:59",
           "user": "Rolf",
           "note": "Pushed to remote"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 15:53:01",
+          "user": "rgbig",
+          "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
         }
-      ]
+      ],
+      "pushed_at": "2026-09-01 15:53:01"
     },
     {
       "id": 42,
@@ -1910,20 +2008,19 @@
       "title": "CM Control Hub Navigation Hardening, Filter Reconciliation, and Action Engine",
       "origin_repo": "LCM Workspace",
       "cr_id": "CRP-2026-018",
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "author": "Rolf",
       "details": "Adds Windows-style top-right Back navigation, fixes completed metric card filter, and implements batch review action suite.",
       "plan_path": "Workspace_Inventory/docs/Proposals/CRP-2026-018-LCM-v2.2.2-CM-Control-Hub-Navigation-Filter-and-Action-Engine.md",
       "walkthrough_path": "",
       "progress_state": "pushed",
-      "pushed_at": "2026-09-01 13:36:59",
       "dates": {
         "created": "2026-08-31 18:30:00",
         "suggested": "2026-08-31 18:30:00",
         "in_progress": "2026-08-31 17:00:00",
         "completed": "2026-09-01 13:30:00",
-        "pushed": "2026-09-01 13:36:59"
+        "pushed": "2026-09-01 15:53:01"
       },
       "state_history": [
         {
@@ -1949,8 +2046,15 @@
           "timestamp": "2026-09-01 13:36:59",
           "user": "Rolf",
           "note": "Pushed to remote"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 15:53:01",
+          "user": "rgbig",
+          "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
         }
-      ]
+      ],
+      "pushed_at": "2026-09-01 15:53:01"
     },
     {
       "id": 43,
@@ -1958,20 +2062,19 @@
       "title": "Universal LCM Table UI/UX Standard & Standardized Interactive Document Viewer",
       "origin_repo": "LCM Workspace",
       "cr_id": "CRP-2026-019",
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "author": "Rolf",
       "details": "Integrates universal table UX standard (selection checkboxes, batch actions, search negation !term, multi-column sorting) across all dashboards.",
       "plan_path": "Workspace_Inventory/docs/Proposals/CRP-2026-019-LCM-v2.2.2-Standardized-Interactive-Document-Table-Viewer.md",
       "walkthrough_path": "",
       "progress_state": "pushed",
-      "pushed_at": "2026-09-01 13:36:59",
       "dates": {
         "created": "2026-08-31 19:00:00",
         "suggested": "2026-08-31 19:00:00",
         "in_progress": "2026-08-31 17:00:00",
         "completed": "2026-09-01 13:30:00",
-        "pushed": "2026-09-01 13:36:59"
+        "pushed": "2026-09-01 15:53:01"
       },
       "state_history": [
         {
@@ -1997,8 +2100,15 @@
           "timestamp": "2026-09-01 13:36:59",
           "user": "Rolf",
           "note": "Pushed to remote"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 15:53:01",
+          "user": "rgbig",
+          "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
         }
-      ]
+      ],
+      "pushed_at": "2026-09-01 15:53:01"
     },
     {
       "id": 44,
@@ -2006,20 +2116,19 @@
       "title": "LCM Deterministic Hook Engine & Zero-Trust Tool Execution Boundary",
       "origin_repo": "Workspace_AI",
       "cr_id": "CRP-2026-020",
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "author": "Rolf",
       "details": "Enforces review-gated git commits, repository boundary isolation, UTF-8 formatting, and privilege delegation via PreToolUse/PostToolUse hooks.",
       "plan_path": "Workspace_Inventory/docs/Proposals/CRP-2026-020-Workspace_AI-v7.2.0-LCM-Deterministic-Hook-Engine.md",
       "walkthrough_path": "",
       "progress_state": "pushed",
-      "pushed_at": "2026-09-01 13:37:50",
       "dates": {
         "created": "2026-09-01 13:35:00",
         "suggested": "2026-09-01 13:35:00",
         "in_progress": "2026-09-01 13:35:00",
         "completed": "2026-09-01 13:37:00",
-        "pushed": "2026-09-01 13:37:50"
+        "pushed": "2026-09-01 15:53:01"
       },
       "state_history": [
         {
@@ -2045,8 +2154,15 @@
           "timestamp": "2026-09-01 13:37:50",
           "user": "Rolf",
           "note": "Pushed to remote"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 15:53:01",
+          "user": "rgbig",
+          "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
         }
-      ]
+      ],
+      "pushed_at": "2026-09-01 15:53:01"
     }
   ]
 }
