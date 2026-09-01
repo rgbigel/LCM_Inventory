@@ -1,0 +1,10 @@
+{
+  "RepositoryName": "Workspace_Inventory",
+  "RepositoryPath": "Workspace_Inventory",
+  "CommitSha": "2246a03",
+  "ReviewResult": "AcceptedAll",
+  "Reviewer": "rgbig",
+  "Timestamp": "2026-09-01 15:51:36",
+  "Message": "feat(cm): implement Show-CrpDates engine, state change date timeline ledger, and CM Control Hub date viewer",
+  "ActionsExecuted": []
+}
