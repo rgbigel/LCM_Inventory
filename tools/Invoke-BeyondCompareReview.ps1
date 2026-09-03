@@ -64,16 +64,17 @@ $scriptName = "Invoke-BeyondCompareReview"
 # ------------------------------------------------------------------------------
 # 0. Help Handler (-h / -Help / -?) per RULE-PS-010
 # ------------------------------------------------------------------------------
-if ($Help -or [string]::IsNullOrWhiteSpace($RepositoryName)) {
+if ($Help) {
     Write-Host "==========================================================================" -ForegroundColor Cyan
     Write-Host " BEYOND COMPARE 5 REPOSITORY REVIEW LAUNCHER (v$scriptVersion)" -ForegroundColor Cyan
     Write-Host "==========================================================================" -ForegroundColor Cyan
     Write-Host "SYNOPSIS:" -ForegroundColor Yellow
-    Write-Host "  Exports the specified Git baseline to a temporary inspection tree and opens"
+    Write-Host "  Exports the local Git HEAD baseline to a temporary inspection tree and opens"
     Write-Host "  Beyond Compare 5 on your interactive desktop with out-of-scope filter exclusions."
     Write-Host ""
     Write-Host "USAGE:" -ForegroundColor Yellow
-    Write-Host "  pwsh tools/Invoke-BeyondCompareReview.ps1 -RepositoryName <repo> [-BaseCommit <commit>] [-Exclusions <array>] [-Wait] [-h]"
+    Write-Host "  pwsh tools/Invoke-BeyondCompareReview.ps1 [-RepositoryName <repo>] [-BaseCommit <commit>] [-Exclusions <array>] [-Wait] [-h]"
+    Write-Host "  BCR [-RepositoryName <repo>] [-BaseCommit <commit>]"
     Write-Host ""
     Write-Host "REVIEW DIRECTIVES (APPLIED IN LEFT PANE):" -ForegroundColor Yellow
     Write-Host "  1. Copy Right -> Left     : Staged for ACCEPTANCE upon 'ACCEPT' command."
@@ -82,6 +83,15 @@ if ($Help -or [string]::IsNullOrWhiteSpace($RepositoryName)) {
     Write-Host "  4. Leave Left Untouched   : Skipped / remains uncommitted in working directory."
     Write-Host "==========================================================================" -ForegroundColor Cyan
     return
+}
+
+if ([string]::IsNullOrWhiteSpace($RepositoryName)) {
+    $currentToplevel = (git rev-parse --show-toplevel 2>$null)
+    if ($currentToplevel) {
+        $RepositoryName = $currentToplevel.Trim()
+    } else {
+        $RepositoryName = '.'
+    }
 }
 
 function Update-BCReviewSession {
@@ -414,7 +424,7 @@ if (-not (Test-Path -LiteralPath $workspaceRoot)) {
 }
 
 $repoPath = $null
-if ($RepositoryName -in @('.', 'root', 'Git_Repositories', (Split-Path $workspaceRoot -Leaf))) {
+if ($RepositoryName -in @('root', 'Git_Repositories', (Split-Path $workspaceRoot -Leaf))) {
     $repoPath = $workspaceRoot
 } elseif (Test-Path -LiteralPath $RepositoryName) {
     $repoPath = (Resolve-Path $RepositoryName).Path
@@ -440,7 +450,7 @@ if (-not (Test-Path -LiteralPath $BeyondComparePath)) {
 }
 
 # ------------------------------------------------------------------------------
-# 2. Resolve Base Commit
+# 2. Resolve Base Commit (Anchored strictly to local Git HEAD; no remote fetches)
 # ------------------------------------------------------------------------------
 $commitSha = $null
 $commitMsg = ""
@@ -450,6 +460,7 @@ if ([string]::IsNullOrWhiteSpace($BaseCommit)) {
 }
 
 try {
+    # Strictly resolve against local Git HEAD without origin/main or network fetches
     $commitSha = (git -C $repoPath rev-parse --short $BaseCommit 2>$null).Trim()
     $commitMsg = (git -C $repoPath log -n 1 --pretty=format:"%s" $BaseCommit 2>$null).Trim()
 }
@@ -462,6 +473,8 @@ if (-not $commitSha) {
     $commitSha = 'unborn'
     $commitMsg = 'Initial Empty Baseline'
 }
+
+Write-Host "Verified Baseline Resolution: [${commitSha}: $commitMsg]" -ForegroundColor DarkCyan
 
 # ------------------------------------------------------------------------------
 # 3. Export Baseline Commit into Workspace Scratch Review Inspection Tree (Variant A)
@@ -620,3 +633,4 @@ if ($Wait) {
     Write-Host "Waiting for Beyond Compare review session to close..." -ForegroundColor DarkGray
     Audit-BeyondCompareReviewStaging -TempReviewRoot $tempReviewRoot -RepoPath $repoPath -RepoName $repoName -CommitSha $commitSha
 }
+

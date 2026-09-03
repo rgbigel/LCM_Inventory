@@ -1,0 +1,2635 @@
+﻿{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "LCM Workspace Proposals Ledger",
+  "updated_at": "2026-09-03 14:12:11",
+  "review_granularity": "coarse",
+  "lcm_mode": "active",
+  "last_proposal_id": 59,
+  "proposals": [
+    {
+      "id": 1,
+      "timestamp": "2026-08-20 15:20:00",
+      "title": "Implement LCM Two-Tier Proposal and Review Governance Engine",
+      "origin_repo": "Workspace_Inventory",
+      "cr_id": "CR-2026-012",
+      "state": "pushed",
+      "bundle_id": "BUNDLE-2026-03",
+      "author": "Rolf",
+      "details": "Two-tier proposal tracking, BC5 review integration, multi-repo staging, granularity controls, and dual-commit sync.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-001_CR-2026-012_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-001_CR-2026-012_Walkthrough.md",
+      "progress_state": "pushed",
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-20 15:20:00",
+        "suggested": "2026-08-20 15:20:00",
+        "in_progress": "2026-08-20 15:20:00",
+        "completed": "2026-08-30 15:25:00",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-20 15:20:00",
+          "user": "Rolf",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-20 15:20:00",
+          "user": "Rolf",
+          "note": "Implementation initiated in core framework"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 15:25:00",
+          "user": "Rolf",
+          "note": "Review disposition ACCEPTED"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote repository"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "timestamp": "2026-08-20 16:37:00",
+      "title": "Implement Automated LCM Rule Health Diagnostics and Repair Engine",
+      "origin_repo": "Workspace_Inventory",
+      "cr_id": "CR-2026-013",
+      "state": "pushed",
+      "bundle_id": "BUNDLE-2026-03",
+      "author": "Rolf",
+      "details": "Add Test-LCMRuleHealth.ps1 and Repair-LCMRules.ps1 to detect and clean up governance drift, redundant static rule files, and broken junctions across pulled repositories.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-002_CR-2026-013_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-002_CR-2026-013_Walkthrough.md",
+      "progress_state": "pushed",
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-20 16:37:00",
+        "suggested": "2026-08-20 16:37:00",
+        "in_progress": "2026-08-20 16:37:00",
+        "completed": "2026-08-30 15:25:00",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-20 16:37:00",
+          "user": "Rolf",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-20 16:37:00",
+          "user": "Rolf",
+          "note": "Implementation initiated in core framework"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 15:25:00",
+          "user": "Rolf",
+          "note": "Review disposition ACCEPTED"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote repository"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "timestamp": "2026-08-20 18:01:00",
+      "title": "Mandate Tripartite Repository Documentation Standard (Architecture, Requirements, Implementation)",
+      "origin_repo": "Workspace_Inventory",
+      "cr_id": "CR-2026-014",
+      "state": "pushed",
+      "bundle_id": "BUNDLE-2026-03",
+      "author": "Rolf",
+      "details": "Codify tripartite repo-level documentation distinguishing Architecture (user view), Requirements (technical aspects of design), and Implementation (code representation).",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-003_CR-2026-014_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-003_CR-2026-014_Walkthrough.md",
+      "progress_state": "pushed",
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-20 18:01:00",
+        "suggested": "2026-08-20 18:01:00",
+        "in_progress": "2026-08-20 18:01:00",
+        "completed": "2026-08-30 15:25:00",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-20 18:01:00",
+          "user": "Rolf",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-20 18:01:00",
+          "user": "Rolf",
+          "note": "Implementation initiated in core framework"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 15:25:00",
+          "user": "Rolf",
+          "note": "Review disposition ACCEPTED"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote repository"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "timestamp": "2026-08-20 18:38:00",
+      "title": "Mandate Universal install/ Directory and Installation.md Lifecycle Runbook Standard",
+      "origin_repo": "Workspace_Inventory",
+      "cr_id": "CR-2026-015",
+      "state": "pushed",
+      "bundle_id": "unassigned",
+      "author": "Rolf",
+      "details": "Codify mandatory install/ directory and Installation.md runbook covering prerequisites, customization, preflight, deployment, health checks, updates, and target folder layout.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-004_CR-2026-015_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-004_CR-2026-015_Walkthrough.md",
+      "progress_state": "pushed",
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-20 18:38:00",
+        "suggested": "2026-08-20 18:38:00",
+        "in_progress": "2026-08-20 18:38:00",
+        "completed": "2026-08-30 15:25:00",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-20 18:38:00",
+          "user": "Rolf",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-20 18:38:00",
+          "user": "Rolf",
+          "note": "Implementation initiated in core framework"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 15:25:00",
+          "user": "Rolf",
+          "note": "Review disposition ACCEPTED"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote repository"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "timestamp": "2026-08-26 14:08:15",
+      "title": "Enable Configurable Target Path Parameter in Show-CmdFolderAnalysis.ps1",
+      "origin_repo": "Root (tools)",
+      "cr_id": "CR-2026-016",
+      "state": "pushed",
+      "bundle_id": "unassigned",
+      "author": "Rolf",
+      "details": "Add -Path parameter (with default 'D:\\OneDrive\\cmd') to tools/Show-CmdFolderAnalysis.ps1, supporting dynamic analysis of arbitrary script directories (e.g. D:\\@cmd, D:\\OneDrive\\cmd\\@Repair, staging paths), updating CLI parameter binding, help banner, existence checks, and dynamic HTML report header.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-005_CR-2026-016_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-005_CR-2026-016_Walkthrough.md",
+      "progress_state": "pushed",
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-26 14:08:15",
+        "suggested": "2026-08-26 14:08:15",
+        "in_progress": "2026-08-26 14:08:15",
+        "completed": "2026-08-30 15:25:00",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-26 14:08:15",
+          "user": "Rolf",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-26 14:08:15",
+          "user": "Rolf",
+          "note": "Implementation initiated in core framework"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 15:25:00",
+          "user": "Rolf",
+          "note": "Review disposition ACCEPTED"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote repository"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "timestamp": "2026-08-26 14:11:55",
+      "title": "Merge Enter-CmdAdmin UAC Elevation Functionality into GoAdm.cmd",
+      "origin_repo": "SystemConfiguration",
+      "cr_id": "CR-2026-017",
+      "state": "pushed",
+      "bundle_id": "unassigned",
+      "author": "Rolf",
+      "details": "Merge the robust modern UAC elevation mechanism from Enter-CmdAdmin.cmd into GoAdm.cmd (replacing legacy runas /user:Administrator with PowerShell Start-Process cmd.exe -Verb RunAs and SID S-1-5-32-544 check), unifying CMD elevation under GoAdm and archiving/consolidating Enter-CmdAdmin.cmd.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-006_CR-2026-017_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-006_CR-2026-017_Walkthrough.md",
+      "progress_state": "pushed",
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-26 14:11:55",
+        "suggested": "2026-08-26 14:11:55",
+        "in_progress": "2026-08-26 14:11:55",
+        "completed": "2026-08-30 15:25:00",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-26 14:11:55",
+          "user": "Rolf",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-26 14:11:55",
+          "user": "Rolf",
+          "note": "Implementation initiated in core framework"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 15:25:00",
+          "user": "Rolf",
+          "note": "Review disposition ACCEPTED"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote repository"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "timestamp": "2026-08-26 14:28:45",
+      "title": "Add Deduplicated Chat Short-Name View Toggle to Show-Tools (TOOLS_VIEWER)",
+      "origin_repo": "Root (tools)",
+      "cr_id": "CR-2026-018",
+      "state": "pushed",
+      "bundle_id": "unassigned",
+      "author": "Rolf",
+      "details": "Add an interactive toggle switch in Show-ToolIndex.ps1 (TOOLS_VIEWER.html) to switch the Tool Name column into 'Chat Short-Names Only' mode. In this mode, displays clean extension-less chat short names, filters to User-exposed tools, deduplicates across environments (.ps1/.cmd) and repository mirrors, and preserves click-to-run execution.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-007_CR-2026-018_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-007_CR-2026-018_Walkthrough.md",
+      "progress_state": "pushed",
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-26 14:28:45",
+        "suggested": "2026-08-26 14:28:45",
+        "in_progress": "2026-08-26 14:28:45",
+        "completed": "2026-08-30 15:25:00",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-26 14:28:45",
+          "user": "Rolf",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-26 14:28:45",
+          "user": "Rolf",
+          "note": "Implementation initiated in core framework"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 15:25:00",
+          "user": "Rolf",
+          "note": "Review disposition ACCEPTED"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote repository"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "timestamp": "2026-08-26 15:42:35",
+      "title": "Modernize BackgroundModifier Architecture via Dynamic Rainmeter Skin Engine",
+      "origin_repo": "BackgroundModifier",
+      "cr_id": "CR-2026-019",
+      "state": "pushed",
+      "bundle_id": "unassigned",
+      "author": "Rolf",
+      "details": "Revive and redesign BackgroundModifier modernization using a dynamic Rainmeter telemetry skin architecture, resolving previous development bottlenecks: 1) Replace brittle GDI+ bitmap wallpaper baking and cache-busting with live desktop widget overlay, 2) Dynamically generate multi-drive meter configurations from state.json (supporting 13+ drives), 3) Implement lightweight event-driven Rainmeter refresh signaling, 4) Ensure DPI scaling and icon-safe screen positioning.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-008_CR-2026-019_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-008_CR-2026-019_Walkthrough.md",
+      "progress_state": "pushed",
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-26 15:42:35",
+        "suggested": "2026-08-26 15:42:35",
+        "in_progress": "2026-08-26 15:42:35",
+        "completed": "2026-08-30 15:25:00",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-26 15:42:35",
+          "user": "Rolf",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-26 15:42:35",
+          "user": "Rolf",
+          "note": "Implementation initiated in core framework"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 15:25:00",
+          "user": "Rolf",
+          "note": "Review disposition ACCEPTED"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote repository"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "timestamp": "2026-08-26 15:45:40",
+      "title": "Implement Export-LCMRules (SaveLCMRules) Governance Exporter and Gemini Sync Tool",
+      "origin_repo": "Root (tools)",
+      "cr_id": "CR-2026-020",
+      "state": "pushed",
+      "bundle_id": "unassigned",
+      "author": "Rolf",
+      "details": "Implement Export-LCMRules.ps1 (with Save-LCMRules and SaveLCMRules aliases) to aggregate all 16 canonical LCM rule policies from .agents/rules/, AGENTS.md, and GEMINI.md into a single structured, clean markdown bundle (with frontmatter stripped and clear section banners), supporting -ToClipboard for 1-click pasting into Gemini Gems and configurable file export targets.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-009_CR-2026-020_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-009_CR-2026-020_Walkthrough.md",
+      "progress_state": "pushed",
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-26 15:45:40",
+        "suggested": "2026-08-26 15:45:40",
+        "in_progress": "2026-08-26 15:45:40",
+        "completed": "2026-08-30 15:25:00",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-26 15:45:40",
+          "user": "Rolf",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-26 15:45:40",
+          "user": "Rolf",
+          "note": "Implementation initiated in core framework"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 15:25:00",
+          "user": "Rolf",
+          "note": "Review disposition ACCEPTED"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote repository"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "timestamp": "2026-08-29 18:00:41",
+      "title": "Align LCM Module and Documentation Versioning with Major Baseline Invariant (v6.1.0 / M.Y.Z)",
+      "origin_repo": "Workspace_AI / Workspace_Inventory",
+      "cr_id": "CR-2026-021",
+      "state": "pushed",
+      "bundle_id": "unassigned",
+      "author": "Rolf",
+      "details": "Codify and enforce LCM Major Version Alignment Invariant: when a major LCM version M is established, all contained module/spec versions become M.Y.Z (preserving minor/patch evolution). Synchronize all outdated documentation and config references in .github, .copilot, .vscode, .agents/rules, docs, tools, and child repos to LCM v6.1.0.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-010_CR-2026-021_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-010_CR-2026-021_Walkthrough.md",
+      "progress_state": "pushed",
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-29 18:00:41",
+        "suggested": "2026-08-29 18:00:41",
+        "in_progress": "2026-08-29 18:00:41",
+        "completed": "2026-08-30 16:34:13",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-29 18:00:41",
+          "user": "Rolf",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-29 18:00:41",
+          "user": "Rolf",
+          "note": "Implementation in progress"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 16:34:13",
+          "user": "Rolf",
+          "note": "Review acceptance recorded"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote tracking branch"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "timestamp": "2026-08-29 18:12:35",
+      "title": "Establish Major Release Retention Horizon Policy and Standardized History Log Naming Scheme",
+      "origin_repo": "Workspace_AI / Workspace_Inventory",
+      "cr_id": "CR-2026-022",
+      "state": "pushed",
+      "bundle_id": "unassigned",
+      "author": "rgbig",
+      "details": "Codify the 2-Major-Release Horizon retention rule for pruning transient logs and deletions upon major release pushes while preserving permanent macro-evolution history logs under a standardized naming taxonomy (##_<Era>-Evolution, Classification: permanent-evolution-history).",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-011_CR-2026-022_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-011_CR-2026-022_Walkthrough.md",
+      "progress_state": "pushed",
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-29 18:12:35",
+        "suggested": "2026-08-29 18:12:35",
+        "in_progress": "2026-08-29 18:12:35",
+        "completed": "2026-08-30 16:34:13",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-29 18:12:35",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-29 18:12:35",
+          "user": "Rolf",
+          "note": "Implementation in progress"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 16:34:13",
+          "user": "Rolf",
+          "note": "Review acceptance recorded"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote tracking branch"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "timestamp": "2026-08-29 18:34:51",
+      "title": "Design and Implement LCM Universal Installation Path, Packaging Agent, Preflight Engine, and UX Verification Suite",
+      "origin_repo": "Workspace_AI / Workspace_Inventory",
+      "cr_id": "CR-2026-023",
+      "state": "pushed",
+      "bundle_id": "unassigned",
+      "author": "rgbig",
+      "details": "Comprehensive design and implementation of the LCM Installation Path: payload extraction from LCM workspace (excluding subsystems), analogous subsystem install contract, configurable target root directory structure, Setup packaging agent, interactive Pre-Installation Check Tool with unified completion log, separate Onboarding function, and post-installation UX verification tool.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-012_CR-2026-023_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-012_CR-2026-023_Walkthrough.md",
+      "progress_state": "pushed",
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-29 18:34:51",
+        "suggested": "2026-08-29 18:34:51",
+        "in_progress": "2026-08-29 18:34:51",
+        "completed": "2026-08-30 16:34:13",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-29 18:34:51",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-29 18:34:51",
+          "user": "Rolf",
+          "note": "Implementation in progress"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 16:34:13",
+          "user": "Rolf",
+          "note": "Review acceptance recorded"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote tracking branch"
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "timestamp": "2026-08-29 18:40:22",
+      "title": "Enhance Pre-Installation Check with Modular Tool Selection & Conditional Deployment Engine",
+      "origin_repo": "Workspace_AI / Workspace_Inventory",
+      "cr_id": "CR-2026-024",
+      "state": "pushed",
+      "bundle_id": "unassigned",
+      "author": "rgbig",
+      "details": "Extend Pre-Installation Check Tool and Setup Engine to support modular, user-controlled tool selection (Everything search, AI orchestration variants, Beyond Compare 5, local database backends, REST daemon) with manifest serialization and conditional post-install verification.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-013_CR-2026-024_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-013_CR-2026-024_Walkthrough.md",
+      "progress_state": "pushed",
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-29 18:40:22",
+        "suggested": "2026-08-29 18:40:22",
+        "in_progress": "2026-08-29 18:40:22",
+        "completed": "2026-08-30 16:34:13",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-29 18:40:22",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-29 18:40:22",
+          "user": "Rolf",
+          "note": "Implementation in progress"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 16:34:13",
+          "user": "Rolf",
+          "note": "Review acceptance recorded"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote tracking branch"
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "timestamp": "2026-08-29 18:45:23",
+      "title": "Establish Dual-State Proposal Lifecycle (Plan State & Implementation Progress State) and CM Plan Archive",
+      "origin_repo": "Workspace_Inventory / Workspace_AI",
+      "cr_id": "CR-2026-025",
+      "state": "pushed",
+      "bundle_id": "unassigned",
+      "author": "rgbig",
+      "details": "Evolve proposal schema to track both Governance Plan State (suggested, approved, deferred, completed) and Implementation Progress State (undecided, queued, in_progress, verification, completed, blocked), and establish dedicated CM archive in Workspace_Inventory/data/proposals/plans/ for all implementation plans and walkthroughs.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-014_CR-2026-025_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-014_CR-2026-025_Walkthrough.md",
+      "progress_state": "pushed",
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-29 18:45:23",
+        "suggested": "2026-08-29 18:45:23",
+        "in_progress": "2026-08-29 18:45:23",
+        "completed": "2026-08-30 16:34:13",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-29 18:45:23",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-29 18:45:23",
+          "user": "Rolf",
+          "note": "Implementation in progress"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 16:34:13",
+          "user": "Rolf",
+          "note": "Review acceptance recorded"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote tracking branch"
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "timestamp": "2026-08-29 18:50:04",
+      "title": "Establish Dedicated Installation_LCD Governed Repository for LCM Platform Packaging & Deployment",
+      "origin_repo": "Installation_LCD",
+      "cr_id": "CR-2026-026",
+      "state": "pushed",
+      "progress_state": "pushed",
+      "bundle_id": "unassigned",
+      "author": "rgbig",
+      "details": "Provision dedicated child repository Installation_LCD under LCM governance (.agents/rules junction, .lcm/config.json baseline 6.1.0, tripartite specs) to isolate packaging agent, preflight checker, modular setup deployer, onboarding engine, and UX verifier outside core LCM until release.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-015_CR-2026-026_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-015_CR-2026-026_Walkthrough.md",
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-29 18:50:04",
+        "suggested": "2026-08-29 18:50:04",
+        "in_progress": "2026-08-29 18:50:04",
+        "completed": "2026-08-30 16:34:13",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-29 18:50:04",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-29 18:50:04",
+          "user": "Rolf",
+          "note": "Implementation in progress"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 16:34:13",
+          "user": "Rolf",
+          "note": "Review acceptance recorded"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote tracking branch"
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "timestamp": "2026-08-29 19:35:34",
+      "title": "Design and Author Comprehensive Tripartite Specifications and Normative Runbook for Installation_LCD",
+      "origin_repo": "Installation_LCD",
+      "cr_id": "CR-2026-027",
+      "state": "pushed",
+      "progress_state": "pushed",
+      "bundle_id": "unassigned",
+      "author": "rgbig",
+      "details": "Author full normative tripartite documentation suite (docs/Architecture.md, docs/Requirements.md, docs/Implementation.md) and 7-phase runbook (install/Installation.md) in Installation_LCD, establishing complete design specifications for IDE review before code implementation.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-016_CR-2026-027_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-016_CR-2026-027_Walkthrough.md",
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-29 19:35:34",
+        "suggested": "2026-08-29 19:35:34",
+        "in_progress": "2026-08-29 19:35:34",
+        "completed": "2026-08-30 16:34:13",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-29 19:35:34",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-29 19:35:34",
+          "user": "Rolf",
+          "note": "Implementation in progress"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 16:34:13",
+          "user": "Rolf",
+          "note": "Review acceptance recorded"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote tracking branch"
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "timestamp": "2026-08-29 19:45:00",
+      "title": "Resolve Broken Path Delegation in Numbered Legacy Alias Wrappers (@21-FixMouseFlickerInvariants.ps1 & @20-KillLogitechUpdateFull.ps1)",
+      "origin_repo": "Root (tools) / SystemConfiguration",
+      "cr_id": "CR-2026-028",
+      "state": "pushed",
+      "progress_state": "pushed",
+      "bundle_id": "unassigned",
+      "author": "rgbig",
+      "details": "Fix invalid target path resolution in @21-FixMouseFlickerInvariants.ps1 (ShortName FixMouseFlicker) and @20-KillLogitechUpdateFull.ps1 (ShortName KillLogitechFull) where relative fallback ..\\..\\tools\\ resolves to non-existent paths when launched from tools/ or ShowTools web dashboard. Implement dynamic multi-candidate path resolution.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-017_CR-2026-028_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-017_CR-2026-028_Walkthrough.md",
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-29 19:45:00",
+        "suggested": "2026-08-29 19:45:00",
+        "in_progress": "2026-08-29 19:45:00",
+        "completed": "2026-08-30 16:34:13",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-29 19:45:00",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-29 19:45:00",
+          "user": "Rolf",
+          "note": "Implementation in progress"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 16:34:13",
+          "user": "Rolf",
+          "note": "Review acceptance recorded"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote tracking branch"
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "timestamp": "2026-08-29 19:59:30",
+      "title": "Default to Lightweight BUG Report on Error/Unwanted Behavior Feedback",
+      "origin_repo": "Workspace_AI / Workspace_Inventory",
+      "cr_id": "CR-2026-029",
+      "state": "pushed",
+      "progress_state": "pushed",
+      "bundle_id": "CRP-2026-004",
+      "author": "rgbig",
+      "details": "When reporting errors or unwanted behavior via back channel/prompt, default to generating lightweight BUG report (superficial root cause, criticality assessment, stop) rather than initiating full-blown CRP processing until explicitly commanded.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-018_CR-2026-029_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-018_CR-2026-029_Walkthrough.md",
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-29 19:59:30",
+        "suggested": "2026-08-29 19:59:30",
+        "in_progress": "2026-08-29 19:59:30",
+        "completed": "2026-08-30 16:34:13",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-29 19:59:30",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-29 19:59:30",
+          "user": "Rolf",
+          "note": "Implementation in progress"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 16:34:13",
+          "user": "Rolf",
+          "note": "Review acceptance recorded"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote tracking branch"
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "timestamp": "2026-08-29 20:22:45",
+      "title": "Configuration Management (CM) Control Hub Web Dashboard & Batch Review Engine (Show-CmControlHub / CmHub / DOR)",
+      "origin_repo": "Workspace_Inventory / tools",
+      "cr_id": "CR-2026-030",
+      "state": "pushed",
+      "progress_state": "pushed",
+      "bundle_id": "CRP-2026-006",
+      "author": "rgbig",
+      "details": "Interactive web dashboard for CM governance, real-time dual-state and BUG tracking, multi-facet filtering, batch beyond compare review & accept all, plan/walkthrough/receipt inspection tabs, Notepad++ CRP editing with plan auto-sync, and historical log viewing.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-019_CR-2026-030_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-019_CR-2026-030_Walkthrough.md",
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-29 20:22:45",
+        "suggested": "2026-08-29 20:22:45",
+        "in_progress": "2026-08-29 20:22:45",
+        "completed": "2026-08-30 16:34:13",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-29 20:22:45",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-29 20:22:45",
+          "user": "Rolf",
+          "note": "Implementation in progress"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 16:34:13",
+          "user": "Rolf",
+          "note": "Review acceptance recorded"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote tracking branch"
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "timestamp": "2026-08-29 22:37:00",
+      "title": "Consolidate LCD Platform Engine into Encapsulated .lcd Structure with .tools/internal and tools/links Separation",
+      "origin_repo": "Root / .lcd",
+      "cr_id": "CR-2026-031",
+      "state": "pushed",
+      "progress_state": "pushed",
+      "bundle_id": "unassigned",
+      "author": "rgbig",
+      "details": "Consolidate LCD platform governance rules, internal tools, modules, and docs into an encapsulated .lcd/ structure with separate .lcd/.tools/internal (real code) and .lcd/tools/links (gitignored symlinks), update %PATH% to .lcd/Cmd, update child repository junctions, and provide root compatibility junctions.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-020_CR-2026-031_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-020_CR-2026-031_Walkthrough.md",
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-29 22:37:00",
+        "suggested": "2026-08-29 22:37:00",
+        "in_progress": "2026-08-29 22:37:00",
+        "completed": "2026-08-30 16:34:13",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-29 22:37:00",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-29 22:37:00",
+          "user": "Rolf",
+          "note": "Implementation in progress"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 16:34:13",
+          "user": "Rolf",
+          "note": "Review acceptance recorded"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote tracking branch"
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "timestamp": "2026-08-30 11:26:00",
+      "title": "Google Drive Gemini Inbox Watcher, Mandatory Timestamping, and Security Intake Queue",
+      "origin_repo": "Workspace_AI / .lcd",
+      "cr_id": "CR-2026-032",
+      "state": "pushed",
+      "progress_state": "pushed",
+      "bundle_id": "CRP-2026-002",
+      "author": "rgbig",
+      "details": "Establish a controlled, secure intake pipeline for instructions and lightweight BUG reports from Google Gemini via D:\\GDrive\\LCM\\INBOX. Enforce mandatory ISO 8601/local timestamping, route incoming items into the LCM Proposal ledger (suggested state) without immediate execution, archive processed files to INBOX/archive/, and provide Sync-GeminiInbox tool and Gemini Gem intake specification.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-021_CR-2026-032_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-021_CR-2026-032_Walkthrough.md",
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-30 11:26:00",
+        "suggested": "2026-08-30 11:26:00",
+        "in_progress": "2026-08-30 11:26:00",
+        "completed": "2026-08-30 16:34:13",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-30 11:26:00",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-30 11:26:00",
+          "user": "Rolf",
+          "note": "Implementation in progress"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 16:34:13",
+          "user": "Rolf",
+          "note": "Review acceptance recorded"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote tracking branch"
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "timestamp": "2026-08-30 11:34:09",
+      "title": "Codify RULE-REV-006 Mandatory Review Stop and Turn Termination Invariant in Governance Rules",
+      "origin_repo": ".agents / Workspace_AI",
+      "cr_id": "CR-2026-033",
+      "state": "pushed",
+      "progress_state": "pushed",
+      "bundle_id": "CRP-2026-003",
+      "author": "rgbig",
+      "details": "Codify RULE-REV-006 (Mandatory Review Stop and Turn Termination Invariant) in ReviewCommitGovernancePolicy.md and ProposalReviewFlowPolicy.md, strictly forbidding the AI agent from auto-committing or invoking Submit-ReviewResult.ps1 in the same response turn as Invoke-BeyondCompareReview.ps1.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-022_CR-2026-033_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-022_CR-2026-033_Walkthrough.md",
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-30 11:34:09",
+        "suggested": "2026-08-30 11:34:09",
+        "in_progress": "2026-08-30 11:34:09",
+        "completed": "2026-08-30 16:34:13",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-30 11:34:09",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-30 11:34:09",
+          "user": "Rolf",
+          "note": "Implementation in progress"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 16:34:13",
+          "user": "Rolf",
+          "note": "Review acceptance recorded"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote tracking branch"
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "timestamp": "2026-08-30 13:07:19",
+      "title": "Scope and Version-Explicit Naming Standard for Change Request Proposals (CRPs)",
+      "origin_repo": "Workspace_Inventory / Governance",
+      "cr_id": "CR-2026-034",
+      "state": "pushed",
+      "progress_state": "pushed",
+      "bundle_id": "CRP-2026-005",
+      "author": "rgbig",
+      "details": "Establish mandatory Scope and Version-Explicit naming convention for Change Request Proposals (CRP-YYYY-NNN-[Scope]-[Version]-[Slug].md) and mandatory header metadata to isolate affected repository boundaries and version ranges.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-023_CR-2026-034_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-023_CR-2026-034_Walkthrough.md",
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-30 13:07:19",
+        "suggested": "2026-08-30 13:07:19",
+        "in_progress": "2026-08-30 13:07:19",
+        "completed": "2026-08-30 16:34:13",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-30 13:07:19",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-30 13:07:19",
+          "user": "Rolf",
+          "note": "Implementation in progress"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 16:34:13",
+          "user": "Rolf",
+          "note": "Review acceptance recorded"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote tracking branch"
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "timestamp": "2026-08-30 15:22:00",
+      "title": "Fix .NET Regex String Interpolation Backreference Corruption in CM Control Hub HTML Data Injector",
+      "origin_repo": "Workspace_Inventory",
+      "cr_id": "BUG-2026-001",
+      "state": "pushed",
+      "progress_state": "pushed",
+      "bundle_id": "BUG-2026-001-Workspace_Inventory-v7.1.0-Regex-Interpolation-Spill",
+      "author": "rgbig",
+      "details": "Replace .NET Regex.Replace with byte-exact literal string .Replace in Show-CmControlHub.ps1 to prevent dollar-sign script variables ($) in cached documents from being mangled as regex backreferences and corrupting HTML script injection.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-024_BUG-2026-001_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-024_BUG-2026-001_Walkthrough.md",
+      "pushed_at": "2026-08-30 15:29:48",
+      "dates": {
+        "created": "2026-08-30 15:22:00",
+        "suggested": "2026-08-30 15:22:00",
+        "in_progress": "2026-08-30 15:22:00",
+        "completed": "2026-08-30 16:34:13",
+        "pushed": "2026-08-30 15:29:48"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-30 15:22:00",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-30 15:22:00",
+          "user": "Rolf",
+          "note": "Implementation in progress"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 16:34:13",
+          "user": "Rolf",
+          "note": "Review acceptance recorded"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:29:48",
+          "user": "Rolf",
+          "note": "Pushed to remote tracking branch"
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "timestamp": "2026-08-30 15:45:00",
+      "title": "Single-Instance Control Hub Tab Lifecycle Coordination, Auto-Retirement, and Quiet Render Engine",
+      "origin_repo": "Workspace_Inventory",
+      "cr_id": "CR-2026-036",
+      "state": "pushed",
+      "progress_state": "pushed",
+      "bundle_id": "CRP-2026-007-Workspace_Inventory-v7.1.0-Single-Instance-Dashboard-Tab-Coordination",
+      "author": "rgbig",
+      "details": "BroadcastChannel single-instance tab coordination in CM_CONTROL_HUB.html to auto-retire obsolete dashboard tabs, unconditional preservation of documentation sub-tabs and desktop editors, and -NoLaunch parameter in Show-CmControlHub.ps1.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-025_CR-2026-036_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-025_CR-2026-036_Walkthrough.md",
+      "pushed_at": "2026-08-30 15:47:00",
+      "dates": {
+        "created": "2026-08-30 15:45:00",
+        "suggested": "2026-08-30 15:45:00",
+        "in_progress": "2026-08-30 15:45:00",
+        "completed": "2026-08-30 16:34:13",
+        "pushed": "2026-08-30 15:47:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-30 15:45:00",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-30 15:45:00",
+          "user": "Rolf",
+          "note": "Implementation in progress"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 16:34:13",
+          "user": "Rolf",
+          "note": "Review acceptance recorded"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 15:47:00",
+          "user": "Rolf",
+          "note": "Pushed to remote tracking branch"
+        }
+      ]
+    },
+    {
+      "id": 26,
+      "timestamp": "2026-08-30 16:05:00",
+      "title": "Workspace Inventory Viewer Interactive Actions Suite, Non-Git Visibility, and Data Versioning Exemption",
+      "origin_repo": "Workspace_Inventory",
+      "cr_id": "CR-2026-037",
+      "state": "pushed",
+      "progress_state": "pushed",
+      "bundle_id": "CRP-2026-008-Workspace_Inventory-v7.1.1-Inventory-Viewer-Interactive-Actions-and-Data-Versioning-Exemption",
+      "author": "rgbig",
+      "details": "Interactive row actions (Open, Onboard, Un-Git, Rename, Delete), .lcd platform and non-Git directory visibility, filter tabs, and Workspace_Inventory data versioning exemption in RULE-REV-007.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-026_CR-2026-037_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-026_CR-2026-037_Walkthrough.md",
+      "pushed_at": "2026-08-30 16:34:00",
+      "dates": {
+        "created": "2026-08-30 16:05:00",
+        "suggested": "2026-08-30 16:05:00",
+        "in_progress": "2026-08-30 16:05:00",
+        "completed": "2026-08-30 16:34:13",
+        "pushed": "2026-08-30 16:34:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-30 16:05:00",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-30 16:05:00",
+          "user": "Rolf",
+          "note": "Implementation in progress"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 16:34:13",
+          "user": "Rolf",
+          "note": "Review acceptance recorded"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 16:34:00",
+          "user": "Rolf",
+          "note": "Pushed to remote tracking branch"
+        }
+      ]
+    },
+    {
+      "id": 27,
+      "timestamp": "2026-08-30 16:37:00",
+      "title": "Unescaped $timestamp Variable Interpolation in Show-HaInventoryApp.ps1",
+      "origin_repo": "HaSSD06_Inventory",
+      "cr_id": "CR-2026-038",
+      "state": "pushed",
+      "progress_state": "pushed",
+      "bundle_id": "BUG-2026-002-HaSSD06_Inventory-v5.3.0-Unescaped-Timestamp-Variable-Interpolation",
+      "author": "rgbig",
+      "details": "Fix strict mode uninitialized variable error when generating HTML viewer print atom.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-027_CR-2026-038_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-027_CR-2026-038_Walkthrough.md",
+      "pushed_at": "2026-08-30 16:55:41",
+      "dates": {
+        "created": "2026-08-30 16:37:00",
+        "suggested": "2026-08-30 16:37:00",
+        "in_progress": "2026-08-30 16:37:00",
+        "completed": "2026-08-30 16:34:13",
+        "pushed": "2026-08-30 16:55:41"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-30 16:37:00",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-30 16:37:00",
+          "user": "Rolf",
+          "note": "Implementation in progress"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 16:34:13",
+          "user": "Rolf",
+          "note": "Review acceptance recorded"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 16:55:41",
+          "user": "Rolf",
+          "note": "Pushed to remote tracking branch"
+        }
+      ]
+    },
+    {
+      "id": 28,
+      "timestamp": "2026-08-30 16:38:00",
+      "title": "Spook 👻 Your Homie Custom Integration Update (v5.0.0 -> v5.1.0)",
+      "origin_repo": "HaSSD06",
+      "cr_id": "CR-2026-039",
+      "state": "pushed",
+      "progress_state": "pushed",
+      "bundle_id": "CRP-2026-009-HaSSD06-v5.1.0-Spook-Homie-Integration-Update",
+      "author": "rgbig",
+      "details": "Software update for Spook custom integration via HACS.",
+      "dates": {
+        "created": "2026-08-30 16:38:00",
+        "suggested": "2026-08-30 16:38:00",
+        "in_progress": "2026-08-30 16:39:00",
+        "completed": "2026-09-01 15:50:00",
+        "pushed": "2026-09-01 15:53:01"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-30 16:38:00",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-30 16:39:00",
+          "user": "Rolf",
+          "note": "Awaiting execution / subsystem review"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-01 15:50:00",
+          "user": "Rolf",
+          "note": "Accepted and marked completed per operator directive"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 15:53:01",
+          "user": "rgbig",
+          "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
+        }
+      ],
+      "pushed_at": "2026-09-01 15:53:01"
+    },
+    {
+      "id": 29,
+      "timestamp": "2026-08-30 16:38:10",
+      "title": "Shelly BLU Gateway Firmware Stabilization (2.0.1-beta1 -> 2.0.0 Stable)",
+      "origin_repo": "HaSSD06",
+      "cr_id": "CR-2026-040",
+      "state": "pushed",
+      "progress_state": "pushed",
+      "bundle_id": "CRP-2026-010-HaSSD06-v2.0.0-Shelly-Blu-Gateway-Firmware-Stabilization",
+      "author": "rgbig",
+      "details": "Transition Shelly BLU gateway from beta firmware to production stable 2.0.0.",
+      "dates": {
+        "created": "2026-08-30 16:38:10",
+        "suggested": "2026-08-30 16:38:10",
+        "in_progress": "2026-08-30 16:39:00",
+        "completed": "2026-09-01 15:50:00",
+        "pushed": "2026-09-01 15:53:01"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-30 16:38:10",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-30 16:39:00",
+          "user": "Rolf",
+          "note": "Awaiting execution / subsystem review"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-01 15:50:00",
+          "user": "Rolf",
+          "note": "Accepted and marked completed per operator directive"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 15:53:01",
+          "user": "rgbig",
+          "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
+        }
+      ],
+      "pushed_at": "2026-09-01 15:53:01"
+    },
+    {
+      "id": 30,
+      "timestamp": "2026-08-30 16:38:20",
+      "title": "FRITZ!Box Deprecated Button Entities Cleanup (Breaks in HA 2026.11.0)",
+      "origin_repo": "HaSSD06",
+      "cr_id": "CR-2026-041",
+      "state": "pushed",
+      "progress_state": "pushed",
+      "bundle_id": "CRP-2026-011-HaSSD06-v2026.11.0-FritzBox-Deprecated-Button-Entities-Removal",
+      "author": "rgbig",
+      "details": "Resolve deprecated cleanup and firmware update button entities before HA Core 2026.11.0.",
+      "dates": {
+        "created": "2026-08-30 16:38:20",
+        "suggested": "2026-08-30 16:38:20",
+        "in_progress": "2026-08-30 16:39:00",
+        "completed": "2026-09-01 15:50:00",
+        "pushed": "2026-09-01 15:53:01"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-30 16:38:20",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-30 16:39:00",
+          "user": "Rolf",
+          "note": "Awaiting execution / subsystem review"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-01 15:50:00",
+          "user": "Rolf",
+          "note": "Accepted and marked completed per operator directive"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 15:53:01",
+          "user": "rgbig",
+          "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
+        }
+      ],
+      "pushed_at": "2026-09-01 15:53:01"
+    },
+    {
+      "id": 31,
+      "timestamp": "2026-08-30 16:38:30",
+      "title": "Active Notification Count Template Sensor Default Value Fix",
+      "origin_repo": "HaSSD06",
+      "cr_id": "CR-2026-042",
+      "state": "pushed",
+      "progress_state": "pushed",
+      "bundle_id": "CRP-2026-012-HaSSD06-v7.1.1-Active-Notification-Count-Template-Filter-Fix",
+      "author": "rgbig",
+      "details": "Append default(0) and int(0) filter to eliminate invalid sensor state validation errors.",
+      "dates": {
+        "created": "2026-08-30 16:38:30",
+        "suggested": "2026-08-30 16:38:30",
+        "in_progress": "2026-08-30 16:39:00",
+        "completed": "2026-09-01 15:50:00",
+        "pushed": "2026-09-01 15:53:01"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-30 16:38:30",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-30 16:39:00",
+          "user": "Rolf",
+          "note": "Awaiting execution / subsystem review"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-01 15:50:00",
+          "user": "Rolf",
+          "note": "Accepted and marked completed per operator directive"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 15:53:01",
+          "user": "rgbig",
+          "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
+        }
+      ],
+      "pushed_at": "2026-09-01 15:53:01"
+    },
+    {
+      "id": 32,
+      "timestamp": "2026-08-30 16:38:40",
+      "title": "Alexa Devices HTTP/2 Push DNS Resolution Timeout (ClientConnectorDNSError)",
+      "origin_repo": "HaSSD06",
+      "cr_id": "CR-2026-043",
+      "state": "pushed",
+      "progress_state": "pushed",
+      "bundle_id": "BUG-2026-003-HaSSD06-v2026.8.3-Alexa-Devices-DNS-Timeout-During-HTTP2-Push",
+      "author": "rgbig",
+      "details": "Upstream DNS timeout during high-concurrency HTTP/2 push events in aioamazondevices.",
+      "dates": {
+        "created": "2026-08-30 16:38:40",
+        "suggested": "2026-08-30 16:38:40",
+        "in_progress": "2026-08-30 16:39:00",
+        "completed": "2026-09-01 15:50:00",
+        "pushed": "2026-09-01 15:53:01"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-30 16:38:40",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-30 16:39:00",
+          "user": "Rolf",
+          "note": "Awaiting execution / subsystem review"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-01 15:50:00",
+          "user": "Rolf",
+          "note": "Accepted and marked completed per operator directive"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 15:53:01",
+          "user": "rgbig",
+          "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
+        }
+      ],
+      "pushed_at": "2026-09-01 15:53:01"
+    },
+    {
+      "id": 33,
+      "timestamp": "2026-08-30 16:38:50",
+      "title": "Tuya Device Handlers Invalid Enum Value for Datapoint relay_status",
+      "origin_repo": "HaSSD06",
+      "cr_id": "CR-2026-044",
+      "state": "pushed",
+      "progress_state": "pushed",
+      "bundle_id": "BUG-2026-004-HaSSD06-v2026.8.3-Tuya-Device-Handlers-Relay-Status-Enum-Mismatch",
+      "author": "rgbig",
+      "details": "Upstream schema mismatch in tuya-device-handlers for smart plug product 9zynrkxe5tys0rja.",
+      "dates": {
+        "created": "2026-08-30 16:38:50",
+        "suggested": "2026-08-30 16:38:50",
+        "in_progress": "2026-08-30 16:39:00",
+        "completed": "2026-09-01 15:50:00",
+        "pushed": "2026-09-01 15:53:01"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-30 16:38:50",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-30 16:39:00",
+          "user": "Rolf",
+          "note": "Awaiting execution / subsystem review"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-01 15:50:00",
+          "user": "Rolf",
+          "note": "Accepted and marked completed per operator directive"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 15:53:01",
+          "user": "rgbig",
+          "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
+        }
+      ],
+      "pushed_at": "2026-09-01 15:53:01"
+    },
+    {
+      "id": 34,
+      "timestamp": "2026-08-30 16:39:00",
+      "title": "Tuya Local Unregistered Product IDs in Smart Plug Device Profiles",
+      "origin_repo": "HaSSD06",
+      "cr_id": "CR-2026-045",
+      "state": "pushed",
+      "progress_state": "pushed",
+      "bundle_id": "BUG-2026-005-HaSSD06-v2026.8.3-Tuya-Local-Unregistered-Product-ID-SmartPlug",
+      "author": "rgbig",
+      "details": "Hardware product IDs keym9qkuywghyrvs and keyjup78v54myhan unlisted in tuya_local config.",
+      "dates": {
+        "created": "2026-08-30 16:39:00",
+        "suggested": "2026-08-30 16:39:00",
+        "in_progress": "2026-08-30 16:39:00",
+        "completed": "2026-09-01 15:50:00",
+        "pushed": "2026-09-01 15:53:01"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-30 16:39:00",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-30 16:39:00",
+          "user": "Rolf",
+          "note": "Awaiting execution / subsystem review"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-01 15:50:00",
+          "user": "Rolf",
+          "note": "Accepted and marked completed per operator directive"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 15:53:01",
+          "user": "rgbig",
+          "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
+        }
+      ],
+      "pushed_at": "2026-09-01 15:53:01"
+    },
+    {
+      "id": 35,
+      "timestamp": "2026-08-30 18:57:00",
+      "title": "Workspace Artifact Deduplication, Archive Consolidation & .lcd Junction Removal",
+      "origin_repo": "Workspace_AI",
+      "cr_id": "CR-2026-046",
+      "state": "pushed",
+      "progress_state": "pushed",
+      "bundle_id": "CRP-2026-013-Workspace_AI-v7.1.1-Workspace-Deduplication-Archive-and-Lcd-Purge",
+      "author": "rgbig",
+      "details": "Hash-based deduplication, archival of redundant scratch snapshots/baselines, refactoring of .lcm/tools/links, and deletion of legacy .lcd junction.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-035_CR-2026-046_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-035_CR-2026-046_Walkthrough.md",
+      "dates": {
+        "created": "2026-08-30 18:57:00",
+        "suggested": "2026-08-30 18:57:00",
+        "in_progress": "2026-08-30 18:57:00",
+        "completed": "2026-08-30 19:02:45",
+        "pushed": "2026-09-01 15:53:01"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-30 18:57:00",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-30 18:57:00",
+          "user": "Rolf",
+          "note": "Execution completed"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 19:02:45",
+          "user": "Rolf",
+          "note": "Validated & accepted"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 19:41:10",
+          "user": "Rolf",
+          "note": "Pushed to remote"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 15:53:01",
+          "user": "rgbig",
+          "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
+        }
+      ],
+      "pushed_at": "2026-09-01 15:53:01"
+    },
+    {
+      "id": 36,
+      "timestamp": "2026-08-30 19:22:00",
+      "title": "Disable Raspberry Pi Onboard Bluetooth Adapter & Consolidate BLE to Shelly Gateway",
+      "origin_repo": "HaSSD06",
+      "cr_id": "CR-2026-047",
+      "state": "pushed",
+      "progress_state": "pushed",
+      "bundle_id": "CRP-2026-014-HaSSD06-v7.1.1-Disable-Host-Bluetooth-Adapter-and-Consolidate-to-Shelly-Gateway",
+      "author": "rgbig",
+      "details": "Deactivate onboard bcm43438-bt adapter in Home Assistant to eliminate dual-scanner packet jitter, consolidating all BLE devices to shellyblugwg3.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-036_CR-2026-047_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-036_CR-2026-047_Walkthrough.md",
+      "dates": {
+        "created": "2026-08-30 19:22:00",
+        "suggested": "2026-08-30 19:22:00",
+        "in_progress": "2026-08-30 19:22:00",
+        "completed": "2026-08-30 19:23:26",
+        "pushed": "2026-09-01 15:53:01"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-30 19:22:00",
+          "user": "rgbig",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-30 19:22:00",
+          "user": "Rolf",
+          "note": "Execution completed"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-08-30 19:23:26",
+          "user": "Rolf",
+          "note": "Validated & accepted"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-08-30 19:41:10",
+          "user": "Rolf",
+          "note": "Pushed to remote"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 15:53:01",
+          "user": "rgbig",
+          "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
+        }
+      ],
+      "pushed_at": "2026-09-01 15:53:01"
+    },
+    {
+      "id": 37,
+      "timestamp": "2026-08-31 16:30:00",
+      "title": "Tool Explorer '@nn-' Prefix Tool Disappearance on Filter Reset",
+      "origin_repo": "LCD / Tool Explorer",
+      "cr_id": "BUG-2026-006",
+      "state": "pushed",
+      "bundle_id": "unassigned",
+      "author": "Rolf",
+      "details": "Restores all 25 @00- to @21- customization tools in Tool Explorer, preserving numerical prefixes in filenames while providing clean chat trampolines.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-2026-006-LCM-v2.2.1-Tool-Explorer-AtPrefix-Filter-Exclusion.md",
+      "walkthrough_path": "",
+      "progress_state": "pushed",
+      "dates": {
+        "created": "2026-08-31 16:30:00",
+        "suggested": "2026-08-31 16:30:00",
+        "in_progress": "2026-08-31 17:00:00",
+        "completed": "2026-09-01 13:30:00",
+        "pushed": "2026-09-01 15:53:01"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-31 16:30:00",
+          "user": "Rolf",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-31 17:00:00",
+          "user": "Rolf",
+          "note": "Implemented and validated in working tree"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-01 13:30:00",
+          "user": "Rolf",
+          "note": "Operator authorized ACCEPT ALL"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 13:36:59",
+          "user": "Rolf",
+          "note": "Pushed to remote"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 15:53:01",
+          "user": "rgbig",
+          "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
+        }
+      ],
+      "pushed_at": "2026-09-01 15:53:01"
+    },
+    {
+      "id": 38,
+      "timestamp": "2026-08-31 16:45:00",
+      "title": "Excessive Repetitive Windows Notifications during Project Rule Access",
+      "origin_repo": "Workspace_AI",
+      "cr_id": "BUG-2026-007",
+      "state": "pushed",
+      "bundle_id": "unassigned",
+      "author": "Rolf",
+      "details": "Suppresses excessive duplicate Windows notification toasts generated when accessing project standards documentation.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-2026-007-Workspace_AI-v7.1.2-Windows-Notification-Spam-Suppression.md",
+      "walkthrough_path": "",
+      "progress_state": "pushed",
+      "dates": {
+        "created": "2026-08-31 16:45:00",
+        "suggested": "2026-08-31 16:45:00",
+        "in_progress": "2026-08-31 17:00:00",
+        "completed": "2026-09-01 13:30:00",
+        "pushed": "2026-09-01 15:53:01"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-31 16:45:00",
+          "user": "Rolf",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-31 17:00:00",
+          "user": "Rolf",
+          "note": "Implemented and validated in working tree"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-01 13:30:00",
+          "user": "Rolf",
+          "note": "Operator authorized ACCEPT ALL"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 13:36:59",
+          "user": "Rolf",
+          "note": "Pushed to remote"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 15:53:01",
+          "user": "rgbig",
+          "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
+        }
+      ],
+      "pushed_at": "2026-09-01 15:53:01"
+    },
+    {
+      "id": 39,
+      "timestamp": "2026-08-31 17:00:00",
+      "title": "Tool Explorer Asset Path Resolution, Draggable Help Modal, and Catalog Sync",
+      "origin_repo": "LCD / Tool Explorer",
+      "cr_id": "CRP-2026-015",
+      "state": "pushed",
+      "bundle_id": "unassigned",
+      "author": "Rolf",
+      "details": "Repairs asset path fallback candidate arrays, implements non-blocking draggable help modal, and expands catalog to 176 tools.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-2026-015-LCM-v2.2.1-Tool-Explorer-Asset-Path-Resolution-and-Multi-Tab-Launch-Repair.md",
+      "walkthrough_path": "",
+      "progress_state": "pushed",
+      "dates": {
+        "created": "2026-08-31 17:00:00",
+        "suggested": "2026-08-31 17:00:00",
+        "in_progress": "2026-08-31 17:00:00",
+        "completed": "2026-09-01 13:30:00",
+        "pushed": "2026-09-01 15:53:01"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-31 17:00:00",
+          "user": "Rolf",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-31 17:00:00",
+          "user": "Rolf",
+          "note": "Implemented and validated in working tree"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-01 13:30:00",
+          "user": "Rolf",
+          "note": "Operator authorized ACCEPT ALL"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 13:36:59",
+          "user": "Rolf",
+          "note": "Pushed to remote"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 15:53:01",
+          "user": "rgbig",
+          "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
+        }
+      ],
+      "pushed_at": "2026-09-01 15:53:01"
+    },
+    {
+      "id": 40,
+      "timestamp": "2026-08-31 17:30:00",
+      "title": "Prevent BLE Packet Collisions via Selective Single-Receiver Ingestion",
+      "origin_repo": "HaSSD06",
+      "cr_id": "CRP-2026-016",
+      "state": "pushed",
+      "bundle_id": "unassigned",
+      "author": "Rolf",
+      "details": "Prevents BLE multi-hub collisions across 51 dynamic Bluetooth entities, scheduling twice-daily supervision and logging telemetry.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-2026-016-HaSSD06-v7.1.2-BLE-Selective-Single-Receiver-Routing.md",
+      "walkthrough_path": "",
+      "progress_state": "pushed",
+      "dates": {
+        "created": "2026-08-31 17:30:00",
+        "suggested": "2026-08-31 17:30:00",
+        "in_progress": "2026-08-31 17:00:00",
+        "completed": "2026-09-01 13:30:00",
+        "pushed": "2026-09-01 15:53:01"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-31 17:30:00",
+          "user": "Rolf",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-31 17:00:00",
+          "user": "Rolf",
+          "note": "Implemented and validated in working tree"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-01 13:30:00",
+          "user": "Rolf",
+          "note": "Operator authorized ACCEPT ALL"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 13:36:59",
+          "user": "Rolf",
+          "note": "Pushed to remote"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 15:53:01",
+          "user": "rgbig",
+          "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
+        }
+      ],
+      "pushed_at": "2026-09-01 15:53:01"
+    },
+    {
+      "id": 41,
+      "timestamp": "2026-08-31 18:00:00",
+      "title": "Universal Light/Dark Theme Standardization & High-Contrast Design Hardening",
+      "origin_repo": "LCM Workspace",
+      "cr_id": "CRP-2026-017",
+      "state": "pushed",
+      "bundle_id": "unassigned",
+      "author": "Rolf",
+      "details": "Standardizes high-contrast light and dark theme color tokens across all 4 LCM dashboards with persistent scrollbars.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-2026-017-LCM-v2.2.2-Universal-Theme-and-High-Contrast-Design-System.md",
+      "walkthrough_path": "",
+      "progress_state": "pushed",
+      "dates": {
+        "created": "2026-08-31 18:00:00",
+        "suggested": "2026-08-31 18:00:00",
+        "in_progress": "2026-08-31 17:00:00",
+        "completed": "2026-09-01 13:30:00",
+        "pushed": "2026-09-01 15:53:01"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-31 18:00:00",
+          "user": "Rolf",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-31 17:00:00",
+          "user": "Rolf",
+          "note": "Implemented and validated in working tree"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-01 13:30:00",
+          "user": "Rolf",
+          "note": "Operator authorized ACCEPT ALL"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 13:36:59",
+          "user": "Rolf",
+          "note": "Pushed to remote"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 15:53:01",
+          "user": "rgbig",
+          "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
+        }
+      ],
+      "pushed_at": "2026-09-01 15:53:01"
+    },
+    {
+      "id": 42,
+      "timestamp": "2026-08-31 18:30:00",
+      "title": "CM Control Hub Navigation Hardening, Filter Reconciliation, and Action Engine",
+      "origin_repo": "LCM Workspace",
+      "cr_id": "CRP-2026-018",
+      "state": "pushed",
+      "bundle_id": "unassigned",
+      "author": "Rolf",
+      "details": "Adds Windows-style top-right Back navigation, fixes completed metric card filter, and implements batch review action suite.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-2026-018-LCM-v2.2.2-CM-Control-Hub-Navigation-Filter-and-Action-Engine.md",
+      "walkthrough_path": "",
+      "progress_state": "pushed",
+      "dates": {
+        "created": "2026-08-31 18:30:00",
+        "suggested": "2026-08-31 18:30:00",
+        "in_progress": "2026-08-31 17:00:00",
+        "completed": "2026-09-01 13:30:00",
+        "pushed": "2026-09-01 15:53:01"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-31 18:30:00",
+          "user": "Rolf",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-31 17:00:00",
+          "user": "Rolf",
+          "note": "Implemented and validated in working tree"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-01 13:30:00",
+          "user": "Rolf",
+          "note": "Operator authorized ACCEPT ALL"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 13:36:59",
+          "user": "Rolf",
+          "note": "Pushed to remote"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 15:53:01",
+          "user": "rgbig",
+          "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
+        }
+      ],
+      "pushed_at": "2026-09-01 15:53:01"
+    },
+    {
+      "id": 43,
+      "timestamp": "2026-08-31 19:00:00",
+      "title": "Universal LCM Table UI/UX Standard & Standardized Interactive Document Viewer",
+      "origin_repo": "LCM Workspace",
+      "cr_id": "CRP-2026-019",
+      "state": "pushed",
+      "bundle_id": "unassigned",
+      "author": "Rolf",
+      "details": "Integrates universal table UX standard (selection checkboxes, batch actions, search negation !term, multi-column sorting) across all dashboards.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-2026-019-LCM-v2.2.2-Standardized-Interactive-Document-Table-Viewer.md",
+      "walkthrough_path": "",
+      "progress_state": "pushed",
+      "dates": {
+        "created": "2026-08-31 19:00:00",
+        "suggested": "2026-08-31 19:00:00",
+        "in_progress": "2026-08-31 17:00:00",
+        "completed": "2026-09-01 13:30:00",
+        "pushed": "2026-09-01 15:53:01"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-08-31 19:00:00",
+          "user": "Rolf",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-08-31 17:00:00",
+          "user": "Rolf",
+          "note": "Implemented and validated in working tree"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-01 13:30:00",
+          "user": "Rolf",
+          "note": "Operator authorized ACCEPT ALL"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 13:36:59",
+          "user": "Rolf",
+          "note": "Pushed to remote"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 15:53:01",
+          "user": "rgbig",
+          "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
+        }
+      ],
+      "pushed_at": "2026-09-01 15:53:01"
+    },
+    {
+      "id": 44,
+      "timestamp": "2026-09-01 13:35:00",
+      "title": "LCM Deterministic Hook Engine & Zero-Trust Tool Execution Boundary",
+      "origin_repo": "Workspace_AI",
+      "cr_id": "CRP-2026-020",
+      "state": "pushed",
+      "bundle_id": "unassigned",
+      "author": "Rolf",
+      "details": "Enforces review-gated git commits, repository boundary isolation, UTF-8 formatting, and privilege delegation via PreToolUse/PostToolUse hooks.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-2026-020-Workspace_AI-v7.2.0-LCM-Deterministic-Hook-Engine.md",
+      "walkthrough_path": "",
+      "progress_state": "pushed",
+      "dates": {
+        "created": "2026-09-01 13:35:00",
+        "suggested": "2026-09-01 13:35:00",
+        "in_progress": "2026-09-01 13:35:00",
+        "completed": "2026-09-01 13:37:00",
+        "pushed": "2026-09-01 15:53:01"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-01 13:35:00",
+          "user": "Rolf",
+          "note": "Initial proposal created & registered in ledger"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-09-01 13:35:00",
+          "user": "Rolf",
+          "note": "Architecture specified and hook scripts created"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-01 13:37:00",
+          "user": "Rolf",
+          "note": "Hook scripts verified & accepted"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 13:37:50",
+          "user": "Rolf",
+          "note": "Pushed to remote"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-01 15:53:01",
+          "user": "rgbig",
+          "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
+        }
+      ],
+      "pushed_at": "2026-09-01 15:53:01"
+    },
+    {
+      "id": 45,
+      "timestamp": "2026-09-02 18:52:00",
+      "title": "LCM Platform Crash During ShowCmControlHub Development — Context Loss and Recovery",
+      "origin_repo": "Workspace_AI / Workspace_Inventory",
+      "cr_id": "BUG-2026-008",
+      "state": "suggested",
+      "progress_state": "undecided",
+      "bundle_id": "unassigned",
+      "author": "Rolf",
+      "details": "LCM AI session crashed mid-implementation during ShowCmControlHub development. Code base intact at baseline 9bff0c7. Lost: active implementation plan for ShowCmControlHub, in-progress AADD and methodology alignment discussion context. Recovery: full context reload via ContextSnapshot, Update-Gemini sync, CM state audit, CRP intake session for unregistered planned items.",
+      "plan_path": "",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-02 18:52:00",
+        "suggested": "2026-09-02 18:52:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-02 18:52:00",
+          "user": "Rolf",
+          "note": "T0 post-hoc BUG registration for LCM crash event; registered during disaster recovery session"
+        }
+      ]
+    },
+    {
+      "id": 46,
+      "timestamp": "2026-09-02 18:52:00",
+      "title": "Complete and Stabilize ShowCmControlHub as LCM Navigation Root with Full Dashboard Tree",
+      "origin_repo": "Workspace_Inventory",
+      "cr_id": "CRP-2026-021",
+      "state": "suggested",
+      "progress_state": "undecided",
+      "bundle_id": "unassigned",
+      "author": "Rolf",
+      "details": "Resume and complete Show-CmControlHub.ps1 and CM_CONTROL_HUB.html as the definitive LCM top-level navigation root. All display functions (ShowTools, ShowHaInventory, ShowCrpDates, ShowActions, ShowSupervisionHub, ShowWorkspaceInventoryApp, ShowHaInventoryApp) reachable from a single navigable tree. Back-navigation is now viable for all child tools because they share a common parent. Crash occurred mid-implementation; recovery scope requires working tree inspection.",
+      "plan_path": "",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-02 18:52:00",
+        "suggested": "2026-09-02 18:52:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-02 18:52:00",
+          "user": "Rolf",
+          "note": "Recovery CRP - continuation of interrupted ShowCmControlHub implementation"
+        }
+      ]
+    },
+    {
+      "id": 47,
+      "timestamp": "2026-09-02 18:52:00",
+      "title": "Formalize CRM (Change Request Management) as Named Acceptance Stage in LCM Lifecycle Chain",
+      "origin_repo": ".agents/rules / Workspace_AI",
+      "cr_id": "CRP-2026-022",
+      "state": "suggested",
+      "progress_state": "undecided",
+      "bundle_id": "unassigned",
+      "author": "Rolf",
+      "details": "Add CRM (Change Request Management) as a named, formal stage in the LCM lifecycle chain, positioned between CRP and Implementation Plan. CRM represents management acceptance or rejection of the CRP - the governance approval gate. Currently implicit in the proposal state field but not named, documented, or expressed as a chain node. The proposal state field IS the CRM record. Update ProposalReviewFlowPolicy.md, the LCM lifecycle chain, and all related documentation to reflect CRM as a first-class lifecycle stage.",
+      "plan_path": "",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-02 18:52:00",
+        "suggested": "2026-09-02 18:52:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-02 18:52:00",
+          "user": "Rolf",
+          "note": "Emerged from LCM-AI alignment discussion during disaster recovery session 2026-09-02"
+        }
+      ]
+    },
+    {
+      "id": 48,
+      "timestamp": "2026-09-02 18:52:00",
+      "title": "AADD Integration - Architecture/Agile Design Discussion as Formal Lifecycle Stage and Documentation Class",
+      "origin_repo": ".agents/rules / Workspace_AI",
+      "cr_id": "CRP-2026-023",
+      "state": "suggested",
+      "progress_state": "undecided",
+      "bundle_id": "unassigned",
+      "author": "Rolf",
+      "details": "Formalize AADD (Architecture/Agile Design Discussion) as a named lifecycle stage and documentation class in the LCM methodology. AI-human discussion content that reaches a conclusive state MUST be captured in Architecture docs and not lost at session end. The ACCEPT xxx command marks a CRP discussion as conclusive and triggers Architecture doc update. All AADD sessions are linked to CRPs. Requires update to ProposalReviewFlowPolicy.md, DocumentationStandardsPolicy.md, and a new AADD doc template. Pre-existing concept with prior CRP reference; re-registered post-crash for continuity.",
+      "plan_path": "",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-02 18:52:00",
+        "suggested": "2026-09-02 18:52:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-02 18:52:00",
+          "user": "Rolf",
+          "note": "Pre-existing concept re-registered post-crash; prior CRP reference noted"
+        }
+      ]
+    },
+    {
+      "id": 49,
+      "timestamp": "2026-09-02 18:52:00",
+      "title": "Tiered Governance Model (T0-T3) - Event-Proportional Review Ceremony",
+      "origin_repo": ".agents/rules / Workspace_AI",
+      "cr_id": "CRP-2026-024",
+      "state": "suggested",
+      "progress_state": "undecided",
+      "bundle_id": "unassigned",
+      "author": "Rolf",
+      "details": "Introduce formal T0-T3 event-proportional governance tiers to replace uniform ceremony. T0=Emergency/crash recovery (act first, register BUG post-hoc, BC5 waived or abbreviated). T1=Trivial (single-point fix, minimal CRP, lightweight BC5). T2=Standard (normal feature/defect, full CRP+plan+BC5+test, default). T3=Architectural (cross-repo design decisions, full chain including Architecture/Requirements docs, multi-pass BC5). Tier set explicitly by operator when issuing do #n; default is T2. Update ProposalReviewFlowPolicy.md.",
+      "plan_path": "",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-02 18:52:00",
+        "suggested": "2026-09-02 18:52:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-02 18:52:00",
+          "user": "Rolf",
+          "note": "Emerged from LCM-AI alignment discussion during disaster recovery session 2026-09-02"
+        }
+      ]
+    },
+    {
+      "id": 50,
+      "timestamp": "2026-09-02 18:52:00",
+      "title": "Formalize HaSSD06 Subsystem BC5 Exemption in ReviewCommitGovernancePolicy.md",
+      "origin_repo": ".agents/rules",
+      "cr_id": "CRP-2026-025",
+      "state": "suggested",
+      "progress_state": "undecided",
+      "bundle_id": "unassigned",
+      "author": "Rolf",
+      "details": "The HaSSD06 and HaSSD06_Inventory subsystem BC5 review-gate exemption is currently documented only in ACTIVE_CONTEXT.md - an informal context document, not an authoritative rule file. Codify this exemption formally in ReviewCommitGovernancePolicy.md (RULE-REV-001) as a named exception alongside the Workspace_Inventory data exemption. Prevents a future agent loading only rule files from incorrectly applying the BC5 gate to HA subsystem changes.",
+      "plan_path": "",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-02 18:52:00",
+        "suggested": "2026-09-02 18:52:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-02 18:52:00",
+          "user": "Rolf",
+          "note": "Identified as governance gap during LCM-AI alignment analysis 2026-09-02"
+        }
+      ]
+    },
+    {
+      "id": 51,
+      "timestamp": "2026-09-02 18:52:00",
+      "title": "Formalize implementation_plan.md as Mandatory CRP Sub-Artifact for T2 and T3 Proposals",
+      "origin_repo": ".agents/rules / Workspace_AI",
+      "cr_id": "CRP-2026-026",
+      "state": "suggested",
+      "progress_state": "undecided",
+      "bundle_id": "unassigned",
+      "author": "Rolf",
+      "details": "Define implementation_plan.md as a required sub-artifact of every T2 and T3 CRP, referenced via the existing plan_path field in proposals.json. The implementation_plan addresses HOW to reach the goal (distinct from Architecture=WHAT and Implementation=CODE). Authored after CRM acceptance, before implementation begins, leading directly to the Implementation stage. Supersedes IDE-native planning artifacts for LCM-governed work. Update ProposalReviewFlowPolicy.md and DocumentationStandardsPolicy.md.",
+      "plan_path": "",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-02 18:52:00",
+        "suggested": "2026-09-02 18:52:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-02 18:52:00",
+          "user": "Rolf",
+          "note": "User decision: retain implementation_plan.md as formal CRP artifact; not suppressed by IDE planning mode"
+        }
+      ]
+    },
+    {
+      "id": 52,
+      "timestamp": "2026-09-02 18:52:00",
+      "title": "Bidirectional LCM Lifecycle Chain - Formal Entry-Point Governance and Bottom-Up Cycles",
+      "origin_repo": ".agents/rules / Workspace_AI",
+      "cr_id": "CRP-2026-027",
+      "state": "suggested",
+      "progress_state": "undecided",
+      "bundle_id": "unassigned",
+      "author": "Rolf",
+      "details": "Formalize the LCM lifecycle chain as a directed graph with bidirectional edges and multiple valid entry points - not a strict top-down waterfall. Entry can occur at any node: BUG, CRP, CRM, Implementation Plan, Architecture, Requirements, Implementation, Refactor. Reviews between nodes are proportional to event tier (T0-T3). Bottom-up cycles (USE to Refactor to Requirements to CRP) are first-class and governed equivalently to top-down flows. The CM records the path actually taken. Update ProposalReviewFlowPolicy.md with formal chain diagram and entry-point rules.",
+      "plan_path": "",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-02 18:52:00",
+        "suggested": "2026-09-02 18:52:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-02 18:52:00",
+          "user": "Rolf",
+          "note": "Emerged from 60-year CS experience alignment discussion during disaster recovery session 2026-09-02"
+        }
+      ]
+    },
+    {
+      "id": 53,
+      "timestamp": "2026-09-02 18:52:00",
+      "title": "Resolve processed State Inconsistency Between RULE-LCM-002 and RULE-LCM-007 Canonical State Enum",
+      "origin_repo": ".agents/rules",
+      "cr_id": "CRP-2026-028",
+      "state": "suggested",
+      "progress_state": "undecided",
+      "bundle_id": "unassigned",
+      "author": "Rolf",
+      "details": "RULE-LCM-002 references a processed state after do #n command execution, but RULE-LCM-007 defines the canonical state enum as: bug | suggested | approved | deferred | rejected | completed | pushed. The term processed does not appear in the canonical enum. Determine the authoritative state name and update rule files consistently. Operator position: canonical states must not change without explicit approval - this CRP resolves the documentation inconsistency only.",
+      "plan_path": "",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-02 18:52:00",
+        "suggested": "2026-09-02 18:52:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-02 18:52:00",
+          "user": "Rolf",
+          "note": "Identified as rule taxonomy inconsistency during LCM-AI alignment analysis 2026-09-02"
+        }
+      ]
+    },
+    {
+      "id": 54,
+      "timestamp": "2026-09-02 18:52:00",
+      "title": "Clarify Workspace_Inventory Tool Governance Scope - Privileged Subsystem Not Exempt from Tool Scrutiny",
+      "origin_repo": ".agents/rules",
+      "cr_id": "CRP-2026-029",
+      "state": "suggested",
+      "progress_state": "undecided",
+      "bundle_id": "unassigned",
+      "author": "Rolf",
+      "details": "Clarify in RULE-LCM-004 that Workspace_Inventory is a privileged subsystem whose configuration data (inventory.json, dashboards, baselines, logs) is auto-accepted per RULE-EFF-001, but whose tool source code (tools/*.ps1, modules/*.psm1, docs/*.md) is subject to full LCM governance including BC5 review gates and semantic versioning. Current rule language implies entire WI repo is BC5-exempt. Update RULE-LCM-004 to distinguish WI data exemption from WI tool governance scope.",
+      "plan_path": "",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-02 18:52:00",
+        "suggested": "2026-09-02 18:52:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-02 18:52:00",
+          "user": "Rolf",
+          "note": "Operator resolved Q3: WI tools are fully LCM-governed; rule must reflect this explicitly"
+        }
+      ]
+    },
+    {
+      "id": 55,
+      "timestamp": "2026-09-02 18:52:00",
+      "title": "Close RULE-LCM-013 Gap - Extend Pre-Push Gemini Sync to Single-Repo Direct Pushes",
+      "origin_repo": ".agents/rules",
+      "cr_id": "CRP-2026-030",
+      "state": "suggested",
+      "progress_state": "undecided",
+      "bundle_id": "unassigned",
+      "author": "Rolf",
+      "details": "RULE-LCM-013 mandates Update-Gemini.ps1 before every multi-repository push via Invoke-WorkspacePush.ps1, but does not address single-repository direct pushes. An agent or developer could push a single repo without triggering the GDrive sync. Extend RULE-LCM-013 to either: (a) mandate Update-Gemini.ps1 before any push regardless of scope, or (b) explicitly document the acceptable exception scope and its conditions.",
+      "plan_path": "",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-02 18:52:00",
+        "suggested": "2026-09-02 18:52:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-02 18:52:00",
+          "user": "Rolf",
+          "note": "Identified as governance gap during LCM-AI alignment analysis 2026-09-02"
+        }
+      ]
+    },
+    {
+      "id": 56,
+      "timestamp": "2026-09-02 20:16:00",
+      "title": "Autonomous Loop-Fencing, Execution Boundaries, and T0 State Recovery Engine",
+      "origin_repo": ".lcm",
+      "cr_id": "CRP-2026-031",
+      "state": "approved",
+      "progress_state": "in_progress",
+      "bundle_id": "unassigned",
+      "author": "Technical Engineering & Governance Team",
+      "tier": "T2",
+      "priority": "High",
+      "details": "1. PreToolUse turn fence (15 turns default, operator extendable) + loop hash detection. 2. Local-scratch lease tracking (OneDrive sync isolated). 3. Atomic serialization for proposals.json ([System.IO.File]::Replace). 4. T0 watchdog and automatic transition to 'blocked' upon orphaned lease detection. 5. Windows Task governance: all Windows Tasks created by LCM_Backup (events, tool communication) must be registered and governed via Workspace_Supervision.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-056_CRP-2026-031_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-056_CRP-2026-031_Walkthrough.md",
+      "dates": {
+        "created": "2026-09-02 20:16:00",
+        "suggested": "2026-09-02 20:16:00",
+        "approved": "2026-09-02 20:39:05",
+        "in_progress": "2026-09-02 20:56:55"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-02 20:16:00",
+          "user": "Technical Engineering & Governance Team",
+          "note": "Registered as T2 standard architecture proposal with queued progress state"
+        },
+        {
+          "state": "approved",
+          "timestamp": "2026-09-02 20:39:05",
+          "user": "Rolf",
+          "note": "CRM Gate Accepted. Privileged subsystem 'LCM Backup' scope established; implementation plan authorized."
+        },
+        {
+          "state": "approved",
+          "progress_state": "in_progress",
+          "timestamp": "2026-09-02 20:56:55",
+          "user": "Rolf",
+          "note": "Authorized Phase 1 execution (Subsystem Scaffold & Tool Integration) via do #56 directive."
+        },
+        {
+          "state": "approved",
+          "progress_state": "in_progress",
+          "timestamp": "2026-09-03 11:05:45",
+          "user": "Rolf",
+          "note": "Amended requirement: Windows Tasks created by LCM_Backup (events, tool communication) must be governed via Workspace_Supervision."
+        }
+      ]
+    },
+    {
+      "id": 57,
+      "timestamp": "2026-09-02 21:07:10",
+      "title": "Canonical Single-Hop NTFS Junction Architecture for Subsystem Rules",
+      "origin_repo": ".lcm / All Subsystems",
+      "cr_id": "CRP-2026-032",
+      "state": "approved",
+      "progress_state": "queued",
+      "bundle_id": "unassigned",
+      "author": "Technical Engineering & Governance Team",
+      "tier": "T2",
+      "priority": "High",
+      "details": "Eliminate nested junction chaining across repos; mandate direct links to physical ground truth (D:\\Git_Repositories\\.lcm\\.agents\\rules). Execution deferred until dedicated audit/migration script is authored.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-057_CRP-2026-032_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-057_CRP-2026-032_Walkthrough.md",
+      "dates": {
+        "created": "2026-09-02 21:07:10",
+        "suggested": "2026-09-02 21:07:10",
+        "approved": "2026-09-02 21:07:10"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-02 21:07:10",
+          "user": "Rolf",
+          "note": "Identified nested junction chaining through D:\\Git_Repositories\\.agents during Proposal #56 scaffolding"
+        },
+        {
+          "state": "approved",
+          "timestamp": "2026-09-02 21:07:10",
+          "user": "Rolf",
+          "note": "CRM Gate Accepted. Queued pending dedicated audit/migration script authoring."
+        }
+      ]
+    },
+    {
+      "id": 58,
+      "timestamp": "2026-09-03 11:33:30",
+      "title": "Fix BCR Baseline Resolution, Path Mangling, and Agent Execution Invariants",
+      "origin_repo": ".lcm / Tooling",
+      "cr_id": "CRP-2026-033",
+      "state": "approved",
+      "progress_state": "in_progress",
+      "bundle_id": "unassigned",
+      "author": "Technical Engineering & Governance Team",
+      "tier": "T1",
+      "priority": "High",
+      "details": "Fix BCR comparison baseline to anchor strictly to local Git HEAD instead of origin/main or network fetches, and correct legacy path mangling across tool trampolines and scripts to canonical .lcm/tools/internal/.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-058_CRP-2026-033_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-058_CRP-2026-033_Walkthrough.md",
+      "dates": {
+        "created": "2026-09-03 11:33:30",
+        "suggested": "2026-09-03 11:33:30",
+        "approved": "2026-09-03 11:33:30",
+        "in_progress": "2026-09-03 11:33:30",
+        "completed": "2026-09-03 11:40:43"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-03 11:33:30",
+          "user": "Rolf",
+          "note": "Registered T1 defect fix for BCR baseline and path mangling."
+        },
+        {
+          "state": "approved",
+          "progress_state": "in_progress",
+          "timestamp": "2026-09-03 11:33:30",
+          "user": "Rolf",
+          "note": "CRM Gate Accepted and authorized immediate T1 execution via do directive."
+        },
+        {
+          "state": "approved",
+          "progress_state": "completed",
+          "timestamp": "2026-09-03 11:40:37",
+          "user": "Rolf",
+          "note": "Verified zero occurrences of path mangling across all tracked repositories, verified BCR local Git HEAD baseline resolution, and provisioned BCR.cmd trampolines."
+        },
+        {
+          "state": "approved",
+          "progress_state": "completed",
+          "timestamp": "2026-09-03 11:40:43",
+          "user": "Rolf",
+          "note": "Verified zero occurrences of path mangling across all tracked repositories, verified BCR local Git HEAD baseline resolution, and provisioned BCR.cmd trampolines."
+        },
+        {
+          "state": "approved",
+          "progress_state": "in_progress",
+          "timestamp": "2026-09-03 14:12:11",
+          "user": "Rolf",
+          "note": "Re-opened for T1 target fixes: BCR baseline resolution, path mangling, and agent execution invariants. Executed via CRP-2026-033 directive."
+        }
+      ]
+    },
+    {
+      "id": 59,
+      "timestamp": "2026-09-03 13:03:30",
+      "title": "Automated Ripgrep Provisioning, System Path Provisioning, and LCM Tool Registration",
+      "origin_repo": ".lcm / Tooling",
+      "cr_id": "CRP-2026-034",
+      "state": "approved",
+      "progress_state": "in_progress",
+      "bundle_id": "unassigned",
+      "author": "Technical Engineering & Governance Team",
+      "tier": "T2",
+      "priority": "High",
+      "details": "Automated Ripgrep (BurntSushi.ripgrep.MSVC) provisioning into D:\\Tools\\rg, machine-wide system PATH registration, de-elevated user context dispatching, LCM tool catalog registration, and @22-LinkRGtool.ps1 sequence authoring.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-059_CRP-2026-034_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-059_CRP-2026-034_Walkthrough.md",
+      "dates": {
+        "created": "2026-09-03 13:03:30",
+        "suggested": "2026-09-03 13:03:30",
+        "approved": "2026-09-03 13:03:30",
+        "in_progress": "2026-09-03 13:03:30"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-03 13:03:30",
+          "user": "Rolf",
+          "note": "Registered T2 proposal for automated ripgrep provisioning and registration."
+        },
+        {
+          "state": "approved",
+          "progress_state": "in_progress",
+          "timestamp": "2026-09-03 13:03:30",
+          "user": "Rolf",
+          "note": "CRM Gate Accepted and authorized execution via do directive."
+        }
+      ]
+    }
+  ]
+}

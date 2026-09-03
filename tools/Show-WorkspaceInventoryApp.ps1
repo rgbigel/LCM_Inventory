@@ -13,6 +13,7 @@
   Authors: Rolf, Workspace_AI Engine
   Version: 6.0.0
   Date: 2026-08-30
+  ShortName: ShowLCMExplorer
 .PARAMETER NoLaunch
   Generates the HTML dashboard file without automatically launching it in the web browser.
 .PARAMETER Help

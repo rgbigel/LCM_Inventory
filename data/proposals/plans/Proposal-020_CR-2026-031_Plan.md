@@ -1,5 +1,5 @@
 # Implementation Plan - Proposal #20 (CR-2026-031)
-## Consolidate LCD Platform Engine into Encapsulated `.lcd` Structure with `tools/internal` and `tools/links` Separation
+## Consolidate LCD Platform Engine into Encapsulated `.lcd` Structure with `.tools/internal` and `tools/links` Separation
 
 ### 1. Goal Description
 Encapsulate the core LCD platform engine into a dedicated `.lcd/` standard directory structure under `D:\Git_Repositories\.lcd`, separating native engine code (`.lcd\tools\internal\`) from dynamic child repository symlinks (`.lcd\tools\links\`), updating child repository rule junctions, migrating `%PATH%` to `.lcd\Cmd`, and preserving IDE rule discovery via a root compatibility junction.
@@ -12,7 +12,7 @@ Encapsulate the core LCD platform engine into a dedicated `.lcd/` standard direc
 - **Origin Repo**: `Root / .lcd`
 - **State**: `approved`
 - **Progress State**: `in_progress`
-- **Title**: *Consolidate LCD Platform Engine into Encapsulated .lcd Structure with tools/internal and tools/links Separation*
+- **Title**: *Consolidate LCD Platform Engine into Encapsulated .lcd Structure with .tools/internal and tools/links Separation*
 - **Plan Path**: `Workspace_Inventory/data/proposals/plans/Proposal-020_CR-2026-031_Plan.md`
 - **Walkthrough Path**: `Workspace_Inventory/data/proposals/plans/Proposal-020_CR-2026-031_Walkthrough.md`
 
@@ -69,3 +69,4 @@ D:\Git_Repositories\
 9. **Automated Verification**:
    - Run `Test-LCMRuleHealth.ps1`.
    - Run `Test-WorkspaceReadiness.ps1`.
+

@@ -173,7 +173,7 @@ $formatted = foreach ($p in $proposals) {
   }
 }
 
-$formatted | Format-Table -AutoSize
+$formatted | Format-Table -AutoSize | Out-String -Stream -Width 4096
 
 if ($Detail -or ($Id -and $Id.Count -gt 0 -and $Id.Count -le 5)) {
   Write-Host "`n========================================================================================================================" -ForegroundColor Yellow

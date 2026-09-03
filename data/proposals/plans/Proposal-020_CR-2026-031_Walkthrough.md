@@ -1,5 +1,5 @@
 # Walkthrough - Proposal #20 (CR-2026-031)
-## Consolidate LCD Platform Engine into Encapsulated `.lcd` Structure with `tools/internal` and `tools/links` Separation
+## Consolidate LCD Platform Engine into Encapsulated `.lcd` Structure with `.tools/internal` and `tools/links` Separation
 
 ### 1. Work Accomplished
 1. **Pre-flight Full Git Synchronization**:
@@ -69,3 +69,4 @@ D:\Git_Repositories\
   ├── Workspace_Inventory\           <── CM Ledger & Proposals
   └── [Child Repositories]\          <── Domain Projects (.agents\rules -> .lcd\.agents\rules)
 ```
+

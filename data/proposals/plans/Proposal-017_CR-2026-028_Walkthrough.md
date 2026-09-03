@@ -13,12 +13,12 @@ Fixed runtime path resolution failure when invoking legacy alias wrappers from `
 ---
 
 ### 2. Files Modified
-- [`tools/@21-FixMouseFlickerInvariants.ps1`](file:///D:/Git_Repositories/tools/@21-FixMouseFlickerInvariants.ps1)
+- [`tools/@21-FixMouseFlickerInvariants.ps1`](file:///D:/Git_Repositories/.tools/@21-FixMouseFlickerInvariants.ps1)
 - [`SystemConfiguration/Source/@21-FixMouseFlickerInvariants.ps1`](file:///D:/Git_Repositories/SystemConfiguration/Source/@21-FixMouseFlickerInvariants.ps1)
-- [`tools/@20-KillLogitechUpdateFull.ps1`](file:///D:/Git_Repositories/tools/@20-KillLogitechUpdateFull.ps1)
+- [`tools/@20-KillLogitechUpdateFull.ps1`](file:///D:/Git_Repositories/.tools/@20-KillLogitechUpdateFull.ps1)
 - [`SystemConfiguration/Source/@20-KillLogitechUpdateFull.ps1`](file:///D:/Git_Repositories/SystemConfiguration/Source/@20-KillLogitechUpdateFull.ps1)
-- [`tools/tool_catalog.json`](file:///D:/Git_Repositories/tools/tool_catalog.json)
-- [`tools/README.md`](file:///D:/Git_Repositories/tools/README.md)
+- [`tools/tool_catalog.json`](file:///D:/Git_Repositories/.tools/tool_catalog.json)
+- [`tools/README.md`](file:///D:/Git_Repositories/.tools/README.md)
 - [`Workspace_Inventory/data/proposals/proposals.json`](file:///D:/Git_Repositories/Workspace_Inventory/data/proposals/proposals.json)
 
 ---
@@ -26,7 +26,8 @@ Fixed runtime path resolution failure when invoking legacy alias wrappers from `
 ### 3. Validation Results
 - Direct invocation help test (`pwsh tools/@21-FixMouseFlickerInvariants.ps1 -h`): **PASSED** (delegates cleanly to `Set-MouseFlickerInvariants.ps1`).
 - Direct invocation help test (`pwsh tools/@20-KillLogitechUpdateFull.ps1 -h`): **PASSED** (delegates cleanly to `Kill-LogitechUpdate.ps1`).
-- CMD trampoline test (`tools/Cmd/FixMouseFlicker.cmd -h`): **PASSED**.
+- CMD trampoline test (`.tools/Cmd/FixMouseFlicker.cmd -h`): **PASSED**.
 - Tool catalog synchronization (`Update-ToolCatalog.ps1`): **PASSED** (141 tools, 141 launchers).
 - Dynamic symlink sync (`Sync-ToolSymlinks.ps1`): **PASSED** (0 orphaned links).
 - Quality gate (`Workspace_AI/tools/Test-WorkspaceReadiness.ps1`): **PASSED** (`Workspace_AI readiness self-test: OK`).
+
