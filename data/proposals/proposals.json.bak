@@ -1,10 +1,10 @@
-{
+﻿{
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-09-03 16:02:46",
+  "updated_at": "2026-09-04 11:19:36",
   "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 60,
+  "last_proposal_id": 61,
   "proposals": [
     {
       "id": 1,
@@ -2645,7 +2645,7 @@
       "origin_repo": ".lcm / Architecture",
       "cr_id": "CRP-2026-036",
       "state": "completed",
-      "progress_state": "completed",
+      "progress_state": "done",
       "bundle_id": "unassigned",
       "author": "Technical Engineering & Governance Team",
       "tier": "T1",
@@ -2658,7 +2658,7 @@
         "suggested": "2026-09-03 16:00:13",
         "approved": "2026-09-03 16:00:13",
         "in_progress": "2026-09-03 16:00:13",
-        "completed": "2026-09-04 10:32:00"
+        "completed": "2026-09-04 10:57:15"
       },
       "state_history": [
         {
@@ -2679,12 +2679,62 @@
         },
         {
           "state": "completed",
-          "progress_state": "completed",
-          "timestamp": "2026-09-04 10:32:00",
+          "progress_state": "done",
+          "timestamp": "2026-09-04 10:57:15",
           "user": "Rolf",
-          "note": "Phase 2 executed: versioning protocol codified, parent workspace mirrored, V6.2.0 aligned, logs migrated to Workspace_Inventory/data/logs/"
+          "from_state": "in_progress",
+          "to_state": "completed",
+          "reason": "Phase 1 & Phase 2 complete. Architecture docs codified, logs migrated to Workspace_Inventory (77 files), dual ledgers synced to V6.2.0, and parent workspace mirrored."
         }
-      ]
+      ],
+      "review": {
+        "type": "BRC",
+        "reviewer": "Rolf / Operator",
+        "status": "approved",
+        "report_path": "Workspace_Inventory/data/proposals/plans/Proposal-060_CRP-2026-036_Walkthrough.md",
+        "timestamp": "2026-09-04 10:57:15"
+      }
+    },
+    {
+      "id": 61,
+      "timestamp": "2026-09-04 11:05:00",
+      "title": "Codification of Tool Traces, Execution Logging & Headless BRC Review Gates",
+      "origin_repo": ".lcm / Workspace_Inventory",
+      "cr_id": "CRP-2026-037",
+      "crp_id": "CRP-2026-037",
+      "state": "in_progress",
+      "progress_state": "in_progress",
+      "bundle_id": "unassigned",
+      "author": "Rolf, Workspace_AI Engine",
+      "tier": "T1",
+      "priority": "High",
+      "target_subsystems": [
+        "Workspace_Inventory",
+        ".lcm"
+      ],
+      "details": "Formally establish Workspace_Inventory/data/logs/crp/ directory tree and codify rule for capturing CLI/tool execution artifacts during CRP implementations.",
+      "dates": {
+        "created": "2026-09-04",
+        "completed": null
+      },
+      "state_history": [
+        {
+          "state": "in_progress",
+          "progress_state": "in_progress",
+          "timestamp": "2026-09-04T11:15:00",
+          "user": "Rolf",
+          "from_state": "created",
+          "to_state": "in_progress",
+          "reason": "Registered CRP-2026-037: Codify Workspace_Inventory/data/logs/crp/ directory, require execution artifact logging, and formalize headless BRC review gate before completion."
+        }
+      ],
+      "review": {
+        "type": "BRC",
+        "reviewer": null,
+        "status": "pending",
+        "report_path": null,
+        "timestamp": null
+      }
     }
   ]
 }
