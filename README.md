@@ -4,8 +4,8 @@ Module: Workspace_Inventory
 Purpose: Authoritative Configuration Management (CM), multi-repository state tracking, LCM version lifecycle management, commit/push audit logging, and centralized Change Request (CR) management across `D:\Git_Repositories\`.
 Path: D:\Git_Repositories\Workspace_Inventory\README.md
 Authors: Rolf, Workspace_AI Engine
-Version: 1.0.1
-Date: 2026-08-21
+Version: 1.1.0
+Date: 2026-09-04
 
 ---
 
@@ -102,10 +102,28 @@ You can wire the **`RR`** review result command directly into Beyond Compare 5 s
 
 ---
 
-## 5. Directory Layout
+## 5. Methodology & Authoritative Memory Anchors
 
-* `data/` - Machine-readable CM databases (`inventory.json`, `change_requests.json`, `baselines/`).
-* `docs/` - Human-readable documentation, policies, and generated dashboards (`INVENTORY_DASHBOARD.md`).
-* `logs/` - CM activity ledger (`cm_activity.log`).
+The operational governance and lifecycle methodology of the platform are codified in the following authoritative specifications:
+
+1. **[LCM Methodology & Memory Anchor](docs/LCM_METHODOLOGY_AND_MEMORY_ANCHOR.md)**:
+   * **The DOX Invariant**: All documenting and executable assets are binding across the system; no code anywhere is exempt from visual review or Git tracking.
+   * **The Ledger Invariant**: Historical audit logs (`.lcm/logs/`, `logs/cm_activity.log`) and visual review receipts (`data/reviews/`) are permanent system memory, strictly tracked and pushed for disaster recovery.
+   * **Review Gate Separation**: Beyond Compare visual diff review is a human inspection gate, strictly distinct from Git `.gitignore`.
+   * **Approach 1 Governance**: Physical tracking in `.lcm/.agents/` with virtual NTFS junctions at the root and child repositories.
+   * **Restorable Snapshot Push Pipeline**: Pre-push rule compilation, catalog synchronization, ahead-detection, and `-DryRun` simulation.
+   * **Browser Display Table Channel Compliance**: Port 9876 REST bridge daemon standard for all LCD tables.
+
+2. **[CM Policies & Operating Procedures](docs/CM_POLICIES.md)**:
+   * Formal lifecycle phases, branching and commit policies, review-gated promotion, history retention horizon ($M-2$), and CM Control Hub architecture.
+
+---
+
+## 6. Directory Layout
+
+* `data/` - Machine-readable CM databases (`inventory.json`, `change_requests.json`, `proposals/`, `reviews/`, `baselines/`).
+* `docs/` - Human-readable documentation, policies, methodology anchors, and generated dashboards (`LCM_METHODOLOGY_AND_MEMORY_ANCHOR.md`, `CM_POLICIES.md`, `INVENTORY_DASHBOARD.md`).
+* `logs/` - CM activity ledger (`cm_activity.log`) and historical audit records.
 * `modules/` - Reusable PowerShell CM modules (`WorkspaceCM.psm1`, `ChangeRequestManager.psm1`).
-* `tools/` - Standalone executable PowerShell CLI tools.
+* `tools/` - Standalone executable PowerShell CLI tools (`Invoke-WorkspacePush.ps1`, `Invoke-BeyondCompareReview.ps1`, `Submit-ReviewResult.ps1`, etc.).
+

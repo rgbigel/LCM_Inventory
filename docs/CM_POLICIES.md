@@ -91,3 +91,40 @@ The **LCM Configuration Management Control Hub** (`docs/CM_CONTROL_HUB.html`) pr
    * **Push & Synchronization Engine**: 1-click `🚀 Push / Sync Repos` with custom or default CRP reason prompts.
    * **Print-Ready Documents**: Export/print plans, walkthroughs, and specs to PDF with `@media print` typography.
    * **Docked Interactive Console**: Bottom terminal feed for real-time CLI command execution and operator status feedback.
+
+---
+
+## 7. Canonical Governance Tracking Architecture (Approach 1)
+
+1. **Physical Tracking Anchor**: Version control tracks canonical governance rules, hook configurations, and session context strictly under the physical directory `.lcm/.agents/`.
+2. **NTFS Directory Junction Exemption**: Root container junction `/.agents/` is excluded in root `.gitignore` to prevent Windows NTFS reparse point collision and duplicate index tracking.
+3. **Single Source of Truth**: Sibling and child repositories link `.agents/rules/` to `.lcm\.agents\rules` via NTFS directory junctions. Modifying rules in any child updates the canonical physical store immediately.
+
+---
+
+## 8. The Ledger Invariant: Audit Logs as Permanent Memory
+
+1. **Logs Constitute the Ledger**: Historical and active audit logs (`.lcm/logs/*.log`, `.lcm/tools/internal/logs/*.log`, `Workspace_Inventory/logs/cm_activity.log`, and `data/reviews/*.json`) are immutable evidence records of system activity and are never exempt from Git tracking.
+2. **Snapshot Invariant**: Root `.gitignore` must allow-list `.lcm/logs/` so that complete historical causality and execution receipts are committed and preserved across disaster recovery.
+3. **Exempt Runtime Data**: Only purely regenerable transient data (compiled scratchpad HTML in `.lcm/scratch/`, `.tmp` buffers, and lock files) is excluded from version control.
+
+---
+
+## 9. Restorable Snapshot Push & Pre-Push Pipeline
+
+1. **Snapshot Guarantee**: Every push dispatched via `Invoke-WorkspacePush.ps1` must represent an immutable, 100% restorable disaster-recovery baseline.
+2. **Pre-Push Sequence**:
+   * **Gemini Rules Mirroring (`RULE-LCM-013`)**: Consolidates 17 rules to `Workspace_AI/docs/LCM_Rules_Gemini_Export.md` and mirrors to `D:\GDrive\LCM`.
+   * **Catalog Snapshot**: Recompiles and commits `tool_catalog.json` and command trampolines before push dispatch.
+   * **Dry-Run Simulation**: Supports `-DryRun` (`-WhatIf`) to inspect queued commits, affected repositories, and proposal transitions prior to remote execution.
+   * **Post-Push Finalization**: Transitions completed proposals to `pushed` in `data/proposals/proposals.json` and appends `PUSH_EXECUTED` to `logs/cm_activity.log`.
+
+---
+
+## 10. Browser Display Table Communication Standard (Port 9876 Channel Compliance)
+
+1. **Universal Channel Compliance**: All browser-rendered display tables, viewers, and tool explorers across the workspace must route interactive host commands (tool execution, file opening, document printing/export) exclusively through the localhost Port 9876 REST Bridge Daemon (`http://127.0.0.1:9876/`).
+2. **Prohibition of Direct Sandbox Egress**: Client-side JavaScript running in web views or browsers must never attempt direct OS execution or silent fallback popups. If the daemon is unreachable, the UI must prompt the user to start `LcmDesktopDaemon.ps1`.
+3. **Shared Asset Reuse**: Display tables must utilize the shared LCM atom modules (`.lcm/assets/lcm-table-print-atom.js`, `.lcm/assets/lcm-table-core.js`) to guarantee uniform behavior and telemetry logging.
+
+See authoritative methodology specification in [`docs/LCM_METHODOLOGY_AND_MEMORY_ANCHOR.md`](file:///D:/Git_Repositories/Workspace_Inventory/docs/LCM_METHODOLOGY_AND_MEMORY_ANCHOR.md).
