@@ -1,0 +1,10 @@
+{
+  "RepositoryName": "Workspace_Inventory",
+  "RepositoryPath": "Workspace_Inventory",
+  "CommitSha": "df2c345",
+  "ReviewResult": "AcceptedAll",
+  "Reviewer": "rgbig",
+  "Timestamp": "2026-09-04 21:51:41",
+  "Message": "feat(bcr): include .lcm in review scope and add pre-push catalog snapshot check",
+  "ActionsExecuted": []
+}
