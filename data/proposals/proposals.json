@@ -1,10 +1,10 @@
-﻿{
+{
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-09-04 11:23:02",
+  "updated_at": "2026-09-04T20:21:23+02:00",
   "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 61,
+  "last_proposal_id": 66,
   "proposals": [
     {
       "id": 1,
@@ -2744,6 +2744,111 @@
         "report_path": "Workspace_Inventory/data/reviews/BRC-CRP-2026-037.md",
         "timestamp": "2026-09-04 11:23:02"
       }
+    },
+    {
+      "id": 62,
+      "timestamp": "2026-09-04 20:21:22",
+      "title": "[TASK] Change Request Proposal: Analysis #01 – Corpus-Structural-Extraction-And-Invariants",
+      "origin_repo": "Gemini / GDrive Inbox",
+      "cr_id": "CR-PROP-62",
+      "state": "suggested",
+      "progress_state": "undecided",
+      "bundle_id": "unassigned",
+      "author": "Gemini Cloud",
+      "details": "Source: Gemini Inbox (Analysis-01_CRP-001-Corpus-Structural-Extraction-And-Invariants.md) | Time: 2026-09-04 17:15:51 | Criticality: MEDIUM\n\n# Change Request Proposal: Analysis #01 – Corpus-Structural-Extraction-And-Invariants\r\n\r\n## Metadata\r\n- **Proposal ID:** CRP-001\r\n- **Target Analysis:** Analysis #01\r\n- **Status:** OPEN\r\n- **Staging Location:** D:\\GDrive\\LCM_ConvergenceProposals\\\r\n- **Author:** Automated LCM Generator\r\n\r\n## Purpose\r\nExecute structured indexing, semantic parsing, and invariant rule extraction across the 43-document corpus.\r\n\r\n## Proposed Changes\r\n- Index all 43 corpus artifacts and categorize by functional subsystem.\n- Extract core architectural rules and isolate conflicting or deprecated guidance.\n- Standardize extracted rules into a single canonical LCM schema.\n- Stage normalized rule sets as baseline inputs for downstream IDE LCM convergence.\n\r\n\r\n## Verification\r\n- Validate schema compliance under IDE workspace rules.\r\n- Confirm local synchronization via canonical D:\\GDrive mount.\r\n\r\n",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-062_CR-PROP-62_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-062_CR-PROP-62_Walkthrough.md"
+    },
+    {
+      "id": 63,
+      "timestamp": "2026-09-04 20:21:23",
+      "title": "[TASK] Change Request Proposal: Analysis #01 – Persistence-Architecture-And-Staging-Boundary",
+      "origin_repo": "Gemini / GDrive Inbox",
+      "cr_id": "CR-PROP-63",
+      "state": "suggested",
+      "progress_state": "undecided",
+      "bundle_id": "unassigned",
+      "author": "Gemini Cloud",
+      "details": "Source: Gemini Inbox (Analysis-01_CRP-001-Persistence-Architecture-And-Staging-Boundary.md) | Time: 2026-09-04 17:15:51 | Criticality: MEDIUM\n\n# Change Request Proposal: Analysis #01 – Persistence-Architecture-And-Staging-Boundary\r\n\r\n## Metadata\r\n- **Proposal ID:** CRP-001\r\n- **Target Analysis:** Analysis #01\r\n- **Status:** OPEN\r\n- **Staging Location:** D:\\GDrive\\LCM_ConvergenceProposals\\\r\n- **Author:** Automated LCM Generator\r\n\r\n## Purpose\r\nFormalize the deterministic staging pipeline bridging conversational Gemini analysis with IDE-based change management via dedicated pre-review staging.\r\n\r\n## Proposed Changes\r\n- Establish D:\\GDrive\\LCM_ConvergenceProposals\\ as the dedicated pre-review staging directory.\n- Set default lifecycle status to OPEN for all newly drafted analytical proposals.\n- Define promotion path: Staging (OPEN) -> IDE/LCM Intake (D:\\GDrive\\LCM\\INBOX\\) -> Archive (D:\\GDrive\\LCM\\INBOX\\archive).\n- Enforce separation of local execution utilities (D:\\OneDrive\\cmd\\) from target data repositories.\n\r\n\r\n## Verification\r\n- Validate schema compliance under IDE workspace rules.\r\n- Confirm local synchronization via canonical D:\\GDrive mount.\r\n\r\n",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-063_CR-PROP-63_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-063_CR-PROP-63_Walkthrough.md"
+    },
+    {
+      "id": 64,
+      "timestamp": "2026-09-04 20:21:23",
+      "title": "[TASK] Change Request Proposal: Analysis #01-ff – Consolidated-Alignment-And-Governance",
+      "origin_repo": "Gemini / GDrive Inbox",
+      "cr_id": "CR-PROP-64",
+      "state": "suggested",
+      "progress_state": "undecided",
+      "bundle_id": "unassigned",
+      "author": "Gemini Cloud",
+      "details": "Source: Gemini Inbox (Analysis-01_CRP-004-Consolidated-Alignment-And-Governance.md) | Time: 2026-09-04 17:15:51 | Criticality: MEDIUM\n\n# Change Request Proposal: Analysis #01-ff – Consolidated-Alignment-And-Governance\r\n\r\n## Metadata\r\n- **Proposal ID:** CRP-004\r\n- **Target Analysis:** Analysis #01-ff\r\n- **Status:** OPEN\r\n- **Staging Location:** D:\\GDrive\\LCM_ConvergenceProposals\\\r\n- **Author:** Automated LCM Generator\r\n\r\n## Purpose\r\nConsolidate Analysis #1 through #ff, enforcing invariant operational rules, strict path compliance under D:\\GDrive, and automated lifecycle management.\r\n\r\n## Proposed Changes\r\n- Enforce global timestamp and minimal output behavior.\n- Standardize all LCM pre-review staging strictly to D:\\GDrive\\LCM_ConvergenceProposals without unauthorized subpaths.\n- Provide a single reusable script adhering to PowerShell header governance.\n\r\n\r\n## Verification\r\n- Validate schema compliance under IDE workspace rules.\r\n- Confirm local synchronization via canonical D:\\GDrive mount.\r\n\r\n",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-064_CR-PROP-64_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-064_CR-PROP-64_Walkthrough.md"
+    },
+    {
+      "id": 65,
+      "timestamp": "2026-09-04 20:21:23",
+      "title": "[TASK] Change Request Proposal: Analysis #02 – Command-Elimination-And-Runtime-Rule-Alignment",
+      "origin_repo": "Gemini / GDrive Inbox",
+      "cr_id": "CR-PROP-65",
+      "state": "suggested",
+      "progress_state": "undecided",
+      "bundle_id": "unassigned",
+      "author": "Gemini Cloud",
+      "details": "Source: Gemini Inbox (Analysis-02_CRP-002-Command-Elimination-And-Runtime-Rule-Alignment.md) | Time: 2026-09-04 17:15:51 | Criticality: MEDIUM\n\n# Change Request Proposal: Analysis #02 – Command-Elimination-And-Runtime-Rule-Alignment\r\n\r\n## Metadata\r\n- **Proposal ID:** CRP-002\r\n- **Target Analysis:** Analysis #02\r\n- **Status:** OPEN\r\n- **Staging Location:** D:\\GDrive\\LCM_ConvergenceProposals\\\r\n- **Author:** Automated LCM Generator\r\n\r\n## Purpose\r\nPermanently eliminate manual conversational triggers (@IRA, @TRH) and enforce native ISO timestamp prefixing and deterministic output rules.\r\n\r\n## Proposed Changes\r\n- Deprecate manual prompt triggers @IRA and @TRH.\n- Enforce standard response header format: YYYYMMDD_HHMM Current Activity: <context> natively.\n- Align .agents/rules/Workspace-Rules.md to mandate zero conversational padding and strict technical density.\n- Ensure PowerShell 7 governance compliance (strict headers, versioning, explicit types) across all generation utilities.\n\r\n\r\n## Verification\r\n- Validate schema compliance under IDE workspace rules.\r\n- Confirm local synchronization via canonical D:\\GDrive mount.\r\n\r\n",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-065_CR-PROP-65_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-065_CR-PROP-65_Walkthrough.md"
+    },
+    {
+      "id": 66,
+      "timestamp": "2026-09-04 20:21:23",
+      "title": "[TASK] Change Request Proposal: Analysis #02 – Corpus-Pattern-Synthesis-And-Rule-Convergence",
+      "origin_repo": "Gemini / GDrive Inbox",
+      "cr_id": "CR-PROP-66",
+      "state": "suggested",
+      "progress_state": "undecided",
+      "bundle_id": "unassigned",
+      "author": "Gemini Cloud",
+      "details": "Source: Gemini Inbox (Analysis-02_CRP-002-Corpus-Pattern-Synthesis-And-Rule-Convergence.md) | Time: 2026-09-04 17:15:51 | Criticality: MEDIUM\n\n# Change Request Proposal: Analysis #02 – Corpus-Pattern-Synthesis-And-Rule-Convergence\r\n\r\n## Metadata\r\n- **Proposal ID:** CRP-002\r\n- **Target Analysis:** Analysis #02\r\n- **Status:** OPEN\r\n- **Staging Location:** D:\\GDrive\\LCM_ConvergenceProposals\\\r\n- **Author:** Automated LCM Generator\r\n\r\n## Purpose\r\nSynthesize extracted corpus patterns into streamlined system directives and eliminate obsolete manual triggers.\r\n\r\n## Proposed Changes\r\n- Consolidate repetitive patterns identified across the 43 texts into singular directives.\n- Deprecate legacy operational flags (@IRA, @TRH) documented in historical files.\n- Draft workspace rule updates targeting .agents/rules/Workspace-Rules.md.\n- Enforce automated, non-conversational timestamp prefixing across all future agent interactions.\n\r\n\r\n## Verification\r\n- Validate schema compliance under IDE workspace rules.\r\n- Confirm local synchronization via canonical D:\\GDrive mount.\r\n\r\n",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-066_CR-PROP-66_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-066_CR-PROP-66_Walkthrough.md"
+    },
+    {
+      "id": 67,
+      "timestamp": "2026-09-04 20:50:00",
+      "title": "[BUG] LCD Browser Display Table Port 9876 Channel Compliance & Print/PDF Bridge",
+      "origin_repo": "LCM",
+      "cr_id": "CR-PROP-67",
+      "state": "in_progress",
+      "progress_state": "in_progress",
+      "bundle_id": "CRP-2026-021-LCM-v6.2.1-LCD-Browser-Table-Port-9876-Channel-Compliance",
+      "author": "rgbig",
+      "priority": "HIGH",
+      "details": "Remediate LCD browser display table Print/PDF button unresponsiveness and enforce architectural compliance routing all display table operations through Port 9876 REST Bridge Daemon.",
+      "dates": {
+        "created": "2026-09-04 20:50:00",
+        "suggested": "2026-09-04 20:50:00",
+        "in_progress": "2026-09-04 20:50:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-04 20:50:00",
+          "user": "rgbig",
+          "note": "Registered high priority CRP-2026-021 per operator directive"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-09-04 20:50:00",
+          "user": "rgbig",
+          "note": "Remediation in progress"
+        }
+      ],
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-067_CR-PROP-67_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-067_CR-PROP-67_Walkthrough.md"
     }
   ]
 }
+
