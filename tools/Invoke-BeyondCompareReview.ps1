@@ -35,8 +35,8 @@ param(
              and SHA-256 staging manifest generation.
     Path: tools/Invoke-BeyondCompareReview.ps1
     Authors: Rolf, Workspace_AI Engine
-    Version: 2.2.0
-    Date: 2026-08-30
+    Version: 2.3.0
+    Date: 2026-09-04
 .PARAMETER RepositoryName
     The name or directory path of the Git repository to review (e.g. 'AuthorizeMasterUser', 'Git_Repositories', '.').
 .PARAMETER BaseCommit
@@ -58,7 +58,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$scriptVersion = "2.0.0"
+$scriptVersion = "2.3.0"
 $scriptName = "Invoke-BeyondCompareReview"
 
 # ------------------------------------------------------------------------------
@@ -177,7 +177,7 @@ function Update-BCReviewSession {
       $null = $sessionNode.AppendChild($rules)
     }
     & $setAttr $rules 'ContentCompareKind' 'ccRulesBased'
-    & $setAttr $rules 'UseContentComparison' 'True'
+    & $setAttr $rules 'UseContentComparison' 'False'
     & $setAttr $rules 'UseSizeComparison' 'True'
     & $setAttr $rules 'UseTimestampComparison' 'True'
 
@@ -188,8 +188,9 @@ function Update-BCReviewSession {
       $null = $sessionNode.AppendChild($state)
     }
     & $setAttr $state 'ColAttributesVisible' 'True'
-    & $setAttr $state 'ColCRCVisible' 'True'
-    & $setAttr $state 'DirHandling' 'dirCompareFilesOnly'
+    & $setAttr $state 'ColCRCVisible' 'False'
+    $dirH = $state.SelectSingleNode('DirHandling')
+    if ($dirH) { $null = $state.RemoveChild($dirH) }
     & $setAttr $state 'DisplayFilter' '[showLeftAdded, showRightAdded, showLeftChanged, showRightChanged, showConflict]'
     & $setAttr $state 'InsigIgnored' 'True'
     & $setAttr $state 'SortCol' 'colModified'
@@ -255,10 +256,42 @@ function Audit-BeyondCompareReviewStaging {
   }
 
   # Scan Right files
-  $rightFiles = @(Get-ChildItem -LiteralPath $RepoPath -Recurse -File | Where-Object {
+  $rightFileList = [System.Collections.Generic.List[System.IO.FileInfo]]::new()
+  $scannedFiles = @(Get-ChildItem -LiteralPath $RepoPath -Recurse -File | Where-Object {
       $rel = $_.FullName.Substring($RepoPath.Length).TrimStart('\')
       -not (Test-PathExcluded $rel)
     })
+  if ($scannedFiles.Count -gt 0) { $rightFileList.AddRange($scannedFiles) }
+
+  # Include files from directory junctions (e.g. .agents / .agents\rules) per RULE-REV-008
+  $auditJunctions = @((Join-Path $RepoPath ".agents"), (Join-Path $RepoPath ".agents\rules"))
+  foreach ($aj in $auditJunctions) {
+    if (Test-Path -LiteralPath $aj) {
+      try {
+        $jItem = Get-Item -LiteralPath $aj -Force -ErrorAction SilentlyContinue
+        if ($jItem -and $jItem.LinkType -eq 'Junction' -and -not [string]::IsNullOrWhiteSpace($jItem.Target)) {
+          $targetDir = [string]$jItem.Target
+          if (Test-Path -LiteralPath $targetDir) {
+            $jFiles = @(Get-ChildItem -LiteralPath $targetDir -Recurse -File | Where-Object {
+                $subRel = $_.FullName.Substring($targetDir.Length).TrimStart('\')
+                $junctionRel = [System.IO.Path]::GetRelativePath($RepoPath, (Join-Path $jItem.FullName $subRel))
+                -not (Test-PathExcluded $junctionRel)
+              })
+            foreach ($jf in $jFiles) {
+              $subRel = $jf.FullName.Substring($targetDir.Length).TrimStart('\')
+              $mappedPath = Join-Path $jItem.FullName $subRel
+              if (Test-Path -LiteralPath $mappedPath) {
+                $rightFileList.Add([System.IO.FileInfo]::new($mappedPath))
+              }
+            }
+          }
+          if ($jItem.Name -eq '.agents') { break }
+        }
+      }
+      catch {}
+    }
+  }
+  $rightFiles = @($rightFileList)
 
   # Scan Left files
   $leftFiles = @(Get-ChildItem -LiteralPath $TempReviewRoot -Recurse -File | Where-Object {
@@ -538,11 +571,13 @@ $baselineManifest | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Pat
 $filterList = [System.Collections.Generic.List[string]]::new()
 
 if ($repoPath -eq $workspaceRoot) {
-  $childRepos = @(Get-ChildItem -LiteralPath $workspaceRoot -Directory | Where-Object { 
-      (Test-Path -LiteralPath (Join-Path $_.FullName '.git')) -and ($_.FullName -ne $workspaceRoot)
-    })
-  foreach ($child in $childRepos) {
-    $filterList.Add("-.\$($child.Name)\")
+  $keepDirs = @('.agents', '.copilot', '.vscode', '.github', '.git')
+  $allDirs = @(Get-ChildItem -LiteralPath $workspaceRoot -Directory -Force)
+  foreach ($d in $allDirs) {
+    if ($d.Name -notin $keepDirs) {
+      $filterList.Add("-$($d.Name)\")
+      $filterList.Add("-*\$($d.Name)\*")
+    }
   }
 }
 else {
@@ -638,6 +673,92 @@ if ($dispatcherPath) {
 }
 else {
   Start-Process -FilePath $BeyondComparePath -ArgumentList @("`"$tempReviewRoot`"", "`"$repoPath`"", "`"/title1=$title1`"", "`"/title2=$title2`"", "`"/filters=$filterMask`"")
+}
+
+# ------------------------------------------------------------------------------
+# 7. Dual-Session Beyond Compare Review for Directory Junctions (RULE-REV-008)
+# ------------------------------------------------------------------------------
+# Repositories frequently link .agents or .agents\rules via NTFS directory junctions.
+# Beyond Compare 5 does not follow directory junctions across filesystem boundaries by default.
+# Per RULE-REV-008, automatically detect any junctions within the repository and dispatch
+# a second Beyond Compare review session targeting the live junction destination on the right pane.
+$candidateJunctionPaths = @(
+  (Join-Path $repoPath ".agents"),
+  (Join-Path $repoPath ".agents\rules")
+)
+
+$detectedJunctions = @()
+foreach ($cPath in $candidateJunctionPaths) {
+  if (Test-Path -LiteralPath $cPath) {
+    try {
+      $item = Get-Item -LiteralPath $cPath -Force -ErrorAction SilentlyContinue
+      if ($item -and $item.LinkType -eq 'Junction' -and -not [string]::IsNullOrWhiteSpace($item.Target)) {
+        $detectedJunctions += $item
+      }
+    }
+    catch {}
+  }
+}
+
+$processedJunctions = @()
+foreach ($jItem in $detectedJunctions) {
+  $rel = [System.IO.Path]::GetRelativePath($repoPath, $jItem.FullName)
+  $alreadyCovered = $false
+  foreach ($pj in $processedJunctions) {
+    if ($rel.StartsWith($pj.RelativePath + '\', [System.StringComparison]::OrdinalIgnoreCase)) {
+      $alreadyCovered = $true
+      break
+    }
+  }
+  if ($alreadyCovered) { continue }
+
+  $targetPath = [string]$jItem.Target
+  if (-not [System.IO.Path]::IsPathRooted($targetPath)) {
+    $targetPath = [System.IO.Path]::GetFullPath((Join-Path (Split-Path $jItem.FullName -Parent) $targetPath))
+  }
+  else {
+    $targetPath = [System.IO.Path]::GetFullPath($targetPath)
+  }
+
+  if (Test-Path -LiteralPath $targetPath) {
+    $leftJunctionPath = Join-Path $tempReviewRoot $rel
+    if (-not (Test-Path -LiteralPath $leftJunctionPath)) {
+      New-Item -ItemType Directory -Path $leftJunctionPath -Force | Out-Null
+    }
+
+    $processedJunctions += [PSCustomObject]@{
+      RelativePath = $rel
+      BaselinePath = $leftJunctionPath
+      LiveTarget   = $targetPath
+    }
+  }
+}
+
+foreach ($pj in $processedJunctions) {
+  Start-Sleep -Milliseconds 500
+  Write-Host ("Launching second Beyond Compare review session for junction target '{0}'..." -f $pj.RelativePath) -ForegroundColor Cyan
+  Write-Host ("  Left (Baseline {0}): {1}" -f $commitSha, $pj.BaselinePath)
+  Write-Host ("  Right (Junction Live Target): {0}" -f $pj.LiveTarget)
+
+  $jSessionName = "LCM_Review_$($pj.RelativePath.Replace('\', '_').TrimStart('.'))"
+  $jFilterMask = "-.git\;-*\.git\*;-.git*;-scratch\;-*\scratch\*;-logs\;-*\logs\*;-*.log;-*.tmp;-*.bak"
+  Update-BCReviewSession -LeftPath $pj.BaselinePath -RightPath $pj.LiveTarget -FilterMask $jFilterMask -SessionName $jSessionName
+
+  $jTitle1 = if (-not [string]::IsNullOrWhiteSpace($CRP)) {
+    "Baseline $CRP ($commitSha) [$($pj.RelativePath)]"
+  }
+  else {
+    "Baseline ($commitSha) [$($pj.RelativePath)]"
+  }
+  $jTitle2 = "Current Live Junction Target ($($pj.RelativePath) -> $($pj.LiveTarget))"
+  $jBcArgString = "`"$($pj.BaselinePath)`" `"$($pj.LiveTarget)`" `"/title1=$jTitle1`" `"/title2=$jTitle2`" `"/filters=$jFilterMask`""
+
+  if ($dispatcherPath) {
+    & pwsh -File $dispatcherPath -FilePath $BeyondComparePath -ArgumentList $jBcArgString | Out-Null
+  }
+  else {
+    Start-Process -FilePath $BeyondComparePath -ArgumentList @("`"$($pj.BaselinePath)`"", "`"$($pj.LiveTarget)`"", "`"/title1=$jTitle1`"", "`"/title2=$jTitle2`"", "`"/filters=$jFilterMask`"")
+  }
 }
 
 if ($Wait) {
