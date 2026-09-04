@@ -1,0 +1,21 @@
+[2026-08-30 11:41:27.151] [INFO] ==========================================================================
+[2026-08-30 11:41:27.164] [INFO]  INTERACTIVE DESKTOP TASK DISPATCHER (v1.1.0)
+[2026-08-30 11:41:27.165] [INFO]  User: rgbig | Host: D5P0-SSD980-Z | Audit Log: D:\Git_Repositories\.lcd\tools\internal\logs\Invoke-InteractiveDesktop-20260830_114127.log
+[2026-08-30 11:41:27.166] [INFO] ==========================================================================
+[2026-08-30 11:41:27.170] [ACTION] Dispatching task 'LCM_DesktopDispatch_1114475596' to Interactive Desktop...
+[2026-08-30 11:41:27.173] [DEBUG]   Executable: D:\Tools\Beyond Compare 5\BCompare.exe
+[2026-08-30 11:41:27.173] [DEBUG]   Arguments : "C:\Users\rgbig\AppData\Local\Temp\BC_Review\Workspace_AI-2e380c3" "D:\Git_Repositories\Workspace_AI" "/title1=Baseline (2e380c3)" "/title2=Current Live (Workspace_AI)" "/filters=-.git\;-*\.git\*;-.git*;-.venv\;-*\.venv\*;-venv\;-*\venv\*;-.env\;-*\.env\*;-__pycache__\;-*\__pycache__\*;-*.pyc;-*.pyo;-scratch\;-*\scratch\*;-logs\;-*\logs\*;-work\;-*\work\*;-*.inventory;-data\inventory.json;-inventory.json;-*.log;-*.tmp;-*.bak;-*.swp;-*.lock;-node_modules\;-*\node_modules\*;-bin\;-*\bin\*;-obj\;-*\obj\*"
+[2026-08-30 11:41:28.239] [DEBUG] LCM Desktop Daemon (Port 9876) unreachable.
+[2026-08-30 11:41:28.241] [ACTION] Auto-restarting LCM Desktop Daemon (Attempt 1 of 3)...
+[2026-08-30 11:41:36.389] [DEBUG] LCM Desktop Daemon (Port 9876) unreachable.
+[2026-08-30 11:41:36.390] [WARN] [FALLBACK-TRIGGERED] LCM Desktop Daemon is OFFLINE (Port 9876). Activating Route B (Scheduled Task dispatch: LCM_DesktopDispatch_1114475596).
+[2026-08-30 11:41:37.474] [ACTION] Task 'LCM_DesktopDispatch_1114475596' successfully started on Session 1.
+[2026-08-30 11:41:38.147] [DEBUG] Cleaned up ephemeral task definition 'LCM_DesktopDispatch_1114475596'.
+[2026-08-30 11:41:38.148] [INFO] 
+[2026-08-30 11:41:38.149] [SUMMARY] ==========================================================================
+[2026-08-30 11:41:38.149] [SUMMARY]  [SUMMARY] Invoke-InteractiveDesktop (v1.1.0)
+[2026-08-30 11:41:38.150] [SUMMARY]  Status     : COMPLETED
+[2026-08-30 11:41:38.151] [SUMMARY]  Dispatched : 1
+[2026-08-30 11:41:38.152] [SUMMARY]  Timestamp  : 2026-08-30 11:41:38.148
+[2026-08-30 11:41:38.153] [SUMMARY]  Log File   : D:\Git_Repositories\.lcd\tools\internal\logs\Invoke-InteractiveDesktop-20260830_114127.log
+[2026-08-30 11:41:38.154] [SUMMARY] ==========================================================================

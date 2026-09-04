@@ -1,0 +1,16 @@
+[2026-09-02 00:17:08.934] [INFO] ==========================================================================
+[2026-09-02 00:17:08.946] [INFO]  INTERACTIVE DESKTOP TASK DISPATCHER (v1.1.0)
+[2026-09-02 00:17:08.948] [INFO]  User: rgbig | Host: D5P0-SSD980-Z | Audit Log: D:\Git_Repositories\.lcm\tools\internal\logs\Invoke-InteractiveDesktop-20260902_001708.log
+[2026-09-02 00:17:08.949] [INFO] ==========================================================================
+[2026-09-02 00:17:08.953] [ACTION] Dispatching task 'LCM_DesktopDispatch_1614528013' to Interactive Desktop...
+[2026-09-02 00:17:08.956] [DEBUG]   Executable: D:\Tools\Beyond Compare 5\BCompare.exe
+[2026-09-02 00:17:08.957] [DEBUG]   Arguments : "D:\Git_Repositories\Workspace_Inventory\scratch\BC_Review\Git_Repositories_c2160f0" "D:\Git_Repositories" "/title1=Baseline (c2160f0)" "/title2=Current Live (Git_Repositories)" "/filters=-.\AuthorizeMasterUser\;-.\BackgroundModifier\;-.\BGMSAMVInv\;-.\BootEntryManager\;-.\HaSSD06\;-.\HaSSD06_Inventory\;-.\Installation_LCD\;-.\InstallFonts\;-.\MacriumTemplateUpdater\;-.\MSG file conversion\;-.\NextBootTray\;-.\OutlookVBAConversion\;-.\PowerBGInfo\;-.\ReEnableRadeonRx580\;-.\SharedModules\;-.\SystemConfiguration\;-.\TimeStamper\;-.\VolumeInventory\;-.\Workspace_AI\;-.\Workspace_Inventory\;-.\Workspace_Supervision\;-.git\;-*\.git\*;-.git*;-.venv\;-*\.venv\*;-venv\;-*\venv\*;-.env\;-*\.env\*;-__pycache__\;-*\__pycache__\*;-*.pyc;-*.pyo;-scratch\;-*\scratch\*;-logs\;-*\logs\*;-work\;-*\work\*;-*.inventory;-data\inventory.json;-inventory.json;-*.log;-*.tmp;-*.bak;-*.swp;-*.lock;-node_modules\;-*\node_modules\*;-bin\;-*\bin\*;-obj\;-*\obj\*"
+[2026-09-02 00:17:09.588] [ACTION] Dispatched D:\Tools\Beyond Compare 5\BCompare.exe via LCM Desktop Daemon (REST Port 9876) in <5ms.
+[2026-09-02 00:17:09.590] [INFO] 
+[2026-09-02 00:17:09.591] [SUMMARY] ==========================================================================
+[2026-09-02 00:17:09.593] [SUMMARY]  [SUMMARY] Invoke-InteractiveDesktop (v1.1.0)
+[2026-09-02 00:17:09.594] [SUMMARY]  Status     : COMPLETED
+[2026-09-02 00:17:09.595] [SUMMARY]  Dispatched : 1
+[2026-09-02 00:17:09.596] [SUMMARY]  Timestamp  : 2026-09-02 00:17:09.590
+[2026-09-02 00:17:09.598] [SUMMARY]  Log File   : D:\Git_Repositories\.lcm\tools\internal\logs\Invoke-InteractiveDesktop-20260902_001708.log
+[2026-09-02 00:17:09.599] [SUMMARY] ==========================================================================

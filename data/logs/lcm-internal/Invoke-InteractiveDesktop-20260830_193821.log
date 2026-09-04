@@ -1,0 +1,16 @@
+[2026-08-30 19:38:21.851] [INFO] ==========================================================================
+[2026-08-30 19:38:21.865] [INFO]  INTERACTIVE DESKTOP TASK DISPATCHER (v1.1.0)
+[2026-08-30 19:38:21.867] [INFO]  User: rgbig | Host: D5P0-SSD980-Z | Audit Log: D:\Git_Repositories\.lcm\tools\internal\logs\Invoke-InteractiveDesktop-20260830_193821.log
+[2026-08-30 19:38:21.868] [INFO] ==========================================================================
+[2026-08-30 19:38:21.871] [ACTION] Dispatching task 'LCM_DesktopDispatch_282618255' to Interactive Desktop...
+[2026-08-30 19:38:21.875] [DEBUG]   Executable: cmd.exe
+[2026-08-30 19:38:21.876] [DEBUG]   Arguments : /c start pwsh.exe -ExecutionPolicy Bypass -File D:\Git_Repositories\.lcm\tools\internal\Disable-WakeDevices.ps1
+[2026-08-30 19:38:22.015] [ACTION] Dispatched command via LCM Desktop Daemon (REST Port 9876) in <5ms.
+[2026-08-30 19:38:22.017] [INFO] 
+[2026-08-30 19:38:22.018] [SUMMARY] ==========================================================================
+[2026-08-30 19:38:22.020] [SUMMARY]  [SUMMARY] Invoke-InteractiveDesktop (v1.1.0)
+[2026-08-30 19:38:22.021] [SUMMARY]  Status     : COMPLETED
+[2026-08-30 19:38:22.023] [SUMMARY]  Dispatched : 1
+[2026-08-30 19:38:22.024] [SUMMARY]  Timestamp  : 2026-08-30 19:38:22.017
+[2026-08-30 19:38:22.026] [SUMMARY]  Log File   : D:\Git_Repositories\.lcm\tools\internal\logs\Invoke-InteractiveDesktop-20260830_193821.log
+[2026-08-30 19:38:22.027] [SUMMARY] ==========================================================================

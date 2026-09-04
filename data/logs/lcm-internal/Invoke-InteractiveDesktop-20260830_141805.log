@@ -1,0 +1,16 @@
+[2026-08-30 14:18:05.045] [INFO] ==========================================================================
+[2026-08-30 14:18:05.056] [INFO]  INTERACTIVE DESKTOP TASK DISPATCHER (v1.1.0)
+[2026-08-30 14:18:05.058] [INFO]  User: rgbig | Host: D5P0-SSD980-Z | Audit Log: D:\Git_Repositories\.lcd\tools\internal\logs\Invoke-InteractiveDesktop-20260830_141805.log
+[2026-08-30 14:18:05.059] [INFO] ==========================================================================
+[2026-08-30 14:18:05.062] [ACTION] Dispatching task 'LCM_DesktopDispatch_137956563' to Interactive Desktop...
+[2026-08-30 14:18:05.063] [DEBUG]   Executable: D:\Tools\Beyond Compare 5\BCompare.exe
+[2026-08-30 14:18:05.064] [DEBUG]   Arguments : "D:\Git_Repositories\Workspace_Inventory\scratch\BC_Review\CRP-2026-006_Workspace_Inventory_d557c61" "D:\Git_Repositories\Workspace_Inventory" "/title1=Baseline CRP-2026-006 (d557c61)" "/title2=Current Live (Workspace_Inventory)" "/filters=-.agents\rules\;-*\.agents\rules\*;-.copilot\Rules\;-*\.copilot\Rules\*;-.copilot\skills\;-*\.copilot\skills\*;-.git\;-*\.git\*;-.git*;-.venv\;-*\.venv\*;-venv\;-*\venv\*;-.env\;-*\.env\*;-__pycache__\;-*\__pycache__\*;-*.pyc;-*.pyo;-scratch\;-*\scratch\*;-logs\;-*\logs\*;-work\;-*\work\*;-*.inventory;-data\inventory.json;-inventory.json;-*.log;-*.tmp;-*.bak;-*.swp;-*.lock;-node_modules\;-*\node_modules\*;-bin\;-*\bin\*;-obj\;-*\obj\*"
+[2026-08-30 14:18:05.591] [ACTION] Dispatched D:\Tools\Beyond Compare 5\BCompare.exe via LCM Desktop Daemon (REST Port 9876) in <5ms.
+[2026-08-30 14:18:05.592] [INFO] 
+[2026-08-30 14:18:05.594] [SUMMARY] ==========================================================================
+[2026-08-30 14:18:05.596] [SUMMARY]  [SUMMARY] Invoke-InteractiveDesktop (v1.1.0)
+[2026-08-30 14:18:05.597] [SUMMARY]  Status     : COMPLETED
+[2026-08-30 14:18:05.600] [SUMMARY]  Dispatched : 1
+[2026-08-30 14:18:05.603] [SUMMARY]  Timestamp  : 2026-08-30 14:18:05.592
+[2026-08-30 14:18:05.604] [SUMMARY]  Log File   : D:\Git_Repositories\.lcd\tools\internal\logs\Invoke-InteractiveDesktop-20260830_141805.log
+[2026-08-30 14:18:05.606] [SUMMARY] ==========================================================================

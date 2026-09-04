@@ -1,10 +1,10 @@
 ﻿{
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-09-03 14:16:25",
+  "updated_at": "2026-09-03 16:02:46",
   "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 59,
+  "last_proposal_id": 60,
   "proposals": [
     {
       "id": 1,
@@ -2635,6 +2635,56 @@
           "timestamp": "2026-09-03 13:03:30",
           "user": "Rolf",
           "note": "CRM Gate Accepted and authorized execution via do directive."
+        }
+      ]
+    },
+    {
+      "id": 60,
+      "timestamp": "2026-09-03 16:00:13",
+      "title": "LCM Subsystem Architecture Formalization: .lcm Whitelisting, Submodule Isolation, and Inventory Log Routing",
+      "origin_repo": ".lcm / Architecture",
+      "cr_id": "CRP-2026-036",
+      "state": "completed",
+      "progress_state": "done",
+      "bundle_id": "unassigned",
+      "author": "Technical Engineering & Governance Team",
+      "tier": "T1",
+      "priority": "High",
+      "details": "Refactor .lcm tracking using an inverted .gitignore whitelist, re-route logging directly into Workspace_Inventory, prepare .lcm/tools for submodule isolation, and document LCD/LCM subsystems in docs/Architecture/.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-060_CRP-2026-036_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-060_CRP-2026-036_Walkthrough.md",
+      "dates": {
+        "created": "2026-09-03 16:00:13",
+        "suggested": "2026-09-03 16:00:13",
+        "approved": "2026-09-03 16:00:13",
+        "in_progress": "2026-09-03 16:00:13",
+        "completed": "2026-09-04 10:57:15"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-03 15:50:00",
+          "user": "Rolf",
+          "note": "Registered T1 architectural proposal for .lcm whitelisting, submodule isolation, and Workspace_Inventory log routing.",
+          "from_state": "new",
+          "to_state": "approved",
+          "reason": "Architectural convergence on .lcm tracking, log consolidation into Workspace_Inventory, and submodule boundary."
+        },
+        {
+          "state": "approved",
+          "progress_state": "in_progress",
+          "timestamp": "2026-09-03 16:00:13",
+          "user": "Rolf",
+          "note": "CRM Gate Accepted and authorized T1 execution via do directive."
+        },
+        {
+          "state": "completed",
+          "progress_state": "done",
+          "timestamp": "2026-09-04 10:57:15",
+          "user": "Rolf",
+          "from_state": "in_progress",
+          "to_state": "completed",
+          "reason": "Phase 1 & Phase 2 complete. Architecture docs codified, logs migrated to Workspace_Inventory (77 files), dual ledgers synced to V6.2.0, and parent workspace mirrored."
         }
       ]
     }

@@ -1,0 +1,16 @@
+[2026-08-30 15:38:59.130] [INFO] ==========================================================================
+[2026-08-30 15:38:59.138] [INFO]  INTERACTIVE DESKTOP TASK DISPATCHER (v1.1.0)
+[2026-08-30 15:38:59.140] [INFO]  User: rgbig | Host: D5P0-SSD980-Z | Audit Log: D:\Git_Repositories\.lcd\tools\internal\logs\Invoke-InteractiveDesktop-20260830_153859.log
+[2026-08-30 15:38:59.141] [INFO] ==========================================================================
+[2026-08-30 15:38:59.144] [ACTION] Dispatching task 'LCM_DesktopDispatch_475780823' to Interactive Desktop...
+[2026-08-30 15:38:59.147] [DEBUG]   Executable: D:\Git_Repositories\Workspace_Inventory\scratch\CM_CONTROL_HUB.html
+[2026-08-30 15:38:59.155] [DEBUG]   Arguments : 
+[2026-08-30 15:38:59.687] [ACTION] Dispatched D:\Git_Repositories\Workspace_Inventory\scratch\CM_CONTROL_HUB.html via LCM Desktop Daemon (REST Port 9876) in <5ms.
+[2026-08-30 15:38:59.689] [INFO] 
+[2026-08-30 15:38:59.691] [SUMMARY] ==========================================================================
+[2026-08-30 15:38:59.692] [SUMMARY]  [SUMMARY] Invoke-InteractiveDesktop (v1.1.0)
+[2026-08-30 15:38:59.694] [SUMMARY]  Status     : COMPLETED
+[2026-08-30 15:38:59.695] [SUMMARY]  Dispatched : 1
+[2026-08-30 15:38:59.696] [SUMMARY]  Timestamp  : 2026-08-30 15:38:59.689
+[2026-08-30 15:38:59.698] [SUMMARY]  Log File   : D:\Git_Repositories\.lcd\tools\internal\logs\Invoke-InteractiveDesktop-20260830_153859.log
+[2026-08-30 15:38:59.699] [SUMMARY] ==========================================================================
