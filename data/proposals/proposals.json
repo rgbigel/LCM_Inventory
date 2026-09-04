@@ -2541,8 +2541,8 @@
       "title": "Fix BCR Baseline Resolution, Path Mangling, and Agent Execution Invariants",
       "origin_repo": ".lcm / Tooling",
       "cr_id": "CRP-2026-033",
-      "state": "approved",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "bundle_id": "unassigned",
       "author": "Technical Engineering & Governance Team",
       "tier": "T1",
@@ -2555,7 +2555,8 @@
         "suggested": "2026-09-03 11:33:30",
         "approved": "2026-09-03 11:33:30",
         "in_progress": "2026-09-03 11:33:30",
-        "completed": "2026-09-03 11:40:43"
+        "completed": "2026-09-03 11:40:43",
+        "pushed": "2026-09-04 22:20:19"
       },
       "state_history": [
         {
@@ -2598,8 +2599,15 @@
           "timestamp": "2026-09-03 14:16:25",
           "user": "Rolf",
           "note": "CRP-2026-033 Part 2 complete: RULE-EFF-007, RULE-EFF-008, RULE-ENV-003 codified in MethodEfficiencyPolicy.md; RULE-PS-015 codified in PowerShellStandardsPolicy.md. BCR point defect fix and ledger registration confirmed."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-04 22:20:19",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, Workspace_AI, Workspace_Inventory)"
         }
-      ]
+      ],
+      "pushed_at": "2026-09-04 22:20:19"
     },
     {
       "id": 59,
@@ -2644,8 +2652,8 @@
       "title": "LCM Subsystem Architecture Formalization: .lcm Whitelisting, Submodule Isolation, and Inventory Log Routing",
       "origin_repo": ".lcm / Architecture",
       "cr_id": "CRP-2026-036",
-      "state": "completed",
-      "progress_state": "done",
+      "state": "pushed",
+      "progress_state": "pushed",
       "bundle_id": "unassigned",
       "author": "Technical Engineering & Governance Team",
       "tier": "T1",
@@ -2658,7 +2666,8 @@
         "suggested": "2026-09-03 16:00:13",
         "approved": "2026-09-03 16:00:13",
         "in_progress": "2026-09-03 16:00:13",
-        "completed": "2026-09-04 10:57:15"
+        "completed": "2026-09-04 10:57:15",
+        "pushed": "2026-09-04 22:20:19"
       },
       "state_history": [
         {
@@ -2685,6 +2694,12 @@
           "from_state": "in_progress",
           "to_state": "completed",
           "reason": "Phase 1 & Phase 2 complete. Architecture docs codified, logs migrated to Workspace_Inventory (77 files), dual ledgers synced to V6.2.0, and parent workspace mirrored."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-04 22:20:19",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, Workspace_AI, Workspace_Inventory)"
         }
       ],
       "review": {
@@ -2693,7 +2708,8 @@
         "status": "approved",
         "report_path": "Workspace_Inventory/data/proposals/plans/Proposal-060_CRP-2026-036_Walkthrough.md",
         "timestamp": "2026-09-04 10:57:15"
-      }
+      },
+      "pushed_at": "2026-09-04 22:20:19"
     },
     {
       "id": 61,
@@ -2702,8 +2718,8 @@
       "origin_repo": ".lcm / Workspace_Inventory",
       "cr_id": "CRP-2026-037",
       "crp_id": "CRP-2026-037",
-      "state": "completed",
-      "progress_state": "done",
+      "state": "pushed",
+      "progress_state": "pushed",
       "bundle_id": "unassigned",
       "author": "Rolf, Workspace_AI Engine",
       "tier": "T1",
@@ -2715,7 +2731,8 @@
       "details": "Formally establish Workspace_Inventory/data/logs/crp/ directory tree and codify rule for capturing CLI/tool execution artifacts during CRP implementations.",
       "dates": {
         "created": "2026-09-04",
-        "completed": "2026-09-04 11:23:02"
+        "completed": "2026-09-04 11:23:02",
+        "pushed": "2026-09-04 22:20:19"
       },
       "state_history": [
         {
@@ -2735,6 +2752,12 @@
           "from_state": "in_progress",
           "to_state": "completed",
           "reason": "CRP-2026-037 complete: Headless BRC review approved (Workspace_Inventory/data/reviews/BRC-CRP-2026-037.md), crp execution logs tree established with initial trace, and pre-push enforcement hooks codified."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-04 22:20:19",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, Workspace_AI, Workspace_Inventory)"
         }
       ],
       "review": {
@@ -2743,7 +2766,8 @@
         "status": "approved",
         "report_path": "Workspace_Inventory/data/reviews/BRC-CRP-2026-037.md",
         "timestamp": "2026-09-04 11:23:02"
-      }
+      },
+      "pushed_at": "2026-09-04 22:20:19"
     },
     {
       "id": 62,
@@ -2851,4 +2875,3 @@
     }
   ]
 }
-
