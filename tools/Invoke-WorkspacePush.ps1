@@ -57,8 +57,22 @@ if (-not $SkipGemini) {
     }
 }
 
+# ------------------------------------------------------------------------------
+# 0.1 Synchronize Tool Catalog & CM Metadata Snapshot for Root Container
+# ------------------------------------------------------------------------------
+$updateCatalogScript = Join-Path $workspaceRoot ".lcm\tools\internal\Update-ToolCatalog.ps1"
+if (Test-Path -LiteralPath $updateCatalogScript) {
+    Write-Host "`n[Pre-Push Pipeline] Synchronizing Tool Catalog snapshot..." -ForegroundColor Yellow
+    & pwsh -File $updateCatalogScript -Silent
+    $rootDirty = git -C $workspaceRoot status --porcelain
+    if ($rootDirty -match '\.lcm/config/tool_catalog\.json') {
+        git -C $workspaceRoot add .lcm/config/tool_catalog.json
+        git -C $workspaceRoot commit -m "chore(lcm): pre-push snapshot synchronization of tool_catalog.json" | Out-Null
+    }
+}
 
 $allRepos = @()
+
 if ($Repositories -and $Repositories.Count -gt 0) {
     $allRepos = $Repositories
 } else {

@@ -571,7 +571,7 @@ $baselineManifest | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Pat
 $filterList = [System.Collections.Generic.List[string]]::new()
 
 if ($repoPath -eq $workspaceRoot) {
-  $keepDirs = @('.agents', '.copilot', '.vscode', '.github', '.git')
+  $keepDirs = @('.copilot', '.vscode', '.github', '.git', '.lcm')
   $allDirs = @(Get-ChildItem -LiteralPath $workspaceRoot -Directory -Force)
   foreach ($d in $allDirs) {
     if ($d.Name -notin $keepDirs) {
@@ -602,7 +602,11 @@ $standardExclusions = @(
   '-*.log', '-*.tmp', '-*.bak', '-*.swp', '-*.lock',
   '-node_modules\', '-*\node_modules\*',
   '-bin\', '-*\bin\*',
-  '-obj\', '-*\obj\*'
+  '-obj\', '-*\obj\*',
+  '-.lcm\logs\', '-*\.lcm\logs\*',
+  '-.lcm\scratch\', '-*\.lcm\scratch\*',
+  '-.lcm\archive\', '-*\.lcm\archive\*',
+  '-.lcm\tools\links\', '-*\.lcm\tools\links\*'
 )
 
 foreach ($ex in $standardExclusions) {
