@@ -22,7 +22,10 @@ param(
     [switch]$SkipGemini,
 
     [Parameter(Mandatory = $false)]
-    [switch]$Force
+    [switch]$Force,
+
+    [Alias('WhatIf')]
+    [switch]$DryRun
 )
 
 Set-StrictMode -Version Latest
@@ -100,15 +103,27 @@ foreach ($repoName in $allRepos) {
 
     # Check branch & ahead status
     $branch = (git -C $repoPath rev-parse --abbrev-ref HEAD).Trim()
-    $statusSb = git -C $repoPath status -sb
-    $isAhead = $statusSb -match 'ahead\s+(\d+)'
+    $statusSb = (git -C $repoPath status -sb) -join "`n"
 
-    if (-not $isAhead) {
+    if ($statusSb -match 'ahead\s+(\d+)') {
+        $aheadCount = $Matches[1]
+    } else {
         Write-Host "  [$repoName] UP-TO-DATE (Branch: $branch, 0 commits ahead)" -ForegroundColor DarkGray
         continue
     }
 
-    $aheadCount = $Matches[1]
+    if ($DryRun) {
+        Write-Host "  [$repoName] [DRY RUN] Would push $aheadCount commit(s) on branch '$branch' to remote 'origin':" -ForegroundColor Yellow
+        $commits = git -C $repoPath log "origin/$branch..HEAD" --oneline 2>$null
+        if ($commits) {
+            foreach ($c in $commits) {
+                Write-Host "      * $c" -ForegroundColor Gray
+            }
+        }
+        $pushedRepos += $repoName
+        continue
+    }
+
     Write-Host "  [$repoName] PUSHING $aheadCount commit(s) on branch '$branch' to remote 'origin'..." -ForegroundColor Cyan
 
     try {
@@ -123,46 +138,63 @@ foreach ($repoName in $allRepos) {
 
 $pushTimestamp = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
 if ($pushedRepos.Count -gt 0) {
-    $logEntry = "[$pushTimestamp] [SUCCESS] [Target: MULTI] [Version: v7.1.0] [PushDate: $pushTimestamp] [AffectedRepos: $($pushedRepos -join ', ')] PUSH_EXECUTED - Pushed $($pushedRepos.Count) repository/repositories to remote ($($pushedRepos -join ', ')). Reason: $Reason"
-    Add-Content -LiteralPath $cmLogFile -Value $logEntry -Encoding UTF8
-    Write-Host "`n  -> Appended PUSH_EXECUTED record to cm_activity.log" -ForegroundColor Green
-
-    # Transition completed proposals to 'pushed' state in proposals.json
-    $proposalsFile = Join-Path $workspaceRoot "Workspace_Inventory\data\proposals\proposals.json"
-    if (Test-Path -LiteralPath $proposalsFile) {
-        $ledgerJson = Get-Content -LiteralPath $proposalsFile -Raw -Encoding UTF8 | ConvertFrom-Json
-        $transitionCount = 0
-        foreach ($p in $ledgerJson.proposals) {
-            $origin = if ($p.origin_repo) { $p.origin_repo } else { "" }
-            $matchesPushed = $pushedRepos | Where-Object { $origin -like "*$_*" }
-            if ($matchesPushed -or $pushedRepos -contains "Workspace_Inventory" -or $pushedRepos -contains "Git_Repositories") {
+    if ($DryRun) {
+        Write-Host "`n  -> [DRY RUN] Would append PUSH_EXECUTED record to cm_activity.log for: $($pushedRepos -join ', ')" -ForegroundColor Yellow
+        $proposalsFile = Join-Path $workspaceRoot "Workspace_Inventory\data\proposals\proposals.json"
+        if (Test-Path -LiteralPath $proposalsFile) {
+            $ledgerJson = Get-Content -LiteralPath $proposalsFile -Raw -Encoding UTF8 | ConvertFrom-Json
+            $transitionCount = 0
+            foreach ($p in $ledgerJson.proposals) {
                 if ($p.progress_state -eq "completed" -or $p.state -eq "completed") {
-                    $p.state = "pushed"
-                    $p.progress_state = "pushed"
-                    $p | Add-Member -NotePropertyName "pushed_at" -NotePropertyValue $pushTimestamp -Force
-                    if ($p.PSObject.Properties['dates'] -and $p.dates) {
-                        $p.dates | Add-Member -NotePropertyName "pushed" -NotePropertyValue $pushTimestamp -Force
-                    }
-                    if ($p.PSObject.Properties['state_history'] -and $p.state_history) {
-                        $newHist = [System.Collections.Generic.List[object]]::new(@($p.state_history))
-                        $newHist.Add([PSCustomObject]@{
-                            state = "pushed"
-                            timestamp = $pushTimestamp
-                            user = $env:USERNAME
-                            note = "Pushed to remote ($($pushedRepos -join ', '))"
-                        })
-                        $p.state_history = @($newHist)
-                    }
                     $transitionCount++
+                    Write-Host "      * [DRY RUN] Would transition Proposal $($p.id) ($($p.title)) to 'pushed'" -ForegroundColor Gray
                 }
             }
+            Write-Host "  -> [DRY RUN] Total $transitionCount completed proposal(s) would transition to 'pushed'." -ForegroundColor Yellow
         }
-        if ($transitionCount -gt 0) {
-            $ledgerJson | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $proposalsFile -Encoding UTF8
-            Write-Host "  -> Transitioned $transitionCount proposal(s) from 'completed' to 'pushed' state in proposals.json." -ForegroundColor Green
+    } else {
+        $logEntry = "[$pushTimestamp] [SUCCESS] [Target: MULTI] [Version: v7.1.0] [PushDate: $pushTimestamp] [AffectedRepos: $($pushedRepos -join ', ')] PUSH_EXECUTED - Pushed $($pushedRepos.Count) repository/repositories to remote ($($pushedRepos -join ', ')). Reason: $Reason"
+        Add-Content -LiteralPath $cmLogFile -Value $logEntry -Encoding UTF8
+        Write-Host "`n  -> Appended PUSH_EXECUTED record to cm_activity.log" -ForegroundColor Green
+
+        # Transition completed proposals to 'pushed' state in proposals.json
+        $proposalsFile = Join-Path $workspaceRoot "Workspace_Inventory\data\proposals\proposals.json"
+        if (Test-Path -LiteralPath $proposalsFile) {
+            $ledgerJson = Get-Content -LiteralPath $proposalsFile -Raw -Encoding UTF8 | ConvertFrom-Json
+            $transitionCount = 0
+            foreach ($p in $ledgerJson.proposals) {
+                $origin = if ($p.origin_repo) { $p.origin_repo } else { "" }
+                $matchesPushed = $pushedRepos | Where-Object { $origin -like "*$_*" }
+                if ($matchesPushed -or $pushedRepos -contains "Workspace_Inventory" -or $pushedRepos -contains "Git_Repositories") {
+                    if ($p.progress_state -eq "completed" -or $p.state -eq "completed") {
+                        $p.state = "pushed"
+                        $p.progress_state = "pushed"
+                        $p | Add-Member -NotePropertyName "pushed_at" -NotePropertyValue $pushTimestamp -Force
+                        if ($p.PSObject.Properties['dates'] -and $p.dates) {
+                            $p.dates | Add-Member -NotePropertyName "pushed" -NotePropertyValue $pushTimestamp -Force
+                        }
+                        if ($p.PSObject.Properties['state_history'] -and $p.state_history) {
+                            $newHist = [System.Collections.Generic.List[object]]::new(@($p.state_history))
+                            $newHist.Add([PSCustomObject]@{
+                                state = "pushed"
+                                timestamp = $pushTimestamp
+                                user = $env:USERNAME
+                                note = "Pushed to remote ($($pushedRepos -join ', '))"
+                            })
+                            $p.state_history = @($newHist)
+                        }
+                        $transitionCount++
+                    }
+                }
+            }
+            if ($transitionCount -gt 0) {
+                $ledgerJson | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $proposalsFile -Encoding UTF8
+                Write-Host "  -> Transitioned $transitionCount proposal(s) from 'completed' to 'pushed' state in proposals.json." -ForegroundColor Green
+            }
         }
     }
 }
+
 
 Write-Host "==========================================================================" -ForegroundColor Cyan
 Write-Host " [SUMMARY] Workspace Push Completed" -ForegroundColor Green
