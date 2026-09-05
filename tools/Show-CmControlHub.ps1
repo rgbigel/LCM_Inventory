@@ -14,6 +14,10 @@ param(
     [Parameter(Mandatory = $false, HelpMessage = 'Render HTML data cache without launching desktop browser')]
     [switch]$NoLaunch,
 
+    [Parameter(Mandatory = $false, HelpMessage = 'Open in CRP Lifecycle Dates modal mode')]
+    [Alias('Dates', 'CrpDates')]
+    [switch]$DatesMode,
+
     [Alias('h', '?')]
     [switch]$Help
 )
@@ -179,11 +183,12 @@ Write-Host " Ledger   : $proposalsFile"
 if (-not $NoLaunch) {
     Write-Host " Launching interactive desktop browser..." -ForegroundColor Green
     Write-Host "==========================================================================" -ForegroundColor Cyan
+    $launchTarget = if ($DatesMode) { "$renderedHtmlPath#dates" } else { $renderedHtmlPath }
     $dispatcher = Join-Path $workspaceRoot ".lcm\tools\internal\Invoke-InteractiveDesktop.ps1"
     if (Test-Path -LiteralPath $dispatcher) {
-        & $dispatcher -FilePath $renderedHtmlPath
+        & $dispatcher -FilePath $launchTarget
     } else {
-        Start-Process -FilePath $renderedHtmlPath
+        Start-Process -FilePath $launchTarget
     }
 } else {
     Write-Host " Dashboard rendered cleanly (browser launch suppressed via -NoLaunch)." -ForegroundColor DarkGray

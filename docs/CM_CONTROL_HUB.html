@@ -684,7 +684,6 @@
         <button class="btn btn-primary" onclick="showCurrentInNewTab()">🌐 Show in New Tab</button>
         <button class="btn btn-blue" onclick="openCurrentInNotepad()">✏️ Open in Notepad++</button>
         <button class="btn" onclick="printInspectorDocument()">🖨️ Print Document</button>
-        <button class="btn" onclick="closeInspectorModal()">Close</button>
       </div>
     </div>
   </div>
@@ -829,7 +828,6 @@
 
       <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center;">
         <span id="crpDateSelectedCount" style="font-size: 0.8rem; color: var(--text-secondary);">Showing 0 of 0 proposals</span>
-        <button class="btn" onclick="closeCrpDatesModal()">Close</button>
       </div>
     </div>
   </div>
@@ -842,9 +840,6 @@
         <button class="btn" onclick="closeLogsModal()">✕ Close</button>
       </div>
       <div class="modal-body" id="logContent">Loading logs...</div>
-      <div class="modal-footer">
-        <button class="btn" onclick="closeLogsModal()">Close</button>
-      </div>
     </div>
   </div>
 
@@ -897,9 +892,6 @@
         <p>Type commands directly into the bottom console to control the CM engine:
         <br><code>do #&lt;id&gt;</code> &bull; <code>review #&lt;id&gt;</code> &bull; <code>accept #&lt;id&gt;</code> &bull; <code>defer #&lt;id&gt;</code> &bull; <code>status</code> &bull; <code>readiness</code></p>
       </div>
-      <div class="modal-footer">
-        <button class="btn" onclick="closeHelpModal()">Close</button>
-      </div>
     </div>
   </div>
 
@@ -948,6 +940,22 @@
       setInterval(checkDaemonHealth, 5000);
 
       appendConsole("CM Control Hub v1.2.0 initialized with " + proposalsData.proposals.length + " proposal(s) and " + Object.keys(docsCache).length + " cached documents.", "msg-info");
+
+      if (window.location.hash === "#dates" || window.location.hash === "#crpdates" || window.location.search.includes("mode=dates")) {
+        setTimeout(() => { showCRPDates(); }, 100);
+      }
+
+      // Global Escape Key Dismissal for Modals (CRP Requirement)
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          closeHelpModal();
+          closeLogsModal();
+          closeInspectorModal();
+          closeRepoDocsModal();
+          closeCrpDatesModal();
+          closeCrpTimelineDrawer();
+        }
+      });
     });
 
     // Markdown Renderer Helper
@@ -2078,11 +2086,12 @@
             </thead>
             <tbody>${rows}</tbody>
           </table>
-          <script>window.onload = function() { window.print(); };</script>
         </body>
         </html>
       `);
       win.document.close();
+      win.focus();
+      setTimeout(() => { win.print(); }, 250);
     }
 
   </script>

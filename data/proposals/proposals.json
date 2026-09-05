@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-09-04T20:21:23+02:00",
+  "updated_at": "2026-09-05T21:50:00+02:00",
   "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 66,
+  "last_proposal_id": 76,
   "proposals": [
     {
       "id": 1,
@@ -2872,6 +2872,239 @@
       ],
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-067_CR-PROP-67_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-067_CR-PROP-67_Walkthrough.md"
+    },
+    {
+      "description": "CM Control Hub template script block escaping fix, global Escape modal dismissal, and alignment with Display Standard.",
+      "origin_repo": "Workspace_Inventory",
+      "type": "CRP",
+      "id": 68,
+      "state_history": [
+        {
+          "state": "completed",
+          "timestamp": "2026-09-05 20:55:30",
+          "user": "Workspace_AI",
+          "note": "Fixed raw script tag leak, unified Esc dismissal, removed redundant Close buttons."
+        }
+      ],
+      "title": "[CRP] CM Control Hub Display Standard Completion & HTML Parser Stabilization",
+      "dates": {
+        "in_progress": "2026-09-05 20:55:30",
+        "completed": "2026-09-05 20:55:30",
+        "created": "2026-09-05 20:55:30"
+      },
+      "cr_id": "CRP-2026-037",
+      "state": "completed",
+      "priority": "HIGH",
+      "progress_state": "completed"
+    },
+    {
+      "description": "Modal exit ergonomics via Escape key across Tool Explorer subdisplays.",
+      "origin_repo": "Git_Repositories",
+      "type": "CRP",
+      "id": 69,
+      "state_history": [
+        {
+          "state": "completed",
+          "timestamp": "2026-09-05 20:55:30",
+          "user": "Workspace_AI",
+          "note": "Implemented global Escape listener, removed secondary Close/Got It buttons, kept header X."
+        }
+      ],
+      "title": "[CRP] LCM Tool Explorer Modal Ergonomics & Esc Key Handler",
+      "dates": {
+        "in_progress": "2026-09-05 20:55:30",
+        "completed": "2026-09-05 20:55:30",
+        "created": "2026-09-05 20:55:30"
+      },
+      "cr_id": "CRP-2026-038",
+      "state": "completed",
+      "priority": "MEDIUM",
+      "progress_state": "completed"
+    },
+    {
+      "description": "Direct code editing in active VS Code IDE instead of Notepad++.",
+      "origin_repo": "Git_Repositories",
+      "type": "BUG",
+      "id": 70,
+      "state_history": [
+        {
+          "state": "completed",
+          "timestamp": "2026-09-05 20:55:30",
+          "user": "Workspace_AI",
+          "note": "Configured daemon OpenEditor to prioritize VS Code code.cmd -g."
+        }
+      ],
+      "title": "[BUG] IDE Code Launcher Configuration (code.cmd vs Notepad++)",
+      "dates": {
+        "in_progress": "2026-09-05 20:55:30",
+        "completed": "2026-09-05 20:55:30",
+        "created": "2026-09-05 20:55:30"
+      },
+      "cr_id": "BUG-2026-004",
+      "state": "completed",
+      "priority": "MEDIUM",
+      "progress_state": "completed"
+    },
+    {
+      "description": "Tool renaming persistence via tool_catalog_overrides.json and immediate .cmd trampoline regeneration in .lcm/Cmd.",
+      "origin_repo": "Git_Repositories",
+      "type": "BUG",
+      "id": 71,
+      "state_history": [
+        {
+          "state": "completed",
+          "timestamp": "2026-09-05 20:55:30",
+          "user": "Workspace_AI",
+          "note": "Added ShortName override merging in daemon SyncCatalogState and .lcm/Cmd generation."
+        }
+      ],
+      "title": "[BUG] Command Renaming Overrides Persistence & Trampoline Regeneration",
+      "dates": {
+        "in_progress": "2026-09-05 20:55:30",
+        "completed": "2026-09-05 20:55:30",
+        "created": "2026-09-05 20:55:30"
+      },
+      "cr_id": "BUG-2026-005",
+      "state": "completed",
+      "priority": "HIGH",
+      "progress_state": "completed"
+    },
+    {
+      "description": "Automatic elevation interlock for SystemPrivilege PsExec tools.",
+      "origin_repo": "SystemConfiguration",
+      "type": "BUG",
+      "id": 72,
+      "state_history": [
+        {
+          "state": "completed",
+          "timestamp": "2026-09-05 20:55:30",
+          "user": "Workspace_AI",
+          "note": "Added Admin: True heuristic in catalog and net session UAC elevation trampoline."
+        }
+      ],
+      "title": "[BUG] SystemPrivilege Local Administrator Self-Elevation Interlock",
+      "dates": {
+        "in_progress": "2026-09-05 20:55:30",
+        "completed": "2026-09-05 20:55:30",
+        "created": "2026-09-05 20:55:30"
+      },
+      "cr_id": "BUG-2026-006",
+      "state": "completed",
+      "priority": "HIGH",
+      "progress_state": "completed"
+    },
+    {
+      "description": "Resolved path errors for Set-MouseFlickerInvariants, forwarded self-elevation arguments, and surfaced script dependencies.",
+      "origin_repo": "SystemConfiguration",
+      "type": "BUG",
+      "id": 73,
+      "state_history": [
+        {
+          "state": "completed",
+          "timestamp": "2026-09-05 20:55:30",
+          "user": "Workspace_AI",
+          "note": "Removed stale tools/ paths, enhanced AST dependency extraction, fixed parameter forwarding."
+        }
+      ],
+      "title": "[BUG] Anti-Flicker Group AST Dependency Extraction & Path Resolution",
+      "dates": {
+        "in_progress": "2026-09-05 20:55:30",
+        "completed": "2026-09-05 20:55:30",
+        "created": "2026-09-05 20:55:30"
+      },
+      "cr_id": "BUG-2026-007",
+      "state": "completed",
+      "priority": "HIGH",
+      "progress_state": "completed"
+    },
+    {
+      "description": "Correct log file detection and cleanup across all LCM log roots.",
+      "origin_repo": "Git_Repositories",
+      "type": "BUG",
+      "id": 74,
+      "state_history": [
+        {
+          "state": "completed",
+          "timestamp": "2026-09-05 20:55:30",
+          "user": "Workspace_AI",
+          "note": "Expanded log cleaner to scan .lcm/logs, tools/logs, and Workspace_Inventory/logs."
+        }
+      ],
+      "title": "[BUG] LCM Daemon Log Cleaner Multi-Directory Scan Fix",
+      "dates": {
+        "in_progress": "2026-09-05 20:55:30",
+        "completed": "2026-09-05 20:55:30",
+        "created": "2026-09-05 20:55:30"
+      },
+      "cr_id": "BUG-2026-008",
+      "state": "completed",
+      "priority": "MEDIUM",
+      "progress_state": "completed"
+    },
+    {
+      "description": "Convergence of ShowToolIndex into ShowTools and enforcing browser table displays for GUI role tools unless -NoBrowser is specified.",
+      "origin_repo": "Git_Repositories",
+      "type": "BUG",
+      "id": 75,
+      "state_history": [
+        {
+          "state": "completed",
+          "timestamp": "2026-09-05 20:55:30",
+          "user": "Workspace_AI",
+          "note": "Converged ShowToolIndex into ShowTools, reclassified ShowActions to Telemetry, defaulted ShowCrpDates to browser."
+        }
+      ],
+      "title": "[BUG] GUI Role CLI Output Suppression & ShowTools / ShowToolIndex Convergence",
+      "dates": {
+        "in_progress": "2026-09-05 20:55:30",
+        "completed": "2026-09-05 20:55:30",
+        "created": "2026-09-05 20:55:30"
+      },
+      "cr_id": "BUG-2026-009",
+      "state": "completed",
+      "priority": "HIGH",
+      "progress_state": "completed"
+    },
+    {
+      "id": 76,
+      "timestamp": "2026-09-05 21:50:00",
+      "title": "Bug/CRP Intake Gate, PROCEED Trigger Invariants, and Batch Execution Granularity",
+      "origin_repo": "Workspace_Inventory",
+      "cr_id": "CRP-2026-022",
+      "bundle_id": "BUNDLE-2026-04",
+      "state": "completed",
+      "progress_state": "completed",
+      "priority": "HIGH",
+      "author": "Rolf, Workspace_AI",
+      "details": "Codify strict intake gate for BUG: and CRP: designators, mandate OPEN initial state, define PROCEED / PROCEED ALL triggers, establish autonomous system exception boundary with 2-attempt loop breaker, and protect against token/credit exhaustion.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-076_CRP-2026-022_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-076_CRP-2026-022_Walkthrough.md",
+      "dates": {
+        "created": "2026-09-05 21:50:00",
+        "suggested": "2026-09-05 21:50:00",
+        "in_progress": "2026-09-05 22:12:31",
+        "completed": "2026-09-05 22:14:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-05 21:50:00",
+          "user": "Rolf",
+          "note": "Registered proposal in OPEN state pending operator document review (no PROCEED)."
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-09-05 22:12:31",
+          "user": "Rolf",
+          "note": "Specification accepted; implementation initiated."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-05 22:14:00",
+          "user": "Workspace_AI",
+          "note": "Implemented RULE-LCM-015 through RULE-LCM-018 in ProposalReviewFlowPolicy.md, updated cross-reference matrices, AGENTS.md, and Implementation.md Design Choices section."
+        }
+      ]
     }
   ]
 }

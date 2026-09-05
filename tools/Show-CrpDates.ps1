@@ -42,8 +42,8 @@ param(
   [Parameter(Mandatory = $false)]
   [switch]$Detail,
 
-  [Parameter(Mandatory = $false)]
-  [switch]$Web,
+  [Alias('Cli', 'Text')]
+  [switch]$NoBrowser,
 
   [Alias('h', '?')]
   [switch]$Help
@@ -83,8 +83,21 @@ function Get-ObjProperty {
 }
 
 $workspaceRoot = 'D:\Git_Repositories'
-$propFile = Join-Path $workspaceRoot 'Workspace_Inventory\data\proposals\proposals.json'
+if (-not (Test-Path -LiteralPath $workspaceRoot)) {
+  $workspaceRoot = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
+}
 
+if (-not $NoBrowser) {
+  $hubScript = Join-Path $workspaceRoot "Workspace_Inventory\tools\Show-CmControlHub.ps1"
+  if (Test-Path -LiteralPath $hubScript) {
+    $hubArgs = @("-DatesMode")
+    if ($State) { $hubArgs += @("-State", $State) }
+    & pwsh -File $hubScript @hubArgs
+    return
+  }
+}
+
+$propFile = Join-Path $workspaceRoot 'Workspace_Inventory\data\proposals\proposals.json'
 if (-not (Test-Path -LiteralPath $propFile)) {
   Write-Error "Proposals ledger not found at: $propFile"
   return
@@ -135,14 +148,6 @@ if (-not [string]::IsNullOrWhiteSpace($StateEvent)) {
     }
     return $false
   })
-}
-
-if ($Web) {
-  $hubScript = Join-Path $workspaceRoot 'Workspace_Inventory\tools\Show-CmControlHub.ps1'
-  if (Test-Path -LiteralPath $hubScript) {
-    & pwsh -File $hubScript
-    return
-  }
 }
 
 Write-Host "========================================================================================================================" -ForegroundColor Cyan
