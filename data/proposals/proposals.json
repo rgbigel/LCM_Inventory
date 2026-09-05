@@ -2884,18 +2884,26 @@
           "timestamp": "2026-09-05 20:55:30",
           "user": "Workspace_AI",
           "note": "Fixed raw script tag leak, unified Esc dismissal, removed redundant Close buttons."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-05 22:33:38",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, Workspace_AI, Workspace_Inventory)"
         }
       ],
       "title": "[CRP] CM Control Hub Display Standard Completion & HTML Parser Stabilization",
       "dates": {
         "in_progress": "2026-09-05 20:55:30",
         "completed": "2026-09-05 20:55:30",
-        "created": "2026-09-05 20:55:30"
+        "created": "2026-09-05 20:55:30",
+        "pushed": "2026-09-05 22:33:38"
       },
       "cr_id": "CRP-2026-037",
-      "state": "completed",
+      "state": "pushed",
       "priority": "HIGH",
-      "progress_state": "completed"
+      "progress_state": "pushed",
+      "pushed_at": "2026-09-05 22:33:38"
     },
     {
       "description": "Modal exit ergonomics via Escape key across Tool Explorer subdisplays.",
@@ -2908,18 +2916,26 @@
           "timestamp": "2026-09-05 20:55:30",
           "user": "Workspace_AI",
           "note": "Implemented global Escape listener, removed secondary Close/Got It buttons, kept header X."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-05 22:33:38",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, Workspace_AI, Workspace_Inventory)"
         }
       ],
       "title": "[CRP] LCM Tool Explorer Modal Ergonomics & Esc Key Handler",
       "dates": {
         "in_progress": "2026-09-05 20:55:30",
         "completed": "2026-09-05 20:55:30",
-        "created": "2026-09-05 20:55:30"
+        "created": "2026-09-05 20:55:30",
+        "pushed": "2026-09-05 22:33:38"
       },
       "cr_id": "CRP-2026-038",
-      "state": "completed",
+      "state": "pushed",
       "priority": "MEDIUM",
-      "progress_state": "completed"
+      "progress_state": "pushed",
+      "pushed_at": "2026-09-05 22:33:38"
     },
     {
       "description": "Direct code editing in active VS Code IDE instead of Notepad++.",
@@ -2932,18 +2948,26 @@
           "timestamp": "2026-09-05 20:55:30",
           "user": "Workspace_AI",
           "note": "Configured daemon OpenEditor to prioritize VS Code code.cmd -g."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-05 22:33:38",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, Workspace_AI, Workspace_Inventory)"
         }
       ],
       "title": "[BUG] IDE Code Launcher Configuration (code.cmd vs Notepad++)",
       "dates": {
         "in_progress": "2026-09-05 20:55:30",
         "completed": "2026-09-05 20:55:30",
-        "created": "2026-09-05 20:55:30"
+        "created": "2026-09-05 20:55:30",
+        "pushed": "2026-09-05 22:33:38"
       },
       "cr_id": "BUG-2026-004",
-      "state": "completed",
+      "state": "pushed",
       "priority": "MEDIUM",
-      "progress_state": "completed"
+      "progress_state": "pushed",
+      "pushed_at": "2026-09-05 22:33:38"
     },
     {
       "description": "Tool renaming persistence via tool_catalog_overrides.json and immediate .cmd trampoline regeneration in .lcm/Cmd.",
@@ -2956,18 +2980,26 @@
           "timestamp": "2026-09-05 20:55:30",
           "user": "Workspace_AI",
           "note": "Added ShortName override merging in daemon SyncCatalogState and .lcm/Cmd generation."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-05 22:33:38",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, Workspace_AI, Workspace_Inventory)"
         }
       ],
       "title": "[BUG] Command Renaming Overrides Persistence & Trampoline Regeneration",
       "dates": {
         "in_progress": "2026-09-05 20:55:30",
         "completed": "2026-09-05 20:55:30",
-        "created": "2026-09-05 20:55:30"
+        "created": "2026-09-05 20:55:30",
+        "pushed": "2026-09-05 22:33:38"
       },
       "cr_id": "BUG-2026-005",
-      "state": "completed",
+      "state": "pushed",
       "priority": "HIGH",
-      "progress_state": "completed"
+      "progress_state": "pushed",
+      "pushed_at": "2026-09-05 22:33:38"
     },
     {
       "description": "Automatic elevation interlock for SystemPrivilege PsExec tools.",
@@ -2980,18 +3012,26 @@
           "timestamp": "2026-09-05 20:55:30",
           "user": "Workspace_AI",
           "note": "Added Admin: True heuristic in catalog and net session UAC elevation trampoline."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-05 22:33:38",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, Workspace_AI, Workspace_Inventory)"
         }
       ],
       "title": "[BUG] SystemPrivilege Local Administrator Self-Elevation Interlock",
       "dates": {
         "in_progress": "2026-09-05 20:55:30",
         "completed": "2026-09-05 20:55:30",
-        "created": "2026-09-05 20:55:30"
+        "created": "2026-09-05 20:55:30",
+        "pushed": "2026-09-05 22:33:38"
       },
       "cr_id": "BUG-2026-006",
-      "state": "completed",
+      "state": "pushed",
       "priority": "HIGH",
-      "progress_state": "completed"
+      "progress_state": "pushed",
+      "pushed_at": "2026-09-05 22:33:38"
     },
     {
       "description": "Resolved path errors for Set-MouseFlickerInvariants, forwarded self-elevation arguments, and surfaced script dependencies.",
@@ -3004,18 +3044,26 @@
           "timestamp": "2026-09-05 20:55:30",
           "user": "Workspace_AI",
           "note": "Removed stale tools/ paths, enhanced AST dependency extraction, fixed parameter forwarding."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-05 22:33:38",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, Workspace_AI, Workspace_Inventory)"
         }
       ],
       "title": "[BUG] Anti-Flicker Group AST Dependency Extraction & Path Resolution",
       "dates": {
         "in_progress": "2026-09-05 20:55:30",
         "completed": "2026-09-05 20:55:30",
-        "created": "2026-09-05 20:55:30"
+        "created": "2026-09-05 20:55:30",
+        "pushed": "2026-09-05 22:33:38"
       },
       "cr_id": "BUG-2026-007",
-      "state": "completed",
+      "state": "pushed",
       "priority": "HIGH",
-      "progress_state": "completed"
+      "progress_state": "pushed",
+      "pushed_at": "2026-09-05 22:33:38"
     },
     {
       "description": "Correct log file detection and cleanup across all LCM log roots.",
@@ -3028,18 +3076,26 @@
           "timestamp": "2026-09-05 20:55:30",
           "user": "Workspace_AI",
           "note": "Expanded log cleaner to scan .lcm/logs, tools/logs, and Workspace_Inventory/logs."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-05 22:33:38",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, Workspace_AI, Workspace_Inventory)"
         }
       ],
       "title": "[BUG] LCM Daemon Log Cleaner Multi-Directory Scan Fix",
       "dates": {
         "in_progress": "2026-09-05 20:55:30",
         "completed": "2026-09-05 20:55:30",
-        "created": "2026-09-05 20:55:30"
+        "created": "2026-09-05 20:55:30",
+        "pushed": "2026-09-05 22:33:38"
       },
       "cr_id": "BUG-2026-008",
-      "state": "completed",
+      "state": "pushed",
       "priority": "MEDIUM",
-      "progress_state": "completed"
+      "progress_state": "pushed",
+      "pushed_at": "2026-09-05 22:33:38"
     },
     {
       "description": "Convergence of ShowToolIndex into ShowTools and enforcing browser table displays for GUI role tools unless -NoBrowser is specified.",
@@ -3052,18 +3108,26 @@
           "timestamp": "2026-09-05 20:55:30",
           "user": "Workspace_AI",
           "note": "Converged ShowToolIndex into ShowTools, reclassified ShowActions to Telemetry, defaulted ShowCrpDates to browser."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-05 22:33:38",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, Workspace_AI, Workspace_Inventory)"
         }
       ],
       "title": "[BUG] GUI Role CLI Output Suppression & ShowTools / ShowToolIndex Convergence",
       "dates": {
         "in_progress": "2026-09-05 20:55:30",
         "completed": "2026-09-05 20:55:30",
-        "created": "2026-09-05 20:55:30"
+        "created": "2026-09-05 20:55:30",
+        "pushed": "2026-09-05 22:33:38"
       },
       "cr_id": "BUG-2026-009",
-      "state": "completed",
+      "state": "pushed",
       "priority": "HIGH",
-      "progress_state": "completed"
+      "progress_state": "pushed",
+      "pushed_at": "2026-09-05 22:33:38"
     },
     {
       "id": 76,
@@ -3072,8 +3136,8 @@
       "origin_repo": "Workspace_Inventory",
       "cr_id": "CRP-2026-022",
       "bundle_id": "BUNDLE-2026-04",
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "priority": "HIGH",
       "author": "Rolf, Workspace_AI",
       "details": "Codify strict intake gate for BUG: and CRP: designators, mandate OPEN initial state, define PROCEED / PROCEED ALL triggers, establish autonomous system exception boundary with 2-attempt loop breaker, and protect against token/credit exhaustion.",
@@ -3083,7 +3147,8 @@
         "created": "2026-09-05 21:50:00",
         "suggested": "2026-09-05 21:50:00",
         "in_progress": "2026-09-05 22:12:31",
-        "completed": "2026-09-05 22:14:00"
+        "completed": "2026-09-05 22:14:00",
+        "pushed": "2026-09-05 22:33:38"
       },
       "state_history": [
         {
@@ -3103,8 +3168,15 @@
           "timestamp": "2026-09-05 22:14:00",
           "user": "Workspace_AI",
           "note": "Implemented RULE-LCM-015 through RULE-LCM-018 in ProposalReviewFlowPolicy.md, updated cross-reference matrices, AGENTS.md, and Implementation.md Design Choices section."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-05 22:33:38",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, Workspace_AI, Workspace_Inventory)"
         }
-      ]
+      ],
+      "pushed_at": "2026-09-05 22:33:38"
     }
   ]
 }
