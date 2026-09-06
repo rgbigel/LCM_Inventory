@@ -1,0 +1,10 @@
+{
+  "RepositoryName": "Workspace_Inventory",
+  "RepositoryPath": "Workspace_Inventory",
+  "CommitSha": "61b58dd",
+  "ReviewResult": "AcceptedAll",
+  "Reviewer": "rgbig",
+  "Timestamp": "2026-09-06 22:58:08",
+  "Message": "feat(cm): implement CRP-079 unified CRP ID, STATUS column, committed state, and proceed routing",
+  "ActionsExecuted": []
+}
