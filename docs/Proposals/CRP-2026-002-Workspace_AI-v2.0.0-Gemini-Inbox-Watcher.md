@@ -32,9 +32,9 @@ Cloud-based Google Gemini (Web, Apps, Gems) operates inside Google's cloud bound
 ## 3. Implemented Components
 
 1. **Intake Specification**: [`Workspace_AI/docs/GEMINI_INBOX_SPECIFICATION.md`](file:///Workspace_AI/docs/GEMINI_INBOX_SPECIFICATION.md) defining markdown and JSON templates with mandatory headers.
-2. **Core Intake Tool**: [`.lcd/.tools/internal/Sync-GeminiInbox.ps1`](file:///.lcd/.tools/internal/Sync-GeminiInbox.ps1) implementing parsing, proposal registration via `ProposalManager.psm1`, archive relocation, and structured logging.
-3. **Command Trampoline**: [`.lcd/Cmd/SyncGeminiInbox.cmd`](file:///.lcd/Cmd/SyncGeminiInbox.cmd) for short-name CLI dispatch (`SyncGeminiInbox`).
-4. **Tool Catalog Synchronization**: Catalog entry in `.lcd/config/tool_catalog.json` (142 tools synchronized).
+2. **Core Intake Tool**: [`.lcm/tools/internal/Sync-GeminiInbox.ps1`](file:///.lcm/tools/internal/Sync-GeminiInbox.ps1) implementing parsing, proposal registration via `ProposalManager.psm1`, archive relocation, and structured logging.
+3. **Command Trampoline**: [`.lcm/Cmd/SyncGeminiInbox.cmd`](file:///.lcm/Cmd/SyncGeminiInbox.cmd) for short-name CLI dispatch (`SyncGeminiInbox`).
+4. **Tool Catalog Synchronization**: Catalog entry in `.lcm/config/tool_catalog.json` (142 tools synchronized).
 5. **GDrive Mirror Synchronization**: Automatic mirroring of specifications and tools to `D:\GDrive\LCM\` via `Export-LCMRules.ps1` and `Export-LcmKnowledgeBase.ps1`.
 
 ---

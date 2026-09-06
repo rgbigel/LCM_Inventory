@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-09-06T22:30:02+02:00",
+  "updated_at": "2026-09-06T23:29:26+02:00",
   "review_granularity": "coarse",
   "lcm_mode": "active",
   "last_proposal_id": 106,
@@ -947,7 +947,7 @@
       "progress_state": "pushed",
       "bundle_id": "unassigned",
       "author": "rgbig",
-      "details": "Consolidate LCD platform governance rules, internal tools, modules, and docs into an encapsulated .lcd/ structure with separate .lcd/.tools/internal (real code) and .lcd/tools/links (gitignored symlinks), update %PATH% to .lcd/Cmd, update child repository junctions, and provide root compatibility junctions.",
+      "details": "Consolidate LCD platform governance rules, internal tools, modules, and docs into an encapsulated .lcm/ structure with separate .lcm/tools/internal (real code) and .lcm/tools/links (gitignored symlinks), update %PATH% to .lcm/Cmd, update child repository junctions, and provide root compatibility junctions.",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-020_CR-2026-031_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-020_CR-2026-031_Walkthrough.md",
       "pushed_at": "2026-08-30 15:29:48",
@@ -5039,8 +5039,7 @@
       "origin_repo": "LCM / Tooling",
       "cr_id": "CRP-106",
       "bundle_id": "CRP-106-LCM _ Tooling",
-      "state": "suggested",
-      "progress_state": "undecided",
+      "state": "processed",
       "author": "Rolf, Workspace_AI",
       "priority": "M",
       "details": "Consolidate tool dispatch mechanisms, eliminate path fragmentation, and standardize headless logging. (Re-instated as active OPEN proposal from specification CRP-2026-049). (Re-instated as CRP-106 with verified state 'suggested' from specification CRP-2026-049).",
@@ -5070,7 +5069,8 @@
         "spec_path": "Workspace_Inventory/docs/Proposals/CRP-2026-049-LCM-v6.2.0-Tool-Architecture-Consolidation.md",
         "final_state": "suggested",
         "final_progress": "undecided"
-      }
+      },
+      "progress_state": "verification"
     }
   ]
 }

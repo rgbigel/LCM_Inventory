@@ -19,7 +19,7 @@ Establish an automated, secure intake bridge for instructions and BUG reports ge
 1. **Inbox Specification** (`Workspace_AI/docs/GEMINI_INBOX_SPECIFICATION.md`):
    - Enforce mandatory timestamping (`**Timestamp**: YYYY-MM-DD HH:MM:SS` or ISO 8601).
    - Standardize metadata (`Type: BUG | TASK | PROPOSAL`, `Criticality`, `Target Repo`).
-2. **Intake Tool** (`.lcd/.tools/internal/Sync-GeminiInbox.ps1`):
+2. **Intake Tool** (`.lcm/tools/internal/Sync-GeminiInbox.ps1`):
    - Scan `D:\GDrive\LCM\INBOX` for incoming `.md`, `.txt`, `.json` files.
    - Validate timestamp header and extract structured fields.
    - Register item in `Workspace_Inventory/data/proposals/proposals.json` as `state: suggested`, `progress_state: undecided`.
