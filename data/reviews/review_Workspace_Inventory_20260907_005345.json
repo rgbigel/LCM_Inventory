@@ -1,0 +1,12 @@
+{
+  "RepositoryName": "Workspace_Inventory",
+  "RepositoryPath": "d:\\Git_Repositories\\Workspace_Inventory",
+  "CommitSha": "21a6097",
+  "ReviewResult": "Accepted",
+  "Reviewer": "rgbig",
+  "Timestamp": "2026-09-07 00:53:45",
+  "Message": "fix(governance): refactor legacy .tools references to .lcm/tools/internal and .lcm/Cmd",
+  "ActionsExecuted": [
+    "Refactored .tools references across proposals, plans, walkthroughs, and reviews"
+  ]
+}
