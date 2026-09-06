@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-09-05T21:50:00+02:00",
+  "updated_at": "2026-09-06T11:07:20+02:00",
   "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 76,
+  "last_proposal_id": 77,
   "proposals": [
     {
       "id": 1,
@@ -3177,6 +3177,48 @@
         }
       ],
       "pushed_at": "2026-09-05 22:33:38"
+    },
+    {
+      "id": 77,
+      "timestamp": "2026-09-06 11:06:00",
+      "title": "Fix JavaScript Syntax Error and Stale Atom Path in Show-HaInventoryApp.ps1",
+      "origin_repo": "HaSSD06_Inventory",
+      "cr_id": "CR-2026-048",
+      "bug_id": "BUG-2026-008",
+      "bundle_id": "BUNDLE-2026-05",
+      "state": "completed",
+      "progress_state": "completed",
+      "priority": "HIGH",
+      "author": "Rolf, Workspace_AI",
+      "details": "Resolve unescaped JS template literal causing V8 compilation failure and fix table print atom path to restore all button click handlers and interactivity.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-077_CR-2026-048_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-077_CR-2026-048_Walkthrough.md",
+      "dates": {
+        "created": "2026-09-06 11:06:00",
+        "suggested": "2026-09-06 11:06:00",
+        "in_progress": "2026-09-06 11:06:00",
+        "completed": "2026-09-06 11:07:20"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-06 11:06:00",
+          "user": "Rolf",
+          "note": "Registered BUG-2026-008 for unresponsive buttons in HA Subsystem Inventory Explorer."
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-09-06 11:06:00",
+          "user": "Rolf",
+          "note": "Operator issued PROCEED directive; executing remediation."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-06 11:07:20",
+          "user": "Workspace_AI",
+          "note": "Fixed JS template literal syntax error, corrected table print atom path, regenerated SHOW_HA_INVENTORY.html, verified 0 JS errors and passed all quality gates."
+        }
+      ]
     }
   ]
 }
