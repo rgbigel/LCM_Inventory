@@ -6,8 +6,8 @@
 #          batch operations, review granularity ('coarse' | 'tight'), repo review queue inspection,
 #          and persistent ledger storage in Workspace_Inventory.
 # Authors: Rolf, Workspace_AI Engine
-# Version: 1.0.1
-# Date: 2026-08-20
+# Version: 1.0.2
+# Date: 2026-09-06
 # =====================================================================
 
 Set-StrictMode -Version Latest
@@ -91,7 +91,7 @@ function Get-WorkspaceProposals {
     $items = @($store.proposals)
 
     if ($OpenOnly) {
-        $items = @($items | Where-Object { $_.state -in @('suggested', 'processed', 'deferred') })
+        $items = @($items | Where-Object { $_.state -in @('bug', 'suggested', 'approved', 'processed', 'deferred') })
     }
 
     if ($Id -and $Id.Count -gt 0) {
@@ -584,6 +584,7 @@ function Format-ProposalsTable {
 
     foreach ($p in $Proposals) {
         $color = switch ($p.state) {
+            'bug'       { [ConsoleColor]::Red }
             'suggested' { [ConsoleColor]::White }
             'processed' { [ConsoleColor]::Green }
             'approved'  { [ConsoleColor]::Green }
