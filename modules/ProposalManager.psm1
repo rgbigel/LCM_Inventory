@@ -209,7 +209,7 @@ function Set-WorkspaceProposalProgress {
         [int]$Id,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet('undecided', 'queued', 'in_progress', 'verification', 'completed', 'blocked', 'failed')]
+        [ValidateSet('undecided', 'queued', 'in_progress', 'verification', 'committed', 'completed', 'pushed', 'blocked', 'failed')]
         [string]$ProgressState,
 
         [string]$Details
@@ -221,6 +221,9 @@ function Set-WorkspaceProposalProgress {
     foreach ($p in $store.proposals) {
         if ($p.id -eq $Id) {
             $p | Add-Member -NotePropertyName "progress_state" -NotePropertyValue $ProgressState -Force
+            if ($ProgressState -in @('in_progress', 'queued', 'verification') -and $p.state -in @('completed', 'pushed')) {
+                $p.state = 'suggested'
+            }
             if ($Details) {
                 $p.details = $Details
             }
@@ -236,6 +239,43 @@ function Set-WorkspaceProposalProgress {
 
     Set-ProposalStore -Store $store
     Write-Host ("Updated Proposal #{0} progress state to '{1}'." -f $Id, $ProgressState) -ForegroundColor Green
+    return $found
+}
+
+function Set-WorkspaceProposalPriority {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [int]$Id,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('C', 'H', 'M', 'L', 'D')]
+        [string]$Priority,
+
+        [string]$Details
+    )
+
+    $store = Get-ProposalStore
+    $found = $null
+
+    foreach ($p in $store.proposals) {
+        if ($p.id -eq $Id) {
+            $p | Add-Member -NotePropertyName "priority" -NotePropertyValue $Priority -Force
+            if ($Details) {
+                $p.details = $Details
+            }
+            $found = $p
+            break
+        }
+    }
+
+    if (-not $found) {
+        Write-Error "Proposal #$Id not found in proposals store."
+        return $null
+    }
+
+    Set-ProposalStore -Store $store
+    Write-Host ("Updated Proposal #{0} priority to '{1}'." -f $Id, $Priority) -ForegroundColor Green
     return $found
 }
 
@@ -333,7 +373,7 @@ function Resolve-ProposalIdExpression {
     $parts = $cleaned -split '[, ]+' | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
 
     foreach ($part in $parts) {
-        $p = $part.Trim().TrimStart('#')
+        $p = ($part.Trim() -replace '(?i)^#?crp-?', '').TrimStart('#')
         if ($p -match '^(\d+)-(\d+)$') {
             $start = [int]$Matches[1]
             $end = [int]$Matches[2]
@@ -386,6 +426,11 @@ function Invoke-ProposalBatchAction {
     foreach ($id in $targetIds) {
         try {
             $res = Set-WorkspaceProposalState -Id $id -State $mappedState -Details $Details
+            if ($Action -eq 'complete') {
+                $res = Set-WorkspaceProposalProgress -Id $id -ProgressState 'completed' -Details $Details
+            } elseif ($Action -eq 'do') {
+                $res = Set-WorkspaceProposalProgress -Id $id -ProgressState 'in_progress' -Details $Details
+            }
             $updated += $res
         } catch {
             Write-Warning $_.Exception.Message
@@ -534,8 +579,8 @@ function Format-ProposalsTable {
         return
     }
 
-    Write-Host (" {0,-5} | {1,-19} | {2,-11} | {3,-13} | {4,-20} | {5}" -f 'ID', 'Timestamp', 'Plan State', 'Progress', 'Origin Repo', 'Title') -ForegroundColor Yellow
-    Write-Host "-------+---------------------+-------------+---------------+----------------------+-----------------------" -ForegroundColor DarkGray
+    Write-Host (" {0,-7} | {1,-4} | {2,-19} | {3,-11} | {4,-13} | {5,-20} | {6}" -f 'CRP ID', 'Prio', 'Timestamp', 'Plan State', 'STATUS', 'Origin Repo', 'Title') -ForegroundColor Yellow
+    Write-Host "---------+------+---------------------+-------------+---------------+----------------------+-----------------------" -ForegroundColor DarkGray
 
     foreach ($p in $Proposals) {
         $color = switch ($p.state) {
@@ -548,9 +593,10 @@ function Format-ProposalsTable {
             default     { [ConsoleColor]::Gray }
         }
 
-        $idStr = "#$($p.id)"
+        $idStr = "CRP-{0:D3}" -f [int]$p.id
         $prog = if ($p.progress_state) { $p.progress_state } else { 'undecided' }
-        Write-Host (" {0,-5} | {1,-19} | {2,-11} | {3,-13} | {4,-20} | {5}" -f $idStr, $p.timestamp, $p.state, $prog, $p.origin_repo, $p.title) -ForegroundColor $color
+        $prio = if ($p.priority) { $p.priority } else { 'M' }
+        Write-Host (" {0,-7} | {1,-4} | {2,-19} | {3,-11} | {4,-13} | {5,-20} | {6}" -f $idStr, $prio, $p.timestamp, $p.state, $prog, $p.origin_repo, $p.title) -ForegroundColor $color
     }
 
     Write-Host "==========================================================================================" -ForegroundColor Cyan
@@ -598,7 +644,7 @@ Set-Alias -Name Parse-ProposalIdExpression -Value Resolve-ProposalIdExpression
 
 Export-ModuleMember -Function Get-ProposalStorePath, Get-ProposalStore, Set-ProposalStore, `
     Get-WorkspaceProposals, New-WorkspaceProposal, Set-WorkspaceProposalState, Set-WorkspaceProposalProgress, `
-    Save-ProposalPlan, Save-ProposalWalkthrough, `
+    Set-WorkspaceProposalPriority, Save-ProposalPlan, Save-ProposalWalkthrough, `
     Resolve-ProposalIdExpression, Invoke-ProposalBatchAction, `
     Set-ReviewGranularity, Get-ReviewGranularity, Set-LCMMode, Get-LCMMode, `
     Get-ReposUnderReview, Format-ProposalsTable, Format-ReposUnderReviewTable `

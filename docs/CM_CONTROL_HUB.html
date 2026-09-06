@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LCM Configuration Management Control Hub V6.1.0</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg-primary: #0d1117;
@@ -21,28 +24,103 @@
       --accent-amber: #d29922;
       --accent-red: #f85149;
       --accent-orange: #f0883e;
-      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
     }
 
+    body.light-theme {
+      --bg-primary: #f6f8fa;
+      --bg-secondary: #ffffff;
+      --bg-tertiary: #eaeef2;
+      --bg-card: rgba(255, 255, 255, 0.95);
+      --border-color: #d0d7de;
+      --text-primary: #1f2328;
+      --text-secondary: #57606a;
+      --text-muted: #8c959f;
+      --accent-blue: #0969da;
+      --accent-cyan: #1b7c83;
+      --accent-green: #1a7f37;
+      --accent-purple: #8250df;
+      --accent-amber: #9a6700;
+      --accent-red: #cf222e;
+      --accent-orange: #bc4c00;
+    }
+    body.light-theme table tr:hover td {
+      background: #f3f6f9 !important;
+    }
+    body.light-theme thead,
+    body.light-theme th {
+      background: #f6f8fa !important;
+      color: #24292f !important;
+      border-bottom: 1px solid #d0d7de !important;
+    }
+    body.light-theme .search-input,
+    body.light-theme .th-select,
+    body.light-theme .console-input {
+      background: #ffffff !important;
+      color: #1f2328 !important;
+      border-color: #d0d7de !important;
+    }
+    body.light-theme .cm-console-dock {
+      background: #ffffff !important;
+      border-top-color: #d0d7de !important;
+    }
+    body.light-theme .console-header {
+      background: #f6f8fa !important;
+      border-bottom-color: #d0d7de !important;
+      color: #1f2328 !important;
+    }
+    body.light-theme .console-stream {
+      background: #f6f8fa !important;
+      color: #1f2328 !important;
+    }
+    body.light-theme .console-input-row {
+      background: #ffffff !important;
+    }
+    body.light-theme .modal-card {
+      background: #ffffff !important;
+      color: #1f2328 !important;
+      border-color: #d0d7de !important;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15) !important;
+    }
+    body.light-theme .modal-header,
+    body.light-theme .modal-footer {
+      background: #f6f8fa !important;
+      border-color: #d0d7de !important;
+    }
+    body.light-theme .modal-body {
+      background: #ffffff !important;
+      color: #1f2328 !important;
+    }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      height: 100vh;
+      max-height: 100vh;
+      margin: 0;
+      padding: 0;
+      overflow: hidden; /* Lock outer window: table is the ONLY scrollable area */
+    }
     body {
       background-color: var(--bg-primary);
       color: var(--text-primary);
       font-family: var(--font-family);
       line-height: 1.5;
-      padding: 16px 24px 280px 24px; /* Extra padding for bottom docked console */
-      min-height: 100vh;
+      padding: 10px 16px 0 16px;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
     }
 
     /* Header & Top Bar */
     header {
+      flex: 0 0 auto;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-bottom: 16px;
+      padding-bottom: 10px;
       border-bottom: 1px solid var(--border-color);
-      margin-bottom: 16px;
+      margin-bottom: 8px;
     }
     .header-title {
       display: flex;
@@ -53,6 +131,7 @@
       font-size: 1.35rem;
       font-weight: 700;
       letter-spacing: -0.5px;
+      white-space: nowrap;
       background: linear-gradient(90deg, #58a6ff, #bc8cff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -61,25 +140,87 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      padding: 3px 8px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--accent-green);
+      white-space: nowrap;
+    }
+    .daemon-badge.offline {
+      color: var(--accent-red);
+    }
+    .daemon-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: currentColor;
+      box-shadow: 0 0 6px currentColor;
+    }
+
+    /* High-Contrast Live Feedback Ticker (Yellow on Black) */
+    .feedback-ticker {
+      display: inline-flex;
+      align-items: center;
+      background: #000000;
+      border: 1px solid #ffd700;
+      border-radius: 4px;
+      padding: 3px 8px;
+      margin-left: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      box-shadow: 0 0 8px rgba(255, 235, 59, 0.25);
+      max-width: 55%;
+      overflow: hidden;
+    }
+    .ticker-badge {
+      background: #ffd700;
+      color: #000000;
+      font-weight: 800;
+      font-size: 0.68rem;
+      padding: 1px 4px;
+      border-radius: 2px;
+      margin-right: 6px;
+      letter-spacing: 0.5px;
+      flex-shrink: 0;
+    }
+    .ticker-text {
+      color: #ffeb3b;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Header Governance Toggle Badges */
+    .header-pill-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
       padding: 4px 10px;
       border-radius: 20px;
       font-size: 0.75rem;
       font-weight: 600;
-      background: rgba(63, 185, 80, 0.15);
-      border: 1px solid rgba(63, 185, 80, 0.4);
-      color: var(--accent-green);
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s ease;
+      background: rgba(88, 166, 255, 0.15);
+      border: 1px solid rgba(88, 166, 255, 0.4);
+      color: var(--accent-blue);
     }
-    .daemon-badge.offline {
-      background: rgba(248, 81, 73, 0.15);
-      border-color: rgba(248, 81, 73, 0.4);
-      color: var(--accent-red);
+    .header-pill-toggle:hover {
+      background: rgba(88, 166, 255, 0.25);
+      border-color: var(--accent-blue);
+      transform: translateY(-1px);
     }
-    .daemon-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: currentColor;
-      box-shadow: 0 0 8px currentColor;
+    .header-pill-toggle.pill-tight {
+      background: rgba(188, 140, 255, 0.18);
+      border-color: rgba(188, 140, 255, 0.45);
+      color: var(--accent-purple);
+    }
+    .header-pill-toggle.pill-paused {
+      background: rgba(210, 153, 34, 0.18);
+      border-color: rgba(210, 153, 34, 0.45);
+      color: var(--accent-amber);
     }
 
     .top-actions {
@@ -90,16 +231,17 @@
 
     /* Stat Cards */
     .stats-row {
+      flex: 0 0 auto;
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 10px;
-      margin-bottom: 16px;
+      gap: 8px;
+      margin-bottom: 8px;
     }
     .stat-card {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
       border-radius: 8px;
-      padding: 10px 14px;
+      padding: 8px 12px;
       cursor: pointer;
       transition: all 0.2s ease;
       backdrop-filter: blur(8px);
@@ -117,7 +259,7 @@
       letter-spacing: 0.5px;
     }
     .stat-value {
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       font-weight: 700;
       margin-top: 2px;
       color: var(--text-primary);
@@ -125,14 +267,15 @@
 
     /* Controls Panel */
     .controls-panel {
+      flex: 0 0 auto;
       background: var(--bg-card);
       border: 1px solid var(--border-color);
       border-radius: 8px;
-      padding: 12px 16px;
-      margin-bottom: 16px;
+      padding: 8px 12px;
+      margin-bottom: 8px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 6px;
     }
     .filter-row {
       display: flex;
@@ -223,20 +366,31 @@
       gap: 8px;
     }
 
-    /* Data Table */
+    /* Data Table with Frozen Sticky Header per LCM Display Standard */
     .table-container {
+      flex: 1 1 auto;
+      min-height: 0; /* Critical for flex child vertical overflow */
       background: var(--bg-card);
       border: 1px solid var(--border-color);
       border-radius: 8px;
-      overflow: hidden;
+      overflow-y: auto;
+      overflow-x: auto;
       box-shadow: 0 4px 16px rgba(0,0,0,0.25);
-      margin-bottom: 24px;
+      margin-bottom: 6px;
+      position: relative;
     }
     table {
       width: 100%;
-      border-collapse: collapse;
+      border-collapse: separate;
+      border-spacing: 0;
       text-align: left;
       font-size: 0.82rem;
+    }
+    thead {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: var(--bg-secondary);
     }
     th {
       background: var(--bg-secondary);
@@ -248,6 +402,9 @@
       font-size: 0.72rem;
       letter-spacing: 0.5px;
       vertical-align: middle;
+      position: sticky;
+      top: 0;
+      z-index: 51;
     }
     .th-header-filter {
       display: flex;
@@ -323,11 +480,31 @@
     .state-plan-rejected { background: rgba(248, 81, 73, 0.15); color: var(--accent-red); border-color: rgba(248, 81, 73, 0.3); text-decoration: line-through; }
 
     .state-prog-verification { background: rgba(210, 153, 34, 0.25); color: var(--accent-amber); border-color: rgba(210, 153, 34, 0.5); font-weight: 700; }
+    .state-prog-committed { background: rgba(88, 166, 255, 0.22); color: var(--accent-blue); border-color: rgba(88, 166, 255, 0.45); font-weight: 700; }
     .state-prog-in_progress { background: rgba(57, 197, 187, 0.2); color: var(--accent-cyan); border-color: rgba(57, 197, 187, 0.4); }
     .state-prog-queued { background: rgba(188, 140, 255, 0.18); color: var(--accent-purple); border-color: rgba(188, 140, 255, 0.4); }
     .state-prog-completed { background: rgba(63, 185, 80, 0.2); color: var(--accent-green); border-color: rgba(63, 185, 80, 0.4); }
     .state-prog-pushed { background: rgba(57, 197, 187, 0.25); color: var(--accent-cyan); border-color: rgba(57, 197, 187, 0.5); font-weight: 700; }
     .state-prog-undecided { background: rgba(110, 118, 129, 0.2); color: var(--text-secondary); border-color: rgba(110, 118, 129, 0.4); }
+
+    /* Compact Prio Select Styles (C, H, M, L, D) */
+    .prio-select {
+      font-size: 0.74rem;
+      font-weight: 800;
+      padding: 2px 2px;
+      border-radius: 4px;
+      border: 1px solid transparent;
+      outline: none;
+      cursor: pointer;
+      width: 44px;
+      text-align: center;
+      text-align-last: center;
+    }
+    .prio-C { background: rgba(248, 81, 73, 0.25); color: var(--accent-red); border-color: rgba(248, 81, 73, 0.5); font-weight: 800; }
+    .prio-H { background: rgba(210, 153, 34, 0.25); color: var(--accent-amber); border-color: rgba(210, 153, 34, 0.5); font-weight: 700; }
+    .prio-M { background: rgba(88, 166, 255, 0.2); color: var(--accent-blue); border-color: rgba(88, 166, 255, 0.4); }
+    .prio-L { background: rgba(139, 148, 158, 0.18); color: var(--text-secondary); border-color: rgba(139, 148, 158, 0.4); }
+    .prio-D { background: rgba(110, 118, 129, 0.15); color: var(--text-muted); border-color: rgba(110, 118, 129, 0.3); font-style: italic; }
 
     .action-group {
       display: flex;
@@ -363,10 +540,10 @@
 
     /* Bottom Docked Interactive CM Console */
     .cm-console-dock {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      flex: 0 0 auto;
+      position: static;
+      margin-left: -16px;
+      margin-right: -16px;
       background: #11161d;
       border-top: 2px solid var(--border-color);
       box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
@@ -378,10 +555,10 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 6px 16px;
+      padding: 5px 14px;
       background: #161b22;
       border-bottom: 1px solid var(--border-color);
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 600;
       color: var(--text-secondary);
     }
@@ -389,6 +566,7 @@
       display: flex;
       gap: 6px;
       align-items: center;
+      flex-wrap: wrap;
     }
     .console-chip {
       background: var(--bg-tertiary);
@@ -399,18 +577,20 @@
       cursor: pointer;
       color: var(--accent-blue);
       font-family: var(--font-mono);
+      white-space: nowrap;
     }
     .console-chip:hover { background: #30363d; }
 
     .console-stream {
-      height: 110px;
+      height: 75px;
       overflow-y: auto;
-      padding: 8px 16px;
+      padding: 6px 14px;
       font-family: var(--font-mono);
-      font-size: 0.75rem;
+      font-size: 0.73rem;
       background: #090d13;
       color: #7ee787;
       white-space: pre-wrap;
+      line-height: 1.4;
     }
     .console-stream .msg-err { color: #f85149; }
     .console-stream .msg-info { color: #58a6ff; }
@@ -419,7 +599,7 @@
     .console-input-row {
       display: flex;
       gap: 8px;
-      padding: 8px 16px;
+      padding: 6px 14px;
       background: #161b22;
       align-items: center;
     }
@@ -428,9 +608,9 @@
       background: #0d1117;
       border: 1px solid var(--border-color);
       border-radius: 6px;
-      padding: 7px 12px;
+      padding: 6px 10px;
       font-family: var(--font-mono);
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       color: var(--text-primary);
       outline: none;
     }
@@ -513,16 +693,24 @@
   <header>
     <div class="header-title">
       <h1>LCM Configuration Management Control Hub <span style="font-size: 0.6em; color: var(--text-muted); vertical-align: middle;">V6.1.0</span></h1>
+      <span class="header-pill-toggle" id="granularityBadge" onclick="toggleGranularity()" title="Click to toggle Review Granularity: Coarse (batch review) vs Tight (per-proposal review)">
+        <span id="granularityIcon">🔍</span>
+        <span id="granularityText">Granularity: Coarse</span>
+      </span>
+      <span class="header-pill-toggle" id="lcmModeBadge" onclick="toggleLcmMode()" title="Click to toggle LCM Governance Mode: Active (strict proposal-first) vs Paused (ad-hoc)">
+        <span id="lcmModeIcon">🛡️</span>
+        <span id="lcmModeText">LCM: Active</span>
+      </span>
+    </div>
+    <div class="top-actions">
       <span class="daemon-badge" id="daemonBadge">
         <span class="daemon-dot"></span>
         <span id="daemonText">REST Daemon: Checking...</span>
       </span>
-    </div>
-    <div class="top-actions">
       <button class="btn btn-back-nav" onclick="window.history.length > 1 ? window.history.back() : window.location.href='../WORKSPACE_INVENTORY_VIEWER.html'" title="Return to Workspace Inventory Explorer (Windows-style Back)">
         <span>⬅️</span> <span>Back</span>
       </button>
-      <button class="btn" id="btn-theme-toggle" onclick="toggleThemeLocal()" title="Switch Light/Dark display modes">
+      <button class="btn" id="btn-theme-toggle" onclick="toggleTheme()" title="Switch Light/Dark display modes">
         <span id="theme-icon">☀️</span> <span id="theme-label">Light Mode</span>
       </button>
       <a href="../../Workspace_Supervision/docs/SUPERVISION_HUB.html" class="btn btn-blue" style="text-decoration: none;" title="Open Workspace Supervision Hub">🛡️ Supervision Hub</a>
@@ -530,6 +718,9 @@
       <button class="btn btn-primary" onclick="executePushRepositories()" title="Push completed commits to remote Git tracking branches">🚀 Push / Sync Repos</button>
       <button class="btn btn-blue" onclick="openLogsModal('active')">📜 Active CM Log</button>
       <button class="btn btn-purple" onclick="openLogsModal('history')">🏛️ Historical Log Archive</button>
+      <button class="btn" id="btn-print-table" onclick="if (typeof LcmTablePrintAtom !== 'undefined') LcmTablePrintAtom.openModal(); else window.print();" title="Configure and print or export to PDF">
+        <span>🖨️</span> <span>Print / PDF</span>
+      </button>
       <button class="btn" onclick="openHelpModal()">❓ Help / Guide</button>
       <button class="btn" onclick="refreshData()">🔄 Refresh</button>
     </div>
@@ -538,7 +729,7 @@
   <!-- Metric Stat Cards -->
   <div class="stats-row">
     <div class="stat-card" id="cardTotal" onclick="setPresetFilter('all')">
-      <div class="stat-label">Total Proposals</div>
+      <div class="stat-label">Total CRPs</div>
       <div class="stat-value" id="valTotal">0</div>
     </div>
     <div class="stat-card" id="cardBugs" onclick="setPresetFilter('bug')">
@@ -570,9 +761,12 @@
   <!-- Controls Panel -->
   <div class="controls-panel">
     <div class="filter-row">
-      <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search proposals (ID, Title, Scope, CR/CRP, Details)..." oninput="renderTable()">
-      
+      <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search CRPs (CRP ID, Title, Scope, Details)..." oninput="handleFilterChange()">
       <button class="btn" onclick="resetFilters()">🔄 Reset to SHOW ALL</button>
+      <div id="liveFeedbackTicker" class="feedback-ticker" style="display: none;">
+        <span class="ticker-badge">TICKER</span>
+        <span id="tickerContent" class="ticker-text"></span>
+      </div>
     </div>
 
     <!-- Batch Actions Bar -->
@@ -594,25 +788,37 @@
 
   <!-- Proposals Data Table with Column Header Filters -->
   <div class="table-container">
-    <table>
+    <table id="proposalsTable">
       <thead>
         <tr>
           <th style="width: 32px;"><input type="checkbox" id="chkSelectAll" onchange="toggleSelectAll(this.checked)"></th>
-          <th style="width: 50px;">ID</th>
-          <th style="width: 150px;">
+          <th style="width: 88px;">CRP ID</th>
+          <th style="width: 54px;">
+            <div class="th-header-filter">
+              <span style="cursor: pointer;" onclick="toggleSortPriority()" title="Click to sort by Priority (C > H > M > L > D)">Prio <span id="prioSortIcon">⬍</span></span>
+              <select id="thPriorityFilter" class="th-select" onchange="handleFilterChange()" style="padding: 1px 2px; font-weight: 700;">
+                <option value="ALL">All</option>
+                <option value="C">C</option>
+                <option value="H">H</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+                <option value="D">D</option>
+              </select>
+            </div>
+          </th>
+          <th style="width: 145px;">
             <div class="th-header-filter">
               <span>Scope / Repo</span>
-              <select id="thScopeFilter" class="th-select" onchange="renderTable()">
+              <select id="thScopeFilter" class="th-select" onchange="handleFilterChange()">
                 <option value="ALL">All Repos</option>
               </select>
             </div>
           </th>
-          <th style="width: 130px;">CRP / CR ID</th>
           <th>Title & Details</th>
           <th style="width: 120px;">
             <div class="th-header-filter">
               <span>Plan State</span>
-              <select id="thPlanStateFilter" class="th-select" onchange="renderTable()">
+              <select id="thPlanStateFilter" class="th-select" onchange="handleFilterChange()">
                 <option value="ALL">All States</option>
                 <option value="bug">🐛 Bug</option>
                 <option value="suggested">💡 Suggested</option>
@@ -626,16 +832,17 @@
           </th>
           <th style="width: 135px;">
             <div class="th-header-filter">
-              <span>Progress</span>
-              <select id="thProgStateFilter" class="th-select" onchange="renderTable()">
-                <option value="open" selected>Open (Non-Completed)</option>
-                <option value="ALL">All Progress</option>
-                <option value="verification">⏳ Verification</option>
+              <span>STATUS</span>
+              <select id="thProgStateFilter" class="th-select" onchange="handleFilterChange()">
+                <option value="open" selected>Open</option>
+                <option value="ALL">All Status</option>
                 <option value="in_progress">⚡ In Progress</option>
-                <option value="queued">Queued (Ready)</option>
-                <option value="undecided">Undecided</option>
+                <option value="verification">⏳ Verification</option>
+                <option value="committed">📦 Committed</option>
                 <option value="completed">✅ Completed</option>
                 <option value="pushed">🚀 Pushed</option>
+                <option value="queued">Queued (Ready)</option>
+                <option value="undecided">Undecided</option>
                 <option value="blocked">Blocked</option>
                 <option value="failed">Failed</option>
               </select>
@@ -654,16 +861,35 @@
   <div class="cm-console-dock">
     <div class="console-header">
       <span>🖥️ CM Interactive Console & Response Feed</span>
-      <div class="console-header-chips">
-        <span class="console-chip" onclick="setConsoleCommand('review #19')">🔍 review #19</span>
-        <span class="console-chip" onclick="setConsoleCommand('status')">📊 git status</span>
-        <span class="console-chip" onclick="setConsoleCommand('readiness')">🧪 test readiness</span>
+        <span class="console-chip" onclick="setConsoleCommand('proceed CRP-079')">⏩ proceed CRP-079</span>
+        <span class="console-chip" onclick="setConsoleCommand('commit CRP-079')">📦 commit CRP-079</span>
+        <span class="console-chip" onclick="setConsoleCommand('verify CRP-078')">⏳ verify CRP-078</span>
+        <span class="console-chip" onclick="setConsoleCommand('complete CRP-077')">✅ complete CRP-077</span>
+        <span class="console-chip" onclick="setConsoleCommand('do CRP-078')">⚡ do CRP-078</span>
+        <span class="console-chip" onclick="setConsoleCommand('prio CRP-079 H')">🔥 prio CRP-079 H</span>
+        <span class="console-chip" onclick="setConsoleCommand('progress CRP-078 completed')">🎯 progress CRP-078 completed</span>
+        <span class="console-chip" onclick="setConsoleCommand('review CRP-078')">🔍 review CRP-078</span>
+        <span class="console-chip" onclick="setConsoleCommand('status')">📊 status</span>
+        <span class="console-chip" onclick="setConsoleCommand('readiness')">🧪 readiness</span>
+        <span class="console-chip" onclick="setConsoleCommand('help')">❓ help</span>
         <span class="console-chip" onclick="clearConsoleStream()">🧹 clear</span>
+        <span class="console-chip" id="btn-toggle-console" onclick="toggleConsoleFeed()" title="Collapse or expand the response feed">▾ Toggle Feed</span>
       </div>
     </div>
-    <div class="console-stream" id="consoleStream">Ready. Type a CM command or action below (e.g., 'do #19', 'review #19', 'accept #19', 'defer #20', 'status', 'help')...</div>
+    <div class="console-stream" id="consoleStream">Ready. Interactive CM Console. Examples:
+  • complete CRP-077          (transition CRP-077 to completed in ledger)
+  • verify CRP-078            (transition CRP-078 status to verification)
+  • commit CRP-079            (transition CRP-079 status to committed)
+  • do CRP-078                (start execution: set state=processed, status=in_progress)
+  • prio CRP-079 H            (set priority to C, H, M, L, or D)
+  • progress CRP-078 &lt;state&gt;  (set status: queued, in_progress, verification, committed, completed)
+  • accept CRP-078            (accept CRP and record review evidence)
+  • review CRP-078            (launch Beyond Compare 5 visual review)
+  • defer CRP-078 / delete CRP-078
+  • status / readiness / help
+Type command and press Enter:</div>
     <div class="console-input-row">
-      <input type="text" id="consoleInput" class="console-input" placeholder="⌨️ Enter command or review note (Press Enter to execute)..." onkeydown="handleConsoleKey(event)">
+      <input type="text" id="consoleInput" class="console-input" placeholder="⌨️ Enter command: 'complete CRP-077', 'verify CRP-078', 'commit CRP-079', 'prio CRP-079 H' (Press Enter to run)..." onkeydown="handleConsoleKey(event)">
       <button class="btn btn-primary" onclick="submitConsoleCommand()">🚀 Send / Run</button>
     </div>
   </div>
@@ -748,6 +974,7 @@
       <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center;">
         <span id="docSelectedCount" style="font-size: 0.8rem; color: var(--text-secondary);">0 of 0 selected</span>
         <div style="display: flex; gap: 8px;">
+          <button class="btn btn-primary" onclick="if (typeof LcmTablePrintAtom !== 'undefined') { LcmTablePrintAtom.init({ documentTitle: 'Repository Documents - ' + (currentDocsRepo || 'LCM'), subsystem: 'LCM', tableSelector: '#docViewerTable', tbodySelector: '#docViewerTbody', getViewMode: () => 'Documents Table', getFileName: () => 'LCM_Repo_Documents.html', getDate: () => new Date().toLocaleString(), getFilterSummary: () => 'Repository: ' + (currentDocsRepo || 'All') }); LcmTablePrintAtom.openModal(); } else { window.print(); }" title="Print document list or export to PDF">🖨️ Print / PDF</button>
           <button class="btn btn-blue" onclick="openAllRepoDocsInNotepad()">✏️ Open All in Notepad++</button>
           <button class="btn" onclick="closeRepoDocsModal()">Close</button>
         </div>
@@ -851,7 +1078,7 @@
         <button class="btn" onclick="closeHelpModal()">✕ Close</button>
       </div>
       <div class="modal-body" style="font-family: var(--font-family); line-height: 1.6; font-size: 0.82rem;">
-        <h4 style="color: var(--accent-blue); margin-bottom: 6px;">1. Two-Tier Proposal & Progress State Lifecycle</h4>
+        <h4 style="color: var(--accent-blue); margin-bottom: 6px;">1. Two-Tier Proposal & STATUS State Lifecycle</h4>
         <p><strong>Plan State:</strong></p>
         <ul style="margin-left: 20px; margin-bottom: 10px;">
           <li><code>🐛 Bug</code>: Raw error intake / issue feedback below suggested. Can be promoted to Suggested or Approved.</li>
@@ -862,16 +1089,21 @@
           <li><code>✅ Completed</code>: Formally reviewed, accepted, and committed in Git.</li>
         </ul>
 
-        <p><strong>Progress State:</strong></p>
+        <p><strong>STATUS (Physical Progress):</strong></p>
         <ul style="margin-left: 20px; margin-bottom: 10px;">
           <li><code>Undecided</code>: Initial unstarted state.</li>
           <li><code>Queued (Ready)</code>: Approved and placed in implementation queue.</li>
           <li><code>⚡ In Progress</code>: Active implementation / agent development.</li>
           <li><code>⏳ Verification</code>: Implementation complete; awaiting Beyond Compare visual review.</li>
-          <li><code>Completed</code>: Review accepted and dual-commit sync complete.</li>
+          <li><code>📦 Committed</code>: Visual review accepted and local Git commit recorded.</li>
+          <li><code>✅ Completed</code>: Formal review disposition ACCEPTED.</li>
+          <li><code>🚀 Pushed</code>: Committed changes pushed to remote Git tracking branches.</li>
         </ul>
 
-        <h4 style="color: var(--accent-blue); margin-bottom: 6px;">2. Beyond Compare 5 Visual Review Gate</h4>
+        <h4 style="color: var(--accent-blue); margin-bottom: 6px;">2. Unified CRP Sequence Identifier</h4>
+        <p>All change requests follow the unified identifier standard: <code>CRP-079</code> (single sequence across all repositories).</p>
+
+        <h4 style="color: var(--accent-blue); margin-bottom: 6px;">3. Beyond Compare 5 Visual Review Gate</h4>
         <p>Click <strong>🔍 BC5</strong> to open Beyond Compare 5 with the Variant A baseline:
         <br><code>Left: Workspace_Inventory\scratch\BC_Review\&lt;CRP&gt;_&lt;Repo&gt;_&lt;CommitSha&gt;</code> (Baseline)
         <br><code>Right: Target Repository Working Directory</code> (Current Live)</p>
@@ -881,16 +1113,16 @@
           <li><strong>Type 'Rename to X' on Left:</strong> Renames file and cleans up old file.</li>
         </ul>
 
-        <h4 style="color: var(--accent-blue); margin-bottom: 6px;">3. ACCEPT Gating Invariants</h4>
+        <h4 style="color: var(--accent-blue); margin-bottom: 6px;">4. ACCEPT Gating Invariants</h4>
         <p>The <strong>ACCEPT</strong> and <strong>ACCEPT SELECTED</strong> actions are strictly gated:</p>
         <ul style="margin-left: 20px; margin-bottom: 10px;">
-          <li>Only proposals in <code>⏳ Verification</code>, <code>⚡ In Progress</code>, or <code>Approved</code> state can be accepted.</li>
-          <li>Proposals in <code>Undecided</code>, <code>Deferred</code>, <code>Blocked</code>, or <code>Rejected</code> state cannot be accidentally accepted.</li>
+          <li>Only CRPs in <code>⏳ Verification</code>, <code>⚡ In Progress</code>, or <code>Approved</code> state can be accepted.</li>
+          <li>CRPs in <code>Undecided</code>, <code>Deferred</code>, <code>Blocked</code>, or <code>Rejected</code> state cannot be accidentally accepted.</li>
         </ul>
 
-        <h4 style="color: var(--accent-blue); margin-bottom: 6px;">4. Interactive CM Console (Bottom Dock)</h4>
+        <h4 style="color: var(--accent-blue); margin-bottom: 6px;">5. Interactive CM Console (Bottom Dock)</h4>
         <p>Type commands directly into the bottom console to control the CM engine:
-        <br><code>do #&lt;id&gt;</code> &bull; <code>review #&lt;id&gt;</code> &bull; <code>accept #&lt;id&gt;</code> &bull; <code>defer #&lt;id&gt;</code> &bull; <code>status</code> &bull; <code>readiness</code></p>
+        <br><code>do CRP-078</code> &bull; <code>verify CRP-078</code> &bull; <code>commit CRP-079</code> &bull; <code>complete CRP-077</code> &bull; <code>review CRP-078</code> &bull; <code>prio CRP-079 H</code> &bull; <code>status</code> &bull; <code>readiness</code></p>
       </div>
     </div>
   </div>
@@ -901,6 +1133,7 @@
   <!-- Safe Global Data Injection Script -->
   <script>
     /*__INJECTED_DATA_PLACEHOLDER__*/
+    /*__INJECTED_ATOM_PLACEHOLDER__*/
   </script>
 
   <!-- Application Logic -->
@@ -1361,13 +1594,675 @@
       if (modal) modal.classList.remove("open");
     }
 
-    function toggleThemeLocal() {
-      const isLight = document.body.classList.toggle("light-theme");
-      localStorage.setItem("lcm_theme_mode", isLight ? "light" : "dark");
+    // -------------------------------------------------------------------------
+    // LCM Display Standard: Unified Theme Management (Light / Dark)
+    // -------------------------------------------------------------------------
+    function initTheme() {
+      const saved = localStorage.getItem("lcm_theme") || localStorage.getItem("lcm_theme_mode") || "dark";
+      applyTheme(saved);
+    }
+
+    function applyTheme(theme) {
+      const isLight = (theme === "light");
+      if (isLight) {
+        document.body.classList.add("light-theme");
+        document.documentElement.setAttribute("data-theme", "light");
+      } else {
+        document.body.classList.remove("light-theme");
+        document.documentElement.setAttribute("data-theme", "dark");
+      }
       const icon = document.getElementById("theme-icon");
       const label = document.getElementById("theme-label");
       if (icon) icon.textContent = isLight ? "🌙" : "☀️";
       if (label) label.textContent = isLight ? "Dark Mode" : "Light Mode";
+      localStorage.setItem("lcm_theme", theme);
+      localStorage.setItem("lcm_theme_mode", theme);
+    }
+
+    function toggleTheme() {
+      const isCurrentlyLight = document.body.classList.contains("light-theme");
+      applyTheme(isCurrentlyLight ? "dark" : "light");
+      showToast(isCurrentlyLight ? "🌙 Switched to Dark Mode" : "☀️ Switched to Light Mode");
+    }
+
+    // -------------------------------------------------------------------------
+    // Interactive CM Console & Command Dispatch Engine
+    // -------------------------------------------------------------------------
+    function appendConsole(msg, type = "msg-info") {
+      const stream = document.getElementById("consoleStream");
+      if (!stream) return;
+      const line = document.createElement("div");
+      line.className = type;
+      const time = new Date().toLocaleTimeString();
+      line.textContent = `[${time}] ${msg}`;
+      stream.appendChild(line);
+      stream.scrollTop = stream.scrollHeight;
+    }
+
+    function clearConsoleStream() {
+      const stream = document.getElementById("consoleStream");
+      if (stream) {
+        stream.innerHTML = '<div class="msg-info">Console stream cleared. Ready for CM commands.</div>';
+      }
+    }
+
+    function setConsoleCommand(cmd) {
+      const input = document.getElementById("consoleInput");
+      if (input) {
+        input.value = cmd;
+        input.focus();
+      }
+    }
+
+    function handleConsoleKey(event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        submitConsoleCommand();
+      }
+    }
+
+    async function submitConsoleCommand() {
+      const input = document.getElementById("consoleInput");
+      if (!input) return;
+      const rawCmd = input.value.trim();
+      if (!rawCmd) return;
+      input.value = "";
+      appendConsole(`> ${rawCmd}`, "msg-info");
+
+      await executeConsoleCommand(rawCmd);
+    }
+
+    async function executeConsoleCommand(cmdStr) {
+      const trimmed = cmdStr.trim();
+      const lower = trimmed.toLowerCase();
+
+      // Command: help / ?
+      if (lower === "help" || lower === "?") {
+        appendConsole("Available CM Commands:", "msg-info");
+        appendConsole("  do <#id|id>       - Transition proposal to In Progress & trigger action", "msg-info");
+        appendConsole("  accept <#id|all>  - Accept proposal review & mark completed", "msg-info");
+        appendConsole("  review <#id>      - Launch Beyond Compare 5 review gate", "msg-info");
+        appendConsole("  defer <#id>       - Defer proposal to future milestone", "msg-info");
+        appendConsole("  delete <#id>      - Permanently purge proposal from ledger", "msg-info");
+        appendConsole("  status            - Show workspace git status & proposal totals", "msg-info");
+        appendConsole("  readiness         - Run Test-LCMRuleHealth quality check", "msg-info");
+        appendConsole("  push              - Open multi-repository push dialog", "msg-info");
+        appendConsole("  clear             - Clear console output stream", "msg-info");
+        return;
+      }
+
+      // Command: clear
+      if (lower === "clear") {
+        clearConsoleStream();
+        return;
+      }
+
+      // Command: status
+      if (lower === "status" || lower === "git status") {
+        appendConsole(`Total Proposals: ${proposalsData.proposals.length}`, "msg-info");
+        try {
+          const res = await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ command: "git status --short", elevated: false, noExit: false })
+          });
+          if (res.ok) {
+            appendConsole("Git status check dispatched via Desktop Daemon.", "msg-info");
+          }
+        } catch (err) {
+          appendConsole(`Daemon unavailable for git status: ${err.message}`, "msg-warn");
+        }
+        return;
+      }
+
+      // Command: readiness
+      if (lower === "readiness" || lower === "test readiness") {
+        appendConsole("Running LCM Rule Health & Readiness check...", "msg-info");
+        try {
+          await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ command: "pwsh -File Workspace_Inventory/tools/Test-LCMRuleHealth.ps1", elevated: false, noExit: false })
+          });
+          showToast("Dispatched Test-LCMRuleHealth.ps1");
+        } catch (err) {
+          appendConsole(`Daemon execution error: ${err.message}`, "msg-err");
+        }
+        return;
+      }
+
+      // Command: push
+      if (lower === "push" || lower === "git push") {
+        await executePushRepositories();
+        return;
+      }
+
+      // Command: complete <#id|crp-id|all> or done <id>
+      const completeMatch = trimmed.match(/^(?:complete|done|finish)\s+(?:#|crp-?)?(\d+|all)$/i);
+      if (completeMatch) {
+        const isAll = completeMatch[1].toLowerCase() === "all";
+        const targetExpr = isAll ? "all" : completeMatch[1];
+        const nowStr = new Date().toISOString().replace('T', ' ').substring(0, 19);
+
+        const targets = isAll
+          ? proposalsData.proposals.filter(p => p.progress_state !== "completed" && p.progress_state !== "pushed")
+          : proposalsData.proposals.filter(p => p.id === parseInt(completeMatch[1], 10));
+
+        if (targets.length === 0) {
+          appendConsole(`[WARN] No matching open CRP found for 'complete ${targetExpr}'.`, "msg-warn");
+          return;
+        }
+
+        targets.forEach(p => {
+          p.state = "completed";
+          p.progress_state = "completed";
+          if (!p.dates) p.dates = {};
+          p.dates.completed = nowStr;
+          if (!p.state_history) p.state_history = [];
+          p.state_history.push({
+            state: "completed",
+            timestamp: nowStr,
+            user: "Operator (Control Hub Console)",
+            note: `Marked completed via console command: '${trimmed}'`
+          });
+        });
+
+        updateMetricCards();
+        renderTable();
+
+        try {
+          await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              command: `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action complete -TargetExpression ${targetExpr}`,
+              elevated: false,
+              noExit: false
+            })
+          });
+        } catch (e) {}
+
+        const logMsg = `[OK] CRP(s) ${targetExpr} transitioned to COMPLETED (plan & status) in ledger.`;
+        appendConsole(logMsg, "msg-info");
+        showToast(`CRP(s) ${targetExpr} Completed`);
+        updateLiveTicker(logMsg, isAll ? null : parseInt(completeMatch[1], 10));
+        return;
+      }
+
+      // Command: verify <#id|crp-id|all>
+      const verifyMatch = trimmed.match(/^verify\s+(?:#|crp-?)?(\d+|all)$/i);
+      if (verifyMatch) {
+        const isAll = verifyMatch[1].toLowerCase() === "all";
+        const targetExpr = isAll ? "all" : verifyMatch[1];
+        const nowStr = new Date().toISOString().replace('T', ' ').substring(0, 19);
+
+        const targets = isAll
+          ? proposalsData.proposals.filter(p => p.progress_state === "in_progress")
+          : proposalsData.proposals.filter(p => p.id === parseInt(verifyMatch[1], 10));
+
+        if (targets.length === 0) {
+          appendConsole(`[WARN] No matching CRP found for 'verify ${targetExpr}'.`, "msg-warn");
+          return;
+        }
+
+        targets.forEach(p => {
+          p.progress_state = "verification";
+          if (!p.state_history) p.state_history = [];
+          p.state_history.push({
+            state: "verification",
+            timestamp: nowStr,
+            user: "Operator (Control Hub Console)",
+            note: `Advanced to verification via console command: '${trimmed}'`
+          });
+        });
+
+        updateMetricCards();
+        renderTable();
+
+        try {
+          await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              command: `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action verify -TargetExpression ${targetExpr}`,
+              elevated: false,
+              noExit: false
+            })
+          });
+        } catch (e) {}
+
+        const logMsg = `[OK] CRP(s) ${targetExpr} status set to VERIFICATION.`;
+        appendConsole(logMsg, "msg-info");
+        showToast(`CRP(s) ${targetExpr} in Verification`);
+        updateLiveTicker(logMsg, isAll ? null : parseInt(verifyMatch[1], 10));
+        return;
+      }
+
+      // Command: commit <#id|crp-id|all>
+      const commitMatch = trimmed.match(/^commit\s+(?:#|crp-?)?(\d+|all)$/i);
+      if (commitMatch) {
+        const isAll = commitMatch[1].toLowerCase() === "all";
+        const targetExpr = isAll ? "all" : commitMatch[1];
+        const nowStr = new Date().toISOString().replace('T', ' ').substring(0, 19);
+
+        const targets = isAll
+          ? proposalsData.proposals.filter(p => p.progress_state === "verification" || p.progress_state === "in_progress")
+          : proposalsData.proposals.filter(p => p.id === parseInt(commitMatch[1], 10));
+
+        if (targets.length === 0) {
+          appendConsole(`[WARN] No matching CRP found for 'commit ${targetExpr}'.`, "msg-warn");
+          return;
+        }
+
+        targets.forEach(p => {
+          p.progress_state = "committed";
+          if (!p.dates) p.dates = {};
+          p.dates.committed = nowStr;
+          if (!p.state_history) p.state_history = [];
+          p.state_history.push({
+            state: "committed",
+            timestamp: nowStr,
+            user: "Operator (Control Hub Console)",
+            note: `Advanced to committed via console command: '${trimmed}'`
+          });
+        });
+
+        updateMetricCards();
+        renderTable();
+
+        try {
+          await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              command: `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action commit -TargetExpression ${targetExpr}`,
+              elevated: false,
+              noExit: false
+            })
+          });
+        } catch (e) {}
+
+        const logMsg = `[OK] CRP(s) ${targetExpr} status set to COMMITTED.`;
+        appendConsole(logMsg, "msg-info");
+        showToast(`CRP(s) ${targetExpr} Committed`);
+        updateLiveTicker(logMsg, isAll ? null : parseInt(commitMatch[1], 10));
+        return;
+      }
+
+      // Command: proceed <#id|crp-id|all> [targetState]
+      const proceedMatch = trimmed.match(/^proceed(?:\s+(?:#|crp-?)?(\d+|all))?(?:\s+([a-zA-Z_]+))?$/i);
+      if (proceedMatch) {
+        const rawTarget = proceedMatch[1] ? proceedMatch[1].toLowerCase() : "all";
+        const isAll = rawTarget === "all";
+        const targetExpr = isAll ? "all" : rawTarget;
+        const explicitState = proceedMatch[2] ? proceedMatch[2].toLowerCase() : null;
+        const nowStr = new Date().toISOString().replace('T', ' ').substring(0, 19);
+
+        const targets = isAll
+          ? proposalsData.proposals.filter(p => p.state === "suggested" || p.state === "processed" || p.state === "approved")
+          : proposalsData.proposals.filter(p => p.id === parseInt(rawTarget, 10));
+
+        if (targets.length === 0) {
+          appendConsole(`[WARN] No active CRP found for 'proceed ${targetExpr}'.`, "msg-warn");
+          return;
+        }
+
+        targets.forEach(p => {
+          let nextProg = explicitState;
+          if (!nextProg) {
+            const cur = p.progress_state || 'undecided';
+            switch (cur) {
+              case 'undecided':
+              case 'queued':
+                nextProg = 'in_progress';
+                break;
+              case 'in_progress':
+                nextProg = 'verification';
+                break;
+              case 'verification':
+                nextProg = 'committed';
+                break;
+              case 'committed':
+                nextProg = 'completed';
+                break;
+              default:
+                nextProg = 'verification';
+                break;
+            }
+          }
+
+          p.progress_state = nextProg;
+          if (nextProg === 'completed') {
+            p.state = 'completed';
+            if (!p.dates) p.dates = {};
+            p.dates.completed = nowStr;
+          } else if (p.state === 'suggested') {
+            p.state = 'processed';
+          }
+
+          if (nextProg === 'committed') {
+            if (!p.dates) p.dates = {};
+            p.dates.committed = nowStr;
+          }
+
+          if (!p.state_history) p.state_history = [];
+          p.state_history.push({
+            state: nextProg,
+            timestamp: nowStr,
+            user: "Operator (Control Hub Console)",
+            note: `Advanced via console command: '${trimmed}'`
+          });
+        });
+
+        updateMetricCards();
+        renderTable();
+
+        try {
+          const extraArg = explicitState ? ` -ProgressState ${explicitState}` : "";
+          await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              command: `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action proceed -TargetExpression ${targetExpr}${extraArg}`,
+              elevated: false,
+              noExit: false
+            })
+          });
+        } catch (e) {}
+
+        const logMsg = `[OK] Proceeded CRP(s) ${targetExpr} along lifecycle pipeline.`;
+        appendConsole(logMsg, "msg-info");
+        showToast(`CRP(s) ${targetExpr} Proceeded`);
+        updateLiveTicker(logMsg, isAll ? null : parseInt(rawTarget, 10));
+        return;
+      }
+
+      // Command: progress/status <#id|crp-id> <state>
+      const progMatch = trimmed.match(/^(?:progress|status)\s+(?:#|crp-?)?(\d+)\s+([a-zA-Z_]+)$/i);
+      if (progMatch) {
+        const id = parseInt(progMatch[1], 10);
+        const targetProg = progMatch[2].toLowerCase();
+        const validProgs = ['undecided', 'queued', 'in_progress', 'verification', 'committed', 'completed', 'pushed', 'blocked', 'failed'];
+        if (!validProgs.includes(targetProg)) {
+          appendConsole(`[ERROR] Invalid status '${targetProg}'. Valid states: ${validProgs.join(', ')}`, "msg-err");
+          return;
+        }
+
+        const p = proposalsData.proposals.find(item => item.id === id);
+        if (!p) {
+          appendConsole(`[ERROR] CRP-${String(id).padStart(3, '0')} not found in ledger.`, "msg-err");
+          return;
+        }
+
+        const nowStr = new Date().toISOString().replace('T', ' ').substring(0, 19);
+        p.progress_state = targetProg;
+        if (targetProg === "completed") {
+          p.state = "completed";
+          if (!p.dates) p.dates = {};
+          p.dates.completed = nowStr;
+        } else if (targetProg === "pushed") {
+          p.state = "pushed";
+          if (!p.dates) p.dates = {};
+          p.dates.pushed = nowStr;
+        } else if (targetProg === "in_progress" || targetProg === "verification" || targetProg === "queued") {
+          if (p.state === "completed" || p.state === "pushed") {
+            p.state = "suggested";
+          }
+        }
+        if (!p.state_history) p.state_history = [];
+        p.state_history.push({
+          state: targetProg,
+          timestamp: nowStr,
+          user: "Operator (Control Hub Console)",
+          note: `Status set to '${targetProg}' via console command`
+        });
+
+        updateMetricCards();
+        renderTable();
+
+        try {
+          await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              command: `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action progress -TargetExpression ${id} -ProgressState ${targetProg}`,
+              elevated: false,
+              noExit: false
+            })
+          });
+        } catch (e) {}
+
+        const crpTag = `CRP-${String(id).padStart(3, '0')}`;
+        const logMsg = `[OK] ${crpTag} status set to '${targetProg}' and saved to ledger.`;
+        appendConsole(logMsg, "msg-info");
+        showToast(`${crpTag} Status: ${targetProg}`);
+        updateLiveTicker(logMsg, id);
+        return;
+      }
+
+      // Command: do <#id|crp-id|all>
+      const doMatch = trimmed.match(/^do\s+(?:#|crp-?)?(\d+|all)$/i);
+      if (doMatch) {
+        const isAll = doMatch[1].toLowerCase() === "all";
+        const targetExpr = isAll ? "all" : doMatch[1];
+        const nowStr = new Date().toISOString().replace('T', ' ').substring(0, 19);
+
+        const targets = isAll
+          ? proposalsData.proposals.filter(p => p.state === "suggested" || p.state === "approved")
+          : proposalsData.proposals.filter(p => p.id === parseInt(doMatch[1], 10));
+
+        if (targets.length === 0) {
+          appendConsole(`[WARN] No matching CRPs found for 'do ${targetExpr}'.`, "msg-warn");
+          return;
+        }
+
+        targets.forEach(p => {
+          p.state = "processed";
+          p.progress_state = "in_progress";
+          if (!p.dates) p.dates = {};
+          p.dates.in_progress = nowStr;
+          if (!p.state_history) p.state_history = [];
+          p.state_history.push({
+            state: "in_progress",
+            timestamp: nowStr,
+            user: "Operator (Control Hub Console)",
+            note: `Execution started via console: 'do CRP-${String(p.id).padStart(3, '0')}'`
+          });
+        });
+
+        updateMetricCards();
+        renderTable();
+
+        try {
+          await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              command: `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action do -TargetExpression ${targetExpr}`,
+              elevated: false,
+              noExit: false
+            })
+          });
+        } catch (e) {}
+
+        const logMsg = `[OK] CRP(s) ${targetExpr} transitioned to PROCESSED / IN_PROGRESS in ledger.`;
+        appendConsole(logMsg, "msg-info");
+        showToast(`CRP(s) ${targetExpr} In Progress`);
+        updateLiveTicker(logMsg, isAll ? null : parseInt(doMatch[1], 10));
+        return;
+      }
+
+      // Command: accept <#id|crp-id|all>
+      const acceptMatch = trimmed.match(/^accept\s+(?:#|crp-?)?(\d+|all)$/i);
+      if (acceptMatch) {
+        if (acceptMatch[1].toLowerCase() === "all") {
+          await executeBatchAccept();
+        } else {
+          const id = parseInt(acceptMatch[1], 10);
+          const p = proposalsData.proposals.find(item => item.id === id);
+          if (!p) {
+            appendConsole(`[ERROR] CRP-${String(id).padStart(3, '0')} not found in ledger.`, "msg-err");
+            return;
+          }
+          p.progress_state = "completed";
+          p.state = "completed";
+          if (!p.dates) p.dates = {};
+          p.dates.completed = new Date().toISOString().replace('T', ' ').substring(0, 19);
+          updateMetricCards();
+          renderTable();
+          await syncLedgerToServer();
+          const crpTag = `CRP-${String(id).padStart(3, '0')}`;
+          const logMsg = `[OK] ${crpTag} marked COMPLETED.`;
+          appendConsole(logMsg, "msg-info");
+          showToast(`${crpTag} Accepted & Completed`);
+          updateLiveTicker(logMsg, id);
+        }
+        return;
+      }
+
+      // Command: review <#id|crp-id>
+      const revMatch = trimmed.match(/^review\s+(?:#|crp-?)?(\d+)$/i);
+      if (revMatch) {
+        const id = parseInt(revMatch[1], 10);
+        const p = proposalsData.proposals.find(item => item.id === id);
+        if (!p) {
+          appendConsole(`[ERROR] CRP-${String(id).padStart(3, '0')} not found in ledger.`, "msg-err");
+          return;
+        }
+        await launchReviewForProposal(p.id, p.origin_repo, p.bundle_id);
+        updateLiveTicker(`Launched BC5 Review for CRP-${String(id).padStart(3, '0')}`, id);
+        return;
+      }
+
+      // Command: defer <#id|crp-id>
+      const defMatch = trimmed.match(/^defer\s+(?:#|crp-?)?(\d+)$/i);
+      if (defMatch) {
+        const id = parseInt(defMatch[1], 10);
+        const p = proposalsData.proposals.find(item => item.id === id);
+        if (!p) {
+          appendConsole(`[ERROR] CRP-${String(id).padStart(3, '0')} not found in ledger.`, "msg-err");
+          return;
+        }
+        p.state = "deferred";
+        updateMetricCards();
+        renderTable();
+        await syncLedgerToServer();
+        const crpTag = `CRP-${String(id).padStart(3, '0')}`;
+        const logMsg = `[OK] ${crpTag} state set to DEFERRED.`;
+        appendConsole(logMsg, "msg-info");
+        showToast(`${crpTag} Deferred`);
+        updateLiveTicker(logMsg, id);
+        return;
+      }
+
+      // Command: delete <#id|crp-id>
+      const delMatch = trimmed.match(/^(?:delete|remove)\s+(?:#|crp-?)?(\d+)$/i);
+      if (delMatch) {
+        const id = parseInt(delMatch[1], 10);
+        deleteProposal(id);
+        return;
+      }
+
+      // Command: prio <#id|crp-id|all> <C|H|M|L|D|1-5>
+      const prioMatch = trimmed.match(/^prio(?:rity)?\s+(?:#|crp-?)?(\d+|all)\s+([chmld1-5])$/i);
+      if (prioMatch) {
+        let rawPrio = prioMatch[2].toUpperCase();
+        const numMap = { '1': 'C', '2': 'H', '3': 'M', '4': 'L', '5': 'D' };
+        if (numMap[rawPrio]) rawPrio = numMap[rawPrio];
+        const isAll = prioMatch[1].toLowerCase() === "all";
+        const targetExpr = isAll ? "all" : prioMatch[1];
+        
+        try {
+          await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              command: `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action priority -TargetExpression ${targetExpr} -Priority ${rawPrio}`,
+              elevated: false,
+              noExit: false
+            })
+          });
+        } catch (e) {}
+
+        const targets = isAll
+          ? proposalsData.proposals
+          : proposalsData.proposals.filter(p => p.id === parseInt(prioMatch[1], 10));
+
+        targets.forEach(p => { p.priority = rawPrio; });
+        renderTable();
+        const logMsg = `[OK] CRP(s) ${targetExpr} priority set to '${rawPrio}'.`;
+        appendConsole(logMsg, "msg-info");
+        showToast(`Priority: ${targetExpr} -> ${rawPrio}`);
+        updateLiveTicker(logMsg, isAll ? null : parseInt(prioMatch[1], 10));
+        return;
+      }
+
+      // Command: granularity <coarse|tight>
+      const granMatch = trimmed.match(/^gran(?:ularity)?(?:\s+(coarse|tight))?$/i);
+      if (granMatch) {
+        if (granMatch[1]) {
+          proposalsData.review_granularity = granMatch[1].toLowerCase();
+          updateHeaderGovernanceBadges();
+          try {
+            await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                command: `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action granularity -TargetExpression ${granMatch[1].toLowerCase()}`,
+                elevated: false,
+                noExit: false
+              })
+            });
+          } catch (e) {}
+          appendConsole(`[GOV] Review Granularity set to: ${granMatch[1].toUpperCase()}`, "msg-info");
+          showToast(`Granularity: ${granMatch[1].toUpperCase()}`);
+        } else {
+          appendConsole(`Current Review Granularity: ${(proposalsData.review_granularity || 'coarse').toUpperCase()}`, "msg-info");
+        }
+        return;
+      }
+
+      // Command: mode <active|paused>
+      const modeMatch = trimmed.match(/^mode(?:\s+(active|paused))?$/i);
+      if (modeMatch) {
+        if (modeMatch[1]) {
+          proposalsData.lcm_mode = modeMatch[1].toLowerCase();
+          updateHeaderGovernanceBadges();
+          try {
+            await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                command: `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action mode -TargetExpression ${modeMatch[1].toLowerCase()}`,
+                elevated: false,
+                noExit: false
+              })
+            });
+          } catch (e) {}
+          appendConsole(`[GOV] LCM Governance Mode set to: ${modeMatch[1].toUpperCase()}`, "msg-info");
+          showToast(`LCM Mode: ${modeMatch[1].toUpperCase()}`);
+        } else {
+          appendConsole(`Current LCM Mode: ${(proposalsData.lcm_mode || 'active').toUpperCase()}`, "msg-info");
+        }
+        return;
+      }
+
+      // Fallback: Generic Command via Daemon
+      appendConsole(`Dispatching to Desktop Daemon: ${trimmed}`, "msg-info");
+      try {
+        const res = await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ command: trimmed, elevated: false, noExit: false })
+        });
+        if (res.ok) {
+          appendConsole(`Command executed successfully.`, "msg-info");
+        } else {
+          appendConsole(`Command returned status ${res.status}.`, "msg-warn");
+        }
+      } catch (err) {
+        appendConsole(`Daemon execution error: ${err.message}`, "msg-err");
+      }
     }
 
     // -------------------------------------------------------------------------
@@ -1423,9 +2318,32 @@
         historyLogText = RAW_HISTORY_LOG;
       }
 
+      initTheme();
+
+      // Inlined LcmTablePrintAtom initialization per Display Standard
+      if (typeof LcmTablePrintAtom !== 'undefined') {
+        LcmTablePrintAtom.init({
+          documentTitle: 'LCM Configuration Management Control Hub',
+          subsystem: 'LCM',
+          tableSelector: '#proposalsTable',
+          tbodySelector: '#proposalsTableBody',
+          getViewMode: () => {
+            const activeCard = document.querySelector('.stat-card.active');
+            return activeCard ? activeCard.querySelector('.stat-label').textContent.trim() : 'Proposals View';
+          },
+          getFileName: () => 'LCM_Control_Hub_Proposals.html',
+          getDate: () => new Date().toLocaleString(),
+          getFilterSummary: () => {
+            const search = document.getElementById('searchInput') ? document.getElementById('searchInput').value.trim() : '';
+            return search ? 'Search: "' + search + '"' : 'All Proposals in View';
+          }
+        });
+      }
+
       initTabLifecycle();
       checkDaemonHealth();
       populateScopeDropdown();
+      updateHeaderGovernanceBadges();
       updateMetricCards();
       renderTable();
       setInterval(checkDaemonHealth, 5000);
@@ -1448,6 +2366,87 @@
         badge.className = "daemon-badge offline";
         text.innerText = `REST Daemon: OFFLINE (${DAEMON_PORT})`;
       }
+    }
+
+    function updateHeaderGovernanceBadges() {
+      const gran = (proposalsData.review_granularity || "coarse").toLowerCase();
+      const mode = (proposalsData.lcm_mode || "active").toLowerCase();
+
+      const granBadge = document.getElementById("granularityBadge");
+      const granIcon = document.getElementById("granularityIcon");
+      const granText = document.getElementById("granularityText");
+
+      if (granBadge && granText && granIcon) {
+        if (gran === "tight") {
+          granBadge.className = "header-pill-toggle pill-tight";
+          granIcon.textContent = "🔬";
+          granText.textContent = "Granularity: Tight";
+        } else {
+          granBadge.className = "header-pill-toggle";
+          granIcon.textContent = "🔍";
+          granText.textContent = "Granularity: Coarse";
+        }
+      }
+
+      const modeBadge = document.getElementById("lcmModeBadge");
+      const modeIcon = document.getElementById("lcmModeIcon");
+      const modeText = document.getElementById("lcmModeText");
+
+      if (modeBadge && modeText && modeIcon) {
+        if (mode === "paused") {
+          modeBadge.className = "header-pill-toggle pill-paused";
+          modeIcon.textContent = "⏸️";
+          modeText.textContent = "LCM: Paused";
+        } else {
+          modeBadge.className = "header-pill-toggle";
+          modeIcon.textContent = "🛡️";
+          modeText.textContent = "LCM: Active";
+        }
+      }
+    }
+
+    async function toggleGranularity() {
+      const curr = (proposalsData.review_granularity || "coarse").toLowerCase();
+      const next = curr === "coarse" ? "tight" : "coarse";
+      proposalsData.review_granularity = next;
+      updateHeaderGovernanceBadges();
+
+      try {
+        await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            command: `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action granularity -TargetExpression ${next}`,
+            elevated: false,
+            noExit: false
+          })
+        });
+      } catch (e) {}
+
+      appendConsole(`[GOV] Review Granularity switched to: ${next.toUpperCase()}`, "msg-info");
+      showToast(`Review Granularity: ${next.toUpperCase()}`);
+    }
+
+    async function toggleLcmMode() {
+      const curr = (proposalsData.lcm_mode || "active").toLowerCase();
+      const next = curr === "active" ? "paused" : "active";
+      proposalsData.lcm_mode = next;
+      updateHeaderGovernanceBadges();
+
+      try {
+        await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            command: `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action mode -TargetExpression ${next}`,
+            elevated: false,
+            noExit: false
+          })
+        });
+      } catch (e) {}
+
+      appendConsole(`[GOV] LCM Governance Mode switched to: ${next.toUpperCase()}`, "msg-info");
+      showToast(`LCM Mode: ${next.toUpperCase()}`);
     }
 
     function populateScopeDropdown() {
@@ -1477,9 +2476,38 @@
       document.getElementById("valDeferred").innerText = list.filter(p => p.state === "deferred").length;
     }
 
+    let prioritySortDirection = null; // null, 'asc', 'desc'
+
+    function toggleSortPriority() {
+      const icon = document.getElementById("prioSortIcon");
+      if (!prioritySortDirection) {
+        prioritySortDirection = 'asc';
+        if (icon) icon.textContent = '▲';
+      } else if (prioritySortDirection === 'asc') {
+        prioritySortDirection = 'desc';
+        if (icon) icon.textContent = '▼';
+      } else {
+        prioritySortDirection = null;
+        if (icon) icon.textContent = '⬍';
+      }
+      renderTable();
+    }
+
+    function getPrioDescription(code) {
+      switch (code) {
+        case 'C': return 'Critical (Highest urgency)';
+        case 'H': return 'High urgency';
+        case 'M': return 'Medium (Normal)';
+        case 'L': return 'Low urgency';
+        case 'D': return 'Designated for later';
+        default: return code || 'Medium';
+      }
+    }
+
     function renderTable() {
       const search = document.getElementById("searchInput").value.toLowerCase().trim();
       const scope = document.getElementById("thScopeFilter").value;
+      const prioFilter = document.getElementById("thPriorityFilter") ? document.getElementById("thPriorityFilter").value : "ALL";
       const planState = document.getElementById("thPlanStateFilter").value;
       const progState = document.getElementById("thProgStateFilter").value;
 
@@ -1487,41 +2515,76 @@
       tbody.innerHTML = "";
 
       const filtered = proposalsData.proposals.filter(p => {
+        const pPrio = (p.priority || "M").toUpperCase();
+        if (prioFilter !== "ALL" && pPrio !== prioFilter) return false;
         if (scope !== "ALL" && (!p.origin_repo || !p.origin_repo.includes(scope))) return false;
         if (planState !== "ALL" && p.state !== planState) return false;
         if (progState === "open" && (p.progress_state === "completed" || p.progress_state === "pushed" || p.state === "completed" || p.state === "pushed")) return false;
         if (progState === "completed" && (p.progress_state !== "completed" && p.state !== "completed" && p.progress_state !== "pushed" && p.state !== "pushed")) return false;
         if (progState === "pushed" && (p.progress_state !== "pushed" && p.state !== "pushed")) return false;
-        if (progState !== "ALL" && progState !== "open" && progState !== "completed" && progState !== "pushed" && p.progress_state !== progState) return false;
+        if (progState === "committed" && (p.progress_state !== "committed")) return false;
+        if (progState !== "ALL" && progState !== "open" && progState !== "completed" && progState !== "pushed" && progState !== "committed" && p.progress_state !== progState) return false;
 
+        const crpCode = `crp-${String(p.id).padStart(3, '0')}`;
         if (search) {
-          const matchId = `#${p.id}`.includes(search) || `${p.id}` === search;
+          const matchId = `#${p.id}`.includes(search) || `${p.id}` === search || crpCode.includes(search);
           const matchTitle = (p.title || "").toLowerCase().includes(search);
           const matchDetails = (p.details || "").toLowerCase().includes(search);
           const matchCr = (p.cr_id || "").toLowerCase().includes(search);
           const matchBundle = (p.bundle_id || "").toLowerCase().includes(search);
           const matchScope = (p.origin_repo || "").toLowerCase().includes(search);
-          if (!matchId && !matchTitle && !matchDetails && !matchCr && !matchBundle && !matchScope) return false;
+          const matchPrio = pPrio.toLowerCase() === search;
+          if (!matchId && !matchTitle && !matchDetails && !matchCr && !matchBundle && !matchScope && !matchPrio) return false;
         }
         return true;
       });
 
-      filtered.sort((a, b) => b.id - a.id);
+      const prioRank = { 'C': 1, 'H': 2, 'M': 3, 'L': 4, 'D': 5 };
+      if (prioritySortDirection === 'asc') {
+        filtered.sort((a, b) => {
+          const rA = prioRank[(a.priority || 'M').toUpperCase()] || 3;
+          const rB = prioRank[(b.priority || 'M').toUpperCase()] || 3;
+          if (rA !== rB) return rA - rB;
+          return b.id - a.id;
+        });
+      } else if (prioritySortDirection === 'desc') {
+        filtered.sort((a, b) => {
+          const rA = prioRank[(a.priority || 'M').toUpperCase()] || 3;
+          const rB = prioRank[(b.priority || 'M').toUpperCase()] || 3;
+          if (rA !== rB) return rB - rA;
+          return b.id - a.id;
+        });
+      } else {
+        filtered.sort((a, b) => b.id - a.id);
+      }
 
       filtered.forEach(p => {
         const tr = document.createElement("tr");
         tr.className = `state-${p.state || "suggested"} state-${p.progress_state || "undecided"}`;
 
         const crpBundle = p.bundle_id && p.bundle_id !== "unassigned" ? p.bundle_id : (p.cr_id || "");
+        const pPrio = (p.priority || "M").toUpperCase();
+        const crpDisplay = `CRP-${String(p.id).padStart(3, '0')}`;
+        const secondaryTag = (p.bundle_id && p.bundle_id !== 'unassigned' && p.bundle_id !== crpDisplay && !p.bundle_id.startsWith(crpDisplay))
+          ? p.bundle_id
+          : ((p.cr_id && p.cr_id !== crpDisplay && !p.cr_id.startsWith(crpDisplay)) ? p.cr_id : '');
 
         tr.innerHTML = `
           <td><input type="checkbox" class="row-chk" value="${p.id}" data-repo="${p.origin_repo || ''}" data-crp="${crpBundle}" data-state="${p.state}" data-prog="${p.progress_state}" onchange="updateSelectedCount()"></td>
-          <td><span class="id-badge">#${p.id}</span></td>
-          <td><span class="scope-tag">${p.origin_repo || 'LCM'}</span></td>
           <td>
-            <span class="crp-tag" style="font-weight:600; color:var(--accent-blue);">${p.bundle_id || '-'}</span>
-            <span class="crp-tag">${p.cr_id || ''}</span>
+            <span class="crp-tag" style="font-weight: 700; font-size: 0.82rem; color: var(--accent-blue); font-family: var(--font-mono);">${crpDisplay}</span>
+            ${secondaryTag ? `<div style="font-size: 0.68rem; color: var(--text-muted); margin-top: 2px;">${secondaryTag}</div>` : ''}
           </td>
+          <td style="text-align: center;">
+            <select class="prio-select prio-${pPrio}" onchange="changeProposalPriority(${p.id}, this.value)" title="Priority: ${getPrioDescription(pPrio)}">
+              <option value="C" class="prio-C" ${pPrio === 'C' ? 'selected' : ''}>C</option>
+              <option value="H" class="prio-H" ${pPrio === 'H' ? 'selected' : ''}>H</option>
+              <option value="M" class="prio-M" ${pPrio === 'M' ? 'selected' : ''}>M</option>
+              <option value="L" class="prio-L" ${pPrio === 'L' ? 'selected' : ''}>L</option>
+              <option value="D" class="prio-D" ${pPrio === 'D' ? 'selected' : ''}>D</option>
+            </select>
+          </td>
+          <td><span class="scope-tag">${p.origin_repo || 'LCM'}</span></td>
           <td>
             <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 2px;">${p.title}</div>
             <div style="font-size: 0.75rem; color: var(--text-secondary);">${p.details || ''}</div>
@@ -1543,6 +2606,7 @@
               <option value="queued" ${p.progress_state === 'queued' ? 'selected' : ''}>Queued (Ready)</option>
               <option value="in_progress" ${p.progress_state === 'in_progress' ? 'selected' : ''}>⚡ In Progress</option>
               <option value="verification" ${p.progress_state === 'verification' ? 'selected' : ''}>⏳ Verification</option>
+              <option value="committed" ${p.progress_state === 'committed' ? 'selected' : ''}>📦 Committed</option>
               <option value="completed" ${p.progress_state === 'completed' ? 'selected' : ''}>✅ Completed</option>
               <option value="pushed" ${p.progress_state === 'pushed' ? 'selected' : ''}>🚀 Pushed</option>
               <option value="blocked" ${p.progress_state === 'blocked' ? 'selected' : ''}>Blocked</option>
@@ -1553,8 +2617,8 @@
             <div class="action-group">
               <button class="action-btn action-btn-bc" onclick="launchReviewForProposal(${p.id}, '${p.origin_repo}', '${crpBundle}')">🔍 BC5</button>
               ${p.bundle_id && p.bundle_id.startsWith('CRP-') ? `<button class="action-btn" onclick="openCrpSpec('${p.bundle_id}')">📜 CRP</button>` : ''}
-              ${p.plan_path ? `<button class="action-btn" onclick="openDocumentModal('${p.plan_path}', 'Plan (#${p.id})')">📄 Plan</button>` : ''}
-              ${p.walkthrough_path ? `<button class="action-btn" onclick="openDocumentModal('${p.walkthrough_path}', 'Walkthrough (#${p.id})')">📋 Walk</button>` : ''}
+              ${p.plan_path ? `<button class="action-btn" onclick="openDocumentModal('${p.plan_path}', 'Plan (${crpDisplay})')">📄 Plan</button>` : ''}
+              ${p.walkthrough_path ? `<button class="action-btn" onclick="openDocumentModal('${p.walkthrough_path}', 'Walkthrough (${crpDisplay})')">📋 Walk</button>` : ''}
               <button class="action-btn" onclick="openRepoDocsReview('${p.origin_repo}')" title="Review Tripartite Documentation for repository">📚 Docs</button>
               <button class="action-btn" onclick="openReceiptForProposal('${p.origin_repo}', '${crpBundle}')">📜 Rcpt</button>
               <button class="action-btn" onclick="editInNotepad('${p.plan_path || p.bundle_id || ''}')" title="Edit in Notepad++">✏️ N++</button>
@@ -1589,9 +2653,22 @@
         prop.state = newState;
         updateMetricCards();
         renderTable();
-        await syncLedgerToServer();
-        appendConsole(`Updated Proposal #${id} plan state to '${newState}'`, "msg-info");
-        showToast(`Proposal #${id} state set to '${newState}'`);
+        try {
+          await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              command: `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action ${newState} -TargetExpression ${id}`,
+              elevated: false,
+              noExit: false
+            })
+          });
+        } catch (err) {}
+        const crpName = `CRP-${String(id).padStart(3, '0')}`;
+        const logMsg = `Updated ${crpName} plan state to '${newState}' (persisted to ledger)`;
+        appendConsole(logMsg, "msg-info");
+        showToast(`${crpName} state set to '${newState}'`);
+        updateLiveTicker(logMsg, id);
       }
     }
 
@@ -1599,11 +2676,109 @@
       const prop = proposalsData.proposals.find(p => p.id === id);
       if (prop) {
         prop.progress_state = newState;
+        if (newState === "completed") {
+          prop.state = "completed";
+          if (!prop.dates) prop.dates = {};
+          prop.dates.completed = new Date().toISOString().replace('T', ' ').substring(0, 19);
+        } else if (newState === "pushed") {
+          prop.state = "pushed";
+          if (!prop.dates) prop.dates = {};
+          prop.dates.pushed = new Date().toISOString().replace('T', ' ').substring(0, 19);
+        } else if (newState === "in_progress" || newState === "verification" || newState === "queued") {
+          if (prop.state === "completed" || prop.state === "pushed") {
+            prop.state = "suggested";
+          }
+        }
         updateMetricCards();
         renderTable();
-        await syncLedgerToServer();
-        appendConsole(`Updated Proposal #${id} progress state to '${newState}'`, "msg-info");
-        showToast(`Proposal #${id} progress set to '${newState}'`);
+        try {
+          await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              command: `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action progress -TargetExpression ${id} -ProgressState ${newState}`,
+              elevated: false,
+              noExit: false
+            })
+          });
+        } catch (err) {}
+        const crpName = `CRP-${String(id).padStart(3, '0')}`;
+        const logMsg = `Updated ${crpName} status to '${newState}' (persisted to ledger)`;
+        appendConsole(logMsg, "msg-info");
+        showToast(`${crpName} status set to '${newState}'`);
+        updateLiveTicker(logMsg, id);
+      }
+    }
+
+    async function changeProposalPriority(id, newPrio) {
+      const prop = proposalsData.proposals.find(p => p.id === id);
+      if (prop) {
+        const upper = newPrio.toUpperCase();
+        prop.priority = upper;
+        renderTable();
+        try {
+          await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              command: `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action priority -TargetExpression ${id} -Priority ${upper}`,
+              elevated: false,
+              noExit: false
+            })
+          });
+        } catch (err) {}
+        const crpName = `CRP-${String(id).padStart(3, '0')}`;
+        const logMsg = `Updated ${crpName} priority to '${upper}' (persisted to ledger)`;
+        appendConsole(logMsg, "msg-info");
+        showToast(`${crpName} priority set to '${upper}'`);
+        updateLiveTicker(logMsg, id);
+      }
+    }
+
+    function updateLiveTicker(msg, affectedId) {
+      const ticker = document.getElementById("liveFeedbackTicker");
+      const content = document.getElementById("tickerContent");
+      if (!ticker || !content) return;
+
+      let displayMsg = msg;
+      if (typeof affectedId !== "undefined" && affectedId !== null) {
+        const visibleChk = document.querySelector(`.row-chk[value="${affectedId}"]`);
+        if (!visibleChk) {
+          const crpTag = `CRP-${String(affectedId).padStart(3, '0')}`;
+          displayMsg += ` ... ${crpTag} (Filtered out of active view)`;
+        }
+      }
+
+      content.textContent = displayMsg;
+      ticker.style.display = "inline-flex";
+    }
+
+    function clearLiveTicker() {
+      const ticker = document.getElementById("liveFeedbackTicker");
+      const content = document.getElementById("tickerContent");
+      if (ticker) ticker.style.display = "none";
+      if (content) content.textContent = "";
+    }
+
+    function handleFilterChange() {
+      clearLiveTicker();
+      renderTable();
+    }
+
+    function printInspectorDocument() {
+      window.print();
+    }
+
+    function toggleConsoleFeed() {
+      const stream = document.getElementById("consoleStream");
+      const btn = document.getElementById("btn-toggle-console");
+      if (!stream) return;
+      if (stream.style.display === "none") {
+        stream.style.display = "block";
+        if (btn) btn.textContent = "▾ Collapse Feed";
+      } else {
+        stream.style.display = "none";
+        if (btn) btn.textContent = "▸ Expand Feed";
       }
     }
 
@@ -1662,7 +2837,7 @@
     async function executeBatchAccept() {
       const chks = getSelectedCheckboxes();
       if (chks.length === 0) {
-        alert("Please select one or more proposals to ACCEPT.");
+        alert("Please select one or more CRPs to ACCEPT.");
         return;
       }
 
@@ -1676,18 +2851,18 @@
 
         // Invariant: Cannot accept undecided, rejected, blocked, or deferred
         if (['undecided', 'blocked'].includes(p.progress_state) || ['rejected', 'deferred'].includes(p.state)) {
-          invalid.push(`#${p.id} (${p.state} / ${p.progress_state})`);
+          invalid.push(`CRP-${String(p.id).padStart(3, '0')} (${p.state} / ${p.progress_state})`);
         } else {
           valid.push(p);
         }
       });
 
       if (invalid.length > 0) {
-        alert(`CANNOT ACCEPT: The following ${invalid.length} proposal(s) are in unready states:\n- ${invalid.join('\n- ')}\n\nOnly proposals in 'Verification', 'In Progress', or 'Approved' state can be accepted.`);
+        alert(`CANNOT ACCEPT: The following ${invalid.length} CRP(s) are in unready states:\n- ${invalid.join('\n- ')}\n\nOnly CRPs in 'Verification', 'In Progress', or 'Approved' state can be accepted.`);
         return;
       }
 
-      if (!confirm(`Are you sure you want to ACCEPT and dual-commit sync ${valid.length} proposal(s)?`)) return;
+      if (!confirm(`Are you sure you want to ACCEPT and dual-commit sync ${valid.length} CRP(s)?`)) return;
 
       for (const p of valid) {
         p.state = "completed";
@@ -1697,15 +2872,17 @@
       updateMetricCards();
       resetFilters();
       await syncLedgerToServer();
-      appendConsole(`Batch accepted and marked completed: ${valid.map(v => '#' + v.id).join(', ')}`, "msg-info");
-      showToast(`Batch Accepted ${valid.length} proposal(s). View reset to SHOW ALL.`);
+      const logMsg = `Batch accepted and marked completed: ${valid.map(v => 'CRP-' + String(v.id).padStart(3, '0')).join(', ')}`;
+      appendConsole(logMsg, "msg-info");
+      showToast(`Batch Accepted ${valid.length} CRP(s). View reset to SHOW ALL.`);
+      updateLiveTicker(logMsg);
     }
 
     // One-Shot Mark Reviewed Button
     async function executeBatchMarkReviewed() {
       const chks = getSelectedCheckboxes();
       if (chks.length === 0) {
-        alert("Please select one or more proposals to mark as reviewed.");
+        alert("Please select one or more CRPs to mark as reviewed.");
         return;
       }
 
@@ -1720,13 +2897,15 @@
       updateMetricCards();
       renderTable();
       await syncLedgerToServer();
-      appendConsole(`Marked ${chks.length} proposal(s) as reviewed / verification.`, "msg-info");
-      showToast(`Marked ${chks.length} proposal(s) as reviewed.`);
+      const logMsg = `Marked ${chks.length} CRP(s) as reviewed / verification.`;
+      appendConsole(logMsg, "msg-info");
+      showToast(logMsg);
+      updateLiveTicker(logMsg);
     }
 
     async function executeBatchReview() {
       const chks = getSelectedCheckboxes();
-      if (chks.length === 0) { alert("Please select proposals to review."); return; }
+      if (chks.length === 0) { alert("Please select CRPs to review."); return; }
       for (const c of chks) {
         const id = parseInt(c.value, 10);
         const p = proposalsData.proposals.find(item => item.id === id);
@@ -1744,31 +2923,39 @@
       });
       updateMetricCards();
       renderTable();
-      showToast(`Deferred ${chks.length} proposal(s).`);
+      const logMsg = `Deferred ${chks.length} CRP(s).`;
+      showToast(logMsg);
+      updateLiveTicker(logMsg);
     }
 
     function executeBatchDelete() {
       const chks = getSelectedCheckboxes();
       if (chks.length === 0) return;
-      if (!confirm(`Delete / purge ${chks.length} proposal(s)?`)) return;
+      if (!confirm(`Delete / purge ${chks.length} CRP(s)?`)) return;
       const ids = new Set(chks.map(c => parseInt(c.value, 10)));
       proposalsData.proposals = proposalsData.proposals.filter(p => !ids.has(p.id));
       updateMetricCards();
       renderTable();
-      showToast(`Deleted ${ids.size} proposal(s).`);
+      const logMsg = `Deleted ${ids.size} CRP(s).`;
+      showToast(logMsg);
+      updateLiveTicker(logMsg);
     }
 
     function deleteProposal(id) {
-      if (confirm(`Permanently delete rejected Proposal #${id}?`)) {
+      const crpTag = `CRP-${String(id).padStart(3, '0')}`;
+      if (confirm(`Permanently delete rejected ${crpTag}?`)) {
         proposalsData.proposals = proposalsData.proposals.filter(p => p.id !== id);
         updateMetricCards();
         renderTable();
-        showToast(`Deleted Proposal #${id}.`);
+        const logMsg = `Deleted ${crpTag}.`;
+        showToast(logMsg);
+        updateLiveTicker(logMsg, id);
       }
     }
 
     // Preset Filters
     function setPresetFilter(type) {
+      clearLiveTicker();
       document.querySelectorAll(".stat-card").forEach(c => c.classList.remove("active"));
       const targetCard = document.getElementById("card" + type.charAt(0).toUpperCase() + type.slice(1));
       if (targetCard) targetCard.classList.add("active");
@@ -1806,11 +2993,16 @@
       const cardTotal = document.getElementById("cardTotal");
       if (cardTotal) cardTotal.classList.add("active");
       document.getElementById("searchInput").value = "";
+      if (document.getElementById("thPriorityFilter")) document.getElementById("thPriorityFilter").value = "ALL";
       document.getElementById("thScopeFilter").value = "ALL";
       document.getElementById("thPlanStateFilter").value = "ALL";
       document.getElementById("thProgStateFilter").value = "ALL";
+      prioritySortDirection = null;
+      const icon = document.getElementById("prioSortIcon");
+      if (icon) icon.textContent = '⬍';
+      clearLiveTicker();
       renderTable();
-      showToast("🔄 Reset to SHOW ALL proposals.");
+      showToast("🔄 Reset to SHOW ALL CRPs.");
     }
 
     // Multi-Repository Push Engine

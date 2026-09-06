@@ -32,8 +32,8 @@ param(
              Notepad++ specification editing, and historical log views.
     Path: tools/Show-CmControlHub.ps1
     Authors: Rolf, Workspace_AI Engine
-    Version: 1.0.0
-    Date: 2026-08-30
+    Version: 1.1.0
+    Date: 2026-09-06
 .PARAMETER ReviewMode
     Opens the Control Hub filtered directly to pending visual reviews requiring Beyond Compare action.
 .PARAMETER Repo
@@ -53,7 +53,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$scriptVersion = "1.0.0"
+$scriptVersion = "1.1.0"
 $scriptName = "Show-CmControlHub"
 
 # ------------------------------------------------------------------------------
@@ -153,6 +153,20 @@ foreach ($r in $governedRepos) {
     }
 }
 
+# Resolve and load LcmTablePrintAtom engine
+$atomJsCandidates = @(
+    (Join-Path $workspaceRoot '.lcm\assets\lcm-table-print-atom.js'),
+    (Join-Path $workspaceRoot 'tools\assets\lcm-table-print-atom.js')
+)
+$atomJsPath = $null
+foreach ($cand in $atomJsCandidates) {
+    if (Test-Path -LiteralPath $cand) {
+        $atomJsPath = $cand
+        break
+    }
+}
+$atomJsContent = if ($atomJsPath) { Get-Content -LiteralPath $atomJsPath -Raw -Encoding UTF8 } else { "" }
+
 $injectedBlock = @"
     const RAW_PROPOSALS = $proposalsRaw;
     const RAW_ACTIVE_LOG = $($activeLogRaw | ConvertTo-Json);
@@ -161,6 +175,7 @@ $injectedBlock = @"
 "@
 
 $htmlContent = Get-Content -LiteralPath $htmlTemplateFile -Raw -Encoding UTF8
+$htmlContent = $htmlContent.Replace('/*__INJECTED_ATOM_PLACEHOLDER__*/', $atomJsContent)
 $htmlContent = $htmlContent.Replace('/*__INJECTED_DATA_PLACEHOLDER__*/', $injectedBlock)
 
 $scratchDir = Join-Path $workspaceRoot "Workspace_Inventory\scratch"

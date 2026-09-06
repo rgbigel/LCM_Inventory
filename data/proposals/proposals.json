@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-09-06T11:07:20+02:00",
+  "updated_at": "2026-09-06T22:30:02+02:00",
   "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 77,
+  "last_proposal_id": 79,
   "proposals": [
     {
       "id": 1,
@@ -52,7 +52,8 @@
           "user": "Rolf",
           "note": "Pushed to remote repository"
         }
-      ]
+      ],
+      "priority": "M"
     },
     {
       "id": 2,
@@ -100,7 +101,8 @@
           "user": "Rolf",
           "note": "Pushed to remote repository"
         }
-      ]
+      ],
+      "priority": "M"
     },
     {
       "id": 3,
@@ -148,7 +150,8 @@
           "user": "Rolf",
           "note": "Pushed to remote repository"
         }
-      ]
+      ],
+      "priority": "M"
     },
     {
       "id": 4,
@@ -196,7 +199,8 @@
           "user": "Rolf",
           "note": "Pushed to remote repository"
         }
-      ]
+      ],
+      "priority": "M"
     },
     {
       "id": 5,
@@ -244,7 +248,8 @@
           "user": "Rolf",
           "note": "Pushed to remote repository"
         }
-      ]
+      ],
+      "priority": "M"
     },
     {
       "id": 6,
@@ -292,7 +297,8 @@
           "user": "Rolf",
           "note": "Pushed to remote repository"
         }
-      ]
+      ],
+      "priority": "M"
     },
     {
       "id": 7,
@@ -340,7 +346,8 @@
           "user": "Rolf",
           "note": "Pushed to remote repository"
         }
-      ]
+      ],
+      "priority": "M"
     },
     {
       "id": 8,
@@ -388,7 +395,8 @@
           "user": "Rolf",
           "note": "Pushed to remote repository"
         }
-      ]
+      ],
+      "priority": "M"
     },
     {
       "id": 9,
@@ -436,7 +444,8 @@
           "user": "Rolf",
           "note": "Pushed to remote repository"
         }
-      ]
+      ],
+      "priority": "M"
     },
     {
       "id": 10,
@@ -484,7 +493,8 @@
           "user": "Rolf",
           "note": "Pushed to remote tracking branch"
         }
-      ]
+      ],
+      "priority": "M"
     },
     {
       "id": 11,
@@ -532,7 +542,8 @@
           "user": "Rolf",
           "note": "Pushed to remote tracking branch"
         }
-      ]
+      ],
+      "priority": "M"
     },
     {
       "id": 12,
@@ -580,7 +591,8 @@
           "user": "Rolf",
           "note": "Pushed to remote tracking branch"
         }
-      ]
+      ],
+      "priority": "M"
     },
     {
       "id": 13,
@@ -628,7 +640,8 @@
           "user": "Rolf",
           "note": "Pushed to remote tracking branch"
         }
-      ]
+      ],
+      "priority": "M"
     },
     {
       "id": 14,
@@ -676,7 +689,8 @@
           "user": "Rolf",
           "note": "Pushed to remote tracking branch"
         }
-      ]
+      ],
+      "priority": "M"
     },
     {
       "id": 15,
@@ -724,7 +738,8 @@
           "user": "Rolf",
           "note": "Pushed to remote tracking branch"
         }
-      ]
+      ],
+      "priority": "M"
     },
     {
       "id": 16,
@@ -772,7 +787,8 @@
           "user": "Rolf",
           "note": "Pushed to remote tracking branch"
         }
-      ]
+      ],
+      "priority": "M"
     },
     {
       "id": 17,
@@ -820,7 +836,8 @@
           "user": "Rolf",
           "note": "Pushed to remote tracking branch"
         }
-      ]
+      ],
+      "priority": "M"
     },
     {
       "id": 18,
@@ -868,7 +885,8 @@
           "user": "Rolf",
           "note": "Pushed to remote tracking branch"
         }
-      ]
+      ],
+      "priority": "M"
     },
     {
       "id": 19,
@@ -916,7 +934,8 @@
           "user": "Rolf",
           "note": "Pushed to remote tracking branch"
         }
-      ]
+      ],
+      "priority": "M"
     },
     {
       "id": 20,
@@ -964,7 +983,8 @@
           "user": "Rolf",
           "note": "Pushed to remote tracking branch"
         }
-      ]
+      ],
+      "priority": "M"
     },
     {
       "id": 21,
@@ -1012,7 +1032,8 @@
           "user": "Rolf",
           "note": "Pushed to remote tracking branch"
         }
-      ]
+      ],
+      "priority": "M"
     },
     {
       "id": 22,
@@ -1060,7 +1081,8 @@
           "user": "Rolf",
           "note": "Pushed to remote tracking branch"
         }
-      ]
+      ],
+      "priority": "M"
     },
     {
       "id": 23,
@@ -1108,7 +1130,8 @@
           "user": "Rolf",
           "note": "Pushed to remote tracking branch"
         }
-      ]
+      ],
+      "priority": "M"
     },
     {
       "id": 24,
@@ -1156,7 +1179,8 @@
           "user": "Rolf",
           "note": "Pushed to remote tracking branch"
         }
-      ]
+      ],
+      "priority": "H"
     },
     {
       "id": 25,
@@ -1204,7 +1228,8 @@
           "user": "Rolf",
           "note": "Pushed to remote tracking branch"
         }
-      ]
+      ],
+      "priority": "M"
     },
     {
       "id": 26,
@@ -1252,7 +1277,8 @@
           "user": "Rolf",
           "note": "Pushed to remote tracking branch"
         }
-      ]
+      ],
+      "priority": "M"
     },
     {
       "id": 27,
@@ -1300,7 +1326,8 @@
           "user": "Rolf",
           "note": "Pushed to remote tracking branch"
         }
-      ]
+      ],
+      "priority": "M"
     },
     {
       "id": 28,
@@ -1346,7 +1373,8 @@
           "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
         }
       ],
-      "pushed_at": "2026-09-01 15:53:01"
+      "pushed_at": "2026-09-01 15:53:01",
+      "priority": "M"
     },
     {
       "id": 29,
@@ -1392,7 +1420,8 @@
           "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
         }
       ],
-      "pushed_at": "2026-09-01 15:53:01"
+      "pushed_at": "2026-09-01 15:53:01",
+      "priority": "M"
     },
     {
       "id": 30,
@@ -1438,7 +1467,8 @@
           "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
         }
       ],
-      "pushed_at": "2026-09-01 15:53:01"
+      "pushed_at": "2026-09-01 15:53:01",
+      "priority": "M"
     },
     {
       "id": 31,
@@ -1484,7 +1514,8 @@
           "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
         }
       ],
-      "pushed_at": "2026-09-01 15:53:01"
+      "pushed_at": "2026-09-01 15:53:01",
+      "priority": "M"
     },
     {
       "id": 32,
@@ -1530,7 +1561,8 @@
           "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
         }
       ],
-      "pushed_at": "2026-09-01 15:53:01"
+      "pushed_at": "2026-09-01 15:53:01",
+      "priority": "M"
     },
     {
       "id": 33,
@@ -1576,7 +1608,8 @@
           "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
         }
       ],
-      "pushed_at": "2026-09-01 15:53:01"
+      "pushed_at": "2026-09-01 15:53:01",
+      "priority": "M"
     },
     {
       "id": 34,
@@ -1622,7 +1655,8 @@
           "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
         }
       ],
-      "pushed_at": "2026-09-01 15:53:01"
+      "pushed_at": "2026-09-01 15:53:01",
+      "priority": "M"
     },
     {
       "id": 35,
@@ -1676,7 +1710,8 @@
           "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
         }
       ],
-      "pushed_at": "2026-09-01 15:53:01"
+      "pushed_at": "2026-09-01 15:53:01",
+      "priority": "M"
     },
     {
       "id": 36,
@@ -1730,7 +1765,8 @@
           "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
         }
       ],
-      "pushed_at": "2026-09-01 15:53:01"
+      "pushed_at": "2026-09-01 15:53:01",
+      "priority": "M"
     },
     {
       "id": 37,
@@ -1784,7 +1820,8 @@
           "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
         }
       ],
-      "pushed_at": "2026-09-01 15:53:01"
+      "pushed_at": "2026-09-01 15:53:01",
+      "priority": "H"
     },
     {
       "id": 38,
@@ -1838,7 +1875,8 @@
           "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
         }
       ],
-      "pushed_at": "2026-09-01 15:53:01"
+      "pushed_at": "2026-09-01 15:53:01",
+      "priority": "H"
     },
     {
       "id": 39,
@@ -1892,7 +1930,8 @@
           "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
         }
       ],
-      "pushed_at": "2026-09-01 15:53:01"
+      "pushed_at": "2026-09-01 15:53:01",
+      "priority": "M"
     },
     {
       "id": 40,
@@ -1946,7 +1985,8 @@
           "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
         }
       ],
-      "pushed_at": "2026-09-01 15:53:01"
+      "pushed_at": "2026-09-01 15:53:01",
+      "priority": "M"
     },
     {
       "id": 41,
@@ -2000,7 +2040,8 @@
           "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
         }
       ],
-      "pushed_at": "2026-09-01 15:53:01"
+      "pushed_at": "2026-09-01 15:53:01",
+      "priority": "M"
     },
     {
       "id": 42,
@@ -2054,7 +2095,8 @@
           "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
         }
       ],
-      "pushed_at": "2026-09-01 15:53:01"
+      "pushed_at": "2026-09-01 15:53:01",
+      "priority": "M"
     },
     {
       "id": 43,
@@ -2108,7 +2150,8 @@
           "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
         }
       ],
-      "pushed_at": "2026-09-01 15:53:01"
+      "pushed_at": "2026-09-01 15:53:01",
+      "priority": "M"
     },
     {
       "id": 44,
@@ -2162,7 +2205,8 @@
           "note": "Pushed to remote (Workspace_AI, Workspace_Inventory)"
         }
       ],
-      "pushed_at": "2026-09-01 15:53:01"
+      "pushed_at": "2026-09-01 15:53:01",
+      "priority": "M"
     },
     {
       "id": 45,
@@ -2188,7 +2232,8 @@
           "user": "Rolf",
           "note": "T0 post-hoc BUG registration for LCM crash event; registered during disaster recovery session"
         }
-      ]
+      ],
+      "priority": "H"
     },
     {
       "id": 46,
@@ -2214,7 +2259,8 @@
           "user": "Rolf",
           "note": "Recovery CRP - continuation of interrupted ShowCmControlHub implementation"
         }
-      ]
+      ],
+      "priority": "M"
     },
     {
       "id": 47,
@@ -2240,7 +2286,8 @@
           "user": "Rolf",
           "note": "Emerged from LCM-AI alignment discussion during disaster recovery session 2026-09-02"
         }
-      ]
+      ],
+      "priority": "M"
     },
     {
       "id": 48,
@@ -2266,7 +2313,8 @@
           "user": "Rolf",
           "note": "Pre-existing concept re-registered post-crash; prior CRP reference noted"
         }
-      ]
+      ],
+      "priority": "M"
     },
     {
       "id": 49,
@@ -2292,7 +2340,8 @@
           "user": "Rolf",
           "note": "Emerged from LCM-AI alignment discussion during disaster recovery session 2026-09-02"
         }
-      ]
+      ],
+      "priority": "M"
     },
     {
       "id": 50,
@@ -2318,7 +2367,8 @@
           "user": "Rolf",
           "note": "Identified as governance gap during LCM-AI alignment analysis 2026-09-02"
         }
-      ]
+      ],
+      "priority": "M"
     },
     {
       "id": 51,
@@ -2344,7 +2394,8 @@
           "user": "Rolf",
           "note": "User decision: retain implementation_plan.md as formal CRP artifact; not suppressed by IDE planning mode"
         }
-      ]
+      ],
+      "priority": "M"
     },
     {
       "id": 52,
@@ -2370,7 +2421,8 @@
           "user": "Rolf",
           "note": "Emerged from 60-year CS experience alignment discussion during disaster recovery session 2026-09-02"
         }
-      ]
+      ],
+      "priority": "M"
     },
     {
       "id": 53,
@@ -2396,7 +2448,8 @@
           "user": "Rolf",
           "note": "Identified as rule taxonomy inconsistency during LCM-AI alignment analysis 2026-09-02"
         }
-      ]
+      ],
+      "priority": "M"
     },
     {
       "id": 54,
@@ -2422,7 +2475,8 @@
           "user": "Rolf",
           "note": "Operator resolved Q3: WI tools are fully LCM-governed; rule must reflect this explicitly"
         }
-      ]
+      ],
+      "priority": "M"
     },
     {
       "id": 55,
@@ -2448,7 +2502,8 @@
           "user": "Rolf",
           "note": "Identified as governance gap during LCM-AI alignment analysis 2026-09-02"
         }
-      ]
+      ],
+      "priority": "M"
     },
     {
       "id": 56,
@@ -2461,7 +2516,6 @@
       "bundle_id": "unassigned",
       "author": "Technical Engineering & Governance Team",
       "tier": "T2",
-      "priority": "High",
       "details": "1. PreToolUse turn fence (15 turns default, operator extendable) + loop hash detection. 2. Local-scratch lease tracking (OneDrive sync isolated). 3. Atomic serialization for proposals.json ([System.IO.File]::Replace). 4. T0 watchdog and automatic transition to 'blocked' upon orphaned lease detection. 5. Windows Task governance: all Windows Tasks created by LCM_Backup (events, tool communication) must be registered and governed via Workspace_Supervision.",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-056_CRP-2026-031_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-056_CRP-2026-031_Walkthrough.md",
@@ -2498,7 +2552,8 @@
           "user": "Rolf",
           "note": "Amended requirement: Windows Tasks created by LCM_Backup (events, tool communication) must be governed via Workspace_Supervision."
         }
-      ]
+      ],
+      "priority": "H"
     },
     {
       "id": 57,
@@ -2511,7 +2566,6 @@
       "bundle_id": "unassigned",
       "author": "Technical Engineering & Governance Team",
       "tier": "T2",
-      "priority": "High",
       "details": "Eliminate nested junction chaining across repos; mandate direct links to physical ground truth (D:\\Git_Repositories\\.lcm\\.agents\\rules). Execution deferred until dedicated audit/migration script is authored.",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-057_CRP-2026-032_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-057_CRP-2026-032_Walkthrough.md",
@@ -2533,7 +2587,8 @@
           "user": "Rolf",
           "note": "CRM Gate Accepted. Queued pending dedicated audit/migration script authoring."
         }
-      ]
+      ],
+      "priority": "H"
     },
     {
       "id": 58,
@@ -2546,7 +2601,6 @@
       "bundle_id": "unassigned",
       "author": "Technical Engineering & Governance Team",
       "tier": "T1",
-      "priority": "High",
       "details": "Fix BCR comparison baseline to anchor strictly to local Git HEAD instead of origin/main or network fetches, and correct legacy path mangling across tool trampolines and scripts to canonical .lcm/tools/internal/.",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-058_CRP-2026-033_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-058_CRP-2026-033_Walkthrough.md",
@@ -2607,7 +2661,8 @@
           "note": "Pushed to remote (Git_Repositories, Workspace_AI, Workspace_Inventory)"
         }
       ],
-      "pushed_at": "2026-09-04 22:20:19"
+      "pushed_at": "2026-09-04 22:20:19",
+      "priority": "H"
     },
     {
       "id": 59,
@@ -2620,7 +2675,6 @@
       "bundle_id": "unassigned",
       "author": "Technical Engineering & Governance Team",
       "tier": "T2",
-      "priority": "High",
       "details": "Automated Ripgrep (BurntSushi.ripgrep.MSVC) provisioning into D:\\Tools\\rg, machine-wide system PATH registration, de-elevated user context dispatching, LCM tool catalog registration, and @22-LinkRGtool.ps1 sequence authoring.",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-059_CRP-2026-034_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-059_CRP-2026-034_Walkthrough.md",
@@ -2644,7 +2698,8 @@
           "user": "Rolf",
           "note": "CRM Gate Accepted and authorized execution via do directive."
         }
-      ]
+      ],
+      "priority": "H"
     },
     {
       "id": 60,
@@ -2657,7 +2712,6 @@
       "bundle_id": "unassigned",
       "author": "Technical Engineering & Governance Team",
       "tier": "T1",
-      "priority": "High",
       "details": "Refactor .lcm tracking using an inverted .gitignore whitelist, re-route logging directly into Workspace_Inventory, prepare .lcm/tools for submodule isolation, and document LCD/LCM subsystems in docs/Architecture/.",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-060_CRP-2026-036_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-060_CRP-2026-036_Walkthrough.md",
@@ -2709,7 +2763,8 @@
         "report_path": "Workspace_Inventory/data/proposals/plans/Proposal-060_CRP-2026-036_Walkthrough.md",
         "timestamp": "2026-09-04 10:57:15"
       },
-      "pushed_at": "2026-09-04 22:20:19"
+      "pushed_at": "2026-09-04 22:20:19",
+      "priority": "H"
     },
     {
       "id": 61,
@@ -2723,7 +2778,6 @@
       "bundle_id": "unassigned",
       "author": "Rolf, Workspace_AI Engine",
       "tier": "T1",
-      "priority": "High",
       "target_subsystems": [
         "Workspace_Inventory",
         ".lcm"
@@ -2767,7 +2821,8 @@
         "report_path": "Workspace_Inventory/data/reviews/BRC-CRP-2026-037.md",
         "timestamp": "2026-09-04 11:23:02"
       },
-      "pushed_at": "2026-09-04 22:20:19"
+      "pushed_at": "2026-09-04 22:20:19",
+      "priority": "H"
     },
     {
       "id": 62,
@@ -2781,7 +2836,8 @@
       "author": "Gemini Cloud",
       "details": "Source: Gemini Inbox (Analysis-01_CRP-001-Corpus-Structural-Extraction-And-Invariants.md) | Time: 2026-09-04 17:15:51 | Criticality: MEDIUM\n\n# Change Request Proposal: Analysis #01 – Corpus-Structural-Extraction-And-Invariants\r\n\r\n## Metadata\r\n- **Proposal ID:** CRP-001\r\n- **Target Analysis:** Analysis #01\r\n- **Status:** OPEN\r\n- **Staging Location:** D:\\GDrive\\LCM_ConvergenceProposals\\\r\n- **Author:** Automated LCM Generator\r\n\r\n## Purpose\r\nExecute structured indexing, semantic parsing, and invariant rule extraction across the 43-document corpus.\r\n\r\n## Proposed Changes\r\n- Index all 43 corpus artifacts and categorize by functional subsystem.\n- Extract core architectural rules and isolate conflicting or deprecated guidance.\n- Standardize extracted rules into a single canonical LCM schema.\n- Stage normalized rule sets as baseline inputs for downstream IDE LCM convergence.\n\r\n\r\n## Verification\r\n- Validate schema compliance under IDE workspace rules.\r\n- Confirm local synchronization via canonical D:\\GDrive mount.\r\n\r\n",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-062_CR-PROP-62_Plan.md",
-      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-062_CR-PROP-62_Walkthrough.md"
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-062_CR-PROP-62_Walkthrough.md",
+      "priority": "M"
     },
     {
       "id": 63,
@@ -2795,7 +2851,8 @@
       "author": "Gemini Cloud",
       "details": "Source: Gemini Inbox (Analysis-01_CRP-001-Persistence-Architecture-And-Staging-Boundary.md) | Time: 2026-09-04 17:15:51 | Criticality: MEDIUM\n\n# Change Request Proposal: Analysis #01 – Persistence-Architecture-And-Staging-Boundary\r\n\r\n## Metadata\r\n- **Proposal ID:** CRP-001\r\n- **Target Analysis:** Analysis #01\r\n- **Status:** OPEN\r\n- **Staging Location:** D:\\GDrive\\LCM_ConvergenceProposals\\\r\n- **Author:** Automated LCM Generator\r\n\r\n## Purpose\r\nFormalize the deterministic staging pipeline bridging conversational Gemini analysis with IDE-based change management via dedicated pre-review staging.\r\n\r\n## Proposed Changes\r\n- Establish D:\\GDrive\\LCM_ConvergenceProposals\\ as the dedicated pre-review staging directory.\n- Set default lifecycle status to OPEN for all newly drafted analytical proposals.\n- Define promotion path: Staging (OPEN) -> IDE/LCM Intake (D:\\GDrive\\LCM\\INBOX\\) -> Archive (D:\\GDrive\\LCM\\INBOX\\archive).\n- Enforce separation of local execution utilities (D:\\OneDrive\\cmd\\) from target data repositories.\n\r\n\r\n## Verification\r\n- Validate schema compliance under IDE workspace rules.\r\n- Confirm local synchronization via canonical D:\\GDrive mount.\r\n\r\n",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-063_CR-PROP-63_Plan.md",
-      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-063_CR-PROP-63_Walkthrough.md"
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-063_CR-PROP-63_Walkthrough.md",
+      "priority": "M"
     },
     {
       "id": 64,
@@ -2809,7 +2866,8 @@
       "author": "Gemini Cloud",
       "details": "Source: Gemini Inbox (Analysis-01_CRP-004-Consolidated-Alignment-And-Governance.md) | Time: 2026-09-04 17:15:51 | Criticality: MEDIUM\n\n# Change Request Proposal: Analysis #01-ff – Consolidated-Alignment-And-Governance\r\n\r\n## Metadata\r\n- **Proposal ID:** CRP-004\r\n- **Target Analysis:** Analysis #01-ff\r\n- **Status:** OPEN\r\n- **Staging Location:** D:\\GDrive\\LCM_ConvergenceProposals\\\r\n- **Author:** Automated LCM Generator\r\n\r\n## Purpose\r\nConsolidate Analysis #1 through #ff, enforcing invariant operational rules, strict path compliance under D:\\GDrive, and automated lifecycle management.\r\n\r\n## Proposed Changes\r\n- Enforce global timestamp and minimal output behavior.\n- Standardize all LCM pre-review staging strictly to D:\\GDrive\\LCM_ConvergenceProposals without unauthorized subpaths.\n- Provide a single reusable script adhering to PowerShell header governance.\n\r\n\r\n## Verification\r\n- Validate schema compliance under IDE workspace rules.\r\n- Confirm local synchronization via canonical D:\\GDrive mount.\r\n\r\n",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-064_CR-PROP-64_Plan.md",
-      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-064_CR-PROP-64_Walkthrough.md"
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-064_CR-PROP-64_Walkthrough.md",
+      "priority": "M"
     },
     {
       "id": 65,
@@ -2823,7 +2881,8 @@
       "author": "Gemini Cloud",
       "details": "Source: Gemini Inbox (Analysis-02_CRP-002-Command-Elimination-And-Runtime-Rule-Alignment.md) | Time: 2026-09-04 17:15:51 | Criticality: MEDIUM\n\n# Change Request Proposal: Analysis #02 – Command-Elimination-And-Runtime-Rule-Alignment\r\n\r\n## Metadata\r\n- **Proposal ID:** CRP-002\r\n- **Target Analysis:** Analysis #02\r\n- **Status:** OPEN\r\n- **Staging Location:** D:\\GDrive\\LCM_ConvergenceProposals\\\r\n- **Author:** Automated LCM Generator\r\n\r\n## Purpose\r\nPermanently eliminate manual conversational triggers (@IRA, @TRH) and enforce native ISO timestamp prefixing and deterministic output rules.\r\n\r\n## Proposed Changes\r\n- Deprecate manual prompt triggers @IRA and @TRH.\n- Enforce standard response header format: YYYYMMDD_HHMM Current Activity: <context> natively.\n- Align .agents/rules/Workspace-Rules.md to mandate zero conversational padding and strict technical density.\n- Ensure PowerShell 7 governance compliance (strict headers, versioning, explicit types) across all generation utilities.\n\r\n\r\n## Verification\r\n- Validate schema compliance under IDE workspace rules.\r\n- Confirm local synchronization via canonical D:\\GDrive mount.\r\n\r\n",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-065_CR-PROP-65_Plan.md",
-      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-065_CR-PROP-65_Walkthrough.md"
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-065_CR-PROP-65_Walkthrough.md",
+      "priority": "M"
     },
     {
       "id": 66,
@@ -2837,7 +2896,8 @@
       "author": "Gemini Cloud",
       "details": "Source: Gemini Inbox (Analysis-02_CRP-002-Corpus-Pattern-Synthesis-And-Rule-Convergence.md) | Time: 2026-09-04 17:15:51 | Criticality: MEDIUM\n\n# Change Request Proposal: Analysis #02 – Corpus-Pattern-Synthesis-And-Rule-Convergence\r\n\r\n## Metadata\r\n- **Proposal ID:** CRP-002\r\n- **Target Analysis:** Analysis #02\r\n- **Status:** OPEN\r\n- **Staging Location:** D:\\GDrive\\LCM_ConvergenceProposals\\\r\n- **Author:** Automated LCM Generator\r\n\r\n## Purpose\r\nSynthesize extracted corpus patterns into streamlined system directives and eliminate obsolete manual triggers.\r\n\r\n## Proposed Changes\r\n- Consolidate repetitive patterns identified across the 43 texts into singular directives.\n- Deprecate legacy operational flags (@IRA, @TRH) documented in historical files.\n- Draft workspace rule updates targeting .agents/rules/Workspace-Rules.md.\n- Enforce automated, non-conversational timestamp prefixing across all future agent interactions.\n\r\n\r\n## Verification\r\n- Validate schema compliance under IDE workspace rules.\r\n- Confirm local synchronization via canonical D:\\GDrive mount.\r\n\r\n",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-066_CR-PROP-66_Plan.md",
-      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-066_CR-PROP-66_Walkthrough.md"
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-066_CR-PROP-66_Walkthrough.md",
+      "priority": "M"
     },
     {
       "id": 67,
@@ -2845,11 +2905,9 @@
       "title": "[BUG] LCD Browser Display Table Port 9876 Channel Compliance & Print/PDF Bridge",
       "origin_repo": "LCM",
       "cr_id": "CR-PROP-67",
-      "state": "in_progress",
-      "progress_state": "in_progress",
+      "state": "processed",
       "bundle_id": "CRP-2026-021-LCM-v6.2.1-LCD-Browser-Table-Port-9876-Channel-Compliance",
       "author": "rgbig",
-      "priority": "HIGH",
       "details": "Remediate LCD browser display table Print/PDF button unresponsiveness and enforce architectural compliance routing all display table operations through Port 9876 REST Bridge Daemon.",
       "dates": {
         "created": "2026-09-04 20:50:00",
@@ -2871,7 +2929,9 @@
         }
       ],
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-067_CR-PROP-67_Plan.md",
-      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-067_CR-PROP-67_Walkthrough.md"
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-067_CR-PROP-67_Walkthrough.md",
+      "priority": "H",
+      "progress_state": "in_progress"
     },
     {
       "description": "CM Control Hub template script block escaping fix, global Escape modal dismissal, and alignment with Display Standard.",
@@ -2901,9 +2961,9 @@
       },
       "cr_id": "CRP-2026-037",
       "state": "pushed",
-      "priority": "HIGH",
       "progress_state": "pushed",
-      "pushed_at": "2026-09-05 22:33:38"
+      "pushed_at": "2026-09-05 22:33:38",
+      "priority": "H"
     },
     {
       "description": "Modal exit ergonomics via Escape key across Tool Explorer subdisplays.",
@@ -2933,9 +2993,9 @@
       },
       "cr_id": "CRP-2026-038",
       "state": "pushed",
-      "priority": "MEDIUM",
       "progress_state": "pushed",
-      "pushed_at": "2026-09-05 22:33:38"
+      "pushed_at": "2026-09-05 22:33:38",
+      "priority": "M"
     },
     {
       "description": "Direct code editing in active VS Code IDE instead of Notepad++.",
@@ -2965,9 +3025,9 @@
       },
       "cr_id": "BUG-2026-004",
       "state": "pushed",
-      "priority": "MEDIUM",
       "progress_state": "pushed",
-      "pushed_at": "2026-09-05 22:33:38"
+      "pushed_at": "2026-09-05 22:33:38",
+      "priority": "M"
     },
     {
       "description": "Tool renaming persistence via tool_catalog_overrides.json and immediate .cmd trampoline regeneration in .lcm/Cmd.",
@@ -2997,9 +3057,9 @@
       },
       "cr_id": "BUG-2026-005",
       "state": "pushed",
-      "priority": "HIGH",
       "progress_state": "pushed",
-      "pushed_at": "2026-09-05 22:33:38"
+      "pushed_at": "2026-09-05 22:33:38",
+      "priority": "H"
     },
     {
       "description": "Automatic elevation interlock for SystemPrivilege PsExec tools.",
@@ -3029,9 +3089,9 @@
       },
       "cr_id": "BUG-2026-006",
       "state": "pushed",
-      "priority": "HIGH",
       "progress_state": "pushed",
-      "pushed_at": "2026-09-05 22:33:38"
+      "pushed_at": "2026-09-05 22:33:38",
+      "priority": "H"
     },
     {
       "description": "Resolved path errors for Set-MouseFlickerInvariants, forwarded self-elevation arguments, and surfaced script dependencies.",
@@ -3061,9 +3121,9 @@
       },
       "cr_id": "BUG-2026-007",
       "state": "pushed",
-      "priority": "HIGH",
       "progress_state": "pushed",
-      "pushed_at": "2026-09-05 22:33:38"
+      "pushed_at": "2026-09-05 22:33:38",
+      "priority": "H"
     },
     {
       "description": "Correct log file detection and cleanup across all LCM log roots.",
@@ -3093,9 +3153,9 @@
       },
       "cr_id": "BUG-2026-008",
       "state": "pushed",
-      "priority": "MEDIUM",
       "progress_state": "pushed",
-      "pushed_at": "2026-09-05 22:33:38"
+      "pushed_at": "2026-09-05 22:33:38",
+      "priority": "M"
     },
     {
       "description": "Convergence of ShowToolIndex into ShowTools and enforcing browser table displays for GUI role tools unless -NoBrowser is specified.",
@@ -3125,9 +3185,9 @@
       },
       "cr_id": "BUG-2026-009",
       "state": "pushed",
-      "priority": "HIGH",
       "progress_state": "pushed",
-      "pushed_at": "2026-09-05 22:33:38"
+      "pushed_at": "2026-09-05 22:33:38",
+      "priority": "H"
     },
     {
       "id": 76,
@@ -3138,7 +3198,6 @@
       "bundle_id": "BUNDLE-2026-04",
       "state": "pushed",
       "progress_state": "pushed",
-      "priority": "HIGH",
       "author": "Rolf, Workspace_AI",
       "details": "Codify strict intake gate for BUG: and CRP: designators, mandate OPEN initial state, define PROCEED / PROCEED ALL triggers, establish autonomous system exception boundary with 2-attempt loop breaker, and protect against token/credit exhaustion.",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-076_CRP-2026-022_Plan.md",
@@ -3176,7 +3235,8 @@
           "note": "Pushed to remote (Git_Repositories, Workspace_AI, Workspace_Inventory)"
         }
       ],
-      "pushed_at": "2026-09-05 22:33:38"
+      "pushed_at": "2026-09-05 22:33:38",
+      "priority": "H"
     },
     {
       "id": 77,
@@ -3188,7 +3248,6 @@
       "bundle_id": "BUNDLE-2026-05",
       "state": "completed",
       "progress_state": "completed",
-      "priority": "HIGH",
       "author": "Rolf, Workspace_AI",
       "details": "Resolve unescaped JS template literal causing V8 compilation failure and fix table print atom path to restore all button click handlers and interactivity.",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-077_CR-2026-048_Plan.md",
@@ -3218,7 +3277,76 @@
           "user": "Workspace_AI",
           "note": "Fixed JS template literal syntax error, corrected table print atom path, regenerated SHOW_HA_INVENTORY.html, verified 0 JS errors and passed all quality gates."
         }
-      ]
+      ],
+      "priority": "H"
+    },
+    {
+      "id": 78,
+      "timestamp": "2026-09-06 11:28:00",
+      "title": "CM Control Hub Display Standard Conformance and Console Command Engine",
+      "origin_repo": "Workspace_Inventory",
+      "cr_id": "CR-2026-049",
+      "bug_id": "BUG-2026-009",
+      "bundle_id": "BUNDLE-2026-05",
+      "state": "suggested",
+      "author": "Rolf, Workspace_AI",
+      "details": "Implement LCM Display Standard (theme switch, frozen sticky table headers excluded from scrolling, LcmTablePrintAtom) and console execution engine (do, accept, review, defer, delete, status) in CM Control Hub.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-078_CR-2026-049_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-078_CR-2026-049_Walkthrough.md",
+      "dates": {
+        "created": "2026-09-06 11:28:00",
+        "suggested": "2026-09-06 11:28:00",
+        "in_progress": "2026-09-06 11:28:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-06 11:28:00",
+          "user": "Rolf",
+          "note": "Registered BUG-2026-009 for CM Control Hub display non-conformance and console inertia."
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-09-06 11:28:00",
+          "user": "Rolf",
+          "note": "Operator issued PROCEED directive; executing remediation for display standard, console engine, and viewport layout."
+        }
+      ],
+      "priority": "H",
+      "progress_state": "completed"
+    },
+    {
+      "id": 79,
+      "timestamp": "2026-09-06 15:50:15",
+      "title": "CM Control Hub Architectural Overhaul, Unified CRP Identifier, Silent Daemon & Status Engine",
+      "origin_repo": "Workspace_Inventory",
+      "cr_id": "CRP-079",
+      "bundle_id": "CRP-079-Workspace_Inventory-v7.1.0-CM-Control-Hub-Unified-Identifier-Engine",
+      "state": "processed",
+      "author": "Rolf, Workspace_AI",
+      "details": "Unified sequence CRP-079 identifier, single merged CRP ID column, STATUS column and committed state, high-contrast live feedback ticker, silent daemon execution, unboxed header status layout, and bidirectional status reopening sync.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/CRP-079_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/CRP-079_Walkthrough.md",
+      "dates": {
+        "created": "2026-09-06 15:50:15",
+        "in_progress": "2026-09-06 15:50:15"
+      },
+      "state_history": [
+        {
+          "state": "in_progress",
+          "timestamp": "2026-09-06 15:50:15",
+          "user": "Rolf",
+          "note": "Registered separate in-progress CRP-2026-023 for compact Prio column and engine."
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-09-06 22:18:00",
+          "user": "Rolf",
+          "note": "Operator issued PROCEED for unified CRP-079 architectural overhaul and UX package."
+        }
+      ],
+      "priority": "H",
+      "progress_state": "committed"
     }
   ]
 }

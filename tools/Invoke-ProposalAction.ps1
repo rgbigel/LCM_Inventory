@@ -11,7 +11,7 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $false, Position = 0)]
-    [ValidateSet('do', 'delete', 'defer', 'complete', 'suggest', 'granularity', 'mode', 'list')]
+    [ValidateSet('do', 'delete', 'defer', 'complete', 'suggest', 'granularity', 'mode', 'list', 'progress', 'verify', 'priority', 'commit', 'committed', 'proceed')]
     [string]$Action = 'list',
 
     [Parameter(Mandatory = $false, Position = 1)]
@@ -19,6 +19,14 @@ param(
 
     [Parameter(Mandatory = $false)]
     [string]$Details = '',
+
+    [Parameter(Mandatory = $false)]
+    [ValidateSet('undecided', 'queued', 'in_progress', 'verification', 'committed', 'completed', 'pushed', 'blocked', 'failed')]
+    [string]$ProgressState,
+
+    [Parameter(Mandatory = $false)]
+    [ValidateSet('C', 'H', 'M', 'L', 'D')]
+    [string]$Priority,
 
     [Parameter(Mandatory = $false)]
     [ValidateSet('coarse', 'tight')]
@@ -60,6 +68,97 @@ switch ($Action) {
     }
     'list' {
         Format-ProposalsTable
+    }
+    'progress' {
+        if ([string]::IsNullOrWhiteSpace($TargetExpression)) {
+            throw "TargetExpression (e.g. '78', 'all') is required for action 'progress'."
+        }
+        if ([string]::IsNullOrWhiteSpace($ProgressState)) {
+            throw "-ProgressState (e.g. 'verification', 'completed', 'in_progress') is required."
+        }
+        $targetIds = @(Resolve-ProposalIdExpression -Expression $TargetExpression)
+        $updated = @()
+        foreach ($id in $targetIds) {
+            $p = Set-WorkspaceProposalProgress -Id $id -ProgressState $ProgressState -Details $Details
+            if ($p) { $updated += $p }
+        }
+        Write-Host "`nUpdated Proposal(s) Progress:" -ForegroundColor Cyan
+        Format-ProposalsTable -Proposals $updated
+    }
+    'verify' {
+        if ([string]::IsNullOrWhiteSpace($TargetExpression)) {
+            throw "TargetExpression is required for action 'verify'."
+        }
+        $targetIds = @(Resolve-ProposalIdExpression -Expression $TargetExpression)
+        $updated = @()
+        foreach ($id in $targetIds) {
+            $p = Set-WorkspaceProposalProgress -Id $id -ProgressState 'verification' -Details $Details
+            if ($p) { $updated += $p }
+        }
+        Write-Host "`nUpdated Proposal(s) to Verification:" -ForegroundColor Cyan
+        Format-ProposalsTable -Proposals $updated
+    }
+    { $_ -in @('commit', 'committed') } {
+        if ([string]::IsNullOrWhiteSpace($TargetExpression)) {
+            throw "TargetExpression is required for action 'commit'."
+        }
+        $targetIds = @(Resolve-ProposalIdExpression -Expression $TargetExpression)
+        $updated = @()
+        foreach ($id in $targetIds) {
+            $p = Set-WorkspaceProposalProgress -Id $id -ProgressState 'committed' -Details $Details
+            if ($p) { $updated += $p }
+        }
+        Write-Host "`nUpdated Proposal(s) to Committed:" -ForegroundColor Cyan
+        Format-ProposalsTable -Proposals $updated
+    }
+    'proceed' {
+        if ([string]::IsNullOrWhiteSpace($TargetExpression)) {
+            throw "TargetExpression is required for action 'proceed'."
+        }
+        $targetIds = @(Resolve-ProposalIdExpression -Expression $TargetExpression)
+        $updated = @()
+        $store = Get-ProposalStore
+        foreach ($id in $targetIds) {
+            $existing = $store.proposals | Where-Object { $_.id -eq $id } | Select-Object -First 1
+            $targetProg = if ($ProgressState) {
+                $ProgressState
+            } else {
+                $cur = if ($existing -and $existing.progress_state) { $existing.progress_state } else { 'undecided' }
+                switch ($cur) {
+                    'undecided'    { 'in_progress' }
+                    'queued'       { 'in_progress' }
+                    'in_progress'  { 'verification' }
+                    'verification' { 'committed' }
+                    'committed'    { 'completed' }
+                    default        { 'verification' }
+                }
+            }
+            if ($targetProg -eq 'completed') {
+                Set-WorkspaceProposalState -Id $id -State 'completed' -Details $Details | Out-Null
+            } elseif ($existing.state -eq 'suggested') {
+                Set-WorkspaceProposalState -Id $id -State 'processed' -Details $Details | Out-Null
+            }
+            $p = Set-WorkspaceProposalProgress -Id $id -ProgressState $targetProg -Details $Details
+            if ($p) { $updated += $p }
+        }
+        Write-Host "`nProceeded Proposal(s):" -ForegroundColor Cyan
+        Format-ProposalsTable -Proposals $updated
+    }
+    'priority' {
+        if ([string]::IsNullOrWhiteSpace($TargetExpression)) {
+            throw "TargetExpression (e.g. '79', 'all') is required for action 'priority'."
+        }
+        if ([string]::IsNullOrWhiteSpace($Priority)) {
+            throw "-Priority (one of 'C', 'H', 'M', 'L', 'D') is required."
+        }
+        $targetIds = @(Resolve-ProposalIdExpression -Expression $TargetExpression)
+        $updated = @()
+        foreach ($id in $targetIds) {
+            $p = Set-WorkspaceProposalPriority -Id $id -Priority $Priority -Details $Details
+            if ($p) { $updated += $p }
+        }
+        Write-Host "`nUpdated Proposal(s) Priority:" -ForegroundColor Cyan
+        Format-ProposalsTable -Proposals $updated
     }
     default {
         if ([string]::IsNullOrWhiteSpace($TargetExpression)) {
