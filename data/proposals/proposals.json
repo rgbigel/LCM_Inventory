@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-09-06T23:29:26+02:00",
+  "updated_at": "2026-09-07 12:58:10",
   "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 106,
+  "last_proposal_id": 108,
   "proposals": [
     {
       "id": 1,
@@ -5039,7 +5039,7 @@
       "origin_repo": "LCM / Tooling",
       "cr_id": "CRP-106",
       "bundle_id": "CRP-106-LCM _ Tooling",
-      "state": "processed",
+      "state": "completed",
       "author": "Rolf, Workspace_AI",
       "priority": "M",
       "details": "Consolidate tool dispatch mechanisms, eliminate path fragmentation, and standardize headless logging. (Re-instated as active OPEN proposal from specification CRP-2026-049). (Re-instated as CRP-106 with verified state 'suggested' from specification CRP-2026-049).",
@@ -5048,7 +5048,8 @@
       "dates": {
         "created": "2026-09-04 12:00:00",
         "suggested": "2026-09-04 12:00:00",
-        "reinstated": "2026-09-06 23:17:33"
+        "reinstated": "2026-09-06 23:17:33",
+        "completed": "2026-09-07 12:58:10"
       },
       "state_history": [
         {
@@ -5062,6 +5063,12 @@
           "timestamp": "2026-09-06 23:17:33",
           "user": "Operator / AI Re-instatement",
           "note": "Re-instated as CRP-106 with verified initial state 'suggested' from specification CRP-2026-049."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-07 12:58:10",
+          "user": "Operator PROCEED 106-107",
+          "note": "Accepted and completed via operator PROCEED 106-107 directive."
         }
       ],
       "historical_source": {
@@ -5070,7 +5077,83 @@
         "final_state": "suggested",
         "final_progress": "undecided"
       },
-      "progress_state": "verification"
+      "progress_state": "completed"
+    },
+    {
+      "id": 107,
+      "crp_id": "CRP-107",
+      "timestamp": "2026-09-07 11:38:00",
+      "title": "Automated Privilege-Aware Tool Execution & Elevation Interception",
+      "origin_repo": "LCM / Governance",
+      "cr_id": "CRP-107",
+      "bundle_id": "CRP-107-LCM",
+      "state": "completed",
+      "progress_state": "completed",
+      "author": "Rolf, Workspace_AI",
+      "priority": "H",
+      "details": "Enforce automatic privilege awareness before tool execution: resolve catalog metadata (Admin: true), verify runtime shell elevation, and route un-elevated admin calls through Session 1 desktop daemon or gsudo bridge.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-2026-024-LCM-v7.3.0-Automated-Privilege-Aware-Tool-Execution-And-Elevation-Interception.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-07 11:38:00",
+        "suggested": "2026-09-07 11:38:00",
+        "in_progress": "2026-09-07 11:43:27",
+        "completed": "2026-09-07 12:58:10"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-07 11:38:00",
+          "user": "Operator / AI Intake Gate",
+          "note": "Registered via strict CRP intake gate per RULE-LCM-015 in OPEN state."
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-09-07 11:43:27",
+          "user": "Operator / PROCEED Trigger",
+          "note": "Activated via explicit PROCEED CRP-2026-024 trigger."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-07 11:43:27",
+          "user": "AI Agent Execution",
+          "note": "Codified RULE-ELEV-006 in ElevationPolicy.md, updated AGENTS.md, LCM-Rules-Cross-Reference.md, and updated tool_catalog.json (SetGitRoot Admin=true)."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-07 12:58:10",
+          "user": "Operator PROCEED 106-107",
+          "note": "Accepted and completed via operator PROCEED 106-107 directive."
+        }
+      ]
+    },
+    {
+      "id": 108,
+      "crp_id": "CRP-108",
+      "timestamp": "2026-09-07 12:35:00",
+      "title": "Universal Table Standard Display Enhancements: Dropdown Filtering, Multi-Page Printing & Action Results",
+      "origin_repo": "LCM / Assets",
+      "cr_id": "CRP-108",
+      "bundle_id": "CRP-108-LCM",
+      "state": "suggested",
+      "progress_state": "open",
+      "author": "Rolf, Workspace_AI",
+      "priority": "H",
+      "details": "Codifies universal table display standards: column-header dropdown filters replacing button pills, standard Dark/Light and reset controls, persistent 2-line action result banner, multi-page print/PDF pagination, and Notepad++ dispatch with CRP governance notice.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-2026-025-LCM-v7.3.0-Universal-Table-Standard-Display-Enhancements.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-07 12:35:00",
+        "suggested": "2026-09-07 12:35:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-07 12:35:00",
+          "user": "Operator Directive / CRP Intake",
+          "note": "Authored per CRP-107 operator feedback for universal table display standards in OPEN state."
+        }
+      ]
     }
   ]
 }
