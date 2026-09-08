@@ -5709,6 +5709,41 @@
           "note": "Registered per operator directive in OPEN state for execution at a later time (Phase C)."
         }
       ]
+    },
+    {
+      "id": 123,
+      "crp_id": "BUG-123",
+      "timestamp": "2026-09-08 16:22:00",
+      "title": "Beyond Compare Review Junction Left Pane Baseline Resolution Defect",
+      "origin_repo": "Workspace_Inventory / BCR",
+      "cr_id": "BUG-123",
+      "bundle_id": "BUG-123",
+      "state": "approved",
+      "progress_state": "in_progress",
+      "author": "rgbig",
+      "priority": "H",
+      "details": "When Invoke-BeyondCompareReview.ps1 opens a second review session for .agents junctions, the left baseline pane loads an empty or unlinked directory instead of the committed baseline from Git_Repositories (.lcm/.agents).",
+      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-123-Workspace_Inventory-v1.1.1-BCR-Junction-Left-Baseline-Resolution.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-08 16:22:00",
+        "suggested": "2026-09-08 16:22:00",
+        "in_progress": "2026-09-08 16:22:00"
+      },
+      "state_history": [
+        {
+          "state": "bug",
+          "timestamp": "2026-09-08 16:22:00",
+          "user": "Operator Directive / BUG Intake",
+          "note": "Registered per operator bug report."
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-09-08 16:22:00",
+          "user": "Operator Directive / Proceed to Accept",
+          "note": "Proceeding directly to remediation."
+        }
+      ]
     }
   ]
 }
