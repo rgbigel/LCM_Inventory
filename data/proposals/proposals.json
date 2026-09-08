@@ -3328,8 +3328,8 @@
       "origin_repo": "HaSSD06_Inventory",
       "bug_id": "BUG-2026-008",
       "bundle_id": "BUNDLE-2026-05",
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "author": "Rolf, Workspace_AI",
       "details": "Resolve unescaped JS template literal causing V8 compilation failure and fix table print atom path to restore all button click handlers and interactivity.",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-077_CR-2026-048_Plan.md",
@@ -3338,7 +3338,8 @@
         "created": "2026-09-06 11:06:00",
         "suggested": "2026-09-06 11:06:00",
         "in_progress": "2026-09-06 11:06:00",
-        "completed": "2026-09-06 11:07:20"
+        "completed": "2026-09-06 11:07:20",
+        "pushed": "2026-09-08 19:42:05"
       },
       "state_history": [
         {
@@ -3358,11 +3359,18 @@
           "timestamp": "2026-09-06 11:07:20",
           "user": "Workspace_AI",
           "note": "Fixed JS template literal syntax error, corrected table print atom path, regenerated SHOW_HA_INVENTORY.html, verified 0 JS errors and passed all quality gates."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-08 19:42:05",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, BGMSAMVInv, HaSSD06, HaSSD06_Inventory, Workspace_AI, Workspace_Inventory, Workspace_Supervision)"
         }
       ],
       "priority": "H",
       "crp_id": "CRP-077",
-      "cr_id": "CRP-077"
+      "cr_id": "CRP-077",
+      "pushed_at": "2026-09-08 19:42:05"
     },
     {
       "id": 78,
@@ -3371,7 +3379,7 @@
       "origin_repo": "Workspace_Inventory",
       "bug_id": "BUG-2026-009",
       "bundle_id": "BUNDLE-2026-05",
-      "state": "suggested",
+      "state": "pushed",
       "author": "Rolf, Workspace_AI",
       "details": "Implement LCM Display Standard (theme switch, frozen sticky table headers excluded from scrolling, LcmTablePrintAtom) and console execution engine (do, accept, review, defer, delete, status) in CM Control Hub.",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-078_CR-2026-049_Plan.md",
@@ -3379,7 +3387,8 @@
       "dates": {
         "created": "2026-09-06 11:28:00",
         "suggested": "2026-09-06 11:28:00",
-        "in_progress": "2026-09-06 11:28:00"
+        "in_progress": "2026-09-06 11:28:00",
+        "pushed": "2026-09-08 19:42:05"
       },
       "state_history": [
         {
@@ -3393,12 +3402,19 @@
           "timestamp": "2026-09-06 11:28:00",
           "user": "Rolf",
           "note": "Operator issued PROCEED directive; executing remediation for display standard, console engine, and viewport layout."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-08 19:42:05",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, BGMSAMVInv, HaSSD06, HaSSD06_Inventory, Workspace_AI, Workspace_Inventory, Workspace_Supervision)"
         }
       ],
       "priority": "H",
-      "progress_state": "completed",
+      "progress_state": "pushed",
       "crp_id": "CRP-078",
-      "cr_id": "CRP-078"
+      "cr_id": "CRP-078",
+      "pushed_at": "2026-09-08 19:42:05"
     },
     {
       "id": 79,
@@ -5132,7 +5148,7 @@
       "origin_repo": "LCM / Tooling",
       "cr_id": "CRP-106",
       "bundle_id": "CRP-106",
-      "state": "completed",
+      "state": "pushed",
       "author": "Rolf, Workspace_AI",
       "priority": "M",
       "details": "Consolidate tool dispatch mechanisms, eliminate path fragmentation, and standardize headless logging. (Re-instated as active OPEN proposal from specification CRP-2026-049). (Re-instated as CRP-106 with verified state 'suggested' from specification CRP-2026-049).",
@@ -5142,7 +5158,8 @@
         "created": "2026-09-04 12:00:00",
         "suggested": "2026-09-04 12:00:00",
         "reinstated": "2026-09-06 23:17:33",
-        "completed": "2026-09-07 12:58:10"
+        "completed": "2026-09-07 12:58:10",
+        "pushed": "2026-09-08 19:42:05"
       },
       "state_history": [
         {
@@ -5162,6 +5179,12 @@
           "timestamp": "2026-09-07 12:58:10",
           "user": "Operator PROCEED 106-107",
           "note": "Accepted and completed via operator PROCEED 106-107 directive."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-08 19:42:05",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, BGMSAMVInv, HaSSD06, HaSSD06_Inventory, Workspace_AI, Workspace_Inventory, Workspace_Supervision)"
         }
       ],
       "historical_source": {
@@ -5170,7 +5193,8 @@
         "final_state": "suggested",
         "final_progress": "undecided"
       },
-      "progress_state": "completed"
+      "progress_state": "pushed",
+      "pushed_at": "2026-09-08 19:42:05"
     },
     {
       "id": 107,
@@ -5180,8 +5204,8 @@
       "origin_repo": "LCM / Governance",
       "cr_id": "CRP-107",
       "bundle_id": "CRP-107",
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "author": "Rolf, Workspace_AI",
       "priority": "H",
       "details": "Enforce automatic privilege awareness before tool execution: resolve catalog metadata (Admin: true), verify runtime shell elevation, and route un-elevated admin calls through Session 1 desktop daemon or gsudo bridge.",
@@ -5191,7 +5215,8 @@
         "created": "2026-09-07 11:38:00",
         "suggested": "2026-09-07 11:38:00",
         "in_progress": "2026-09-07 11:43:27",
-        "completed": "2026-09-07 12:58:10"
+        "completed": "2026-09-07 12:58:10",
+        "pushed": "2026-09-08 19:42:05"
       },
       "state_history": [
         {
@@ -5217,8 +5242,15 @@
           "timestamp": "2026-09-07 12:58:10",
           "user": "Operator PROCEED 106-107",
           "note": "Accepted and completed via operator PROCEED 106-107 directive."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-08 19:42:05",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, BGMSAMVInv, HaSSD06, HaSSD06_Inventory, Workspace_AI, Workspace_Inventory, Workspace_Supervision)"
         }
-      ]
+      ],
+      "pushed_at": "2026-09-08 19:42:05"
     },
     {
       "id": 108,
@@ -5284,8 +5316,8 @@
       "origin_repo": "LCM / Telemetry",
       "cr_id": "CRP-110",
       "bundle_id": "CRP-110",
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "author": "Rolf, Workspace_AI",
       "priority": "H",
       "details": "Establishes a hybrid progress indicator system for single and batch actions (PROCEED, ACCEPT, do #n-#m) across Chat markdown cards, native PowerShell Write-Progress in CLI, and dynamic pulsating row-level badges with docked console streams in web dashboards.",
@@ -5294,7 +5326,8 @@
       "dates": {
         "created": "2026-09-07 15:55:00",
         "suggested": "2026-09-07 15:55:00",
-        "completed": "2026-09-07 16:02:00"
+        "completed": "2026-09-07 16:02:00",
+        "pushed": "2026-09-08 19:42:05"
       },
       "state_history": [
         {
@@ -5308,8 +5341,15 @@
           "timestamp": "2026-09-07 16:02:00",
           "user": "Operator ACCEPT 110",
           "note": "Accepted via operator ACCEPT 110 directive. Implemented LcmProgressAtom.psm1, Set-LcmActionProgress.ps1, /progress REST routes in LcmDesktopDaemon.ps1, and dynamic row-processing animations and watcher in CM_CONTROL_HUB.html."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-08 19:42:05",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, BGMSAMVInv, HaSSD06, HaSSD06_Inventory, Workspace_AI, Workspace_Inventory, Workspace_Supervision)"
         }
-      ]
+      ],
+      "pushed_at": "2026-09-08 19:42:05"
     },
     {
       "id": 111,
@@ -5438,8 +5478,8 @@
       "origin_repo": "LCM / Desktop UI",
       "cr_id": "CRP-115",
       "bundle_id": "CRP-115",
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "author": "Rolf, Workspace_AI",
       "priority": "M",
       "details": "Enforces universal F5 key event handler across all Show-* web displays to trigger live dashboard data reload, and purges legacy on-screen Refresh buttons from header and toolbar controls.",
@@ -5449,7 +5489,8 @@
         "created": "2026-09-07 16:52:00",
         "suggested": "2026-09-07 16:52:00",
         "in_progress": "2026-09-07 16:55:00",
-        "completed": "2026-09-07 17:00:00"
+        "completed": "2026-09-07 17:00:00",
+        "pushed": "2026-09-08 19:42:05"
       },
       "state_history": [
         {
@@ -5469,8 +5510,15 @@
           "timestamp": "2026-09-07 17:00:00",
           "user": "Workspace_AI Governance",
           "note": "Completed and verified universal F5 keydown listeners and purged refresh buttons across all 7 Show-* dashboards."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-08 19:42:05",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, BGMSAMVInv, HaSSD06, HaSSD06_Inventory, Workspace_AI, Workspace_Inventory, Workspace_Supervision)"
         }
-      ]
+      ],
+      "pushed_at": "2026-09-08 19:42:05"
     },
     {
       "id": 116,
@@ -5480,8 +5528,8 @@
       "origin_repo": "LCM / Desktop UI",
       "cr_id": "CRP-116",
       "bundle_id": "CRP-116",
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "author": "Rolf, Workspace_AI",
       "priority": "H",
       "details": "Adds selective short-name deletion to Tool Explorer with Last-Alias Protection invariant. In 'Mode: Source Files (Dev)', displays all associated short names inline beneath long filenames with individual '✕' delete buttons (or '🔒' when sole remaining). Also integrates 'Delete short name only' option in the Rename modal.",
@@ -5491,7 +5539,8 @@
         "created": "2026-09-07 19:10:00",
         "suggested": "2026-09-07 19:10:00",
         "in_progress": "2026-09-07 19:11:00",
-        "completed": "2026-09-07 19:15:00"
+        "completed": "2026-09-07 19:15:00",
+        "pushed": "2026-09-08 19:42:05"
       },
       "state_history": [
         {
@@ -5511,8 +5560,15 @@
           "timestamp": "2026-09-07 19:15:00",
           "user": "Operator ACCEPT Immediately",
           "note": "Accepted immediately per operator directive. Verified Last-Alias Protection invariant rejection and live daemon deletion."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-08 19:42:05",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, BGMSAMVInv, HaSSD06, HaSSD06_Inventory, Workspace_AI, Workspace_Inventory, Workspace_Supervision)"
         }
-      ]
+      ],
+      "pushed_at": "2026-09-08 19:42:05"
     },
     {
       "id": 117,
@@ -5578,8 +5634,8 @@
       "origin_repo": "LCM / Governance",
       "cr_id": "CRP-119",
       "bundle_id": "CRP-119",
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "author": "Rolf, Workspace_AI",
       "priority": "H",
       "details": "Establishes a single canonical identifier in the form CRP-nnn (or BUG-nnn for defects), where nnn is strictly the proposal's unique monotonic integer ID. Retires the annual CRP-2026-yyy dual-numbering system and aligns filenames, ledger IDs, and tooling under a unified 1:1 scheme.",
@@ -5589,7 +5645,8 @@
         "created": "2026-09-08 11:20:00",
         "suggested": "2026-09-08 11:20:00",
         "in_progress": "2026-09-08 11:22:00",
-        "completed": "2026-09-08 11:31:08"
+        "completed": "2026-09-08 11:31:08",
+        "pushed": "2026-09-08 19:42:05"
       },
       "state_history": [
         {
@@ -5609,8 +5666,15 @@
           "timestamp": "2026-09-08 11:31:08",
           "user": "Agent / CRP-119 Execution",
           "note": "Universal Monotonic CRP/BUG-nnn Identifier Naming Scheme migration executed successfully. All proposal records normalized, document specifications renamed with Git history preserved, and CM Control Hub / ProposalManager tooling aligned."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-08 19:42:05",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, BGMSAMVInv, HaSSD06, HaSSD06_Inventory, Workspace_AI, Workspace_Inventory, Workspace_Supervision)"
         }
-      ]
+      ],
+      "pushed_at": "2026-09-08 19:42:05"
     },
     {
       "id": 120,
@@ -5620,8 +5684,8 @@
       "origin_repo": "LCM / Show-Rules",
       "cr_id": "BUG-120",
       "bundle_id": "BUG-120",
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "author": "rgbig",
       "priority": "H",
       "details": "Read action in Show-Rules lacks standard display controls (e.g. Light Mode toggle, Print button). Ctrl+P inside the reader causes the browser to freeze/hang upon printout completion.",
@@ -5631,7 +5695,8 @@
         "created": "2026-09-08 13:11:07",
         "suggested": "2026-09-08 13:11:07",
         "in_progress": "2026-09-08 13:13:21",
-        "completed": "2026-09-08 13:46:20"
+        "completed": "2026-09-08 13:46:20",
+        "pushed": "2026-09-08 19:42:05"
       },
       "state_history": [
         {
@@ -5651,8 +5716,15 @@
           "timestamp": "2026-09-08 13:46:20",
           "user": "Agent / BUG-120 Execution",
           "note": "Remediated Show-Rules reader display options (Light/Dark mode toggle, Print Document button) and overhauled print lifecycle/media queries to prevent browser lockup."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-08 19:42:05",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, BGMSAMVInv, HaSSD06, HaSSD06_Inventory, Workspace_AI, Workspace_Inventory, Workspace_Supervision)"
         }
-      ]
+      ],
+      "pushed_at": "2026-09-08 19:42:05"
     },
     {
       "id": 121,
