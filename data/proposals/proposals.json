@@ -4,7 +4,7 @@
   "updated_at": "2026-09-08T15:25:00+02:00",
   "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 121,
+  "last_proposal_id": 124,
   "proposals": [
     {
       "id": 1,
@@ -5742,6 +5742,41 @@
           "timestamp": "2026-09-08 16:22:00",
           "user": "Operator Directive / Proceed to Accept",
           "note": "Proceeding directly to remediation."
+        }
+      ]
+    },
+    {
+      "id": 124,
+      "crp_id": "BUG-124",
+      "timestamp": "2026-09-08 19:25:00",
+      "title": "BCR Junction Exclusion Filter Defect and Directory Root Boundary Isolation",
+      "origin_repo": "Workspace_Inventory / BCR",
+      "cr_id": "BUG-124",
+      "bundle_id": "BUG-124",
+      "state": "deferred",
+      "progress_state": "deferred",
+      "author": "rgbig",
+      "priority": "L",
+      "details": "Invoke-BeyondCompareReview.ps1 primary review session only excluded -.agents\\rules\\ instead of -.agents\\, causing .agents junction directories to redundantly appear in the primary comparison window alongside the secondary comparison session.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-124-Workspace_Inventory-v1.1.2-BCR-Junction-Exclusion-Filter-Defect.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-08 19:25:00",
+        "suggested": "2026-09-08 19:25:00",
+        "deferred": "2026-09-08 19:29:00"
+      },
+      "state_history": [
+        {
+          "state": "bug",
+          "timestamp": "2026-09-08 19:25:00",
+          "user": "Operator Directive / BUG Intake",
+          "note": "Registered per operator bug report."
+        },
+        {
+          "state": "deferred",
+          "timestamp": "2026-09-08 19:29:00",
+          "user": "Operator Directive / DEFER",
+          "note": "Deferred per operator command 'DEFER 124'."
         }
       ]
     }
