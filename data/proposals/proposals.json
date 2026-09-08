@@ -5888,8 +5888,8 @@
       "origin_repo": "LCM / Governance & Tool Architecture",
       "cr_id": "CRP-125",
       "bundle_id": "CRP-125",
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "author": "Rolf, Workspace_AI",
       "priority": "M",
       "details": "Expands Update-ToolCatalog.ps1 heuristic scanner depth to 250 lines with deep keyword detection, aligns tool_catalog.json for Set-GitRoot, Repair-VolumeAcl, and companion administrative utilities, recompiles .cmd trampolines with UAC elevation preambles, and formally retires CRP-107.",
@@ -5899,7 +5899,8 @@
         "created": "2026-09-08 20:26:00",
         "suggested": "2026-09-08 20:26:00",
         "in_progress": "2026-09-08 20:26:00",
-        "completed": "2026-09-08 20:30:53"
+        "completed": "2026-09-08 20:30:53",
+        "pushed": "2026-09-08 20:33:07"
       },
       "state_history": [
         {
@@ -5919,8 +5920,15 @@
           "timestamp": "2026-09-08 20:30:53",
           "user": "Operator ACCEPTED ALL / Review Gate",
           "note": "Review accepted and committed (d18119a) in Git_Repositories. Deep admin discovery and catalog alignment complete."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-08 20:33:07",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, Workspace_AI, Workspace_Inventory)"
         }
-      ]
+      ],
+      "pushed_at": "2026-09-08 20:33:07"
     }
   ]
 }

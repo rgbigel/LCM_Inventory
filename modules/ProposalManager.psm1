@@ -626,7 +626,7 @@ function Format-ReposUnderReviewTable {
     Write-Host " Repositories Under Review Queue" -ForegroundColor Cyan
     Write-Host "==========================================================================================" -ForegroundColor Cyan
 
-    if (@($Repos).Count -eq 0) {
+    if ($null -eq $Repos -or @($Repos).Length -eq 0 -or (@($Repos).Length -eq 1 -and $null -eq @($Repos)[0])) {
         Write-Host " No repositories currently pending review or commit." -ForegroundColor Gray
         Write-Host "==========================================================================================" -ForegroundColor Cyan
         return

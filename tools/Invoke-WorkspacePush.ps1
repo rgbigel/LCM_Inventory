@@ -126,12 +126,17 @@ foreach ($repoName in $allRepos) {
 
     Write-Host "  [$repoName] PUSHING $aheadCount commit(s) on branch '$branch' to remote 'origin'..." -ForegroundColor Cyan
 
-    try {
-        $pushOutput = git -C $repoPath push origin $branch 2>&1
+    $prevEAP = $ErrorActionPreference
+    $ErrorActionPreference = 'Continue'
+    $pushOutput = git -C $repoPath push origin $branch 2>&1
+    $pushExit = $LASTEXITCODE
+    $ErrorActionPreference = $prevEAP
+
+    if ($pushExit -eq 0) {
         Write-Host "    -> $pushOutput" -ForegroundColor Green
         $pushedRepos += $repoName
-    } catch {
-        Write-Host "    -> ERROR: $_" -ForegroundColor Red
+    } else {
+        Write-Host "    -> ERROR (Exit Code $pushExit): $pushOutput" -ForegroundColor Red
         $failedRepos += $repoName
     }
 }
