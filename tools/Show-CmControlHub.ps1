@@ -32,8 +32,8 @@ param(
              Notepad++ specification editing, and historical log views.
     Path: tools/Show-CmControlHub.ps1
     Authors: Rolf, Workspace_AI Engine
-    Version: 1.1.0
-    Date: 2026-09-06
+    Version: 1.1.1
+    Date: 2026-09-08
 .PARAMETER ReviewMode
     Opens the Control Hub filtered directly to pending visual reviews requiring Beyond Compare action.
 .PARAMETER Repo
@@ -118,7 +118,7 @@ foreach ($f in $crpFiles) {
     $rel = "Workspace_Inventory/docs/Proposals/$($f.Name)"
     $content = Get-Content -LiteralPath $f.FullName -Raw -Encoding UTF8
     $docsCache[$rel] = $content
-    if ($f.Name -match '^(CRP-\d{4}-\d{3})') {
+    if ($f.Name -match '^((?:CRP|BUG)-(?:\d{4}-)?\d{3,})') {
         $docsCache[$Matches[1]] = $content
         $docsCache[$f.Name] = $content
     }
@@ -196,9 +196,9 @@ Write-Host " Ledger   : $proposalsFile"
 # 2. Dispatch to Session 1 Interactive Desktop
 # ------------------------------------------------------------------------------
 if (-not $NoLaunch) {
-    Write-Host " Launching interactive desktop browser..." -ForegroundColor Green
     Write-Host "==========================================================================" -ForegroundColor Cyan
-    $launchTarget = if ($DatesMode) { "$renderedHtmlPath#dates" } else { $renderedHtmlPath }
+    $fileUri = [System.Uri]::new($renderedHtmlPath).AbsoluteUri
+    $launchTarget = if ($DatesMode) { "$fileUri#dates" } else { $fileUri }
     $dispatcher = Join-Path $workspaceRoot ".lcm\tools\internal\Invoke-InteractiveDesktop.ps1"
     if (Test-Path -LiteralPath $dispatcher) {
         & $dispatcher -FilePath $launchTarget

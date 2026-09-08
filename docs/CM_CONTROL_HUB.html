@@ -229,6 +229,28 @@
       gap: 8px;
     }
 
+    /* Live Progress Indicator Styles (CRP-110) */
+    @keyframes rowPulse {
+      0% { background-color: rgba(88, 166, 255, 0.05); }
+      50% { background-color: rgba(88, 166, 255, 0.22); }
+      100% { background-color: rgba(88, 166, 255, 0.05); }
+    }
+    @keyframes badgePulse {
+      0% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.05); opacity: 1; }
+      100% { transform: scale(1); opacity: 0.9; }
+    }
+    .row-processing {
+      animation: rowPulse 1.8s infinite ease-in-out !important;
+      border-left: 3px solid var(--accent-blue) !important;
+    }
+    .badge-pulse {
+      animation: badgePulse 1.2s infinite ease-in-out;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
     /* Stat Cards */
     .stats-row {
       flex: 0 0 auto;
@@ -428,6 +450,9 @@
       padding: 8px 10px;
       border-bottom: 1px solid rgba(255,255,255,0.05);
       vertical-align: middle;
+      white-space: normal;
+      word-break: break-word;
+      overflow-wrap: anywhere;
     }
     tr:hover {
       background: rgba(88, 166, 255, 0.04);
@@ -451,7 +476,9 @@
       background: rgba(188, 140, 255, 0.12);
       border: 1px solid rgba(188, 140, 255, 0.3);
       color: var(--accent-purple);
-      white-space: nowrap;
+      white-space: normal;
+      word-break: break-word;
+      display: inline-block;
     }
     .crp-tag {
       font-family: var(--font-mono);
@@ -722,7 +749,6 @@
         <span>🖨️</span> <span>Print / PDF</span>
       </button>
       <button class="btn" onclick="openHelpModal()">❓ Help / Guide</button>
-      <button class="btn" onclick="refreshData()">🔄 Refresh</button>
     </div>
   </header>
 
@@ -1166,11 +1192,16 @@ Type command and press Enter:</div>
         docsCache = RAW_DOCS_CACHE;
       }
 
+      // Apply saved theme or default to dark per CRP-105
+      const savedTheme = localStorage.getItem("lcm_theme") || "dark";
+      applyTheme(savedTheme);
+
       checkDaemonHealth();
       populateScopeDropdown();
       updateMetricCards();
       renderTable();
       setInterval(checkDaemonHealth, 5000);
+      setInterval(checkActionProgress, 1500);
 
       appendConsole("CM Control Hub v1.2.0 initialized with " + proposalsData.proposals.length + " proposal(s) and " + Object.keys(docsCache).length + " cached documents.", "msg-info");
 
@@ -1178,9 +1209,12 @@ Type command and press Enter:</div>
         setTimeout(() => { showCRPDates(); }, 100);
       }
 
-      // Global Escape Key Dismissal for Modals (CRP Requirement)
+      // Global F5 Refresh and Escape Key Dismissal for Modals
       window.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") {
+        if (e.key === "F5" || e.code === "F5") {
+          e.preventDefault();
+          refreshData();
+        } else if (e.key === "Escape") {
           closeHelpModal();
           closeLogsModal();
           closeInspectorModal();
@@ -1190,6 +1224,69 @@ Type command and press Enter:</div>
         }
       });
     });
+
+    // Theme Engine (CRP-105)
+    function toggleTheme() {
+      const current = document.body.classList.contains("light-theme") ? "light" : "dark";
+      const target = current === "dark" ? "light" : "dark";
+      applyTheme(target);
+      localStorage.setItem("lcm_theme", target);
+    }
+
+    function applyTheme(theme) {
+      if (theme === "light") {
+        document.body.classList.add("light-theme");
+        document.documentElement.setAttribute("data-theme", "light");
+        const label = document.getElementById("theme-label");
+        const icon = document.getElementById("theme-icon");
+        if (label) label.innerText = "Dark Mode";
+        if (icon) icon.innerText = "🌙";
+      } else {
+        document.body.classList.remove("light-theme");
+        document.documentElement.setAttribute("data-theme", "dark");
+        const label = document.getElementById("theme-label");
+        const icon = document.getElementById("theme-icon");
+        if (label) label.innerText = "Light Mode";
+        if (icon) icon.innerText = "☀️";
+      }
+    }
+
+    // Live Action Progress Watcher (CRP-110)
+    let lastActiveActionId = null;
+    async function checkActionProgress() {
+      try {
+        const res = await fetch("http://127.0.0.1:9876/progress/current", {
+          signal: AbortSignal.timeout(1000)
+        });
+        if (!res.ok) return;
+        const progress = await res.json();
+        if (!progress || !progress.items) return;
+
+        if (progress.action_id !== lastActiveActionId && progress.status === "in_progress") {
+          lastActiveActionId = progress.action_id;
+          appendConsole(`⚡ Live Batch Action Detected: ${progress.command} (${progress.total_items} item(s))`, "msg-info");
+        }
+
+        progress.items.forEach(it => {
+          const row = document.getElementById(`row-proposal-${it.id}`);
+          if (row) {
+            if (it.state === "in_progress") {
+              row.classList.add("row-processing");
+            } else if (it.state === "completed" || it.state === "failed") {
+              row.classList.remove("row-processing");
+            }
+          }
+        });
+
+        if (progress.status === "completed" && lastActiveActionId === progress.action_id) {
+          lastActiveActionId = null;
+          appendConsole(`✅ Batch Action '${progress.command}' Finished. Refreshing data...`, "msg-success");
+          setTimeout(() => { if (typeof refreshData === "function") refreshData(); }, 1200);
+        }
+      } catch (e) {
+        // Daemon detached - fail gracefully
+      }
+    }
 
     // Markdown Renderer Helper
     function formatMarkdown(md) {
@@ -2525,7 +2622,7 @@ Type command and press Enter:</div>
         if (progState === "committed" && (p.progress_state !== "committed")) return false;
         if (progState !== "ALL" && progState !== "open" && progState !== "completed" && progState !== "pushed" && progState !== "committed" && p.progress_state !== progState) return false;
 
-        const crpCode = `crp-${String(p.id).padStart(3, '0')}`;
+        const crpCode = (p.crp_id || `crp-${String(p.id).padStart(3, '0')}`).toLowerCase();
         if (search) {
           const matchId = `#${p.id}`.includes(search) || `${p.id}` === search || crpCode.includes(search);
           const matchTitle = (p.title || "").toLowerCase().includes(search);
@@ -2560,11 +2657,13 @@ Type command and press Enter:</div>
 
       filtered.forEach(p => {
         const tr = document.createElement("tr");
+        tr.id = `row-proposal-${p.id}`;
         tr.className = `state-${p.state || "suggested"} state-${p.progress_state || "undecided"}`;
 
         const crpBundle = p.bundle_id && p.bundle_id !== "unassigned" ? p.bundle_id : (p.cr_id || "");
         const pPrio = (p.priority || "M").toUpperCase();
-        const crpDisplay = `CRP-${String(p.id).padStart(3, '0')}`;
+        const crpDisplay = p.crp_id || (p.state === 'bug' || (p.cr_id && p.cr_id.startsWith('BUG-')) ? `BUG-${String(p.id).padStart(3, '0')}` : `CRP-${String(p.id).padStart(3, '0')}`);
+        const tagColor = crpDisplay.startsWith('BUG-') ? 'var(--accent-red)' : 'var(--accent-blue)';
         const secondaryTag = (p.bundle_id && p.bundle_id !== 'unassigned' && p.bundle_id !== crpDisplay && !p.bundle_id.startsWith(crpDisplay))
           ? p.bundle_id
           : ((p.cr_id && p.cr_id !== crpDisplay && !p.cr_id.startsWith(crpDisplay)) ? p.cr_id : '');
@@ -2572,7 +2671,7 @@ Type command and press Enter:</div>
         tr.innerHTML = `
           <td><input type="checkbox" class="row-chk" value="${p.id}" data-repo="${p.origin_repo || ''}" data-crp="${crpBundle}" data-state="${p.state}" data-prog="${p.progress_state}" onchange="updateSelectedCount()"></td>
           <td>
-            <span class="crp-tag" style="font-weight: 700; font-size: 0.82rem; color: var(--accent-blue); font-family: var(--font-mono);">${crpDisplay}</span>
+            <span class="crp-tag" style="font-weight: 700; font-size: 0.82rem; color: ${tagColor}; font-family: var(--font-mono);">${crpDisplay}</span>
             ${secondaryTag ? `<div style="font-size: 0.68rem; color: var(--text-muted); margin-top: 2px;">${secondaryTag}</div>` : ''}
           </td>
           <td style="text-align: center;">
@@ -2616,7 +2715,7 @@ Type command and press Enter:</div>
           <td>
             <div class="action-group">
               <button class="action-btn action-btn-bc" onclick="launchReviewForProposal(${p.id}, '${p.origin_repo}', '${crpBundle}')">🔍 BC5</button>
-              ${p.bundle_id && p.bundle_id.startsWith('CRP-') ? `<button class="action-btn" onclick="openCrpSpec('${p.bundle_id}')">📜 CRP</button>` : ''}
+              ${p.bundle_id && (p.bundle_id.startsWith('CRP-') || p.bundle_id.startsWith('BUG-')) ? `<button class="action-btn" onclick="openCrpSpec('${p.bundle_id}')">${p.bundle_id.startsWith('BUG-') ? '🐛 BUG' : '📜 CRP'}</button>` : ''}
               ${p.plan_path ? `<button class="action-btn" onclick="openDocumentModal('${p.plan_path}', 'Plan (${crpDisplay})')">📄 Plan</button>` : ''}
               ${p.walkthrough_path ? `<button class="action-btn" onclick="openDocumentModal('${p.walkthrough_path}', 'Walkthrough (${crpDisplay})')">📋 Walk</button>` : ''}
               <button class="action-btn" onclick="openRepoDocsReview('${p.origin_repo}')" title="Review Tripartite Documentation for repository">📚 Docs</button>
@@ -3039,8 +3138,17 @@ Type command and press Enter:</div>
       }
     }
 
-    function refreshData() {
-      location.reload();
+    async function refreshData() {
+      showToast("🔄 Refreshing CM Control Hub data...");
+      try {
+        await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ command: "pwsh -File Workspace_Inventory/tools/Show-CmControlHub.ps1 -NoLaunch", elevated: false, noExit: false }),
+          signal: AbortSignal.timeout(2000)
+        });
+      } catch (e) {}
+      setTimeout(() => { location.reload(); }, 600);
     }
   
     // -------------------------------------------------------------------------

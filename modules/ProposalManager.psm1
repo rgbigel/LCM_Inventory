@@ -6,8 +6,8 @@
 #          batch operations, review granularity ('coarse' | 'tight'), repo review queue inspection,
 #          and persistent ledger storage in Workspace_Inventory.
 # Authors: Rolf, Workspace_AI Engine
-# Version: 1.0.2
-# Date: 2026-09-06
+# Version: 1.0.3
+# Date: 2026-09-08
 # =====================================================================
 
 Set-StrictMode -Version Latest
@@ -131,7 +131,10 @@ function New-WorkspaceProposal {
     $store.last_proposal_id = $newId
 
     $timestamp = (Get-Date).ToString('yyyy-MM-dd HH:mm:ss')
-    $cleanCrId = if ($CrId) { $CrId } else { "CR-PROP-$newId" }
+    $isBug = ($OriginRepo -eq 'bug') -or ($CrId -match '^BUG-') -or ($Title -match '\[BUG\]')
+    $prefix = if ($isBug) { 'BUG' } else { 'CRP' }
+    $canonicalId = "{0}-{1:D3}" -f $prefix, $newId
+    $cleanCrId = if ($CrId) { $CrId } else { $canonicalId }
     $safeCrId = $cleanCrId -replace '[^a-zA-Z0-9_-]', '_'
 
     if ([string]::IsNullOrWhiteSpace($PlanPath)) {
@@ -143,6 +146,7 @@ function New-WorkspaceProposal {
 
     $proposal = [ordered]@{
         id               = $newId
+        crp_id           = $canonicalId
         timestamp        = $timestamp
         title            = $Title
         origin_repo      = $OriginRepo
@@ -373,7 +377,7 @@ function Resolve-ProposalIdExpression {
     $parts = $cleaned -split '[, ]+' | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
 
     foreach ($part in $parts) {
-        $p = ($part.Trim() -replace '(?i)^#?crp-?', '').TrimStart('#')
+        $p = ($part.Trim() -replace '(?i)^#?(?:crp|bug)-?', '').TrimStart('#')
         if ($p -match '^(\d+)-(\d+)$') {
             $start = [int]$Matches[1]
             $end = [int]$Matches[2]
@@ -594,10 +598,14 @@ function Format-ProposalsTable {
             default     { [ConsoleColor]::Gray }
         }
 
-        $idStr = "CRP-{0:D3}" -f [int]$p.id
-        $prog = if ($p.progress_state) { $p.progress_state } else { 'undecided' }
-        $prio = if ($p.priority) { $p.priority } else { 'M' }
-        Write-Host (" {0,-7} | {1,-4} | {2,-19} | {3,-11} | {4,-13} | {5,-20} | {6}" -f $idStr, $prio, $p.timestamp, $p.state, $prog, $p.origin_repo, $p.title) -ForegroundColor $color
+        $idStr = if ($null -ne $p.PSObject.Properties['crp_id'] -and $p.crp_id) { $p.crp_id } else { if (($null -ne $p.PSObject.Properties['state'] -and $p.state -eq 'bug') -or ($null -ne $p.PSObject.Properties['cr_id'] -and $p.cr_id.StartsWith('BUG-'))) { "BUG-{0:D3}" -f [int]$p.id } else { "CRP-{0:D3}" -f [int]$p.id } }
+        $prog = if ($null -ne $p.PSObject.Properties['progress_state'] -and $p.progress_state) { $p.progress_state } else { 'undecided' }
+        $prio = if ($null -ne $p.PSObject.Properties['priority'] -and $p.priority) { $p.priority } else { 'M' }
+        $ts = if ($null -ne $p.PSObject.Properties['timestamp'] -and $p.timestamp) { $p.timestamp } elseif ($null -ne $p.PSObject.Properties['dates'] -and $null -ne $p.dates.PSObject.Properties['created']) { $p.dates.created } else { '-' }
+        $scope = if ($null -ne $p.PSObject.Properties['origin_repo'] -and $p.origin_repo) { $p.origin_repo } else { 'LCM' }
+        $pState = if ($null -ne $p.PSObject.Properties['state'] -and $p.state) { $p.state } else { 'suggested' }
+        $title = if ($null -ne $p.PSObject.Properties['title'] -and $p.title) { $p.title } else { '' }
+        Write-Host (" {0,-7} | {1,-4} | {2,-19} | {3,-11} | {4,-13} | {5,-20} | {6}" -f $idStr, $prio, $ts, $pState, $prog, $scope, $title) -ForegroundColor $color
     }
 
     Write-Host "==========================================================================================" -ForegroundColor Cyan

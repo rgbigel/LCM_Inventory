@@ -1,17 +1,16 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-09-07 12:58:10",
+  "updated_at": "2026-09-08T15:25:00+02:00",
   "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 108,
+  "last_proposal_id": 121,
   "proposals": [
     {
       "id": 1,
       "timestamp": "2026-08-20 15:20:00",
       "title": "Implement LCM Two-Tier Proposal and Review Governance Engine",
       "origin_repo": "Workspace_Inventory",
-      "cr_id": "CR-2026-012",
       "state": "pushed",
       "bundle_id": "BUNDLE-2026-03",
       "author": "Rolf",
@@ -53,14 +52,15 @@
           "note": "Pushed to remote repository"
         }
       ],
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-001",
+      "cr_id": "CRP-001"
     },
     {
       "id": 2,
       "timestamp": "2026-08-20 16:37:00",
       "title": "Implement Automated LCM Rule Health Diagnostics and Repair Engine",
       "origin_repo": "Workspace_Inventory",
-      "cr_id": "CR-2026-013",
       "state": "pushed",
       "bundle_id": "BUNDLE-2026-03",
       "author": "Rolf",
@@ -102,14 +102,15 @@
           "note": "Pushed to remote repository"
         }
       ],
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-002",
+      "cr_id": "CRP-002"
     },
     {
       "id": 3,
       "timestamp": "2026-08-20 18:01:00",
       "title": "Mandate Tripartite Repository Documentation Standard (Architecture, Requirements, Implementation)",
       "origin_repo": "Workspace_Inventory",
-      "cr_id": "CR-2026-014",
       "state": "pushed",
       "bundle_id": "BUNDLE-2026-03",
       "author": "Rolf",
@@ -151,14 +152,15 @@
           "note": "Pushed to remote repository"
         }
       ],
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-003",
+      "cr_id": "CRP-003"
     },
     {
       "id": 4,
       "timestamp": "2026-08-20 18:38:00",
       "title": "Mandate Universal install/ Directory and Installation.md Lifecycle Runbook Standard",
       "origin_repo": "Workspace_Inventory",
-      "cr_id": "CR-2026-015",
       "state": "pushed",
       "bundle_id": "unassigned",
       "author": "Rolf",
@@ -200,14 +202,15 @@
           "note": "Pushed to remote repository"
         }
       ],
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-004",
+      "cr_id": "CRP-004"
     },
     {
       "id": 5,
       "timestamp": "2026-08-26 14:08:15",
       "title": "Enable Configurable Target Path Parameter in Show-CmdFolderAnalysis.ps1",
       "origin_repo": "Root (tools)",
-      "cr_id": "CR-2026-016",
       "state": "pushed",
       "bundle_id": "unassigned",
       "author": "Rolf",
@@ -249,14 +252,15 @@
           "note": "Pushed to remote repository"
         }
       ],
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-005",
+      "cr_id": "CRP-005"
     },
     {
       "id": 6,
       "timestamp": "2026-08-26 14:11:55",
       "title": "Merge Enter-CmdAdmin UAC Elevation Functionality into GoAdm.cmd",
       "origin_repo": "SystemConfiguration",
-      "cr_id": "CR-2026-017",
       "state": "pushed",
       "bundle_id": "unassigned",
       "author": "Rolf",
@@ -298,14 +302,15 @@
           "note": "Pushed to remote repository"
         }
       ],
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-006",
+      "cr_id": "CRP-006"
     },
     {
       "id": 7,
       "timestamp": "2026-08-26 14:28:45",
       "title": "Add Deduplicated Chat Short-Name View Toggle to Show-Tools (TOOLS_VIEWER)",
       "origin_repo": "Root (tools)",
-      "cr_id": "CR-2026-018",
       "state": "pushed",
       "bundle_id": "unassigned",
       "author": "Rolf",
@@ -347,14 +352,15 @@
           "note": "Pushed to remote repository"
         }
       ],
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-007",
+      "cr_id": "CRP-007"
     },
     {
       "id": 8,
       "timestamp": "2026-08-26 15:42:35",
       "title": "Modernize BackgroundModifier Architecture via Dynamic Rainmeter Skin Engine",
       "origin_repo": "BackgroundModifier",
-      "cr_id": "CR-2026-019",
       "state": "pushed",
       "bundle_id": "unassigned",
       "author": "Rolf",
@@ -396,14 +402,15 @@
           "note": "Pushed to remote repository"
         }
       ],
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-008",
+      "cr_id": "CRP-008"
     },
     {
       "id": 9,
       "timestamp": "2026-08-26 15:45:40",
       "title": "Implement Export-LCMRules (SaveLCMRules) Governance Exporter and Gemini Sync Tool",
       "origin_repo": "Root (tools)",
-      "cr_id": "CR-2026-020",
       "state": "pushed",
       "bundle_id": "unassigned",
       "author": "Rolf",
@@ -445,14 +452,15 @@
           "note": "Pushed to remote repository"
         }
       ],
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-009",
+      "cr_id": "CRP-009"
     },
     {
       "id": 10,
       "timestamp": "2026-08-29 18:00:41",
       "title": "Align LCM Module and Documentation Versioning with Major Baseline Invariant (v6.1.0 / M.Y.Z)",
       "origin_repo": "Workspace_AI / Workspace_Inventory",
-      "cr_id": "CR-2026-021",
       "state": "pushed",
       "bundle_id": "unassigned",
       "author": "Rolf",
@@ -494,14 +502,15 @@
           "note": "Pushed to remote tracking branch"
         }
       ],
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-010",
+      "cr_id": "CRP-010"
     },
     {
       "id": 11,
       "timestamp": "2026-08-29 18:12:35",
       "title": "Establish Major Release Retention Horizon Policy and Standardized History Log Naming Scheme",
       "origin_repo": "Workspace_AI / Workspace_Inventory",
-      "cr_id": "CR-2026-022",
       "state": "pushed",
       "bundle_id": "unassigned",
       "author": "rgbig",
@@ -543,14 +552,15 @@
           "note": "Pushed to remote tracking branch"
         }
       ],
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-011",
+      "cr_id": "CRP-011"
     },
     {
       "id": 12,
       "timestamp": "2026-08-29 18:34:51",
       "title": "Design and Implement LCM Universal Installation Path, Packaging Agent, Preflight Engine, and UX Verification Suite",
       "origin_repo": "Workspace_AI / Workspace_Inventory",
-      "cr_id": "CR-2026-023",
       "state": "pushed",
       "bundle_id": "unassigned",
       "author": "rgbig",
@@ -592,14 +602,15 @@
           "note": "Pushed to remote tracking branch"
         }
       ],
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-012",
+      "cr_id": "CRP-012"
     },
     {
       "id": 13,
       "timestamp": "2026-08-29 18:40:22",
       "title": "Enhance Pre-Installation Check with Modular Tool Selection & Conditional Deployment Engine",
       "origin_repo": "Workspace_AI / Workspace_Inventory",
-      "cr_id": "CR-2026-024",
       "state": "pushed",
       "bundle_id": "unassigned",
       "author": "rgbig",
@@ -641,14 +652,15 @@
           "note": "Pushed to remote tracking branch"
         }
       ],
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-013",
+      "cr_id": "CRP-013"
     },
     {
       "id": 14,
       "timestamp": "2026-08-29 18:45:23",
       "title": "Establish Dual-State Proposal Lifecycle (Plan State & Implementation Progress State) and CM Plan Archive",
       "origin_repo": "Workspace_Inventory / Workspace_AI",
-      "cr_id": "CR-2026-025",
       "state": "pushed",
       "bundle_id": "unassigned",
       "author": "rgbig",
@@ -690,14 +702,15 @@
           "note": "Pushed to remote tracking branch"
         }
       ],
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-014",
+      "cr_id": "CRP-014"
     },
     {
       "id": 15,
       "timestamp": "2026-08-29 18:50:04",
       "title": "Establish Dedicated Installation_LCD Governed Repository for LCM Platform Packaging & Deployment",
       "origin_repo": "Installation_LCD",
-      "cr_id": "CR-2026-026",
       "state": "pushed",
       "progress_state": "pushed",
       "bundle_id": "unassigned",
@@ -739,14 +752,15 @@
           "note": "Pushed to remote tracking branch"
         }
       ],
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-015",
+      "cr_id": "CRP-015"
     },
     {
       "id": 16,
       "timestamp": "2026-08-29 19:35:34",
       "title": "Design and Author Comprehensive Tripartite Specifications and Normative Runbook for Installation_LCD",
       "origin_repo": "Installation_LCD",
-      "cr_id": "CR-2026-027",
       "state": "pushed",
       "progress_state": "pushed",
       "bundle_id": "unassigned",
@@ -788,14 +802,15 @@
           "note": "Pushed to remote tracking branch"
         }
       ],
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-016",
+      "cr_id": "CRP-016"
     },
     {
       "id": 17,
       "timestamp": "2026-08-29 19:45:00",
       "title": "Resolve Broken Path Delegation in Numbered Legacy Alias Wrappers (@21-FixMouseFlickerInvariants.ps1 & @20-KillLogitechUpdateFull.ps1)",
       "origin_repo": "Root (tools) / SystemConfiguration",
-      "cr_id": "CR-2026-028",
       "state": "pushed",
       "progress_state": "pushed",
       "bundle_id": "unassigned",
@@ -837,20 +852,21 @@
           "note": "Pushed to remote tracking branch"
         }
       ],
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-017",
+      "cr_id": "CRP-017"
     },
     {
       "id": 18,
       "timestamp": "2026-08-29 19:59:30",
       "title": "Default to Lightweight BUG Report on Error/Unwanted Behavior Feedback",
       "origin_repo": "Workspace_AI / Workspace_Inventory",
-      "cr_id": "CR-2026-029",
       "state": "pushed",
       "progress_state": "pushed",
-      "bundle_id": "CRP-2026-004",
+      "bundle_id": "CRP-018",
       "author": "rgbig",
       "details": "When reporting errors or unwanted behavior via back channel/prompt, default to generating lightweight BUG report (superficial root cause, criticality assessment, stop) rather than initiating full-blown CRP processing until explicitly commanded.",
-      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-018_CR-2026-029_Plan.md",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-018-LCM-v7.0.0-Lightweight-Bug-Reporting.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-018_CR-2026-029_Walkthrough.md",
       "pushed_at": "2026-08-30 15:29:48",
       "dates": {
@@ -886,20 +902,21 @@
           "note": "Pushed to remote tracking branch"
         }
       ],
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-018",
+      "cr_id": "CRP-018"
     },
     {
       "id": 19,
       "timestamp": "2026-08-29 20:22:45",
       "title": "Configuration Management (CM) Control Hub Web Dashboard & Batch Review Engine (Show-CmControlHub / CmHub / DOR)",
       "origin_repo": "Workspace_Inventory / tools",
-      "cr_id": "CR-2026-030",
       "state": "pushed",
       "progress_state": "pushed",
-      "bundle_id": "CRP-2026-006",
+      "bundle_id": "CRP-019",
       "author": "rgbig",
       "details": "Interactive web dashboard for CM governance, real-time dual-state and BUG tracking, multi-facet filtering, batch beyond compare review & accept all, plan/walkthrough/receipt inspection tabs, Notepad++ CRP editing with plan auto-sync, and historical log viewing.",
-      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-019_CR-2026-030_Plan.md",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-019-LCM-v7.1.0-CM-Control-Hub.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-019_CR-2026-030_Walkthrough.md",
       "pushed_at": "2026-08-30 15:29:48",
       "dates": {
@@ -935,14 +952,15 @@
           "note": "Pushed to remote tracking branch"
         }
       ],
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-019",
+      "cr_id": "CRP-019"
     },
     {
       "id": 20,
       "timestamp": "2026-08-29 22:37:00",
       "title": "Consolidate LCD Platform Engine into Encapsulated .lcd Structure with .tools/internal and tools/links Separation",
       "origin_repo": "Root / .lcd",
-      "cr_id": "CR-2026-031",
       "state": "pushed",
       "progress_state": "pushed",
       "bundle_id": "unassigned",
@@ -984,20 +1002,21 @@
           "note": "Pushed to remote tracking branch"
         }
       ],
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-020",
+      "cr_id": "CRP-020"
     },
     {
       "id": 21,
       "timestamp": "2026-08-30 11:26:00",
       "title": "Google Drive Gemini Inbox Watcher, Mandatory Timestamping, and Security Intake Queue",
       "origin_repo": "Workspace_AI / .lcd",
-      "cr_id": "CR-2026-032",
       "state": "pushed",
       "progress_state": "pushed",
-      "bundle_id": "CRP-2026-002",
+      "bundle_id": "CRP-021",
       "author": "rgbig",
       "details": "Establish a controlled, secure intake pipeline for instructions and lightweight BUG reports from Google Gemini via D:\\GDrive\\LCM\\INBOX. Enforce mandatory ISO 8601/local timestamping, route incoming items into the LCM Proposal ledger (suggested state) without immediate execution, archive processed files to INBOX/archive/, and provide Sync-GeminiInbox tool and Gemini Gem intake specification.",
-      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-021_CR-2026-032_Plan.md",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-021-Workspace_AI-v2.0.0-Gemini-Inbox-Watcher.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-021_CR-2026-032_Walkthrough.md",
       "pushed_at": "2026-08-30 15:29:48",
       "dates": {
@@ -1033,20 +1052,21 @@
           "note": "Pushed to remote tracking branch"
         }
       ],
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-021",
+      "cr_id": "CRP-021"
     },
     {
       "id": 22,
       "timestamp": "2026-08-30 11:34:09",
       "title": "Codify RULE-REV-006 Mandatory Review Stop and Turn Termination Invariant in Governance Rules",
       "origin_repo": ".agents / Workspace_AI",
-      "cr_id": "CR-2026-033",
       "state": "pushed",
       "progress_state": "pushed",
-      "bundle_id": "CRP-2026-003",
+      "bundle_id": "CRP-022",
       "author": "rgbig",
       "details": "Codify RULE-REV-006 (Mandatory Review Stop and Turn Termination Invariant) in ReviewCommitGovernancePolicy.md and ProposalReviewFlowPolicy.md, strictly forbidding the AI agent from auto-committing or invoking Submit-ReviewResult.ps1 in the same response turn as Invoke-BeyondCompareReview.ps1.",
-      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-022_CR-2026-033_Plan.md",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-022-LCM-v7.0.0-Review-Stop-Turn-Termination-Invariant.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-022_CR-2026-033_Walkthrough.md",
       "pushed_at": "2026-08-30 15:29:48",
       "dates": {
@@ -1082,20 +1102,21 @@
           "note": "Pushed to remote tracking branch"
         }
       ],
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-022",
+      "cr_id": "CRP-022"
     },
     {
       "id": 23,
       "timestamp": "2026-08-30 13:07:19",
       "title": "Scope and Version-Explicit Naming Standard for Change Request Proposals (CRPs)",
       "origin_repo": "Workspace_Inventory / Governance",
-      "cr_id": "CR-2026-034",
       "state": "pushed",
       "progress_state": "pushed",
-      "bundle_id": "CRP-2026-005",
+      "bundle_id": "CRP-023",
       "author": "rgbig",
       "details": "Establish mandatory Scope and Version-Explicit naming convention for Change Request Proposals (CRP-YYYY-NNN-[Scope]-[Version]-[Slug].md) and mandatory header metadata to isolate affected repository boundaries and version ranges.",
-      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-023_CR-2026-034_Plan.md",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-023-LCM-v7.0.0-Scope-And-Version-Explicit-Naming.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-023_CR-2026-034_Walkthrough.md",
       "pushed_at": "2026-08-30 15:29:48",
       "dates": {
@@ -1131,20 +1152,21 @@
           "note": "Pushed to remote tracking branch"
         }
       ],
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-023",
+      "cr_id": "CRP-023"
     },
     {
       "id": 24,
       "timestamp": "2026-08-30 15:22:00",
       "title": "Fix .NET Regex String Interpolation Backreference Corruption in CM Control Hub HTML Data Injector",
       "origin_repo": "Workspace_Inventory",
-      "cr_id": "BUG-2026-001",
       "state": "pushed",
       "progress_state": "pushed",
-      "bundle_id": "BUG-2026-001-Workspace_Inventory-v7.1.0-Regex-Interpolation-Spill",
+      "bundle_id": "BUG-024",
       "author": "rgbig",
       "details": "Replace .NET Regex.Replace with byte-exact literal string .Replace in Show-CmControlHub.ps1 to prevent dollar-sign script variables ($) in cached documents from being mangled as regex backreferences and corrupting HTML script injection.",
-      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-024_BUG-2026-001_Plan.md",
+      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-024-Workspace_Inventory-v7.1.0-Regex-Interpolation-Spill.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-024_BUG-2026-001_Walkthrough.md",
       "pushed_at": "2026-08-30 15:29:48",
       "dates": {
@@ -1180,20 +1202,21 @@
           "note": "Pushed to remote tracking branch"
         }
       ],
-      "priority": "H"
+      "priority": "H",
+      "crp_id": "BUG-024",
+      "cr_id": "BUG-024"
     },
     {
       "id": 25,
       "timestamp": "2026-08-30 15:45:00",
       "title": "Single-Instance Control Hub Tab Lifecycle Coordination, Auto-Retirement, and Quiet Render Engine",
       "origin_repo": "Workspace_Inventory",
-      "cr_id": "CR-2026-036",
       "state": "pushed",
       "progress_state": "pushed",
-      "bundle_id": "CRP-2026-007-Workspace_Inventory-v7.1.0-Single-Instance-Dashboard-Tab-Coordination",
+      "bundle_id": "CRP-025",
       "author": "rgbig",
       "details": "BroadcastChannel single-instance tab coordination in CM_CONTROL_HUB.html to auto-retire obsolete dashboard tabs, unconditional preservation of documentation sub-tabs and desktop editors, and -NoLaunch parameter in Show-CmControlHub.ps1.",
-      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-025_CR-2026-036_Plan.md",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-025-Workspace_Inventory-v7.1.0-Single-Instance-Dashboard-Tab-Coordination.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-025_CR-2026-036_Walkthrough.md",
       "pushed_at": "2026-08-30 15:47:00",
       "dates": {
@@ -1229,20 +1252,21 @@
           "note": "Pushed to remote tracking branch"
         }
       ],
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-025",
+      "cr_id": "CRP-025"
     },
     {
       "id": 26,
       "timestamp": "2026-08-30 16:05:00",
       "title": "Workspace Inventory Viewer Interactive Actions Suite, Non-Git Visibility, and Data Versioning Exemption",
       "origin_repo": "Workspace_Inventory",
-      "cr_id": "CR-2026-037",
       "state": "pushed",
       "progress_state": "pushed",
-      "bundle_id": "CRP-2026-008-Workspace_Inventory-v7.1.1-Inventory-Viewer-Interactive-Actions-and-Data-Versioning-Exemption",
+      "bundle_id": "CRP-026",
       "author": "rgbig",
       "details": "Interactive row actions (Open, Onboard, Un-Git, Rename, Delete), .lcd platform and non-Git directory visibility, filter tabs, and Workspace_Inventory data versioning exemption in RULE-REV-007.",
-      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-026_CR-2026-037_Plan.md",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-026-Workspace_Inventory-v7.1.1-Inventory-Viewer-Interactive-Actions-and-Data-Versioning-Exemption.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-026_CR-2026-037_Walkthrough.md",
       "pushed_at": "2026-08-30 16:34:00",
       "dates": {
@@ -1278,17 +1302,18 @@
           "note": "Pushed to remote tracking branch"
         }
       ],
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-026",
+      "cr_id": "CRP-026"
     },
     {
       "id": 27,
       "timestamp": "2026-08-30 16:37:00",
       "title": "Unescaped $timestamp Variable Interpolation in Show-HaInventoryApp.ps1",
       "origin_repo": "HaSSD06_Inventory",
-      "cr_id": "CR-2026-038",
       "state": "pushed",
       "progress_state": "pushed",
-      "bundle_id": "BUG-2026-002-HaSSD06_Inventory-v5.3.0-Unescaped-Timestamp-Variable-Interpolation",
+      "bundle_id": "CRP-027",
       "author": "rgbig",
       "details": "Fix strict mode uninitialized variable error when generating HTML viewer print atom.",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-027_CR-2026-038_Plan.md",
@@ -1327,17 +1352,18 @@
           "note": "Pushed to remote tracking branch"
         }
       ],
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-027",
+      "cr_id": "CRP-027"
     },
     {
       "id": 28,
       "timestamp": "2026-08-30 16:38:00",
       "title": "Spook 👻 Your Homie Custom Integration Update (v5.0.0 -> v5.1.0)",
       "origin_repo": "HaSSD06",
-      "cr_id": "CR-2026-039",
       "state": "pushed",
       "progress_state": "pushed",
-      "bundle_id": "CRP-2026-009-HaSSD06-v5.1.0-Spook-Homie-Integration-Update",
+      "bundle_id": "CRP-028",
       "author": "rgbig",
       "details": "Software update for Spook custom integration via HACS.",
       "dates": {
@@ -1374,17 +1400,18 @@
         }
       ],
       "pushed_at": "2026-09-01 15:53:01",
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-028",
+      "cr_id": "CRP-028"
     },
     {
       "id": 29,
       "timestamp": "2026-08-30 16:38:10",
       "title": "Shelly BLU Gateway Firmware Stabilization (2.0.1-beta1 -> 2.0.0 Stable)",
       "origin_repo": "HaSSD06",
-      "cr_id": "CR-2026-040",
       "state": "pushed",
       "progress_state": "pushed",
-      "bundle_id": "CRP-2026-010-HaSSD06-v2.0.0-Shelly-Blu-Gateway-Firmware-Stabilization",
+      "bundle_id": "CRP-029",
       "author": "rgbig",
       "details": "Transition Shelly BLU gateway from beta firmware to production stable 2.0.0.",
       "dates": {
@@ -1421,17 +1448,18 @@
         }
       ],
       "pushed_at": "2026-09-01 15:53:01",
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-029",
+      "cr_id": "CRP-029"
     },
     {
       "id": 30,
       "timestamp": "2026-08-30 16:38:20",
       "title": "FRITZ!Box Deprecated Button Entities Cleanup (Breaks in HA 2026.11.0)",
       "origin_repo": "HaSSD06",
-      "cr_id": "CR-2026-041",
       "state": "pushed",
       "progress_state": "pushed",
-      "bundle_id": "CRP-2026-011-HaSSD06-v2026.11.0-FritzBox-Deprecated-Button-Entities-Removal",
+      "bundle_id": "CRP-030",
       "author": "rgbig",
       "details": "Resolve deprecated cleanup and firmware update button entities before HA Core 2026.11.0.",
       "dates": {
@@ -1468,17 +1496,18 @@
         }
       ],
       "pushed_at": "2026-09-01 15:53:01",
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-030",
+      "cr_id": "CRP-030"
     },
     {
       "id": 31,
       "timestamp": "2026-08-30 16:38:30",
       "title": "Active Notification Count Template Sensor Default Value Fix",
       "origin_repo": "HaSSD06",
-      "cr_id": "CR-2026-042",
       "state": "pushed",
       "progress_state": "pushed",
-      "bundle_id": "CRP-2026-012-HaSSD06-v7.1.1-Active-Notification-Count-Template-Filter-Fix",
+      "bundle_id": "CRP-031",
       "author": "rgbig",
       "details": "Append default(0) and int(0) filter to eliminate invalid sensor state validation errors.",
       "dates": {
@@ -1515,17 +1544,18 @@
         }
       ],
       "pushed_at": "2026-09-01 15:53:01",
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-031",
+      "cr_id": "CRP-031"
     },
     {
       "id": 32,
       "timestamp": "2026-08-30 16:38:40",
       "title": "Alexa Devices HTTP/2 Push DNS Resolution Timeout (ClientConnectorDNSError)",
       "origin_repo": "HaSSD06",
-      "cr_id": "CR-2026-043",
       "state": "pushed",
       "progress_state": "pushed",
-      "bundle_id": "BUG-2026-003-HaSSD06-v2026.8.3-Alexa-Devices-DNS-Timeout-During-HTTP2-Push",
+      "bundle_id": "CRP-032",
       "author": "rgbig",
       "details": "Upstream DNS timeout during high-concurrency HTTP/2 push events in aioamazondevices.",
       "dates": {
@@ -1562,17 +1592,18 @@
         }
       ],
       "pushed_at": "2026-09-01 15:53:01",
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-032",
+      "cr_id": "CRP-032"
     },
     {
       "id": 33,
       "timestamp": "2026-08-30 16:38:50",
       "title": "Tuya Device Handlers Invalid Enum Value for Datapoint relay_status",
       "origin_repo": "HaSSD06",
-      "cr_id": "CR-2026-044",
       "state": "pushed",
       "progress_state": "pushed",
-      "bundle_id": "BUG-2026-004-HaSSD06-v2026.8.3-Tuya-Device-Handlers-Relay-Status-Enum-Mismatch",
+      "bundle_id": "CRP-033",
       "author": "rgbig",
       "details": "Upstream schema mismatch in tuya-device-handlers for smart plug product 9zynrkxe5tys0rja.",
       "dates": {
@@ -1609,17 +1640,18 @@
         }
       ],
       "pushed_at": "2026-09-01 15:53:01",
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-033",
+      "cr_id": "CRP-033"
     },
     {
       "id": 34,
       "timestamp": "2026-08-30 16:39:00",
       "title": "Tuya Local Unregistered Product IDs in Smart Plug Device Profiles",
       "origin_repo": "HaSSD06",
-      "cr_id": "CR-2026-045",
       "state": "pushed",
       "progress_state": "pushed",
-      "bundle_id": "BUG-2026-005-HaSSD06-v2026.8.3-Tuya-Local-Unregistered-Product-ID-SmartPlug",
+      "bundle_id": "CRP-034",
       "author": "rgbig",
       "details": "Hardware product IDs keym9qkuywghyrvs and keyjup78v54myhan unlisted in tuya_local config.",
       "dates": {
@@ -1656,17 +1688,18 @@
         }
       ],
       "pushed_at": "2026-09-01 15:53:01",
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-034",
+      "cr_id": "CRP-034"
     },
     {
       "id": 35,
       "timestamp": "2026-08-30 18:57:00",
       "title": "Workspace Artifact Deduplication, Archive Consolidation & .lcd Junction Removal",
       "origin_repo": "Workspace_AI",
-      "cr_id": "CR-2026-046",
       "state": "pushed",
       "progress_state": "pushed",
-      "bundle_id": "CRP-2026-013-Workspace_AI-v7.1.1-Workspace-Deduplication-Archive-and-Lcd-Purge",
+      "bundle_id": "CRP-035",
       "author": "rgbig",
       "details": "Hash-based deduplication, archival of redundant scratch snapshots/baselines, refactoring of .lcm/tools/links, and deletion of legacy .lcd junction.",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-035_CR-2026-046_Plan.md",
@@ -1711,17 +1744,18 @@
         }
       ],
       "pushed_at": "2026-09-01 15:53:01",
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-035",
+      "cr_id": "CRP-035"
     },
     {
       "id": 36,
       "timestamp": "2026-08-30 19:22:00",
       "title": "Disable Raspberry Pi Onboard Bluetooth Adapter & Consolidate BLE to Shelly Gateway",
       "origin_repo": "HaSSD06",
-      "cr_id": "CR-2026-047",
       "state": "pushed",
       "progress_state": "pushed",
-      "bundle_id": "CRP-2026-014-HaSSD06-v7.1.1-Disable-Host-Bluetooth-Adapter-and-Consolidate-to-Shelly-Gateway",
+      "bundle_id": "CRP-036",
       "author": "rgbig",
       "details": "Deactivate onboard bcm43438-bt adapter in Home Assistant to eliminate dual-scanner packet jitter, consolidating all BLE devices to shellyblugwg3.",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-036_CR-2026-047_Plan.md",
@@ -1766,19 +1800,20 @@
         }
       ],
       "pushed_at": "2026-09-01 15:53:01",
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-036",
+      "cr_id": "CRP-036"
     },
     {
       "id": 37,
       "timestamp": "2026-08-31 16:30:00",
       "title": "Tool Explorer '@nn-' Prefix Tool Disappearance on Filter Reset",
       "origin_repo": "LCD / Tool Explorer",
-      "cr_id": "BUG-2026-006",
       "state": "pushed",
       "bundle_id": "unassigned",
       "author": "Rolf",
       "details": "Restores all 25 @00- to @21- customization tools in Tool Explorer, preserving numerical prefixes in filenames while providing clean chat trampolines.",
-      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-2026-006-LCM-v2.2.1-Tool-Explorer-AtPrefix-Filter-Exclusion.md",
+      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-097-LCM-v2.2.1-Tool-Explorer-AtPrefix-Filter-Exclusion.md",
       "walkthrough_path": "",
       "progress_state": "pushed",
       "dates": {
@@ -1821,19 +1856,20 @@
         }
       ],
       "pushed_at": "2026-09-01 15:53:01",
-      "priority": "H"
+      "priority": "H",
+      "crp_id": "BUG-037",
+      "cr_id": "BUG-037"
     },
     {
       "id": 38,
       "timestamp": "2026-08-31 16:45:00",
       "title": "Excessive Repetitive Windows Notifications during Project Rule Access",
       "origin_repo": "Workspace_AI",
-      "cr_id": "BUG-2026-007",
       "state": "pushed",
       "bundle_id": "unassigned",
       "author": "Rolf",
       "details": "Suppresses excessive duplicate Windows notification toasts generated when accessing project standards documentation.",
-      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-2026-007-Workspace_AI-v7.1.2-Windows-Notification-Spam-Suppression.md",
+      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-098-Workspace_AI-v7.1.2-Windows-Notification-Spam-Suppression.md",
       "walkthrough_path": "",
       "progress_state": "pushed",
       "dates": {
@@ -1876,19 +1912,20 @@
         }
       ],
       "pushed_at": "2026-09-01 15:53:01",
-      "priority": "H"
+      "priority": "H",
+      "crp_id": "BUG-038",
+      "cr_id": "BUG-038"
     },
     {
       "id": 39,
       "timestamp": "2026-08-31 17:00:00",
       "title": "Tool Explorer Asset Path Resolution, Draggable Help Modal, and Catalog Sync",
       "origin_repo": "LCD / Tool Explorer",
-      "cr_id": "CRP-2026-015",
       "state": "pushed",
       "bundle_id": "unassigned",
       "author": "Rolf",
       "details": "Repairs asset path fallback candidate arrays, implements non-blocking draggable help modal, and expands catalog to 176 tools.",
-      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-2026-015-LCM-v2.2.1-Tool-Explorer-Asset-Path-Resolution-and-Multi-Tab-Launch-Repair.md",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-099-LCM-v2.2.1-Tool-Explorer-Asset-Path-Resolution-and-Multi-Tab-Launch-Repair.md",
       "walkthrough_path": "",
       "progress_state": "pushed",
       "dates": {
@@ -1931,19 +1968,20 @@
         }
       ],
       "pushed_at": "2026-09-01 15:53:01",
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-039",
+      "cr_id": "CRP-039"
     },
     {
       "id": 40,
       "timestamp": "2026-08-31 17:30:00",
       "title": "Prevent BLE Packet Collisions via Selective Single-Receiver Ingestion",
       "origin_repo": "HaSSD06",
-      "cr_id": "CRP-2026-016",
       "state": "pushed",
       "bundle_id": "unassigned",
       "author": "Rolf",
       "details": "Prevents BLE multi-hub collisions across 51 dynamic Bluetooth entities, scheduling twice-daily supervision and logging telemetry.",
-      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-2026-016-HaSSD06-v7.1.2-BLE-Selective-Single-Receiver-Routing.md",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-100-HaSSD06-v7.1.2-BLE-Selective-Single-Receiver-Routing.md",
       "walkthrough_path": "",
       "progress_state": "pushed",
       "dates": {
@@ -1986,19 +2024,20 @@
         }
       ],
       "pushed_at": "2026-09-01 15:53:01",
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-040",
+      "cr_id": "CRP-040"
     },
     {
       "id": 41,
       "timestamp": "2026-08-31 18:00:00",
       "title": "Universal Light/Dark Theme Standardization & High-Contrast Design Hardening",
       "origin_repo": "LCM Workspace",
-      "cr_id": "CRP-2026-017",
       "state": "pushed",
       "bundle_id": "unassigned",
       "author": "Rolf",
       "details": "Standardizes high-contrast light and dark theme color tokens across all 4 LCM dashboards with persistent scrollbars.",
-      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-2026-017-LCM-v2.2.2-Universal-Theme-and-High-Contrast-Design-System.md",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-101-LCM-v2.2.2-Universal-Theme-and-High-Contrast-Design-System.md",
       "walkthrough_path": "",
       "progress_state": "pushed",
       "dates": {
@@ -2041,19 +2080,20 @@
         }
       ],
       "pushed_at": "2026-09-01 15:53:01",
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-041",
+      "cr_id": "CRP-041"
     },
     {
       "id": 42,
       "timestamp": "2026-08-31 18:30:00",
       "title": "CM Control Hub Navigation Hardening, Filter Reconciliation, and Action Engine",
       "origin_repo": "LCM Workspace",
-      "cr_id": "CRP-2026-018",
       "state": "pushed",
       "bundle_id": "unassigned",
       "author": "Rolf",
       "details": "Adds Windows-style top-right Back navigation, fixes completed metric card filter, and implements batch review action suite.",
-      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-2026-018-LCM-v2.2.2-CM-Control-Hub-Navigation-Filter-and-Action-Engine.md",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-102-LCM-v2.2.2-CM-Control-Hub-Navigation-Filter-and-Action-Engine.md",
       "walkthrough_path": "",
       "progress_state": "pushed",
       "dates": {
@@ -2096,19 +2136,20 @@
         }
       ],
       "pushed_at": "2026-09-01 15:53:01",
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-042",
+      "cr_id": "CRP-042"
     },
     {
       "id": 43,
       "timestamp": "2026-08-31 19:00:00",
       "title": "Universal LCM Table UI/UX Standard & Standardized Interactive Document Viewer",
       "origin_repo": "LCM Workspace",
-      "cr_id": "CRP-2026-019",
       "state": "pushed",
       "bundle_id": "unassigned",
       "author": "Rolf",
       "details": "Integrates universal table UX standard (selection checkboxes, batch actions, search negation !term, multi-column sorting) across all dashboards.",
-      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-2026-019-LCM-v2.2.2-Standardized-Interactive-Document-Table-Viewer.md",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-103-LCM-v2.2.2-Standardized-Interactive-Document-Table-Viewer.md",
       "walkthrough_path": "",
       "progress_state": "pushed",
       "dates": {
@@ -2151,19 +2192,20 @@
         }
       ],
       "pushed_at": "2026-09-01 15:53:01",
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-043",
+      "cr_id": "CRP-043"
     },
     {
       "id": 44,
       "timestamp": "2026-09-01 13:35:00",
       "title": "LCM Deterministic Hook Engine & Zero-Trust Tool Execution Boundary",
       "origin_repo": "Workspace_AI",
-      "cr_id": "CRP-2026-020",
       "state": "pushed",
       "bundle_id": "unassigned",
       "author": "Rolf",
       "details": "Enforces review-gated git commits, repository boundary isolation, UTF-8 formatting, and privilege delegation via PreToolUse/PostToolUse hooks.",
-      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-2026-020-Workspace_AI-v7.2.0-LCM-Deterministic-Hook-Engine.md",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-104-Workspace_AI-v7.2.0-LCM-Deterministic-Hook-Engine.md",
       "walkthrough_path": "",
       "progress_state": "pushed",
       "dates": {
@@ -2206,14 +2248,15 @@
         }
       ],
       "pushed_at": "2026-09-01 15:53:01",
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-044",
+      "cr_id": "CRP-044"
     },
     {
       "id": 45,
       "timestamp": "2026-09-02 18:52:00",
       "title": "LCM Platform Crash During ShowCmControlHub Development — Context Loss and Recovery",
       "origin_repo": "Workspace_AI / Workspace_Inventory",
-      "cr_id": "BUG-2026-008",
       "state": "suggested",
       "progress_state": "undecided",
       "bundle_id": "unassigned",
@@ -2233,14 +2276,15 @@
           "note": "T0 post-hoc BUG registration for LCM crash event; registered during disaster recovery session"
         }
       ],
-      "priority": "H"
+      "priority": "H",
+      "crp_id": "BUG-045",
+      "cr_id": "BUG-045"
     },
     {
       "id": 46,
       "timestamp": "2026-09-02 18:52:00",
       "title": "Complete and Stabilize ShowCmControlHub as LCM Navigation Root with Full Dashboard Tree",
       "origin_repo": "Workspace_Inventory",
-      "cr_id": "CRP-2026-021",
       "state": "suggested",
       "progress_state": "undecided",
       "bundle_id": "unassigned",
@@ -2260,14 +2304,15 @@
           "note": "Recovery CRP - continuation of interrupted ShowCmControlHub implementation"
         }
       ],
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-046",
+      "cr_id": "CRP-046"
     },
     {
       "id": 47,
       "timestamp": "2026-09-02 18:52:00",
       "title": "Formalize CRM (Change Request Management) as Named Acceptance Stage in LCM Lifecycle Chain",
       "origin_repo": ".agents/rules / Workspace_AI",
-      "cr_id": "CRP-2026-022",
       "state": "suggested",
       "progress_state": "undecided",
       "bundle_id": "unassigned",
@@ -2287,20 +2332,21 @@
           "note": "Emerged from LCM-AI alignment discussion during disaster recovery session 2026-09-02"
         }
       ],
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-047",
+      "cr_id": "CRP-047"
     },
     {
       "id": 48,
       "timestamp": "2026-09-02 18:52:00",
       "title": "AADD Integration - Architecture/Agile Design Discussion as Formal Lifecycle Stage and Documentation Class",
       "origin_repo": ".agents/rules / Workspace_AI",
-      "cr_id": "CRP-2026-023",
       "state": "suggested",
       "progress_state": "undecided",
       "bundle_id": "unassigned",
       "author": "Rolf",
       "details": "Formalize AADD (Architecture/Agile Design Discussion) as a named lifecycle stage and documentation class in the LCM methodology. AI-human discussion content that reaches a conclusive state MUST be captured in Architecture docs and not lost at session end. The ACCEPT xxx command marks a CRP discussion as conclusive and triggers Architecture doc update. All AADD sessions are linked to CRPs. Requires update to ProposalReviewFlowPolicy.md, DocumentationStandardsPolicy.md, and a new AADD doc template. Pre-existing concept with prior CRP reference; re-registered post-crash for continuity.",
-      "plan_path": "",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-048-Workspace_Inventory-v7.1.0-CM-Control-Hub-Prio-Column-Engine.md",
       "walkthrough_path": "",
       "dates": {
         "created": "2026-09-02 18:52:00",
@@ -2314,14 +2360,15 @@
           "note": "Pre-existing concept re-registered post-crash; prior CRP reference noted"
         }
       ],
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-048",
+      "cr_id": "CRP-048"
     },
     {
       "id": 49,
       "timestamp": "2026-09-02 18:52:00",
       "title": "Tiered Governance Model (T0-T3) - Event-Proportional Review Ceremony",
       "origin_repo": ".agents/rules / Workspace_AI",
-      "cr_id": "CRP-2026-024",
       "state": "suggested",
       "progress_state": "undecided",
       "bundle_id": "unassigned",
@@ -2341,14 +2388,15 @@
           "note": "Emerged from LCM-AI alignment discussion during disaster recovery session 2026-09-02"
         }
       ],
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-049",
+      "cr_id": "CRP-049"
     },
     {
       "id": 50,
       "timestamp": "2026-09-02 18:52:00",
       "title": "Formalize HaSSD06 Subsystem BC5 Exemption in ReviewCommitGovernancePolicy.md",
       "origin_repo": ".agents/rules",
-      "cr_id": "CRP-2026-025",
       "state": "suggested",
       "progress_state": "undecided",
       "bundle_id": "unassigned",
@@ -2368,14 +2416,15 @@
           "note": "Identified as governance gap during LCM-AI alignment analysis 2026-09-02"
         }
       ],
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-050",
+      "cr_id": "CRP-050"
     },
     {
       "id": 51,
       "timestamp": "2026-09-02 18:52:00",
       "title": "Formalize implementation_plan.md as Mandatory CRP Sub-Artifact for T2 and T3 Proposals",
       "origin_repo": ".agents/rules / Workspace_AI",
-      "cr_id": "CRP-2026-026",
       "state": "suggested",
       "progress_state": "undecided",
       "bundle_id": "unassigned",
@@ -2395,14 +2444,15 @@
           "note": "User decision: retain implementation_plan.md as formal CRP artifact; not suppressed by IDE planning mode"
         }
       ],
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-051",
+      "cr_id": "CRP-051"
     },
     {
       "id": 52,
       "timestamp": "2026-09-02 18:52:00",
       "title": "Bidirectional LCM Lifecycle Chain - Formal Entry-Point Governance and Bottom-Up Cycles",
       "origin_repo": ".agents/rules / Workspace_AI",
-      "cr_id": "CRP-2026-027",
       "state": "suggested",
       "progress_state": "undecided",
       "bundle_id": "unassigned",
@@ -2422,14 +2472,15 @@
           "note": "Emerged from 60-year CS experience alignment discussion during disaster recovery session 2026-09-02"
         }
       ],
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-052",
+      "cr_id": "CRP-052"
     },
     {
       "id": 53,
       "timestamp": "2026-09-02 18:52:00",
       "title": "Resolve processed State Inconsistency Between RULE-LCM-002 and RULE-LCM-007 Canonical State Enum",
       "origin_repo": ".agents/rules",
-      "cr_id": "CRP-2026-028",
       "state": "suggested",
       "progress_state": "undecided",
       "bundle_id": "unassigned",
@@ -2449,14 +2500,15 @@
           "note": "Identified as rule taxonomy inconsistency during LCM-AI alignment analysis 2026-09-02"
         }
       ],
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-053",
+      "cr_id": "CRP-053"
     },
     {
       "id": 54,
       "timestamp": "2026-09-02 18:52:00",
       "title": "Clarify Workspace_Inventory Tool Governance Scope - Privileged Subsystem Not Exempt from Tool Scrutiny",
       "origin_repo": ".agents/rules",
-      "cr_id": "CRP-2026-029",
       "state": "suggested",
       "progress_state": "undecided",
       "bundle_id": "unassigned",
@@ -2476,14 +2528,15 @@
           "note": "Operator resolved Q3: WI tools are fully LCM-governed; rule must reflect this explicitly"
         }
       ],
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-054",
+      "cr_id": "CRP-054"
     },
     {
       "id": 55,
       "timestamp": "2026-09-02 18:52:00",
       "title": "Close RULE-LCM-013 Gap - Extend Pre-Push Gemini Sync to Single-Repo Direct Pushes",
       "origin_repo": ".agents/rules",
-      "cr_id": "CRP-2026-030",
       "state": "suggested",
       "progress_state": "undecided",
       "bundle_id": "unassigned",
@@ -2503,14 +2556,15 @@
           "note": "Identified as governance gap during LCM-AI alignment analysis 2026-09-02"
         }
       ],
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-055",
+      "cr_id": "CRP-055"
     },
     {
       "id": 56,
       "timestamp": "2026-09-02 20:16:00",
       "title": "Autonomous Loop-Fencing, Execution Boundaries, and T0 State Recovery Engine",
       "origin_repo": ".lcm",
-      "cr_id": "CRP-2026-031",
       "state": "approved",
       "progress_state": "in_progress",
       "bundle_id": "unassigned",
@@ -2553,14 +2607,15 @@
           "note": "Amended requirement: Windows Tasks created by LCM_Backup (events, tool communication) must be governed via Workspace_Supervision."
         }
       ],
-      "priority": "H"
+      "priority": "H",
+      "crp_id": "CRP-056",
+      "cr_id": "CRP-056"
     },
     {
       "id": 57,
       "timestamp": "2026-09-02 21:07:10",
       "title": "Canonical Single-Hop NTFS Junction Architecture for Subsystem Rules",
       "origin_repo": ".lcm / All Subsystems",
-      "cr_id": "CRP-2026-032",
       "state": "approved",
       "progress_state": "queued",
       "bundle_id": "unassigned",
@@ -2588,14 +2643,15 @@
           "note": "CRM Gate Accepted. Queued pending dedicated audit/migration script authoring."
         }
       ],
-      "priority": "H"
+      "priority": "H",
+      "crp_id": "CRP-057",
+      "cr_id": "CRP-057"
     },
     {
       "id": 58,
       "timestamp": "2026-09-03 11:33:30",
       "title": "Fix BCR Baseline Resolution, Path Mangling, and Agent Execution Invariants",
       "origin_repo": ".lcm / Tooling",
-      "cr_id": "CRP-2026-033",
       "state": "pushed",
       "progress_state": "pushed",
       "bundle_id": "unassigned",
@@ -2662,14 +2718,15 @@
         }
       ],
       "pushed_at": "2026-09-04 22:20:19",
-      "priority": "H"
+      "priority": "H",
+      "crp_id": "CRP-058",
+      "cr_id": "CRP-058"
     },
     {
       "id": 59,
       "timestamp": "2026-09-03 13:03:30",
       "title": "Automated Ripgrep Provisioning, System Path Provisioning, and LCM Tool Registration",
       "origin_repo": ".lcm / Tooling",
-      "cr_id": "CRP-2026-034",
       "state": "approved",
       "progress_state": "in_progress",
       "bundle_id": "unassigned",
@@ -2699,14 +2756,15 @@
           "note": "CRM Gate Accepted and authorized execution via do directive."
         }
       ],
-      "priority": "H"
+      "priority": "H",
+      "crp_id": "CRP-059",
+      "cr_id": "CRP-059"
     },
     {
       "id": 60,
       "timestamp": "2026-09-03 16:00:13",
       "title": "LCM Subsystem Architecture Formalization: .lcm Whitelisting, Submodule Isolation, and Inventory Log Routing",
       "origin_repo": ".lcm / Architecture",
-      "cr_id": "CRP-2026-036",
       "state": "pushed",
       "progress_state": "pushed",
       "bundle_id": "unassigned",
@@ -2764,15 +2822,15 @@
         "timestamp": "2026-09-04 10:57:15"
       },
       "pushed_at": "2026-09-04 22:20:19",
-      "priority": "H"
+      "priority": "H",
+      "crp_id": "CRP-060",
+      "cr_id": "CRP-060"
     },
     {
       "id": 61,
       "timestamp": "2026-09-04 11:05:00",
       "title": "Codification of Tool Traces, Execution Logging & Headless BRC Review Gates",
       "origin_repo": ".lcm / Workspace_Inventory",
-      "cr_id": "CRP-2026-037",
-      "crp_id": "CRP-2026-037",
       "state": "pushed",
       "progress_state": "pushed",
       "bundle_id": "unassigned",
@@ -2822,14 +2880,15 @@
         "timestamp": "2026-09-04 11:23:02"
       },
       "pushed_at": "2026-09-04 22:20:19",
-      "priority": "H"
+      "priority": "H",
+      "crp_id": "CRP-061",
+      "cr_id": "CRP-061"
     },
     {
       "id": 62,
       "timestamp": "2026-09-04 20:21:22",
       "title": "[TASK] Change Request Proposal: Analysis #01 – Corpus-Structural-Extraction-And-Invariants",
       "origin_repo": "Gemini / GDrive Inbox",
-      "cr_id": "CR-PROP-62",
       "state": "suggested",
       "progress_state": "undecided",
       "bundle_id": "unassigned",
@@ -2837,14 +2896,15 @@
       "details": "Source: Gemini Inbox (Analysis-01_CRP-001-Corpus-Structural-Extraction-And-Invariants.md) | Time: 2026-09-04 17:15:51 | Criticality: MEDIUM\n\n# Change Request Proposal: Analysis #01 – Corpus-Structural-Extraction-And-Invariants\r\n\r\n## Metadata\r\n- **Proposal ID:** CRP-001\r\n- **Target Analysis:** Analysis #01\r\n- **Status:** OPEN\r\n- **Staging Location:** D:\\GDrive\\LCM_ConvergenceProposals\\\r\n- **Author:** Automated LCM Generator\r\n\r\n## Purpose\r\nExecute structured indexing, semantic parsing, and invariant rule extraction across the 43-document corpus.\r\n\r\n## Proposed Changes\r\n- Index all 43 corpus artifacts and categorize by functional subsystem.\n- Extract core architectural rules and isolate conflicting or deprecated guidance.\n- Standardize extracted rules into a single canonical LCM schema.\n- Stage normalized rule sets as baseline inputs for downstream IDE LCM convergence.\n\r\n\r\n## Verification\r\n- Validate schema compliance under IDE workspace rules.\r\n- Confirm local synchronization via canonical D:\\GDrive mount.\r\n\r\n",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-062_CR-PROP-62_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-062_CR-PROP-62_Walkthrough.md",
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-062",
+      "cr_id": "CRP-062"
     },
     {
       "id": 63,
       "timestamp": "2026-09-04 20:21:23",
       "title": "[TASK] Change Request Proposal: Analysis #01 – Persistence-Architecture-And-Staging-Boundary",
       "origin_repo": "Gemini / GDrive Inbox",
-      "cr_id": "CR-PROP-63",
       "state": "suggested",
       "progress_state": "undecided",
       "bundle_id": "unassigned",
@@ -2852,14 +2912,15 @@
       "details": "Source: Gemini Inbox (Analysis-01_CRP-001-Persistence-Architecture-And-Staging-Boundary.md) | Time: 2026-09-04 17:15:51 | Criticality: MEDIUM\n\n# Change Request Proposal: Analysis #01 – Persistence-Architecture-And-Staging-Boundary\r\n\r\n## Metadata\r\n- **Proposal ID:** CRP-001\r\n- **Target Analysis:** Analysis #01\r\n- **Status:** OPEN\r\n- **Staging Location:** D:\\GDrive\\LCM_ConvergenceProposals\\\r\n- **Author:** Automated LCM Generator\r\n\r\n## Purpose\r\nFormalize the deterministic staging pipeline bridging conversational Gemini analysis with IDE-based change management via dedicated pre-review staging.\r\n\r\n## Proposed Changes\r\n- Establish D:\\GDrive\\LCM_ConvergenceProposals\\ as the dedicated pre-review staging directory.\n- Set default lifecycle status to OPEN for all newly drafted analytical proposals.\n- Define promotion path: Staging (OPEN) -> IDE/LCM Intake (D:\\GDrive\\LCM\\INBOX\\) -> Archive (D:\\GDrive\\LCM\\INBOX\\archive).\n- Enforce separation of local execution utilities (D:\\OneDrive\\cmd\\) from target data repositories.\n\r\n\r\n## Verification\r\n- Validate schema compliance under IDE workspace rules.\r\n- Confirm local synchronization via canonical D:\\GDrive mount.\r\n\r\n",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-063_CR-PROP-63_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-063_CR-PROP-63_Walkthrough.md",
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-063",
+      "cr_id": "CRP-063"
     },
     {
       "id": 64,
       "timestamp": "2026-09-04 20:21:23",
       "title": "[TASK] Change Request Proposal: Analysis #01-ff – Consolidated-Alignment-And-Governance",
       "origin_repo": "Gemini / GDrive Inbox",
-      "cr_id": "CR-PROP-64",
       "state": "suggested",
       "progress_state": "undecided",
       "bundle_id": "unassigned",
@@ -2867,14 +2928,15 @@
       "details": "Source: Gemini Inbox (Analysis-01_CRP-004-Consolidated-Alignment-And-Governance.md) | Time: 2026-09-04 17:15:51 | Criticality: MEDIUM\n\n# Change Request Proposal: Analysis #01-ff – Consolidated-Alignment-And-Governance\r\n\r\n## Metadata\r\n- **Proposal ID:** CRP-004\r\n- **Target Analysis:** Analysis #01-ff\r\n- **Status:** OPEN\r\n- **Staging Location:** D:\\GDrive\\LCM_ConvergenceProposals\\\r\n- **Author:** Automated LCM Generator\r\n\r\n## Purpose\r\nConsolidate Analysis #1 through #ff, enforcing invariant operational rules, strict path compliance under D:\\GDrive, and automated lifecycle management.\r\n\r\n## Proposed Changes\r\n- Enforce global timestamp and minimal output behavior.\n- Standardize all LCM pre-review staging strictly to D:\\GDrive\\LCM_ConvergenceProposals without unauthorized subpaths.\n- Provide a single reusable script adhering to PowerShell header governance.\n\r\n\r\n## Verification\r\n- Validate schema compliance under IDE workspace rules.\r\n- Confirm local synchronization via canonical D:\\GDrive mount.\r\n\r\n",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-064_CR-PROP-64_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-064_CR-PROP-64_Walkthrough.md",
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-064",
+      "cr_id": "CRP-064"
     },
     {
       "id": 65,
       "timestamp": "2026-09-04 20:21:23",
       "title": "[TASK] Change Request Proposal: Analysis #02 – Command-Elimination-And-Runtime-Rule-Alignment",
       "origin_repo": "Gemini / GDrive Inbox",
-      "cr_id": "CR-PROP-65",
       "state": "suggested",
       "progress_state": "undecided",
       "bundle_id": "unassigned",
@@ -2882,31 +2944,33 @@
       "details": "Source: Gemini Inbox (Analysis-02_CRP-002-Command-Elimination-And-Runtime-Rule-Alignment.md) | Time: 2026-09-04 17:15:51 | Criticality: MEDIUM\n\n# Change Request Proposal: Analysis #02 – Command-Elimination-And-Runtime-Rule-Alignment\r\n\r\n## Metadata\r\n- **Proposal ID:** CRP-002\r\n- **Target Analysis:** Analysis #02\r\n- **Status:** OPEN\r\n- **Staging Location:** D:\\GDrive\\LCM_ConvergenceProposals\\\r\n- **Author:** Automated LCM Generator\r\n\r\n## Purpose\r\nPermanently eliminate manual conversational triggers (@IRA, @TRH) and enforce native ISO timestamp prefixing and deterministic output rules.\r\n\r\n## Proposed Changes\r\n- Deprecate manual prompt triggers @IRA and @TRH.\n- Enforce standard response header format: YYYYMMDD_HHMM Current Activity: <context> natively.\n- Align .agents/rules/Workspace-Rules.md to mandate zero conversational padding and strict technical density.\n- Ensure PowerShell 7 governance compliance (strict headers, versioning, explicit types) across all generation utilities.\n\r\n\r\n## Verification\r\n- Validate schema compliance under IDE workspace rules.\r\n- Confirm local synchronization via canonical D:\\GDrive mount.\r\n\r\n",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-065_CR-PROP-65_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-065_CR-PROP-65_Walkthrough.md",
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-065",
+      "cr_id": "CRP-065"
     },
     {
       "id": 66,
       "timestamp": "2026-09-04 20:21:23",
       "title": "[TASK] Change Request Proposal: Analysis #02 – Corpus-Pattern-Synthesis-And-Rule-Convergence",
       "origin_repo": "Gemini / GDrive Inbox",
-      "cr_id": "CR-PROP-66",
-      "state": "suggested",
-      "progress_state": "undecided",
+      "state": "processed",
       "bundle_id": "unassigned",
       "author": "Gemini Cloud",
       "details": "Source: Gemini Inbox (Analysis-02_CRP-002-Corpus-Pattern-Synthesis-And-Rule-Convergence.md) | Time: 2026-09-04 17:15:51 | Criticality: MEDIUM\n\n# Change Request Proposal: Analysis #02 – Corpus-Pattern-Synthesis-And-Rule-Convergence\r\n\r\n## Metadata\r\n- **Proposal ID:** CRP-002\r\n- **Target Analysis:** Analysis #02\r\n- **Status:** OPEN\r\n- **Staging Location:** D:\\GDrive\\LCM_ConvergenceProposals\\\r\n- **Author:** Automated LCM Generator\r\n\r\n## Purpose\r\nSynthesize extracted corpus patterns into streamlined system directives and eliminate obsolete manual triggers.\r\n\r\n## Proposed Changes\r\n- Consolidate repetitive patterns identified across the 43 texts into singular directives.\n- Deprecate legacy operational flags (@IRA, @TRH) documented in historical files.\n- Draft workspace rule updates targeting .agents/rules/Workspace-Rules.md.\n- Enforce automated, non-conversational timestamp prefixing across all future agent interactions.\n\r\n\r\n## Verification\r\n- Validate schema compliance under IDE workspace rules.\r\n- Confirm local synchronization via canonical D:\\GDrive mount.\r\n\r\n",
       "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-066_CR-PROP-66_Plan.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-066_CR-PROP-66_Walkthrough.md",
-      "priority": "M"
+      "priority": "M",
+      "progress_state": "in_progress",
+      "crp_id": "CRP-066",
+      "cr_id": "CRP-066"
     },
     {
       "id": 67,
       "timestamp": "2026-09-04 20:50:00",
       "title": "[BUG] LCD Browser Display Table Port 9876 Channel Compliance & Print/PDF Bridge",
       "origin_repo": "LCM",
-      "cr_id": "CR-PROP-67",
       "state": "processed",
-      "bundle_id": "CRP-2026-021-LCM-v6.2.1-LCD-Browser-Table-Port-9876-Channel-Compliance",
+      "bundle_id": "BUG-067",
       "author": "rgbig",
       "details": "Remediate LCD browser display table Print/PDF button unresponsiveness and enforce architectural compliance routing all display table operations through Port 9876 REST Bridge Daemon.",
       "dates": {
@@ -2928,10 +2992,12 @@
           "note": "Remediation in progress"
         }
       ],
-      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-067_CR-PROP-67_Plan.md",
+      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-067-LCM-v6.2.1-LCD-Browser-Table-Port-9876-Channel-Compliance.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-067_CR-PROP-67_Walkthrough.md",
       "priority": "H",
-      "progress_state": "in_progress"
+      "progress_state": "in_progress",
+      "crp_id": "BUG-067",
+      "cr_id": "BUG-067"
     },
     {
       "description": "CM Control Hub template script block escaping fix, global Escape modal dismissal, and alignment with Display Standard.",
@@ -2959,11 +3025,13 @@
         "created": "2026-09-05 20:55:30",
         "pushed": "2026-09-05 22:33:38"
       },
-      "cr_id": "CRP-2026-037",
       "state": "pushed",
       "progress_state": "pushed",
       "pushed_at": "2026-09-05 22:33:38",
-      "priority": "H"
+      "priority": "H",
+      "crp_id": "CRP-068",
+      "cr_id": "CRP-068",
+      "timestamp": "2026-09-05 20:55:30"
     },
     {
       "description": "Modal exit ergonomics via Escape key across Tool Explorer subdisplays.",
@@ -2991,11 +3059,13 @@
         "created": "2026-09-05 20:55:30",
         "pushed": "2026-09-05 22:33:38"
       },
-      "cr_id": "CRP-2026-038",
       "state": "pushed",
       "progress_state": "pushed",
       "pushed_at": "2026-09-05 22:33:38",
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "CRP-069",
+      "cr_id": "CRP-069",
+      "timestamp": "2026-09-05 20:55:30"
     },
     {
       "description": "Direct code editing in active VS Code IDE instead of Notepad++.",
@@ -3023,11 +3093,13 @@
         "created": "2026-09-05 20:55:30",
         "pushed": "2026-09-05 22:33:38"
       },
-      "cr_id": "BUG-2026-004",
       "state": "pushed",
       "progress_state": "pushed",
       "pushed_at": "2026-09-05 22:33:38",
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "BUG-070",
+      "cr_id": "BUG-070",
+      "timestamp": "2026-09-05 20:55:30"
     },
     {
       "description": "Tool renaming persistence via tool_catalog_overrides.json and immediate .cmd trampoline regeneration in .lcm/Cmd.",
@@ -3055,11 +3127,13 @@
         "created": "2026-09-05 20:55:30",
         "pushed": "2026-09-05 22:33:38"
       },
-      "cr_id": "BUG-2026-005",
       "state": "pushed",
       "progress_state": "pushed",
       "pushed_at": "2026-09-05 22:33:38",
-      "priority": "H"
+      "priority": "H",
+      "crp_id": "BUG-071",
+      "cr_id": "BUG-071",
+      "timestamp": "2026-09-05 20:55:30"
     },
     {
       "description": "Automatic elevation interlock for SystemPrivilege PsExec tools.",
@@ -3087,11 +3161,13 @@
         "created": "2026-09-05 20:55:30",
         "pushed": "2026-09-05 22:33:38"
       },
-      "cr_id": "BUG-2026-006",
       "state": "pushed",
       "progress_state": "pushed",
       "pushed_at": "2026-09-05 22:33:38",
-      "priority": "H"
+      "priority": "H",
+      "crp_id": "BUG-072",
+      "cr_id": "BUG-072",
+      "timestamp": "2026-09-05 20:55:30"
     },
     {
       "description": "Resolved path errors for Set-MouseFlickerInvariants, forwarded self-elevation arguments, and surfaced script dependencies.",
@@ -3119,11 +3195,13 @@
         "created": "2026-09-05 20:55:30",
         "pushed": "2026-09-05 22:33:38"
       },
-      "cr_id": "BUG-2026-007",
       "state": "pushed",
       "progress_state": "pushed",
       "pushed_at": "2026-09-05 22:33:38",
-      "priority": "H"
+      "priority": "H",
+      "crp_id": "BUG-073",
+      "cr_id": "BUG-073",
+      "timestamp": "2026-09-05 20:55:30"
     },
     {
       "description": "Correct log file detection and cleanup across all LCM log roots.",
@@ -3151,11 +3229,13 @@
         "created": "2026-09-05 20:55:30",
         "pushed": "2026-09-05 22:33:38"
       },
-      "cr_id": "BUG-2026-008",
       "state": "pushed",
       "progress_state": "pushed",
       "pushed_at": "2026-09-05 22:33:38",
-      "priority": "M"
+      "priority": "M",
+      "crp_id": "BUG-074",
+      "cr_id": "BUG-074",
+      "timestamp": "2026-09-05 20:55:30"
     },
     {
       "description": "Convergence of ShowToolIndex into ShowTools and enforcing browser table displays for GUI role tools unless -NoBrowser is specified.",
@@ -3183,24 +3263,25 @@
         "created": "2026-09-05 20:55:30",
         "pushed": "2026-09-05 22:33:38"
       },
-      "cr_id": "BUG-2026-009",
       "state": "pushed",
       "progress_state": "pushed",
       "pushed_at": "2026-09-05 22:33:38",
-      "priority": "H"
+      "priority": "H",
+      "crp_id": "BUG-075",
+      "cr_id": "BUG-075",
+      "timestamp": "2026-09-05 20:55:30"
     },
     {
       "id": 76,
       "timestamp": "2026-09-05 21:50:00",
       "title": "Bug/CRP Intake Gate, PROCEED Trigger Invariants, and Batch Execution Granularity",
       "origin_repo": "Workspace_Inventory",
-      "cr_id": "CRP-2026-022",
-      "bundle_id": "BUNDLE-2026-04",
+      "bundle_id": "CRP-076",
       "state": "pushed",
       "progress_state": "pushed",
       "author": "Rolf, Workspace_AI",
       "details": "Codify strict intake gate for BUG: and CRP: designators, mandate OPEN initial state, define PROCEED / PROCEED ALL triggers, establish autonomous system exception boundary with 2-attempt loop breaker, and protect against token/credit exhaustion.",
-      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-076_CRP-2026-022_Plan.md",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-076-LCM-v7.3.0-Bug-Crp-Intake-Proceed-Trigger-and-Batch-Bounds.md",
       "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-076_CRP-2026-022_Walkthrough.md",
       "dates": {
         "created": "2026-09-05 21:50:00",
@@ -3236,14 +3317,15 @@
         }
       ],
       "pushed_at": "2026-09-05 22:33:38",
-      "priority": "H"
+      "priority": "H",
+      "crp_id": "CRP-076",
+      "cr_id": "CRP-076"
     },
     {
       "id": 77,
       "timestamp": "2026-09-06 11:06:00",
       "title": "Fix JavaScript Syntax Error and Stale Atom Path in Show-HaInventoryApp.ps1",
       "origin_repo": "HaSSD06_Inventory",
-      "cr_id": "CR-2026-048",
       "bug_id": "BUG-2026-008",
       "bundle_id": "BUNDLE-2026-05",
       "state": "completed",
@@ -3278,14 +3360,15 @@
           "note": "Fixed JS template literal syntax error, corrected table print atom path, regenerated SHOW_HA_INVENTORY.html, verified 0 JS errors and passed all quality gates."
         }
       ],
-      "priority": "H"
+      "priority": "H",
+      "crp_id": "CRP-077",
+      "cr_id": "CRP-077"
     },
     {
       "id": 78,
       "timestamp": "2026-09-06 11:28:00",
       "title": "CM Control Hub Display Standard Conformance and Console Command Engine",
       "origin_repo": "Workspace_Inventory",
-      "cr_id": "CR-2026-049",
       "bug_id": "BUG-2026-009",
       "bundle_id": "BUNDLE-2026-05",
       "state": "suggested",
@@ -3313,7 +3396,9 @@
         }
       ],
       "priority": "H",
-      "progress_state": "completed"
+      "progress_state": "completed",
+      "crp_id": "CRP-078",
+      "cr_id": "CRP-078"
     },
     {
       "id": 79,
@@ -3321,7 +3406,7 @@
       "title": "CM Control Hub Architectural Overhaul, Unified CRP Identifier, Silent Daemon & Status Engine",
       "origin_repo": "Workspace_Inventory",
       "cr_id": "CRP-079",
-      "bundle_id": "CRP-079-Workspace_Inventory-v7.1.0-CM-Control-Hub-Unified-Identifier-Engine",
+      "bundle_id": "CRP-079",
       "state": "processed",
       "author": "Rolf, Workspace_AI",
       "details": "Unified sequence CRP-079 identifier, single merged CRP ID column, STATUS column and committed state, high-contrast live feedback ticker, silent daemon execution, unboxed header status layout, and bidirectional status reopening sync.",
@@ -3346,7 +3431,8 @@
         }
       ],
       "priority": "H",
-      "progress_state": "committed"
+      "progress_state": "committed",
+      "crp_id": "CRP-079"
     },
     {
       "id": 80,
@@ -3355,7 +3441,7 @@
       "title": "Modernize BackgroundModifier Architecture via Dynamic Rainmeter Skin Engine",
       "origin_repo": "BackgroundModifier",
       "cr_id": "CRP-080",
-      "bundle_id": "CRP-080-BackgroundModifier",
+      "bundle_id": "CRP-080",
       "state": "pushed",
       "progress_state": "pushed",
       "author": "Rolf",
@@ -3418,7 +3504,7 @@
       "title": "Design and Implement LCM Universal Installation Path, Packaging Agent, Preflight Engine, and UX Verification Suite",
       "origin_repo": "Workspace_AI / Workspace_Inventory",
       "cr_id": "CRP-081",
-      "bundle_id": "CRP-081-Workspace_AI _ Workspace_Inventory",
+      "bundle_id": "CRP-081",
       "state": "pushed",
       "progress_state": "pushed",
       "author": "rgbig",
@@ -3481,7 +3567,7 @@
       "title": "Enhance Pre-Installation Check with Modular Tool Selection & Conditional Deployment Engine",
       "origin_repo": "Workspace_AI / Workspace_Inventory",
       "cr_id": "CRP-082",
-      "bundle_id": "CRP-082-Workspace_AI _ Workspace_Inventory",
+      "bundle_id": "CRP-082",
       "state": "pushed",
       "progress_state": "pushed",
       "author": "rgbig",
@@ -3544,7 +3630,7 @@
       "title": "Design and Author Comprehensive Tripartite Specifications and Normative Runbook for Installation_LCD",
       "origin_repo": "Installation_LCD",
       "cr_id": "CRP-083",
-      "bundle_id": "CRP-083-Installation_LCD",
+      "bundle_id": "CRP-083",
       "state": "pushed",
       "progress_state": "pushed",
       "author": "rgbig",
@@ -3607,7 +3693,7 @@
       "title": "Default to Lightweight BUG Report on Error/Unwanted Behavior Feedback",
       "origin_repo": "Workspace_AI / Workspace_Inventory",
       "cr_id": "CRP-084",
-      "bundle_id": "CRP-084-Workspace_AI _ Workspace_Inventory",
+      "bundle_id": "CRP-084",
       "state": "pushed",
       "progress_state": "pushed",
       "author": "rgbig",
@@ -3670,7 +3756,7 @@
       "title": "Scope and Version-Explicit Naming Standard for Change Request Proposals (CRPs)",
       "origin_repo": "Workspace_Inventory / Governance",
       "cr_id": "CRP-085",
-      "bundle_id": "CRP-085-Workspace_Inventory _ Governance",
+      "bundle_id": "CRP-085",
       "state": "pushed",
       "progress_state": "pushed",
       "author": "rgbig",
@@ -3733,7 +3819,7 @@
       "title": "Workspace Inventory Viewer Interactive Actions Suite, Non-Git Visibility, and Data Versioning Exemption",
       "origin_repo": "Workspace_Inventory",
       "cr_id": "CRP-086",
-      "bundle_id": "CRP-086-Workspace_Inventory",
+      "bundle_id": "CRP-086",
       "state": "pushed",
       "progress_state": "pushed",
       "author": "rgbig",
@@ -3796,7 +3882,7 @@
       "title": "Unescaped $timestamp Variable Interpolation in Show-HaInventoryApp.ps1",
       "origin_repo": "HaSSD06_Inventory",
       "cr_id": "CRP-087",
-      "bundle_id": "CRP-087-HaSSD06_Inventory",
+      "bundle_id": "CRP-087",
       "state": "pushed",
       "progress_state": "pushed",
       "author": "rgbig",
@@ -3859,13 +3945,13 @@
       "title": "Spook 👻 Your Homie Custom Integration Update (v5.0.0 -> v5.1.0)",
       "origin_repo": "HaSSD06",
       "cr_id": "CRP-088",
-      "bundle_id": "CRP-088-HaSSD06",
+      "bundle_id": "CRP-088",
       "state": "pushed",
       "progress_state": "pushed",
       "author": "rgbig",
       "priority": "M",
       "details": "Software update for Spook custom integration via HACS. (Re-instated as CRP-088 with verified final state 'pushed' from historical #28 / CR-2026-039).",
-      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-2026-009-HaSSD06-v5.1.0-Spook-Homie-Integration-Update.md",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-088-HaSSD06-v5.1.0-Spook-Homie-Integration-Update.md",
       "walkthrough_path": "",
       "dates": {
         "created": "2026-08-30 16:38:00",
@@ -3922,13 +4008,13 @@
       "title": "Shelly BLU Gateway Firmware Stabilization (2.0.1-beta1 -> 2.0.0 Stable)",
       "origin_repo": "HaSSD06",
       "cr_id": "CRP-089",
-      "bundle_id": "CRP-089-HaSSD06",
+      "bundle_id": "CRP-089",
       "state": "pushed",
       "progress_state": "pushed",
       "author": "rgbig",
       "priority": "M",
       "details": "Transition Shelly BLU gateway from beta firmware to production stable 2.0.0. (Re-instated as CRP-089 with verified final state 'pushed' from historical #29 / CR-2026-040).",
-      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-2026-010-HaSSD06-v2.0.0-Shelly-Blu-Gateway-Firmware-Stabilization.md",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-089-HaSSD06-v2.0.0-Shelly-Blu-Gateway-Firmware-Stabilization.md",
       "walkthrough_path": "",
       "dates": {
         "created": "2026-08-30 16:38:10",
@@ -3985,13 +4071,13 @@
       "title": "FRITZ!Box Deprecated Button Entities Cleanup (Breaks in HA 2026.11.0)",
       "origin_repo": "HaSSD06",
       "cr_id": "CRP-090",
-      "bundle_id": "CRP-090-HaSSD06",
+      "bundle_id": "CRP-090",
       "state": "pushed",
       "progress_state": "pushed",
       "author": "rgbig",
       "priority": "M",
       "details": "Resolve deprecated cleanup and firmware update button entities before HA Core 2026.11.0. (Re-instated as CRP-090 with verified final state 'pushed' from historical #30 / CR-2026-041).",
-      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-2026-011-HaSSD06-v2026.11.0-FritzBox-Deprecated-Button-Entities-Removal.md",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-090-HaSSD06-v2026.11.0-FritzBox-Deprecated-Button-Entities-Removal.md",
       "walkthrough_path": "",
       "dates": {
         "created": "2026-08-30 16:38:20",
@@ -4048,13 +4134,13 @@
       "title": "Active Notification Count Template Sensor Default Value Fix",
       "origin_repo": "HaSSD06",
       "cr_id": "CRP-091",
-      "bundle_id": "CRP-091-HaSSD06",
+      "bundle_id": "CRP-091",
       "state": "pushed",
       "progress_state": "pushed",
       "author": "rgbig",
       "priority": "M",
       "details": "Append default(0) and int(0) filter to eliminate invalid sensor state validation errors. (Re-instated as CRP-091 with verified final state 'pushed' from historical #31 / CR-2026-042).",
-      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-2026-012-HaSSD06-v7.1.1-Active-Notification-Count-Template-Filter-Fix.md",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-091-HaSSD06-v7.1.1-Active-Notification-Count-Template-Filter-Fix.md",
       "walkthrough_path": "",
       "dates": {
         "created": "2026-08-30 16:38:30",
@@ -4106,18 +4192,18 @@
     },
     {
       "id": 92,
-      "crp_id": "CRP-092",
+      "crp_id": "BUG-092",
       "timestamp": "2026-09-06 23:09:10",
       "title": "Alexa Devices HTTP/2 Push DNS Resolution Timeout (ClientConnectorDNSError)",
       "origin_repo": "HaSSD06",
-      "cr_id": "CRP-092",
-      "bundle_id": "CRP-092-HaSSD06",
+      "cr_id": "BUG-092",
+      "bundle_id": "BUG-092",
       "state": "pushed",
       "progress_state": "pushed",
       "author": "rgbig",
       "priority": "M",
       "details": "Upstream DNS timeout during high-concurrency HTTP/2 push events in aioamazondevices. (Re-instated as CRP-092 with verified final state 'pushed' from historical #32 / CR-2026-043).",
-      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-2026-003-HaSSD06-v2026.8.3-Alexa-Devices-DNS-Timeout-During-HTTP2-Push.md",
+      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-092-HaSSD06-v2026.8.3-Alexa-Devices-DNS-Timeout-During-HTTP2-Push.md",
       "walkthrough_path": "",
       "dates": {
         "created": "2026-08-30 16:38:40",
@@ -4169,18 +4255,18 @@
     },
     {
       "id": 93,
-      "crp_id": "CRP-093",
+      "crp_id": "BUG-093",
       "timestamp": "2026-09-06 23:09:10",
       "title": "Tuya Device Handlers Invalid Enum Value for Datapoint relay_status",
       "origin_repo": "HaSSD06",
-      "cr_id": "CRP-093",
-      "bundle_id": "CRP-093-HaSSD06",
+      "cr_id": "BUG-093",
+      "bundle_id": "BUG-093",
       "state": "pushed",
       "progress_state": "pushed",
       "author": "rgbig",
       "priority": "M",
       "details": "Upstream schema mismatch in tuya-device-handlers for smart plug product 9zynrkxe5tys0rja. (Re-instated as CRP-093 with verified final state 'pushed' from historical #33 / CR-2026-044).",
-      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-2026-004-HaSSD06-v2026.8.3-Tuya-Device-Handlers-Relay-Status-Enum-Mismatch.md",
+      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-093-HaSSD06-v2026.8.3-Tuya-Device-Handlers-Relay-Status-Enum-Mismatch.md",
       "walkthrough_path": "",
       "dates": {
         "created": "2026-08-30 16:38:50",
@@ -4232,18 +4318,18 @@
     },
     {
       "id": 94,
-      "crp_id": "CRP-094",
+      "crp_id": "BUG-094",
       "timestamp": "2026-09-06 23:09:10",
       "title": "Tuya Local Unregistered Product IDs in Smart Plug Device Profiles",
       "origin_repo": "HaSSD06",
-      "cr_id": "CRP-094",
-      "bundle_id": "CRP-094-HaSSD06",
+      "cr_id": "BUG-094",
+      "bundle_id": "BUG-094",
       "state": "pushed",
       "progress_state": "pushed",
       "author": "rgbig",
       "priority": "M",
       "details": "Hardware product IDs keym9qkuywghyrvs and keyjup78v54myhan unlisted in tuya_local config. (Re-instated as CRP-094 with verified final state 'pushed' from historical #34 / CR-2026-045).",
-      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-2026-005-HaSSD06-v2026.8.3-Tuya-Local-Unregistered-Product-ID-SmartPlug.md",
+      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-094-HaSSD06-v2026.8.3-Tuya-Local-Unregistered-Product-ID-SmartPlug.md",
       "walkthrough_path": "",
       "dates": {
         "created": "2026-08-30 16:39:00",
@@ -4300,7 +4386,7 @@
       "title": "Workspace Artifact Deduplication, Archive Consolidation & .lcd Junction Removal",
       "origin_repo": "Workspace_AI",
       "cr_id": "CRP-095",
-      "bundle_id": "CRP-095-Workspace_AI",
+      "bundle_id": "CRP-095",
       "state": "pushed",
       "progress_state": "pushed",
       "author": "rgbig",
@@ -4369,7 +4455,7 @@
       "title": "Disable Raspberry Pi Onboard Bluetooth Adapter & Consolidate BLE to Shelly Gateway",
       "origin_repo": "HaSSD06",
       "cr_id": "CRP-096",
-      "bundle_id": "CRP-096-HaSSD06",
+      "bundle_id": "CRP-096",
       "state": "pushed",
       "progress_state": "pushed",
       "author": "rgbig",
@@ -4433,18 +4519,18 @@
     },
     {
       "id": 97,
-      "crp_id": "CRP-097",
+      "crp_id": "BUG-097",
       "timestamp": "2026-09-06 23:09:10",
       "title": "Tool Explorer '@nn-' Prefix Tool Disappearance on Filter Reset",
       "origin_repo": "LCD / Tool Explorer",
-      "cr_id": "CRP-097",
-      "bundle_id": "CRP-097-LCD _ Tool Explorer",
+      "cr_id": "BUG-097",
+      "bundle_id": "BUG-097",
       "state": "pushed",
       "progress_state": "pushed",
       "author": "Rolf",
       "priority": "H",
       "details": "Restores all 25 @00- to @21- customization tools in Tool Explorer, preserving numerical prefixes in filenames while providing clean chat trampolines. (Re-instated as CRP-097 with verified final state 'pushed' from historical #37 / BUG-2026-006).",
-      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-2026-006-LCM-v2.2.1-Tool-Explorer-AtPrefix-Filter-Exclusion.md",
+      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-097-LCM-v2.2.1-Tool-Explorer-AtPrefix-Filter-Exclusion.md",
       "walkthrough_path": "",
       "dates": {
         "created": "2026-08-31 16:30:00",
@@ -4502,18 +4588,18 @@
     },
     {
       "id": 98,
-      "crp_id": "CRP-098",
+      "crp_id": "BUG-098",
       "timestamp": "2026-09-06 23:09:10",
       "title": "Excessive Repetitive Windows Notifications during Project Rule Access",
       "origin_repo": "Workspace_AI",
-      "cr_id": "CRP-098",
-      "bundle_id": "CRP-098-Workspace_AI",
+      "cr_id": "BUG-098",
+      "bundle_id": "BUG-098",
       "state": "pushed",
       "progress_state": "pushed",
       "author": "Rolf",
       "priority": "H",
       "details": "Suppresses excessive duplicate Windows notification toasts generated when accessing project standards documentation. (Re-instated as CRP-098 with verified final state 'pushed' from historical #38 / BUG-2026-007).",
-      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-2026-007-Workspace_AI-v7.1.2-Windows-Notification-Spam-Suppression.md",
+      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-098-Workspace_AI-v7.1.2-Windows-Notification-Spam-Suppression.md",
       "walkthrough_path": "",
       "dates": {
         "created": "2026-08-31 16:45:00",
@@ -4576,13 +4662,13 @@
       "title": "Tool Explorer Asset Path Resolution, Draggable Help Modal, and Catalog Sync",
       "origin_repo": "LCD / Tool Explorer",
       "cr_id": "CRP-099",
-      "bundle_id": "CRP-099-LCD _ Tool Explorer",
+      "bundle_id": "CRP-099",
       "state": "pushed",
       "progress_state": "pushed",
       "author": "Rolf",
       "priority": "M",
       "details": "Repairs asset path fallback candidate arrays, implements non-blocking draggable help modal, and expands catalog to 176 tools. (Re-instated as CRP-099 with verified final state 'pushed' from historical #39 / CRP-2026-015).",
-      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-2026-015-LCM-v2.2.1-Tool-Explorer-Asset-Path-Resolution-and-Multi-Tab-Launch-Repair.md",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-099-LCM-v2.2.1-Tool-Explorer-Asset-Path-Resolution-and-Multi-Tab-Launch-Repair.md",
       "walkthrough_path": "",
       "dates": {
         "created": "2026-08-31 17:00:00",
@@ -4645,13 +4731,13 @@
       "title": "Prevent BLE Packet Collisions via Selective Single-Receiver Ingestion",
       "origin_repo": "HaSSD06",
       "cr_id": "CRP-100",
-      "bundle_id": "CRP-100-HaSSD06",
+      "bundle_id": "CRP-100",
       "state": "pushed",
       "progress_state": "pushed",
       "author": "Rolf",
       "priority": "M",
       "details": "Prevents BLE multi-hub collisions across 51 dynamic Bluetooth entities, scheduling twice-daily supervision and logging telemetry. (Re-instated as CRP-100 with verified final state 'pushed' from historical #40 / CRP-2026-016).",
-      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-2026-016-HaSSD06-v7.1.2-BLE-Selective-Single-Receiver-Routing.md",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-100-HaSSD06-v7.1.2-BLE-Selective-Single-Receiver-Routing.md",
       "walkthrough_path": "",
       "dates": {
         "created": "2026-08-31 17:30:00",
@@ -4714,13 +4800,13 @@
       "title": "Universal Light/Dark Theme Standardization & High-Contrast Design Hardening",
       "origin_repo": "LCM Workspace",
       "cr_id": "CRP-101",
-      "bundle_id": "CRP-101-LCM Workspace",
+      "bundle_id": "CRP-101",
       "state": "pushed",
       "progress_state": "pushed",
       "author": "Rolf",
       "priority": "M",
       "details": "Standardizes high-contrast light and dark theme color tokens across all 4 LCM dashboards with persistent scrollbars. (Re-instated as CRP-101 with verified final state 'pushed' from historical #41 / CRP-2026-017).",
-      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-2026-017-LCM-v2.2.2-Universal-Theme-and-High-Contrast-Design-System.md",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-101-LCM-v2.2.2-Universal-Theme-and-High-Contrast-Design-System.md",
       "walkthrough_path": "",
       "dates": {
         "created": "2026-08-31 18:00:00",
@@ -4783,13 +4869,13 @@
       "title": "CM Control Hub Navigation Hardening, Filter Reconciliation, and Action Engine",
       "origin_repo": "LCM Workspace",
       "cr_id": "CRP-102",
-      "bundle_id": "CRP-102-LCM Workspace",
+      "bundle_id": "CRP-102",
       "state": "pushed",
       "progress_state": "pushed",
       "author": "Rolf",
       "priority": "M",
       "details": "Adds Windows-style top-right Back navigation, fixes completed metric card filter, and implements batch review action suite. (Re-instated as CRP-102 with verified final state 'pushed' from historical #42 / CRP-2026-018).",
-      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-2026-018-LCM-v2.2.2-CM-Control-Hub-Navigation-Filter-and-Action-Engine.md",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-102-LCM-v2.2.2-CM-Control-Hub-Navigation-Filter-and-Action-Engine.md",
       "walkthrough_path": "",
       "dates": {
         "created": "2026-08-31 18:30:00",
@@ -4852,13 +4938,13 @@
       "title": "Universal LCM Table UI/UX Standard & Standardized Interactive Document Viewer",
       "origin_repo": "LCM Workspace",
       "cr_id": "CRP-103",
-      "bundle_id": "CRP-103-LCM Workspace",
+      "bundle_id": "CRP-103",
       "state": "pushed",
       "progress_state": "pushed",
       "author": "Rolf",
       "priority": "M",
       "details": "Integrates universal table UX standard (selection checkboxes, batch actions, search negation !term, multi-column sorting) across all dashboards. (Re-instated as CRP-103 with verified final state 'pushed' from historical #43 / CRP-2026-019).",
-      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-2026-019-LCM-v2.2.2-Standardized-Interactive-Document-Table-Viewer.md",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-103-LCM-v2.2.2-Standardized-Interactive-Document-Table-Viewer.md",
       "walkthrough_path": "",
       "dates": {
         "created": "2026-08-31 19:00:00",
@@ -4921,13 +5007,13 @@
       "title": "LCM Deterministic Hook Engine & Zero-Trust Tool Execution Boundary",
       "origin_repo": "Workspace_AI",
       "cr_id": "CRP-104",
-      "bundle_id": "CRP-104-Workspace_AI",
+      "bundle_id": "CRP-104",
       "state": "pushed",
       "progress_state": "pushed",
       "author": "Rolf",
       "priority": "M",
       "details": "Enforces review-gated git commits, repository boundary isolation, UTF-8 formatting, and privilege delegation via PreToolUse/PostToolUse hooks. (Re-instated as CRP-104 with verified final state 'pushed' from historical #44 / CRP-2026-020).",
-      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-2026-020-Workspace_AI-v7.2.0-LCM-Deterministic-Hook-Engine.md",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-104-Workspace_AI-v7.2.0-LCM-Deterministic-Hook-Engine.md",
       "walkthrough_path": "",
       "dates": {
         "created": "2026-09-01 13:35:00",
@@ -4990,19 +5076,19 @@
       "title": "Universal LCM Browser Table UI/UX Standard, Theme Support & High-Contrast Design System",
       "origin_repo": "Workspace_Inventory",
       "cr_id": "CRP-105",
-      "bundle_id": "CRP-105-Workspace_Inventory",
-      "state": "deferred",
-      "progress_state": "deferred",
+      "bundle_id": "CRP-105",
+      "state": "suggested",
       "author": "Rolf, Workspace_AI",
       "priority": "M",
       "details": "Author and codify universal UI/UX standard for interactive browser tables across LCM tools. (Re-instated as active OPEN proposal from specification CRP-2026-048). (Re-instated as CRP-105 with verified final state 'deferred' from specification CRP-2026-048).",
-      "plan_path": "Workspace_Inventory/change_requests/Workspace_Inventory/CRP-2026-048-LCM-UI-Template-Standardization.md",
+      "plan_path": "Workspace_Inventory/change_requests/Workspace_Inventory/CRP-105-LCM-UI-Template-Standardization.md",
       "walkthrough_path": "",
       "dates": {
         "created": "2026-09-01 14:00:00",
         "suggested": "2026-09-01 14:00:00",
         "deferred": "2026-09-01 14:30:00",
-        "reinstated": "2026-09-06 23:17:33"
+        "reinstated": "2026-09-06 23:17:33",
+        "completed": "2026-09-07 15:35:00"
       },
       "state_history": [
         {
@@ -5022,6 +5108,12 @@
           "timestamp": "2026-09-06 23:17:33",
           "user": "Operator / AI Re-instatement",
           "note": "Re-instated as CRP-105 with verified final state 'deferred' from specification CRP-2026-048."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-07 15:35:00",
+          "user": "Operator PROCEED 105",
+          "note": "Activated via PROCEED 105. Implemented universal theme toggling (Light/Dark mode) with persistent localStorage synchronization and high-contrast WCAG AAA palette in CM_CONTROL_HUB.html."
         }
       ],
       "historical_source": {
@@ -5029,7 +5121,8 @@
         "spec_path": "Workspace_Inventory/change_requests/Workspace_Inventory/CRP-2026-048-LCM-UI-Template-Standardization.md",
         "final_state": "deferred",
         "final_progress": "deferred"
-      }
+      },
+      "progress_state": "verification"
     },
     {
       "id": 106,
@@ -5038,12 +5131,12 @@
       "title": "Tool Architecture Consolidation, Centralized Dispatch Trampolines & Headless Logging",
       "origin_repo": "LCM / Tooling",
       "cr_id": "CRP-106",
-      "bundle_id": "CRP-106-LCM _ Tooling",
+      "bundle_id": "CRP-106",
       "state": "completed",
       "author": "Rolf, Workspace_AI",
       "priority": "M",
       "details": "Consolidate tool dispatch mechanisms, eliminate path fragmentation, and standardize headless logging. (Re-instated as active OPEN proposal from specification CRP-2026-049). (Re-instated as CRP-106 with verified state 'suggested' from specification CRP-2026-049).",
-      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-2026-049-LCM-v6.2.0-Tool-Architecture-Consolidation.md",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-106-LCM-v6.2.0-Tool-Architecture-Consolidation.md",
       "walkthrough_path": "",
       "dates": {
         "created": "2026-09-04 12:00:00",
@@ -5086,13 +5179,13 @@
       "title": "Automated Privilege-Aware Tool Execution & Elevation Interception",
       "origin_repo": "LCM / Governance",
       "cr_id": "CRP-107",
-      "bundle_id": "CRP-107-LCM",
+      "bundle_id": "CRP-107",
       "state": "completed",
       "progress_state": "completed",
       "author": "Rolf, Workspace_AI",
       "priority": "H",
       "details": "Enforce automatic privilege awareness before tool execution: resolve catalog metadata (Admin: true), verify runtime shell elevation, and route un-elevated admin calls through Session 1 desktop daemon or gsudo bridge.",
-      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-2026-024-LCM-v7.3.0-Automated-Privilege-Aware-Tool-Execution-And-Elevation-Interception.md",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-107-LCM-v7.3.0-Automated-Privilege-Aware-Tool-Execution-And-Elevation-Interception.md",
       "walkthrough_path": "",
       "dates": {
         "created": "2026-09-07 11:38:00",
@@ -5134,13 +5227,12 @@
       "title": "Universal Table Standard Display Enhancements: Dropdown Filtering, Multi-Page Printing & Action Results",
       "origin_repo": "LCM / Assets",
       "cr_id": "CRP-108",
-      "bundle_id": "CRP-108-LCM",
+      "bundle_id": "CRP-108",
       "state": "suggested",
-      "progress_state": "open",
       "author": "Rolf, Workspace_AI",
       "priority": "H",
       "details": "Codifies universal table display standards: column-header dropdown filters replacing button pills, standard Dark/Light and reset controls, persistent 2-line action result banner, multi-page print/PDF pagination, and Notepad++ dispatch with CRP governance notice.",
-      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-2026-025-LCM-v7.3.0-Universal-Table-Standard-Display-Enhancements.md",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-108-LCM-v7.3.0-Universal-Table-Standard-Display-Enhancements.md",
       "walkthrough_path": "",
       "dates": {
         "created": "2026-09-07 12:35:00",
@@ -5152,6 +5244,441 @@
           "timestamp": "2026-09-07 12:35:00",
           "user": "Operator Directive / CRP Intake",
           "note": "Authored per CRP-107 operator feedback for universal table display standards in OPEN state."
+        }
+      ],
+      "progress_state": "queued"
+    },
+    {
+      "id": 109,
+      "crp_id": "CRP-109",
+      "timestamp": "2026-09-07 15:25:00",
+      "title": "Mermaid Diagram Standard and Multi-Scope Markdown/CM Conversion Engine (FormatDiagrams)",
+      "origin_repo": "LCM / Tools",
+      "cr_id": "CRP-109",
+      "bundle_id": "CRP-109",
+      "state": "suggested",
+      "author": "Rolf, Workspace_AI",
+      "priority": "H",
+      "details": "Codifies mandatory Mermaid diagrams (minimum 8pt text) for software layers, topologies, and workflows across .md/.cm docs. Provides FormatDiagrams user command across Git_root, Repo, Folder, and Document scopes with pre-commit hook integration.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-109-LCM-v7.3.0-Mermaid-Diagram-Standard-And-Conversion-Engine.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-07 15:25:00",
+        "suggested": "2026-09-07 15:25:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-07 15:25:00",
+          "user": "Operator Directive / CRP Intake",
+          "note": "Registered per operator directive for 8pt minimum Mermaid box typography and multi-scope FormatDiagrams user command in OPEN state."
+        }
+      ],
+      "progress_state": "queued"
+    },
+    {
+      "id": 110,
+      "crp_id": "CRP-110",
+      "timestamp": "2026-09-07 15:55:00",
+      "title": "Universal Multi-Channel Progress Indicator Engine: Chat, Terminal & Web Dashboards",
+      "origin_repo": "LCM / Telemetry",
+      "cr_id": "CRP-110",
+      "bundle_id": "CRP-110",
+      "state": "completed",
+      "progress_state": "completed",
+      "author": "Rolf, Workspace_AI",
+      "priority": "H",
+      "details": "Establishes a hybrid progress indicator system for single and batch actions (PROCEED, ACCEPT, do #n-#m) across Chat markdown cards, native PowerShell Write-Progress in CLI, and dynamic pulsating row-level badges with docked console streams in web dashboards.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-110-LCM-v7.3.0-Universal-Multi-Channel-Progress-Indicator-Engine.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-07 15:55:00",
+        "suggested": "2026-09-07 15:55:00",
+        "completed": "2026-09-07 16:02:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-07 15:55:00",
+          "user": "Operator Directive / CRP Intake",
+          "note": "Registered per operator directive for Hybrid multi-channel progress indicators across Chat, Terminal, and Web Dashboards in OPEN state."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-07 16:02:00",
+          "user": "Operator ACCEPT 110",
+          "note": "Accepted via operator ACCEPT 110 directive. Implemented LcmProgressAtom.psm1, Set-LcmActionProgress.ps1, /progress REST routes in LcmDesktopDaemon.ps1, and dynamic row-processing animations and watcher in CM_CONTROL_HUB.html."
+        }
+      ]
+    },
+    {
+      "id": 111,
+      "crp_id": "BUG-111",
+      "timestamp": "2026-09-07 16:05:00",
+      "title": "Mermaid Box and Table Column Long-Line Folding and Text Wrapping Support",
+      "origin_repo": "LCM / Visualization",
+      "cr_id": "BUG-111",
+      "bundle_id": "BUG-111",
+      "state": "in_progress",
+      "progress_state": "in_progress",
+      "author": "Rolf, Workspace_AI",
+      "priority": "M",
+      "details": "Enables soft-break and line-folding for lengthy text within Mermaid diagram boxes and enforces responsive word-break wrapping for long strings across table columns to eliminate layout blowout.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-111-LCM-v7.3.0-Mermaid-Box-And-Table-Column-Line-Folding.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-07 16:05:00",
+        "suggested": "2026-09-07 16:05:00",
+        "in_progress": "2026-09-07 16:07:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-07 16:05:00",
+          "user": "Operator Directive / Bug Intake",
+          "note": "Registered per operator directive for folding long lines in Mermaid boxes and table columns in OPEN state."
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-09-07 16:07:00",
+          "user": "Operator Proceed 111",
+          "note": "Transitioned to in_progress per operator Proceed 111 directive. Implementing Mermaid box line folding in Format-LcmMarkdownDiagrams and table column wrapping in LCM dashboards."
+        }
+      ]
+    },
+    {
+      "id": 112,
+      "crp_id": "BUG-112",
+      "timestamp": "2026-09-07 16:22:00",
+      "title": "Fix Unresolved %Git_Root% Variable in CMD Launchers and Script Dispatchers",
+      "origin_repo": "LCM / Dispatch",
+      "cr_id": "BUG-112",
+      "bundle_id": "BUG-112",
+      "state": "bug",
+      "progress_state": "open",
+      "author": "Rolf, Workspace_AI",
+      "priority": "H",
+      "details": "Remediates argument resolution failure when %Git_Root% is undefined in CMD wrappers (e.g. ShowCrpDates.cmd), adding dynamic relative anchor fallback (%~dp0..\\..) and D:\\Git_Repositories default.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-112-LCM-v7.3.0-Unresolved-GitRoot-In-Cmd-Launchers.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-07 16:22:00",
+        "suggested": "2026-09-07 16:22:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-07 16:22:00",
+          "user": "Operator Directive / Bug Intake",
+          "note": "Registered per operator directive for unresolved /Workspace_Inventory/tools/Show-CrpDates.ps1 path in OPEN state."
+        }
+      ]
+    },
+    {
+      "id": 113,
+      "crp_id": "BUG-113",
+      "timestamp": "2026-09-07 16:29:00",
+      "title": "Enforce Admin Elevation and Process Restart Notification for System Environment Variables",
+      "origin_repo": "LCM / Security & Environment",
+      "cr_id": "BUG-113",
+      "bundle_id": "BUG-113",
+      "state": "bug",
+      "progress_state": "open",
+      "author": "Rolf, Workspace_AI",
+      "priority": "H",
+      "details": "Ensures setting Git_Root (and system-level environment variables) is strictly elevated to ADMIN context, broadcasts environment change, and warns operator that running processes (Antigravity IDE, terminals, Explorer) must be restarted to take effect.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-113-LCM-v7.3.0-Admin-Elevation-And-Restart-Notice-For-System-Environment-Variables.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-07 16:29:00",
+        "suggested": "2026-09-07 16:29:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-07 16:29:00",
+          "user": "Operator Directive / Bug Intake",
+          "note": "Registered per operator directive for admin elevation gating and restart notification when modifying machine environment variables in OPEN state."
+        }
+      ]
+    },
+    {
+      "id": 114,
+      "crp_id": "CRP-114",
+      "timestamp": "2026-09-07 16:32:00",
+      "title": "Remove Deprecated HaSSD06 Subsystem Filter Button from Tool Explorer",
+      "origin_repo": "LCM / Desktop UI",
+      "cr_id": "CRP-114",
+      "bundle_id": "CRP-114",
+      "state": "suggested",
+      "progress_state": "open",
+      "author": "Rolf, Workspace_AI",
+      "priority": "L",
+      "details": "Removes the obsolete hardcoded HaSSD06 filter button from the Tool Explorer interface and consolidates subsystem filtering exclusively into the dynamic Group/Subsystem column dropdown selectors.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-114-LCM-v7.3.0-Remove-HaSSD06-Filter-Button-From-Tool-Explorer.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-07 16:32:00",
+        "suggested": "2026-09-07 16:32:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-07 16:32:00",
+          "user": "Operator Directive / CRP Intake",
+          "note": "Registered per operator directive to remove HaSSD06 filter button from Tool Explorer in OPEN state."
+        }
+      ]
+    },
+    {
+      "id": 115,
+      "crp_id": "CRP-115",
+      "timestamp": "2026-09-07 16:52:00",
+      "title": "Universal F5 Keyboard Refresh and Refresh Button Removal Across Show-* Displays",
+      "origin_repo": "LCM / Desktop UI",
+      "cr_id": "CRP-115",
+      "bundle_id": "CRP-115",
+      "state": "completed",
+      "progress_state": "completed",
+      "author": "Rolf, Workspace_AI",
+      "priority": "M",
+      "details": "Enforces universal F5 key event handler across all Show-* web displays to trigger live dashboard data reload, and purges legacy on-screen Refresh buttons from header and toolbar controls.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-115-LCM-v7.3.0-Universal-F5-Keyboard-Refresh-And-Button-Removal.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-07 16:52:00",
+        "suggested": "2026-09-07 16:52:00",
+        "in_progress": "2026-09-07 16:55:00",
+        "completed": "2026-09-07 17:00:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-07 16:52:00",
+          "user": "Operator Directive / CRP Intake",
+          "note": "Registered per operator directive for universal F5 keyboard refresh and removing obsolete refresh buttons across Show-* displays in OPEN state."
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-09-07 16:55:00",
+          "user": "Operator PROCEED 115",
+          "note": "Transitioned to in_progress per operator PROCEED 115 directive. Implementing universal F5 keyboard handler and removing legacy Refresh buttons across all Show-* displays."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-07 17:00:00",
+          "user": "Workspace_AI Governance",
+          "note": "Completed and verified universal F5 keydown listeners and purged refresh buttons across all 7 Show-* dashboards."
+        }
+      ]
+    },
+    {
+      "id": 116,
+      "crp_id": "CRP-116",
+      "timestamp": "2026-09-07 19:10:00",
+      "title": "Selective Short-Name Deletion with Last-Alias Protection Invariant in Tool Explorer",
+      "origin_repo": "LCM / Desktop UI",
+      "cr_id": "CRP-116",
+      "bundle_id": "CRP-116",
+      "state": "completed",
+      "progress_state": "completed",
+      "author": "Rolf, Workspace_AI",
+      "priority": "H",
+      "details": "Adds selective short-name deletion to Tool Explorer with Last-Alias Protection invariant. In 'Mode: Source Files (Dev)', displays all associated short names inline beneath long filenames with individual '✕' delete buttons (or '🔒' when sole remaining). Also integrates 'Delete short name only' option in the Rename modal.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-116-LCM-v7.3.0-Selective-Short-Name-Deletion-With-Last-Alias-Protection.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-07 19:10:00",
+        "suggested": "2026-09-07 19:10:00",
+        "in_progress": "2026-09-07 19:11:00",
+        "completed": "2026-09-07 19:15:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-07 19:10:00",
+          "user": "Operator Directive / CRP Intake",
+          "note": "Registered per operator directive to delete short names without deleting code, with last-alias protection."
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-09-07 19:11:00",
+          "user": "Operator Directive",
+          "note": "Implemented Remove-LcmShortName.ps1, daemon routes /query_short_names & /delete_short_name, and UI controls in Rename modal."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-07 19:15:00",
+          "user": "Operator ACCEPT Immediately",
+          "note": "Accepted immediately per operator directive. Verified Last-Alias Protection invariant rejection and live daemon deletion."
+        }
+      ]
+    },
+    {
+      "id": 117,
+      "crp_id": "CRP-117",
+      "timestamp": "2026-09-07 20:16:00",
+      "title": "Single Authoritative Tool Catalog Architecture (Single Source of Truth)",
+      "origin_repo": "LCM / Tool Architecture",
+      "cr_id": "CRP-117",
+      "bundle_id": "CRP-117",
+      "state": "suggested",
+      "progress_state": "suggested",
+      "author": "Rolf, Workspace_AI",
+      "priority": "M",
+      "details": "Consolidates tool metadata management into a single authoritative tool_catalog.json file. Deprecates the hardcoded $metadataOverrides dictionary in Update-ToolCatalog.ps1, retires tool_catalog_overrides.json, and eliminates on-the-fly daemon regex parsing of 191 .cmd trampoline files.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-117-LCM-v7.3.0-Single-Authoritative-Tool-Catalog-Architecture.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-07 20:16:00",
+        "suggested": "2026-09-07 20:16:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-07 20:16:00",
+          "user": "Operator Directive / CRP Intake",
+          "note": "Registered per operator directive in OPEN state. Single authoritative tool_catalog.json architecture."
+        }
+      ]
+    },
+    {
+      "id": 118,
+      "crp_id": "CRP-118",
+      "timestamp": "2026-09-08 10:28:00",
+      "title": "Automated Privilege-Aware Tool Execution CLI Interceptor Engine",
+      "origin_repo": "LCM / Execution Governance",
+      "cr_id": "CRP-118",
+      "bundle_id": "CRP-118",
+      "state": "suggested",
+      "progress_state": "suggested",
+      "author": "Rolf, Workspace_AI",
+      "priority": "H",
+      "details": "Closes the execution intent gap for RULE-ELEV-006 by providing a standardized CLI and agent dispatcher (Invoke-PrivilegedTool.ps1) and aligning trampoline .cmd elevation logic. Ensures admin-required tools are automatically intercepted and routed to the Session 1 daemon bridge without blocking or degrading in un-elevated shells.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-118-LCM-v7.3.0-Automated-Privilege-Aware-CLI-Interception-Engine.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-08 10:28:00",
+        "suggested": "2026-09-08 10:28:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-08 10:28:00",
+          "user": "Operator Directive / CRP Intake",
+          "note": "Registered per operator directive in OPEN state to close the CLI and agent interception gap for RULE-ELEV-006."
+        }
+      ]
+    },
+    {
+      "id": 119,
+      "crp_id": "CRP-119",
+      "timestamp": "2026-09-08 11:20:00",
+      "title": "Universal Monotonic CRP/BUG-nnn Identifier Naming Scheme",
+      "origin_repo": "LCM / Governance",
+      "cr_id": "CRP-119",
+      "bundle_id": "CRP-119",
+      "state": "completed",
+      "progress_state": "completed",
+      "author": "Rolf, Workspace_AI",
+      "priority": "H",
+      "details": "Establishes a single canonical identifier in the form CRP-nnn (or BUG-nnn for defects), where nnn is strictly the proposal's unique monotonic integer ID. Retires the annual CRP-2026-yyy dual-numbering system and aligns filenames, ledger IDs, and tooling under a unified 1:1 scheme.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-119-LCM-v7.3.0-Universal-Monotonic-Identifier-Scheme.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-08 11:20:00",
+        "suggested": "2026-09-08 11:20:00",
+        "in_progress": "2026-09-08 11:22:00",
+        "completed": "2026-09-08 11:31:08"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-08 11:20:00",
+          "user": "Operator Directive / CRP Intake",
+          "note": "Registered per operator directive in OPEN state. Unified monotonic CRP/BUG-nnn naming scheme."
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-09-08 11:22:00",
+          "user": "Operator PROCEED 119",
+          "note": "Transitioned to in_progress per operator PROCEED directive. Executing universal monotonic naming migration."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-08 11:31:08",
+          "user": "Agent / CRP-119 Execution",
+          "note": "Universal Monotonic CRP/BUG-nnn Identifier Naming Scheme migration executed successfully. All proposal records normalized, document specifications renamed with Git history preserved, and CM Control Hub / ProposalManager tooling aligned."
+        }
+      ]
+    },
+    {
+      "id": 120,
+      "crp_id": "BUG-120",
+      "timestamp": "2026-09-08 13:11:07",
+      "title": "Show-Rules Read View Missing Standard Display Options and Post-Print Browser Hang",
+      "origin_repo": "LCM / Show-Rules",
+      "cr_id": "BUG-120",
+      "bundle_id": "BUG-120",
+      "state": "completed",
+      "progress_state": "completed",
+      "author": "rgbig",
+      "priority": "H",
+      "details": "Read action in Show-Rules lacks standard display controls (e.g. Light Mode toggle, Print button). Ctrl+P inside the reader causes the browser to freeze/hang upon printout completion.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-120-LCM-v2.1.0-Show-Rules-Read-View-Display-Options-And-Print-Hang.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-08 13:11:07",
+        "suggested": "2026-09-08 13:11:07",
+        "in_progress": "2026-09-08 13:13:21",
+        "completed": "2026-09-08 13:46:20"
+      },
+      "state_history": [
+        {
+          "state": "bug",
+          "timestamp": "2026-09-08 13:11:07",
+          "user": "Operator Directive / BUG Intake",
+          "note": "Registered in OPEN state per operator bug report (RULE-LCM-015)."
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-09-08 13:13:21",
+          "user": "Operator Directive / Proceed 120",
+          "note": "Transitioned to in_progress per operator PROCEED directive."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-08 13:46:20",
+          "user": "Agent / BUG-120 Execution",
+          "note": "Remediated Show-Rules reader display options (Light/Dark mode toggle, Print Document button) and overhauled print lifecycle/media queries to prevent browser lockup."
+        }
+      ]
+    },
+    {
+      "id": 121,
+      "crp_id": "CRP-121",
+      "timestamp": "2026-09-08 15:25:00",
+      "title": "Automated Bidirectional Tool Dependency Documentation Engine (WIUD & WUD)",
+      "origin_repo": "LCM / Tooling & Documentation Governance",
+      "cr_id": "CRP-121",
+      "bundle_id": "CRP-121",
+      "state": "suggested",
+      "progress_state": "open",
+      "author": "Rolf, Workspace_AI",
+      "priority": "M",
+      "details": "Establishes an automated, AST-powered tool constituent and reverse caller documentation engine. Generates per-tool WIUD ('What It Uses Directly') forward dependencies at commit time and WUD ('What Uses Directly') reverse call graphs at pre-push time with hash-based gating to prevent Git churn.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-121-LCM-v7.3.0-Automated-Tool-Dependency-Documentation-Engine.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-08 15:25:00",
+        "suggested": "2026-09-08 15:25:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-08 15:25:00",
+          "user": "Operator Directive / CRP Intake",
+          "note": "Registered per operator directive in OPEN state with Pass 1 (Commit) and Pass 2 (Pre-Push) hash-gated architecture."
         }
       ]
     }

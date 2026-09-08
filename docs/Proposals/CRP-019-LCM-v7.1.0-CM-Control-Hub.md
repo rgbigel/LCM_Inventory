@@ -1,0 +1,90 @@
+# Change Request Proposal (CRP): Configuration Management (CM) Control Hub & Batch Review Engine
+
+Module: Workspace_Inventory/docs/Proposals/CRP-019-LCM-v7.1.0-CM-Control-Hub.md  
+Purpose: Interactive browser dashboard and batch governance engine for CM lifecycle, dual-state and BUG tracking, multi-facet filtering, Notepad++ editing, and Beyond Compare review dispatch.  
+Target Scope: Workspace_Inventory / LCM Tooling  
+Affected Version Range: v7.1.0+  
+Impacted Repositories: [Workspace_Inventory, Root Container, Child Repositories]  
+Authors: Rolf, Workspace_AI Engine  
+Version: 1.0.0 (LCM Baseline: 7.1.0)  
+Status: IN_PROGRESS  
+Date: 2026-08-30  
+Rule: RULE-LCM-001, RULE-LCM-007, RULE-LCM-008, RULE-LCM-009, RULE-REV-001 - RULE-REV-006  
+
+---
+
+## 1. Executive Summary & Impact Classification
+
+* **Proposal ID**: `CRP-019`
+* **CR Reference**: `CR-2026-030` (Proposal #19)
+* **Target Domain**: `LCM Governance, Visual Review & Change Management Operations`
+* **Impact Level**: `MEDIUM` (Provides authoritative interactive UI for proposal management, review staging, and batch acceptance).
+* **Target Milestone**: `LCM v7.1.0`
+
+---
+
+## 2. Itemized Functional Specifications
+
+### 2.1 Browser Web Application (`CM_CONTROL_HUB.html`)
+* **Location**: `Workspace_Inventory/docs/CM_CONTROL_HUB.html`.
+* **Design & Aesthetics**: Dark theme, glassmorphism cards, responsive tabular grid, live status badges, sticky header, and search bar.
+* **REST Daemon Integration**: Communicates with Desktop Daemon on `http://127.0.0.1:9876` for sub-5ms GUI dispatch, file opening, and in-place state synchronization.
+
+### 2.2 Dual-State, BUG Intake & Failure Handling Hierarchy
+* **Plan State Enum**: `bug` (raw intake / below suggested) $\to$ `suggested` $\to$ `approved` $\to$ `deferred` $\to$ `rejected` $\to$ `completed`.
+* **Progress State Enum**: `undecided`, `queued`, `in_progress`, `verification`, `completed`, `blocked`, `failed`.
+* **Handling the `failed` Status (Sensible Actions & Workflows)**:
+  * An item transitions to `failed` when an implementation script crashes, automated quality gates fail, or unresolvable review conflicts occur.
+  * **Sensible Actions Available on `failed`**:
+    1. 🔍 **`Diagnostics / View Error Log`**: Instant inspection of error logs, stderr traces, or quality gate failure reports.
+    2. 🐛 **`Triage to Bug`**: Promotes failure diagnostics into a lightweight BUG report (`RULE-LCM-008`) for root-cause isolation.
+    3. 🔄 **`Retry Execution`**: Resets progress state to `queued` / `in_progress` to re-attempt implementation after fixes.
+    4. ⏪ **`Revert Working Tree`**: Discards partial working directory changes from the failed attempt (`git restore .`).
+    5. ❌ **`Reject`** / ⏸️ **`Defer`**: Formally discards or postpones the proposal.
+  * **Acceptance Invariant**: `failed` items **CANNOT** be accepted. They must successfully re-execute and pass `verification` first.
+* **In-Place Modification**: Operator can change Plan or Progress state directly via interactive dropdowns; changes auto-save back to `proposals.json`.
+
+### 2.3 Multi-Facet Filtering, Progress Default & Metric Accounting
+* **Default Progress Filter (`Open / Non-Completed`)**: Per Operator Dispatched Directive, the default Progress filter is set to **`Open (Non-Completed)`** (`progress_state != 'completed'`), displaying active items (`undecided`, `queued`, `in_progress`, `verification`, `blocked`).
+* **Initial Scope Default**: Defaults to **All Repositories / Subsystems** while showing active proposals.
+* **Filter Persistence**: Selected Subsystem/Repository filter remains pinned until any repository commit/push is executed.
+* **Metric Accounting**: Completed/pushed proposals are tracked separately in the **`✅ Completed`** metric and archived in `logs/history/`, keeping the primary focus on active workload.
+* **Facets**: Filter by Scope (`All Repos`, `LCM`, `Workspace_AI`, `Installation_LCD`, `SystemConfiguration`, `HaSSD06`, `VolumeInventory`, `Workspace_Inventory`), Plan State, and Progress State.
+
+### 2.4 Action Triggers & Notepad++ CRP Editing
+* **Contextual Actions per Item**:
+  * 🚀 **`Do / Execute`**: Triggers proposal execution.
+  * 🔍 **`Review (BC5)`**: Launches Beyond Compare 5 with Variant A scratch baseline:
+    `pwsh tools/Invoke-BeyondCompareReview.ps1 -RepositoryName <Repo> -CRP <CRP-ID>`
+  * ✏️ **`Edit CRP / Plan`**: Opens the CRP specification in Notepad++ via Desktop Daemon (`POST /open_editor`).
+  * 🔄 **Auto-Sync on Edit**: When modified, triggers plan updates and prompts a fresh Beyond Compare review.
+  * ⚡ **One-Shot Mark Reviewed**: Action button `[ ⚡ Mark Selected Reviewed (Bypass BC5) ]` without sticky state.
+  * 🗑️ **Delete / Undo**: Allows purging rejected CRPs with working-tree revert support.
+
+### 2.5 Multi-Tab Inspection & Receipt Viewer
+* **Inspection Drawer / Tab**: View rendered Markdown for Plans (`Proposal-{ID}_Plan.md`), Walkthroughs (`Proposal-{ID}_Walkthrough.md`), and CRP specs (`CRP-*.md`).
+* **Receipt Viewer (`📜 Rcpt`)**: Inspect JSON review receipts (`review_<Repo>_<timestamp>.json`) and audit logs.
+
+### 2.6 Log & Historical Archive Viewer
+* **Dual Header Buttons**:
+  * **`📜 Active CM Log`**: Active activity ledger (`logs/cm_activity.log`).
+  * **`🏛️ Historical Log Archive`**: Historical archive (`logs/history/cm_activity_v5_v6_history.log`).
+
+### 2.7 Bottom Docked Interactive CM Console & Chat Stream
+* **Real-Time Stream Feed**: Monospace console at bottom of dashboard streaming execution outputs, Beyond Compare status, and git results.
+* **Command & Message Input**: Allows typing natural language operator directives and CLI commands (`review #19`, `do #19`, `status`, `readiness`, `accept all`), dispatching directly to the REST Daemon and echoing real-time feedback.
+
+### 2.8 Batch Operations Pipeline & Gated Acceptance
+* Multi-select checkboxes for visible rows + `[ Select All Visible ]`.
+* **Gated ACCEPT Enforcement**: Only items in `⏳ Verification`, `⚡ In Progress`, or `Approved` state can be accepted. Attempts to accept `Undecided`, `Deferred`, `Blocked`, or `Rejected` items are blocked with clear validation feedback.
+
+---
+
+## 3. Tool Implementation & Short-Name Trampolines
+
+* **PowerShell Launcher**: `Workspace_Inventory/tools/Show-CmControlHub.ps1`
+* **Short-Name Trampolines**:
+  * `.lcd/Cmd/CmHub.cmd` $\to$ `pwsh tools/Show-CmControlHub.ps1`
+  * `.lcd/Cmd/DOR.cmd` $\to$ `pwsh tools/Show-CmControlHub.ps1 -ReviewMode`
+  * `.lcd/Cmd/DoReview.cmd` $\to$ `pwsh tools/Show-CmControlHub.ps1 -ReviewMode`
+

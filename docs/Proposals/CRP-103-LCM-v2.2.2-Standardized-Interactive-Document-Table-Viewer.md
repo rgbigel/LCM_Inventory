@@ -1,0 +1,84 @@
+---
+Proposal-ID: CRP-103
+CR-ID: CR-2026-054
+Scope: LCM Platform (.lcm) & Shared Dashboards
+Version: v2.2.2
+Affected-Repos: [Workspace_Inventory, Workspace_AI, HaSSD06_Inventory, .lcm]
+Status: Suggested
+Date: 2026-08-31
+Author: Rolf, Workspace_AI Engine
+Target Scope: Universal Dashboard UI/UX Standard & Interactive Document Table Viewer
+Affected Version Range: v2.2.1 -> v2.2.2
+Impacted Repositories: [Workspace_Inventory, Workspace_AI, HaSSD06_Inventory, .lcm]
+---
+
+# CRP-103: Universal LCM Table UI/UX Standard & Standardized Interactive Document Viewer
+
+## 1. Executive Summary & Intent
+Codify and enforce the definitive **Universal LCM Table UI/UX Design Standard** across all interactive web applications, dashboards, and modal viewers in the LCM workspace (LCM Tool Explorer, Workspace Inventory Explorer, CM Control Hub, Home Assistant Subsystem Inventory Viewer, and the new Document Table Viewer).
+
+This proposal aggregates all proven, high-utility interaction patterns across our existing viewers into a single authoritative UX specification: Windows-style top-right `[⬅ Back]` navigation, persistent overflow scrollbars, row selection checkboxes, per-row operational action buttons, left-adjusted global search with `!term` negation, column-aligned dropdown filters, metric summary filter cards, high-contrast theme toggling, and universal `[❓ Help / Guide]` dialogs.
+
+---
+
+## 2. Definitive Universal Table UI/UX Specification
+
+Every table view across the LCM ecosystem will mandate the following unified architecture:
+
+### 2.1 Navigation & Header Structure (Windows-Style Back Navigation)
+* **Top-Right `[⬅ Back]` Button**:
+  * Positioned in the upper right header toolbar (matching classic Windows navigation).
+  * Deterministically returns the operator to the calling view/dashboard without relying on browser history or risking application exit.
+* **Universal Header Actions Bar**:
+  * `[☀️/🌙 Light/Dark Mode Switch]`: High-contrast theme toggle with cross-dashboard `localStorage` state persistence.
+  * `[🔄 Refresh Data & View]`: Live re-read from disk/API.
+  * `[🖨️ Print / PDF]`: Global formatted document print preview.
+  * `[❓ Help / Guide]`: Comprehensive modal dialog explaining all columns, status badges, shortcut keys, and icon legends.
+
+### 2.2 Table Layout, Row Selection & Operational Actions
+1. **Row Selection Checkboxes & Batch Processing**:
+   * Master `Select All` checkbox in the table header.
+   * Per-row checkbox for individual selection.
+   * Batch action bar active when $\ge 1$ item selected (Batch Print/PDF, Batch Export, Batch Accept, Batch Edit).
+2. **Standardized Per-Row Action Buttons**:
+   * `[🔍 Show / Inspect]`: Opens detailed modal view with full metadata, content, and parameters.
+   * `[🖨️ Print / Save PDF]`: Formatted single-record or multi-record PDF/Print preview.
+   * `[✏️ Edit]`: Dispatches external editor (e.g. Notepad++) or enables inline live cell editing.
+   * `[⚡ Run / Execute]` *(where applicable)*: Dispatches real process execution via `lcm://` protocol on active desktop.
+
+### 2.3 Search, Column-Aligned Filters & Metric Cards
+* **Top Metric Summary Cards**: Interactive cards displaying real-time counts that act as instant 1-click filter toggles.
+* **Top-Line Search Field**: Left-adjusted global search box supporting `!term` negation filtering (e.g. `!hass`, `!python`).
+* **Column-Aligned Dropdown Selectors**: Dedicated dropdown filter controls positioned directly above their respective columns.
+* **Multi-Column Sorting**: Bidirectional sorting toggles (`⇅`) on all column headers.
+
+### 2.4 Viewport Adaptation & Overflow Scrollbar Management
+* **Visible, Styled Scrollbars**: Whenever table data or modal content exceeds container bounds, custom-styled, high-contrast scrollbars (`scrollbar-gutter: stable`, `overflow-y: auto`, `overflow-x: auto`) must automatically appear.
+* **No Content Clipping**: Information must never be truncated or hidden offscreen without explicit scrollbar affordance.
+* **Frozen Sticky Table Headers**: The head of the table displays must be frozen, i.e., excluded from scrolling (`position: sticky; top: 0; z-index: 50/51`), ensuring column headers, sort toggles, and filter controls remain continuously pinned and visible while scrolling rows vertically.
+
+---
+
+## 3. Application Matrix Across All Dashboards
+
+| Dashboard Application | Target File / Runner | Universal Table Standard Capabilities |
+|:---|:---|:---|
+| **1. Document Table Viewer** | `WORKSPACE_INVENTORY_VIEWER.html` / `Docs` Modal | Replaces unstructured list with full Document Table (Columns: Checkbox, Doc Name, Role, Version, Date, Review State, Actions [Show, Print, Edit]), Top-Right `[⬅ Back]` button, visible scrollbars. |
+| **2. LCM Tool Explorer** | `Tools_Explorer_LCM.html` / `Show-Tools.ps1` | Multi-select checkboxes, batch run/export, Show/Print/Edit row actions, Top-Right `[⬅ Back]`, universal Help/Guide, overflow scrollbars. |
+| **3. CM Control Hub** | `CM_CONTROL_HUB.html` / `Show-CmControlHub.ps1` | Standard table row actions, Active CM Log modal, Historical Archive viewer, Top-Right `[⬅ Back]` to Inventory button. |
+| **4. Workspace Inventory Explorer** | `WORKSPACE_INVENTORY_VIEWER.html` / `Show-WorkspaceInventoryApp.ps1` | Universal row actions (Show, Print, Onboard, Un-Git), Light/Dark theme atom, Top-Right `[⬅ Back]`, Help dialog. |
+| **5. HA Subsystem Viewer** | `SHOW_HA_INVENTORY.html` / `Show-HaInventory.ps1` | Entity/Device selection checkboxes, batch state inspect, Print/PDF, Light/Dark theme atom, Top-Right `[⬅ Back]`. |
+
+---
+
+## 4. Implementation Plan
+1. **Modular Table UX Engine (`lcm-table-engine.js` / `lcm-dashboard-theme.css`)**:
+   * Centralize the shared table rendering, row selection, multi-sorting, print preview, overflow scrollbar styles, and modal management code into `.lcm/assets/`.
+2. **Document Viewer Refactoring**:
+   * Rebuild the "Docs" view into the canonical Document Table conforming to Section 2.
+3. **Cross-Dashboard Harmonization**:
+   * Standardize the Top-Right `[⬅ Back]` button, Help dialogs, and scrollbar styling across all 5 dashboards.
+4. **Validation**:
+   * Verify all table views render consistently in both Light and Dark themes with full checkbox selection, visible overflow scrollbars, and working action buttons.
+
+

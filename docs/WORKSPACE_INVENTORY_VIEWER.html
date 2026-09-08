@@ -247,9 +247,6 @@
                 <button class="btn" onclick="openControlHub()">
                     <span>🎛️</span> Open CM Control Hub
                 </button>
-                <button class="btn btn-primary" onclick="refreshAudit()">
-                    <span>🔄</span> Run Audit & Refresh
-                </button>
                 <span class="badge badge-success" id="schemaBadge">LCM Active &bull; v7.1.1</span>
             </div>
         </header>
@@ -757,6 +754,15 @@
             if (icon) icon.textContent = isLight ? "🌙" : "☀️";
             if (label) label.textContent = isLight ? "Dark Mode" : "Light Mode";
         }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'F5' || e.code === 'F5') {
+                e.preventDefault();
+                refreshAudit();
+            } else if (e.key === 'Escape') {
+                closeDocsModal();
+            }
+        });
     </script>
 
     <!-- Document Table Modal -->
