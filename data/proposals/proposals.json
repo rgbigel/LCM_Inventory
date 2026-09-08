@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-09-08 20:03:30",
+  "updated_at": "2026-09-08 20:30:53",
   "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 124,
+  "last_proposal_id": 125,
   "proposals": [
     {
       "id": 1,
@@ -5248,6 +5248,12 @@
           "timestamp": "2026-09-08 19:42:05",
           "user": "rgbig",
           "note": "Pushed to remote (Git_Repositories, BGMSAMVInv, HaSSD06, HaSSD06_Inventory, Workspace_AI, Workspace_Inventory, Workspace_Supervision)"
+        },
+        {
+          "state": "retired",
+          "timestamp": "2026-09-08 20:27:00",
+          "user": "Operator Directive / Governance Lifecycle",
+          "note": "Formally retired and superseded by CRP-125. Core RULE-ELEV-006 codified in ElevationPolicy.md; operational tool discovery and catalog alignment consolidated in CRP-125."
         }
       ],
       "pushed_at": "2026-09-08 19:42:05"
@@ -5288,7 +5294,7 @@
       "origin_repo": "LCM / Tools",
       "cr_id": "CRP-109",
       "bundle_id": "CRP-109",
-      "state": "suggested",
+      "state": "processed",
       "author": "Rolf, Workspace_AI",
       "priority": "H",
       "details": "Codifies mandatory Mermaid diagrams (minimum 8pt text) for software layers, topologies, and workflows across .md/.cm docs. Provides FormatDiagrams user command across Git_root, Repo, Folder, and Document scopes with pre-commit hook integration.",
@@ -5306,7 +5312,7 @@
           "note": "Registered per operator directive for 8pt minimum Mermaid box typography and multi-scope FormatDiagrams user command in OPEN state."
         }
       ],
-      "progress_state": "queued"
+      "progress_state": "in_progress"
     },
     {
       "id": 110,
@@ -5578,8 +5584,8 @@
       "origin_repo": "LCM / Tool Architecture",
       "cr_id": "CRP-117",
       "bundle_id": "CRP-117",
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "author": "Rolf, Workspace_AI",
       "priority": "M",
       "details": "Consolidates tool metadata management into a single authoritative tool_catalog.json file. Deprecates the hardcoded $metadataOverrides dictionary in Update-ToolCatalog.ps1, retires tool_catalog_overrides.json, and eliminates on-the-fly daemon regex parsing of 191 .cmd trampoline files.",
@@ -5589,7 +5595,8 @@
         "created": "2026-09-07 20:16:00",
         "suggested": "2026-09-07 20:16:00",
         "in_progress": "2026-09-08 19:54:00",
-        "completed": "2026-09-08 20:03:30"
+        "completed": "2026-09-08 20:03:30",
+        "pushed": "2026-09-08 20:07:12"
       },
       "state_history": [
         {
@@ -5609,8 +5616,15 @@
           "timestamp": "2026-09-08 20:03:30",
           "user": "Operator ACCEPTED / Review Gate",
           "note": "Review accepted and committed (80e5e6e) in Git_Repositories. Single Authoritative Tool Catalog Architecture complete."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-08 20:07:12",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, Workspace_AI, Workspace_Inventory)"
         }
-      ]
+      ],
+      "pushed_at": "2026-09-08 20:07:12"
     },
     {
       "id": 118,
@@ -5863,6 +5877,48 @@
           "timestamp": "2026-09-08 19:29:00",
           "user": "Operator Directive / DEFER",
           "note": "Deferred per operator command 'DEFER 124'."
+        }
+      ]
+    },
+    {
+      "id": 125,
+      "crp_id": "CRP-125",
+      "timestamp": "2026-09-08 20:26:00",
+      "title": "Comprehensive Administrative Tool Discovery & Catalog Elevation Alignment",
+      "origin_repo": "LCM / Governance & Tool Architecture",
+      "cr_id": "CRP-125",
+      "bundle_id": "CRP-125",
+      "state": "completed",
+      "progress_state": "completed",
+      "author": "Rolf, Workspace_AI",
+      "priority": "M",
+      "details": "Expands Update-ToolCatalog.ps1 heuristic scanner depth to 250 lines with deep keyword detection, aligns tool_catalog.json for Set-GitRoot, Repair-VolumeAcl, and companion administrative utilities, recompiles .cmd trampolines with UAC elevation preambles, and formally retires CRP-107.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-125-LCM-v7.4.0-Comprehensive-Admin-Tool-Discovery-And-Catalog-Elevation-Alignment.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-08 20:26:00",
+        "suggested": "2026-09-08 20:26:00",
+        "in_progress": "2026-09-08 20:26:00",
+        "completed": "2026-09-08 20:30:53"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-08 20:26:00",
+          "user": "Operator Directive / CRP Intake",
+          "note": "Registered per operator directive to resolve Gap A & B and supersede CRP-107."
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-09-08 20:26:00",
+          "user": "Operator PROCEED / Execution Policy",
+          "note": "Active execution of deep admin discovery and catalog alignment."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-08 20:30:53",
+          "user": "Operator ACCEPTED ALL / Review Gate",
+          "note": "Review accepted and committed (d18119a) in Git_Repositories. Deep admin discovery and catalog alignment complete."
         }
       ]
     }

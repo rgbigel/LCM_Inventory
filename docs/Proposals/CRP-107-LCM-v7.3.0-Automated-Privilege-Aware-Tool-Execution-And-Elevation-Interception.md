@@ -5,7 +5,7 @@
 - **Target Version**: `v7.3.0`
 - **Domain**: `Lifecycle Model (LCM) Security, Elevation & Tool Dispatch Governance`
 - **Author**: Rolf, Workspace_AI Governance
-- **Status**: `ACCEPTED` (Approved by Operator via PROCEED, Codified)
+- **Status**: `SUPERSEDED_AND_RETIRED` (Superseded by `CRP-125` for operational elevation discovery & catalog alignment; `RULE-ELEV-006` policy preserved in `ElevationPolicy.md`)
 - **Created**: `2026-09-07 11:38:00`
 - **Priority**: `HIGH`
 - **Target Scope**: `.agents/rules/ElevationPolicy.md`, `PowerShellStandardsPolicy.md`, `.lcm/config/tool_catalog.json`
