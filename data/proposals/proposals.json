@@ -5681,6 +5681,34 @@
           "note": "Registered per operator directive in OPEN state with Pass 1 (Commit) and Pass 2 (Pre-Push) hash-gated architecture."
         }
       ]
+    },
+    {
+      "id": 122,
+      "crp_id": "CRP-122",
+      "timestamp": "2026-09-08 15:45:00",
+      "title": "AST-Powered CRP Intent Signature and Semantic Integrity Engine",
+      "origin_repo": "LCM / Audit & Governance",
+      "cr_id": "CRP-122",
+      "bundle_id": "CRP-122",
+      "state": "suggested",
+      "progress_state": "open",
+      "author": "Rolf, Workspace_AI",
+      "priority": "M",
+      "details": "Establishes a formal AST-powered intent signature probing engine (Test-LcmIntentSignatures.ps1) to audit the living codebase against proposal functional deltas, identifying Fully Integrated, Partially Overwritten/Regressed, or Never Reached modifications during crash recovery.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-122-LCM-v7.3.0-AST-Intent-Signature-Audit-Engine.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-08 15:45:00",
+        "suggested": "2026-09-08 15:45:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-08 15:45:00",
+          "user": "Operator Directive / CRP Intake",
+          "note": "Registered per operator directive in OPEN state for execution at a later time (Phase C)."
+        }
+      ]
     }
   ]
 }
