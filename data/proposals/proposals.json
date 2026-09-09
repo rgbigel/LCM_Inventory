@@ -2530,8 +2530,8 @@
       "timestamp": "2026-09-02 18:52:00",
       "title": "Clarify Workspace_Inventory Tool Governance Scope - Privileged Subsystem Not Exempt from Tool Scrutiny",
       "origin_repo": "Workspace_Inventory",
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "bundle_id": "CRP-054",
       "author": "Rolf",
       "details": "Clarify in RULE-LCM-004 that Workspace_Inventory is a privileged subsystem whose configuration data (inventory.json, dashboards, baselines, logs) is auto-accepted per RULE-EFF-001, but whose tool source code (tools/*.ps1, modules/*.psm1, docs/*.md) is subject to full LCM governance including BC5 review gates and semantic versioning. Current rule language implies entire WI repo is BC5-exempt. Update RULE-LCM-004 to distinguish WI data exemption from WI tool governance scope.",
@@ -2541,7 +2541,8 @@
         "created": "2026-09-02 18:52:00",
         "suggested": "2026-09-02 18:52:00",
         "in_progress": "2026-09-09 14:18:00",
-        "completed": "2026-09-09 14:26:00"
+        "completed": "2026-09-09 14:26:00",
+        "pushed": "2026-09-09 22:38:53"
       },
       "state_history": [
         {
@@ -2561,11 +2562,18 @@
           "timestamp": "2026-09-09 14:26:00",
           "user": "Rolf",
           "note": "Operator visual review disposition ACCEPT ALL"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-09 22:38:53",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, Workspace_AI, Workspace_Inventory)"
         }
       ],
       "priority": "M",
       "crp_id": "CRP-054",
-      "cr_id": "CRP-054"
+      "cr_id": "CRP-054",
+      "pushed_at": "2026-09-09 22:38:53"
     },
     {
       "id": 55,
@@ -6046,8 +6054,8 @@
       "timestamp": "2026-09-09 14:33:00",
       "title": "Control Hub Table and Runtime Tool Version Desynchronization Across Messages, Logs, and UI Tables",
       "origin_repo": "Workspace_Inventory",
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "bundle_id": "BUG-127",
       "author": "Operator Directive / Bug Intake",
       "details": "For all tools, because the correct version must be used in all messages and logs, tabular displays consistently fail to reflect the changed tool version. Desynchronization between header metadata, script runtime version variables, and UI/dashboard tables in Control Hub (CM_CONTROL_HUB.html, Show-CmControlHub.ps1, and tool documentation parsers) results in stale or hardcoded tool versions being shown.",
@@ -6057,7 +6065,8 @@
         "created": "2026-09-09 14:33:00",
         "suggested": "2026-09-09 14:33:00",
         "in_progress": "2026-09-09 15:50:00",
-        "completed": "2026-09-09 20:06:00"
+        "completed": "2026-09-09 20:06:00",
+        "pushed": "2026-09-09 22:38:53"
       },
       "state_history": [
         {
@@ -6077,11 +6086,18 @@
           "timestamp": "2026-09-09 20:06:00",
           "user": "Rolf",
           "note": "Operator visual review disposition ACCEPT ALL"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-09 22:38:53",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, Workspace_AI, Workspace_Inventory)"
         }
       ],
       "priority": "H",
       "crp_id": "BUG-127",
-      "cr_id": "BUG-127"
+      "cr_id": "BUG-127",
+      "pushed_at": "2026-09-09 22:38:53"
     },
     {
       "id": 128,
@@ -6172,8 +6188,8 @@
       "timestamp": "2026-09-09 21:40:00",
       "title": "Remediation of Redundant Rules Junction Loop in Workspace_Inventory",
       "origin_repo": "Workspace_Inventory",
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "bundle_id": "CRP-131",
       "author": "Operator Directive / CRP Intake",
       "details": "Remediate redundant NTFS directory junction in Workspace_Inventory where .agents/rules points to Git_Repositories/.lcm/.agents/rules, creating an unnecessary loop and duplicate review traversal.",
@@ -6183,7 +6199,8 @@
         "created": "2026-09-09 21:40:00",
         "suggested": "2026-09-09 21:40:00",
         "in_progress": "2026-09-09 21:43:00",
-        "completed": "2026-09-09 22:35:12"
+        "completed": "2026-09-09 22:35:12",
+        "pushed": "2026-09-09 22:38:53"
       },
       "state_history": [
         {
@@ -6203,11 +6220,18 @@
           "timestamp": "2026-09-09 22:35:12",
           "user": "Rolf",
           "note": "Review disposition ACCEPT ALL committed (963d3f5)."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-09 22:38:53",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, Workspace_AI, Workspace_Inventory)"
         }
       ],
       "priority": "M",
       "crp_id": "CRP-131",
-      "cr_id": "CRP-131"
+      "cr_id": "CRP-131",
+      "pushed_at": "2026-09-09 22:38:53"
     },
     {
       "id": 132,
