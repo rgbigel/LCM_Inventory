@@ -516,16 +516,22 @@ function Get-ReposUnderReview {
         $repoPath = $r.FullName
         $repoName = $r.Name
 
-        $dirtyFiles = @(git -C $repoPath status --porcelain 2>$null)
+        $rawDirty = @(git -C $repoPath status --porcelain 2>$null)
+        $dirtyFiles = @($rawDirty | Where-Object {
+            $filePath = $_.Substring(3).Trim()
+            -not ($filePath -like "data/logs/*" -or $filePath -like "data\logs\*" -or
+                  $filePath -like "logs/*" -or $filePath -like "logs\*" -or
+                  $filePath -like ".lcm/logs/*" -or $filePath -like ".lcm\logs\*" -or
+                  $filePath -like "scratch/*" -or $filePath -like "scratch\*" -or
+                  $filePath -like ".lcm/scratch/*" -or $filePath -like ".lcm\scratch\*")
+        })
 
         # Path-aware review discrimination for Workspace_Inventory per CRP-054 / RULE-LCM-004
         if ($repoName -eq 'Workspace_Inventory') {
             # Filter out auto-accepted dynamic data (data/, logs/, scratch/) per RULE-EFF-001
             $dirtyFiles = @($dirtyFiles | Where-Object {
                 $filePath = $_.Substring(3).Trim()
-                -not ($filePath -like "data/*" -or $filePath -like "data\*" -or
-                      $filePath -like "logs/*" -or $filePath -like "logs\*" -or
-                      $filePath -like "scratch/*" -or $filePath -like "scratch\*")
+                -not ($filePath -like "data/*" -or $filePath -like "data\*")
             })
         }
 
@@ -552,7 +558,7 @@ function Get-ReposUnderReview {
         }
 
         if ($isDirty -or $matchingProps.Count -gt 0) {
-            $commitStatus = if ($latestReview -eq 'Accepted' -or $latestReview -eq 'AcceptedWithEdits') {
+            $commitStatus = if ($latestReview -in @('Accepted', 'AcceptedWithEdits', 'AcceptedAll')) {
                 'Ready to Commit'
             } elseif ($latestReview -eq 'Deferred') {
                 'Commit Deferred'
