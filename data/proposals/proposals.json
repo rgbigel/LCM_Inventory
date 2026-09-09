@@ -2257,16 +2257,18 @@
       "timestamp": "2026-09-02 18:52:00",
       "title": "LCM Platform Crash During ShowCmControlHub Development — Context Loss and Recovery",
       "origin_repo": "Workspace_AI / Workspace_Inventory",
-      "state": "suggested",
-      "progress_state": "undecided",
+      "state": "pushed",
+      "progress_state": "pushed",
       "bundle_id": "unassigned",
       "author": "Rolf",
       "details": "LCM AI session crashed mid-implementation during ShowCmControlHub development. Code base intact at baseline 9bff0c7. Lost: active implementation plan for ShowCmControlHub, in-progress AADD and methodology alignment discussion context. Recovery: full context reload via ContextSnapshot, Update-Gemini sync, CM state audit, CRP intake session for unregistered planned items.",
-      "plan_path": "",
+      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-045-Workspace_AI-v6.2.0-LCM-Platform-Crash-Context-Loss-And-Recovery.md",
       "walkthrough_path": "",
       "dates": {
         "created": "2026-09-02 18:52:00",
-        "suggested": "2026-09-02 18:52:00"
+        "suggested": "2026-09-02 18:52:00",
+        "completed": "2026-09-08 20:35:00",
+        "pushed": "2026-09-09 13:42:00"
       },
       "state_history": [
         {
@@ -2274,11 +2276,24 @@
           "timestamp": "2026-09-02 18:52:00",
           "user": "Rolf",
           "note": "T0 post-hoc BUG registration for LCM crash event; registered during disaster recovery session"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-08 20:35:00",
+          "user": "Workspace_AI / Disaster Recovery",
+          "note": "All 5 recovery milestones verified and delivered: ShowCmControlHub operational, Update-Gemini context sync, CM state audit, CRP intake pipeline, and AADD governance policies."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-09 13:42:00",
+          "user": "Operator Directive / Governance Lifecycle",
+          "note": "Formally archived and retired. All crash recovery deliverables deployed in baselines v6.2.0-v7.4.1."
         }
       ],
       "priority": "H",
       "crp_id": "BUG-045",
-      "cr_id": "BUG-045"
+      "cr_id": "BUG-045",
+      "pushed_at": "2026-09-09 13:42:00"
     },
     {
       "id": 46,
