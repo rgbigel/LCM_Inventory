@@ -30,6 +30,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 $canonicalRulesCandidates = @(
+    (Join-Path $WorkspaceRoot 'Workspace_Inventory\.agents\rules'),
     (Join-Path $WorkspaceRoot '.lcm\.agents\rules'),
     (Join-Path $WorkspaceRoot '.agents\rules')
 )
@@ -51,6 +52,7 @@ if (Test-Path $reqDoc) {
 $childDirs = @(Get-ChildItem -Path $WorkspaceRoot -Directory | Where-Object {
     $_.Name -notmatch '^\.' -and
     $_.Name -ne 'Workspace_AI' -and
+    $_.Name -ne 'Workspace_Inventory' -and
     (Test-Path (Join-Path $_.FullName '.git'))
 })
 
@@ -99,7 +101,7 @@ foreach ($dir in $childDirs) {
         
         if ($isJunction) {
             $target = [string]$item.Target
-            if ($target -eq $canonicalRulesDir -or $target -eq (Get-Item $canonicalRulesDir).FullName) {
+            if ($canonicalRulesCandidates -contains $target -or $target -eq $canonicalRulesDir -or $target -eq (Get-Item $canonicalRulesDir).FullName) {
                 $needsJunction = $false
             } else {
                 Write-Host "    [!] Removing broken/invalid junction: $target" -ForegroundColor Yellow

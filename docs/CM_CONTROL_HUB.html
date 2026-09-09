@@ -457,6 +457,75 @@
     }
     .th-select:focus { border-color: var(--accent-blue); }
 
+    /* Column-Header Dropdown Filter Row (CRP-108 & CRP-103) */
+    .col-filter-row th {
+      padding: 3px 6px 6px 6px;
+      background: var(--bg-secondary);
+      border-bottom: 2px solid var(--border-color);
+      text-transform: none;
+      font-weight: 400;
+      letter-spacing: normal;
+    }
+    .col-filter-select {
+      width: 100%;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      padding: 3px 5px;
+      color: var(--text-primary);
+      font-size: 0.72rem;
+      font-weight: 500;
+      cursor: pointer;
+      outline: none;
+      box-sizing: border-box;
+    }
+    .col-filter-select:focus {
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.2);
+    }
+    .col-filter-reset-btn {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      padding: 3px 8px;
+      color: var(--accent-blue);
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .col-filter-reset-btn:hover {
+      background: rgba(88, 166, 255, 0.15);
+      border-color: var(--accent-blue);
+    }
+    .sort-icon {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-left: 3px;
+      display: inline-block;
+      user-select: none;
+    }
+    .sort-icon.active {
+      color: var(--accent-blue);
+      font-weight: 800;
+    }
+
+    body.light-theme .col-filter-row th {
+      background: #f6f8fa !important;
+      border-bottom-color: #d0d7de !important;
+    }
+    body.light-theme .col-filter-select {
+      background: #ffffff !important;
+      color: #1f2328 !important;
+      border-color: #d0d7de !important;
+    }
+    body.light-theme .col-filter-reset-btn {
+      background: #ffffff !important;
+      border-color: #d0d7de !important;
+      color: #0969da !important;
+    }
+
     td {
       padding: 8px 10px;
       border-bottom: 1px solid rgba(255,255,255,0.05);
@@ -834,63 +903,69 @@
       <thead>
         <tr>
           <th style="width: 32px;"><input type="checkbox" id="chkSelectAll" onchange="toggleSelectAll(this.checked)"></th>
-          <th style="width: 88px;">CRP ID</th>
-          <th style="width: 54px;">
-            <div class="th-header-filter">
-              <span style="cursor: pointer;" onclick="toggleSortPriority()" title="Click to sort by Priority (C > H > M > L > D)">Prio <span id="prioSortIcon">⬍</span></span>
-              <select id="thPriorityFilter" class="th-select" onchange="handleFilterChange()" style="padding: 1px 2px; font-weight: 700;">
-                <option value="ALL">All</option>
-                <option value="C">C</option>
-                <option value="H">H</option>
-                <option value="M">M</option>
-                <option value="L">L</option>
-                <option value="D">D</option>
-              </select>
-            </div>
+          <th onclick="toggleSort('id')" style="width: 95px; cursor: pointer;" title="Sort by Proposal ID (Asc/Desc)">CRP ID <span class="sort-icon active" id="sort-icon-id">▼</span></th>
+          <th onclick="toggleSort('prio')" style="width: 58px; text-align: center; cursor: pointer;" title="Sort by Priority (C > H > M > L > D)">Prio <span class="sort-icon" id="sort-icon-prio">⇅</span></th>
+          <th onclick="toggleSort('scope')" style="width: 145px; cursor: pointer;" title="Sort by Scope / Repo">Scope / Repo <span class="sort-icon" id="sort-icon-scope">⇅</span></th>
+          <th onclick="toggleSort('title')" style="cursor: pointer;" title="Sort by Title">Title & Details <span class="sort-icon" id="sort-icon-title">⇅</span></th>
+          <th onclick="toggleSort('state')" style="width: 125px; cursor: pointer;" title="Sort by Plan State">Plan State <span class="sort-icon" id="sort-icon-state">⇅</span></th>
+          <th onclick="toggleSort('progress')" style="width: 135px; cursor: pointer;" title="Sort by STATUS">STATUS <span class="sort-icon" id="sort-icon-progress">⇅</span></th>
+          <th style="width: 250px; text-align: center;">Actions</th>
+        </tr>
+        <tr class="col-filter-row">
+          <th></th>
+          <th>
+            <select id="thIdCategoryFilter" class="col-filter-select" onchange="handleFilterChange()">
+              <option value="ALL">All (CRP/BUG)</option>
+              <option value="BUG">🐛 BUG-* Only</option>
+              <option value="CRP">📋 CRP-* Only</option>
+            </select>
           </th>
-          <th style="width: 145px;">
-            <div class="th-header-filter">
-              <span>Scope / Repo</span>
-              <select id="thScopeFilter" class="th-select" onchange="handleFilterChange()">
-                <option value="ALL">All Repos</option>
-              </select>
-            </div>
+          <th style="text-align: center;">
+            <select id="thPriorityFilter" class="col-filter-select" onchange="handleFilterChange()" style="padding: 1px 2px; font-weight: 700;">
+              <option value="ALL">All</option>
+              <option value="C">C</option>
+              <option value="H">H</option>
+              <option value="M">M</option>
+              <option value="L">L</option>
+              <option value="D">D</option>
+            </select>
           </th>
-          <th>Title & Details</th>
-          <th style="width: 120px;">
-            <div class="th-header-filter">
-              <span>Plan State</span>
-              <select id="thPlanStateFilter" class="th-select" onchange="handleFilterChange()">
-                <option value="ALL">All States</option>
-                <option value="bug">🐛 Bug</option>
-                <option value="suggested">💡 Suggested</option>
-                <option value="approved">Approved</option>
-                <option value="deferred">⏸️ Deferred</option>
-                <option value="rejected">❌ Rejected</option>
-                <option value="completed">✅ Completed</option>
-                <option value="pushed">🚀 Pushed</option>
-              </select>
-            </div>
+          <th>
+            <select id="thScopeFilter" class="col-filter-select" onchange="handleFilterChange()">
+              <option value="ALL">All Repos</option>
+            </select>
           </th>
-          <th style="width: 135px;">
-            <div class="th-header-filter">
-              <span>STATUS</span>
-              <select id="thProgStateFilter" class="th-select" onchange="handleFilterChange()">
-                <option value="open" selected>Open</option>
-                <option value="ALL">All Status</option>
-                <option value="in_progress">⚡ In Progress</option>
-                <option value="verification">⏳ Verification</option>
-                <option value="committed">📦 Committed</option>
-                <option value="completed">✅ Completed</option>
-                <option value="pushed">🚀 Pushed</option>
-                <option value="queued">Queued (Ready)</option>
-                <option value="undecided">Undecided</option>
-                <option value="blocked">Blocked</option>
-                <option value="failed">Failed</option>
-              </select>
-            </div>
+          <th></th>
+          <th>
+            <select id="thPlanStateFilter" class="col-filter-select" onchange="handleFilterChange()">
+              <option value="ALL">All States</option>
+              <option value="bug">🐛 Bug</option>
+              <option value="suggested">💡 Suggested</option>
+              <option value="approved">Approved</option>
+              <option value="deferred">⏸️ Deferred</option>
+              <option value="rejected">❌ Rejected</option>
+              <option value="completed">✅ Completed</option>
+              <option value="pushed">🚀 Pushed</option>
+            </select>
           </th>
-          <th style="width: 250px;">Actions</th>
+          <th>
+            <select id="thProgStateFilter" class="col-filter-select" onchange="handleFilterChange()">
+              <option value="open" selected>Open</option>
+              <option value="ALL">All Status</option>
+              <option value="in_progress">⚡ In Progress</option>
+              <option value="verification">⏳ Verification</option>
+              <option value="committed">📦 Committed</option>
+              <option value="completed">✅ Completed</option>
+              <option value="pushed">🚀 Pushed</option>
+              <option value="queued">Queued (Ready)</option>
+              <option value="undecided">Undecided</option>
+              <option value="blocked">Blocked</option>
+              <option value="failed">Failed</option>
+            </select>
+          </th>
+          <th style="text-align: center;">
+            <button class="col-filter-reset-btn" onclick="resetAllFilters()" title="Reset All Column Selectors and Search">↺ Reset</button>
+          </th>
         </tr>
       </thead>
       <tbody id="proposalsTableBody">
@@ -2623,21 +2698,33 @@ Type command and press Enter:</div>
       document.getElementById("valDeferred").innerText = list.filter(p => p.state === "deferred").length;
     }
 
-    let prioritySortDirection = null; // null, 'asc', 'desc'
+    let currentSortColumn = 'id'; // 'id', 'prio', 'scope', 'title', 'state', 'progress'
+    let currentSortDirection = 'desc'; // 'asc', 'desc'
 
-    function toggleSortPriority() {
-      const icon = document.getElementById("prioSortIcon");
-      if (!prioritySortDirection) {
-        prioritySortDirection = 'asc';
-        if (icon) icon.textContent = '▲';
-      } else if (prioritySortDirection === 'asc') {
-        prioritySortDirection = 'desc';
-        if (icon) icon.textContent = '▼';
+    function toggleSort(column) {
+      if (currentSortColumn === column) {
+        currentSortDirection = (currentSortDirection === 'asc') ? 'desc' : 'asc';
       } else {
-        prioritySortDirection = null;
-        if (icon) icon.textContent = '⬍';
+        currentSortColumn = column;
+        currentSortDirection = (column === 'prio') ? 'asc' : (column === 'id' ? 'desc' : 'asc');
       }
+      updateSortIcons();
       renderTable();
+    }
+
+    function updateSortIcons() {
+      const columns = ['id', 'prio', 'scope', 'title', 'state', 'progress'];
+      columns.forEach(col => {
+        const icon = document.getElementById(`sort-icon-${col}`);
+        if (!icon) return;
+        if (currentSortColumn === col) {
+          icon.textContent = (currentSortDirection === 'asc') ? '▲' : '▼';
+          icon.classList.add('active');
+        } else {
+          icon.textContent = '⇅';
+          icon.classList.remove('active');
+        }
+      });
     }
 
     function getPrioDescription(code) {
@@ -2653,10 +2740,11 @@ Type command and press Enter:</div>
 
     function renderTable() {
       const search = document.getElementById("searchInput").value.toLowerCase().trim();
-      const scope = document.getElementById("thScopeFilter").value;
+      const scope = document.getElementById("thScopeFilter") ? document.getElementById("thScopeFilter").value : "ALL";
+      const idCatFilter = document.getElementById("thIdCategoryFilter") ? document.getElementById("thIdCategoryFilter").value : "ALL";
       const prioFilter = document.getElementById("thPriorityFilter") ? document.getElementById("thPriorityFilter").value : "ALL";
-      const planState = document.getElementById("thPlanStateFilter").value;
-      const progState = document.getElementById("thProgStateFilter").value;
+      const planState = document.getElementById("thPlanStateFilter") ? document.getElementById("thPlanStateFilter").value : "ALL";
+      const progState = document.getElementById("thProgStateFilter") ? document.getElementById("thProgStateFilter").value : "ALL";
 
       const tbody = document.getElementById("proposalsTableBody");
       tbody.innerHTML = "";
@@ -2666,6 +2754,11 @@ Type command and press Enter:</div>
         if (prioFilter !== "ALL" && pPrio !== prioFilter) return false;
         if (scope !== "ALL" && (!p.origin_repo || !p.origin_repo.includes(scope))) return false;
         if (planState !== "ALL" && p.state !== planState) return false;
+
+        const isBug = p.state === 'bug' || (p.cr_id && p.cr_id.startsWith('BUG-'));
+        if (idCatFilter === "BUG" && !isBug) return false;
+        if (idCatFilter === "CRP" && isBug) return false;
+
         if (progState === "open" && (p.progress_state === "completed" || p.progress_state === "pushed" || p.state === "completed" || p.state === "pushed")) return false;
         if (progState === "completed" && (p.progress_state !== "completed" && p.state !== "completed" && p.progress_state !== "pushed" && p.state !== "pushed")) return false;
         if (progState === "pushed" && (p.progress_state !== "pushed" && p.state !== "pushed")) return false;
@@ -2686,24 +2779,55 @@ Type command and press Enter:</div>
         return true;
       });
 
+      // Multi-column sorting per CRP-108 and CRP-103
       const prioRank = { 'C': 1, 'H': 2, 'M': 3, 'L': 4, 'D': 5 };
-      if (prioritySortDirection === 'asc') {
-        filtered.sort((a, b) => {
-          const rA = prioRank[(a.priority || 'M').toUpperCase()] || 3;
-          const rB = prioRank[(b.priority || 'M').toUpperCase()] || 3;
-          if (rA !== rB) return rA - rB;
-          return b.id - a.id;
-        });
-      } else if (prioritySortDirection === 'desc') {
-        filtered.sort((a, b) => {
-          const rA = prioRank[(a.priority || 'M').toUpperCase()] || 3;
-          const rB = prioRank[(b.priority || 'M').toUpperCase()] || 3;
-          if (rA !== rB) return rB - rA;
-          return b.id - a.id;
-        });
-      } else {
-        filtered.sort((a, b) => b.id - a.id);
-      }
+      const planStateRank = { 'bug': 1, 'suggested': 2, 'approved': 3, 'in_progress': 4, 'completed': 5, 'pushed': 6, 'deferred': 7, 'rejected': 8 };
+      const progStateRank = { 'undecided': 1, 'queued': 2, 'in_progress': 3, 'verification': 4, 'committed': 5, 'completed': 6, 'pushed': 7, 'blocked': 8, 'failed': 9 };
+
+      filtered.sort((a, b) => {
+        let res = 0;
+        switch (currentSortColumn) {
+          case 'prio': {
+            const rA = prioRank[(a.priority || 'M').toUpperCase()] || 3;
+            const rB = prioRank[(b.priority || 'M').toUpperCase()] || 3;
+            res = rA - rB;
+            break;
+          }
+          case 'scope': {
+            const sA = (a.origin_repo || '').toLowerCase();
+            const sB = (b.origin_repo || '').toLowerCase();
+            res = sA.localeCompare(sB);
+            break;
+          }
+          case 'title': {
+            const tA = (a.title || '').toLowerCase();
+            const tB = (b.title || '').toLowerCase();
+            res = tA.localeCompare(tB);
+            break;
+          }
+          case 'state': {
+            const stA = planStateRank[a.state] || 99;
+            const stB = planStateRank[b.state] || 99;
+            res = stA - stB;
+            break;
+          }
+          case 'progress': {
+            const prA = progStateRank[a.progress_state] || 99;
+            const prB = progStateRank[b.progress_state] || 99;
+            res = prA - prB;
+            break;
+          }
+          case 'id':
+          default: {
+            res = a.id - b.id;
+            break;
+          }
+        }
+        if (res !== 0) {
+          return (currentSortDirection === 'desc') ? -res : res;
+        }
+        return b.id - a.id;
+      });
 
       filtered.forEach(p => {
         const tr = document.createElement("tr");
@@ -2912,6 +3036,73 @@ Type command and press Enter:</div>
     function handleFilterChange() {
       clearLiveTicker();
       renderTable();
+    }
+
+    function resetAllFilters() {
+      clearLiveTicker();
+      const search = document.getElementById("searchInput");
+      if (search) search.value = "";
+      const idCat = document.getElementById("thIdCategoryFilter");
+      if (idCat) idCat.value = "ALL";
+      const prio = document.getElementById("thPriorityFilter");
+      if (prio) prio.value = "ALL";
+      const scope = document.getElementById("thScopeFilter");
+      if (scope) scope.value = "ALL";
+      const plan = document.getElementById("thPlanStateFilter");
+      if (plan) plan.value = "ALL";
+      const prog = document.getElementById("thProgStateFilter");
+      if (prog) prog.value = "open";
+
+      currentSortColumn = 'id';
+      currentSortDirection = 'desc';
+      updateSortIcons();
+      renderTable();
+      showToast("All column filters and sorting reset to default (Open items).");
+    }
+
+    function getHubStateSnapshot() {
+      const container = document.querySelector(".table-container");
+      return {
+        search: document.getElementById("searchInput") ? document.getElementById("searchInput").value : "",
+        idCat: document.getElementById("thIdCategoryFilter") ? document.getElementById("thIdCategoryFilter").value : "ALL",
+        prio: document.getElementById("thPriorityFilter") ? document.getElementById("thPriorityFilter").value : "ALL",
+        scope: document.getElementById("thScopeFilter") ? document.getElementById("thScopeFilter").value : "ALL",
+        plan: document.getElementById("thPlanStateFilter") ? document.getElementById("thPlanStateFilter").value : "ALL",
+        prog: document.getElementById("thProgStateFilter") ? document.getElementById("thProgStateFilter").value : "open",
+        sortCol: currentSortColumn,
+        sortDir: currentSortDirection,
+        scrollTop: container ? container.scrollTop : 0
+      };
+    }
+
+    function applyHubStateSnapshot(state) {
+      if (!state) return;
+      if (document.getElementById("searchInput") && typeof state.search !== "undefined") {
+        document.getElementById("searchInput").value = state.search;
+      }
+      if (document.getElementById("thIdCategoryFilter") && state.idCat) {
+        document.getElementById("thIdCategoryFilter").value = state.idCat;
+      }
+      if (document.getElementById("thPriorityFilter") && state.prio) {
+        document.getElementById("thPriorityFilter").value = state.prio;
+      }
+      if (document.getElementById("thScopeFilter") && state.scope) {
+        document.getElementById("thScopeFilter").value = state.scope;
+      }
+      if (document.getElementById("thPlanStateFilter") && state.plan) {
+        document.getElementById("thPlanStateFilter").value = state.plan;
+      }
+      if (document.getElementById("thProgStateFilter") && state.prog) {
+        document.getElementById("thProgStateFilter").value = state.prog;
+      }
+      if (state.sortCol) currentSortColumn = state.sortCol;
+      if (state.sortDir) currentSortDirection = state.sortDir;
+      updateSortIcons();
+      renderTable();
+      if (state.scrollTop) {
+        const container = document.querySelector(".table-container");
+        if (container) container.scrollTop = state.scrollTop;
+      }
     }
 
     function printInspectorDocument() {

@@ -2,14 +2,15 @@
 Proposal-ID: CRP-025
 CR-ID: CR-2026-036
 Scope: Workspace_Inventory
-Version: v7.1.0
-Affected-Repos: [Workspace_Inventory, .lcd]
-Status: Pushed
+Version: v7.5.0
+Affected-Repos: [Workspace_Inventory, .lcm]
+Status: OPEN (Bundled in BUNDLE-STD-DISPLAY-v7.5.0)
 Date: 2026-08-30
 Author: rgbig
-Target Scope: Workspace_Inventory / tools
-Affected Version Range: v7.1.0
-Impacted Repositories: [Workspace_Inventory, .lcd]
+Target Scope: Global Standard Displays & Workspace_Inventory
+Affected Version Range: v7.1.0 -> v7.5.0
+Impacted Repositories: [Workspace_Inventory, .lcm]
+Logical-Bundle: BUNDLE-STD-DISPLAY-v7.5.0
 ---
 
 # CRP-025: Single-Instance Control Hub Tab Lifecycle Coordination, Auto-Retirement, and Quiet Render Engine

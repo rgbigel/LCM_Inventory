@@ -586,8 +586,12 @@ if ($repoPath -eq $workspaceRoot) {
   }
 }
 else {
-  # Exclude child repo junction directories
-  $junctionFilters = @('-.agents\rules\', '-*\.agents\rules\*', '-.copilot\Rules\', '-*\.copilot\Rules\*', '-.copilot\skills\', '-*\.copilot\skills\*')
+  # Exclude child repo junction directories (exempt Workspace_Inventory which is the physical rules owner per CRP-131)
+  $junctionFilters = if ($repoName -eq 'Workspace_Inventory') {
+    @('-.copilot\Rules\', '-*\.copilot\Rules\*', '-.copilot\skills\', '-*\.copilot\skills\*')
+  } else {
+    @('-.agents\rules\', '-*\.agents\rules\*', '-.copilot\Rules\', '-*\.copilot\Rules\*', '-.copilot\skills\', '-*\.copilot\skills\*')
+  }
   foreach ($jf in $junctionFilters) {
     if (-not $filterList.Contains($jf)) {
       $filterList.Add($jf)
@@ -750,22 +754,19 @@ foreach ($jItem in $detectedJunctions) {
     # Resolve against the authoritative committed baseline of Git_Repositories
     $hasBaselineFiles = (Test-Path -LiteralPath $leftJunctionPath) -and @(Get-ChildItem -LiteralPath $leftJunctionPath -Recurse -File -ErrorAction SilentlyContinue).Count -gt 0
     if (-not $hasBaselineFiles) {
+      $canonicalWiAgents = Join-Path $workspaceRoot 'Workspace_Inventory\.agents'
       $canonicalLcmAgents = Join-Path $workspaceRoot '.lcm\.agents'
-      if ($targetPath.StartsWith($canonicalLcmAgents, [System.StringComparison]::OrdinalIgnoreCase) -or
+      if ($targetPath.StartsWith($canonicalWiAgents, [System.StringComparison]::OrdinalIgnoreCase) -or
+          $targetPath.StartsWith($canonicalLcmAgents, [System.StringComparison]::OrdinalIgnoreCase) -or
           $targetPath.StartsWith((Join-Path $workspaceRoot '.agents'), [System.StringComparison]::OrdinalIgnoreCase)) {
-        $subRel = if ($targetPath.Length -gt $canonicalLcmAgents.Length) {
-          $targetPath.Substring($canonicalLcmAgents.Length).TrimStart('\', '/')
-        } else {
-          ''
-        }
-        $rootHeadSha = (git -C $workspaceRoot rev-parse --short HEAD 2>$null)
-        if ($rootHeadSha) {
-          $rootReviewSnap = Join-Path (Split-Path $tempReviewRoot -Parent) "Git_Repositories_$rootHeadSha"
-          if (-not (Test-Path -LiteralPath $rootReviewSnap)) {
-            New-Item -ItemType Directory -Path (Join-Path $rootReviewSnap '.lcm\.agents') -Force | Out-Null
-            & git -C $workspaceRoot archive HEAD .lcm/.agents | tar -x -C $rootReviewSnap 2>$null
+        $wiHeadSha = (git -C (Join-Path $workspaceRoot 'Workspace_Inventory') rev-parse --short HEAD 2>$null)
+        if ($wiHeadSha) {
+          $wiReviewSnap = Join-Path (Split-Path $tempReviewRoot -Parent) "Workspace_Inventory_$wiHeadSha"
+          if (-not (Test-Path -LiteralPath (Join-Path $wiReviewSnap '.agents\rules'))) {
+            New-Item -ItemType Directory -Path (Join-Path $wiReviewSnap '.agents\rules') -Force | Out-Null
+            & git -C (Join-Path $workspaceRoot 'Workspace_Inventory') archive HEAD .agents/rules | tar -x -C $wiReviewSnap 2>$null
           }
-          $fallbackLeft = Join-Path $rootReviewSnap (Join-Path '.lcm\.agents' $subRel)
+          $fallbackLeft = Join-Path $wiReviewSnap '.agents\rules'
           if (Test-Path -LiteralPath $fallbackLeft) {
             $leftJunctionPath = $fallbackLeft
           }

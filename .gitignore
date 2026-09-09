@@ -23,7 +23,9 @@ data/archives/
 !.vscode/settings.json
 !.vscode/tasks.json
 
-# LCM Local Governance Link
-.agents/
+# LCM Local Governance (physical rules tracked in Workspace_Inventory)
+!.agents/
+!.agents/rules/
+!.agents/rules/*
 
 temp/

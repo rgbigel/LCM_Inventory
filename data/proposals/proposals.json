@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-09-08 20:30:53",
+  "updated_at": "2026-09-09 22:09:00",
   "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 127,
+  "last_proposal_id": 132,
   "proposals": [
     {
       "id": 1,
@@ -1211,9 +1211,9 @@
       "timestamp": "2026-08-30 15:45:00",
       "title": "Single-Instance Control Hub Tab Lifecycle Coordination, Auto-Retirement, and Quiet Render Engine",
       "origin_repo": "Workspace_Inventory",
-      "state": "pushed",
-      "progress_state": "pushed",
-      "bundle_id": "CRP-025",
+      "state": "suggested",
+      "progress_state": "queued",
+      "bundle_id": "BUNDLE-STD-DISPLAY-v7.5.0",
       "author": "rgbig",
       "details": "BroadcastChannel single-instance tab coordination in CM_CONTROL_HUB.html to auto-retire obsolete dashboard tabs, unconditional preservation of documentation sub-tabs and desktop editors, and -NoLaunch parameter in Show-CmControlHub.ps1.",
       "plan_path": "Workspace_Inventory/docs/Proposals/CRP-025-Workspace_Inventory-v7.1.0-Single-Instance-Dashboard-Tab-Coordination.md",
@@ -1250,6 +1250,12 @@
           "timestamp": "2026-08-30 15:47:00",
           "user": "Rolf",
           "note": "Pushed to remote tracking branch"
+        },
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-09 20:30:00",
+          "user": "Rolf / Operator Directive",
+          "note": "Re-opened into OPEN status as part of BUNDLE-STD-DISPLAY-v7.5.0 for standard display tab coordination."
         }
       ],
       "priority": "M",
@@ -4998,12 +5004,12 @@
       "title": "Universal LCM Table UI/UX Standard & Standardized Interactive Document Viewer",
       "origin_repo": "LCM Workspace",
       "cr_id": "CRP-103",
-      "bundle_id": "CRP-103",
-      "state": "pushed",
-      "progress_state": "pushed",
+      "bundle_id": "BUNDLE-STD-DISPLAY-v7.5.0",
+      "state": "suggested",
+      "progress_state": "queued",
       "author": "Rolf",
       "priority": "H",
-      "details": "Integrates universal table UX standard (selection checkboxes, batch actions, search negation !term, multi-column sorting) across all dashboards. (Re-instated as CRP-103 with verified final state 'pushed' from historical #43 / CRP-2026-019).",
+      "details": "Universal table display standard (bidirectional column sort, header dropdown filters, sticky headers, visible scrollbars). Document table viewer extracted to CRP-130.",
       "plan_path": "Workspace_Inventory/docs/Proposals/CRP-103-LCM-v2.2.2-Standardized-Interactive-Document-Table-Viewer.md",
       "walkthrough_path": "",
       "dates": {
@@ -5050,6 +5056,12 @@
           "timestamp": "2026-09-06 23:17:33",
           "user": "Operator / AI Re-instatement",
           "note": "Re-instated as CRP-103 inheriting verified final lifecycle state 'pushed/pushed' from historical #43 (CRP-2026-019)."
+        },
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-09 20:30:00",
+          "user": "Rolf / Operator Directive",
+          "note": "Re-opened into OPEN status as part of BUNDLE-STD-DISPLAY-v7.5.0. Extracted doc viewer to CRP-130."
         }
       ],
       "historical_source": {
@@ -5309,11 +5321,11 @@
       "title": "Universal Table Standard Display Enhancements: Dropdown Filtering, Multi-Page Printing & Action Results",
       "origin_repo": "LCM / Assets",
       "cr_id": "CRP-108",
-      "bundle_id": "CRP-108",
+      "bundle_id": "BUNDLE-STD-DISPLAY-v7.5.0",
       "state": "suggested",
       "author": "Rolf, Workspace_AI",
       "priority": "H",
-      "details": "Codifies universal table display standards: column-header dropdown filters replacing button pills, standard Dark/Light and reset controls, persistent 2-line action result banner, multi-page print/PDF pagination, and Notepad++ dispatch with CRP governance notice.",
+      "details": "Column-header dropdown filtering standard (excluding long text) and Reset All Filters controls. Multi-page print extracted to CRP-128; editor dispatch extracted to CRP-129.",
       "plan_path": "Workspace_Inventory/docs/Proposals/CRP-108-LCM-v7.3.0-Universal-Table-Standard-Display-Enhancements.md",
       "walkthrough_path": "",
       "dates": {
@@ -5326,6 +5338,12 @@
           "timestamp": "2026-09-07 12:35:00",
           "user": "Operator Directive / CRP Intake",
           "note": "Authored per CRP-107 operator feedback for universal table display standards in OPEN state."
+        },
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-09 20:30:00",
+          "user": "Rolf / Operator Directive",
+          "note": "Assigned to BUNDLE-STD-DISPLAY-v7.5.0 in OPEN status. Extracted printing to CRP-128 and editor dispatch to CRP-129."
         }
       ],
       "progress_state": "queued"
@@ -5527,9 +5545,9 @@
       "title": "Universal F5 Keyboard Refresh and Refresh Button Removal Across Show-* Displays",
       "origin_repo": "LCM / Desktop UI",
       "cr_id": "CRP-115",
-      "bundle_id": "CRP-115",
-      "state": "pushed",
-      "progress_state": "pushed",
+      "bundle_id": "BUNDLE-STD-DISPLAY-v7.5.0",
+      "state": "suggested",
+      "progress_state": "queued",
       "author": "Rolf, Workspace_AI",
       "priority": "H",
       "details": "Enforces universal F5 key event handler across all Show-* web displays to trigger live dashboard data reload, and purges legacy on-screen Refresh buttons from header and toolbar controls.",
@@ -5566,6 +5584,12 @@
           "timestamp": "2026-09-08 19:42:05",
           "user": "rgbig",
           "note": "Pushed to remote (Git_Repositories, BGMSAMVInv, HaSSD06, HaSSD06_Inventory, Workspace_AI, Workspace_Inventory, Workspace_Supervision)"
+        },
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-09 20:30:00",
+          "user": "Rolf / Operator Directive",
+          "note": "Re-opened into OPEN status as part of BUNDLE-STD-DISPLAY-v7.5.0 for universal F5 keyboard refresh and refresh button purge."
         }
       ],
       "pushed_at": "2026-09-08 19:42:05"
@@ -6058,6 +6082,153 @@
       "priority": "H",
       "crp_id": "BUG-127",
       "cr_id": "BUG-127"
+    },
+    {
+      "id": 128,
+      "timestamp": "2026-09-09 20:30:00",
+      "title": "Universal Multi-Page Table Print and PDF Export Engine",
+      "origin_repo": "LCM / Assets",
+      "state": "suggested",
+      "progress_state": "undecided",
+      "bundle_id": "unassigned",
+      "author": "Rolf, Workspace_AI",
+      "details": "Extracted from CRP-108 and CRP-103. Formalizes print-specific CSS rules (@media print) for table container viewport resets, page break avoidance, and LcmTablePrintAtom print dialog engine.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-128-LCM-v7.5.0-Universal-Multi-Page-Table-Print-And-PDF-Export-Engine.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-09 20:30:00",
+        "suggested": "2026-09-09 20:30:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-09 20:30:00",
+          "user": "Operator Directive / Extraction",
+          "note": "Extracted from CRP-108 (§2.4) and CRP-103 (§2.1) during BUNDLE-STD-DISPLAY-v7.5.0 preparation."
+        }
+      ],
+      "priority": "M",
+      "crp_id": "CRP-128",
+      "cr_id": "CRP-128"
+    },
+    {
+      "id": 129,
+      "timestamp": "2026-09-09 20:30:00",
+      "title": "Standard Desktop Editor Dispatch and Governance Advisory Hook",
+      "origin_repo": "LCM / Desktop Integration",
+      "state": "suggested",
+      "progress_state": "undecided",
+      "bundle_id": "unassigned",
+      "author": "Rolf, Workspace_AI",
+      "details": "Extracted from CRP-108 and CRP-103. Session 1 desktop daemon Notepad++ editor dispatch and RULE-LCM-012 governance advisory warning banner when editing authoritative assets.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-129-LCM-v7.5.0-Standard-Desktop-Editor-Dispatch-And-Governance-Advisory-Hook.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-09 20:30:00",
+        "suggested": "2026-09-09 20:30:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-09 20:30:00",
+          "user": "Operator Directive / Extraction",
+          "note": "Extracted from CRP-108 (§2.5) and CRP-103 (§2.2) during BUNDLE-STD-DISPLAY-v7.5.0 preparation."
+        }
+      ],
+      "priority": "M",
+      "crp_id": "CRP-129",
+      "cr_id": "CRP-129"
+    },
+    {
+      "id": 130,
+      "timestamp": "2026-09-09 20:30:00",
+      "title": "Workspace Inventory Document Table Viewer Implementation",
+      "origin_repo": "Workspace_Inventory",
+      "state": "suggested",
+      "progress_state": "undecided",
+      "bundle_id": "unassigned",
+      "author": "Rolf, Workspace_AI",
+      "details": "Extracted from CRP-103 (§3.1). Replaces unstructured document list in WORKSPACE_INVENTORY_VIEWER.html Docs tab with interactive Document Table (columns: Checkbox, Name, Role, Version, Date, Review State, Actions).",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-130-Workspace_Inventory-v7.5.0-Document-Table-Viewer-Implementation.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-09 20:30:00",
+        "suggested": "2026-09-09 20:30:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-09 20:30:00",
+          "user": "Operator Directive / Extraction",
+          "note": "Extracted from CRP-103 (§3.1) during BUNDLE-STD-DISPLAY-v7.5.0 preparation."
+        }
+      ],
+      "priority": "M",
+      "crp_id": "CRP-130",
+      "cr_id": "CRP-130"
+    },
+    {
+      "id": 131,
+      "timestamp": "2026-09-09 21:40:00",
+      "title": "Remediation of Redundant Rules Junction Loop in Workspace_Inventory",
+      "origin_repo": "Workspace_Inventory",
+      "state": "suggested",
+      "progress_state": "in_progress",
+      "bundle_id": "CRP-131",
+      "author": "Operator Directive / CRP Intake",
+      "details": "Remediate redundant NTFS directory junction in Workspace_Inventory where .agents/rules points to Git_Repositories/.lcm/.agents/rules, creating an unnecessary loop and duplicate review traversal.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-131-Workspace_Inventory-v7.5.0-Remediation-Of-Redundant-Rules-Junction-Loop.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-09 21:40:00",
+        "suggested": "2026-09-09 21:40:00",
+        "in_progress": "2026-09-09 21:43:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-09 21:40:00",
+          "user": "Operator Directive / CRP Intake",
+          "note": "Registered in OPEN state per RULE-LCM-015."
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-09-09 21:43:00",
+          "user": "Rolf",
+          "note": "Operator issued PROCEED 131 trigger. Planning initiated."
+        }
+      ],
+      "priority": "M",
+      "crp_id": "CRP-131",
+      "cr_id": "CRP-131"
+    },
+    {
+      "id": 132,
+      "timestamp": "2026-09-09 22:09:00",
+      "title": "Git-Root Directory Structure Cleanup, De-Duplication, and Hub/Hooks Rationalization",
+      "origin_repo": "LCM / Git_Repositories",
+      "state": "suggested",
+      "progress_state": "open",
+      "bundle_id": "CRP-132",
+      "author": "Operator Directive / CRP Intake",
+      "details": "Clean up and rationalize Git-Root .lcm directory structure following tool migration to Workspace_Inventory: eliminate duplicate hooks directories (.lcm/hooks vs .lcm/tools/hooks), de-duplicate hub infrastructure (.lcm/tools/hub vs Workspace_Inventory), and re-architect the misplaced .lcm/tools/internal hierarchy safely without breaking desktop shortcuts or daemons.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-132-LCM-v7.5.0-Git-Root-Directory-Structure-Cleanup-And-De-Duplication.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-09 22:09:00",
+        "suggested": "2026-09-09 22:09:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-09 22:09:00",
+          "user": "Operator Directive / CRP Intake",
+          "note": "Registered in OPEN state per RULE-LCM-015. High-risk architectural redesign intake."
+        }
+      ],
+      "priority": "H",
+      "crp_id": "CRP-132",
+      "cr_id": "CRP-132"
     }
   ]
 }
