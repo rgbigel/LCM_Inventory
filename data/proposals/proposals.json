@@ -4,7 +4,7 @@
   "updated_at": "2026-09-08 20:30:53",
   "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 126,
+  "last_proposal_id": 127,
   "proposals": [
     {
       "id": 1,
@@ -6016,6 +6016,48 @@
         }
       ],
       "pushed_at": "2026-09-09 14:10:00"
+    },
+    {
+      "id": 127,
+      "timestamp": "2026-09-09 14:33:00",
+      "title": "Control Hub Table and Runtime Tool Version Desynchronization Across Messages, Logs, and UI Tables",
+      "origin_repo": "Workspace_Inventory",
+      "state": "completed",
+      "progress_state": "completed",
+      "bundle_id": "BUG-127",
+      "author": "Operator Directive / Bug Intake",
+      "details": "For all tools, because the correct version must be used in all messages and logs, tabular displays consistently fail to reflect the changed tool version. Desynchronization between header metadata, script runtime version variables, and UI/dashboard tables in Control Hub (CM_CONTROL_HUB.html, Show-CmControlHub.ps1, and tool documentation parsers) results in stale or hardcoded tool versions being shown.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-127-Workspace_Inventory-v7.4.2-Control-Hub-Tool-Version-Display-Desynchronization.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-09 14:33:00",
+        "suggested": "2026-09-09 14:33:00",
+        "in_progress": "2026-09-09 15:50:00",
+        "completed": "2026-09-09 20:06:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-09 14:33:00",
+          "user": "Operator Directive / Bug Intake",
+          "note": "Registered in OPEN state per RULE-LCM-015."
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-09-09 15:50:00",
+          "user": "Rolf",
+          "note": "Implementation initiated with compile-time pre-compilation architecture and subtitle layout."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-09 20:06:00",
+          "user": "Rolf",
+          "note": "Operator visual review disposition ACCEPT ALL"
+        }
+      ],
+      "priority": "H",
+      "crp_id": "BUG-127",
+      "cr_id": "BUG-127"
     }
   ]
 }

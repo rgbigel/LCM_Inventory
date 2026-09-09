@@ -32,8 +32,8 @@ param(
              Notepad++ specification editing, and historical log views.
     Path: tools/Show-CmControlHub.ps1
     Authors: Rolf, Workspace_AI Engine
-    Version: 1.1.1
-    Date: 2026-09-08
+    Version: 1.3.0
+    Date: 2026-09-09
 .PARAMETER ReviewMode
     Opens the Control Hub filtered directly to pending visual reviews requiring Beyond Compare action.
 .PARAMETER Repo
@@ -74,7 +74,7 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
     }
 }
 
-$scriptVersion = "1.2.0"
+$scriptVersion = "1.3.0"
 $scriptName = "Show-CmControlHub"
 
 # ------------------------------------------------------------------------------
@@ -171,8 +171,104 @@ foreach ($r in $governedRepos) {
                 $docsCache[$key] = Get-Content -LiteralPath $fullDoc -Raw -Encoding UTF8
             }
         }
+        if ($r -eq "Workspace_Inventory") {
+            $wiTools = @("tools/Show-CmControlHub.ps1", "tools/Invoke-BeyondCompareReview.ps1", "tools/Invoke-WorkspacePush.ps1", "tools/Invoke-ProposalAction.ps1", "tools/Submit-ReviewResult.ps1", "modules/ProposalManager.psm1")
+            foreach ($wt in $wiTools) {
+                $fullTool = Join-Path $repoDir $wt.Replace('/', '\')
+                if (Test-Path -LiteralPath $fullTool) {
+                    $docsCache["$r/$wt"] = Get-Content -LiteralPath $fullTool -Raw -Encoding UTF8
+                }
+            }
+        }
     }
 }
+
+# ------------------------------------------------------------------------------
+# 2. Compile-Time Document & Tool Metadata Pre-Compilation (BUG-127)
+# ------------------------------------------------------------------------------
+function Get-CompiledDocMetadata {
+    param(
+        [string]$Name,
+        [string]$Content
+    )
+
+    $role = "Specification"
+    $version = "v1.0.0"
+    $date = (Get-Date).ToString("yyyy-MM-dd")
+    $reviewState = "ACCEPTED"
+
+    $lower = $Name.ToLowerInvariant()
+    if ($lower -like "*architecture*") { $role = "Architecture" }
+    elseif ($lower -like "*requirements*") { $role = "Requirements" }
+    elseif ($lower -like "*implementation*") { $role = "Implementation" }
+    elseif ($lower -like "*installation*") { $role = "Runbook" }
+    elseif ($lower -like "*readme*") { $role = "Overview" }
+    elseif ($lower -like "*crp*" -or $lower -like "*proposal*" -or $lower -like "*bug*") { $role = "Proposal" }
+    elseif ($lower -like "*policy*" -or $lower -like "*policies*" -or $lower -like "*rules*") { $role = "Policy" }
+    elseif ($lower.EndsWith(".ps1") -or $lower.EndsWith(".cmd") -or $lower.EndsWith(".bat")) { $role = "Tool" }
+    elseif ($lower.EndsWith(".psm1") -or $lower.EndsWith(".psd1")) { $role = "Module" }
+
+    if ($Content) {
+        # Priority 1: Script runtime version variable ($scriptVersion or $VERSION)
+        if ($Content -match '(?m)^\s*\$(?:scriptVersion|VERSION|ScriptVersion)\s*=\s*["'']([^"'']+)["'']') {
+            $v = $Matches[1].Trim()
+            $version = if ($v.StartsWith("v", [System.StringComparison]::OrdinalIgnoreCase)) { $v } else { "v$v" }
+        }
+        # Priority 2: Header comment Version
+        elseif ($Content -match '(?i)(?:Version|Ver)\s*:\s*(v?[0-9.]+)') {
+            $v = $Matches[1].Trim()
+            $version = if ($v.StartsWith("v", [System.StringComparison]::OrdinalIgnoreCase)) { $v } else { "v$v" }
+        }
+
+        if ($Content -match '(?i)(?:Date|Last Modified|Timestamp)\s*:\s*([0-9]{4}-[0-9]{2}-[0-9]{2})') {
+            $date = $Matches[1]
+        }
+        if ($Content -match '(?i)Status\s*:\s*([A-Za-z0-9_-]+)') {
+            $reviewState = $Matches[1].ToUpperInvariant()
+        }
+    }
+
+    return [ordered]@{
+        name        = $Name
+        role        = $role
+        version     = $version
+        date        = $date
+        reviewState = $reviewState
+    }
+}
+
+$compiledCatalog = [ordered]@{}
+foreach ($k in $docsCache.Keys) {
+    $leafName = Split-Path $k -Leaf
+    $itemContent = $docsCache[$k]
+    $meta = Get-CompiledDocMetadata -Name $leafName -Content $itemContent
+    $entry = [ordered]@{
+        name        = $meta.name
+        key         = $k
+        role        = $meta.role
+        version     = $meta.version
+        date        = $meta.date
+        reviewState = $meta.reviewState
+    }
+    $compiledCatalog[$k] = $entry
+    if (-not $compiledCatalog.Contains($leafName)) {
+        $compiledCatalog[$leafName] = $entry
+    }
+}
+
+# Resolve active LCM baseline
+$lcmBaseline = "v7.4.2"
+$sessionFile = Join-Path $workspaceRoot ".agents\ACTIVE_SESSION.md"
+if (Test-Path -LiteralPath $sessionFile) {
+    $sessContent = Get-Content -LiteralPath $sessionFile -Raw
+    if ($sessContent -match '(?i)LCM Version\s*:\s*(v?[0-9.]+)') {
+        $lcmBaseline = $Matches[1]
+        if (-not $lcmBaseline.StartsWith("v", [System.StringComparison]::OrdinalIgnoreCase)) { $lcmBaseline = "v$lcmBaseline" }
+    }
+}
+
+$compiledTimestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+$hubVersionSubtitle = "Tool: Show-CmControlHub v$scriptVersion | LCM Baseline: $lcmBaseline | Compiled: $compiledTimestamp"
 
 # Resolve and load LcmTablePrintAtom engine
 $atomJsCandidates = @(
@@ -193,11 +289,18 @@ $injectedBlock = @"
     const RAW_ACTIVE_LOG = $($activeLogRaw | ConvertTo-Json);
     const RAW_HISTORY_LOG = $($historyLogRaw | ConvertTo-Json);
     const RAW_DOCS_CACHE = $($docsCache | ConvertTo-Json -Depth 3);
+    const RAW_COMPILED_CATALOG = $($compiledCatalog | ConvertTo-Json -Depth 3);
 "@
 
 $htmlContent = Get-Content -LiteralPath $htmlTemplateFile -Raw -Encoding UTF8
 $htmlContent = $htmlContent.Replace('/*__INJECTED_ATOM_PLACEHOLDER__*/', $atomJsContent)
 $htmlContent = $htmlContent.Replace('/*__INJECTED_DATA_PLACEHOLDER__*/', $injectedBlock)
+
+# Static Token Substitutions (BUG-127)
+$htmlContent = $htmlContent.Replace('{{HUB_TITLE}}', "LCM Configuration Management Control Hub v$scriptVersion")
+$htmlContent = $htmlContent.Replace('{{HUB_VERSION}}', "v$scriptVersion")
+$htmlContent = $htmlContent.Replace('{{HUB_VERSION_SUBTITLE}}', $hubVersionSubtitle)
+$htmlContent = $htmlContent.Replace('{{LCM_BASELINE}}', $lcmBaseline)
 
 $scratchDir = Join-Path $workspaceRoot "Workspace_Inventory\scratch"
 if (-not (Test-Path -LiteralPath $scratchDir)) {

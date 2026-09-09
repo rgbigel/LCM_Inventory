@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LCM Configuration Management Control Hub V6.1.0</title>
+  <title>{{HUB_TITLE}}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -124,8 +124,19 @@
     }
     .header-title {
       display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .header-title-row {
+      display: flex;
       align-items: center;
       gap: 12px;
+    }
+    .header-version-subtitle {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      letter-spacing: 0.2px;
     }
     .header-title h1 {
       font-size: 1.35rem;
@@ -719,15 +730,20 @@
   <!-- Header -->
   <header>
     <div class="header-title">
-      <h1>LCM Configuration Management Control Hub <span style="font-size: 0.6em; color: var(--text-muted); vertical-align: middle;">V6.1.0</span></h1>
-      <span class="header-pill-toggle" id="granularityBadge" onclick="toggleGranularity()" title="Click to toggle Review Granularity: Coarse (batch review) vs Tight (per-proposal review)">
-        <span id="granularityIcon">🔍</span>
-        <span id="granularityText">Granularity: Coarse</span>
-      </span>
-      <span class="header-pill-toggle" id="lcmModeBadge" onclick="toggleLcmMode()" title="Click to toggle LCM Governance Mode: Active (strict proposal-first) vs Paused (ad-hoc)">
-        <span id="lcmModeIcon">🛡️</span>
-        <span id="lcmModeText">LCM: Active</span>
-      </span>
+      <div class="header-title-row">
+        <h1>LCM Configuration Management Control Hub</h1>
+        <span class="header-pill-toggle" id="granularityBadge" onclick="toggleGranularity()" title="Click to toggle Review Granularity: Coarse (batch review) vs Tight (per-proposal review)">
+          <span id="granularityIcon">🔍</span>
+          <span id="granularityText">Granularity: Coarse</span>
+        </span>
+        <span class="header-pill-toggle" id="lcmModeBadge" onclick="toggleLcmMode()" title="Click to toggle LCM Governance Mode: Active (strict proposal-first) vs Paused (ad-hoc)">
+          <span id="lcmModeIcon">🛡️</span>
+          <span id="lcmModeText">LCM: Active</span>
+        </span>
+      </div>
+      <div class="header-version-subtitle" id="hubVersionSubtitle">
+        {{HUB_VERSION_SUBTITLE}}
+      </div>
     </div>
     <div class="top-actions">
       <span class="daemon-badge" id="daemonBadge">
@@ -1172,6 +1188,7 @@ Type command and press Enter:</div>
     let activeLogText = "";
     let historyLogText = "";
     let docsCache = {};
+    let compiledCatalog = {};
     let currentModalPath = "";
     let currentModalTitle = "";
     let currentModalRaw = "";
@@ -1191,6 +1208,9 @@ Type command and press Enter:</div>
       if (typeof RAW_DOCS_CACHE !== "undefined" && RAW_DOCS_CACHE) {
         docsCache = RAW_DOCS_CACHE;
       }
+      if (typeof RAW_COMPILED_CATALOG !== "undefined" && RAW_COMPILED_CATALOG) {
+        compiledCatalog = RAW_COMPILED_CATALOG;
+      }
 
       // Apply saved theme or default to dark per CRP-105
       const savedTheme = localStorage.getItem("lcm_theme") || "dark";
@@ -1203,7 +1223,7 @@ Type command and press Enter:</div>
       setInterval(checkDaemonHealth, 5000);
       setInterval(checkActionProgress, 1500);
 
-      appendConsole("CM Control Hub v1.2.0 initialized with " + proposalsData.proposals.length + " proposal(s) and " + Object.keys(docsCache).length + " cached documents.", "msg-info");
+      appendConsole("CM Control Hub {{HUB_VERSION}} initialized with " + proposalsData.proposals.length + " proposal(s) and " + Object.keys(docsCache).length + " cached documents.", "msg-info");
 
       if (window.location.hash === "#dates" || window.location.hash === "#crpdates" || window.location.search.includes("mode=dates")) {
         setTimeout(() => { showCRPDates(); }, 100);
@@ -1466,7 +1486,12 @@ Type command and press Enter:</div>
     let currentRepoDocRaw = "";
     let currentRepoDocsList = [];
 
-    function extractDocMetadata(fileName, content) {
+    function extractDocMetadata(fileName, content, docKey) {
+      if (typeof RAW_COMPILED_CATALOG !== 'undefined' && RAW_COMPILED_CATALOG) {
+        if (docKey && RAW_COMPILED_CATALOG[docKey]) return RAW_COMPILED_CATALOG[docKey];
+        if (RAW_COMPILED_CATALOG[fileName]) return RAW_COMPILED_CATALOG[fileName];
+      }
+
       let version = "v1.0.0";
       let date = "2026-08-30";
       let reviewState = "ACCEPTED";
@@ -1478,14 +1503,21 @@ Type command and press Enter:</div>
       else if (lower.includes("implementation")) role = "Implementation";
       else if (lower.includes("installation")) role = "Runbook";
       else if (lower.includes("readme")) role = "Overview";
-      else if (lower.includes("crp") || lower.includes("proposal")) role = "Proposal";
+      else if (lower.includes("crp") || lower.includes("proposal") || lower.includes("bug")) role = "Proposal";
       else if (lower.includes("policy") || lower.includes("policies") || lower.includes("rules")) role = "Policy";
+      else if (lower.endsWith(".ps1") || lower.endsWith(".cmd") || lower.endsWith(".bat")) role = "Tool";
+      else if (lower.endsWith(".psm1") || lower.endsWith(".psd1")) role = "Module";
 
       if (content) {
-        const verMatch = content.match(/Version:\s*(v?[0-9.]+)/i) || content.match(/Ver:\s*(v?[0-9.]+)/i);
-        if (verMatch) version = verMatch[1].startsWith('v') ? verMatch[1] : 'v' + verMatch[1];
+        const scriptVerMatch = content.match(/^\s*\$(?:scriptVersion|VERSION|ScriptVersion)\s*=\s*["']([^"']+)["']/m);
+        if (scriptVerMatch) {
+          version = scriptVerMatch[1].startsWith('v') ? scriptVerMatch[1] : 'v' + scriptVerMatch[1];
+        } else {
+          const verMatch = content.match(/(?:Version|Ver):\s*(v?[0-9.]+)/i);
+          if (verMatch) version = verMatch[1].startsWith('v') ? verMatch[1] : 'v' + verMatch[1];
+        }
         
-        const dateMatch = content.match(/Date:\s*([0-9]{4}-[0-9]{2}-[0-9]{2})/i);
+        const dateMatch = content.match(/(?:Date|Last Modified|Timestamp):\s*([0-9]{4}-[0-9]{2}-[0-9]{2})/i);
         if (dateMatch) date = dateMatch[1];
 
         const stateMatch = content.match(/Status:\s*([A-Za-z0-9_-]+)/i);
@@ -1513,7 +1545,7 @@ Type command and press Enter:</div>
           key = `Workspace_Inventory/${docFile}`;
         }
         if (text) {
-          const meta = extractDocMetadata(docFile, text);
+          const meta = extractDocMetadata(docFile, text, key);
           currentRepoDocsList.push({
             name: docFile,
             key: key,
@@ -1526,12 +1558,30 @@ Type command and press Enter:</div>
         }
       });
 
+      // Also include all other cached tools, modules, and docs for this repo
+      for (const k in docsCache) {
+        if (k.startsWith(currentRepoForDocs + "/") && !standardFiles.some(sf => `${currentRepoForDocs}/${sf}` === k)) {
+          const subName = k.substring(currentRepoForDocs.length + 1);
+          const text = docsCache[k];
+          const meta = extractDocMetadata(subName, text, k);
+          currentRepoDocsList.push({
+            name: subName,
+            key: k,
+            role: meta.role,
+            version: meta.version,
+            date: meta.date,
+            reviewState: meta.reviewState,
+            content: text
+          });
+        }
+      }
+
       // Also include any Proposals associated with this repo
       for (const k in docsCache) {
         if (k.startsWith("Workspace_Inventory/docs/Proposals/") && k.includes(currentRepoForDocs)) {
           const docName = k.replace("Workspace_Inventory/docs/Proposals/", "");
           const text = docsCache[k];
-          const meta = extractDocMetadata(docName, text);
+          const meta = extractDocMetadata(docName, text, k);
           currentRepoDocsList.push({
             name: "Proposals/" + docName,
             key: k,
@@ -2445,7 +2495,7 @@ Type command and press Enter:</div>
       renderTable();
       setInterval(checkDaemonHealth, 5000);
 
-      appendConsole("CM Control Hub v1.2.0 initialized with " + proposalsData.proposals.length + " proposal(s).", "msg-info");
+      appendConsole("CM Control Hub {{HUB_VERSION}} initialized with " + proposalsData.proposals.length + " proposal(s).", "msg-info");
     });
 
     async function checkDaemonHealth() {
