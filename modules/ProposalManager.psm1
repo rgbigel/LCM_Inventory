@@ -6,8 +6,8 @@
 #          batch operations, review granularity ('coarse' | 'tight'), repo review queue inspection,
 #          and persistent ledger storage in Workspace_Inventory.
 # Authors: Rolf, Workspace_AI Engine
-# Version: 1.0.3
-# Date: 2026-09-08
+# Version: 1.0.4
+# Date: 2026-09-09
 # =====================================================================
 
 Set-StrictMode -Version Latest
@@ -503,7 +503,11 @@ function Get-ReposUnderReview {
     )
 
     $openProposals = Get-WorkspaceProposals -OpenOnly
-    $repos = @(Get-ChildItem -Path $WorkspaceRoot -Directory | Where-Object { Test-Path (Join-Path $_.FullName '.git') })
+    $repos = @()
+    if (Test-Path (Join-Path $WorkspaceRoot '.git')) {
+        $repos += (Get-Item $WorkspaceRoot)
+    }
+    $repos += @(Get-ChildItem -Path $WorkspaceRoot -Directory | Where-Object { Test-Path (Join-Path $_.FullName '.git') })
     $results = @()
 
     $reviewsDir = Join-Path $WorkspaceRoot 'Workspace_Inventory\data\reviews'
@@ -512,16 +516,28 @@ function Get-ReposUnderReview {
         $repoPath = $r.FullName
         $repoName = $r.Name
 
+        $dirtyFiles = @(git -C $repoPath status --porcelain 2>$null)
+
+        # Path-aware review discrimination for Workspace_Inventory per CRP-054 / RULE-LCM-004
         if ($repoName -eq 'Workspace_Inventory') {
-            continue # Workspace_Inventory is exempt from visual BC reviews
+            # Filter out auto-accepted dynamic data (data/, logs/, scratch/) per RULE-EFF-001
+            $dirtyFiles = @($dirtyFiles | Where-Object {
+                $filePath = $_.Substring(3).Trim()
+                -not ($filePath -like "data/*" -or $filePath -like "data\*" -or
+                      $filePath -like "logs/*" -or $filePath -like "logs\*" -or
+                      $filePath -like "scratch/*" -or $filePath -like "scratch\*")
+            })
         }
 
-        $dirtyFiles = @(git -C $repoPath status --porcelain 2>$null)
         $isDirty = ($dirtyFiles.Count -gt 0)
 
         # Match proposals associated with this repo
         $matchingProps = @($openProposals | Where-Object { $_.origin_repo -eq $repoName })
         $propIds = if ($matchingProps.Count -gt 0) { ($matchingProps | ForEach-Object { "#$($_.id)" }) -join ', ' } else { '-' }
+
+        if ($repoName -eq 'Workspace_Inventory' -and -not $isDirty -and $matchingProps.Count -eq 0) {
+            continue
+        }
 
         # Check latest review record if available
         $latestReview = 'Pending Review'

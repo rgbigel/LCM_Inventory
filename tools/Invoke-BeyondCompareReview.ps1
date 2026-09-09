@@ -35,8 +35,8 @@ param(
              and SHA-256 staging manifest generation.
     Path: tools/Invoke-BeyondCompareReview.ps1
     Authors: Rolf, Workspace_AI Engine
-    Version: 2.3.1
-    Date: 2026-09-08
+    Version: 2.3.2
+    Date: 2026-09-09
 .PARAMETER RepositoryName
     The name or directory path of the Git repository to review (e.g. 'AuthorizeMasterUser', 'Git_Repositories', '.').
 .PARAMETER BaseCommit
@@ -58,7 +58,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$scriptVersion = "2.3.0"
+$scriptVersion = "2.3.2"
 $scriptName = "Invoke-BeyondCompareReview"
 
 # ------------------------------------------------------------------------------
@@ -246,6 +246,11 @@ function Audit-BeyondCompareReviewStaging {
   function Test-PathExcluded([string]$relPath) {
     if ($relPath -like ".git*" -or $relPath -like "*\.git\*" -or $relPath -like "*\logs\*" -or $relPath -like "logs\*" -or $relPath -like "*\scratch\*" -or $relPath -like "scratch\*" -or $relPath -like "*.log" -or $relPath -like "*.tmp" -or $relPath -like ".venv*" -or $relPath -like "*\.venv\*") {
       return $true
+    }
+    if ($RepoName -eq 'Workspace_Inventory') {
+      if ($relPath -like "data\*" -or $relPath -like "*\data\*" -or $relPath -like "data/*" -or $relPath -like "*/data/*") {
+        return $true
+      }
     }
     if ($RepoPath -ne $workspaceRoot) {
       if ($relPath -like ".agents\rules*" -or $relPath -like "*\.agents\rules\*" -or $relPath -like ".copilot\Rules*" -or $relPath -like "*\.copilot\Rules\*") {
@@ -608,6 +613,11 @@ $standardExclusions = @(
   '-.lcm\archive\', '-*\.lcm\archive\*',
   '-.lcm\tools\links\', '-*\.lcm\tools\links\*'
 )
+
+if ($repoName -eq 'Workspace_Inventory') {
+  if (-not $filterList.Contains('-data\')) { $filterList.Add('-data\') }
+  if (-not $filterList.Contains('-*\data\*')) { $filterList.Add('-*\data\*') }
+}
 
 foreach ($ex in $standardExclusions) {
   if (-not $filterList.Contains($ex)) {

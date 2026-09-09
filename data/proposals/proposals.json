@@ -2523,17 +2523,19 @@
       "id": 54,
       "timestamp": "2026-09-02 18:52:00",
       "title": "Clarify Workspace_Inventory Tool Governance Scope - Privileged Subsystem Not Exempt from Tool Scrutiny",
-      "origin_repo": ".agents/rules",
-      "state": "suggested",
-      "progress_state": "undecided",
-      "bundle_id": "unassigned",
+      "origin_repo": "Workspace_Inventory",
+      "state": "completed",
+      "progress_state": "completed",
+      "bundle_id": "CRP-054",
       "author": "Rolf",
       "details": "Clarify in RULE-LCM-004 that Workspace_Inventory is a privileged subsystem whose configuration data (inventory.json, dashboards, baselines, logs) is auto-accepted per RULE-EFF-001, but whose tool source code (tools/*.ps1, modules/*.psm1, docs/*.md) is subject to full LCM governance including BC5 review gates and semantic versioning. Current rule language implies entire WI repo is BC5-exempt. Update RULE-LCM-004 to distinguish WI data exemption from WI tool governance scope.",
-      "plan_path": "",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-054-LCM-v7.4.2-Workspace-Inventory-Tool-Governance-Scope-And-Data-Exemption-Split.md",
       "walkthrough_path": "",
       "dates": {
         "created": "2026-09-02 18:52:00",
-        "suggested": "2026-09-02 18:52:00"
+        "suggested": "2026-09-02 18:52:00",
+        "in_progress": "2026-09-09 14:18:00",
+        "completed": "2026-09-09 14:26:00"
       },
       "state_history": [
         {
@@ -2541,6 +2543,18 @@
           "timestamp": "2026-09-02 18:52:00",
           "user": "Rolf",
           "note": "Operator resolved Q3: WI tools are fully LCM-governed; rule must reflect this explicitly"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-09-09 14:18:00",
+          "user": "Rolf",
+          "note": "Implementation initiated per operator directive"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-09 14:26:00",
+          "user": "Rolf",
+          "note": "Operator visual review disposition ACCEPT ALL"
         }
       ],
       "priority": "M",
