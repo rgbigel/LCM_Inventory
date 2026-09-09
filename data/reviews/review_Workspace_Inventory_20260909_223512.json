@@ -1,0 +1,10 @@
+{
+  "RepositoryName": "Workspace_Inventory",
+  "RepositoryPath": "D:\\Git_Repositories\\Workspace_Inventory",
+  "CommitSha": "963d3f5",
+  "ReviewResult": "AcceptedAll",
+  "Reviewer": "rgbig",
+  "Timestamp": "2026-09-09 22:35:12",
+  "Message": "feat(governance): transfer physical rule ownership to Workspace_Inventory and bundle standard display proposals (CRP-131, BUNDLE-STD-DISPLAY-v7.5.0) [v7.5.0]",
+  "ActionsExecuted": []
+}
