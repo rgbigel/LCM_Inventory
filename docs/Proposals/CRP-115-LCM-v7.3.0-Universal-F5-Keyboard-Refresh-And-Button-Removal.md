@@ -9,6 +9,7 @@
 | **Target Scope** | Global `Show-*` Displays (`Show-Tools`, `Show-CmControlHub`, `Show-Rules`, `Show-CrpDates`, `Show-RepositoryInventory`, etc.) |
 | **Author** | Rolf, Workspace_AI |
 | **Date** | 2026-09-07 |
+| **Priority** | `High` |
 | **Version Impact** | `v7.3.0` |
 
 ---

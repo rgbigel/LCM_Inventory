@@ -7,6 +7,7 @@ Affected-Repos: [Workspace_Inventory, Workspace_AI, HaSSD06_Inventory, .lcm]
 Status: Suggested
 Date: 2026-08-31
 Author: Rolf, Workspace_AI Engine
+Priority: High
 Target Scope: Universal Dashboard UI/UX Standard & Interactive Document Table Viewer
 Affected Version Range: v2.2.1 -> v2.2.2
 Impacted Repositories: [Workspace_Inventory, Workspace_AI, HaSSD06_Inventory, .lcm]
