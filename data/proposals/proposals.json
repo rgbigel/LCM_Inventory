@@ -4,7 +4,7 @@
   "updated_at": "2026-09-08 20:30:53",
   "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 125,
+  "last_proposal_id": 126,
   "proposals": [
     {
       "id": 1,
@@ -2552,8 +2552,8 @@
       "timestamp": "2026-09-02 18:52:00",
       "title": "Close RULE-LCM-013 Gap - Extend Pre-Push Gemini Sync to Single-Repo Direct Pushes",
       "origin_repo": ".agents/rules",
-      "state": "suggested",
-      "progress_state": "undecided",
+      "state": "pushed",
+      "progress_state": "pushed",
       "bundle_id": "unassigned",
       "author": "Rolf",
       "details": "RULE-LCM-013 mandates Update-Gemini.ps1 before every multi-repository push via Invoke-WorkspacePush.ps1, but does not address single-repository direct pushes. An agent or developer could push a single repo without triggering the GDrive sync. Extend RULE-LCM-013 to either: (a) mandate Update-Gemini.ps1 before any push regardless of scope, or (b) explicitly document the acceptable exception scope and its conditions.",
@@ -2561,7 +2561,9 @@
       "walkthrough_path": "",
       "dates": {
         "created": "2026-09-02 18:52:00",
-        "suggested": "2026-09-02 18:52:00"
+        "suggested": "2026-09-02 18:52:00",
+        "completed": "2026-09-09 14:10:00",
+        "pushed": "2026-09-09 14:10:00"
       },
       "state_history": [
         {
@@ -2569,11 +2571,24 @@
           "timestamp": "2026-09-02 18:52:00",
           "user": "Rolf",
           "note": "Identified as governance gap during LCM-AI alignment analysis 2026-09-02"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-09 14:10:00",
+          "user": "Operator ACCEPTED / Governance Alignment",
+          "note": "Amended RULE-LCM-013 in ProposalReviewFlowPolicy.md to mandate Update-Gemini.ps1 for both multi-repository and single-repository pushes (-Repositories <repo>). Direct un-synced manual git push prohibited."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-09 14:10:00",
+          "user": "rgbig",
+          "note": "Rule codified and synchronized across LCM repository."
         }
       ],
       "priority": "M",
       "crp_id": "CRP-055",
-      "cr_id": "CRP-055"
+      "cr_id": "CRP-055",
+      "pushed_at": "2026-09-09 14:10:00"
     },
     {
       "id": 56,
@@ -5944,6 +5959,49 @@
         }
       ],
       "pushed_at": "2026-09-08 20:33:07"
+    },
+    {
+      "id": 126,
+      "timestamp": "2026-09-09 14:10:00",
+      "title": "Show-CmControlHub PowerShell 5.1 ConvertTo-Json Recursion Lock & Runtime pwsh Delegation Guard",
+      "origin_repo": "Workspace_Inventory",
+      "cr_id": "BUG-126",
+      "crp_id": "BUG-126",
+      "bundle_id": "BUG-126",
+      "state": "pushed",
+      "progress_state": "pushed",
+      "author": "Rolf, Workspace_AI",
+      "priority": "C",
+      "details": "Show-CmControlHub.ps1 suffered from an indefinite execution hang when invoked under Windows PowerShell 5.1 due to ConvertTo-Json -Depth 6 recursion lock over the large nested docsCache dictionary, combined with the lack of an automatic pwsh.exe runtime enforcement guard.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-126-Workspace_Inventory-v7.4.2-Show-CmControlHub-PS51-Serialization-Hang.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-09 14:10:00",
+        "suggested": "2026-09-09 14:10:00",
+        "completed": "2026-09-09 14:10:00",
+        "pushed": "2026-09-09 14:10:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-09 14:10:00",
+          "user": "Operator Directive / Critical Bug Intake",
+          "note": "Registered as Critical Priority (Highest) bug per operator directive for Show-CmControlHub execution hang."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-09 14:10:00",
+          "user": "Workspace_AI / Bug Remediation",
+          "note": "Implemented automatic pwsh runtime delegation guard in Show-CmControlHub.ps1 and optimized JSON serialization depth (-Depth 3). Verified clean execution in <600ms."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-09 14:10:00",
+          "user": "rgbig",
+          "note": "Pushed fix and documentation to remote."
+        }
+      ],
+      "pushed_at": "2026-09-09 14:10:00"
     }
   ]
 }

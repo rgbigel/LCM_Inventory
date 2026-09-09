@@ -53,7 +53,28 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$scriptVersion = "1.1.0"
+# ------------------------------------------------------------------------------
+# 0. PowerShell 7 (pwsh) Runtime Enforcement Guard (BUG-126)
+# ------------------------------------------------------------------------------
+if ($PSVersionTable.PSVersion.Major -lt 7) {
+    $pwshCmd = Get-Command pwsh -ErrorAction SilentlyContinue
+    if ($pwshCmd) {
+        $boundArgs = @()
+        foreach ($k in $PSBoundParameters.Keys) {
+            $val = $PSBoundParameters[$k]
+            if ($val -is [switch] -or $val -is [bool]) {
+                if ($val) { $boundArgs += "-$k" }
+            } else {
+                $boundArgs += "-$k"
+                $boundArgs += "$val"
+            }
+        }
+        $proc = Start-Process -FilePath "pwsh.exe" -ArgumentList (@("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "`"$PSCommandPath`"") + $boundArgs) -Wait -PassThru -NoNewWindow
+        exit $proc.ExitCode
+    }
+}
+
+$scriptVersion = "1.2.0"
 $scriptName = "Show-CmControlHub"
 
 # ------------------------------------------------------------------------------
@@ -171,7 +192,7 @@ $injectedBlock = @"
     const RAW_PROPOSALS = $proposalsRaw;
     const RAW_ACTIVE_LOG = $($activeLogRaw | ConvertTo-Json);
     const RAW_HISTORY_LOG = $($historyLogRaw | ConvertTo-Json);
-    const RAW_DOCS_CACHE = $($docsCache | ConvertTo-Json -Depth 6);
+    const RAW_DOCS_CACHE = $($docsCache | ConvertTo-Json -Depth 3);
 "@
 
 $htmlContent = Get-Content -LiteralPath $htmlTemplateFile -Raw -Encoding UTF8
