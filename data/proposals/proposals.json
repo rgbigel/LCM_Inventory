@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-09-09 22:09:00",
+  "updated_at": "2026-09-10 13:55:00",
   "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 132,
+  "last_proposal_id": 134,
   "proposals": [
     {
       "id": 1,
@@ -6260,6 +6260,104 @@
       "priority": "H",
       "crp_id": "CRP-132",
       "cr_id": "CRP-132"
+    },
+    {
+      "id": 133,
+      "timestamp": "2026-09-10 13:10:00",
+      "title": "LCM Tool Explorer UI Regressions, Parameter/Help Execution Defects, and Navigation Fixes",
+      "origin_repo": "LCM",
+      "state": "approved",
+      "progress_state": "completed",
+      "bundle_id": "BUG-133",
+      "author": "Operator Directive / Bug Intake",
+      "details": "Operator reported 12 defects and enhancements across Tool Explorer and tools: stale V6.1.0 title across Show-* Standard Displays, Model A linked static CSS architecture owned by Workspace_Inventory/assets (StandardTableDisplay.css with cascaded LCMToolCatalog.css), hardcoded HaSSD06 metric card, over-aggressive parameter modal prompting on zero-parameter tools, console windows not auto-closing for May Exit tools, static LCM data script resolution for help without .lnk parsing and display in Notepad, missing standard Refresh button, phantom LCD subsystem in dropdowns, broken scratch back button link, generalized tool file audit for missing -h help parameters, missing parameter descriptions in BCR, Alternative B structured !Column:Value negative search syntax, and interactive Filter Presets dropdown with Add/Replace/Delete #n custom preset management.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-133_BUG-133_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-133_BUG-133_Walkthrough.md",
+      "dates": {
+        "created": "2026-09-10 13:10:00",
+        "suggested": "2026-09-10 13:10:00",
+        "approved": "2026-09-10 13:55:00",
+        "in_progress": "2026-09-10 14:03:00",
+        "completed": "2026-09-10 14:17:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-10 13:10:00",
+          "user": "Operator Directive / Bug Intake",
+          "note": "Registered in OPEN state per RULE-LCM-015."
+        },
+        {
+          "state": "approved",
+          "timestamp": "2026-09-10 13:55:00",
+          "user": "Rolf",
+          "note": "Operator directive: BUG-133 ACCEPTED."
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-09-10 14:03:00",
+          "user": "Rolf",
+          "note": "Operator directive: PROCEED ALL. Implementation initiated."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-10 14:17:00",
+          "user": "Rolf",
+          "note": "Visual review gate passed. Implementation verified across all 12 items."
+        }
+      ],
+      "priority": "H",
+      "crp_id": "BUG-133",
+      "cr_id": "BUG-133"
+    },
+    {
+      "id": 134,
+      "timestamp": "2026-09-10 13:10:00",
+      "title": "De-Parameterize BeyondComparePath in Invoke-BeyondCompareReview and Standardize Environment Constant",
+      "origin_repo": "Workspace_Inventory",
+      "state": "approved",
+      "progress_state": "completed",
+      "bundle_id": "CRP-134",
+      "author": "Operator Directive / CRP Intake",
+      "details": "De-parameterize BeyondComparePath from Invoke-BeyondCompareReview.ps1 CLI parameters. In LCM, the Beyond Compare executable path is an immutable environment setting / documentation standard, making runtime parameter prompting unnecessary and noisy.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-134_CRP-134_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-134_CRP-134_Walkthrough.md",
+      "dates": {
+        "created": "2026-09-10 13:10:00",
+        "suggested": "2026-09-10 13:10:00",
+        "approved": "2026-09-10 13:51:00",
+        "in_progress": "2026-09-10 14:03:00",
+        "completed": "2026-09-10 14:17:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-10 13:10:00",
+          "user": "Operator Directive / CRP Intake",
+          "note": "Registered in OPEN state per RULE-LCM-015."
+        },
+        {
+          "state": "approved",
+          "timestamp": "2026-09-10 13:51:00",
+          "user": "Rolf",
+          "note": "Operator directive: CRP-134 ACCEPTED."
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-09-10 14:03:00",
+          "user": "Rolf",
+          "note": "Operator directive: PROCEED ALL. Implementation initiated."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-10 14:17:00",
+          "user": "Rolf",
+          "note": "Visual review gate passed. BeyondComparePath de-parameterized to environment constant."
+        }
+      ],
+      "priority": "M",
+      "crp_id": "CRP-134",
+      "cr_id": "CRP-134"
     }
   ]
 }

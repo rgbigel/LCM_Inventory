@@ -15,10 +15,7 @@ param(
   [Alias('Cr', 'ChangeRequest', 'Proposal', 'ProposalId')]
   [string]$CRP = '',
 
-  [Parameter(Mandatory = $false)]
-  [string]$BeyondComparePath = 'D:\Tools\Beyond Compare 5\BCompare.exe',
-
-  [Parameter(Mandatory = $false)]
+  [Parameter(Mandatory = $false, HelpMessage = 'Wait synchronously for the Beyond Compare review session to close before evaluating staging')]
   [switch]$Wait,
 
   [Alias('h', '?')]
@@ -35,16 +32,16 @@ param(
              and SHA-256 staging manifest generation.
     Path: tools/Invoke-BeyondCompareReview.ps1
     Authors: Rolf, Workspace_AI Engine
-    Version: 2.3.2
-    Date: 2026-09-09
+    Version: 2.3.3
+    Date: 2026-09-10
 .PARAMETER RepositoryName
     The name or directory path of the Git repository to review (e.g. 'AuthorizeMasterUser', 'Git_Repositories', '.').
 .PARAMETER BaseCommit
     The base Git commit to compare against (e.g. 'HEAD~1', 'HEAD', 'root', SHA). Defaults to 'HEAD'.
 .PARAMETER Exclusions
     Additional file or directory exclusion masks (Aliases: -Exclude, -Filters). Standard LCM exclusions are always applied.
-.PARAMETER BeyondComparePath
-    Path to BCompare.exe executable. Defaults to 'D:\Tools\Beyond Compare 5\BCompare.exe'.
+.PARAMETER CRP
+    Change Request Proposal identifier (e.g. 'CRP-134', 'CR-2026-012') to correlate with review receipts.
 .PARAMETER Wait
     Wait synchronously for the Beyond Compare review session to close before evaluating staging.
 .PARAMETER Help
@@ -58,7 +55,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$scriptVersion = "2.3.2"
+$scriptVersion = "2.3.3"
 $scriptName = "Invoke-BeyondCompareReview"
 
 # ------------------------------------------------------------------------------
@@ -487,6 +484,18 @@ $repoName = Split-Path $repoPath -Leaf
 
 if (-not (Test-Path -LiteralPath (Join-Path $repoPath '.git'))) {
   throw "Target folder is not a valid Git repository: '$repoPath'"
+}
+
+# Resolve Beyond Compare 5 executable path deterministically
+$BeyondComparePath = if (-not [string]::IsNullOrWhiteSpace($env:BCOMPARE_PATH) -and (Test-Path -LiteralPath $env:BCOMPARE_PATH)) {
+  $env:BCOMPARE_PATH
+} elseif (Test-Path -LiteralPath 'D:\Tools\Beyond Compare 5\BCompare.exe') {
+  'D:\Tools\Beyond Compare 5\BCompare.exe'
+} elseif (Test-Path -LiteralPath "${env:ProgramFiles}\Beyond Compare 5\BCompare.exe") {
+  "${env:ProgramFiles}\Beyond Compare 5\BCompare.exe"
+} else {
+  $cmd = Get-Command "BCompare.exe" -ErrorAction SilentlyContinue
+  if ($cmd) { $cmd.Source } else { 'D:\Tools\Beyond Compare 5\BCompare.exe' }
 }
 
 if (-not (Test-Path -LiteralPath $BeyondComparePath)) {
