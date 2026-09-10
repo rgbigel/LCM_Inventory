@@ -9,24 +9,47 @@ param(
     [switch]$Purge,
 
     [Parameter(Mandatory = $false, HelpMessage = 'Purge review folders older than the specified number of hours')]
-    [Alias('o', 'h', 'Older')]
+    [Alias('o', 'Older')]
     [int]$OlderThanHours,
 
     [Parameter(Mandatory = $false, HelpMessage = 'Suppress automatically opening Windows File Explorer')]
-    [switch]$NoExplorer
+    [switch]$NoExplorer,
+
+    [Alias('h', '?')]
+    [switch]$Help
 )
 
 <#
 Module: Clear-BCReviewTemp.ps1
-Purpose: User command to inspect and clean up Beyond Compare temp review directories in %TEMP%\BC_Review.
+Purpose: User command to inspect and clean up Beyond Compare temp review directories in BC_Review scratch.
 Path: tools/Clear-BCReviewTemp.ps1
 Authors: Rolf, Workspace_AI Engine
-Version: 1.5.0
-Date: 2026-08-20
+Version: 1.5.1
+Date: 2026-09-10
 #>
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+
+if ($Help) {
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    Write-Host " CLEAR BEYOND COMPARE TEMP REVIEWS (Clear-BCReviewTemp)" -ForegroundColor Cyan
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    Write-Host "SYNOPSIS:" -ForegroundColor Yellow
+    Write-Host "  Inspect and clean up Beyond Compare temp review directories in BC_Review scratch."
+    Write-Host ""
+    Write-Host "USAGE:" -ForegroundColor Yellow
+    Write-Host "  pwsh Workspace_Inventory/tools/Clear-BCReviewTemp.ps1 [-All] [-Purge] [-OlderThanHours <int>] [-NoExplorer] [-h]"
+    Write-Host ""
+    Write-Host "PARAMETERS:" -ForegroundColor Yellow
+    Write-Host "  -All             : Purge all review folders (Explorer is skipped in -All mode)"
+    Write-Host "  -Purge           : Purge older review folders, keeping only the single newest one"
+    Write-Host "  -OlderThanHours  : Purge review folders older than the specified number of hours"
+    Write-Host "  -NoExplorer      : Suppress automatically opening Windows File Explorer"
+    Write-Host "  -Help (-h, -?)   : Displays this help screen"
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    return
+}
 
 # ==============================================================================
 # 1. Parameter Validation & Mutual Exclusivity Check

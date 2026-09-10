@@ -30,18 +30,19 @@
 #>
 [CmdletBinding()]
 param(
-  [Parameter(Mandatory = $false, Position = 0)]
+  [Parameter(Mandatory = $false, Position = 0, HelpMessage = 'Optional array of Proposal IDs to filter (e.g. 1, 28, 44)')]
   [object[]]$Id,
 
-  [Parameter(Mandatory = $false)]
+  [Parameter(Mandatory = $false, HelpMessage = 'Filter by current proposal state (suggested, in_progress, completed, pushed, deferred)')]
   [string]$State,
 
-  [Parameter(Mandatory = $false)]
+  [Parameter(Mandatory = $false, HelpMessage = 'Filter by state change event presence (created, in_progress, completed, pushed, deferred)')]
   [string]$StateEvent,
 
-  [Parameter(Mandatory = $false)]
+  [Parameter(Mandatory = $false, HelpMessage = 'Displays detailed individual state transition timeline and notes for each proposal')]
   [switch]$Detail,
 
+  [Parameter(Mandatory = $false, HelpMessage = 'Suppresses browser launch and outputs text table to terminal')]
   [Alias('Cli', 'Text')]
   [switch]$NoBrowser,
 

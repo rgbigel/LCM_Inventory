@@ -6,30 +6,55 @@
   Purpose: Iterates across all governed and child repositories under D:\Git_Repositories, detects if a Git remote exists and if local branch is ahead of remote tracking branch, and executes git push with structured audit logging.
   Path: Workspace_Inventory/tools/Invoke-WorkspacePush.ps1
   Authors: Rolf, Workspace_AI Engine
-  Version: 1.0.0
-  Date: 2026-08-30
+  Version: 1.1.0
+  Date: 2026-09-10
 #>
 
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory = $false, Position = 0)]
+    [Parameter(Mandatory = $false, Position = 0, HelpMessage = 'Commit reason and audit message for the push operation')]
     [string]$Reason = "feat(cm): sync completed workspace proposals and governance updates",
 
-    [Parameter(Mandatory = $false)]
+    [Parameter(Mandatory = $false, HelpMessage = 'Specific repositories to push (defaults to all ahead repositories)')]
     [string[]]$Repositories,
 
-    [Parameter(Mandatory = $false)]
+    [Parameter(Mandatory = $false, HelpMessage = 'Skip the pre-push Gemini export and knowledge base mirror pipeline')]
     [switch]$SkipGemini,
 
-    [Parameter(Mandatory = $false)]
+    [Parameter(Mandatory = $false, HelpMessage = 'Force git push even if validation warnings exist')]
     [switch]$Force,
 
+    [Parameter(Mandatory = $false, HelpMessage = 'Simulate the push operation and show actions without modifying remotes')]
     [Alias('WhatIf')]
-    [switch]$DryRun
+    [switch]$DryRun,
+
+    [Alias('h', '?')]
+    [switch]$Help
 )
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+
+if ($Help) {
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    Write-Host " LCM MULTI-REPOSITORY PUSH & SYNC ENGINE (Invoke-WorkspacePush)" -ForegroundColor Cyan
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    Write-Host "SYNOPSIS:" -ForegroundColor Yellow
+    Write-Host "  Pushes all ahead workspace repositories to remote Git repositories in lockstep."
+    Write-Host ""
+    Write-Host "USAGE:" -ForegroundColor Yellow
+    Write-Host "  pwsh Workspace_Inventory/tools/Invoke-WorkspacePush.ps1 [[-Reason] <str>] [-Repositories <str[]>] [-SkipGemini] [-Force] [-DryRun] [-h]"
+    Write-Host ""
+    Write-Host "PARAMETERS:" -ForegroundColor Yellow
+    Write-Host "  -Reason          : Commit reason and audit message"
+    Write-Host "  -Repositories    : Specific repositories to push"
+    Write-Host "  -SkipGemini      : Skip pre-push Gemini export"
+    Write-Host "  -Force           : Force git push"
+    Write-Host "  -DryRun          : Simulate push without modifying remotes"
+    Write-Host "  -Help (-h, -?)   : Displays this help screen"
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    return
+}
 
 $workspaceRoot = 'D:\Git_Repositories'
 $cmLogFile = Join-Path $workspaceRoot "Workspace_Inventory\logs\cm_activity.log"

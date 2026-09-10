@@ -4,24 +4,46 @@
 .DESCRIPTION
     Module: tools/Test-LCMRuleHealth.ps1
     Authors: Rolf, Workspace_AI Engine
-    Version: 1.0.0
-    Date: 2026-08-20
+    Version: 1.1.0
+    Date: 2026-09-10
 #>
 
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory = $false, Position = 0)]
+    [Parameter(Mandatory = $false, Position = 0, HelpMessage = 'Target repository name or path to diagnose (defaults to all)')]
     [string]$TargetRepository,
 
-    [Parameter(Mandatory = $false)]
+    [Parameter(Mandatory = $false, HelpMessage = 'Root workspace directory containing repositories to test')]
     [string]$WorkspaceRoot = 'D:\Git_Repositories',
 
-    [Parameter(Mandatory = $false)]
-    [switch]$Detailed
+    [Parameter(Mandatory = $false, HelpMessage = 'Show detailed diagnostic messages for every checked file and rule')]
+    [switch]$Detailed,
+
+    [Alias('h', '?')]
+    [switch]$Help
 )
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+
+if ($Help) {
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    Write-Host " TEST LCM RULE HEALTH (Test-LCMRuleHealth)" -ForegroundColor Cyan
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    Write-Host "SYNOPSIS:" -ForegroundColor Yellow
+    Write-Host "  Diagnoses LCM rule health, junction validity, static duplicates, and versions."
+    Write-Host ""
+    Write-Host "USAGE:" -ForegroundColor Yellow
+    Write-Host "  pwsh Workspace_Inventory/tools/Test-LCMRuleHealth.ps1 [[-TargetRepository] <str>] [-WorkspaceRoot <str>] [-Detailed] [-h]"
+    Write-Host ""
+    Write-Host "PARAMETERS:" -ForegroundColor Yellow
+    Write-Host "  -TargetRepository : Target repository name to diagnose"
+    Write-Host "  -WorkspaceRoot    : Root workspace directory (default: D:\Git_Repositories)"
+    Write-Host "  -Detailed         : Show detailed diagnostic messages"
+    Write-Host "  -Help (-h, -?)    : Displays this help screen"
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    return
+}
 
 $canonicalRulesCandidates = @(
     (Join-Path $WorkspaceRoot '.lcm\.agents\rules'),

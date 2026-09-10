@@ -7,13 +7,13 @@
              1:1 parity with their canonical proposals.json ID (CRP-nnn or BUG-nnn), updates document DOX
              headers, and normalizes crp_id, cr_id, and plan_path across proposals.json.
     Authors: Rolf, Workspace_AI Engine
-    Version: 1.0.2
-    Date: 2026-09-08
+    Version: 1.0.3
+    Date: 2026-09-10
 #>
 
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
-    [Parameter(Mandatory = $false)]
+    [Parameter(Mandatory = $false, HelpMessage = 'Force file rename operations without interactive confirmation prompts')]
     [switch]$Force,
 
     [Alias('h', '?')]

@@ -4,18 +4,38 @@
 .DESCRIPTION
     Module: tools/Get-ReposUnderReview.ps1
     Authors: Rolf, Workspace_AI Engine
-    Version: 1.0.0
-    Date: 2026-08-20
+    Version: 1.1.0
+    Date: 2026-09-10
 #>
 
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory = $false)]
-    [string]$WorkspaceRoot = 'D:\Git_Repositories'
+    [Parameter(Mandatory = $false, HelpMessage = 'Root workspace directory to inspect for repositories under review')]
+    [string]$WorkspaceRoot = 'D:\Git_Repositories',
+
+    [Alias('h', '?')]
+    [switch]$Help
 )
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+
+if ($Help) {
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    Write-Host " GET REPOSITORIES UNDER REVIEW (Get-ReposUnderReview)" -ForegroundColor Cyan
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    Write-Host "SYNOPSIS:" -ForegroundColor Yellow
+    Write-Host "  Displays all repositories under review, dirty file counts, and BC5 review statuses."
+    Write-Host ""
+    Write-Host "USAGE:" -ForegroundColor Yellow
+    Write-Host "  pwsh Workspace_Inventory/tools/Get-ReposUnderReview.ps1 [[-WorkspaceRoot] <str>] [-h]"
+    Write-Host ""
+    Write-Host "PARAMETERS:" -ForegroundColor Yellow
+    Write-Host "  -WorkspaceRoot   : Root workspace directory to inspect (default: D:\Git_Repositories)"
+    Write-Host "  -Help (-h, -?)   : Displays this help screen"
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    return
+}
 
 $moduleCandidates = @(
     (Join-Path $WorkspaceRoot 'Workspace_Inventory\modules\ProposalManager.psm1'),

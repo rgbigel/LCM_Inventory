@@ -3,17 +3,37 @@ Module: tools/Invoke-WorkspaceAudit.ps1
 Purpose: Runs a complete multi-repository Configuration Management audit across D:\Git_Repositories.
 Path: tools/Invoke-WorkspaceAudit.ps1
 Authors: Rolf, Workspace_AI Engine
-Version: 1.0.0
-Date: 2026-08-15
+Version: 1.1.0
+Date: 2026-09-10
 Changelog:
+- 2026-09-10: Added -h / -Help parameter per RULE-PS-010.
 - 2026-08-15: Initial versioned implementation of the multi-repo CM audit runner.
 #>
 
 [CmdletBinding()]
-param()
+param(
+    [Alias('h', '?')]
+    [switch]$Help
+)
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+
+if ($Help) {
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    Write-Host " CONFIGURATION MANAGEMENT AUDIT RUNNER (Invoke-WorkspaceAudit)" -ForegroundColor Cyan
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    Write-Host "SYNOPSIS:" -ForegroundColor Yellow
+    Write-Host "  Runs a complete multi-repository Configuration Management audit across workspace."
+    Write-Host ""
+    Write-Host "USAGE:" -ForegroundColor Yellow
+    Write-Host "  pwsh Workspace_Inventory/tools/Invoke-WorkspaceAudit.ps1 [-h]"
+    Write-Host ""
+    Write-Host "PARAMETERS:" -ForegroundColor Yellow
+    Write-Host "  -Help (-h, -?) : Displays this help screen"
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    return
+}
 
 $modulePath = Join-Path $PSScriptRoot '..\modules\WorkspaceCM.psm1'
 Import-Module $modulePath -Force

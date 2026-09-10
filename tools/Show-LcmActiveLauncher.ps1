@@ -4,15 +4,34 @@ Purpose: Interactive Desktop GUI & Active Help Launcher for all LCM and Subsyste
 Governance Invariant (RULE-EFF-001): Direct interactive tool orchestration.
 Path: tools/Show-LcmActiveLauncher.ps1
 Authors: Rolf, Workspace_AI Engine
-Version: 5.0.2
-Date: 2026-08-21
+Version: 5.0.3
+Date: 2026-09-10
 #>
 
 [CmdletBinding()]
-param()
+param(
+    [Alias('h', '?')]
+    [switch]$Help
+)
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+
+if ($Help) {
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    Write-Host " LCM ACTIVE LAUNCHER (Show-LcmActiveLauncher)" -ForegroundColor Cyan
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    Write-Host "SYNOPSIS:" -ForegroundColor Yellow
+    Write-Host "  Interactive Desktop GUI & Active Help Launcher for LCM and Subsystem tools."
+    Write-Host ""
+    Write-Host "USAGE:" -ForegroundColor Yellow
+    Write-Host "  pwsh Workspace_Inventory/tools/Show-LcmActiveLauncher.ps1 [-h]"
+    Write-Host ""
+    Write-Host "PARAMETERS:" -ForegroundColor Yellow
+    Write-Host "  -Help (-h, -?) : Displays this help screen"
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    return
+}
 
 Add-Type -AssemblyName PresentationFramework, PresentationCore, WindowsBase
 

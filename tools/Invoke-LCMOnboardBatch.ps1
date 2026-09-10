@@ -3,17 +3,38 @@ Module: tools/Invoke-LCMOnboardBatch.ps1
 Purpose: Interactively enumerates un-governed repositories in alphabetical order, prompting for disposition (Onboard, Ignore, Retire, Delete) or auto-skipping pre-dispositioned items.
 Path: tools/Invoke-LCMOnboardBatch.ps1
 Authors: Rolf, Workspace_AI Engine
-Version: 1.0.0
-Date: 2026-08-21
+Version: 1.1.0
+Date: 2026-09-10
 #>
 
 [CmdletBinding()]
 param(
-    [switch]$NonInteractive
+    [Parameter(Mandatory = $false, HelpMessage = 'Suppresses interactive disposition prompts and runs in batch mode')]
+    [switch]$NonInteractive,
+
+    [Alias('h', '?')]
+    [switch]$Help
 )
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+
+if ($Help) {
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    Write-Host " LCM MULTI-REPO BATCH ONBOARDING (Invoke-LCMOnboardBatch)" -ForegroundColor Cyan
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    Write-Host "SYNOPSIS:" -ForegroundColor Yellow
+    Write-Host "  Enumerates un-governed repositories, prompting for disposition or auto-skipping."
+    Write-Host ""
+    Write-Host "USAGE:" -ForegroundColor Yellow
+    Write-Host "  pwsh Workspace_Inventory/tools/Invoke-LCMOnboardBatch.ps1 [-NonInteractive] [-h]"
+    Write-Host ""
+    Write-Host "PARAMETERS:" -ForegroundColor Yellow
+    Write-Host "  -NonInteractive : Run without prompting for interactive decisions"
+    Write-Host "  -Help (-h, -?)  : Displays this help screen"
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    return
+}
 
 $modulePath = Join-Path $PSScriptRoot '..\modules\WorkspaceCM.psm1'
 Import-Module (Resolve-Path $modulePath) -Force

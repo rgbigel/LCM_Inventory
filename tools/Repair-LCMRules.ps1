@@ -4,30 +4,54 @@
 .DESCRIPTION
     Module: tools/Repair-LCMRules.ps1
     Authors: Rolf, Workspace_AI Engine
-    Version: 1.0.0
-    Date: 2026-08-20
+    Version: 1.1.0
+    Date: 2026-09-10
 #>
 
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
-    [Parameter(Mandatory = $false, Position = 0)]
+    [Parameter(Mandatory = $false, Position = 0, HelpMessage = 'Specific target repository name or path to repair rules in')]
     [string]$TargetRepository,
 
-    [Parameter(Mandatory = $false)]
+    [Parameter(Mandatory = $false, HelpMessage = 'Repair rule junctions across all repositories in the workspace')]
     [switch]$All,
 
-    [Parameter(Mandatory = $false)]
+    [Parameter(Mandatory = $false, HelpMessage = 'Root workspace directory containing governed repositories')]
     [string]$WorkspaceRoot = 'D:\Git_Repositories',
 
-    [Parameter(Mandatory = $false)]
+    [Parameter(Mandatory = $false, HelpMessage = 'Simulate repair operations without making junction or file changes')]
     [switch]$DryRun,
 
-    [Parameter(Mandatory = $false)]
-    [switch]$Force
+    [Parameter(Mandatory = $false, HelpMessage = 'Force replacement or re-creation of invalid junctions')]
+    [switch]$Force,
+
+    [Alias('h', '?')]
+    [switch]$Help
 )
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+
+if ($Help) {
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    Write-Host " REPAIR LCM RULES & JUNCTIONS (Repair-LCMRules)" -ForegroundColor Cyan
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    Write-Host "SYNOPSIS:" -ForegroundColor Yellow
+    Write-Host "  Reconciles, repairs, and standardizes LCM rule discovery junctions across repositories."
+    Write-Host ""
+    Write-Host "USAGE:" -ForegroundColor Yellow
+    Write-Host "  pwsh Workspace_Inventory/tools/Repair-LCMRules.ps1 [[-TargetRepository] <str>] [-All] [-WorkspaceRoot <str>] [-DryRun] [-Force] [-h]"
+    Write-Host ""
+    Write-Host "PARAMETERS:" -ForegroundColor Yellow
+    Write-Host "  -TargetRepository : Specific target repository to repair"
+    Write-Host "  -All              : Repair rule junctions across all repositories"
+    Write-Host "  -WorkspaceRoot    : Root workspace directory (default: D:\Git_Repositories)"
+    Write-Host "  -DryRun           : Simulate repair without making changes"
+    Write-Host "  -Force            : Force re-creation of invalid junctions"
+    Write-Host "  -Help (-h, -?)    : Displays this help screen"
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    return
+}
 
 $canonicalRulesCandidates = @(
     (Join-Path $WorkspaceRoot 'Workspace_Inventory\.agents\rules'),

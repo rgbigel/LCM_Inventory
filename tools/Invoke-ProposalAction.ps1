@@ -4,41 +4,67 @@
 .DESCRIPTION
     Module: tools/Invoke-ProposalAction.ps1
     Authors: Rolf, Workspace_AI Engine
-    Version: 1.0.0
-    Date: 2026-08-20
+    Version: 1.1.0
+    Date: 2026-09-10
 #>
 
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory = $false, Position = 0)]
+    [Parameter(Mandatory = $false, Position = 0, HelpMessage = 'Action to perform on proposals or governance settings')]
     [ValidateSet('do', 'delete', 'defer', 'complete', 'suggest', 'granularity', 'mode', 'list', 'progress', 'verify', 'priority', 'commit', 'committed', 'proceed')]
     [string]$Action = 'list',
 
-    [Parameter(Mandatory = $false, Position = 1)]
+    [Parameter(Mandatory = $false, Position = 1, HelpMessage = 'Target proposal expression (e.g. all, #1, 105, 100-105)')]
     [string]$TargetExpression = '',
 
-    [Parameter(Mandatory = $false)]
+    [Parameter(Mandatory = $false, HelpMessage = 'Additional details or notes for proposal transition')]
     [string]$Details = '',
 
-    [Parameter(Mandatory = $false)]
+    [Parameter(Mandatory = $false, HelpMessage = 'Target implementation progress state to set')]
     [ValidateSet('undecided', 'queued', 'in_progress', 'verification', 'committed', 'completed', 'pushed', 'blocked', 'failed')]
     [string]$ProgressState,
 
-    [Parameter(Mandatory = $false)]
+    [Parameter(Mandatory = $false, HelpMessage = 'Priority level to assign (C=Critical, H=High, M=Medium, L=Low, D=Deferred)')]
     [ValidateSet('C', 'H', 'M', 'L', 'D')]
     [string]$Priority,
 
-    [Parameter(Mandatory = $false)]
+    [Parameter(Mandatory = $false, HelpMessage = 'Set review granularity: coarse (single BC5 review) or tight (BC5 review per proposal)')]
     [ValidateSet('coarse', 'tight')]
     [string]$Granularity,
 
-    [Parameter(Mandatory = $false)]
+    [Parameter(Mandatory = $false, HelpMessage = 'Set LCM governance mode: active (proposal-first) or paused')]
     [ValidateSet('active', 'paused')]
-    [string]$Mode
+    [string]$Mode,
+
+    [Alias('h', '?')]
+    [switch]$Help
 )
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+
+if ($Help) {
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    Write-Host " INVOKE PROPOSAL ACTION (Invoke-ProposalAction)" -ForegroundColor Cyan
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    Write-Host "SYNOPSIS:" -ForegroundColor Yellow
+    Write-Host "  Executes proposal batch actions ('do', 'delete', 'defer', etc.) and configures review granularity."
+    Write-Host ""
+    Write-Host "USAGE:" -ForegroundColor Yellow
+    Write-Host "  pwsh Workspace_Inventory/tools/Invoke-ProposalAction.ps1 [[-Action] <str>] [[-TargetExpression] <str>] [-Details <str>] [-ProgressState <str>] [-Priority <str>] [-Granularity <str>] [-Mode <str>] [-h]"
+    Write-Host ""
+    Write-Host "PARAMETERS:" -ForegroundColor Yellow
+    Write-Host "  -Action           : Action to perform (do, delete, defer, complete, suggest, granularity, mode, list, etc.)"
+    Write-Host "  -TargetExpression : Target proposal expression (e.g. all, #1, 105, 100-105)"
+    Write-Host "  -Details          : Additional details or notes for proposal transition"
+    Write-Host "  -ProgressState    : Target progress state (undecided, queued, in_progress, completed, pushed, etc.)"
+    Write-Host "  -Priority         : Priority level (C, H, M, L, D)"
+    Write-Host "  -Granularity      : Review granularity: coarse or tight"
+    Write-Host "  -Mode             : Governance mode: active or paused"
+    Write-Host "  -Help (-h, -?)    : Displays this help screen"
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    return
+}
 
 $modulePath = Join-Path $PSScriptRoot '..\modules\ProposalManager.psm1'
 Import-Module $modulePath -Force

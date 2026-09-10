@@ -4,18 +4,22 @@ param(
     [Alias('RepositoryName', 'Repo', 'Name')]
     [string]$RepositoryPath,
 
-    [Parameter(Mandatory = $false)]
+    [Parameter(Mandatory = $false, HelpMessage = 'Review outcome disposition (Accepted, AcceptedAll, AcceptedStaged, AcceptedWithEdits, Rejected, Deferred)')]
     [ValidateSet("Accepted", "AcceptedAll", "AcceptedStaged", "AcceptedWithEdits", "Rejected", "Deferred", "ALL", "ACCEPT ALL")]
     [string]$Result,
 
-    [Parameter(Mandatory = $false)]
+    [Parameter(Mandatory = $false, HelpMessage = 'Review notes, rationale, or instructions for the audit receipt')]
     [string]$Notes,
 
+    [Parameter(Mandatory = $false, HelpMessage = 'Accept all changes including uncopied files without interactive confirmation')]
     [Alias('AcceptAll')]
     [switch]$All,
 
-    [Parameter(Mandatory = $false)]
-    [switch]$Force
+    [Parameter(Mandatory = $false, HelpMessage = 'Force review commit and bypass safety checks')]
+    [switch]$Force,
+
+    [Alias('h', '?')]
+    [switch]$Help
 )
 
 <#
@@ -27,12 +31,33 @@ param(
              prompts for uncopied file confirmations (bypassed with 'ACCEPT ALL' or -All), and performs review-gated commits per RULE-REV-001.
     Path: tools/Submit-ReviewResult.ps1
     Authors: Rolf, Workspace_AI Engine
-    Version: 2.1.0
-    Date: 2026-08-29
+    Version: 2.2.0
+    Date: 2026-09-10
 #>
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+
+if ($Help) {
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    Write-Host " SUBMIT REVIEW RESULT (Submit-ReviewResult)" -ForegroundColor Cyan
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    Write-Host "SYNOPSIS:" -ForegroundColor Yellow
+    Write-Host "  Interactive review response recorder and staging engine for Beyond Compare 5."
+    Write-Host ""
+    Write-Host "USAGE:" -ForegroundColor Yellow
+    Write-Host "  pwsh Workspace_Inventory/tools/Submit-ReviewResult.ps1 [[-RepositoryPath] <str>] [-Result <str>] [-Notes <str>] [-All] [-Force] [-h]"
+    Write-Host ""
+    Write-Host "PARAMETERS:" -ForegroundColor Yellow
+    Write-Host "  -RepositoryPath  : Name or path of the repository"
+    Write-Host "  -Result          : Review disposition (Accepted, AcceptedAll, AcceptedWithEdits, Rejected, Deferred)"
+    Write-Host "  -Notes           : Review notes or rationale"
+    Write-Host "  -All             : Accept all including uncopied files"
+    Write-Host "  -Force           : Force commit"
+    Write-Host "  -Help (-h, -?)   : Displays this help screen"
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    return
+}
 
 $workspaceRoot = 'D:\Git_Repositories'
 if (-not (Test-Path -LiteralPath $workspaceRoot)) {

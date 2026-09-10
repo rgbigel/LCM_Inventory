@@ -24,11 +24,35 @@ param(
     [string]$BundleId,
     
     [Parameter(Mandatory=$false, HelpMessage='Filter by author')]
-    [string]$Author
+    [string]$Author,
+
+    [Alias('h', '?')]
+    [switch]$Help
 )
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+
+if ($Help) {
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    Write-Host " FIND CHANGE REQUEST (Find-ChangeRequest)" -ForegroundColor Cyan
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    Write-Host "SYNOPSIS:" -ForegroundColor Yellow
+    Write-Host "  Queries and displays Change Requests from central CM index and proposals."
+    Write-Host ""
+    Write-Host "USAGE:" -ForegroundColor Yellow
+    Write-Host "  pwsh Workspace_Inventory/tools/Find-ChangeRequest.ps1 [[-Query] <str>] [-Repository <str>] [-Status <str>] [-BundleId <str>] [-Author <str>] [-h]"
+    Write-Host ""
+    Write-Host "PARAMETERS:" -ForegroundColor Yellow
+    Write-Host "  -Query         : Search term matching CR ID, title, or repository"
+    Write-Host "  -Repository    : Filter by origin repository"
+    Write-Host "  -Status        : Filter by status (proposed, under-review, approved, implemented, verified, closed)"
+    Write-Host "  -BundleId      : Filter by bundle ID"
+    Write-Host "  -Author        : Filter by author"
+    Write-Host "  -Help (-h, -?) : Displays this help screen"
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    return
+}
 
 $crModule = Join-Path $PSScriptRoot '..\modules\ChangeRequestManager.psm1'
 Import-Module $crModule -Force

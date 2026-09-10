@@ -18,11 +18,33 @@ param(
     [switch]$Execute,
     
     [Parameter(Mandatory=$false, HelpMessage='Simulate the update without modifying files')]
-    [switch]$DryRun
+    [switch]$DryRun,
+
+    [Alias('h', '?')]
+    [switch]$Help
 )
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+
+if ($Help) {
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    Write-Host " INVOKE LCM VERSION UPGRADE (Invoke-LCMUpdate)" -ForegroundColor Cyan
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    Write-Host "SYNOPSIS:" -ForegroundColor Yellow
+    Write-Host "  Governed entrypoint for proposing or applying LCM version upgrades to repositories."
+    Write-Host ""
+    Write-Host "USAGE:" -ForegroundColor Yellow
+    Write-Host "  pwsh Workspace_Inventory/tools/Invoke-LCMUpdate.ps1 [-TargetRepository] <str> [-Execute] [-DryRun] [-h]"
+    Write-Host ""
+    Write-Host "PARAMETERS:" -ForegroundColor Yellow
+    Write-Host "  -TargetRepository : Target repository name or path"
+    Write-Host "  -Execute          : Execute live update after CR approval"
+    Write-Host "  -DryRun           : Simulate update without modifying files"
+    Write-Host "  -Help (-h, -?)    : Displays this help screen"
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    return
+}
 
 $cmModule = Join-Path $PSScriptRoot '..\modules\WorkspaceCM.psm1'
 $crModule = Join-Path $PSScriptRoot '..\modules\ChangeRequestManager.psm1'
