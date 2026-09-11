@@ -277,11 +277,32 @@ header {
     max-height: calc(100vh - 275px);
     box-shadow: var(--card-shadow);
     position: relative;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) var(--bg-secondary);
+}
+
+.table-container::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.table-container::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+    border-radius: 6px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 6px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+    background: var(--text-secondary);
 }
 
 table {
     width: 100%;
-    min-width: 1180px;
+    min-width: 1360px;
     border-collapse: collapse;
     text-align: left;
     font-size: 13px;

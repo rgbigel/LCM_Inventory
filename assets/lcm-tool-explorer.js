@@ -292,7 +292,7 @@
                 '<td>' +
                     '<div class="tool-name-cell" style="display: flex; flex-direction: column; align-items: flex-start;">' +
                         '<div style="display: flex; align-items: center; gap: 4px;">' +
-                            '<a href="javascript:void(0)" class="tool-name-link" onclick="window.LcmTools.runToolSmart(' + safeIdx + ')" title="Click to configure parameters and run (' + (t.Admin ? '🛡️ Elevated Admin' : '👤 Standard User') + ')">' +
+                            '<a href="javascript:void(0)" class="tool-name-link" onclick="window.LcmTools.openRunDialog(' + safeIdx + ')" title="Click to configure parameters and run (' + (t.Admin ? '🛡️ Elevated Admin' : '👤 Standard User') + ')">' +
                                 displayName +
                             '</a>' +
                             editedMarker +
@@ -986,7 +986,10 @@
             const matchCat = (catVal === 'All') || (t.Category === catVal);
             const matchDesc = matchQuery(t.Description, descFilter);
             const matchSearch = matchRowSearch(t, search);
-            const matchShowFilter = !isFilteringShowTools || (t.Name.startsWith('Show-') || (t.ShortName && t.ShortName.startsWith('Show-')));
+            const matchShowFilter = !isFilteringShowTools || (
+                (t.Name && (t.Name.toLowerCase().startsWith('show-') || t.Name.toLowerCase().startsWith('show'))) ||
+                (t.ShortName && (t.ShortName.toLowerCase().startsWith('show-') || t.ShortName.toLowerCase().startsWith('show')))
+            );
 
             return matchAud && matchTool && matchEnv && matchGroup && matchRole && matchAdmin && matchNoExit && matchCat && matchDesc && matchSearch && matchShowFilter;
         });
@@ -1111,6 +1114,8 @@
             btnShow.style.background = '';
             btnShow.style.color = '';
         }
+        const presetSelect = document.getElementById('filter-presets-select');
+        if (presetSelect) presetSelect.value = '';
         updateViewModeUI();
         resetColumnFilters(false);
         document.querySelectorAll('.metric-card').forEach(c => c.classList.remove('active'));
@@ -1521,10 +1526,51 @@
         });
     }
 
+    function buildToolCommandWithSavedParams(tool) {
+        let baseCmd = resolveToolExecutionCommand(tool, isSourceMode);
+        const matchFile = baseCmd.match(/^(pwsh(?:\.exe)?\s+-File\s+"[^"]+"|\S+)/i);
+        if (matchFile) {
+            baseCmd = matchFile[0];
+        } else if (baseCmd.includes(' -')) {
+            baseCmd = baseCmd.substring(0, baseCmd.indexOf(' -')).trim();
+        }
+
+        const params = tool.Parameters || [];
+        let argParts = [];
+        params.forEach(p => {
+            const storageKey = getParamStorageKey(tool.Name, p.Name);
+            const savedVal = localStorage.getItem(storageKey);
+            if (savedVal !== null && savedVal !== undefined && savedVal !== '') {
+                const isSwitch = p.Type.toLowerCase().includes('switch') || p.Type.toLowerCase().includes('bool');
+                if (isSwitch) {
+                    if (savedVal === 'true' || savedVal === '1' || savedVal === true) {
+                        argParts.push('-' + p.Name);
+                    }
+                } else {
+                    let val = String(savedVal).trim();
+                    if (val.startsWith('-' + p.Name)) {
+                        val = val.substring(p.Name.length + 1).trim();
+                    }
+                    if (val.startsWith('"') && val.endsWith('"')) {
+                        val = val.slice(1, -1);
+                    }
+                    if (val) {
+                        argParts.push('-' + p.Name + ' "' + val.replace(/"/g, '`"') + '"');
+                    }
+                }
+            }
+        });
+
+        if (argParts.length > 0) {
+            return baseCmd + ' ' + argParts.join(' ');
+        }
+        return baseCmd;
+    }
+
     function runTool(idx) {
         const tool = toolsData[idx];
         if (!tool) return;
-        const cmd = resolveToolExecutionCommand(tool, isSourceMode);
+        const cmd = buildToolCommandWithSavedParams(tool);
         
         showToast('⚡ Launching ' + (isSourceMode ? tool.Name : (tool.ShortName || tool.Name)) + '...');
         fetch(DAEMON_URL + '/execute', {
@@ -1828,19 +1874,22 @@
     function toggleShowFilter() {
         isFilteringShowTools = !isFilteringShowTools;
         const btn = document.getElementById('btn-show-tools-filter');
+        const presetSelect = document.getElementById('filter-presets-select');
         if (btn) {
             if (isFilteringShowTools) {
                 btn.classList.add('active');
                 btn.style.background = 'var(--accent, #58a6ff)';
                 btn.style.color = '#ffffff';
+                if (presetSelect) presetSelect.value = 'preset_show_tools';
             } else {
                 btn.classList.remove('active');
                 btn.style.background = '';
                 btn.style.color = '';
+                if (presetSelect && presetSelect.value === 'preset_show_tools') presetSelect.value = '';
             }
         }
         applyFilters();
-        showToast(isFilteringShowTools ? '📊 Filtered to Show-* standard display tools' : '↺ Restored all tools view');
+        showToast(isFilteringShowTools ? '📊 Filtered to ShowTools standard displays' : '↺ Restored all tools view');
     }
 
     function prioritizeShowTools() {
@@ -1939,7 +1988,7 @@
             search: '!group:HaSSD06 !env:CMD'
         },
         'preset_show_tools': {
-            name: '📊 Show-* Tools',
+            name: '📊 ShowTools',
             audience: 'All',
             group: 'All',
             env: 'All',
@@ -1947,7 +1996,7 @@
             admin: 'All',
             noexit: 'All',
             cat: 'All',
-            search: 'Show-'
+            search: ''
         },
         'preset_none': {
             name: '⚪ None (Clear All)',
@@ -2019,6 +2068,24 @@
         }
         const searchInput = document.getElementById('search-input');
         if (searchInput) searchInput.value = preset.search || '';
+
+        // Synchronize ShowTools button highlight state
+        const btnShow = document.getElementById('btn-show-tools-filter');
+        if (presetId === 'preset_show_tools') {
+            isFilteringShowTools = true;
+            if (btnShow) {
+                btnShow.classList.add('active');
+                btnShow.style.background = 'var(--accent, #58a6ff)';
+                btnShow.style.color = '#ffffff';
+            }
+        } else {
+            isFilteringShowTools = false;
+            if (btnShow) {
+                btnShow.classList.remove('active');
+                btnShow.style.background = '';
+                btnShow.style.color = '';
+            }
+        }
 
         applyFilters();
         showToast('✓ Filter preset applied: ' + (preset.name || presetId));

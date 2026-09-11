@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-09-10 13:55:00",
+  "updated_at": "2026-09-11 16:23:49",
   "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 134,
+  "last_proposal_id": 139,
   "proposals": [
     {
       "id": 1,
@@ -6418,6 +6418,178 @@
       "cr_id": "CRP-135",
       "max_regression_depth": 2,
       "regression_needed": true
+    },
+    {
+      "id": 136,
+      "timestamp": "2026-09-11 14:49:00",
+      "title": "Show-Actions ToolName Log Filter and Silent Editor Failure",
+      "origin_repo": "LCM",
+      "state": "approved",
+      "progress_state": "completed",
+      "bundle_id": "BUG-136",
+      "author": "Operator Directive / Bug Intake",
+      "details": "Show-Actions terminates without launching editor when filtered with -ToolName ShowActions because the utility searches for ShowActions-*.log (which does not exist for the reader tool itself), causing early exit before editor dispatch.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-136-LCM-v7.5.0-ShowActions-ToolName-Filter-Silent-Editor-Failure.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-11 14:49:00",
+        "suggested": "2026-09-11 14:49:00",
+        "completed": "2026-09-11 16:23:49",
+        "approved": "2026-09-11 16:23:49"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-11 14:49:00",
+          "user": "Operator Directive / Bug Intake",
+          "note": "Registered in OPEN state per RULE-LCM-015."
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-09-11 15:00:00",
+          "user": "Rolf",
+          "note": "Operator directive: PROCEED ALL. Implementation initiated."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-11 16:23:49",
+          "user": "Rolf",
+          "note": "Operator directive: ACCEPT ALL. Review gate passed."
+        }
+      ],
+      "priority": "H",
+      "crp_id": "BUG-136",
+      "cr_id": "BUG-136",
+      "regression_needed": true
+    },
+    {
+      "id": 137,
+      "timestamp": "2026-09-11 14:49:00",
+      "title": "Desktop Daemon Foreground Focus Inversion on Target Launch",
+      "origin_repo": "LCM",
+      "state": "approved",
+      "progress_state": "completed",
+      "bundle_id": "BUG-137",
+      "author": "Operator Directive / Bug Intake",
+      "details": "Desktop daemon OpenTarget endpoint actively activates 'LCM Tool Explorer' when title is empty, pulling the browser window in front of newly launched external processes (e.g. Notepad) and burying them in the background.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-137-LCM-v7.5.0-Desktop-Daemon-Foreground-Focus-Inversion.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-11 14:49:00",
+        "suggested": "2026-09-11 14:49:00",
+        "completed": "2026-09-11 16:23:49",
+        "approved": "2026-09-11 16:23:49"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-11 14:49:00",
+          "user": "Operator Directive / Bug Intake",
+          "note": "Registered in OPEN state per RULE-LCM-015."
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-09-11 15:00:00",
+          "user": "Rolf",
+          "note": "Operator directive: PROCEED ALL. Implementation initiated."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-11 16:23:49",
+          "user": "Rolf",
+          "note": "Operator directive: ACCEPT ALL. Review gate passed."
+        }
+      ],
+      "priority": "H",
+      "crp_id": "BUG-137",
+      "cr_id": "BUG-137",
+      "regression_needed": true
+    },
+    {
+      "id": 138,
+      "timestamp": "2026-09-11 14:49:00",
+      "title": "Tool Explorer ShowTools Button, Header Layout, and Horizontal Scrolling Refinements",
+      "origin_repo": "LCM",
+      "state": "approved",
+      "progress_state": "completed",
+      "bundle_id": "CRP-138",
+      "author": "Operator Directive / CRP Intake",
+      "details": "Rename Show-* Tools button to ShowTools and align behavior with Presets dropdown filter; move Light Mode toggle into primary top header in front of Refresh; ensure table container enforces horizontal scrolling when NoExit column overflows.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-138-LCM-v7.5.0-Tool-Explorer-ShowTools-Button-And-Header-Layout.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-11 14:49:00",
+        "suggested": "2026-09-11 14:49:00",
+        "completed": "2026-09-11 16:23:49",
+        "approved": "2026-09-11 16:23:49"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-11 14:49:00",
+          "user": "Operator Directive / CRP Intake",
+          "note": "Registered in OPEN state per RULE-LCM-015."
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-09-11 15:00:00",
+          "user": "Rolf",
+          "note": "Operator directive: PROCEED ALL. Implementation initiated."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-11 16:23:49",
+          "user": "Rolf",
+          "note": "Operator directive: ACCEPT ALL. Review gate passed."
+        }
+      ],
+      "priority": "M",
+      "crp_id": "CRP-138",
+      "cr_id": "CRP-138",
+      "regression_needed": true
+    },
+    {
+      "id": 139,
+      "timestamp": "2026-09-11 14:54:00",
+      "title": "Pushed Proposal Immutability, Sequence Integrity, and Origin Traceability",
+      "origin_repo": "Workspace_Inventory",
+      "state": "approved",
+      "progress_state": "completed",
+      "bundle_id": "BUG-139",
+      "author": "Operator Directive / Bug Intake",
+      "details": "Enforce strict immutability of already-pushed and completed proposals in Configuration Management. Prevent sequence ID collisions or overwrites of past proposals. Mandate that all follow-up bugs and regression fixes receive fresh monotonic sequence numbers and explicitly cross-link to their originating parent proposals.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-139-Workspace_Inventory-v7.5.0-Pushed-Proposal-Immutability-And-Sequence-Integrity.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-11 14:54:00",
+        "suggested": "2026-09-11 14:54:00",
+        "completed": "2026-09-11 16:23:49",
+        "approved": "2026-09-11 16:23:49"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-11 14:54:00",
+          "user": "Operator Directive / Bug Intake",
+          "note": "Registered in OPEN state per RULE-LCM-015."
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-09-11 15:00:00",
+          "user": "Rolf",
+          "note": "Operator directive: PROCEED ALL. Implementation initiated."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-11 16:23:49",
+          "user": "Rolf",
+          "note": "Operator directive: ACCEPT ALL. Review gate passed."
+        }
+      ],
+      "priority": "H",
+      "crp_id": "BUG-139",
+      "cr_id": "BUG-139",
+      "regression_needed": false
     }
   ]
 }
