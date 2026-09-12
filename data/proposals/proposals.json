@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-09-11 16:23:49",
+  "updated_at": "2026-09-12 18:54:44",
   "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 139,
+  "last_proposal_id": 140,
   "proposals": [
     {
       "id": 1,
@@ -6589,6 +6589,50 @@
       "priority": "H",
       "crp_id": "BUG-139",
       "cr_id": "BUG-139",
+      "regression_needed": false
+    },
+    {
+      "id": 140,
+      "timestamp": "2026-09-12 18:50:00",
+      "title": "Create LCM-Conforming Repository One2Md (v1.0.0)",
+      "origin_repo": "One2Md",
+      "state": "completed",
+      "progress_state": "completed",
+      "bundle_id": "CRP-140",
+      "author": "Rolf / Antigravity AI Engine",
+      "details": "Initialize new LCM-governed repository One2Md, absorb and enhance prototype OneNote-to-Markdown script with StrictMode, parameter interface, preflight checks, structured logging, tripartite documentation, installation runbook, and Pester tests.",
+      "plan_path": "Workspace_Inventory/data/proposals/plans/Proposal-140_CRP-140_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/data/proposals/plans/Proposal-140_CRP-140_Walkthrough.md",
+      "dates": {
+        "created": "2026-09-12 18:50:00",
+        "suggested": "2026-09-12 18:50:00",
+        "approved": "2026-09-12 18:50:00",
+        "in_progress": "2026-09-12 18:50:00",
+        "completed": "2026-09-12 18:54:44"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-12 18:50:00",
+          "user": "Operator Directive",
+          "note": "Initial repository creation request received"
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-09-12 18:50:00",
+          "user": "Operator Directive",
+          "note": "Implementation plan approved; execution initiated"
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-12 18:54:44",
+          "user": "Operator Directive",
+          "note": "Repository One2Md created, verified, and committed v1.0.0 (Commit 13ac61f)"
+        }
+      ],
+      "priority": "M",
+      "crp_id": "CRP-140",
+      "cr_id": "CRP-140",
       "regression_needed": false
     }
   ]
