@@ -3,8 +3,8 @@
 - Rule ID: `RULE-ELEV-001` through `RULE-ELEV-006`
 - Scope: Solution-Wide (All Repositories Governed by LCM v4.1.0)
 - Classification: Invariant Rule
-- Version: 7.3.0
-- Updated: 2026-09-07
+- Version: 7.5.3
+- Updated: 2026-09-19
 
 ---
 
@@ -59,9 +59,9 @@ When an interactive script or launcher delegates execution to an elevated consol
    - The elevated worker `MUST` output a clear completion notice upon finishing indicating that the window has been intentionally kept open for operator inspection.
 
 ### `RULE-ELEV-006` (Automated Privilege-Aware Tool Execution & Elevation Interception)
-Ensure that any tool, script, or shorthand command requiring administrative privileges is never executed directly within a standard un-elevated user context. Instead, enforce automatic discovery and routing through the background desktop daemon or `gsudo` bridge.
+Ensure that any tool, script, or shorthand command requiring administrative privileges is never executed directly within a standard un-elevated user context. Instead, enforce automatic discovery and routing through the standardized CLI interceptor (`.lcm/tools/internal/Invoke-PrivilegedTool.ps1`), the background desktop daemon (`http://127.0.0.1:9876/execute`), or `Invoke-InteractiveDesktop.ps1`.
 
-Before executing any tool, script, or shorthand command, the AI agent `MUST` perform the following validation sequence:
+Before executing any tool, script, or shorthand command, the AI agent or CLI launcher `MUST` perform the following validation sequence:
 1. **Catalog & Schema Lookup**:
    - Query the authoritative tool catalog (`.lcm/config/tool_catalog.json` / `WorkspaceInventory`) to resolve the target tool's metadata record.
    - Inspect whether the execution profile defines `"Admin": true` (or equivalent elevation requirement flag).
@@ -69,4 +69,8 @@ Before executing any tool, script, or shorthand command, the AI agent `MUST` per
    - Check whether the current runtime shell session holds elevated administrative rights (e.g. `([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)`).
 3. **Execution Routing & Interception**:
    - **Standard Execution**: If the tool does **not** require admin rights (`"Admin": false` or unset), execute it directly in the current session.
-   - **Elevated Interception**: If `"Admin": true` and the current session is running under a standard un-elevated user context, **do not** execute the script directly in that session. Immediately intercept the call and route the execution through the established background desktop daemon bridge (`POST http://127.0.0.1:9876/execute` with `{ elevated: true, noExit: true }`) or `Invoke-InteractiveDesktop.ps1` / `gsudo` to trigger the proper privilege escalation pipeline rather than falling back to a partial user-level modification. Console windows launched via elevation `MUST` include `-NoExit` / `/k` per `RULE-ELEV-005`.
+   - **Elevated Interception**: If `"Admin": true` and the current session is running under a standard un-elevated user context, **do not** execute the script directly in that session. Immediately route the call via:
+     ```powershell
+     pwsh .lcm/tools/internal/Invoke-PrivilegedTool.ps1 -Tool <ToolName> [-Arguments <Args>] [-NoExit]
+     ```
+   - **Automated Dispatch Pipeline**: `Invoke-PrivilegedTool.ps1` and generated `.cmd` trampolines inspect the Session 1 Desktop Daemon on port 9876 and dispatch via `POST /execute` (`{ "command": "...", "elevated": true, "noExit": true }`), falling back to `Invoke-InteractiveDesktop.ps1 -Elevated` if the daemon is offline. Console windows launched via elevation `MUST` include `-NoExit` / `/k` per `RULE-ELEV-005`.

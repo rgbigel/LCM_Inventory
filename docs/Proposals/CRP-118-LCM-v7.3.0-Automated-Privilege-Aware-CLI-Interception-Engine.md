@@ -4,13 +4,13 @@
 | Metadata Field | Value |
 | :--- | :--- |
 | **Proposal ID** | `CRP-118` |
-| **Lifecycle State** | `OPEN` (Suggested / Awaiting Review) |
+| **Lifecycle State** | `COMPLETED` (Accepted by Operator) |
 | **Origin Repository** | `LCM` / Execution & Elevation Governance |
 | **Target Scope** | CLI & Agent Execution Layer (`.lcm/tools/internal/Invoke-PrivilegedTool.ps1`, `Invoke-InteractiveDesktop.ps1`, `Update-ToolCatalog.ps1`, `.lcm/Cmd/*.cmd`, `.agents/rules/ElevationPolicy.md`) |
 | **Author** | Rolf, Workspace_AI |
-| **Date** | 2026-09-08 |
-| **Version Impact** | `v7.3.0` |
-| **Related Proposals** | `CRP-107` (`CRP-2026-024`), `CRP-116` (`CRP-2026-030`), `CRP-117` (`CRP-2026-031`) |
+| **Date** | 2026-09-08 (Completed: 2026-09-19) |
+| **Version Impact** | `v7.5.3` |
+| **Related Proposals** | `CRP-107` (`CRP-2026-024`), `CRP-116` (`CRP-2026-030`), `CRP-117` (`CRP-2026-031`), `CRP-158` |
 
 ---
 
@@ -31,12 +31,12 @@ While the **Web Tool Explorer UI** (`lcm-tool-explorer.js`) enforces this policy
 ## 2. Architecture & Implementation Scope
 
 ### 2.1 Reusable CLI & Agent Dispatch Engine (`Invoke-PrivilegedTool.ps1`)
-Provide a standardized PowerShell dispatcher in `.lcm/tools/internal/Invoke-PrivilegedTool.ps1`:
+Standardized PowerShell dispatcher in `.lcm/tools/internal/Invoke-PrivilegedTool.ps1`:
 ```powershell
-pwsh .lcm/tools/internal/Invoke-PrivilegedTool.ps1 -Tool <NameOrShortName> [-Arguments <string>] [-NoExit] [-Force]
+pwsh .lcm/tools/internal/Invoke-PrivilegedTool.ps1 -Tool <NameOrShortName> [-Arguments <string>] [-NoExit] [-DryRun] [-Force]
 ```
 **Execution Sequence**:
-1. **Catalog Lookup**: Queries `.lcm/config/tool_catalog.json` (or single authoritative catalog) to resolve tool metadata and inspect whether `"Admin": true`.
+1. **Catalog Lookup**: Queries `.lcm/config/tool_catalog.json` to resolve tool metadata and inspect whether `"Admin": true`. Includes word-token fuzzy matching and alias lookup.
 2. **Privilege Inspection**: Evaluates whether the current shell process holds administrator rights via `WindowsPrincipal.IsInRole([WindowsBuiltInRole]::Administrator)`.
 3. **Deterministic Routing**:
    - **Case A (`Admin: false` or already elevated)**: Invokes the target script directly in-process with passed arguments.
@@ -47,13 +47,11 @@ pwsh .lcm/tools/internal/Invoke-PrivilegedTool.ps1 -Tool <NameOrShortName> [-Arg
      - Never hangs on Session 0 UAC prompts.
 
 ### 2.2 Trampoline `.cmd` Interception Alignment
-Update the trampoline generation logic in [Update-ToolCatalog.ps1](file:///D:/Git_Repositories/.lcm/tools/internal/Update-ToolCatalog.ps1):
-- For tools marked `"Admin": true`, ensure the batch trampoline checks whether the caller is a background/headless process before invoking `Start-Process -Verb RunAs`.
-- If the REST Daemon is running on Port 9876, route un-elevated CLI invocations through the daemon bridge to guarantee UAC prompts display reliably on the interactive desktop Session 1.
+Updated trampoline generation logic in [Update-ToolCatalog.ps1](file:///D:/Git_Repositories/.lcm/tools/internal/Update-ToolCatalog.ps1):
+- For tools marked `"Admin": true`, generated batch trampolines check `net session >nul 2>&1`. If un-elevated, they delegate directly to `Invoke-PrivilegedTool.ps1 -Tool <ShortName> -Arguments "%*"` and exit cleanly.
 
 ### 2.3 Agent Operational Rule Integration
-- Update [`.agents/rules/ElevationPolicy.md`](file:///D:/Git_Repositories/.agents/rules/ElevationPolicy.md) to explicitly require AI agents to route tools requiring administrative privileges through `Invoke-PrivilegedTool.ps1` or the Desktop Daemon bridge.
-- Provide a clear shorthand syntax and error-guard pattern for agent planning mode.
+- Updated [`.agents/rules/ElevationPolicy.md`](file:///D:/Git_Repositories/.agents/rules/ElevationPolicy.md) to explicitly codify `Invoke-PrivilegedTool.ps1` and trampoline routing under `RULE-ELEV-006`.
 
 ---
 
@@ -68,8 +66,8 @@ Update the trampoline generation logic in [Update-ToolCatalog.ps1](file:///D:/Gi
 
 ---
 
-## 4. Current State & Promotion Notice
+## 4. Current State & Verification Delivery
 
 > [!NOTE]
-> This proposal is registered in **`OPEN`** (`suggested`) state. Implementation is deferred until explicit operator review and promotion per LCM governance.
+> **Delivery Status**: Implementation completed and verified. Transitioned to **`VERIFICATION`** state awaiting formal Beyond Compare Review (BCR) operator disposition.
 
