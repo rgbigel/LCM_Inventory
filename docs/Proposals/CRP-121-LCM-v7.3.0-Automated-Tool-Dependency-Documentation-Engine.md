@@ -52,7 +52,7 @@ To balance immediate accuracy with workspace performance:
 
 ```mermaid
 flowchart TD
-    subgraph CommitTime ["Local Commit Phase (Per-Tool)"]
+    subgraph CommitTime["Local Commit Phase (Per-Tool)"]
         C1["Tool Modified & Reaching COMMITTED"] --> C2["Run Pass 1: Complete-ToolDocumentation -Tool <Name> -Pass1"]
         C2 --> C3["Compute SHA-256 Hash of Script"]
         C3 --> C4{"Hash Changed?"}
@@ -62,13 +62,14 @@ flowchart TD
         C7 --> C8["Include in Commit Payload (RULE-LCM-005)"]
     end
 
-    subgraph PrePushTime ["Remote Push Phase (Workspace-Wide)"]
+    subgraph PrePushTime["Remote Push Phase (Workspace-Wide)"]
         P1["Invoke-WorkspacePush Triggered"] --> P2["Run Pass 2: Complete-ToolDocumentation -Pass2"]
         P2 --> P3["Build In-Memory Solution Dependency Index"]
         P3 --> P4["Invert Graph (G -> G^T) to Map All Callers"]
         P4 --> P5["Generate / Refresh docs/tools/<ToolName>/<ToolName>-WUD.md"]
         P5 --> P6["Sync with Gemini Knowledge Base (RULE-LCM-013) & Push"]
     end
+
 ```
 
 1. **Pass 1 (`-Pass1` / Commit Time)**:
@@ -129,3 +130,4 @@ Codify in [`.agents/rules/DocumentationStandardsPolicy.md`](file:///D:/Git_Repos
 > [!NOTE]
 > **Registered in OPEN State**:
 > Per `RULE-LCM-015` and `RULE-LCM-016`, this proposal is registered in the CM ledger in the `OPEN` state awaiting explicit `PROCEED 121` authorization before implementation planning and execution commence.
+

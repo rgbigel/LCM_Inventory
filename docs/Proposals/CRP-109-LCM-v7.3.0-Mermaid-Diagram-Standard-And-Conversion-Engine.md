@@ -46,7 +46,8 @@ This Change Request Proposal establishes the **authoritative Mermaid diagramming
   ```mermaid
   flowchart TD
       classDef default font-size:8pt;
-  ```
+  
+```
 - Subgraph labels, node titles, and body text inside diagram boxes must remain legible in high-resolution PDF outputs and scaled mobile/tablet displays.
 
 ---
@@ -116,4 +117,5 @@ param(
 2. **Phase 2**: Codify `RULE-DOC-007` in `DocumentationStandardsPolicy.md` and synchronize `AGENTS.md` and `LCM-Rules-Cross-Reference.md`.
 3. **Phase 3**: Implement `.lcm/tools/internal/Format-LcmMarkdownDiagrams.ps1` and trampoline `.lcm/Cmd/FormatDiagrams.cmd`.
 4. **Phase 4**: Register the tool in `tool_catalog.json` and execute verification across scopes (`Document`, `Folder`, `Repo`, `Git_root`).
+
 

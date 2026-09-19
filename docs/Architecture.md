@@ -1,0 +1,152 @@
+# Architecture Specification: Workspace Inventory & Configuration Management Control Hub
+
+Module: docs/Architecture.md  
+Purpose: Authoritative architectural specification for Workspace_Inventory, the central Configuration Management (CM), proposal ledger, and review-gating engine of the Lifecycle Model (LCM).  
+Path: D:/Git_Repositories/Workspace_Inventory/docs/Architecture.md  
+Authors: Rolf, Workspace_AI Engine  
+Version: 7.0.0  
+Status: Authoritative Architecture  
+Date: 2026-09-19  
+
+---
+
+## 1. System Overview & End-User Perspective
+
+**`Workspace_Inventory`** serves as the central operational hub and single source of truth for the entire Lifecycle Model (LCM) multi-repository ecosystem. It governs configuration tracking, change request proposal (CRP) state progression, multi-repository review gating via Beyond Compare 5, drift auditing, and multi-repo remote push orchestration.
+
+From an operator and AI agent perspective, `Workspace_Inventory` provides three primary interaction surfaces:
+1. **Interactive UI Dashboards**: Fast, single-instance HTML/JS control hubs launched via local loopback web channels (e.g. CM Control Hub, Tool Explorer, Readiness Modal, Table Viewers).
+2. **Deterministic CLI Tooling**: Modular PowerShell 7 automation scripts conforming to Microsoft approved verbs and universal `-h` help banners.
+3. **Canonical Data Stores**: Schema-validated JSON ledgers (`proposals.json`, `inventory.json`, `tool_catalog.json`) maintaining immutable audit history and proposal lifecycle states.
+
+```mermaid
+graph TB
+    subgraph UI_Layer["Presentation & Interaction Layer"]
+        CM_HUB["CM Control Hub<br/>Show-CmControlHub.ps1"]
+        TOOL_EXP["LCM Tool Explorer<br/>Show-LcmActiveLauncher.ps1"]
+        READINESS_UI["Readiness Dashboard<br/>Show-WorkspaceReadiness.ps1"]
+        BC_GATE["Beyond Compare 5<br/>Invoke-BeyondCompareReview.ps1"]
+    end
+
+    subgraph Control_Layer["Governance & Orchestration Engine"]
+        CM_MOD["WorkspaceCM.psm1<br/>Core CM Module"]
+        AUDIT_ENG["Invoke-WorkspaceAudit.ps1<br/>Multi-Repo Drift Scanner"]
+        PUSH_ENG["Invoke-WorkspacePush.ps1<br/>Lockstep Git Push Conductor"]
+        HEALTH_ENG["Test-LCMRuleHealth.ps1<br/>Junction & Policy Auditor"]
+    end
+
+    subgraph Persistence_Layer["Canonical Data Stores & Staging"]
+        PROP_LEDGER[("proposals.json<br/>Proposals and CRP Ledger")]
+        INV_LEDGER[("inventory.json<br/>Workspace Inventory Matrix")]
+        REV_RECEIPTS[("data/reviews/<br/>Cryptographic Review Receipts")]
+        ARTIFACTS[("data/artifacts/<br/>Transient HTML Viewers")]
+    end
+
+    subgraph Governed_Space["Governed Repositories (13 Repos)"]
+        REPO_ROOT["Git_Repositories (Root)"]
+        REPO_SUBS["Subsystems (HaSSD06, Supervision)"]
+        REPO_COMPS["Components (SharedModules, etc.)"]
+    end
+
+    CM_HUB <--> CM_MOD
+    TOOL_EXP <--> CM_MOD
+    READINESS_UI <--> CM_MOD
+    BC_GATE <--> CM_MOD
+
+    CM_MOD <--> PROP_LEDGER
+    CM_MOD <--> INV_LEDGER
+    CM_MOD --> REV_RECEIPTS
+    CM_MOD --> ARTIFACTS
+
+    AUDIT_ENG --> INV_LEDGER
+    AUDIT_ENG --> Governed_Space
+    PUSH_ENG --> PROP_LEDGER
+    PUSH_ENG --> Governed_Space
+    HEALTH_ENG --> Governed_Space
+
+```
+
+---
+
+## 2. Proposal Lifecycle & Dual-State Progression
+
+All modifications to workspace code, documentation, and configuration operate under a strict, non-bypassable proposal lifecycle:
+
+```mermaid
+stateDiagram-v2
+    [*] --> suggested: Proposal Created (Submit-Proposal)
+    suggested --> approved: Operator Approval / ACCEPT <id>
+    approved --> completed: Code Execution & Pester Quality Pass
+    completed --> review_gated: BC5 Visual Diff Review Gate (RULE-REV-001)
+    review_gated --> accepted: Operator ACCEPT in Beyond Compare
+    accepted --> pushed: Lockstep Multi-Repo Push (Invoke-WorkspacePush)
+    pushed --> [*]
+    
+    suggested --> rejected: Superseded / Withdrawn (RULE-LCM-002)
+    rejected --> [*]
+
+```
+
+### Proposal State Definitions:
+- **`suggested`**: Formal proposal or change request (CRP) registered with structured scope and plan path.
+- **`approved`**: Operator has granted explicit permission to proceed with implementation.
+- **`completed`**: Code modifications implemented and verified through quality gates and Pester test suites.
+- **`review_gated`**: Physical code changes staged in temporary isolation for operator side-by-side verification in Beyond Compare.
+- **`accepted`**: Operator review complete; cryptographic review receipt generated in `data/reviews/` and changes committed to Git.
+- **`pushed`**: Commits synchronized to remote GitHub repositories via `Invoke-WorkspacePush.ps1`.
+
+---
+
+## 3. Beyond Compare Review Gate Architecture
+
+Per `RULE-REV-001` - `008` ([`ReviewCommitGovernancePolicy.md`](file:///D:/Git_Repositories/.agents/rules/ReviewCommitGovernancePolicy.md)), direct un-reviewed commits are prohibited. The review gating pipeline isolates changes, performs side-by-side verification, and audits all approvals:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Operator as Operator
+    participant Agent as Antigravity AI
+    participant BCR as Invoke-BeyondCompareReview.ps1
+    participant BC5 as Beyond Compare 5
+    participant Receipt as data/reviews/*.json
+    participant Git as Git Multi-Repo Engine
+
+    Agent->>BCR: Invoke-BeyondCompareReview -Repository <Repo>
+    BCR->>BCR: Create isolated temp staging & resolve junction filters
+    BCR->>BC5: Launch BCompare.exe with Left (HEAD) vs Right (Working)
+    Operator->>BC5: Inspect diffs, accept/reject files, close BC5
+    BCR->>Receipt: Generate cryptographic review receipt (SHA256)
+    BCR->>Git: Commit accepted changes with standard semantic message
+    BCR->>Agent: Return success and review receipt path
+
+```
+
+---
+
+## 4. Multi-Repository Governance & Junction Topology
+
+`Workspace_Inventory` holds the canonical physical storage for all 17 authoritative governance policies at `.agents/rules/`. All other repositories in the workspace link to this directory via single-hop NTFS junctions:
+
+```mermaid
+graph TD
+    classDef hub fill:#1e293b,stroke:#38bdf8,stroke-width:2px,color:#fff;
+    classDef spk fill:#0f172a,stroke:#94a3b8,stroke-width:1px,color:#fff;
+
+    HUB["Canonical Governance Rules Hub<br/>Workspace_Inventory/.agents/rules/<br/>(17 Authoritative Policies)"]:::hub
+
+    ROOT["Git_Repositories/.agents/rules"]:::spk
+    WAI["Workspace_AI/.agents/rules"]:::spk
+    WSUP["Workspace_Supervision/.agents/rules"]:::spk
+    HASS["HaSSD06_Inventory/.agents/rules"]:::spk
+    OTHER["All Other Governed Repos/.agents/rules"]:::spk
+
+    HUB ==>|NTFS Junction Link| ROOT
+    HUB ==>|NTFS Junction Link| WAI
+    HUB ==>|NTFS Junction Link| WSUP
+    HUB ==>|NTFS Junction Link| HASS
+    HUB ==>|NTFS Junction Link| OTHER
+
+```
+
+This topology ensures 100% rule discovery whether opening the root workspace container or any isolated child repository folder in IDE sessions.
+

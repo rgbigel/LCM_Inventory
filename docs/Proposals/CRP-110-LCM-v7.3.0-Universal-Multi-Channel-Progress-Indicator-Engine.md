@@ -35,7 +35,7 @@ flowchart TD
     classDef broker fill:#0f172a,stroke:#3b82f6,stroke-width:2px,color:#f8fafc;
     classDef channel fill:#1e293b,stroke:#10b981,stroke-width:1.5px,color:#f1f5f9;
 
-    TRIGGER["🚀 Action Invocation<br/><i>(PROCEED, ACCEPT, do #n-#m)</i>"] --> BROKER["⚙️ Progress Broker<br/><code>LcmProgressAtom.psm1</code>"]:::broker
+    TRIGGER["🚀 Action Invocation<br/>(PROCEED, ACCEPT, do #n-#m)"] --> BROKER["⚙️ Progress Broker<br/>LcmProgressAtom.psm1"]:::broker
 
     BROKER -->|"Atomic Write (<2ms)"| FILE[".lcm/scratch/active_progress.json"]
     BROKER -->|"HTTP POST (Localhost:9876)"| DAEMON["LcmDesktopDaemon (Session 1)"]:::broker
@@ -43,6 +43,7 @@ flowchart TD
     FILE & DAEMON --> CH_CLI["💻 Terminal CLI<br/>• PowerShell Write-Progress<br/>• Console Step Bar [████░░]"]:::channel
     FILE & DAEMON --> CH_WEB["🌐 Web Dashboards<br/>• Pulsing Row State Badges<br/>• Docked Console Log Stream"]:::channel
     FILE & DAEMON --> CH_CHAT["💬 Chat / Agent<br/>• Multi-Item Markdown Cards<br/>• Step-by-Step Checklists"]:::channel
+
 ```
 
 ---
@@ -163,4 +164,5 @@ The ephemeral progress file is maintained in `.lcm/scratch/active_progress.json`
 1. **Terminal Test**: Run `Invoke-ProposalAction.ps1` with mock items; assert `Write-Progress` renders parent/child bars without flicker.
 2. **Web Test**: Open `CM_CONTROL_HUB.html`; trigger a multi-item batch; verify that row status badges transition through `queued` $\rightarrow$ `in_progress` $\rightarrow$ `completed` in real-time.
 3. **Resilience Test**: Terminate `LcmDesktopDaemon.ps1`; verify that file-based polling (`active_progress.json`) seamlessly maintains dashboard row progress without error dialogs.
+
 

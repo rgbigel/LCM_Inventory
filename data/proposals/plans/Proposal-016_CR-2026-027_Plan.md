@@ -52,8 +52,9 @@ graph TD
     
     R1 & R2 & R3 & R4 -->|Extract Clean Payload| F1
     F2 & F3 & F4 & F5 -->|Bundle Toolchain| F1
-    F1 -->|Emit Standalone Archive| D["<b>LCM-Setup-v6.1.1.zip / Setup.exe</b>"]
+    F1 -->|Emit Standalone Archive| D["LCM-Setup-v6.1.1.zip / Setup.exe"]
     D -->|Execute Deployment Pipeline| T1 & T2 & T3 & T4
+
 ```
 
 #### Key Architecture Decisions:
@@ -122,4 +123,5 @@ graph TD
 ## 5. Review & Approval Gate
 
 In accordance with [`RULE-LCM-001`](file:///.agents/rules/ProposalReviewFlowPolicy.md) and [`RULE-LCM-002`](file:///.agents/rules/ProposalReviewFlowPolicy.md), please review the design in this document and respond with **`do #16 Proposal`** (or click **Proceed**) to authorize implementation of the packaging and installer suite in `Installation_LCD`.
+
 
