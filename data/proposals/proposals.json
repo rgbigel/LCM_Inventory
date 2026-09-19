@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-09-19T21:46:55+02:00",
+  "updated_at": "2026-09-19T21:58:09+02:00",
   "review_granularity": "tight",
   "lcm_mode": "active",
   "last_proposal_id": 159,
@@ -6155,7 +6155,7 @@
           "note": "Registered per operator directive in OPEN state with Pass 1 (Commit) and Pass 2 (Pre-Push) hash-gated architecture."
         }
       ],
-      "progress_state": "verification"
+      "progress_state": "committed"
     },
     {
       "id": 122,
