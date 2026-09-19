@@ -510,6 +510,8 @@
       color: var(--accent-blue);
       font-weight: 800;
     }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+    .spin-icon { display: inline-block; animation: spin 0.8s linear infinite; }
 
     body.light-theme .col-filter-row th {
       background: #f6f8fa !important;
@@ -819,6 +821,9 @@
         <span class="daemon-dot"></span>
         <span id="daemonText">REST Daemon: Checking...</span>
       </span>
+      <button class="btn btn-primary" id="btn-refresh-hub" onclick="refreshHubData(true)" title="Reload latest proposal ledger, statuses, and logs (F5 / Ctrl+R)">
+        <span id="refresh-hub-icon">🔄</span> <span id="refresh-hub-label">Refresh</span>
+      </button>
       <button class="btn btn-back-nav" onclick="window.history.length > 1 ? window.history.back() : window.location.href='../WORKSPACE_INVENTORY_VIEWER.html'" title="Return to Workspace Inventory Explorer (Windows-style Back)">
         <span>⬅️</span> <span>Back</span>
       </button>
@@ -1304,11 +1309,11 @@ Type command and press Enter:</div>
         setTimeout(() => { showCRPDates(); }, 100);
       }
 
-      // Global F5 Refresh and Escape Key Dismissal for Modals
+      // Global F5 / Ctrl+R Refresh and Escape Key Dismissal for Modals
       window.addEventListener("keydown", (e) => {
-        if (e.key === "F5" || e.code === "F5") {
+        if (e.key === "F5" || (e.ctrlKey && (e.key === "r" || e.key === "R"))) {
           e.preventDefault();
-          refreshData();
+          refreshHubData(true);
         } else if (e.key === "Escape") {
           closeHelpModal();
           closeLogsModal();
@@ -1319,6 +1324,83 @@ Type command and press Enter:</div>
         }
       });
     });
+
+    // Live Ledger & Status Refresh Engine
+    async function refreshHubData(manual = true) {
+      const btn = document.getElementById("btn-refresh-hub");
+      const icon = document.getElementById("refresh-hub-icon");
+      const label = document.getElementById("refresh-hub-label");
+      if (icon) icon.classList.add("spin-icon");
+      if (label) label.innerText = "Refreshing...";
+      if (manual) appendConsole("🔄 Refreshing CM Control Hub ledger and status...", "msg-info");
+
+      let refreshed = false;
+      try {
+        const candidateUrls = [
+          "../proposals/proposals.json",
+          "../../data/proposals/proposals.json",
+          "http://127.0.0.1:9876/api/proposals"
+        ];
+        
+        for (const url of candidateUrls) {
+          try {
+            const res = await fetch(url + "?t=" + Date.now(), { cache: "no-store" });
+            if (res.ok) {
+              const freshData = await res.json();
+              if (freshData && Array.isArray(freshData.proposals)) {
+                proposalsData = freshData;
+                refreshed = true;
+                break;
+              }
+            }
+          } catch (err) {}
+        }
+
+        try {
+          const logRes = await fetch("../../logs/cm_activity.log?t=" + Date.now(), { cache: "no-store" });
+          if (logRes.ok) {
+            activeLogText = await logRes.text();
+          }
+        } catch (e) {}
+
+        if (refreshed) {
+          populateScopeDropdown();
+          updateMetricCards();
+          renderTable();
+          const nowTime = new Date().toLocaleTimeString();
+          const subTitle = document.getElementById("hubVersionSubtitle");
+          if (subTitle) {
+            subTitle.innerText = `Tool: Show-CmControlHub {{HUB_VERSION}} | LCM Baseline: {{LCM_BASELINE}} | Refreshed: ${nowTime}`;
+          }
+          const pushedCount = (proposalsData.proposals.filter(p => p.state === 'pushed')).length;
+          const openCount = (proposalsData.proposals.filter(p => p.state !== 'pushed' && p.state !== 'rejected' && p.state !== 'completed')).length;
+          showTicker(`✅ Refreshed ledger: ${proposalsData.proposals.length} total (${pushedCount} pushed, ${openCount} open)`);
+          if (manual) appendConsole(`[SUCCESS] Refreshed CM ledger at ${nowTime} (${proposalsData.proposals.length} proposals: ${pushedCount} pushed, ${openCount} open).`, "msg-success");
+        } else {
+          if (manual) {
+            appendConsole("[RELOAD] Local file sandbox active - reloading compiled snapshot...", "msg-info");
+            window.location.reload();
+            return;
+          }
+        }
+      } catch (error) {
+        console.error("Refresh error:", error);
+        if (manual) {
+          appendConsole("[RELOAD] Reloading page to refresh snapshot...", "msg-warn");
+          window.location.reload();
+          return;
+        }
+      } finally {
+        setTimeout(() => {
+          if (icon) icon.classList.remove("spin-icon");
+          if (label) label.innerText = "Refresh";
+        }, 400);
+      }
+    }
+
+    function refreshData() {
+      return refreshHubData(true);
+    }
 
     // Theme Engine (CRP-105)
     function toggleTheme() {
