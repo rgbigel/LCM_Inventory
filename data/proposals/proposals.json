@@ -7942,7 +7942,7 @@
       "timestamp": "2026-09-19 21:38:00",
       "title": "[BUG] CM Control Hub Command Execution Output Capture & Automatic Ledger Re-Query Refresh",
       "origin_repo": "Workspace_Inventory",
-      "state": "in_progress",
+      "state": "completed",
       "bundle_id": "BUG-159",
       "author": "Rolf, Workspace_AI",
       "details": "Fixes CM Control Hub console command execution so that: 1) Daemon returns synchronous stdout/stderr/exit code from executed tools (e.g. Invoke-ProposalAction.ps1), 2) Control Hub displays full structured output, target status reached, and diagnostics/problems in Response Feed, and 3) Control Hub automatically re-queries GET /proposals and refreshes the table, cards, and badges immediately upon command completion without requiring manual browser restarts.",
@@ -7951,7 +7951,8 @@
       "dates": {
         "created": "2026-09-19 21:38:00",
         "suggested": "2026-09-19 21:38:00",
-        "in_progress": "2026-09-19 21:40:00"
+        "in_progress": "2026-09-19 21:40:00",
+        "completed": "2026-09-19 21:53:00"
       },
       "state_history": [
         {
@@ -7965,13 +7966,19 @@
           "timestamp": "2026-09-19 21:40:00",
           "user": "Operator Directive",
           "note": "Activated via explicit PROCEED 159 directive."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-19 21:53:00",
+          "user": "rgbig",
+          "note": "Operator directive: accept 159. Review receipts recorded."
         }
       ],
       "priority": "H",
       "type": "BUG",
       "crp_id": "BUG-159",
       "cr_id": "BUG-159",
-      "progress_state": "verification"
+      "progress_state": "completed"
     }
   ]
 }
