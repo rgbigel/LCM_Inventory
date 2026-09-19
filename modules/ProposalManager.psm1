@@ -496,6 +496,220 @@ function Get-LCMMode {
     return 'active'
 }
 
+# =====================================================================
+# CRP-135 Automated Regression & DAG Engine
+# =====================================================================
+
+function Test-RegressionTrigger {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCustomObject]$Proposal,
+        [Parameter(Mandatory = $false)]
+        [object[]]$AllProposals
+    )
+
+    $triggers = @()
+    $isRegressionNeeded = $false
+
+    # 1. Explicit Author Intent
+    if ($Proposal.PSObject.Properties['regression_needed'] -and $Proposal.regression_needed -eq $true) {
+        $triggers += 'Explicit author intent'
+        $isRegressionNeeded = $true
+    }
+
+    # 2. Semantic Scope Filter (Global Workspace Scope)
+    $scope = if ($Proposal.PSObject.Properties['origin_repo']) { $Proposal.origin_repo } else { '' }
+    $title = if ($Proposal.PSObject.Properties['title']) { $Proposal.title } else { '' }
+    $details = if ($Proposal.PSObject.Properties['details']) { $Proposal.details } else { '' }
+    $combined = "$scope $title $details".ToLowerInvariant()
+
+    if ($scope -in @('LCM', 'Workspace_AI') -or $combined -match '(all repositories|all child repos|workspace-wide|governance rule|\.agents/rules)') {
+        $triggers += 'Global scope pattern detected'
+        $isRegressionNeeded = $true
+    }
+
+    # 3. Active Dependency Overlap
+    if ($AllProposals -and $AllProposals.Count -gt 0) {
+        $activeProps = @($AllProposals | Where-Object { 
+            $_.id -ne $Proposal.id -and $_.state -in @('bug', 'suggested', 'approved', 'processed') -and 
+            $_.PSObject.Properties['regression_needed'] -and $_.regression_needed -eq $true 
+        })
+        if ($activeProps.Count -gt 0) {
+            foreach ($ap in $activeProps) {
+                if ($ap.origin_repo -eq $Proposal.origin_repo -and $Proposal.origin_repo -ne 'Workspace_Inventory') {
+                    $triggers += "Active dependency overlap with CRP-$($ap.id) on repo '$($ap.origin_repo)'"
+                    $isRegressionNeeded = $true
+                }
+            }
+        }
+    }
+
+    return [PSCustomObject]@{
+        ProposalId         = $Proposal.id
+        RegressionNeeded   = $isRegressionNeeded
+        RegressionTriggers = $triggers
+    }
+}
+
+function Assert-RegressionSafety {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [int]$ParentProposalId,
+        [Parameter(Mandatory = $false)]
+        [int]$ProposedDepth = 1,
+        [Parameter(Mandatory = $false)]
+        [int]$MaxDepth = 2,
+        [Parameter(Mandatory = $false)]
+        [object[]]$AllProposals
+    )
+
+    if ($null -eq $AllProposals) {
+        $store = Get-ProposalStore
+        $AllProposals = @($store.proposals)
+    }
+
+    # 1. Max Regression Depth Guard (MaxRegressionDepth = 2)
+    if ($ProposedDepth -gt $MaxDepth) {
+        throw "MaxRegressionDepth limit ($MaxDepth) exceeded for Proposal #$ParentProposalId (Proposed Depth: $ProposedDepth). Regression cascade halted."
+    }
+
+    # 2. DAG Cycle Detection (A -> B -> A)
+    $visited = New-Object 'System.Collections.Generic.HashSet[int]'
+    $currId = $ParentProposalId
+    [void]$visited.Add($currId)
+
+    while ($currId -gt 0) {
+        $parentProp = $AllProposals | Where-Object { $_.id -eq $currId }
+        if ($null -eq $parentProp -or -not $parentProp.PSObject.Properties['parent_crp_id'] -or -not $parentProp.parent_crp_id) {
+            break
+        }
+        
+        $nextParentId = [int]$parentProp.parent_crp_id
+        if ($visited.Contains($nextParentId)) {
+            throw "Blocked_Cycle: Circular dependency detected in regression DAG between Proposal #$ParentProposalId and Parent #$nextParentId."
+        }
+        [void]$visited.Add($nextParentId)
+        $currId = $nextParentId
+    }
+
+    return $true
+}
+
+function Get-RegressionDAGOrder {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $false)]
+        [object[]]$Proposals
+    )
+
+    if ($null -eq $Proposals) {
+        $store = Get-ProposalStore
+        $Proposals = @($store.proposals)
+    }
+
+    $nodes = @{}
+    $inDegree = @{}
+    $edges = @{}
+
+    foreach ($p in $Proposals) {
+        $nodes[$p.id] = $p
+        $inDegree[$p.id] = 0
+        $edges[$p.id] = @()
+    }
+
+    foreach ($p in $Proposals) {
+        if ($p.PSObject.Properties['parent_crp_id'] -and $p.parent_crp_id) {
+            $parentId = [int]$p.parent_crp_id
+            if ($nodes.ContainsKey($parentId)) {
+                $edges[$parentId] += $p.id
+                $inDegree[$p.id] = $inDegree[$p.id] + 1
+            }
+        }
+    }
+
+    $queue = [System.Collections.Generic.Queue[int]]::new()
+    foreach ($id in $nodes.Keys) {
+        if ($inDegree[$id] -eq 0) {
+            $queue.Enqueue($id)
+        }
+    }
+
+    $topologicalOrder = @()
+    while ($queue.Count -gt 0) {
+        $curr = $queue.Dequeue()
+        $topologicalOrder += $nodes[$curr]
+
+        foreach ($dep in $edges[$curr]) {
+            $inDegree[$dep] = $inDegree[$dep] - 1
+            if ($inDegree[$dep] -eq 0) {
+                $queue.Enqueue($dep)
+            }
+        }
+    }
+
+    if ($topologicalOrder.Count -ne $nodes.Count) {
+        Write-Warning "Cycle detected in proposal graph. Some proposals have unresolved circular dependencies."
+    }
+
+    return $topologicalOrder
+}
+
+function New-ChildRegressionProposal {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [int]$ParentProposalId,
+        [Parameter(Mandatory = $true)]
+        [string]$TargetRepo,
+        [Parameter(Mandatory = $true)]
+        [string]$Reason,
+        [Parameter(Mandatory = $false)]
+        [string]$Scope = 'tools',
+        [Parameter(Mandatory = $false)]
+        [int]$NegativePriorityIndex = -1,
+        [Parameter(Mandatory = $false)]
+        [int]$MaxDepth = 2
+    )
+
+    $store = Get-ProposalStore
+    $allProps = @($store.proposals)
+    $parentProp = $allProps | Where-Object { $_.id -eq $ParentProposalId }
+
+    if (-not $parentProp) {
+        throw "Parent proposal #$ParentProposalId not found."
+    }
+
+    $parentDepth = if ($parentProp.PSObject.Properties['regression_depth'] -and $parentProp.regression_depth) { [int]$parentProp.regression_depth } else { 0 }
+    $childDepth = $parentDepth + 1
+
+    Assert-RegressionSafety -ParentProposalId $ParentProposalId -ProposedDepth $childDepth -MaxDepth $MaxDepth -AllProposals $allProps
+
+    $childTitle = "Regression: $TargetRepo for CRP-$ParentProposalId ($($parentProp.title))"
+    $childDetails = "Automated downstream regression proposal for $TargetRepo. Triggered by CRP-${ParentProposalId}: $Reason"
+
+    # Mint child proposal in 'suggested' state (OPEN progress state) per RULE-LCM-015
+    $newProp = New-WorkspaceProposal -Title $childTitle -OriginRepo $TargetRepo -Details $childDetails -State 'suggested'
+
+    # Set regression metadata
+    $newProp | Add-Member -NotePropertyName 'parent_crp_id' -NotePropertyValue $ParentProposalId -Force
+    $newProp | Add-Member -NotePropertyName 'regression_depth' -NotePropertyValue $childDepth -Force
+    $newProp | Add-Member -NotePropertyName 'negative_priority' -NotePropertyValue $NegativePriorityIndex -Force
+    $newProp | Add-Member -NotePropertyName 'max_regression_depth' -NotePropertyValue $MaxDepth -Force
+
+    # Save to store
+    $store = Get-ProposalStore
+    $idx = $store.proposals.FindIndex([System.Predicate[object]]{ param($item) $item.id -eq $newProp.id })
+    if ($idx -ge 0) {
+        $store.proposals[$idx] = $newProp
+    }
+    Set-ProposalStore -Store $store
+
+    Write-Host "Minted Child Regression Proposal #$($newProp.id) (Depth: $childDepth, Prio: $NegativePriorityIndex) for Parent CRP-$ParentProposalId on repo '$TargetRepo'." -ForegroundColor Green
+    return $newProp
+}
+
 function Get-ReposUnderReview {
     [CmdletBinding()]
     param(
@@ -678,5 +892,6 @@ Export-ModuleMember -Function Get-ProposalStorePath, Get-ProposalStore, Set-Prop
     Set-WorkspaceProposalPriority, Save-ProposalPlan, Save-ProposalWalkthrough, `
     Resolve-ProposalIdExpression, Invoke-ProposalBatchAction, `
     Set-ReviewGranularity, Get-ReviewGranularity, Set-LCMMode, Get-LCMMode, `
+    Test-RegressionTrigger, Assert-RegressionSafety, Get-RegressionDAGOrder, New-ChildRegressionProposal, `
     Get-ReposUnderReview, Format-ProposalsTable, Format-ReposUnderReviewTable `
     -Alias Parse-ProposalIdExpression

@@ -11,7 +11,7 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $false, Position = 0, HelpMessage = 'Action to perform on proposals or governance settings')]
-    [ValidateSet('do', 'delete', 'defer', 'complete', 'suggest', 'granularity', 'mode', 'list', 'progress', 'verify', 'priority', 'commit', 'committed', 'proceed')]
+    [ValidateSet('do', 'delete', 'defer', 'complete', 'suggest', 'granularity', 'mode', 'list', 'progress', 'verify', 'priority', 'commit', 'committed', 'proceed', 'regression', 'regressions', 'check-regressions', 'generate-regression')]
     [string]$Action = 'list',
 
     [Parameter(Mandatory = $false, Position = 1, HelpMessage = 'Target proposal expression (e.g. all, #1, 105, 100-105)')]
@@ -27,6 +27,15 @@ param(
     [Parameter(Mandatory = $false, HelpMessage = 'Priority level to assign (C=Critical, H=High, M=Medium, L=Low, D=Deferred)')]
     [ValidateSet('C', 'H', 'M', 'L', 'D')]
     [string]$Priority,
+
+    [Parameter(Mandatory = $false, HelpMessage = 'Target repository for child regression proposal')]
+    [string]$TargetRepo = '',
+
+    [Parameter(Mandatory = $false, HelpMessage = 'Reason or trigger description for child regression proposal')]
+    [string]$Reason = '',
+
+    [Parameter(Mandatory = $false, HelpMessage = 'Max regression depth limit (default: 2)')]
+    [int]$MaxRegressionDepth = 2,
 
     [Parameter(Mandatory = $false, HelpMessage = 'Set review granularity: coarse (single BC5 review) or tight (BC5 review per proposal)')]
     [ValidateSet('coarse', 'tight')]
@@ -185,6 +194,58 @@ switch ($Action) {
         }
         Write-Host "`nUpdated Proposal(s) Priority:" -ForegroundColor Cyan
         Format-ProposalsTable -Proposals $updated
+    }
+    { $_ -in @('regression', 'regressions', 'check-regressions') } {
+        $store = Get-ProposalStore
+        $allProps = @($store.proposals)
+        $targets = if ($TargetExpression) {
+            $ids = @(Resolve-ProposalIdExpression -Expression $TargetExpression)
+            @($allProps | Where-Object { $ids -contains $_.id })
+        } else {
+            @($allProps | Where-Object { $_.state -in @('bug', 'suggested', 'approved', 'processed') })
+        }
+
+        Write-Host "==========================================================================" -ForegroundColor Cyan
+        Write-Host " CRP-135 AUTOMATED REGRESSION & COLLISION SCAN REPORT" -ForegroundColor Cyan
+        Write-Host "==========================================================================" -ForegroundColor Cyan
+
+        $regCount = 0
+        foreach ($p in $targets) {
+            $res = Test-RegressionTrigger -Proposal $p -AllProposals $allProps
+            if ($res.RegressionNeeded) {
+                $regCount++
+                $prio = if ($p.priority) { $p.priority } else { 'M' }
+                $depth = if ($p.PSObject.Properties['regression_depth'] -and $p.regression_depth) { $p.regression_depth } else { 0 }
+                Write-Host "  ⚠️  #$($p.id) [$($p.origin_repo)] $($p.title) (Prio: $prio, Depth: $depth)" -ForegroundColor Yellow
+                foreach ($t in $res.RegressionTriggers) {
+                    Write-Host "     -> Trigger: $t" -ForegroundColor Gray
+                }
+            }
+        }
+
+        if ($regCount -eq 0) {
+            Write-Host "  ✅ No active proposals require downstream regression." -ForegroundColor Green
+        } else {
+            Write-Host "`n  Total flagged for regression: $regCount proposal(s)." -ForegroundColor Yellow
+        }
+        Write-Host "==========================================================================" -ForegroundColor Cyan
+    }
+    'generate-regression' {
+        if ([string]::IsNullOrWhiteSpace($TargetExpression)) {
+            throw "TargetExpression (Parent Proposal ID, e.g. '135') is required for 'generate-regression'."
+        }
+        if ([string]::IsNullOrWhiteSpace($TargetRepo)) {
+            throw "-TargetRepo is required for 'generate-regression'."
+        }
+        if ([string]::IsNullOrWhiteSpace($Reason)) {
+            $Reason = if ($Details) { $Details } else { 'Downstream component interface dependency' }
+        }
+
+        $parentId = [int](Resolve-ProposalIdExpression -Expression $TargetExpression)[0]
+        $child = New-ChildRegressionProposal -ParentProposalId $parentId -TargetRepo $TargetRepo -Reason $Reason -MaxDepth $MaxRegressionDepth
+
+        Write-Host "`nGenerated Child Regression Proposal:" -ForegroundColor Cyan
+        Format-ProposalsTable -Proposals @($child)
     }
     default {
         if ([string]::IsNullOrWhiteSpace($TargetExpression)) {

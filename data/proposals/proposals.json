@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-09-19 20:17:00",
+  "updated_at": "2026-09-19 18:24:56",
   "review_granularity": "coarse",
   "lcm_mode": "active",
   "last_proposal_id": 157,
@@ -2693,7 +2693,6 @@
       "title": "Autonomous Loop-Fencing, Execution Boundaries, and T0 State Recovery Engine",
       "origin_repo": ".lcm",
       "state": "rejected",
-      "progress_state": "rejected",
       "bundle_id": "unassigned",
       "author": "Technical Engineering & Governance Team",
       "tier": "T2",
@@ -2743,7 +2742,8 @@
       ],
       "priority": "H",
       "crp_id": "CRP-056",
-      "cr_id": "CRP-056"
+      "cr_id": "CRP-056",
+      "progress_state": "blocked"
     },
     {
       "id": 57,
@@ -6749,15 +6749,18 @@
       "timestamp": "2026-09-10 16:58:00",
       "title": "Determining and Enforcing Automated Regression CRPs in CM",
       "origin_repo": "LCM",
-      "state": "approved",
-      "progress_state": "open",
+      "state": "pushed",
+      "progress_state": "pushed",
       "bundle_id": "CRP-135",
       "author": "Operator Directive / CRP Intake",
       "details": "Establish automated detection and enforcement of regression CRPs when changes impact dependent components: support RegressionNeeded flag, collision detection against uncompleted CRPs, automated OPEN child regression CRP generation, multi-stage consistency/governance validation, cycle/loop prevention, MaxRegressionDepth=2 ceiling, and negative-priority ordering for ListOfChangesRequired.",
       "dates": {
         "created": "2026-09-10 16:58:00",
         "suggested": "2026-09-10 16:58:00",
-        "approved": "2026-09-10 17:29:00"
+        "approved": "2026-09-10 17:29:00",
+        "in_progress": "2026-09-19 18:23:23",
+        "completed": "2026-09-19 18:24:56",
+        "pushed": "2026-09-19 18:24:56"
       },
       "state_history": [
         {
@@ -6771,13 +6774,32 @@
           "timestamp": "2026-09-10 17:29:00",
           "user": "Rolf",
           "note": "Operator directive: ACCEPT 135. MaxRegressionDepth=2 established."
+        },
+        {
+          "state": "processed",
+          "timestamp": "2026-09-19 18:23:23",
+          "user": "Operator Directive / proceed 135",
+          "note": "Execution started: implementing automated regression CRP detection, DAG cycle checking, and MaxRegressionDepth=2 bounds."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-19 18:24:56",
+          "user": "Workspace_AI Engine",
+          "note": "Completed implementation of Test-RegressionTrigger, Assert-RegressionSafety, Get-RegressionDAGOrder, and New-ChildRegressionProposal in ProposalManager.psm1 and Invoke-ProposalAction.ps1. All 8 unit tests passed."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-19 18:24:56",
+          "user": "Workspace_AI Engine",
+          "note": "Committed and pushed to Workspace_Inventory origin/main."
         }
       ],
       "priority": "H",
       "crp_id": "CRP-135",
       "cr_id": "CRP-135",
       "max_regression_depth": 2,
-      "regression_needed": true
+      "regression_needed": true,
+      "pushed_at": "2026-09-19 18:24:56"
     },
     {
       "id": 136,
