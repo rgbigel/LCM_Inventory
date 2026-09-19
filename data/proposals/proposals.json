@@ -7985,16 +7985,17 @@
       "timestamp": "2026-09-19 22:03:00",
       "title": "CM Control Hub Stream Area Minimization, Default Output De-cluttering & Notepad++ Display Action",
       "origin_repo": "Workspace_Inventory",
-      "state": "processed",
+      "state": "completed",
       "bundle_id": "CRP-160",
       "author": "Rolf, Workspace_AI",
-      "details": "Minimizes the CM Control Hub output feed area by: 1) Replacing default multi-line help clutter with a clean single-line ready message, 2) Adding a dedicated 'display' / 'notepad' command and header quick-action chip to export stream output to Notepad++, and 3) Keeping inline help and default stream height compact.",
+      "details": "Minimizes the CM Control Hub output feed area by: 1) Replacing default multi-line help clutter with a clean single-line ready message, 2) Adding a dedicated 'display' / 'notepad' command and header quick-action chip to export stream output to standard Notepad, and 3) Keeping inline help and default stream height compact.",
       "plan_path": "Workspace_Inventory/docs/Proposals/CRP-160-Workspace_Inventory-v7.0.4-Control-Hub-Minimal-Stream-And-Notepad-Output-Display.md",
       "walkthrough_path": "",
       "dates": {
         "created": "2026-09-19 22:03:00",
         "suggested": "2026-09-19 22:03:00",
-        "in_progress": "2026-09-19 22:04:00"
+        "in_progress": "2026-09-19 22:04:00",
+        "completed": "2026-09-19 22:11:00"
       },
       "state_history": [
         {
@@ -8008,13 +8009,19 @@
           "timestamp": "2026-09-19 22:04:00",
           "user": "Operator Directive",
           "note": "Activated via explicit DO 160 directive."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-19 22:11:00",
+          "user": "rgbig",
+          "note": "Operator directive: accept 160. Review receipts recorded."
         }
       ],
       "priority": "M",
       "type": "CRP",
       "crp_id": "CRP-160",
       "cr_id": "CRP-160",
-      "progress_state": "in_progress"
+      "progress_state": "completed"
     }
   ]
 }
