@@ -21,6 +21,7 @@ data/archives/
 # Local Runtime Artifacts & Staging (Not Tracked in Git)
 data/artifacts/
 data/readiness/
+data/reviews/
 data/staging/
 
 # VS Code local workspace state
