@@ -32,8 +32,8 @@ param(
              and SHA-256 staging manifest generation.
     Path: tools/Invoke-BeyondCompareReview.ps1
     Authors: Rolf, Workspace_AI Engine
-    Version: 2.3.3
-    Date: 2026-09-10
+    Version: 2.3.4
+    Date: 2026-09-19
 .PARAMETER RepositoryName
     The name or directory path of the Git repository to review (e.g. 'AuthorizeMasterUser', 'Git_Repositories', '.').
 .PARAMETER BaseCommit
@@ -55,7 +55,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$scriptVersion = "2.3.3"
+$scriptVersion = "2.3.4"
 $scriptName = "Invoke-BeyondCompareReview"
 
 # ------------------------------------------------------------------------------
@@ -244,10 +244,8 @@ function Audit-BeyondCompareReviewStaging {
     if ($relPath -like ".git*" -or $relPath -like "*\.git\*" -or $relPath -like "*\logs\*" -or $relPath -like "logs\*" -or $relPath -like "*\scratch\*" -or $relPath -like "scratch\*" -or $relPath -like "*.log" -or $relPath -like "*.tmp" -or $relPath -like ".venv*" -or $relPath -like "*\.venv\*") {
       return $true
     }
-    if ($RepoName -eq 'Workspace_Inventory') {
-      if ($relPath -like "data\*" -or $relPath -like "*\data\*" -or $relPath -like "data/*" -or $relPath -like "*/data/*") {
-        return $true
-      }
+    if ($relPath -like "data\*" -or $relPath -like "*\data\*" -or $relPath -like "data/*" -or $relPath -like "*/data/*") {
+      return $true
     }
     if ($RepoPath -ne $workspaceRoot) {
       if ($relPath -like ".agents\rules*" -or $relPath -like "*\.agents\rules\*" -or $relPath -like ".copilot\Rules*" -or $relPath -like "*\.copilot\Rules\*") {
@@ -616,6 +614,7 @@ $standardExclusions = @(
   '-scratch\', '-*\scratch\*',
   '-logs\', '-*\logs\*',
   '-work\', '-*\work\*',
+  '-data\', '-*\data\*',
   '-*.inventory', '-data\inventory.json', '-inventory.json',
   '-*.log', '-*.tmp', '-*.bak', '-*.swp', '-*.lock',
   '-node_modules\', '-*\node_modules\*',
@@ -626,11 +625,6 @@ $standardExclusions = @(
   '-.lcm\archive\', '-*\.lcm\archive\*',
   '-.lcm\tools\links\', '-*\.lcm\tools\links\*'
 )
-
-if ($repoName -eq 'Workspace_Inventory') {
-  if (-not $filterList.Contains('-data\')) { $filterList.Add('-data\') }
-  if (-not $filterList.Contains('-*\data\*')) { $filterList.Add('-*\data\*') }
-}
 
 foreach ($ex in $standardExclusions) {
   if (-not $filterList.Contains($ex)) {

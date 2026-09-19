@@ -18,6 +18,11 @@ tmp/
 archive/
 data/archives/
 
+# Local Runtime Artifacts & Staging (Not Tracked in Git)
+data/artifacts/
+data/readiness/
+data/staging/
+
 # VS Code local workspace state
 .vscode/*
 !.vscode/settings.json

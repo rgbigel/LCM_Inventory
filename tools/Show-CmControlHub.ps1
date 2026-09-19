@@ -32,8 +32,8 @@ param(
              Notepad++ specification editing, and historical log views.
     Path: tools/Show-CmControlHub.ps1
     Authors: Rolf, Workspace_AI Engine
-    Version: 1.3.0
-    Date: 2026-09-09
+    Version: 1.3.1
+    Date: 2026-09-19
 .PARAMETER ReviewMode
     Opens the Control Hub filtered directly to pending visual reviews requiring Beyond Compare action.
 .PARAMETER Repo
@@ -74,7 +74,7 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
     }
 }
 
-$scriptVersion = "1.3.0"
+$scriptVersion = "1.3.1"
 $scriptName = "Show-CmControlHub"
 
 # ------------------------------------------------------------------------------
@@ -107,7 +107,10 @@ if (-not (Test-Path -LiteralPath $workspaceRoot)) {
 $proposalsFile = Join-Path $workspaceRoot "Workspace_Inventory\data\proposals\proposals.json"
 $activeLogFile = Join-Path $workspaceRoot "Workspace_Inventory\logs\cm_activity.log"
 $historyLogFile = Join-Path $workspaceRoot "Workspace_Inventory\logs\history\cm_activity_v5_v6_history.log"
-$htmlTemplateFile = Join-Path $workspaceRoot "Workspace_Inventory\docs\CM_CONTROL_HUB.html"
+$htmlTemplateFile = Join-Path $workspaceRoot "Workspace_Inventory\assets\CM_CONTROL_HUB.html"
+if (-not (Test-Path -LiteralPath $htmlTemplateFile)) {
+    $htmlTemplateFile = Join-Path $workspaceRoot "Workspace_Inventory\docs\CM_CONTROL_HUB.html"
+}
 
 if (-not (Test-Path -LiteralPath $proposalsFile)) {
     throw "Proposals ledger not found at: $proposalsFile"
@@ -306,9 +309,14 @@ $scratchDir = Join-Path $workspaceRoot "Workspace_Inventory\scratch"
 if (-not (Test-Path -LiteralPath $scratchDir)) {
     New-Item -ItemType Directory -Path $scratchDir -Force | Out-Null
 }
+$artifactsDir = Join-Path $workspaceRoot "Workspace_Inventory\data\artifacts"
+if (-not (Test-Path -LiteralPath $artifactsDir)) {
+    New-Item -ItemType Directory -Path $artifactsDir -Force | Out-Null
+}
 
-$renderedHtmlPath = Join-Path $scratchDir "CM_CONTROL_HUB.html"
+$renderedHtmlPath = Join-Path $artifactsDir "CM_CONTROL_HUB.html"
 Set-Content -LiteralPath $renderedHtmlPath -Value $htmlContent -Encoding UTF8
+Set-Content -LiteralPath (Join-Path $scratchDir "CM_CONTROL_HUB.html") -Value $htmlContent -Encoding UTF8
 
 Write-Host "==========================================================================" -ForegroundColor Cyan
 Write-Host " LCM CONFIGURATION MANAGEMENT CONTROL HUB" -ForegroundColor Green

@@ -4,8 +4,8 @@
 .DESCRIPTION
     Module: tools/Test-LCMRuleHealth.ps1
     Authors: Rolf, Workspace_AI Engine
-    Version: 1.1.0
-    Date: 2026-09-10
+    Version: 1.2.0
+    Date: 2026-09-19
 #>
 
 [CmdletBinding()]
@@ -26,9 +26,11 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
+$stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
+
 if ($Help) {
     Write-Host "==========================================================================" -ForegroundColor Cyan
-    Write-Host " TEST LCM RULE HEALTH (Test-LCMRuleHealth)" -ForegroundColor Cyan
+    Write-Host " TEST LCM RULE HEALTH (Test-LCMRuleHealth v1.2.0)" -ForegroundColor Cyan
     Write-Host "==========================================================================" -ForegroundColor Cyan
     Write-Host "SYNOPSIS:" -ForegroundColor Yellow
     Write-Host "  Diagnoses LCM rule health, junction validity, static duplicates, and versions."
@@ -46,6 +48,7 @@ if ($Help) {
 }
 
 $canonicalRulesCandidates = @(
+    (Join-Path $WorkspaceRoot 'Workspace_Inventory\.agents\rules'),
     (Join-Path $WorkspaceRoot '.lcm\.agents\rules'),
     (Join-Path $WorkspaceRoot '.agents\rules')
 )
@@ -86,7 +89,17 @@ foreach ($dir in $childDirs) {
     $isJunction = $false
     $duplicateCount = 0
     
-    if (Test-Path -LiteralPath $agentRulesPath) {
+    if ($repoName -eq 'Workspace_Inventory' -and (Test-Path -LiteralPath $agentRulesPath)) {
+        $files = @(Get-ChildItem -Path $agentRulesPath -File -Recurse -ErrorAction SilentlyContinue)
+        if ($files.Count -gt 0) {
+            $isJunction = $true
+            $junctionState = 'Canonical Hub'
+            $junctionTarget = 'Canonical Physical Hub'
+            $duplicateCount = 0
+        } else {
+            $junctionState = 'Empty Hub'
+        }
+    } elseif (Test-Path -LiteralPath $agentRulesPath) {
         $item = Get-Item -LiteralPath $agentRulesPath -Force
         if ($item.LinkType -eq 'Junction' -or $item.Attributes.HasFlag([System.IO.FileAttributes]::ReparsePoint)) {
             $isJunction = $true
@@ -237,5 +250,36 @@ if ($driftCount -gt 0) {
 } else {
     Write-Host " [✓] All repositories are in full compliance with canonical LCM rule discovery standards." -ForegroundColor Green
 }
+
+$stopwatch.Stop()
+$durationMs = [int]$stopwatch.ElapsedMilliseconds
+
+# Generate Standard Readiness Receipt (CRP-152)
+$receiptDir = Join-Path $WorkspaceRoot 'Workspace_Inventory\data\readiness'
+if (-not (Test-Path -LiteralPath $receiptDir)) {
+    New-Item -Path $receiptDir -ItemType Directory -Force | Out-Null
+}
+$receiptPath = Join-Path $receiptDir 'latest_rule_health.json'
+
+$compliantCount = @($results | Where-Object { $_.Status -like '*In Compliance*' }).Count
+$warningCount = @($results | Where-Object { $_.Status -like '*Warning*' }).Count
+
+$receiptObj = [ordered]@{
+    '$schema'            = 'https://json-schema.org/draft/2020-12/schema'
+    repository           = 'Workspace_Inventory'
+    tool                 = 'Test-LCMRuleHealth.ps1'
+    timestamp            = (Get-Date).ToString('o')
+    overall_status       = if ($driftCount -eq 0) { 'PASSED' } else { 'FAILED' }
+    total_repositories   = $results.Count
+    compliant_count      = $compliantCount
+    warning_count        = $warningCount
+    drift_count          = $driftCount
+    duration_ms          = $durationMs
+    results              = $results
+}
+
+$receiptJson = $receiptObj | ConvertTo-Json -Depth 5
+[System.IO.File]::WriteAllText($receiptPath, $receiptJson, [System.Text.Encoding]::UTF8)
+Write-Host " [i] Saved LCM Rule Health Receipt: $receiptPath ($durationMs ms)" -ForegroundColor DarkGray
 
 return $results

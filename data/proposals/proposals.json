@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-09-12 18:54:44",
+  "updated_at": "2026-09-19 16:23:00",
   "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 140,
+  "last_proposal_id": 156,
   "proposals": [
     {
       "id": 1,
@@ -6633,6 +6633,603 @@
       "priority": "M",
       "crp_id": "CRP-140",
       "cr_id": "CRP-140",
+      "regression_needed": false
+    },
+    {
+      "id": 141,
+      "timestamp": "2026-09-18 22:08:42",
+      "title": "Automations with State 'OFF' Incorrectly Render Green Instead of Red",
+      "origin_repo": "HaSSD06_Inventory",
+      "state": "completed",
+      "progress_state": "completed",
+      "bundle_id": "BUG-141",
+      "author": "Operator Directive / Bug Intake",
+      "details": "In Show-HaInventoryApp.ps1 under Tab 5 (Automations & Scripts), automations with state 'off' display badge-success (green) instead of badge-danger (red). Remediate by calculating dynamic badge styling based on automation state.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-141-HaSSD06_Inventory-v5.4.0-Off-Automations-Show-Green-Instead-Of-Red.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-18 22:08:42",
+        "suggested": "2026-09-18 22:08:42",
+        "completed": "2026-09-18 22:38:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-18 22:08:42",
+          "user": "Operator Directive / Bug Intake",
+          "note": "Registered in OPEN state per RULE-LCM-015."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-18 22:38:00",
+          "user": "Antigravity",
+          "note": "Fixed dynamic state badge color mapping in Show-HaInventoryApp.ps1."
+        }
+      ],
+      "priority": "H",
+      "crp_id": "BUG-141",
+      "cr_id": "BUG-141",
+      "regression_needed": false
+    },
+    {
+      "id": 142,
+      "timestamp": "2026-09-18 22:08:42",
+      "title": "Codify and Enforce Canonical LCM Display Standards Governance Policy",
+      "origin_repo": "LCM",
+      "state": "completed",
+      "progress_state": "completed",
+      "bundle_id": "CRP-142",
+      "author": "Operator Directive / CRP Intake",
+      "details": "Establish authoritative governance policy in .agents/rules/DisplayStandardsPolicy.md defining rules RULE-DSP-001 through RULE-DSP-008. Enforce canonical StandardTableDisplay.css tokens, double-row sticky table headers with aligned column filters, large recognizable sort indicators (▲▼⇅) and inspect icons (🔍), dark/light theme switcher with persistence, LcmTablePrintAtom export integration, word-wrapping on text columns, and interactive desktop dispatching across all LCM viewers and tools.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-142-LCM-v7.5.0-Enforce-Display-Standards-Governance-Policy.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-18 22:08:42",
+        "suggested": "2026-09-18 22:08:42",
+        "completed": "2026-09-18 22:38:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-18 22:08:42",
+          "user": "Operator Directive / CRP Intake",
+          "note": "Registered in OPEN state per RULE-LCM-015."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-18 22:38:00",
+          "user": "Antigravity",
+          "note": "Codified DisplayStandardsPolicy.md (RULE-DSP-001..008), updated StandardTableDisplay.css tokens, and synchronized rule tables in AGENTS.md and LCM-Rules-Cross-Reference.md."
+        }
+      ],
+      "priority": "H",
+      "crp_id": "CRP-142",
+      "cr_id": "CRP-142",
+      "regression_needed": false
+    },
+    {
+      "id": 143,
+      "timestamp": "2026-09-18 22:13:53",
+      "title": "Integrate Run and Help Actions in Subsystem Explorer Tools Tab",
+      "origin_repo": "HaSSD06_Inventory",
+      "state": "completed",
+      "progress_state": "completed",
+      "bundle_id": "CRP-143",
+      "author": "Operator Directive / CRP Intake",
+      "details": "In Show-HaInventoryApp.ps1 under Tab 8 (Tools & Active Help), add interactive Run and Help action buttons in analogy to ShowTools. Support click-to-run with parameter dialog, -h synopsis modal display, and direct tool log inspection via Show-LastLog.ps1.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-143-HaSSD06_Inventory-v5.4.0-Add-Run-And-Help-Actions-To-Tools-Tab.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-18 22:13:53",
+        "suggested": "2026-09-18 22:13:53",
+        "completed": "2026-09-18 23:05:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-18 22:13:53",
+          "user": "Operator Directive / CRP Intake",
+          "note": "Registered in OPEN state per RULE-LCM-015."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-18 23:05:00",
+          "user": "Antigravity",
+          "note": "Added Actions column with Run, Help, and Logs buttons in Tools table, parameter modal with history caching & clear, tool synopsis modal, and enhanced Show-LastLog.ps1 multi-subsystem log sweeper."
+        }
+      ],
+      "priority": "H",
+      "crp_id": "CRP-143",
+      "cr_id": "CRP-143",
+      "regression_needed": false
+    },
+    {
+      "id": 144,
+      "timestamp": "2026-09-18 22:28:00",
+      "title": "Live Entities Status and Associated Device Column Enhancements",
+      "origin_repo": "HaSSD06_Inventory",
+      "state": "completed",
+      "progress_state": "completed",
+      "bundle_id": "CRP-144",
+      "author": "Operator Directive / CRP Intake",
+      "details": "In Show-HaInventoryApp.ps1 under Tab 4 (Live Entities), add dedicated Status column with badge color-coding and filtering, and dedicated Associated Device column with clickable link/badge leading directly to the Devices tab.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-144-HaSSD06_Inventory-v5.4.0-Live-Entities-Status-And-Device-Columns.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-18 22:28:00",
+        "suggested": "2026-09-18 22:28:00",
+        "completed": "2026-09-18 22:56:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-18 22:28:00",
+          "user": "Operator Directive / CRP Intake",
+          "note": "Registered in OPEN state per RULE-LCM-015."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-18 22:56:00",
+          "user": "Antigravity",
+          "note": "Added dedicated Status column with dynamic badge colors and Associated Device column with jumpToDevice navigation links."
+        }
+      ],
+      "priority": "H",
+      "crp_id": "CRP-144",
+      "cr_id": "CRP-144",
+      "regression_needed": false
+    },
+    {
+      "id": 145,
+      "timestamp": "2026-09-18 22:28:00",
+      "title": "Dedicated Devices Explorer Page with Dropdown Selection and Two-Way Linking",
+      "origin_repo": "HaSSD06_Inventory",
+      "state": "completed",
+      "progress_state": "completed",
+      "bundle_id": "CRP-145",
+      "author": "Operator Directive / CRP Intake",
+      "details": "Add dedicated first-class Devices Explorer table in Show-HaInventoryApp.ps1 with dropdown selector, double-row sticky filters, two-way clickable links between Devices and Entities, and Label column.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-145-HaSSD06_Inventory-v5.4.0-Dedicated-Devices-Explorer-Page.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-18 22:28:00",
+        "suggested": "2026-09-18 22:28:00",
+        "completed": "2026-09-18 22:56:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-18 22:28:00",
+          "user": "Operator Directive / CRP Intake",
+          "note": "Registered in OPEN state per RULE-LCM-015."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-18 22:56:00",
+          "user": "Antigravity",
+          "note": "Implemented dedicated Devices Explorer table with dropdown filter, labels column, two-way entity jump links, and deep scan action dispatching."
+        }
+      ],
+      "priority": "H",
+      "crp_id": "CRP-145",
+      "cr_id": "CRP-145",
+      "regression_needed": false
+    },
+    {
+      "id": 146,
+      "timestamp": "2026-09-18 22:28:00",
+      "title": "Device and Entity Renaming Action Subpanels with Pattern-Based Propagation",
+      "origin_repo": "HaSSD06_Inventory",
+      "state": "completed",
+      "progress_state": "completed",
+      "bundle_id": "CRP-146",
+      "author": "Operator Directive / CRP Intake",
+      "details": "Integrate interactive action subpanels in Subsystem Inventory Explorer for renaming Devices and Entities with pattern support (<Area> <Device>) and automated cross-location reference updates across automations, scripts, and catalogs.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-146-HaSSD06_Inventory-v5.4.0-Device-Entity-Renaming-Action-Subpanels.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-18 22:28:00",
+        "suggested": "2026-09-18 22:28:00",
+        "completed": "2026-09-18 23:30:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-18 22:28:00",
+          "user": "Operator Directive / CRP Intake",
+          "note": "Registered in OPEN state per RULE-LCM-015."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-18 23:30:00",
+          "user": "Antigravity",
+          "note": "Implemented interactive Device & Entity renaming modals, pattern engine, reverse-dependency scanner, pre-change backup prompts, staging transaction ledgers, and Invoke-HaRenameCascade.ps1."
+        }
+      ],
+      "priority": "H",
+      "crp_id": "CRP-146",
+      "cr_id": "CRP-146",
+      "regression_needed": false
+    },
+    {
+      "id": 147,
+      "timestamp": "2026-09-18 23:25:00",
+      "title": "Governed MCP Live Mutation Conductor & Subsystem Protocol Safety Interlock",
+      "origin_repo": "HaSSD06_Inventory",
+      "state": "suggested",
+      "progress_state": "open",
+      "bundle_id": "CRP-147",
+      "author": "Operator Directive / CRP Intake",
+      "details": "Implement dedicated Model Context Protocol (MCP) write-gated execution server for Home Assistant Core OS, featuring 3-barrier cryptographic human nonces, automated pre-change backup verification, live registry update dispatch, and atomic inverse-mutation rollback loops per RULE-SUB-004.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-147-HaSSD06_Inventory-v5.5.0-Governed-MCP-Live-Mutation-Conductor.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-18 23:25:00",
+        "suggested": "2026-09-18 23:25:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-18 23:25:00",
+          "user": "Operator Directive / CRP Intake",
+          "note": "Registered in OPEN state per RULE-LCM-015 for Step 5."
+        }
+      ],
+      "priority": "H",
+      "crp_id": "CRP-147",
+      "cr_id": "CRP-147",
+      "regression_needed": false
+    },
+    {
+      "id": 148,
+      "timestamp": "2026-09-19 14:32:00",
+      "title": "HA_Inventory Navigation Failure on 'Back to Subsystems' Button",
+      "origin_repo": "HaSSD06_Inventory",
+      "state": "completed",
+      "progress_state": "completed",
+      "bundle_id": "BUG-148",
+      "author": "Operator Directive / BUG Intake",
+      "details": "In Show-HaInventoryApp.ps1, clicking 'Back to Subsystems' fails with 'File not found SHOW_LCM.html' when history.back() has no stack. Implement robust multi-tier navigateBackToSubsystems handler with relative path fallback and REST daemon dispatch.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-148-HaSSD06_Inventory-v5.4.1-Back-To-Subsystems-Navigation-Fix.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-19 14:32:00",
+        "suggested": "2026-09-19 14:32:00",
+        "completed": "2026-09-19 14:35:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-19 14:32:00",
+          "user": "Operator Directive / BUG Intake",
+          "note": "Registered in OPEN state per RULE-LCM-015."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-19 14:35:00",
+          "user": "Antigravity",
+          "note": "Implemented navigateBackToSubsystems() with multi-tier history/referrer and relative path fallback (../../.lcm/scratch/SHOW_SUBSYSTEMS.html). Fixed scratch path in Show-Subsystems.ps1."
+        }
+      ],
+      "priority": "H",
+      "crp_id": "BUG-148",
+      "cr_id": "BUG-148",
+      "regression_needed": false
+    },
+    {
+      "id": 149,
+      "timestamp": "2026-09-19 14:48:00",
+      "title": "Add-ons & Packages Status and Semantic Update State Display",
+      "origin_repo": "HaSSD06_Inventory",
+      "state": "completed",
+      "progress_state": "completed",
+      "bundle_id": "BUG-149",
+      "author": "Operator Directive / BUG Intake",
+      "details": "In Show-HaInventoryApp.ps1 under Tab 4 (Add-ons & Packages), software update entities reported state 'off' (meaning up-to-date) which was displayed as red OFF badges. Reclassify categories, extract version pairs, and render semantic badges (Up to date, Update Available, Running).",
+      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-149-HaSSD06_Inventory-v5.4.1-Addons-And-Packages-Update-Status-Display.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-19 14:48:00",
+        "suggested": "2026-09-19 14:48:00",
+        "completed": "2026-09-19 14:55:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-19 14:48:00",
+          "user": "Operator Directive / BUG Intake",
+          "note": "Registered in OPEN state per RULE-LCM-015."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-19 14:55:00",
+          "user": "Antigravity",
+          "note": "Implemented category taxonomy, semantic update state resolution (up_to_date, running, update_available), double-row sticky filters, and release note link integration."
+        }
+      ],
+      "priority": "H",
+      "crp_id": "BUG-149",
+      "cr_id": "BUG-149",
+      "regression_needed": false
+    },
+    {
+      "id": 150,
+      "timestamp": "2026-09-19 14:50:00",
+      "title": "Automations & Scripts Interactive Action Suite (Toggle, YAML Edit, Delete, Rename)",
+      "origin_repo": "HaSSD06_Inventory",
+      "state": "completed",
+      "progress_state": "completed",
+      "bundle_id": "CRP-150",
+      "author": "Operator Directive / CRP Intake",
+      "details": "In Show-HaInventoryApp.ps1 under Tab 5 (Automations & Scripts), add interactive table actions: Toggle State (turn on/off), Edit YAML subpanel modal with HA deep link, Delete modal with dependency scan, and Rename modal cascading via Invoke-HaRenameCascade.ps1.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-150-HaSSD06_Inventory-v5.5.0-Automations-And-Scripts-Action-Suite.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-19 14:50:00",
+        "suggested": "2026-09-19 14:50:00",
+        "completed": "2026-09-19 14:55:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-19 14:50:00",
+          "user": "Operator Directive / CRP Intake",
+          "note": "Registered in OPEN state per RULE-LCM-015."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-19 14:55:00",
+          "user": "Antigravity",
+          "note": "Implemented 4-action suite in Tab 5: Toggle state dispatch, #automationYamlModal editor with HA deep links, #automationDeleteModal with reverse-dependency scanning, #entityRenameModal integration, and created Invoke-HaService.ps1 dispatcher."
+        }
+      ],
+      "priority": "H",
+      "crp_id": "CRP-150",
+      "cr_id": "CRP-150",
+      "regression_needed": false
+    },
+    {
+      "id": 151,
+      "timestamp": "2026-09-19 15:06:00",
+      "title": "Standard Display Universal Action Logging Engine and In-Browser Audit Drawer",
+      "origin_repo": "Workspace_Inventory",
+      "state": "completed",
+      "progress_state": "completed",
+      "bundle_id": "CRP-151",
+      "author": "Operator Directive / CRP Intake",
+      "details": "Establishes a universal, zero-friction Action Logging architecture across all interactive HTML Standard Displays, PowerShell helpers, Python diagnostic tools, and scratch scripts, with background REST telemetry (:9876/log), in-browser Action Log drawer, and central .lcm/logs/actions.jsonl ledger.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-151-LCM-v7.5.0-Standard-Display-Universal-Action-Logging-Engine.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-19 15:06:00",
+        "suggested": "2026-09-19 15:06:00",
+        "deferred": "2026-09-19 15:07:00",
+        "accepted": "2026-09-19 15:48:00",
+        "completed": "2026-09-19 15:56:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-19 15:06:00",
+          "user": "Operator Directive / CRP Intake",
+          "note": "Registered per RULE-LCM-015."
+        },
+        {
+          "state": "deferred",
+          "timestamp": "2026-09-19 15:07:00",
+          "user": "Operator Directive",
+          "note": "Prepared in DEFER state per operator instruction."
+        },
+        {
+          "state": "accepted",
+          "timestamp": "2026-09-19 15:48:00",
+          "user": "Operator Directive / ACCEPT 151",
+          "note": "Accepted by operator for implementation."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-19 15:56:00",
+          "user": "Antigravity",
+          "note": "Implemented REST Daemon /log and /logs endpoints with strongly typed DTO, sliding Action Log drawer with telemetry stream in Standard Display, and Show-Actions.ps1 v2.0.0 CLI reader."
+        }
+      ],
+      "priority": "N",
+      "crp_id": "CRP-151",
+      "cr_id": "CRP-151",
+      "regression_needed": false
+    },
+    {
+      "id": 152,
+      "timestamp": "2026-09-19 15:06:00",
+      "title": "Unified Quality Gate Readiness Receipt Engine, In-Dashboard Modal, and Workspace Rollup",
+      "origin_repo": "Workspace_Inventory",
+      "state": "completed",
+      "progress_state": "completed",
+      "bundle_id": "CRP-152",
+      "author": "Operator Directive / CRP Intake",
+      "details": "Standardizes machine-readable readiness check receipts (data/readiness/latest_readiness.json) across all 34 repositories, adds interactive Header Readiness Badges and #readinessModal in Standard Displays, and provides Show-WorkspaceReadiness.ps1 multi-repo rollup viewer.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-152-LCM-v7.5.0-Unified-Readiness-Receipts-And-Inspection-Modal.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-19 15:06:00",
+        "suggested": "2026-09-19 15:06:00",
+        "deferred": "2026-09-19 15:07:00",
+        "accepted": "2026-09-19 15:40:00",
+        "completed": "2026-09-19 15:46:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-19 15:06:00",
+          "user": "Operator Directive / CRP Intake",
+          "note": "Registered per RULE-LCM-015."
+        },
+        {
+          "state": "deferred",
+          "timestamp": "2026-09-19 15:07:00",
+          "user": "Operator Directive",
+          "note": "Prepared in DEFER state per operator instruction."
+        },
+        {
+          "state": "accepted",
+          "timestamp": "2026-09-19 15:40:00",
+          "user": "Operator Directive / ACCEPT 152",
+          "note": "Accepted by operator for implementation."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-19 15:46:00",
+          "user": "Antigravity",
+          "note": "Standardized readiness receipt engine, in-dashboard readiness modal, and Show-WorkspaceReadiness.ps1 multi-repo rollup implemented and verified."
+        }
+      ],
+      "priority": "N",
+      "crp_id": "CRP-152",
+      "cr_id": "CRP-152",
+      "regression_needed": false
+    },
+    {
+      "id": 153,
+      "timestamp": "2026-09-19 15:25:00",
+      "title": "Reverse-Dependency Scanner Self-Match Exclusion for Automations and Scripts",
+      "origin_repo": "HaSSD06_Inventory",
+      "state": "completed",
+      "progress_state": "completed",
+      "bundle_id": "BUG-153",
+      "author": "Operator Directive / BUG Intake",
+      "details": "In Show-HaInventoryApp.ps1 and Invoke-HaRenameCascade.ps1, the reverse dependency reference scanner (countEntityReferences, scanEntityReverseDependencies, scanDeviceReverseDependencies) matched the target entity against itself during automation and script renaming/deletion scans, falsely reporting active self-references. Implement strict self-match exclusion guards.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-153-HaSSD06_Inventory-v5.5.3-Reverse-Dependency-Scanner-Self-Match-Exclusion.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-19 15:25:00",
+        "suggested": "2026-09-19 15:25:00",
+        "completed": "2026-09-19 15:27:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-19 15:25:00",
+          "user": "Operator Directive / BUG Intake",
+          "note": "Registered in OPEN state per RULE-LCM-015."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-19 15:27:00",
+          "user": "Antigravity",
+          "note": "Added strict self-match exclusion guards across countEntityReferences, scanEntityReverseDependencies, scanDeviceReverseDependencies in Show-HaInventoryApp.ps1 and reverse dependency scanning loops in Invoke-HaRenameCascade.ps1."
+        }
+      ],
+      "priority": "H",
+      "crp_id": "BUG-153",
+      "cr_id": "BUG-153",
+      "regression_needed": false
+    },
+    {
+      "id": 154,
+      "timestamp": "2026-09-19 16:15:00",
+      "title": "Subsystem Inventory and Rename Engine UTF-8 Mojibake Sanitization and Encoding Hardening",
+      "origin_repo": "HaSSD06_Inventory",
+      "state": "completed",
+      "progress_state": "completed",
+      "bundle_id": "BUG-154",
+      "author": "Operator Directive / BUG Intake",
+      "details": "Sanitized historical CP437/OEM Mojibake sequences (K├╝che -> Küche, T├╝r -> Tür, Büroleuchte, emojis) across data/subsystem_inventory.json, hardened PowerShell and Python UTF-8 stdout/pipeline handling in Update-HaInventory.ps1 and extract_ha_central_registry.py, and preserved clean UTF-8 display names across Invoke-HaRenameCascade.ps1 and Show-HaInventoryApp.ps1 while maintaining slugified ASCII entity IDs.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-154-HaSSD06_Inventory-v5.5.4-UTF8-Mojibake-Sanitization-And-Encoding-Hardening.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-19 16:15:00",
+        "suggested": "2026-09-19 16:15:00",
+        "completed": "2026-09-19 16:18:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-19 16:15:00",
+          "user": "Operator Directive / BUG Intake",
+          "note": "Registered in OPEN state per RULE-LCM-015."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-19 16:18:00",
+          "user": "Antigravity",
+          "note": "Sanitized 245 Mojibake sequences in data/subsystem_inventory.json, configured UTF-8 without BOM pipeline encoding in Update-HaInventory.ps1, Invoke-HaRenameCascade.ps1, and Show-HaInventoryApp.ps1, and recompiled SHOW_HA_INVENTORY.html."
+        }
+      ],
+      "priority": "H",
+      "crp_id": "BUG-154",
+      "cr_id": "BUG-154",
+      "regression_needed": false
+    },
+    {
+      "id": 155,
+      "timestamp": "2026-09-19 16:23:00",
+      "title": "LCM Tool Explorer Tool Name and Run Action Column Interaction Correction",
+      "origin_repo": "Workspace_Inventory",
+      "state": "completed",
+      "progress_state": "completed",
+      "bundle_id": "BUG-155",
+      "author": "Operator Directive / BUG Intake",
+      "details": "Corrected inverted interaction switch between Tool Name column and Actions & Modes column in LCM Tool Explorer: clicking Tool Name link directly executes the command (or opens parameter modal only if mandatory parameters are unfilled), clicking the >Run button in Actions column always opens the Parameter Configuration modal, and removes the redundant 'Run with Parameters...' item from the action dropdown menu.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-155-LCM-v7.5.1-Tool-Explorer-Action-And-Name-Column-Interaction-Correction.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-19 16:23:00",
+        "suggested": "2026-09-19 16:23:00",
+        "completed": "2026-09-19 16:24:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-19 16:23:00",
+          "user": "Operator Directive / BUG Intake",
+          "note": "Registered in OPEN state per RULE-LCM-015."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-19 16:24:00",
+          "user": "Antigravity",
+          "note": "Wired Tool Name link to runToolSmart, wired >Run button to openRunDialog, removed redundant 'Run with Parameters...' button from #action-dropdown-menu, and recompiled User_Tools_Explorer_LCM.html."
+        }
+      ],
+      "priority": "M",
+      "crp_id": "BUG-155",
+      "cr_id": "BUG-155",
+      "regression_needed": false
+    },
+    {
+      "id": 156,
+      "timestamp": "2026-09-19 16:53:00",
+      "title": "Standardize HTML Presentation Artifacts to data/artifacts/ & Purge Docs HTML Churn",
+      "origin_repo": "Workspace_Inventory",
+      "state": "completed",
+      "progress_state": "completed",
+      "bundle_id": "CRP-156",
+      "author": "Operator Directive / CRP Intake",
+      "details": "Relocates all dynamically compiled HTML presentation dashboards from docs/ to data/artifacts/ across all repositories (HaSSD06_Inventory, Workspace_Inventory, Workspace_Supervision), moves static HTML templates into assets/, purges tracked/stale HTML files from docs/, and updates viewer launchers to prevent Git churn and keep docs/ pure Markdown.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-156-LCM-v7.5.2-Standardize-HTML-Presentation-Artifacts-To-Data-Artifacts.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-19 16:53:00",
+        "suggested": "2026-09-19 16:53:00",
+        "completed": "2026-09-19 16:54:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-19 16:53:00",
+          "user": "Operator Directive / CRP Intake",
+          "note": "Registered in ACCEPTED state per operator directive."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-19 16:54:00",
+          "user": "Antigravity",
+          "note": "Standardized HTML viewers to data/artifacts/, moved templates to assets/, untracked docs/*.html files, and verified readiness across repositories."
+        }
+      ],
+      "priority": "M",
+      "crp_id": "CRP-156",
+      "cr_id": "CRP-156",
       "regression_needed": false
     }
   ]

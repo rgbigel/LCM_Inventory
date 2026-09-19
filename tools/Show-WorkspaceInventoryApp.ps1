@@ -11,8 +11,8 @@
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
   Path: Workspace_Inventory/tools/Show-WorkspaceInventoryApp.ps1
   Authors: Rolf, Workspace_AI Engine
-  Version: 6.0.0
-  Date: 2026-08-30
+  Version: 6.0.1
+  Date: 2026-09-19
   ShortName: ShowLCMExplorer
 .PARAMETER NoLaunch
   Generates the HTML dashboard file without automatically launching it in the web browser.
@@ -34,7 +34,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$scriptVersion = "6.0.0"
+$scriptVersion = "6.0.1"
 $scriptName = "Show-WorkspaceInventoryApp"
 
 if ($Help) {
@@ -53,12 +53,19 @@ if ($Help) {
 $repoRoot = Split-Path $PSScriptRoot -Parent
 $workspaceRoot = Split-Path $repoRoot -Parent
 $invPath = Join-Path $repoRoot 'data\inventory.json'
-$templatePath = Join-Path $repoRoot 'docs\WORKSPACE_INVENTORY_VIEWER.html'
+$templatePath = Join-Path $repoRoot 'assets\WORKSPACE_INVENTORY_VIEWER.html'
+if (-not (Test-Path -LiteralPath $templatePath)) {
+  $templatePath = Join-Path $repoRoot 'docs\WORKSPACE_INVENTORY_VIEWER.html'
+}
 $scratchDir = Join-Path $repoRoot 'scratch'
 if (-not (Test-Path $scratchDir)) {
   New-Item -Path $scratchDir -ItemType Directory -Force | Out-Null
 }
-$renderedHtmlPath = Join-Path $scratchDir 'WORKSPACE_INVENTORY_VIEWER.html'
+$artifactsDir = Join-Path $repoRoot 'data\artifacts'
+if (-not (Test-Path $artifactsDir)) {
+  New-Item -Path $artifactsDir -ItemType Directory -Force | Out-Null
+}
+$renderedHtmlPath = Join-Path $artifactsDir 'WORKSPACE_INVENTORY_VIEWER.html'
 
 if (-not (Test-Path -LiteralPath $invPath)) {
   throw "Workspace inventory file not found: $invPath"
@@ -95,6 +102,7 @@ const DOCS_CACHE = $($docsCache | ConvertTo-Json -Depth 6);
 $renderedHtml = $htmlTemplate.Replace('/*__INJECTED_INVENTORY_DATA__*/', $injectedDataBlock)
 
 $renderedHtml | Set-Content -LiteralPath $renderedHtmlPath -Encoding UTF8
+$renderedHtml | Set-Content -LiteralPath (Join-Path $scratchDir 'WORKSPACE_INVENTORY_VIEWER.html') -Encoding UTF8
 
 Write-Host "==========================================================================" -ForegroundColor Cyan
 Write-Host " LCM WORKSPACE INVENTORY EXPLORER (v$scriptVersion)" -ForegroundColor Green
