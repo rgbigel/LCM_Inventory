@@ -665,46 +665,70 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 5px 14px;
+      gap: 12px;
+      padding: 6px 14px;
       background: #161b22;
       border-bottom: 1px solid var(--border-color);
-      font-size: 0.72rem;
+      font-size: 0.74rem;
       font-weight: 600;
       color: var(--text-secondary);
+      white-space: nowrap;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+    }
+    .console-title {
+      white-space: nowrap;
+      flex-shrink: 0;
+      font-weight: 700;
+      color: var(--accent-blue);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
     }
     .console-header-chips {
       display: flex;
-      gap: 6px;
+      gap: 5px;
       align-items: center;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
+      white-space: nowrap;
+      overflow-x: auto;
     }
     .console-chip {
       background: var(--bg-tertiary);
       border: 1px solid var(--border-color);
       border-radius: 4px;
-      padding: 2px 6px;
+      padding: 2px 7px;
       font-size: 0.7rem;
       cursor: pointer;
       color: var(--accent-blue);
       font-family: var(--font-mono);
       white-space: nowrap;
+      flex-shrink: 0;
+      user-select: none;
+      transition: background 0.15s ease;
     }
     .console-chip:hover { background: #30363d; }
 
     .console-stream {
-      height: 75px;
+      height: 150px;
+      min-height: 120px;
+      max-height: 480px;
+      transition: height 0.22s cubic-bezier(0.16, 1, 0.3, 1);
       overflow-y: auto;
-      padding: 6px 14px;
+      padding: 8px 14px;
       font-family: var(--font-mono);
-      font-size: 0.73rem;
+      font-size: 0.74rem;
       background: #090d13;
       color: #7ee787;
       white-space: pre-wrap;
-      line-height: 1.4;
+      line-height: 1.45;
     }
-    .console-stream .msg-err { color: #f85149; }
+    .console-stream .msg-err { color: #f85149; font-weight: 600; }
     .console-stream .msg-info { color: #58a6ff; }
     .console-stream .msg-warn { color: #d29922; }
+    .console-stream .msg-success { color: #3fb950; font-weight: 700; }
+    .console-stream .msg-stdout { color: #e6edf3; white-space: pre; font-family: var(--font-mono); margin: 1px 0; }
 
     .console-input-row {
       display: flex;
@@ -983,7 +1007,8 @@
   <!-- Bottom Docked Interactive CM Console & Chat-Style Input -->
   <div class="cm-console-dock">
     <div class="console-header">
-      <span>🖥️ CM Interactive Console & Response Feed</span>
+      <span class="console-title">🖥️ CM Interactive Console &amp; Response Feed</span>
+      <div class="console-header-chips">
         <span class="console-chip" onclick="setConsoleCommand('proceed CRP-079')">⏩ proceed CRP-079</span>
         <span class="console-chip" onclick="setConsoleCommand('commit CRP-079')">📦 commit CRP-079</span>
         <span class="console-chip" onclick="setConsoleCommand('verify CRP-078')">⏳ verify CRP-078</span>
@@ -1294,11 +1319,32 @@ Type command and press Enter:</div>
       }
 
       // Apply saved theme or default to dark per CRP-105
-      const savedTheme = localStorage.getItem("lcm_theme") || "dark";
-      applyTheme(savedTheme);
+      initTheme();
 
+      // Inlined LcmTablePrintAtom initialization per Display Standard
+      if (typeof LcmTablePrintAtom !== 'undefined') {
+        LcmTablePrintAtom.init({
+          documentTitle: 'LCM Configuration Management Control Hub',
+          subsystem: 'LCM',
+          tableSelector: '#proposalsTable',
+          tbodySelector: '#proposalsTableBody',
+          getViewMode: () => {
+            const activeCard = document.querySelector('.stat-card.active');
+            return activeCard ? activeCard.querySelector('.stat-label').textContent.trim() : 'Proposals View';
+          },
+          getFileName: () => 'LCM_Control_Hub_Proposals.html',
+          getDate: () => new Date().toLocaleString(),
+          getFilterSummary: () => {
+            const search = document.getElementById('searchInput') ? document.getElementById('searchInput').value.trim() : '';
+            return search ? 'Search: "' + search + '"' : 'All Proposals in View';
+          }
+        });
+      }
+
+      initTabLifecycle();
       checkDaemonHealth();
       populateScopeDropdown();
+      updateHeaderGovernanceBadges();
       updateMetricCards();
       renderTable();
       setInterval(checkDaemonHealth, 5000);
@@ -1338,14 +1384,15 @@ Type command and press Enter:</div>
       let refreshed = false;
       try {
         const candidateUrls = [
+          `http://127.0.0.1:${DAEMON_PORT}/proposals`,
+          `http://127.0.0.1:${DAEMON_PORT}/api/proposals`,
           "../proposals/proposals.json",
-          "../../data/proposals/proposals.json",
-          "http://127.0.0.1:9876/api/proposals"
+          "../../data/proposals/proposals.json"
         ];
 
         for (const url of candidateUrls) {
           try {
-            const res = await fetch(url + "?t=" + Date.now(), { cache: "no-store" });
+            const res = await fetch(url + (url.includes("?") ? "&" : "?") + "t=" + Date.now(), { cache: "no-store", signal: AbortSignal.timeout(2000) });
             if (res.ok) {
               const freshData = await res.json();
               if (freshData && Array.isArray(freshData.proposals)) {
@@ -1358,14 +1405,16 @@ Type command and press Enter:</div>
         }
 
         try {
-          const logRes = await fetch("../../logs/cm_activity.log?t=" + Date.now(), { cache: "no-store" });
+          const logRes = await fetch(`http://127.0.0.1:${DAEMON_PORT}/logs/activity?t=` + Date.now(), { cache: "no-store", signal: AbortSignal.timeout(1500) });
           if (logRes.ok) {
             activeLogText = await logRes.text();
           }
         } catch (e) {}
 
         if (refreshed) {
+          if (typeof resetConsoleHeight === "function") resetConsoleHeight();
           populateScopeDropdown();
+          updateHeaderGovernanceBadges();
           updateMetricCards();
           renderTable();
           const nowTime = new Date().toLocaleTimeString();
@@ -1373,8 +1422,8 @@ Type command and press Enter:</div>
           if (subTitle) {
             subTitle.innerText = `Tool: Show-CmControlHub {{HUB_VERSION}} | LCM Baseline: {{LCM_BASELINE}} | Refreshed: ${nowTime}`;
           }
-          const pushedCount = (proposalsData.proposals.filter(p => p.state === 'pushed')).length;
-          const openCount = (proposalsData.proposals.filter(p => p.state !== 'pushed' && p.state !== 'rejected' && p.state !== 'completed')).length;
+          const pushedCount = (proposalsData.proposals.filter(p => p.state === 'pushed' || p.progress_state === 'pushed')).length;
+          const openCount = (proposalsData.proposals.filter(p => p.state !== 'pushed' && p.state !== 'rejected' && p.state !== 'completed' && p.progress_state !== 'pushed' && p.progress_state !== 'completed')).length;
           showTicker(`✅ Refreshed ledger: ${proposalsData.proposals.length} total (${pushedCount} pushed, ${openCount} open)`);
           if (manual) appendConsole(`[SUCCESS] Refreshed CM ledger at ${nowTime} (${proposalsData.proposals.length} proposals: ${pushedCount} pushed, ${openCount} open).`, "msg-success");
         } else {
@@ -1933,14 +1982,38 @@ Type command and press Enter:</div>
     // -------------------------------------------------------------------------
     // Interactive CM Console & Command Dispatch Engine
     // -------------------------------------------------------------------------
+    const CONSOLE_BASE_HEIGHT = 150;
+    const CONSOLE_MAX_DYNAMIC_HEIGHT = 460;
+
+    function autoAdjustConsoleHeight() {
+      const stream = document.getElementById("consoleStream");
+      if (!stream || stream.style.display === "none") return;
+      const neededHeight = stream.scrollHeight + 16;
+      if (neededHeight > CONSOLE_BASE_HEIGHT) {
+        const targetHeight = Math.min(neededHeight, CONSOLE_MAX_DYNAMIC_HEIGHT);
+        stream.style.height = targetHeight + "px";
+      }
+    }
+
+    function resetConsoleHeight() {
+      const stream = document.getElementById("consoleStream");
+      if (!stream) return;
+      stream.style.height = CONSOLE_BASE_HEIGHT + "px";
+    }
+
     function appendConsole(msg, type = "msg-info") {
       const stream = document.getElementById("consoleStream");
       if (!stream) return;
       const line = document.createElement("div");
       line.className = type;
       const time = new Date().toLocaleTimeString();
-      line.textContent = `[${time}] ${msg}`;
+      if (type === "msg-stdout") {
+        line.textContent = msg;
+      } else {
+        line.textContent = `[${time}] ${msg}`;
+      }
       stream.appendChild(line);
+      autoAdjustConsoleHeight();
       stream.scrollTop = stream.scrollHeight;
     }
 
@@ -1948,6 +2021,7 @@ Type command and press Enter:</div>
       const stream = document.getElementById("consoleStream");
       if (stream) {
         stream.innerHTML = '<div class="msg-info">Console stream cleared. Ready for CM commands.</div>';
+        resetConsoleHeight();
       }
     }
 
@@ -1977,6 +2051,69 @@ Type command and press Enter:</div>
       await executeConsoleCommand(rawCmd);
     }
 
+    async function executeHubCommand(cmdStr, label = "", affectedId = null) {
+      showToast(label || "Executing command...");
+
+      try {
+        const res = await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            command: cmdStr,
+            sync: true,
+            elevated: false,
+            noExit: false
+          })
+        });
+
+        if (!res.ok) {
+          appendConsole(`[HTTP ${res.status}] ${res.statusText}`, "msg-err");
+          return { success: false, exitCode: res.status };
+        }
+
+        const data = await res.json();
+
+        // 1. Output stdout in Response Feed
+        if (data.stdout && data.stdout.trim().length > 0) {
+          appendConsole(data.stdout.trim(), "msg-stdout");
+        }
+
+        // 2. Output stderr if present
+        if (data.stderr && data.stderr.trim().length > 0) {
+          appendConsole(data.stderr.trim(), "msg-err");
+        }
+
+        // 3. Highlight exit code & target status reached
+        if (data.exitCode === 0) {
+          let statusReached = "";
+          if (data.stdout) {
+            const match = data.stdout.match(/(?:Proceeded Proposal\(s\)|Updated Proposal\(s\)|Transitioned to|Status set to|Marked COMPLETED|Action completed)[:\s]+([^\r\n]+)/i);
+            if (match) {
+              statusReached = match[0].trim();
+            }
+          }
+          if (!statusReached && label) {
+            statusReached = `[OK] ${label} completed successfully.`;
+          }
+          if (statusReached) {
+            appendConsole(`[STATUS REACHED] ${statusReached}`, "msg-success");
+            updateLiveTicker(statusReached, affectedId);
+          }
+        } else {
+          appendConsole(`[ERROR] Command failed with exit code ${data.exitCode}.`, "msg-err");
+          updateLiveTicker(`[FAILED] Command exited with code ${data.exitCode}`, affectedId);
+        }
+
+        // 4. Automatic ledger re-query and UI refresh
+        await refreshHubData(false);
+
+        return data;
+      } catch (err) {
+        appendConsole(`[DAEMON ERROR] Failed to reach daemon: ${err.message}`, "msg-err");
+        return { success: false, error: err.message };
+      }
+    }
+
     async function executeConsoleCommand(cmdStr) {
       const trimmed = cmdStr.trim();
       const lower = trimmed.toLowerCase();
@@ -1984,15 +2121,23 @@ Type command and press Enter:</div>
       // Command: help / ?
       if (lower === "help" || lower === "?") {
         appendConsole("Available CM Commands:", "msg-info");
-        appendConsole("  do <#id|id>       - Transition proposal to In Progress & trigger action", "msg-info");
-        appendConsole("  accept <#id|all>  - Accept proposal review & mark completed", "msg-info");
-        appendConsole("  review <#id>      - Launch Beyond Compare 5 review gate", "msg-info");
-        appendConsole("  defer <#id>       - Defer proposal to future milestone", "msg-info");
-        appendConsole("  delete <#id>      - Permanently purge proposal from ledger", "msg-info");
-        appendConsole("  status            - Show workspace git status & proposal totals", "msg-info");
-        appendConsole("  readiness         - Run Test-LCMRuleHealth quality check", "msg-info");
-        appendConsole("  push              - Open multi-repository push dialog", "msg-info");
-        appendConsole("  clear             - Clear console output stream", "msg-info");
+        appendConsole("  proceed <#id|all> [state] - Advance proposal(s) along lifecycle pipeline", "msg-info");
+        appendConsole("  complete <#id|all>        - Transition proposal(s) to COMPLETED", "msg-info");
+        appendConsole("  verify <#id|all>          - Transition proposal(s) to VERIFICATION", "msg-info");
+        appendConsole("  commit <#id|all>          - Transition proposal(s) to COMMITTED", "msg-info");
+        appendConsole("  do <#id|all>              - Transition proposal(s) to IN_PROGRESS", "msg-info");
+        appendConsole("  progress <#id> <state>    - Set explicit progress status for proposal", "msg-info");
+        appendConsole("  prio <#id|all> <C|H|M|L|D>- Set proposal priority", "msg-info");
+        appendConsole("  granularity <coarse|tight>- Switch review granularity mode", "msg-info");
+        appendConsole("  mode <active|paused>      - Switch LCM governance mode", "msg-info");
+        appendConsole("  accept <#id|all>          - Accept proposal review & mark completed", "msg-info");
+        appendConsole("  review <#id>              - Launch Beyond Compare 5 review gate", "msg-info");
+        appendConsole("  defer <#id>               - Defer proposal to future milestone", "msg-info");
+        appendConsole("  delete <#id>              - Permanently purge proposal from ledger", "msg-info");
+        appendConsole("  status                    - Show workspace git status & proposal totals", "msg-info");
+        appendConsole("  readiness                 - Run Test-LCMRuleHealth quality check", "msg-info");
+        appendConsole("  push                      - Open multi-repository push dialog", "msg-info");
+        appendConsole("  clear                     - Clear console output stream", "msg-info");
         return;
       }
 
@@ -2004,35 +2149,15 @@ Type command and press Enter:</div>
 
       // Command: status
       if (lower === "status" || lower === "git status") {
-        appendConsole(`Total Proposals: ${proposalsData.proposals.length}`, "msg-info");
-        try {
-          const res = await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ command: "git status --short", elevated: false, noExit: false })
-          });
-          if (res.ok) {
-            appendConsole("Git status check dispatched via Desktop Daemon.", "msg-info");
-          }
-        } catch (err) {
-          appendConsole(`Daemon unavailable for git status: ${err.message}`, "msg-warn");
-        }
+        appendConsole(`Total Proposals in Ledger: ${proposalsData.proposals.length}`, "msg-info");
+        await executeHubCommand("git status --short", "Git Status");
         return;
       }
 
       // Command: readiness
       if (lower === "readiness" || lower === "test readiness") {
         appendConsole("Running LCM Rule Health & Readiness check...", "msg-info");
-        try {
-          await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ command: "pwsh -File Workspace_Inventory/tools/Test-LCMRuleHealth.ps1", elevated: false, noExit: false })
-          });
-          showToast("Dispatched Test-LCMRuleHealth.ps1");
-        } catch (err) {
-          appendConsole(`Daemon execution error: ${err.message}`, "msg-err");
-        }
+        await executeHubCommand("pwsh -File Workspace_Inventory/tools/Test-LCMRuleHealth.ps1", "LCM Rule Health & Readiness");
         return;
       }
 
@@ -2047,50 +2172,11 @@ Type command and press Enter:</div>
       if (completeMatch) {
         const isAll = completeMatch[1].toLowerCase() === "all";
         const targetExpr = isAll ? "all" : completeMatch[1];
-        const nowStr = new Date().toISOString().replace('T', ' ').substring(0, 19);
-
-        const targets = isAll
-          ? proposalsData.proposals.filter(p => p.progress_state !== "completed" && p.progress_state !== "pushed")
-          : proposalsData.proposals.filter(p => p.id === parseInt(completeMatch[1], 10));
-
-        if (targets.length === 0) {
-          appendConsole(`[WARN] No matching open CRP found for 'complete ${targetExpr}'.`, "msg-warn");
-          return;
-        }
-
-        targets.forEach(p => {
-          p.state = "completed";
-          p.progress_state = "completed";
-          if (!p.dates) p.dates = {};
-          p.dates.completed = nowStr;
-          if (!p.state_history) p.state_history = [];
-          p.state_history.push({
-            state: "completed",
-            timestamp: nowStr,
-            user: "Operator (Control Hub Console)",
-            note: `Marked completed via console command: '${trimmed}'`
-          });
-        });
-
-        updateMetricCards();
-        renderTable();
-
-        try {
-          await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              command: `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action complete -TargetExpression ${targetExpr}`,
-              elevated: false,
-              noExit: false
-            })
-          });
-        } catch (e) {}
-
-        const logMsg = `[OK] CRP(s) ${targetExpr} transitioned to COMPLETED (plan & status) in ledger.`;
-        appendConsole(logMsg, "msg-info");
-        showToast(`CRP(s) ${targetExpr} Completed`);
-        updateLiveTicker(logMsg, isAll ? null : parseInt(completeMatch[1], 10));
+        await executeHubCommand(
+          `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action complete -TargetExpression ${targetExpr}`,
+          `Complete CRP ${targetExpr}`,
+          isAll ? null : parseInt(targetExpr, 10)
+        );
         return;
       }
 
@@ -2099,47 +2185,11 @@ Type command and press Enter:</div>
       if (verifyMatch) {
         const isAll = verifyMatch[1].toLowerCase() === "all";
         const targetExpr = isAll ? "all" : verifyMatch[1];
-        const nowStr = new Date().toISOString().replace('T', ' ').substring(0, 19);
-
-        const targets = isAll
-          ? proposalsData.proposals.filter(p => p.progress_state === "in_progress")
-          : proposalsData.proposals.filter(p => p.id === parseInt(verifyMatch[1], 10));
-
-        if (targets.length === 0) {
-          appendConsole(`[WARN] No matching CRP found for 'verify ${targetExpr}'.`, "msg-warn");
-          return;
-        }
-
-        targets.forEach(p => {
-          p.progress_state = "verification";
-          if (!p.state_history) p.state_history = [];
-          p.state_history.push({
-            state: "verification",
-            timestamp: nowStr,
-            user: "Operator (Control Hub Console)",
-            note: `Advanced to verification via console command: '${trimmed}'`
-          });
-        });
-
-        updateMetricCards();
-        renderTable();
-
-        try {
-          await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              command: `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action verify -TargetExpression ${targetExpr}`,
-              elevated: false,
-              noExit: false
-            })
-          });
-        } catch (e) {}
-
-        const logMsg = `[OK] CRP(s) ${targetExpr} status set to VERIFICATION.`;
-        appendConsole(logMsg, "msg-info");
-        showToast(`CRP(s) ${targetExpr} in Verification`);
-        updateLiveTicker(logMsg, isAll ? null : parseInt(verifyMatch[1], 10));
+        await executeHubCommand(
+          `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action verify -TargetExpression ${targetExpr}`,
+          `Verify CRP ${targetExpr}`,
+          isAll ? null : parseInt(targetExpr, 10)
+        );
         return;
       }
 
@@ -2148,49 +2198,11 @@ Type command and press Enter:</div>
       if (commitMatch) {
         const isAll = commitMatch[1].toLowerCase() === "all";
         const targetExpr = isAll ? "all" : commitMatch[1];
-        const nowStr = new Date().toISOString().replace('T', ' ').substring(0, 19);
-
-        const targets = isAll
-          ? proposalsData.proposals.filter(p => p.progress_state === "verification" || p.progress_state === "in_progress")
-          : proposalsData.proposals.filter(p => p.id === parseInt(commitMatch[1], 10));
-
-        if (targets.length === 0) {
-          appendConsole(`[WARN] No matching CRP found for 'commit ${targetExpr}'.`, "msg-warn");
-          return;
-        }
-
-        targets.forEach(p => {
-          p.progress_state = "committed";
-          if (!p.dates) p.dates = {};
-          p.dates.committed = nowStr;
-          if (!p.state_history) p.state_history = [];
-          p.state_history.push({
-            state: "committed",
-            timestamp: nowStr,
-            user: "Operator (Control Hub Console)",
-            note: `Advanced to committed via console command: '${trimmed}'`
-          });
-        });
-
-        updateMetricCards();
-        renderTable();
-
-        try {
-          await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              command: `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action commit -TargetExpression ${targetExpr}`,
-              elevated: false,
-              noExit: false
-            })
-          });
-        } catch (e) {}
-
-        const logMsg = `[OK] CRP(s) ${targetExpr} status set to COMMITTED.`;
-        appendConsole(logMsg, "msg-info");
-        showToast(`CRP(s) ${targetExpr} Committed`);
-        updateLiveTicker(logMsg, isAll ? null : parseInt(commitMatch[1], 10));
+        await executeHubCommand(
+          `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action commit -TargetExpression ${targetExpr}`,
+          `Commit CRP ${targetExpr}`,
+          isAll ? null : parseInt(targetExpr, 10)
+        );
         return;
       }
 
@@ -2200,85 +2212,12 @@ Type command and press Enter:</div>
         const rawTarget = proceedMatch[1] ? proceedMatch[1].toLowerCase() : "all";
         const isAll = rawTarget === "all";
         const targetExpr = isAll ? "all" : rawTarget;
-        const explicitState = proceedMatch[2] ? proceedMatch[2].toLowerCase() : null;
-        const nowStr = new Date().toISOString().replace('T', ' ').substring(0, 19);
-
-        const targets = isAll
-          ? proposalsData.proposals.filter(p => p.state === "suggested" || p.state === "processed" || p.state === "approved")
-          : proposalsData.proposals.filter(p => p.id === parseInt(rawTarget, 10));
-
-        if (targets.length === 0) {
-          appendConsole(`[WARN] No active CRP found for 'proceed ${targetExpr}'.`, "msg-warn");
-          return;
-        }
-
-        targets.forEach(p => {
-          let nextProg = explicitState;
-          if (!nextProg) {
-            const cur = p.progress_state || 'undecided';
-            switch (cur) {
-              case 'undecided':
-              case 'queued':
-                nextProg = 'in_progress';
-                break;
-              case 'in_progress':
-                nextProg = 'verification';
-                break;
-              case 'verification':
-                nextProg = 'committed';
-                break;
-              case 'committed':
-                nextProg = 'completed';
-                break;
-              default:
-                nextProg = 'verification';
-                break;
-            }
-          }
-
-          p.progress_state = nextProg;
-          if (nextProg === 'completed') {
-            p.state = 'completed';
-            if (!p.dates) p.dates = {};
-            p.dates.completed = nowStr;
-          } else if (p.state === 'suggested') {
-            p.state = 'processed';
-          }
-
-          if (nextProg === 'committed') {
-            if (!p.dates) p.dates = {};
-            p.dates.committed = nowStr;
-          }
-
-          if (!p.state_history) p.state_history = [];
-          p.state_history.push({
-            state: nextProg,
-            timestamp: nowStr,
-            user: "Operator (Control Hub Console)",
-            note: `Advanced via console command: '${trimmed}'`
-          });
-        });
-
-        updateMetricCards();
-        renderTable();
-
-        try {
-          const extraArg = explicitState ? ` -ProgressState ${explicitState}` : "";
-          await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              command: `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action proceed -TargetExpression ${targetExpr}${extraArg}`,
-              elevated: false,
-              noExit: false
-            })
-          });
-        } catch (e) {}
-
-        const logMsg = `[OK] Proceeded CRP(s) ${targetExpr} along lifecycle pipeline.`;
-        appendConsole(logMsg, "msg-info");
-        showToast(`CRP(s) ${targetExpr} Proceeded`);
-        updateLiveTicker(logMsg, isAll ? null : parseInt(rawTarget, 10));
+        const explicitState = proceedMatch[2] ? ` -ProgressState ${proceedMatch[2].toLowerCase()}` : "";
+        await executeHubCommand(
+          `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action proceed -TargetExpression ${targetExpr}${explicitState}`,
+          `Proceed CRP ${targetExpr}`,
+          isAll ? null : parseInt(rawTarget, 10)
+        );
         return;
       }
 
@@ -2292,56 +2231,11 @@ Type command and press Enter:</div>
           appendConsole(`[ERROR] Invalid status '${targetProg}'. Valid states: ${validProgs.join(', ')}`, "msg-err");
           return;
         }
-
-        const p = proposalsData.proposals.find(item => item.id === id);
-        if (!p) {
-          appendConsole(`[ERROR] CRP-${String(id).padStart(3, '0')} not found in ledger.`, "msg-err");
-          return;
-        }
-
-        const nowStr = new Date().toISOString().replace('T', ' ').substring(0, 19);
-        p.progress_state = targetProg;
-        if (targetProg === "completed") {
-          p.state = "completed";
-          if (!p.dates) p.dates = {};
-          p.dates.completed = nowStr;
-        } else if (targetProg === "pushed") {
-          p.state = "pushed";
-          if (!p.dates) p.dates = {};
-          p.dates.pushed = nowStr;
-        } else if (targetProg === "in_progress" || targetProg === "verification" || targetProg === "queued") {
-          if (p.state === "completed" || p.state === "pushed") {
-            p.state = "suggested";
-          }
-        }
-        if (!p.state_history) p.state_history = [];
-        p.state_history.push({
-          state: targetProg,
-          timestamp: nowStr,
-          user: "Operator (Control Hub Console)",
-          note: `Status set to '${targetProg}' via console command`
-        });
-
-        updateMetricCards();
-        renderTable();
-
-        try {
-          await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              command: `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action progress -TargetExpression ${id} -ProgressState ${targetProg}`,
-              elevated: false,
-              noExit: false
-            })
-          });
-        } catch (e) {}
-
-        const crpTag = `CRP-${String(id).padStart(3, '0')}`;
-        const logMsg = `[OK] ${crpTag} status set to '${targetProg}' and saved to ledger.`;
-        appendConsole(logMsg, "msg-info");
-        showToast(`${crpTag} Status: ${targetProg}`);
-        updateLiveTicker(logMsg, id);
+        await executeHubCommand(
+          `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action progress -TargetExpression ${id} -ProgressState ${targetProg}`,
+          `Status CRP-${id} -> ${targetProg}`,
+          id
+        );
         return;
       }
 
@@ -2350,50 +2244,11 @@ Type command and press Enter:</div>
       if (doMatch) {
         const isAll = doMatch[1].toLowerCase() === "all";
         const targetExpr = isAll ? "all" : doMatch[1];
-        const nowStr = new Date().toISOString().replace('T', ' ').substring(0, 19);
-
-        const targets = isAll
-          ? proposalsData.proposals.filter(p => p.state === "suggested" || p.state === "approved")
-          : proposalsData.proposals.filter(p => p.id === parseInt(doMatch[1], 10));
-
-        if (targets.length === 0) {
-          appendConsole(`[WARN] No matching CRPs found for 'do ${targetExpr}'.`, "msg-warn");
-          return;
-        }
-
-        targets.forEach(p => {
-          p.state = "processed";
-          p.progress_state = "in_progress";
-          if (!p.dates) p.dates = {};
-          p.dates.in_progress = nowStr;
-          if (!p.state_history) p.state_history = [];
-          p.state_history.push({
-            state: "in_progress",
-            timestamp: nowStr,
-            user: "Operator (Control Hub Console)",
-            note: `Execution started via console: 'do CRP-${String(p.id).padStart(3, '0')}'`
-          });
-        });
-
-        updateMetricCards();
-        renderTable();
-
-        try {
-          await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              command: `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action do -TargetExpression ${targetExpr}`,
-              elevated: false,
-              noExit: false
-            })
-          });
-        } catch (e) {}
-
-        const logMsg = `[OK] CRP(s) ${targetExpr} transitioned to PROCESSED / IN_PROGRESS in ledger.`;
-        appendConsole(logMsg, "msg-info");
-        showToast(`CRP(s) ${targetExpr} In Progress`);
-        updateLiveTicker(logMsg, isAll ? null : parseInt(doMatch[1], 10));
+        await executeHubCommand(
+          `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action do -TargetExpression ${targetExpr}`,
+          `Execute CRP ${targetExpr}`,
+          isAll ? null : parseInt(doMatch[1], 10)
+        );
         return;
       }
 
@@ -2404,23 +2259,11 @@ Type command and press Enter:</div>
           await executeBatchAccept();
         } else {
           const id = parseInt(acceptMatch[1], 10);
-          const p = proposalsData.proposals.find(item => item.id === id);
-          if (!p) {
-            appendConsole(`[ERROR] CRP-${String(id).padStart(3, '0')} not found in ledger.`, "msg-err");
-            return;
-          }
-          p.progress_state = "completed";
-          p.state = "completed";
-          if (!p.dates) p.dates = {};
-          p.dates.completed = new Date().toISOString().replace('T', ' ').substring(0, 19);
-          updateMetricCards();
-          renderTable();
-          await syncLedgerToServer();
-          const crpTag = `CRP-${String(id).padStart(3, '0')}`;
-          const logMsg = `[OK] ${crpTag} marked COMPLETED.`;
-          appendConsole(logMsg, "msg-info");
-          showToast(`${crpTag} Accepted & Completed`);
-          updateLiveTicker(logMsg, id);
+          await executeHubCommand(
+            `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action complete -TargetExpression ${id}`,
+            `Accept & Complete CRP-${id}`,
+            id
+          );
         }
         return;
       }
@@ -2443,20 +2286,11 @@ Type command and press Enter:</div>
       const defMatch = trimmed.match(/^defer\s+(?:#|crp-?)?(\d+)$/i);
       if (defMatch) {
         const id = parseInt(defMatch[1], 10);
-        const p = proposalsData.proposals.find(item => item.id === id);
-        if (!p) {
-          appendConsole(`[ERROR] CRP-${String(id).padStart(3, '0')} not found in ledger.`, "msg-err");
-          return;
-        }
-        p.state = "deferred";
-        updateMetricCards();
-        renderTable();
-        await syncLedgerToServer();
-        const crpTag = `CRP-${String(id).padStart(3, '0')}`;
-        const logMsg = `[OK] ${crpTag} state set to DEFERRED.`;
-        appendConsole(logMsg, "msg-info");
-        showToast(`${crpTag} Deferred`);
-        updateLiveTicker(logMsg, id);
+        await executeHubCommand(
+          `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action defer -TargetExpression ${id}`,
+          `Defer CRP-${id}`,
+          id
+        );
         return;
       }
 
@@ -2464,7 +2298,11 @@ Type command and press Enter:</div>
       const delMatch = trimmed.match(/^(?:delete|remove)\s+(?:#|crp-?)?(\d+)$/i);
       if (delMatch) {
         const id = parseInt(delMatch[1], 10);
-        deleteProposal(id);
+        await executeHubCommand(
+          `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action delete -TargetExpression ${id}`,
+          `Delete CRP-${id}`,
+          id
+        );
         return;
       }
 
@@ -2476,29 +2314,11 @@ Type command and press Enter:</div>
         if (numMap[rawPrio]) rawPrio = numMap[rawPrio];
         const isAll = prioMatch[1].toLowerCase() === "all";
         const targetExpr = isAll ? "all" : prioMatch[1];
-
-        try {
-          await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              command: `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action priority -TargetExpression ${targetExpr} -Priority ${rawPrio}`,
-              elevated: false,
-              noExit: false
-            })
-          });
-        } catch (e) {}
-
-        const targets = isAll
-          ? proposalsData.proposals
-          : proposalsData.proposals.filter(p => p.id === parseInt(prioMatch[1], 10));
-
-        targets.forEach(p => { p.priority = rawPrio; });
-        renderTable();
-        const logMsg = `[OK] CRP(s) ${targetExpr} priority set to '${rawPrio}'.`;
-        appendConsole(logMsg, "msg-info");
-        showToast(`Priority: ${targetExpr} -> ${rawPrio}`);
-        updateLiveTicker(logMsg, isAll ? null : parseInt(prioMatch[1], 10));
+        await executeHubCommand(
+          `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action priority -TargetExpression ${targetExpr} -Priority ${rawPrio}`,
+          `Priority CRP ${targetExpr} -> ${rawPrio}`,
+          isAll ? null : parseInt(prioMatch[1], 10)
+        );
         return;
       }
 
@@ -2506,21 +2326,12 @@ Type command and press Enter:</div>
       const granMatch = trimmed.match(/^gran(?:ularity)?(?:\s+(coarse|tight))?$/i);
       if (granMatch) {
         if (granMatch[1]) {
+          await executeHubCommand(
+            `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action granularity -TargetExpression ${granMatch[1].toLowerCase()}`,
+            `Granularity -> ${granMatch[1].toUpperCase()}`
+          );
           proposalsData.review_granularity = granMatch[1].toLowerCase();
           updateHeaderGovernanceBadges();
-          try {
-            await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                command: `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action granularity -TargetExpression ${granMatch[1].toLowerCase()}`,
-                elevated: false,
-                noExit: false
-              })
-            });
-          } catch (e) {}
-          appendConsole(`[GOV] Review Granularity set to: ${granMatch[1].toUpperCase()}`, "msg-info");
-          showToast(`Granularity: ${granMatch[1].toUpperCase()}`);
         } else {
           appendConsole(`Current Review Granularity: ${(proposalsData.review_granularity || 'coarse').toUpperCase()}`, "msg-info");
         }
@@ -2531,21 +2342,12 @@ Type command and press Enter:</div>
       const modeMatch = trimmed.match(/^mode(?:\s+(active|paused))?$/i);
       if (modeMatch) {
         if (modeMatch[1]) {
+          await executeHubCommand(
+            `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action mode -TargetExpression ${modeMatch[1].toLowerCase()}`,
+            `LCM Mode -> ${modeMatch[1].toUpperCase()}`
+          );
           proposalsData.lcm_mode = modeMatch[1].toLowerCase();
           updateHeaderGovernanceBadges();
-          try {
-            await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                command: `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action mode -TargetExpression ${modeMatch[1].toLowerCase()}`,
-                elevated: false,
-                noExit: false
-              })
-            });
-          } catch (e) {}
-          appendConsole(`[GOV] LCM Governance Mode set to: ${modeMatch[1].toUpperCase()}`, "msg-info");
-          showToast(`LCM Mode: ${modeMatch[1].toUpperCase()}`);
         } else {
           appendConsole(`Current LCM Mode: ${(proposalsData.lcm_mode || 'active').toUpperCase()}`, "msg-info");
         }
@@ -2553,21 +2355,7 @@ Type command and press Enter:</div>
       }
 
       // Fallback: Generic Command via Daemon
-      appendConsole(`Dispatching to Desktop Daemon: ${trimmed}`, "msg-info");
-      try {
-        const res = await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ command: trimmed, elevated: false, noExit: false })
-        });
-        if (res.ok) {
-          appendConsole(`Command executed successfully.`, "msg-info");
-        } else {
-          appendConsole(`Command returned status ${res.status}.`, "msg-warn");
-        }
-      } catch (err) {
-        appendConsole(`Daemon execution error: ${err.message}`, "msg-err");
-      }
+      await executeHubCommand(trimmed, "Console Command");
     }
 
     // -------------------------------------------------------------------------
@@ -2610,51 +2398,6 @@ Type command and press Enter:</div>
         }
       };
     }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      // Ingest injected data if available
-      if (typeof RAW_PROPOSALS !== "undefined" && RAW_PROPOSALS && RAW_PROPOSALS.proposals) {
-        proposalsData = RAW_PROPOSALS;
-      }
-      if (typeof RAW_ACTIVE_LOG !== "undefined" && RAW_ACTIVE_LOG) {
-        activeLogText = RAW_ACTIVE_LOG;
-      }
-      if (typeof RAW_HISTORY_LOG !== "undefined" && RAW_HISTORY_LOG) {
-        historyLogText = RAW_HISTORY_LOG;
-      }
-
-      initTheme();
-
-      // Inlined LcmTablePrintAtom initialization per Display Standard
-      if (typeof LcmTablePrintAtom !== 'undefined') {
-        LcmTablePrintAtom.init({
-          documentTitle: 'LCM Configuration Management Control Hub',
-          subsystem: 'LCM',
-          tableSelector: '#proposalsTable',
-          tbodySelector: '#proposalsTableBody',
-          getViewMode: () => {
-            const activeCard = document.querySelector('.stat-card.active');
-            return activeCard ? activeCard.querySelector('.stat-label').textContent.trim() : 'Proposals View';
-          },
-          getFileName: () => 'LCM_Control_Hub_Proposals.html',
-          getDate: () => new Date().toLocaleString(),
-          getFilterSummary: () => {
-            const search = document.getElementById('searchInput') ? document.getElementById('searchInput').value.trim() : '';
-            return search ? 'Search: "' + search + '"' : 'All Proposals in View';
-          }
-        });
-      }
-
-      initTabLifecycle();
-      checkDaemonHealth();
-      populateScopeDropdown();
-      updateHeaderGovernanceBadges();
-      updateMetricCards();
-      renderTable();
-      setInterval(checkDaemonHealth, 5000);
-
-      appendConsole("CM Control Hub {{HUB_VERSION}} initialized with " + proposalsData.proposals.length + " proposal(s).", "msg-info");
-    });
 
     async function checkDaemonHealth() {
       const badge = document.getElementById("daemonBadge");
@@ -3124,91 +2867,28 @@ Type command and press Enter:</div>
 
     // State Transitions
     async function changePlanState(id, newState) {
-      const prop = proposalsData.proposals.find(p => p.id === id);
-      if (prop) {
-        prop.state = newState;
-        updateMetricCards();
-        renderTable();
-        try {
-          await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              command: `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action ${newState} -TargetExpression ${id}`,
-              elevated: false,
-              noExit: false
-            })
-          });
-        } catch (err) {}
-        const crpName = `CRP-${String(id).padStart(3, '0')}`;
-        const logMsg = `Updated ${crpName} plan state to '${newState}' (persisted to ledger)`;
-        appendConsole(logMsg, "msg-info");
-        showToast(`${crpName} state set to '${newState}'`);
-        updateLiveTicker(logMsg, id);
-      }
+      await executeHubCommand(
+        `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action ${newState} -TargetExpression ${id}`,
+        `Plan State -> ${newState}`,
+        id
+      );
     }
 
     async function changeProgressState(id, newState) {
-      const prop = proposalsData.proposals.find(p => p.id === id);
-      if (prop) {
-        prop.progress_state = newState;
-        if (newState === "completed") {
-          prop.state = "completed";
-          if (!prop.dates) prop.dates = {};
-          prop.dates.completed = new Date().toISOString().replace('T', ' ').substring(0, 19);
-        } else if (newState === "pushed") {
-          prop.state = "pushed";
-          if (!prop.dates) prop.dates = {};
-          prop.dates.pushed = new Date().toISOString().replace('T', ' ').substring(0, 19);
-        } else if (newState === "in_progress" || newState === "verification" || newState === "queued") {
-          if (prop.state === "completed" || prop.state === "pushed") {
-            prop.state = "suggested";
-          }
-        }
-        updateMetricCards();
-        renderTable();
-        try {
-          await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              command: `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action progress -TargetExpression ${id} -ProgressState ${newState}`,
-              elevated: false,
-              noExit: false
-            })
-          });
-        } catch (err) {}
-        const crpName = `CRP-${String(id).padStart(3, '0')}`;
-        const logMsg = `Updated ${crpName} status to '${newState}' (persisted to ledger)`;
-        appendConsole(logMsg, "msg-info");
-        showToast(`${crpName} status set to '${newState}'`);
-        updateLiveTicker(logMsg, id);
-      }
+      await executeHubCommand(
+        `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action progress -TargetExpression ${id} -ProgressState ${newState}`,
+        `Status -> ${newState}`,
+        id
+      );
     }
 
     async function changeProposalPriority(id, newPrio) {
-      const prop = proposalsData.proposals.find(p => p.id === id);
-      if (prop) {
-        const upper = newPrio.toUpperCase();
-        prop.priority = upper;
-        renderTable();
-        try {
-          await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              command: `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action priority -TargetExpression ${id} -Priority ${upper}`,
-              elevated: false,
-              noExit: false
-            })
-          });
-        } catch (err) {}
-        const crpName = `CRP-${String(id).padStart(3, '0')}`;
-        const logMsg = `Updated ${crpName} priority to '${upper}' (persisted to ledger)`;
-        appendConsole(logMsg, "msg-info");
-        showToast(`${crpName} priority set to '${upper}'`);
-        updateLiveTicker(logMsg, id);
-      }
+      const upper = newPrio.toUpperCase();
+      await executeHubCommand(
+        `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action priority -TargetExpression ${id} -Priority ${upper}`,
+        `Priority -> ${upper}`,
+        id
+      );
     }
 
     function updateLiveTicker(msg, affectedId) {
@@ -3564,35 +3244,10 @@ Type command and press Enter:</div>
       const promptReason = prompt("Enter push reason / commit tag (defaults to CRP Title):", defaultReason);
       if (!promptReason) return;
 
-      appendConsole(`Dispatching Multi-Repository Push engine across governed repositories...`, "msg-info");
       appendConsole(`Push Reason: ${promptReason}`, "msg-info");
-
       const cmd = `pwsh -File Workspace_Inventory/tools/Invoke-WorkspacePush.ps1 -Reason "${promptReason.replace(/"/g, '`"')}"`;
 
-      try {
-        await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ command: cmd, elevated: false, noExit: false })
-        });
-        showToast("Git Push triggered across repositories.");
-        appendConsole("Triggered Invoke-WorkspacePush via Desktop Daemon.", "msg-info");
-      } catch (err) {
-        appendConsole(`Failed to trigger push: ${err.message}`, "msg-err");
-      }
-    }
-
-    async function refreshData() {
-      showToast("🔄 Refreshing CM Control Hub data...");
-      try {
-        await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ command: "pwsh -File Workspace_Inventory/tools/Show-CmControlHub.ps1 -NoLaunch", elevated: false, noExit: false }),
-          signal: AbortSignal.timeout(2000)
-        });
-      } catch (e) {}
-      setTimeout(() => { location.reload(); }, 600);
+      await executeHubCommand(cmd, "Multi-Repository Push");
     }
 
     // -------------------------------------------------------------------------

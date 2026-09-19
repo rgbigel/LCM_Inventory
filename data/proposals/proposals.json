@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-09-19T21:28:59+02:00",
+  "updated_at": "2026-09-19T21:46:55+02:00",
   "review_granularity": "tight",
   "lcm_mode": "active",
-  "last_proposal_id": 158,
+  "last_proposal_id": 159,
   "proposals": [
     {
       "id": 1,
@@ -6137,8 +6137,7 @@
       "origin_repo": "LCM / Tooling & Documentation Governance",
       "cr_id": "CRP-121",
       "bundle_id": "CRP-121",
-      "state": "suggested",
-      "progress_state": "open",
+      "state": "processed",
       "author": "Rolf, Workspace_AI",
       "priority": "M",
       "details": "Establishes an automated, AST-powered tool constituent and reverse caller documentation engine. Generates per-tool WIUD ('What It Uses Directly') forward dependencies at commit time and WUD ('What Uses Directly') reverse call graphs at pre-push time with hash-based gating to prevent Git churn.",
@@ -6155,7 +6154,8 @@
           "user": "Operator Directive / CRP Intake",
           "note": "Registered per operator directive in OPEN state with Pass 1 (Commit) and Pass 2 (Pre-Push) hash-gated architecture."
         }
-      ]
+      ],
+      "progress_state": "verification"
     },
     {
       "id": 122,
@@ -7936,6 +7936,42 @@
       "regression_needed": false,
       "progress_state": "pushed",
       "pushed_at": "2026-09-19 20:49:00"
+    },
+    {
+      "id": 159,
+      "timestamp": "2026-09-19 21:38:00",
+      "title": "[BUG] CM Control Hub Command Execution Output Capture & Automatic Ledger Re-Query Refresh",
+      "origin_repo": "Workspace_Inventory",
+      "state": "in_progress",
+      "bundle_id": "BUG-159",
+      "author": "Rolf, Workspace_AI",
+      "details": "Fixes CM Control Hub console command execution so that: 1) Daemon returns synchronous stdout/stderr/exit code from executed tools (e.g. Invoke-ProposalAction.ps1), 2) Control Hub displays full structured output, target status reached, and diagnostics/problems in Response Feed, and 3) Control Hub automatically re-queries GET /proposals and refreshes the table, cards, and badges immediately upon command completion without requiring manual browser restarts.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-159-Workspace_Inventory-v7.0.3-Control-Hub-Execution-Output-Capture-And-Auto-Refresh.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-19 21:38:00",
+        "suggested": "2026-09-19 21:38:00",
+        "in_progress": "2026-09-19 21:40:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-19 21:38:00",
+          "user": "Operator Directive / Strict Intake Gate",
+          "note": "Registered via strict BUG intake gate per RULE-LCM-015 in OPEN state."
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-09-19 21:40:00",
+          "user": "Operator Directive",
+          "note": "Activated via explicit PROCEED 159 directive."
+        }
+      ],
+      "priority": "H",
+      "type": "BUG",
+      "crp_id": "BUG-159",
+      "cr_id": "BUG-159",
+      "progress_state": "verification"
     }
   ]
 }
