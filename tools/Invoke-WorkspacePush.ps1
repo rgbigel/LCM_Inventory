@@ -183,7 +183,15 @@ if ($pushedRepos.Count -gt 0) {
             Write-Host "  -> [DRY RUN] Total $transitionCount completed proposal(s) would transition to 'pushed'." -ForegroundColor Yellow
         }
     } else {
-        $logEntry = "[$pushTimestamp] [SUCCESS] [Target: MULTI] [Version: v7.1.0] [PushDate: $pushTimestamp] [AffectedRepos: $($pushedRepos -join ', ')] PUSH_EXECUTED - Pushed $($pushedRepos.Count) repository/repositories to remote ($($pushedRepos -join ', ')). Reason: $Reason"
+        $lcmVersion = "v7.0.0"
+        $invFile = Join-Path $workspaceRoot "Workspace_Inventory\data\inventory.json"
+        if (Test-Path -LiteralPath $invFile) {
+            try {
+                $invData = Get-Content -LiteralPath $invFile -Raw -Encoding UTF8 | ConvertFrom-Json
+                if ($invData.GlobalLCMVersion) { $lcmVersion = "v$($invData.GlobalLCMVersion.TrimStart('v'))" }
+            } catch { }
+        }
+        $logEntry = "[$pushTimestamp] [SUCCESS] [Target: MULTI] [Version: $lcmVersion] [PushDate: $pushTimestamp] [AffectedRepos: $($pushedRepos -join ', ')] PUSH_EXECUTED - Pushed $($pushedRepos.Count) repository/repositories to remote ($($pushedRepos -join ', ')). Reason: $Reason"
         Add-Content -LiteralPath $cmLogFile -Value $logEntry -Encoding UTF8
         Write-Host "`n  -> Appended PUSH_EXECUTED record to cm_activity.log" -ForegroundColor Green
 
