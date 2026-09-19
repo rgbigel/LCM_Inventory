@@ -878,7 +878,7 @@
   <!-- Controls Panel -->
   <div class="controls-panel">
     <div class="filter-row">
-      <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search CRPs (CRP ID, Title, Scope, Details)..." oninput="handleFilterChange()">
+      <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search CRPs (e.g. #158, title, scope:LCM, state:!blocked, !prio:D)..." title="Search proposals by text, ID, or field filters. Supports negation (!term, state:!val, !status:blocked, prio:!D, scope:!LCM)." oninput="handleFilterChange()">
       <button class="btn" onclick="resetFilters()">🔄 Reset to SHOW ALL</button>
       <div id="liveFeedbackTicker" class="feedback-ticker" style="display: none;">
         <span class="ticker-badge">TICKER</span>
@@ -1047,7 +1047,7 @@ Type command and press Enter:</div>
           <button class="btn btn-back-nav" onclick="closeRepoDocsModal()" title="Return to CM Control Hub (Windows-style Back)"><span>⬅️</span> <span>Back</span></button>
         </div>
       </div>
-      
+
       <!-- Top-Line Filter Panel for Document Table -->
       <div style="padding: 12px 20px 0 20px; display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap;">
         <input type="text" id="docSearchInput" class="search-input" style="max-width: 380px;" placeholder="🔍 Filter documents (name, role, version)..." oninput="filterDocTable()">
@@ -1342,7 +1342,7 @@ Type command and press Enter:</div>
           "../../data/proposals/proposals.json",
           "http://127.0.0.1:9876/api/proposals"
         ];
-        
+
         for (const url of candidateUrls) {
           try {
             const res = await fetch(url + "?t=" + Date.now(), { cache: "no-store" });
@@ -1493,7 +1493,7 @@ Type command and press Enter:</div>
         return;
       }
       const bodyHtml = isMarkdown ? formatMarkdown(content) : `<pre style="font-family:ui-monospace,monospace;font-size:0.85rem;white-space:pre-wrap;background:#090d13;color:#7ee787;padding:16px;border-radius:8px;">${content}</pre>`;
-      
+
       newWin.document.write(`<!DOCTYPE html>
 <html>
 <head>
@@ -1674,7 +1674,7 @@ Type command and press Enter:</div>
           const verMatch = content.match(/(?:Version|Ver):\s*(v?[0-9.]+)/i);
           if (verMatch) version = verMatch[1].startsWith('v') ? verMatch[1] : 'v' + verMatch[1];
         }
-        
+
         const dateMatch = content.match(/(?:Date|Last Modified|Timestamp):\s*([0-9]{4}-[0-9]{2}-[0-9]{2})/i);
         if (dateMatch) date = dateMatch[1];
 
@@ -1690,11 +1690,11 @@ Type command and press Enter:</div>
     async function openRepoDocsReview(repoStr) {
       currentRepoForDocs = (repoStr || "Workspace_Inventory").split("/")[0].trim();
       document.getElementById("repoDocsTitle").innerText = `📚 Repository Documentation Table: ${currentRepoForDocs}`;
-      
+
       // Build document catalog for this repository from docsCache
       currentRepoDocsList = [];
       const standardFiles = ["Architecture.md", "Requirements.md", "Implementation.md", "install/Installation.md", "README.md", "docs/Architecture.md", "docs/Requirements.md", "docs/Implementation.md", "docs/CM_POLICIES.md"];
-      
+
       standardFiles.forEach(docFile => {
         let key = `${currentRepoForDocs}/${docFile}`;
         let text = docsCache[key];
@@ -1781,7 +1781,7 @@ Type command and press Enter:</div>
       filtered.forEach((d, idx) => {
         const tr = document.createElement("tr");
         const stateBadgeClass = d.reviewState === "ACCEPTED" ? "badge-success" : (d.reviewState === "STAGED" ? "badge-warning" : "badge-muted");
-        
+
         tr.innerHTML = `
           <td style="text-align: center;"><input type="checkbox" class="doc-row-chk" value="${d.key}" data-name="${d.name}" onchange="updateDocSelectedCount()"></td>
           <td>
@@ -2476,7 +2476,7 @@ Type command and press Enter:</div>
         if (numMap[rawPrio]) rawPrio = numMap[rawPrio];
         const isAll = prioMatch[1].toLowerCase() === "all";
         const targetExpr = isAll ? "all" : prioMatch[1];
-        
+
         try {
           await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
             method: "POST",
@@ -2590,7 +2590,7 @@ Type command and press Enter:</div>
           try {
             window.close();
           } catch(e) {}
-          
+
           setTimeout(() => {
             document.body.innerHTML = `
               <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; background:#0d1117; color:#c9d1d9; font-family:system-ui, sans-serif; text-align:center; padding:20px;">
@@ -2821,8 +2821,126 @@ Type command and press Enter:</div>
       }
     }
 
+    function parseSearchToken(rawToken) {
+      let token = rawToken.trim();
+      if (!token) return null;
+      let negate = false;
+
+      // Handle leading '!' on token (e.g. !state:blocked, !prio:D, !term)
+      if (token.startsWith('!')) {
+        negate = true;
+        token = token.slice(1).trim();
+      }
+
+      // Check for field prefix format (e.g. state:val, state:!val)
+      const colonIdx = token.indexOf(':');
+      if (colonIdx > 0) {
+        const fieldKey = token.slice(0, colonIdx).toLowerCase().trim();
+        let val = token.slice(colonIdx + 1).trim();
+
+        // Handle negation within value after colon (e.g. state:!blocked)
+        if (val.startsWith('!')) {
+          negate = !negate;
+          val = val.slice(1).trim();
+        }
+
+        return {
+          type: 'field',
+          field: fieldKey,
+          value: val.toLowerCase(),
+          negate: negate,
+          raw: rawToken
+        };
+      }
+
+      // General text token
+      return {
+        type: 'general',
+        field: null,
+        value: token.toLowerCase(),
+        negate: negate,
+        raw: rawToken
+      };
+    }
+
+    function matchesProposalToken(p, tokenObj) {
+      if (!tokenObj || !tokenObj.value) return true;
+
+      const pIdStr = String(p.id || '');
+      const pCrpCode = (p.crp_id || `crp-${String(p.id).padStart(3, '0')}`).toLowerCase();
+      const pCrId = (p.cr_id || '').toLowerCase();
+      const pBundleId = (p.bundle_id || '').toLowerCase();
+      const pTitle = (p.title || '').toLowerCase();
+      const pDetails = (p.details || '').toLowerCase();
+      const pScope = (p.origin_repo || 'LCM').toLowerCase();
+      const pPrio = (p.priority || 'M').toLowerCase();
+      const pPlanState = (p.state || 'suggested').toLowerCase();
+      const pProgState = (p.progress_state || 'undecided').toLowerCase();
+
+      let isMatch = false;
+      const val = tokenObj.value;
+
+      if (tokenObj.type === 'field') {
+        switch (tokenObj.field) {
+          case 'state':
+            // Checks both plan state and progress state for maximum operator convenience (e.g. state:!blocked, state:suggested)
+            isMatch = (pPlanState === val || pPlanState.includes(val) || pProgState === val || pProgState.includes(val));
+            break;
+          case 'plan':
+          case 'plan_state':
+            isMatch = (pPlanState === val || pPlanState.includes(val));
+            break;
+          case 'status':
+          case 'prog':
+          case 'progress':
+          case 'progress_state':
+            if (val === 'open') {
+              isMatch = !(pProgState === 'completed' || pProgState === 'pushed' || pProgState === 'blocked' || pProgState === 'failed' || pPlanState === 'completed' || pPlanState === 'pushed' || pPlanState === 'blocked' || pPlanState === 'rejected');
+            } else {
+              isMatch = (pProgState === val || pProgState.includes(val));
+            }
+            break;
+          case 'prio':
+          case 'priority':
+            isMatch = (pPrio === val || pPrio.includes(val));
+            break;
+          case 'scope':
+          case 'repo':
+          case 'origin':
+            isMatch = pScope.includes(val);
+            break;
+          case 'id':
+          case 'crp':
+          case 'cr':
+          case 'bug': {
+            const cleanVal = val.replace(/^(crp|bug)-?/, '').replace(/^#/, '');
+            isMatch = (pIdStr === cleanVal || pCrpCode.includes(val) || pCrId.includes(val) || pBundleId.includes(val) || `#${pIdStr}`.includes(val));
+            break;
+          }
+          case 'title':
+            isMatch = pTitle.includes(val);
+            break;
+          case 'details':
+          case 'detail':
+            isMatch = pDetails.includes(val);
+            break;
+          default: {
+            const cleanVal = val.replace(/^(crp|bug)-?/, '').replace(/^#/, '');
+            isMatch = (`#${pIdStr}`.includes(val) || pIdStr === cleanVal || pCrpCode.includes(val) || pCrId.includes(val) || pBundleId.includes(val) || pTitle.includes(val) || pDetails.includes(val) || pScope.includes(val) || pPrio === val || pPlanState.includes(val) || pProgState.includes(val));
+            break;
+          }
+        }
+      } else {
+        const cleanVal = val.replace(/^(crp|bug)-?/, '').replace(/^#/, '');
+        isMatch = (`#${pIdStr}`.includes(val) || pIdStr === cleanVal || pCrpCode.includes(val) || pCrId.includes(val) || pBundleId.includes(val) || pTitle.includes(val) || pDetails.includes(val) || pScope.includes(val) || pPrio === val || pPlanState.includes(val) || pProgState.includes(val));
+      }
+
+      return tokenObj.negate ? !isMatch : isMatch;
+    }
+
     function renderTable() {
-      const search = document.getElementById("searchInput").value.toLowerCase().trim();
+      const rawSearch = document.getElementById("searchInput").value.trim();
+      const searchTokens = rawSearch ? rawSearch.split(/\s+/).map(parseSearchToken).filter(Boolean) : [];
       const scope = document.getElementById("thScopeFilter") ? document.getElementById("thScopeFilter").value : "ALL";
       const idCatFilter = document.getElementById("thIdCategoryFilter") ? document.getElementById("thIdCategoryFilter").value : "ALL";
       const prioFilter = document.getElementById("thPriorityFilter") ? document.getElementById("thPriorityFilter").value : "ALL";
@@ -2842,22 +2960,24 @@ Type command and press Enter:</div>
         if (idCatFilter === "BUG" && !isBug) return false;
         if (idCatFilter === "CRP" && isBug) return false;
 
-        if (progState === "open" && (p.progress_state === "completed" || p.progress_state === "pushed" || p.state === "completed" || p.state === "pushed")) return false;
+        if (progState === "open" && (
+          p.progress_state === "completed" ||
+          p.progress_state === "pushed" ||
+          p.progress_state === "blocked" ||
+          p.progress_state === "failed" ||
+          p.state === "completed" ||
+          p.state === "pushed" ||
+          p.state === "blocked" ||
+          p.state === "rejected"
+        )) return false;
         if (progState === "completed" && (p.progress_state !== "completed" && p.state !== "completed" && p.progress_state !== "pushed" && p.state !== "pushed")) return false;
         if (progState === "pushed" && (p.progress_state !== "pushed" && p.state !== "pushed")) return false;
         if (progState === "committed" && (p.progress_state !== "committed")) return false;
         if (progState !== "ALL" && progState !== "open" && progState !== "completed" && progState !== "pushed" && progState !== "committed" && p.progress_state !== progState) return false;
 
-        const crpCode = (p.crp_id || `crp-${String(p.id).padStart(3, '0')}`).toLowerCase();
-        if (search) {
-          const matchId = `#${p.id}`.includes(search) || `${p.id}` === search || crpCode.includes(search);
-          const matchTitle = (p.title || "").toLowerCase().includes(search);
-          const matchDetails = (p.details || "").toLowerCase().includes(search);
-          const matchCr = (p.cr_id || "").toLowerCase().includes(search);
-          const matchBundle = (p.bundle_id || "").toLowerCase().includes(search);
-          const matchScope = (p.origin_repo || "").toLowerCase().includes(search);
-          const matchPrio = pPrio.toLowerCase() === search;
-          if (!matchId && !matchTitle && !matchDetails && !matchCr && !matchBundle && !matchScope && !matchPrio) return false;
+        if (searchTokens.length > 0) {
+          const matchesAll = searchTokens.every(tok => matchesProposalToken(p, tok));
+          if (!matchesAll) return false;
         }
         return true;
       });
@@ -3222,7 +3342,7 @@ Type command and press Enter:</div>
       const primaryRepo = (repoStr || "Workspace_Inventory").split("/")[0].trim();
       const crpArg = crp && crp.startsWith("CRP-") ? `-CRP "${crp}"` : "";
       const cmd = `pwsh -File tools/Invoke-BeyondCompareReview.ps1 -RepositoryName "${primaryRepo}" ${crpArg}`;
-      
+
       appendConsole(`Launching Beyond Compare 5 review for #${id} (${primaryRepo})...`, "msg-info");
       try {
         await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
@@ -3474,7 +3594,7 @@ Type command and press Enter:</div>
       } catch (e) {}
       setTimeout(() => { location.reload(); }, 600);
     }
-  
+
     // -------------------------------------------------------------------------
     // CRP Lifecycle Dates & State Transitions Management (Show-CrpDates)
     // -------------------------------------------------------------------------
@@ -3636,7 +3756,7 @@ Type command and press Enter:</div>
       if (!drawer || !titleEl || !contentEl) return;
 
       titleEl.innerHTML = `📜 State Transition History: #${p.id} (${p.cr_id || "CR-" + p.id}) - ${p.title}`;
-      
+
       const history = p.state_history || [];
       if (history.length === 0) {
         contentEl.innerHTML = `<p style="color: var(--text-muted);">No detailed transition history recorded for this proposal.</p>`;

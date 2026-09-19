@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-09-19 18:24:56",
+  "updated_at": "2026-09-19T20:33:42+02:00",
   "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 157,
+  "last_proposal_id": 158,
   "proposals": [
     {
       "id": 1,
@@ -2565,7 +2565,6 @@
       "title": "Resolve processed State Inconsistency Between RULE-LCM-002 and RULE-LCM-007 Canonical State Enum",
       "origin_repo": ".agents/rules",
       "state": "rejected",
-      "progress_state": "rejected",
       "bundle_id": "unassigned",
       "author": "Rolf",
       "details": "RULE-LCM-002 references a processed state after do #n command execution, but RULE-LCM-007 defines the canonical state enum as: bug | suggested | approved | deferred | rejected | completed | pushed. The term processed does not appear in the canonical enum. Determine the authoritative state name and update rule files consistently. Operator position: canonical states must not change without explicit approval - this CRP resolves the documentation inconsistency only.",
@@ -2592,7 +2591,8 @@
       ],
       "priority": "M",
       "crp_id": "CRP-053",
-      "cr_id": "CRP-053"
+      "cr_id": "CRP-053",
+      "progress_state": "blocked"
     },
     {
       "id": 54,
@@ -7855,6 +7855,43 @@
       "regression_needed": false,
       "progress_state": "pushed",
       "pushed_at": "2026-09-19 20:17:00"
+    },
+    {
+      "id": 158,
+      "timestamp": "2026-09-19 20:45:00",
+      "title": "CM Control Hub Open Status Filter Excludes Blocked & Field-Prefixed NOT Negation Syntax Engine",
+      "origin_repo": "Workspace_Inventory",
+      "state": "completed",
+      "bundle_id": "CRP-158",
+      "author": "Operator Directive / CRP Intake",
+      "details": "Refines CM Control Hub table filtering by updating the Open status filter preset to strictly exclude blocked, failed, and rejected items, and implements a full tokenizer supporting field-prefixed and general NOT negation expressions (state:!blocked, !state:blocked, prio:!D, !scope:LCM).",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-158-Workspace_Inventory-v7.0.2-CM-Control-Hub-Filter-Open-Excludes-Blocked-And-NOT-Negation-Syntax.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-19 20:45:00",
+        "suggested": "2026-09-19 20:45:00",
+        "in_progress": "2026-09-19 20:45:00",
+        "completed": "2026-09-19 20:45:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-19 20:45:00",
+          "user": "Operator Directive / CRP Intake",
+          "note": "Registered in OPEN state per operator directive."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-19 20:45:00",
+          "user": "Workspace_AI Engine",
+          "note": "Implemented Open filter exclusion of blocked items and full field-prefixed NOT negation syntax engine in CM_CONTROL_HUB.html."
+        }
+      ],
+      "priority": "M",
+      "crp_id": "CRP-158",
+      "cr_id": "CRP-158",
+      "regression_needed": false,
+      "progress_state": "completed"
     }
   ]
 }
