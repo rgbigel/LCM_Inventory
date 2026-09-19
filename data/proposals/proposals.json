@@ -7872,7 +7872,8 @@
         "suggested": "2026-09-19 20:45:00",
         "in_progress": "2026-09-19 20:45:00",
         "completed": "2026-09-19 20:45:00",
-        "pushed": "2026-09-19 20:49:00"
+        "pushed": "2026-09-19 20:49:00",
+        "accepted": "2026-09-19 20:57:37"
       },
       "state_history": [
         {
@@ -7892,6 +7893,12 @@
           "timestamp": "2026-09-19 20:49:00",
           "user": "Workspace_AI Engine",
           "note": "Pushed to Workspace_Inventory origin/main."
+        },
+        {
+          "state": "accepted",
+          "timestamp": "2026-09-19 20:57:37",
+          "user": "rgbig",
+          "note": "Operator directive: accept 158. Audit receipts recorded."
         }
       ],
       "priority": "M",
