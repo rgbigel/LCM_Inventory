@@ -7861,7 +7861,7 @@
       "timestamp": "2026-09-19 20:45:00",
       "title": "CM Control Hub Open Status Filter Excludes Blocked & Field-Prefixed NOT Negation Syntax Engine",
       "origin_repo": "Workspace_Inventory",
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "CRP-158",
       "author": "Operator Directive / CRP Intake",
       "details": "Refines CM Control Hub table filtering by updating the Open status filter preset to strictly exclude blocked, failed, and rejected items, and implements a full tokenizer supporting field-prefixed and general NOT negation expressions (state:!blocked, !state:blocked, prio:!D, !scope:LCM).",
@@ -7871,7 +7871,8 @@
         "created": "2026-09-19 20:45:00",
         "suggested": "2026-09-19 20:45:00",
         "in_progress": "2026-09-19 20:45:00",
-        "completed": "2026-09-19 20:45:00"
+        "completed": "2026-09-19 20:45:00",
+        "pushed": "2026-09-19 20:49:00"
       },
       "state_history": [
         {
@@ -7885,13 +7886,20 @@
           "timestamp": "2026-09-19 20:45:00",
           "user": "Workspace_AI Engine",
           "note": "Implemented Open filter exclusion of blocked items and full field-prefixed NOT negation syntax engine in CM_CONTROL_HUB.html."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-19 20:49:00",
+          "user": "Workspace_AI Engine",
+          "note": "Pushed to Workspace_Inventory origin/main."
         }
       ],
       "priority": "M",
       "crp_id": "CRP-158",
       "cr_id": "CRP-158",
       "regression_needed": false,
-      "progress_state": "completed"
+      "progress_state": "pushed",
+      "pushed_at": "2026-09-19 20:49:00"
     }
   ]
 }
