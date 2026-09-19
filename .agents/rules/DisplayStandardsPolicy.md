@@ -9,9 +9,9 @@ Module: DisplayStandardsPolicy
 Purpose: Governs presentation standards, CSS design system tokens, sticky double-row header layouts, theme persistence, and interactive desktop dispatching across all LCM-generated HTML viewers and dashboards.  
 Path: .agents/rules/DisplayStandardsPolicy.md  
 Authors: Rolf, Workspace_AI Governance  
-Version: 7.5.0  
-Status: Authoritative Policy  
-Date: 2026-09-18  
+Version: 7.5.1
+Status: Authoritative Policy
+Date: 2026-09-19
 
 ---
 
@@ -55,9 +55,10 @@ To ensure a cohesive, professional, accessible, and high-performance user experi
 1. Action icons (Inspect `🔍`, Copy `📋`, Run `▶️`, Help `❓`) `MUST` be rendered with minimum font size of 14–15px and distinct hover animations.
 2. Column sort indicators `MUST` use clear directional glyphs (`▲` ascending, `▼` descending, `⇅` unsorted) with legible contrast.
 
-### RULE-DSP-006: Negation Search Engine & Live Match Counters
-1. Primary filter inputs `MUST` support tokenized search including negation tokens (`!exclude` or `-exclude`).
-2. Every filtered view `MUST` display a live, dynamic counter showing match progress (e.g., `Showing 42 of 150 items`).
+### RULE-DSP-006: Column-Qualified Negation Search Engine & Live Match Counters
+1. Primary filter inputs `MUST` support tokenized search including column-qualified expressions (`Column:value`, `Column:!value`, `!Column:value`) and general negation tokens (`!exclude`).
+2. All standard table dashboards `MUST` leverage `LcmTableEngine.filterTable()` / `LcmTableEngine.bindSearch()` or implement equivalent column-qualified negation matching.
+3. Every filtered view `MUST` display a live, dynamic counter showing match progress (e.g., `Showing 42 of 150 items`).
 
 ### RULE-DSP-007: Print & PDF Export Integration
 1. High-density data tables and audit reports `MUST` integrate `lcm-table-print-atom.js` or standard print stylesheets (`@media print`) ensuring zero header cutoff and clean pagination across multi-page PDF exports.

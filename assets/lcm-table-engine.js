@@ -1,8 +1,8 @@
 /**
  * ==============================================================================
- * LCM UNIVERSAL TABLE & THEME ENGINE (v1.0.0)
+ * LCM UNIVERSAL TABLE & THEME ENGINE (v1.1.0)
  * Canonical shared UI/UX module for all LCM dashboards and viewers.
- * Conforms to CRP-2026-017, CRP-2026-018, CRP-2026-019.
+ * Conforms to CRP-2026-017, CRP-2026-018, CRP-2026-019, CRP-108, CRP-158.
  * ==============================================================================
  */
 
@@ -12,7 +12,7 @@
     const STORAGE_KEY_THEME = 'lcm_theme_mode';
 
     const LcmTableEngine = {
-        version: '1.0.0',
+        version: '1.1.0',
 
         // --------------------------------------------------------------------------
         // 1. Theme Management (Light / Dark with High Contrast Persistence)
@@ -142,26 +142,214 @@
         },
 
         // --------------------------------------------------------------------------
-        // 4. Universal Search with !term Negation Engine
+        // 4. Universal Tokenized Search with Column Qualifiers & Negation (CRP-158)
         // --------------------------------------------------------------------------
-        matchesQuery: function (textToSearch, query) {
-            if (!query || !query.trim()) return true;
-            const text = (textToSearch || '').toLowerCase();
-            const terms = query.toLowerCase().split(/\s+/).filter(t => t.length > 0);
-
-            for (const term of terms) {
-                if (term.startsWith('!')) {
-                    const negTerm = term.slice(1);
-                    if (negTerm.length > 0 && text.includes(negTerm)) {
-                        return false; // Negation matched -> Exclude row
-                    }
+        parseTokens: function (query) {
+            if (!query || !query.trim()) return [];
+            const raw = query.trim();
+            const tokens = [];
+            // Matches [!][field:](["']val["']|\S+) OR [!](["']val["']|\S+)
+            const regex = /(!?)([a-zA-Z0-9_\-\.]+):(!?)(?:"([^"]*)"|'([^']*)'|(\S+))|(!?)(?:"([^"]*)"|'([^']*)'|(\S+))/g;
+            let match;
+            while ((match = regex.exec(raw)) !== null) {
+                if (match[2] !== undefined) {
+                    const isNeg1 = match[1] === '!';
+                    const field = match[2].toLowerCase().trim();
+                    const isNeg2 = match[3] === '!';
+                    const val = (match[4] !== undefined ? match[4] : (match[5] !== undefined ? match[5] : match[6] || '')).toLowerCase().trim();
+                    const negate = isNeg1 !== isNeg2;
+                    tokens.push({
+                        type: 'field',
+                        field: field,
+                        value: val,
+                        negate: negate,
+                        raw: match[0]
+                    });
                 } else {
-                    if (!text.includes(term)) {
-                        return false; // Positive term not found -> Exclude row
+                    const negate = match[7] === '!';
+                    const val = (match[8] !== undefined ? match[8] : (match[9] !== undefined ? match[9] : match[10] || '')).toLowerCase().trim();
+                    if (val) {
+                        tokens.push({
+                            type: 'general',
+                            field: null,
+                            value: val,
+                            negate: negate,
+                            raw: match[0]
+                        });
                     }
                 }
             }
-            return true;
+            return tokens;
+        },
+
+        getColumnMap: function (table) {
+            const colMap = {};
+            if (!table) return colMap;
+            const headers = table.querySelectorAll('thead tr:first-child th');
+            headers.forEach((th, idx) => {
+                const text = th.innerText.trim().toLowerCase();
+                const dataCol = (th.dataset.col || '').toLowerCase();
+                const thId = (th.id || '').replace(/^th-?/, '').toLowerCase();
+
+                if (text) {
+                    colMap[text] = idx;
+                    text.split(/[\/\-_,\s]+/).forEach(part => {
+                        const clean = part.trim();
+                        if (clean.length > 1 && !colMap[clean]) colMap[clean] = idx;
+                    });
+                }
+                if (dataCol) colMap[dataCol] = idx;
+                if (thId && !colMap[thId]) colMap[thId] = idx;
+            });
+            return colMap;
+        },
+
+        matchesRow: function (tr, tokens, colMap, options = {}) {
+            if (!tokens || tokens.length === 0) return true;
+            const aliases = options.aliases || {
+                repo: 'scope',
+                origin: 'scope',
+                subsystem: 'scope',
+                status: 'state',
+                prog: 'state',
+                progress: 'state',
+                plan: 'state',
+                title: 'name',
+                tool: 'name'
+            };
+
+            return tokens.every(tok => {
+                let isMatch = false;
+                if (tok.type === 'field') {
+                    let colIdx = colMap[tok.field];
+                    if (colIdx === undefined && aliases[tok.field]) {
+                        colIdx = colMap[aliases[tok.field]];
+                    }
+
+                    if (colIdx !== undefined && tr.cells[colIdx]) {
+                        const cell = tr.cells[colIdx];
+                        const cellText = cell.innerText.toLowerCase();
+                        const cellDataVal = (cell.dataset.value || '').toLowerCase();
+                        isMatch = cellText.includes(tok.value) || cellDataVal.includes(tok.value);
+                    } else if (tr.dataset[tok.field] !== undefined) {
+                        isMatch = String(tr.dataset[tok.field]).toLowerCase().includes(tok.value);
+                    } else {
+                        isMatch = tr.innerText.toLowerCase().includes(tok.value);
+                    }
+                } else {
+                    isMatch = tr.innerText.toLowerCase().includes(tok.value);
+                }
+                return tok.negate ? !isMatch : isMatch;
+            });
+        },
+
+        matchesObject: function (obj, query, options = {}) {
+            const tokens = Array.isArray(query) ? query : this.parseTokens(query);
+            if (tokens.length === 0) return true;
+
+            const aliases = options.aliases || {
+                repo: ['origin_repo', 'repository', 'repo_name', 'scope'],
+                scope: ['origin_repo', 'repository', 'scope', 'subsystem'],
+                status: ['progress_state', 'state', 'status'],
+                state: ['state', 'plan_state', 'progress_state', 'status'],
+                plan: ['state', 'plan_state'],
+                prog: ['progress_state', 'status'],
+                prio: ['priority', 'prio', 'urgency'],
+                id: ['id', 'crp_id', 'cr_id', 'bundle_id'],
+                name: ['title', 'name', 'tool', 'tool_name']
+            };
+
+            return tokens.every(tok => {
+                let isMatch = false;
+                if (tok.type === 'field') {
+                    const targetKeys = aliases[tok.field] || [tok.field];
+                    for (const k of targetKeys) {
+                        if (obj[k] !== undefined && obj[k] !== null) {
+                            const valStr = String(obj[k]).toLowerCase();
+                            if (valStr.includes(tok.value) || (tok.field === 'prio' && valStr === tok.value)) {
+                                isMatch = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!isMatch && obj[tok.field] !== undefined && obj[tok.field] !== null) {
+                        isMatch = String(obj[tok.field]).toLowerCase().includes(tok.value);
+                    }
+                } else {
+                    for (const k of Object.keys(obj)) {
+                        if (typeof obj[k] === 'object' && obj[k] !== null) {
+                            if (JSON.stringify(obj[k]).toLowerCase().includes(tok.value)) {
+                                isMatch = true;
+                                break;
+                            }
+                        } else if (obj[k] !== undefined && obj[k] !== null) {
+                            if (String(obj[k]).toLowerCase().includes(tok.value)) {
+                                isMatch = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                return tok.negate ? !isMatch : isMatch;
+            });
+        },
+
+        matchesQuery: function (textToSearch, query) {
+            if (!query || !query.trim()) return true;
+            const tokens = this.parseTokens(query);
+            const text = (textToSearch || '').toLowerCase();
+
+            return tokens.every(tok => {
+                const isMatch = text.includes(tok.value);
+                return tok.negate ? !isMatch : isMatch;
+            });
+        },
+
+        filterTable: function (options) {
+            const table = document.getElementById(options.tableId);
+            if (!table) return 0;
+            const query = options.query !== undefined ? options.query : (document.getElementById(options.searchInputId) ? document.getElementById(options.searchInputId).value : '');
+            const tokens = this.parseTokens(query);
+            const colMap = this.getColumnMap(table);
+            const rows = table.querySelectorAll('tbody tr');
+            let visibleCount = 0;
+
+            rows.forEach(tr => {
+                const isVisible = this.matchesRow(tr, tokens, colMap, options);
+                tr.style.display = isVisible ? '' : 'none';
+                if (isVisible) visibleCount++;
+            });
+
+            if (options.counterId) {
+                const counter = document.getElementById(options.counterId);
+                if (counter) {
+                    counter.textContent = `Showing ${visibleCount} of ${rows.length} items`;
+                }
+            }
+
+            if (typeof options.onFilter === 'function') {
+                options.onFilter(visibleCount, rows.length);
+            }
+
+            return visibleCount;
+        },
+
+        bindSearch: function (options) {
+            const searchInput = document.getElementById(options.searchInputId);
+            if (!searchInput) return;
+
+            const runFilter = () => this.filterTable(options);
+
+            searchInput.addEventListener('input', runFilter);
+            searchInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    searchInput.value = '';
+                    runFilter();
+                }
+            });
+
+            // Initial filter run
+            runFilter();
         },
 
         // --------------------------------------------------------------------------
