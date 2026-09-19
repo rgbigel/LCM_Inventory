@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-09-19 18:10:53",
+  "updated_at": "2026-09-19 20:17:00",
   "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 156,
+  "last_proposal_id": 157,
   "proposals": [
     {
       "id": 1,
@@ -7788,6 +7788,51 @@
       "cr_id": "CRP-156",
       "regression_needed": false,
       "pushed_at": "2026-09-19 18:05:33"
+    },
+    {
+      "id": 157,
+      "timestamp": "2026-09-19 20:17:00",
+      "title": "CM Control Hub Missing Refresh Engine & F5 Keydown ReferenceError Remediation",
+      "origin_repo": "Workspace_Inventory",
+      "state": "pushed",
+      "bundle_id": "BUG-157",
+      "author": "Operator Directive / BUG Intake",
+      "details": "Resolve missing refresh button and ReferenceError exception on F5 keydown event in LCM CM Control Hub by introducing dedicated [🔄 Refresh] toolbar button, async live ledger/log re-fetching (refreshHubData), F5/Ctrl+R keybinding, and animated UI indicators.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-157-Workspace_Inventory-v7.0.1-CM-Control-Hub-Missing-Refresh-Engine-And-F5-ReferenceError.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-19 20:17:00",
+        "suggested": "2026-09-19 20:17:00",
+        "in_progress": "2026-09-19 20:17:00",
+        "completed": "2026-09-19 20:17:00",
+        "pushed": "2026-09-19 20:17:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-19 20:17:00",
+          "user": "Operator Directive / BUG Intake",
+          "note": "Reported F5 failure and lack of refresh control in CM Control Hub."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-19 20:17:00",
+          "user": "Workspace_AI Engine",
+          "note": "Implemented refreshHubData async fetch engine, toolbar button, and F5 keybindings in CM_CONTROL_HUB.html."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-19 20:17:00",
+          "user": "Workspace_AI Engine",
+          "note": "Committed and pushed to Workspace_Inventory origin/main."
+        }
+      ],
+      "priority": "H",
+      "crp_id": "BUG-157",
+      "cr_id": "BUG-157",
+      "regression_needed": false,
+      "progress_state": "pushed",
+      "pushed_at": "2026-09-19 20:17:00"
     }
   ]
 }
