@@ -1,4 +1,4 @@
-﻿---
+---
 name: DocumentationStandardsPolicy
 description: Authoritative documentation standard mandating tripartite repository specifications (Architecture, Requirements, Implementation) and DOX header invariants.
 globs: "*.md"
@@ -9,9 +9,9 @@ Module: DocumentationStandardsPolicy
 Purpose: Defines mandatory tripartite repository documentation standards, audience scoping, and DOX metadata invariants across all governed repositories.  
 Path: .agents/rules/DocumentationStandardsPolicy.md  
 Authors: Rolf, Workspace_AI Governance  
-Version: 7.0.0  
+Version: 7.6.0  
 Status: Authoritative Policy  
-Date: 2026-08-29  
+Date: 2026-09-20  
 
 ---
 
@@ -38,19 +38,29 @@ Every LCM-governed repository `MUST` maintain three distinct core specifications
 
 ---
 
-### RULE-DOC-003: DOX Metadata Header Invariant
-Every Markdown document in `docs/` and `.agents/rules/` `MUST` begin with a standardized DOX metadata header:
-```markdown
-# <Document Title>
+### RULE-DOC-003: DOX Metadata Header & Rule Frontmatter Invariant
+1. **General Markdown Documents (`docs/`)**: Every general Markdown document `MUST` begin with a standardized DOX metadata header:
+   ```markdown
+   # <Document Title>
 
-Module: <Relative Path>  
-Purpose: <1-2 Sentence Summary of Purpose>  
-Path: <Canonical Path>  
-Authors: <Author Name / Engine>  
-Version: <MAJOR.MINOR.PATCH>  
-Status: <Authoritative Standard | Reference | Policy>  
-Date: <YYYY-MM-DD>  
-```
+   Module: <Relative Path>  
+   Purpose: <1-2 Sentence Summary of Purpose>  
+   Path: <Canonical Path>  
+   Authors: <Author Name / Engine>  
+   Version: <MAJOR.MINOR.PATCH>  
+   Status: <Authoritative Standard | Reference | Policy>  
+   Date: <YYYY-MM-DD>  
+   ```
+2. **Governance Rule Documents (`.agents/rules/`)**: Governance rule files `MUST` utilize a hybrid structure to ensure compatibility with modern AI agent rule discovery engines and IDEs:
+   - **Lines 1–5**: Mandatory YAML Frontmatter declaring rule metadata:
+     ```yaml
+     ---
+     name: <RulePolicyName>
+     description: <Concise description of governed domains and invariants>
+     globs: "<Applicable file patterns or *>"
+     ---
+     ```
+   - **Immediately below frontmatter**: The standardized DOX metadata header block per Section 1.
 
 ---
 
@@ -97,3 +107,28 @@ At the time of a major release push $M$ (e.g. `v6.0.0`, `v7.0.0`):
    - **File Naming**: `{Sequence:02d}_{Subject}_{MilestoneType}.md` (where `MilestoneType` $\in$ `{Lineage, Governance, Milestones, Architecture, Ledger, Rollup}`).
    - **DOX Metadata Invariant**: All permanent evolution log documents `MUST` declare `Classification: permanent-evolution-history` and `Status: Authoritative Historical Ledger`.
    - **Automated Protection**: All directories matching `*-Evolution/` or files with `Classification: permanent-evolution-history` are unconditionally protected from deletion by cleanup engines and daemons.
+
+---
+
+### RULE-DOC-007: App-Centric Modular Tripartite Architecture & Constituent Manifest Standard
+For governed repositories that scale beyond single-purpose scripts into multi-capability systems:
+1. **Optional Modular Slicing (`App: #`)**:
+   - Tripartite specifications (`Architecture.md`, `Requirements.md`, `Implementation.md`) `MAY` be partitioned into numbered `App: # - <Title>` sections (e.g. `App: 1 - CM Interactive Control Hub`).
+   - Repositories not requiring modular slicing remain standard un-prefixed tripartite documents.
+2. **Tripartite Slicing Consistency Invariant**:
+   - When `App: N` is declared in `Architecture.md`, corresponding `## App: N` sections `MUST` exist in `Requirements.md` (normative constraints) and `Implementation.md` (code blueprint).
+3. **Directory Separation Layout (`docs/App#<N>-<Slug>/`)**:
+   - When directory separation is utilized (`-SplitDocs` or `Split-LcmAppDocs`), each App's tripartite specifications `MUST` be housed in a dedicated subdirectory located **directly under `docs/`**:
+     `docs/App#<N>-<Slug>/` (e.g. `docs/App#1-SystemIdentityStateCaptureEngine/`).
+   - Intermediate wrapper directories (such as `docs/apps/`) are strictly prohibited.
+   - Each `docs/App#<N>-<Slug>/` folder `MUST` contain its dedicated `Architecture.md`, `Requirements.md`, and `Implementation.md`.
+   - The root `Architecture.md` `MUST` maintain an authoritative **App Subsystems & Sliced Specifications Index Table** linking directly to each `docs/App#<N>-<Slug>/` tripartite document.
+4. **Constituent Manifest Table Standard (`Implementation.md`)**:
+   - Under each `## App: N` section (or inside each dedicated `docs/App#<N>-<Slug>/Implementation.md`), an authoritative **Constituent Manifest Table** `MUST` be maintained:
+     `| Relative Path | Role / Layer | Primary Cmdlets / Entrypoints | Pester Test Suite |`
+5. **Code DOX Header Annotation**:
+   - Every script, module, or UI asset belonging to an App `MUST` declare `App: App: N - <Title>` in its standard DOX metadata header.
+6. **Machine-Readable Registry (`data/catalog/apps.json`)**:
+   - Repositories utilizing App slicing `MUST` maintain a zero-drift machine-readable catalog at `data/catalog/apps.json`, synchronized via AST scanning.
+7. **Inter-App Contract Governance (The "Glue")**:
+   - Apps `MUST NOT` communicate via private internal functions or implicit global variables. All cross-App interactions `MUST` be governed by declared, registered Public Interface Contracts (Cmdlet Exports, JSON Schemas, REST DTOs, Event Broadcasts) cataloged in `data/catalog/contracts.json`.

@@ -17,10 +17,14 @@ Date: 2026-09-04
 
 ## 1. Governance Rules
 
-### RULE-REV-001: Mandatory Review-Gated Commits & Invariant Review Boundary
-1. **Mandatory Visual Review Gate**: Every Git commit action for source code, configuration, tools, modules, or structural assets (`*.ps1`, `*.psm1`, `.vscode/settings.json`, `.lcm/*`, `docs/*`) in any LCM-governed repository requires a prior validated review disposition (`ACCEPTED` or `ACCEPTED_WITH_EDITS`) produced via the formal Beyond Compare 5 visual review gate (`Invoke-BeyondCompareReview.ps1`).
-2. **Conversational Directives Do Not Waive Gating**: Explicit user instructions in chat (e.g. "yes, remove that", "fix this error") grant authority to execute file edits and staging, but **DO NOT waive the Beyond Compare visual review gate**. The agent `MUST` launch `Invoke-BeyondCompareReview.ps1` and await user review sign-off / folder clearance before executing `git commit` and `git push`.
-3. **Exemption Scope**: Only purely mechanical telemetry artifacts defined in `RULE-EFF-001` (`inventory.json`, `INVENTORY_DASHBOARD.md`, `out/test_results.json`, and activity logs) are exempt from visual review gating.
+### RULE-REV-001: Mandatory Review-Gated Commits & Gate 2 Non-Circumvention Invariant
+1. **Mandatory Visual Review Gate (Gate 2)**: Every Git commit action for source code, configuration, tools, modules, or structural assets (`*.ps1`, `*.psm1`, `.vscode/settings.json`, `.lcm/*`, `docs/*`) in any LCM-governed repository requires a prior validated review disposition (`ACCEPTED` or `ACCEPTED_WITH_EDITS`) produced via the formal Beyond Compare 5 visual review gate (`Invoke-BeyondCompareReview.ps1`).
+2. **Strict Gate 2 Non-Circumvention for All Items**:
+   - **Even critical, urgent, or internally generated BUGs MUST NOT circumvent Gate 2.**
+   - While `BUG` items execute in `DOIT` mode (`always-proceed = $true`) without a Gate 1 planning pause, they `MUST HALT` at Gate 2 for operator review before reaching `COMMITTED`.
+3. **Conversational Directives Do Not Waive Gating**: Explicit user instructions in chat (e.g. "yes, remove that", "fix this error") grant authority to execute file edits and staging, but **DO NOT waive the Beyond Compare visual review gate**. The agent `MUST` launch `Invoke-BeyondCompareReview.ps1` and await user review sign-off / folder clearance before stepping to `COMMITTED`.
+4. **Exemption Scope**: Only purely mechanical telemetry artifacts defined in `RULE-EFF-001` (`inventory.json`, `INVENTORY_DASHBOARD.md`, `out/test_results.json`, and activity logs) are exempt from visual review gating.
+5. **Non-Interactive / Headless Environment Fallback**: If Beyond Compare 5 or Session 1 interactive GUI execution is physically unavailable (e.g. running inside a headless CI/CD runner, container, or non-GUI remote SSH terminal), the agent `SHALL` present unified console diffs alongside the proposal's `Walkthrough.md` verification evidence for explicit terminal disposition before committing.
 
 ### RULE-REV-002: Accepted with Edits Qualification
 When a review outcome is recorded as `Accepted with Edits` (or `Accepted with Change`):
@@ -42,10 +46,16 @@ Every review disposition (`Accepted`, `AcceptedWithEdits`, `Rejected`, `Deferred
 2. `Workspace_Inventory/data/reviews/REVIEW-<Repo>-<Timestamp>.json` (Structured review evidence).
 3. The active Change Request (CR) record in `Workspace_Inventory/data/change_requests.json` and mirrored proposal Markdown files when modifying governed baselines.
 
-### RULE-REV-006: Mandatory Review Stop & Turn Termination Invariant
-1. **Mandatory Turn Termination**: Whenever an agent carries out a CRP or code modification reaching the visual review stage, the agent `MUST` launch `Invoke-BeyondCompareReview.ps1` and **immediately terminate the current response turn without making additional tool calls**.
-2. **Prohibition of Same-Turn Submissions**: The agent `MUST NOT` invoke `Submit-ReviewResult.ps1`, stage files, or execute `git commit` within the same execution turn cycle as the review launcher.
-3. **Discrete Operator Disposition Requirement**: Review dispositions (`ACCEPTED`, `ACCEPTED_WITH_EDITS`, `REJECTED`, `DEFERRED`) `SHALL ONLY` be consumed and processed when received as a discrete, independent message submitted by the operator in a subsequent turn.
+### RULE-REV-006: Mandatory Review Stop & Lifecycle Step Invariant
+1. **Mandatory Review Stop**: Whenever an agent carries out a CRP or code modification reaching the visual review stage (Gate 2), the agent `MUST` launch `Invoke-BeyondCompareReview.ps1` and **immediately terminate the current response turn without making additional tool calls**.
+2. **`Proceed` at Gate 2**: Upon operator submission of **`Proceed`** (or `Proceed <ID>`) after review inspection:
+   - The proposal advances by exactly one status pulse: `REVIEW` $\rightarrow$ **`COMMITTED`**.
+   - The local Git commit is created with the required SemVer increment per `RULE-REV-007`.
+3. **`ACCEPT` / `ACCEPT ALL` (Push Trigger)**:
+   - The `ACCEPT` command serves as an authoritative alias to **`PUSH`**.
+   - `ACCEPT ALL` pushes **all currently `COMMITTED` proposals only** to remote repositories (`COMMITTED` $\rightarrow$ `PUSHED`).
+   - Uncommitted proposals remain strictly in their local state.
+   - Enforces the Push Auto-Reset Invariant: both `LCM Mode` and `Testing Mode` unconditionally revert to `ON`.
 
 ### RULE-REV-007: Mandatory Automatic Semantic Version Increment per Change Invariant
 1. **Universal Version Increment Invariant**: Every change, proposal, or bug fix committed to any LCM-governed repository `MUST` increment that repository's semantic version before or during review commit:

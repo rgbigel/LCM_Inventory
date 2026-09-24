@@ -1,10 +1,17 @@
-# Elevation & Privilege Governance Policy
+---
+name: ElevationPolicy
+description: Authoritative elevation governance enforcing least-privilege execution default, automated privilege-aware execution, runner delegation, and console persistence.
+globs: "*"
+---
+# File: ElevationPolicy.md
 
-- Rule ID: `RULE-ELEV-001` through `RULE-ELEV-006`
-- Scope: Solution-Wide (All Repositories Governed by LCM v4.1.0)
-- Classification: Invariant Rule
-- Version: 7.5.3
-- Updated: 2026-09-19
+Module: ElevationPolicy  
+Purpose: Defines mandatory elevation, runner delegation, and privilege interception rules across all repositories.  
+Path: .agents/rules/ElevationPolicy.md  
+Authors: Rolf, Workspace_AI Governance  
+Version: 7.6.0  
+Status: Authoritative Invariant Rule  
+Date: 2026-09-24  
 
 ---
 

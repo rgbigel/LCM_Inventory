@@ -5,7 +5,7 @@ globs: "*"
 ---
 <!-- ===================================================================== -->
 <!-- ANTIGRAVITY RULE MIRROR                                               -->
-<!-- Source Authority: .copilot/Rules/macro-definitions.md                 -->
+<!-- Source Authority: Workspace_Inventory/.agents/rules/macro-definitions.md -->
 <!-- Activation: Workspace Automatic                                       -->
 <!-- ===================================================================== -->
 # macro-definitions.md
@@ -13,7 +13,7 @@ globs: "*"
 
 # MACRO-DEFINITIONS-METADATA
 # scope: durable-memory
-# location: .copilot/Rules/macro-definitions.md
+# location: .agents/rules/macro-definitions.md
 # update-policy: manual
 
 MACRO: @technical

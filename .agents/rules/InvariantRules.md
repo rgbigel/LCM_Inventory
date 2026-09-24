@@ -23,6 +23,7 @@ Date: 2026-09-04
 - **ascii-default**: ASCII required unless explicit exceptions apply:
   - Markdown (`.md`) files may contain Unicode (arrows, bullets, umlauts, typographic symbols).
   - PowerShell literal strings and comments may contain umlauts.
+  - HTML and UI presentation assets (`.html`, `.css`, `.js`) may contain Unicode glyphs and standard UI emojis as defined in DisplayStandardsPolicy.md.
 - **no-non-ascii-identifiers**: Identifiers, variables, function names, and file names must be ASCII-only.
 - **constant-string-apostrophes**: Use single ASCII apostrophes (`'...'`) for constant strings.
 - **indent-2**: Indentation level is exactly 2 spaces (no tabs).
@@ -37,6 +38,7 @@ Date: 2026-09-04
 - **timestamp-header-rule**: Mandatory response output header on every assistant response in the exact format:
   `YYYYMMDD_HHMM "<short-task-description>"`
   Permanent, automated mechanism inherited across all sessions (replaces manual `@tsr` / `@THR` / `@TRH` prompting).
+- **tool-and-log-timestamp-precision**: Tool execution timestamps, generated log file names, and internal log entries `MUST` include at least second-level precision (`ss`) (e.g. `yyyyMMdd_HHmmss` or `yyyy-MM-dd HH:mm:ss[.fff]`). The minute-level format (`YYYYMMDD_HHMM`) applies strictly and exclusively to the assistant chat response header, never to tools or logs.
 - **no-backtick-line-continuations**: Script generation must not use backticks (`` ` ``) for line continuation; use splatting, pipeline wrapping, or parenthesized expressions instead.
 
 ---

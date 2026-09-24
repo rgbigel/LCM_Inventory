@@ -1,18 +1,18 @@
-﻿---
+---
 name: PowerShellRules
 description: Authoritative governance rule mirror for PowerShellRules
 globs: "*"
 ---
 <!-- ===================================================================== -->
 <!-- ANTIGRAVITY RULE MIRROR                                               -->
-<!-- Source Authority: .copilot/Rules/PowerShellRules.md                            -->
+<!-- Source Authority: Workspace_Inventory/.agents/rules/PowerShellRules.md  -->
 <!-- Activation: Workspace Automatic                                       -->
 <!-- ===================================================================== -->
 # File: PowerShellRules.md
 
 Module: PowerShellRules
 Purpose: Authoritative rules for PowerShell script generation and normalization.
-Path: .copilot/Rules/PowerShellRules.md
+Path: .agents/rules/PowerShellRules.md
 Authors: Rolf
 Version: 7.0.0
 Changelog:

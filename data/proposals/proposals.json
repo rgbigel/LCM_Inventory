@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-09-19T22:11:22+02:00",
+  "updated_at": "2026-09-24T18:21:35+02:00",
   "review_granularity": "tight",
   "lcm_mode": "active",
-  "last_proposal_id": 160,
+  "last_proposal_id": 170,
   "proposals": [
     {
       "id": 1,
@@ -2394,14 +2394,13 @@
     {
       "id": 48,
       "timestamp": "2026-09-02 18:52:00",
-      "title": "AADD Integration - Architecture/Agile Design Discussion as Formal Lifecycle Stage and Documentation Class",
+      "title": "App-Centric Architectural Synthesis, Active Context Engine & High-Order Decomposition Tooling",
       "origin_repo": ".agents/rules / Workspace_AI",
-      "state": "suggested",
-      "progress_state": "undecided",
+      "state": "completed",
       "bundle_id": "unassigned",
       "author": "Rolf",
-      "details": "Formalize AADD (Architecture/Agile Design Discussion) as a named lifecycle stage and documentation class in the LCM methodology. AI-human discussion content that reaches a conclusive state MUST be captured in Architecture docs and not lost at session end. The ACCEPT xxx command marks a CRP discussion as conclusive and triggers Architecture doc update. All AADD sessions are linked to CRPs. Requires update to ProposalReviewFlowPolicy.md, DocumentationStandardsPolicy.md, and a new AADD doc template. Pre-existing concept with prior CRP reference; re-registered post-crash for continuity.",
-      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-048-Workspace_Inventory-v7.1.0-CM-Control-Hub-Prio-Column-Engine.md",
+      "details": "Formalizes the App-Centric Architecture Taxonomy (App: #), an Active Feature Context Engine (Workon: A#), 3-tier code-to-app mapping, cross-App problem governance, and automated tripartite synthesis on ACCEPT. Absorbs core AADD invariants.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-048-LCM-v7.5.0-App-Centric-Architecture-Engine.md",
       "walkthrough_path": "",
       "dates": {
         "created": "2026-09-02 18:52:00",
@@ -2415,9 +2414,10 @@
           "note": "Pre-existing concept re-registered post-crash; prior CRP reference noted"
         }
       ],
-      "priority": "M",
+      "priority": "H",
       "crp_id": "CRP-048",
-      "cr_id": "CRP-048"
+      "cr_id": "CRP-048",
+      "progress_state": "completed"
     },
     {
       "id": 49,
@@ -6137,7 +6137,7 @@
       "origin_repo": "LCM / Tooling & Documentation Governance",
       "cr_id": "CRP-121",
       "bundle_id": "CRP-121",
-      "state": "processed",
+      "state": "completed",
       "author": "Rolf, Workspace_AI",
       "priority": "M",
       "details": "Establishes an automated, AST-powered tool constituent and reverse caller documentation engine. Generates per-tool WIUD ('What It Uses Directly') forward dependencies at commit time and WUD ('What Uses Directly') reverse call graphs at pre-push time with hash-based gating to prevent Git churn.",
@@ -6155,7 +6155,7 @@
           "note": "Registered per operator directive in OPEN state with Pass 1 (Commit) and Pass 2 (Pre-Push) hash-gated architecture."
         }
       ],
-      "progress_state": "committed"
+      "progress_state": "completed"
     },
     {
       "id": 122,
@@ -6165,8 +6165,7 @@
       "origin_repo": "LCM / Audit & Governance",
       "cr_id": "CRP-122",
       "bundle_id": "CRP-122",
-      "state": "suggested",
-      "progress_state": "open",
+      "state": "rejected",
       "author": "Rolf, Workspace_AI",
       "priority": "M",
       "details": "Establishes a formal AST-powered intent signature probing engine (Test-LcmIntentSignatures.ps1) to audit the living codebase against proposal functional deltas, identifying Fully Integrated, Partially Overwritten/Regressed, or Never Reached modifications during crash recovery.",
@@ -6183,7 +6182,8 @@
           "user": "Operator Directive / CRP Intake",
           "note": "Registered per operator directive in OPEN state for execution at a later time (Phase C)."
         }
-      ]
+      ],
+      "progress_state": "blocked"
     },
     {
       "id": 123,
@@ -8022,6 +8022,274 @@
       "crp_id": "CRP-160",
       "cr_id": "CRP-160",
       "progress_state": "completed"
+    },
+    {
+      "id": 161,
+      "timestamp": "2026-09-20 15:40:00",
+      "title": "App Documentation Slicing, Directory Layout (docs/App#<N>-<Slug>/), and Migration Engine (SplitDocs)",
+      "origin_repo": "Workspace_Inventory",
+      "state": "processed",
+      "bundle_id": "CRP-161",
+      "author": "Rolf, Workspace_AI Intake",
+      "details": "Establishes canonical docs/App#<N>-<Slug>/ directory layout directly under docs/ (no docs/apps/ wrapper), -SplitDocs switch parameter, Split-LcmAppDocs migration engine, and RULE-DOC-007 rule codification.",
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-161-LCM-v7.6.0-App-Documentation-Slicing-And-Directory-Layout.md",
+      "walkthrough_path": "",
+      "dates": {
+        "created": "2026-09-20 15:40:00",
+        "suggested": "2026-09-20 15:40:00",
+        "in_progress": "2026-09-20 15:51:00",
+        "completed": "2026-09-20 15:55:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-20 15:40:00",
+          "user": "Rolf",
+          "note": "Registered via strict intake gate in SUGGESTED state."
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-09-20 15:51:00",
+          "user": "Rolf",
+          "note": "Activated via explicit proceed 161 directive."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-20 15:55:00",
+          "user": "rgbig",
+          "note": "Implementation completed and validated with 18/18 Pester tests and clean readiness check."
+        }
+      ],
+      "priority": "H",
+      "type": "CRP",
+      "crp_id": "CRP-161",
+      "cr_id": "CRP-161",
+      "progress_state": "completed"
+    },
+    {
+      "id": 162,
+      "timestamp": "2026-09-20 15:45:00",
+      "title": "Proposal Bundle Directory Architecture, Dual Lifecycle, Git Object Document Retrieval, and Post-Push Working Tree Purge Engine",
+      "origin_repo": "Workspace_Inventory",
+      "state": "completed",
+      "bundle_id": "CRP-162",
+      "author": "Rolf, Workspace_AI Intake",
+      "details": "Batch completed via proceed 162-163 directive",
+      "bundle_dir": "docs/Proposals/CRP-162-LCM-v7.6.0-Proposal-Bundle-Architecture",
+      "docs": {
+        "specification": "Workspace_Inventory/docs/Proposals/CRP-162-LCM-v7.6.0-Proposal-Bundle-Architecture/Specification.md",
+        "plan": "Workspace_Inventory/docs/Proposals/CRP-162-LCM-v7.6.0-Proposal-Bundle-Architecture/Implementation_Plan.md",
+        "walkthrough": "Workspace_Inventory/docs/Proposals/CRP-162-LCM-v7.6.0-Proposal-Bundle-Architecture/Walkthrough.md"
+      },
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-162-LCM-v7.6.0-Proposal-Bundle-Architecture/Implementation_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/docs/Proposals/CRP-162-LCM-v7.6.0-Proposal-Bundle-Architecture/Walkthrough.md",
+      "dates": {
+        "created": "2026-09-20 15:45:00",
+        "suggested": "2026-09-20 15:45:00",
+        "in_progress": "2026-09-20 16:15:00",
+        "completed": "2026-09-20 16:25:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-20 15:45:00",
+          "user": "Rolf",
+          "note": "Registered via strict intake gate in SUGGESTED state."
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-09-20 16:15:00",
+          "user": "Operator Directive",
+          "note": "Activated via explicit proceed 162 directive."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-20 16:25:00",
+          "user": "rgbig",
+          "note": "Implementation completed, bundle directory verified, and 21/21 Pester tests passing."
+        }
+      ],
+      "priority": "H",
+      "type": "CRP",
+      "crp_id": "CRP-162",
+      "cr_id": "CRP-162",
+      "progress_state": "completed"
+    },
+    {
+      "id": 163,
+      "timestamp": "2026-09-20 17:45:00",
+      "title": "Master Tripartite Architecture Visibility, Catalog Indexing & Cross-App Governance Focus",
+      "origin_repo": "Workspace_Inventory",
+      "state": "completed",
+      "bundle_id": "CRP-163",
+      "author": "Rolf, Workspace_AI Intake",
+      "details": "Batch completed via proceed 162-163 directive",
+      "bundle_dir": "docs/Proposals/CRP-163-LCM-v7.6.0-Master-Architecture-Visibility-And-Catalog-Indexing",
+      "docs": {
+        "specification": "Workspace_Inventory/docs/Proposals/CRP-163-LCM-v7.6.0-Master-Architecture-Visibility-And-Catalog-Indexing/Specification.md",
+        "plan": "Workspace_Inventory/docs/Proposals/CRP-163-LCM-v7.6.0-Master-Architecture-Visibility-And-Catalog-Indexing/Implementation_Plan.md",
+        "walkthrough": "Workspace_Inventory/docs/Proposals/CRP-163-LCM-v7.6.0-Master-Architecture-Visibility-And-Catalog-Indexing/Walkthrough.md"
+      },
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-163-LCM-v7.6.0-Master-Architecture-Visibility-And-Catalog-Indexing/Implementation_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/docs/Proposals/CRP-163-LCM-v7.6.0-Master-Architecture-Visibility-And-Catalog-Indexing/Walkthrough.md",
+      "dates": {
+        "created": "2026-09-20 17:45:00",
+        "suggested": "2026-09-20 17:45:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-20 17:45:00",
+          "user": "Rolf",
+          "note": "Registered via strict intake gate in SUGGESTED state."
+        }
+      ],
+      "priority": "H",
+      "type": "CRP",
+      "crp_id": "CRP-163",
+      "cr_id": "CRP-163",
+      "progress_state": "completed"
+    },
+    {
+      "id": 164,
+      "timestamp": "2026-09-21 00:10:00",
+      "title": "Usability Improvements & Interactive Document Viewer Optimization",
+      "origin_repo": "Workspace_Inventory",
+      "state": "suggested",
+      "bundle_id": "CRP-164",
+      "author": "Rolf, Workspace_AI Intake",
+      "details": "Addresses 13 usability and document review defects: document deduplication in table, CRLF markdown paragraph rendering in preview, clean VS Code editor dispatch, column sizing (preventing AUTHORITATIVE word wrap), dynamic batch button labels, sticky header/control pinning, zero-parameter tool defaults, and Show-* naming consolidation.",
+      "bundle_dir": "docs/Proposals/CRP-164-LCM-v7.6.0-Usability-Improvements-And-Document-Viewer-Optimization",
+      "docs": {
+        "specification": "Workspace_Inventory/docs/Proposals/CRP-164-LCM-v7.6.0-Usability-Improvements-And-Document-Viewer-Optimization/Specification.md",
+        "plan": "Workspace_Inventory/docs/Proposals/CRP-164-LCM-v7.6.0-Usability-Improvements-And-Document-Viewer-Optimization/Implementation_Plan.md",
+        "walkthrough": "Workspace_Inventory/docs/Proposals/CRP-164-LCM-v7.6.0-Usability-Improvements-And-Document-Viewer-Optimization/Walkthrough.md"
+      },
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-164-LCM-v7.6.0-Usability-Improvements-And-Document-Viewer-Optimization/Implementation_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/docs/Proposals/CRP-164-LCM-v7.6.0-Usability-Improvements-And-Document-Viewer-Optimization/Walkthrough.md",
+      "dates": {
+        "created": "2026-09-21 00:10:00",
+        "suggested": "2026-09-21 00:10:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-21 00:10:00",
+          "user": "Rolf",
+          "note": "Registered via strict intake gate in SUGGESTED state."
+        }
+      ],
+      "priority": "H",
+      "type": "CRP",
+      "crp_id": "CRP-164",
+      "cr_id": "CRP-164",
+      "progress_state": "queued"
+    },
+    {
+      "id": 169,
+      "timestamp": "2026-09-24 16:59:47",
+      "title": "Deploy Root .agents Junction and Align .copilot Rules with Canonical Governance",
+      "origin_repo": "Workspace_Inventory",
+      "state": "completed",
+      "bundle_id": "CRP-169",
+      "author": "Rolf, Antigravity AI Assistant",
+      "details": "Deploys root NTFS directory junction D:\\Git_Repositories\\.agents -> D:\\Git_Repositories\\.lcm\\.agents, and synchronizes all 17 canonical governance rules into D:\\Git_Repositories\\.copilot\\Rules\\ and root .copilot.",
+      "bundle_dir": "docs/Proposals/CRP-169-LCM-v7.6.0-Root-Agents-Junction-And-Copilot-Rules-Alignment",
+      "docs": {
+        "specification": "Workspace_Inventory/docs/Proposals/CRP-169-LCM-v7.6.0-Root-Agents-Junction-And-Copilot-Rules-Alignment/Specification.md",
+        "plan": "Workspace_Inventory/docs/Proposals/CRP-169-LCM-v7.6.0-Root-Agents-Junction-And-Copilot-Rules-Alignment/Implementation_Plan.md",
+        "walkthrough": "Workspace_Inventory/docs/Proposals/CRP-169-LCM-v7.6.0-Root-Agents-Junction-And-Copilot-Rules-Alignment/Walkthrough.md"
+      },
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-169-LCM-v7.6.0-Root-Agents-Junction-And-Copilot-Rules-Alignment/Implementation_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/docs/Proposals/CRP-169-LCM-v7.6.0-Root-Agents-Junction-And-Copilot-Rules-Alignment/Walkthrough.md",
+      "dates": {
+        "created": "2026-09-24 16:59:47",
+        "suggested": "2026-09-24 16:59:47",
+        "in_progress": "2026-09-24 17:41:17",
+        "completed": "2026-09-24 22:05:05"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-24 16:59:47",
+          "user": "Rolf",
+          "note": "Registered via strict intake gate in SUGGESTED state."
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-09-24 17:41:17",
+          "user": "Rolf",
+          "note": "Advanced to in_progress via Proceed trigger."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-24 22:05:05",
+          "user": "rgbig",
+          "note": "Review disposition ACCEPT ALL recorded; committed in Git_Repositories (ff11d81) and Workspace_AI (10061e5)."
+        }
+      ],
+      "priority": "H",
+      "type": "CRP",
+      "crp_id": "CRP-169",
+      "cr_id": "CRP-169",
+      "progress_state": "completed"
+    },
+    {
+      "id": 170,
+      "timestamp": "2026-09-24 18:21:34",
+      "title": "Master Cross-Reference Matrix Synchronization, Rule Header Normalization, and Governance Fallback Codification",
+      "origin_repo": "Workspace_Inventory",
+      "state": "completed",
+      "bundle_id": "CRP-170",
+      "author": "Rolf, Antigravity AI Assistant",
+      "details": "Resolves remaining DivergenceCorrection.md items: sanitizes .copilot authority headers in rules, updates LCM-Rules-Cross-Reference.md and AGENTS.md to v7.6.0 baseline, amends RULE-DOC-003 and normalizes ElevationPolicy and MethodEfficiencyPolicy headers, and codifies tool fallbacks.",
+      "bundle_dir": "docs/Proposals/CRP-170-LCM-v7.6.0-Matrix-Sync-And-Rule-Normalization",
+      "docs": {
+        "specification": "Workspace_Inventory/docs/Proposals/CRP-170-LCM-v7.6.0-Matrix-Sync-And-Rule-Normalization/Specification.md",
+        "plan": "Workspace_Inventory/docs/Proposals/CRP-170-LCM-v7.6.0-Matrix-Sync-And-Rule-Normalization/Implementation_Plan.md",
+        "walkthrough": "Workspace_Inventory/docs/Proposals/CRP-170-LCM-v7.6.0-Matrix-Sync-And-Rule-Normalization/Walkthrough.md"
+      },
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-170-LCM-v7.6.0-Matrix-Sync-And-Rule-Normalization/Implementation_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/docs/Proposals/CRP-170-LCM-v7.6.0-Matrix-Sync-And-Rule-Normalization/Walkthrough.md",
+      "dates": {
+        "created": "2026-09-24 18:21:35",
+        "suggested": "2026-09-24 18:21:35",
+        "in_progress": "2026-09-24 18:21:35",
+        "completed": "2026-09-24 22:05:05"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-24 18:21:35",
+          "user": "Rolf",
+          "note": "Created from DivergenceCorrection.md remaining items."
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-09-24 18:21:35",
+          "user": "Rolf",
+          "note": "Direct execution initiated via 'do 170' in DOIT mode."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-24 22:05:05",
+          "user": "rgbig",
+          "note": "Review disposition ACCEPT ALL recorded; committed in Git_Repositories (ff11d81) and Workspace_AI (10061e5)."
+        }
+      ],
+      "priority": "H",
+      "type": "CRP",
+      "crp_id": "CRP-170",
+      "cr_id": "CRP-170",
+      "progress_state": "completed"
     }
-  ]
+  ],
+  "active_context": {
+    "app_id": "App: 1",
+    "app_number": 1,
+    "app_title": "System Identity & State Capture Engine",
+    "repo": "BackgroundModifier",
+    "set_at": "2026-09-20 00:48:58",
+    "details": ""
+  }
 }

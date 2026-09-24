@@ -123,7 +123,11 @@ function New-WorkspaceProposal {
         [string]$CrId = '',
         [string]$Author = $env:USERNAME,
         [string]$PlanPath = '',
-        [string]$WalkthroughPath = ''
+        [string]$WalkthroughPath = '',
+        [string]$AppId = '',
+        [string]$PrimaryApp = '',
+        [string[]]$AffectedApps = @(),
+        [string]$WorkspaceRoot = 'D:\Git_Repositories'
     )
 
     $store = Get-ProposalStore
@@ -137,11 +141,103 @@ function New-WorkspaceProposal {
     $cleanCrId = if ($CrId) { $CrId } else { $canonicalId }
     $safeCrId = $cleanCrId -replace '[^a-zA-Z0-9_-]', '_'
 
+    # Active App Context Inheritance per RULE-LCM-019
+    $activeCtx = Get-ActiveAppContext
+    if ([string]::IsNullOrWhiteSpace($AppId) -and $activeCtx -and $activeCtx.app_id -and $activeCtx.app_id -ne 'Architecture') {
+        $AppId = $activeCtx.app_id
+    }
+
+    # CRP-162 Proposal Bundle Directory Standard
+    $cleanSlug = ($Title -replace '[^a-zA-Z0-9]', '-') -replace '-+', '-' -replace '^-|-$', ''
+    if ($cleanSlug.Length -gt 50) { $cleanSlug = $cleanSlug.Substring(0, 50).TrimEnd('-') }
+    $bundleDirName = "{0}-{1}" -f $canonicalId, $cleanSlug
+    $bundleRelPath = "docs/Proposals/$bundleDirName"
+
+    $targetRepoDir = if ($OriginRepo -and (Test-Path (Join-Path $WorkspaceRoot $OriginRepo))) {
+        Join-Path $WorkspaceRoot $OriginRepo
+    } else {
+        Join-Path $WorkspaceRoot 'Workspace_Inventory'
+    }
+
+    $bundleFullPath = Join-Path $targetRepoDir "docs\Proposals\$bundleDirName"
+    if (-not (Test-Path $bundleFullPath)) {
+        New-Item -ItemType Directory -Path $bundleFullPath -Force | Out-Null
+    }
+
+    # 1. Specification.md
+    $specPath = Join-Path $bundleFullPath 'Specification.md'
+    if (-not (Test-Path $specPath)) {
+        $appDisplay = if ($AppId) { $AppId } else { "None" }
+        $specContent = @"
+# Change Request Proposal: $canonicalId
+
+```yaml
+CRP-ID: $canonicalId
+Title: $Title
+Scope: $OriginRepo
+Baseline-Version: v7.6.0
+Author: $Author
+Date: $timestamp
+Status: Suggested
+Plan-State: suggested
+Progress-State: undecided
+Priority: High
+App-ID: $appDisplay
+```
+
+---
+
+## 1. Executive Summary & Intent
+$Details
+
+## 2. Technical Requirements & Invariants
+- Invariant 1: Must conform to LCM governance standards.
+
+"@
+        Set-Content -Path $specPath -Value $specContent.Trim() -Encoding UTF8
+    }
+
+    # 2. Implementation_Plan.md
+    $planFilePath = Join-Path $bundleFullPath 'Implementation_Plan.md'
+    if (-not (Test-Path $planFilePath)) {
+        $planContent = @"
+# Implementation Plan: $canonicalId - $Title
+
+## 1. Executive Summary & Problem Context
+$Details
+
+## 2. Proposed Changes
+### Component 1: Initial Implementation
+- Scaffolding baseline implementation for $Title.
+
+## 3. Verification Plan
+- Automated Pester tests and readiness quality gates.
+
+"@
+        Set-Content -Path $planFilePath -Value $planContent.Trim() -Encoding UTF8
+    }
+
+    # 3. Walkthrough.md
+    $walkFilePath = Join-Path $bundleFullPath 'Walkthrough.md'
+    if (-not (Test-Path $walkFilePath)) {
+        $walkContent = @"
+# Walkthrough: $canonicalId - $Title
+
+## 1. Executive Summary
+Implementation and verification records for $canonicalId.
+
+## 2. Verification Evidence
+- Pending implementation execution.
+
+"@
+        Set-Content -Path $walkFilePath -Value $walkContent.Trim() -Encoding UTF8
+    }
+
     if ([string]::IsNullOrWhiteSpace($PlanPath)) {
-        $PlanPath = "Workspace_Inventory/data/proposals/plans/Proposal-{0:D3}_{1}_Plan.md" -f $newId, $safeCrId
+        $PlanPath = "$bundleRelPath/Implementation_Plan.md"
     }
     if ([string]::IsNullOrWhiteSpace($WalkthroughPath)) {
-        $WalkthroughPath = "Workspace_Inventory/data/proposals/plans/Proposal-{0:D3}_{1}_Walkthrough.md" -f $newId, $safeCrId
+        $WalkthroughPath = "$bundleRelPath/Walkthrough.md"
     }
 
     $proposal = [ordered]@{
@@ -151,9 +247,20 @@ function New-WorkspaceProposal {
         title            = $Title
         origin_repo      = $OriginRepo
         cr_id            = $cleanCrId
+        app_id           = if ($AppId) { $AppId } else { $null }
+        primary_app      = if ($PrimaryApp) { $PrimaryApp } elseif ($isBug -and $AppId) { $AppId } else { $null }
+        affected_apps    = if ($AffectedApps.Count -gt 0) { @($AffectedApps) } else { @() }
         state            = 'suggested'
         progress_state   = 'undecided'
         bundle_id        = $BundleId
+        bundle_dir       = $bundleRelPath
+        docs             = [ordered]@{
+            specification = 'Specification.md'
+            plan          = 'Implementation_Plan.md'
+            walkthrough   = 'Walkthrough.md'
+        }
+        commit_sha       = $null
+        github_url       = $null
         author           = if ($Author) { $Author } else { 'Rolf' }
         details          = $Details
         plan_path        = $PlanPath
@@ -165,7 +272,8 @@ function New-WorkspaceProposal {
     $store.proposals = @($list)
 
     Set-ProposalStore -Store $store
-    Write-Host ("Created Proposal #{0}: {1} (Plan State: suggested | Progress: undecided)" -f $newId, $Title) -ForegroundColor Green
+    $appSuffix = if ($AppId) { " | App: $AppId" } else { "" }
+    Write-Host ("Created Proposal #{0}: {1} (Plan State: suggested | Progress: undecided{2})" -f $newId, $Title, $appSuffix) -ForegroundColor Green
     return [PSCustomObject]$proposal
 }
 
@@ -176,7 +284,7 @@ function Set-WorkspaceProposalState {
         [int]$Id,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet('suggested', 'processed', 'approved', 'deferred', 'deleted', 'completed')]
+        [ValidateSet('bug', 'suggested', 'processed', 'approved', 'deferred', 'deleted', 'completed', 'rejected', 'pushed')]
         [string]$State,
 
         [string]$Details
@@ -403,7 +511,7 @@ function Invoke-ProposalBatchAction {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
-        [ValidateSet('do', 'delete', 'defer', 'complete', 'suggest')]
+        [ValidateSet('do', 'delete', 'defer', 'deferred', 'complete', 'completed', 'suggest', 'suggested', 'reject', 'rejected', 'approve', 'approved', 'bug', 'push', 'pushed')]
         [string]$Action,
 
         [Parameter(Mandatory = $true)]
@@ -419,11 +527,15 @@ function Invoke-ProposalBatchAction {
     }
 
     $mappedState = switch ($Action) {
-        'do'       { 'processed' }
-        'delete'   { 'deleted' }
-        'defer'    { 'deferred' }
-        'complete' { 'completed' }
-        'suggest'  { 'suggested' }
+        'do'                                  { 'processed' }
+        'delete'                              { 'deleted' }
+        { $_ -in @('defer', 'deferred') }     { 'deferred' }
+        { $_ -in @('complete', 'completed') } { 'completed' }
+        { $_ -in @('suggest', 'suggested') }   { 'suggested' }
+        { $_ -in @('reject', 'rejected') }    { 'rejected' }
+        { $_ -in @('approve', 'approved') }   { 'approved' }
+        'bug'                                 { 'bug' }
+        { $_ -in @('push', 'pushed') }        { 'pushed' }
     }
 
     $updated = @()
@@ -494,6 +606,1092 @@ function Get-LCMMode {
         return $store.lcm_mode
     }
     return 'active'
+}
+
+# =====================================================================
+# CRP-162 Proposal Bundle Directory Architecture & Git Object Resolver
+# =====================================================================
+
+function Get-LcmProposalDocument {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true, Position = 0)]
+        [int]$Id,
+
+        [Parameter(Mandatory = $false, Position = 1)]
+        [ValidateSet('Specification', 'Plan', 'Walkthrough', 'All')]
+        [string]$DocumentType = 'Specification',
+
+        [Parameter(Mandatory = $false)]
+        [string]$WorkspaceRoot = 'D:\Git_Repositories'
+    )
+
+    $store = Get-ProposalStore
+    $proposal = $store.proposals | Where-Object { $_.id -eq $Id } | Select-Object -First 1
+
+    if (-not $proposal) {
+        Write-Warning "Proposal #$Id not found in proposals store."
+        return $null
+    }
+
+    $repoName = if ($proposal.origin_repo -and (Test-Path (Join-Path $WorkspaceRoot $proposal.origin_repo))) {
+        $proposal.origin_repo
+    } else {
+        'Workspace_Inventory'
+    }
+    $repoDir = Join-Path $WorkspaceRoot $repoName
+
+    $docFileMap = @{
+        'Specification' = 'Specification.md'
+        'Plan'          = 'Implementation_Plan.md'
+        'Walkthrough'   = 'Walkthrough.md'
+    }
+
+    $filesToFetch = if ($DocumentType -eq 'All') {
+        @('Specification', 'Plan', 'Walkthrough')
+    } else {
+        @($DocumentType)
+    }
+
+    $results = @{}
+
+    foreach ($dtype in $filesToFetch) {
+        $fileName = $docFileMap[$dtype]
+        $content = $null
+        $sourceMode = 'None'
+        $resolvedPath = ''
+
+        # 1. Mode 1: Check live bundle directory on disk
+        if ($proposal.PSObject.Properties['bundle_dir'] -and $proposal.bundle_dir) {
+            $localBundleDir = Join-Path $repoDir $proposal.bundle_dir
+            $localFilePath = Join-Path $localBundleDir $fileName
+            if (Test-Path $localFilePath) {
+                $content = Get-Content -Path $localFilePath -Raw -Encoding UTF8
+                $sourceMode = 'LiveWorkingTree'
+                $resolvedPath = $localFilePath
+            }
+        }
+
+        # 2. Mode 2: If absent on disk, check local Git object database using commit_sha
+        if ($null -eq $content -and $proposal.PSObject.Properties['commit_sha'] -and $proposal.commit_sha -and (Test-Path (Join-Path $repoDir '.git'))) {
+            $bundleRel = if ($proposal.bundle_dir) { $proposal.bundle_dir.TrimStart('\', '/') } else { "docs/Proposals/$($proposal.crp_id)" }
+            $gitPath = "$bundleRel/$fileName" -replace '\\', '/'
+            $sha = $proposal.commit_sha
+
+            try {
+                $gitOutput = & git -C $repoDir show "${sha}:${gitPath}" 2>$null
+                if ($LASTEXITCODE -eq 0 -and $gitOutput) {
+                    $content = $gitOutput -join "`r`n"
+                    $sourceMode = 'GitObject'
+                    $resolvedPath = "git://${sha}:${gitPath}"
+                }
+            } catch {
+                # Continue to next fallback
+            }
+        }
+
+        # 3. Mode 3: Legacy flat file fallback
+        if ($null -eq $content) {
+            $legacyPath = switch ($dtype) {
+                'Plan' { if ($proposal.PSObject.Properties['plan_path']) { $proposal.plan_path } else { '' } }
+                'Walkthrough' { if ($proposal.PSObject.Properties['walkthrough_path']) { $proposal.walkthrough_path } else { '' } }
+                'Specification' {
+                    $propsDir = Join-Path $repoDir 'docs\Proposals'
+                    if (Test-Path $propsDir) {
+                        $match = Get-ChildItem -Path $propsDir -Filter "$($proposal.crp_id)*.md" | Select-Object -First 1
+                        if ($match) { $match.FullName } else { '' }
+                    } else { '' }
+                }
+            }
+
+            if ($legacyPath) {
+                $fullLegacyPath = if ([System.IO.Path]::IsPathRooted($legacyPath)) { $legacyPath } else { Join-Path $WorkspaceRoot $legacyPath }
+                if (Test-Path $fullLegacyPath) {
+                    $content = Get-Content -Path $fullLegacyPath -Raw -Encoding UTF8
+                    $sourceMode = 'LegacyFlatDisk'
+                    $resolvedPath = $fullLegacyPath
+                }
+            }
+        }
+
+        $results[$dtype] = [PSCustomObject]@{
+            Id           = $Id
+            CrpId        = $proposal.crp_id
+            DocumentType = $dtype
+            FileName     = $fileName
+            SourceMode   = $sourceMode
+            ResolvedPath = $resolvedPath
+            Content      = if ($content) { $content } else { "<!-- Document not found for $dtype in Proposal #$Id -->" }
+            Found        = ($null -ne $content)
+        }
+    }
+
+    if ($DocumentType -eq 'All') {
+        return $results
+    } else {
+        return $results[$DocumentType]
+    }
+}
+
+function Remove-LcmProposalBundle {
+    [CmdletBinding(SupportsShouldProcess = $true)]
+    param(
+        [Parameter(Mandatory = $true, Position = 0)]
+        [int]$Id,
+
+        [Parameter(Mandatory = $false)]
+        [string]$CommitSha = '',
+
+        [Parameter(Mandatory = $false)]
+        [string]$WorkspaceRoot = 'D:\Git_Repositories'
+    )
+
+    $store = Get-ProposalStore
+    $proposal = $store.proposals | Where-Object { $_.id -eq $Id } | Select-Object -First 1
+
+    if (-not $proposal) {
+        Write-Warning "Proposal #$Id not found in proposals store."
+        return $null
+    }
+
+    $repoName = if ($proposal.origin_repo -and (Test-Path (Join-Path $WorkspaceRoot $proposal.origin_repo))) {
+        $proposal.origin_repo
+    } else {
+        'Workspace_Inventory'
+    }
+    $repoDir = Join-Path $WorkspaceRoot $repoName
+
+    # 1. Capture commit SHA if not provided
+    if ([string]::IsNullOrWhiteSpace($CommitSha) -and (Test-Path (Join-Path $repoDir '.git'))) {
+        $capturedSha = & git -C $repoDir rev-parse HEAD 2>$null
+        if ($LASTEXITCODE -eq 0 -and $capturedSha) {
+            $CommitSha = $capturedSha.Trim()
+        }
+    }
+
+    # 2. Update proposal record in ledger
+    if ($CommitSha) {
+        $proposal | Add-Member -NotePropertyName "commit_sha" -NotePropertyValue $CommitSha -Force
+        $bundleRel = if ($proposal.PSObject.Properties['bundle_dir'] -and $proposal.bundle_dir) { $proposal.bundle_dir } else { "docs/Proposals/$($proposal.crp_id)" }
+        $shortSha = $CommitSha.Substring(0, [Math]::Min(7, $CommitSha.Length))
+        $githubUrl = "https://github.com/rgbig/$repoName/tree/$shortSha/$bundleRel" -replace '\\', '/'
+        $proposal | Add-Member -NotePropertyName "github_url" -NotePropertyValue $githubUrl -Force
+    }
+
+    # 3. Purge local working tree bundle directory
+    $purged = $false
+    if ($proposal.PSObject.Properties['bundle_dir'] -and $proposal.bundle_dir) {
+        $localBundleDir = Join-Path $repoDir $proposal.bundle_dir
+        if (Test-Path $localBundleDir) {
+            if ($PSCmdlet.ShouldProcess($localBundleDir, "Purge pushed proposal bundle from working tree")) {
+                Remove-Item -Path $localBundleDir -Recurse -Force | Out-Null
+                $purged = $true
+                Write-Host ("  [+] Purged local working tree bundle: {0}" -f $proposal.bundle_dir) -ForegroundColor Green
+            }
+        }
+    }
+
+    Set-ProposalStore -Store $store
+
+    return [PSCustomObject]@{
+        Id        = $Id
+        CrpId     = $proposal.crp_id
+        Repo      = $repoName
+        CommitSha = $CommitSha
+        GithubUrl = if ($proposal.PSObject.Properties['github_url']) { $proposal.github_url } else { $null }
+        Purged    = $purged
+    }
+}
+
+# =====================================================================
+# CRP-048 App-Centric Architecture, Active Context Engine & Catalog
+# =====================================================================
+
+function Get-ActiveAppContext {
+    [CmdletBinding()]
+    param()
+
+    $store = Get-ProposalStore
+    if ($store.PSObject.Properties['active_context'] -and $store.active_context) {
+        return $store.active_context
+    }
+    return $null
+}
+
+function Set-ActiveAppContext {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $false, Position = 0)]
+        [string]$Context = '',
+
+        [Parameter(Mandatory = $false)]
+        [string]$Repo = '',
+
+        [Parameter(Mandatory = $false)]
+        [string]$Details = '',
+
+        [Parameter(Mandatory = $false)]
+        [string]$WorkspaceRoot = 'D:\Git_Repositories'
+    )
+
+    $store = Get-ProposalStore
+    $trimmed = if ($Context) { $Context.Trim() } else { '' }
+
+    if ([string]::IsNullOrWhiteSpace($trimmed) -or $trimmed -in @('clear', 'reset', 'none', 'null')) {
+        $store | Add-Member -NotePropertyName 'active_context' -NotePropertyValue $null -Force
+        Set-ProposalStore -Store $store
+
+        $wiDataDir = (Get-Item (Get-ProposalStorePath)).Directory.Parent.FullName
+        $sessionDir = Join-Path $wiDataDir 'session_state'
+        if (-not (Test-Path $sessionDir)) { New-Item -ItemType Directory -Path $sessionDir -Force | Out-Null }
+        $sessionFile = Join-Path $sessionDir 'active_session.json'
+        @{
+            active_context = $null
+            updated_at     = (Get-Date).ToString('yyyy-MM-ddTHH:mm:sszzz')
+        } | ConvertTo-Json -Depth 3 | Set-Content -Path $sessionFile -Encoding UTF8
+
+        Write-Host "Active App Context cleared. Current focus: 🏛️ Master Architecture (Governing All Apps)." -ForegroundColor Green
+        return $null
+    }
+
+    if ($trimmed -in @('Master', 'Architecture', 'Base', 'Root', '0', 'App: 0', 'A0')) {
+        $targetRepo = if ($Repo) { $Repo } else { 'Workspace_AI' }
+        $appId = if ($trimmed -eq 'Architecture') { 'Architecture' } else { 'Master' }
+        $appTitle = if ($trimmed -eq 'Architecture') { 'Foundational Tripartite Architecture' } else { 'Master Tripartite Architecture (Governing All Apps)' }
+        $ctxObj = [ordered]@{
+            app_id     = $appId
+            app_number = 0
+            app_title  = $appTitle
+            repo       = $targetRepo
+            set_at     = (Get-Date).ToString('yyyy-MM-dd HH:mm:ss')
+            details    = $Details
+        }
+        $store | Add-Member -NotePropertyName 'active_context' -NotePropertyValue ([PSCustomObject]$ctxObj) -Force
+        Set-ProposalStore -Store $store
+
+        $wiDataDir = (Get-Item (Get-ProposalStorePath)).Directory.Parent.FullName
+        $sessionDir = Join-Path $wiDataDir 'session_state'
+        if (-not (Test-Path $sessionDir)) { New-Item -ItemType Directory -Path $sessionDir -Force | Out-Null }
+        $sessionFile = Join-Path $sessionDir 'active_session.json'
+        @{
+            active_context = $ctxObj
+            updated_at     = (Get-Date).ToString('yyyy-MM-ddTHH:mm:sszzz')
+        } | ConvertTo-Json -Depth 3 | Set-Content -Path $sessionFile -Encoding UTF8
+
+        Write-Host ("Active App Context set to: 🏛️ Master Architecture (Governing All Apps) [{0}]" -f $targetRepo) -ForegroundColor Green
+        return [PSCustomObject]$ctxObj
+    }
+
+    # Normalize App identifier: 'A1', '1', 'App: 1', 'App 1', 'App: 1 - Title'
+    $appNum = $null
+    $appTitle = ''
+    if ($trimmed -match '^(?i)(?:App:?\s*|A)?(\d+)(?:\s*-\s*(.+))?$') {
+        $appNum = [int]$Matches[1]
+        if ($Matches.Count -ge 3 -and $Matches[2]) {
+            $appTitle = $Matches[2].Trim()
+        }
+    }
+
+    $appId = if ($appNum -ne $null) { "App: $appNum" } else { $trimmed }
+
+    # If title wasn't passed in context string, look up in catalog or tripartite docs
+    $targetRepo = if ($Repo) { $Repo } else { 'Workspace_AI' }
+    if ([string]::IsNullOrWhiteSpace($appTitle) -and $appNum -ne $null) {
+        $catalog = @(Get-LcmApps -Repo $targetRepo -WorkspaceRoot $WorkspaceRoot)
+        $found = @($catalog | Where-Object { $_.number -eq $appNum })
+        if ($found.Count -gt 0) {
+            $appTitle = $found[0].title
+        }
+    }
+
+    $ctxObj = [ordered]@{
+        app_id     = $appId
+        app_number = $appNum
+        app_title  = $appTitle
+        repo       = $targetRepo
+        set_at     = (Get-Date).ToString('yyyy-MM-dd HH:mm:ss')
+        details    = $Details
+    }
+
+    $store | Add-Member -NotePropertyName 'active_context' -NotePropertyValue ([PSCustomObject]$ctxObj) -Force
+    Set-ProposalStore -Store $store
+
+    $wiDataDir = (Get-Item (Get-ProposalStorePath)).Directory.Parent.FullName
+    $sessionDir = Join-Path $wiDataDir 'session_state'
+    if (-not (Test-Path $sessionDir)) { New-Item -ItemType Directory -Path $sessionDir -Force | Out-Null }
+    $sessionFile = Join-Path $sessionDir 'active_session.json'
+    @{
+        active_context = $ctxObj
+        updated_at     = (Get-Date).ToString('yyyy-MM-ddTHH:mm:sszzz')
+    } | ConvertTo-Json -Depth 3 | Set-Content -Path $sessionFile -Encoding UTF8
+
+    $displayTitle = if ($appTitle) { " - $appTitle" } else { '' }
+    Write-Host ("Active App Context set to: {0}{1} [{2}]" -f $appId, $displayTitle, $targetRepo) -ForegroundColor Green
+    return [PSCustomObject]$ctxObj
+}
+
+function Get-LcmApps {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $false)]
+        [string]$Repo = '',
+
+        [Parameter(Mandatory = $false)]
+        [string]$WorkspaceRoot = 'D:\Git_Repositories'
+    )
+
+    $targetRepos = @()
+    if ($Repo) {
+        $rPath = Join-Path $WorkspaceRoot $Repo
+        if (Test-Path $rPath) {
+            $targetRepos += [PSCustomObject]@{ Name = $Repo; Path = $rPath }
+        }
+    } else {
+        $dirs = Get-ChildItem -Path $WorkspaceRoot -Directory | Where-Object { 
+            (Test-Path (Join-Path $_.FullName 'docs')) -or (Test-Path (Join-Path $_.FullName '.git'))
+        }
+        foreach ($d in $dirs) {
+            $targetRepos += [PSCustomObject]@{ Name = $d.Name; Path = $d.FullName }
+        }
+    }
+
+    $allApps = @()
+
+    foreach ($r in $targetRepos) {
+        $docsDir = Join-Path $r.Path 'docs'
+        if (!(Test-Path $docsDir)) {
+            continue
+        }
+        $archPath = Join-Path $docsDir 'Architecture.md'
+        $implPath = Join-Path $docsDir 'Implementation.md'
+        $reqPath  = Join-Path $docsDir 'Requirements.md'
+
+        $archOk = Test-Path $archPath
+        $implOk = Test-Path $implPath
+        $reqOk  = Test-Path $reqPath
+
+        # 0. Include Master Tripartite Architecture Entry for the repository
+        if ($archOk -or $implOk -or $reqOk) {
+            $masterTitle = "Master Tripartite Architecture (Governing All Apps)"
+            if ($archOk) {
+                $topLines = @(Get-Content -Path $archPath -TotalCount 5 -Encoding UTF8 | Where-Object { $_ -match '^#\s+' })
+                if ($topLines.Count -gt 0 -and $topLines[0] -match '^#\s+(.+)$') {
+                    $rawH1 = $Matches[1].Trim()
+                    if ($rawH1 -notmatch '(?i)App:') {
+                        $masterTitle = "Master Architecture - $rawH1"
+                    }
+                }
+            }
+
+            $masterEntry = [ordered]@{
+                id           = 'Master'
+                number       = 0
+                title        = $masterTitle
+                repo         = $r.Name
+                doc_layout   = 'MasterRoot'
+                directory    = 'docs/'
+                arch_defined = $archOk
+                req_defined  = $reqOk
+                impl_defined = $implOk
+                is_master    = $true
+                constituents = @()
+            }
+            $allApps += [PSCustomObject]$masterEntry
+        }
+
+        $appMap = @{}
+
+        # 1. Scan directory-separated App documents under docs/App#*/ or legacy docs/App-*/
+        $appsSubDirs = @()
+        if (Test-Path $docsDir) {
+            $directAppDirs = @(Get-ChildItem -Path $docsDir -Directory | Where-Object { $_.Name -match '^(?i)App[#-]?\d+' -and $_.Name -ne 'apps' })
+            $appsSubDirs += $directAppDirs
+            $appsBaseDir = Join-Path $docsDir 'apps'
+            if (Test-Path $appsBaseDir) {
+                $appsSubDirs += @(Get-ChildItem -Path $appsBaseDir -Directory)
+            }
+        }
+
+        foreach ($sd in $appsSubDirs) {
+            $num = $null
+            $folderTitle = ''
+            if ($sd.Name -match '^(?i)App[#-]?(\d+)(?:-(.*))?$') {
+                $num = [int]$Matches[1]
+                if ($Matches.Count -ge 3 -and $Matches[2]) { $folderTitle = $Matches[2].Trim() }
+            } elseif ($sd.Name -match '^\d+$') {
+                $num = [int]$sd.Name
+            }
+
+            if ($num -ne $null) {
+                $subArch = Join-Path $sd.FullName 'Architecture.md'
+                $subReq  = Join-Path $sd.FullName 'Requirements.md'
+                $subImpl = Join-Path $sd.FullName 'Implementation.md'
+
+                $archOk = Test-Path $subArch
+                $reqOk  = Test-Path $subReq
+                $implOk = Test-Path $subImpl
+
+                $title = if ($folderTitle) { $folderTitle } else { "App $num" }
+
+                # Extract title from Architecture.md or Implementation.md if available
+                if ($archOk) {
+                    $firstLine = (Get-Content -Path $subArch -TotalCount 5 -Encoding UTF8 | Where-Object { $_ -match '^#\s+' } | Select-Object -First 1)
+                    if ($firstLine -match '(?i)^#\s+(?:App:\s*\d+\s*-\s*)?(.+?)(?:\s+Architecture)?$') {
+                        $title = $Matches[1].Trim()
+                    }
+                }
+
+                $constituents = @()
+                if ($implOk) {
+                    $implContent = Get-Content -Path $subImpl -Raw -Encoding UTF8
+                    $implLines = $implContent -split '\r?\n'
+                    $inManifest = $false
+                    foreach ($line in $implLines) {
+                        if ($line -match '(?i)Constituent Manifest') {
+                            $inManifest = $true
+                        } elseif ($inManifest -and $line -match '^\|\s*([^\|]+)\|\s*([^\|]+)\|\s*([^\|]+)\|\s*([^\|]+)\|') {
+                            $cPath = $Matches[1].Trim()
+                            $cRole = $Matches[2].Trim()
+                            $cEntry = $Matches[3].Trim()
+                            $cTest = $Matches[4].Trim()
+                            if ($cPath -notmatch '^:?-+:?$' -and $cPath -notmatch '(?i)Relative Path' -and $cPath -notmatch '^[\|\s:-]+$') {
+                                $constituents += [PSCustomObject]@{
+                                    Path        = $cPath
+                                    Role        = $cRole
+                                    Entrypoints = $cEntry
+                                    TestSuite   = $cTest
+                                }
+                            }
+                        } elseif ($line -match '^#{2,3}\s+' -and $inManifest) {
+                            $inManifest = $false
+                        }
+                    }
+                }
+
+                $relDir = $sd.FullName.Substring($r.Path.Length).TrimStart('\', '/')
+                $appMap[$num] = [ordered]@{
+                    id           = "App: $num"
+                    number       = $num
+                    title        = $title
+                    repo         = $r.Name
+                    doc_layout   = 'Directory'
+                    directory    = $relDir
+                    arch_defined = $archOk
+                    req_defined  = $reqOk
+                    impl_defined = $implOk
+                    constituents = $constituents
+                }
+            }
+        }
+
+        # 2. Scan in-document sections from root Architecture.md
+        if (Test-Path $archPath) {
+            $archLines = Get-Content -Path $archPath -Encoding UTF8
+            foreach ($line in $archLines) {
+                if ($line -match '(?i)^#{2,3}\s+App:\s*(\d+)\s*-\s*(.+)$') {
+                    $num = [int]$Matches[1]
+                    $title = $Matches[2].Trim()
+                    if (-not $appMap.ContainsKey($num)) {
+                        $appMap[$num] = [ordered]@{
+                            id           = "App: $num"
+                            number       = $num
+                            title        = $title
+                            repo         = $r.Name
+                            doc_layout   = 'InDocument'
+                            directory    = 'docs/'
+                            arch_defined = $true
+                            req_defined  = $false
+                            impl_defined = $false
+                            constituents = @()
+                        }
+                    } else {
+                        $appMap[$num].arch_defined = $true
+                    }
+                }
+            }
+        }
+
+        # 3. Scan in-document sections from root Requirements.md
+        if (Test-Path $reqPath) {
+            $reqLines = Get-Content -Path $reqPath -Encoding UTF8
+            foreach ($line in $reqLines) {
+                if ($line -match '(?i)^#{2,3}\s+App:\s*(\d+)') {
+                    $num = [int]$Matches[1]
+                    if ($appMap.ContainsKey($num)) {
+                        $appMap[$num].req_defined = $true
+                    } else {
+                        $title = if ($line -match '(?i)^#{2,3}\s+App:\s*\d+\s*-\s*(.+)$') { $Matches[1].Trim() } else { "App $num" }
+                        $appMap[$num] = [ordered]@{
+                            id           = "App: $num"
+                            number       = $num
+                            title        = $title
+                            repo         = $r.Name
+                            doc_layout   = 'InDocument'
+                            directory    = 'docs/'
+                            arch_defined = $false
+                            req_defined  = $true
+                            impl_defined = $false
+                            constituents = @()
+                        }
+                    }
+                }
+            }
+        }
+
+        # 4. Scan in-document sections from root Implementation.md
+        if (Test-Path $implPath) {
+            $implContent = Get-Content -Path $implPath -Raw -Encoding UTF8
+            $implLines = $implContent -split '\r?\n'
+            $currentAppNum = $null
+            $inManifest = $false
+
+            foreach ($line in $implLines) {
+                if ($line -match '(?i)^#{2,3}\s+App:\s*(\d+)') {
+                    $currentAppNum = [int]$Matches[1]
+                    $inManifest = $false
+                    if ($appMap.ContainsKey($currentAppNum)) {
+                        $appMap[$currentAppNum].impl_defined = $true
+                    } else {
+                        $title = if ($line -match '(?i)^#{2,3}\s+App:\s*\d+\s*-\s*(.+)$') { $Matches[1].Trim() } else { "App $currentAppNum" }
+                        $appMap[$currentAppNum] = [ordered]@{
+                            id           = "App: $currentAppNum"
+                            number       = $currentAppNum
+                            title        = $title
+                            repo         = $r.Name
+                            doc_layout   = 'InDocument'
+                            directory    = 'docs/'
+                            arch_defined = $false
+                            req_defined  = $false
+                            impl_defined = $true
+                            constituents = @()
+                        }
+                    }
+                } elseif ($currentAppNum -ne $null -and $line -match '(?i)Constituent Manifest') {
+                    $inManifest = $true
+                } elseif ($inManifest -and $line -match '^\|\s*([^\|]+)\|\s*([^\|]+)\|\s*([^\|]+)\|\s*([^\|]+)\|') {
+                    $cPath = $Matches[1].Trim()
+                    $cRole = $Matches[2].Trim()
+                    $cEntry = $Matches[3].Trim()
+                    $cTest = $Matches[4].Trim()
+                    if ($cPath -notmatch '^:?-+:?$' -and $cPath -notmatch '(?i)Relative Path' -and $cPath -notmatch '^[\|\s:-]+$') {
+                        $appMap[$currentAppNum].constituents += [PSCustomObject]@{
+                            Path        = $cPath
+                            Role        = $cRole
+                            Entrypoints = $cEntry
+                            TestSuite   = $cTest
+                        }
+                    }
+                } elseif ($line -match '^#{2,3}\s+') {
+                    $inManifest = $false
+                }
+            }
+        }
+
+        # 5. Scan code files in repo for DOX header `App: App: # - <Title>`
+        $codeFiles = @(Get-ChildItem -Path $r.Path -Recurse -Include *.ps1, *.psm1, *.js, *.py -ErrorAction SilentlyContinue | Where-Object {
+            $_.FullName -notmatch '[\\/](\.git|\.agents|data|logs|scratch|node_modules)[\\/]'
+        })
+        foreach ($cf in $codeFiles) {
+            $first20 = @(Get-Content -Path $cf.FullName -TotalCount 25 -ErrorAction SilentlyContinue)
+            foreach ($line in $first20) {
+                if ($line -match '(?i)\bApp:\s*(?:App:\s*)?(\d+)(?:\s*-\s*(.+))?') {
+                    $num = [int]$Matches[1]
+                    $rel = $cf.FullName.Substring($r.Path.Length).TrimStart('\', '/')
+                    if ($appMap.ContainsKey($num)) {
+                        $existingPaths = @($appMap[$num].constituents | ForEach-Object { $_.Path })
+                        if ($existingPaths -notcontains $rel) {
+                            $appMap[$num].constituents += [PSCustomObject]@{
+                                Path        = $rel
+                                Role        = 'Source / Asset'
+                                Entrypoints = '-'
+                                TestSuite   = '-'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        foreach ($k in ($appMap.Keys | Sort-Object)) {
+            $allApps += [PSCustomObject]$appMap[$k]
+        }
+    }
+
+    return $allApps
+}
+
+function Sync-LcmAppCatalog {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $false)]
+        [string]$Repo = '',
+
+        [Parameter(Mandatory = $false)]
+        [string]$WorkspaceRoot = 'D:\Git_Repositories'
+    )
+
+    $catalogDir = Join-Path $WorkspaceRoot 'Workspace_Inventory\data\catalog'
+    if (-not (Test-Path $catalogDir)) {
+        New-Item -ItemType Directory -Path $catalogDir -Force | Out-Null
+    }
+
+    $apps = @(Get-LcmApps -Repo $Repo -WorkspaceRoot $WorkspaceRoot)
+    $catalogPath = Join-Path $catalogDir 'apps.json'
+
+    $catalogObj = [ordered]@{
+        '$schema'    = 'https://json-schema.org/draft/2020-12/schema'
+        title        = 'LCM Workspace App-Centric Architecture Catalog'
+        updated_at   = (Get-Date).ToString('yyyy-MM-ddTHH:mm:sszzz')
+        total_apps   = $apps.Count
+        apps         = $apps
+    }
+
+    $catalogObj | ConvertTo-Json -Depth 6 | Set-Content -Path $catalogPath -Encoding UTF8
+    Write-Host ("Synchronized App Catalog ({0} App(s) indexed) -> {1}" -f $apps.Count, $catalogPath) -ForegroundColor Green
+    return [PSCustomObject]$catalogObj
+}
+
+function New-LcmApp {
+    [CmdletBinding(SupportsShouldProcess = $true)]
+    param(
+        [Parameter(Mandatory = $true, Position = 0)]
+        [string]$Title,
+
+        [Parameter(Mandatory = $false)]
+        [string]$Repo = 'Workspace_AI',
+
+        [Parameter(Mandatory = $false)]
+        [string]$Description = '',
+
+        [Parameter(Mandatory = $false)]
+        [switch]$SplitDocs = $false,
+
+        [Parameter(Mandatory = $false)]
+        [string]$WorkspaceRoot = 'D:\Git_Repositories'
+    )
+
+    $targetRepoDir = Join-Path $WorkspaceRoot $Repo
+    if (-not (Test-Path $targetRepoDir)) {
+        throw "Target repository '$Repo' does not exist at: $targetRepoDir"
+    }
+
+    # Find existing App IDs across the repo
+    $existingApps = @(Get-LcmApps -Repo $Repo -WorkspaceRoot $WorkspaceRoot)
+    $maxNum = 0
+    foreach ($a in $existingApps) {
+        if ($a.number -gt $maxNum) {
+            $maxNum = $a.number
+        }
+    }
+
+    $newNum = $maxNum + 1
+    $appId = "App: $newNum"
+    $fullTitle = "$appId - $Title"
+    $cleanModName = ($Title -replace '[^a-zA-Z0-9]', '')
+    $docsDir = Join-Path $targetRepoDir 'docs'
+    if (-not (Test-Path $docsDir)) {
+        New-Item -ItemType Directory -Path $docsDir -Force | Out-Null
+    }
+
+    if ($SplitDocs) {
+        $folderName = "App#$newNum-$cleanModName"
+        $appTargetDir = Join-Path $docsDir $folderName
+
+        if ($PSCmdlet.ShouldProcess($appTargetDir, "Scaffold directory-separated tripartite documents for '$fullTitle'")) {
+            if (-not (Test-Path $appTargetDir)) {
+                New-Item -ItemType Directory -Path $appTargetDir -Force | Out-Null
+            }
+
+            # 1. Architecture.md
+            $archSnippet = @"
+# $fullTitle Architecture
+
+## 1. Architectural Concept & End-User Perspective
+$Description
+
+## 2. User Mental Model & Topology
+<!-- Add Mermaid topology or functional diagram -->
+
+"@
+            Set-Content -Path (Join-Path $appTargetDir 'Architecture.md') -Value $archSnippet.Trim() -Encoding UTF8
+
+            # 2. Requirements.md
+            $reqSnippet = @"
+# $fullTitle Requirements
+
+## 1. Technical Invariants & Prerequisites
+- Invariant 1: Must conform to LCM governance standards.
+
+## 2. Safety & Error Handling Boundaries
+- Boundary 1: Clean degradation and zero-state recovery.
+
+"@
+            Set-Content -Path (Join-Path $appTargetDir 'Requirements.md') -Value $reqSnippet.Trim() -Encoding UTF8
+
+            # 3. Implementation.md
+            $implSnippet = @"
+# $fullTitle Implementation
+
+## 1. Constituent Manifest Table
+| Relative Path | Role / Layer | Primary Cmdlets / Entrypoints | Pester Test Suite |
+|:---|:---|:---|:---|
+| `modules/$($cleanModName).psm1` | Core Logic | `Get-$($cleanModName)` | `tests/$($cleanModName).Tests.ps1` |
+
+## 2. Exported Interfaces & Public Contracts
+- Cmdlet / API contracts defined in `data/catalog/contracts.json`.
+
+"@
+            Set-Content -Path (Join-Path $appTargetDir 'Implementation.md') -Value $implSnippet.Trim() -Encoding UTF8
+
+            Write-Host ("Successfully scaffolded {0} in docs/{1}/ and set as active context." -f $fullTitle, $folderName) -ForegroundColor Green
+        }
+    } else {
+        # Flat in-document scaffolding (default)
+        $archFile = Join-Path $docsDir 'Architecture.md'
+        $reqFile  = Join-Path $docsDir 'Requirements.md'
+        $implFile = Join-Path $docsDir 'Implementation.md'
+
+        if ($PSCmdlet.ShouldProcess("$Repo/docs/", "Scaffold in-document section for '$fullTitle'")) {
+            # Scaffold in Architecture.md
+            if (Test-Path $archFile) {
+                $archSnippet = @"
+
+
+---
+
+## $fullTitle
+
+### 1. Architectural Concept & End-User Perspective
+$Description
+
+### 2. User Mental Model & Topology
+<!-- Add Mermaid topology or functional diagram -->
+
+"@
+                Add-Content -Path $archFile -Value $archSnippet -Encoding UTF8
+            }
+
+            # Scaffold in Requirements.md
+            if (Test-Path $reqFile) {
+                $reqSnippet = @"
+
+
+---
+
+## $fullTitle
+
+### 1. Technical Invariants & Prerequisites
+- Invariant 1: Must conform to LCM governance standards.
+
+### 2. Safety & Error Handling Boundaries
+- Boundary 1: Clean degradation and zero-state recovery.
+
+"@
+                Add-Content -Path $reqFile -Value $reqSnippet -Encoding UTF8
+            }
+
+            # Scaffold in Implementation.md
+            if (Test-Path $implFile) {
+                $implSnippet = @"
+
+
+---
+
+## $fullTitle
+
+### 1. Constituent Manifest Table
+| Relative Path | Role / Layer | Primary Cmdlets / Entrypoints | Pester Test Suite |
+|:---|:---|:---|:---|
+| `modules/$($cleanModName).psm1` | Core Logic | `Get-$($cleanModName)` | `tests/$($cleanModName).Tests.ps1` |
+
+### 2. Exported Interfaces & Public Contracts
+- Cmdlet / API contracts defined in `data/catalog/contracts.json`.
+
+"@
+                Add-Content -Path $implFile -Value $implSnippet -Encoding UTF8
+            }
+
+            Write-Host ("Successfully scaffolded {0} across {1}/docs/ and set as active context." -f $fullTitle, $Repo) -ForegroundColor Green
+        }
+    }
+
+    # Set active context to newly minted App
+    Set-ActiveAppContext -Context "A$newNum" -Repo $Repo -Details $Title -WorkspaceRoot $WorkspaceRoot | Out-Null
+
+    # Sync catalog
+    Sync-LcmAppCatalog -Repo $Repo -WorkspaceRoot $WorkspaceRoot | Out-Null
+
+    return [PSCustomObject]@{
+        Id          = $appId
+        Number      = $newNum
+        Title       = $Title
+        FullTitle   = $fullTitle
+        Repo        = $Repo
+        Description = $Description
+        DocLayout   = if ($SplitDocs) { 'Directory' } else { 'InDocument' }
+        Directory   = if ($SplitDocs) { "docs/$folderName" } else { 'docs/' }
+    }
+}
+
+function Split-LcmAppDocs {
+    [CmdletBinding(SupportsShouldProcess = $true)]
+    param(
+        [Parameter(Mandatory = $true, Position = 0)]
+        [string]$Repo,
+
+        [Parameter(Mandatory = $false)]
+        [string]$WorkspaceRoot = 'D:\Git_Repositories'
+    )
+
+    $targetRepoDir = Join-Path $WorkspaceRoot $Repo
+    if (-not (Test-Path $targetRepoDir)) {
+        throw "Target repository '$Repo' does not exist at: $targetRepoDir"
+    }
+
+    $docsDir = Join-Path $targetRepoDir 'docs'
+    if (-not (Test-Path $docsDir)) {
+        throw "Documentation directory 'docs' does not exist at: $docsDir"
+    }
+
+    $archPath = Join-Path $docsDir 'Architecture.md'
+    $reqPath  = Join-Path $docsDir 'Requirements.md'
+    $implPath = Join-Path $docsDir 'Implementation.md'
+
+    # 1. Parse existing in-document Apps from Architecture.md, Requirements.md, Implementation.md
+    $archContent = if (Test-Path $archPath) { Get-Content -Path $archPath -Raw -Encoding UTF8 } else { '' }
+    $reqContent  = if (Test-Path $reqPath)  { Get-Content -Path $reqPath -Raw -Encoding UTF8 } else { '' }
+    $implContent = if (Test-Path $implPath) { Get-Content -Path $implPath -Raw -Encoding UTF8 } else { '' }
+
+    # Helper function to split markdown content into preamble and per-App sections
+    $splitSections = {
+        param([string]$Content)
+        $lines = $Content -split '\r?\n'
+        $preamble = @()
+        $sections = @{}
+        $currNum = $null
+        $currTitle = ''
+        $currLines = @()
+
+        foreach ($line in $lines) {
+            if ($line -match '(?i)^#{2,3}\s+App:\s*(\d+)(?:\s*-\s*(.+))?$') {
+                if ($currNum -ne $null) {
+                    $sections[$currNum] = @{
+                        Number = $currNum
+                        Title  = $currTitle
+                        Body   = ($currLines -join "`r`n").Trim()
+                    }
+                }
+                $currNum = [int]$Matches[1]
+                $currTitle = if ($Matches.Count -ge 3 -and $Matches[2]) { $Matches[2].Trim() } else { "App $currNum" }
+                $currLines = @()
+            } elseif ($currNum -eq $null) {
+                $preamble += $line
+            } else {
+                $currLines += $line
+            }
+        }
+
+        if ($currNum -ne $null) {
+            $sections[$currNum] = @{
+                Number = $currNum
+                Title  = $currTitle
+                Body   = ($currLines -join "`r`n").Trim()
+            }
+        }
+
+        return @{
+            Preamble = ($preamble -join "`r`n").TrimEnd()
+            Sections = $sections
+        }
+    }
+
+    $archSplit = & $splitSections $archContent
+    $reqSplit  = & $splitSections $reqContent
+    $implSplit = & $splitSections $implContent
+
+    $allAppNums = @($archSplit.Sections.Keys + $reqSplit.Sections.Keys + $implSplit.Sections.Keys | Sort-Object -Unique)
+
+    if ($allAppNums.Count -eq 0) {
+        Write-Host "No in-document '## App: #' sections found in $Repo/docs/ to split." -ForegroundColor Yellow
+        return @()
+    }
+
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    Write-Host (" SPLITTING APP DOCUMENTATION FOR REPOSITORY: {0}" -f $Repo) -ForegroundColor Green
+    Write-Host (" Discovered {0} in-document App slice(s): {1}" -f $allAppNums.Count, ($allAppNums -join ', ')) -ForegroundColor Cyan
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+
+    $migrated = @()
+
+    foreach ($num in $allAppNums) {
+        $title = if ($archSplit.Sections.ContainsKey($num) -and $archSplit.Sections[$num].Title) {
+            $archSplit.Sections[$num].Title
+        } elseif ($reqSplit.Sections.ContainsKey($num) -and $reqSplit.Sections[$num].Title) {
+            $reqSplit.Sections[$num].Title
+        } elseif ($implSplit.Sections.ContainsKey($num) -and $implSplit.Sections[$num].Title) {
+            $implSplit.Sections[$num].Title
+        } else {
+            "App $num"
+        }
+
+        $cleanSlug = ($title -replace '[^a-zA-Z0-9]', '')
+        $folderName = "App#$num-$cleanSlug"
+        $appTargetDir = Join-Path $docsDir $folderName
+
+        $fullAppTitle = "App: $num - $title"
+
+        if ($PSCmdlet.ShouldProcess($appTargetDir, "Extract $fullAppTitle tripartite docs")) {
+            if (-not (Test-Path $appTargetDir)) {
+                New-Item -ItemType Directory -Path $appTargetDir -Force | Out-Null
+            }
+
+            # 1. Architecture.md
+            $archBody = if ($archSplit.Sections.ContainsKey($num)) { $archSplit.Sections[$num].Body } else { "### 1. Architectural Concept`n$title capability slice." }
+            $archDocContent = @"
+# $fullAppTitle Architecture
+
+$archBody
+
+"@
+            Set-Content -Path (Join-Path $appTargetDir 'Architecture.md') -Value $archDocContent.Trim() -Encoding UTF8
+
+            # 2. Requirements.md
+            $reqBody = if ($reqSplit.Sections.ContainsKey($num)) { $reqSplit.Sections[$num].Body } else { "### 1. Technical Invariants`n- Invariant: Conforms to LCM governance standards." }
+            $reqDocContent = @"
+# $fullAppTitle Requirements
+
+$reqBody
+
+"@
+            Set-Content -Path (Join-Path $appTargetDir 'Requirements.md') -Value $reqDocContent.Trim() -Encoding UTF8
+
+            # 3. Implementation.md
+            $implBody = if ($implSplit.Sections.ContainsKey($num)) { $implSplit.Sections[$num].Body } else { "### 1. Constituent Manifest Table`n| Relative Path | Role / Layer | Primary Cmdlets / Entrypoints | Test Suite |`n|:---|:---|:---|:---|`n| modules/$cleanSlug.psm1 | Core Logic | Get-$cleanSlug | tests/$cleanSlug.Tests.ps1 |" }
+            $implDocContent = @"
+# $fullAppTitle Implementation
+
+$implBody
+
+"@
+            Set-Content -Path (Join-Path $appTargetDir 'Implementation.md') -Value $implDocContent.Trim() -Encoding UTF8
+
+            $migrated += [PSCustomObject]@{
+                Number    = $num
+                Title     = $title
+                Directory = "docs/$folderName"
+            }
+            Write-Host ("  [+] Migrated {0} -> docs/{1}/" -f $fullAppTitle, $folderName) -ForegroundColor Green
+        } else {
+            Write-Host ("  [WhatIf] Would migrate {0} -> docs/{1}/" -f $fullAppTitle, $folderName) -ForegroundColor Yellow
+        }
+    }
+
+    # 4. Clean up root Architecture.md, Requirements.md, Implementation.md
+    if ($PSCmdlet.ShouldProcess("$Repo/docs/", "Clean up root tripartite documents and add App index")) {
+        # Build App Index table for root Architecture.md
+        $indexRows = @()
+        foreach ($m in $migrated) {
+            $indexRows += "| App: $($m.Number) | $($m.Title) | [``$($m.Directory)/``](file:///$($m.Directory)) | [Arch](file:///$($m.Directory)/Architecture.md) · [Req](file:///$($m.Directory)/Requirements.md) · [Impl](file:///$($m.Directory)/Implementation.md) |"
+        }
+
+        $appIndexSection = @"
+
+
+---
+
+## App Subsystems & Sliced Specifications
+The following modular App slices are documented in dedicated subdirectories per RULE-DOC-007:
+
+| App ID | Title | Directory | Sliced Specifications |
+|:---|:---|:---|:---|
+$($indexRows -join "`r`n")
+"@
+
+        # Write clean root files
+        $cleanArch = ($archSplit.Preamble.TrimEnd() -replace '(?s)\n---\s*$', '') + $appIndexSection
+        Set-Content -Path $archPath -Value $cleanArch.Trim() -Encoding UTF8
+
+        $cleanReq = $reqSplit.Preamble.TrimEnd() -replace '(?s)\n---\s*$', ''
+        Set-Content -Path $reqPath -Value $cleanReq.Trim() -Encoding UTF8
+
+        $cleanImpl = $implSplit.Preamble.TrimEnd() -replace '(?s)\n---\s*$', ''
+        Set-Content -Path $implPath -Value $cleanImpl.Trim() -Encoding UTF8
+
+        # 5. Re-synchronize App catalog
+        Sync-LcmAppCatalog -Repo $Repo -WorkspaceRoot $WorkspaceRoot | Out-Null
+        Write-Host "`n[SUCCESS] SplitDocs completed for repository '$Repo'." -ForegroundColor Green
+        Format-LcmAppsTable -WorkspaceRoot $WorkspaceRoot
+    }
+
+    return $migrated
+}
+
+function Format-LcmAppsTable {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $false)]
+        [object[]]$Apps,
+
+        [Parameter(Mandatory = $false)]
+        [string]$WorkspaceRoot = 'D:\Git_Repositories'
+    )
+
+    if ($null -eq $Apps) {
+        $Apps = Get-LcmApps -WorkspaceRoot $WorkspaceRoot
+    }
+
+    $activeCtx = Get-ActiveAppContext
+    $activeId = if ($activeCtx) { 
+        if ($activeCtx.app_id -in @('Master', 'Architecture', 'Base')) {
+            "🏛️ Master Architecture (Governing All Apps) [$($activeCtx.repo)]"
+        } else {
+            "$($activeCtx.app_id) [$($activeCtx.repo)]"
+        }
+    } else { 
+        '🏛️ Master Architecture (Governing All Apps)' 
+    }
+
+    Write-Host "==========================================================================================" -ForegroundColor Cyan
+    Write-Host (" LCM Workspace App Catalog (Active Focus: {0})" -f $activeId) -ForegroundColor Cyan
+    Write-Host "==========================================================================================" -ForegroundColor Cyan
+
+    if (@($Apps).Count -eq 0) {
+        Write-Host " No modular Apps currently registered across workspace repositories." -ForegroundColor Gray
+        Write-Host "==========================================================================================" -ForegroundColor Cyan
+        return
+    }
+
+    Write-Host (" {0,-10} | {1,-22} | {2,-7} | {3,-13} | {4}" -f 'App ID', 'Repository', 'Docs', 'Constituents', 'Title') -ForegroundColor Yellow
+    Write-Host "-----------+------------------------+---------+---------------+----------------------------------" -ForegroundColor DarkGray
+
+    foreach ($a in $Apps) {
+        $isMasterEntry = ($a.id -eq 'Master' -or $a.number -eq 0)
+        $isActive = if ($isMasterEntry) {
+            ($null -eq $activeCtx -or $activeCtx.app_id -in @('Master', 'Architecture', 'Base'))
+        } else {
+            ($activeCtx -and $activeCtx.app_id -eq $a.id -and $activeCtx.repo -eq $a.repo)
+        }
+
+        $color = if ($isActive) { 
+            [ConsoleColor]::Green 
+        } elseif ($isMasterEntry) {
+            [ConsoleColor]::Cyan
+        } else { 
+            [ConsoleColor]::White 
+        }
+
+        $docsFlag = ""
+        $docsFlag += if ($a.arch_defined) { "A" } else { "-" }
+        $docsFlag += if ($a.req_defined)  { "R" } else { "-" }
+        $docsFlag += if ($a.impl_defined) { "I" } else { "-" }
+
+        $constCount = if ($isMasterEntry) { "Master Specs" } else { "$(@($a.constituents).Count) file(s)" }
+        $idDisplay = if ($isActive) { "*$($a.id)" } else { " $($a.id)" }
+
+        Write-Host (" {0,-10} | {1,-22} | {2,-7} | {3,-13} | {4}" -f $idDisplay, $a.repo, $docsFlag, $constCount, $a.title) -ForegroundColor $color
+    }
+
+    Write-Host "==========================================================================================" -ForegroundColor Cyan
 }
 
 # =====================================================================
@@ -808,9 +2006,11 @@ function Format-ProposalsTable {
 
     $granularity = Get-ReviewGranularity
     $mode = Get-LCMMode
+    $activeCtx = Get-ActiveAppContext
+    $activeId = if ($activeCtx) { $activeCtx.app_id } else { 'None (Base)' }
 
     Write-Host "==========================================================================================" -ForegroundColor Cyan
-    Write-Host (" LCM Workspace Proposals Ledger (Mode: {0} | Granularity: {1})" -f $mode.ToUpper(), $granularity.ToUpper()) -ForegroundColor Cyan
+    Write-Host (" LCM Workspace Proposals Ledger (Mode: {0} | Granularity: {1} | Active Focus: {2})" -f $mode.ToUpper(), $granularity.ToUpper(), $activeId) -ForegroundColor Cyan
     Write-Host "==========================================================================================" -ForegroundColor Cyan
 
     if (@($Proposals).Count -eq 0) {
@@ -819,8 +2019,8 @@ function Format-ProposalsTable {
         return
     }
 
-    Write-Host (" {0,-7} | {1,-4} | {2,-19} | {3,-11} | {4,-13} | {5,-20} | {6}" -f 'CRP ID', 'Prio', 'Timestamp', 'Plan State', 'STATUS', 'Origin Repo', 'Title') -ForegroundColor Yellow
-    Write-Host "---------+------+---------------------+-------------+---------------+----------------------+-----------------------" -ForegroundColor DarkGray
+    Write-Host (" {0,-7} | {1,-4} | {2,-8} | {3,-19} | {4,-11} | {5,-13} | {6,-18} | {7}" -f 'CRP ID', 'Prio', 'App', 'Timestamp', 'Plan State', 'STATUS', 'Origin Repo', 'Title') -ForegroundColor Yellow
+    Write-Host "---------+------+----------+---------------------+-------------+---------------+--------------------+-----------------------" -ForegroundColor DarkGray
 
     foreach ($p in $Proposals) {
         $color = switch ($p.state) {
@@ -837,11 +2037,12 @@ function Format-ProposalsTable {
         $idStr = if ($null -ne $p.PSObject.Properties['crp_id'] -and $p.crp_id) { $p.crp_id } else { if (($null -ne $p.PSObject.Properties['state'] -and $p.state -eq 'bug') -or ($null -ne $p.PSObject.Properties['cr_id'] -and $p.cr_id.StartsWith('BUG-'))) { "BUG-{0:D3}" -f [int]$p.id } else { "CRP-{0:D3}" -f [int]$p.id } }
         $prog = if ($null -ne $p.PSObject.Properties['progress_state'] -and $p.progress_state) { $p.progress_state } else { 'undecided' }
         $prio = if ($null -ne $p.PSObject.Properties['priority'] -and $p.priority) { $p.priority } else { 'M' }
+        $appTag = if ($null -ne $p.PSObject.Properties['app_id'] -and $p.app_id) { $p.app_id -replace '(?i)^App:\s*', 'A' } else { '-' }
         $ts = if ($null -ne $p.PSObject.Properties['timestamp'] -and $p.timestamp) { $p.timestamp } elseif ($null -ne $p.PSObject.Properties['dates'] -and $null -ne $p.dates.PSObject.Properties['created']) { $p.dates.created } else { '-' }
         $scope = if ($null -ne $p.PSObject.Properties['origin_repo'] -and $p.origin_repo) { $p.origin_repo } else { 'LCM' }
         $pState = if ($null -ne $p.PSObject.Properties['state'] -and $p.state) { $p.state } else { 'suggested' }
         $title = if ($null -ne $p.PSObject.Properties['title'] -and $p.title) { $p.title } else { '' }
-        Write-Host (" {0,-7} | {1,-4} | {2,-19} | {3,-11} | {4,-13} | {5,-20} | {6}" -f $idStr, $prio, $ts, $pState, $prog, $scope, $title) -ForegroundColor $color
+        Write-Host (" {0,-7} | {1,-4} | {2,-8} | {3,-19} | {4,-11} | {5,-13} | {6,-18} | {7}" -f $idStr, $prio, $appTag, $ts, $pState, $prog, $scope, $title) -ForegroundColor $color
     }
 
     Write-Host "==========================================================================================" -ForegroundColor Cyan
@@ -886,12 +2087,22 @@ function Format-ReposUnderReviewTable {
 }
 
 Set-Alias -Name Parse-ProposalIdExpression -Value Resolve-ProposalIdExpression
+Set-Alias -Name Workon -Value Set-ActiveAppContext
+Set-Alias -Name Apps -Value Format-LcmAppsTable
+Set-Alias -Name App -Value New-LcmApp
+Set-Alias -Name SplitDocs -Value Split-LcmAppDocs
+Set-Alias -Name Purge-LcmPushedProposalBundle -Value Remove-LcmProposalBundle
+Set-Alias -Name Purge-Bundle -Value Remove-LcmProposalBundle
+Set-Alias -Name Get-Doc -Value Get-LcmProposalDocument
 
 Export-ModuleMember -Function Get-ProposalStorePath, Get-ProposalStore, Set-ProposalStore, `
     Get-WorkspaceProposals, New-WorkspaceProposal, Set-WorkspaceProposalState, Set-WorkspaceProposalProgress, `
     Set-WorkspaceProposalPriority, Save-ProposalPlan, Save-ProposalWalkthrough, `
     Resolve-ProposalIdExpression, Invoke-ProposalBatchAction, `
     Set-ReviewGranularity, Get-ReviewGranularity, Set-LCMMode, Get-LCMMode, `
+    Get-ActiveAppContext, Set-ActiveAppContext, Get-LcmApps, Sync-LcmAppCatalog, New-LcmApp, Split-LcmAppDocs, Format-LcmAppsTable, `
+    Get-LcmProposalDocument, Remove-LcmProposalBundle, `
     Test-RegressionTrigger, Assert-RegressionSafety, Get-RegressionDAGOrder, New-ChildRegressionProposal, `
     Get-ReposUnderReview, Format-ProposalsTable, Format-ReposUnderReviewTable `
-    -Alias Parse-ProposalIdExpression
+    -Alias Parse-ProposalIdExpression, Workon, Apps, App, SplitDocs, Purge-LcmPushedProposalBundle, Purge-Bundle, Get-Doc
+

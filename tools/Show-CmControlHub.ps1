@@ -148,6 +148,20 @@ foreach ($f in $crpFiles) {
     }
 }
 
+# Load Proposal Bundle Directories (CRP-162)
+$bundleDirs = @(Get-ChildItem -Path (Join-Path $workspaceRoot "Workspace_Inventory\docs\Proposals") -Directory -ErrorAction SilentlyContinue)
+foreach ($bd in $bundleDirs) {
+    foreach ($docFile in (Get-ChildItem -Path $bd.FullName -Filter "*.md" -File)) {
+        $rel = "Workspace_Inventory/docs/Proposals/$($bd.Name)/$($docFile.Name)"
+        $content = Get-Content -LiteralPath $docFile.FullName -Raw -Encoding UTF8
+        $docsCache[$rel] = $content
+        $docsCache["$($bd.Name)/$($docFile.Name)"] = $content
+        if ($bd.Name -match '^((?:CRP|BUG)-(?:\d{4}-)?\d{3,})') {
+            $docsCache["$($Matches[1])/$($docFile.Name)"] = $content
+        }
+    }
+}
+
 # Load Review Receipts
 $receiptFiles = @(Get-ChildItem -Path (Join-Path $workspaceRoot "Workspace_Inventory\data\reviews") -Filter "*.json" -File -ErrorAction SilentlyContinue)
 foreach ($f in $receiptFiles) {
@@ -170,8 +184,11 @@ foreach ($r in $governedRepos) {
         foreach ($d in $docNames) {
             $fullDoc = Join-Path $repoDir $d.Replace('/', '\')
             if (Test-Path -LiteralPath $fullDoc) {
+                $content = Get-Content -LiteralPath $fullDoc -Raw -Encoding UTF8
                 $key = "$r/$d"
-                $docsCache[$key] = Get-Content -LiteralPath $fullDoc -Raw -Encoding UTF8
+                $docsCache[$key] = $content
+                $leaf = Split-Path $d -Leaf
+                $docsCache["$r/$leaf"] = $content
             }
         }
         if ($r -eq "Workspace_Inventory") {
@@ -286,9 +303,12 @@ foreach ($cand in $atomJsCandidates) {
     }
 }
 $atomJsContent = if ($atomJsPath) { Get-Content -LiteralPath $atomJsPath -Raw -Encoding UTF8 } else { "" }
+$appsCatalogFile = Join-Path $workspaceRoot "Workspace_Inventory\data\catalog\apps.json"
+$appsCatalogRaw = if (Test-Path -LiteralPath $appsCatalogFile) { Get-Content -LiteralPath $appsCatalogFile -Raw -Encoding UTF8 } else { '{"total_apps":0,"apps":[]}' }
 
 $injectedBlock = @"
     const RAW_PROPOSALS = $proposalsRaw;
+    const RAW_APPS_CATALOG = $appsCatalogRaw;
     const RAW_ACTIVE_LOG = $($activeLogRaw | ConvertTo-Json);
     const RAW_HISTORY_LOG = $($historyLogRaw | ConvertTo-Json);
     const RAW_DOCS_CACHE = $($docsCache | ConvertTo-Json -Depth 3);
@@ -300,7 +320,7 @@ $htmlContent = $htmlContent.Replace('/*__INJECTED_ATOM_PLACEHOLDER__*/', $atomJs
 $htmlContent = $htmlContent.Replace('/*__INJECTED_DATA_PLACEHOLDER__*/', $injectedBlock)
 
 # Static Token Substitutions (BUG-127)
-$htmlContent = $htmlContent.Replace('{{HUB_TITLE}}', "LCM Configuration Management Control Hub v$scriptVersion")
+$htmlContent = $htmlContent.Replace('{{HUB_TITLE}}', "LCM Control Hub v$scriptVersion")
 $htmlContent = $htmlContent.Replace('{{HUB_VERSION}}', "v$scriptVersion")
 $htmlContent = $htmlContent.Replace('{{HUB_VERSION_SUBTITLE}}', $hubVersionSubtitle)
 $htmlContent = $htmlContent.Replace('{{LCM_BASELINE}}', $lcmBaseline)

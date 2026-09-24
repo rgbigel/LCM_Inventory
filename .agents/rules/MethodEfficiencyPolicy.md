@@ -1,12 +1,17 @@
-﻿# MethodEfficiencyPolicy
+---
+name: MethodEfficiencyPolicy
+description: Authoritative method efficiency policy enforcing mechanical artifact auto-acceptance, zero-test cascades, DOIT mode velocity, search dispatch, and tool catalog discovery.
+globs: "*"
+---
+# File: MethodEfficiencyPolicy.md
 
-Module: MethodEfficiencyPolicy.md  
-Purpose: Defines auto-acceptance, zero-test-trigger invariants, and method efficiency rules for generated inventory telemetry and logs.  
+Module: MethodEfficiencyPolicy  
+Purpose: Defines auto-acceptance, zero-test-trigger invariants, and method efficiency rules for generated inventory telemetry, logs, DOIT mode execution velocity, and tool discovery.  
 Path: .agents/rules/MethodEfficiencyPolicy.md  
 Authors: Rolf, Workspace_AI Engine  
-Version: 7.1.0  
+Version: 7.6.0  
 Status: Authoritative Invariant Rule  
-Date: 2026-09-03  
+Date: 2026-09-24  
 
 ---
 
@@ -38,8 +43,10 @@ Modifications to the mechanical artifacts listed in `RULE-EFF-001` **MUST NEVER*
 ### RULE-EFF-003 (Machine-Only Mutation Authority)
 Human operators and AI assistants `MUST NOT` hand-edit `inventory.json`, `INVENTORY_DASHBOARD.md`, or baseline snapshots. They must be modified solely by designated CM tools (`Invoke-WorkspaceAudit.ps1`, `New-WorkspaceBaseline.ps1`, `Invoke-LCMUpdate.ps1`).
 
-### RULE-EFF-004 (Agent Direct Execution & RR Review Gating Alignment)
-AI pair-programming agents operating under the Lifecycle Model (LCM) `SHALL` execute tool operations, script commands, and file edits directly under `always-proceed` and `allow` policies without introducing interactive chat planning pauses or confirmation prompts. Formal review gating, safety verification, and user acceptance are strictly and exclusively enforced downstream at the Review Request / Beyond Compare (`RR.ps1` / `Invoke-BeyondCompareReview.ps1`) commit stage per `RULE-REV-001`.
+### RULE-EFF-004 (DOIT Mode & Autonomous Execution Velocity Standard)
+1. **DOIT Mode Execution**: When a proposal is in **`DOIT` Mode** (`always-proceed = $true`) — which occurs automatically upon `BUG` birth or when explicitly triggered on a `CRP` via the `do` command — AI pair-programming agents `SHALL` execute tool operations, script commands, and file edits directly under `always-proceed` and `allow` policies without introducing interactive chat planning pauses or per-tool confirmation prompts.
+2. **Universal Gate 2 Review Boundary**: Execution velocity under `DOIT` mode proceeds continuously until the downstream Gate 2 Review stage (`RR.ps1` / `Invoke-BeyondCompareReview.ps1`) is reached per `RULE-REV-001`. Even critical, urgent, or internally generated BUGs `MUST NOT` circumvent Gate 2 review.
+3. **Normal Cycle Alignment**: For CRPs progressing under the Normal Review Cycle via `Proceed`, agents implement approved changes with interactive checkpoints whenever open questions, architectural alternatives, or user choices are encountered.
 
 ### RULE-EFF-005 (Quality Gate Short-Circuiting & Negative-Outcome Prevention)
 1. **Short-Circuit on Upstream Failure**: Multi-phase quality gates (`Test-RepoReadiness.ps1`, `Test-WorkspaceReadiness.ps1`) `MUST` execute tiered validations in prerequisite order (`Structure` $\rightarrow$ `Formatting` $\rightarrow$ `GovernanceLinks` $\rightarrow$ `ElevationConsistency` $\rightarrow$ `DocumentationFabric` $\rightarrow$ `PesterSuite`). If any structural tier fails, execution `MUST` abort immediately with a diagnostic message without executing downstream test suites.
@@ -54,6 +61,7 @@ Reserved for future use. See RULE-EFF-004 for current agent execution policy.
 - **Direct execution of `es.exe` is strictly prohibited** due to IPC authorization constraints when running from non-interactive or Session 0 contexts.
 - All high-speed file searches **must** be dispatched via `Search-Everything.ps1` (`.lcm/tools/internal/Search-Everything.ps1`) or directly against the Everything 1.5a HTTP REST API (port 8080).
 - CLI text searches inside file contents **must** use `rg.exe` (installed machine-wide in `D:\Tools\rg\`).
+- **Search Fallback Protocol**: If the Everything 1.5a HTTP REST API (port 8080) is unreachable or not running, tooling and agents `SHALL` fall back gracefully to `rg.exe --files` or PowerShell `Get-ChildItem` with scoped directory boundaries, ensuring operations never fail due to an inactive background daemon.
 
 ---
 

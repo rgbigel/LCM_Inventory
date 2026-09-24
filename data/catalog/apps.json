@@ -1,0 +1,415 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "LCM Workspace App-Centric Architecture Catalog",
+  "updated_at": "2026-09-20T17:50:23+02:00",
+  "total_apps": 23,
+  "apps": [
+    {
+      "id": "Master",
+      "number": 0,
+      "title": "Master Architecture - LCM Root Tooling Hub - System Architecture & User Mental Model",
+      "repo": ".lcm",
+      "doc_layout": "MasterRoot",
+      "directory": "docs/",
+      "arch_defined": true,
+      "req_defined": true,
+      "impl_defined": true,
+      "is_master": true,
+      "constituents": []
+    },
+    {
+      "id": "Master",
+      "number": 0,
+      "title": "Master Architecture - AuthorizeMasterUser Architecture Specification",
+      "repo": "AuthorizeMasterUser",
+      "doc_layout": "MasterRoot",
+      "directory": "docs/",
+      "arch_defined": true,
+      "req_defined": true,
+      "impl_defined": true,
+      "is_master": true,
+      "constituents": []
+    },
+    {
+      "id": "Master",
+      "number": 0,
+      "title": "Master Architecture - BackgroundModifier Architecture",
+      "repo": "BackgroundModifier",
+      "doc_layout": "MasterRoot",
+      "directory": "docs/",
+      "arch_defined": true,
+      "req_defined": true,
+      "impl_defined": true,
+      "is_master": true,
+      "constituents": []
+    },
+    {
+      "id": "App: 1",
+      "number": 1,
+      "title": "System Identity & State Capture Engine",
+      "repo": "BackgroundModifier",
+      "doc_layout": "Directory",
+      "directory": "docs\\App#1-SystemIdentityStateCaptureEngine",
+      "arch_defined": true,
+      "req_defined": true,
+      "impl_defined": true,
+      "constituents": [
+        {
+          "Path": "`Source/BackgroundModifier.ps1`",
+          "Role": "Phase 1 Orchestrator",
+          "Entrypoints": "`Invoke-BackgroundModifier`",
+          "TestSuite": "`tools/Test-RepoReadiness.ps1`"
+        },
+        {
+          "Path": "`Modules/SystemInfoTools.psm1`",
+          "Role": "Identity Harvester",
+          "Entrypoints": "`Get-SystemInfo`, `Get-BootTime`",
+          "TestSuite": "`tools/Test-RepoReadiness.ps1`"
+        },
+        {
+          "Path": "`Modules/StateTools.psm1`",
+          "Role": "State Store Engine",
+          "Entrypoints": "`Get-BackgroundState`, `Set-BackgroundState`",
+          "TestSuite": "`tools/Test-RepoReadiness.ps1`"
+        },
+        {
+          "Path": "`Modules/RuntimeContext.psm1`",
+          "Role": "Context Provider",
+          "Entrypoints": "`Get-RuntimeContext`",
+          "TestSuite": "`tools/Test-RepoReadiness.ps1`"
+        },
+        {
+          "Path": "`Modules/Logging.psm1`",
+          "Role": "Audit Logger",
+          "Entrypoints": "`Write-StructuredLog`",
+          "TestSuite": "`tools/Test-RepoReadiness.ps1`"
+        }
+      ]
+    },
+    {
+      "id": "App: 2",
+      "number": 2,
+      "title": "Telemetry Rendering & Skin Engine",
+      "repo": "BackgroundModifier",
+      "doc_layout": "Directory",
+      "directory": "docs\\App#2-TelemetryRenderingSkinEngine",
+      "arch_defined": true,
+      "req_defined": true,
+      "impl_defined": true,
+      "constituents": [
+        {
+          "Path": "`Source/BackgroundRenderer.ps1`",
+          "Role": "Phase 2 Orchestrator",
+          "Entrypoints": "`Invoke-BackgroundRenderer`",
+          "TestSuite": "`tools/Test-RepoReadiness.ps1`"
+        },
+        {
+          "Path": "`Modules/RenderTools.psm1`",
+          "Role": "Skin & Meter Generator",
+          "Entrypoints": "`Export-RainmeterSkin`, `New-TelemetryOverlay`",
+          "TestSuite": "`tools/Test-RepoReadiness.ps1`"
+        },
+        {
+          "Path": "`Modules/ImageTools.psm1`",
+          "Role": "Image Processing",
+          "Entrypoints": "`Resize-BackgroundAsset`",
+          "TestSuite": "`tools/Test-RepoReadiness.ps1`"
+        },
+        {
+          "Path": "`Modules/ImageStateTools.psm1`",
+          "Role": "Render Hash Cache",
+          "Entrypoints": "`Test-RenderStateDelta`",
+          "TestSuite": "`tools/Test-RepoReadiness.ps1`"
+        }
+      ]
+    },
+    {
+      "id": "App: 3",
+      "number": 3,
+      "title": "Desktop & Logon Wallpaper Setter",
+      "repo": "BackgroundModifier",
+      "doc_layout": "Directory",
+      "directory": "docs\\App#3-DesktopLogonWallpaperSetter",
+      "arch_defined": true,
+      "req_defined": true,
+      "impl_defined": true,
+      "constituents": [
+        {
+          "Path": "`Source/BackgroundSetter.ps1`",
+          "Role": "Phase 2 Apply Entrypoint",
+          "Entrypoints": "`Invoke-BackgroundSetter`",
+          "TestSuite": "`tools/Test-RepoReadiness.ps1`"
+        },
+        {
+          "Path": "`Modules/PathTools.psm1`",
+          "Role": "Cache Buster & Paths",
+          "Entrypoints": "`Resolve-BusterPath`",
+          "TestSuite": "`tools/Test-RepoReadiness.ps1`"
+        },
+        {
+          "Path": "`Modules/ModeTools.psm1`",
+          "Role": "Mode Resolver",
+          "Entrypoints": "`Get-ApplyMode`",
+          "TestSuite": "`tools/Test-RepoReadiness.ps1`"
+        },
+        {
+          "Path": "`Modules/SetFlagsTool.psm1`",
+          "Role": "Flag Manager",
+          "Entrypoints": "`Get-SetFlags`",
+          "TestSuite": "`tools/Test-RepoReadiness.ps1`"
+        }
+      ]
+    },
+    {
+      "id": "App: 4",
+      "number": 4,
+      "title": "Phase Execution Harness & Interactive Dashboard",
+      "repo": "BackgroundModifier",
+      "doc_layout": "Directory",
+      "directory": "docs\\App#4-PhaseExecutionHarnessInteractiveDashboard",
+      "arch_defined": true,
+      "req_defined": true,
+      "impl_defined": true,
+      "constituents": [
+        {
+          "Path": "`Source/BackgroundPhase2aHarness.ps1`",
+          "Role": "Phase 2a Automated Runner",
+          "Entrypoints": "`Invoke-Phase2aHarness`",
+          "TestSuite": "`tools/Test-RepoReadiness.ps1`"
+        },
+        {
+          "Path": "`Source/BackgroundPhase2bHarness.ps1`",
+          "Role": "Phase 2b Interactive Dashboard",
+          "Entrypoints": "`Invoke-Phase2bHarness`",
+          "TestSuite": "`tools/Test-RepoReadiness.ps1`"
+        },
+        {
+          "Path": "`Modules/SummaryTools.psm1`",
+          "Role": "Run Summary Formatter",
+          "Entrypoints": "`Format-RunSummary`",
+          "TestSuite": "`tools/Test-RepoReadiness.ps1`"
+        },
+        {
+          "Path": "`Modules/TranscriptTools.psm1`",
+          "Role": "Session Transcriber",
+          "Entrypoints": "`Start-PhaseTranscript`",
+          "TestSuite": "`tools/Test-RepoReadiness.ps1`"
+        },
+        {
+          "Path": "`Modules/ErrorTools.psm1`",
+          "Role": "Diagnostics Engine",
+          "Entrypoints": "`Write-CriticalError`",
+          "TestSuite": "`tools/Test-RepoReadiness.ps1`"
+        }
+      ]
+    },
+    {
+      "id": "Master",
+      "number": 0,
+      "title": "Master Architecture - BGMSAMVInv Architecture",
+      "repo": "BGMSAMVInv",
+      "doc_layout": "MasterRoot",
+      "directory": "docs/",
+      "arch_defined": true,
+      "req_defined": true,
+      "impl_defined": true,
+      "is_master": true,
+      "constituents": []
+    },
+    {
+      "id": "Master",
+      "number": 0,
+      "title": "Master Architecture - BootEntryManager Architecture",
+      "repo": "BootEntryManager",
+      "doc_layout": "MasterRoot",
+      "directory": "docs/",
+      "arch_defined": true,
+      "req_defined": true,
+      "impl_defined": false,
+      "is_master": true,
+      "constituents": []
+    },
+    {
+      "id": "Master",
+      "number": 0,
+      "title": "Master Architecture - Subsystem Architecture: HaSSD06 Home Assistant OS",
+      "repo": "HaSSD06",
+      "doc_layout": "MasterRoot",
+      "directory": "docs/",
+      "arch_defined": true,
+      "req_defined": true,
+      "impl_defined": true,
+      "is_master": true,
+      "constituents": []
+    },
+    {
+      "id": "Master",
+      "number": 0,
+      "title": "Master Architecture - Architecture Specification: HaSSD06 Subsystem Inventory & Action Engine",
+      "repo": "HaSSD06_Inventory",
+      "doc_layout": "MasterRoot",
+      "directory": "docs/",
+      "arch_defined": true,
+      "req_defined": true,
+      "impl_defined": true,
+      "is_master": true,
+      "constituents": []
+    },
+    {
+      "id": "Master",
+      "number": 0,
+      "title": "Master Architecture - Installation_LCD Technical Architecture Specification",
+      "repo": "Installation_LCD",
+      "doc_layout": "MasterRoot",
+      "directory": "docs/",
+      "arch_defined": true,
+      "req_defined": true,
+      "impl_defined": true,
+      "is_master": true,
+      "constituents": []
+    },
+    {
+      "id": "Master",
+      "number": 0,
+      "title": "Master Architecture - Architecture Specification: LCM Backup Engine (AADR)",
+      "repo": "LCM_Backup",
+      "doc_layout": "MasterRoot",
+      "directory": "docs/",
+      "arch_defined": true,
+      "req_defined": true,
+      "impl_defined": true,
+      "is_master": true,
+      "constituents": []
+    },
+    {
+      "id": "Master",
+      "number": 0,
+      "title": "Master Architecture - Architecture",
+      "repo": "MacriumTemplateUpdater",
+      "doc_layout": "MasterRoot",
+      "directory": "docs/",
+      "arch_defined": true,
+      "req_defined": false,
+      "impl_defined": false,
+      "is_master": true,
+      "constituents": []
+    },
+    {
+      "id": "Master",
+      "number": 0,
+      "title": "Master Architecture - NextBootTray Architecture",
+      "repo": "NextBootTray",
+      "doc_layout": "MasterRoot",
+      "directory": "docs/",
+      "arch_defined": true,
+      "req_defined": true,
+      "impl_defined": false,
+      "is_master": true,
+      "constituents": []
+    },
+    {
+      "id": "Master",
+      "number": 0,
+      "title": "Master Architecture - Architecture Specification - One2Md",
+      "repo": "One2Md",
+      "doc_layout": "MasterRoot",
+      "directory": "docs/",
+      "arch_defined": true,
+      "req_defined": true,
+      "impl_defined": true,
+      "is_master": true,
+      "constituents": []
+    },
+    {
+      "id": "Master",
+      "number": 0,
+      "title": "Master Architecture - PowerBGInfo Architecture",
+      "repo": "PowerBGInfo",
+      "doc_layout": "MasterRoot",
+      "directory": "docs/",
+      "arch_defined": true,
+      "req_defined": true,
+      "impl_defined": true,
+      "is_master": true,
+      "constituents": []
+    },
+    {
+      "id": "Master",
+      "number": 0,
+      "title": "Master Architecture - SharedModules Architecture",
+      "repo": "SharedModules",
+      "doc_layout": "MasterRoot",
+      "directory": "docs/",
+      "arch_defined": true,
+      "req_defined": true,
+      "impl_defined": false,
+      "is_master": true,
+      "constituents": []
+    },
+    {
+      "id": "Master",
+      "number": 0,
+      "title": "Master Architecture - SystemConfiguration Architecture",
+      "repo": "SystemConfiguration",
+      "doc_layout": "MasterRoot",
+      "directory": "docs/",
+      "arch_defined": true,
+      "req_defined": true,
+      "impl_defined": true,
+      "is_master": true,
+      "constituents": []
+    },
+    {
+      "id": "Master",
+      "number": 0,
+      "title": "Master Architecture - VolumeInventory Architecture",
+      "repo": "VolumeInventory",
+      "doc_layout": "MasterRoot",
+      "directory": "docs/",
+      "arch_defined": true,
+      "req_defined": false,
+      "impl_defined": false,
+      "is_master": true,
+      "constituents": []
+    },
+    {
+      "id": "Master",
+      "number": 0,
+      "title": "Master Architecture - Workspace_AI Lifecycle Model (LCM) System Architecture",
+      "repo": "Workspace_AI",
+      "doc_layout": "MasterRoot",
+      "directory": "docs/",
+      "arch_defined": true,
+      "req_defined": true,
+      "impl_defined": true,
+      "is_master": true,
+      "constituents": []
+    },
+    {
+      "id": "Master",
+      "number": 0,
+      "title": "Master Architecture - Architecture Specification: Workspace Inventory & Configuration Management Control Hub",
+      "repo": "Workspace_Inventory",
+      "doc_layout": "MasterRoot",
+      "directory": "docs/",
+      "arch_defined": true,
+      "req_defined": true,
+      "impl_defined": true,
+      "is_master": true,
+      "constituents": []
+    },
+    {
+      "id": "Master",
+      "number": 0,
+      "title": "Master Architecture - Architecture Specification: Workspace Supervision Engine",
+      "repo": "Workspace_Supervision",
+      "doc_layout": "MasterRoot",
+      "directory": "docs/",
+      "arch_defined": true,
+      "req_defined": true,
+      "impl_defined": true,
+      "is_master": true,
+      "constituents": []
+    }
+  ]
+}
