@@ -2396,7 +2396,7 @@
       "timestamp": "2026-09-02 18:52:00",
       "title": "App-Centric Architectural Synthesis, Active Context Engine & High-Order Decomposition Tooling",
       "origin_repo": ".agents/rules / Workspace_AI",
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "author": "Rolf",
       "details": "Formalizes the App-Centric Architecture Taxonomy (App: #), an Active Feature Context Engine (Workon: A#), 3-tier code-to-app mapping, cross-App problem governance, and automated tripartite synthesis on ACCEPT. Absorbs core AADD invariants.",
@@ -2404,7 +2404,8 @@
       "walkthrough_path": "",
       "dates": {
         "created": "2026-09-02 18:52:00",
-        "suggested": "2026-09-02 18:52:00"
+        "suggested": "2026-09-02 18:52:00",
+        "pushed": "2026-09-24 22:06:33"
       },
       "state_history": [
         {
@@ -2412,12 +2413,19 @@
           "timestamp": "2026-09-02 18:52:00",
           "user": "Rolf",
           "note": "Pre-existing concept re-registered post-crash; prior CRP reference noted"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-24 22:06:33",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, Workspace_AI, Workspace_Inventory)"
         }
       ],
       "priority": "H",
       "crp_id": "CRP-048",
       "cr_id": "CRP-048",
-      "progress_state": "completed"
+      "progress_state": "pushed",
+      "pushed_at": "2026-09-24 22:06:33"
     },
     {
       "id": 49,
@@ -6137,7 +6145,7 @@
       "origin_repo": "LCM / Tooling & Documentation Governance",
       "cr_id": "CRP-121",
       "bundle_id": "CRP-121",
-      "state": "completed",
+      "state": "pushed",
       "author": "Rolf, Workspace_AI",
       "priority": "M",
       "details": "Establishes an automated, AST-powered tool constituent and reverse caller documentation engine. Generates per-tool WIUD ('What It Uses Directly') forward dependencies at commit time and WUD ('What Uses Directly') reverse call graphs at pre-push time with hash-based gating to prevent Git churn.",
@@ -6145,7 +6153,8 @@
       "walkthrough_path": "",
       "dates": {
         "created": "2026-09-08 15:25:00",
-        "suggested": "2026-09-08 15:25:00"
+        "suggested": "2026-09-08 15:25:00",
+        "pushed": "2026-09-24 22:06:33"
       },
       "state_history": [
         {
@@ -6153,9 +6162,16 @@
           "timestamp": "2026-09-08 15:25:00",
           "user": "Operator Directive / CRP Intake",
           "note": "Registered per operator directive in OPEN state with Pass 1 (Commit) and Pass 2 (Pre-Push) hash-gated architecture."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-24 22:06:33",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, Workspace_AI, Workspace_Inventory)"
         }
       ],
-      "progress_state": "completed"
+      "progress_state": "pushed",
+      "pushed_at": "2026-09-24 22:06:33"
     },
     {
       "id": 122,
@@ -7942,7 +7958,7 @@
       "timestamp": "2026-09-19 21:38:00",
       "title": "[BUG] CM Control Hub Command Execution Output Capture & Automatic Ledger Re-Query Refresh",
       "origin_repo": "Workspace_Inventory",
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "BUG-159",
       "author": "Rolf, Workspace_AI",
       "details": "Fixes CM Control Hub console command execution so that: 1) Daemon returns synchronous stdout/stderr/exit code from executed tools (e.g. Invoke-ProposalAction.ps1), 2) Control Hub displays full structured output, target status reached, and diagnostics/problems in Response Feed, and 3) Control Hub automatically re-queries GET /proposals and refreshes the table, cards, and badges immediately upon command completion without requiring manual browser restarts.",
@@ -7952,7 +7968,8 @@
         "created": "2026-09-19 21:38:00",
         "suggested": "2026-09-19 21:38:00",
         "in_progress": "2026-09-19 21:40:00",
-        "completed": "2026-09-19 21:53:00"
+        "completed": "2026-09-19 21:53:00",
+        "pushed": "2026-09-24 22:06:33"
       },
       "state_history": [
         {
@@ -7972,20 +7989,27 @@
           "timestamp": "2026-09-19 21:53:00",
           "user": "rgbig",
           "note": "Operator directive: accept 159. Review receipts recorded."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-24 22:06:33",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, Workspace_AI, Workspace_Inventory)"
         }
       ],
       "priority": "H",
       "type": "BUG",
       "crp_id": "BUG-159",
       "cr_id": "BUG-159",
-      "progress_state": "completed"
+      "progress_state": "pushed",
+      "pushed_at": "2026-09-24 22:06:33"
     },
     {
       "id": 160,
       "timestamp": "2026-09-19 22:03:00",
       "title": "CM Control Hub Stream Area Minimization, Default Output De-cluttering & Notepad++ Display Action",
       "origin_repo": "Workspace_Inventory",
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "CRP-160",
       "author": "Rolf, Workspace_AI",
       "details": "Minimizes the CM Control Hub output feed area by: 1) Replacing default multi-line help clutter with a clean single-line ready message, 2) Adding a dedicated 'display' / 'notepad' command and header quick-action chip to export stream output to standard Notepad, and 3) Keeping inline help and default stream height compact.",
@@ -7995,7 +8019,8 @@
         "created": "2026-09-19 22:03:00",
         "suggested": "2026-09-19 22:03:00",
         "in_progress": "2026-09-19 22:04:00",
-        "completed": "2026-09-19 22:11:00"
+        "completed": "2026-09-19 22:11:00",
+        "pushed": "2026-09-24 22:06:33"
       },
       "state_history": [
         {
@@ -8015,20 +8040,27 @@
           "timestamp": "2026-09-19 22:11:00",
           "user": "rgbig",
           "note": "Operator directive: accept 160. Review receipts recorded."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-24 22:06:33",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, Workspace_AI, Workspace_Inventory)"
         }
       ],
       "priority": "M",
       "type": "CRP",
       "crp_id": "CRP-160",
       "cr_id": "CRP-160",
-      "progress_state": "completed"
+      "progress_state": "pushed",
+      "pushed_at": "2026-09-24 22:06:33"
     },
     {
       "id": 161,
       "timestamp": "2026-09-20 15:40:00",
       "title": "App Documentation Slicing, Directory Layout (docs/App#<N>-<Slug>/), and Migration Engine (SplitDocs)",
       "origin_repo": "Workspace_Inventory",
-      "state": "processed",
+      "state": "pushed",
       "bundle_id": "CRP-161",
       "author": "Rolf, Workspace_AI Intake",
       "details": "Establishes canonical docs/App#<N>-<Slug>/ directory layout directly under docs/ (no docs/apps/ wrapper), -SplitDocs switch parameter, Split-LcmAppDocs migration engine, and RULE-DOC-007 rule codification.",
@@ -8038,7 +8070,8 @@
         "created": "2026-09-20 15:40:00",
         "suggested": "2026-09-20 15:40:00",
         "in_progress": "2026-09-20 15:51:00",
-        "completed": "2026-09-20 15:55:00"
+        "completed": "2026-09-20 15:55:00",
+        "pushed": "2026-09-24 22:06:33"
       },
       "state_history": [
         {
@@ -8058,20 +8091,27 @@
           "timestamp": "2026-09-20 15:55:00",
           "user": "rgbig",
           "note": "Implementation completed and validated with 18/18 Pester tests and clean readiness check."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-24 22:06:33",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, Workspace_AI, Workspace_Inventory)"
         }
       ],
       "priority": "H",
       "type": "CRP",
       "crp_id": "CRP-161",
       "cr_id": "CRP-161",
-      "progress_state": "completed"
+      "progress_state": "pushed",
+      "pushed_at": "2026-09-24 22:06:33"
     },
     {
       "id": 162,
       "timestamp": "2026-09-20 15:45:00",
       "title": "Proposal Bundle Directory Architecture, Dual Lifecycle, Git Object Document Retrieval, and Post-Push Working Tree Purge Engine",
       "origin_repo": "Workspace_Inventory",
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "CRP-162",
       "author": "Rolf, Workspace_AI Intake",
       "details": "Batch completed via proceed 162-163 directive",
@@ -8087,7 +8127,8 @@
         "created": "2026-09-20 15:45:00",
         "suggested": "2026-09-20 15:45:00",
         "in_progress": "2026-09-20 16:15:00",
-        "completed": "2026-09-20 16:25:00"
+        "completed": "2026-09-20 16:25:00",
+        "pushed": "2026-09-24 22:06:33"
       },
       "state_history": [
         {
@@ -8107,20 +8148,27 @@
           "timestamp": "2026-09-20 16:25:00",
           "user": "rgbig",
           "note": "Implementation completed, bundle directory verified, and 21/21 Pester tests passing."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-24 22:06:33",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, Workspace_AI, Workspace_Inventory)"
         }
       ],
       "priority": "H",
       "type": "CRP",
       "crp_id": "CRP-162",
       "cr_id": "CRP-162",
-      "progress_state": "completed"
+      "progress_state": "pushed",
+      "pushed_at": "2026-09-24 22:06:33"
     },
     {
       "id": 163,
       "timestamp": "2026-09-20 17:45:00",
       "title": "Master Tripartite Architecture Visibility, Catalog Indexing & Cross-App Governance Focus",
       "origin_repo": "Workspace_Inventory",
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "CRP-163",
       "author": "Rolf, Workspace_AI Intake",
       "details": "Batch completed via proceed 162-163 directive",
@@ -8134,7 +8182,8 @@
       "walkthrough_path": "Workspace_Inventory/docs/Proposals/CRP-163-LCM-v7.6.0-Master-Architecture-Visibility-And-Catalog-Indexing/Walkthrough.md",
       "dates": {
         "created": "2026-09-20 17:45:00",
-        "suggested": "2026-09-20 17:45:00"
+        "suggested": "2026-09-20 17:45:00",
+        "pushed": "2026-09-24 22:06:33"
       },
       "state_history": [
         {
@@ -8142,13 +8191,20 @@
           "timestamp": "2026-09-20 17:45:00",
           "user": "Rolf",
           "note": "Registered via strict intake gate in SUGGESTED state."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-24 22:06:33",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, Workspace_AI, Workspace_Inventory)"
         }
       ],
       "priority": "H",
       "type": "CRP",
       "crp_id": "CRP-163",
       "cr_id": "CRP-163",
-      "progress_state": "completed"
+      "progress_state": "pushed",
+      "pushed_at": "2026-09-24 22:06:33"
     },
     {
       "id": 164,
@@ -8190,7 +8246,7 @@
       "timestamp": "2026-09-24 16:59:47",
       "title": "Deploy Root .agents Junction and Align .copilot Rules with Canonical Governance",
       "origin_repo": "Workspace_Inventory",
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "CRP-169",
       "author": "Rolf, Antigravity AI Assistant",
       "details": "Deploys root NTFS directory junction D:\\Git_Repositories\\.agents -> D:\\Git_Repositories\\.lcm\\.agents, and synchronizes all 17 canonical governance rules into D:\\Git_Repositories\\.copilot\\Rules\\ and root .copilot.",
@@ -8206,7 +8262,8 @@
         "created": "2026-09-24 16:59:47",
         "suggested": "2026-09-24 16:59:47",
         "in_progress": "2026-09-24 17:41:17",
-        "completed": "2026-09-24 22:05:05"
+        "completed": "2026-09-24 22:05:05",
+        "pushed": "2026-09-24 22:06:33"
       },
       "state_history": [
         {
@@ -8226,20 +8283,27 @@
           "timestamp": "2026-09-24 22:05:05",
           "user": "rgbig",
           "note": "Review disposition ACCEPT ALL recorded; committed in Git_Repositories (ff11d81) and Workspace_AI (10061e5)."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-24 22:06:33",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, Workspace_AI, Workspace_Inventory)"
         }
       ],
       "priority": "H",
       "type": "CRP",
       "crp_id": "CRP-169",
       "cr_id": "CRP-169",
-      "progress_state": "completed"
+      "progress_state": "pushed",
+      "pushed_at": "2026-09-24 22:06:33"
     },
     {
       "id": 170,
       "timestamp": "2026-09-24 18:21:34",
       "title": "Master Cross-Reference Matrix Synchronization, Rule Header Normalization, and Governance Fallback Codification",
       "origin_repo": "Workspace_Inventory",
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "CRP-170",
       "author": "Rolf, Antigravity AI Assistant",
       "details": "Resolves remaining DivergenceCorrection.md items: sanitizes .copilot authority headers in rules, updates LCM-Rules-Cross-Reference.md and AGENTS.md to v7.6.0 baseline, amends RULE-DOC-003 and normalizes ElevationPolicy and MethodEfficiencyPolicy headers, and codifies tool fallbacks.",
@@ -8255,7 +8319,8 @@
         "created": "2026-09-24 18:21:35",
         "suggested": "2026-09-24 18:21:35",
         "in_progress": "2026-09-24 18:21:35",
-        "completed": "2026-09-24 22:05:05"
+        "completed": "2026-09-24 22:05:05",
+        "pushed": "2026-09-24 22:06:33"
       },
       "state_history": [
         {
@@ -8275,13 +8340,20 @@
           "timestamp": "2026-09-24 22:05:05",
           "user": "rgbig",
           "note": "Review disposition ACCEPT ALL recorded; committed in Git_Repositories (ff11d81) and Workspace_AI (10061e5)."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-24 22:06:33",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, Workspace_AI, Workspace_Inventory)"
         }
       ],
       "priority": "H",
       "type": "CRP",
       "crp_id": "CRP-170",
       "cr_id": "CRP-170",
-      "progress_state": "completed"
+      "progress_state": "pushed",
+      "pushed_at": "2026-09-24 22:06:33"
     }
   ],
   "active_context": {
