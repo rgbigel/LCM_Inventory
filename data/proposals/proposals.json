@@ -8368,7 +8368,7 @@
       "timestamp": "2026-09-25 15:57:43",
       "title": "LCM Tool Explorer ShowTools Default Mode, Self-Tool Exclusion, and Dynamic Filtered Count Metric Card",
       "origin_repo": "Workspace_Inventory",
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "CRP-171",
       "author": "Rolf, Antigravity AI Assistant",
       "details": "Configures default ShowTools display mode on initial launch, excludes the self-referential ShowTools command line from the filtered display list, and drops the NoExit Locked metric card in favor of an inactive live filtered item count card.",
@@ -8383,7 +8383,8 @@
       "dates": {
         "created": "2026-09-25 15:57:43",
         "suggested": "2026-09-25 15:57:43",
-        "completed": "2026-09-25 20:39:09"
+        "completed": "2026-09-25 20:39:09",
+        "pushed": "2026-09-25 20:45:50"
       },
       "state_history": [
         {
@@ -8391,20 +8392,27 @@
           "timestamp": "2026-09-25 15:57:43",
           "user": "Rolf",
           "note": "CRP intake from operator directive."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-25 20:45:50",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, Workspace_AI, Workspace_Inventory)"
         }
       ],
       "priority": "M",
       "type": "CRP",
       "crp_id": "CRP-171",
       "cr_id": "CRP-171",
-      "progress_state": "completed"
+      "progress_state": "pushed",
+      "pushed_at": "2026-09-25 20:45:50"
     },
     {
       "id": 172,
       "timestamp": "2026-09-25 16:16:51",
       "title": "Remediate Get-Content Parameter Conflict in Apply-AllCustomizations",
       "origin_repo": "SystemConfiguration",
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "BUG-172",
       "author": "Rolf, Antigravity AI Assistant",
       "details": "Remediates mutually exclusive -Raw and -TotalCount parameters passed to Get-Content in Apply-AllCustomizations.ps1, Update-ToolCatalog.ps1, and Flush-LcmLegacyLogs.ps1.",
@@ -8421,7 +8429,8 @@
         "suggested": "2026-09-25 16:16:51",
         "in_progress": "2026-09-25 16:16:51",
         "review": "2026-09-25 16:18:11",
-        "completed": "2026-09-25 20:38:48"
+        "completed": "2026-09-25 20:38:48",
+        "pushed": "2026-09-25 20:45:50"
       },
       "state_history": [
         {
@@ -8435,6 +8444,12 @@
           "timestamp": "2026-09-25 16:18:11",
           "user": "Rolf",
           "note": "DOIT execution complete. Reached Gate 2 visual review."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-25 20:45:50",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, Workspace_AI, Workspace_Inventory)"
         }
       ],
       "priority": "H",
@@ -8442,14 +8457,15 @@
       "bug_id": "BUG-172",
       "crp_id": "BUG-172",
       "cr_id": "BUG-172",
-      "progress_state": "completed"
+      "progress_state": "pushed",
+      "pushed_at": "2026-09-25 20:45:50"
     },
     {
       "id": 173,
       "timestamp": "2026-09-25 17:53:27",
       "title": "Shared AI Memory (.gemini) Migration Safeguards, GitHub Baseline Verification, Hash Validation, and Pre-Push Integration",
       "origin_repo": "Workspace_AI",
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "CRP-173",
       "author": "Rolf, Antigravity AI Assistant",
       "details": "Implements fail-safe two-phase migration of .gemini to A:, double-checked junction idempotency, age verification vs GitHub repository baseline, SHA256 manifest hash consistency validation, and automated pre-push version updates.",
@@ -8466,7 +8482,8 @@
         "suggested": "2026-09-25 17:53:27",
         "in_progress": "2026-09-25 18:02:33",
         "review": "2026-09-25 18:06:58",
-        "completed": "2026-09-25 20:38:57"
+        "completed": "2026-09-25 20:38:57",
+        "pushed": "2026-09-25 20:45:50"
       },
       "state_history": [
         {
@@ -8486,20 +8503,27 @@
           "timestamp": "2026-09-25 18:06:58",
           "user": "Rolf",
           "note": "DOIT execution complete. Reached Gate 2 visual review."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-25 20:45:50",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, Workspace_AI, Workspace_Inventory)"
         }
       ],
       "priority": "H",
       "type": "CRP",
       "crp_id": "CRP-173",
       "cr_id": "CRP-173",
-      "progress_state": "completed"
+      "progress_state": "pushed",
+      "pushed_at": "2026-09-25 20:45:50"
     },
     {
       "id": 174,
       "timestamp": "2026-09-25 18:51:44",
       "title": "Beyond Compare Review Baseline Caching, Deduplication, and Unified Multi-Repo Shared Staging",
       "origin_repo": "Workspace_Inventory",
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "CRP-174",
       "author": "Rolf, Antigravity AI Assistant",
       "details": "Eliminates redundant baseline git-archive extractions on repeat BCR launches via immutable SHA cache hits, enables unified multi-repo proposal baseline staging, and maintains automatic cleanup on review acceptance.",
@@ -8515,7 +8539,8 @@
         "created": "2026-09-25 18:51:44",
         "suggested": "2026-09-25 18:51:44",
         "review": "2026-09-25 19:52:00",
-        "completed": "2026-09-25 20:39:09"
+        "completed": "2026-09-25 20:39:09",
+        "pushed": "2026-09-25 20:45:50"
       },
       "state_history": [
         {
@@ -8535,13 +8560,20 @@
           "timestamp": "2026-09-25 19:52:00",
           "user": "Rolf",
           "note": "DOIT complete. BCR baseline caching, Sidecar proposal switcher, Complete workflow, and UI compacting implemented. At Gate 2 review."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-25 20:45:50",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, Workspace_AI, Workspace_Inventory)"
         }
       ],
       "priority": "H",
       "type": "CRP",
       "crp_id": "CRP-174",
       "cr_id": "CRP-174",
-      "progress_state": "completed"
+      "progress_state": "pushed",
+      "pushed_at": "2026-09-25 20:45:50"
     }
   ],
   "active_context": {
