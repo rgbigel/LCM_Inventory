@@ -283,7 +283,7 @@
             } else {
                 actionButtonsHtml = 
                     '<div class="action-btns">' +
-                        '<button class="btn-action btn-run-action" onclick="window.LcmTools.runToolSmart(' + safeIdx + ')" title="Run with parameters...">▶ Run</button>' +
+                        '<button class="btn-action btn-run-action" onclick="window.LcmTools.openRunDialog(' + safeIdx + ')" title="Configure parameters and run...">▶ Run...</button>' +
                         '<button class="btn-action btn-menu-trigger" onclick="window.LcmTools.openActionMenu(' + safeIdx + ', event)" title="Select action">⋮ ▾</button>' +
                     '</div>';
             }
@@ -292,7 +292,7 @@
                 '<td>' +
                     '<div class="tool-name-cell" style="display: flex; flex-direction: column; align-items: flex-start;">' +
                         '<div style="display: flex; align-items: center; gap: 4px;">' +
-                            '<a href="javascript:void(0)" class="tool-name-link" onclick="window.LcmTools.openRunDialog(' + safeIdx + ')" title="Click to configure parameters and run (' + (t.Admin ? '🛡️ Elevated Admin' : '👤 Standard User') + ')">' +
+                            '<a href="javascript:void(0)" class="tool-name-link" onclick="window.LcmTools.runToolSmart(' + safeIdx + ')" title="Run ' + displayName + ' with defaults (' + (t.Admin ? '🛡️ Elevated Admin' : '👤 Standard User') + ')">' +
                                 displayName +
                             '</a>' +
                             editedMarker +
@@ -2163,31 +2163,26 @@
     }
 
     function initTheme() {
-        const savedTheme = localStorage.getItem('lcm_theme') || 'dark';
+        const savedTheme = localStorage.getItem('lcm_theme') || localStorage.getItem('lcm_theme_mode') || 'dark';
         applyTheme(savedTheme);
     }
 
     function applyTheme(theme) {
-        const icon = document.getElementById('theme-icon');
-        const label = document.getElementById('theme-label');
         if (theme === 'light') {
             document.body.classList.add('light-theme');
             document.documentElement.setAttribute('data-theme', 'light');
-            if (icon) icon.innerText = '🌙';
-            if (label) label.innerText = 'Dark Mode';
         } else {
             document.body.classList.remove('light-theme');
             document.documentElement.setAttribute('data-theme', 'dark');
-            if (icon) icon.innerText = '☀️';
-            if (label) label.innerText = 'Light Mode';
         }
         localStorage.setItem('lcm_theme', theme);
+        localStorage.setItem('lcm_theme_mode', theme);
     }
 
     function toggleTheme() {
         const isLight = document.body.classList.contains('light-theme');
         applyTheme(isLight ? 'dark' : 'light');
-        showToast(isLight ? '🌙 Switched to Dark Mode' : '☀️ Switched to Light Mode');
+        showToast(isLight ? '🌓 Switched to Dark Theme' : '🌓 Switched to Light Theme');
     }
 
     function initApplication() {

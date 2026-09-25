@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-09-24T18:21:35+02:00",
+  "updated_at": "2026-09-25T02:29:34+02:00",
   "review_granularity": "tight",
   "lcm_mode": "active",
   "last_proposal_id": 170,
@@ -8211,7 +8211,7 @@
       "timestamp": "2026-09-21 00:10:00",
       "title": "Usability Improvements & Interactive Document Viewer Optimization",
       "origin_repo": "Workspace_Inventory",
-      "state": "suggested",
+      "state": "completed",
       "bundle_id": "CRP-164",
       "author": "Rolf, Workspace_AI Intake",
       "details": "Addresses 13 usability and document review defects: document deduplication in table, CRLF markdown paragraph rendering in preview, clean VS Code editor dispatch, column sizing (preventing AUTHORITATIVE word wrap), dynamic batch button labels, sticky header/control pinning, zero-parameter tool defaults, and Show-* naming consolidation.",
@@ -8239,7 +8239,7 @@
       "type": "CRP",
       "crp_id": "CRP-164",
       "cr_id": "CRP-164",
-      "progress_state": "queued"
+      "progress_state": "committed"
     },
     {
       "id": 169,

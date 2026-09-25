@@ -334,7 +334,7 @@ th {
 th:hover { color: var(--text-primary); }
 
 .col-filter-row th {
-    background: #1c2128;
+    background: var(--bg-tertiary);
     padding: 8px 10px;
     border-bottom: 2px solid var(--border);
     cursor: default;
@@ -366,6 +366,7 @@ td {
     overflow-wrap: anywhere;
 }
 tr:hover td { background: rgba(255, 255, 255, 0.02); }
+body.light-theme tr:hover td { background: rgba(0, 0, 0, 0.04); }
 
 /* Description Column Constraints */
 td.col-desc, .col-desc {

@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LCM Sidecar</title>
+  <style>
+    :root {
+      /* Solarized Light (Pale Ochre) Palette matching Antigravity IDE (3 yellowish shades) */
+      --bg-main: #fdf6e3;        /* Shade 1: Primary Canvas (Pale Ochre) */
+      --bg-surface: #eee8d5;     /* Shade 2: Toolbars, Surface, Headers, Banners */
+      --bg-card: #f5edd6;        /* Shade 3: Cards, Command Rows, Action Buttons */
+      --bg-card-hover: #ede2c5;  /* Shade 3 Hover */
+      --bg-card-active: #e2d6b5; /* Shade 3 Active */
+      --border-main: #d3cbb7;    /* Primary Ochre Border */
+      --border-subtle: #e4decb;  /* Subtle Ochre Border */
+      
+      --text-main: #586e75;      /* Solarized base01 */
+      --text-bright: #073642;    /* Solarized base02 */
+      --text-muted: #839496;     /* Solarized base0 */
+      
+      --syntax-cmd: #268bd2;     /* Solarized blue */
+      --syntax-desc: #586e75;
+      --syntax-pill-bg: #eee8d5;
+
+      --accent-blue: #268bd2;
+      --accent-blue-hover: #1f70a9;
+      --accent-green: #859900;
+      --accent-green-bg: #eaf2d7;
+      --accent-green-border: #859900;
+      --accent-red: #dc322f;
+      --accent-red-bg: #fce8e8;
+      --accent-red-border: #dc322f;
+      --accent-purple: #6c71c4;
+      --accent-amber: #b58900;
+
+      --font-code: Consolas, "Cascadia Code", "SF Mono", Menlo, Monaco, monospace;
+      --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body.dark-theme, [data-theme="dark"] {
+      --bg-main: #002b36;
+      --bg-surface: #073642;
+      --bg-card: #0a3d4a;
+      --bg-card-hover: #0e4c5c;
+      --bg-card-active: #145e70;
+      --border-main: #144e5d;
+      --border-subtle: #0f3d48;
+
+      --text-main: #839496;
+      --text-bright: #eee8d5;
+      --text-muted: #586e75;
+
+      --syntax-cmd: #2aa198;
+      --syntax-desc: #839496;
+      --syntax-pill-bg: #073642;
+
+      --accent-blue: #268bd2;
+      --accent-blue-hover: #3aa3e8;
+      --accent-green: #859900;
+      --accent-green-bg: rgba(133, 153, 0, 0.2);
+      --accent-green-border: #859900;
+      --accent-red: #dc322f;
+      --accent-red-bg: rgba(220, 50, 47, 0.2);
+      --accent-red-border: #dc322f;
+      --accent-purple: #6c71c4;
+      --accent-amber: #b58900;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      height: 100%;
+      background: var(--bg-main);
+      color: var(--text-main);
+      font-family: var(--font-ui);
+      font-size: 13.5px;
+      line-height: 1.35;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    /* Sidecar Top Bar */
+    header {
+      flex: 0 0 auto;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-main);
+      padding: 6px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+    .header-left {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+    .header-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--syntax-cmd);
+      letter-spacing: -0.2px;
+      white-space: nowrap;
+    }
+    .header-sync-info {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      font-family: var(--font-code);
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .daemon-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.74rem;
+      font-family: var(--font-code);
+      font-weight: 600;
+      color: var(--accent-green);
+    }
+    .daemon-indicator.offline { color: var(--accent-red); }
+    .daemon-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    /* Target Proposal Display (Read-Only, Driven strictly by Control Hub) */
+    .target-banner {
+      flex: 0 0 auto;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-main);
+      padding: 7px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .target-header-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+    .target-title-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .target-code {
+      font-family: var(--font-code);
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--syntax-cmd);
+      flex-shrink: 0;
+    }
+    .target-name {
+      font-weight: 600;
+      font-size: 0.88rem;
+      color: var(--text-bright);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .target-pills-line {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.76rem;
+      font-family: var(--font-code);
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 1px 6px;
+      border-radius: 3px;
+      font-size: 0.74rem;
+      border: 1px solid var(--border-main);
+      background: var(--bg-card);
+      color: var(--text-bright);
+    }
+    .pill-scope { color: var(--accent-purple); border-color: var(--accent-purple); background: rgba(108, 113, 196, 0.12); }
+    .pill-plan { color: var(--accent-blue); border-color: var(--accent-blue); background: rgba(38, 139, 210, 0.12); }
+    .pill-prog { color: var(--accent-green); border-color: var(--accent-green); background: rgba(133, 153, 0, 0.12); }
+    .pill-prio { font-weight: 700; }
+    .prio-C, .prio-H { color: var(--accent-red); border-color: var(--accent-red); background: rgba(220, 50, 47, 0.12); }
+    .prio-M { color: var(--accent-amber); border-color: var(--accent-amber); background: rgba(181, 137, 0, 0.12); }
+    .prio-L, .prio-D { color: var(--text-muted); border-color: var(--border-main); background: var(--bg-card); }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--border-main);
+      background: var(--bg-card);
+      color: var(--text-bright);
+      font-size: 0.78rem;
+      font-family: var(--font-ui);
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.12s ease;
+      white-space: nowrap;
+    }
+    .btn:hover { background: var(--bg-card-hover); border-color: var(--border-main); color: var(--text-bright); }
+    .btn-theme-toggle {
+      background: var(--bg-card);
+      color: var(--text-bright);
+      border-color: var(--border-main);
+      font-weight: 600;
+    }
+    .btn-theme-toggle:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--accent-amber);
+    }
+    .btn-focus-hub {
+      background: var(--accent-blue);
+      color: #ffffff;
+      border-color: var(--accent-blue-hover);
+      font-weight: 600;
+    }
+    .btn-focus-hub:hover { background: var(--accent-blue-hover); color: #ffffff; }
+    .btn-action { background: var(--bg-card); }
+    .btn-delete { color: var(--accent-red); border-color: var(--accent-red); }
+    .btn-delete:hover { background: var(--accent-red-bg); border-color: var(--accent-red); color: var(--accent-red); }
+    .btn-help { background: var(--bg-card); color: var(--accent-blue); border-color: var(--border-main); }
+    .btn-help:hover { background: var(--bg-card-hover); border-color: var(--accent-blue); }
+
+    /* Proposal Actions Ribbon */
+    .actions-ribbon {
+      flex: 0 0 auto;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-main);
+      padding: 5px 14px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+    .actions-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Help Drawer (Positioned under action bar) */
+    .help-box {
+      display: none;
+      flex: 0 0 auto;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-main);
+      padding: 10px 14px;
+      font-size: 0.78rem;
+      color: var(--text-main);
+      line-height: 1.45;
+    }
+    .help-box.open { display: block; }
+    .help-box code {
+      font-family: var(--font-code);
+      color: var(--syntax-cmd);
+      background: var(--bg-card);
+      border: 1px solid var(--border-main);
+      padding: 1px 4px;
+      border-radius: 3px;
+    }
+
+    /* Main Scrollable Commands List */
+    .commands-container {
+      flex: 1 1 auto;
+      overflow-y: auto;
+      padding: 8px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: var(--bg-main);
+    }
+    .cmd-group-header {
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 3px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 2px;
+    }
+    .cmd-list {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    /* Command Row (Dense, High-Contrast, Both Action Buttons Cleanly Visible) */
+    .cmd-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-card);
+      transition: all 0.12s ease;
+      user-select: none;
+    }
+    .cmd-row:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-main);
+    }
+    .cmd-left {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      min-width: 0;
+      flex: 1;
+      cursor: pointer;
+    }
+    .cmd-text {
+      font-family: var(--font-code);
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: var(--syntax-cmd);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .cmd-desc {
+      font-size: 0.76rem;
+      color: var(--text-main);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .cmd-right {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+    .cmd-tip {
+      font-size: 0.70rem;
+      font-family: var(--font-code);
+      color: var(--text-muted);
+      padding: 1px 4px;
+      border-radius: 2px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+    }
+    
+    /* Prominent & Always-Visible Action Buttons */
+    .btn-row-copy {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 2px 7px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      border-radius: 3px;
+      background: var(--bg-surface);
+      color: var(--syntax-cmd);
+      border: 1px solid var(--border-main);
+      cursor: pointer;
+      transition: all 0.12s ease;
+    }
+    .btn-row-copy:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--accent-blue);
+    }
+
+    .btn-row-run {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 2px 7px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      border-radius: 3px;
+      background: var(--accent-green);
+      color: #ffffff;
+      border: 1px solid #738a00;
+      cursor: pointer;
+      transition: all 0.12s ease;
+    }
+    .btn-row-run:hover {
+      background: #6c7c00;
+      color: #ffffff;
+      border-color: #6c7c00;
+    }
+
+    /* Bottom Feedback / Status Line */
+    footer.sidecar-footer {
+      flex: 0 0 auto;
+      height: 26px;
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border-main);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 14px;
+      font-size: 0.74rem;
+      font-family: var(--font-code);
+      color: var(--text-muted);
+    }
+    .footer-msg {
+      color: var(--text-main);
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      flex: 1;
+    }
+    .footer-msg.success { color: var(--accent-green); font-weight: 700; }
+    .footer-msg.err { color: var(--accent-red); font-weight: 700; }
+    .footer-time {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      margin-left: 12px;
+    }
+
+    /* Toast Notification */
+    #sidecarToast {
+      position: fixed;
+      bottom: 34px;
+      right: 18px;
+      background: var(--text-bright);
+      color: var(--bg-main);
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      display: none;
+      z-index: 2000;
+      font-family: var(--font-code);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <header>
+    <div class="header-left">
+      <span class="header-title">🧩 LCM Sidecar &amp; Command Selector</span>
+      <span class="header-sync-info" id="syncStatus">Synced with Hub</span>
+    </div>
+    <div class="header-right">
+      <span class="daemon-indicator" id="sidecarDaemon">
+        <span class="daemon-dot"></span>
+        <span id="daemonLabel">REST: ONLINE</span>
+      </span>
+      <button class="btn btn-theme-toggle" id="btn-theme-toggle" onclick="toggleTheme()" title="Toggle Light/Dark Theme"><span>🌓</span> <span>Theme</span></button>
+      <button class="btn btn-focus-hub" onclick="focusHubWindow()" title="Bring LCM Control Hub window into focus on the left">🪟 Focus Hub</button>
+    </div>
+  </header>
+
+  <!-- Active Target Display (Strictly driven by Hub) -->
+  <div class="target-banner">
+    <div class="target-header-line">
+      <div class="target-title-box">
+        <span class="target-code" id="targetCode">CRP-164</span>
+        <span class="target-name" id="targetTitle">Usability Improvements &amp; Interactive Document Viewer Optimization</span>
+      </div>
+      <span style="font-size:0.72rem; color:var(--text-muted); font-family:var(--font-code); flex-shrink:0;">
+        Controlled by LCM Hub
+      </span>
+    </div>
+    <div class="target-pills-line">
+      <span class="pill pill-scope" id="targetRepo">Workspace_Inventory</span>
+      <span class="pill pill-plan" id="targetPlanState">Plan: suggested</span>
+      <span class="pill pill-prog" id="targetProgState">Status: queued</span>
+      <span class="pill pill-prio prio-H" id="targetPriority">Prio: H</span>
+      <span class="pill" id="targetApp" style="color:var(--text-muted);">App: Base</span>
+    </div>
+  </div>
+
+  <!-- Proposal Actions Ribbon -->
+  <div class="actions-ribbon">
+    <button class="btn btn-action" onclick="actionReview()" title="Launch Beyond Compare 5 review gate">🔍 BC5 Review</button>
+    <button class="btn btn-action" onclick="actionOpenDoc('specification')" title="Open specification document">📜 Spec</button>
+    <button class="btn btn-action" onclick="actionOpenDoc('plan')" title="Open implementation plan">📄 Plan</button>
+    <button class="btn btn-action" onclick="actionOpenDoc('walkthrough')" title="Open walkthrough document">📋 Walk</button>
+    <button class="btn btn-action" onclick="actionOpenRepoDocs()" title="Review repository tripartite documentation">📚 Docs</button>
+    <button class="btn btn-action" onclick="actionOpenReceipt()" title="Open review receipt">📜 Receipt</button>
+    <button class="btn btn-action" onclick="actionOpenInEditor()" title="Open in VS Code editor">✏️ Editor</button>
+    <button class="btn btn-delete" onclick="actionDelete()" title="Delete / undo proposal">🗑️ Delete</button>
+
+    <!-- Right-bound following Delete -->
+    <div class="actions-right">
+      <button class="btn btn-help" onclick="toggleHelpBox()" title="Show command reference and LCM rules help">❓ Help</button>
+    </div>
+  </div>
+
+  <!-- Help Box (Right under Action ribbon) -->
+  <div class="help-box" id="helpBox">
+    <div style="font-weight:700; color:var(--text-bright); margin-bottom:5px;">LCM Command Reference &amp; Execution Guide</div>
+    <p style="margin-bottom:6px;">
+      • <strong>📋 Copy to Chat:</strong> Copies the formatted prompt to your clipboard (ready for instant <code>Ctrl+V</code> into the AI chat input). Use this when you want the AI agent to reason through the step, inspect files, check git diffs, and provide step-by-step feedback.<br>
+      • <strong>▶ Run:</strong> Dispatches the command directly to the local LCM REST daemon on port <code>9876</code> to mechanically execute the PowerShell script on the host without involving the AI chat.<br>
+      • <strong>Hub Target Synchronization:</strong> Selecting any proposal row in the LCM Control Hub on the left instantly updates this Sidecar context in real time.<br>
+      • <strong>Primary Lifecycle Sequence:</strong> <code>proceed</code> &rarr; <code>do</code> &rarr; <code>verify</code> (BC5 Review) &rarr; <code>commit</code> &rarr; <code>complete</code> &rarr; <code>push</code>.
+    </p>
+  </div>
+
+  <!-- Commands Catalog -->
+  <div class="commands-container">
+    <!-- Lifecycle Group -->
+    <div class="cmd-group">
+      <div class="cmd-group-header">
+        <span>⚡ Lifecycle &amp; Progression</span>
+        <span>Click row or [Copy] for Chat | [Run] for direct execution</span>
+      </div>
+      <div class="cmd-list" id="listLifecycle"></div>
+    </div>
+
+    <!-- Triage & States Group -->
+    <div class="cmd-group">
+      <div class="cmd-group-header">
+        <span>🏷️ Triage, Priority &amp; States</span>
+      </div>
+      <div class="cmd-list" id="listTriage"></div>
+    </div>
+
+    <!-- Modular App Architecture Group -->
+    <div class="cmd-group">
+      <div class="cmd-group-header">
+        <span>🏛️ Modular App Architecture</span>
+      </div>
+      <div class="cmd-list" id="listArchitecture"></div>
+    </div>
+
+    <!-- Quality, Git & System Group -->
+    <div class="cmd-group">
+      <div class="cmd-group-header">
+        <span>🛡️ Quality, Git &amp; System</span>
+      </div>
+      <div class="cmd-list" id="listSystem"></div>
+    </div>
+  </div>
+
+  <!-- Bottom Feedback Bar with 24h Clock -->
+  <footer class="sidecar-footer">
+    <span class="footer-msg" id="sidecarStatus">⚡ Ready. Target: CRP-164</span>
+    <span class="footer-time" id="sidecarTimestamp">00:00:00</span>
+  </footer>
+
+  <div id="sidecarToast">✓ Copied for Chat</div>
+
+  <script>
+    const DAEMON_PORT = 9876;
+    const SIDECAR_CHANNEL = ("BroadcastChannel" in window) ? new BroadcastChannel("LCM_SIDECAR_CHANNEL") : null;
+
+    /*__INJECTED_DATA_PLACEHOLDER__*/
+    let proposalsList = (typeof RAW_PROPOSALS !== "undefined" && RAW_PROPOSALS && RAW_PROPOSALS.proposals) ? RAW_PROPOSALS.proposals : [];
+    let currentProposal = null;
+
+    const COMMAND_CATALOG = [
+      // Lifecycle
+      { group: "lifecycle", cmd: "do ${TAG}", desc: "Autonomous DOIT execution of complete plan", tip: "DOIT" },
+      { group: "lifecycle", cmd: "proceed ${TAG}", desc: "Advance proposal step-by-step through lifecycle milestones", tip: "Stepwise" },
+      { group: "lifecycle", cmd: "verify ${TAG}", desc: "Mark implementation complete & ready for BC5 review gate", tip: "Gate 1" },
+      { group: "lifecycle", cmd: "commit ${TAG}", desc: "Record reviewed Git commit in origin repo and sync ledger", tip: "Gate 2" },
+      { group: "lifecycle", cmd: "complete ${TAG}", desc: "Mark proposal accepted and completed in dual ledger", tip: "Close" },
+      { group: "lifecycle", cmd: "push", desc: "Push committed repositories to remote Git tracking branches", tip: "Push" },
+
+      // Triage
+      { group: "triage", cmd: "prio ${TAG} H", desc: "Set proposal priority level (C, H, M, L, D)", tip: "Priority" },
+      { group: "triage", cmd: "progress ${TAG} in_progress", desc: "Set physical progress state (in_progress, verification, etc.)", tip: "Status" },
+      { group: "triage", cmd: "state ${TAG} approved", desc: "Set governance plan state (suggested, approved, etc.)", tip: "State" },
+      { group: "triage", cmd: "defer ${TAG}", desc: "Postpone proposal to future iteration milestone", tip: "Defer" },
+      { group: "triage", cmd: "delete ${TAG}", desc: "Purge / permanently delete rejected proposal", tip: "Delete" },
+
+      // Architecture
+      { group: "architecture", cmd: "workon ${APP}", desc: "Set active app focus context for agent operations", tip: "Context" },
+      { group: "architecture", cmd: "workon Base", desc: "Clear active app focus and govern foundational system", tip: "Base" },
+      { group: "architecture", cmd: "app ${TITLE}", desc: "Scaffold new modular app slice across tripartite specs", tip: "Scaffold" },
+      { group: "architecture", cmd: "catalog", desc: "Synchronize and scan tripartite repository specifications", tip: "Scan" },
+
+      // System
+      { group: "system", cmd: "review ${TAG}", desc: "Launch Beyond Compare 5 visual review gate", tip: "BC5" },
+      { group: "system", cmd: "status", desc: "Check git status and proposal ledger alignment", tip: "Status" },
+      { group: "system", cmd: "readiness", desc: "Run LCM Rule Health & Readiness automated quality gate", tip: "Readiness" },
+      { group: "system", cmd: "help", desc: "Display CM CLI command reference and usage guide", tip: "Help" }
+    ];
+
+    function get24hTime() {
+      const d = new Date();
+      const pad = n => String(n).padStart(2, '0');
+      return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+    }
+
+    // Theme Engine (Solarized Light Pale Ochre vs Solarized Dark)
+    function initTheme() {
+      const saved = localStorage.getItem("lcm_theme") || localStorage.getItem("lcm_theme_mode") || "light";
+      applyTheme(saved, false);
+    }
+
+    function toggleTheme() {
+      const isCurrentlyDark = document.body.classList.contains("dark-theme") || document.documentElement.getAttribute("data-theme") === "dark";
+      const nextTheme = isCurrentlyDark ? "light" : "dark";
+      applyTheme(nextTheme, true);
+      showToast(nextTheme === "light" ? "🌓 Theme: Light (Solarized Pale Ochre)" : "🌓 Theme: Dark (Solarized Dark)");
+    }
+
+    function applyTheme(theme, broadcast = true) {
+      const isDark = (theme === "dark");
+      if (isDark) {
+        document.body.classList.add("dark-theme");
+        document.body.classList.remove("light-theme");
+        document.documentElement.setAttribute("data-theme", "dark");
+      } else {
+        document.body.classList.remove("dark-theme");
+        document.body.classList.add("light-theme");
+        document.documentElement.setAttribute("data-theme", "light");
+      }
+      localStorage.setItem("lcm_theme", isDark ? "dark" : "light");
+      localStorage.setItem("lcm_theme_mode", isDark ? "dark" : "light");
+
+      if (broadcast && SIDECAR_CHANNEL) {
+        SIDECAR_CHANNEL.postMessage({ type: "THEME_CHANGED", theme: isDark ? "dark" : "light" });
+      }
+    }
+
+    function initSidecar() {
+      initTheme();
+
+      // Connect to Hub broadcast
+      if (SIDECAR_CHANNEL) {
+        SIDECAR_CHANNEL.onmessage = (e) => {
+          if (!e.data) return;
+          if (e.data.type === "PROPOSAL_SELECTED" && e.data.proposal) {
+            setTargetProposal(e.data.proposal);
+            const syncEl = document.getElementById("syncStatus");
+            if (syncEl) syncEl.textContent = `Hub Sync: ${get24hTime()}`;
+          } else if (e.data.type === "THEME_CHANGED" && e.data.theme) {
+            applyTheme(e.data.theme, false);
+          }
+        };
+      }
+
+      checkDaemon();
+      setInterval(checkDaemon, 10000);
+
+      // Default target: CRP-164 or first
+      const found = proposalsList.find(p => p.id === 164) || proposalsList[0] || {
+        id: 164, crp_id: "CRP-164", title: "Usability Improvements & Interactive Document Viewer Optimization",
+        origin_repo: "Workspace_Inventory", state: "suggested", progress_state: "queued", priority: "H"
+      };
+      setTargetProposal(found);
+      updateStatus(`⚡ Ready. Target: ${found.crp_id || 'CRP-' + found.id}`);
+    }
+
+    function setTargetProposal(p) {
+      currentProposal = p;
+      const tag = p.crp_id || (p.state === 'bug' ? `BUG-${String(p.id).padStart(3, '0')}` : `CRP-${String(p.id).padStart(3, '0')}`);
+
+      document.getElementById("targetCode").textContent = tag;
+      document.getElementById("targetTitle").textContent = p.title || "No Title";
+      document.getElementById("targetRepo").textContent = p.origin_repo || "LCM";
+      document.getElementById("targetPlanState").textContent = `Plan: ${p.state || 'suggested'}`;
+      document.getElementById("targetProgState").textContent = `Status: ${p.progress_state || 'queued'}`;
+
+      const prio = (p.priority || 'M').toUpperCase();
+      const prioEl = document.getElementById("targetPriority");
+      prioEl.textContent = `Prio: ${prio}`;
+      prioEl.className = `pill pill-prio prio-${prio}`;
+
+      document.getElementById("targetApp").textContent = p.app_id ? `App: ${p.app_id}` : "App: Base";
+
+      updateStatus(`Selected target: ${tag}`);
+      renderCommands();
+    }
+
+    function renderCommands() {
+      const p = currentProposal || { id: 164, crp_id: "CRP-164" };
+      const tag = p.crp_id || `CRP-${p.id}`;
+      const app = p.app_id || "Base";
+
+      const containers = {
+        lifecycle: document.getElementById("listLifecycle"),
+        triage: document.getElementById("listTriage"),
+        architecture: document.getElementById("listArchitecture"),
+        system: document.getElementById("listSystem")
+      };
+
+      Object.values(containers).forEach(c => { if (c) c.innerHTML = ""; });
+
+      COMMAND_CATALOG.forEach(item => {
+        const concreteCmd = item.cmd
+          .replace("${TAG}", tag)
+          .replace("${APP}", app)
+          .replace("${TITLE}", "NewFeature");
+
+        const targetEl = containers[item.group];
+        if (!targetEl) return;
+
+        const row = document.createElement("div");
+        row.className = "cmd-row";
+
+        row.innerHTML = `
+          <div class="cmd-left" onclick="copyToChat('${concreteCmd}')" title="Click to copy for Chat (Ctrl+V)">
+            <span class="cmd-text">${concreteCmd}</span>
+            <span class="cmd-desc">${item.desc}</span>
+          </div>
+          <div class="cmd-right">
+            <span class="cmd-tip">${item.tip}</span>
+            <button class="btn-row-copy" onclick="event.stopPropagation(); copyToChat('${concreteCmd}')" title="Copy to clipboard for AI Chat input">📋 Copy</button>
+            <button class="btn-row-run" onclick="event.stopPropagation(); executeDaemonCmd('${concreteCmd}')" title="Run directly via local REST daemon">▶ Run</button>
+          </div>
+        `;
+        targetEl.appendChild(row);
+      });
+    }
+
+    function copyToChat(cmdText) {
+      navigator.clipboard.writeText(cmdText).then(() => {
+        showToast(`✓ Copied: ${cmdText}`);
+        updateStatus(`Copied for chat: "${cmdText}"`);
+      }).catch(() => {
+        prompt("Copy command to clipboard:", cmdText);
+      });
+    }
+
+    function translateSidecarCommand(cmdText) {
+      const trimmed = cmdText.trim();
+
+      // 1. Review action: review <#id|CRP-id>
+      const reviewMatch = trimmed.match(/^review(?:\s+(?:#|crp-?)?(\d+|all))?$/i);
+      if (reviewMatch) {
+        const repo = (currentProposal && currentProposal.origin_repo) ? currentProposal.origin_repo.split("/")[0].trim() : "Workspace_Inventory";
+        const tag = (reviewMatch[1] && reviewMatch[1] !== "all") ? `-CRP "CRP-${String(reviewMatch[1]).padStart(3, '0')}"` : "";
+        return `pwsh -File tools/Invoke-BeyondCompareReview.ps1 -RepositoryName "${repo}" ${tag}`.trim();
+      }
+
+      // 2. Proposal actions: commit, proceed, verify, complete, do, defer, delete
+      const actionMatch = trimmed.match(/^(commit|proceed|verify|complete|do|defer|delete)\s+(?:#|crp-?)?(\d+|all)$/i);
+      if (actionMatch) {
+        const action = actionMatch[1].toLowerCase();
+        const target = actionMatch[2];
+        return `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action ${action} -TargetExpression ${target}`;
+      }
+
+      // 3. Priority: prio <TAG> <C|H|M|L|D>
+      const prioMatch = trimmed.match(/^prio\s+(?:#|crp-?)?(\d+)\s+([CHMLD])$/i);
+      if (prioMatch) {
+        return `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action priority -TargetExpression ${prioMatch[1]} -Priority ${prioMatch[2].toUpperCase()}`;
+      }
+
+      // 4. Progress: progress <TAG> <state>
+      const progMatch = trimmed.match(/^progress\s+(?:#|crp-?)?(\d+)\s+([a-zA-Z_]+)$/i);
+      if (progMatch) {
+        return `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action progress -TargetExpression ${progMatch[1]} -ProgressState ${progMatch[2].toLowerCase()}`;
+      }
+
+      // 5. Workon: workon <APP>
+      const workonMatch = trimmed.match(/^workon\s+(.+)$/i);
+      if (workonMatch) {
+        return `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action workon -TargetExpression "${workonMatch[1]}"`;
+      }
+
+      // 6. Push
+      if (trimmed.toLowerCase() === "push" || trimmed.toLowerCase() === "git push") {
+        return `pwsh -File Workspace_Inventory/tools/Invoke-WorkspacePush.ps1`;
+      }
+
+      // 7. Status
+      if (trimmed.toLowerCase() === "status" || trimmed.toLowerCase() === "git status") {
+        return `git status --short`;
+      }
+
+      // 8. Readiness
+      if (trimmed.toLowerCase() === "readiness") {
+        return `pwsh -File Workspace_Inventory/tools/Test-LCMRuleHealth.ps1`;
+      }
+
+      return trimmed;
+    }
+
+    async function executeDaemonCmd(cmdText) {
+      const translated = translateSidecarCommand(cmdText);
+      updateStatus(`⏳ Executing: ${cmdText}...`);
+      try {
+        const res = await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ command: translated, sync: true })
+        });
+        const data = await res.json();
+        const isSuccess = (data.status === "COMPLETED" || data.exitCode === 0);
+        if (isSuccess) {
+          updateStatus(`✅ [OK] ${cmdText}`, "success");
+          showToast(`Executed: ${cmdText}`);
+          if (SIDECAR_CHANNEL) {
+            SIDECAR_CHANNEL.postMessage({ type: "DATA_UPDATED" });
+          }
+        } else {
+          updateStatus(`❌ [FAILED] ${cmdText} (Exit ${data.exitCode})`, "err");
+        }
+      } catch (err) {
+        updateStatus(`❌ Daemon error: ${err.message}`, "err");
+      }
+    }
+
+    /* Focus Hub Action */
+    function focusHubWindow() {
+      showToast("🪟 Focusing LCM Control Hub...");
+      if (SIDECAR_CHANNEL) {
+        SIDECAR_CHANNEL.postMessage({ type: "FOCUS_REQUEST" });
+      }
+      fetch(`http://127.0.0.1:${DAEMON_PORT}/foreground`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title: "LCM Control Hub" })
+      }).then(res => res.json()).then(data => {
+        if (!data || !data.success) {
+          fetch(`http://127.0.0.1:${DAEMON_PORT}/open`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              url: new URL("./CM_CONTROL_HUB.html", window.location.href).href,
+              foreground: true,
+              title: "LCM Control Hub"
+            })
+          }).catch(() => {});
+        }
+      }).catch(() => {});
+      updateStatus("Requested focus for LCM Control Hub");
+    }
+
+    /* Actions Ribbon Handlers */
+    function actionReview() {
+      if (!currentProposal) return;
+      const tag = currentProposal.crp_id || `CRP-${currentProposal.id}`;
+      const repo = (currentProposal.origin_repo || "Workspace_Inventory").split("/")[0].trim();
+      executeDaemonCmd(`pwsh -File tools/Invoke-BeyondCompareReview.ps1 -RepositoryName "${repo}" -CRP "${tag}"`);
+    }
+
+    function actionOpenDoc(docType) {
+      if (!currentProposal) return;
+      const path = currentProposal.docs ? currentProposal.docs[docType] : null;
+      if (path) {
+        executeDaemonCmd(`display ${path}`);
+      } else {
+        alert(`${docType} not found for ${currentProposal.crp_id || currentProposal.id}`);
+      }
+    }
+
+    function actionOpenRepoDocs() {
+      if (!currentProposal) return;
+      executeDaemonCmd(`pwsh -File Workspace_Inventory/tools/Show-RepositoryDocumentation.ps1 -RepositoryName "${currentProposal.origin_repo || 'Workspace_AI'}"`);
+    }
+
+    function actionOpenReceipt() {
+      if (!currentProposal) return;
+      const tag = currentProposal.crp_id || `CRP-${currentProposal.id}`;
+      executeDaemonCmd(`rcpt ${tag}`);
+    }
+
+    function actionOpenInEditor() {
+      if (!currentProposal) return;
+      const target = currentProposal.plan_path || currentProposal.bundle_dir || "Workspace_Inventory";
+      executeDaemonCmd(`npp ${target}`);
+    }
+
+    function actionDelete() {
+      if (!currentProposal) return;
+      const tag = currentProposal.crp_id || `CRP-${currentProposal.id}`;
+      if (confirm(`Delete ${tag}?`)) {
+        executeDaemonCmd(`delete ${tag}`);
+      }
+    }
+
+    function toggleHelpBox() {
+      const box = document.getElementById("helpBox");
+      box.classList.toggle("open");
+    }
+
+    async function checkDaemon() {
+      const badge = document.getElementById("sidecarDaemon");
+      const label = document.getElementById("daemonLabel");
+      try {
+        const res = await fetch(`http://127.0.0.1:${DAEMON_PORT}/ping`, { signal: AbortSignal.timeout(1500) });
+        if (res.ok) {
+          badge.className = "daemon-indicator";
+          label.textContent = "REST: ONLINE";
+        } else { throw new Error(); }
+      } catch (e) {
+        badge.className = "daemon-indicator offline";
+        label.textContent = "REST: OFFLINE";
+      }
+    }
+
+    function updateStatus(msg, state = "") {
+      const el = document.getElementById("sidecarStatus");
+      const ts = document.getElementById("sidecarTimestamp");
+      if (el) {
+        el.textContent = msg;
+        el.className = `footer-msg ${state}`;
+      }
+      if (ts) ts.textContent = get24hTime();
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById("sidecarToast");
+      if (!t) return;
+      t.textContent = msg;
+      t.style.display = "block";
+      setTimeout(() => { t.style.display = "none"; }, 2000);
+    }
+
+    window.onload = initSidecar;
+  </script>
+</body>
+</html>

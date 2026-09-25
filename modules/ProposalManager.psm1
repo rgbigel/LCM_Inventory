@@ -331,11 +331,20 @@ function Set-WorkspaceProposalProgress {
     $found = $null
 
     foreach ($p in $store.proposals) {
-        if ($p.id -eq $Id) {
             $p | Add-Member -NotePropertyName "progress_state" -NotePropertyValue $ProgressState -Force
+
+            # Plan State Synchronization (RULE-LCM-002 / Two-Tier Governance)
+            # When physical progress advances, the plan state follows:
             if ($ProgressState -in @('in_progress', 'queued', 'verification') -and $p.state -in @('completed', 'pushed')) {
                 $p.state = 'suggested'
+            } elseif ($ProgressState -in @('in_progress', 'verification', 'committed') -and $p.state -eq 'suggested') {
+                $p.state = 'approved'
+            } elseif ($ProgressState -eq 'completed' -and $p.state -ne 'completed') {
+                $p.state = 'completed'
+            } elseif ($ProgressState -eq 'pushed' -and $p.state -ne 'pushed') {
+                $p.state = 'pushed'
             }
+
             if ($Details) {
                 $p.details = $Details
             }

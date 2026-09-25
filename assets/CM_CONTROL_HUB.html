@@ -29,68 +29,125 @@
     }
 
     body.light-theme {
-      --bg-primary: #f6f8fa;
-      --bg-secondary: #ffffff;
-      --bg-tertiary: #eaeef2;
-      --bg-card: rgba(255, 255, 255, 0.95);
-      --border-color: #d0d7de;
-      --text-primary: #1f2328;
-      --text-secondary: #57606a;
-      --text-muted: #8c959f;
-      --accent-blue: #0969da;
-      --accent-cyan: #1b7c83;
-      --accent-green: #1a7f37;
-      --accent-purple: #8250df;
-      --accent-amber: #9a6700;
-      --accent-red: #cf222e;
-      --accent-orange: #bc4c00;
+      /* Solarized Light (Pale Ochre) Palette matching Antigravity IDE */
+      --bg-primary: #fdf6e3;   /* Shade 1: Primary Canvas (Pale Ochre) */
+      --bg-secondary: #eee8d5; /* Shade 2: Toolbars, Surface, Headers */
+      --bg-tertiary: #e4decb;  /* Shade 3: Table Headers, Hover, Sections */
+      --bg-card: #f5edd6;      /* Card Background */
+      --border-color: #d3cbb7;
+      --text-primary: #073642;
+      --text-secondary: #586e75;
+      --text-muted: #839496;
+      --accent-blue: #268bd2;
+      --accent-cyan: #2aa198;
+      --accent-green: #859900;
+      --accent-purple: #6c71c4;
+      --accent-amber: #b58900;
+      --accent-red: #dc322f;
+      --accent-orange: #cb4b16;
+    }
+    body.light-theme .btn {
+      background: #f5edd6 !important;
+      color: #073642 !important;
+      border-color: #d3cbb7 !important;
+    }
+    body.light-theme .btn:hover {
+      background: #ede2c5 !important;
+      border-color: #b58900 !important;
+    }
+    body.light-theme .btn-primary {
+      background: #1a7f37 !important;
+      color: #ffffff !important;
+      border-color: #1a7f37 !important;
+    }
+    body.light-theme .btn-primary:hover {
+      background: #2da44e !important;
+    }
+    body.light-theme .btn-blue {
+      background: #0969da !important;
+      color: #ffffff !important;
+      border-color: #0969da !important;
+    }
+    body.light-theme .btn-blue:hover {
+      background: #0860ca !important;
+    }
+    body.light-theme .btn-purple {
+      background: #8250df !important;
+      color: #ffffff !important;
+      border-color: #8250df !important;
+    }
+    body.light-theme .btn-amber {
+      background: #fff8c5 !important;
+      color: #9a6700 !important;
+      border-color: #d4a72c !important;
+    }
+    body.light-theme .btn-red {
+      background: #ffebe9 !important;
+      color: #cf222e !important;
+      border-color: #ff8182 !important;
+    }
+    body.light-theme .table-container {
+      background: #f5edd6 !important;
+      border-color: #d3cbb7 !important;
+    }
+    body.light-theme table tr td {
+      border-bottom: 1px solid #e4decb !important;
+      color: #073642 !important;
     }
     body.light-theme table tr:hover td {
-      background: #f3f6f9 !important;
+      background: #ede2c5 !important;
     }
     body.light-theme thead,
     body.light-theme th {
-      background: #f6f8fa !important;
-      color: #24292f !important;
-      border-bottom: 1px solid #d0d7de !important;
+      background: #eee8d5 !important;
+      color: #073642 !important;
+      border-bottom: 1px solid #d3cbb7 !important;
     }
     body.light-theme .search-input,
     body.light-theme .th-select,
     body.light-theme .console-input {
-      background: #ffffff !important;
-      color: #1f2328 !important;
-      border-color: #d0d7de !important;
+      background: #f5edd6 !important;
+      color: #073642 !important;
+      border-color: #d3cbb7 !important;
     }
-    body.light-theme .cm-console-dock {
-      background: #ffffff !important;
-      border-top-color: #d0d7de !important;
+    body.light-theme .stat-card {
+      background: #f5edd6 !important;
+      border-color: #d3cbb7 !important;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
     }
-    body.light-theme .console-header {
-      background: #f6f8fa !important;
-      border-bottom-color: #d0d7de !important;
-      color: #1f2328 !important;
+    body.light-theme .stat-card:hover,
+    body.light-theme .stat-card.active {
+      border-color: #268bd2 !important;
+      box-shadow: 0 3px 8px rgba(38, 139, 210, 0.15) !important;
     }
-    body.light-theme .console-stream {
-      background: #f6f8fa !important;
-      color: #1f2328 !important;
+    body.light-theme .controls-panel {
+      background: #eee8d5 !important;
+      border-color: #d3cbb7 !important;
     }
-    body.light-theme .console-input-row {
-      background: #ffffff !important;
+    body.light-theme .cm-status-bar {
+      background: #eee8d5 !important;
+      border-top-color: #d3cbb7 !important;
+      color: #586e75 !important;
+    }
+    body.light-theme .header-pill-toggle {
+      background: #f5edd6 !important;
+      border-color: #d3cbb7 !important;
+      color: #268bd2 !important;
     }
     body.light-theme .modal-card {
-      background: #ffffff !important;
-      color: #1f2328 !important;
-      border-color: #d0d7de !important;
+      background: #eee8d5 !important;
+      color: #073642 !important;
+      border-color: #d3cbb7 !important;
       box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15) !important;
     }
     body.light-theme .modal-header,
     body.light-theme .modal-footer {
-      background: #f6f8fa !important;
-      border-color: #d0d7de !important;
+      background: #e4decb !important;
+      border-color: #d3cbb7 !important;
     }
     body.light-theme .modal-body {
-      background: #ffffff !important;
-      color: #1f2328 !important;
+      background: #fdf6e3 !important;
+      color: #073642 !important;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -112,41 +169,110 @@
       box-sizing: border-box;
     }
 
-    /* Header & Top Bar */
+    /* Header & Top Bar (Condensed 3-Line Layout for Split Screen) */
     header {
       flex: 0 0 auto;
       display: flex;
+      flex-direction: column;
+      gap: 3px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 6px;
+    }
+    .hub-header-line {
+      display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-bottom: 10px;
-      border-bottom: 1px solid var(--border-color);
-      margin-bottom: 8px;
+      width: 100%;
+      min-height: 24px;
     }
-    .header-title {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
+    .hub-line-1 {
+      margin-bottom: 1px;
     }
-    .header-title-row {
-      display: flex;
+    .hub-line-2 {
+      margin-bottom: 1px;
+    }
+    .hub-line-3 {
+      font-size: 0.74rem;
+    }
+    .hub-focus-container {
+      display: inline-flex;
       align-items: center;
-      gap: 12px;
+      gap: 8px;
     }
-    .header-version-subtitle {
-      font-size: 0.76rem;
-      color: var(--text-muted);
-      font-family: var(--font-mono);
-      letter-spacing: 0.2px;
-    }
-    .header-title h1 {
-      font-size: 1.35rem;
+    .hub-focus-container h1 {
+      font-size: 1.05rem;
       font-weight: 700;
-      letter-spacing: -0.5px;
+      letter-spacing: -0.4px;
       white-space: nowrap;
+      margin: 0;
       background: linear-gradient(90deg, #58a6ff, #bc8cff);
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
+    }
+    .hub-sep {
+      color: var(--border-color);
+      opacity: 0.6;
+    }
+    .hub-focus-line {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--accent-cyan);
+      user-select: none;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+      padding: 1px 4px;
+      border-radius: 4px;
+    }
+    .hub-focus-line:hover {
+      background: rgba(57, 197, 187, 0.12);
+      text-decoration: underline;
+    }
+    .hub-focus-line.focus-master {
+      color: var(--accent-purple);
+    }
+    .hub-focus-line.focus-master:hover {
+      background: rgba(188, 140, 255, 0.12);
+    }
+    .hub-line-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .hub-governance-strip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .hub-nav-strip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .hub-meta-strip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      white-space: nowrap;
+    }
+    .meta-sep {
+      color: var(--border-color);
+      opacity: 0.6;
+    }
+    .btn-sm {
+      padding: 2px 8px !important;
+      font-size: 0.74rem !important;
+      height: 24px;
+      line-height: 20px;
     }
     .daemon-badge {
       display: inline-flex;
@@ -669,109 +795,53 @@
     }
     .action-btn-bc:hover { background: rgba(210, 153, 34, 0.3); }
 
-    /* Bottom Docked Interactive CM Console */
-    .cm-console-dock {
+    /* Bottom Single-Line Status / Confirmation Bar */
+    .cm-status-bar {
       flex: 0 0 auto;
-      position: static;
+      height: 28px;
+      min-height: 28px;
       margin-left: -16px;
       margin-right: -16px;
-      background: #11161d;
-      border-top: 2px solid var(--border-color);
-      box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
-      z-index: 900;
-      display: flex;
-      flex-direction: column;
-    }
-    .console-header {
+      margin-top: 2px;
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border-color);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 12px;
-      padding: 6px 14px;
-      background: #161b22;
-      border-bottom: 1px solid var(--border-color);
-      font-size: 0.74rem;
-      font-weight: 600;
+      padding: 0 16px;
+      font-size: 0.76rem;
+      font-family: var(--font-mono);
       color: var(--text-secondary);
-      white-space: nowrap;
-      flex-wrap: nowrap;
-      overflow-x: auto;
+      box-sizing: border-box;
+      z-index: 100;
     }
-    .console-title {
-      white-space: nowrap;
-      flex-shrink: 0;
-      font-weight: 700;
-      color: var(--accent-blue);
+    .status-bar-inner {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      font-size: 0.78rem;
-    }
-    .console-header-chips {
-      display: flex;
-      gap: 5px;
-      align-items: center;
-      flex-wrap: nowrap;
-      white-space: nowrap;
-      overflow-x: auto;
-    }
-    .console-chip {
-      background: var(--bg-tertiary);
-      border: 1px solid var(--border-color);
-      border-radius: 4px;
-      padding: 2px 7px;
-      font-size: 0.7rem;
-      cursor: pointer;
-      color: var(--accent-blue);
-      font-family: var(--font-mono);
-      white-space: nowrap;
-      flex-shrink: 0;
-      user-select: none;
-      transition: background 0.15s ease;
-    }
-    .console-chip:hover { background: #30363d; }
-
-    .console-stream {
-      height: 80px;
-      min-height: 50px;
-      max-height: 480px;
-      transition: height 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-      overflow-y: auto;
-      padding: 6px 14px;
-      font-family: var(--font-mono);
-      font-size: 0.74rem;
-      background: #090d13;
-      color: #7ee787;
-      white-space: pre-wrap;
-      line-height: 1.45;
-    }
-    .console-stream .msg-err { color: #f85149; font-weight: 600; }
-    .console-stream .msg-info { color: #58a6ff; }
-    .console-stream .msg-warn { color: #d29922; }
-    .console-stream .msg-success { color: #3fb950; font-weight: 700; }
-    .console-stream .msg-stdout { color: #e6edf3; white-space: pre; font-family: var(--font-mono); margin: 1px 0; }
-
-    .console-input-row {
-      display: flex;
       gap: 8px;
-      padding: 6px 14px;
-      background: #161b22;
-      align-items: center;
-    }
-    .console-input {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
       flex: 1;
-      background: #0d1117;
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      padding: 6px 10px;
-      font-family: var(--font-mono);
-      font-size: 0.78rem;
-      color: var(--text-primary);
-      outline: none;
     }
-    .console-input:focus {
-      border-color: var(--accent-blue);
-      box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.2);
+    .status-icon {
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+    .status-msg {
+      color: var(--text-primary);
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    .status-msg.msg-success { color: var(--accent-green); font-weight: 600; }
+    .status-msg.msg-err { color: var(--accent-red); font-weight: 600; }
+    .status-msg.msg-info { color: var(--accent-blue); }
+    .status-time {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      margin-left: 12px;
     }
 
     /* Modal Viewer */
@@ -863,6 +933,28 @@
     }
 
     /* Toast Notification */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--bg-tertiary, #21262d);
+      color: var(--text-primary, #ffffff);
+      padding: 10px 18px;
+      border-radius: 6px;
+      border: 1px solid var(--accent-blue, #58a6ff);
+      font-size: 0.88rem;
+      font-weight: 500;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+      display: none;
+      z-index: 10000;
+    }
+    body.light-theme #toast {
+      background: #fdf6e3 !important;
+      color: #073642 !important;
+      border-color: #268bd2 !important;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15) !important;
+    }
+
     /* Print & Export PDF Styling */
     @media print {
       body { background: #ffffff !important; color: #000000 !important; padding: 0 !important; }
@@ -881,17 +973,39 @@
     .callout-tip { border-left: 4px solid var(--accent-green); background: rgba(63, 185, 80, 0.1); padding: 8px 12px; border-radius: 4px; margin: 8px 0; }
   </style>
 </head>
-<body>
+<body class="light-theme">
 
-  <!-- Header -->
+  <!-- Header (Condensed 3-Line Layout for Split Screen / Narrow Hub) -->
   <header>
-    <div class="header-title">
-      <div class="header-title-row">
+    <!-- Line 1: Focus line (left) + ACTIONS Sidecar + Theme Toggle + Refresh & Back (right) -->
+    <div class="hub-header-line hub-line-1">
+      <div class="hub-focus-container">
         <h1>LCM Control Hub</h1>
-        <span class="header-pill-toggle pill-app" id="activeFocusBadge" onclick="openAppsModal()" title="Active App Focus. Click to switch context or view Apps Catalog.">
+        <span class="hub-sep">|</span>
+        <span class="hub-focus-line" id="activeFocusBadge" onclick="openAppsModal()" title="Active App Focus. Click to switch context or view Apps Catalog.">
           <span id="activeFocusIcon">🎯</span>
           <span id="activeFocusText">Focus: None (Base)</span>
         </span>
+      </div>
+      <div class="hub-line-actions">
+        <button class="btn btn-blue btn-sm" id="btn-show-sidecar" onclick="launchSidecarWindow()" title="Launch LCM Sidecar & Command Selector in dedicated window (Option B)">
+          <span>🧩</span> <span>ACTIONS Sidecar</span>
+        </button>
+        <button class="btn btn-sm" id="btn-theme-toggle" onclick="toggleTheme()" title="Toggle Light/Dark Theme">
+          <span>🌓</span> <span>Theme</span>
+        </button>
+        <button class="btn btn-primary btn-sm" id="btn-refresh-hub" onclick="refreshHubData(true)" title="Reload latest proposal ledger, statuses, and logs (F5 / Ctrl+R)">
+          <span id="refresh-hub-icon">🔄</span> <span id="refresh-hub-label">Refresh</span>
+        </button>
+        <button class="btn btn-back-nav btn-sm" onclick="window.history.length > 1 ? window.history.back() : window.location.href='./WORKSPACE_INVENTORY_VIEWER.html'" title="Return to Workspace Inventory Explorer (Windows-style Back)">
+          <span>⬅️</span> <span>Back</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Line 2: Granularity and LCM mode -->
+    <div class="hub-header-line hub-line-2">
+      <div class="hub-governance-strip">
         <span class="header-pill-toggle" id="granularityBadge" onclick="toggleGranularity()" title="Click to toggle Review Granularity: Coarse (batch review) vs Tight (per-proposal review)">
           <span id="granularityIcon">🔍</span>
           <span id="granularityText">Granularity: Coarse</span>
@@ -901,34 +1015,27 @@
           <span id="lcmModeText">LCM: Active</span>
         </span>
       </div>
-      <div class="header-version-subtitle" id="hubVersionSubtitle">
-        {{HUB_VERSION_SUBTITLE}}
+      <div class="hub-line-actions">
+        <span class="daemon-badge" id="daemonBadge">
+          <span class="daemon-dot"></span>
+          <span id="daemonText">REST Daemon: Checking...</span>
+        </span>
       </div>
     </div>
-    <div class="top-actions">
-      <span class="daemon-badge" id="daemonBadge">
-        <span class="daemon-dot"></span>
-        <span id="daemonText">REST Daemon: Checking...</span>
-      </span>
-      <button class="btn btn-primary" id="btn-refresh-hub" onclick="refreshHubData(true)" title="Reload latest proposal ledger, statuses, and logs (F5 / Ctrl+R)">
-        <span id="refresh-hub-icon">🔄</span> <span id="refresh-hub-label">Refresh</span>
-      </button>
-      <button class="btn btn-back-nav" onclick="window.history.length > 1 ? window.history.back() : window.location.href='../WORKSPACE_INVENTORY_VIEWER.html'" title="Return to Workspace Inventory Explorer (Windows-style Back)">
-        <span>⬅️</span> <span>Back</span>
-      </button>
-      <button class="btn" id="btn-theme-toggle" onclick="toggleTheme()" title="Switch Light/Dark display modes">
-        <span id="theme-icon">☀️</span> <span id="theme-label">Light Mode</span>
-      </button>
-      <button class="btn btn-purple" onclick="openAppsModal()" title="View and manage App-Centric modular architecture catalog">🧩 Apps Catalog</button>
-      <a href="../../Workspace_Supervision/docs/SUPERVISION_HUB.html" class="btn btn-blue" style="text-decoration: none;" title="Open Workspace Supervision Hub">🛡️ Supervision Hub</a>
-      <button class="btn btn-purple" onclick="showCRPDates(false)" title="Show lifecycle date values and individual state transitions for all proposals">📅 Show CRP Dates</button>
-      <button class="btn btn-primary" onclick="executePushRepositories()" title="Push completed commits to remote Git tracking branches">🚀 Push / Sync Repos</button>
-      <button class="btn btn-blue" onclick="openLogsModal('active')">📜 Active CM Log</button>
-      <button class="btn btn-purple" onclick="openLogsModal('history')">🏛️ Historical Log Archive</button>
-      <button class="btn" id="btn-print-table" onclick="if (typeof LcmTablePrintAtom !== 'undefined') LcmTablePrintAtom.openModal(); else window.print();" title="Configure and print or export to PDF">
-        <span>🖨️</span> <span>Print / PDF</span>
-      </button>
-      <button class="btn" onclick="openHelpModal()">❓ Help / Guide</button>
+
+    <!-- Line 3: Left: Apps Catalog, Supervision Hub; Right: tool version, LCM Version, Compile date of the html -->
+    <div class="hub-header-line hub-line-3">
+      <div class="hub-nav-strip">
+        <button class="btn btn-purple btn-sm" onclick="openAppsModal()" title="View and manage App-Centric modular architecture catalog">🧩 Apps Catalog</button>
+        <a href="../../../Workspace_Supervision/data/artifacts/SUPERVISION_HUB.html" class="btn btn-blue btn-sm" style="text-decoration: none;" title="Open Workspace Supervision Hub">🛡️ Supervision Hub</a>
+      </div>
+      <div class="hub-meta-strip" id="hubVersionSubtitle">
+        <span>Tool: <strong id="hubToolVersion">{{HUB_VERSION}}</strong></span>
+        <span class="meta-sep">•</span>
+        <span>LCM: <strong id="hubLcmVersion">{{LCM_BASELINE}}</strong></span>
+        <span class="meta-sep">•</span>
+        <span>Compiled: <span id="hubCompileDate">{{COMPILE_DATE}}</span></span>
+      </div>
     </div>
   </header>
 
@@ -978,12 +1085,11 @@
     <!-- Batch Actions Bar -->
     <div class="batch-bar">
       <div class="batch-actions">
-        <button class="btn btn-amber" onclick="executeBatchReview()" title="Launch Beyond Compare review for all checked items">🔍 Batch BC5 Review</button>
         <button class="btn btn-primary" onclick="executeBatchAccept()" title="Accept and dual-commit sync selected actionable proposals">✅ ACCEPT SELECTED</button>
-        <button class="btn btn-purple" onclick="showCRPDates(true)" title="Show state change date values and history for checked proposals">📅 Show Selected Dates</button>
-        <button class="btn btn-blue" onclick="executeBatchMarkReviewed()" title="One-shot: Mark selected items as reviewed without Beyond Compare visual gate">⚡ Mark Selected Reviewed (Bypass BC5)</button>
-        <button class="btn" onclick="executeBatchDefer()">⏸️ Defer Selected</button>
-        <button class="btn btn-red" onclick="executeBatchDelete()">🗑️ Delete / Undo</button>
+        <button class="btn" onclick="executeBatchDefer()" title="Defer selected proposals">⏸️ Defer Selected</button>
+        <button class="btn btn-amber" onclick="executeBatchReview()" title="Launch Beyond Compare review for all checked items">🔍 Do Review</button>
+        <button class="btn btn-blue" onclick="executeBatchMarkReviewed()" title="Mark selected items as reviewed / verification complete">⚡ Review Done</button>
+        <button class="btn btn-red" onclick="executeBatchDelete()" title="Delete / undo selected proposals">🗑️ Delete/Undo</button>
       </div>
 
       <div style="font-size: 0.75rem; color: var(--text-secondary);">
@@ -1004,7 +1110,6 @@
           <th onclick="toggleSort('title')" style="cursor: pointer;" title="Sort by Title">Title & Details <span class="sort-icon" id="sort-icon-title">⇅</span></th>
           <th onclick="toggleSort('state')" style="width: 125px; cursor: pointer;" title="Sort by Plan State">Plan State <span class="sort-icon" id="sort-icon-state">⇅</span></th>
           <th onclick="toggleSort('progress')" style="width: 135px; cursor: pointer;" title="Sort by STATUS">STATUS <span class="sort-icon" id="sort-icon-progress">⇅</span></th>
-          <th style="width: 250px; text-align: center;">Actions</th>
         </tr>
         <tr class="col-filter-row">
           <th></th>
@@ -1058,9 +1163,6 @@
               <option value="failed">Failed</option>
             </select>
           </th>
-          <th style="text-align: center;">
-            <button class="col-filter-reset-btn" onclick="resetAllFilters()" title="Reset All Column Selectors and Search">↺ Reset</button>
-          </th>
         </tr>
       </thead>
       <tbody id="proposalsTableBody">
@@ -1069,33 +1171,16 @@
     </table>
   </div>
 
-  <!-- Bottom Docked Interactive CM Console & Chat-Style Input -->
-  <div class="cm-console-dock">
-    <div class="console-header">
-      <span class="console-title">🖥️ CM Interactive Console &amp; Response Feed</span>
-      <div class="console-header-chips">
-        <span class="console-chip" onclick="setConsoleCommand('proceed CRP-079')">⏩ proceed CRP-079</span>
-        <span class="console-chip" onclick="setConsoleCommand('commit CRP-079')">📦 commit CRP-079</span>
-        <span class="console-chip" onclick="setConsoleCommand('verify CRP-078')">⏳ verify CRP-078</span>
-        <span class="console-chip" onclick="setConsoleCommand('complete CRP-077')">✅ complete CRP-077</span>
-        <span class="console-chip" onclick="setConsoleCommand('do CRP-078')">⚡ do CRP-078</span>
-        <span class="console-chip" onclick="setConsoleCommand('prio CRP-079 H')">🔥 prio CRP-079 H</span>
-        <span class="console-chip" onclick="setConsoleCommand('progress CRP-078 completed')">🎯 progress CRP-078 completed</span>
-        <span class="console-chip" onclick="setConsoleCommand('review CRP-078')">🔍 review CRP-078</span>
-        <span class="console-chip" onclick="setConsoleCommand('status')">📊 status</span>
-        <span class="console-chip" onclick="setConsoleCommand('readiness')">🧪 readiness</span>
-        <span class="console-chip" onclick="setConsoleCommand('help')">❓ help</span>
-        <span class="console-chip" onclick="displayConsoleOutputInNotepad()" title="Export and open response feed in Notepad">📝 Display</span>
-        <span class="console-chip" onclick="clearConsoleStream()">🧹 clear</span>
-        <span class="console-chip" id="btn-toggle-console" onclick="toggleConsoleFeed()" title="Collapse or expand the response feed">▾ Toggle Feed</span>
-      </div>
+  <!-- Bottom Single-Line Status / Confirmation Bar -->
+  <footer id="cmStatusBar" class="cm-status-bar">
+    <div class="status-bar-inner">
+      <span id="statusIcon" class="status-icon">⚡</span>
+      <span id="statusMessage" class="status-msg">Ready.</span>
     </div>
-    <div class="console-stream" id="consoleStream"><div class="msg-info">Ready. Type commands below (or 'help' / 'display').</div></div>
-    <div class="console-input-row">
-      <input type="text" id="consoleInput" class="console-input" placeholder="⌨️ Enter command: 'complete CRP-077', 'verify CRP-078', 'commit CRP-079', 'prio CRP-079 H' (Press Enter to run)..." onkeydown="handleConsoleKey(event)">
-      <button class="btn btn-primary" onclick="submitConsoleCommand()">🚀 Send / Run</button>
+    <div class="status-bar-right">
+      <span id="statusTimestamp" class="status-time"></span>
     </div>
-  </div>
+  </footer>
 
   <!-- Document Inspector Modal -->
   <div class="modal-overlay" id="inspectorModal">
@@ -1417,6 +1502,7 @@
     let currentModalTitle = "";
     let currentModalRaw = "";
     const DAEMON_PORT = 9876;
+    const SIDECAR_CHANNEL = ("BroadcastChannel" in window) ? new BroadcastChannel("LCM_SIDECAR_CHANNEL") : null;
 
     document.addEventListener("DOMContentLoaded", () => {
       // Ingest injected data if available
@@ -1439,9 +1525,6 @@
         appsData = RAW_APPS_CATALOG;
       }
 
-      // Apply saved theme or default to dark per CRP-105
-      initTheme();
-
       // Inlined LcmTablePrintAtom initialization per Display Standard
       if (typeof LcmTablePrintAtom !== 'undefined') {
         LcmTablePrintAtom.init({
@@ -1460,6 +1543,23 @@
             return search ? 'Search: "' + search + '"' : 'All Proposals in View';
           }
         });
+      }
+
+      // Initialize Theme (Default to Light matching IDE)
+      const savedTheme = localStorage.getItem("lcm_theme") || "light";
+      applyTheme(savedTheme);
+
+      if (SIDECAR_CHANNEL) {
+        SIDECAR_CHANNEL.onmessage = (e) => {
+          if (!e.data) return;
+          if (e.data.type === "FOCUS_REQUEST") {
+            window.focus();
+          } else if (e.data.type === "THEME_CHANGED" && e.data.theme) {
+            applyTheme(e.data.theme, false);
+          } else if (e.data.type === "DATA_UPDATED") {
+            refreshHubData(false);
+          }
+        };
       }
 
       initTabLifecycle();
@@ -1574,29 +1674,83 @@
       return refreshHubData(true);
     }
 
-    // Theme Engine (CRP-105)
-    function toggleTheme() {
-      const current = document.body.classList.contains("light-theme") ? "light" : "dark";
-      const target = current === "dark" ? "light" : "dark";
-      applyTheme(target);
-      localStorage.setItem("lcm_theme", target);
+    function showToast(msg) {
+      const t = document.getElementById("toast");
+      if (!t) return;
+      t.textContent = msg;
+      t.style.display = "block";
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => { t.style.display = "none"; }, 2500);
     }
 
-    function applyTheme(theme) {
-      if (theme === "light") {
+    // Theme Engine (CRP-105)
+    function toggleTheme() {
+      const isCurrentlyLight = document.body.classList.contains("light-theme");
+      const nextTheme = isCurrentlyLight ? "dark" : "light";
+      applyTheme(nextTheme, true);
+      showToast(isCurrentlyLight ? "🌓 Switched to Dark Theme" : "🌓 Switched to Light Theme");
+    }
+
+    function applyTheme(theme, broadcast = true) {
+      const isLight = (theme === "light");
+      if (isLight) {
         document.body.classList.add("light-theme");
         document.documentElement.setAttribute("data-theme", "light");
-        const label = document.getElementById("theme-label");
-        const icon = document.getElementById("theme-icon");
-        if (label) label.innerText = "Dark Mode";
-        if (icon) icon.innerText = "🌙";
       } else {
         document.body.classList.remove("light-theme");
         document.documentElement.setAttribute("data-theme", "dark");
-        const label = document.getElementById("theme-label");
-        const icon = document.getElementById("theme-icon");
-        if (label) label.innerText = "Light Mode";
-        if (icon) icon.innerText = "☀️";
+      }
+      localStorage.setItem("lcm_theme", isLight ? "light" : "dark");
+      localStorage.setItem("lcm_theme_mode", isLight ? "light" : "dark");
+
+      if (broadcast && typeof SIDECAR_CHANNEL !== "undefined" && SIDECAR_CHANNEL) {
+        SIDECAR_CHANNEL.postMessage({ type: "THEME_CHANGED", theme: isLight ? "light" : "dark" });
+      }
+    }
+
+    function launchSidecarWindow() {
+      showToast("🚀 Switching to ACTIONS Sidecar...");
+
+      // 1. Tell daemon to activate and foreground the LCM Sidecar window
+      fetch(`http://127.0.0.1:${DAEMON_PORT}/foreground`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title: "LCM Sidecar" })
+      }).then(res => res.json()).then(data => {
+        if (!data || !data.success) {
+          // Fallback: If not found, open Sidecar app window
+          fetch(`http://127.0.0.1:${DAEMON_PORT}/open`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              url: new URL("./LCM_SIDECAR.html", window.location.href).href,
+              foreground: true,
+              title: "LCM Sidecar"
+            })
+          }).catch(() => {
+            window.open("./LCM_SIDECAR.html", "LcmSidecarWindow");
+          });
+        }
+      }).catch(() => {
+        window.open("./LCM_SIDECAR.html", "LcmSidecarWindow");
+      });
+
+      // 2. Broadcast active proposal context to the Sidecar
+      const checked = document.querySelector(".row-chk:checked");
+      if (checked) {
+        const id = parseInt(checked.value, 10);
+        const p = (proposalsData.proposals || []).find(x => x.id === id);
+        if (p && SIDECAR_CHANNEL) {
+          setTimeout(() => {
+            SIDECAR_CHANNEL.postMessage({ type: "PROPOSAL_SELECTED", proposal: p });
+          }, 200);
+        }
+      }
+    }
+
+    function broadcastSidecarTarget(p) {
+      if (p && SIDECAR_CHANNEL) {
+        SIDECAR_CHANNEL.postMessage({ type: "PROPOSAL_SELECTED", proposal: p });
       }
     }
 
@@ -2197,36 +2351,6 @@
       if (modal) modal.classList.remove("open");
     }
 
-    // -------------------------------------------------------------------------
-    // LCM Display Standard: Unified Theme Management (Light / Dark)
-    // -------------------------------------------------------------------------
-    function initTheme() {
-      const saved = localStorage.getItem("lcm_theme") || localStorage.getItem("lcm_theme_mode") || "dark";
-      applyTheme(saved);
-    }
-
-    function applyTheme(theme) {
-      const isLight = (theme === "light");
-      if (isLight) {
-        document.body.classList.add("light-theme");
-        document.documentElement.setAttribute("data-theme", "light");
-      } else {
-        document.body.classList.remove("light-theme");
-        document.documentElement.setAttribute("data-theme", "dark");
-      }
-      const icon = document.getElementById("theme-icon");
-      const label = document.getElementById("theme-label");
-      if (icon) icon.textContent = isLight ? "🌙" : "☀️";
-      if (label) label.textContent = isLight ? "Dark Mode" : "Light Mode";
-      localStorage.setItem("lcm_theme", theme);
-      localStorage.setItem("lcm_theme_mode", theme);
-    }
-
-    function toggleTheme() {
-      const isCurrentlyLight = document.body.classList.contains("light-theme");
-      applyTheme(isCurrentlyLight ? "dark" : "light");
-      showToast(isCurrentlyLight ? "🌙 Switched to Dark Mode" : "☀️ Switched to Light Mode");
-    }
 
     // -------------------------------------------------------------------------
     // Interactive CM Console & Command Dispatch Engine
@@ -2250,7 +2374,29 @@
       stream.style.height = CONSOLE_BASE_HEIGHT + "px";
     }
 
+    function updateStatusLine(msg, type = "msg-info") {
+      const msgEl = document.getElementById("statusMessage");
+      const iconEl = document.getElementById("statusIcon");
+      const timeEl = document.getElementById("statusTimestamp");
+      if (msgEl) {
+        msgEl.textContent = msg;
+        msgEl.className = `status-msg ${type}`;
+      }
+      if (iconEl) {
+        if (type === "msg-err" || (typeof msg === 'string' && msg.includes("❌"))) iconEl.textContent = "❌";
+        else if (type === "msg-success" || (typeof msg === 'string' && msg.includes("✅"))) iconEl.textContent = "✅";
+        else if (type === "msg-info" && typeof msg === 'string' && msg.includes("⏳")) iconEl.textContent = "⏳";
+        else if (typeof msg === 'string' && msg.includes("🗑️")) iconEl.textContent = "🗑️";
+        else if (typeof msg === 'string' && msg.includes("⏸️")) iconEl.textContent = "⏸️";
+        else iconEl.textContent = "⚡";
+      }
+      if (timeEl) {
+        timeEl.textContent = new Date().toLocaleTimeString();
+      }
+    }
+
     function appendConsole(msg, type = "msg-info") {
+      updateStatusLine(msg, type);
       const stream = document.getElementById("consoleStream");
       if (!stream) return;
       const line = document.createElement("div");
@@ -2779,14 +2925,14 @@
 
       if (badge && text && icon) {
         if (act && act.app_id && !['Master', 'Architecture', 'Base', 'clear'].includes(act.app_id)) {
-          badge.className = "header-pill-toggle pill-app";
+          badge.className = "hub-focus-line";
           icon.textContent = "🎯";
           const titleSnippet = act.app_title ? ` (${act.app_title})` : '';
           text.textContent = `Focus: ${act.app_id}${titleSnippet}`;
           if (modalDisplay) modalDisplay.innerHTML = `<strong style="color:var(--accent-cyan);">${act.app_id}${titleSnippet}</strong> [${act.repo || 'Workspace_AI'}]`;
         } else {
           const repo = (act && act.repo) ? act.repo : 'Governing All Apps';
-          badge.className = "header-pill-toggle pill-app";
+          badge.className = "hub-focus-line focus-master";
           icon.textContent = "🏛️";
           text.textContent = "Focus: 🏛️ Master Architecture";
           if (modalDisplay) modalDisplay.innerHTML = `<strong style="color:var(--accent-purple);">🏛️ Master Tripartite Architecture</strong> [${repo}] <span style="color:var(--text-secondary);">(Architecture.md, Requirements.md, Implementation.md - Governing All Apps)</span>`;
@@ -3390,10 +3536,26 @@
         return b.id - a.id;
       });
 
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 32px; color: var(--text-muted);">No proposals match the current filter criteria.</td></tr>';
+        updateSelectedCount();
+        return;
+      }
+
       filtered.forEach(p => {
         const tr = document.createElement("tr");
         tr.id = `row-proposal-${p.id}`;
         tr.className = `state-${p.state || "suggested"} state-${p.progress_state || "undecided"}`;
+        tr.style.cursor = "pointer";
+        tr.onclick = (e) => {
+          if (['INPUT', 'SELECT', 'A', 'BUTTON'].includes(e.target.tagName)) return;
+          const chk = tr.querySelector('.row-chk');
+          if (chk) {
+            chk.checked = !chk.checked;
+            updateSelectedCount();
+          }
+          broadcastSidecarTarget(p);
+        };
 
         const crpBundle = p.bundle_id && p.bundle_id !== "unassigned" ? p.bundle_id : (p.cr_id || "");
         const pPrio = (p.priority || "M").toUpperCase();
@@ -3448,18 +3610,6 @@
               <option value="blocked" ${p.progress_state === 'blocked' ? 'selected' : ''}>Blocked</option>
               <option value="failed" ${p.progress_state === 'failed' ? 'selected' : ''}>Failed</option>
             </select>
-          </td>
-          <td>
-            <div class="action-group">
-              <button class="action-btn action-btn-bc" onclick="launchReviewForProposal(${p.id}, '${p.origin_repo}', '${crpBundle}')">🔍 BC5</button>
-              ${p.bundle_id && (p.bundle_id.startsWith('CRP-') || p.bundle_id.startsWith('BUG-')) ? `<button class="action-btn" onclick="openProposalBundleModal(${p.id}, 'specification')">${p.bundle_id.startsWith('BUG-') ? '🐛 BUG' : '📜 CRP'}</button>` : ''}
-              ${(p.plan_path || (p.docs && p.docs.plan) || p.bundle_dir) ? `<button class="action-btn" onclick="openProposalBundleModal(${p.id}, 'plan')">📄 Plan</button>` : ''}
-              ${(p.walkthrough_path || (p.docs && p.docs.walkthrough) || p.bundle_dir) ? `<button class="action-btn" onclick="openProposalBundleModal(${p.id}, 'walkthrough')">📋 Walk</button>` : ''}
-              <button class="action-btn" onclick="openRepoDocsReview('${p.origin_repo}')" title="Review Tripartite Documentation for repository">📚 Docs</button>
-              <button class="action-btn" onclick="openReceiptForProposal('${p.origin_repo}', '${crpBundle}')">📜 Rcpt</button>
-              <button class="action-btn" onclick="editInNotepad('${p.plan_path || p.bundle_id || ''}')" title="Edit in Notepad++">✏️ N++</button>
-              ${p.state === 'rejected' ? `<button class="action-btn" style="color:var(--accent-red);" onclick="deleteProposal(${p.id})">🗑️</button>` : ''}
-            </div>
           </td>
         `;
         tbody.appendChild(tr);
@@ -3825,6 +3975,7 @@
       const cardTotal = document.getElementById("cardTotal");
       if (cardTotal) cardTotal.classList.add("active");
       document.getElementById("searchInput").value = "";
+      if (document.getElementById("thIdCategoryFilter")) document.getElementById("thIdCategoryFilter").value = "ALL";
       if (document.getElementById("thPriorityFilter")) document.getElementById("thPriorityFilter").value = "ALL";
       document.getElementById("thScopeFilter").value = "ALL";
       document.getElementById("thPlanStateFilter").value = "ALL";
