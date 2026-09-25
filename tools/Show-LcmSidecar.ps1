@@ -40,7 +40,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$scriptVersion = "1.2.0"
+$scriptVersion = "7.2.0"
 $scriptName = "Show-LcmSidecar"
 
 if ($Help) {

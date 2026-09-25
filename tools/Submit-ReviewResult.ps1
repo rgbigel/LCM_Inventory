@@ -31,8 +31,8 @@ param(
              prompts for uncopied file confirmations (bypassed with 'ACCEPT ALL' or -All), and performs review-gated commits per RULE-REV-001.
     Path: tools/Submit-ReviewResult.ps1
     Authors: Rolf, Workspace_AI Engine
-    Version: 2.2.0
-    Date: 2026-09-10
+    Version: 7.3.0
+    Date: 2026-09-25
 #>
 
 Set-StrictMode -Version Latest
