@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-09-25T20:38:57+02:00",
+  "updated_at": "2026-09-25T20:39:09+02:00",
   "review_granularity": "tight",
   "lcm_mode": "active",
   "last_proposal_id": 174,
@@ -8368,7 +8368,7 @@
       "timestamp": "2026-09-25 15:57:43",
       "title": "LCM Tool Explorer ShowTools Default Mode, Self-Tool Exclusion, and Dynamic Filtered Count Metric Card",
       "origin_repo": "Workspace_Inventory",
-      "state": "suggested",
+      "state": "completed",
       "bundle_id": "CRP-171",
       "author": "Rolf, Antigravity AI Assistant",
       "details": "Configures default ShowTools display mode on initial launch, excludes the self-referential ShowTools command line from the filtered display list, and drops the NoExit Locked metric card in favor of an inactive live filtered item count card.",
@@ -8382,7 +8382,8 @@
       "walkthrough_path": "Workspace_Inventory/docs/Proposals/CRP-171-LCM-v7.6.0-Tool-Explorer-ShowTools-Default-And-Metrics/Walkthrough.md",
       "dates": {
         "created": "2026-09-25 15:57:43",
-        "suggested": "2026-09-25 15:57:43"
+        "suggested": "2026-09-25 15:57:43",
+        "completed": "2026-09-25 20:39:09"
       },
       "state_history": [
         {
@@ -8396,7 +8397,7 @@
       "type": "CRP",
       "crp_id": "CRP-171",
       "cr_id": "CRP-171",
-      "progress_state": "suggested"
+      "progress_state": "completed"
     },
     {
       "id": 172,
@@ -8498,7 +8499,7 @@
       "timestamp": "2026-09-25 18:51:44",
       "title": "Beyond Compare Review Baseline Caching, Deduplication, and Unified Multi-Repo Shared Staging",
       "origin_repo": "Workspace_Inventory",
-      "state": "review",
+      "state": "completed",
       "bundle_id": "CRP-174",
       "author": "Rolf, Antigravity AI Assistant",
       "details": "Eliminates redundant baseline git-archive extractions on repeat BCR launches via immutable SHA cache hits, enables unified multi-repo proposal baseline staging, and maintains automatic cleanup on review acceptance.",
@@ -8513,7 +8514,8 @@
       "dates": {
         "created": "2026-09-25 18:51:44",
         "suggested": "2026-09-25 18:51:44",
-        "review": "2026-09-25 19:52:00"
+        "review": "2026-09-25 19:52:00",
+        "completed": "2026-09-25 20:39:09"
       },
       "state_history": [
         {
@@ -8539,7 +8541,7 @@
       "type": "CRP",
       "crp_id": "CRP-174",
       "cr_id": "CRP-174",
-      "progress_state": "verification"
+      "progress_state": "completed"
     }
   ],
   "active_context": {
