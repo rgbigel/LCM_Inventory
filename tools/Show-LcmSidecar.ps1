@@ -131,7 +131,7 @@ if (-not $NoLaunch) {
 
     if ($edgePath) {
         Write-Host "  -> Opening Sidecar as standalone App Window (Edge App Mode)..." -ForegroundColor Green
-        $sidecarArgs = "--app=`"$fileUri`" --window-size=560,980 --window-position=1310,30"
+        $sidecarArgs = "--app=`"$fileUri`" --window-size=500,680 --window-position=1380,50"
         if (Test-Path -LiteralPath $dispatcher) {
             & $dispatcher -FilePath $edgePath -ArgumentList $sidecarArgs
         } else {

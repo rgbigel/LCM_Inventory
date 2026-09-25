@@ -414,35 +414,38 @@
     .stats-row {
       flex: 0 0 auto;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 8px;
-      margin-bottom: 8px;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 5px;
+      margin-bottom: 5px;
     }
     .stat-card {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
-      border-radius: 8px;
-      padding: 8px 12px;
+      border-radius: 6px;
+      padding: 4px 8px;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.15s ease;
       backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
     .stat-card:hover, .stat-card.active {
       border-color: var(--accent-blue);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.25);
     }
     .stat-label {
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       text-transform: uppercase;
       font-weight: 600;
       color: var(--text-secondary);
-      letter-spacing: 0.5px;
+      letter-spacing: 0.3px;
     }
     .stat-value {
-      font-size: 1.4rem;
+      font-size: 1.05rem;
       font-weight: 700;
-      margin-top: 2px;
+      margin-top: 0;
       color: var(--text-primary);
     }
 
@@ -1571,6 +1574,9 @@
       renderTable();
       setInterval(checkDaemonHealth, 5000);
       setInterval(checkActionProgress, 1500);
+
+      // Dynamically fetch live ledger from REST daemon immediately on startup
+      refreshHubData(false);
 
       appendConsole("CM Control Hub {{HUB_VERSION}} initialized with " + proposalsData.proposals.length + " proposal(s) and " + Object.keys(docsCache).length + " cached documents.", "msg-info");
 
@@ -3788,7 +3794,7 @@
     async function launchReviewForProposal(id, repoStr, crp) {
       const primaryRepo = (repoStr || "Workspace_Inventory").split("/")[0].trim();
       const crpArg = crp && crp.startsWith("CRP-") ? `-CRP "${crp}"` : "";
-      const cmd = `pwsh -File tools/Invoke-BeyondCompareReview.ps1 -RepositoryName "${primaryRepo}" ${crpArg}`;
+      const cmd = `pwsh -File Workspace_Inventory/tools/Invoke-BeyondCompareReview.ps1 -RepositoryName "${primaryRepo}" ${crpArg}`;
 
       appendConsole(`Launching Beyond Compare 5 review for #${id} (${primaryRepo})...`, "msg-info");
       try {

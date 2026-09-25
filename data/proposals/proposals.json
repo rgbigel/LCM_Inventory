@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-09-25T02:37:20+02:00",
+  "updated_at": "2026-09-25T20:38:57+02:00",
   "review_granularity": "tight",
   "lcm_mode": "active",
-  "last_proposal_id": 170,
+  "last_proposal_id": 174,
   "proposals": [
     {
       "id": 1,
@@ -2362,7 +2362,6 @@
       "title": "Formalize CRM (Change Request Management) as Named Acceptance Stage in LCM Lifecycle Chain",
       "origin_repo": ".agents/rules / Workspace_AI",
       "state": "rejected",
-      "progress_state": "rejected",
       "bundle_id": "unassigned",
       "author": "Rolf",
       "details": "Add CRM (Change Request Management) as a named, formal stage in the LCM lifecycle chain, positioned between CRP and Implementation Plan. CRM represents management acceptance or rejection of the CRP - the governance approval gate. Currently implicit in the proposal state field but not named, documented, or expressed as a chain node. The proposal state field IS the CRM record. Update ProposalReviewFlowPolicy.md, the LCM lifecycle chain, and all related documentation to reflect CRM as a first-class lifecycle stage.",
@@ -2389,7 +2388,8 @@
       ],
       "priority": "M",
       "crp_id": "CRP-047",
-      "cr_id": "CRP-047"
+      "cr_id": "CRP-047",
+      "progress_state": "blocked"
     },
     {
       "id": 48,
@@ -2565,7 +2565,7 @@
       "priority": "M",
       "crp_id": "CRP-052",
       "cr_id": "CRP-052",
-      "progress_state": "queued"
+      "progress_state": "blocked"
     },
     {
       "id": 53,
@@ -8211,7 +8211,7 @@
       "timestamp": "2026-09-21 00:10:00",
       "title": "Usability Improvements & Interactive Document Viewer Optimization",
       "origin_repo": "Workspace_Inventory",
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "CRP-164",
       "author": "Rolf, Workspace_AI Intake",
       "details": "Review accepted (2ddf29e) via ACCEPT ALL fast-path exception",
@@ -8225,7 +8225,8 @@
       "walkthrough_path": "Workspace_Inventory/docs/Proposals/CRP-164-LCM-v7.6.0-Usability-Improvements-And-Document-Viewer-Optimization/Walkthrough.md",
       "dates": {
         "created": "2026-09-21 00:10:00",
-        "suggested": "2026-09-21 00:10:00"
+        "suggested": "2026-09-21 00:10:00",
+        "pushed": "2026-09-25 02:40:46"
       },
       "state_history": [
         {
@@ -8233,13 +8234,20 @@
           "timestamp": "2026-09-21 00:10:00",
           "user": "Rolf",
           "note": "Registered via strict intake gate in SUGGESTED state."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-25 02:40:46",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, Workspace_AI, Workspace_Inventory)"
         }
       ],
       "priority": "H",
       "type": "CRP",
       "crp_id": "CRP-164",
       "cr_id": "CRP-164",
-      "progress_state": "completed"
+      "progress_state": "pushed",
+      "pushed_at": "2026-09-25 02:40:46"
     },
     {
       "id": 169,
@@ -8354,6 +8362,184 @@
       "cr_id": "CRP-170",
       "progress_state": "pushed",
       "pushed_at": "2026-09-24 22:06:33"
+    },
+    {
+      "id": 171,
+      "timestamp": "2026-09-25 15:57:43",
+      "title": "LCM Tool Explorer ShowTools Default Mode, Self-Tool Exclusion, and Dynamic Filtered Count Metric Card",
+      "origin_repo": "Workspace_Inventory",
+      "state": "suggested",
+      "bundle_id": "CRP-171",
+      "author": "Rolf, Antigravity AI Assistant",
+      "details": "Configures default ShowTools display mode on initial launch, excludes the self-referential ShowTools command line from the filtered display list, and drops the NoExit Locked metric card in favor of an inactive live filtered item count card.",
+      "bundle_dir": "docs/Proposals/CRP-171-LCM-v7.6.0-Tool-Explorer-ShowTools-Default-And-Metrics",
+      "docs": {
+        "specification": "Workspace_Inventory/docs/Proposals/CRP-171-LCM-v7.6.0-Tool-Explorer-ShowTools-Default-And-Metrics/Specification.md",
+        "plan": "Workspace_Inventory/docs/Proposals/CRP-171-LCM-v7.6.0-Tool-Explorer-ShowTools-Default-And-Metrics/Implementation_Plan.md",
+        "walkthrough": "Workspace_Inventory/docs/Proposals/CRP-171-LCM-v7.6.0-Tool-Explorer-ShowTools-Default-And-Metrics/Walkthrough.md"
+      },
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-171-LCM-v7.6.0-Tool-Explorer-ShowTools-Default-And-Metrics/Implementation_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/docs/Proposals/CRP-171-LCM-v7.6.0-Tool-Explorer-ShowTools-Default-And-Metrics/Walkthrough.md",
+      "dates": {
+        "created": "2026-09-25 15:57:43",
+        "suggested": "2026-09-25 15:57:43"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-25 15:57:43",
+          "user": "Rolf",
+          "note": "CRP intake from operator directive."
+        }
+      ],
+      "priority": "M",
+      "type": "CRP",
+      "crp_id": "CRP-171",
+      "cr_id": "CRP-171",
+      "progress_state": "suggested"
+    },
+    {
+      "id": 172,
+      "timestamp": "2026-09-25 16:16:51",
+      "title": "Remediate Get-Content Parameter Conflict in Apply-AllCustomizations",
+      "origin_repo": "SystemConfiguration",
+      "state": "completed",
+      "bundle_id": "BUG-172",
+      "author": "Rolf, Antigravity AI Assistant",
+      "details": "Remediates mutually exclusive -Raw and -TotalCount parameters passed to Get-Content in Apply-AllCustomizations.ps1, Update-ToolCatalog.ps1, and Flush-LcmLegacyLogs.ps1.",
+      "bundle_dir": "docs/Proposals/BUG-172-SystemConfiguration-Apply-AllCustomizations-Get-Content-Raw-Conflict",
+      "docs": {
+        "specification": "Workspace_Inventory/docs/Proposals/BUG-172-SystemConfiguration-Apply-AllCustomizations-Get-Content-Raw-Conflict/Specification.md",
+        "plan": "Workspace_Inventory/docs/Proposals/BUG-172-SystemConfiguration-Apply-AllCustomizations-Get-Content-Raw-Conflict/Implementation_Plan.md",
+        "walkthrough": "Workspace_Inventory/docs/Proposals/BUG-172-SystemConfiguration-Apply-AllCustomizations-Get-Content-Raw-Conflict/Walkthrough.md"
+      },
+      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-172-SystemConfiguration-Apply-AllCustomizations-Get-Content-Raw-Conflict/Implementation_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/docs/Proposals/BUG-172-SystemConfiguration-Apply-AllCustomizations-Get-Content-Raw-Conflict/Walkthrough.md",
+      "dates": {
+        "created": "2026-09-25 16:16:51",
+        "suggested": "2026-09-25 16:16:51",
+        "in_progress": "2026-09-25 16:16:51",
+        "review": "2026-09-25 16:18:11",
+        "completed": "2026-09-25 20:38:48"
+      },
+      "state_history": [
+        {
+          "state": "in_progress",
+          "timestamp": "2026-09-25 16:16:51",
+          "user": "Rolf",
+          "note": "BUG intake: entering DOIT mode directly towards Gate 2 review."
+        },
+        {
+          "state": "review",
+          "timestamp": "2026-09-25 16:18:11",
+          "user": "Rolf",
+          "note": "DOIT execution complete. Reached Gate 2 visual review."
+        }
+      ],
+      "priority": "H",
+      "type": "BUG",
+      "bug_id": "BUG-172",
+      "crp_id": "BUG-172",
+      "cr_id": "BUG-172",
+      "progress_state": "completed"
+    },
+    {
+      "id": 173,
+      "timestamp": "2026-09-25 17:53:27",
+      "title": "Shared AI Memory (.gemini) Migration Safeguards, GitHub Baseline Verification, Hash Validation, and Pre-Push Integration",
+      "origin_repo": "Workspace_AI",
+      "state": "completed",
+      "bundle_id": "CRP-173",
+      "author": "Rolf, Antigravity AI Assistant",
+      "details": "Implements fail-safe two-phase migration of .gemini to A:, double-checked junction idempotency, age verification vs GitHub repository baseline, SHA256 manifest hash consistency validation, and automated pre-push version updates.",
+      "bundle_dir": "docs/Proposals/CRP-173-LCM-v7.6.0-Shared-Ai-Memory-Migration-Safeguards-And-GitHub-Verification",
+      "docs": {
+        "specification": "Workspace_Inventory/docs/Proposals/CRP-173-LCM-v7.6.0-Shared-Ai-Memory-Migration-Safeguards-And-GitHub-Verification/Specification.md",
+        "plan": "Workspace_Inventory/docs/Proposals/CRP-173-LCM-v7.6.0-Shared-Ai-Memory-Migration-Safeguards-And-GitHub-Verification/Implementation_Plan.md",
+        "walkthrough": "Workspace_Inventory/docs/Proposals/CRP-173-LCM-v7.6.0-Shared-Ai-Memory-Migration-Safeguards-And-GitHub-Verification/Walkthrough.md"
+      },
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-173-LCM-v7.6.0-Shared-Ai-Memory-Migration-Safeguards-And-GitHub-Verification/Implementation_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/docs/Proposals/CRP-173-LCM-v7.6.0-Shared-Ai-Memory-Migration-Safeguards-And-GitHub-Verification/Walkthrough.md",
+      "dates": {
+        "created": "2026-09-25 17:53:27",
+        "suggested": "2026-09-25 17:53:27",
+        "in_progress": "2026-09-25 18:02:33",
+        "review": "2026-09-25 18:06:58",
+        "completed": "2026-09-25 20:38:57"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-25 17:53:27",
+          "user": "Rolf",
+          "note": "CRP intake: shared AI memory migration safeguards and pre-push verification."
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-09-25 18:02:33",
+          "user": "Rolf",
+          "note": "DOIT Mode activated via operator command: do 173."
+        },
+        {
+          "state": "review",
+          "timestamp": "2026-09-25 18:06:58",
+          "user": "Rolf",
+          "note": "DOIT execution complete. Reached Gate 2 visual review."
+        }
+      ],
+      "priority": "H",
+      "type": "CRP",
+      "crp_id": "CRP-173",
+      "cr_id": "CRP-173",
+      "progress_state": "completed"
+    },
+    {
+      "id": 174,
+      "timestamp": "2026-09-25 18:51:44",
+      "title": "Beyond Compare Review Baseline Caching, Deduplication, and Unified Multi-Repo Shared Staging",
+      "origin_repo": "Workspace_Inventory",
+      "state": "review",
+      "bundle_id": "CRP-174",
+      "author": "Rolf, Antigravity AI Assistant",
+      "details": "Eliminates redundant baseline git-archive extractions on repeat BCR launches via immutable SHA cache hits, enables unified multi-repo proposal baseline staging, and maintains automatic cleanup on review acceptance.",
+      "bundle_dir": "docs/Proposals/CRP-174-LCM-v7.6.0-BCR-Baseline-Caching-Deduplication-And-Shared-Staging",
+      "docs": {
+        "specification": "Workspace_Inventory/docs/Proposals/CRP-174-LCM-v7.6.0-BCR-Baseline-Caching-Deduplication-And-Shared-Staging/Specification.md",
+        "plan": "Workspace_Inventory/docs/Proposals/CRP-174-LCM-v7.6.0-BCR-Baseline-Caching-Deduplication-And-Shared-Staging/Implementation_Plan.md",
+        "walkthrough": "Workspace_Inventory/docs/Proposals/CRP-174-LCM-v7.6.0-BCR-Baseline-Caching-Deduplication-And-Shared-Staging/Walkthrough.md"
+      },
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-174-LCM-v7.6.0-BCR-Baseline-Caching-Deduplication-And-Shared-Staging/Implementation_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/docs/Proposals/CRP-174-LCM-v7.6.0-BCR-Baseline-Caching-Deduplication-And-Shared-Staging/Walkthrough.md",
+      "dates": {
+        "created": "2026-09-25 18:51:44",
+        "suggested": "2026-09-25 18:51:44",
+        "review": "2026-09-25 19:52:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-25 18:51:44",
+          "user": "Rolf",
+          "note": "CRP intake: BCR baseline caching, deduplication, and shared multi-repo staging."
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-09-25 19:39:40",
+          "user": "Rolf",
+          "note": "DOIT mode activated via operator command: DOIT with COMPLETE terminology consolidation."
+        },
+        {
+          "state": "review",
+          "timestamp": "2026-09-25 19:52:00",
+          "user": "Rolf",
+          "note": "DOIT complete. BCR baseline caching, Sidecar proposal switcher, Complete workflow, and UI compacting implemented. At Gate 2 review."
+        }
+      ],
+      "priority": "H",
+      "type": "CRP",
+      "crp_id": "CRP-174",
+      "cr_id": "CRP-174",
+      "progress_state": "verification"
     }
   ],
   "active_context": {

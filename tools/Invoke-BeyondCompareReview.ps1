@@ -18,6 +18,10 @@ param(
   [Parameter(Mandatory = $false, HelpMessage = 'Wait synchronously for the Beyond Compare review session to close before evaluating staging')]
   [switch]$Wait,
 
+  [Parameter(Mandatory = $false, HelpMessage = 'Force re-extraction and rebuild of baseline cache even if existing cached tree matches commit SHA')]
+  [Alias('Force', 'RebuildBaseline', 'NoCache')]
+  [switch]$ForceRebuild,
+
   [Alias('h', '?')]
   [switch]$Help
 )
@@ -177,6 +181,7 @@ function Update-BCReviewSession {
     & $setAttr $rules 'UseContentComparison' 'False'
     & $setAttr $rules 'UseSizeComparison' 'True'
     & $setAttr $rules 'UseTimestampComparison' 'True'
+    & $setAttr $rules 'FollowSymLinks' 'True'
 
     # State
     $state = $sessionNode.SelectSingleNode('State')
@@ -191,6 +196,17 @@ function Update-BCReviewSession {
     & $setAttr $state 'DisplayFilter' '[showLeftAdded, showRightAdded, showLeftChanged, showRightChanged, showConflict]'
     & $setAttr $state 'InsigIgnored' 'True'
     & $setAttr $state 'SortCol' 'colModified'
+
+    # Also ensure default TDirCompareSession template has FollowSymLinks = True
+    $defaultSession = $xml.SelectSingleNode('//TDirCompareSession[not(@Value)]')
+    if ($defaultSession) {
+      $defRules = $defaultSession.SelectSingleNode('Rules')
+      if (-not $defRules) {
+        $defRules = $xml.CreateElement('Rules')
+        $null = $defaultSession.AppendChild($defRules)
+      }
+      & $setAttr $defRules 'FollowSymLinks' 'True'
+    }
 
     $xml.Save($bcSessionsPath)
   }
@@ -543,39 +559,71 @@ else {
 }
 
 $tempReviewRoot = Join-Path $scratchReviewDir $reviewFolderStem
+$baselineManifestFile = Join-Path $tempReviewRoot ".lcm_baseline_manifest.json"
 
-if (Test-Path -LiteralPath $tempReviewRoot) {
-  Remove-Item -LiteralPath $tempReviewRoot -Recurse -Force -ErrorAction SilentlyContinue
-}
-$null = New-Item -ItemType Directory -Path $tempReviewRoot -Force
-
-Write-Host ("Exporting baseline commit [{0}: {1}] to temp review directory..." -f $commitSha, $commitMsg) -ForegroundColor Cyan
-
-if ($commitSha -ne 'unborn') {
-  $tarPath = Join-Path $tempReviewRoot "archive.tar"
-  git -C $repoPath archive $commitSha -o $tarPath
-  tar -xf $tarPath -C $tempReviewRoot
-  Remove-Item -LiteralPath $tarPath -Force -ErrorAction SilentlyContinue
-}
-
-# ------------------------------------------------------------------------------
-# 4. Generate Baseline Manifest for Staging Audits
-# ------------------------------------------------------------------------------
-$baselineManifest = @{}
-$baselineFiles = @(Get-ChildItem -LiteralPath $tempReviewRoot -Recurse -File | Where-Object { $_.Name -ne 'archive.tar' })
-$sha = [System.Security.Cryptography.SHA256]::Create()
-foreach ($bf in $baselineFiles) {
+$reuseCache = $false
+if (-not $ForceRebuild -and (Test-Path -LiteralPath $tempReviewRoot) -and (Test-Path -LiteralPath $baselineManifestFile)) {
+  # Verify that cache contains files and valid manifest
   try {
-    $rel = $bf.FullName.Substring($tempReviewRoot.Length).TrimStart('\')
-    if ([System.IO.File]::Exists($bf.FullName)) {
-      $bytes = [System.IO.File]::ReadAllBytes($bf.FullName)
-      $hash = [System.BitConverter]::ToString($sha.ComputeHash($bytes)).Replace('-', '').ToLowerInvariant()
-      $baselineManifest[$rel] = $hash
+    $existingManifestJson = Get-Content -LiteralPath $baselineManifestFile -Raw -Encoding UTF8 -ErrorAction Stop
+    if (-not [string]::IsNullOrWhiteSpace($existingManifestJson)) {
+      $reuseCache = $true
     }
   }
-  catch {}
+  catch {
+    $reuseCache = $false
+  }
 }
-$baselineManifest | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $tempReviewRoot ".lcm_baseline_manifest.json") -Encoding UTF8
+
+if ($reuseCache) {
+  Write-Host ("[CACHE HIT] Reusing existing verified baseline cache: {0}" -f $reviewFolderStem) -ForegroundColor Green
+}
+else {
+  if (Test-Path -LiteralPath $tempReviewRoot) {
+    Remove-Item -LiteralPath $tempReviewRoot -Recurse -Force -ErrorAction SilentlyContinue
+  }
+  $null = New-Item -ItemType Directory -Path $tempReviewRoot -Force
+
+  Write-Host ("Exporting baseline commit [{0}: {1}] to temp review directory..." -f $commitSha, $commitMsg) -ForegroundColor Cyan
+
+  if ($commitSha -ne 'unborn') {
+    $tarPath = Join-Path $tempReviewRoot "archive.tar"
+    git -C $repoPath archive $commitSha -o $tarPath
+    tar -xf $tarPath -C $tempReviewRoot
+    Remove-Item -LiteralPath $tarPath -Force -ErrorAction SilentlyContinue
+  }
+
+  # Ensure baseline directory contains rules baseline if target repository has .agents\rules junction
+  $targetRulesPath = Join-Path $repoPath ".agents\rules"
+  $tempRulesPath = Join-Path $tempReviewRoot ".agents\rules"
+  if ((Test-Path -LiteralPath $targetRulesPath) -and -not (Test-Path -LiteralPath $tempRulesPath)) {
+    $aiRepo = Join-Path $workspaceRoot "Workspace_AI"
+    $aiHeadSha = (git -C $aiRepo rev-parse --short HEAD 2>$null)
+    if ($aiHeadSha) {
+      New-Item -ItemType Directory -Path $tempRulesPath -Force | Out-Null
+      & git -C $aiRepo archive HEAD .agents/rules | tar -x -C $tempReviewRoot 2>$null
+    }
+  }
+
+  # ------------------------------------------------------------------------------
+  # 4. Generate Baseline Manifest for Staging Audits
+  # ------------------------------------------------------------------------------
+  $baselineManifest = @{}
+  $baselineFiles = @(Get-ChildItem -LiteralPath $tempReviewRoot -Recurse -File | Where-Object { $_.Name -ne 'archive.tar' })
+  $sha = [System.Security.Cryptography.SHA256]::Create()
+  foreach ($bf in $baselineFiles) {
+    try {
+      $rel = $bf.FullName.Substring($tempReviewRoot.Length).TrimStart('\')
+      if ([System.IO.File]::Exists($bf.FullName)) {
+        $bytes = [System.IO.File]::ReadAllBytes($bf.FullName)
+        $hash = [System.BitConverter]::ToString($sha.ComputeHash($bytes)).Replace('-', '').ToLowerInvariant()
+        $baselineManifest[$rel] = $hash
+      }
+    }
+    catch {}
+  }
+  $baselineManifest | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath $baselineManifestFile -Encoding UTF8
+}
 
 # ------------------------------------------------------------------------------
 # 5. Construct Authoritative Exclusion Filter List
@@ -593,12 +641,8 @@ if ($repoPath -eq $workspaceRoot) {
   }
 }
 else {
-  # Exclude child repo junction directories (exempt Workspace_Inventory which is the physical rules owner per CRP-131)
-  $junctionFilters = if ($repoName -eq 'Workspace_Inventory') {
-    @('-.copilot\Rules\', '-*\.copilot\Rules\*', '-.copilot\skills\', '-*\.copilot\skills\*')
-  } else {
-    @('-.agents\rules\', '-*\.agents\rules\*', '-.copilot\Rules\', '-*\.copilot\Rules\*', '-.copilot\skills\', '-*\.copilot\skills\*')
-  }
+  # Exclude external tool junction directories (.copilot) while allowing .agents\rules to be traversed transparently via FollowSymLinks
+  $junctionFilters = @('-.copilot\Rules\', '-*\.copilot\Rules\*', '-.copilot\skills\', '-*\.copilot\skills\*')
   foreach ($jf in $junctionFilters) {
     if (-not $filterList.Contains($jf)) {
       $filterList.Add($jf)
@@ -697,124 +741,10 @@ else {
 }
 
 # ------------------------------------------------------------------------------
-# 7. Dual-Session Beyond Compare Review for Directory Junctions (RULE-REV-008)
+# 7. Single-Session Beyond Compare Review (Transparent Junction Traversal)
 # ------------------------------------------------------------------------------
-# Repositories frequently link .agents or .agents\rules via NTFS directory junctions.
-# Beyond Compare 5 does not follow directory junctions across filesystem boundaries by default.
-# Per RULE-REV-008, automatically detect any junctions within the repository and dispatch
-# a second Beyond Compare review session targeting the live junction destination on the right pane.
-$candidateJunctionPaths = @(
-  (Join-Path $repoPath ".agents"),
-  (Join-Path $repoPath ".agents\rules")
-)
-
-$detectedJunctions = @()
-foreach ($cPath in $candidateJunctionPaths) {
-  if (Test-Path -LiteralPath $cPath) {
-    try {
-      $item = Get-Item -LiteralPath $cPath -Force -ErrorAction SilentlyContinue
-      if ($item -and $item.LinkType -eq 'Junction' -and -not [string]::IsNullOrWhiteSpace($item.Target)) {
-        $detectedJunctions += $item
-      }
-    }
-    catch {}
-  }
-}
-
-$processedJunctions = @()
-foreach ($jItem in $detectedJunctions) {
-  $rel = [System.IO.Path]::GetRelativePath($repoPath, $jItem.FullName)
-  $alreadyCovered = $false
-  foreach ($pj in $processedJunctions) {
-    if ($rel.StartsWith($pj.RelativePath + '\', [System.StringComparison]::OrdinalIgnoreCase)) {
-      $alreadyCovered = $true
-      break
-    }
-  }
-  if ($alreadyCovered) { continue }
-
-  $targetPath = [string]$jItem.Target
-  if (-not [System.IO.Path]::IsPathRooted($targetPath)) {
-    $targetPath = [System.IO.Path]::GetFullPath((Join-Path (Split-Path $jItem.FullName -Parent) $targetPath))
-  }
-  else {
-    $targetPath = [System.IO.Path]::GetFullPath($targetPath)
-  }
-
-  if (Test-Path -LiteralPath $targetPath) {
-    # Resolve appropriate baseline directory for junction review (BUG-123)
-    $leftJunctionPath = Join-Path $tempReviewRoot $rel
-
-    # Case 1: Root Container (Git_Repositories) - committed baseline is in .lcm\.agents
-    if ($rel -eq '.agents' -or $rel -like '.agents\*') {
-      $lcmAgentsBaseline = Join-Path $tempReviewRoot ('.lcm\' + $rel)
-      if (Test-Path -LiteralPath $lcmAgentsBaseline) {
-        $leftJunctionPath = $lcmAgentsBaseline
-      }
-    }
-
-    # Case 2: Child repository where baseline snapshot does not contain junction files
-    # Resolve against the authoritative committed baseline of Git_Repositories
-    $hasBaselineFiles = (Test-Path -LiteralPath $leftJunctionPath) -and @(Get-ChildItem -LiteralPath $leftJunctionPath -Recurse -File -ErrorAction SilentlyContinue).Count -gt 0
-    if (-not $hasBaselineFiles) {
-      $canonicalWiAgents = Join-Path $workspaceRoot 'Workspace_Inventory\.agents'
-      $canonicalLcmAgents = Join-Path $workspaceRoot '.lcm\.agents'
-      if ($targetPath.StartsWith($canonicalWiAgents, [System.StringComparison]::OrdinalIgnoreCase) -or
-          $targetPath.StartsWith($canonicalLcmAgents, [System.StringComparison]::OrdinalIgnoreCase) -or
-          $targetPath.StartsWith((Join-Path $workspaceRoot '.agents'), [System.StringComparison]::OrdinalIgnoreCase)) {
-        $wiHeadSha = (git -C (Join-Path $workspaceRoot 'Workspace_Inventory') rev-parse --short HEAD 2>$null)
-        if ($wiHeadSha) {
-          $wiReviewSnap = Join-Path (Split-Path $tempReviewRoot -Parent) "Workspace_Inventory_$wiHeadSha"
-          if (-not (Test-Path -LiteralPath (Join-Path $wiReviewSnap '.agents\rules'))) {
-            New-Item -ItemType Directory -Path (Join-Path $wiReviewSnap '.agents\rules') -Force | Out-Null
-            & git -C (Join-Path $workspaceRoot 'Workspace_Inventory') archive HEAD .agents/rules | tar -x -C $wiReviewSnap 2>$null
-          }
-          $fallbackLeft = Join-Path $wiReviewSnap '.agents\rules'
-          if (Test-Path -LiteralPath $fallbackLeft) {
-            $leftJunctionPath = $fallbackLeft
-          }
-        }
-      }
-    }
-
-    if (-not (Test-Path -LiteralPath $leftJunctionPath)) {
-      New-Item -ItemType Directory -Path $leftJunctionPath -Force | Out-Null
-    }
-
-    $processedJunctions += [PSCustomObject]@{
-      RelativePath = $rel
-      BaselinePath = $leftJunctionPath
-      LiveTarget   = $targetPath
-    }
-  }
-}
-
-foreach ($pj in $processedJunctions) {
-  Start-Sleep -Milliseconds 500
-  Write-Host ("Launching second Beyond Compare review session for junction target '{0}'..." -f $pj.RelativePath) -ForegroundColor Cyan
-  Write-Host ("  Left (Baseline {0}): {1}" -f $commitSha, $pj.BaselinePath)
-  Write-Host ("  Right (Junction Live Target): {0}" -f $pj.LiveTarget)
-
-  $jSessionName = "LCM_Review_$($pj.RelativePath.Replace('\', '_').TrimStart('.'))"
-  $jFilterMask = "-.git\;-*\.git\*;-.git*;-scratch\;-*\scratch\*;-logs\;-*\logs\*;-*.log;-*.tmp;-*.bak"
-  Update-BCReviewSession -LeftPath $pj.BaselinePath -RightPath $pj.LiveTarget -FilterMask $jFilterMask -SessionName $jSessionName
-
-  $jTitle1 = if (-not [string]::IsNullOrWhiteSpace($CRP)) {
-    "Baseline $CRP ($commitSha) [$($pj.RelativePath)]"
-  }
-  else {
-    "Baseline ($commitSha) [$($pj.RelativePath)]"
-  }
-  $jTitle2 = "Current Live Junction Target ($($pj.RelativePath) -> $($pj.LiveTarget))"
-  $jBcArgString = "`"$($pj.BaselinePath)`" `"$($pj.LiveTarget)`" `"/title1=$jTitle1`" `"/title2=$jTitle2`" `"/filters=$jFilterMask`""
-
-  if ($dispatcherPath) {
-    & pwsh -File $dispatcherPath -FilePath $BeyondComparePath -ArgumentList $jBcArgString | Out-Null
-  }
-  else {
-    Start-Process -FilePath $BeyondComparePath -ArgumentList @("`"$($pj.BaselinePath)`"", "`"$($pj.LiveTarget)`"", "`"/title1=$jTitle1`"", "`"/title2=$jTitle2`"", "`"/filters=$jFilterMask`"")
-  }
-}
+# Beyond Compare 5 traverses NTFS directory junctions (.agents\rules) inline within
+# the primary session via FollowSymLinks='True'. Dual-session dispatch is retired.
 
 if ($Wait) {
   Write-Host "Waiting for Beyond Compare review session to close..." -ForegroundColor DarkGray

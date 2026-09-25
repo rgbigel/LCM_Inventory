@@ -230,10 +230,32 @@
     }
     .btn-focus-hub:hover { background: var(--accent-blue-hover); color: #ffffff; }
     .btn-action { background: var(--bg-card); }
+    .btn-complete {
+      background: var(--accent-green);
+      color: #ffffff;
+      border-color: #738a00;
+      font-weight: 700;
+    }
+    .btn-complete:hover {
+      background: #6c7c00;
+      color: #ffffff;
+      border-color: #6c7c00;
+    }
     .btn-delete { color: var(--accent-red); border-color: var(--accent-red); }
     .btn-delete:hover { background: var(--accent-red-bg); border-color: var(--accent-red); color: var(--accent-red); }
     .btn-help { background: var(--bg-card); color: var(--accent-blue); border-color: var(--border-main); }
     .btn-help:hover { background: var(--bg-card-hover); border-color: var(--accent-blue); }
+    .target-select {
+      background: var(--bg-card);
+      color: var(--text-bright);
+      border: 1px solid var(--border-main);
+      border-radius: 3px;
+      font-size: 0.74rem;
+      font-family: var(--font-code);
+      padding: 1px 4px;
+      max-width: 140px;
+      cursor: pointer;
+    }
 
     /* Proposal Actions Ribbon */
     .actions-ribbon {
@@ -465,16 +487,18 @@
     </div>
   </header>
 
-  <!-- Active Target Display (Strictly driven by Hub) -->
+  <!-- Active Target Display -->
   <div class="target-banner">
     <div class="target-header-line">
       <div class="target-title-box">
         <span class="target-code" id="targetCode">CRP-164</span>
         <span class="target-name" id="targetTitle">Usability Improvements &amp; Interactive Document Viewer Optimization</span>
       </div>
-      <span style="font-size:0.72rem; color:var(--text-muted); font-family:var(--font-code); flex-shrink:0;">
-        Controlled by LCM Hub
-      </span>
+      <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
+        <select id="proposalSwitcher" class="target-select" onchange="onSwitchProposal(this.value)" title="Direct Proposal Switcher">
+          <option value="">Switch CRP...</option>
+        </select>
+      </div>
     </div>
     <div class="target-pills-line">
       <span class="pill pill-scope" id="targetRepo">Workspace_Inventory</span>
@@ -487,7 +511,8 @@
 
   <!-- Proposal Actions Ribbon -->
   <div class="actions-ribbon">
-    <button class="btn btn-action" onclick="actionReview()" title="Launch Beyond Compare 5 review gate">🔍 BC5 Review</button>
+    <button class="btn btn-action" onclick="actionReview()" title="Review changes in Beyond Compare 5">🔍 Review with BC</button>
+    <button class="btn btn-complete" onclick="actionComplete()" title="Complete proposal: stage, commit review, generate receipt &amp; mark completed">✅ Complete</button>
     <button class="btn btn-action" onclick="actionOpenDoc('specification')" title="Open specification document">📜 Spec</button>
     <button class="btn btn-action" onclick="actionOpenDoc('plan')" title="Open implementation plan">📄 Plan</button>
     <button class="btn btn-action" onclick="actionOpenDoc('walkthrough')" title="Open walkthrough document">📋 Walk</button>
@@ -585,12 +610,10 @@
       { group: "architecture", cmd: "workon ${APP}", desc: "Set active app focus context for agent operations", tip: "Context" },
       { group: "architecture", cmd: "workon Base", desc: "Clear active app focus and govern foundational system", tip: "Base" },
       { group: "architecture", cmd: "app ${TITLE}", desc: "Scaffold new modular app slice across tripartite specs", tip: "Scaffold" },
-      { group: "architecture", cmd: "catalog", desc: "Synchronize and scan tripartite repository specifications", tip: "Scan" },
 
       // System
-      { group: "system", cmd: "review ${TAG}", desc: "Launch Beyond Compare 5 visual review gate", tip: "BC5" },
+      { group: "system", cmd: "review ${TAG}", desc: "Launch Beyond Compare 5 visual review", tip: "BC" },
       { group: "system", cmd: "status", desc: "Check git status and proposal ledger alignment", tip: "Status" },
-      { group: "system", cmd: "readiness", desc: "Run LCM Rule Health & Readiness automated quality gate", tip: "Readiness" },
       { group: "system", cmd: "help", desc: "Display CM CLI command reference and usage guide", tip: "Help" }
     ];
 
@@ -632,6 +655,34 @@
       }
     }
 
+    async function fetchFreshProposals() {
+      try {
+        const res = await fetch(`http://127.0.0.1:${DAEMON_PORT}/proposals?t=` + Date.now(), { cache: "no-store", signal: AbortSignal.timeout(2000) });
+        if (res.ok) {
+          const fresh = await res.json();
+          if (fresh && Array.isArray(fresh.proposals)) {
+            proposalsList = fresh.proposals;
+            populateProposalSwitcher();
+          }
+        }
+      } catch (err) {}
+    }
+
+    function populateProposalSwitcher() {
+      const sw = document.getElementById("proposalSwitcher");
+      if (!sw) return;
+      const curId = currentProposal ? currentProposal.id : null;
+      sw.innerHTML = '<option value="">Switch CRP...</option>';
+      proposalsList.slice().reverse().forEach(p => {
+        const tag = p.crp_id || (p.state === 'bug' ? `BUG-${String(p.id).padStart(3, '0')}` : `CRP-${String(p.id).padStart(3, '0')}`);
+        const opt = document.createElement("option");
+        opt.value = p.id;
+        opt.textContent = `${tag}: ${p.title ? p.title.substring(0, 36) : ''}`;
+        if (curId && p.id === curId) opt.selected = true;
+        sw.appendChild(opt);
+      });
+    }
+
     function initSidecar() {
       initTheme();
 
@@ -645,18 +696,23 @@
             if (syncEl) syncEl.textContent = `Hub Sync: ${get24hTime()}`;
           } else if (e.data.type === "THEME_CHANGED" && e.data.theme) {
             applyTheme(e.data.theme, false);
+          } else if (e.data.type === "DATA_UPDATED") {
+            fetchFreshProposals();
           }
         };
       }
 
       checkDaemon();
       setInterval(checkDaemon, 10000);
+      populateProposalSwitcher();
+      fetchFreshProposals();
 
-      // Default target: CRP-164 or first
-      const found = proposalsList.find(p => p.id === 164) || proposalsList[0] || {
-        id: 164, crp_id: "CRP-164", title: "Usability Improvements & Interactive Document Viewer Optimization",
-        origin_repo: "Workspace_Inventory", state: "suggested", progress_state: "queued", priority: "H"
-      };
+      // Default target: highest open proposal or latest
+      const openCandidates = proposalsList.filter(p => p.state !== 'completed' && p.state !== 'pushed' && p.progress_state !== 'completed' && p.progress_state !== 'pushed');
+      const found = openCandidates.length > 0 ? openCandidates[openCandidates.length - 1] : (proposalsList[proposalsList.length - 1] || {
+        id: 174, crp_id: "CRP-174", title: "Beyond Compare Review Baseline Caching, Deduplication, and Unified Multi-Repo Shared Staging",
+        origin_repo: "Workspace_Inventory", state: "in_progress", progress_state: "in_progress", priority: "H"
+      });
       setTargetProposal(found);
       updateStatus(`⚡ Ready. Target: ${found.crp_id || 'CRP-' + found.id}`);
     }
@@ -677,6 +733,9 @@
       prioEl.className = `pill pill-prio prio-${prio}`;
 
       document.getElementById("targetApp").textContent = p.app_id ? `App: ${p.app_id}` : "App: Base";
+
+      const sw = document.getElementById("proposalSwitcher");
+      if (sw) sw.value = p.id;
 
       updateStatus(`Selected target: ${tag}`);
       renderCommands();
@@ -740,13 +799,14 @@
       if (reviewMatch) {
         const repo = (currentProposal && currentProposal.origin_repo) ? currentProposal.origin_repo.split("/")[0].trim() : "Workspace_Inventory";
         const tag = (reviewMatch[1] && reviewMatch[1] !== "all") ? `-CRP "CRP-${String(reviewMatch[1]).padStart(3, '0')}"` : "";
-        return `pwsh -File tools/Invoke-BeyondCompareReview.ps1 -RepositoryName "${repo}" ${tag}`.trim();
+        return `pwsh -File Workspace_Inventory/tools/Invoke-BeyondCompareReview.ps1 -RepositoryName "${repo}" ${tag}`.trim();
       }
 
-      // 2. Proposal actions: commit, proceed, verify, complete, do, defer, delete
-      const actionMatch = trimmed.match(/^(commit|proceed|verify|complete|do|defer|delete)\s+(?:#|crp-?)?(\d+|all)$/i);
+      // 2. Proposal actions: commit, proceed, verify, complete, accept (synonym for complete), do, defer, delete
+      const actionMatch = trimmed.match(/^(commit|proceed|verify|complete|accept|do|defer|delete)\s+(?:#|crp-?)?(\d+|all)$/i);
       if (actionMatch) {
-        const action = actionMatch[1].toLowerCase();
+        let action = actionMatch[1].toLowerCase();
+        if (action === "accept") action = "complete";
         const target = actionMatch[2];
         return `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action ${action} -TargetExpression ${target}`;
       }
@@ -843,7 +903,26 @@
       if (!currentProposal) return;
       const tag = currentProposal.crp_id || `CRP-${currentProposal.id}`;
       const repo = (currentProposal.origin_repo || "Workspace_Inventory").split("/")[0].trim();
-      executeDaemonCmd(`pwsh -File tools/Invoke-BeyondCompareReview.ps1 -RepositoryName "${repo}" -CRP "${tag}"`);
+      executeDaemonCmd(`pwsh -File Workspace_Inventory/tools/Invoke-BeyondCompareReview.ps1 -RepositoryName "${repo}" -CRP "${tag}"`);
+    }
+
+    function actionComplete() {
+      if (!currentProposal) return;
+      const tag = currentProposal.crp_id || `CRP-${currentProposal.id}`;
+      const num = currentProposal.id;
+      executeDaemonCmd(`complete ${num}`);
+    }
+
+    function onSwitchProposal(val) {
+      if (!val) return;
+      const targetId = parseInt(val, 10);
+      const target = proposalsList.find(p => p.id === targetId);
+      if (target) {
+        setTargetProposal(target);
+        if (SIDECAR_CHANNEL) {
+          SIDECAR_CHANNEL.postMessage({ type: "PROPOSAL_SELECTED", proposal: target });
+        }
+      }
     }
 
     function actionOpenDoc(docType) {

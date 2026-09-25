@@ -4,8 +4,8 @@ param(
     [Alias('RepositoryName', 'Repo', 'Name')]
     [string]$RepositoryPath,
 
-    [Parameter(Mandatory = $false, HelpMessage = 'Review outcome disposition (Accepted, AcceptedAll, AcceptedStaged, AcceptedWithEdits, Rejected, Deferred)')]
-    [ValidateSet("Accepted", "AcceptedAll", "AcceptedStaged", "AcceptedWithEdits", "Rejected", "Deferred", "ALL", "ACCEPT ALL")]
+    [Parameter(Mandatory = $false, HelpMessage = 'Review outcome disposition (Completed, Complete, Accepted, AcceptedAll, AcceptedStaged, AcceptedWithEdits, Rejected, Deferred)')]
+    [ValidateSet("Completed", "Complete", "Accepted", "AcceptedAll", "AcceptedStaged", "AcceptedWithEdits", "Rejected", "Deferred", "ALL", "ACCEPT ALL", "COMPLETE ALL")]
     [string]$Result,
 
     [Parameter(Mandatory = $false, HelpMessage = 'Review notes, rationale, or instructions for the audit receipt')]
@@ -251,4 +251,33 @@ if ($status.Count -gt 0) {
 if (Test-Path -LiteralPath $stagedManifestFile) { Remove-Item -LiteralPath $stagedManifestFile -Force -ErrorAction SilentlyContinue }
 if ($stagedManifest -and $stagedManifest.TempReviewRoot -and (Test-Path -LiteralPath $stagedManifest.TempReviewRoot)) {
     Remove-Item -LiteralPath $stagedManifest.TempReviewRoot -Recurse -Force -ErrorAction SilentlyContinue
+}
+
+# ------------------------------------------------------------------------------
+# Auto-Synchronize Proposals Ledger (RULE-LCM-002: Dual-State Alignment)
+# ------------------------------------------------------------------------------
+try {
+    $propJsonFile = Join-Path $workspaceRoot "Workspace_Inventory\data\proposals\proposals.json"
+    if (Test-Path -LiteralPath $propJsonFile) {
+        $propStore = Get-Content -LiteralPath $propJsonFile -Raw -Encoding UTF8 | ConvertFrom-Json
+        $matchedProposal = $false
+        foreach ($p in $propStore.proposals) {
+            $isRepoMatch = ($p.origin_repo -and $p.origin_repo.StartsWith($repoName))
+            $isOpenState = ($p.progress_state -in @('verification', 'committed', 'in_progress', 'review') -or $p.state -in @('approved', 'suggested', 'in_progress', 'review'))
+            if ($isRepoMatch -and $isOpenState) {
+                $p.progress_state = 'completed'
+                $p.state = 'completed'
+                if (-not $p.dates) { $p | Add-Member -NotePropertyName "dates" -NotePropertyValue ([ordered]@{}) -Force }
+                $p.dates | Add-Member -NotePropertyName "completed" -NotePropertyValue (Get-Date).ToString("yyyy-MM-dd HH:mm:ss") -Force
+                $matchedProposal = $true
+            }
+        }
+        if ($matchedProposal) {
+            $propStore.updated_at = (Get-Date).ToString("yyyy-MM-ddTHH:mm:sszzz")
+            $propStore | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath $propJsonFile -Encoding UTF8
+            Write-Host "Auto-synchronized proposals ledger to 'completed'." -ForegroundColor Green
+        }
+    }
+} catch {
+    Write-Verbose "Could not auto-update proposals.json: $($_.Exception.Message)"
 }
