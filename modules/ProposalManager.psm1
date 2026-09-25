@@ -331,6 +331,7 @@ function Set-WorkspaceProposalProgress {
     $found = $null
 
     foreach ($p in $store.proposals) {
+        if ($p.id -eq $Id) {
             $p | Add-Member -NotePropertyName "progress_state" -NotePropertyValue $ProgressState -Force
 
             # Plan State Synchronization (RULE-LCM-002 / Two-Tier Governance)
