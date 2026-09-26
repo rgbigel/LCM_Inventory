@@ -216,7 +216,7 @@
                 btn.style.borderColor = '';
                 btn.style.background = '';
                 btn.style.color = '';
-                if (thName) thName.innerHTML = 'Tool Name (Short-Name) <span class="sort-icon">⇅</span>';
+                if (thName) thName.innerHTML = 'ToolName <span class="sort-icon">⇅</span>';
             }
         }
     }
@@ -295,9 +295,9 @@
             if (isBlocked) {
                 actionButtonsHtml = 
                     '<div class="action-btns">' +
-                        '<button class="btn-action btn-blocked" disabled title="Tool execution is blocked pending Finalize or Revert">⛔ Blocked</button>' +
-                        '<button class="btn-action btn-revert" onclick="window.LcmTools.revertTool(' + safeIdx + ')" title="Revert changes, restore baseline, lift blockade">↺ Revert</button>' +
-                        '<button class="btn-action btn-finalize" onclick="window.LcmTools.finalizeTool(' + safeIdx + ')" title="Finalize changes permanently, lift blockade">✓ Finalize</button>' +
+                        '<span class="badge-no-entry" title="Tool execution blocked pending Set or Reset" style="font-size: 15px; cursor: default; user-select: none;">⛔</span>' +
+                        '<button class="btn-action btn-revert" onclick="window.LcmTools.revertTool(' + safeIdx + ')" title="Reset changes, restore baseline, lift blockade" style="color: #f85149; border-color: rgba(248, 81, 73, 0.4); font-weight: 700;">Reset</button>' +
+                        '<button class="btn-action btn-finalize" onclick="window.LcmTools.finalizeTool(' + safeIdx + ')" title="Set changes permanently, lift blockade" style="color: #3fb950; border-color: rgba(63, 185, 80, 0.4); font-weight: 700;">Set</button>' +
                     '</div>';
             } else {
                 actionButtonsHtml = 
@@ -320,14 +320,14 @@
                         shortNamesListHtml +
                     '</div>' +
                 '</td>' +
-                '<td style="text-align: center;">' + extDisplay + '</td>' +
+                '<td style="text-align: center;">' + actionButtonsHtml + '</td>' +
                 '<td class="cell-editable" onclick="window.LcmTools.openCellEditor(' + safeIdx + ', \'Group\', event)" title="Click to edit Subsystem / Group"><span class="badge badge-group">' + (t.Domain ? t.Domain : t.Group) + '</span></td>' +
                 '<td class="cell-editable" onclick="window.LcmTools.openCellEditor(' + safeIdx + ', \'Role\', event)"><span class="badge badge-role">' + t.Role + '</span></td>' +
-                '<td class="cell-editable" onclick="window.LcmTools.openCellEditor(' + safeIdx + ', \'Audience\', event)">' + audBadge + '</td>' +
-                '<td class="cell-editable" onclick="window.LcmTools.openCellEditor(' + safeIdx + ', \'Admin\', event)">' + admBadge + '</td>' +
-                '<td class="cell-editable" onclick="window.LcmTools.openCellEditor(' + safeIdx + ', \'Category\', event)" style="color: #c9d1d9;">' + (t.Category || 'General') + '</td>' +
                 '<td class="col-desc cell-editable" onclick="window.LcmTools.openCellEditor(' + safeIdx + ', \'Description\', event)" title="Click to edit Description" style="cursor: pointer;">' + (t.Description || '') + '</td>' +
-                '<td style="text-align: center;">' + actionButtonsHtml + '</td>' +
+                '<td class="cell-editable" onclick="window.LcmTools.openCellEditor(' + safeIdx + ', \'Category\', event)" style="color: #c9d1d9;">' + (t.Category || 'General') + '</td>' +
+                '<td class="cell-editable" onclick="window.LcmTools.openCellEditor(' + safeIdx + ', \'Audience\', event)">' + audBadge + '</td>' +
+                '<td style="text-align: center;">' + extDisplay + '</td>' +
+                '<td class="cell-editable" onclick="window.LcmTools.openCellEditor(' + safeIdx + ', \'Admin\', event)">' + admBadge + '</td>' +
                 '<td style="text-align: center;">' + noExitBadge + '</td>' +
                 '</tr>';
         }).join('');
@@ -1687,17 +1687,24 @@
         let controlHtml = '';
         if (field === 'Group') {
             const curGroup = tool.Domain || tool.Group || 'General';
-            const allGroups = Array.from(new Set(toolsData.map(t => t.Domain || t.Group).filter(Boolean)));
+            const opts = (window.__LCM_OPTIONS__ && window.__LCM_OPTIONS__.Subsystems) || Array.from(new Set(toolsData.map(t => t.Domain || t.Group).filter(Boolean)));
+            const allGroups = Array.from(new Set(opts));
             if (!allGroups.includes('Needed?')) allGroups.push('Needed?');
             allGroups.sort();
-            controlHtml = '<label style="font-size: 11px; color: var(--text-secondary); font-weight: 600;">Edit Subsystem / Group:</label>' +
-                '<select id="inline-edit-input">' +
+            controlHtml = '<label style="font-size: 11px; color: var(--text-secondary); font-weight: 600;">Edit Subsys / Group:</label>' +
+                '<select id="inline-edit-input" onchange="window.LcmTools.handleCellEditSelectChange(\'Subsystems\', this)">' +
                 allGroups.map(g => '<option value="' + g + '" ' + (g === curGroup ? 'selected' : '') + '>' + g + '</option>').join('') +
+                '<option value="__NEW__" style="color: #58a6ff; font-weight: 700;">+ New...</option>' +
                 '</select>';
         } else if (field === 'Role') {
+            const curRole = tool.Role || 'Utility';
+            const opts = (window.__LCM_OPTIONS__ && window.__LCM_OPTIONS__.Roles) || roleChoices;
+            const allRoles = Array.from(new Set(opts));
+            allRoles.sort();
             controlHtml = '<label style="font-size: 11px; color: var(--text-secondary); font-weight: 600;">Edit Role:</label>' +
-                '<select id="inline-edit-input">' +
-                roleChoices.map(r => '<option value="' + r + '" ' + (r === tool.Role ? 'selected' : '') + '>' + r + '</option>').join('') +
+                '<select id="inline-edit-input" onchange="window.LcmTools.handleCellEditSelectChange(\'Roles\', this)">' +
+                allRoles.map(r => '<option value="' + r + '" ' + (r === curRole ? 'selected' : '') + '>' + r + '</option>').join('') +
+                '<option value="__NEW__" style="color: #58a6ff; font-weight: 700;">+ New...</option>' +
                 '</select>';
         } else if (field === 'Audience') {
             controlHtml = '<label style="font-size: 11px; color: var(--text-secondary); font-weight: 600;">Edit Audience:</label>' +
@@ -1712,8 +1719,15 @@
                 '<option value="false" ' + (!tool.Admin ? 'selected' : '') + '>👤 Standard User</option>' +
                 '</select>';
         } else if (field === 'Category') {
+            const curCat = tool.Category || 'General';
+            const opts = (window.__LCM_OPTIONS__ && window.__LCM_OPTIONS__.Categories) || Array.from(new Set(toolsData.map(t => t.Category).filter(Boolean)));
+            const allCats = Array.from(new Set(opts));
+            allCats.sort();
             controlHtml = '<label style="font-size: 11px; color: var(--text-secondary); font-weight: 600;">Edit Category:</label>' +
-                '<input type="text" id="inline-edit-input" value="' + (tool.Category || '') + '">';
+                '<select id="inline-edit-input" onchange="window.LcmTools.handleCellEditSelectChange(\'Categories\', this)">' +
+                allCats.map(c => '<option value="' + c + '" ' + (c === curCat ? 'selected' : '') + '>' + c + '</option>').join('') +
+                '<option value="__NEW__" style="color: #58a6ff; font-weight: 700;">+ New...</option>' +
+                '</select>';
         } else if (field === 'Description') {
             if (!isAutoSyncEnabled()) {
                 showToast('❌ Auto-Sync is off. Description edits are disabled.');
@@ -1944,6 +1958,124 @@
 
         applyFilters();
         showToast('✓ Finalized changes for ' + (tool.ShortName || tool.Name) + '. Blockade lifted.');
+    }
+
+    function finalizeAllBlocked() {
+        const blockedTools = toolsData.filter(t => t.IsBlocked || t._isPendingModification);
+        if (blockedTools.length === 0) {
+            showToast('ℹ️ No tools are currently blocked.');
+            return;
+        }
+        const count = blockedTools.length;
+        const mods = getPendingModifications();
+
+        blockedTools.forEach(t => {
+            delete mods[t.Name];
+            if (t.RelativePath) delete mods[t.RelativePath];
+            const baseStem = t.Name.replace(/\.[^/.]+$/, "");
+            delete mods[baseStem];
+            t._isPendingModification = false;
+            t.IsBlocked = false;
+            t._pendingType = null;
+        });
+
+        setPendingModifications(mods);
+
+        let storedOverrides = {};
+        try { storedOverrides = JSON.parse(localStorage.getItem('lcm_tools_overrides') || '{}'); } catch(e) {}
+
+        fetch(DAEMON_URL + '/sync_json', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                type: 'tool_catalog_overrides',
+                timestamp: new Date().toISOString(),
+                overrides: storedOverrides
+            })
+        }).catch(() => {});
+
+        applyFilters();
+        showToast('✓ Finalized ' + count + ' blocked tool(s). All blockades lifted.');
+    }
+
+    function handleSelectFilterChange(field, selectEl) {
+        if (!selectEl) return;
+        if (selectEl.value === '__NEW__') {
+            const promptName = field === 'Subsystems' ? 'Subsystem' : (field === 'Roles' ? 'Role' : 'Category');
+            const newVal = prompt('Enter new ' + promptName + ' name:');
+            if (!newVal || !newVal.trim()) {
+                selectEl.value = 'All';
+                applyFilters();
+                return;
+            }
+            const cleanVal = newVal.trim();
+            if (!window.__LCM_OPTIONS__) window.__LCM_OPTIONS__ = {};
+            if (!window.__LCM_OPTIONS__[field]) window.__LCM_OPTIONS__[field] = [];
+            if (!window.__LCM_OPTIONS__[field].includes(cleanVal)) {
+                window.__LCM_OPTIONS__[field].push(cleanVal);
+                window.__LCM_OPTIONS__[field].sort();
+            }
+
+            // Sync to daemon
+            fetch(DAEMON_URL + '/add_explorer_option', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ field: field, value: cleanVal })
+            }).catch(() => {});
+
+            // Insert new option before __NEW__ and select it
+            const newOpt = document.createElement('option');
+            newOpt.value = cleanVal;
+            newOpt.text = cleanVal;
+            newOpt.selected = true;
+            selectEl.insertBefore(newOpt, selectEl.lastElementChild);
+
+            showToast('✓ Added new ' + promptName + ': ' + cleanVal);
+        }
+        applyFilters();
+    }
+
+    function handleCellEditSelectChange(field, selectEl) {
+        if (!selectEl) return;
+        if (selectEl.value === '__NEW__') {
+            const promptName = field === 'Subsystems' ? 'Subsystem' : (field === 'Roles' ? 'Role' : 'Category');
+            const newVal = prompt('Enter new ' + promptName + ' name:');
+            if (!newVal || !newVal.trim()) {
+                selectEl.selectedIndex = 0;
+                return;
+            }
+            const cleanVal = newVal.trim();
+            if (!window.__LCM_OPTIONS__) window.__LCM_OPTIONS__ = {};
+            if (!window.__LCM_OPTIONS__[field]) window.__LCM_OPTIONS__[field] = [];
+            if (!window.__LCM_OPTIONS__[field].includes(cleanVal)) {
+                window.__LCM_OPTIONS__[field].push(cleanVal);
+                window.__LCM_OPTIONS__[field].sort();
+            }
+
+            // Sync to daemon
+            fetch(DAEMON_URL + '/add_explorer_option', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ field: field, value: cleanVal })
+            }).catch(() => {});
+
+            // Insert new option before __NEW__ and select it
+            const newOpt = document.createElement('option');
+            newOpt.value = cleanVal;
+            newOpt.text = cleanVal;
+            newOpt.selected = true;
+            selectEl.insertBefore(newOpt, selectEl.lastElementChild);
+
+            // Also update the corresponding table column filter dropdown
+            const filterId = field === 'Subsystems' ? 'group-select' : (field === 'Roles' ? 'role-select' : 'category-select');
+            const filterEl = document.getElementById(filterId);
+            if (filterEl) {
+                const optCopy = document.createElement('option');
+                optCopy.value = cleanVal;
+                optCopy.text = cleanVal;
+                filterEl.insertBefore(optCopy, filterEl.lastElementChild);
+            }
+        }
     }
 
     // Show-* Standard Displays Filter & Prioritization
@@ -2358,6 +2490,9 @@
         openToolHelp: openToolHelp,
         revertTool: revertTool,
         finalizeTool: finalizeTool,
+        finalizeAllBlocked: finalizeAllBlocked,
+        handleSelectFilterChange: handleSelectFilterChange,
+        handleCellEditSelectChange: handleCellEditSelectChange,
         toggleShowFilter: toggleShowFilter,
         copyCommand: copyCommand,
         openDetails: openDetails,
