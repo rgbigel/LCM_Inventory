@@ -8580,7 +8580,7 @@
       "timestamp": "2026-09-25 20:57:00",
       "title": "Workspace AI Multi-Tool Adapter Unification and Lock-Free Gemini Synchronization",
       "origin_repo": "Workspace_AI",
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "CRP-175",
       "author": "Rolf, Antigravity AI Assistant",
       "details": "Consolidates all physical AI adapter directories (.copilot, .continue) exclusively into Workspace_AI with root junctions, retires divergent stale prototype rules, and circumvents .gemini file-locking via granular directory slicing and non-exclusive FileShare streams.",
@@ -8595,7 +8595,8 @@
       "dates": {
         "created": "2026-09-25 20:57:00",
         "suggested": "2026-09-25 20:57:00",
-        "completed": "2026-09-26 13:20:43"
+        "completed": "2026-09-26 13:20:43",
+        "pushed": "2026-09-26 19:11:58"
       },
       "state_history": [
         {
@@ -8609,20 +8610,27 @@
           "timestamp": "2026-09-26 13:20:43",
           "user": "Rolf",
           "note": "Multi-tool adapter unification, dangling reference remediation, and lock-free Gemini synchronization executed and verified."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-26 19:11:58",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, Workspace_AI, Workspace_Inventory)"
         }
       ],
       "priority": "M",
       "type": "CRP",
       "crp_id": "CRP-175",
       "cr_id": "CRP-175",
-      "progress_state": "completed"
+      "progress_state": "pushed",
+      "pushed_at": "2026-09-26 19:11:58"
     },
     {
       "id": 176,
       "timestamp": "2026-09-26 13:00:00",
       "title": "Workspace AI Super-Controller and Fast-Dispatch Reflexes for Component Orchestration",
       "origin_repo": "Workspace_AI",
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "CRP-176",
       "author": "Rolf, Antigravity AI Assistant",
       "details": "Architectural concept for a centralized Workspace_AI Super-Controller coordinating Show-* viewers, daemons, and browser layouts alongside zero-latency Fast-Dispatch agent reflexes.",
@@ -8636,7 +8644,8 @@
       "walkthrough_path": null,
       "dates": {
         "created": "2026-09-26 13:00:00",
-        "suggested": "2026-09-26 13:00:00"
+        "suggested": "2026-09-26 13:00:00",
+        "pushed": "2026-09-26 19:11:58"
       },
       "state_history": [
         {
@@ -8644,13 +8653,20 @@
           "timestamp": "2026-09-26 13:00:00",
           "user": "Rolf",
           "note": "Preliminary Change Request Proposal captured for Super-Controller and Fast-Dispatch reflexes."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-26 19:11:58",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, Workspace_AI, Workspace_Inventory)"
         }
       ],
       "priority": "M",
       "type": "CRP",
       "crp_id": "CRP-176",
       "cr_id": "CRP-176",
-      "progress_state": "completed"
+      "progress_state": "pushed",
+      "pushed_at": "2026-09-26 19:11:58"
     }
   ],
   "active_context": {

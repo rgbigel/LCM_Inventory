@@ -1044,7 +1044,7 @@
 
   <!-- Metric Stat Cards -->
   <div class="stats-row">
-    <div class="stat-card" id="cardTotal" onclick="setPresetFilter('all')">
+    <div class="stat-card active" id="cardTotal" onclick="setPresetFilter('all')">
       <div class="stat-label">Total CRPs</div>
       <div class="stat-value" id="valTotal">0</div>
     </div>
@@ -1088,7 +1088,7 @@
     <!-- Batch Actions Bar -->
     <div class="batch-bar">
       <div class="batch-actions">
-        <button class="btn btn-primary" onclick="executeBatchComplete()" title="Complete: stage/commit/generate/receipt/mark done">✅ COMPLETE SELECTED</button>
+        <button class="btn btn-primary" onclick="executeBatchComplete()" title="Complete: stage/commit/generate/receipt/mark done">✅ Complete Selected</button>
         <button class="btn" onclick="executeBatchDefer()" title="Defer selected proposals">⏸️ Defer Selected</button>
         <button class="btn btn-amber" onclick="executeBatchReview()" title="Review changes in Beyond Compare">🔍 Do Review</button>
         <button class="btn btn-blue" onclick="executeBatchMarkReviewed()" title="Mark selected items as reviewed">⚡ Review Done</button>
@@ -1154,8 +1154,8 @@
           </th>
           <th>
             <select id="thProgStateFilter" class="col-filter-select" onchange="handleFilterChange()">
-              <option value="open" selected>Open</option>
-              <option value="ALL">All Status</option>
+              <option value="ALL" selected>All Status</option>
+              <option value="open">Open</option>
               <option value="in_progress">⚡ In Progress</option>
               <option value="verification">⏳ Verification</option>
               <option value="committed">📦 Committed</option>
@@ -1468,8 +1468,8 @@
           <li><strong>Type 'Rename to X' on Left:</strong> Renames file and cleans up old file.</li>
         </ul>
 
-        <h4 style="color: var(--accent-blue); margin-bottom: 6px;">4. COMPLETE Gating Invariants</h4>
-        <p>The <strong>COMPLETE</strong> and <strong>COMPLETE SELECTED</strong> actions are strictly gated:</p>
+        <h4 style="color: var(--accent-blue); margin-bottom: 6px;">4. Complete Gating Invariants</h4>
+        <p>The <strong>Complete</strong> and <strong>Complete Selected</strong> actions are strictly gated:</p>
         <ul style="margin-left: 20px; margin-bottom: 10px;">
           <li>Only CRPs in <code>⏳ Verification</code>, <code>⚡ In Progress</code>, or <code>Approved</code> state can be completed.</li>
           <li>CRPs in <code>Undecided</code>, <code>Deferred</code>, <code>Blocked</code>, or <code>Rejected</code> state cannot be accidentally completed.</li>
@@ -3708,13 +3708,13 @@
       const plan = document.getElementById("thPlanStateFilter");
       if (plan) plan.value = "ALL";
       const prog = document.getElementById("thProgStateFilter");
-      if (prog) prog.value = "open";
+      if (prog) prog.value = "ALL";
 
       currentSortColumn = 'id';
       currentSortDirection = 'desc';
       updateSortIcons();
       renderTable();
-      showToast("All column filters and sorting reset to default (Open items).");
+      showToast("All column filters and sorting reset to default (All items).");
     }
 
     function getHubStateSnapshot() {
