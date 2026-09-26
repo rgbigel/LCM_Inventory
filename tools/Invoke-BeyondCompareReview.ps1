@@ -28,16 +28,16 @@ param(
 
 <#
 .SYNOPSIS
-    Compares a repository's current state against any prior commit in Beyond Compare 5 with interactive review staging.
+    Compares a repository's current state against any prior commit in Beyond Compare with interactive review staging.
 .DESCRIPTION
     Module: tools/Invoke-BeyondCompareReview.ps1
-    Purpose: Compares a repository's current state against any prior commit in Beyond Compare 5 with interactive review staging,
-             automatic exclusion of .venv/cache/scratch directories, 4-directive action parsing (Accept, Delete, Rename, Defer),
+    Purpose: Compares a repository's current state against any prior commit in Beyond Compare with interactive review staging,
+             automatic exclusion of .venv/cache/scratch directories, 4-directive action parsing (Complete, Delete, Rename, Defer),
              and SHA-256 staging manifest generation.
     Path: tools/Invoke-BeyondCompareReview.ps1
     Authors: Rolf, Workspace_AI Engine
-    Version: 7.4.0
-    Date: 2026-09-25
+    Version: 8.0.0
+    Date: 2026-09-26
 .PARAMETER RepositoryName
     The name or directory path of the Git repository to review (e.g. 'AuthorizeMasterUser', 'Git_Repositories', '.').
 .PARAMETER BaseCommit
@@ -59,7 +59,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$scriptVersion = "2.3.4"
+$scriptVersion = "8.0.0"
 $scriptName = "Invoke-BeyondCompareReview"
 
 # ------------------------------------------------------------------------------
@@ -67,11 +67,11 @@ $scriptName = "Invoke-BeyondCompareReview"
 # ------------------------------------------------------------------------------
 if ($Help) {
   Write-Host "==========================================================================" -ForegroundColor Cyan
-  Write-Host " BEYOND COMPARE 5 REPOSITORY REVIEW LAUNCHER (v$scriptVersion)" -ForegroundColor Cyan
+  Write-Host " BEYOND COMPARE REPOSITORY REVIEW LAUNCHER (v$scriptVersion)" -ForegroundColor Cyan
   Write-Host "==========================================================================" -ForegroundColor Cyan
   Write-Host "SYNOPSIS:" -ForegroundColor Yellow
   Write-Host "  Exports the local Git HEAD baseline to a temporary inspection tree and opens"
-  Write-Host "  Beyond Compare 5 on your interactive desktop with out-of-scope filter exclusions."
+  Write-Host "  Beyond Compare on your interactive desktop with out-of-scope filter exclusions."
   Write-Host ""
   Write-Host "USAGE:" -ForegroundColor Yellow
   Write-Host "  pwsh tools/Invoke-BeyondCompareReview.ps1 [-RepositoryName <repo>] [-BaseCommit <commit>] [-Exclusions <array>] [-Wait] [-h]"
@@ -94,6 +94,129 @@ if ([string]::IsNullOrWhiteSpace($RepositoryName)) {
   else {
     $RepositoryName = '.'
   }
+}
+
+function Get-RepoVersion {
+  [CmdletBinding()]
+  param(
+    [Parameter(Mandatory = $true)]
+    [string]$TargetRepoPath,
+
+    [Parameter(Mandatory = $false)]
+    [string]$TargetCommit = 'HEAD'
+  )
+
+  $v = $null
+
+  # 1. Inspect Git commit message for version tag [vX.Y.Z]
+  if ($TargetCommit -and $TargetCommit -ne 'unborn') {
+    try {
+      $logs = @(git -C $TargetRepoPath log -n 5 --pretty=format:"%s" $TargetCommit 2>$null) -join "`n"
+      if ($logs -match '\[v?(\d+\.\d+(?:\.\d+)?)\]') {
+        $v = $Matches[1]
+      }
+    }
+    catch {}
+  }
+
+  # 2. Inspect .lcm/config.json if available
+  if (-not $v) {
+    $lcmCfg = Join-Path $TargetRepoPath ".lcm\config.json"
+    if (Test-Path -LiteralPath $lcmCfg) {
+      try {
+        $json = Get-Content -LiteralPath $lcmCfg -Raw -Encoding UTF8 | ConvertFrom-Json
+        if ($json.PSObject.Properties['governance'] -and $json.governance.PSObject.Properties['absorbed_lcm_version']) {
+          $v = [string]$json.governance.absorbed_lcm_version
+        }
+        elseif ($json.PSObject.Properties['absorbed_lcm_version']) {
+          $v = [string]$json.absorbed_lcm_version
+        }
+        elseif ($json.PSObject.Properties['governance'] -and $json.governance.PSObject.Properties['lcm_version']) {
+          $v = [string]$json.governance.lcm_version
+        }
+        elseif ($json.PSObject.Properties['version']) {
+          $v = [string]$json.version
+        }
+      }
+      catch {}
+    }
+  }
+
+  # 3. Inspect VERSION.txt
+  if (-not $v) {
+    $verFile = Join-Path $TargetRepoPath "VERSION.txt"
+    if (Test-Path -LiteralPath $verFile) {
+      try {
+        $candidate = (Get-Content -LiteralPath $verFile -Raw -Encoding UTF8).Trim()
+        if (-not [string]::IsNullOrWhiteSpace($candidate)) {
+          $v = $candidate
+        }
+      }
+      catch {}
+    }
+  }
+
+  # 4. Fallback to active LCM baseline version
+  if (-not $v) {
+    $v = '8.0.0'
+  }
+
+  $cleanVer = $v -replace '^[vV]', ''
+  return $cleanVer
+}
+
+function Get-ActiveCRP {
+  [CmdletBinding()]
+  param(
+    [Parameter(Mandatory = $true)]
+    [string]$TargetRepoName,
+
+    [Parameter(Mandatory = $true)]
+    [string]$WorkspaceRootPath
+  )
+
+  # 1. Search proposals.json for in-flight / staged / suggested proposal for this repo
+  $pJson = Join-Path $WorkspaceRootPath "Workspace_Inventory\data\proposals\proposals.json"
+  if (Test-Path -LiteralPath $pJson) {
+    try {
+      $pData = Get-Content -LiteralPath $pJson -Raw -Encoding UTF8 | ConvertFrom-Json
+      if ($pData.PSObject.Properties['proposals']) {
+        $matchesList = @($pData.proposals | Where-Object {
+          ($_.PSObject.Properties['origin_repo'] -and $_.origin_repo -eq $TargetRepoName) -or
+          ($_.PSObject.Properties['repo'] -and $_.repo -eq $TargetRepoName)
+        } | Where-Object {
+          $_.PSObject.Properties['state'] -and $_.state -in @('in_progress', 'staged', 'suggested', 'review')
+        })
+        if ($matchesList.Count -gt 0) {
+          $latest = $matchesList | Sort-Object { [int]($_.id -replace '\D', '') } -Descending | Select-Object -First 1
+          if ($latest.PSObject.Properties['crp_id'] -and -not [string]::IsNullOrWhiteSpace($latest.crp_id)) {
+            return [string]$latest.crp_id
+          }
+          if ($latest.PSObject.Properties['id']) {
+            return "CRP-$($latest.id)"
+          }
+        }
+      }
+    }
+    catch {}
+  }
+
+  # 2. Search ACTIVE_SESSION.md
+  $activeSessionFile = Join-Path $WorkspaceRootPath ".agents\ACTIVE_SESSION.md"
+  if (Test-Path -LiteralPath $activeSessionFile) {
+    try {
+      $content = Get-Content -LiteralPath $activeSessionFile -Raw -Encoding UTF8
+      if ($content -match "(?i)$TargetRepoName.*?\[?(CRP-\d+|BUG-\d+|CR-\d+)\]?") {
+        return $Matches[1].ToUpperInvariant()
+      }
+      if ($content -match "(?i)Current In-Flight:.*?(CRP-\d+|BUG-\d+|CR-\d+)") {
+        return $Matches[1].ToUpperInvariant()
+      }
+    }
+    catch {}
+  }
+
+  return ''
 }
 
 function Update-BCReviewSession {
@@ -696,7 +819,24 @@ if ($Exclusions -and $Exclusions.Count -gt 0) {
 
 $filterMask = ($filterList -join ';')
 
-Update-BCReviewSession -LeftPath $tempReviewRoot -RightPath $repoPath -FilterMask $filterMask -SessionName 'LCM_Review'
+# ------------------------------------------------------------------------------
+# 6. Establish Fixed Junction Bridge & Update Review Session (Approach A)
+# ------------------------------------------------------------------------------
+$junctionBaseline = Join-Path $scratchReviewDir "ACTIVE_BASELINE"
+$junctionLive = Join-Path $scratchReviewDir "ACTIVE_LIVE"
+
+# Safely refresh directory junctions per RULE-PS-018 (non-recursive reparse unlink)
+if (Test-Path -LiteralPath $junctionBaseline) {
+  [System.IO.Directory]::Delete($junctionBaseline, $false)
+}
+if (Test-Path -LiteralPath $junctionLive) {
+  [System.IO.Directory]::Delete($junctionLive, $false)
+}
+
+New-Item -ItemType Junction -Path $junctionBaseline -Target $tempReviewRoot | Out-Null
+New-Item -ItemType Junction -Path $junctionLive -Target $repoPath | Out-Null
+
+Update-BCReviewSession -LeftPath $junctionBaseline -RightPath $junctionLive -FilterMask $filterMask -SessionName 'LCM_Review'
 
 $sessionMeta = [ordered]@{
   RepositoryName   = $repoName
@@ -709,19 +849,28 @@ $sessionMeta = [ordered]@{
 }
 $sessionMeta | ConvertTo-Json -Depth 3 | Set-Content -LiteralPath (Join-Path $tempReviewRoot ".lcm_review.json") -Encoding utf8
 
-Write-Host "Launching Beyond Compare 5 on interactive desktop..." -ForegroundColor Green
-Write-Host ("  Left (Baseline {0}): {1}" -f $commitSha, $tempReviewRoot)
-Write-Host ("  Right (Current Live):       {0}" -f $repoPath)
-Write-Host ("  Filters Applied:            {0}" -f $filterMask)
+if ([string]::IsNullOrWhiteSpace($CRP)) {
+  $CRP = Get-ActiveCRP -TargetRepoName $repoName -WorkspaceRootPath $workspaceRoot
+}
 
-$title1 = if (-not [string]::IsNullOrWhiteSpace($CRP)) {
-  "Baseline $CRP ($commitSha)"
+$baselineVersion = Get-RepoVersion -TargetRepoPath $repoPath -TargetCommit $commitSha
+$title1 = "$repoName v$baselineVersion ($commitSha)"
+$title2 = if (-not [string]::IsNullOrWhiteSpace($CRP)) {
+  "Live $repoName [$CRP]"
 }
 else {
-  "Baseline ($commitSha)"
+  "Live $repoName"
 }
-$title2 = "Current Live ($repoName)"
-$bcArgString = "`"$tempReviewRoot`" `"$repoPath`" `"/title1=$title1`" `"/title2=$title2`" `"/filters=$filterMask`""
+
+Write-Host "Launching Beyond Compare on interactive desktop (Approach A - Fixed Junction Bridge)..." -ForegroundColor Green
+Write-Host ("  Left (Baseline {0}): {1}" -f $commitSha, $junctionBaseline)
+Write-Host ("  Right (Live):        {0}" -f $junctionLive)
+Write-Host ("  Pane Titles:         [Left: '{0}'] <--> [Right: '{1}']" -f $title1, $title2)
+Write-Host ("  Filters Applied:     {0}" -f $filterMask)
+
+# Single positional argument "LCM_Review" guarantees 2-way folder compare without 3-way merge collision.
+# /ro1 enforces read-only protection on the left baseline pane.
+$bcArgString = "`"LCM_Review`" `"/title1=$title1`" `"/title2=$title2`" `"/filters=$filterMask`" /ro1"
 
 $dispatcherCandidates = @(
   (Join-Path $workspaceRoot ".lcm\tools\internal\Invoke-InteractiveDesktop.ps1"),
@@ -741,7 +890,7 @@ if ($dispatcherPath) {
   & pwsh -File $dispatcherPath -FilePath $BeyondComparePath -ArgumentList $bcArgString | Out-Null
 }
 else {
-  Start-Process -FilePath $BeyondComparePath -ArgumentList @("`"$tempReviewRoot`"", "`"$repoPath`"", "`"/title1=$title1`"", "`"/title2=$title2`"", "`"/filters=$filterMask`"")
+  Start-Process -FilePath $BeyondComparePath -ArgumentList @("LCM_Review", "`"/title1=$title1`"", "`"/title2=$title2`"", "`"/filters=$filterMask`"", "/ro1")
 }
 
 # ------------------------------------------------------------------------------

@@ -24,15 +24,15 @@ param(
 
 <#
 .SYNOPSIS
-    Interactive review response recorder and staging execution engine for Beyond Compare 5 and LCM governance.
+    Interactive review response recorder and staging execution engine for Beyond Compare and LCM governance.
 .DESCRIPTION
     Module: tools/Submit-ReviewResult.ps1
     Purpose: Consumes interactive review staging manifests, handles Delete/Rename directives, executes cleanups,
-             prompts for uncopied file confirmations (bypassed with 'ACCEPT ALL' or -All), and performs review-gated commits per RULE-REV-001.
+             prompts for uncopied file confirmations (bypassed with 'COMPLETE ALL' or -All), and performs review-gated commits per RULE-REV-001.
     Path: tools/Submit-ReviewResult.ps1
     Authors: Rolf, Workspace_AI Engine
-    Version: 7.3.0
-    Date: 2026-09-25
+    Version: 8.0.0
+    Date: 2026-09-26
 #>
 
 Set-StrictMode -Version Latest
@@ -43,7 +43,7 @@ if ($Help) {
     Write-Host " SUBMIT REVIEW RESULT (Submit-ReviewResult)" -ForegroundColor Cyan
     Write-Host "==========================================================================" -ForegroundColor Cyan
     Write-Host "SYNOPSIS:" -ForegroundColor Yellow
-    Write-Host "  Interactive review response recorder and staging engine for Beyond Compare 5."
+    Write-Host "  Interactive review response recorder and staging engine for Beyond Compare."
     Write-Host ""
     Write-Host "USAGE:" -ForegroundColor Yellow
     Write-Host "  pwsh Workspace_Inventory/tools/Submit-ReviewResult.ps1 [[-RepositoryPath] <str>] [-Result <str>] [-Notes <str>] [-All] [-Force] [-h]"
@@ -249,8 +249,19 @@ if ($status.Count -gt 0) {
 
 # Cleanup staging manifest and temp baseline tree
 if (Test-Path -LiteralPath $stagedManifestFile) { Remove-Item -LiteralPath $stagedManifestFile -Force -ErrorAction SilentlyContinue }
-if ($stagedManifest -and $stagedManifest.TempReviewRoot -and (Test-Path -LiteralPath $stagedManifest.TempReviewRoot)) {
-    Remove-Item -LiteralPath $stagedManifest.TempReviewRoot -Recurse -Force -ErrorAction SilentlyContinue
+if ($stagedManifest -and $stagedManifest.TempReviewRoot) {
+    $activeBaselineJunction = Join-Path $workspaceRoot "Workspace_Inventory\scratch\BC_Review\ACTIVE_BASELINE"
+    if (Test-Path -LiteralPath $activeBaselineJunction) {
+        try {
+            $jItem = Get-Item -LiteralPath $activeBaselineJunction -Force -ErrorAction SilentlyContinue
+            if ($jItem -and $jItem.Target -eq $stagedManifest.TempReviewRoot) {
+                [System.IO.Directory]::Delete($activeBaselineJunction, $false)
+            }
+        } catch {}
+    }
+    if (Test-Path -LiteralPath $stagedManifest.TempReviewRoot) {
+        Remove-Item -LiteralPath $stagedManifest.TempReviewRoot -Recurse -Force -ErrorAction SilentlyContinue
+    }
 }
 
 # ------------------------------------------------------------------------------

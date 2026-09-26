@@ -20,12 +20,16 @@ param(
 )
 
 <#
-Module: Clear-BCReviewTemp.ps1
-Purpose: User command to inspect and clean up Beyond Compare temp review directories in BC_Review scratch.
-Path: tools/Clear-BCReviewTemp.ps1
-Authors: Rolf, Workspace_AI Engine
-Version: 1.5.1
-Date: 2026-09-10
+.SYNOPSIS
+    Inspects and cleans up Beyond Compare temp review directories in BC_Review scratch.
+.DESCRIPTION
+    Module: tools/Clear-BCReviewTemp.ps1
+    Purpose: User command and automated lifecycle hook to inspect and clean up Beyond Compare temp review directories in BC_Review scratch.
+             Safely preserves and unlinks Approach A directory junctions (ACTIVE_BASELINE and ACTIVE_LIVE) per RULE-PS-018.
+    Path: tools/Clear-BCReviewTemp.ps1
+    Authors: Rolf, Workspace_AI Engine
+    Version: 8.0.0
+    Date: 2026-09-26
 #>
 
 Set-StrictMode -Version Latest
@@ -65,6 +69,9 @@ if ($Purge -and $hasOlderThan) {
 }
 
 $workspaceRoot = 'D:\Git_Repositories'
+if (-not (Test-Path -LiteralPath $workspaceRoot)) {
+    $workspaceRoot = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
+}
 $scratchReviewDir = Join-Path $workspaceRoot 'Workspace_Inventory\scratch\BC_Review'
 $legacyTempParent = Join-Path $env:TEMP 'BC_Review'
 
@@ -77,9 +84,15 @@ if ($searchDirs.Count -eq 0) {
     return
 }
 
+# Safely filter out permanent junction bridges (ACTIVE_BASELINE and ACTIVE_LIVE) per RULE-PS-018
 $rawDirs = @()
 foreach ($sd in $searchDirs) {
-    $rawDirs += @(Get-ChildItem -Path $sd -Directory -ErrorAction SilentlyContinue)
+    $found = @(Get-ChildItem -Path $sd -Directory -ErrorAction SilentlyContinue | Where-Object {
+        $_.Name -notin @('ACTIVE_BASELINE', 'ACTIVE_LIVE') -and $_.LinkType -ne 'Junction'
+    })
+    if ($found.Count -gt 0) {
+        $rawDirs += $found
+    }
 }
 
 # Load session metadata for each directory
@@ -114,7 +127,7 @@ $sessionEntries = foreach ($dir in $rawDirs) {
 }
 
 # ==============================================================================
-# 2. Deletions (Executed FIRST based on exact SessionStarted timestamp)
+# 2. Deletions (Executed based on selection criteria)
 # ==============================================================================
 $toDelete = @()
 
@@ -128,7 +141,7 @@ elseif ($Purge) {
         $toDelete = @($sorted | Select-Object -Skip 1 | ForEach-Object { $_.DirectoryObject })
         Write-Host "Action: Preserving newest session ($($sorted[0].Name)), removing $($toDelete.Count) older folder(s)..." -ForegroundColor Yellow
     } else {
-        Write-Host "Only 1 review folder exists. Nothing to purge. (Use -All / -a to remove all)." -ForegroundColor Yellow
+        Write-Host "Only $($sessionEntries.Count) review folder(s) exist. Nothing to purge. (Use -All / -a to remove all)." -ForegroundColor Yellow
     }
 }
 elseif ($hasOlderThan) {
@@ -137,11 +150,25 @@ elseif ($hasOlderThan) {
     Write-Host "Action: Purging $($toDelete.Count) folder(s) older than $OlderThanHours hour(s) (Cutoff: $cutoff)..." -ForegroundColor Yellow
 }
 
+$activeBaselineJunction = Join-Path $scratchReviewDir "ACTIVE_BASELINE"
+$activeLiveJunction = Join-Path $scratchReviewDir "ACTIVE_LIVE"
+
 if ($toDelete.Count -gt 0) {
     $deletedCount = 0
     foreach ($target in $toDelete) {
         if ($PSCmdlet.ShouldProcess($target.FullName, "Delete BC_Review temp directory")) {
             try {
+                # If ACTIVE_BASELINE currently points to this target, safely unlink junction first
+                if (Test-Path -LiteralPath $activeBaselineJunction) {
+                    try {
+                        $jItem = Get-Item -LiteralPath $activeBaselineJunction -Force -ErrorAction SilentlyContinue
+                        if ($jItem -and $jItem.Target -eq $target.FullName) {
+                            [System.IO.Directory]::Delete($activeBaselineJunction, $false)
+                            Write-Host "Safely unlinked junction ACTIVE_BASELINE (target being deleted)" -ForegroundColor DarkCyan
+                        }
+                    } catch {}
+                }
+
                 Remove-Item -LiteralPath $target.FullName -Recurse -Force
                 Write-Host "Deleted: $($target.Name)" -ForegroundColor Green
                 $deletedCount++
@@ -152,31 +179,59 @@ if ($toDelete.Count -gt 0) {
         }
     }
     Write-Host "`nCleanup Complete. Removed $deletedCount folder(s)." -ForegroundColor Green
+
+    # If -All was chosen, also safely unlink ACTIVE_BASELINE if still present
+    if ($All -and (Test-Path -LiteralPath $activeBaselineJunction)) {
+        try {
+            [System.IO.Directory]::Delete($activeBaselineJunction, $false)
+            Write-Host "Safely unlinked junction ACTIVE_BASELINE" -ForegroundColor DarkCyan
+        } catch {}
+    }
+
     # Refresh directory list after deletion
-    $rawDirs = @(Get-ChildItem -Path $tempParent -Directory -ErrorAction SilentlyContinue)
     $sessionEntries = @($sessionEntries | Where-Object { Test-Path $_.DirectoryObject.FullName })
+}
+
+# Clean stale review staging manifests if requested
+$reviewsDir = Join-Path $workspaceRoot "Workspace_Inventory\data\reviews"
+if (Test-Path -LiteralPath $reviewsDir) {
+    $stagedManifests = @(Get-ChildItem -Path $reviewsDir -Filter "staged_review_*.json" -ErrorAction SilentlyContinue)
+    foreach ($sm in $stagedManifests) {
+        if ($All) {
+            Remove-Item -LiteralPath $sm.FullName -Force -ErrorAction SilentlyContinue
+        } else {
+            # If target review root in manifest no longer exists, remove orphan manifest
+            try {
+                $mJson = Get-Content -LiteralPath $sm.FullName -Raw | ConvertFrom-Json
+                if ($mJson.TempReviewRoot -and -not (Test-Path -LiteralPath $mJson.TempReviewRoot)) {
+                    Remove-Item -LiteralPath $sm.FullName -Force -ErrorAction SilentlyContinue
+                    Write-Host "Removed orphan review staging manifest: $($sm.Name)" -ForegroundColor DarkCyan
+                }
+            } catch {}
+        }
+    }
 }
 
 # ==============================================================================
 # 3. Report & Status Table
 # ==============================================================================
 Write-Host "`n==========================================================================================" -ForegroundColor Cyan
-Write-Host " Beyond Compare Review Temp Directory Manager: $tempParent" -ForegroundColor Cyan
+Write-Host " Beyond Compare Review Temp Directory Manager: $scratchReviewDir" -ForegroundColor Cyan
 Write-Host "==========================================================================================" -ForegroundColor Cyan
 
 if ($sessionEntries.Count -gt 0) {
     $sessionEntries | Format-Table Repository, BaseCommit, SessionStarted, FileCount, SizeBytes -AutoSize
 } else {
-    Write-Host "BC_Review temp directory is empty ($tempParent)." -ForegroundColor Green
+    Write-Host "BC_Review temp directory is empty ($scratchReviewDir)." -ForegroundColor Green
 }
 
 # ==============================================================================
-# 4. Open File Explorer AFTER Deletions (Implicit in ALL cases except -All)
+# 4. Open File Explorer AFTER Deletions (Implicit in ALL cases except -All or -NoExplorer)
 # ==============================================================================
 if (-not $All -and -not $NoExplorer) {
-    if ($sessionEntries.Count -gt 0) {
+    if ($sessionEntries.Count -gt 0 -and (Test-Path -LiteralPath $scratchReviewDir)) {
         Write-Host "Opening remaining review contents in Windows File Explorer..." -ForegroundColor Green
-        Start-Process "explorer.exe" -ArgumentList "`"$tempParent`""
+        Start-Process "explorer.exe" -ArgumentList "`"$scratchReviewDir`""
     }
 }
 elseif ($All) {

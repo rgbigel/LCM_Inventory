@@ -1088,11 +1088,12 @@
     <!-- Batch Actions Bar -->
     <div class="batch-bar">
       <div class="batch-actions">
-        <button class="btn btn-primary" onclick="executeBatchAccept()" title="Accept and dual-commit sync selected actionable proposals">✅ ACCEPT SELECTED</button>
+        <button class="btn btn-primary" onclick="executeBatchComplete()" title="Complete: stage/commit/generate/receipt/mark done">✅ COMPLETE SELECTED</button>
         <button class="btn" onclick="executeBatchDefer()" title="Defer selected proposals">⏸️ Defer Selected</button>
-        <button class="btn btn-amber" onclick="executeBatchReview()" title="Launch Beyond Compare review for all checked items">🔍 Do Review</button>
-        <button class="btn btn-blue" onclick="executeBatchMarkReviewed()" title="Mark selected items as reviewed / verification complete">⚡ Review Done</button>
-        <button class="btn btn-red" onclick="executeBatchDelete()" title="Delete / undo selected proposals">🗑️ Delete/Undo</button>
+        <button class="btn btn-amber" onclick="executeBatchReview()" title="Review changes in Beyond Compare">🔍 Do Review</button>
+        <button class="btn btn-blue" onclick="executeBatchMarkReviewed()" title="Mark selected items as reviewed">⚡ Review Done</button>
+        <button class="btn btn-red" onclick="executeBatchDelete()" title="Delete / undo Proposal">🗑️ Delete/Undo</button>
+        <button class="btn btn-sm" onclick="executeBatchCleanBCR()" title="BCReview Cleanup Temps">🧹 Clean BCR</button>
       </div>
 
       <div style="font-size: 0.75rem; color: var(--text-secondary);">
@@ -1369,7 +1370,7 @@
             <option value="ALL">All State Events</option>
             <option value="created">Created / Suggested</option>
             <option value="in_progress">In Progress</option>
-            <option value="completed">Completed / Accepted</option>
+            <option value="completed">Completed</option>
             <option value="pushed">Pushed to Remote</option>
           </select>
           <button class="btn" onclick="resetCrpDateFilters()">Reset</button>
@@ -1440,7 +1441,7 @@
           <li><code>Approved</code>: Formally approved; queued for AI agent implementation.</li>
           <li><code>⏸️ Deferred</code>: Postponed to future milestone.</li>
           <li><code>❌ Rejected</code>: Dropped / cancelled.</li>
-          <li><code>✅ Completed</code>: Formally reviewed, accepted, and committed in Git.</li>
+          <li><code>✅ Completed</code>: Formally reviewed, completed, and committed in Git.</li>
         </ul>
 
         <p><strong>STATUS (Physical Progress):</strong></p>
@@ -1449,29 +1450,29 @@
           <li><code>Queued (Ready)</code>: Approved and placed in implementation queue.</li>
           <li><code>⚡ In Progress</code>: Active implementation / agent development.</li>
           <li><code>⏳ Verification</code>: Implementation complete; awaiting Beyond Compare visual review.</li>
-          <li><code>📦 Committed</code>: Visual review accepted and local Git commit recorded.</li>
-          <li><code>✅ Completed</code>: Formal review disposition ACCEPTED.</li>
+          <li><code>📦 Committed</code>: Visual review completed and local Git commit recorded.</li>
+          <li><code>✅ Completed</code>: Formal review disposition COMPLETED.</li>
           <li><code>🚀 Pushed</code>: Committed changes pushed to remote Git tracking branches.</li>
         </ul>
 
         <h4 style="color: var(--accent-blue); margin-bottom: 6px;">2. Unified CRP Sequence Identifier</h4>
         <p>All change requests follow the unified identifier standard: <code>CRP-079</code> (single sequence across all repositories).</p>
 
-        <h4 style="color: var(--accent-blue); margin-bottom: 6px;">3. Beyond Compare 5 Visual Review Gate</h4>
-        <p>Click <strong>🔍 BC5</strong> to open Beyond Compare 5 with the Variant A baseline:
+        <h4 style="color: var(--accent-blue); margin-bottom: 6px;">3. Beyond Compare Visual Review Gate</h4>
+        <p>Click <strong>🔍 BC</strong> to open Beyond Compare with the Variant A baseline:
         <br><code>Left: Workspace_Inventory\scratch\BC_Review\&lt;CRP&gt;_&lt;Repo&gt;_&lt;CommitSha&gt;</code> (Baseline)
         <br><code>Right: Target Repository Working Directory</code> (Current Live)</p>
         <ul style="margin-left: 20px; margin-bottom: 10px;">
-          <li><strong>Copy Right &rarr; Left:</strong> Stages modifications for acceptance.</li>
+          <li><strong>Copy Right &rarr; Left:</strong> Stages modifications for completion.</li>
           <li><strong>Type 'Delete' on Left:</strong> Permanently deletes file on disk and in Git.</li>
           <li><strong>Type 'Rename to X' on Left:</strong> Renames file and cleans up old file.</li>
         </ul>
 
-        <h4 style="color: var(--accent-blue); margin-bottom: 6px;">4. ACCEPT Gating Invariants</h4>
-        <p>The <strong>ACCEPT</strong> and <strong>ACCEPT SELECTED</strong> actions are strictly gated:</p>
+        <h4 style="color: var(--accent-blue); margin-bottom: 6px;">4. COMPLETE Gating Invariants</h4>
+        <p>The <strong>COMPLETE</strong> and <strong>COMPLETE SELECTED</strong> actions are strictly gated:</p>
         <ul style="margin-left: 20px; margin-bottom: 10px;">
-          <li>Only CRPs in <code>⏳ Verification</code>, <code>⚡ In Progress</code>, or <code>Approved</code> state can be accepted.</li>
-          <li>CRPs in <code>Undecided</code>, <code>Deferred</code>, <code>Blocked</code>, or <code>Rejected</code> state cannot be accidentally accepted.</li>
+          <li>Only CRPs in <code>⏳ Verification</code>, <code>⚡ In Progress</code>, or <code>Approved</code> state can be completed.</li>
+          <li>CRPs in <code>Undecided</code>, <code>Deferred</code>, <code>Blocked</code>, or <code>Rejected</code> state cannot be accidentally completed.</li>
         </ul>
 
         <h4 style="color: var(--accent-blue); margin-bottom: 6px;">5. Interactive CM Console (Bottom Dock)</h4>
@@ -2086,13 +2087,13 @@
 
       if (text) {
         currentModalPath = foundPath;
-        currentModalTitle = `Review Acceptance Receipt (${primaryRepo})`;
+        currentModalTitle = `Review Receipt (${primaryRepo})`;
         currentModalRaw = text;
         document.getElementById("modalTitle").innerText = currentModalTitle;
         document.getElementById("modalContent").innerHTML = `<pre style="font-family:var(--font-mono);font-size:0.8rem;background:#090d13;color:#7ee787;padding:12px;border-radius:6px;">${text}</pre>`;
         document.getElementById("inspectorModal").classList.add("open");
       } else {
-        alert(`No review acceptance receipt found on disk for ${primaryRepo}. Run a Beyond Compare review and ACCEPT to generate a receipt.`);
+        alert(`No review receipt found on disk for ${primaryRepo}. Run a Beyond Compare review and COMPLETE to generate a receipt.`);
       }
     }
 
@@ -2110,7 +2111,7 @@
 
       let version = "v1.0.0";
       let date = "2026-08-30";
-      let reviewState = "ACCEPTED";
+      let reviewState = "COMPLETED";
       let role = "Specification";
 
       const lower = fileName.toLowerCase();
@@ -2238,7 +2239,7 @@
 
       filtered.forEach((d, idx) => {
         const tr = document.createElement("tr");
-        const stateBadgeClass = d.reviewState === "ACCEPTED" ? "badge-success" : (d.reviewState === "STAGED" ? "badge-warning" : "badge-muted");
+        const stateBadgeClass = (d.reviewState === "COMPLETED" || d.reviewState === "ACCEPTED") ? "badge-success" : (d.reviewState === "STAGED" ? "badge-warning" : "badge-muted");
 
         tr.innerHTML = `
           <td style="text-align: center;"><input type="checkbox" class="doc-row-chk" value="${d.key}" data-name="${d.name}" onchange="updateDocSelectedCount()"></td>
@@ -2706,16 +2707,16 @@
         return;
       }
 
-      // Command: accept <#id|crp-id|all>
-      const acceptMatch = trimmed.match(/^accept\s+(?:#|crp-?)?(\d+|all)$/i);
-      if (acceptMatch) {
-        if (acceptMatch[1].toLowerCase() === "all") {
-          await executeBatchAccept();
+      // Command: complete <#id|crp-id|all>
+      const completeMatch = trimmed.match(/^complete\s+(?:#|crp-?)?(\d+|all)$/i);
+      if (completeMatch) {
+        if (completeMatch[1].toLowerCase() === "all") {
+          await executeBatchComplete();
         } else {
-          const id = parseInt(acceptMatch[1], 10);
+          const id = parseInt(completeMatch[1], 10);
           await executeHubCommand(
             `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action complete -TargetExpression ${id}`,
-            `Accept & Complete CRP-${id}`,
+            `Complete CRP-${id}`,
             id
           );
         }
@@ -2732,7 +2733,7 @@
           return;
         }
         await launchReviewForProposal(p.id, p.origin_repo, p.bundle_id);
-        updateLiveTicker(`Launched BC5 Review for CRP-${String(id).padStart(3, '0')}`, id);
+        updateLiveTicker(`Launched Beyond Compare Review for CRP-${String(id).padStart(3, '0')}`, id);
         return;
       }
 
@@ -3790,22 +3791,22 @@
       }
     }
 
-    // Launch BC5 Review
+    // Launch Beyond Compare Review
     async function launchReviewForProposal(id, repoStr, crp) {
       const primaryRepo = (repoStr || "Workspace_Inventory").split("/")[0].trim();
       const crpArg = crp && crp.startsWith("CRP-") ? `-CRP "${crp}"` : "";
       const cmd = `pwsh -File Workspace_Inventory/tools/Invoke-BeyondCompareReview.ps1 -RepositoryName "${primaryRepo}" ${crpArg}`;
 
-      appendConsole(`Launching Beyond Compare 5 review for #${id} (${primaryRepo})...`, "msg-info");
+      appendConsole(`Launching Beyond Compare review for #${id} (${primaryRepo})...`, "msg-info");
       try {
         await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ command: cmd, elevated: false, noExit: false })
         });
-        showToast(`Launched BC5 Review for #${id}`);
+        showToast(`Launched BC Review for #${id}`);
       } catch (err) {
-        appendConsole(`Error launching BC5 review: ${err.message}`, "msg-err");
+        appendConsole(`Error launching BC review: ${err.message}`, "msg-err");
       }
     }
 
@@ -3829,11 +3830,11 @@
       if (currentModalPath) editInNotepad(currentModalPath);
     }
 
-    // Gated Batch Accept
-    async function executeBatchAccept() {
+    // Gated Batch Complete
+    async function executeBatchComplete() {
       const chks = getSelectedCheckboxes();
       if (chks.length === 0) {
-        alert("Please select one or more CRPs to ACCEPT.");
+        alert("Please select one or more CRPs to COMPLETE.");
         return;
       }
 
@@ -3845,7 +3846,7 @@
         const p = proposalsData.proposals.find(item => item.id === id);
         if (!p) return;
 
-        // Invariant: Cannot accept undecided, rejected, blocked, or deferred
+        // Invariant: Cannot complete undecided, rejected, blocked, or deferred
         if (['undecided', 'blocked'].includes(p.progress_state) || ['rejected', 'deferred'].includes(p.state)) {
           invalid.push(`CRP-${String(p.id).padStart(3, '0')} (${p.state} / ${p.progress_state})`);
         } else {
@@ -3854,11 +3855,11 @@
       });
 
       if (invalid.length > 0) {
-        alert(`CANNOT ACCEPT: The following ${invalid.length} CRP(s) are in unready states:\n- ${invalid.join('\n- ')}\n\nOnly CRPs in 'Verification', 'In Progress', or 'Approved' state can be accepted.`);
+        alert(`CANNOT COMPLETE: The following ${invalid.length} CRP(s) are in unready states:\n- ${invalid.join('\n- ')}\n\nOnly CRPs in 'Verification', 'In Progress', or 'Approved' state can be completed.`);
         return;
       }
 
-      if (!confirm(`Are you sure you want to ACCEPT and dual-commit sync ${valid.length} CRP(s)?`)) return;
+      if (!confirm(`Are you sure you want to COMPLETE ${valid.length} CRP(s)?`)) return;
 
       for (const p of valid) {
         p.state = "completed";
@@ -3868,9 +3869,9 @@
       updateMetricCards();
       resetFilters();
       await syncLedgerToServer();
-      const logMsg = `Batch accepted and marked completed: ${valid.map(v => 'CRP-' + String(v.id).padStart(3, '0')).join(', ')}`;
+      const logMsg = `Batch completed: ${valid.map(v => 'CRP-' + String(v.id).padStart(3, '0')).join(', ')}`;
       appendConsole(logMsg, "msg-info");
-      showToast(`Batch Accepted ${valid.length} CRP(s). View reset to SHOW ALL.`);
+      showToast(`Batch Completed ${valid.length} CRP(s). View reset to SHOW ALL.`);
       updateLiveTicker(logMsg);
     }
 
@@ -3927,6 +3928,13 @@
       await executeHubCommand(
         `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action delete -TargetExpression ${ids}`,
         `Batch Delete ${chks.length} CRP(s)`
+      );
+    }
+
+    async function executeBatchCleanBCR() {
+      await executeHubCommand(
+        `pwsh -File Workspace_Inventory/tools/Clear-BCReviewTemp.ps1 -Purge -NoExplorer`,
+        `Clean BCR Review Scratch`
       );
     }
 

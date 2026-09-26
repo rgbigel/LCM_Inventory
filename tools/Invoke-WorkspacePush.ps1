@@ -6,8 +6,8 @@
   Purpose: Iterates across all governed and child repositories under D:\Git_Repositories, detects if a Git remote exists and if local branch is ahead of remote tracking branch, and executes git push with structured audit logging.
   Path: Workspace_Inventory/tools/Invoke-WorkspacePush.ps1
   Authors: Rolf, Workspace_AI Engine
-  Version: 1.1.0
-  Date: 2026-09-10
+  Version: 8.0.0
+  Date: 2026-09-26
 #>
 
 [CmdletBinding()]
@@ -233,6 +233,18 @@ if ($pushedRepos.Count -gt 0) {
     }
 }
 
+# ------------------------------------------------------------------------------
+# Post-Push Automated Cleanup: BCR Scratch & Stale Baseline Purge
+# ------------------------------------------------------------------------------
+$clearBcrScript = Join-Path $workspaceRoot "Workspace_Inventory\tools\Clear-BCReviewTemp.ps1"
+if (Test-Path -LiteralPath $clearBcrScript) {
+    if ($DryRun) {
+        Write-Host "`n  -> [DRY RUN] Would execute automated Beyond Compare review scratch cleanup (Clear-BCReviewTemp -Purge)" -ForegroundColor Yellow
+    } else {
+        Write-Host "`n[Post-Push Pipeline] Executing automated Beyond Compare review scratch cleanup..." -ForegroundColor Yellow
+        & pwsh -File $clearBcrScript -Purge -NoExplorer
+    }
+}
 
 Write-Host "==========================================================================" -ForegroundColor Cyan
 Write-Host " [SUMMARY] Workspace Push Completed" -ForegroundColor Green
