@@ -107,18 +107,22 @@ This document details the complete technical trace, tool execution log, command 
         `$xml.SelectSingleNode('/BCSessions/TSessionFolder/Items/TSessionFolder/Items')`
       - Corrected default session template target:
         `$xml.SelectSingleNode('/BCSessions/TSessionFolder/Items/TDirCompareSession[not(@Value) or @Value=""]')`
-      - Preprended session name to CLI arguments:
-        ```powershell
-        $bcArgString = "`"LCM_Review`" `"$tempReviewRoot`" `"$repoPath`" `"/title1=$title1`" `"/title2=$title2`" `"/filters=$filterMask`""
-        ```
-      - Updated direct fallback launcher (`Start-Process`) to pass `"LCM_Review"` as the first element.
-18. **Tool**: `run_command`
-    - *Action*: Created backup `BCSessions.xml.pre_patch.bak` and injected `<Rules><FollowSymLinks Value="True"/></Rules>` into both the default `TDirCompareSession` template and the named `LCM_Review` session node.
-19. **Tool**: `run_command`
-    - *Action*: Ran PowerShell AST parser validation:
+      - Injected `<Rules><FollowSymLinks Value="True"/></Rules>` into both the default template and `LCM_Review`.
+
+---
+
+### Phase F: The 3-Argument Positional Collision (3-Way Merge Defect)
+18. **Symptom Observed**:
+    - When passing `"LCM_Review"` followed by `$tempReviewRoot` and `$repoPath`, BC5 opened a **3-way Folder Merge** with the left folder showing an error: `C:\Windows\System32\LCM_Review`.
+19. **Root Cause Analysis**:
+    - Beyond Compare's CLI positional parser behaves as follows:
+      - 1 argument: `BCompare.exe "Named Session"` (loads named session).
+      - 2 arguments: `BCompare.exe "Left" "Right"` (opens 2-way Folder Compare).
+      - 3 arguments: `BCompare.exe "Left" "Right" "Center"` (opens 3-way Folder Merge).
+    - BC5 does **not** recognize `"LCM_Review"` as a session switch when followed by multiple paths. It interpreted `"LCM_Review"` as a relative path to the left folder, `$tempReviewRoot` as the right folder, and `$repoPath` as the center folder.
+20. **Final Resolution**:
+    - Restored the CLI invocation to strictly **two** folder arguments:
       ```powershell
-      [System.Management.Automation.Language.Parser]::ParseFile(...)
+      $bcArgString = "`"$tempReviewRoot`" `"$repoPath`" `"/title1=$title1`" `"/title2=$title2`" `"/filters=$filterMask`""
       ```
-    - *Result*: `0 AST syntax errors`.
-20. **Tool**: `run_command`
-    - *Action*: `git status` and `git diff` on `Invoke-BeyondCompareReview.ps1` to confirm clean formatting, StrictMode compliance, and no unintended collateral modifications.
+    - Because the default `TDirCompareSession` template in `BCSessions.xml` is permanently patched with `<Rules><FollowSymLinks Value="True"/></Rules>`, every 2-path Folder Compare automatically inherits link-following without triggering 3-way merge semantics. Verified live: window opened cleanly as a 2-way `Folder Compare` with symlinks traversed.
