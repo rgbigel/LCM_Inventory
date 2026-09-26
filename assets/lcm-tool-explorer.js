@@ -230,7 +230,7 @@
 
         tbody.innerHTML = data.map(t => {
             // Determine master index in global toolsData array
-            const masterIdx = toolsData.findIndex(item => item.Name === t.Name);
+            const masterIdx = toolsData.findIndex(item => (item.RelativePath && t.RelativePath) ? (item.RelativePath === t.RelativePath) : (item.Name === t.Name));
             const safeIdx = masterIdx >= 0 ? masterIdx : 0;
             const counter = String(safeIdx + 1).padStart(3, '0');
 
@@ -246,11 +246,11 @@
             const displayName = isSourceMode ? t.Name : shortNameLabel;
 
             let shortNamesListHtml = '';
+            const allShortNames = getShortNamesForTool(t);
             if (isSourceMode) {
-                const shortNames = getShortNamesForTool(t);
-                const totalShortNames = shortNames.length;
+                const totalShortNames = allShortNames.length;
                 shortNamesListHtml = '<div class="shortnames-container">' +
-                    shortNames.map(sn => {
+                    allShortNames.map(sn => {
                         const safeSn = escapeHtml(sn);
                         if (totalShortNames > 1) {
                             return '<span class="shortname-pill active-alias" title="Short-name launcher: ' + safeSn + '.cmd">' +
@@ -265,6 +265,19 @@
                         }
                     }).join('') +
                     '</div>';
+            } else {
+                // In Short-Names mode, display active aliases (e.g. BCR) below the primary ShortName
+                const aliases = allShortNames.filter(sn => sn.toLowerCase() !== displayName.toLowerCase());
+                if (aliases.length > 0) {
+                    shortNamesListHtml = '<div class="shortnames-container">' +
+                        aliases.map(sn => {
+                            const safeSn = escapeHtml(sn);
+                            return '<span class="shortname-pill active-alias" title="Alias launcher: ' + safeSn + '.cmd">' +
+                                '💬 ' + safeSn +
+                                '</span>';
+                        }).join('') +
+                        '</div>';
+                }
             }
 
             const noExitBadge = t.NoExit 
@@ -1724,29 +1737,29 @@
         const input = document.getElementById('inline-edit-input');
         const val = input.value;
         const targetTool = toolsData[activeEditCell.idx];
+        if (!targetTool) return;
         const baseStem = targetTool.Name.replace(/\.[^/.]+$/, "");
         const parsedVal = activeEditCell.field === 'Admin' ? (val === 'true') : val;
 
-        let updatedCount = 0;
         let stored = {};
         try { stored = JSON.parse(localStorage.getItem('lcm_tools_overrides') || '{}'); } catch(e) {}
 
-        toolsData.forEach(t => {
-            const stem = t.Name.replace(/\.[^/.]+$/, "");
-            if (stem.toLowerCase() === baseStem.toLowerCase()) {
-                const oldVal = t[activeEditCell.field];
-                t[activeEditCell.field] = parsedVal;
-                if (activeEditCell.field === 'Group') {
-                    t.Group = parsedVal;
-                    t.Domain = parsedVal;
-                }
-                t._edited = true;
-                if (!stored[t.Name]) stored[t.Name] = {};
-                stored[t.Name][activeEditCell.field] = parsedVal;
-                markToolPending(t, 'edit', { [activeEditCell.field]: oldVal }, { [activeEditCell.field]: parsedVal });
-                updatedCount++;
-            }
-        });
+        const oldVal = targetTool[activeEditCell.field];
+        targetTool[activeEditCell.field] = parsedVal;
+        if (activeEditCell.field === 'Group' || activeEditCell.field === 'Domain' || activeEditCell.field === 'Subsystem') {
+            targetTool.Group = parsedVal;
+            targetTool.Domain = parsedVal;
+            targetTool.Subsystem = parsedVal;
+        }
+        targetTool._edited = true;
+        
+        const relKey = targetTool.RelativePath || targetTool.Name;
+        if (!stored[relKey]) stored[relKey] = {};
+        stored[relKey][activeEditCell.field] = parsedVal;
+        stored[targetTool.Name] = stored[targetTool.Name] || {};
+        stored[targetTool.Name][activeEditCell.field] = parsedVal;
+
+        markToolPending(targetTool, 'edit', { [activeEditCell.field]: oldVal }, { [activeEditCell.field]: parsedVal });
 
         localStorage.setItem('lcm_tools_overrides', JSON.stringify(stored));
 
@@ -1768,7 +1781,7 @@
 
         closeCellEditor();
         applyFilters();
-        showToast('✓ Staged ' + activeEditCell.field + ' for ' + baseStem + ' (Blocked pending Finalize/Revert)');
+        showToast('✓ Staged ' + activeEditCell.field + ' for ' + (targetTool.ShortName || baseStem) + ' (Blocked pending Finalize/Revert)');
     }
 
     function closeCellEditor() {
@@ -1795,24 +1808,34 @@
     function isToolBlocked(tool) {
         if (!tool) return false;
         const mods = getPendingModifications();
-        return Boolean(mods[tool.Name] || tool._isPendingModification);
+        const relKey = tool.RelativePath || tool.Name;
+        return Boolean(mods[relKey] || mods[tool.Name] || tool._isPendingModification || tool.IsBlocked);
     }
 
     function getToolPendingInfo(tool) {
         if (!tool) return null;
         const mods = getPendingModifications();
-        return mods[tool.Name] || (tool._isPendingModification ? { type: tool._pendingType || 'edit' } : null);
+        const relKey = tool.RelativePath || tool.Name;
+        const mod = mods[relKey] || mods[tool.Name];
+        if (mod) return mod;
+        if (tool._isPendingModification) {
+            return { type: tool._pendingType || 'edit' };
+        }
+        return null;
     }
 
     function markToolPending(tool, type, oldState, newState) {
         if (!tool) return;
         const mods = getPendingModifications();
-        mods[tool.Name] = {
+        const relKey = tool.RelativePath || tool.Name;
+        const payload = {
             type: type, // 'edit' | 'rename' | 'delete'
             timestamp: new Date().toISOString(),
             oldState: oldState || {},
             newState: newState || {}
         };
+        mods[relKey] = payload;
+        mods[tool.Name] = payload;
         setPendingModifications(mods);
         tool._isPendingModification = true;
         tool._pendingType = type;
@@ -1822,10 +1845,16 @@
     function initPendingModifications() {
         const mods = getPendingModifications();
         toolsData.forEach(t => {
-            if (mods[t.Name]) {
+            const relKey = t.RelativePath || t.Name;
+            const mod = mods[relKey] || mods[t.Name];
+            if (mod) {
                 t._isPendingModification = true;
-                t._pendingType = mods[t.Name].type || 'edit';
+                t._pendingType = mod.type || 'edit';
                 t.IsBlocked = true;
+            } else {
+                t._isPendingModification = false;
+                t.IsBlocked = false;
+                t._pendingType = null;
             }
         });
     }
@@ -1834,22 +1863,37 @@
         const tool = toolsData[idx];
         if (!tool) return;
         const mods = getPendingModifications();
-        const modInfo = mods[tool.Name];
+        const relKey = tool.RelativePath || tool.Name;
+        const modInfo = mods[relKey] || mods[tool.Name];
         if (modInfo && modInfo.oldState) {
             Object.assign(tool, modInfo.oldState);
         }
         delete mods[tool.Name];
+        if (tool.RelativePath) delete mods[tool.RelativePath];
+        const baseStem = tool.Name.replace(/\.[^/.]+$/, "");
+        delete mods[baseStem];
         setPendingModifications(mods);
 
         // Remove from overrides
         let storedOverrides = {};
         try { storedOverrides = JSON.parse(localStorage.getItem('lcm_tools_overrides') || '{}'); } catch(e) {}
         delete storedOverrides[tool.Name];
+        if (tool.RelativePath) delete storedOverrides[tool.RelativePath];
+        delete storedOverrides[baseStem];
         localStorage.setItem('lcm_tools_overrides', JSON.stringify(storedOverrides));
 
-        tool._isPendingModification = false;
-        tool._edited = false;
-        tool.IsBlocked = false;
+        // Clear in-memory blockade across all matching tools in toolsData
+        toolsData.forEach(t => {
+            if (t === tool || (t.RelativePath && tool.RelativePath && t.RelativePath === tool.RelativePath) || t.Name === tool.Name) {
+                t._isPendingModification = false;
+                t._edited = false;
+                t.IsBlocked = false;
+                t._pendingType = null;
+                if (modInfo && modInfo.oldState) {
+                    Object.assign(t, modInfo.oldState);
+                }
+            }
+        });
 
         // Sync to daemon
         fetch(DAEMON_URL + '/sync_json', {
@@ -1871,10 +1915,19 @@
         if (!tool) return;
         const mods = getPendingModifications();
         delete mods[tool.Name];
+        if (tool.RelativePath) delete mods[tool.RelativePath];
+        const baseStem = tool.Name.replace(/\.[^/.]+$/, "");
+        delete mods[baseStem];
         setPendingModifications(mods);
 
-        tool._isPendingModification = false;
-        tool.IsBlocked = false;
+        // Clear in-memory blockade across all matching tools in toolsData
+        toolsData.forEach(t => {
+            if (t === tool || (t.RelativePath && tool.RelativePath && t.RelativePath === tool.RelativePath) || t.Name === tool.Name) {
+                t._isPendingModification = false;
+                t.IsBlocked = false;
+                t._pendingType = null;
+            }
+        });
 
         let storedOverrides = {};
         try { storedOverrides = JSON.parse(localStorage.getItem('lcm_tools_overrides') || '{}'); } catch(e) {}

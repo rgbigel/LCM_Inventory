@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-09-26T22:38:00+02:00",
+  "updated_at": "2026-09-26T23:10:00+02:00",
   "review_granularity": "tight",
   "lcm_mode": "active",
-  "last_proposal_id": 178,
+  "last_proposal_id": 179,
   "proposals": [
     {
       "id": 1,
@@ -8750,6 +8750,48 @@
       "type": "BUG",
       "crp_id": "BUG-178",
       "cr_id": "BUG-178",
+      "progress_state": "completed"
+    },
+    {
+      "id": 179,
+      "timestamp": "2026-09-26 23:00:00",
+      "title": "Tool Explorer Alias Omission, Subsystem Override Reversion, and Two-State Finalize Blockade Defect",
+      "origin_repo": "Workspace_Inventory",
+      "state": "completed",
+      "bundle_id": "BUG-179",
+      "author": "Rolf, Antigravity AI Assistant",
+      "details": "Restores missing BCR alias and BCR.cmd trampoline for BeyondCompareReview, fixes masterIdx relative path derivation in lcm-tool-explorer.js to prevent collision on duplicate filenames, ensures finalizeTool and revertTool lift in-memory and local storage blockades cleanly, and adds Subsystem/Group/Domain override persistence to tool_catalog_overrides.json in DaemonActionController.",
+      "bundle_dir": "docs/Proposals/BUG-179-LCM-v8.0.0-Tool-Explorer-Alias-Omission-And-Two-State-Blockade-Fix",
+      "docs": {
+        "specification": "Workspace_Inventory/docs/Proposals/BUG-179-LCM-v8.0.0-Tool-Explorer-Alias-Omission-And-Two-State-Blockade-Fix/Specification.md",
+        "plan": "Workspace_Inventory/docs/Proposals/BUG-179-LCM-v8.0.0-Tool-Explorer-Alias-Omission-And-Two-State-Blockade-Fix/Implementation_Plan.md",
+        "walkthrough": "Workspace_Inventory/docs/Proposals/BUG-179-LCM-v8.0.0-Tool-Explorer-Alias-Omission-And-Two-State-Blockade-Fix/Walkthrough.md"
+      },
+      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-179-LCM-v8.0.0-Tool-Explorer-Alias-Omission-And-Two-State-Blockade-Fix/Implementation_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/docs/Proposals/BUG-179-LCM-v8.0.0-Tool-Explorer-Alias-Omission-And-Two-State-Blockade-Fix/Walkthrough.md",
+      "dates": {
+        "created": "2026-09-26 23:00:00",
+        "suggested": "2026-09-26 23:00:00",
+        "completed": "2026-09-26 23:10:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-26 23:00:00",
+          "user": "Rolf",
+          "note": "Bug captured for missing BCR alias, two-state finalize blockade failure, and subsystem override reversion."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-26 23:10:00",
+          "user": "Rolf",
+          "note": "BCR alias restored, BCR.cmd generated, masterIdx fixed via RelativePath, finalizeTool blockade clearing hardened, and subsystem overrides persisted."
+        }
+      ],
+      "priority": "H",
+      "type": "BUG",
+      "crp_id": "BUG-179",
+      "cr_id": "BUG-179",
       "progress_state": "completed"
     }
   ],
