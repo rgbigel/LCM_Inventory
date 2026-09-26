@@ -219,7 +219,7 @@
     function renderTable(data) {
         const tbody = document.getElementById('tools-tbody');
         if (data.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="10" style="text-align: center; padding: 32px; color: var(--text-muted);">No matching tools found.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="11" style="text-align: center; padding: 32px; color: var(--text-muted);">No matching tools found.</td></tr>';
             return;
         }
 
@@ -227,6 +227,7 @@
             // Determine master index in global toolsData array
             const masterIdx = toolsData.findIndex(item => item.Name === t.Name);
             const safeIdx = masterIdx >= 0 ? masterIdx : 0;
+            const counter = String(safeIdx + 1).padStart(3, '0');
 
             const ext = getExtClass(t.Name);
             const audBadge = t.Audience === 'User' ? '<span class="badge badge-user">User</span>' : '<span class="badge badge-dev">Dev</span>';
@@ -235,9 +236,9 @@
 
             const extDisplay = '<span class="tool-ext-badge ' + ext.cls + '">' + ext.label + '</span>';
 
-            // Display Name switched per user specification
+            // Display Name switched per user specification (no pictograms)
             const shortNameLabel = t.ShortName || t.Name.replace(/\.[^/.]+$/, "");
-            const displayName = isSourceMode ? ('📁 ' + t.Name) : ('💬 ' + shortNameLabel);
+            const displayName = isSourceMode ? t.Name : shortNameLabel;
 
             let shortNamesListHtml = '';
             if (isSourceMode) {
@@ -289,6 +290,7 @@
             }
 
             return '<tr' + rowClass + '>' +
+                '<td style="text-align: center; font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); font-weight: 600;">' + counter + '</td>' +
                 '<td>' +
                     '<div class="tool-name-cell" style="display: flex; flex-direction: column; align-items: flex-start;">' +
                         '<div style="display: flex; align-items: center; gap: 4px;">' +
@@ -301,7 +303,7 @@
                     '</div>' +
                 '</td>' +
                 '<td style="text-align: center;">' + extDisplay + '</td>' +
-                '<td><span class="badge badge-group">' + (t.Domain ? t.Domain : t.Group) + '</span></td>' +
+                '<td class="cell-editable" onclick="window.LcmTools.openCellEditor(' + safeIdx + ', \'Group\', event)" title="Click to edit Subsystem / Group"><span class="badge badge-group">' + (t.Domain ? t.Domain : t.Group) + '</span></td>' +
                 '<td class="cell-editable" onclick="window.LcmTools.openCellEditor(' + safeIdx + ', \'Role\', event)"><span class="badge badge-role">' + t.Role + '</span></td>' +
                 '<td class="cell-editable" onclick="window.LcmTools.openCellEditor(' + safeIdx + ', \'Audience\', event)">' + audBadge + '</td>' +
                 '<td class="cell-editable" onclick="window.LcmTools.openCellEditor(' + safeIdx + ', \'Admin\', event)">' + admBadge + '</td>' +
@@ -995,6 +997,11 @@
         });
 
         filtered.sort((a, b) => {
+            if (sortField === 'Index') {
+                const idxA = toolsData.findIndex(x => x.Name === a.Name);
+                const idxB = toolsData.findIndex(x => x.Name === b.Name);
+                return sortAsc ? (idxA - idxB) : (idxB - idxA);
+            }
             const field = (!isSourceMode && sortField === 'Name') ? 'ShortName' : sortField;
             let valA = (a[field] !== undefined ? a[field] : '').toString().toLowerCase();
             let valB = (b[field] !== undefined ? b[field] : '').toString().toLowerCase();
@@ -1660,7 +1667,16 @@
         const container = document.getElementById('editor-control-container');
 
         let controlHtml = '';
-        if (field === 'Role') {
+        if (field === 'Group') {
+            const curGroup = tool.Domain || tool.Group || 'General';
+            const allGroups = Array.from(new Set(toolsData.map(t => t.Domain || t.Group).filter(Boolean)));
+            if (!allGroups.includes('Needed?')) allGroups.push('Needed?');
+            allGroups.sort();
+            controlHtml = '<label style="font-size: 11px; color: var(--text-secondary); font-weight: 600;">Edit Subsystem / Group:</label>' +
+                '<select id="inline-edit-input">' +
+                allGroups.map(g => '<option value="' + g + '" ' + (g === curGroup ? 'selected' : '') + '>' + g + '</option>').join('') +
+                '</select>';
+        } else if (field === 'Role') {
             controlHtml = '<label style="font-size: 11px; color: var(--text-secondary); font-weight: 600;">Edit Role:</label>' +
                 '<select id="inline-edit-input">' +
                 roleChoices.map(r => '<option value="' + r + '" ' + (r === tool.Role ? 'selected' : '') + '>' + r + '</option>').join('') +
@@ -1715,6 +1731,10 @@
             if (stem.toLowerCase() === baseStem.toLowerCase()) {
                 const oldVal = t[activeEditCell.field];
                 t[activeEditCell.field] = parsedVal;
+                if (activeEditCell.field === 'Group') {
+                    t.Group = parsedVal;
+                    t.Domain = parsedVal;
+                }
                 t._edited = true;
                 if (!stored[t.Name]) stored[t.Name] = {};
                 stored[t.Name][activeEditCell.field] = parsedVal;

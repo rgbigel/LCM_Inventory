@@ -169,6 +169,12 @@ if ($toDelete.Count -gt 0) {
                     } catch {}
                 }
 
+                # Safely unlink any nested directory junctions before deleting directory tree (RULE-PS-018)
+                $nestedJunctions = @(Get-ChildItem -Path $target.FullName -Directory -Recurse -Force -ErrorAction SilentlyContinue | Where-Object { $_.LinkType -eq 'Junction' })
+                foreach ($nj in $nestedJunctions) {
+                    try { [System.IO.Directory]::Delete($nj.FullName, $false) } catch {}
+                }
+
                 Remove-Item -LiteralPath $target.FullName -Recurse -Force
                 Write-Host "Deleted: $($target.Name)" -ForegroundColor Green
                 $deletedCount++

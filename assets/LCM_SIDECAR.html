@@ -5,6 +5,37 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LCM Sidecar</title>
+  <script>
+    (function() {
+      function showLcmSidecarError(msg, src, line, col, err) {
+        var existing = document.getElementById("lcm-global-error-banner");
+        if (!existing) {
+          existing = document.createElement("div");
+          existing.id = "lcm-global-error-banner";
+          existing.style.cssText = "position:fixed;top:0;left:0;right:0;z-index:9999999;background:#b31d28;color:#ffffff;padding:8px 14px;font-family:Consolas,monospace;font-size:12px;box-shadow:0 3px 12px rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:2px solid #ea4a5a;";
+          var body = document.body || document.documentElement;
+          body.insertBefore(existing, body.firstChild);
+        }
+        var fileLeaf = src ? src.split("/").pop().split("?")[0] : "sidecar";
+        var errText = (msg || "Unknown script error") + (src ? " (" + fileLeaf + ":" + line + ")" : "");
+        existing.innerHTML = '<div style="display:flex;align-items:center;gap:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' +
+          '<span style="font-size:14px;">⚠️</span> ' +
+          '<span><strong>Sidecar Script Error:</strong> ' + String(errText).replace(/</g, "&lt;") + '</span>' +
+          '</div>' +
+          '<div style="display:flex;gap:6px;flex-shrink:0;">' +
+          '<button onclick="navigator.clipboard.writeText(\'' + String(errText).replace(/'/g, "\\'") + '\');this.innerText=\'✓ Copied\';" style="background:#21262d;color:#f0f6fc;border:1px solid #30363d;padding:3px 8px;border-radius:3px;cursor:pointer;font-size:10px;">📋 Copy</button>' +
+          '<button onclick="location.reload()" style="background:#f0f6fc;color:#b31d28;border:none;padding:3px 10px;font-weight:bold;border-radius:3px;cursor:pointer;font-size:10px;">🔄 Reload</button>' +
+          '</div>';
+      }
+      window.addEventListener("error", function(e) {
+        showLcmSidecarError(e.message, e.filename, e.lineno, e.colno, e.error);
+      });
+      window.addEventListener("unhandledrejection", function(e) {
+        var reason = e.reason ? (e.reason.message || String(e.reason)) : "Promise rejected";
+        showLcmSidecarError("Unhandled Promise: " + reason, "", 0, 0, null);
+      });
+    })();
+  </script>
   <style>
     :root {
       /* Solarized Light (Pale Ochre) Palette matching Antigravity IDE (3 yellowish shades) */
@@ -607,7 +638,7 @@
   <header>
     <div class="header-left">
       <span class="header-title">🧩 LCM Sidecar &amp; Command Selector</span>
-      <span class="header-sync-info" id="syncStatus">Synced with Hub</span>
+      <span class="header-sync-info" id="syncStatus" onclick="pingOrFocusHub()" style="cursor:pointer;" title="Hub synchronization status. Click to focus or launch Hub.">⏳ Connecting to Hub...</span>
     </div>
     <div class="header-right">
       <span class="daemon-indicator" id="sidecarDaemon">
@@ -833,14 +864,43 @@
     function initSidecar() {
       initTheme();
 
+      let lastHubPong = 0;
+
+      function updateSyncBadge(text, stateClass, color) {
+        const syncEl = document.getElementById("syncStatus");
+        if (!syncEl) return;
+        syncEl.textContent = text;
+        if (color) syncEl.style.color = color;
+      }
+
+      function sendHubPing() {
+        if (SIDECAR_CHANNEL) {
+          SIDECAR_CHANNEL.postMessage({ type: "SIDECAR_PING", timestamp: Date.now() });
+        }
+      }
+
+      window.pingOrFocusHub = function() {
+        sendHubPing();
+        focusHubWindow();
+      };
+
       // Connect to Hub broadcast
       if (SIDECAR_CHANNEL) {
         SIDECAR_CHANNEL.onmessage = (e) => {
           if (!e.data) return;
           if (e.data.type === "PROPOSAL_SELECTED" && e.data.proposal) {
+            lastHubPong = Date.now();
             setTargetProposal(e.data.proposal);
-            const syncEl = document.getElementById("syncStatus");
-            if (syncEl) syncEl.textContent = `Hub Sync: ${get24hTime()}`;
+            updateSyncBadge(`✓ Hub Synced (${get24hTime()})`, "synced", "var(--accent-green)");
+          } else if (e.data.type === "HUB_PONG") {
+            lastHubPong = Date.now();
+            if (e.data.proposal && (!currentProposal || currentProposal.id !== e.data.proposal.id)) {
+              setTargetProposal(e.data.proposal);
+            }
+            updateSyncBadge(`✓ Hub Connected (${get24hTime()})`, "synced", "var(--accent-green)");
+          } else if (e.data.type === "HUB_CLOSED") {
+            lastHubPong = 0;
+            updateSyncBadge("⚠️ Hub Closed (Click to Open)", "disconnected", "var(--accent-amber)");
           } else if (e.data.type === "THEME_CHANGED" && e.data.theme) {
             applyTheme(e.data.theme, false);
           } else if (e.data.type === "DATA_UPDATED") {
@@ -848,6 +908,18 @@
           }
         };
       }
+
+      // Initial ping & periodic heartbeat
+      sendHubPing();
+      setInterval(() => {
+        sendHubPing();
+        const now = Date.now();
+        if (lastHubPong > 0 && (now - lastHubPong) > 8000) {
+          updateSyncBadge("⚠️ Hub Disconnected (Click to Focus)", "disconnected", "var(--accent-amber)");
+        } else if (lastHubPong === 0) {
+          updateSyncBadge("⚠️ Hub Not Found (Click to Open)", "disconnected", "var(--accent-amber)");
+        }
+      }, 5000);
 
       checkDaemon();
       setInterval(checkDaemon, 10000);
@@ -1020,9 +1092,11 @@
           }
         } else {
           updateStatus(`❌ [FAILED] ${cmdText} (Exit ${data.exitCode})`, "err");
+          showToast(`❌ Command failed (Exit ${data.exitCode})`);
         }
       } catch (err) {
         updateStatus(`❌ Daemon error: ${err.message}`, "err");
+        showToast(`⚠️ REST Daemon (Port ${DAEMON_PORT}) Unreachable: ${err.message}`);
       }
     }
 

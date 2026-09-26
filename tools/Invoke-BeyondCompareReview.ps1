@@ -240,17 +240,21 @@ function Update-BCReviewSession {
 
   try {
     $xml = [xml](Get-Content -LiteralPath $bcSessionsPath -Raw)
-    # The actual saved named sessions reside under /BCSessions/TSessionFolder/Items/TSessionFolder/Items
-    $itemsFolder = $xml.SelectSingleNode('/BCSessions/TSessionFolder/Items/TSessionFolder/Items')
-    if (-not $itemsFolder) {
-      $itemsFolder = $xml.BCSessions.TSessionFolder.Items
-    }
+    $rootNode = $xml.SelectSingleNode('/BCSessions')
+    if (-not $rootNode) { return }
 
-    $sessionNode = $itemsFolder.SelectSingleNode("TDirCompareSession[@Value='$SessionName']")
+    # The authoritative saved named sessions reside directly under /BCSessions
+    $sessionNode = $rootNode.SelectSingleNode("TDirCompareSession[@Value='$SessionName']")
     if (-not $sessionNode) {
-      $sessionNode = $xml.CreateElement('TDirCompareSession')
-      $sessionNode.SetAttribute('Value', $SessionName)
-      $null = $itemsFolder.PrependChild($sessionNode)
+      $templateNode = $rootNode.SelectSingleNode("TDirCompareSession[@Value='LCM_Review']")
+      if ($templateNode) {
+        $sessionNode = $templateNode.CloneNode($true)
+        $sessionNode.SetAttribute('Value', $SessionName)
+      } else {
+        $sessionNode = $xml.CreateElement('TDirCompareSession')
+        $sessionNode.SetAttribute('Value', $SessionName)
+      }
+      $null = $rootNode.AppendChild($sessionNode)
     }
 
     # Specs (Left and Right)
@@ -678,14 +682,19 @@ if (-not (Test-Path -LiteralPath $scratchReviewDir)) {
   $null = New-Item -ItemType Directory -Path $scratchReviewDir -Force
 }
 
-$reviewFolderStem = if (-not [string]::IsNullOrWhiteSpace($CRP)) {
-  "${CRP}_${repoName}_${commitSha}"
-}
-else {
-  "${repoName}_${commitSha}"
+if ([string]::IsNullOrWhiteSpace($CRP)) {
+  $CRP = Get-ActiveCRP -TargetRepoName $repoName -WorkspaceRootPath $workspaceRoot
 }
 
-$tempReviewRoot = Join-Path $scratchReviewDir $reviewFolderStem
+$crpSegment = if (-not [string]::IsNullOrWhiteSpace($CRP)) { $CRP } else { "Review_${repoName}" }
+$crpReviewDir = Join-Path $scratchReviewDir $crpSegment
+if (-not (Test-Path -LiteralPath $crpReviewDir)) {
+  $null = New-Item -ItemType Directory -Path $crpReviewDir -Force
+}
+
+$reviewFolderStem = "Baseline_${repoName}_${commitSha}"
+$tempReviewRoot = Join-Path $crpReviewDir $reviewFolderStem
+$liveJunction = Join-Path $crpReviewDir "Live_${repoName}"
 $baselineManifestFile = Join-Path $tempReviewRoot ".lcm_baseline_manifest.json"
 
 $reuseCache = $false
@@ -820,23 +829,31 @@ if ($Exclusions -and $Exclusions.Count -gt 0) {
 $filterMask = ($filterList -join ';')
 
 # ------------------------------------------------------------------------------
-# 6. Establish Fixed Junction Bridge & Update Review Session (Approach A)
+# 6. Establish Dedicated Per-CRP Review Bridge & Update Review Session
 # ------------------------------------------------------------------------------
+# Safely refresh per-CRP Live directory junction
+if (Test-Path -LiteralPath $liveJunction) {
+  try { [System.IO.Directory]::Delete($liveJunction, $false) } catch {}
+}
+New-Item -ItemType Junction -Path $liveJunction -Target $repoPath | Out-Null
+
+# Backwards compatibility: maintain root-level ACTIVE_BASELINE & ACTIVE_LIVE bridges
 $junctionBaseline = Join-Path $scratchReviewDir "ACTIVE_BASELINE"
-$junctionLive = Join-Path $scratchReviewDir "ACTIVE_LIVE"
-
-# Safely refresh directory junctions per RULE-PS-018 (non-recursive reparse unlink)
+$junctionLiveRoot = Join-Path $scratchReviewDir "ACTIVE_LIVE"
 if (Test-Path -LiteralPath $junctionBaseline) {
-  [System.IO.Directory]::Delete($junctionBaseline, $false)
+  try { [System.IO.Directory]::Delete($junctionBaseline, $false) } catch {}
 }
-if (Test-Path -LiteralPath $junctionLive) {
-  [System.IO.Directory]::Delete($junctionLive, $false)
+if (Test-Path -LiteralPath $junctionLiveRoot) {
+  try { [System.IO.Directory]::Delete($junctionLiveRoot, $false) } catch {}
 }
-
 New-Item -ItemType Junction -Path $junctionBaseline -Target $tempReviewRoot | Out-Null
-New-Item -ItemType Junction -Path $junctionLive -Target $repoPath | Out-Null
+New-Item -ItemType Junction -Path $junctionLiveRoot -Target $repoPath | Out-Null
 
-Update-BCReviewSession -LeftPath $junctionBaseline -RightPath $junctionLive -FilterMask $filterMask -SessionName 'LCM_Review'
+$sessionName = if (-not [string]::IsNullOrWhiteSpace($CRP)) { "${CRP}_Review" } else { "LCM_Review" }
+
+# Update BCSessions.xml for both the dedicated CRP session and legacy LCM_Review
+Update-BCReviewSession -LeftPath $tempReviewRoot -RightPath $liveJunction -FilterMask $filterMask -SessionName $sessionName
+Update-BCReviewSession -LeftPath $tempReviewRoot -RightPath $liveJunction -FilterMask $filterMask -SessionName 'LCM_Review'
 
 $sessionMeta = [ordered]@{
   RepositoryName   = $repoName
@@ -846,12 +863,10 @@ $sessionMeta = [ordered]@{
   CommitDate       = if ($commitSha -ne 'unborn') { (git -C $repoPath log -n 1 --pretty=format:"%cI" $commitSha) } else { (Get-Date).ToString("o") }
   SessionStartedAt = (Get-Date).ToString("o")
   FilterMask       = $filterMask
+  CRP              = $CRP
 }
 $sessionMeta | ConvertTo-Json -Depth 3 | Set-Content -LiteralPath (Join-Path $tempReviewRoot ".lcm_review.json") -Encoding utf8
-
-if ([string]::IsNullOrWhiteSpace($CRP)) {
-  $CRP = Get-ActiveCRP -TargetRepoName $repoName -WorkspaceRootPath $workspaceRoot
-}
+$sessionMeta | ConvertTo-Json -Depth 3 | Set-Content -LiteralPath (Join-Path $crpReviewDir ".lcm_review.json") -Encoding utf8
 
 $baselineVersion = Get-RepoVersion -TargetRepoPath $repoPath -TargetCommit $commitSha
 $title1 = "$repoName v$baselineVersion ($commitSha)"
@@ -862,15 +877,16 @@ else {
   "Live $repoName"
 }
 
-Write-Host "Launching Beyond Compare on interactive desktop (Approach A - Fixed Junction Bridge)..." -ForegroundColor Green
-Write-Host ("  Left (Baseline {0}): {1}" -f $commitSha, $junctionBaseline)
-Write-Host ("  Right (Live):        {0}" -f $junctionLive)
+Write-Host "Launching Beyond Compare on interactive desktop (Per-CRP Session Isolation)..." -ForegroundColor Green
+Write-Host ("  Session Name:        {0}" -f $sessionName)
+Write-Host ("  Left (Baseline {0}): {1}" -f $commitSha, $tempReviewRoot)
+Write-Host ("  Right (Live):        {0}" -f $liveJunction)
 Write-Host ("  Pane Titles:         [Left: '{0}'] <--> [Right: '{1}']" -f $title1, $title2)
 Write-Host ("  Filters Applied:     {0}" -f $filterMask)
 
-# Single positional argument "LCM_Review" guarantees 2-way folder compare without 3-way merge collision.
+# Dedicated named session in BCSessions.xml guarantees 2-way folder compare with correct filters and tab title.
 # /ro1 enforces read-only protection on the left baseline pane.
-$bcArgString = "`"LCM_Review`" `"/title1=$title1`" `"/title2=$title2`" `"/filters=$filterMask`" /ro1"
+$bcArgString = "`"$sessionName`" /ro1"
 
 $dispatcherCandidates = @(
   (Join-Path $workspaceRoot ".lcm\tools\internal\Invoke-InteractiveDesktop.ps1"),
@@ -890,7 +906,7 @@ if ($dispatcherPath) {
   & pwsh -File $dispatcherPath -FilePath $BeyondComparePath -ArgumentList $bcArgString | Out-Null
 }
 else {
-  Start-Process -FilePath $BeyondComparePath -ArgumentList @("LCM_Review", "`"/title1=$title1`"", "`"/title2=$title2`"", "`"/filters=$filterMask`"", "/ro1")
+  Start-Process -FilePath $BeyondComparePath -ArgumentList @($sessionName, "/ro1")
 }
 
 # ------------------------------------------------------------------------------

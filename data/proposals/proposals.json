@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-09-26T19:08:31+02:00",
+  "updated_at": "2026-09-26T20:34:00+02:00",
   "review_granularity": "tight",
   "lcm_mode": "active",
-  "last_proposal_id": 176,
+  "last_proposal_id": 177,
   "proposals": [
     {
       "id": 1,
@@ -8667,6 +8667,48 @@
       "cr_id": "CRP-176",
       "progress_state": "pushed",
       "pushed_at": "2026-09-26 19:11:58"
+    },
+    {
+      "id": 177,
+      "timestamp": "2026-09-26 20:15:00",
+      "title": "Tool Explorer Ergonomics, Daemon Log Truncation, and Automated Workspace Maintenance Engine",
+      "origin_repo": "Workspace_Inventory",
+      "state": "completed",
+      "bundle_id": "CRP-177",
+      "author": "Rolf, Antigravity AI Assistant",
+      "details": "Removes NOEXIT LOCKED metric card, compacts button styling, removes pictograms, adds persistent sequential # column, makes Subsystem editable with Needed? tag, renames HaSSD06InventoryTestRepoReadiness to TestHaRepoReady, creates Invoke-WorkspaceMaintenance.ps1 to truncate daemon logs to 100 lines, isolates BC reviews into per-CRP scratch directories with named sessions, and integrates into pre-push pipeline.",
+      "bundle_dir": "docs/Proposals/CRP-177-LCM-v8.0.0-Tool-Explorer-Log-Truncation-And-Workspace-Maintenance",
+      "docs": {
+        "specification": "Workspace_Inventory/docs/Proposals/CRP-177-LCM-v8.0.0-Tool-Explorer-Log-Truncation-And-Workspace-Maintenance/Specification.md",
+        "plan": "Workspace_Inventory/docs/Proposals/CRP-177-LCM-v8.0.0-Tool-Explorer-Log-Truncation-And-Workspace-Maintenance/Implementation_Plan.md",
+        "walkthrough": "Workspace_Inventory/docs/Proposals/CRP-177-LCM-v8.0.0-Tool-Explorer-Log-Truncation-And-Workspace-Maintenance/Walkthrough.md"
+      },
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-177-LCM-v8.0.0-Tool-Explorer-Log-Truncation-And-Workspace-Maintenance/Implementation_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/docs/Proposals/CRP-177-LCM-v8.0.0-Tool-Explorer-Log-Truncation-And-Workspace-Maintenance/Walkthrough.md",
+      "dates": {
+        "created": "2026-09-26 20:15:00",
+        "suggested": "2026-09-26 20:15:00",
+        "completed": "2026-09-26 20:30:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-26 20:15:00",
+          "user": "Rolf",
+          "note": "Change Request Proposal captured for Tool Explorer ergonomics, daemon log truncation, and workspace maintenance."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-26 20:30:00",
+          "user": "Rolf",
+          "note": "Tool Explorer UI compacting, sequential numbering, subsystem inline editing, TestHaRepoReady renaming, and Invoke-WorkspaceMaintenance pre-push integration executed and verified."
+        }
+      ],
+      "priority": "M",
+      "type": "CRP",
+      "crp_id": "CRP-177",
+      "cr_id": "CRP-177",
+      "progress_state": "completed"
     }
   ],
   "active_context": {

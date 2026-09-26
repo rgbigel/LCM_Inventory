@@ -99,6 +99,15 @@ if (Test-Path -LiteralPath $updateCatalogScript) {
     }
 }
 
+# ------------------------------------------------------------------------------
+# 0.2 Workspace Maintenance & Daemon Log Truncation
+# ------------------------------------------------------------------------------
+$maintenanceScript = Join-Path $workspaceRoot "Workspace_Inventory\tools\Invoke-WorkspaceMaintenance.ps1"
+if (Test-Path -LiteralPath $maintenanceScript) {
+    Write-Host "`n[Pre-Push Pipeline] Executing Workspace Maintenance & Daemon Log Truncation..." -ForegroundColor Yellow
+    & pwsh -File $maintenanceScript -TailLines 100
+}
+
 $allRepos = @()
 
 if ($Repositories -and $Repositories.Count -gt 0) {

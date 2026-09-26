@@ -4,6 +4,37 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{HUB_TITLE}}</title>
+  <script>
+    (function() {
+      function showLcmErrorBanner(msg, src, line, col, err) {
+        var existing = document.getElementById("lcm-global-error-banner");
+        if (!existing) {
+          existing = document.createElement("div");
+          existing.id = "lcm-global-error-banner";
+          existing.style.cssText = "position:fixed;top:0;left:0;right:0;z-index:9999999;background:#b31d28;color:#ffffff;padding:10px 16px;font-family:Consolas,monospace;font-size:12.5px;box-shadow:0 3px 12px rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:2px solid #ea4a5a;";
+          var body = document.body || document.documentElement;
+          body.insertBefore(existing, body.firstChild);
+        }
+        var fileLeaf = src ? src.split("/").pop().split("?")[0] : "script";
+        var errText = (msg || "Unknown script error") + (src ? " (" + fileLeaf + ":" + line + ")" : "");
+        existing.innerHTML = '<div style="display:flex;align-items:center;gap:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' +
+          '<span style="font-size:16px;">⚠️</span> ' +
+          '<span><strong>LCM Application Error:</strong> ' + String(errText).replace(/</g, "&lt;") + '</span>' +
+          '</div>' +
+          '<div style="display:flex;gap:8px;flex-shrink:0;">' +
+          '<button onclick="navigator.clipboard.writeText(\'' + String(errText).replace(/'/g, "\\'") + '\');this.innerText=\'✓ Copied\';" style="background:#21262d;color:#f0f6fc;border:1px solid #30363d;padding:4px 10px;border-radius:4px;cursor:pointer;font-size:11px;">📋 Copy Error</button>' +
+          '<button onclick="location.reload()" style="background:#f0f6fc;color:#b31d28;border:none;padding:4px 12px;font-weight:bold;border-radius:4px;cursor:pointer;font-size:11px;">🔄 Reload</button>' +
+          '</div>';
+      }
+      window.addEventListener("error", function(e) {
+        showLcmErrorBanner(e.message, e.filename, e.lineno, e.colno, e.error);
+      });
+      window.addEventListener("unhandledrejection", function(e) {
+        var reason = e.reason ? (e.reason.message || String(e.reason)) : "Promise rejected";
+        showLcmErrorBanner("Unhandled Promise: " + reason, "", 0, 0, null);
+      });
+    })();
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -1562,8 +1593,18 @@
             applyTheme(e.data.theme, false);
           } else if (e.data.type === "DATA_UPDATED") {
             refreshHubData(false);
+          } else if (e.data.type === "SIDECAR_PING") {
+            // Heartbeat Handshake: Send active proposal to keep Sidecar in sync
+            const activeId = activeInspectorProposalId || (filteredProposals[0] ? filteredProposals[0].id : null);
+            const activeProp = activeId ? (proposalsData.proposals || []).find(p => p.id === activeId) : null;
+            SIDECAR_CHANNEL.postMessage({ type: "HUB_PONG", proposal: activeProp, timestamp: Date.now() });
           }
         };
+
+        // Notify companions when closing
+        window.addEventListener("beforeunload", () => {
+          try { SIDECAR_CHANNEL.postMessage({ type: "HUB_CLOSED" }); } catch(err) {}
+        });
       }
 
       initTabLifecycle();
@@ -2570,6 +2611,7 @@
         }
         appendConsole(`[DAEMON ERROR] Failed to reach daemon: ${err.message}`, "msg-err");
         updateLiveTicker(`[DAEMON ERROR] ${err.message}`, affectedId);
+        showToast(`⚠️ REST Daemon (Port ${DAEMON_PORT}) Unreachable: ${err.message}`);
         return { success: false, error: err.message };
       } finally {
         if (affectedId) {
@@ -2704,22 +2746,6 @@
           `Execute CRP ${targetExpr}`,
           isAll ? null : parseInt(doMatch[1], 10)
         );
-        return;
-      }
-
-      // Command: complete <#id|crp-id|all>
-      const completeMatch = trimmed.match(/^complete\s+(?:#|crp-?)?(\d+|all)$/i);
-      if (completeMatch) {
-        if (completeMatch[1].toLowerCase() === "all") {
-          await executeBatchComplete();
-        } else {
-          const id = parseInt(completeMatch[1], 10);
-          await executeHubCommand(
-            `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action complete -TargetExpression ${id}`,
-            `Complete CRP-${id}`,
-            id
-          );
-        }
         return;
       }
 

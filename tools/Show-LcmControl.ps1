@@ -31,6 +31,10 @@ param(
     [Parameter(Mandatory = $false, HelpMessage = 'Render HTML data cache without launching desktop browser')]
     [switch]$NoLaunch,
 
+    [Parameter(Mandatory = $false, HelpMessage = 'Display verbose execution timing telemetry milestones')]
+    [Alias('Timer', 'Timing', 'timer-ON')]
+    [switch]$TimerOn,
+
     [Alias('h', '?')]
     [switch]$Help
 )
@@ -65,6 +69,8 @@ param(
     Displays detailed individual state transition timeline and user notes in CLI mode.
 .PARAMETER NoLaunch
     Renders HTML artifacts without launching the desktop browser.
+.PARAMETER TimerOn
+    Display verbose execution timing milestones (Aliases: -Timer, -Timing, -timer-ON). Defaults to false.
 .PARAMETER Help
     Displays this parameter reference (Aliases: -h, -?).
 .EXAMPLE
@@ -138,6 +144,14 @@ if ($Help) {
 $workspaceRoot = 'D:\Git_Repositories'
 if (-not (Test-Path -LiteralPath $workspaceRoot)) {
     $workspaceRoot = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
+}
+
+$script:stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
+function Write-TimingLog {
+    param([string]$Message)
+    if ($TimerOn) {
+        Write-Host "  [+$($script:stopwatch.ElapsedMilliseconds)ms] $Message" -ForegroundColor DarkGray
+    }
 }
 
 $proposalsFile = Join-Path $workspaceRoot "Workspace_Inventory\data\proposals\proposals.json"
@@ -258,11 +272,13 @@ if (-not (Test-Path -LiteralPath $htmlTemplateFile)) {
     throw "CM Control Hub HTML template not found at: $htmlTemplateFile"
 }
 
+Write-TimingLog "Loading proposals ledger and activity logs..."
 $proposalsRaw = Get-Content -LiteralPath $proposalsFile -Raw -Encoding UTF8
 $activeLogRaw = if (Test-Path -LiteralPath $activeLogFile) { Get-Content -LiteralPath $activeLogFile -Raw -Encoding UTF8 } else { "" }
 $historyLogRaw = if (Test-Path -LiteralPath $historyLogFile) { Get-Content -LiteralPath $historyLogFile -Raw -Encoding UTF8 } else { "" }
 
 # Gather tripartite and module documentation for in-browser review
+Write-TimingLog "Gathering repository tripartite docs..."
 $docsCache = [ordered]@{}
 $repoDirs = Get-ChildItem -LiteralPath $workspaceRoot -Directory | Where-Object { -not ($_.Name.StartsWith(".") -or $_.Name -in @("tools", "scratch", "data", "logs")) }
 
@@ -290,6 +306,7 @@ foreach ($r in $repoDirs) {
 }
 
 # Gather Proposal Markdown documents
+Write-TimingLog "Gathering proposal markdown documents..."
 $propDocsDir = Join-Path $workspaceRoot "Workspace_Inventory\docs\Proposals"
 if (Test-Path -LiteralPath $propDocsDir) {
     $propFiles = Get-ChildItem -LiteralPath $propDocsDir -Filter "*.md" -Recurse
@@ -298,6 +315,7 @@ if (Test-Path -LiteralPath $propDocsDir) {
         $docsCache[$rel] = Get-Content -LiteralPath $pf.FullName -Raw -Encoding UTF8
     }
 }
+Write-TimingLog "Gathered $($docsCache.Count) total documents into cache."
 
 # Compile Document Metadata Catalog
 function Get-CompiledDocMetadata {
@@ -372,6 +390,7 @@ $atomJsContent = if ($atomJsPath) { Get-Content -LiteralPath $atomJsPath -Raw -E
 $appsCatalogFile = Join-Path $workspaceRoot "Workspace_Inventory\data\catalog\apps.json"
 $appsCatalogRaw = if (Test-Path -LiteralPath $appsCatalogFile) { Get-Content -LiteralPath $appsCatalogFile -Raw -Encoding UTF8 } else { '{"total_apps":0,"apps":[]}' }
 
+Write-TimingLog "Serializing documents and compiling JSON injection blocks..."
 $injectedBlock = @"
     const RAW_PROPOSALS = $proposalsRaw;
     const RAW_APPS_CATALOG = $appsCatalogRaw;
@@ -402,8 +421,10 @@ if (-not (Test-Path -LiteralPath $artifactsDir)) {
 }
 
 $renderedHtmlPath = Join-Path $artifactsDir "CM_CONTROL_HUB.html"
+Write-TimingLog "Writing CM_CONTROL_HUB.html to disk..."
 Set-Content -LiteralPath $renderedHtmlPath -Value $htmlContent -Encoding UTF8
 Set-Content -LiteralPath (Join-Path $scratchDir "CM_CONTROL_HUB.html") -Value $htmlContent -Encoding UTF8
+Write-TimingLog "CM_CONTROL_HUB.html written ($([Math]::Round($htmlContent.Length / 1KB, 1)) KB)."
 
 Write-Host "==========================================================================" -ForegroundColor Cyan
 Write-Host " UNIFIED LCM CONTROL HUB COMPILED" -ForegroundColor Green
@@ -420,7 +441,9 @@ if (-not $NoLaunch) {
     # 1. Compile companion LCM Sidecar dashboard
     $sidecarScript = Join-Path $PSScriptRoot "Show-LcmSidecar.ps1"
     if (Test-Path -LiteralPath $sidecarScript) {
+        Write-TimingLog "Compiling companion LCM Sidecar..."
         & $sidecarScript -NoLaunch
+        Write-TimingLog "Companion LCM Sidecar compiled."
     }
 
     $hubUri = [System.Uri]::new($renderedHtmlPath).AbsoluteUri
@@ -461,7 +484,7 @@ if (-not $NoLaunch) {
     }
 
     $dispatcher = Join-Path $workspaceRoot ".lcm\tools\internal\Invoke-InteractiveDesktop.ps1"
-
+    Write-TimingLog "Browser detected: $browserName ($browserPath). Dispatching windows..."
     if ($browserPath -and (Test-Path -LiteralPath $browserPath)) {
         if ($browserName -in @('zen', 'firefox')) {
             # ------------------------------------------------------------------
@@ -469,9 +492,13 @@ if (-not $NoLaunch) {
             # ------------------------------------------------------------------
             Write-Host "  -> Launching LCM Control Hub & Sidecar as two tabs in a single $browserName window..." -ForegroundColor Green
             if (Test-Path -LiteralPath $dispatcher) {
+                Write-TimingLog "Dispatching Tab 1: $launchTarget..."
                 & $dispatcher -FilePath $browserPath -ArgumentList "`"$launchTarget`""
+                Write-TimingLog "Tab 1 dispatched. Pausing 350ms..."
                 Start-Sleep -Milliseconds 350
+                Write-TimingLog "Dispatching Tab 2: $sidecarUri..."
                 & $dispatcher -FilePath $browserPath -ArgumentList "--new-tab `"$sidecarUri`""
+                Write-TimingLog "Tab 2 dispatched."
             } else {
                 Start-Process -FilePath $browserPath -ArgumentList "`"$launchTarget`""
                 Start-Sleep -Milliseconds 350
@@ -486,7 +513,9 @@ if (-not $NoLaunch) {
             # Top Window: Control Hub
             $topArgs = "--new-window `"$launchTarget`" --window-position=30,20 --window-size=1860,540"
             if (Test-Path -LiteralPath $dispatcher) {
+                Write-TimingLog "Dispatching Window 1: Control Hub ($topArgs)..."
                 & $dispatcher -FilePath $browserPath -ArgumentList $topArgs
+                Write-TimingLog "Window 1 dispatched. Pausing 450ms..."
             } else {
                 Start-Process -FilePath $browserPath -ArgumentList $topArgs
             }
@@ -496,7 +525,9 @@ if (-not $NoLaunch) {
             # Bottom Window: Sidecar
             $bottomArgs = "--new-window `"$sidecarUri`" --window-position=30,575 --window-size=1860,450"
             if (Test-Path -LiteralPath $dispatcher) {
+                Write-TimingLog "Dispatching Window 2: Sidecar ($bottomArgs)..."
                 & $dispatcher -FilePath $browserPath -ArgumentList $bottomArgs
+                Write-TimingLog "Window 2 dispatched."
             } else {
                 Start-Process -FilePath $browserPath -ArgumentList $bottomArgs
             }
@@ -504,9 +535,13 @@ if (-not $NoLaunch) {
             # Generic browser dispatch: two sequential tab launches
             Write-Host "  -> Launching Hub & Sidecar via detected default browser ($browserName)..." -ForegroundColor Green
             if (Test-Path -LiteralPath $dispatcher) {
+                Write-TimingLog "Dispatching Tab 1: $launchTarget..."
                 & $dispatcher -FilePath $browserPath -ArgumentList "`"$launchTarget`""
+                Write-TimingLog "Tab 1 dispatched. Pausing 300ms..."
                 Start-Sleep -Milliseconds 300
+                Write-TimingLog "Dispatching Tab 2: $sidecarUri..."
                 & $dispatcher -FilePath $browserPath -ArgumentList "`"$sidecarUri`""
+                Write-TimingLog "Tab 2 dispatched."
             } else {
                 Start-Process -FilePath $browserPath -ArgumentList "`"$launchTarget`""
                 Start-Sleep -Milliseconds 300
@@ -516,16 +551,22 @@ if (-not $NoLaunch) {
     } else {
         Write-Host "  -> Dispatching Control Hub & Sidecar tabs via default browser handler..." -ForegroundColor Cyan
         if (Test-Path -LiteralPath $dispatcher) {
+            Write-TimingLog "Dispatching Target 1: $launchTarget..."
             & $dispatcher -FilePath $launchTarget
+            Write-TimingLog "Target 1 dispatched. Pausing 250ms..."
             Start-Sleep -Milliseconds 250
+            Write-TimingLog "Dispatching Target 2: $sidecarUri..."
             & $dispatcher -FilePath $sidecarUri
+            Write-TimingLog "Target 2 dispatched."
         } else {
             Start-Process -FilePath $launchTarget
             Start-Sleep -Milliseconds 250
             Start-Process -FilePath $sidecarUri
         }
     }
+    Write-TimingLog "All dispatches completed. Total execution time: $($script:stopwatch.ElapsedMilliseconds)ms"
 } else {
+    Write-TimingLog "Browser launch suppressed via -NoLaunch. Total execution time: $($script:stopwatch.ElapsedMilliseconds)ms"
     Write-Host " Dashboard rendered cleanly (browser launch suppressed via -NoLaunch)." -ForegroundColor DarkGray
     Write-Host "==========================================================================" -ForegroundColor Cyan
 }
