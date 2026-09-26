@@ -104,10 +104,17 @@ flowchart TD
 
 ---
 
-## 5. Next Steps for Operator Alignment
+## 5. Implementation Decision: Option A (IDE Answer Box Action Widget)
 
-1. Finalize preference between **Option A (In-Chat Card with Direct Action Links)** vs. **Option B (Companion Sidecar Expansion)** vs. a hybrid approach.
-2. Confirm parameter mappings:
-   - ToolsExplorer: `-Group <Subsystem>`
-   - ShowCM: `-Repo <Subsystem>`
-3. Once aligned, progress CRP-176 from `suggested` to `approved` and prepare the Implementation Plan.
+Per operator directive on 2026-09-27, **Option A** has been selected and implemented as the authoritative design. Alternatives B and C imply keeping an extra browser window open, whereas the operator interface is centered within the IDE and uses Zen Browser (`D:\Tools\Zen Browser\zen.exe`) when external dashboards are required.
+
+### 5.1 Artifacts Implemented
+1. **Interactive Answer Box Widget**:
+   - Structured markdown card with Subsystem scope badges and one-click dispatch links.
+2. **Unified Navigation Dispatcher (`Show-SuperController.ps1`)**:
+   - Dispatches `Show-ToolsExplorer.ps1 -Group <Subsystem>` and/or `Show-LcmControl.ps1 -Repo <Subsystem>`.
+3. **Canonical Trampoline (`SuperController.cmd`)**:
+   - Fast CLI entry in `.lcm/Cmd/SuperController.cmd`.
+4. **Browser Isolation**:
+   - Enforces Zen Browser (`D:\Tools\Zen Browser\zen.exe`) with `--new-window` dispatch to prevent window collisions.
+

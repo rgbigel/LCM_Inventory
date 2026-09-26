@@ -221,7 +221,7 @@ if ($CliMode) {
     Write-Host "==========================================================================" -ForegroundColor Cyan
 
     $rows = foreach ($p in $list) {
-        $d = $p.dates
+        $d = if ($p.PSObject.Properties['dates']) { $p.dates } else { $null }
         $created = if ($d) { Get-ObjProperty $d 'created' (Get-ObjProperty $p 'timestamp') } else { Get-ObjProperty $p 'timestamp' }
         $inProg  = if ($d) { Get-ObjProperty $d 'in_progress' } else { '-' }
         $comp    = if ($d) { Get-ObjProperty $d 'completed' } else { '-' }

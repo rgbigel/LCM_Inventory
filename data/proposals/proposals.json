@@ -8630,21 +8630,22 @@
       "timestamp": "2026-09-26 13:00:00",
       "title": "Workspace AI Super-Controller for Unified Subsystem Navigation (ToolsExplorer & ShowCM)",
       "origin_repo": "Workspace_AI",
-      "state": "suggested",
+      "state": "completed",
       "bundle_id": "CRP-176",
       "author": "Rolf, Antigravity AI Assistant",
       "details": "Unified navigation hub and tripartite controller providing Subsystem selection, ToolsExplorer launcher, and ShowCM launcher directly accessible from within the IDE interface and companion viewers.",
       "bundle_dir": "docs/Proposals/CRP-176-LCM-v7.6.0-Workspace-AI-Super-Controller-And-Fast-Dispatch-Reflexes",
       "docs": {
         "specification": "Workspace_Inventory/docs/Proposals/CRP-176-LCM-v7.6.0-Workspace-AI-Super-Controller-And-Fast-Dispatch-Reflexes/Specification.md",
-        "plan": null,
-        "walkthrough": null
+        "plan": "Workspace_Inventory/docs/Proposals/CRP-176-LCM-v7.6.0-Workspace-AI-Super-Controller-And-Fast-Dispatch-Reflexes/Implementation_Plan.md",
+        "walkthrough": "Workspace_Inventory/docs/Proposals/CRP-176-LCM-v7.6.0-Workspace-AI-Super-Controller-And-Fast-Dispatch-Reflexes/Walkthrough.md"
       },
-      "plan_path": null,
-      "walkthrough_path": null,
+      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-176-LCM-v7.6.0-Workspace-AI-Super-Controller-And-Fast-Dispatch-Reflexes/Implementation_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/docs/Proposals/CRP-176-LCM-v7.6.0-Workspace-AI-Super-Controller-And-Fast-Dispatch-Reflexes/Walkthrough.md",
       "dates": {
         "created": "2026-09-26 13:00:00",
-        "suggested": "2026-09-26 13:00:00"
+        "suggested": "2026-09-26 13:00:00",
+        "completed": "2026-09-27 01:15:00"
       },
       "state_history": [
         {
@@ -8652,13 +8653,19 @@
           "timestamp": "2026-09-26 13:00:00",
           "user": "Rolf",
           "note": "Change Request Proposal captured for Workspace AI Super-Controller (Subsystem, ToolsExplorer, ShowCM)."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-27 01:15:00",
+          "user": "Rolf",
+          "note": "Option A (IDE Answer Box Card Widget + Show-SuperController.ps1 CLI dispatcher) implemented and verified."
         }
       ],
       "priority": "M",
       "type": "CRP",
       "crp_id": "CRP-176",
       "cr_id": "CRP-176",
-      "progress_state": "undecided"
+      "progress_state": "completed"
     },
     {
       "id": 177,
