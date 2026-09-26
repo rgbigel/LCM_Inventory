@@ -385,3 +385,42 @@ table {
     background: #79c0ff !important;
 }
 
+/* Base and Dark-Mode Button Styling (BUG-181) */
+button, .btn, .btn-outline {
+    background: #161b22;
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+button:hover, .btn:hover, .btn-outline:hover {
+    border-color: var(--accent);
+}
+
+/* Reset / Revert Button Styling (BUG-181: Black background, red text) */
+.btn-reset, .btn-revert, .col-filter-reset-btn {
+    background: #0d1117 !important;
+    color: #f85149 !important;
+    border: 1px solid rgba(248, 81, 73, 0.4) !important;
+}
+
+.btn-reset:hover, .btn-revert:hover, .col-filter-reset-btn:hover {
+    background: rgba(248, 81, 73, 0.15) !important;
+    border-color: #f85149 !important;
+}
+
+/* Action Set / Finalize Buttons */
+.btn-set, .btn-finalize {
+    background: #0d1117 !important;
+    color: #3fb950 !important;
+    border: 1px solid rgba(63, 185, 80, 0.4) !important;
+}
+
+.btn-set:hover, .btn-finalize:hover {
+    background: rgba(63, 185, 80, 0.15) !important;
+    border-color: #3fb950 !important;
+}
+

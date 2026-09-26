@@ -296,8 +296,8 @@
                 actionButtonsHtml = 
                     '<div class="action-btns">' +
                         '<span class="badge-no-entry" title="Tool execution blocked pending Set or Reset" style="font-size: 15px; cursor: default; user-select: none;">⛔</span>' +
-                        '<button class="btn-action btn-revert" onclick="window.LcmTools.revertTool(' + safeIdx + ')" title="Reset changes, restore baseline, lift blockade" style="color: #f85149; border-color: rgba(248, 81, 73, 0.4); font-weight: 700;">Reset</button>' +
-                        '<button class="btn-action btn-finalize" onclick="window.LcmTools.finalizeTool(' + safeIdx + ')" title="Set changes permanently, lift blockade" style="color: #3fb950; border-color: rgba(63, 185, 80, 0.4); font-weight: 700;">Set</button>' +
+                        '<button class="btn-action btn-revert" onclick="window.LcmTools.revertTool(' + safeIdx + ')" title="Reset changes, restore baseline, lift blockade" style="background: #0d1117 !important; color: #f85149 !important; border-color: rgba(248, 81, 73, 0.4) !important; font-weight: 700;">Reset</button>' +
+                        '<button class="btn-action btn-finalize" onclick="window.LcmTools.finalizeTool(' + safeIdx + ')" title="Set changes permanently, lift blockade" style="background: #0d1117 !important; color: #3fb950 !important; border-color: rgba(63, 185, 80, 0.4) !important; font-weight: 700;">Set</button>' +
                     '</div>';
             } else {
                 actionButtonsHtml = 
@@ -1969,7 +1969,18 @@
         const count = blockedTools.length;
         const mods = getPendingModifications();
 
+        let storedOverrides = {};
+        try { storedOverrides = JSON.parse(localStorage.getItem('lcm_tools_overrides') || '{}'); } catch(e) {}
+
         blockedTools.forEach(t => {
+            const relKey = t.RelativePath || t.Name;
+            const modInfo = mods[relKey] || mods[t.Name];
+            if (modInfo && modInfo.newState) {
+                storedOverrides[relKey] = storedOverrides[relKey] || {};
+                Object.assign(storedOverrides[relKey], modInfo.newState);
+                storedOverrides[t.Name] = storedOverrides[t.Name] || {};
+                Object.assign(storedOverrides[t.Name], modInfo.newState);
+            }
             delete mods[t.Name];
             if (t.RelativePath) delete mods[t.RelativePath];
             const baseStem = t.Name.replace(/\.[^/.]+$/, "");
@@ -1980,9 +1991,7 @@
         });
 
         setPendingModifications(mods);
-
-        let storedOverrides = {};
-        try { storedOverrides = JSON.parse(localStorage.getItem('lcm_tools_overrides') || '{}'); } catch(e) {}
+        localStorage.setItem('lcm_tools_overrides', JSON.stringify(storedOverrides));
 
         fetch(DAEMON_URL + '/sync_json', {
             method: 'POST',

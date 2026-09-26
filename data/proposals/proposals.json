@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-09-26T23:45:00+02:00",
+  "updated_at": "2026-09-26T23:53:35+02:00",
   "review_granularity": "tight",
   "lcm_mode": "active",
-  "last_proposal_id": 180,
+  "last_proposal_id": 181,
   "proposals": [
     {
       "id": 1,
@@ -8628,12 +8628,12 @@
     {
       "id": 176,
       "timestamp": "2026-09-26 13:00:00",
-      "title": "Workspace AI Super-Controller and Fast-Dispatch Reflexes for Component Orchestration",
+      "title": "Workspace AI Super-Controller for Unified Subsystem Navigation (ToolsExplorer & ShowCM)",
       "origin_repo": "Workspace_AI",
-      "state": "pushed",
+      "state": "suggested",
       "bundle_id": "CRP-176",
       "author": "Rolf, Antigravity AI Assistant",
-      "details": "Architectural concept for a centralized Workspace_AI Super-Controller coordinating Show-* viewers, daemons, and browser layouts alongside zero-latency Fast-Dispatch agent reflexes.",
+      "details": "Unified navigation hub and tripartite controller providing Subsystem selection, ToolsExplorer launcher, and ShowCM launcher directly accessible from within the IDE interface and companion viewers.",
       "bundle_dir": "docs/Proposals/CRP-176-LCM-v7.6.0-Workspace-AI-Super-Controller-And-Fast-Dispatch-Reflexes",
       "docs": {
         "specification": "Workspace_Inventory/docs/Proposals/CRP-176-LCM-v7.6.0-Workspace-AI-Super-Controller-And-Fast-Dispatch-Reflexes/Specification.md",
@@ -8644,29 +8644,21 @@
       "walkthrough_path": null,
       "dates": {
         "created": "2026-09-26 13:00:00",
-        "suggested": "2026-09-26 13:00:00",
-        "pushed": "2026-09-26 19:11:58"
+        "suggested": "2026-09-26 13:00:00"
       },
       "state_history": [
         {
           "state": "suggested",
           "timestamp": "2026-09-26 13:00:00",
           "user": "Rolf",
-          "note": "Preliminary Change Request Proposal captured for Super-Controller and Fast-Dispatch reflexes."
-        },
-        {
-          "state": "pushed",
-          "timestamp": "2026-09-26 19:11:58",
-          "user": "rgbig",
-          "note": "Pushed to remote (Git_Repositories, Workspace_AI, Workspace_Inventory)"
+          "note": "Change Request Proposal captured for Workspace AI Super-Controller (Subsystem, ToolsExplorer, ShowCM)."
         }
       ],
       "priority": "M",
       "type": "CRP",
       "crp_id": "CRP-176",
       "cr_id": "CRP-176",
-      "progress_state": "pushed",
-      "pushed_at": "2026-09-26 19:11:58"
+      "progress_state": "undecided"
     },
     {
       "id": 177,
@@ -8834,6 +8826,48 @@
       "type": "CRP",
       "crp_id": "CRP-180",
       "cr_id": "CRP-180",
+      "progress_state": "completed"
+    },
+    {
+      "id": 181,
+      "timestamp": "2026-09-27 00:30:00",
+      "title": "Tool Explorer and Control Hub Ergonomics, Window Collision Isolation, Short-Name Renaming, and Lifecycle Defect Remediation",
+      "origin_repo": "Workspace_Inventory",
+      "state": "completed",
+      "bundle_id": "BUG-181",
+      "author": "Rolf, Antigravity AI Assistant",
+      "details": "Resolves 8 lifecycle, ergonomics, and window management defects: (1) dark mode Reset button styling with #0d1117 background and red #f85149 text, (2) independent Zen Browser window isolation via --new-window to avoid overwriting active Control Hub tabs, (3) ShowCM short-name persistence with /rename REST daemon endpoint and removal of 3 obsolete trampolines (0 aliases), (4) Subsystem Workspace* to LCM persistence across recompilation by resolving relative path keys in Update-ToolCatalog.ps1, (5) Sidecar candidate filter excluding rejected/deferred proposals, (6) 2-line prominent proposal switcher styled like Complete button, (7) top-line Sidecar Plan State and Status dropdowns with daemon execution, and (8) global 12px scrollbars with overflow-x: scroll.",
+      "bundle_dir": "docs/Proposals/BUG-181-LCM-v8.0.0-Tool-Explorer-And-Control-Hub-Ergonomics-And-Lifecycle-Defects",
+      "docs": {
+        "specification": "Workspace_Inventory/docs/Proposals/BUG-181-LCM-v8.0.0-Tool-Explorer-And-Control-Hub-Ergonomics-And-Lifecycle-Defects/Specification.md",
+        "plan": "Workspace_Inventory/docs/Proposals/BUG-181-LCM-v8.0.0-Tool-Explorer-And-Control-Hub-Ergonomics-And-Lifecycle-Defects/Implementation_Plan.md",
+        "walkthrough": "Workspace_Inventory/docs/Proposals/BUG-181-LCM-v8.0.0-Tool-Explorer-And-Control-Hub-Ergonomics-And-Lifecycle-Defects/Walkthrough.md"
+      },
+      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-181-LCM-v8.0.0-Tool-Explorer-And-Control-Hub-Ergonomics-And-Lifecycle-Defects/Implementation_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/docs/Proposals/BUG-181-LCM-v8.0.0-Tool-Explorer-And-Control-Hub-Ergonomics-And-Lifecycle-Defects/Walkthrough.md",
+      "dates": {
+        "created": "2026-09-27 00:30:00",
+        "suggested": "2026-09-27 00:30:00",
+        "completed": "2026-09-27 01:10:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-27 00:30:00",
+          "user": "Rolf",
+          "note": "Defect report logged for 8 Tool Explorer, Control Hub, and Sidecar defects."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-27 01:10:00",
+          "user": "Rolf",
+          "note": "All 8 defect areas resolved, verified, assets mirrored, and compiled."
+        }
+      ],
+      "priority": "H",
+      "type": "BUG",
+      "crp_id": "BUG-181",
+      "cr_id": "BUG-181",
       "progress_state": "completed"
     }
   ],

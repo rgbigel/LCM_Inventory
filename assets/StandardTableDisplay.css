@@ -41,7 +41,7 @@ body.light-theme, :root[data-theme="light"] {
 }
 
 /* Scrollbars */
-::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar { width: 12px; height: 12px; }
 ::-webkit-scrollbar-track { background: var(--bg-secondary); border-radius: 6px; }
 ::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 6px; border: 2px solid var(--bg-secondary); }
 ::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); }
@@ -273,17 +273,17 @@ header {
     border: 1px solid var(--border);
     border-radius: 12px;
     overflow-y: auto;
-    overflow-x: auto;
+    overflow-x: scroll !important;
     max-height: calc(100vh - 275px);
     box-shadow: var(--card-shadow);
     position: relative;
-    scrollbar-width: thin;
+    scrollbar-width: auto;
     scrollbar-color: var(--border) var(--bg-secondary);
 }
 
 .table-container::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 12px;
+    height: 12px;
 }
 
 .table-container::-webkit-scrollbar-track {

@@ -115,6 +115,27 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+      scrollbar-width: auto;
+      scrollbar-color: var(--border-main) var(--bg-surface);
+    }
+
+    ::-webkit-scrollbar {
+      width: 12px;
+      height: 12px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg-surface);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border-main);
+      border-radius: 6px;
+      border: 2px solid var(--bg-surface);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--text-muted);
     }
 
     html,
@@ -394,6 +415,51 @@
       cursor: pointer;
     }
 
+    .proposal-switcher-prominent {
+      background: var(--accent-green) !important;
+      color: #ffffff !important;
+      border: 1px solid #738a00 !important;
+      font-weight: 700 !important;
+      font-size: 0.85rem !important;
+      font-family: var(--font-ui) !important;
+      border-radius: 4px;
+      padding: 6px 12px;
+      height: 48px;
+      line-height: 1.3;
+      max-width: 340px;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+      transition: all 0.15s ease;
+    }
+
+    .proposal-switcher-prominent:hover {
+      background: #6c7c00 !important;
+      border-color: #6c7c00 !important;
+    }
+
+    .proposal-switcher-prominent option {
+      background: var(--bg-card);
+      color: var(--text-bright);
+      font-weight: 500;
+      font-size: 0.82rem;
+    }
+
+    .sidecar-state-select {
+      background: var(--bg-card);
+      color: var(--text-bright);
+      border: 1px solid var(--border-main);
+      border-radius: 3px;
+      font-size: 0.74rem;
+      font-family: var(--font-code);
+      padding: 2px 6px;
+      cursor: pointer;
+    }
+
+    .sidecar-state-select:focus {
+      border-color: var(--accent-blue);
+      outline: none;
+    }
+
     /* Proposal Actions Ribbon */
     .actions-ribbon {
       flex: 0 0 auto;
@@ -654,25 +720,52 @@
 
   <!-- Active Target Display -->
   <div class="target-banner">
-    <div class="target-header-line">
-      <div class="target-title-box">
-        <span class="target-code" id="targetCode">CRP-164</span>
-        <span class="target-name" id="targetTitle">Usability Improvements &amp; Interactive Document Viewer
-          Optimization</span>
+    <div class="target-banner-inner" style="display:flex; justify-content:space-between; align-items:center; gap:12px;">
+      <div class="target-info-cols" style="display:flex; flex-direction:column; gap:5px; min-width:0; flex:1;">
+        <!-- Top row: Code + Plan State + Status + Scope + Prio + App -->
+        <div class="target-top-line" style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+          <span class="target-code" id="targetCode">CRP-164</span>
+          <div class="sidecar-state-ctrl" style="display:inline-flex; align-items:center; gap:4px; font-size:0.75rem;">
+            <span style="color:var(--text-muted); font-weight:600;">Plan State:</span>
+            <select id="sidecarPlanState" class="sidecar-state-select" onchange="changeSidecarPlanState(this.value)" title="Change Plan State">
+              <option value="bug">🐛 Bug</option>
+              <option value="suggested">💡 Suggested</option>
+              <option value="approved">Approved</option>
+              <option value="deferred">⏸️ Deferred</option>
+              <option value="rejected">❌ Rejected</option>
+              <option value="completed">✅ Completed</option>
+              <option value="pushed">🚀 Pushed</option>
+            </select>
+          </div>
+          <div class="sidecar-state-ctrl" style="display:inline-flex; align-items:center; gap:4px; font-size:0.75rem;">
+            <span style="color:var(--text-muted); font-weight:600;">Proposal Status:</span>
+            <select id="sidecarProgState" class="sidecar-state-select" onchange="changeSidecarProgressState(this.value)" title="Change Proposal Status">
+              <option value="undecided">Undecided</option>
+              <option value="queued">Queued (Ready)</option>
+              <option value="in_progress">⚡ In Progress</option>
+              <option value="verification">⏳ Verification</option>
+              <option value="committed">📦 Committed</option>
+              <option value="completed">✅ Completed</option>
+              <option value="pushed">🚀 Pushed</option>
+              <option value="blocked">Blocked</option>
+              <option value="failed">Failed</option>
+            </select>
+          </div>
+          <span class="pill pill-scope" id="targetRepo">Workspace_Inventory</span>
+          <span class="pill pill-prio prio-H" id="targetPriority">Prio: H</span>
+          <span class="pill" id="targetApp" style="color:var(--text-muted);">App: Base</span>
+        </div>
+        <!-- Bottom row: Title -->
+        <div class="target-bottom-line" style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+          <span class="target-name" id="targetTitle">Usability Improvements &amp; Interactive Document Viewer Optimization</span>
+        </div>
       </div>
-      <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
-        <select id="proposalSwitcher" class="target-select" onchange="onSwitchProposal(this.value)"
-          title="Direct Proposal Switcher">
+      <!-- Right: Proposal Switcher filling two lines and standing out like Complete button coloring -->
+      <div class="target-switcher-wrapper" style="flex-shrink:0;">
+        <select id="proposalSwitcher" class="proposal-switcher-prominent" onchange="onSwitchProposal(this.value)" title="Direct Proposal Switcher">
           <option value="">Switch CRP...</option>
         </select>
       </div>
-    </div>
-    <div class="target-pills-line">
-      <span class="pill pill-scope" id="targetRepo">Workspace_Inventory</span>
-      <span class="pill pill-plan" id="targetPlanState">Plan: suggested</span>
-      <span class="pill pill-prog" id="targetProgState">Status: queued</span>
-      <span class="pill pill-prio prio-H" id="targetPriority">Prio: H</span>
-      <span class="pill" id="targetApp" style="color:var(--text-muted);">App: Base</span>
     </div>
   </div>
 
@@ -927,9 +1020,16 @@
       fetchFreshProposals();
 
       // Default target: highest open proposal or latest
-      const openCandidates = proposalsList.filter(p => p.state !== 'completed' && p.state !== 'pushed' && p.progress_state !== 'completed' && p.progress_state !== 'pushed');
+      const openStates = ['suggested', 'in_progress', 'staged', 'approved'];
+      const openCandidates = proposalsList.filter(p => {
+        const st = (p.state || '').toLowerCase();
+        const pr = (p.progress_state || '').toLowerCase();
+        return openStates.includes(st) &&
+          !['completed', 'pushed', 'rejected', 'deferred', 'cancelled', 'abandoned'].includes(st) &&
+          !['completed', 'pushed', 'rejected', 'deferred', 'blocked', 'failed'].includes(pr);
+      });
       const found = openCandidates.length > 0 ? openCandidates[openCandidates.length - 1] : (proposalsList[proposalsList.length - 1] || {
-        id: 174, crp_id: "CRP-174", title: "Beyond Compare Review Baseline Caching, Deduplication, and Unified Multi-Repo Shared Staging",
+        id: 181, crp_id: "BUG-181", title: "Tool Explorer and Control Hub Ergonomics",
         origin_repo: "Workspace_Inventory", state: "in_progress", progress_state: "in_progress", priority: "H"
       });
       setTargetProposal(found);
@@ -943,8 +1043,12 @@
       document.getElementById("targetCode").textContent = tag;
       document.getElementById("targetTitle").textContent = p.title || "No Title";
       document.getElementById("targetRepo").textContent = p.origin_repo || "LCM";
-      document.getElementById("targetPlanState").textContent = `Plan: ${p.state || 'suggested'}`;
-      document.getElementById("targetProgState").textContent = `Status: ${p.progress_state || 'queued'}`;
+
+      const planSel = document.getElementById("sidecarPlanState");
+      if (planSel) planSel.value = p.state || 'suggested';
+
+      const progSel = document.getElementById("sidecarProgState");
+      if (progSel) progSel.value = p.progress_state || 'undecided';
 
       const prio = (p.priority || 'M').toUpperCase();
       const prioEl = document.getElementById("targetPriority");
@@ -958,6 +1062,20 @@
 
       updateStatus(`Selected target: ${tag}`);
       renderCommands();
+    }
+
+    async function changeSidecarPlanState(newState) {
+      if (!currentProposal) return;
+      const pid = currentProposal.id;
+      currentProposal.state = newState;
+      await executeDaemonCmd(`pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action state -TargetExpression ${pid} -State ${newState}`);
+    }
+
+    async function changeSidecarProgressState(newState) {
+      if (!currentProposal) return;
+      const pid = currentProposal.id;
+      currentProposal.progress_state = newState;
+      await executeDaemonCmd(`pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action progress -TargetExpression ${pid} -ProgressState ${newState}`);
     }
 
     function renderCommands() {

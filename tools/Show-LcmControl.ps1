@@ -488,19 +488,19 @@ if (-not $NoLaunch) {
     if ($browserPath -and (Test-Path -LiteralPath $browserPath)) {
         if ($browserName -in @('zen', 'firefox')) {
             # ------------------------------------------------------------------
-            # Zen Browser / Firefox: Two tabs in single window (Native Split View)
+            # Zen Browser / Firefox: Dedicated window with Hub + Sidecar tabs
             # ------------------------------------------------------------------
-            Write-Host "  -> Launching LCM Control Hub & Sidecar as two tabs in a single $browserName window..." -ForegroundColor Green
+            Write-Host "  -> Launching LCM Control Hub & Sidecar as two tabs in a dedicated $browserName window..." -ForegroundColor Green
             if (Test-Path -LiteralPath $dispatcher) {
                 Write-TimingLog "Dispatching Tab 1: $launchTarget..."
-                & $dispatcher -FilePath $browserPath -ArgumentList "`"$launchTarget`""
+                & $dispatcher -FilePath $browserPath -ArgumentList "--new-window `"$launchTarget`""
                 Write-TimingLog "Tab 1 dispatched. Pausing 350ms..."
                 Start-Sleep -Milliseconds 350
                 Write-TimingLog "Dispatching Tab 2: $sidecarUri..."
                 & $dispatcher -FilePath $browserPath -ArgumentList "--new-tab `"$sidecarUri`""
                 Write-TimingLog "Tab 2 dispatched."
             } else {
-                Start-Process -FilePath $browserPath -ArgumentList "`"$launchTarget`""
+                Start-Process -FilePath $browserPath -ArgumentList "--new-window `"$launchTarget`""
                 Start-Sleep -Milliseconds 350
                 Start-Process -FilePath $browserPath -ArgumentList @("--new-tab", "`"$sidecarUri`"")
             }

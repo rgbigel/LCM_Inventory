@@ -589,10 +589,27 @@
       border: 1px solid var(--border-color);
       border-radius: 8px;
       overflow-y: auto;
-      overflow-x: auto;
+      overflow-x: scroll !important;
       box-shadow: 0 4px 16px rgba(0,0,0,0.25);
       margin-bottom: 6px;
       position: relative;
+      scrollbar-width: auto;
+      scrollbar-color: var(--border-color) var(--bg-secondary);
+    }
+    .table-container::-webkit-scrollbar {
+      width: 12px;
+      height: 12px;
+    }
+    .table-container::-webkit-scrollbar-track {
+      background: var(--bg-secondary);
+      border-radius: 6px;
+    }
+    .table-container::-webkit-scrollbar-thumb {
+      background: var(--border-color);
+      border-radius: 6px;
+    }
+    .table-container::-webkit-scrollbar-thumb:hover {
+      background: var(--text-muted);
     }
     table {
       width: 100%;
