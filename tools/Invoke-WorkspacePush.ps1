@@ -18,6 +18,9 @@ param(
     [Parameter(Mandatory = $false, HelpMessage = 'Specific repositories to push (defaults to all ahead repositories)')]
     [string[]]$Repositories,
 
+    [Parameter(Mandatory = $false, HelpMessage = 'Specific proposal IDs to transition to pushed state')]
+    [object[]]$ProposalIds,
+
     [Parameter(Mandatory = $false, HelpMessage = 'Skip the pre-push Gemini export and knowledge base mirror pipeline')]
     [switch]$SkipGemini,
 
@@ -58,6 +61,17 @@ if ($Help) {
 
 $workspaceRoot = 'D:\Git_Repositories'
 $cmLogFile = Join-Path $workspaceRoot "Workspace_Inventory\logs\cm_activity.log"
+
+$targetProposalSet = [System.Collections.Generic.HashSet[int]]::new()
+if ($null -ne $ProposalIds) {
+    foreach ($item in $ProposalIds) {
+        foreach ($sub in "$item".Split(',', [System.StringSplitOptions]::RemoveEmptyEntries)) {
+            if ($sub.Trim() -match '^\d+$') {
+                [void]$targetProposalSet.Add([int]$sub.Trim())
+            }
+        }
+    }
+}
 
 Write-Host "==========================================================================" -ForegroundColor Cyan
 Write-Host " LCM MULTI-REPOSITORY PUSH & REMOTE SYNCHRONIZATION ENGINE" -ForegroundColor Green
@@ -184,6 +198,9 @@ if ($pushedRepos.Count -gt 0) {
             $ledgerJson = Get-Content -LiteralPath $proposalsFile -Raw -Encoding UTF8 | ConvertFrom-Json
             $transitionCount = 0
             foreach ($p in $ledgerJson.proposals) {
+                if ($targetProposalSet.Count -gt 0 -and (-not $targetProposalSet.Contains([int]$p.id))) {
+                    continue
+                }
                 if ($p.progress_state -eq "completed" -or $p.state -eq "completed") {
                     $transitionCount++
                     Write-Host "      * [DRY RUN] Would transition Proposal $($p.id) ($($p.title)) to 'pushed'" -ForegroundColor Gray
@@ -213,6 +230,9 @@ if ($pushedRepos.Count -gt 0) {
                 $origin = if ($p.origin_repo) { $p.origin_repo } else { "" }
                 $matchesPushed = $pushedRepos | Where-Object { $origin -like "*$_*" }
                 if ($matchesPushed -or $pushedRepos -contains "Workspace_Inventory" -or $pushedRepos -contains "Git_Repositories") {
+                    if ($targetProposalSet.Count -gt 0 -and (-not $targetProposalSet.Contains([int]$p.id))) {
+                        continue
+                    }
                     if ($p.progress_state -eq "completed" -or $p.state -eq "completed") {
                         $p.state = "pushed"
                         $p.progress_state = "pushed"

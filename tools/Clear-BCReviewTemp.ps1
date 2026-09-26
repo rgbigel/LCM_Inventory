@@ -96,7 +96,7 @@ foreach ($sd in $searchDirs) {
 }
 
 # Load session metadata for each directory
-$sessionEntries = foreach ($dir in $rawDirs) {
+$sessionEntries = @(foreach ($dir in $rawDirs) {
     $metaFile = Join-Path $dir.FullName ".lcm_review.json"
     $sessionStarted = $dir.CreationTime
     $baseCommit = "-"
@@ -124,7 +124,7 @@ $sessionEntries = foreach ($dir in $rawDirs) {
         SizeBytes        = $totalBytes
         DirectoryObject  = $dir
     }
-}
+})
 
 # ==============================================================================
 # 2. Deletions (Executed based on selection criteria)

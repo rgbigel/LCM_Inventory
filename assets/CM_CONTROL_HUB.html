@@ -1137,6 +1137,7 @@
     <div class="batch-bar">
       <div class="batch-actions">
         <button class="btn btn-primary" onclick="executeBatchComplete()" title="Complete: stage/commit/generate/receipt/mark done">✅ Complete Selected</button>
+        <button class="btn btn-purple" onclick="executePushRepositories()" title="Push completed proposals to remote Git repositories (pushes selected completed items, or all completed if none selected)">🚀 Push</button>
         <button class="btn" onclick="executeBatchDefer()" title="Defer selected proposals">⏸️ Defer Selected</button>
         <button class="btn btn-amber" onclick="executeBatchReview()" title="Review changes in Beyond Compare">🔍 Do Review</button>
         <button class="btn btn-blue" onclick="executeBatchMarkReviewed()" title="Mark selected items as reviewed">⚡ Review Done</button>
@@ -4048,23 +4049,82 @@
     // Multi-Repository Push Engine
     async function executePushRepositories() {
       const chks = getSelectedCheckboxes();
-      let defaultReason = "feat(cm): implement Proposal #19 (CRP-2026-006) CM Control Hub and Proposal #24 (BUG-2026-001)";
+      let defaultReason = "feat(cm): sync completed workspace proposals and governance updates";
+      let targetPropIds = [];
 
       if (chks.length > 0) {
-        const firstId = parseInt(chks[0].value, 10);
-        const p = proposalsData.proposals.find(item => item.id === firstId);
-        if (p) {
-          defaultReason = `feat(cm): ${p.bundle_id || p.cr_id || ('Proposal #' + p.id)} - ${p.title}`;
+        const selectedIds = chks.map(c => parseInt(c.value, 10));
+        const selectedProps = proposalsData.proposals.filter(p => selectedIds.includes(p.id));
+
+        const completedProps = selectedProps.filter(p => p.state === 'completed' || p.progress_state === 'completed');
+        const unfinishedProps = selectedProps.filter(p => p.state !== 'completed' && p.progress_state !== 'completed');
+
+        // Requirement: Do not abort the other Push items, just omit them from push and mark them as "unfinished" in the Status column
+        unfinishedProps.forEach(p => {
+          const row = document.getElementById(`row-proposal-${p.id}`);
+          if (row) {
+            const statusCell = row.querySelector('td:nth-child(7)');
+            if (statusCell) {
+              let badge = statusCell.querySelector('.unfinished-badge');
+              if (!badge) {
+                badge = document.createElement('div');
+                badge.className = 'unfinished-badge';
+                badge.style.cssText = 'color: #f85149; font-size: 0.72rem; font-weight: 700; margin-top: 3px; font-family: var(--font-mono);';
+                badge.textContent = '⚠️ Unfinished (Omitted from Push)';
+                statusCell.appendChild(badge);
+              }
+            }
+          }
+        });
+
+        if (unfinishedProps.length > 0) {
+          appendConsole(`[NOTICE] Omitted ${unfinishedProps.length} unfinished proposal(s) from push: ${unfinishedProps.map(p => p.crp_id || ('#' + p.id)).join(', ')}`, "msg-warning");
+          updateLiveTicker(`⚠️ ${unfinishedProps.length} unfinished item(s) omitted from push`);
         }
+
+        if (completedProps.length === 0) {
+          showToast(`⚠️ No completed proposals selected (${unfinishedProps.length} unfinished items omitted).`);
+          appendConsole("[ABORT] None of the selected proposals are in 'completed' state. Pushing requires completed status per RULE-LCM-005.", "msg-err");
+          return;
+        }
+
+        targetPropIds = completedProps.map(p => p.id);
+        const first = completedProps[0];
+        defaultReason = `feat(cm): ${first.bundle_id || first.cr_id || ('Proposal #' + first.id)} - ${first.title}`;
+        if (completedProps.length > 1) {
+          defaultReason += ` (+${completedProps.length - 1} more)`;
+        }
+      } else {
+        // No items selected: push everything completed
+        const allCompleted = proposalsData.proposals.filter(p => p.state === 'completed' || p.progress_state === 'completed');
+        if (allCompleted.length === 0) {
+          showToast("ℹ️ No completed proposals to push.");
+          appendConsole("[INFO] All proposals are either already pushed or still in progress. Nothing to push.", "msg-info");
+          return;
+        }
+
+        // Side note feature: set a temporary Filter for Status "COMPLETED" so operator sees what is being pushed
+        const progFilter = document.getElementById("thProgStateFilter");
+        if (progFilter) {
+          progFilter.value = "completed";
+          handleFilterChange();
+        }
+
+        targetPropIds = allCompleted.map(p => p.id);
+        defaultReason = `feat(cm): sync ${allCompleted.length} completed workspace proposal(s) to remote`;
       }
 
-      const promptReason = prompt("Enter push reason / commit tag (defaults to CRP Title):", defaultReason);
+      const promptReason = prompt(`Enter push reason / commit message for ${targetPropIds.length} completed proposal(s):`, defaultReason);
       if (!promptReason) return;
 
-      appendConsole(`Push Reason: ${promptReason}`, "msg-info");
-      const cmd = `pwsh -File Workspace_Inventory/tools/Invoke-WorkspacePush.ps1 -Reason "${promptReason.replace(/"/g, '`"')}"`;
+      appendConsole(`Dispatching Multi-Repository Push (${targetPropIds.length} completed proposals)...`, "msg-info");
+      
+      let cmd = `pwsh -File Workspace_Inventory/tools/Invoke-WorkspacePush.ps1 -Reason "${promptReason.replace(/"/g, '`"')}"`;
+      if (chks.length > 0 && targetPropIds.length > 0) {
+        cmd += ` -ProposalIds ${targetPropIds.join(',')}`;
+      }
 
-      await executeHubCommand(cmd, "Multi-Repository Push");
+      await executeHubCommand(cmd, `Multi-Repo Push (${targetPropIds.length} proposals)`);
     }
 
     // -------------------------------------------------------------------------
