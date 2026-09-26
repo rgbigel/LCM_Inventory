@@ -13,7 +13,12 @@
     'use strict';
 
     const baselineData = window.__LCM_TOOLS_DATA__ || [];
-    let toolsData = JSON.parse(JSON.stringify(baselineData));
+    const selfStems = ['show-toolsexplorer', 'show-toolexplorer', 'toolsexplorer', 'toolexplorer', 'show-tools', 'showtools'];
+    let toolsData = JSON.parse(JSON.stringify(baselineData)).filter(t => {
+        const tStem = (t.Name || '').replace(/\.[^/.]+$/, "").toLowerCase();
+        const tShort = (t.ShortName || '').toLowerCase();
+        return !selfStems.includes(tStem) && !selfStems.includes(tShort);
+    });
     let activeRunningTool = null;
     let activeModalTool = null;
     let activeEditCell = null;

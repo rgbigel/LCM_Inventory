@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-09-26T20:34:00+02:00",
+  "updated_at": "2026-09-26T22:38:00+02:00",
   "review_granularity": "tight",
   "lcm_mode": "active",
-  "last_proposal_id": 177,
+  "last_proposal_id": 178,
   "proposals": [
     {
       "id": 1,
@@ -8708,6 +8708,48 @@
       "type": "CRP",
       "crp_id": "CRP-177",
       "cr_id": "CRP-177",
+      "progress_state": "completed"
+    },
+    {
+      "id": 178,
+      "timestamp": "2026-09-26 22:35:00",
+      "title": "Tool Explorer Approved Verb Naming, Catalog Deduplication, Self-Tool Filtering, and Scrollbar Hardening",
+      "origin_repo": "Workspace_Inventory",
+      "state": "completed",
+      "bundle_id": "BUG-178",
+      "author": "Rolf, Antigravity AI Assistant",
+      "details": "Aligns Tool Explorer script to Show-ToolsExplorer.ps1 per RULE-PS-002 with ToolExplorer.cmd trampolines, purges obsolete duplicate catalog .lcm/tools/internal/tool_catalog.json, adds self-tool exclusion filter in lcm-tool-explorer.js, closes missing tbody tag in LcmToolCatalog.psm1, and restores horizontal scrollbar with min-width 1560px and high-contrast thumb in LCMToolCatalog.css.",
+      "bundle_dir": "docs/Proposals/BUG-178-LCM-v8.0.0-Tool-Explorer-Naming-Catalog-Deduplication-And-Ergonomics",
+      "docs": {
+        "specification": "Workspace_Inventory/docs/Proposals/BUG-178-LCM-v8.0.0-Tool-Explorer-Naming-Catalog-Deduplication-And-Ergonomics/Specification.md",
+        "plan": "Workspace_Inventory/docs/Proposals/BUG-178-LCM-v8.0.0-Tool-Explorer-Naming-Catalog-Deduplication-And-Ergonomics/Implementation_Plan.md",
+        "walkthrough": "Workspace_Inventory/docs/Proposals/BUG-178-LCM-v8.0.0-Tool-Explorer-Naming-Catalog-Deduplication-And-Ergonomics/Walkthrough.md"
+      },
+      "plan_path": "Workspace_Inventory/docs/Proposals/BUG-178-LCM-v8.0.0-Tool-Explorer-Naming-Catalog-Deduplication-And-Ergonomics/Implementation_Plan.md",
+      "walkthrough_path": "Workspace_Inventory/docs/Proposals/BUG-178-LCM-v8.0.0-Tool-Explorer-Naming-Catalog-Deduplication-And-Ergonomics/Walkthrough.md",
+      "dates": {
+        "created": "2026-09-26 22:35:00",
+        "suggested": "2026-09-26 22:35:00",
+        "completed": "2026-09-26 22:38:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-09-26 22:35:00",
+          "user": "Rolf",
+          "note": "Bug captured for Tool Explorer naming, stale catalog duplicate, self-tool exclusion, and scrollbar ergonomics."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-09-26 22:38:00",
+          "user": "Rolf",
+          "note": "Approved verb Show-ToolsExplorer.ps1 created, stale catalog purged, self-tool excluded, horizontal scrollbar enforced and verified."
+        }
+      ],
+      "priority": "H",
+      "type": "BUG",
+      "crp_id": "BUG-178",
+      "cr_id": "BUG-178",
       "progress_state": "completed"
     }
   ],
