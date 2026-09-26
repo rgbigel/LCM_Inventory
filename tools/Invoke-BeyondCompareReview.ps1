@@ -721,7 +721,7 @@ else {
   "Baseline ($commitSha)"
 }
 $title2 = "Current Live ($repoName)"
-$bcArgString = "`"LCM_Review`" `"$tempReviewRoot`" `"$repoPath`" `"/title1=$title1`" `"/title2=$title2`" `"/filters=$filterMask`""
+$bcArgString = "`"$tempReviewRoot`" `"$repoPath`" `"/title1=$title1`" `"/title2=$title2`" `"/filters=$filterMask`""
 
 $dispatcherCandidates = @(
   (Join-Path $workspaceRoot ".lcm\tools\internal\Invoke-InteractiveDesktop.ps1"),
@@ -741,7 +741,7 @@ if ($dispatcherPath) {
   & pwsh -File $dispatcherPath -FilePath $BeyondComparePath -ArgumentList $bcArgString | Out-Null
 }
 else {
-  Start-Process -FilePath $BeyondComparePath -ArgumentList @("LCM_Review", "`"$tempReviewRoot`"", "`"$repoPath`"", "`"/title1=$title1`"", "`"/title2=$title2`"", "`"/filters=$filterMask`"")
+  Start-Process -FilePath $BeyondComparePath -ArgumentList @("`"$tempReviewRoot`"", "`"$repoPath`"", "`"/title1=$title1`"", "`"/title2=$title2`"", "`"/filters=$filterMask`"")
 }
 
 # ------------------------------------------------------------------------------
