@@ -236,7 +236,8 @@ if ($CliMode) {
             $history = $p.state_history
             if ($history -and $history.Count -gt 0) {
                 Write-Host ""
-                Write-Host "Proposal #$($p.id) ($($p.crp_id || $p.cr_id)) - $($p.title)" -ForegroundColor Green
+                $crpTag = if ($p.crp_id) { $p.crp_id } else { $p.cr_id }
+                Write-Host "Proposal #$($p.id) ($crpTag) - $($p.title)" -ForegroundColor Green
                 foreach ($h in $history) {
                     $ts = Get-ObjProperty $h 'timestamp'
                     $st = (Get-ObjProperty $h 'state').ToUpper()
@@ -427,46 +428,100 @@ if (-not $NoLaunch) {
     $sidecarPath = Join-Path $artifactsDir "LCM_SIDECAR.html"
     $sidecarUri = [System.Uri]::new($sidecarPath).AbsoluteUri
 
-    $edgeCandidates = @(
-        "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
-        "C:\Program Files\Microsoft\Edge\Application\msedge.exe"
-    )
-    $edgePath = $null
-    foreach ($cand in $edgeCandidates) {
-        if (Test-Path -LiteralPath $cand) { $edgePath = $cand; break }
+    # --------------------------------------------------------------------------
+    # Dynamic User Default Browser Discovery (Windows Registry UserChoice)
+    # --------------------------------------------------------------------------
+    $browserPath = $null
+    $browserName = "unknown"
+    try {
+        $progId = (Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice" -ErrorAction Stop).ProgId
+        $cmd = (Get-ItemProperty -Path "Registry::HKEY_CLASSES_ROOT\$progId\shell\open\command" -ErrorAction Stop).'(Default)'
+        if ($cmd -match '"([^"]+\.exe)"') { $browserPath = $Matches[1] }
+        elseif ($cmd -match '^\s*([^\s]+\.exe)') { $browserPath = $Matches[1] }
+        if ($browserPath) {
+            $browserName = [System.IO.Path]::GetFileNameWithoutExtension($browserPath).ToLowerInvariant()
+        }
+    } catch {}
+
+    # Secondary fallback to known paths if registry query produced nothing
+    if (-not $browserPath -or -not (Test-Path -LiteralPath $browserPath)) {
+        $zenPath = "D:\Tools\Zen Browser\zen.exe"
+        if (Test-Path -LiteralPath $zenPath) {
+            $browserPath = $zenPath
+            $browserName = "zen"
+        } else {
+            $firefoxCandidates = @(
+                "C:\Program Files\Mozilla Firefox\firefox.exe",
+                "C:\Program Files (x86)\Mozilla Firefox\firefox.exe"
+            )
+            foreach ($cand in $firefoxCandidates) {
+                if (Test-Path -LiteralPath $cand) { $browserPath = $cand; $browserName = "firefox"; break }
+            }
+        }
     }
 
     $dispatcher = Join-Path $workspaceRoot ".lcm\tools\internal\Invoke-InteractiveDesktop.ps1"
 
-    if ($edgePath) {
-        Write-Host "  -> Launching LCM Control Hub & Sidecar in dual standalone App Windows..." -ForegroundColor Green
-        
-        # Window 1: LCM Control Hub (Left side, wide)
-        $hubArgs = "--app=`"$launchTarget`" --window-size=1260,980 --window-position=30,30"
-        if (Test-Path -LiteralPath $dispatcher) {
-            & $dispatcher -FilePath $edgePath -ArgumentList $hubArgs
-        } else {
-            Start-Process -FilePath $edgePath -ArgumentList $hubArgs
-        }
+    if ($browserPath -and (Test-Path -LiteralPath $browserPath)) {
+        if ($browserName -in @('zen', 'firefox')) {
+            # ------------------------------------------------------------------
+            # Zen Browser / Firefox: Two tabs in single window (Native Split View)
+            # ------------------------------------------------------------------
+            Write-Host "  -> Launching LCM Control Hub & Sidecar as two tabs in a single $browserName window..." -ForegroundColor Green
+            if (Test-Path -LiteralPath $dispatcher) {
+                & $dispatcher -FilePath $browserPath -ArgumentList "`"$launchTarget`""
+                Start-Sleep -Milliseconds 350
+                & $dispatcher -FilePath $browserPath -ArgumentList "--new-tab `"$sidecarUri`""
+            } else {
+                Start-Process -FilePath $browserPath -ArgumentList "`"$launchTarget`""
+                Start-Sleep -Milliseconds 350
+                Start-Process -FilePath $browserPath -ArgumentList @("--new-tab", "`"$sidecarUri`"")
+            }
+        } elseif ($browserName -in @('msedge', 'chrome', 'brave')) {
+            # ------------------------------------------------------------------
+            # Chromium / Edge: Two windows stacked vertically (one above the other)
+            # ------------------------------------------------------------------
+            Write-Host "  -> Launching LCM Control Hub & Sidecar in vertically stacked $browserName windows (one above the other)..." -ForegroundColor Green
+            
+            # Top Window: Control Hub
+            $topArgs = "--new-window `"$launchTarget`" --window-position=30,20 --window-size=1860,540"
+            if (Test-Path -LiteralPath $dispatcher) {
+                & $dispatcher -FilePath $browserPath -ArgumentList $topArgs
+            } else {
+                Start-Process -FilePath $browserPath -ArgumentList $topArgs
+            }
 
-        Start-Sleep -Milliseconds 450
+            Start-Sleep -Milliseconds 450
 
-        # Window 2: LCM Sidecar (Right side, narrow companion)
-        $sidecarArgs = "--app=`"$sidecarUri`" --window-size=560,980 --window-position=1310,30"
-        if (Test-Path -LiteralPath $dispatcher) {
-            & $dispatcher -FilePath $edgePath -ArgumentList $sidecarArgs
+            # Bottom Window: Sidecar
+            $bottomArgs = "--new-window `"$sidecarUri`" --window-position=30,575 --window-size=1860,450"
+            if (Test-Path -LiteralPath $dispatcher) {
+                & $dispatcher -FilePath $browserPath -ArgumentList $bottomArgs
+            } else {
+                Start-Process -FilePath $browserPath -ArgumentList $bottomArgs
+            }
         } else {
-            Start-Process -FilePath $edgePath -ArgumentList $sidecarArgs
+            # Generic browser dispatch: two sequential tab launches
+            Write-Host "  -> Launching Hub & Sidecar via detected default browser ($browserName)..." -ForegroundColor Green
+            if (Test-Path -LiteralPath $dispatcher) {
+                & $dispatcher -FilePath $browserPath -ArgumentList "`"$launchTarget`""
+                Start-Sleep -Milliseconds 300
+                & $dispatcher -FilePath $browserPath -ArgumentList "`"$sidecarUri`""
+            } else {
+                Start-Process -FilePath $browserPath -ArgumentList "`"$launchTarget`""
+                Start-Sleep -Milliseconds 300
+                Start-Process -FilePath $browserPath -ArgumentList "`"$sidecarUri`""
+            }
         }
     } else {
-        Write-Host "  -> Dispatching via Interactive Desktop..." -ForegroundColor Cyan
+        Write-Host "  -> Dispatching Control Hub & Sidecar tabs via default browser handler..." -ForegroundColor Cyan
         if (Test-Path -LiteralPath $dispatcher) {
             & $dispatcher -FilePath $launchTarget
-            Start-Sleep -Milliseconds 300
+            Start-Sleep -Milliseconds 250
             & $dispatcher -FilePath $sidecarUri
         } else {
             Start-Process -FilePath $launchTarget
-            Start-Sleep -Milliseconds 300
+            Start-Sleep -Milliseconds 250
             Start-Process -FilePath $sidecarUri
         }
     }

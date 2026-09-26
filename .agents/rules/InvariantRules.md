@@ -9,9 +9,9 @@ Module: InvariantRules
 Purpose: Authoritative invariant rules for workspace behavior, encoding, determinism, and generation.  
 Path: .agents/rules/InvariantRules.md  
 Authors: Rolf  
-Version: 7.1.0  
+Version: 8.1.0  
 Status: Authoritative Invariant Rule  
-Date: 2026-09-04  
+Date: 2026-09-26  
 
 ---
 
@@ -48,5 +48,6 @@ Date: 2026-09-04
 - **Native Rule Inheritance**: Rules in this file are auto-inherited across all agent interactions via `.agents/rules/`.
 - `@tsr` / `@THR` / `@TRH` / `@IRA`: Legacy prompt macros for TimestampHeaderRule and InvariantRules. Now superseded by persistent, native rule enforcement.
 - `@ml`: Shows ordered visible messages in current chat.
+
 
 

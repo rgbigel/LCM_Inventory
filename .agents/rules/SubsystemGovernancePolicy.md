@@ -9,9 +9,9 @@ Module: SubsystemGovernancePolicy
 Purpose: Governs disjunct Subsystem repositories (e.g. Home Assistant OS), dedicated subsystem inventories, JIT ephemeral write authentication, host hardware interlocks, and log segregation.  
 Path: .agents/rules/SubsystemGovernancePolicy.md  
 Authors: Rolf, Workspace_AI Governance  
-Version: 7.0.0  
+Version: 8.0.0  
 Status: Authoritative Policy  
-Date: 2026-08-29  
+Date: 2026-09-26  
 
 ---
 
@@ -73,6 +73,7 @@ While Subsystems inherit standard LCM **documentation and quality gate rules**, 
 1. **Authoritative Internal State**: The Subsystem's internal runtime registries (e.g. Home Assistant OS Device Registry, Entity Registry, Area Registry, and Config Entries stored in `.storage/`) constitute the authoritative internal state of the Subsystem host.
 2. **External Write Prohibition**: Tooling, scripts, and MCP agents executing on the host PC `MUST NOT` attempt to mutate, overwrite, clean, or inject records into the Subsystem's internal central registry from the outside (whether via direct `.storage/` file writes or WebSocket mutation endpoints like `config/device_registry/update`).
 3. **Observation-Only Protocol**: LCM Configuration Management tools `SHALL` operate strictly as read-only observers and reconcilers. Even if internal registry records contain historical errors, duplicate hardware identifiers, or inconsistent naming, corrections `MUST` be performed exclusively within the official Subsystem UI by the human operator.
+
 
 
 

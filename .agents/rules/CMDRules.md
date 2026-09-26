@@ -1,4 +1,4 @@
-﻿---
+---
 name: CMDRules
 description: Authoritative rules for Windows Command Prompt (CMD/Batch) script generation and normalization.
 globs: "*.cmd,*.bat"
@@ -9,9 +9,9 @@ Module: CMDRules
 Purpose: Authoritative rules for CMD batch generation, echo control, error levels, and normalization.  
 Path: .agents/rules/CMDRules.md  
 Authors: Rolf  
-Version: 7.0.0  
+Version: 8.0.0  
 Status: Authoritative Invariant Rule  
-Date: 2026-08-29  
+Date: 2026-09-26  
 
 ---
 
@@ -24,4 +24,5 @@ Date: 2026-08-29
 - **newline-crlf**: All `*.cmd` and `*.bat` files must end with CRLF line endings.
 - **deterministic-output**: Identical input $\rightarrow$ identical output.
 - **indent-2**: 2-space indentation for logical blocks and parenthesized expressions.
+
 

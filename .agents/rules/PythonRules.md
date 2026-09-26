@@ -9,9 +9,9 @@ Module: PythonRules
 Purpose: Authoritative rule definitions for Python code quality, import ordering, string formatting, and linter compliance.  
 Path: .agents/rules/PythonRules.md  
 Authors: Rolf, Workspace_AI Engine  
-Version: 7.1.0  
+Version: 8.1.0  
 Status: Authoritative Invariant Rule  
-Date: 2026-09-06  
+Date: 2026-09-26  
 
 ---
 
@@ -36,4 +36,5 @@ Date: 2026-09-06
 ## 2. Linter & Quality Verification
 - All Python source files must pass `flake8` checks with zero `E9,F63,F7,F82,F401,F541,F841` violations.
 - All Python files must compile cleanly with `py_compile.compile()` during repository readiness checks (`Test-RepoReadiness.ps1`).
+
 

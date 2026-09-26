@@ -1,4 +1,4 @@
-﻿---
+---
 name: RepositoryContextPolicy
 description: Authoritative rule for automatic repository context detection, fast-tier ingestion, candidate fallback, and zero-redundant scan governance.
 globs: "*"
@@ -9,9 +9,9 @@ Module: RepositoryContextPolicy
 Purpose: Defines automatic active-document repository detection, fast-tier context priming, candidate fallback, and scan optimization invariants.  
 Path: .agents/rules/RepositoryContextPolicy.md  
 Authors: Rolf, Workspace_AI  
-Version: 7.0.0  
+Version: 8.0.0  
 Status: Authoritative Invariant Rule  
-Date: 2026-08-29  
+Date: 2026-09-26  
 
 ---
 
@@ -41,4 +41,5 @@ The agent `MUST` remain aware of the global LCM triad at all times:
 * **`Workspace_AI`**: Governs release baselines (v4.3.0), templates, and quality gates.
 * **`Workspace_Inventory`**: Configuration Management engine, audit ledger, and cross-repo CR indexing.
 * **`SharedModules`**: Reusable functional PowerShell atom library (`Logging`, `VolumeAtoms`, `BcdAtoms`).
+
 

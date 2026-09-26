@@ -1,4 +1,4 @@
-﻿---
+---
 name: LanguagePolicy
 description: Mandatory rule to enforce English language for all documentation, file names, code, and comments across all repositories.
 globs: "*"
@@ -13,7 +13,7 @@ Module: LanguagePolicy
 Purpose: Authoritative rule enforcing English language usage across all workspace documentation, file names, and code.
 Path: .agents/rules/LanguagePolicy.md
 Authors: Rolf
-Version: 7.0.0
+Version: 8.0.0
 Changelog:
 - 2026-08-15: Initial persistent rule for English language invariant across all documentation, file names, code, and comments.
 
@@ -23,4 +23,5 @@ LANGUAGE-POLICY-RULES
 - english-filenames: All file and directory names must use English, ASCII-only naming.
 - documentation-language: All markdown (.md) documents, headers, and specifications must be written in English.
 - code-comments: All source code comments and docstrings must be written in English.
+
 

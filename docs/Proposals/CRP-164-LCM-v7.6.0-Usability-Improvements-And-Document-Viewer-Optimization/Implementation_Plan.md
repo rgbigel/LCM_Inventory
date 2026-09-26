@@ -49,6 +49,14 @@ Priority: High
 3. **Tool Catalog Schema & Categorization**:
    - Add explicit `Dev/Internal` audience and categories in `tool_catalog.json`.
 
+### Component 3: Hub & Sidecar Unified Single-Window Launch (Amendment)
+1. In `Show-LcmControl.ps1`:
+   - Prioritize Zen Browser and Firefox over Microsoft Edge.
+   - Launch Hub (`CM_CONTROL_HUB.html`) and Sidecar (`LCM_SIDECAR.html`) as **two tabs in a single browser window**.
+   - Prohibit `--app` mode and hardcoded desktop window coordinates.
+2. In `Show-LcmSidecar.ps1`:
+   - Prioritize Zen Browser / Firefox tab launch; eliminate forced Edge app mode.
+
 ---
 
 ## 2. Verification Plan

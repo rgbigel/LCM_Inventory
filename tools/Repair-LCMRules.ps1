@@ -54,8 +54,7 @@ if ($Help) {
 }
 
 $canonicalRulesCandidates = @(
-    (Join-Path $WorkspaceRoot 'Workspace_Inventory\.agents\rules'),
-    (Join-Path $WorkspaceRoot '.lcm\.agents\rules'),
+    (Join-Path $WorkspaceRoot 'Workspace_AI\.agents\rules'),
     (Join-Path $WorkspaceRoot '.agents\rules')
 )
 $canonicalRulesDir = $canonicalRulesCandidates | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1

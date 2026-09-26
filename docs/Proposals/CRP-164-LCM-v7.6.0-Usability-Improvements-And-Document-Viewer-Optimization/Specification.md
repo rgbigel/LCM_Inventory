@@ -88,9 +88,12 @@ Workspace_Inventory/
 │           ├── Implementation_Plan.md
 │           └── Walkthrough.md
 ├── assets/
-│   └── CM_CONTROL_HUB.html         # Document viewer fixes, sticky headers, VS Code dispatch, column sizing
+│   ├── CM_CONTROL_HUB.html         # Document viewer fixes, sticky headers, VS Code dispatch, column sizing
+│   └── LCM_SIDECAR.html            # Companion Actions Sidecar dashboard
 ├── tools/
-│   ├── Show-CmControlHub.ps1       # docsCache normalization and tool catalog updates
+│   ├── Show-CmControlHub.ps1       # Compatibility forwarder
+│   ├── Show-LcmControl.ps1         # Unified Hub & Sidecar browser dispatcher
+│   ├── Show-LcmSidecar.ps1         # Companion Sidecar launcher
 │   ├── Show-CRPs.ps1               # Consolidated from Show-CrpDates.ps1
 │   ├── Show-Inventory.ps1          # Renamed from Show-WorkspaceInventoryApp.ps1 with 0-param defaults
 │   └── Show-WorkspaceReadiness.ps1 # Intelligent default to current repo
@@ -100,3 +103,26 @@ Workspace_Inventory/
 └── Cmd/
     └── ShowTools.cmd               # Updated tool dispatchers
 ```
+
+---
+
+## 4. Retrospective Architectural Amendment: Hub & Sidecar Unified Single-Window Launch
+
+### Problem & Defect in Initial Implementation:
+The original implementation in `tools/Show-LcmControl.ps1` and `tools/Show-LcmSidecar.ps1` forced Microsoft Edge `--app` mode into two separate standalone popup windows at fixed pixel coordinates (`--window-position=30,30` and `1310,30`). This violated core operational ergonomics:
+1. **Detached Companion Contradiction**: A "Sidecar" is an attached companion to the Hub vehicle, not an independent floating application that clutters the desktop and taskbar.
+2. **Forced Microsoft Edge**: It ignored the operator's primary browser (**Zen Browser / Firefox**).
+3. **Precluded Native Split View**: In Zen Browser and Firefox, tabs in the same window can be natively split side-by-side with a single click, providing the ideal sidecar experience within a single application window frame.
+
+### Corrected Specification Invariant:
+1. **Dynamic User Default Browser Resolution**:
+   - `Show-LcmControl.ps1` and `Show-LcmSidecar.ps1` **MUST** dynamically detect the operator's configured default browser from the Windows Registry (`HKCU:\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice` $\rightarrow$ `ProgId` $\rightarrow$ `shell\open\command`). No personal browser preference is hardcoded.
+2. **Layout Adaptation Strategy**:
+   - **Modern Split-Tab Browsers (Zen Browser, Firefox)**:
+     - The tool launches the Hub (`CM_CONTROL_HUB.html`) and Sidecar (`LCM_SIDECAR.html`) as **two tabs in a single browser window** (primary URL followed by `--new-tab <sidecarUri>`), enabling immediate native Split View side-by-side inside the browser window.
+   - **Chromium / Edge / Non-Split Browsers (Microsoft Edge, Google Chrome, Brave)**:
+     - For browsers that do not natively feature vertical split tabs, the tool launches **two windows stacked vertically (one above the other)**:
+       - **Top Window (Control Hub)**: `--new-window "<launchTarget>" --window-position=30,20 --window-size=1860,540`
+       - **Bottom Window (Actions Sidecar)**: `--new-window "<sidecarUri>" --window-position=30,575 --window-size=1860,450`
+3. **Ergonomic Invariant**:
+   - Forced `--app` chromeless popups and detached desktop floating windows are strictly retired in favor of browser-native tabbed or stacked window ergonomics.

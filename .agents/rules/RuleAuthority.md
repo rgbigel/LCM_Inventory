@@ -9,9 +9,9 @@ Module: RuleAuthority
 Purpose: Defines canonical rule authority, governance hierarchy, and mandatory cross-reference synchronization across the workspace.  
 Path: .agents/rules/RuleAuthority.md  
 Authors: Rolf, Workspace_AI Governance  
-Version: 7.0.0  
+Version: 8.0.0  
 Status: Authoritative Policy  
-Date: 2026-08-29  
+Date: 2026-09-26  
 
 ---
 
@@ -19,7 +19,7 @@ Date: 2026-08-29
 
 ### `RULE-AUTH-001` (Single Source of Truth & Zero Rule Forking)
 - **Canonical Physical Hub**: `Workspace_AI\.agents\rules\` is the single, authoritative physical host and primary commit gate for all LCM governance rules.
-- **Root & Child Discovery**: The root workspace container links `D:\Git_Repositories\.agents\rules\` (via `.lcm\.agents\rules`) directly to `Workspace_AI\.agents\rules\` via NTFS directory junction (`mklink /J`), avoiding rule commit churn on the root container. All governed child repositories link their local `.agents\rules` directory to this canonical hub.
+- **Root & Child Discovery**: The root workspace container links `D:\Git_Repositories\.agents\rules\` directly to `Workspace_AI\.agents\rules\` via NTFS directory junction (`mklink /J`), avoiding rule commit churn on the root container. All governed child repositories link their local `.agents\rules` directory to this canonical hub.
 - **No Independent Truth**: Child repositories and IDE adapter surfaces `MUST NOT` fork, maintain conflicting local copies, or override core governance policies without an approved Change Request.
 
 ---
@@ -34,3 +34,4 @@ Whenever an existing rule is updated, or a new rule/policy is created ("invented
 
 ## 2. Activation Commands
 - `@RULEAUTH`: Activates and validates the canonical source-of-truth and synchronization policy.
+

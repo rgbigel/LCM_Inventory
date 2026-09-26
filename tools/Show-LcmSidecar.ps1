@@ -117,53 +117,54 @@ if (-not $NoLaunch) {
         return
     }
 
-    # Standalone App Window Dispatch (Chromeless Edge App Mode default)
-    $edgeCandidates = @(
-        "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
-        "C:\Program Files\Microsoft\Edge\Application\msedge.exe"
-    )
-    $edgePath = $null
-    foreach ($cand in $edgeCandidates) {
-        if (Test-Path -LiteralPath $cand) { $edgePath = $cand; break }
+    # --------------------------------------------------------------------------
+    # Dynamic User Default Browser Discovery (Windows Registry UserChoice)
+    # --------------------------------------------------------------------------
+    $browserPath = $null
+    $browserName = "unknown"
+    try {
+        $progId = (Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice" -ErrorAction Stop).ProgId
+        $cmd = (Get-ItemProperty -Path "Registry::HKEY_CLASSES_ROOT\$progId\shell\open\command" -ErrorAction Stop).'(Default)'
+        if ($cmd -match '"([^"]+\.exe)"') { $browserPath = $Matches[1] }
+        elseif ($cmd -match '^\s*([^\s]+\.exe)') { $browserPath = $Matches[1] }
+        if ($browserPath) {
+            $browserName = [System.IO.Path]::GetFileNameWithoutExtension($browserPath).ToLowerInvariant()
+        }
+    } catch {}
+
+    # Secondary fallback to known paths
+    if (-not $browserPath -or -not (Test-Path -LiteralPath $browserPath)) {
+        $zenPath = "D:\Tools\Zen Browser\zen.exe"
+        if (Test-Path -LiteralPath $zenPath) {
+            $browserPath = $zenPath
+            $browserName = "zen"
+        } else {
+            $firefoxCandidates = @(
+                "C:\Program Files\Mozilla Firefox\firefox.exe",
+                "C:\Program Files (x86)\Mozilla Firefox\firefox.exe"
+            )
+            foreach ($cand in $firefoxCandidates) {
+                if (Test-Path -LiteralPath $cand) { $browserPath = $cand; $browserName = "firefox"; break }
+            }
+        }
     }
 
     $dispatcher = Join-Path $workspaceRoot ".lcm\tools\internal\Invoke-InteractiveDesktop.ps1"
 
-    if ($edgePath) {
-        Write-Host "  -> Opening Sidecar as standalone App Window (Edge App Mode)..." -ForegroundColor Green
-        $sidecarArgs = "--app=`"$fileUri`" --window-size=500,680 --window-position=1380,50"
+    if ($browserPath -and (Test-Path -LiteralPath $browserPath)) {
+        Write-Host "  -> Opening Sidecar in $browserName tab..." -ForegroundColor Green
+        $tabArg = if ($browserName -in @('zen', 'firefox')) { "--new-tab `"$fileUri`"" } else { "`"$fileUri`"" }
         if (Test-Path -LiteralPath $dispatcher) {
-            & $dispatcher -FilePath $edgePath -ArgumentList $sidecarArgs
+            & $dispatcher -FilePath $browserPath -ArgumentList $tabArg
         } else {
-            Start-Process -FilePath $edgePath -ArgumentList $sidecarArgs
+            Start-Process -FilePath $browserPath -ArgumentList $tabArg
         }
-        Start-Sleep -Milliseconds 400
-        try {
-            $wsh = New-Object -ComObject WScript.Shell
-            $wsh.AppActivate("LCM Sidecar") | Out-Null
-        } catch [System.Exception] {}
     } else {
-        $zenPath = "D:\Tools\Zen Browser\zen.exe"
-        if (-not (Test-Path -LiteralPath $zenPath)) {
-            $zenProc = Get-Process zen -ErrorAction SilentlyContinue | Select-Object -First 1
-            if ($zenProc -and $zenProc.Path) { $zenPath = $zenProc.Path }
-        }
-
-        if (Test-Path -LiteralPath $zenPath) {
-            Write-Host "  -> Opening Sidecar in Zen Browser window..." -ForegroundColor Green
-            Start-Process -FilePath $zenPath -ArgumentList "-new-window", $fileUri
-            Start-Sleep -Milliseconds 400
-            try {
-                $wsh = New-Object -ComObject WScript.Shell
-                $wsh.AppActivate("LCM Sidecar") | Out-Null
-            } catch [System.Exception] {}
+        Write-Host "  -> Dispatching Sidecar via default browser..." -ForegroundColor Cyan
+        if (Test-Path -LiteralPath $dispatcher) {
+            & $dispatcher -FilePath $fileUri
         } else {
-            Write-Host "  -> Dispatching via Interactive Desktop..." -ForegroundColor Cyan
-            if (Test-Path -LiteralPath $dispatcher) {
-                & $dispatcher -FilePath $fileUri
-            } else {
-                Start-Process -FilePath $fileUri
-            }
+            Start-Process -FilePath $fileUri
         }
     }
 } else {

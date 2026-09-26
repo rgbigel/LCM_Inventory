@@ -9,9 +9,9 @@ Module: ElevationPolicy
 Purpose: Defines mandatory elevation, runner delegation, and privilege interception rules across all repositories.  
 Path: .agents/rules/ElevationPolicy.md  
 Authors: Rolf, Workspace_AI Governance  
-Version: 7.6.0  
+Version: 8.6.0  
 Status: Authoritative Invariant Rule  
-Date: 2026-09-24  
+Date: 2026-09-26  
 
 ---
 
@@ -81,3 +81,4 @@ Before executing any tool, script, or shorthand command, the AI agent or CLI lau
      pwsh .lcm/tools/internal/Invoke-PrivilegedTool.ps1 -Tool <ToolName> [-Arguments <Args>] [-NoExit]
      ```
    - **Automated Dispatch Pipeline**: `Invoke-PrivilegedTool.ps1` and generated `.cmd` trampolines inspect the Session 1 Desktop Daemon on port 9876 and dispatch via `POST /execute` (`{ "command": "...", "elevated": true, "noExit": true }`), falling back to `Invoke-InteractiveDesktop.ps1 -Elevated` if the daemon is offline. Console windows launched via elevation `MUST` include `-NoExit` / `/k` per `RULE-ELEV-005`.
+

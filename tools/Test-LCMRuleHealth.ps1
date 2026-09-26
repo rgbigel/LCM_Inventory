@@ -48,13 +48,12 @@ if ($Help) {
 }
 
 $canonicalRulesCandidates = @(
-    (Join-Path $WorkspaceRoot 'Workspace_Inventory\.agents\rules'),
-    (Join-Path $WorkspaceRoot '.lcm\.agents\rules'),
+    (Join-Path $WorkspaceRoot 'Workspace_AI\.agents\rules'),
     (Join-Path $WorkspaceRoot '.agents\rules')
 )
 $canonicalRulesDir = $canonicalRulesCandidates | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
 if (-not $canonicalRulesDir) {
-    $canonicalRulesDir = Join-Path $WorkspaceRoot '.lcm\.agents\rules'
+    $canonicalRulesDir = Join-Path $WorkspaceRoot 'Workspace_AI\.agents\rules'
 }
 
 # Read global LCM baseline
@@ -89,7 +88,7 @@ foreach ($dir in $childDirs) {
     $isJunction = $false
     $duplicateCount = 0
     
-    if ($repoName -eq 'Workspace_Inventory' -and (Test-Path -LiteralPath $agentRulesPath)) {
+    if ($repoName -eq 'Workspace_AI' -and (Test-Path -LiteralPath $agentRulesPath)) {
         $files = @(Get-ChildItem -Path $agentRulesPath -File -Recurse -ErrorAction SilentlyContinue)
         if ($files.Count -gt 0) {
             $isJunction = $true
@@ -134,7 +133,13 @@ foreach ($dir in $childDirs) {
     
     # 2. Inspect Legacy Residue
     $copilotRulesPath = Join-Path $repoPath '.copilot\Rules'
-    $hasLegacyResidue = (Test-Path -LiteralPath $copilotRulesPath)
+    $hasLegacyResidue = $false
+    if (Test-Path -LiteralPath $copilotRulesPath) {
+        $cItem = Get-Item -LiteralPath $copilotRulesPath -Force
+        if (-not ($cItem.LinkType -eq 'Junction' -or $cItem.Attributes.HasFlag([System.IO.FileAttributes]::ReparsePoint))) {
+            $hasLegacyResidue = $true
+        }
+    }
     
     # 3. Inspect .lcm/config.json
     $cfgPath = Join-Path $repoPath '.lcm\config.json'

@@ -1,4 +1,4 @@
-﻿---
+---
 name: JsonRules
 description: Authoritative rules for JSON data serialization, schemas, encoding, and formatting.
 globs: "*.json"
@@ -9,9 +9,9 @@ Module: JsonRules
 Purpose: Authoritative rules for JSON normalization, schema referencing, encoding, and indentation.  
 Path: .agents/rules/JsonRules.md  
 Authors: Rolf  
-Version: 7.0.0  
+Version: 8.0.0  
 Status: Authoritative Invariant Rule  
-Date: 2026-08-29  
+Date: 2026-09-26  
 
 ---
 
@@ -24,4 +24,5 @@ Date: 2026-08-29
 - **schema-declaration**: JSON data files should include a `$schema` property referencing a valid draft schema when applicable.
 - **ascii-default**: ASCII recommended for keys and identifiers; UTF-8 strings permitted for localized values.
 - **deterministic-output**: Predictable, key-ordered serialization (`[ordered]@{ ... }`).
+
 

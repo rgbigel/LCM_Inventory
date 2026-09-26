@@ -6,12 +6,12 @@ globs: "*.ps1,*.psm1,*.psd1"
 # File: PowerShellStandardsPolicy.md
 
 Module: PowerShellStandardsPolicy  
-Purpose: Defines mandatory PowerShell standards for strict mode resilience, verb compliance, string interpolation, pipeline hygiene, and testing across all repositories.  
+Purpose: Defines mandatory PowerShell 7 (pwsh) standards for strict mode resilience, verb compliance, string interpolation, intermediate code execution, and pipeline hygiene.  
 Path: .agents/rules/PowerShellStandardsPolicy.md  
 Authors: Rolf, Workspace_AI Governance  
-Version: 7.1.0  
+Version: 8.6.0  
 Status: Authoritative Policy  
-Date: 2026-09-03  
+Date: 2026-09-26  
 
 ---
 
@@ -234,4 +234,52 @@ The bare syntax `"$var:"` inside double-quoted strings is **strictly prohibited*
   Write-Host "Drive: $driveLetter:\\"               # ParserError — $driveLetter: treated as drive provider
   Write-Host "Value: $obj.Property"                 # Silent failure — expands $obj then appends literal '.Property'
   ```
+
+---
+
+### RULE-PS-016: Single-Quoted Here-String Invariant for Inline & Intermediate Code
+When an AI agent or automated script invokes PowerShell commands via `pwsh -Command` (intermediate code execution in chat or orchestration), multi-line script blocks, path-bearing commands, and nested string interpolations `MUST` be enclosed in **single-quoted here-strings** (`@' ... '@`).
+- **Rationale**: Double-quoted command strings unescape outer quotes and mangle backslashes (`\`) prematurely during CLI argument parsing, triggering fatal `ParserError` or `ParameterBindingException` (`A positional parameter cannot be found that accepts argument...`).
+- **Mandatory Invariant**:
+  ```powershell
+  pwsh -NoProfile -Command @'
+    $target = 'D:\Git_Repositories'
+    Write-Host "Target: $target"
+  '@
+  ```
+- **Forbidden**: Passing multi-line or path-heavy scripts via double-quoted strings (`pwsh -Command "..."`).
+
+---
+
+### RULE-PS-017: Lock-Free Concurrency & FileShare Invariant
+When inspecting, reading, or hashing files in active, synchronized, or cloud-mirrored directories (such as `D:\GDrive\`, `.gemini\`, or live daemon roots), file handles `MUST NOT` be opened with exclusive locks (`FileShare.None`).
+- **Mandatory Read Pattern**: Employ explicit `[System.IO.FileStream]` with `[System.IO.FileShare]::ReadWrite` or non-exclusive readers:
+  ```powershell
+  $fs = [System.IO.FileStream]::new($file, [System.IO.FileMode]::Open, [System.IO.FileAccess]::Read, [System.IO.FileShare]::ReadWrite)
+  try {
+      $hashBytes = $sha256.ComputeHash($fs)
+  } finally {
+      $fs.Dispose()
+  }
+  ```
+- **Mandatory Write Pattern**: Writes to shared or synced paths `MUST` use atomic temporary file staging (`.tmp` $\rightarrow$ `[System.IO.File]::Move($tmp, $dest, $true)`) wrapped in an exponential backoff retry loop (minimum 3 attempts).
+
+---
+
+### RULE-PS-018: Reparse Point & Link Shell Extension (LSE) Safe Deletion Invariant
+NTFS directory junctions and symbolic links represent discrete filesystem reparse pointers.
+- **Mandatory Invariant**: Deleting a junction or link `MUST NEVER` invoke naive recursive deletion (`Remove-Item -Recurse -Force`) without reparse verification, as some PowerShell engines traverse into the junction and delete physical target files.
+- **Safe Deletion**:
+  1. Inspect the reparse attribute: `$item.Attributes -band [System.IO.FileAttributes]::ReparsePoint`.
+  2. Call `.Delete()` directly on the filesystem item: `(Get-Item -LiteralPath $path -Force).Delete()`.
+  3. Or delegate to Windows shell / Link Shell Extension (LSE) tools or `cmd /c rmdir $path`.
+
+---
+
+### RULE-PS-019: Universal Scope Invariant (Script & Intermediate Code Parity)
+The PowerShell standards codified in this policy (`RULE-PS-001` through `RULE-PS-018`) apply with **equal force to both permanent repository scripts (`*.ps1`, `*.psm1`) and ad-hoc intermediate command blocks (`pwsh -Command`)**.
+- The AI agent `MUST NOT` relax coding hygiene, error handling, strict typing, or parameter safety when generating inline or temporary execution blocks.
+- **Runtime Host Mandate**: The workspace engine is **PowerShell 7 (`pwsh`) exclusively**. Invoking legacy `powershell.exe` (Windows PowerShell 5.1) is strictly prohibited. Modern PS7 features (`||`, `&&`, ternary `? :`, null-coalescing `??`) are fully authorized and preferred.
+
+
 

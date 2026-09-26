@@ -9,9 +9,9 @@ Module: MethodEfficiencyPolicy
 Purpose: Defines auto-acceptance, zero-test-trigger invariants, and method efficiency rules for generated inventory telemetry, logs, DOIT mode execution velocity, and tool discovery.  
 Path: .agents/rules/MethodEfficiencyPolicy.md  
 Authors: Rolf, Workspace_AI Engine  
-Version: 7.6.0  
+Version: 8.6.0  
 Status: Authoritative Invariant Rule  
-Date: 2026-09-24  
+Date: 2026-09-26  
 
 ---
 
@@ -88,6 +88,7 @@ Reserved for future use. See RULE-EFF-004 for current agent execution policy.
 - **Search Enforcement (RULE-EFF-007)**: All agents and tooling must route file-system searches through `Search-Everything.ps1` or the Everything HTTP API; `rg.exe` is the mandatory content-search tool.
 - **Tool Discovery Enforcement (RULE-EFF-008)**: `tool_catalog.json` is the first-query target for all tool and command discovery; broad unindexed filesystem scans are prohibited.
 - **Path Safety Enforcement (RULE-ENV-003)**: All path constructions must be grounded via `$PSScriptRoot`, registered trampolines, or explicit pre-flight resolution; speculative traversal is prohibited.
+
 
 
 

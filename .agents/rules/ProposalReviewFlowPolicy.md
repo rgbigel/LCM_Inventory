@@ -9,9 +9,9 @@ Module: ProposalReviewFlowPolicy
 Purpose: Enforces ticket-first proposals, batch commands, Beyond Compare 5 review gates, granularity controls, and Workspace_Inventory dual-commit synchronization.  
 Path: .agents/rules/ProposalReviewFlowPolicy.md  
 Authors: Rolf, Workspace_AI Governance  
-Version: 7.6.0  
+Version: 8.6.0  
 Status: Authoritative Policy  
-Date: 2026-09-20  
+Date: 2026-09-26  
 
 ---
 
@@ -42,7 +42,7 @@ The review frequency is governed by `review_granularity` in `Workspace_Inventory
 
 ### RULE-LCM-004: Visual Diff Review & Exemption Scope
 - **Governed Repositories & Root Container**: Every governed repository and the Root Container (`D:\Git_Repositories`) `MUST` undergo visual diff review via `Invoke-BeyondCompareReview.ps1 <RepoName>` before commit.
-- **Dual-Session Junction Review**: For repositories containing NTFS directory junctions (e.g. `.agents` pointing to `.lcm\.agents`, or `.agents\rules` pointing to `.lcm\.agents\rules`), `Invoke-BeyondCompareReview.ps1` `MUST` automatically dispatch a second Beyond Compare review session targeting the live junction destination on the right pane per `RULE-REV-008`.
+- **Dual-Session Junction Review**: For repositories containing NTFS directory junctions (e.g. `.agents` pointing to `Workspace_AI\.agents`, or `.agents\rules` pointing to `Workspace_AI\.agents\rules`), `Invoke-BeyondCompareReview.ps1` `MUST` automatically dispatch a second Beyond Compare review session targeting the live junction destination on the right pane per `RULE-REV-008`.
 - **Privileged Subsystem Data Exemption vs. Tool Scrutiny**:
   - **Dynamic Configuration & Ledger Data Exemption (`RULE-EFF-001`)**: Ledger data, review staging receipts, baseline manifests, telemetry logs, and scratch generation outputs located in `Workspace_Inventory` (`data/`, `logs/`, `scratch/`) are auto-accepted mechanical evidence and exempt from visual diff review stops.
   - **Executable Tools & Documentation Scrutiny**: All permanent scripts, PowerShell modules, test suites, and architectural documentation located in `Workspace_Inventory` (`tools/`, `modules/`, `docs/`, `tests/`, `Cmd/`) are first-class governed LCM software assets and `MUST` undergo visual diff review via `Invoke-BeyondCompareReview.ps1 Workspace_Inventory` prior to commit.
@@ -198,4 +198,5 @@ The review frequency is governed by `review_granularity` in `Workspace_Inventory
      - **Mode 1 (Live Disk)**: If the bundle directory exists on disk (`Test-Path`), read content directly from the working tree.
      - **Mode 2 (Git Object Extraction)**: If the local directory has been purged, extract document content directly from the local repository Git object store using `git -C <RepoPath> show "<commit_sha>:<bundle_dir>/<file>"`.
      - **Mode 3 (Legacy Fallback)**: For pre-CRP-162 historic proposals, fall back to flat `plan_path` and `walkthrough_path` targets.
+
 

@@ -9,9 +9,9 @@ Module: DocumentationStandardsPolicy
 Purpose: Defines mandatory tripartite repository documentation standards, audience scoping, and DOX metadata invariants across all governed repositories.  
 Path: .agents/rules/DocumentationStandardsPolicy.md  
 Authors: Rolf, Workspace_AI Governance  
-Version: 7.6.0  
+Version: 8.6.0  
 Status: Authoritative Policy  
-Date: 2026-09-20  
+Date: 2026-09-26  
 
 ---
 
@@ -132,3 +132,4 @@ For governed repositories that scale beyond single-purpose scripts into multi-ca
    - Repositories utilizing App slicing `MUST` maintain a zero-drift machine-readable catalog at `data/catalog/apps.json`, synchronized via AST scanning.
 7. **Inter-App Contract Governance (The "Glue")**:
    - Apps `MUST NOT` communicate via private internal functions or implicit global variables. All cross-App interactions `MUST` be governed by declared, registered Public Interface Contracts (Cmdlet Exports, JSON Schemas, REST DTOs, Event Broadcasts) cataloged in `data/catalog/contracts.json`.
+

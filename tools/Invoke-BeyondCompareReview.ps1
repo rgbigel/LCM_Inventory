@@ -117,7 +117,11 @@ function Update-BCReviewSession {
 
   try {
     $xml = [xml](Get-Content -LiteralPath $bcSessionsPath -Raw)
-    $itemsFolder = $xml.BCSessions.TSessionFolder.Items
+    # The actual saved named sessions reside under /BCSessions/TSessionFolder/Items/TSessionFolder/Items
+    $itemsFolder = $xml.SelectSingleNode('/BCSessions/TSessionFolder/Items/TSessionFolder/Items')
+    if (-not $itemsFolder) {
+      $itemsFolder = $xml.BCSessions.TSessionFolder.Items
+    }
 
     $sessionNode = $itemsFolder.SelectSingleNode("TDirCompareSession[@Value='$SessionName']")
     if (-not $sessionNode) {
@@ -198,7 +202,7 @@ function Update-BCReviewSession {
     & $setAttr $state 'SortCol' 'colModified'
 
     # Also ensure default TDirCompareSession template has FollowSymLinks = True
-    $defaultSession = $xml.SelectSingleNode('//TDirCompareSession[not(@Value)]')
+    $defaultSession = $xml.SelectSingleNode('/BCSessions/TSessionFolder/Items/TDirCompareSession[not(@Value) or @Value=""]')
     if ($defaultSession) {
       $defRules = $defaultSession.SelectSingleNode('Rules')
       if (-not $defRules) {
@@ -717,7 +721,7 @@ else {
   "Baseline ($commitSha)"
 }
 $title2 = "Current Live ($repoName)"
-$bcArgString = "`"$tempReviewRoot`" `"$repoPath`" `"/title1=$title1`" `"/title2=$title2`" `"/filters=$filterMask`""
+$bcArgString = "`"LCM_Review`" `"$tempReviewRoot`" `"$repoPath`" `"/title1=$title1`" `"/title2=$title2`" `"/filters=$filterMask`""
 
 $dispatcherCandidates = @(
   (Join-Path $workspaceRoot ".lcm\tools\internal\Invoke-InteractiveDesktop.ps1"),
@@ -737,7 +741,7 @@ if ($dispatcherPath) {
   & pwsh -File $dispatcherPath -FilePath $BeyondComparePath -ArgumentList $bcArgString | Out-Null
 }
 else {
-  Start-Process -FilePath $BeyondComparePath -ArgumentList @("`"$tempReviewRoot`"", "`"$repoPath`"", "`"/title1=$title1`"", "`"/title2=$title2`"", "`"/filters=$filterMask`"")
+  Start-Process -FilePath $BeyondComparePath -ArgumentList @("LCM_Review", "`"$tempReviewRoot`"", "`"$repoPath`"", "`"/title1=$title1`"", "`"/title2=$title2`"", "`"/filters=$filterMask`"")
 }
 
 # ------------------------------------------------------------------------------

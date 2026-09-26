@@ -9,9 +9,9 @@ Module: DisplayStandardsPolicy
 Purpose: Governs presentation standards, CSS design system tokens, sticky double-row header layouts, theme persistence, and interactive desktop dispatching across all LCM-generated HTML viewers and dashboards.  
 Path: .agents/rules/DisplayStandardsPolicy.md  
 Authors: Rolf, Workspace_AI Governance  
-Version: 7.5.1
+Version: 8.5.1
 Status: Authoritative Policy
-Date: 2026-09-19
+Date: 2026-09-26
 
 ---
 
@@ -65,3 +65,4 @@ To ensure a cohesive, professional, accessible, and high-performance user experi
 
 ### RULE-DSP-008: Interactive Desktop Dispatch Routing
 1. Any CLI script or utility that builds and displays an HTML viewer `MUST` invoke `Invoke-InteractiveDesktop.ps1` per `RULE-PS-011` to ensure reliable browser launching on interactive session 1.
+
