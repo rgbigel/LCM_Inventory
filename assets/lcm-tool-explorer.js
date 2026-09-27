@@ -1,10 +1,13 @@
 /**
- * LCM Tool Explorer Client Application (v4.0.0)
+ * LCM Tool Explorer Client Application (v8.0.0)
  * Modern dashboard controller supporting:
  * - Switched Short-Names default column with source-file toggle mode
  * - Unified 8-mode action dropdown (Run, Help, Run with parms, Code editor, Rename, Archive, Delete, Cleanup)
  * - Multi-choice Cleanup modal with live daemon artifact size queries
  * - Dual-field Rename modal (Source filename + Short-Name alias)
+ * - Granular Command Alias management with active tag removal and creation
+ * - Bulk Column Assignment and Pattern Replacement
+ * - Internal Audience visibility toggle
  * - AST dependency visualization
  * - Multi-tab sessionStorage isolation & broadcast sync
  */
@@ -13,18 +16,18 @@
     'use strict';
 
     const baselineData = window.__LCM_TOOLS_DATA__ || [];
-    const selfStems = ['show-toolsexplorer', 'show-toolexplorer', 'toolsexplorer', 'toolexplorer', 'show-tools', 'showtools'];
-    let toolsData = JSON.parse(JSON.stringify(baselineData)).filter(t => {
-        const tStem = (t.Name || '').replace(/\.[^/.]+$/, "").toLowerCase();
-        const tShort = (t.ShortName || '').toLowerCase();
-        return !selfStems.includes(tStem) && !selfStems.includes(tShort);
-    });
+    let toolsData = JSON.parse(JSON.stringify(baselineData));
     let activeRunningTool = null;
     let activeModalTool = null;
     let activeEditCell = null;
     let activeMenuTool = null;
     let activeCleanupTool = null;
     let activeRenameTool = null;
+    let modalAliases = [];
+    let isFilteringInternal = false;
+    let isShowToolsButtonOn = false;
+    let isManualShowToolsFilter = false;
+    let currentFilteredTools = [];
 
     const DAEMON_URL = 'http://127.0.0.1:9876';
 
@@ -141,6 +144,12 @@
                     }
                     if (matched) {
                         Object.assign(t, matched);
+                        if (matched.Group || matched.Subsystem || matched.Domain) {
+                            const gVal = matched.Subsystem || matched.Group || matched.Domain;
+                            t.Group = gVal;
+                            t.Domain = gVal;
+                            t.Subsystem = gVal;
+                        }
                         t._edited = true;
                     }
                 });
@@ -205,19 +214,24 @@
         if (btn) {
             if (isSourceMode) {
                 btn.classList.add('active');
-                btn.innerHTML = '📁 Mode: Source Files (Dev)';
+                btn.innerHTML = '<span style="font-size: 16px; line-height: 1;">📁</span> Mode: Code';
                 btn.style.borderColor = 'var(--accent)';
                 btn.style.background = 'rgba(88, 166, 255, 0.2)';
                 btn.style.color = '#79c0ff';
-                if (thName) thName.innerHTML = 'Source File (Dev Mode) <span class="sort-icon">⇅</span>';
+                if (thName) {
+                    thName.innerHTML = 'Source File <span class="sort-icon">⇅</span>';
+                }
             } else {
                 btn.classList.remove('active');
-                btn.innerHTML = '💬 Mode: Short-Names (Default)';
+                btn.innerHTML = '<span style="font-size: 16px; line-height: 1;">💬</span> Mode: Short';
                 btn.style.borderColor = '';
                 btn.style.background = '';
                 btn.style.color = '';
-                if (thName) thName.innerHTML = 'ToolName <span class="sort-icon">⇅</span>';
+                if (thName) {
+                    thName.innerHTML = 'Tool Name <span class="sort-icon">⇅</span>';
+                }
             }
+            autoAdjustColumnWidths();
         }
     }
 
@@ -229,13 +243,18 @@
         }
 
         tbody.innerHTML = data.map(t => {
-            // Determine master index in global toolsData array
+            // Static sequence number assigned at compile time in Show-ToolsExplorer.ps1 (never dynamically browser-generated)
             const masterIdx = toolsData.findIndex(item => (item.RelativePath && t.RelativePath) ? (item.RelativePath === t.RelativePath) : (item.Name === t.Name));
             const safeIdx = masterIdx >= 0 ? masterIdx : 0;
-            const counter = String(safeIdx + 1).padStart(3, '0');
+            const counter = String(t.Index != null ? t.Index : (safeIdx + 1)).padStart(3, '0');
 
             const ext = getExtClass(t.Name);
-            const audBadge = t.Audience === 'User' ? '<span class="badge badge-user">User</span>' : '<span class="badge badge-dev">Dev</span>';
+            let audBadge = '<span class="badge badge-dev">Dev</span>';
+            if (t.Audience === 'User') {
+                audBadge = '<span class="badge badge-user">User</span>';
+            } else if (t.Audience === 'Internal') {
+                audBadge = '<span class="badge badge-internal" style="background: #8957e5; color: #fff; font-weight: 600;">Internal</span>';
+            }
             const admBadge = t.Admin ? '<span class="badge badge-admin-yes" title="Admin elevation required">🛡️ Admin</span>' : '<span class="badge badge-admin-no" title="Standard user execution">👤 User</span>';
             const editedMarker = t._edited ? '<span class="edited-tag" title="Cell overridden client-side">✏️</span>' : '';
 
@@ -249,16 +268,16 @@
             const allShortNames = getShortNamesForTool(t);
             if (isSourceMode) {
                 const totalShortNames = allShortNames.length;
-                shortNamesListHtml = '<div class="shortnames-container">' +
+                shortNamesListHtml = '<div class="shortnames-container" style="display: flex; flex-direction: column; gap: 2px; margin-top: 4px;">' +
                     allShortNames.map(sn => {
                         const safeSn = escapeHtml(sn);
                         if (totalShortNames > 1) {
-                            return '<span class="shortname-pill active-alias" title="Short-name launcher: ' + safeSn + '.cmd">' +
+                            return '<span class="shortname-pill active-alias" style="display: inline-flex; align-items: center; justify-content: space-between; max-width: fit-content;" title="Short-name launcher: ' + safeSn + '.cmd">' +
                                 '💬 ' + safeSn +
                                 '<button type="button" class="btn-delete-shortname" onclick="window.LcmTools.deleteSpecificShortName(' + safeIdx + ', \'' + safeSn + '\', event)" title="Delete short-name launcher ' + safeSn + '.cmd (preserves underlying script)">✕</button>' +
                                 '</span>';
                         } else {
-                            return '<span class="shortname-pill protected-alias" title="Protected sole launcher">' +
+                            return '<span class="shortname-pill protected-alias" style="display: inline-flex; align-items: center; max-width: fit-content;" title="Protected sole launcher">' +
                                 '💬 ' + safeSn +
                                 '<span style="margin-left: 4px; font-size: 10px;" title="Disallowed: Sole remaining launcher for this script (Last-Alias Invariant)">🔒</span>' +
                                 '</span>';
@@ -266,13 +285,13 @@
                     }).join('') +
                     '</div>';
             } else {
-                // In Short-Names mode, display active aliases (e.g. BCR) below the primary ShortName
+                // In Short-Names mode, display active aliases (e.g. BCR) below primary ShortName stacked vertically
                 const aliases = allShortNames.filter(sn => sn.toLowerCase() !== displayName.toLowerCase());
                 if (aliases.length > 0) {
-                    shortNamesListHtml = '<div class="shortnames-container">' +
+                    shortNamesListHtml = '<div class="shortnames-container" style="display: flex; flex-direction: column; gap: 2px; margin-top: 3px;">' +
                         aliases.map(sn => {
                             const safeSn = escapeHtml(sn);
-                            return '<span class="shortname-pill active-alias" title="Alias launcher: ' + safeSn + '.cmd">' +
+                            return '<span class="shortname-pill active-alias" style="display: inline-block; max-width: fit-content;" title="Alias launcher: ' + safeSn + '.cmd">' +
                                 '💬 ' + safeSn +
                                 '</span>';
                         }).join('') +
@@ -321,7 +340,7 @@
                     '</div>' +
                 '</td>' +
                 '<td style="text-align: center;">' + actionButtonsHtml + '</td>' +
-                '<td class="cell-editable" onclick="window.LcmTools.openCellEditor(' + safeIdx + ', \'Group\', event)" title="Click to edit Subsystem / Group"><span class="badge badge-group">' + (t.Domain ? t.Domain : t.Group) + '</span></td>' +
+                '<td class="cell-editable" onclick="window.LcmTools.openCellEditor(' + safeIdx + ', \'Group\', event)" title="Click to edit Group"><span class="badge badge-group">' + (t.Group || t.Subsystem || t.Domain || '') + '</span></td>' +
                 '<td class="cell-editable" onclick="window.LcmTools.openCellEditor(' + safeIdx + ', \'Role\', event)"><span class="badge badge-role">' + t.Role + '</span></td>' +
                 '<td class="col-desc cell-editable" onclick="window.LcmTools.openCellEditor(' + safeIdx + ', \'Description\', event)" title="Click to edit Description" style="cursor: pointer;">' + (t.Description || '') + '</td>' +
                 '<td class="cell-editable" onclick="window.LcmTools.openCellEditor(' + safeIdx + ', \'Category\', event)" style="color: #c9d1d9;">' + (t.Category || 'General') + '</td>' +
@@ -331,7 +350,76 @@
                 '<td style="text-align: center;">' + noExitBadge + '</td>' +
                 '</tr>';
         }).join('');
+
+        autoAdjustColumnWidths();
     }
+
+    function autoAdjustColumnWidths() {
+        const container = document.querySelector('.table-container');
+        const containerW = container ? container.clientWidth : window.innerWidth;
+        const isNarrow = containerW < 1400;
+
+        // Measure Tool Name column
+        const thToolName = document.getElementById('th-tool-name');
+        if (thToolName) {
+            const toolLinks = document.querySelectorAll('.tool-name-link');
+            let maxLen = 0;
+            toolLinks.forEach((el, idx) => {
+                if (idx < 60) {
+                    const textLen = el.textContent.trim().length;
+                    if (textLen > maxLen) maxLen = textLen;
+                }
+            });
+            // Calculate width based on mode and longest visible item, auto-adjusting for viewport width
+            let calculatedWidth;
+            if (isSourceMode) {
+                const base = Math.round(maxLen * 8.0 + 30);
+                calculatedWidth = isNarrow 
+                    ? Math.max(190, Math.min(320, base))
+                    : Math.max(210, Math.min(400, base));
+            } else {
+                const base = Math.round(maxLen * 7.5 + 24);
+                calculatedWidth = isNarrow 
+                    ? Math.max(140, Math.min(240, base))
+                    : Math.max(150, Math.min(280, base));
+            }
+            thToolName.style.width = calculatedWidth + 'px';
+            thToolName.style.minWidth = calculatedWidth + 'px';
+            thToolName.style.maxWidth = calculatedWidth + 'px';
+        }
+
+        // Measure Dropdown columns based on active selected value
+        const adjustDropdownCol = (thId, selectId, baseWidth, maxAllowed) => {
+            const th = document.getElementById(thId);
+            const sel = document.getElementById(selectId);
+            if (!th || !sel) return;
+            const selText = sel.options && sel.selectedIndex >= 0 ? sel.options[sel.selectedIndex].text : '';
+            if (!sel.value || sel.value === 'All') {
+                th.style.width = baseWidth + 'px';
+                th.style.minWidth = baseWidth + 'px';
+                th.style.maxWidth = baseWidth + 'px';
+            } else {
+                const needed = Math.max(baseWidth, Math.min(maxAllowed, Math.round(selText.length * 8.0 + 26)));
+                th.style.width = needed + 'px';
+                th.style.minWidth = needed + 'px';
+                th.style.maxWidth = needed + 'px';
+            }
+        };
+
+        adjustDropdownCol('th-col-group', 'group-select', 75, 190);
+        adjustDropdownCol('th-col-role', 'role-select', 70, 160);
+        adjustDropdownCol('th-col-category', 'category-select', 90, 200);
+        adjustDropdownCol('th-col-audience', 'audience-select', 80, 140);
+    }
+
+    // Dynamic Live Resize Listener: auto-shrinks and auto-widens columns on window resize
+    let resizeDebounceTimer = null;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeDebounceTimer);
+        resizeDebounceTimer = setTimeout(() => {
+            autoAdjustColumnWidths();
+        }, 50);
+    });
 
     // -------------------------------------------------------------------------
     // Action Dropdown Menu Logic
@@ -436,8 +524,6 @@
         const modal = document.getElementById('rename-modal-overlay');
         const inputSrc = document.getElementById('rename-input-source');
         const inputShort = document.getElementById('rename-input-short');
-        const chkDelete = document.getElementById('rename-chk-delete-short');
-        const countInfo = document.getElementById('rename-alias-count-info');
         
         if (inputSrc) {
             inputSrc.value = activeRenameTool.Name;
@@ -446,34 +532,53 @@
         if (inputShort) {
             inputShort.value = activeRenameTool.ShortName || activeRenameTool.Name.replace(/\.[^/.]+$/, "");
         }
-        if (chkDelete) {
-            chkDelete.checked = false;
-        }
-        toggleDeleteShortName(false);
         
-        if (countInfo) countInfo.innerText = 'Scanning matching launchers in .lcm/Cmd/...';
-        activeRenameTool._matchingAliases = [];
-
-        // Query active trampolines targeting this script via daemon or catalog
-        fetch(DAEMON_URL + '/query_short_names', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ targetScript: activeRenameTool.Name })
-        }).then(r => r.json()).then(data => {
-            if (data.shortNames && data.shortNames.length > 0) {
-                activeRenameTool._matchingAliases = data.shortNames;
-            } else {
-                const localMatches = toolsData.filter(t => t.Name.toLowerCase() === activeRenameTool.Name.toLowerCase()).map(t => t.ShortName);
-                activeRenameTool._matchingAliases = [...new Set(localMatches)];
+        modalAliases = Array.isArray(activeRenameTool.Aliases) ? [...activeRenameTool.Aliases] : [];
+        const existingShorts = getShortNamesForTool(activeRenameTool);
+        const primary = (inputShort ? inputShort.value : '').toLowerCase();
+        existingShorts.forEach(sn => {
+            if (sn.toLowerCase() !== primary && !modalAliases.some(a => a.toLowerCase() === sn.toLowerCase())) {
+                modalAliases.push(sn);
             }
-            updateDeleteShortNameUI();
-        }).catch(() => {
-            const localMatches = toolsData.filter(t => t.Name.toLowerCase() === activeRenameTool.Name.toLowerCase()).map(t => t.ShortName);
-            activeRenameTool._matchingAliases = [...new Set(localMatches)];
-            updateDeleteShortNameUI();
         });
+        renderModalAliasTags();
 
         if (modal) modal.style.display = 'flex';
+    }
+
+    function renderModalAliasTags() {
+        const container = document.getElementById('rename-aliases-tags');
+        if (!container) return;
+        if (modalAliases.length === 0) {
+            container.innerHTML = '<span style="font-size: 11px; color: var(--text-muted); font-style: italic;">No additional aliases configured.</span>';
+            return;
+        }
+        container.innerHTML = modalAliases.map((alias, i) => {
+            const safe = escapeHtml(alias);
+            return '<span class="shortname-pill active-alias" style="display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px;">' +
+                '💬 ' + safe +
+                '<button type="button" onclick="window.LcmTools.removeModalAlias(' + i + ')" style="background: none; border: none; color: #f85149; font-weight: bold; cursor: pointer; padding: 0 2px; font-size: 12px;" title="Remove alias ' + safe + '">×</button>' +
+                '</span>';
+        }).join('');
+    }
+
+    function addModalAlias() {
+        const input = document.getElementById('rename-new-alias-input');
+        if (!input) return;
+        const val = input.value.trim().replace(/\.cmd$/i, '');
+        if (!val) return;
+        if (modalAliases.some(a => a.toLowerCase() === val.toLowerCase())) {
+            alert('Alias already exists: ' + val);
+            return;
+        }
+        modalAliases.push(val);
+        input.value = '';
+        renderModalAliasTags();
+    }
+
+    function removeModalAlias(idx) {
+        modalAliases.splice(idx, 1);
+        renderModalAliasTags();
     }
 
     function updateDeleteShortNameUI() {
@@ -645,12 +750,6 @@
 
     function executeRename() {
         if (!activeRenameTool) return;
-        const chkDelete = document.getElementById('rename-chk-delete-short');
-        if (chkDelete && chkDelete.checked) {
-            executeDeleteShortName();
-            return;
-        }
-
         const newSrc = (document.getElementById('rename-input-source').value || '').trim();
         const newShort = (document.getElementById('rename-input-short').value || '').trim();
 
@@ -668,12 +767,15 @@
                 newName: newSrc,
                 oldShortName: activeRenameTool.ShortName,
                 newShortName: newShort,
-                relativePath: activeRenameTool.RelativePath
+                relativePath: activeRenameTool.RelativePath,
+                aliases: modalAliases
             })
         }).then(r => r.json()).then(data => {
             if (data.error) {
                 alert('Rename failed: ' + data.error);
             } else {
+                activeRenameTool.ShortName = newShort;
+                activeRenameTool.Aliases = modalAliases;
                 showToast('✓ Renamed to ' + newShort + ' (' + newSrc + ')');
                 closeRenameModal();
                 setTimeout(() => { window.location.reload(); }, 600);
@@ -977,6 +1079,10 @@
         sessionStorage.setItem('lcm_tools_noexit', noexitVal);
         sessionStorage.setItem('lcm_tools_category', catVal);
         sessionStorage.setItem('lcm_tools_audience', currentAudience);
+        sessionStorage.setItem('lcm_tools_sort_field', sortField);
+        sessionStorage.setItem('lcm_tools_sort_asc', sortAsc ? 'true' : 'false');
+        sessionStorage.setItem('lcm_tools_internal_filter', isFilteringInternal ? '1' : '0');
+        sessionStorage.setItem('lcm_tools_show_filter', isShowToolsButtonOn ? '1' : '0');
 
         const headerGrp = document.getElementById('header-subsystem-select');
         if (headerGrp && headerGrp.value !== groupVal && groupVal !== 'All' && groupVal !== '') {
@@ -986,11 +1092,32 @@
         }
 
         let filtered = toolsData.filter(t => {
+            const matchesIntern = (s) => typeof s === 'string' && s.trim().toLowerCase().startsWith('intern');
+            const isItemInternal = matchesIntern(t.Audience) || 
+                                   matchesIntern(t.Category) || 
+                                   matchesIntern(t.Role) || 
+                                   matchesIntern(t.Group) || 
+                                   matchesIntern(t.Domain);
+
+            // 1. Internal Suppression Rule:
+            // When isFilteringInternal is false (Int. button OFF), items with "Intern*"
+            // are suppressed unless explicitly requested via specific filter dropdowns.
+            if (isItemInternal && !isFilteringInternal && audVal !== 'Internal' && !matchesIntern(catVal) && !matchesIntern(roleVal) && !matchesIntern(groupVal)) {
+                return false;
+            }
+
+            // 2. Audience Filter Matching:
             let matchAud = true;
-            if (audVal !== 'All') {
-                matchAud = (t.Audience.toLowerCase() === audVal.toLowerCase()) || (audVal === 'Dev' && t.Audience === 'Developer');
-            } else if (currentAudience !== 'All') {
-                matchAud = (t.Audience.toLowerCase() === currentAudience.toLowerCase()) || (currentAudience === 'Dev' && t.Audience === 'Developer');
+            if (audVal === 'All') {
+                matchAud = true;
+            } else if (audVal === 'Internal') {
+                matchAud = isItemInternal || (t.Audience && t.Audience.toLowerCase() === 'internal');
+            } else if (audVal === 'Dev' || audVal === 'Developer') {
+                matchAud = (t.Audience === 'Developer' || t.Audience === 'Dev');
+            } else if (audVal === 'User') {
+                matchAud = (t.Audience && t.Audience.toLowerCase() === 'user');
+            } else {
+                matchAud = (t.Audience && t.Audience.toLowerCase() === audVal.toLowerCase());
             }
 
             const matchTool = (toolVal === 'All') || (t.Name === toolVal) || (t.ShortName === toolVal);
@@ -1006,7 +1133,7 @@
             const matchCat = (catVal === 'All') || (t.Category === catVal);
             const matchDesc = matchQuery(t.Description, descFilter);
             const matchSearch = matchRowSearch(t, search);
-            const matchShowFilter = !isFilteringShowTools || (
+            const matchShowFilter = !isManualShowToolsFilter || (
                 (t.Name && (t.Name.toLowerCase().startsWith('show-') || t.Name.toLowerCase().startsWith('show'))) ||
                 (t.ShortName && (t.ShortName.toLowerCase().startsWith('show-') || t.ShortName.toLowerCase().startsWith('show')))
             );
@@ -1016,8 +1143,8 @@
 
         filtered.sort((a, b) => {
             if (sortField === 'Index') {
-                const idxA = toolsData.findIndex(x => x.Name === a.Name);
-                const idxB = toolsData.findIndex(x => x.Name === b.Name);
+                const idxA = (a.Index != null) ? a.Index : toolsData.findIndex(x => x.Name === a.Name);
+                const idxB = (b.Index != null) ? b.Index : toolsData.findIndex(x => x.Name === b.Name);
                 return sortAsc ? (idxA - idxB) : (idxB - idxA);
             }
             const field = (!isSourceMode && sortField === 'Name') ? 'ShortName' : sortField;
@@ -1027,7 +1154,14 @@
         });
 
         updateSubsystemCard(groupVal);
+        currentFilteredTools = filtered;
         renderTable(filtered);
+
+        // Update Total / Selected Tools metric card display
+        const cardAllVal = document.getElementById('card-all-value');
+        if (cardAllVal) {
+            cardAllVal.textContent = toolsData.length + ' / ' + filtered.length;
+        }
     }
 
     function setAudienceTab(aud) {
@@ -1125,6 +1259,8 @@
         if (document.getElementById('noexit-select')) document.getElementById('noexit-select').value = 'All';
         if (document.getElementById('category-select')) document.getElementById('category-select').value = 'All';
         if (document.getElementById('desc-filter')) document.getElementById('desc-filter').value = '';
+        if (document.getElementById('header-subsystem-select')) document.getElementById('header-subsystem-select').value = 'All';
+        currentAudience = 'All';
         if (apply) applyFilters();
     }
 
@@ -1133,14 +1269,33 @@
         if (document.getElementById('search-input')) document.getElementById('search-input').value = '';
         isSourceMode = false;
         isFilteringShowTools = false;
+        isShowToolsButtonOn = false;
+        isManualShowToolsFilter = false;
+        isFilteringInternal = false;
+        currentAudience = 'All';
+
         const btnShow = document.getElementById('btn-show-tools-filter');
         if (btnShow) {
             btnShow.classList.remove('active');
             btnShow.style.background = '';
             btnShow.style.color = '';
+            btnShow.innerHTML = '<span style="font-size: 16px; line-height: 1;">📊</span> ShowTools';
         }
+
+        const btnInt = document.getElementById('btn-internal-filter');
+        if (btnInt) {
+            btnInt.classList.remove('active');
+            btnInt.style.background = '';
+            btnInt.style.color = '';
+            btnInt.innerHTML = '<span style="font-size: 16px; line-height: 1;">🔒</span> Intern';
+        }
+
+        const headerGrp = document.getElementById('header-subsystem-select');
+        if (headerGrp) headerGrp.value = 'All';
+
         const presetSelect = document.getElementById('filter-presets-select');
         if (presetSelect) presetSelect.value = '';
+
         updateViewModeUI();
         resetColumnFilters(false);
         document.querySelectorAll('.metric-card').forEach(c => c.classList.remove('active'));
@@ -1773,7 +1928,23 @@
         stored[targetTool.Name] = stored[targetTool.Name] || {};
         stored[targetTool.Name][activeEditCell.field] = parsedVal;
 
-        markToolPending(targetTool, 'edit', { [activeEditCell.field]: oldVal }, { [activeEditCell.field]: parsedVal });
+        if (activeEditCell.field === 'Group' || activeEditCell.field === 'Domain' || activeEditCell.field === 'Subsystem') {
+            stored[relKey].Group = parsedVal;
+            stored[relKey].Domain = parsedVal;
+            stored[relKey].Subsystem = parsedVal;
+            stored[targetTool.Name].Group = parsedVal;
+            stored[targetTool.Name].Domain = parsedVal;
+            stored[targetTool.Name].Subsystem = parsedVal;
+        }
+
+        const pendingOld = (activeEditCell.field === 'Group' || activeEditCell.field === 'Domain' || activeEditCell.field === 'Subsystem')
+            ? { Group: oldVal, Domain: targetTool.Domain, Subsystem: targetTool.Subsystem }
+            : { [activeEditCell.field]: oldVal };
+        const pendingNew = (activeEditCell.field === 'Group' || activeEditCell.field === 'Domain' || activeEditCell.field === 'Subsystem')
+            ? { Group: parsedVal, Domain: parsedVal, Subsystem: parsedVal }
+            : { [activeEditCell.field]: parsedVal };
+
+        markToolPending(targetTool, 'edit', pendingOld, pendingNew);
 
         localStorage.setItem('lcm_tools_overrides', JSON.stringify(stored));
 
@@ -1980,6 +2151,18 @@
                 Object.assign(storedOverrides[relKey], modInfo.newState);
                 storedOverrides[t.Name] = storedOverrides[t.Name] || {};
                 Object.assign(storedOverrides[t.Name], modInfo.newState);
+                if (modInfo.newState.Group || modInfo.newState.Subsystem || modInfo.newState.Domain) {
+                    const gVal = modInfo.newState.Subsystem || modInfo.newState.Group || modInfo.newState.Domain;
+                    storedOverrides[relKey].Group = gVal;
+                    storedOverrides[relKey].Domain = gVal;
+                    storedOverrides[relKey].Subsystem = gVal;
+                    storedOverrides[t.Name].Group = gVal;
+                    storedOverrides[t.Name].Domain = gVal;
+                    storedOverrides[t.Name].Subsystem = gVal;
+                    t.Group = gVal;
+                    t.Domain = gVal;
+                    t.Subsystem = gVal;
+                }
             }
             delete mods[t.Name];
             if (t.RelativePath) delete mods[t.RelativePath];
@@ -2087,19 +2270,17 @@
         }
     }
 
-    // Show-* Standard Displays Filter & Prioritization
-    let isFilteringShowTools = false;
-
-    function toggleShowFilter() {
-        isFilteringShowTools = !isFilteringShowTools;
+    // ShowTools & Internal Filters per CRP-182
+    function updateShowToolsButtonUI() {
         const btn = document.getElementById('btn-show-tools-filter');
         const presetSelect = document.getElementById('filter-presets-select');
         if (btn) {
-            if (isFilteringShowTools) {
+            btn.innerHTML = '<span style="font-size: 16px; line-height: 1;">📊</span> ShowTools';
+            if (isShowToolsButtonOn) {
                 btn.classList.add('active');
-                btn.style.background = 'var(--accent, #58a6ff)';
+                btn.style.background = '#238636';
                 btn.style.color = '#ffffff';
-                if (presetSelect) presetSelect.value = 'preset_show_tools';
+                if (presetSelect && isManualShowToolsFilter) presetSelect.value = 'preset_show_tools';
             } else {
                 btn.classList.remove('active');
                 btn.style.background = '';
@@ -2107,18 +2288,207 @@
                 if (presetSelect && presetSelect.value === 'preset_show_tools') presetSelect.value = '';
             }
         }
-        applyFilters();
-        showToast(isFilteringShowTools ? '📊 Filtered to ShowTools standard displays' : '↺ Restored all tools view');
     }
 
-    function prioritizeShowTools() {
-        toolsData.sort((a, b) => {
-            const aIsShow = a.Name.startsWith('Show-') || (a.ShortName && a.ShortName.startsWith('Show-'));
-            const bIsShow = b.Name.startsWith('Show-') || (b.ShortName && b.ShortName.startsWith('Show-'));
-            if (aIsShow && !bIsShow) return -1;
-            if (!aIsShow && bIsShow) return 1;
-            return 0;
+    function toggleShowFilter() {
+        if (isShowToolsButtonOn) {
+            // User toggled it OFF
+            isShowToolsButtonOn = false;
+            isManualShowToolsFilter = false;
+            sessionStorage.setItem('lcm_tools_show_filter', '0');
+            sessionStorage.setItem('lcm_tools_manual_show', '0');
+            updateShowToolsButtonUI();
+            applyFilters();
+            showToast('↺ Restored all tools view');
+        } else {
+            // User toggled it ON manually
+            isShowToolsButtonOn = true;
+            isManualShowToolsFilter = true;
+            sessionStorage.setItem('lcm_tools_show_filter', '1');
+            sessionStorage.setItem('lcm_tools_manual_show', '1');
+            updateShowToolsButtonUI();
+            applyFilters();
+            showToast('📊 Filtered to ShowTools standard displays');
+        }
+    }
+
+    function toggleInternalFilter() {
+        isFilteringInternal = !isFilteringInternal;
+        sessionStorage.setItem('lcm_tools_internal_filter', isFilteringInternal ? '1' : '0');
+        updateInternalFilterUI();
+        applyFilters();
+        showToast(isFilteringInternal ? '🔒 Internal tools included in view' : '🔓 Internal tools excluded');
+    }
+
+    function updateInternalFilterUI() {
+        const btn = document.getElementById('btn-internal-filter');
+        if (btn) {
+            btn.innerHTML = '<span style="font-size: 16px; line-height: 1;">🔒</span> Intern';
+            if (isFilteringInternal) {
+                btn.classList.add('active');
+                btn.style.background = '#8957e5';
+                btn.style.color = '#ffffff';
+                btn.title = 'Internal tools are currently included in view. Click to exclude.';
+            } else {
+                btn.classList.remove('active');
+                btn.style.background = '';
+                btn.style.color = '';
+                btn.title = 'Internal tools are excluded. Click to include Internal tools.';
+            }
+        }
+    }
+
+    // Mass Column Edit / Bulk Assignment Modal Functions
+    function openMassEditModal() {
+        const modal = document.getElementById('mass-edit-modal-overlay');
+        const countEl = document.getElementById('mass-edit-count');
+        if (!modal) return;
+        if (!currentFilteredTools || currentFilteredTools.length === 0) {
+            showToast('⚠️ No tools match current filter.');
+            return;
+        }
+        if (countEl) countEl.innerText = currentFilteredTools.length;
+        updateMassEditOptions();
+        toggleMassEditMode();
+        modal.style.display = 'flex';
+    }
+
+    function closeMassEditModal(e) {
+        if (!e || e === true || e.target.id === 'mass-edit-modal-overlay' || e.target.classList.contains('modal-close') || e.target.classList.contains('btn-reset')) {
+            const modal = document.getElementById('mass-edit-modal-overlay');
+            if (modal) modal.style.display = 'none';
+        }
+    }
+
+    function toggleMassEditMode() {
+        const mode = document.querySelector('input[name="mass-edit-mode"]:checked')?.value || 'set';
+        const setCont = document.getElementById('mass-edit-set-container');
+        const repCont = document.getElementById('mass-edit-replace-container');
+        if (setCont) setCont.style.display = mode === 'set' ? 'block' : 'none';
+        if (repCont) repCont.style.display = mode === 'replace' ? 'block' : 'none';
+    }
+
+    function updateMassEditOptions() {
+        const col = document.getElementById('mass-edit-col')?.value || 'Group';
+        const select = document.getElementById('mass-edit-val-select');
+        const customInput = document.getElementById('mass-edit-val-custom');
+        if (!select) return;
+        if (customInput) customInput.style.display = 'none';
+
+        let options = [];
+        if (col === 'Group') {
+            options = (window.__LCM_OPTIONS__ && window.__LCM_OPTIONS__.Subsystems) || Array.from(new Set(toolsData.map(t => t.Group || t.Domain || t.Subsystem).filter(Boolean)));
+        } else if (col === 'Category') {
+            options = (window.__LCM_OPTIONS__ && window.__LCM_OPTIONS__.Categories) || Array.from(new Set(toolsData.map(t => t.Category).filter(Boolean)));
+        } else if (col === 'Role') {
+            options = (window.__LCM_OPTIONS__ && window.__LCM_OPTIONS__.Roles) || Array.from(new Set(toolsData.map(t => t.Role).filter(Boolean)));
+        } else if (col === 'Audience') {
+            options = ['User', 'Developer', 'Internal'];
+        }
+        options = Array.from(new Set(options)).sort();
+
+        select.innerHTML = options.map(o => '<option value="' + escapeHtml(o) + '">' + escapeHtml(o) + '</option>').join('') +
+            '<option value="__CUSTOM__" style="color: #58a6ff; font-weight: 700;">+ Custom Value...</option>';
+    }
+
+    function handleMassEditSelectChange(sel) {
+        const customInput = document.getElementById('mass-edit-val-custom');
+        if (customInput) {
+            if (sel.value === '__CUSTOM__') {
+                customInput.style.display = 'block';
+                customInput.focus();
+            } else {
+                customInput.style.display = 'none';
+            }
+        }
+    }
+
+    function executeMassEdit() {
+        if (!currentFilteredTools || currentFilteredTools.length === 0) return;
+        const col = document.getElementById('mass-edit-col')?.value || 'Group';
+        const mode = document.querySelector('input[name="mass-edit-mode"]:checked')?.value || 'set';
+        let targetVal = '';
+
+        if (mode === 'set') {
+            const sel = document.getElementById('mass-edit-val-select');
+            const custom = document.getElementById('mass-edit-val-custom');
+            if (sel.value === '__CUSTOM__') {
+                targetVal = (custom.value || '').trim();
+            } else {
+                targetVal = sel.value;
+            }
+            if (!targetVal) {
+                alert('Please specify a value to set.');
+                return;
+            }
+        } else {
+            const findText = (document.getElementById('mass-edit-find')?.value || '').trim();
+            if (!findText) {
+                alert('Please enter a pattern to match.');
+                return;
+            }
+        }
+
+        let stored = {};
+        try { stored = JSON.parse(localStorage.getItem('lcm_tools_overrides') || '{}'); } catch(e) {}
+        let updatedCount = 0;
+
+        const findPattern = (document.getElementById('mass-edit-find')?.value || '').trim();
+        const repPattern = (document.getElementById('mass-edit-replace')?.value || '').trim();
+        let regex = null;
+        if (mode === 'replace') {
+            const escaped = findPattern.replace(/[.+^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*').replace(/\?/g, '.');
+            regex = new RegExp(escaped, 'i');
+        }
+
+        currentFilteredTools.forEach(t => {
+            let oldVal = t[col] || '';
+            let newVal = '';
+            if (mode === 'set') {
+                newVal = targetVal;
+            } else {
+                if (!regex.test(oldVal)) return;
+                newVal = oldVal.replace(regex, repPattern);
+            }
+
+            t[col] = newVal;
+            if (col === 'Group') {
+                t.Group = newVal;
+                t.Domain = newVal;
+                t.Subsystem = newVal;
+            }
+            t._edited = true;
+
+            const relKey = t.RelativePath || t.Name;
+            stored[relKey] = stored[relKey] || {};
+            stored[relKey][col] = newVal;
+            stored[t.Name] = stored[t.Name] || {};
+            stored[t.Name][col] = newVal;
+            if (col === 'Group') {
+                stored[relKey].Group = newVal;
+                stored[relKey].Domain = newVal;
+                stored[relKey].Subsystem = newVal;
+                stored[t.Name].Group = newVal;
+                stored[t.Name].Domain = newVal;
+                stored[t.Name].Subsystem = newVal;
+            }
+            updatedCount++;
         });
+
+        localStorage.setItem('lcm_tools_overrides', JSON.stringify(stored));
+        fetch(DAEMON_URL + '/sync_json', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                type: 'tool_catalog_overrides',
+                timestamp: new Date().toISOString(),
+                overrides: stored
+            })
+        }).catch(() => {});
+
+        closeMassEditModal(true);
+        applyFilters();
+        showToast('✓ Bulk updated ' + updatedCount + ' tool(s) [' + col + '].');
     }
 
     // Compatibility stubs
@@ -2409,11 +2779,59 @@
         loadAllShortNames();
         initPendingModifications();
 
-        // CRP-108 / Conflict 3: Initial viewport prioritization
-        // On a new session launch (no explicit query or persisted filter), prioritize Show-* standard display tools
-        const isFreshLaunch = !sessionStorage.getItem('lcm_tools_search') && !window.location.search;
-        if (isFreshLaunch) {
-            prioritizeShowTools();
+        // Check if session has already been initialized in this browser window/tab
+        const hasSession = sessionStorage.getItem('lcm_tools_session_active');
+        if (!hasSession) {
+            const initAud = (typeof currentAudience !== 'undefined' && currentAudience) ? currentAudience : 'All';
+            const initGrp = (typeof currentGroup !== 'undefined' && currentGroup) ? currentGroup : 'All';
+
+            sessionStorage.setItem('lcm_tools_session_active', '1');
+            sessionStorage.setItem('lcm_tools_show_filter', '0');
+            sessionStorage.setItem('lcm_tools_internal_filter', '0');
+            sessionStorage.setItem('lcm_tools_audience', initAud);
+            sessionStorage.setItem('lcm_tools_group', initGrp);
+            sessionStorage.setItem('lcm_tools_sort_field', 'ShortName');
+            sessionStorage.setItem('lcm_tools_sort_asc', 'true');
+            
+            isShowToolsButtonOn = false;
+            isManualShowToolsFilter = false;
+            isFilteringInternal = false;
+            currentAudience = initAud;
+            sortField = 'ShortName';
+            sortAsc = true;
+            isSourceMode = false;
+
+            resetColumnFilters(false);
+            if (document.getElementById('group-select')) document.getElementById('group-select').value = initGrp;
+            if (document.getElementById('audience-select')) document.getElementById('audience-select').value = initAud;
+            if (document.getElementById('header-subsystem-select')) document.getElementById('header-subsystem-select').value = initGrp;
+        } else {
+            // Window was refreshed: retain active filters without resetting
+            const savedShowFilter = sessionStorage.getItem('lcm_tools_show_filter');
+            isShowToolsButtonOn = savedShowFilter === '1';
+            isManualShowToolsFilter = sessionStorage.getItem('lcm_tools_manual_show') === '1';
+
+            const savedInternalFilter = sessionStorage.getItem('lcm_tools_internal_filter');
+            isFilteringInternal = savedInternalFilter === '1';
+
+            let savedAudience = sessionStorage.getItem('lcm_tools_audience') || currentAudience;
+            if (savedAudience) currentAudience = savedAudience;
+
+            let savedSortField = sessionStorage.getItem('lcm_tools_sort_field');
+            if (savedSortField) sortField = savedSortField;
+            let savedSortAsc = sessionStorage.getItem('lcm_tools_sort_asc');
+            if (savedSortAsc != null) sortAsc = savedSortAsc === 'true';
+
+            if (searchFilter && document.getElementById('search-input')) document.getElementById('search-input').value = searchFilter;
+            if (currentTool && currentTool !== 'All' && document.getElementById('tool-select')) document.getElementById('tool-select').value = currentTool;
+            if (currentEnv && currentEnv !== 'All' && document.getElementById('env-select')) document.getElementById('env-select').value = currentEnv;
+            if (currentGroup && currentGroup !== 'All' && document.getElementById('group-select')) document.getElementById('group-select').value = currentGroup;
+            if (currentRole && currentRole !== 'All' && document.getElementById('role-select')) document.getElementById('role-select').value = currentRole;
+            if (currentAdmin && currentAdmin !== 'All' && document.getElementById('admin-select')) document.getElementById('admin-select').value = currentAdmin;
+            let currentCat = sessionStorage.getItem('lcm_tools_category') || 'All';
+            if (currentCat && currentCat !== 'All' && document.getElementById('category-select')) document.getElementById('category-select').value = currentCat;
+            let currentNoExit = sessionStorage.getItem('lcm_tools_noexit') || 'All';
+            if (currentNoExit && currentNoExit !== 'All' && document.getElementById('noexit-select')) document.getElementById('noexit-select').value = currentNoExit;
         }
 
         // Initialize Print Preview Atom
@@ -2427,8 +2845,7 @@
                     return !isSourceMode ? 'Short-Names' : (currentAudience === 'All' ? 'All Tools' : currentAudience + ' Tools');
                 },
                 getFileName: () => {
-                    const modePart = !isSourceMode ? 'ShortNames' : (currentAudience === 'All' ? 'All' : currentAudience);
-                    return `${modePart}_Tools_Explorer_LCM.html`;
+                    return 'SHOW_TOOLS.html';
                 },
                 getDate: () => {
                     const stampEl = document.getElementById('catalog-timestamp');
@@ -2447,25 +2864,11 @@
             });
         }
 
-        // Initialize state on load from isolated sessionStorage
-        let initialAudience = currentAudience;
-        if (!initialAudience || initialAudience === '') initialAudience = 'All';
-        if (initialAudience === 'Dev') initialAudience = 'Developer';
-
-        if (searchFilter && document.getElementById('search-input')) document.getElementById('search-input').value = searchFilter;
-        if (currentTool && currentTool !== 'All' && document.getElementById('tool-select')) document.getElementById('tool-select').value = currentTool;
-        if (currentEnv && currentEnv !== 'All' && document.getElementById('env-select')) document.getElementById('env-select').value = currentEnv;
-        if (currentGroup && currentGroup !== 'All' && document.getElementById('group-select')) document.getElementById('group-select').value = currentGroup;
-        if (currentRole && currentRole !== 'All' && document.getElementById('role-select')) document.getElementById('role-select').value = currentRole;
-        if (currentAdmin && currentAdmin !== 'All' && document.getElementById('admin-select')) document.getElementById('admin-select').value = currentAdmin;
-        let currentCat = sessionStorage.getItem('lcm_tools_category') || 'All';
-        if (currentCat && currentCat !== 'All' && document.getElementById('category-select')) document.getElementById('category-select').value = currentCat;
-        let currentNoExit = sessionStorage.getItem('lcm_tools_noexit') || 'All';
-        if (currentNoExit && currentNoExit !== 'All' && document.getElementById('noexit-select')) document.getElementById('noexit-select').value = currentNoExit;
-        
         renderPresetOptions();
         updateViewModeUI();
-        setAudienceTab(initialAudience);
+        updateShowToolsButtonUI();
+        updateInternalFilterUI();
+        setAudienceTab(currentAudience || 'All');
 
         document.addEventListener('click', (e) => {
             if (!e.target.closest('#cell-editor') && !e.target.closest('.cell-editable')) {
@@ -2503,6 +2906,7 @@
         handleSelectFilterChange: handleSelectFilterChange,
         handleCellEditSelectChange: handleCellEditSelectChange,
         toggleShowFilter: toggleShowFilter,
+        toggleInternalFilter: toggleInternalFilter,
         copyCommand: copyCommand,
         openDetails: openDetails,
         closeModal: closeModal,
@@ -2520,8 +2924,14 @@
         openRenameModal: openRenameModal,
         closeRenameModal: closeRenameModal,
         executeRename: executeRename,
-        toggleDeleteShortName: toggleDeleteShortName,
-        executeDeleteShortName: executeDeleteShortName,
+        addModalAlias: addModalAlias,
+        removeModalAlias: removeModalAlias,
+        openMassEditModal: openMassEditModal,
+        closeMassEditModal: closeMassEditModal,
+        toggleMassEditMode: toggleMassEditMode,
+        updateMassEditOptions: updateMassEditOptions,
+        handleMassEditSelectChange: handleMassEditSelectChange,
+        executeMassEdit: executeMassEdit,
         deleteSpecificShortName: deleteSpecificShortName,
         loadAllShortNames: loadAllShortNames,
         openCleanupModal: openCleanupModal,

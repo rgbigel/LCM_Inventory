@@ -1558,6 +1558,7 @@
     const SIDECAR_CHANNEL = ("BroadcastChannel" in window) ? new BroadcastChannel("LCM_SIDECAR_CHANNEL") : null;
 
     document.addEventListener("DOMContentLoaded", () => {
+      window.name = "lcm_control_hub";
       // Ingest injected data if available
       if (typeof RAW_PROPOSALS !== "undefined" && RAW_PROPOSALS && RAW_PROPOSALS.proposals) {
         proposalsData = RAW_PROPOSALS;
@@ -1610,7 +1611,9 @@
           } else if (e.data.type === "THEME_CHANGED" && e.data.theme) {
             applyTheme(e.data.theme, false);
           } else if (e.data.type === "DATA_UPDATED") {
-            refreshHubData(false);
+            if (e.data.source !== "hub") {
+              refreshHubData(false, false);
+            }
           } else if (e.data.type === "SIDECAR_PING") {
             // Heartbeat Handshake: Send active proposal to keep Sidecar in sync
             const activeId = activeInspectorProposalId || (filteredProposals[0] ? filteredProposals[0].id : null);
@@ -1661,7 +1664,7 @@
     });
 
     // Live Ledger & Status Refresh Engine
-    async function refreshHubData(manual = true) {
+    async function refreshHubData(manual = true, broadcast = true) {
       const btn = document.getElementById("btn-refresh-hub");
       const icon = document.getElementById("refresh-hub-icon");
       const label = document.getElementById("refresh-hub-label");
@@ -1714,6 +1717,10 @@
           const openCount = (proposalsData.proposals.filter(p => p.state !== 'pushed' && p.state !== 'rejected' && p.state !== 'completed' && p.progress_state !== 'pushed' && p.progress_state !== 'completed')).length;
           showTicker(`✅ Refreshed ledger: ${proposalsData.proposals.length} total (${pushedCount} pushed, ${openCount} open)`);
           if (manual) appendConsole(`[SUCCESS] Refreshed CM ledger at ${nowTime} (${proposalsData.proposals.length} proposals: ${pushedCount} pushed, ${openCount} open).`, "msg-success");
+
+          if (broadcast && SIDECAR_CHANNEL) {
+            try { SIDECAR_CHANNEL.postMessage({ type: "DATA_UPDATED", source: "hub" }); } catch(e) {}
+          }
         } else {
           if (manual) {
             appendConsole("[RELOAD] Local file sandbox active - reloading compiled snapshot...", "msg-info");
@@ -2544,37 +2551,51 @@
       await executeConsoleCommand(rawCmd);
     }
 
-    async function executeHubCommand(cmdStr, label = "", affectedId = null) {
+    async function executeHubCommand(cmdStr, label = "", affectedId = null, timeoutMs = null) {
       const displayLabel = label || cmdStr;
       showToast(displayLabel);
 
       // 1. Immediate visual progress indicator in console feed & live ticker
       const progressLine = document.createElement("div");
       progressLine.className = "msg-info";
-      progressLine.innerHTML = `<span class="spin-icon">⏳</span> <em>Executing: ${displayLabel}...</em>`;
+      progressLine.innerHTML = `<span class="spin-icon">⏳</span> <em>Doing it -- please wait (0s): ${displayLabel}...</em>`;
       const stream = document.getElementById("consoleStream");
       if (stream) {
         stream.appendChild(progressLine);
         autoAdjustConsoleHeight();
         stream.scrollTop = stream.scrollHeight;
       }
-      updateLiveTicker(`⏳ Executing: ${displayLabel}...`, affectedId);
+
+      let elapsedSec = 0;
+      updateLiveTicker(`⏳ Doing it -- please wait (0s)... [${displayLabel}]`, affectedId);
+      const waitInterval = setInterval(() => {
+        elapsedSec++;
+        updateLiveTicker(`⏳ Doing it -- please wait (${elapsedSec}s)... [${displayLabel}]`, affectedId);
+        if (progressLine) {
+          progressLine.innerHTML = `<span class="spin-icon">⏳</span> <em>Doing it -- please wait (${elapsedSec}s): ${displayLabel}...</em>`;
+        }
+      }, 1000);
 
       if (affectedId) {
         const row = document.querySelector(`tr[data-id="${affectedId}"]`) || document.querySelector(`.row-chk[value="${affectedId}"]`)?.closest("tr");
         if (row) row.classList.add("row-processing");
       }
 
+      const reqBody = {
+        command: cmdStr,
+        sync: true,
+        elevated: false,
+        noExit: false
+      };
+      if (timeoutMs && timeoutMs > 0) {
+        reqBody.timeoutMs = timeoutMs;
+      }
+
       try {
         const res = await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            command: cmdStr,
-            sync: true,
-            elevated: false,
-            noExit: false
-          })
+          body: JSON.stringify(reqBody)
         });
 
         if (progressLine && progressLine.parentNode) {
@@ -2603,7 +2624,7 @@
         await refreshHubData(false);
 
         // 5. Deterministic target status reached notification
-        if (data.exitCode === 0) {
+        if (data.exitCode === 0 || data.status === "COMPLETED") {
           let statusReachedMsg = "";
           if (affectedId) {
             const updatedP = (proposalsData.proposals || []).find(x => x.id === affectedId);
@@ -2618,8 +2639,9 @@
           appendConsole(`✅ [STATUS REACHED] ${statusReachedMsg}`, "msg-success");
           updateLiveTicker(statusReachedMsg, affectedId);
         } else {
-          appendConsole(`❌ [ERROR] Command failed with exit code ${data.exitCode}.`, "msg-err");
-          updateLiveTicker(`[FAILED] Command exited with code ${data.exitCode}`, affectedId);
+          const codeDisplay = (data.exitCode !== null && data.exitCode !== undefined) ? data.exitCode : (data.status || "UNKNOWN");
+          appendConsole(`❌ [ERROR] Command failed with status/code ${codeDisplay}.`, "msg-err");
+          updateLiveTicker(`[FAILED] Command exited with code ${codeDisplay}`, affectedId);
         }
 
         return data;
@@ -2632,6 +2654,10 @@
         showToast(`⚠️ REST Daemon (Port ${DAEMON_PORT}) Unreachable: ${err.message}`);
         return { success: false, error: err.message };
       } finally {
+        clearInterval(waitInterval);
+        if (progressLine && progressLine.parentNode) {
+          progressLine.parentNode.removeChild(progressLine);
+        }
         if (affectedId) {
           const row = document.querySelector(`tr[data-id="${affectedId}"]`) || document.querySelector(`.row-chk[value="${affectedId}"]`)?.closest("tr");
           if (row) row.classList.remove("row-processing");
@@ -3311,12 +3337,23 @@
 
     function updateMetricCards() {
       const list = proposalsData.proposals || [];
-      const openCount = list.filter(p => p.progress_state !== "completed" && p.progress_state !== "pushed").length;
+      const openCount = list.filter(p =>
+        p.progress_state !== "completed" &&
+        p.progress_state !== "pushed" &&
+        p.progress_state !== "blocked" &&
+        p.progress_state !== "failed" &&
+        p.progress_state !== "rejected" &&
+        p.state !== "completed" &&
+        p.state !== "pushed" &&
+        p.state !== "blocked" &&
+        p.state !== "rejected" &&
+        p.state !== "deferred"
+      ).length;
       document.getElementById("valTotal").innerText = `${openCount} Open / ${list.length}`;
       document.getElementById("valBugs").innerText = list.filter(p => p.state === "bug").length;
       document.getElementById("valSuggested").innerText = list.filter(p => p.state === "suggested").length;
       document.getElementById("valReview").innerText = list.filter(p => p.progress_state === "verification").length;
-      document.getElementById("valCompleted").innerText = list.filter(p => p.state === "completed" || p.progress_state === "completed").length;
+      document.getElementById("valCompleted").innerText = list.filter(p => (p.state === "completed" || p.progress_state === "completed") && p.state !== "pushed" && p.progress_state !== "pushed").length;
       document.getElementById("valPushed").innerText = list.filter(p => p.state === "pushed" || p.progress_state === "pushed").length;
       document.getElementById("valDeferred").innerText = list.filter(p => p.state === "deferred").length;
     }
@@ -3525,7 +3562,11 @@
           p.state === "blocked" ||
           p.state === "rejected"
         )) return false;
-        if (progState === "completed" && (p.progress_state !== "completed" && p.state !== "completed" && p.progress_state !== "pushed" && p.state !== "pushed")) return false;
+        if (progState === "completed" && (
+          (p.progress_state !== "completed" && p.state !== "completed") ||
+          p.progress_state === "pushed" ||
+          p.state === "pushed"
+        )) return false;
         if (progState === "pushed" && (p.progress_state !== "pushed" && p.state !== "pushed")) return false;
         if (progState === "committed" && (p.progress_state !== "committed")) return false;
         if (progState !== "ALL" && progState !== "open" && progState !== "completed" && progState !== "pushed" && progState !== "committed" && p.progress_state !== progState) return false;
@@ -3675,8 +3716,25 @@
     }
 
     function updateSelectedCount() {
-      const count = document.querySelectorAll(".row-chk:checked").length;
-      document.getElementById("selectedCount").innerText = count;
+      const allRowChks = document.querySelectorAll(".row-chk");
+      const checkedRowChks = document.querySelectorAll(".row-chk:checked");
+      const count = checkedRowChks.length;
+      const countEl = document.getElementById("selectedCount");
+      if (countEl) countEl.innerText = count;
+
+      const chkAll = document.getElementById("chkSelectAll");
+      if (chkAll) {
+        if (allRowChks.length === 0 || count === 0) {
+          chkAll.checked = false;
+          chkAll.indeterminate = false;
+        } else if (count === allRowChks.length) {
+          chkAll.checked = true;
+          chkAll.indeterminate = false;
+        } else {
+          chkAll.checked = false;
+          chkAll.indeterminate = true;
+        }
+      }
     }
 
     function getSelectedCheckboxes() {
@@ -3757,6 +3815,7 @@
       currentSortColumn = 'id';
       currentSortDirection = 'desc';
       updateSortIcons();
+      toggleSelectAll(false);
       renderTable();
       showToast("All column filters and sorting reset to default (All items).");
     }
@@ -3838,7 +3897,7 @@
     // Launch Beyond Compare Review
     async function launchReviewForProposal(id, repoStr, crp) {
       const primaryRepo = (repoStr || "Workspace_Inventory").split("/")[0].trim();
-      const crpArg = crp && crp.startsWith("CRP-") ? `-CRP "${crp}"` : "";
+      const crpArg = crp ? `-CRP "${crp}"` : "";
       const cmd = `pwsh -File Workspace_Inventory/tools/Invoke-BeyondCompareReview.ps1 -RepositoryName "${primaryRepo}" ${crpArg}`;
 
       appendConsole(`Launching Beyond Compare review for #${id} (${primaryRepo})...`, "msg-info");
@@ -3876,10 +3935,17 @@
 
     // Gated Batch Complete
     async function executeBatchComplete() {
-      const chks = getSelectedCheckboxes();
+      let chks = getSelectedCheckboxes();
       if (chks.length === 0) {
-        alert("Please select one or more CRPs to COMPLETE.");
-        return;
+        const visibleChks = Array.from(document.querySelectorAll(".row-chk"));
+        if (visibleChks.length > 0 && visibleChks.length <= 15) {
+          toggleSelectAll(true);
+          chks = getSelectedCheckboxes();
+          showToast(`Auto-selected all ${chks.length} visible proposal(s).`);
+        } else {
+          showToast("⚠️ Please select one or more CRPs to COMPLETE.");
+          return;
+        }
       }
 
       const invalid = [];
@@ -3903,16 +3969,23 @@
         return;
       }
 
-      if (!confirm(`Are you sure you want to COMPLETE ${valid.length} CRP(s)?`)) return;
-
       for (const p of valid) {
         p.state = "completed";
         p.progress_state = "completed";
       }
 
+      toggleSelectAll(false);
+      const chkAll = document.getElementById("chkSelectAll");
+      if (chkAll) chkAll.checked = false;
+      updateSelectedCount();
+
       updateMetricCards();
       resetFilters();
-      await syncLedgerToServer();
+      const validIds = valid.map(v => v.id).join(',');
+      await executeHubCommand(
+        `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action complete -TargetExpression ${validIds}`,
+        `Batch Complete ${valid.length} CRP(s)`
+      );
       const logMsg = `Batch completed: ${valid.map(v => 'CRP-' + String(v.id).padStart(3, '0')).join(', ')}`;
       appendConsole(logMsg, "msg-info");
       showToast(`Batch Completed ${valid.length} CRP(s). View reset to SHOW ALL.`);
@@ -3944,13 +4017,95 @@
       updateLiveTicker(logMsg);
     }
 
+    function formatBatchReviewTag(proposals, defaultRepo) {
+      if (!proposals || proposals.length === 0) return `Review_${defaultRepo}`;
+      if (proposals.length === 1) {
+        const p = proposals[0];
+        return p.bundle_id || `CRP-${String(p.id).padStart(3, '0')}`;
+      }
+
+      // Extract numeric IDs from proposal objects
+      const ids = proposals.map(p => {
+        if (typeof p.id === 'number') return p.id;
+        const m = String(p.bundle_id || '').match(/\d+/);
+        return m ? parseInt(m[0], 10) : null;
+      }).filter(n => n !== null).sort((a, b) => a - b);
+
+      if (ids.length === 0) {
+        return proposals.map(p => p.bundle_id || p.id).join('+');
+      }
+
+      const min = ids[0];
+      const max = ids[ids.length - 1];
+      const isContiguous = (max - min + 1 === ids.length) && (new Set(ids).size === ids.length);
+
+      // Range notation for contiguous spans (e.g. CRP-183-185 or CRP-183-184)
+      if (isContiguous && ids.length >= 2) {
+        return `CRP-${min}-${max}`;
+      } else {
+        // Compact plus-separated IDs for non-contiguous sets (e.g. CRP-182+185)
+        return `CRP-${ids.join('+')}`;
+      }
+    }
+
     async function executeBatchReview() {
-      const chks = getSelectedCheckboxes();
-      if (chks.length === 0) { alert("Please select CRPs to review."); return; }
+      let chks = getSelectedCheckboxes();
+      if (chks.length === 0) {
+        const visibleChks = Array.from(document.querySelectorAll(".row-chk"));
+        if (visibleChks.length > 0 && visibleChks.length <= 15) {
+          toggleSelectAll(true);
+          chks = getSelectedCheckboxes();
+          showToast(`Auto-selected all ${chks.length} visible proposal(s) for review.`);
+        } else {
+          showToast("⚠️ Please select one or more CRPs to review.");
+          return;
+        }
+      }
+
+      // Filter out proposals that are already pushed or rejected
+      const reviewable = [];
+      const skippedPushed = [];
       for (const c of chks) {
         const id = parseInt(c.value, 10);
         const p = proposalsData.proposals.find(item => item.id === id);
-        if (p) await launchReviewForProposal(p.id, p.origin_repo, p.bundle_id);
+        if (!p) continue;
+        if (p.state === 'pushed' || p.progress_state === 'pushed' || p.state === 'rejected' || p.progress_state === 'rejected') {
+          skippedPushed.push(p.bundle_id || ('#' + p.id));
+        } else {
+          reviewable.push(p);
+        }
+      }
+
+      if (reviewable.length === 0) {
+        alert("None of the selected proposals have local changes to review (selected items are already pushed or rejected).");
+        return;
+      }
+
+      if (skippedPushed.length > 0) {
+        appendConsole(`[INFO] Omitted ${skippedPushed.length} already pushed/rejected proposal(s) from review: ${skippedPushed.join(', ')}`, "msg-info");
+      }
+
+      // Group reviewable proposals by primary target repository
+      const repoGroups = {};
+      for (const p of reviewable) {
+        const repo = (p.origin_repo || "Workspace_Inventory").split("/")[0].trim();
+        if (!repoGroups[repo]) repoGroups[repo] = [];
+        repoGroups[repo].push(p);
+      }
+
+      // Launch exactly one Beyond Compare review per distinct target repository
+      const repos = Object.keys(repoGroups);
+      for (let i = 0; i < repos.length; i++) {
+        const repo = repos[i];
+        const proposals = repoGroups[repo];
+        const combinedTag = formatBatchReviewTag(proposals, repo);
+        const primaryId = proposals[0].id;
+        await launchReviewForProposal(primaryId, repo, combinedTag);
+
+        // Stagger consecutive multi-repo launches to prevent BCSessions.xml write collisions
+        if (i < repos.length - 1) {
+          await new Promise(r => setTimeout(r, 600));
+        }
       }
     }
 
@@ -4042,6 +4197,10 @@
       const icon = document.getElementById("prioSortIcon");
       if (icon) icon.textContent = '⬍';
       clearLiveTicker();
+      toggleSelectAll(false);
+      const chkAll = document.getElementById("chkSelectAll");
+      if (chkAll) chkAll.checked = false;
+      updateSelectedCount();
       renderTable();
       showToast("🔄 Reset to SHOW ALL CRPs.");
     }
@@ -4089,14 +4248,15 @@
         }
 
         targetPropIds = completedProps.map(p => p.id);
-        const first = completedProps[0];
-        defaultReason = `feat(cm): ${first.bundle_id || first.cr_id || ('Proposal #' + first.id)} - ${first.title}`;
-        if (completedProps.length > 1) {
-          defaultReason += ` (+${completedProps.length - 1} more)`;
+        const crpTag = formatBatchReviewTag(completedProps);
+        if (completedProps.length === 1) {
+          defaultReason = `feat(cm): ${crpTag} - ${completedProps[0].title}`;
+        } else {
+          defaultReason = `feat(cm): sync completed proposals (${crpTag}) to remote`;
         }
       } else {
         // No items selected: push everything completed
-        const allCompleted = proposalsData.proposals.filter(p => p.state === 'completed' || p.progress_state === 'completed');
+        const allCompleted = proposalsData.proposals.filter(p => (p.state === 'completed' || p.progress_state === 'completed') && p.state !== 'pushed' && p.progress_state !== 'pushed');
         if (allCompleted.length === 0) {
           showToast("ℹ️ No completed proposals to push.");
           appendConsole("[INFO] All proposals are either already pushed or still in progress. Nothing to push.", "msg-info");
@@ -4111,7 +4271,12 @@
         }
 
         targetPropIds = allCompleted.map(p => p.id);
-        defaultReason = `feat(cm): sync ${allCompleted.length} completed workspace proposal(s) to remote`;
+        const crpTag = formatBatchReviewTag(allCompleted);
+        if (allCompleted.length === 1) {
+          defaultReason = `feat(cm): ${crpTag} - ${allCompleted[0].title}`;
+        } else {
+          defaultReason = `feat(cm): sync completed proposals (${crpTag}) to remote`;
+        }
       }
 
       const promptReason = prompt(`Enter push reason / commit message for ${targetPropIds.length} completed proposal(s):`, defaultReason);
@@ -4124,7 +4289,13 @@
         cmd += ` -ProposalIds ${targetPropIds.join(',')}`;
       }
 
-      await executeHubCommand(cmd, `Multi-Repo Push (${targetPropIds.length} proposals)`);
+      await executeHubCommand(cmd, `Multi-Repo Push (${targetPropIds.length} proposals)`, null, 300000);
+      const progFilterAfter = document.getElementById("thProgStateFilter");
+      if (progFilterAfter) {
+        progFilterAfter.value = "pushed";
+        handleFilterChange();
+      }
+      showToast(`🚀 Push completed. Filter updated to show Pushed proposals.`);
     }
 
     // -------------------------------------------------------------------------

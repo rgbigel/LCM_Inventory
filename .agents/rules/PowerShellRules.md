@@ -14,14 +14,17 @@ Module: PowerShellRules
 Purpose: Authoritative rules for PowerShell script generation and normalization.
 Path: .agents/rules/PowerShellRules.md
 Authors: Rolf
-Version: 8.6.0
+Version: 8.7.0
 Changelog:
+- 2026-09-27: Added inline-single-quotes invariant and colon-safe-interpolation rule to eliminate host shell pre-expansion and parsing errors.
 - 2026-09-26: Standardized on PS7 (pwsh) runtime exclusively; parity for intermediate code.
 - 2026-07-27: Split unified rule file; clarified ASCII constraints; stabilized PS rules.
 
 POWERSHELL-RULES
 - ps7-exclusive: pwsh (PS7) is mandatory workspace-wide; legacy powershell.exe (5.1) is forbidden
 - intermediate-parity: rules apply equally to permanent scripts and inline pwsh -Command blocks
+- inline-single-quotes: inline pwsh -Command blocks MUST use single-quoted script blocks '& { ... }' or here-strings to prevent outer shell variable pre-expansion ($var)
+- colon-safe-interpolation: variables followed by colons MUST use explicit braces (${var}:)
 - ascii-default: ASCII required; umlauts allowed in literal strings and comments
 - utf8-without-bom: scripts must be UTF-8 without BOM
 - newline-crlf: scripts must end with CRLF

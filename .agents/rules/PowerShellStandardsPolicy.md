@@ -40,19 +40,23 @@ All exported module cmdlets and public functions `MUST` strictly adhere to stand
 
 ---
 
-### RULE-PS-003: Colon-Safe String Interpolation
-When interpolating a variable immediately followed by a colon (`:`) within a double-quoted string, developers `MUST` delimit the variable using `$($var):` or `${var}:`.
-- **Rationale**: PowerShell treats `$var:` as an unclosed scope qualifier (e.g., `$global:`, `$script:`), causing a fatal `ParserError`.
+### RULE-PS-003: Colon-Safe String Interpolation & Boundary Delimitation
+When interpolating a variable immediately followed by a colon (`:`) within any double-quoted string, error message, or inline `-Command` execution block, developers and AI agents `MUST` delimit the variable using `${var}:` or `$($var):`, or use explicit string concatenation (`'Prefix ' + $var + ':'`) or format operator (`"{0}:" -f $var`).
+- **Rationale**: PowerShell treats `$var:` as an unclosed scope qualifier or drive specification (like `$env:`, `$script:`, `$global:`), causing a fatal `ParserError: Variable reference is not valid. ':' was not followed by a valid variable name character.`
+- **Universal Scope Mandate**: This rule applies with zero exception to **all ad-hoc, intermediate, or one-liner inline commands** (e.g., `Write-Error "Error in $f:"` is strictly forbidden).
 - **Correct**:
   ```powershell
+  Write-Error "AST error in ${f}: $($errors | Out-String)"
   Write-Host ("Created Proposal #{0}: {1}" -f $newId, $Title)
-  # or
   Write-Host "Created Proposal #$($newId): $Title"
+  Write-Host ('AST error in ' + $f + ':')
   ```
 - **Forbidden**:
   ```powershell
+  Write-Error "AST error in $f: $errors"         # Throws ParserError ($f: treated as drive scope)
   Write-Host "Created Proposal #$newId: $Title"  # Throws ParserError
   ```
+- **Mechanical Linter Pattern**: Any occurrence of `\$[a-zA-Z0-9_]+:(?!\/\/|[a-zA-Z])` within double-quoted strings or inline code is a quality gate violation.
 
 ---
 
@@ -280,6 +284,13 @@ NTFS directory junctions and symbolic links represent discrete filesystem repars
 The PowerShell standards codified in this policy (`RULE-PS-001` through `RULE-PS-018`) apply with **equal force to both permanent repository scripts (`*.ps1`, `*.psm1`) and ad-hoc intermediate command blocks (`pwsh -Command`)**.
 - The AI agent `MUST NOT` relax coding hygiene, error handling, strict typing, or parameter safety when generating inline or temporary execution blocks.
 - **Runtime Host Mandate**: The workspace engine is **PowerShell 7 (`pwsh`) exclusively**. Invoking legacy `powershell.exe` (Windows PowerShell 5.1) is strictly prohibited. Modern PS7 features (`||`, `&&`, ternary `? :`, null-coalescing `??`) are fully authorized and preferred.
+
+---
+
+### RULE-PS-020: Class Dependency Runspace Pre-loading for AST Validation
+When performing static AST validation on PowerShell scripts that utilize custom classes as type annotations, all prerequisite class definition files must be dot-sourced into the runspace before invoking `[System.Management.Automation.Language.Parser]::ParseFile()`.
+- **Rationale**: PowerShell's AST parser cannot resolve custom type tokens unless the type is already loaded in the active runspace, throwing false-positive syntax errors.
+
 
 
 

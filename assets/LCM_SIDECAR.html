@@ -711,10 +711,12 @@
         <span class="daemon-dot"></span>
         <span id="daemonLabel">REST: ONLINE</span>
       </span>
+      <button class="btn btn-primary btn-sm" id="btn-refresh-sidecar" onclick="refreshSidecarData(true)"
+        title="Refresh Sidecar &amp; Control Hub Data (F5)"><span id="refresh-sidecar-icon">🔄</span> <span id="refresh-sidecar-label">Refresh</span></button>
       <button class="btn btn-theme-toggle" id="btn-theme-toggle" onclick="toggleTheme()"
         title="Toggle Light/Dark Theme"><span>🌓</span> <span>Theme</span></button>
       <button class="btn btn-focus-hub" onclick="focusHubWindow()"
-        title="Bring LCM Control Hub window into focus on the left">🪟 Focus Hub</button>
+        title="Bring LCM Control Hub into focus">🪟 Focus Hub</button>
     </div>
   </header>
 
@@ -852,6 +854,7 @@
 
   <script>
     const DAEMON_PORT = 9876;
+    window.name = "lcm_sidecar";
     const SIDECAR_CHANNEL = ("BroadcastChannel" in window) ? new BroadcastChannel("LCM_SIDECAR_CHANNEL") : null;
 
     /*__INJECTED_DATA_PLACEHOLDER__*/
@@ -939,6 +942,35 @@
       } catch (err) { }
     }
 
+    async function refreshSidecarData(manual = true, broadcast = true) {
+      const icon = document.getElementById("refresh-sidecar-icon");
+      const label = document.getElementById("refresh-sidecar-label");
+      if (icon) icon.classList.add("spin-icon");
+      if (label) label.innerText = "Refreshing...";
+      if (manual) showToast("🔄 Refreshing Sidecar & Hub data...");
+
+      try {
+        await fetchFreshProposals();
+        if (currentProposal) {
+          const updated = proposalsList.find(p => p.id === currentProposal.id);
+          if (updated) setTargetProposal(updated);
+        }
+        if (manual) showToast("✓ Sidecar & Hub refreshed");
+        if (broadcast && SIDECAR_CHANNEL) {
+          try {
+            SIDECAR_CHANNEL.postMessage({ type: "DATA_UPDATED", source: "sidecar", timestamp: Date.now() });
+          } catch(e) {}
+        }
+      } catch (err) {
+        if (manual) showToast(`⚠️ Refresh error: ${err.message}`);
+      } finally {
+        setTimeout(() => {
+          if (icon) icon.classList.remove("spin-icon");
+          if (label) label.innerText = "Refresh";
+        }, 400);
+      }
+    }
+
     function populateProposalSwitcher() {
       const sw = document.getElementById("proposalSwitcher");
       if (!sw) return;
@@ -997,10 +1029,20 @@
           } else if (e.data.type === "THEME_CHANGED" && e.data.theme) {
             applyTheme(e.data.theme, false);
           } else if (e.data.type === "DATA_UPDATED") {
-            fetchFreshProposals();
+            if (e.data.source !== "sidecar") {
+              refreshSidecarData(false, false);
+            }
           }
         };
       }
+
+      // Intercept F5 / Ctrl+R to perform unified refresh of both Sidecar and Hub
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "F5" || (e.ctrlKey && e.key.toLowerCase() === "r")) {
+          e.preventDefault();
+          refreshSidecarData(true, true);
+        }
+      });
 
       // Initial ping & periodic heartbeat
       sendHubPing();
@@ -1224,12 +1266,24 @@
       if (SIDECAR_CHANNEL) {
         SIDECAR_CHANNEL.postMessage({ type: "FOCUS_REQUEST" });
       }
+
+      // 1. Direct same-origin named tab focus (instant tab switch in same window)
+      try {
+        const hubWin = window.open("", "lcm_control_hub");
+        if (hubWin && !hubWin.closed) {
+          hubWin.focus();
+        }
+      } catch (e) {}
+
+      // 2. Window foregrounding for dual-window desktop mode (e.g. Edge/Chrome stacked windows)
       fetch(`http://127.0.0.1:${DAEMON_PORT}/foreground`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title: "LCM Control Hub" })
       }).then(res => res.json()).then(data => {
-        if (!data || !data.success) {
+        // ONLY launch via /open if the Hub is genuinely not connected / not open
+        const isHubConnected = (Date.now() - lastHubPong) < 15000;
+        if (!isHubConnected && (!data || !data.success)) {
           fetch(`http://127.0.0.1:${DAEMON_PORT}/open`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },

@@ -12,9 +12,9 @@
     --bg-tertiary: #21262d;
     --accent: #58a6ff;
     --accent-gradient: linear-gradient(135deg, #388bfd, #1f6feb);
-    --text-primary: #f0f6fc;
-    --text-secondary: #8b949e;
-    --text-muted: #6e7681;
+    --text-primary: #ffffff;
+    --text-secondary: #ffffff;
+    --text-muted: #e6edf3;
     --border: #30363d;
     --success: #3fb950;
     --warning: #d29922;
@@ -29,9 +29,9 @@ body.light-theme, :root[data-theme="light"] {
     --bg-tertiary: #eaeef2;
     --accent: #0969da;
     --accent-gradient: linear-gradient(135deg, #0969da, #0550ae);
-    --text-primary: #1f2328;
-    --text-secondary: #424a53;
-    --text-muted: #57606a;
+    --text-primary: #000000;
+    --text-secondary: #000000;
+    --text-muted: #1f2328;
     --border: #d0d7de;
     --success: #1a7f37;
     --warning: #9a6700;
@@ -50,26 +50,47 @@ body.light-theme ::-webkit-scrollbar-thumb:hover { background: #57606a; }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+html, body {
+    height: 100vh;
+    max-height: 100vh;
+    margin: 0;
+    padding: 0;
+    overflow: hidden !important;
+}
+
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     background-color: var(--bg-primary);
     color: var(--text-primary);
     line-height: 1.5;
-    padding: 20px;
+    display: flex;
+    flex-direction: column;
 }
 
-.container { max-width: 1720px; margin: 0 auto; }
+.container {
+    width: 100%;
+    max-width: 100%;
+    height: 100vh;
+    max-height: 100vh;
+    padding: 8px 12px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    margin: 0 auto;
+}
 
 /* Standard Display Header */
 header {
+    flex: 0 0 auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-bottom: 16px;
+    padding-bottom: 8px;
     border-bottom: 1px solid var(--border);
-    margin-bottom: 20px;
+    margin-bottom: 8px;
     flex-wrap: wrap;
-    gap: 16px;
+    gap: 12px;
 }
 
 .header-title h1 {
@@ -167,16 +188,17 @@ header {
 
 /* Universal Toolbar & Filters Panel */
 .filter-panel-top {
+    flex: 0 0 auto;
     background: var(--bg-secondary);
     border: 1px solid var(--border);
     border-radius: 12px;
-    padding: 12px 16px;
-    margin-bottom: 16px;
+    padding: 8px 12px;
+    margin-bottom: 8px;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    gap: 16px;
+    gap: 12px;
     flex-wrap: wrap;
 }
 
@@ -269,12 +291,13 @@ header {
 
 /* Universal Data Table with Aligned Column Filters & Sticky Header */
 .table-container {
+    flex: 1 1 auto;
+    min-height: 0;
     background: var(--bg-secondary);
     border: 1px solid var(--border);
     border-radius: 12px;
-    overflow-y: auto;
-    overflow-x: scroll !important;
-    max-height: calc(100vh - 275px);
+    overflow-y: auto !important;
+    overflow-x: auto !important;
     box-shadow: var(--card-shadow);
     position: relative;
     scrollbar-width: auto;
@@ -302,7 +325,7 @@ header {
 
 table {
     width: 100%;
-    min-width: 1360px;
+    min-width: 1280px;
     border-collapse: collapse;
     text-align: left;
     font-size: 13px;
@@ -317,12 +340,12 @@ thead {
 
 th {
     background: var(--bg-tertiary);
-    color: var(--text-secondary);
-    padding: 12px 14px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-size: 11px;
+    color: #ffffff;
+    padding: 10px 12px;
+    font-weight: 700;
+    text-transform: none;
+    letter-spacing: 0.2px;
+    font-size: 12px;
     border-bottom: 1px solid var(--border);
     cursor: pointer;
     user-select: none;
@@ -331,17 +354,22 @@ th {
     top: 0;
     z-index: 51;
 }
-th:hover { color: var(--text-primary); }
+th:hover { color: #ffffff; }
+body.light-theme th { color: #000000; }
+body.light-theme th:hover { color: #000000; }
 
 .col-filter-row th {
     background: var(--bg-tertiary);
-    padding: 8px 10px;
+    color: #ffffff;
+    font-weight: 700;
+    padding: 6px 8px;
     border-bottom: 2px solid var(--border);
     cursor: default;
     position: sticky;
     top: 41px;
     z-index: 50;
 }
+body.light-theme .col-filter-row th { color: #000000; }
 
 .col-filter-select, .col-filter-input {
     width: 100%;

@@ -36,8 +36,8 @@ param(
              and SHA-256 staging manifest generation.
     Path: tools/Invoke-BeyondCompareReview.ps1
     Authors: Rolf, Workspace_AI Engine
-    Version: 8.0.0
-    Date: 2026-09-26
+    Version: 8.1.0
+    Date: 2026-09-27
 .PARAMETER RepositoryName
     The name or directory path of the Git repository to review (e.g. 'AuthorizeMasterUser', 'Git_Repositories', '.').
 .PARAMETER BaseCommit
@@ -175,25 +175,55 @@ function Get-ActiveCRP {
     [string]$WorkspaceRootPath
   )
 
-  # 1. Search proposals.json for in-flight / staged / suggested proposal for this repo
+  # Normalize TargetRepoName for alias matching (e.g. Git_Repositories / LCM)
+  $isRootRepo = $TargetRepoName -in @('Git_Repositories', 'Root', 'LCM')
+
+  # 1. Search proposals.json for matching proposals
   $pJson = Join-Path $WorkspaceRootPath "Workspace_Inventory\data\proposals\proposals.json"
   if (Test-Path -LiteralPath $pJson) {
     try {
       $pData = Get-Content -LiteralPath $pJson -Raw -Encoding UTF8 | ConvertFrom-Json
       if ($pData.PSObject.Properties['proposals']) {
-        $matchesList = @($pData.proposals | Where-Object {
-          ($_.PSObject.Properties['origin_repo'] -and $_.origin_repo -eq $TargetRepoName) -or
-          ($_.PSObject.Properties['repo'] -and $_.repo -eq $TargetRepoName)
-        } | Where-Object {
-          $_.PSObject.Properties['state'] -and $_.state -in @('in_progress', 'staged', 'suggested', 'review')
-        })
-        if ($matchesList.Count -gt 0) {
-          $latest = $matchesList | Sort-Object { [int]($_.id -replace '\D', '') } -Descending | Select-Object -First 1
-          if ($latest.PSObject.Properties['crp_id'] -and -not [string]::IsNullOrWhiteSpace($latest.crp_id)) {
-            return [string]$latest.crp_id
+        # Filter proposals by target repository
+        $allRepoProposals = @($pData.proposals | Where-Object {
+          if ($isRootRepo) {
+            ($_.PSObject.Properties['origin_repo'] -and ($_.origin_repo -in @('Git_Repositories', 'Root', 'LCM', 'LCM / Git_Repositories') -or $_.origin_repo -like '*Git_Repositories*')) -or
+            ($_.PSObject.Properties['repo'] -and ($_.repo -in @('Git_Repositories', 'Root', 'LCM') -or $_.repo -like '*Git_Repositories*'))
           }
-          if ($latest.PSObject.Properties['id']) {
-            return "CRP-$($latest.id)"
+          else {
+            ($_.PSObject.Properties['origin_repo'] -and $_.origin_repo -eq $TargetRepoName) -or
+            ($_.PSObject.Properties['repo'] -and $_.repo -eq $TargetRepoName) -or
+            ($_.PSObject.Properties['impacted_repos'] -and $_.impacted_repos -contains $TargetRepoName) -or
+            ($_.PSObject.Properties['affected_repos'] -and $_.affected_repos -contains $TargetRepoName)
+          }
+        })
+
+        if ($allRepoProposals.Count -gt 0) {
+          # Priority 1: In-flight / suggested / review / staged proposals
+          $active = @($allRepoProposals | Where-Object {
+            $_.PSObject.Properties['state'] -and $_.state -in @('in_progress', 'review', 'staged', 'suggested')
+          })
+          if ($active.Count -gt 0) {
+            $latest = $active | Sort-Object { [int]($_.id -replace '\D', '') } -Descending | Select-Object -First 1
+            if ($latest.PSObject.Properties['crp_id'] -and -not [string]::IsNullOrWhiteSpace($latest.crp_id)) { return [string]$latest.crp_id }
+            if ($latest.PSObject.Properties['id']) { return "CRP-$($latest.id)" }
+          }
+
+          # Priority 2: Unpushed completed or committed proposals awaiting review / push
+          $unpushed = @($allRepoProposals | Where-Object {
+            $_.PSObject.Properties['state'] -and $_.state -notin @('pushed', 'deleted')
+          })
+          if ($unpushed.Count -gt 0) {
+            $latest = $unpushed | Sort-Object { [int]($_.id -replace '\D', '') } -Descending | Select-Object -First 1
+            if ($latest.PSObject.Properties['crp_id'] -and -not [string]::IsNullOrWhiteSpace($latest.crp_id)) { return [string]$latest.crp_id }
+            if ($latest.PSObject.Properties['id']) { return "CRP-$($latest.id)" }
+          }
+
+          # Priority 3: Fall back to newest proposal overall for this repo
+          $latestOverall = $allRepoProposals | Sort-Object { [int]($_.id -replace '\D', '') } -Descending | Select-Object -First 1
+          if ($latestOverall) {
+            if ($latestOverall.PSObject.Properties['crp_id'] -and -not [string]::IsNullOrWhiteSpace($latestOverall.crp_id)) { return [string]$latestOverall.crp_id }
+            if ($latestOverall.PSObject.Properties['id']) { return "CRP-$($latestOverall.id)" }
           }
         }
       }
@@ -201,7 +231,20 @@ function Get-ActiveCRP {
     catch {}
   }
 
-  # 2. Search ACTIVE_SESSION.md
+  # 2. Search recent commit message on repo path
+  $targetRepoDir = Join-Path $WorkspaceRootPath $TargetRepoName
+  if ($TargetRepoName -eq 'Git_Repositories') { $targetRepoDir = $WorkspaceRootPath }
+  if (Test-Path -LiteralPath $targetRepoDir) {
+    try {
+      $lastMsg = (git -C $targetRepoDir log -n 1 --pretty=format:"%s" 2>$null)
+      if ($lastMsg -match "(?i)\b(CRP-\d+|BUG-\d+|CR-\d+)\b") {
+        return $Matches[1].ToUpperInvariant()
+      }
+    }
+    catch {}
+  }
+
+  # 3. Search ACTIVE_SESSION.md
   $activeSessionFile = Join-Path $WorkspaceRootPath ".agents\ACTIVE_SESSION.md"
   if (Test-Path -LiteralPath $activeSessionFile) {
     try {
@@ -674,6 +717,9 @@ if (-not $commitSha) {
 
 Write-Host "Verified Baseline Resolution: [${commitSha}: $commitMsg]" -ForegroundColor DarkCyan
 
+# Resolve baseline repository version early for directory naming
+$baselineVersion = Get-RepoVersion -TargetRepoPath $repoPath -TargetCommit $commitSha
+
 # ------------------------------------------------------------------------------
 # 3. Export Baseline Commit into Workspace Scratch Review Inspection Tree (Variant A)
 # ------------------------------------------------------------------------------
@@ -692,9 +738,21 @@ if (-not (Test-Path -LiteralPath $crpReviewDir)) {
   $null = New-Item -ItemType Directory -Path $crpReviewDir -Force
 }
 
-$reviewFolderStem = "Baseline_${repoName}_${commitSha}"
+# Left-hand side: incorporates baseline Version and commit SHA
+$reviewFolderStem = if ($commitSha -ne 'unborn') {
+  "Baseline_${repoName}_v${baselineVersion}_${commitSha}"
+} else {
+  "Baseline_${repoName}_v${baselineVersion}"
+}
 $tempReviewRoot = Join-Path $crpReviewDir $reviewFolderStem
-$liveJunction = Join-Path $crpReviewDir "Live_${repoName}"
+
+# Right-hand side: incorporates CRP number in live junction name
+$liveJunctionStem = if (-not [string]::IsNullOrWhiteSpace($CRP)) {
+  "Live_${repoName}_${CRP}"
+} else {
+  "Live_${repoName}"
+}
+$liveJunction = Join-Path $crpReviewDir $liveJunctionStem
 $baselineManifestFile = Join-Path $tempReviewRoot ".lcm_baseline_manifest.json"
 
 $reuseCache = $false
@@ -831,7 +889,11 @@ $filterMask = ($filterList -join ';')
 # ------------------------------------------------------------------------------
 # 6. Establish Dedicated Per-CRP Review Bridge & Update Review Session
 # ------------------------------------------------------------------------------
-# Safely refresh per-CRP Live directory junction
+# Safely purge any stale live junctions in this review directory
+$oldJunctions = @(Get-ChildItem -LiteralPath $crpReviewDir -Directory -Force -ErrorAction SilentlyContinue | Where-Object { $_.Name -like "Live_*" -and $_.LinkType -eq 'Junction' })
+foreach ($oj in $oldJunctions) {
+  try { [System.IO.Directory]::Delete($oj.FullName, $false) } catch {}
+}
 if (Test-Path -LiteralPath $liveJunction) {
   try { [System.IO.Directory]::Delete($liveJunction, $false) } catch {}
 }
@@ -868,7 +930,6 @@ $sessionMeta = [ordered]@{
 $sessionMeta | ConvertTo-Json -Depth 3 | Set-Content -LiteralPath (Join-Path $tempReviewRoot ".lcm_review.json") -Encoding utf8
 $sessionMeta | ConvertTo-Json -Depth 3 | Set-Content -LiteralPath (Join-Path $crpReviewDir ".lcm_review.json") -Encoding utf8
 
-$baselineVersion = Get-RepoVersion -TargetRepoPath $repoPath -TargetCommit $commitSha
 $title1 = "$repoName v$baselineVersion ($commitSha)"
 $title2 = if (-not [string]::IsNullOrWhiteSpace($CRP)) {
   "Live $repoName [$CRP]"
@@ -884,9 +945,12 @@ Write-Host ("  Right (Live):        {0}" -f $liveJunction)
 Write-Host ("  Pane Titles:         [Left: '{0}'] <--> [Right: '{1}']" -f $title1, $title2)
 Write-Host ("  Filters Applied:     {0}" -f $filterMask)
 
-# Dedicated named session in BCSessions.xml guarantees 2-way folder compare with correct filters and tab title.
+# 2-way Folder Compare with explicit absolute Left and Right paths.
+# Passing exactly two folders guarantees Beyond Compare opens Folder Compare (NEVER Folder Merge).
+# /title1 and /title2 provide human-readable pane descriptions.
+# /filters applies the comprehensive exclusion masks.
 # /ro1 enforces read-only protection on the left baseline pane.
-$bcArgString = "`"$sessionName`" /ro1"
+$bcArgString = "`"$tempReviewRoot`" `"$liveJunction`" /title1=`"$title1`" /title2=`"$title2`" /filters=`"$filterMask`" /ro1"
 
 $dispatcherCandidates = @(
   (Join-Path $workspaceRoot ".lcm\tools\internal\Invoke-InteractiveDesktop.ps1"),
@@ -906,7 +970,7 @@ if ($dispatcherPath) {
   & pwsh -File $dispatcherPath -FilePath $BeyondComparePath -ArgumentList $bcArgString | Out-Null
 }
 else {
-  Start-Process -FilePath $BeyondComparePath -ArgumentList @($sessionName, "/ro1")
+  Start-Process -FilePath $BeyondComparePath -ArgumentList @($tempReviewRoot, $liveJunction, "/title1=$title1", "/title2=$title2", "/filters=$filterMask", "/ro1")
 }
 
 # ------------------------------------------------------------------------------

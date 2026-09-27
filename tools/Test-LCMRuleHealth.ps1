@@ -4,17 +4,21 @@
 .DESCRIPTION
     Module: tools/Test-LCMRuleHealth.ps1
     Authors: Rolf, Workspace_AI Engine
-    Version: 1.2.0
-    Date: 2026-09-19
+    Version: 1.3.0
+    Date: 2026-09-27
 #>
 
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory = $false, Position = 0, HelpMessage = 'Target repository name or path to diagnose (defaults to all)')]
+    [Parameter(Mandatory = $false, Position = 0, HelpMessage = 'Target repository name or path to diagnose (defaults to all governed)')]
     [string]$TargetRepository,
 
     [Parameter(Mandatory = $false, HelpMessage = 'Root workspace directory containing repositories to test')]
     [string]$WorkspaceRoot = 'D:\Git_Repositories',
+
+    [Parameter(Mandatory = $false, HelpMessage = 'Include standalone / non-governed utility repositories (defaults to Governed repositories only)')]
+    [Alias('Ungoverned', 'All')]
+    [switch]$IncludeUngoverned,
 
     [Parameter(Mandatory = $false, HelpMessage = 'Show detailed diagnostic messages for every checked file and rule')]
     [switch]$Detailed,
@@ -30,19 +34,20 @@ $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
 
 if ($Help) {
     Write-Host "==========================================================================" -ForegroundColor Cyan
-    Write-Host " TEST LCM RULE HEALTH (Test-LCMRuleHealth v1.2.0)" -ForegroundColor Cyan
+    Write-Host " TEST LCM RULE HEALTH (Test-LCMRuleHealth v1.3.0)" -ForegroundColor Cyan
     Write-Host "==========================================================================" -ForegroundColor Cyan
     Write-Host "SYNOPSIS:" -ForegroundColor Yellow
     Write-Host "  Diagnoses LCM rule health, junction validity, static duplicates, and versions."
     Write-Host ""
     Write-Host "USAGE:" -ForegroundColor Yellow
-    Write-Host "  pwsh Workspace_Inventory/tools/Test-LCMRuleHealth.ps1 [[-TargetRepository] <str>] [-WorkspaceRoot <str>] [-Detailed] [-h]"
+    Write-Host "  pwsh Workspace_Inventory/tools/Test-LCMRuleHealth.ps1 [[-TargetRepository] <str>] [-IncludeUngoverned] [-WorkspaceRoot <str>] [-Detailed] [-h]"
     Write-Host ""
     Write-Host "PARAMETERS:" -ForegroundColor Yellow
-    Write-Host "  -TargetRepository : Target repository name to diagnose"
-    Write-Host "  -WorkspaceRoot    : Root workspace directory (default: D:\Git_Repositories)"
-    Write-Host "  -Detailed         : Show detailed diagnostic messages"
-    Write-Host "  -Help (-h, -?)    : Displays this help screen"
+    Write-Host "  -TargetRepository    : Target repository name to diagnose"
+    Write-Host "  -IncludeUngoverned   : Include standalone / non-governed utility repositories (default: Tier 1 Governed only)"
+    Write-Host "  -WorkspaceRoot       : Root workspace directory (default: D:\Git_Repositories)"
+    Write-Host "  -Detailed            : Show detailed diagnostic messages"
+    Write-Host "  -Help (-h, -?)       : Displays this help screen"
     Write-Host "==========================================================================" -ForegroundColor Cyan
     return
 }
@@ -70,6 +75,14 @@ $childDirs = @(Get-ChildItem -Path $WorkspaceRoot -Directory | Where-Object {
     $_.Name -notmatch '^\.' -and
     (Test-Path (Join-Path $_.FullName '.git'))
 })
+
+# Filter: Default to Tier 1 Governed repositories unless -IncludeUngoverned is specified or a specific target is requested
+if (-not $IncludeUngoverned -and [string]::IsNullOrWhiteSpace($TargetRepository)) {
+    $childDirs = @($childDirs | Where-Object {
+        (Test-Path (Join-Path $_.FullName '.lcm')) -or
+        $_.Name -in @('Workspace_AI', 'Workspace_Inventory')
+    })
+}
 
 if (-not [string]::IsNullOrWhiteSpace($TargetRepository)) {
     $childDirs = @($childDirs | Where-Object { $_.Name -like "*$TargetRepository*" })
@@ -172,7 +185,7 @@ foreach ($dir in $childDirs) {
             $absorbedVersion = 'Invalid JSON'
         }
     } else {
-        $absorbedVersion = 'Missing .lcm'
+        $absorbedVersion = 'N/A (Standalone)'
     }
     
     # 4. Inspect .gitignore for .agents/
@@ -207,7 +220,7 @@ foreach ($dir in $childDirs) {
         }
     }
     
-    if (-not $versionAligned -and $absorbedVersion -ne 'Missing .lcm') {
+    if (-not $versionAligned -and $absorbedVersion -notin @('N/A (Standalone)', '-')) {
         $issues += "Outdated Baseline ($absorbedVersion vs v$globalVersion)"
         if ($status -eq '🟢 In Compliance') {
             $status = '🟡 Warning: Outdated Baseline'
@@ -218,7 +231,7 @@ foreach ($dir in $childDirs) {
         Repository       = $repoName
         JunctionState    = $junctionState
         PhysicalCopies   = if ($duplicateCount -gt 0) { "$duplicateCount file(s)" } else { 'None (Linked)' }
-        AbsorbedLCM      = if ($absorbedVersion -ne '-') { "v$absorbedVersion" } else { '-' }
+        AbsorbedLCM      = if ($absorbedVersion -match '^\d') { "v$absorbedVersion" } else { $absorbedVersion }
         LegacyResidue    = if ($hasLegacyResidue) { 'Present' } else { 'Clean' }
         AgentsIgnored    = $agentsIgnored
         Status           = $status
@@ -231,8 +244,8 @@ foreach ($dir in $childDirs) {
 Write-Host "`n========================================================================================================" -ForegroundColor Cyan
 Write-Host (" LCM Governance & Rule Discovery Diagnostic Report (Global Baseline: v{0})" -f $globalVersion) -ForegroundColor Cyan
 Write-Host "========================================================================================================" -ForegroundColor Cyan
-Write-Host (" {0,-22} | {1,-18} | {2,-16} | {3,-10} | {4}" -f 'Repository', 'Junction State', 'Physical Copies', 'Baseline', 'Health Status') -ForegroundColor Yellow
-Write-Host "-----------------------+--------------------+------------------+------------+---------------------------" -ForegroundColor DarkGray
+Write-Host (" {0,-22} | {1,-18} | {2,-16} | {3,-16} | {4}" -f 'Repository', 'Junction State', 'Physical Copies', 'Baseline', 'Health Status') -ForegroundColor Yellow
+Write-Host "-----------------------+--------------------+------------------+------------------+---------------------------" -ForegroundColor DarkGray
 
 $driftCount = 0
 foreach ($r in $results) {
@@ -245,7 +258,7 @@ foreach ($r in $results) {
         [ConsoleColor]::Red
     }
 
-    Write-Host (" {0,-22} | {1,-18} | {2,-16} | {3,-10} | {4}" -f $r.Repository, $r.JunctionState, $r.PhysicalCopies, $r.AbsorbedLCM, $r.Status) -ForegroundColor $color
+    Write-Host (" {0,-22} | {1,-18} | {2,-16} | {3,-16} | {4}" -f $r.Repository, $r.JunctionState, $r.PhysicalCopies, $r.AbsorbedLCM, $r.Status) -ForegroundColor $color
 }
 
 Write-Host "========================================================================================================" -ForegroundColor Cyan

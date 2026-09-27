@@ -5,34 +5,40 @@
    Version: 1.0.0
    ============================================================================== */
 
-/* Top Metric Summary Cards (Interactive Filters) */
+/* Top Metric Summary Cards (Interactive Filters) - Narrowed to Content Minimum */
 .metrics-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 14px;
-    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 8px;
+    justify-content: flex-start;
+    flex: 0 0 auto;
 }
 
 .metric-card {
     background: var(--bg-secondary);
     border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 14px 16px;
+    border-radius: 8px;
+    padding: 6px 12px;
     box-shadow: var(--card-shadow);
     cursor: pointer;
     transition: all 0.2s ease;
     position: relative;
     overflow: hidden;
+    flex: 0 0 auto;
+    width: auto;
 }
 
-.metric-card:hover { transform: translateY(-2px); border-color: var(--accent); }
-.metric-card.active { border-color: var(--accent); background: rgba(56, 139, 253, 0.08); }
+.metric-card:hover { transform: translateY(-1px); border-color: var(--accent); }
+.metric-card.active { border-color: var(--accent); background: rgba(56, 139, 253, 0.12); }
 .metric-card.no-op-card { cursor: default; }
 .metric-card.no-op-card:hover { transform: none; border-color: var(--border); }
 
-.metric-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); }
-.metric-value { font-size: 24px; font-weight: 700; color: var(--text-primary); margin-top: 2px; font-family: 'JetBrains Mono', monospace; }
-.metric-sub { font-size: 11px; color: var(--success); margin-top: 2px; }
+.metric-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #ffffff; }
+body.light-theme .metric-label { color: #000000; }
+.metric-value { font-size: 18px; font-weight: 700; color: #ffffff; margin-top: 1px; font-family: 'JetBrains Mono', monospace; }
+body.light-theme .metric-value { color: #000000; }
+.metric-sub { font-size: 10px; color: var(--success); margin-top: 1px; font-weight: 600; }
 
 body.light-theme .metric-card {
     background: #ffffff;
@@ -42,6 +48,22 @@ body.light-theme .metric-card {
 body.light-theme .metric-card.active {
     background: #eef6ff;
     border-color: #0969da;
+}
+
+/* Header & Table Display Hardening (No Grey Text, Bold Headers, No Uppercase) */
+th, #th-tool-name {
+    text-transform: none !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+}
+body.light-theme th, body.light-theme #th-tool-name {
+    color: #000000 !important;
+}
+
+#btn-show-tools-filter {
+    padding: 3px 8px !important;
+    font-size: 11px !important;
+    white-space: nowrap !important;
 }
 
 /* Subsystem Highlight Badge in Header */
@@ -354,15 +376,19 @@ body.light-theme .shortname-pill.protected-alias {
 .row-pending-modification { background: rgba(210, 153, 34, 0.12) !important; border-left: 3px solid #d29922 !important; }
 .row-pending-delete { background: rgba(248, 81, 73, 0.12) !important; border-left: 3px solid #f85149 !important; }
 
-/* Table Sizing & Horizontal Scrollbar Hardening (CRP-180) */
+/* Table Sizing & Horizontal Scrollbar Hardening (CRP-180 & BUG-185) */
 .table-container {
-    overflow-x: scroll !important;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto !important;
+    overflow-x: auto !important;
     scrollbar-width: auto;
     scrollbar-color: var(--accent) var(--bg-secondary) !important;
 }
 
 table {
-    min-width: 1800px !important;
+    min-width: 1280px;
+    width: 100%;
 }
 
 .table-container::-webkit-scrollbar {
