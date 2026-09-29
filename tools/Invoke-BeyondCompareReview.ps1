@@ -36,8 +36,8 @@ param(
              and SHA-256 staging manifest generation.
     Path: tools/Invoke-BeyondCompareReview.ps1
     Authors: Rolf, Workspace_AI Engine
-    Version: 8.2.0
-    Date: 2026-09-28
+    Version: 8.3.0
+    Date: 2026-09-29
 .PARAMETER RepositoryName
     The name or directory path of the Git repository to review (e.g. 'AuthorizeMasterUser', 'Git_Repositories', '.').
 .PARAMETER BaseCommit
@@ -59,7 +59,12 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$scriptVersion = "8.0.0"
+$bcompareWindowToolsPath = Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\BCompareWindowTools.psm1'
+Import-Module -Name $bcompareWindowToolsPath -Force
+$bcompareBaselinePath = Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\BCompareBaseline.psm1'
+Import-Module -Name $bcompareBaselinePath -Force
+
+$scriptVersion = "8.3.0"
 $scriptName = "Invoke-BeyondCompareReview"
 
 # ------------------------------------------------------------------------------
@@ -94,75 +99,6 @@ if ([string]::IsNullOrWhiteSpace($RepositoryName)) {
   else {
     $RepositoryName = '.'
   }
-}
-
-function Get-RepoVersion {
-  [CmdletBinding()]
-  param(
-    [Parameter(Mandatory = $true)]
-    [string]$TargetRepoPath,
-
-    [Parameter(Mandatory = $false)]
-    [string]$TargetCommit = 'HEAD'
-  )
-
-  $v = $null
-
-  # 1. Inspect Git commit message for version tag [vX.Y.Z]
-  if ($TargetCommit -and $TargetCommit -ne 'unborn') {
-    try {
-      $logs = @(git -C $TargetRepoPath log -n 5 --pretty=format:"%s" $TargetCommit 2>$null) -join "`n"
-      if ($logs -match '\[v?(\d+\.\d+(?:\.\d+)?)\]') {
-        $v = $Matches[1]
-      }
-    }
-    catch {}
-  }
-
-  # 2. Inspect .lcm/config.json if available
-  if (-not $v) {
-    $lcmCfg = Join-Path $TargetRepoPath ".lcm\config.json"
-    if (Test-Path -LiteralPath $lcmCfg) {
-      try {
-        $json = Get-Content -LiteralPath $lcmCfg -Raw -Encoding UTF8 | ConvertFrom-Json
-        if ($json.PSObject.Properties['governance'] -and $json.governance.PSObject.Properties['absorbed_lcm_version']) {
-          $v = [string]$json.governance.absorbed_lcm_version
-        }
-        elseif ($json.PSObject.Properties['absorbed_lcm_version']) {
-          $v = [string]$json.absorbed_lcm_version
-        }
-        elseif ($json.PSObject.Properties['governance'] -and $json.governance.PSObject.Properties['lcm_version']) {
-          $v = [string]$json.governance.lcm_version
-        }
-        elseif ($json.PSObject.Properties['version']) {
-          $v = [string]$json.version
-        }
-      }
-      catch {}
-    }
-  }
-
-  # 3. Inspect VERSION.txt
-  if (-not $v) {
-    $verFile = Join-Path $TargetRepoPath "VERSION.txt"
-    if (Test-Path -LiteralPath $verFile) {
-      try {
-        $candidate = (Get-Content -LiteralPath $verFile -Raw -Encoding UTF8).Trim()
-        if (-not [string]::IsNullOrWhiteSpace($candidate)) {
-          $v = $candidate
-        }
-      }
-      catch {}
-    }
-  }
-
-  # 4. Fallback to active LCM baseline version
-  if (-not $v) {
-    $v = '8.0.0'
-  }
-
-  $cleanVer = $v -replace '^[vV]', ''
-  return $cleanVer
 }
 
 function Get-ActiveCRP {
@@ -717,8 +653,11 @@ if (-not $commitSha) {
 
 Write-Host "Verified Baseline Resolution: [${commitSha}: $commitMsg]" -ForegroundColor DarkCyan
 
-# Resolve baseline repository version early for directory naming
-$baselineVersion = Get-RepoVersion -TargetRepoPath $repoPath -TargetCommit $commitSha
+$baselineDescriptor = $null
+if ($commitSha -ne 'unborn') {
+  $baselineDescriptor = Get-BCompareBaselineDescriptor -RepositoryPath $repoPath -BaseCommit $BaseCommit
+  $commitSha = $baselineDescriptor.TargetCommit
+}
 
 # ------------------------------------------------------------------------------
 # 3. Export Baseline Commit into Workspace Scratch Review Inspection Tree (Variant A)
@@ -738,11 +677,18 @@ if (-not (Test-Path -LiteralPath $crpReviewDir)) {
   $null = New-Item -ItemType Directory -Path $crpReviewDir -Force
 }
 
-# Left-hand side: incorporates baseline Version and commit SHA
+# Left-hand side: identifies the local target commit and the committed rules snapshot used to replace a junction.
+$rulesBaselineSegment = if ($baselineDescriptor -and -not [string]::IsNullOrWhiteSpace($baselineDescriptor.RulesBaselineCommit)) {
+  $rulesBaselineSha = $baselineDescriptor.RulesBaselineCommit.Substring(0, [Math]::Min(7, $baselineDescriptor.RulesBaselineCommit.Length))
+  "rules-$($baselineDescriptor.RulesBaselineSource)-$rulesBaselineSha"
+}
+else {
+  'rules-none'
+}
 $reviewFolderStem = if ($commitSha -ne 'unborn') {
-  "Baseline_${repoName}_v${baselineVersion}_${commitSha}"
+  "Baseline_${repoName}_local-${commitSha}_${rulesBaselineSegment}"
 } else {
-  "Baseline_${repoName}_v${baselineVersion}"
+  "Baseline_${repoName}_unborn_${rulesBaselineSegment}"
 }
 $tempReviewRoot = Join-Path $crpReviewDir $reviewFolderStem
 
@@ -780,23 +726,8 @@ else {
 
   Write-Host ("Exporting baseline commit [{0}: {1}] to temp review directory..." -f $commitSha, $commitMsg) -ForegroundColor Cyan
 
-  if ($commitSha -ne 'unborn') {
-    $tarPath = Join-Path $tempReviewRoot "archive.tar"
-    git -C $repoPath archive $commitSha -o $tarPath
-    tar -xf $tarPath -C $tempReviewRoot
-    Remove-Item -LiteralPath $tarPath -Force -ErrorAction SilentlyContinue
-  }
-
-  # Ensure baseline directory contains rules baseline if target repository has .agents\rules junction
-  $targetRulesPath = Join-Path $repoPath ".agents\rules"
-  $tempRulesPath = Join-Path $tempReviewRoot ".agents\rules"
-  if ((Test-Path -LiteralPath $targetRulesPath) -and -not (Test-Path -LiteralPath $tempRulesPath)) {
-    $aiRepo = Join-Path $workspaceRoot "Workspace_AI"
-    $aiHeadSha = (git -C $aiRepo rev-parse --short HEAD 2>$null)
-    if ($aiHeadSha) {
-      New-Item -ItemType Directory -Path $tempRulesPath -Force | Out-Null
-      & git -C $aiRepo archive HEAD .agents/rules | tar -x -C $tempReviewRoot 2>$null
-    }
+  if ($baselineDescriptor) {
+    Export-BCompareBaseline -Descriptor $baselineDescriptor -DestinationPath $tempReviewRoot
   }
 
   # ------------------------------------------------------------------------------
@@ -921,6 +852,15 @@ $sessionMeta = [ordered]@{
   RepositoryName   = $repoName
   RepositoryPath   = $repoPath
   BaseCommit       = $commitSha
+  BaselineIdentity = "local-$commitSha"
+  RulesAuthorityRepository = if ($baselineDescriptor) { $baselineDescriptor.RulesAuthorityPath } else { $null }
+  RulesAuthorityCommit = if ($baselineDescriptor) { $baselineDescriptor.RulesAuthorityCommit } else { $null }
+  RulesAuthorityPath = if ($baselineDescriptor) { $baselineDescriptor.RulesAuthorityRelativePath } else { $null }
+  RulesAuthorityContentPresent = if ($baselineDescriptor) { $baselineDescriptor.RulesAuthorityContentPresent } else { $false }
+  RulesBaselineRepository = if ($baselineDescriptor) { $baselineDescriptor.RulesBaselineRepositoryPath } else { $null }
+  RulesBaselineCommit = if ($baselineDescriptor) { $baselineDescriptor.RulesBaselineCommit } else { $null }
+  RulesBaselinePath = if ($baselineDescriptor) { $baselineDescriptor.RulesBaselineRelativePath } else { $null }
+  RulesBaselineSource = if ($baselineDescriptor) { $baselineDescriptor.RulesBaselineSource } else { 'none' }
   CommitMessage    = $commitMsg
   CommitDate       = if ($commitSha -ne 'unborn') { (git -C $repoPath log -n 1 --pretty=format:"%cI" $commitSha) } else { (Get-Date).ToString("o") }
   SessionStartedAt = (Get-Date).ToString("o")
@@ -930,7 +870,7 @@ $sessionMeta = [ordered]@{
 $sessionMeta | ConvertTo-Json -Depth 3 | Set-Content -LiteralPath (Join-Path $tempReviewRoot ".lcm_review.json") -Encoding utf8
 $sessionMeta | ConvertTo-Json -Depth 3 | Set-Content -LiteralPath (Join-Path $crpReviewDir ".lcm_review.json") -Encoding utf8
 
-$title1 = "$repoName v$baselineVersion ($commitSha)"
+$title1 = "$repoName local-$commitSha ($rulesBaselineSegment)"
 $title2 = if (-not [string]::IsNullOrWhiteSpace($CRP)) {
   "Live $repoName [$CRP]"
 }
@@ -938,13 +878,11 @@ else {
   "Live $repoName"
 }
 
-$staleReviewProcesses = @(Get-Process -Name 'BCompare' -ErrorAction SilentlyContinue | Where-Object {
-    $_.MainWindowTitle -like "*$repoName*" -and $_.MainWindowTitle -like '*<-->*'
-  })
+$staleReviewProcesses = @(Get-SameRepositoryBCompareProcess -RepositoryName $repoName -Process @(Get-Process -Name 'BCompare' -ErrorAction SilentlyContinue))
 foreach ($staleReviewProcess in $staleReviewProcesses) {
   Write-Host "Closing stale Beyond Compare review window: $($staleReviewProcess.MainWindowTitle)" -ForegroundColor DarkYellow
-  Stop-Process -Id $staleReviewProcess.Id -Force -ErrorAction SilentlyContinue
 }
+$null = Remove-StaleBCompareProcess -RepositoryName $repoName -Process $staleReviewProcesses -Confirm:$false
 
 Write-Host "Launching Beyond Compare on interactive desktop (Per-CRP Session Isolation)..." -ForegroundColor Green
 Write-Host ("  Session Name:        {0}" -f $sessionName)
