@@ -323,7 +323,7 @@ function Get-CompiledDocMetadata {
     $role = "Specification"
     $version = "v1.0.0"
     $date = (Get-Date).ToString("yyyy-MM-dd")
-    $reviewState = "ACCEPTED"
+    $reviewState = "COMPLETED"
 
     if ($Content -match '(?ms)<---\s*DOX\s*(.*?)\s*--->') {
         $metaBlock = $Matches[1]

@@ -61,6 +61,8 @@ if ($Help) {
 
 $workspaceRoot = 'D:\Git_Repositories'
 $cmLogFile = Join-Path $workspaceRoot "Workspace_Inventory\logs\cm_activity.log"
+$proposalsFile = Join-Path $workspaceRoot "Workspace_Inventory\data\proposals\proposals.json"
+$eligibilityModule = Join-Path $workspaceRoot "Workspace_Inventory\modules\WorkspacePushEligibility.psm1"
 
 $targetProposalSet = [System.Collections.Generic.HashSet[int]]::new()
 if ($null -ne $ProposalIds) {
@@ -81,7 +83,57 @@ Write-Host " Timestamp   : $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
 Write-Host "==========================================================================" -ForegroundColor Cyan
 
 # ------------------------------------------------------------------------------
-# 0. Synchronize Gemini AI & Knowledge Base Mirror (RULE-LCM-013)
+# 0. Read-only completion and lockstep preflight. This must precede all mutation.
+# ------------------------------------------------------------------------------
+if (-not (Test-Path -LiteralPath $proposalsFile)) {
+    throw "PUSH cannot continue because the proposal ledger was not found: $proposalsFile"
+}
+if (-not (Test-Path -LiteralPath $eligibilityModule)) {
+    throw "PUSH cannot continue because the eligibility module was not found: $eligibilityModule"
+}
+
+Import-Module -Name $eligibilityModule -Force
+$ledgerJson = Get-Content -LiteralPath $proposalsFile -Raw -Encoding UTF8 | ConvertFrom-Json
+$requestedProposalIds = @($targetProposalSet.ToArray())
+$pushPlan = Resolve-WorkspacePushPlan -Proposals @($ledgerJson.proposals) -RequestedRepositories @($Repositories) -ProposalIds $requestedProposalIds
+
+$repositoryStates = @(
+    foreach ($repoName in $pushPlan.RequiredRepositories) {
+        $repoPath = if ($repoName -eq 'Git_Repositories') { $workspaceRoot } else { Join-Path $workspaceRoot $repoName }
+        $hasGit = Test-Path -LiteralPath (Join-Path $repoPath '.git')
+        $hasRemote = $false
+        $aheadCount = 0
+        $branch = ''
+
+        if ($hasGit) {
+            $remotes = @(git -C $repoPath remote)
+            $hasRemote = $remotes.Count -gt 0
+            if ($hasRemote) {
+                $branch = (git -C $repoPath rev-parse --abbrev-ref HEAD).Trim()
+                $statusSummary = (git -C $repoPath status -sb) -join "`n"
+                if ($statusSummary -match 'ahead\s+(\d+)') {
+                    $aheadCount = [int]$Matches[1]
+                }
+            }
+        }
+
+        [pscustomobject]@{
+            Name = $repoName
+            Path = $repoPath
+            HasGit = $hasGit
+            HasRemote = $hasRemote
+            AheadCount = $aheadCount
+            Branch = $branch
+        }
+    }
+)
+
+Test-WorkspacePushCohort -PushPlan $pushPlan -RepositoryStates $repositoryStates | Out-Null
+Test-WorkspaceProposalBundlesInHead -PushPlan $pushPlan -RepositoryStates $repositoryStates | Out-Null
+Write-Host "  -> Lockstep preflight passed for: $($pushPlan.RequiredRepositories -join ', ')" -ForegroundColor Green
+
+# ------------------------------------------------------------------------------
+# 1. Synchronize Gemini AI & Knowledge Base Mirror (RULE-LCM-013)
 # ------------------------------------------------------------------------------
 if (-not $SkipGemini) {
     Write-Host "`n[Pre-Push Pipeline] Executing Update-Gemini Context & Knowledge Base Synchronization..." -ForegroundColor Yellow
@@ -100,7 +152,7 @@ if (-not $SkipGemini) {
 }
 
 # ------------------------------------------------------------------------------
-# 0.1 Synchronize Tool Catalog & CM Metadata Snapshot for Root Container
+# 2. Synchronize Tool Catalog & CM Metadata Snapshot for Root Container
 # ------------------------------------------------------------------------------
 $updateCatalogScript = Join-Path $workspaceRoot ".lcm\tools\internal\Update-ToolCatalog.ps1"
 if (Test-Path -LiteralPath $updateCatalogScript) {
@@ -114,7 +166,7 @@ if (Test-Path -LiteralPath $updateCatalogScript) {
 }
 
 # ------------------------------------------------------------------------------
-# 0.2 Workspace Maintenance & Daemon Log Truncation
+# 3. Workspace Maintenance & Daemon Log Truncation
 # ------------------------------------------------------------------------------
 $maintenanceScript = Join-Path $workspaceRoot "Workspace_Inventory\tools\Invoke-WorkspaceMaintenance.ps1"
 if (Test-Path -LiteralPath $maintenanceScript) {
@@ -122,43 +174,15 @@ if (Test-Path -LiteralPath $maintenanceScript) {
     & pwsh -File $maintenanceScript -TailLines 100
 }
 
-$allRepos = @()
-
-if ($Repositories -and $Repositories.Count -gt 0) {
-    $allRepos = $Repositories
-} else {
-    $candidateDirs = Get-ChildItem -Path $workspaceRoot -Directory -ErrorAction SilentlyContinue
-    $allRepos = @("Git_Repositories") + @($candidateDirs | Where-Object { Test-Path (Join-Path $_.FullName ".git") } | Select-Object -ExpandProperty Name)
-}
-
 $pushedRepos = @()
 $skippedRepos = @()
 $failedRepos = @()
 
-foreach ($repoName in $allRepos) {
-    $repoPath = if ($repoName -eq "Git_Repositories" -or $repoName -eq ".") { $workspaceRoot } else { Join-Path $workspaceRoot $repoName }
-    if (-not (Test-Path -LiteralPath (Join-Path $repoPath ".git"))) {
-        continue
-    }
-
-    # Check if remote exists
-    $remotes = git -C $repoPath remote
-    if (-not $remotes) {
-        Write-Host "  [$repoName] SKIP (No Git remote configured)" -ForegroundColor DarkGray
-        $skippedRepos += $repoName
-        continue
-    }
-
-    # Check branch & ahead status
-    $branch = (git -C $repoPath rev-parse --abbrev-ref HEAD).Trim()
-    $statusSb = (git -C $repoPath status -sb) -join "`n"
-
-    if ($statusSb -match 'ahead\s+(\d+)') {
-        $aheadCount = $Matches[1]
-    } else {
-        Write-Host "  [$repoName] UP-TO-DATE (Branch: $branch, 0 commits ahead)" -ForegroundColor DarkGray
-        continue
-    }
+foreach ($repositoryState in $repositoryStates) {
+    $repoName = $repositoryState.Name
+    $repoPath = $repositoryState.Path
+    $branch = $repositoryState.Branch
+    $aheadCount = $repositoryState.AheadCount
 
     if ($DryRun) {
         Write-Host "  [$repoName] [DRY RUN] Would push $aheadCount commit(s) on branch '$branch' to remote 'origin':" -ForegroundColor Yellow
@@ -189,25 +213,19 @@ foreach ($repoName in $allRepos) {
     }
 }
 
+$cohortPushed = $failedRepos.Count -eq 0 -and $pushedRepos.Count -eq $pushPlan.RequiredRepositories.Count
 $pushTimestamp = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
-if ($pushedRepos.Count -gt 0) {
+if (-not $cohortPushed) {
+    Write-Host "`n  -> PUSH cohort did not complete. No proposal state will transition to 'pushed'." -ForegroundColor Red
+}
+
+if ($cohortPushed) {
     if ($DryRun) {
         Write-Host "`n  -> [DRY RUN] Would append PUSH_EXECUTED record to cm_activity.log for: $($pushedRepos -join ', ')" -ForegroundColor Yellow
-        $proposalsFile = Join-Path $workspaceRoot "Workspace_Inventory\data\proposals\proposals.json"
-        if (Test-Path -LiteralPath $proposalsFile) {
-            $ledgerJson = Get-Content -LiteralPath $proposalsFile -Raw -Encoding UTF8 | ConvertFrom-Json
-            $transitionCount = 0
-            foreach ($p in $ledgerJson.proposals) {
-                if ($targetProposalSet.Count -gt 0 -and (-not $targetProposalSet.Contains([int]$p.id))) {
-                    continue
-                }
-                if ($p.progress_state -eq "completed" -or $p.state -eq "completed") {
-                    $transitionCount++
-                    Write-Host "      * [DRY RUN] Would transition Proposal $($p.id) ($($p.title)) to 'pushed'" -ForegroundColor Gray
-                }
-            }
-            Write-Host "  -> [DRY RUN] Total $transitionCount completed proposal(s) would transition to 'pushed'." -ForegroundColor Yellow
+        foreach ($proposal in $pushPlan.CompletedProposals) {
+            Write-Host "      * [DRY RUN] Would transition Proposal $($proposal.Id) in $($proposal.Repository) to 'pushed'" -ForegroundColor Gray
         }
+        Write-Host "  -> [DRY RUN] Total $($pushPlan.CompletedProposalIds.Count) completed proposal(s) would transition to 'pushed'." -ForegroundColor Yellow
     } else {
         $lcmVersion = "v7.0.0"
         $invFile = Join-Path $workspaceRoot "Workspace_Inventory\data\inventory.json"
@@ -221,43 +239,36 @@ if ($pushedRepos.Count -gt 0) {
         Add-Content -LiteralPath $cmLogFile -Value $logEntry -Encoding UTF8
         Write-Host "`n  -> Appended PUSH_EXECUTED record to cm_activity.log" -ForegroundColor Green
 
-        # Transition completed proposals to 'pushed' state in proposals.json
-        $proposalsFile = Join-Path $workspaceRoot "Workspace_Inventory\data\proposals\proposals.json"
-        if (Test-Path -LiteralPath $proposalsFile) {
-            $ledgerJson = Get-Content -LiteralPath $proposalsFile -Raw -Encoding UTF8 | ConvertFrom-Json
-            $transitionCount = 0
-            foreach ($p in $ledgerJson.proposals) {
-                $origin = if ($p.origin_repo) { $p.origin_repo } else { "" }
-                $matchesPushed = $pushedRepos | Where-Object { $origin -like "*$_*" }
-                if ($matchesPushed -or $pushedRepos -contains "Workspace_Inventory" -or $pushedRepos -contains "Git_Repositories") {
-                    if ($targetProposalSet.Count -gt 0 -and (-not $targetProposalSet.Contains([int]$p.id))) {
-                        continue
-                    }
-                    if ($p.progress_state -eq "completed" -or $p.state -eq "completed") {
-                        $p.state = "pushed"
-                        $p.progress_state = "pushed"
-                        $p | Add-Member -NotePropertyName "pushed_at" -NotePropertyValue $pushTimestamp -Force
-                        if ($p.PSObject.Properties['dates'] -and $p.dates) {
-                            $p.dates | Add-Member -NotePropertyName "pushed" -NotePropertyValue $pushTimestamp -Force
-                        }
-                        if ($p.PSObject.Properties['state_history'] -and $p.state_history) {
-                            $newHist = [System.Collections.Generic.List[object]]::new(@($p.state_history))
-                            $newHist.Add([PSCustomObject]@{
-                                state = "pushed"
-                                timestamp = $pushTimestamp
-                                user = $env:USERNAME
-                                note = "Pushed to remote ($($pushedRepos -join ', '))"
-                            })
-                            $p.state_history = @($newHist)
-                        }
-                        $transitionCount++
-                    }
-                }
+        # Transition only completed proposals in the successfully pushed cohort.
+        $ledgerJson = Get-Content -LiteralPath $proposalsFile -Raw -Encoding UTF8 | ConvertFrom-Json
+        $transitionCount = 0
+        foreach ($p in $ledgerJson.proposals) {
+            $plannedProposal = @($pushPlan.CompletedProposals | Where-Object { $_.Id -eq [int]$p.id })
+            if ($plannedProposal.Count -eq 0 -or $plannedProposal[0].Repository -notin $pushedRepos) {
+                continue
             }
-            if ($transitionCount -gt 0) {
-                $ledgerJson | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $proposalsFile -Encoding UTF8
-                Write-Host "  -> Transitioned $transitionCount proposal(s) from 'completed' to 'pushed' state in proposals.json." -ForegroundColor Green
+
+            $p.state = "pushed"
+            $p.progress_state = "pushed"
+            $p | Add-Member -NotePropertyName "pushed_at" -NotePropertyValue $pushTimestamp -Force
+            if ($p.PSObject.Properties['dates'] -and $p.dates) {
+                $p.dates | Add-Member -NotePropertyName "pushed" -NotePropertyValue $pushTimestamp -Force
             }
+            if ($p.PSObject.Properties['state_history'] -and $p.state_history) {
+                $newHist = [System.Collections.Generic.List[object]]::new(@($p.state_history))
+                $newHist.Add([PSCustomObject]@{
+                    state = "pushed"
+                    timestamp = $pushTimestamp
+                    user = $env:USERNAME
+                    note = "Pushed to remote ($($pushedRepos -join ', '))"
+                })
+                $p.state_history = @($newHist)
+            }
+            $transitionCount++
+        }
+        if ($transitionCount -gt 0) {
+            $ledgerJson | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $proposalsFile -Encoding UTF8
+            Write-Host "  -> Transitioned $transitionCount proposal(s) from 'completed' to 'pushed' state in proposals.json." -ForegroundColor Green
         }
     }
 }
@@ -266,7 +277,7 @@ if ($pushedRepos.Count -gt 0) {
 # Post-Push Automated Cleanup: BCR Scratch & Stale Baseline Purge
 # ------------------------------------------------------------------------------
 $clearBcrScript = Join-Path $workspaceRoot "Workspace_Inventory\tools\Clear-BCReviewTemp.ps1"
-if (Test-Path -LiteralPath $clearBcrScript) {
+if ($cohortPushed -and (Test-Path -LiteralPath $clearBcrScript)) {
     if ($DryRun) {
         Write-Host "`n  -> [DRY RUN] Would execute automated Beyond Compare review scratch cleanup (Clear-BCReviewTemp -Purge)" -ForegroundColor Yellow
     } else {

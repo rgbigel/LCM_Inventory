@@ -63,7 +63,7 @@ Every workspace proposal in `Workspace_Inventory/data/proposals/proposals.json` 
    * **Line 'Delete' on Left**: Permanently deletes file on disk and in Git.
    * **Line 'Rename to X' on Left**: Renames file on disk and in Git.
    * **Leave Left Untouched**: Skipped / uncommitted in working tree.
-3. **Acceptance Gating**: Only proposals in `verification`, `in_progress`, or `approved` state are eligible for `ACCEPT` / `ACCEPT SELECTED`. Items in `undecided`, `deferred`, `blocked`, or `rejected` are strictly blocked from acceptance.
+3. **Completion Gating**: Only proposals in `verification`, `in_progress`, or `approved` state are eligible for `COMPLETE` / `COMPLETE ALL`. Items in `undecided`, `deferred`, `blocked`, or `rejected` are strictly blocked from completion.
 
 ---
 

@@ -4,15 +4,14 @@ param(
     [Alias('RepositoryName', 'Repo', 'Name')]
     [string]$RepositoryPath,
 
-    [Parameter(Mandatory = $false, HelpMessage = 'Review outcome disposition (Completed, Complete, Accepted, AcceptedAll, AcceptedStaged, AcceptedWithEdits, Rejected, Deferred)')]
-    [ValidateSet("Completed", "Complete", "Accepted", "AcceptedAll", "AcceptedStaged", "AcceptedWithEdits", "Rejected", "Deferred", "ALL", "ACCEPT ALL", "COMPLETE ALL")]
+    [Parameter(Mandatory = $false, HelpMessage = 'Review outcome disposition (Completed, Complete, CompleteAll, CompleteStaged, CompleteWithEdits, Rejected, Deferred)')]
+    [ValidateSet("Completed", "Complete", "CompleteAll", "CompleteStaged", "CompleteWithEdits", "Rejected", "Deferred", "ALL", "COMPLETE ALL")]
     [string]$Result,
 
     [Parameter(Mandatory = $false, HelpMessage = 'Review notes, rationale, or instructions for the audit receipt')]
     [string]$Notes,
 
-    [Parameter(Mandatory = $false, HelpMessage = 'Accept all changes including uncopied files without interactive confirmation')]
-    [Alias('AcceptAll')]
+    [Parameter(Mandatory = $false, HelpMessage = 'Include all changes, including uncopied files, without interactive confirmation')]
     [switch]$All,
 
     [Parameter(Mandatory = $false, HelpMessage = 'Force review commit and bypass safety checks')]
@@ -50,9 +49,9 @@ if ($Help) {
     Write-Host ""
     Write-Host "PARAMETERS:" -ForegroundColor Yellow
     Write-Host "  -RepositoryPath  : Name or path of the repository"
-    Write-Host "  -Result          : Review disposition (Accepted, AcceptedAll, AcceptedWithEdits, Rejected, Deferred)"
+    Write-Host "  -Result          : Review disposition (Completed, CompleteAll, CompleteWithEdits, Rejected, Deferred)"
     Write-Host "  -Notes           : Review notes or rationale"
-    Write-Host "  -All             : Accept all including uncopied files"
+    Write-Host "  -All             : Include all uncopied files"
     Write-Host "  -Force           : Force commit"
     Write-Host "  -Help (-h, -?)   : Displays this help screen"
     Write-Host "==========================================================================" -ForegroundColor Cyan
@@ -100,19 +99,19 @@ if (Test-Path -LiteralPath $stagedManifestFile) {
 }
 
 # ------------------------------------------------------------------------------
-# Check for Uncopied Files and Prompt Operator (Bypassed if ACCEPT ALL / -All is used)
+# Check for Uncopied Files and Prompt Operator (Bypassed if COMPLETE ALL / -All is used)
 # ------------------------------------------------------------------------------
 $includeUncopied = $false
-$isExplicitAcceptAll = ($All -or $Result -in @("AcceptedAll", "ALL", "ACCEPT ALL"))
+$isExplicitCompleteAll = ($All -or $Result -in @("CompleteAll", "ALL", "COMPLETE ALL"))
 
 if ($stagedManifest -and $stagedManifest.Uncopied -and $stagedManifest.Uncopied.Count -gt 0) {
-    if ($isExplicitAcceptAll) {
+    if ($isExplicitCompleteAll) {
         $includeUncopied = $true
-        $Result = "AcceptedAll"
-        Write-Host "[ACCEPT ALL] Confirmed: Automatically including all $($stagedManifest.Uncopied.Count) uncopied/modified file(s) without prompt." -ForegroundColor Green
-    } elseif ($Result -eq "AcceptedStaged") {
+        $Result = "CompleteAll"
+        Write-Host "[COMPLETE ALL] Confirmed: Automatically including all $($stagedManifest.Uncopied.Count) uncopied/modified file(s) without prompt." -ForegroundColor Green
+    } elseif ($Result -eq "CompleteStaged") {
         $includeUncopied = $false
-    } elseif (-not $Force -and ($null -eq $Result -or $Result -in @("Accepted", "AcceptedWithEdits"))) {
+    } elseif (-not $Force -and ($null -eq $Result -or $Result -in @("Complete", "CompleteWithEdits"))) {
         Write-Host ""
         Write-Host "==========================================================================" -ForegroundColor Yellow
         Write-Host " NOTICE: UNCOPIED FILES DETECTED IN REVIEW" -ForegroundColor Yellow
@@ -123,28 +122,28 @@ if ($stagedManifest -and $stagedManifest.Uncopied -and $stagedManifest.Uncopied.
         }
         Write-Host "--------------------------------------------------------------------------"
         Write-Host " Did you forget to copy them, or do you want to include them in this commit?" -ForegroundColor Cyan
-        Write-Host "   [1] Yes, Include All    - Accept staged files PLUS these uncopied files" -ForegroundColor Green
+        Write-Host "   [1] Yes, Include All    - Complete staged files PLUS these uncopied files" -ForegroundColor Green
         Write-Host "   [2] No, Staged Only     - Commit ONLY explicitly copied files (leave these uncommitted)" -ForegroundColor Gray
         Write-Host "   [q] Cancel Review"
         $resp = Read-Host " Enter choice [1-2, q]"
         if ($resp -eq "1" -or $resp -eq "y" -or $resp -eq "yes") {
             $includeUncopied = $true
-            $Result = "Accepted"
+            $Result = "Complete"
         } elseif ($resp -eq "2" -or $resp -eq "n" -or $resp -eq "no") {
             $includeUncopied = $false
-            $Result = "Accepted"
+            $Result = "Complete"
         } else {
             Write-Host "Review submission cancelled." -ForegroundColor Gray
             return
         }
     }
-} elseif ($isExplicitAcceptAll) {
+} elseif ($isExplicitCompleteAll) {
     $includeUncopied = $true
-    $Result = "AcceptedAll"
+    $Result = "CompleteAll"
 }
 
 if ([string]::IsNullOrWhiteSpace($Result)) {
-    $Result = "Accepted"
+    $Result = "Completed"
 }
 
 if ($Result -eq "Rejected") {
@@ -195,9 +194,9 @@ if ($stagedManifest) {
 if ($includeUncopied -or ($null -eq $stagedManifest)) {
     git -C $targetRepoPath add -A
 } else {
-    # Stage accepted files
-    if ($stagedManifest.Accepted) {
-        foreach ($af in $stagedManifest.Accepted) {
+    # Stage reviewed files
+    if ($stagedManifest.Completed) {
+        foreach ($af in $stagedManifest.Completed) {
             git -C $targetRepoPath add $af.RelativePath 2>$null | Out-Null
         }
     }
@@ -210,7 +209,7 @@ if ($includeUncopied -or ($null -eq $stagedManifest)) {
 
 $status = @(git -C $targetRepoPath status --short)
 if ($status.Count -gt 0) {
-    $commitMsg = if (-not [string]::IsNullOrWhiteSpace($Notes)) { $Notes } else { "feat(review): review acceptance by $env:USERNAME" }
+    $commitMsg = if (-not [string]::IsNullOrWhiteSpace($Notes)) { $Notes } else { "feat(review): review completion by $env:USERNAME" }
     git -C $targetRepoPath commit -m "$commitMsg"
     $newCommitSha = (git -C $targetRepoPath rev-parse --short HEAD).Trim()
 
@@ -233,12 +232,12 @@ if ($status.Count -gt 0) {
     # Append to active CM activity ledger
     $cmLogFile = Join-Path $workspaceRoot "Workspace_Inventory\logs\cm_activity.log"
     if (Test-Path -LiteralPath (Split-Path $cmLogFile -Parent)) {
-        $cmLogEntry = "[$timestamp] [REVIEW_SUBMITTED] [Target: $repoName] [Version: v7.1.0] [PushDate: $timestamp] [AffectedRepos: $repoName, Workspace_Inventory] REVIEW_COMMITTED - Committed review acceptance ($newCommitSha): $commitMsg"
+        $cmLogEntry = "[$timestamp] [REVIEW_SUBMITTED] [Target: $repoName] [Version: v7.1.0] [PushDate: $timestamp] [AffectedRepos: $repoName, Workspace_Inventory] REVIEW_COMPLETED - Committed review completion ($newCommitSha): $commitMsg"
         Add-Content -LiteralPath $cmLogFile -Value $cmLogEntry -Encoding UTF8
     }
 
     Write-Host "==========================================================================" -ForegroundColor Cyan
-    Write-Host " REVIEW ACCEPTANCE COMMITTED ($newCommitSha)" -ForegroundColor Green
+    Write-Host " REVIEW COMPLETED AND COMMITTED ($newCommitSha)" -ForegroundColor Green
     Write-Host " Repository : $repoName"
     Write-Host " Message    : $commitMsg"
     Write-Host " Receipt    : $finalReviewFile" -ForegroundColor Cyan

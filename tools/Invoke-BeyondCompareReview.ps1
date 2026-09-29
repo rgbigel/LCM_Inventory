@@ -36,8 +36,8 @@ param(
              and SHA-256 staging manifest generation.
     Path: tools/Invoke-BeyondCompareReview.ps1
     Authors: Rolf, Workspace_AI Engine
-    Version: 8.1.0
-    Date: 2026-09-27
+    Version: 8.2.0
+    Date: 2026-09-28
 .PARAMETER RepositoryName
     The name or directory path of the Git repository to review (e.g. 'AuthorizeMasterUser', 'Git_Repositories', '.').
 .PARAMETER BaseCommit
@@ -78,7 +78,7 @@ if ($Help) {
   Write-Host "  BCR [-RepositoryName <repo>] [-BaseCommit <commit>]"
   Write-Host ""
   Write-Host "REVIEW DIRECTIVES (APPLIED IN LEFT PANE):" -ForegroundColor Yellow
-  Write-Host "  1. Copy Right -> Left     : Staged for ACCEPTANCE upon 'ACCEPT' command."
+  Write-Host "  1. Copy Right -> Left     : Staged for completion upon 'COMPLETE' command."
   Write-Host "  2. Line 'Delete' on Left  : Permanently DELETE file on disk and in Git."
   Write-Host "  3. Line 'Rename [to] X'   : RENAME file on disk and in Git to X (cleans up old file)."
   Write-Host "  4. Leave Left Untouched   : Skipped / remains uncommitted in working directory."
@@ -488,7 +488,7 @@ function Audit-BeyondCompareReviewStaging {
       $_.Name -ne '.lcm_review.json' -and $_.Name -ne '.lcm_baseline_manifest.json' -and $_.Name -ne 'archive.tar'
     })
 
-  $acceptedFiles = [System.Collections.Generic.List[PSCustomObject]]::new()
+  $completedFiles = [System.Collections.Generic.List[PSCustomObject]]::new()
   $renameFiles = [System.Collections.Generic.List[PSCustomObject]]::new()
   $deleteFiles = [System.Collections.Generic.List[PSCustomObject]]::new()
   $uncopiedFiles = [System.Collections.Generic.List[PSCustomObject]]::new()
@@ -550,11 +550,11 @@ function Audit-BeyondCompareReviewStaging {
 
     if ($leftHash -and $rightHash -and $leftHash -eq $rightHash) {
       if ($leftHash -ne $baselineHash) {
-        $acceptedFiles.Add([PSCustomObject]@{
+        $completedFiles.Add([PSCustomObject]@{
             RelativePath = $rel
             LivePath     = $rfPath
             Hash         = $leftHash
-            Status       = "ACCEPTED"
+          Status       = "COMPLETED"
           })
       }
     }
@@ -584,7 +584,7 @@ function Audit-BeyondCompareReviewStaging {
     BaselineCommit = $CommitSha
     TempReviewRoot = $TempReviewRoot
     Timestamp      = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
-    Accepted       = $acceptedFiles
+    Completed      = $completedFiles
     Renames        = $renameFiles
     Deletions      = $deleteFiles
     Uncopied       = $uncopiedFiles
@@ -603,9 +603,9 @@ function Audit-BeyondCompareReviewStaging {
   Write-Host " Staging Record  : $manifestFile" -ForegroundColor DarkCyan
   Write-Host "--------------------------------------------------------------------------"
 
-  if ($acceptedFiles.Count -gt 0) {
-    Write-Host " [STAGED FOR ACCEPTANCE] ($($acceptedFiles.Count) files):" -ForegroundColor Green
-    foreach ($af in $acceptedFiles) { Write-Host "   + $($af.RelativePath)" -ForegroundColor Green }
+  if ($completedFiles.Count -gt 0) {
+    Write-Host " [STAGED FOR COMPLETION] ($($completedFiles.Count) files):" -ForegroundColor Green
+    foreach ($cf in $completedFiles) { Write-Host "   + $($cf.RelativePath)" -ForegroundColor Green }
   }
 
   if ($renameFiles.Count -gt 0) {
@@ -632,9 +632,9 @@ function Audit-BeyondCompareReviewStaging {
 
   Write-Host "==========================================================================" -ForegroundColor Cyan
   Write-Host " Awaiting Operator Command:" -ForegroundColor Yellow
-  Write-Host "   - 'ACCEPT'        -> Commits staged files, executes renames & clean deletions."
+  Write-Host "   - 'COMPLETE'      -> Commits staged files, executes renames & clean deletions locally."
   if ($uncopiedFiles.Count -gt 0) {
-    Write-Host "   - 'ACCEPT ALL'    -> Commits staged files PLUS all uncopied files above."
+    Write-Host "   - 'COMPLETE ALL'  -> Commits staged files PLUS all uncopied files above locally."
   }
   Write-Host "   - 'REJECT'        -> Discards review staging; zero changes committed."
   Write-Host "==========================================================================" -ForegroundColor Cyan
@@ -889,8 +889,8 @@ $filterMask = ($filterList -join ';')
 # ------------------------------------------------------------------------------
 # 6. Establish Dedicated Per-CRP Review Bridge & Update Review Session
 # ------------------------------------------------------------------------------
-# Safely purge any stale live junctions in this review directory
-$oldJunctions = @(Get-ChildItem -LiteralPath $crpReviewDir -Directory -Force -ErrorAction SilentlyContinue | Where-Object { $_.Name -like "Live_*" -and $_.LinkType -eq 'Junction' })
+# Safely purge any stale live junctions in this review directory for this repository only
+$oldJunctions = @(Get-ChildItem -LiteralPath $crpReviewDir -Directory -Force -ErrorAction SilentlyContinue | Where-Object { $_.Name -like "Live_${repoName}_*" -and $_.LinkType -eq 'Junction' })
 foreach ($oj in $oldJunctions) {
   try { [System.IO.Directory]::Delete($oj.FullName, $false) } catch {}
 }
