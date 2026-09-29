@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-09-29T17:45:00+02:00",
+  "updated_at": "2026-09-29T18:15:00+02:00",
   "review_granularity": "tight",
   "lcm_mode": "active",
-  "last_proposal_id": 195,
+  "last_proposal_id": 196,
   "proposals": [
     {
       "id": 1,
@@ -9172,7 +9172,7 @@
       "timestamp": "2026-09-28 21:10:00",
       "title": "LCM Runtime Decoupling, SharedModules Governance Integration, and Editor Review Safety Invariant",
       "origin_repo": "Workspace_Inventory",
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "CRP-187",
       "author": "Rolf, Antigravity AI Assistant",
       "details": "Completed runtime decoupling, SharedModules governance, editor review safety, and directional lockstep documentation.",
@@ -9187,7 +9187,8 @@
       },
       "dates": {
         "created": "2026-09-28 21:10:00",
-        "in_progress": "2026-09-28 21:10:00"
+        "in_progress": "2026-09-28 21:10:00",
+        "pushed": "2026-09-29 18:05:46"
       },
       "state_history": [
         {
@@ -9195,20 +9196,27 @@
           "timestamp": "2026-09-28 21:10:00",
           "user": "Rolf, Antigravity AI Assistant",
           "note": "CRP-187 registered for active batch review across affected repositories."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-29 18:05:46",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, Workspace_AI, Workspace_Inventory)"
         }
       ],
       "priority": "H",
       "type": "CRP",
       "crp_id": "CRP-187",
       "cr_id": "CRP-187",
-      "progress_state": "completed"
+      "progress_state": "pushed",
+      "pushed_at": "2026-09-29 18:05:46"
     },
     {
       "id": 188,
       "timestamp": "2026-09-28 21:46:00",
       "title": "Version Synchronization Invariant, Element Telemetry Logging, ShowXYZ View Density, and Dynamic HTML-JSON Runtime Contract",
       "origin_repo": "Workspace_Inventory",
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "CRP-188",
       "author": "Rolf, Antigravity AI Assistant",
       "details": "Completed version synchronization, element telemetry, ShowXYZ density, and dynamic HTML-JSON runtime contract definition.",
@@ -9223,7 +9231,8 @@
       },
       "dates": {
         "created": "2026-09-28 21:46:00",
-        "suggested": "2026-09-28 21:46:00"
+        "suggested": "2026-09-28 21:46:00",
+        "pushed": "2026-09-29 18:05:46"
       },
       "state_history": [
         {
@@ -9231,6 +9240,12 @@
           "timestamp": "2026-09-28 21:46:00",
           "user": "Rolf, Antigravity AI Assistant",
           "note": "CRP-188 intake registered in preliminary suggested state (severity: High, priority: Low)."
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-09-29 18:05:46",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, Workspace_AI, Workspace_Inventory)"
         }
       ],
       "priority": "L",
@@ -9238,7 +9253,8 @@
       "type": "CRP",
       "crp_id": "CRP-188",
       "cr_id": "CRP-188",
-      "progress_state": "completed"
+      "progress_state": "pushed",
+      "pushed_at": "2026-09-29 18:05:46"
     },
     {
       "id": 189,
@@ -9255,7 +9271,7 @@
       "app_id": "App: 1",
       "primary_app": "App: 1",
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/BUG-189-LCM-Lifecycle-Command-Migration-and-Lockstep-Push",
       "docs": {
@@ -9269,7 +9285,8 @@
       "details": "Scoped BCR reviewed; completion authorized by operator. Focused parser checks and WorkspacePushEligibility Pester tests passed.",
       "plan_path": "docs/Proposals/BUG-189-LCM-Lifecycle-Command-Migration-and-Lockstep-Push/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/BUG-189-LCM-Lifecycle-Command-Migration-and-Lockstep-Push/Walkthrough.md",
-      "progress_state": "completed"
+      "progress_state": "pushed",
+      "pushed_at": "2026-09-29 18:05:46"
     },
     {
       "id": 190,
@@ -9281,8 +9298,8 @@
       "app_id": "App: 1",
       "primary_app": null,
       "affected_apps": null,
-      "state": "suggested",
-      "progress_state": "undecided",
+      "state": "completed",
+      "progress_state": "completed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-190-Antigravity-Temporary-Tool-Guardrails-and-Prefligh",
       "docs": {
@@ -9293,9 +9310,31 @@
       "commit_sha": null,
       "github_url": null,
       "author": "rgbig",
-      "details": "Define enforceable rules and a reusable preflight helper for temporary Antigravity IDE tools: safe PowerShell command transport, AST validation, StrictMode initialization, shared-resource contention checks, elevation routing, idempotent string normalization, and managed scratch locations.",
+      "details": "Approved preliminary design record: retain the temporary-tool guardrail and preflight goals; future guard-helper implementation remains separate work.",
       "plan_path": "docs/Proposals/CRP-190-Antigravity-Temporary-Tool-Guardrails-and-Prefligh/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-190-Antigravity-Temporary-Tool-Guardrails-and-Prefligh/Walkthrough.md"
+    },
+    {
+      "id": 196,
+      "crp_id": "CRP-196",
+      "timestamp": "2026-09-29 18:15:00",
+      "title": "LCM Control Hub Lifecycle and Action Model Redesign",
+      "origin_repo": "Workspace_Inventory",
+      "cr_id": "CRP-196",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "suggested",
+      "progress_state": "undecided",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/CRP-196-LCM-Control-Hub-Lifecycle-and-Action-Model-Redesign",
+      "docs": { "specification": "Specification.md", "plan": "Implementation_Plan.md", "walkthrough": "Walkthrough.md" },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig",
+      "details": "Redesign the LCM Control Hub lifecycle terminology, transition actions, layout, fast-complete route, and sidecar interaction model.",
+      "plan_path": "docs/Proposals/CRP-196-LCM-Control-Hub-Lifecycle-and-Action-Model-Redesign/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-196-LCM-Control-Hub-Lifecycle-and-Action-Model-Redesign/Walkthrough.md"
     },
     {
       "id": 195,
@@ -9304,21 +9343,51 @@
       "title": "Close Stale Beyond Compare Review Windows Before Relaunch",
       "origin_repo": "Workspace_Inventory",
       "cr_id": "BUG-195",
-      "affected_repos": ["Workspace_Inventory"],
+      "affected_repos": [
+        "Workspace_Inventory"
+      ],
       "app_id": "App: 1",
       "primary_app": "App: 1",
       "affected_apps": null,
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/BUG-195-Close-Stale-Beyond-Compare-Review-Windows",
-      "docs": { "specification": "Specification.md", "plan": "Implementation_Plan.md", "walkthrough": "Walkthrough.md" },
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
       "commit_sha": null,
       "github_url": null,
       "author": "rgbig",
       "details": "Scoped BCR reviewed; stale same-repository BCompare review windows are closed before replacement dispatch.",
       "plan_path": "docs/Proposals/BUG-195-Close-Stale-Beyond-Compare-Review-Windows/Implementation_Plan.md",
-      "walkthrough_path": "docs/Proposals/BUG-195-Close-Stale-Beyond-Compare-Review-Windows/Walkthrough.md"
+      "walkthrough_path": "docs/Proposals/BUG-195-Close-Stale-Beyond-Compare-Review-Windows/Walkthrough.md",
+      "pushed_at": "2026-09-29 18:05:46"
+    },
+    {
+      "id": 165,
+      "crp_id": "CRP-165",
+      "timestamp": "2026-09-29 18:15:00",
+      "title": "Beyond Compare Replacement Session Hygiene",
+      "origin_repo": "Workspace_Inventory",
+      "cr_id": "CRP-165",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "pushed",
+      "progress_state": "pushed",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/CRP-165-Beyond-Compare-Replacement-Session-Hygiene",
+      "docs": { "specification": "Specification.md", "plan": "Implementation_Plan.md", "walkthrough": "Walkthrough.md" },
+      "commit_sha": "c314f93",
+      "github_url": null,
+      "author": "rgbig",
+      "details": "Backfilled record for the delivered same-repository stale BCompare review-window cleanup, implemented and published with BUG-195.",
+      "plan_path": "docs/Proposals/CRP-165-Beyond-Compare-Replacement-Session-Hygiene/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-165-Beyond-Compare-Replacement-Session-Hygiene/Walkthrough.md",
+      "pushed_at": "2026-09-29 18:05:46"
     },
     {
       "id": 194,
@@ -9327,21 +9396,28 @@
       "title": "PUSH Omitted Repository Filter Normalization",
       "origin_repo": "Workspace_Inventory",
       "cr_id": "BUG-194",
-      "affected_repos": ["Workspace_Inventory"],
+      "affected_repos": [
+        "Workspace_Inventory"
+      ],
       "app_id": "App: 1",
       "primary_app": "App: 1",
       "affected_apps": null,
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/BUG-194-PUSH-Omitted-Repository-Filter-Normalization",
-      "docs": { "specification": "Specification.md", "plan": "Implementation_Plan.md", "walkthrough": "Walkthrough.md" },
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
       "commit_sha": null,
       "github_url": null,
       "author": "rgbig",
       "details": "Scoped BCR review completed; blank repository filters are normalized before full-cohort push-plan resolution.",
       "plan_path": "docs/Proposals/BUG-194-PUSH-Omitted-Repository-Filter-Normalization/Implementation_Plan.md",
-      "walkthrough_path": "docs/Proposals/BUG-194-PUSH-Omitted-Repository-Filter-Normalization/Walkthrough.md"
+      "walkthrough_path": "docs/Proposals/BUG-194-PUSH-Omitted-Repository-Filter-Normalization/Walkthrough.md",
+      "pushed_at": "2026-09-29 18:05:46"
     },
     {
       "id": 193,
@@ -9356,7 +9432,7 @@
       "app_id": "App: 1",
       "primary_app": "App: 1",
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/BUG-193-PUSH-Proposal-ID-HashSet-Enumeration-Failure",
       "docs": {
@@ -9370,7 +9446,8 @@
       "details": "Scoped BCR reviewed; HashSet enumeration fixed and PS7-only runtime enforcement validated.",
       "plan_path": "docs/Proposals/BUG-193-PUSH-Proposal-ID-HashSet-Enumeration-Failure/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/BUG-193-PUSH-Proposal-ID-HashSet-Enumeration-Failure/Walkthrough.md",
-      "progress_state": "completed"
+      "progress_state": "pushed",
+      "pushed_at": "2026-09-29 18:05:46"
     },
     {
       "id": 192,
@@ -9382,8 +9459,8 @@
       "app_id": "App: 1",
       "primary_app": null,
       "affected_apps": null,
-      "state": "suggested",
-      "progress_state": "undecided",
+      "state": "completed",
+      "progress_state": "completed",
       "priority": "L",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-192-Compact-Inclusion-Scoped-Beyond-Compare-Review",
@@ -9393,9 +9470,9 @@
       "commit_sha": null,
       "github_url": null,
       "author": "rgbig",
-      "details": "Add an opt-in, inclusion-scoped BCR review mode that materializes isolated baseline and working trees from an explicit review manifest, keeping unrelated dirty files out of the session.",
-      "plan_path": null,
-      "walkthrough_path": null
+      "details": "Approved preliminary design record: retain the opt-in compact BCR goal with hierarchy-preserving, collision-safe inclusion trees and deterministic session behavior.",
+      "plan_path": "docs/Proposals/CRP-192-Compact-Inclusion-Scoped-Beyond-Compare-Review/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-192-Compact-Inclusion-Scoped-Beyond-Compare-Review/Walkthrough.md"
     },
     {
       "id": 191,
@@ -9407,8 +9484,8 @@
       "app_id": "App: 1",
       "primary_app": null,
       "affected_apps": null,
-      "state": "suggested",
-      "progress_state": "undecided",
+      "state": "completed",
+      "progress_state": "completed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-191-Workspace-Repository-Index-Enrollment-Filter-and-S",
       "docs": {
@@ -9419,7 +9496,7 @@
       "commit_sha": null,
       "github_url": null,
       "author": "rgbig",
-      "details": "Create a Workspace_Inventory-owned repository index that makes every workspace repository and discoverable directory visible, distinguishes governed .git repositories from discovered but not-onboarded repositories, provides user-editable metadata overlays, and introduces ShowRepos for console and HTML management.",
+      "details": "Approved preliminary design record: retain the repository-index and ShowRepos goals; future implementation remains separate work.",
       "plan_path": "docs/Proposals/CRP-191-Workspace-Repository-Index-Enrollment-Filter-and-S/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-191-Workspace-Repository-Index-Enrollment-Filter-and-S/Walkthrough.md"
     }

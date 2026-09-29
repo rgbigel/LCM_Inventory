@@ -3,15 +3,23 @@
 ```yaml
 CRP-ID: CRP-191
 Scope: Workspace_Inventory repository discovery, metadata, and change visibility
-Status: Suggested
-Plan-State: suggested
-Progress-State: undecided
+Status: Completed
+Plan-State: completed
+Progress-State: completed
+Maturity: Preliminary design record
 Owner: Workspace_Inventory
 ```
 
 ## Problem
 
 The workspace is intentionally split into repositories with distinct ownership, but repository boundaries currently fragment change visibility. Existing inventory output discovers Git and non-Git directories, yet it does not provide a durable enrollment distinction, a user-editable metadata layer, or a workspace-wide repository management command.
+
+## Current Rebaseline
+
+The goal remains unchanged. Review must confirm that a future index respects
+strict repository ownership while still presenting a workspace-wide view, and
+that its metadata operations remain read-only with respect to physical
+repositories.
 
 ## Core Invariant
 
