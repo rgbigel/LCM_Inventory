@@ -114,6 +114,7 @@ function Resolve-WorkspacePushPlan {
 
   $requestedTargets = @(
     $RequestedRepositories |
+      Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
       ForEach-Object { ConvertTo-WorkspacePushRepositoryName -RepositoryName $_ } |
       Where-Object { $_ -ne 'Workspace_Inventory' } |
       Select-Object -Unique

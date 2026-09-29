@@ -99,7 +99,8 @@ if (-not (Test-Path -LiteralPath $eligibilityModule)) {
 Import-Module -Name $eligibilityModule -Force
 $ledgerJson = Get-Content -LiteralPath $proposalsFile -Raw -Encoding UTF8 | ConvertFrom-Json
 $requestedProposalIds = @($targetProposalSet)
-$pushPlan = Resolve-WorkspacePushPlan -Proposals @($ledgerJson.proposals) -RequestedRepositories @($Repositories) -ProposalIds $requestedProposalIds
+$requestedRepositories = if ($null -eq $Repositories) { @() } else { @($Repositories | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }) }
+$pushPlan = Resolve-WorkspacePushPlan -Proposals @($ledgerJson.proposals) -RequestedRepositories $requestedRepositories -ProposalIds $requestedProposalIds
 
 $repositoryStates = @(
     foreach ($repoName in $pushPlan.RequiredRepositories) {

@@ -41,6 +41,18 @@ Describe 'Workspace push eligibility' {
     $plan.CompletedProposals[0].BundlePath | Should -Be ''
   }
 
+  It 'includes every completed proposal when no repository filter is supplied' {
+    $proposals = @(
+      [pscustomobject]@{ id = 105; origin_repo = 'ExampleRepo'; state = 'completed'; progress_state = 'completed' },
+      [pscustomobject]@{ id = 106; origin_repo = 'Workspace_Inventory'; state = 'completed'; progress_state = 'completed' }
+    )
+
+    $plan = Resolve-WorkspacePushPlan -Proposals $proposals -RequestedRepositories @('')
+
+    $plan.CompletedProposalIds | Should -Contain 105
+    $plan.CompletedProposalIds | Should -Contain 106
+  }
+
   It 'allows a fully eligible completed proposal lockstep cohort' {
     $proposals = @(
       [pscustomobject]@{ id = 103; origin_repo = 'ExampleRepo'; state = 'completed'; progress_state = 'completed' }
