@@ -6,8 +6,8 @@
   Purpose: Iterates across all governed and child repositories under D:\Git_Repositories, detects if a Git remote exists and if local branch is ahead of remote tracking branch, and executes git push with structured audit logging.
   Path: Workspace_Inventory/tools/Invoke-WorkspacePush.ps1
   Authors: Rolf, Workspace_AI Engine
-  Version: 8.0.0
-  Date: 2026-09-26
+    Version: 8.0.1
+    Date: 2026-09-29
 #>
 
 [CmdletBinding()]
@@ -37,6 +37,10 @@ param(
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+
+if ($PSVersionTable.PSEdition -ne 'Core' -or $PSVersionTable.PSVersion.Major -lt 7) {
+    throw 'Invoke-WorkspacePush.ps1 requires PowerShell 7 (pwsh.exe). Windows PowerShell (powershell.exe) is not supported.'
+}
 
 if ($Help) {
     Write-Host "==========================================================================" -ForegroundColor Cyan
@@ -94,7 +98,7 @@ if (-not (Test-Path -LiteralPath $eligibilityModule)) {
 
 Import-Module -Name $eligibilityModule -Force
 $ledgerJson = Get-Content -LiteralPath $proposalsFile -Raw -Encoding UTF8 | ConvertFrom-Json
-$requestedProposalIds = @($targetProposalSet.ToArray())
+$requestedProposalIds = @($targetProposalSet)
 $pushPlan = Resolve-WorkspacePushPlan -Proposals @($ledgerJson.proposals) -RequestedRepositories @($Repositories) -ProposalIds $requestedProposalIds
 
 $repositoryStates = @(

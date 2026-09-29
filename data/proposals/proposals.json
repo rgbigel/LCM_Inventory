@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-09-29T17:04:39+02:00",
+  "updated_at": "2026-09-29T17:12:46+02:00",
   "review_granularity": "tight",
   "lcm_mode": "active",
-  "last_proposal_id": 192,
+  "last_proposal_id": 193,
   "proposals": [
     {
       "id": 1,
@@ -9296,6 +9296,35 @@
       "details": "Define enforceable rules and a reusable preflight helper for temporary Antigravity IDE tools: safe PowerShell command transport, AST validation, StrictMode initialization, shared-resource contention checks, elevation routing, idempotent string normalization, and managed scratch locations.",
       "plan_path": "docs/Proposals/CRP-190-Antigravity-Temporary-Tool-Guardrails-and-Prefligh/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-190-Antigravity-Temporary-Tool-Guardrails-and-Prefligh/Walkthrough.md"
+    },
+    {
+      "id": 193,
+      "crp_id": "BUG-193",
+      "timestamp": "2026-09-29 17:08:16",
+      "title": "PUSH Proposal ID HashSet Enumeration Failure",
+      "origin_repo": "Workspace_Inventory",
+      "cr_id": "BUG-193",
+      "affected_repos": [
+        "Workspace_Inventory"
+      ],
+      "app_id": "App: 1",
+      "primary_app": "App: 1",
+      "affected_apps": null,
+      "state": "completed",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/BUG-193-PUSH-Proposal-ID-HashSet-Enumeration-Failure",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig",
+      "details": "Scoped BCR reviewed; HashSet enumeration fixed and PS7-only runtime enforcement validated.",
+      "plan_path": "docs/Proposals/BUG-193-PUSH-Proposal-ID-HashSet-Enumeration-Failure/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/BUG-193-PUSH-Proposal-ID-HashSet-Enumeration-Failure/Walkthrough.md",
+      "progress_state": "completed"
     },
     {
       "id": 192,
