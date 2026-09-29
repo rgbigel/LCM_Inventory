@@ -23,15 +23,16 @@ data/artifacts/
 data/readiness/
 data/reviews/
 data/staging/
+data/logs/lcm/
+data/logs/lcm-internal/*.log
+data/logs/lcm-internal/actions.jsonl
 
 # VS Code local workspace state
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 
-# LCM Local Governance (physical rules tracked in Workspace_Inventory)
-!.agents/
-!.agents/rules/
-!.agents/rules/*
+# Canonical LCM rules are owned and tracked by Workspace_AI.
+.agents/rules/
 
 temp/

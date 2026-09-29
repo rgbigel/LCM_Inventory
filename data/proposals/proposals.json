@@ -9298,8 +9298,8 @@
       "app_id": "App: 1",
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-190-Antigravity-Temporary-Tool-Guardrails-and-Prefligh",
       "docs": {
@@ -9312,7 +9312,8 @@
       "author": "rgbig",
       "details": "Approved preliminary design record: retain the temporary-tool guardrail and preflight goals; future guard-helper implementation remains separate work.",
       "plan_path": "docs/Proposals/CRP-190-Antigravity-Temporary-Tool-Guardrails-and-Prefligh/Implementation_Plan.md",
-      "walkthrough_path": "docs/Proposals/CRP-190-Antigravity-Temporary-Tool-Guardrails-and-Prefligh/Walkthrough.md"
+      "walkthrough_path": "docs/Proposals/CRP-190-Antigravity-Temporary-Tool-Guardrails-and-Prefligh/Walkthrough.md",
+      "pushed_at": "2026-09-29 19:42:33"
     },
     {
       "id": 196,
@@ -9328,7 +9329,11 @@
       "progress_state": "undecided",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-196-LCM-Control-Hub-Lifecycle-and-Action-Model-Redesign",
-      "docs": { "specification": "Specification.md", "plan": "Implementation_Plan.md", "walkthrough": "Walkthrough.md" },
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
       "commit_sha": null,
       "github_url": null,
       "author": "rgbig",
@@ -9380,7 +9385,11 @@
       "progress_state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-165-Beyond-Compare-Replacement-Session-Hygiene",
-      "docs": { "specification": "Specification.md", "plan": "Implementation_Plan.md", "walkthrough": "Walkthrough.md" },
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
       "commit_sha": "c314f93",
       "github_url": null,
       "author": "rgbig",
@@ -9459,8 +9468,8 @@
       "app_id": "App: 1",
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "priority": "L",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-192-Compact-Inclusion-Scoped-Beyond-Compare-Review",
@@ -9472,7 +9481,8 @@
       "author": "rgbig",
       "details": "Approved preliminary design record: retain the opt-in compact BCR goal with hierarchy-preserving, collision-safe inclusion trees and deterministic session behavior.",
       "plan_path": "docs/Proposals/CRP-192-Compact-Inclusion-Scoped-Beyond-Compare-Review/Implementation_Plan.md",
-      "walkthrough_path": "docs/Proposals/CRP-192-Compact-Inclusion-Scoped-Beyond-Compare-Review/Walkthrough.md"
+      "walkthrough_path": "docs/Proposals/CRP-192-Compact-Inclusion-Scoped-Beyond-Compare-Review/Walkthrough.md",
+      "pushed_at": "2026-09-29 19:42:33"
     },
     {
       "id": 191,
@@ -9484,8 +9494,8 @@
       "app_id": "App: 1",
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-191-Workspace-Repository-Index-Enrollment-Filter-and-S",
       "docs": {
@@ -9498,7 +9508,8 @@
       "author": "rgbig",
       "details": "Approved preliminary design record: retain the repository-index and ShowRepos goals; future implementation remains separate work.",
       "plan_path": "docs/Proposals/CRP-191-Workspace-Repository-Index-Enrollment-Filter-and-S/Implementation_Plan.md",
-      "walkthrough_path": "docs/Proposals/CRP-191-Workspace-Repository-Index-Enrollment-Filter-and-S/Walkthrough.md"
+      "walkthrough_path": "docs/Proposals/CRP-191-Workspace-Repository-Index-Enrollment-Filter-and-S/Walkthrough.md",
+      "pushed_at": "2026-09-29 19:42:33"
     }
   ],
   "active_context": {
