@@ -938,6 +938,14 @@ else {
   "Live $repoName"
 }
 
+$staleReviewProcesses = @(Get-Process -Name 'BCompare' -ErrorAction SilentlyContinue | Where-Object {
+    $_.MainWindowTitle -like "*$repoName*" -and $_.MainWindowTitle -like '*<-->*'
+  })
+foreach ($staleReviewProcess in $staleReviewProcesses) {
+  Write-Host "Closing stale Beyond Compare review window: $($staleReviewProcess.MainWindowTitle)" -ForegroundColor DarkYellow
+  Stop-Process -Id $staleReviewProcess.Id -Force -ErrorAction SilentlyContinue
+}
+
 Write-Host "Launching Beyond Compare on interactive desktop (Per-CRP Session Isolation)..." -ForegroundColor Green
 Write-Host ("  Session Name:        {0}" -f $sessionName)
 Write-Host ("  Left (Baseline {0}): {1}" -f $commitSha, $tempReviewRoot)
