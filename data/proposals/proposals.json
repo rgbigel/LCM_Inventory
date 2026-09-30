@@ -9601,6 +9601,26 @@
       "github_url": null,
       "author": "rgbig",
       "details": "Audit-BeyondCompareReviewStaging accessed Count on a scalar string when a baseline file contained one meaningful line under StrictMode."
+    },
+    {
+      "id": 201,
+      "crp_id": "CRP-201",
+      "timestamp": "2026-09-30 22:00:00",
+      "title": "Methodology documentation reconciliation for review and release closure",
+      "origin_repo": "Workspace_AI",
+      "cr_id": "CRP-201",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": [],
+      "state": "suggested",
+      "progress_state": "undecided",
+      "priority": "High",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/CRP-201-Methodology-Documentation-Reconciliation-for-Review-and-Release-Closure",
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig",
+      "details": "Clarify methodology boundaries between visual review, tracked operational records, Git publication, and release-closure documentation synthesis."
     }
   ],
   "active_context": {
