@@ -9547,8 +9547,8 @@
       "app_id": "App: 1",
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-198-RollingCalendar-New-Repository-Integration",
       "docs": {
@@ -9561,7 +9561,8 @@
       "author": "rgbig",
       "details": "New standalone repository integrating Invoke-RollingCalendar.ps1 as an LCM-governed repository; all German strings translated to English; tripartite docs and 7-phase install runbook included.",
       "plan_path": "docs/Proposals/CRP-198-RollingCalendar-New-Repository-Integration/Implementation_Plan.md",
-      "walkthrough_path": "docs/Proposals/CRP-198-RollingCalendar-New-Repository-Integration/Walkthrough.md"
+      "walkthrough_path": "docs/Proposals/CRP-198-RollingCalendar-New-Repository-Integration/Walkthrough.md",
+      "pushed_at": "2026-09-30 13:17:01"
     }
   ],
   "active_context": {
