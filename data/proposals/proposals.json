@@ -4,7 +4,7 @@
   "updated_at": "2026-09-29T18:15:00+02:00",
   "review_granularity": "tight",
   "lcm_mode": "active",
-  "last_proposal_id": 196,
+  "last_proposal_id": 197,
   "proposals": [
     {
       "id": 1,
@@ -9316,6 +9316,32 @@
       "pushed_at": "2026-09-29 19:42:33"
     },
     {
+      "id": 197,
+      "crp_id": "CRP-197",
+      "timestamp": "2026-09-29 20:00:00",
+      "title": "Delivery and Verification Follow-Through for CRPs 190-195",
+      "origin_repo": "Workspace_Inventory",
+      "cr_id": "CRP-197",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "review",
+      "progress_state": "verification",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/CRP-197-Delivery-and-Verification-Follow-Through-for-CRPs-190-195",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig",
+      "details": "Deliver the unimplemented CRP-190/191/192 scopes and add durable verification for BCompare session hygiene from BUG-195; CRP-193 and BUG-194 require no additional extraction.",
+      "plan_path": "docs/Proposals/CRP-197-Delivery-and-Verification-Follow-Through-for-CRPs-190-195/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-197-Delivery-and-Verification-Follow-Through-for-CRPs-190-195/Walkthrough.md"
+    },
+    {
       "id": 196,
       "crp_id": "CRP-196",
       "timestamp": "2026-09-29 18:15:00",
@@ -9510,6 +9536,32 @@
       "plan_path": "docs/Proposals/CRP-191-Workspace-Repository-Index-Enrollment-Filter-and-S/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-191-Workspace-Repository-Index-Enrollment-Filter-and-S/Walkthrough.md",
       "pushed_at": "2026-09-29 19:42:33"
+    },
+    {
+      "id": 198,
+      "crp_id": "CRP-198",
+      "timestamp": "2026-09-30 11:42:00",
+      "title": "RollingCalendar -- New Repository Integration",
+      "origin_repo": "RollingCalendar",
+      "cr_id": "CRP-198",
+      "app_id": "App: 1",
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "completed",
+      "progress_state": "completed",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/CRP-198-RollingCalendar-New-Repository-Integration",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": "14073860e8280097f91185acf352feac20ea0040",
+      "github_url": "https://github.com/rgbigel/RollingCalendar/tree/14073860e8280097f91185acf352feac20ea0040",
+      "author": "rgbig",
+      "details": "New standalone repository integrating Invoke-RollingCalendar.ps1 as an LCM-governed repository; all German strings translated to English; tripartite docs and 7-phase install runbook included.",
+      "plan_path": "docs/Proposals/CRP-198-RollingCalendar-New-Repository-Integration/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-198-RollingCalendar-New-Repository-Integration/Walkthrough.md"
     }
   ],
   "active_context": {
