@@ -36,8 +36,8 @@ param(
              and SHA-256 staging manifest generation.
     Path: tools/Invoke-BeyondCompareReview.ps1
     Authors: Rolf, Workspace_AI Engine
-    Version: 8.3.0
-    Date: 2026-09-29
+    Version: 8.4.1
+    Date: 2026-09-30
 .PARAMETER RepositoryName
     The name or directory path of the Git repository to review (e.g. 'AuthorizeMasterUser', 'Git_Repositories', '.').
 .PARAMETER BaseCommit
@@ -64,7 +64,7 @@ Import-Module -Name $bcompareWindowToolsPath -Force
 $bcompareBaselinePath = Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\BCompareBaseline.psm1'
 Import-Module -Name $bcompareBaselinePath -Force
 
-$scriptVersion = "8.3.0"
+$scriptVersion = "8.4.1"
 $scriptName = "Invoke-BeyondCompareReview"
 
 # ------------------------------------------------------------------------------
@@ -325,6 +325,20 @@ function Update-BCReviewSession {
   }
 }
 
+function Get-FileSha256 {
+  [CmdletBinding()]
+  param(
+    [Parameter(Mandatory = $true)]
+    [string]$FilePath
+  )
+
+  if (-not (Test-Path -LiteralPath $FilePath)) { return $null }
+  $sha = [System.Security.Cryptography.SHA256]::Create()
+  $bytes = [System.IO.File]::ReadAllBytes($FilePath)
+  $hashBytes = $sha.ComputeHash($bytes)
+  return [System.BitConverter]::ToString($hashBytes).Replace('-', '').ToLowerInvariant()
+}
+
 function Audit-BeyondCompareReviewStaging {
   [CmdletBinding()]
   param(
@@ -358,67 +372,6 @@ function Audit-BeyondCompareReviewStaging {
     catch {}
   }
 
-  function Get-FileSha256([string]$filePath) {
-    if (-not (Test-Path -LiteralPath $filePath)) { return $null }
-    $sha = [System.Security.Cryptography.SHA256]::Create()
-    $bytes = [System.IO.File]::ReadAllBytes($filePath)
-    $hashBytes = $sha.ComputeHash($bytes)
-    return [System.BitConverter]::ToString($hashBytes).Replace('-', '').ToLowerInvariant()
-  }
-
-  function Test-PathExcluded([string]$relPath) {
-    if ($relPath -like ".git*" -or $relPath -like "*\.git\*" -or $relPath -like "*\logs\*" -or $relPath -like "logs\*" -or $relPath -like "*\scratch\*" -or $relPath -like "scratch\*" -or $relPath -like "*.log" -or $relPath -like "*.tmp" -or $relPath -like ".venv*" -or $relPath -like "*\.venv\*") {
-      return $true
-    }
-    if ($relPath -like "data\*" -or $relPath -like "*\data\*" -or $relPath -like "data/*" -or $relPath -like "*/data/*") {
-      return $true
-    }
-    if ($RepoPath -ne $workspaceRoot) {
-      if ($relPath -like ".agents\rules*" -or $relPath -like "*\.agents\rules\*" -or $relPath -like ".copilot\Rules*" -or $relPath -like "*\.copilot\Rules\*") {
-        return $true
-      }
-    }
-    return $false
-  }
-
-  # Scan Right files
-  $rightFileList = [System.Collections.Generic.List[System.IO.FileInfo]]::new()
-  $scannedFiles = @(Get-ChildItem -LiteralPath $RepoPath -Recurse -File | Where-Object {
-      $rel = $_.FullName.Substring($RepoPath.Length).TrimStart('\')
-      -not (Test-PathExcluded $rel)
-    })
-  if ($scannedFiles.Count -gt 0) { $rightFileList.AddRange($scannedFiles) }
-
-  # Include files from directory junctions (e.g. .agents / .agents\rules) per RULE-REV-008
-  $auditJunctions = @((Join-Path $RepoPath ".agents"), (Join-Path $RepoPath ".agents\rules"))
-  foreach ($aj in $auditJunctions) {
-    if (Test-Path -LiteralPath $aj) {
-      try {
-        $jItem = Get-Item -LiteralPath $aj -Force -ErrorAction SilentlyContinue
-        if ($jItem -and $jItem.LinkType -eq 'Junction' -and -not [string]::IsNullOrWhiteSpace($jItem.Target)) {
-          $targetDir = [string]$jItem.Target
-          if (Test-Path -LiteralPath $targetDir) {
-            $jFiles = @(Get-ChildItem -LiteralPath $targetDir -Recurse -File | Where-Object {
-                $subRel = $_.FullName.Substring($targetDir.Length).TrimStart('\')
-                $junctionRel = [System.IO.Path]::GetRelativePath($RepoPath, (Join-Path $jItem.FullName $subRel))
-                -not (Test-PathExcluded $junctionRel)
-              })
-            foreach ($jf in $jFiles) {
-              $subRel = $jf.FullName.Substring($targetDir.Length).TrimStart('\')
-              $mappedPath = Join-Path $jItem.FullName $subRel
-              if (Test-Path -LiteralPath $mappedPath) {
-                $rightFileList.Add([System.IO.FileInfo]::new($mappedPath))
-              }
-            }
-          }
-          if ($jItem.Name -eq '.agents') { break }
-        }
-      }
-      catch {}
-    }
-  }
-  $rightFiles = @($rightFileList)
-
   # Scan Left files
   $leftFiles = @(Get-ChildItem -LiteralPath $TempReviewRoot -Recurse -File | Where-Object {
       $_.Name -ne '.lcm_review.json' -and $_.Name -ne '.lcm_baseline_manifest.json' -and $_.Name -ne 'archive.tar'
@@ -427,14 +380,10 @@ function Audit-BeyondCompareReviewStaging {
   $completedFiles = [System.Collections.Generic.List[PSCustomObject]]::new()
   $renameFiles = [System.Collections.Generic.List[PSCustomObject]]::new()
   $deleteFiles = [System.Collections.Generic.List[PSCustomObject]]::new()
-  $uncopiedFiles = [System.Collections.Generic.List[PSCustomObject]]::new()
   $rejectedEmpty = [System.Collections.Generic.List[PSCustomObject]]::new()
-
-  $evaluatedLeftRelPaths = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
 
   foreach ($lf in $leftFiles) {
     $rel = $lf.FullName.Substring($TempReviewRoot.Length).TrimStart('\')
-    $null = $evaluatedLeftRelPaths.Add($rel)
 
     $rfPath = Join-Path $RepoPath $rel
     $leftContent = [System.IO.File]::ReadAllText($lf.FullName, [System.Text.Encoding]::UTF8)
@@ -444,7 +393,7 @@ function Audit-BeyondCompareReviewStaging {
       continue
     }
 
-    $lines = $leftContent.Trim().Split("`n") | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne "" }
+    $lines = @($leftContent.Trim().Split("`n") | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne "" })
         
     # Check Delete
     if ($lines.Count -eq 1 -and ($lines[0] -match '^(?i)(?:#|//|;|--)?\s*delete\s*$')) {
@@ -480,8 +429,8 @@ function Audit-BeyondCompareReviewStaging {
       continue
     }
 
-    $leftHash = Get-FileSha256 $lf.FullName
-    $rightHash = if (Test-Path -LiteralPath $rfPath) { Get-FileSha256 $rfPath } else { $null }
+    $leftHash = Get-FileSha256 -FilePath $lf.FullName
+    $rightHash = if (Test-Path -LiteralPath $rfPath) { Get-FileSha256 -FilePath $rfPath } else { $null }
     $baselineHash = if ($baselineManifest.ContainsKey($rel)) { $baselineManifest[$rel] } else { $null }
 
     if ($leftHash -and $rightHash -and $leftHash -eq $rightHash) {
@@ -494,24 +443,6 @@ function Audit-BeyondCompareReviewStaging {
           })
       }
     }
-    elseif ($leftHash -eq $baselineHash -and $rightHash -and $leftHash -ne $rightHash) {
-      $uncopiedFiles.Add([PSCustomObject]@{
-          RelativePath = $rel
-          LivePath     = $rfPath
-          Status       = "UNCOPIED_MODIFIED"
-        })
-    }
-  }
-
-  foreach ($rf in $rightFiles) {
-    $rel = $rf.FullName.Substring($RepoPath.Length).TrimStart('\')
-    if (-not $evaluatedLeftRelPaths.Contains($rel)) {
-      $uncopiedFiles.Add([PSCustomObject]@{
-          RelativePath = $rel
-          LivePath     = $rf.FullName
-          Status       = "UNCOPIED_NEW"
-        })
-    }
   }
 
   $stagingManifest = [ordered]@{
@@ -523,7 +454,7 @@ function Audit-BeyondCompareReviewStaging {
     Completed      = $completedFiles
     Renames        = $renameFiles
     Deletions      = $deleteFiles
-    Uncopied       = $uncopiedFiles
+    Uncopied       = @()
     RejectedEmpty  = $rejectedEmpty
   }
 
@@ -554,13 +485,6 @@ function Audit-BeyondCompareReviewStaging {
     foreach ($df in $deleteFiles) { Write-Host "   x $($df.RelativePath)" -ForegroundColor Red }
   }
 
-  if ($uncopiedFiles.Count -gt 0) {
-    Write-Host "--------------------------------------------------------------------------" -ForegroundColor DarkYellow
-    Write-Host " [UNCOPIED FILES DETECTED] ($($uncopiedFiles.Count) files):" -ForegroundColor DarkYellow
-    Write-Host " (These files were modified/created on Right but NOT copied to Left)" -ForegroundColor DarkGray
-    foreach ($uf in $uncopiedFiles) { Write-Host "   ? $($uf.RelativePath) [$($uf.Status)]" -ForegroundColor DarkYellow }
-  }
-
   if ($rejectedEmpty.Count -gt 0) {
     Write-Host " [REJECTED - EMPTY] ($($rejectedEmpty.Count) files):" -ForegroundColor Magenta
     foreach ($re in $rejectedEmpty) { Write-Host "   ! $($re.RelativePath) (0 bytes)" -ForegroundColor Magenta }
@@ -569,9 +493,6 @@ function Audit-BeyondCompareReviewStaging {
   Write-Host "==========================================================================" -ForegroundColor Cyan
   Write-Host " Awaiting Operator Command:" -ForegroundColor Yellow
   Write-Host "   - 'COMPLETE'      -> Commits staged files, executes renames & clean deletions locally."
-  if ($uncopiedFiles.Count -gt 0) {
-    Write-Host "   - 'COMPLETE ALL'  -> Commits staged files PLUS all uncopied files above locally."
-  }
   Write-Host "   - 'REJECT'        -> Discards review staging; zero changes committed."
   Write-Host "==========================================================================" -ForegroundColor Cyan
 
@@ -692,12 +613,9 @@ $reviewFolderStem = if ($commitSha -ne 'unborn') {
 }
 $tempReviewRoot = Join-Path $crpReviewDir $reviewFolderStem
 
-# Right-hand side: incorporates CRP number in live junction name
-$liveJunctionStem = if (-not [string]::IsNullOrWhiteSpace($CRP)) {
-  "Live_${repoName}_${CRP}"
-} else {
-  "Live_${repoName}"
-}
+# Right-hand side: CRP context is already captured by $crpReviewDir (BC_Review\CRP-nnn\).
+# The junction name needs only the repo name — no redundant _CRP-nnn suffix.
+$liveJunctionStem = "Live_${repoName}"
 $liveJunction = Join-Path $crpReviewDir $liveJunctionStem
 $baselineManifestFile = Join-Path $tempReviewRoot ".lcm_baseline_manifest.json"
 
@@ -735,14 +653,11 @@ else {
   # ------------------------------------------------------------------------------
   $baselineManifest = @{}
   $baselineFiles = @(Get-ChildItem -LiteralPath $tempReviewRoot -Recurse -File | Where-Object { $_.Name -ne 'archive.tar' })
-  $sha = [System.Security.Cryptography.SHA256]::Create()
   foreach ($bf in $baselineFiles) {
     try {
       $rel = $bf.FullName.Substring($tempReviewRoot.Length).TrimStart('\')
       if ([System.IO.File]::Exists($bf.FullName)) {
-        $bytes = [System.IO.File]::ReadAllBytes($bf.FullName)
-        $hash = [System.BitConverter]::ToString($sha.ComputeHash($bytes)).Replace('-', '').ToLowerInvariant()
-        $baselineManifest[$rel] = $hash
+        $baselineManifest[$rel] = Get-FileSha256 -FilePath $bf.FullName
       }
     }
     catch {}
@@ -820,8 +735,8 @@ $filterMask = ($filterList -join ';')
 # ------------------------------------------------------------------------------
 # 6. Establish Dedicated Per-CRP Review Bridge & Update Review Session
 # ------------------------------------------------------------------------------
-# Safely purge any stale live junctions in this review directory for this repository only
-$oldJunctions = @(Get-ChildItem -LiteralPath $crpReviewDir -Directory -Force -ErrorAction SilentlyContinue | Where-Object { $_.Name -like "Live_${repoName}_*" -and $_.LinkType -eq 'Junction' })
+# Purge any stale live junction for this repo in this CRP directory (exact name match — no suffix).
+$oldJunctions = @(Get-ChildItem -LiteralPath $crpReviewDir -Directory -Force -ErrorAction SilentlyContinue | Where-Object { $_.Name -eq "Live_${repoName}" -and $_.LinkType -eq 'Junction' })
 foreach ($oj in $oldJunctions) {
   try { [System.IO.Directory]::Delete($oj.FullName, $false) } catch {}
 }

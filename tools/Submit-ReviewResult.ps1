@@ -30,8 +30,8 @@ param(
              prompts for uncopied file confirmations (bypassed with 'COMPLETE ALL' or -All), and performs review-gated commits per RULE-REV-001.
     Path: tools/Submit-ReviewResult.ps1
     Authors: Rolf, Workspace_AI Engine
-    Version: 8.0.0
-    Date: 2026-09-26
+    Version: 8.1.0
+    Date: 2026-09-30
 #>
 
 Set-StrictMode -Version Latest
@@ -249,7 +249,23 @@ if ($status.Count -gt 0) {
 # Cleanup staging manifest and temp baseline tree
 if (Test-Path -LiteralPath $stagedManifestFile) { Remove-Item -LiteralPath $stagedManifestFile -Force -ErrorAction SilentlyContinue }
 if ($stagedManifest -and $stagedManifest.TempReviewRoot) {
-    $activeBaselineJunction = Join-Path $workspaceRoot "Workspace_Inventory\scratch\BC_Review\ACTIVE_BASELINE"
+    $scratchBcReviewDir = Join-Path $workspaceRoot "Workspace_Inventory\scratch\BC_Review"
+
+    # Resolve the CRP identifier from the BCR session metadata before purging the baseline dir.
+    # .lcm_review.json is written by BCR into the TempReviewRoot on every BCR invocation.
+    $crpReviewDirToPurge = $null
+    $lcmReviewMeta = Join-Path $stagedManifest.TempReviewRoot ".lcm_review.json"
+    if (Test-Path -LiteralPath $lcmReviewMeta) {
+        try {
+            $meta = Get-Content -LiteralPath $lcmReviewMeta -Raw -Encoding UTF8 | ConvertFrom-Json
+            if ($meta -and -not [string]::IsNullOrWhiteSpace($meta.CRP)) {
+                $crpReviewDirToPurge = Join-Path $scratchBcReviewDir $meta.CRP
+            }
+        } catch {}
+    }
+
+    # Remove root-level ACTIVE_BASELINE convenience junction if it still points to this baseline.
+    $activeBaselineJunction = Join-Path $scratchBcReviewDir "ACTIVE_BASELINE"
     if (Test-Path -LiteralPath $activeBaselineJunction) {
         try {
             $jItem = Get-Item -LiteralPath $activeBaselineJunction -Force -ErrorAction SilentlyContinue
@@ -258,7 +274,24 @@ if ($stagedManifest -and $stagedManifest.TempReviewRoot) {
             }
         } catch {}
     }
-    if (Test-Path -LiteralPath $stagedManifest.TempReviewRoot) {
+
+    # Purge the entire CRP review directory (BC_Review\CRP-nnn\) post-commit.
+    # Junction nodes must be deleted non-recursively first to avoid following them into the live repo.
+    if ($crpReviewDirToPurge -and (Test-Path -LiteralPath $crpReviewDirToPurge)) {
+        try {
+            # Delete all junction nodes within the CRP dir before recursive removal
+            $junctions = @(Get-ChildItem -LiteralPath $crpReviewDirToPurge -Directory -Force -Recurse -ErrorAction SilentlyContinue |
+                Where-Object { $_.LinkType -eq 'Junction' })
+            foreach ($jn in $junctions) {
+                try { [System.IO.Directory]::Delete($jn.FullName, $false) } catch {}
+            }
+            Remove-Item -LiteralPath $crpReviewDirToPurge -Recurse -Force -ErrorAction SilentlyContinue
+            Write-Host "  [PURGED] BC review scratch directory: $crpReviewDirToPurge" -ForegroundColor DarkGray
+        } catch {
+            Write-Verbose "Could not fully purge CRP review directory '$crpReviewDirToPurge': $($_.Exception.Message)"
+        }
+    } elseif (Test-Path -LiteralPath $stagedManifest.TempReviewRoot) {
+        # Fallback: CRP not resolvable — purge baseline dir only
         Remove-Item -LiteralPath $stagedManifest.TempReviewRoot -Recurse -Force -ErrorAction SilentlyContinue
     }
 }
