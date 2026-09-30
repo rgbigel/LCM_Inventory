@@ -4,8 +4,8 @@ Module: Workspace_Inventory/docs/Proposals/CRP-198-RollingCalendar-New-Repositor
 Purpose: Integrate the RollingCalendar PowerShell script as a new LCM-governed repository with full tripartite documentation, install runbook, and governance wiring.
 Path: Workspace_Inventory/docs/Proposals/CRP-198-RollingCalendar-New-Repository-Integration/Specification.md
 Authors: rgbig, Workspace_AI Governance
-Version: 8.0.0
-Status: Completed
+Version: 8.1.1
+Status: Verification — Interface Refinement Reviewed
 Date: 2026-09-30
 
 ---
@@ -34,17 +34,34 @@ from German to English per `LANGUAGE-POLICY`.
 
 ---
 
-## 2. Requirements Met
+## 2. Requirements
 
 ### Functional
 - Repository `D:\Git_Repositories\RollingCalendar` initialized as a Git repository.
 - Script corrected and placed at `Invoke-RollingCalendar.ps1` (repository root).
 - `output\` directory excluded via `.gitignore`.
 - Temporary `temp_calendar.html` excluded via `.gitignore`.
+- Capture Edge process output and suppress only known non-fatal Chromium
+  renderer diagnostics after a successful PDF creation, while reporting nonzero
+  exits, missing/empty PDFs, and all other stderr output as actionable failures
+  or warnings.
+- Accept the workspace timestamp conventions `yyyyMMdd_HHmm` and
+  `yyyyMMdd_HHmmss`, as well as the existing `HH:mm` and `HHmm` schedule-time
+  formats, normalizing each to the Task Scheduler time of day.
+- Provide `-o` as an unambiguous alias for the output-directory parameter. A
+  supplied directory such as `-o C:\Temp` receives the normal generated filename
+  (`Calendar_<N>W_<yyyy-MM-dd>.pdf`). `-NoShow` replaces `-OpenAfterExport` and
+  defaults to `$false`, so the generated PDF opens unless explicitly suppressed.
+- Set the default output directory to `C:\Temp`, retaining the generated
+	filename format `Calendar_<N>W_<yyyy-MM-dd>.pdf` when no output directory is
+	supplied.
 
 ### Governance
 - `.agents/rules` NTFS junction pointing to `Workspace_AI\.agents\rules`.
 - `Set-StrictMode -Version Latest` and `$ErrorActionPreference = 'Stop'` at script top.
+- Advanced script and function declarations with explicit function inputs.
+- Focused Pester structural quality tests before the review gate.
+- Automated Beyond Compare review staging against the committed baseline.
 - DOX header added to script.
 - 2-space indentation enforced throughout.
 - All German strings translated to English per `LANGUAGE-POLICY`.

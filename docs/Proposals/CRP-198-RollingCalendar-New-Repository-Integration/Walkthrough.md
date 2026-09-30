@@ -4,8 +4,8 @@ Module: Workspace_Inventory/docs/Proposals/CRP-198-RollingCalendar-New-Repositor
 Purpose: Execution receipts, verification evidence, and operational audit log for CRP-198.
 Path: Workspace_Inventory/docs/Proposals/CRP-198-RollingCalendar-New-Repository-Integration/Walkthrough.md
 Authors: rgbig, Workspace_AI Governance
-Version: 8.0.0
-Status: Gate 2 — Awaiting Operator Review
+Version: 8.1.1
+Status: Verification — Interface Refinement Reviewed
 Date: 2026-09-30
 
 ---
@@ -25,6 +25,13 @@ Date: 2026-09-30
 | 2026-09-30 11:49:09 | `install\Installation.md` written | Created |
 | 2026-09-30 11:50:04 | `proposals.json` updated — CRP-198 registered | state: review |
 | 2026-09-30 11:50:05 | Initial commit `1407386` | 24 files, 2568 insertions |
+| 2026-09-30 | Quality-gate audit | Reopened: script and test contracts require remediation before review |
+| 2026-09-30 | Focused Pester quality contract | Passed: 4 tests, 0 failures |
+| 2026-09-30 18:46:20 | Automated BCompare staging review | Completed against `1407386`; three intended live-side remediation files recorded |
+| 2026-09-30 | Interface refinement implementation | Added timestamp normalization, `-o`/`C:\Temp`, `-NoShow`, and captured Edge diagnostics |
+| 2026-09-30 | Focused Pester regression suite | Passed: 7 tests, 0 failures |
+| 2026-09-30 | Functional smoke test | Generated `C:\Temp\Calendar_2W_2026-09-30.pdf` using default output and `-NoShow`; no Edge diagnostic shown |
+| 2026-09-30 20:05:09 | Refreshed BCompare staging review | Completed against `1407386`; exactly five intended tracked files recorded |
 
 ---
 
@@ -58,4 +65,4 @@ Date: 2026-09-30
 
 ## Gate 2 Status
 
-> **Awaiting visual diff review via `bcr RollingCalendar` before COMPLETE.**
+> **Reached. The interface refinement passes 7 focused tests, a functional smoke test, and BCompare staging with five intended tracked files. The CRP remains uncommitted and is not eligible for push.**

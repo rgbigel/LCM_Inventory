@@ -9548,7 +9548,7 @@
       "primary_app": null,
       "affected_apps": null,
       "state": "pushed",
-      "progress_state": "pushed",
+      "progress_state": "verification",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-198-RollingCalendar-New-Repository-Integration",
       "docs": {
