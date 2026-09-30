@@ -19,13 +19,26 @@ one explicit lifecycle model and a compact, action-oriented Control Hub.
 ## Lifecycle Contract
 
 ```text
-Suggested -> Proceed -> In Progress -> Verify -> Verified -> Commit -> Completed -> Push -> Pushed
+Suggested -> Proceed -> In Progress -> Verify -> Verified -> Commit -> Review Commit -> Completed -> Push -> Pushed
 Unborn -> Fast Complete -> Completed -> Push -> Pushed
 ```
 
-`Open Review` is a utility action, not a lifecycle transition. `Request
-Changes`, `Reopen`, and `Resume` provide explicit reverse routes. Deferred,
-blocked, and failed work is represented by `Held` with a required reason.
+`Commit` stages and creates a local Git commit. `Review Commit` automatically
+launches BCompare against the committed delta: the left pane is the local parent
+commit and the right pane is the live working tree at the new local commit. The
+review is therefore a clean inspection of the proposed committed result, not a
+file-selection or staging surface.
+
+The left pane is read-only. Any right-pane modification invalidates the review
+receipt, returns the CRP to `in_progress`, and requires verification tests
+before a new local commit and a new `Review Commit` cycle. A failed verification
+test remains `in_progress`; an unchanged, accepted commit review advances to
+`completed`. No invalidated or unreviewed local commit may advance to `push`.
+
+`Open Review` remains a utility action for historic inspection; `Review Commit`
+is the automatic lifecycle review. `Request Changes`, `Reopen`, and `Resume`
+provide explicit reverse routes. Deferred, blocked, and failed work is
+represented by `Held` with a required reason.
 
 ## Fast Complete
 
@@ -42,5 +55,7 @@ contract, schema, or architectural changes.
 - Replace the persistent sidecar with an `Actions` dropdown showing only valid
   transitions for the selected proposal or cohort.
 - Show the lifecycle rail and shortcuts as separate horizontal rows.
+- Show `Review Commit` with its compared local commit SHAs and disposition;
+  expose `Open Review` as a separate historic-inspection tool.
 - Move `Clean BCR` into review tools near `Open Review`; keep reset filters in
   the top bar.

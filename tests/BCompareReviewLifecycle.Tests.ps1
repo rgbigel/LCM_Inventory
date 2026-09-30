@@ -32,6 +32,12 @@ Describe 'BCompare review lifecycle contracts' {
     $reviewScript | Should -Not -Match ([regex]::Escape('"Live_${repoName}_*"'))
   }
 
+  It 'opens the configured Beyond Compare named session without replaying command-line switches' {
+    $reviewScript | Should -Match ([regex]::Escape('$bcArgString = "/solo `"$sessionName`""'))
+    $reviewScript | Should -Match ([regex]::Escape("Start-Process -FilePath `$BeyondComparePath -ArgumentList @('/solo', `$sessionName)"))
+    $reviewScript | Should -Not -Match ([regex]::Escape('/title1=`"$title1`" /title2=`"$title2`" /filters='))
+  }
+
   It 'derives post-commit cleanup from BCR review metadata' {
     $submitScript | Should -Match ([regex]::Escape('".lcm_review.json"'))
     $submitScript | Should -Match ([regex]::Escape('$crpReviewDirToPurge = Join-Path $scratchBcReviewDir $meta.CRP'))

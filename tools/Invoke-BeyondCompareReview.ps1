@@ -36,7 +36,7 @@ param(
              and SHA-256 staging manifest generation.
     Path: tools/Invoke-BeyondCompareReview.ps1
     Authors: Rolf, Workspace_AI Engine
-    Version: 8.4.1
+    Version: 8.4.2
     Date: 2026-09-30
 .PARAMETER RepositoryName
     The name or directory path of the Git repository to review (e.g. 'AuthorizeMasterUser', 'Git_Repositories', '.').
@@ -64,7 +64,7 @@ Import-Module -Name $bcompareWindowToolsPath -Force
 $bcompareBaselinePath = Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\BCompareBaseline.psm1'
 Import-Module -Name $bcompareBaselinePath -Force
 
-$scriptVersion = "8.4.1"
+$scriptVersion = "8.4.2"
 $scriptName = "Invoke-BeyondCompareReview"
 
 # ------------------------------------------------------------------------------
@@ -806,12 +806,10 @@ Write-Host ("  Right (Live):        {0}" -f $liveJunction)
 Write-Host ("  Pane Titles:         [Left: '{0}'] <--> [Right: '{1}']" -f $title1, $title2)
 Write-Host ("  Filters Applied:     {0}" -f $filterMask)
 
-# 2-way Folder Compare with explicit absolute Left and Right paths.
-# Passing exactly two folders guarantees Beyond Compare opens Folder Compare (NEVER Folder Merge).
-# /title1 and /title2 provide human-readable pane descriptions.
-# /filters applies the comprehensive exclusion masks.
-# /ro1 enforces read-only protection on the left baseline pane.
-$bcArgString = "`"$tempReviewRoot`" `"$liveJunction`" /title1=`"$title1`" /title2=`"$title2`" /filters=`"$filterMask`" /ro1"
+# Open the configured named session in a fresh BCompare instance. An existing
+# instance caches its session list and otherwise treats a newly written session
+# name as unknown, opening the command-line reference instead.
+$bcArgString = "/solo `"$sessionName`""
 
 $dispatcherCandidates = @(
   (Join-Path $workspaceRoot ".lcm\tools\internal\Invoke-InteractiveDesktop.ps1"),
@@ -831,7 +829,7 @@ if ($dispatcherPath) {
   & pwsh -File $dispatcherPath -FilePath $BeyondComparePath -ArgumentList $bcArgString | Out-Null
 }
 else {
-  Start-Process -FilePath $BeyondComparePath -ArgumentList @($tempReviewRoot, $liveJunction, "/title1=$title1", "/title2=$title2", "/filters=$filterMask", "/ro1")
+  Start-Process -FilePath $BeyondComparePath -ArgumentList @('/solo', $sessionName)
 }
 
 # ------------------------------------------------------------------------------

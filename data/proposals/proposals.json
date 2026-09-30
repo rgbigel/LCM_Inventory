@@ -9621,6 +9621,26 @@
       "github_url": null,
       "author": "rgbig",
       "details": "Clarify methodology boundaries between visual review, tracked operational records, Git publication, and release-closure documentation synthesis."
+    },
+    {
+      "id": 202,
+      "crp_id": "BUG-202",
+      "timestamp": "2026-09-30 22:40:00",
+      "title": "BCompare opens command-line reference instead of review session",
+      "origin_repo": "Workspace_Inventory",
+      "cr_id": "BUG-202",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": [],
+      "state": "in_progress",
+      "progress_state": "in_progress",
+      "priority": "High",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/BUG-202-BCompare-Command-Line-Reference-Launch",
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig",
+      "details": "Launch the saved BCompare session name instead of replaying the folder-comparison command line through the interactive desktop bridge."
     }
   ],
   "active_context": {
