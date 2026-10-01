@@ -129,3 +129,12 @@ All tools in `tools/` conform to `RULE-PS-008` (Headers), `RULE-PS-009` (Logging
   ]
 }
 ```
+
+<!-- FixDocumentation: CRP-196 Implementation -->
+### 3.1 Documentation Reconciliation Tool
+
+| Tool Script | Role & Function | Key Parameters |
+|:---|:---|:---|
+| **`Fix-Documentation.ps1`** | Reconciles explicit, repository-qualified CRP/BUG payloads into tripartite documents. | `<CRP/BUG scope>`, `-Apply`, `-OpenReview`, `-Trace` |
+<!-- /FixDocumentation -->
+

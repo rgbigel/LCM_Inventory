@@ -81,3 +81,13 @@ All interactive viewers in `Workspace_Inventory` (such as `Show-CmControlHub.ps1
 
 ### REQ-WINV-010: Constituent Component Version Registry
 - `Workspace_Inventory` `MUST` maintain an authoritative registry (`inventory.json`) recording the exact versions, commit hashes, and dependency states of all external satellite modules (e.g., `SharedModules`), while allowing each satellite module repository to maintain its own independent source code versioning lifecycle.
+
+<!-- FixDocumentation: CRP-196 Requirements -->
+### REQ-WINV-011: Scoped Documentation Reconciliation
+
+`FixDocumentation` MUST default to dry-run, accept only explicit CRP/BUG
+identifiers, and apply only declared fenced payloads. Applied changes MUST carry
+provenance, produce an operational receipt, and undergo BCompare review before
+commit.
+<!-- /FixDocumentation -->
+

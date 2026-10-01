@@ -1,18 +1,34 @@
 # Implementation Plan: CRP-196
 
-1. Define canonical states, transition metadata, fast-complete receipts,
-   post-commit review receipts, and legacy-state migration rules.
-2. Refactor lifecycle services so `Commit` stages and creates the local commit,
-   then transitions to `Review Commit` rather than directly to `Completed`.
-3. Build status filters and valid-action menus from transition metadata.
-4. Replace the sidecar with a contextual `Actions` dropdown and a global App
-   focus control.
-5. Implement `Review Commit` as an automatic BCompare launch from the parent
-   commit to the live local commit, with both compared SHAs recorded in the
-   review receipt.
-6. Detect any right-pane/live-working-tree modification during the review;
-   invalidate the receipt, return the CRP to `in_progress`, and force
-   verification before the next local commit.
-7. Implement the lifecycle rail, reverse routes, held route, and review tools.
-8. Add migration, transition, UI workflow, right-side-mutation, forced-test,
-   and no-push-before-clean-review tests.
+1. Define the visible statuses `Open`, `Active`, `Review`, `Complete`,
+   `Published`, `Held`, and `Cancelled`, including valid actions and legacy
+   state migration rules.
+2. Define the internal execution ledger, checkpoints, receipts, verification
+   depths, and recovery routes without exposing them as Control Hub statuses.
+3. Define the LCM Query Index projections for proposals, repositories, runs,
+   artifacts, actions, tools, interfaces, messages, and workflows.
+4. Define direct NTFS source access, `es.exe` discovery, and port 9876 command
+   and event transport boundaries.
+5. Refactor lifecycle services so BCompare review compares the pushed baseline
+   to live work; acceptance creates the local commit and moves to `Complete`.
+6. Add CRP-specific immutable review snapshots on `accepted` and `accepted
+   with changes`; refresh BCompare sessions so any snapshot can be selected as
+   the left side without modifying the live right side.
+7. Require a final pushed-baseline-to-live roll-up review before local commit,
+   regardless of prior snapshot decisions.
+8. Build the standard-display work queue with presets, mode, Intern, filters,
+   integrated sorting, reset controls, and global commands.
+9. Replace the sidecar with a full-width selection and bulk-action work area
+   that exposes only actions valid for the selected cohort.
+10. Show Status, Plan State, Progress Status, numeric priority, busy phase, and
+   `Failed for <reason>` indication without exposing every internal phase as a
+   lifecycle status.
+11. Expose execution switches in the Control Hub and record their effective
+   values in each execution run.
+12. Sort bulk cohorts by numeric priority $10$ through $0$ and provide a
+    dependency-, risk-, reversibility-, and validation-cost-aware recommendation
+    order for equal-priority items.
+13. Treat `assets/CM_CONTROL_HUB_IMPLEMENTATION_0.html` as a visual prototype
+   and advance it through review before building operational UI behavior.
+14. Add migration, transition, action-validity, query-index, UI workflow,
+   review, verification-depth, and no-push-before-review tests.

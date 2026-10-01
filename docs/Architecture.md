@@ -150,3 +150,13 @@ graph TD
 
 This topology ensures 100% rule discovery whether opening the root workspace container or any isolated child repository folder in IDE sessions.
 
+<!-- FixDocumentation: CRP-196 Architecture -->
+## 5. Proposed Documentation Reconciliation Service
+
+`Workspace_Inventory` hosts `Fix-Documentation.ps1` as the evidence-bound
+documentation reconciliation service. It receives explicit CRP/BUG scopes,
+resolves repository-qualified tripartite payloads, records manifests and
+receipts, and dispatches per-repository BCompare review without changing
+implementation or lifecycle state.
+<!-- /FixDocumentation -->
+

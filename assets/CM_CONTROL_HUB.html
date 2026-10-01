@@ -3450,7 +3450,7 @@
       const pTitle = (p.title || '').toLowerCase();
       const pDetails = (p.details || '').toLowerCase();
       const pScope = (p.origin_repo || 'LCM').toLowerCase();
-      const pPrio = (p.priority || 'M').toLowerCase();
+      const pPrio = String(p.priority ?? 'M').toLowerCase();
       const pPlanState = (p.state || 'suggested').toLowerCase();
       const pProgState = (p.progress_state || 'undecided').toLowerCase();
 
@@ -3543,7 +3543,7 @@
       tbody.innerHTML = "";
 
       const filtered = proposalsData.proposals.filter(p => {
-        const pPrio = (p.priority || "M").toUpperCase();
+        const pPrio = String(p.priority ?? "M").toUpperCase();
         if (prioFilter !== "ALL" && pPrio !== prioFilter) return false;
         if (scope !== "ALL" && (!p.origin_repo || !p.origin_repo.includes(scope))) return false;
         if (planState !== "ALL" && p.state !== planState) return false;
@@ -3587,8 +3587,8 @@
         let res = 0;
         switch (currentSortColumn) {
           case 'prio': {
-            const rA = prioRank[(a.priority || 'M').toUpperCase()] || 3;
-            const rB = prioRank[(b.priority || 'M').toUpperCase()] || 3;
+            const rA = prioRank[String(a.priority ?? 'M').toUpperCase()] || 3;
+            const rB = prioRank[String(b.priority ?? 'M').toUpperCase()] || 3;
             res = rA - rB;
             break;
           }
@@ -3650,7 +3650,7 @@
         };
 
         const crpBundle = p.bundle_id && p.bundle_id !== "unassigned" ? p.bundle_id : (p.cr_id || "");
-        const pPrio = (p.priority || "M").toUpperCase();
+        const pPrio = String(p.priority ?? "M").toUpperCase();
         const crpDisplay = p.crp_id || (p.state === 'bug' || (p.cr_id && p.cr_id.startsWith('BUG-')) ? `BUG-${String(p.id).padStart(3, '0')}` : `CRP-${String(p.id).padStart(3, '0')}`);
         const tagColor = crpDisplay.startsWith('BUG-') ? 'var(--accent-red)' : 'var(--accent-blue)';
         const secondaryTag = (p.bundle_id && p.bundle_id !== 'unassigned' && p.bundle_id !== crpDisplay && !p.bundle_id.startsWith(crpDisplay))
