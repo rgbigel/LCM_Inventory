@@ -4,7 +4,7 @@
 # Module: WorkspaceCM
 # Purpose: Deep multi-repository state auditing, classification, Git inspection,
 #          LCM version tracking, baseline management, and drift detection.
-# Authors: Rolf, Workspace_AI Engine
+# Authors: Rolf, LCM_AI Engine
 # Version: 1.0.0
 # Date: 2026-08-15
 # =====================================================================
@@ -47,7 +47,7 @@ function Write-CMLog {
     )
     
     $root = Get-WorkspaceRoot
-    $logDir = Join-Path $root 'Workspace_Inventory\logs'
+    $logDir = Join-Path $root 'LCM_Inventory\logs'
     if (-not (Test-Path $logDir)) {
         New-Item -ItemType Directory -Path $logDir -Force | Out-Null
     }
@@ -76,7 +76,7 @@ function Write-CMLog {
 function Get-WorkspaceAIState {
     [CmdletBinding()]
     param(
-        [string]$WorkspacePath = (Join-Path (Get-WorkspaceRoot) 'Workspace_AI')
+        [string]$WorkspacePath = (Join-Path (Get-WorkspaceRoot) 'LCM_AI')
     )
     
     if (-not (Test-Path $WorkspacePath)) {
@@ -133,8 +133,8 @@ function Get-RepoClassification {
     $nonGitIgnored = @('AuthorizeMasterUser', 'BootOpsHub', 'CommandHub', 'DeviceInventory',
                        'DiskAssignmentStatus_AC', 'DiskAssignmentStatus_S1', 'EnvironmentTools',
                        'FileUtilities', 'GitTools', 'SystemConfiguration')
-    if ($repoName -eq 'Workspace_AI') { return 'active-design-workshop' }
-    if ($repoName -eq 'Workspace_Inventory') { return 'configuration-management' }
+    if ($repoName -eq 'LCM_AI') { return 'active-design-workshop' }
+    if ($repoName -eq 'LCM_Inventory') { return 'configuration-management' }
     if ($repoName -in @('.lcd', '.lcm')) { return 'platform-engine' }
     if ($retiredList -contains $repoName) { return 'legacy-retired' }
     if ($parentInfraList -contains $repoName) { return 'parent-infra' }
@@ -255,7 +255,7 @@ function Get-RepoCMState {
     if (-not $elevationDetermined -and $CachedRepoState -and ($null -ne $CachedRepoState.ElevationRequired)) {
         $elevationRequired = [bool]$CachedRepoState.ElevationRequired
         $minPrivilege = if ($CachedRepoState.MinimumPrivilege) { [string]$CachedRepoState.MinimumPrivilege } else { if ($elevationRequired) { 'Administrator' } else { 'User' } }
-        $elevationReason = if ($CachedRepoState.ElevationReason) { [string]$CachedRepoState.ElevationReason } else { 'Known in Workspace_Inventory' }
+        $elevationReason = if ($CachedRepoState.ElevationReason) { [string]$CachedRepoState.ElevationReason } else { 'Known in LCM_Inventory' }
         $elevationDetermined = $true
     }
     
@@ -314,7 +314,7 @@ function Update-WorkspaceInventory {
     $aiState = Get-WorkspaceAIState
     $globalLCM = $aiState.GlobalLCMVersion
     
-    $invDir = Join-Path $WorkspaceRoot 'Workspace_Inventory\data'
+    $invDir = Join-Path $WorkspaceRoot 'LCM_Inventory\data'
     $invPath = Join-Path $invDir 'inventory.json'
     $cachedRepos = @{}
     if (Test-Path $invPath) {
@@ -361,7 +361,7 @@ function Update-WorkspaceInventory {
     Write-Host "Updated inventory JSON: $jsonPath" -ForegroundColor Green
     
     # Generate Markdown Dashboard
-    $dashDir = Join-Path $WorkspaceRoot 'Workspace_Inventory\docs'
+    $dashDir = Join-Path $WorkspaceRoot 'LCM_Inventory\docs'
     if (-not (Test-Path $dashDir)) {
         New-Item -ItemType Directory -Path $dashDir -Force | Out-Null
     }
@@ -377,7 +377,7 @@ function Update-WorkspaceInventory {
     [void]$sb.AppendLine('')
     [void]$sb.AppendLine("Module: docs/INVENTORY_DASHBOARD.md")
     [void]$sb.AppendLine("Generated: $((Get-Date).ToString('yyyy-MM-dd HH:mm:ss'))")
-    [void]$sb.AppendLine("Global Baseline Version: **v$globalLCM** (Source: `Workspace_AI`)")
+    [void]$sb.AppendLine("Global Baseline Version: **v$globalLCM** (Source: `LCM_AI`)")
     [void]$sb.AppendLine('')
     [void]$sb.AppendLine('---')
     [void]$sb.AppendLine('')
@@ -386,8 +386,8 @@ function Update-WorkspaceInventory {
     [void]$sb.AppendLine("| Metric | Count | Description |")
     [void]$sb.AppendLine("| :--- | :---: | :--- |")
     [void]$sb.AppendLine("| **Total Directories Audited** | **$totalCount** | All child directories under `D:\Git_Repositories\` |")
-    [void]$sb.AppendLine("| **Active Design Workshop** | **1** | `Workspace_AI` (v$globalLCM) |")
-    [void]$sb.AppendLine("| **CM Repository** | **1** | `Workspace_Inventory` |")
+    [void]$sb.AppendLine("| **Active Design Workshop** | **1** | `LCM_AI` (v$globalLCM) |")
+    [void]$sb.AppendLine("| **CM Repository** | **1** | `LCM_Inventory` |")
     [void]$sb.AppendLine("| **LCM Governed / Candidates** | **$govCandCount** | Actively governed under LCM |")
     [void]$sb.AppendLine("| **Elevation Required Repositories** | **$elevCount** | Repositories requiring Administrator privileges |")
     [void]$sb.AppendLine("| **Standard Git Repositories** | **$stdGitCount** | Un-onboarded Git repos |")
@@ -430,7 +430,7 @@ function Test-WorkspaceDrift {
         [string]$WorkspaceRoot = (Get-WorkspaceRoot)
     )
     
-    $invPath = Join-Path $WorkspaceRoot 'Workspace_Inventory\data\inventory.json'
+    $invPath = Join-Path $WorkspaceRoot 'LCM_Inventory\data\inventory.json'
     if (-not (Test-Path $invPath)) {
         Update-WorkspaceInventory -WorkspaceRoot $WorkspaceRoot | Out-Null
     }
@@ -479,7 +479,7 @@ function New-WorkspaceBaseline {
         repositories         = $inv
     }
     
-    $baselineDir = Join-Path $WorkspaceRoot 'Workspace_Inventory\data\baselines'
+    $baselineDir = Join-Path $WorkspaceRoot 'LCM_Inventory\data\baselines'
     if (-not (Test-Path $baselineDir)) {
         New-Item -ItemType Directory -Path $baselineDir -Force | Out-Null
     }
@@ -501,7 +501,7 @@ function Invoke-BeyondCompareReview {
         [string]$BeyondComparePath = 'D:\Tools\Beyond Compare 5\BCompare.exe'
     )
 
-    $toolScript = Join-Path (Get-WorkspaceRoot) "Workspace_Inventory\tools\Invoke-BeyondCompareReview.ps1"
+    $toolScript = Join-Path (Get-WorkspaceRoot) "LCM_Inventory\tools\Invoke-BeyondCompareReview.ps1"
     & $toolScript -RepositoryName $RepositoryName -BaseCommit $BaseCommit -BeyondComparePath $BeyondComparePath
 }
 
@@ -522,7 +522,7 @@ function Set-RepoDisposition {
         [string]$WorkspaceRoot = (Get-WorkspaceRoot)
     )
 
-    $invPath = Join-Path $WorkspaceRoot 'Workspace_Inventory\data\inventory.json'
+    $invPath = Join-Path $WorkspaceRoot 'LCM_Inventory\data\inventory.json'
     if (-not (Test-Path -LiteralPath $invPath)) {
         throw "Inventory database not found: $invPath"
     }
@@ -557,7 +557,7 @@ function Get-UngovernedRepositories {
         [string]$WorkspaceRoot = (Get-WorkspaceRoot)
     )
 
-    $invPath = Join-Path $WorkspaceRoot 'Workspace_Inventory\data\inventory.json'
+    $invPath = Join-Path $WorkspaceRoot 'LCM_Inventory\data\inventory.json'
     if (-not (Test-Path -LiteralPath $invPath)) {
         throw "Inventory database not found: $invPath"
     }

@@ -3,7 +3,7 @@
     Executes proposal batch actions ('do', 'delete', 'defer', 'complete', 'suggest') and sets review granularity.
 .DESCRIPTION
     Module: tools/Invoke-ProposalAction.ps1
-    Authors: Rolf, Workspace_AI Engine
+    Authors: Rolf, LCM_AI Engine
     Version: 1.1.0
     Date: 2026-09-10
 #>
@@ -65,7 +65,7 @@ if ($Help) {
     Write-Host "  Executes proposal batch actions ('do', 'delete', 'defer', etc.) and configures review granularity."
     Write-Host ""
     Write-Host "USAGE:" -ForegroundColor Yellow
-    Write-Host "  pwsh Workspace_Inventory/tools/Invoke-ProposalAction.ps1 [[-Action] <str>] [[-TargetExpression] <str>] [-Details <str>] [-ProgressState <str>] [-Priority <str>] [-Granularity <str>] [-Mode <str>] [-h]"
+    Write-Host "  pwsh LCM_Inventory/tools/Invoke-ProposalAction.ps1 [[-Action] <str>] [[-TargetExpression] <str>] [-Details <str>] [-ProgressState <str>] [-Priority <str>] [-Granularity <str>] [-Mode <str>] [-h]"
     Write-Host ""
     Write-Host "PARAMETERS:" -ForegroundColor Yellow
     Write-Host "  -Action           : Action to perform (do, delete, defer, complete, suggest, granularity, mode, list, etc.)"
@@ -298,7 +298,7 @@ switch -Regex ($Action) {
         if ([string]::IsNullOrWhiteSpace($TargetExpression)) {
             throw "TargetExpression (App Title, e.g. 'Realtime Log Streamer') is required for 'app'."
         }
-        $targetR = if ($TargetRepo) { $TargetRepo } else { 'Workspace_AI' }
+        $targetR = if ($TargetRepo) { $TargetRepo } else { 'LCM_AI' }
         $res = New-LcmApp -Title $TargetExpression -Repo $targetR -Description $Details
         break
     }

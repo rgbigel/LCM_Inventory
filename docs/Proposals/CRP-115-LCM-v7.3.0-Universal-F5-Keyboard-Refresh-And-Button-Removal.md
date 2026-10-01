@@ -7,7 +7,7 @@
 | **Lifecycle State** | `OPEN` (Bundled in `BUNDLE-STD-DISPLAY-v7.5.0` - Awaiting Operator PROCEED) |
 | **Origin Repository** | `LCM` / Desktop UI & Dashboards |
 | **Target Scope** | Global `Show-*` Displays (`Show-Tools`, `Show-CmControlHub`, `Show-Rules`, `Show-CrpDates`, `Show-RepositoryInventory`, etc.) |
-| **Author** | Rolf, Workspace_AI |
+| **Author** | Rolf, LCM_AI |
 | **Date** | 2026-09-07 |
 | **Priority** | `High` |
 | **Version Impact** | `v7.5.0` |
@@ -46,10 +46,10 @@ window.addEventListener('keydown', (e) => {
 ---
 
 ## 3. Affected Components
-- `Workspace_Inventory/docs/CM_CONTROL_HUB.html`
+- `LCM_Inventory/docs/CM_CONTROL_HUB.html`
 - `.lcm/tools/internal/LcmToolCatalog.psm1` & `SHOW_TOOLS.html`
 - `.lcm/tools/internal/Show-Rules.ps1`
-- `Workspace_Inventory/tools/Show-CrpDates.ps1`
+- `LCM_Inventory/tools/Show-CrpDates.ps1`
 - `.lcm/assets/lcm-dashboard-theme.css` / theme components
 
 ---

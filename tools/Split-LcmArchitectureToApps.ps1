@@ -3,7 +3,7 @@
     Decomposes monolithic repository tripartite specifications into modular App: # slices.
 .DESCRIPTION
     Module: tools/Split-LcmArchitectureToApps.ps1
-    Authors: Rolf, Workspace_AI Engine
+    Authors: Rolf, LCM_AI Engine
     Version: 7.5.0
     Date: 2026-09-19
     Purpose: High-Order Lifecycle Operator that partitions large un-sliced tripartite specifications
@@ -39,10 +39,10 @@ if ($Help -or [string]::IsNullOrWhiteSpace($Repo)) {
     Write-Host "  Decomposes monolithic tripartite specifications into modular App: # slices."
     Write-Host ""
     Write-Host "USAGE:" -ForegroundColor Yellow
-    Write-Host "  pwsh Workspace_Inventory/tools/Split-LcmArchitectureToApps.ps1 [-Repo] <str> [[-AppTitles] <str[]>] [-SplitDocs] [-WhatIf] [-h]"
+    Write-Host "  pwsh LCM_Inventory/tools/Split-LcmArchitectureToApps.ps1 [-Repo] <str> [[-AppTitles] <str[]>] [-SplitDocs] [-WhatIf] [-h]"
     Write-Host ""
     Write-Host "PARAMETERS:" -ForegroundColor Yellow
-    Write-Host "  -Repo          : Target repository name (e.g. 'Workspace_AI', 'SystemConfiguration')"
+    Write-Host "  -Repo          : Target repository name (e.g. 'LCM_AI', 'SystemConfiguration')"
     Write-Host "  -AppTitles     : Array of App titles to scaffold (e.g. 'Control Hub', 'Governance Engine')"
     Write-Host "  -SplitDocs     : Partition into dedicated docs/App#<N>-<Slug>/ subdirectories (default: false)"
     Write-Host "  -WorkspaceRoot : Workspace root directory (default: D:\Git_Repositories)"

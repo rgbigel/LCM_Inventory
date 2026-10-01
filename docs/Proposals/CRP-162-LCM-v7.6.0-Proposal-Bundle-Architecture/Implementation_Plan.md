@@ -3,9 +3,9 @@
 ```yaml
 CRP-ID: CRP-162
 Title: Proposal Bundle Directory Architecture, Dual Lifecycle, Git Object Document Retrieval, and Post-Push Working Tree Purge Engine
-Scope: LCM Governance, Workspace_Inventory, & Governed Child Repositories
+Scope: LCM Governance, LCM_Inventory, & Governed Child Repositories
 Baseline-Version: v7.6.0
-Author: Rolf, Workspace_AI Engine
+Author: Rolf, LCM_AI Engine
 Date: 2026-09-20
 Status: Processed
 Plan-State: completed
@@ -32,7 +32,7 @@ Priority: High
 - Automatic caching of proposal bundle directories in `Show-CmControlHub.ps1`.
 
 ### Component 4: Governance Rule Codification
-- `RULE-LCM-020` in `Workspace_Inventory/.agents/rules/ProposalReviewFlowPolicy.md`.
+- `RULE-LCM-020` in `LCM_Inventory/.agents/rules/ProposalReviewFlowPolicy.md`.
 - Quick-reference index updated in `AGENTS.md`.
 
 ---
@@ -45,6 +45,6 @@ Priority: High
    - Verify `Get-LcmProposalDocument` extracts Git commit objects via `git show`.
    - Verify `Remove-LcmProposalBundle` cleans local working tree.
 2. **Control Hub Compilation**:
-   - `pwsh Workspace_Inventory/tools/Show-CmControlHub.ps1 -NoLaunch` executes without error.
+   - `pwsh LCM_Inventory/tools/Show-CmControlHub.ps1 -NoLaunch` executes without error.
 3. **Readiness Quality Gate**:
-   - `pwsh Workspace_Inventory/tools/Test-WorkspaceReadiness.ps1 -Repository Workspace_Inventory` passes 100%.
+   - `pwsh LCM_Inventory/tools/Test-WorkspaceReadiness.ps1 -Repository LCM_Inventory` passes 100%.

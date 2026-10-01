@@ -7,7 +7,7 @@
 | **Lifecycle State** | `COMPLETED` (Accepted by Operator) |
 | **Origin Repository** | `LCM` / Execution & Elevation Governance |
 | **Target Scope** | CLI & Agent Execution Layer (`.lcm/tools/internal/Invoke-PrivilegedTool.ps1`, `Invoke-InteractiveDesktop.ps1`, `Update-ToolCatalog.ps1`, `.lcm/Cmd/*.cmd`, `.agents/rules/ElevationPolicy.md`) |
-| **Author** | Rolf, Workspace_AI |
+| **Author** | Rolf, LCM_AI |
 | **Date** | 2026-09-08 (Completed: 2026-09-19) |
 | **Version Impact** | `v7.5.3` |
 | **Related Proposals** | `CRP-107` (`CRP-2026-024`), `CRP-116` (`CRP-2026-030`), `CRP-117` (`CRP-2026-031`), `CRP-158` |

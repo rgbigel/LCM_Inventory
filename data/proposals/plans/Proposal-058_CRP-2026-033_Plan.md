@@ -30,7 +30,7 @@
 - **`tool_catalog.json`**: Replaced all 33 occurrences of `.lcm\.tools\internal\` with canonical `.lcm\tools\internal\`.
 - **Scratch Dashboards**: Corrected `SHOW_TOOLS.html` and `User_Tools_Explorer_LCM.html`.
 - **System Directives**: Corrected `AGENTS.md` system restore path and `.agents/ACTIVE_SESSION.md` tool explorer path.
-- **Documentation**: Updated `Workspace_AI/docs/` specifications to use `.lcm/tools/` and `.lcm/Cmd/`.
+- **Documentation**: Updated `LCM_AI/docs/` specifications to use `.lcm/tools/` and `.lcm/Cmd/`.
 
 ### B. BCR Tooling
 - **`Invoke-BeyondCompareReview.ps1`**:

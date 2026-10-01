@@ -1,9 +1,9 @@
 # Architecture Specification: Workspace Inventory & Configuration Management Control Hub
 
 Module: docs/Architecture.md  
-Purpose: Authoritative architectural specification for Workspace_Inventory, the central Configuration Management (CM), proposal ledger, and review-gating engine of the Lifecycle Model (LCM).  
-Path: D:/Git_Repositories/Workspace_Inventory/docs/Architecture.md  
-Authors: Rolf, Workspace_AI Engine  
+Purpose: Authoritative architectural specification for LCM_Inventory, the central Configuration Management (CM), proposal ledger, and review-gating engine of the Lifecycle Model (LCM).  
+Path: D:/Git_Repositories/LCM_Inventory/docs/Architecture.md  
+Authors: Rolf, LCM_AI Engine  
 Version: 7.0.0  
 Status: Authoritative Architecture  
 Date: 2026-09-19  
@@ -12,9 +12,9 @@ Date: 2026-09-19
 
 ## 1. System Overview & End-User Perspective
 
-**`Workspace_Inventory`** serves as the central operational hub and single source of truth for the entire Lifecycle Model (LCM) multi-repository ecosystem. It governs configuration tracking, change request proposal (CRP) state progression, multi-repository review gating via Beyond Compare 5, drift auditing, and multi-repo remote push orchestration.
+**`LCM_Inventory`** serves as the central operational hub and single source of truth for the entire Lifecycle Model (LCM) multi-repository ecosystem. It governs configuration tracking, change request proposal (CRP) state progression, multi-repository review gating via Beyond Compare 5, drift auditing, and multi-repo remote push orchestration.
 
-From an operator and AI agent perspective, `Workspace_Inventory` provides three primary interaction surfaces:
+From an operator and AI agent perspective, `LCM_Inventory` provides three primary interaction surfaces:
 1. **Interactive UI Dashboards**: Fast, single-instance HTML/JS control hubs launched via local loopback web channels (e.g. CM Control Hub, Tool Explorer, Readiness Modal, Table Viewers).
 2. **Deterministic CLI Tooling**: Modular PowerShell 7 automation scripts conforming to Microsoft approved verbs and universal `-h` help banners.
 3. **Canonical Data Stores**: Schema-validated JSON ledgers (`proposals.json`, `inventory.json`, `tool_catalog.json`) maintaining immutable audit history and proposal lifecycle states.
@@ -45,7 +45,7 @@ graph TB
     subgraph Governed_Space["Governed Repositories (13 Repos)"]
         REPO_ROOT["Git_Repositories (Root)"]
         REPO_SUBS["Subsystems (HaSSD06, Supervision)"]
-        REPO_COMPS["Components (SharedModules, etc.)"]
+        REPO_COMPS["Components (LCM_Shared, etc.)"]
     end
 
     CM_HUB <--> CM_MOD
@@ -125,18 +125,18 @@ sequenceDiagram
 
 ## 4. Multi-Repository Governance & Junction Topology
 
-`Workspace_Inventory` holds the canonical physical storage for all 17 authoritative governance policies at `.agents/rules/`. All other repositories in the workspace link to this directory via single-hop NTFS junctions:
+`LCM_Inventory` holds the canonical physical storage for all 17 authoritative governance policies at `.agents/rules/`. All other repositories in the workspace link to this directory via single-hop NTFS junctions:
 
 ```mermaid
 graph TD
     classDef hub fill:#1e293b,stroke:#38bdf8,stroke-width:2px,color:#fff;
     classDef spk fill:#0f172a,stroke:#94a3b8,stroke-width:1px,color:#fff;
 
-    HUB["Canonical Governance Rules Hub<br/>Workspace_Inventory/.agents/rules/<br/>(17 Authoritative Policies)"]:::hub
+    HUB["Canonical Governance Rules Hub<br/>LCM_Inventory/.agents/rules/<br/>(17 Authoritative Policies)"]:::hub
 
     ROOT["Git_Repositories/.agents/rules"]:::spk
-    WAI["Workspace_AI/.agents/rules"]:::spk
-    WSUP["Workspace_Supervision/.agents/rules"]:::spk
+    WAI["LCM_AI/.agents/rules"]:::spk
+    WSUP["LCM_Supervision/.agents/rules"]:::spk
     HASS["HaSSD06_Inventory/.agents/rules"]:::spk
     OTHER["All Other Governed Repos/.agents/rules"]:::spk
 
@@ -153,7 +153,7 @@ This topology ensures 100% rule discovery whether opening the root workspace con
 <!-- FixDocumentation: CRP-196 Architecture -->
 ## 5. Proposed Documentation Reconciliation Service
 
-`Workspace_Inventory` hosts `Fix-Documentation.ps1` as the evidence-bound
+`LCM_Inventory` hosts `Fix-Documentation.ps1` as the evidence-bound
 documentation reconciliation service. It receives explicit CRP/BUG scopes,
 resolves repository-qualified tripartite payloads, records manifests and
 receipts, and dispatches per-repository BCompare review without changing

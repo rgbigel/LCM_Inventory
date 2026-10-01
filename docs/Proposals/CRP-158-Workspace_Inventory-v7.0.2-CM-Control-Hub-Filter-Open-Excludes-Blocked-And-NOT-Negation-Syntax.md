@@ -3,15 +3,15 @@
 ## Metadata
 - **Proposal ID**: `158`
 - **Bundle ID**: `CRP-158`
-- **Origin Repo**: `Workspace_Inventory`
+- **Origin Repo**: `LCM_Inventory`
 - **Target Components**:
-  - `Workspace_Inventory/assets/CM_CONTROL_HUB.html`
-  - `Workspace_Inventory/data/artifacts/CM_CONTROL_HUB.html`
-  - `Workspace_Inventory/scratch/CM_CONTROL_HUB.html`
-  - `Workspace_Inventory/tools/Show-CmControlHub.ps1`
+  - `LCM_Inventory/assets/CM_CONTROL_HUB.html`
+  - `LCM_Inventory/data/artifacts/CM_CONTROL_HUB.html`
+  - `LCM_Inventory/scratch/CM_CONTROL_HUB.html`
+  - `LCM_Inventory/tools/Show-CmControlHub.ps1`
   - `.lcm/assets/lcm-table-engine.js`
-  - `Workspace_Inventory/assets/lcm-table-engine.js`
-  - `Workspace_Inventory/.agents/rules/DisplayStandardsPolicy.md`
+  - `LCM_Inventory/assets/lcm-table-engine.js`
+  - `LCM_Inventory/.agents/rules/DisplayStandardsPolicy.md`
 - **Author**: Operator Directive / CRP Intake
 - **Date**: 2026-09-19
 - **Priority**: Medium (`M`)
@@ -28,7 +28,7 @@ When operators manage change requests and proposals within the **LCM Configurati
 ---
 
 ## 2. Root Cause Analysis
-In `Workspace_Inventory/assets/CM_CONTROL_HUB.html`:
+In `LCM_Inventory/assets/CM_CONTROL_HUB.html`:
 - Line 2845: `if (progState === "open" && (p.progress_state === "completed" || p.progress_state === "pushed" || p.state === "completed" || p.state === "pushed")) return false;` did not check for `p.progress_state === "blocked"` or `p.state === "blocked"`.
 - Lines 2852–2861: Search string evaluation only performed a monolithic `search.includes(...)` comparison without tokenizing query terms or parsing field prefixes (`field:value` / `!field:value` / `field:!value`).
 - In `.lcm/assets/lcm-table-engine.js`: `matchesQuery()` only checked simple substring terms without column-name qualifiers or DOM-level header index mapping.
@@ -55,10 +55,10 @@ Implemented `parseSearchToken()` and `matchesProposalToken()` in `CM_CONTROL_HUB
 2. **General Term Negation**:
    - `!term` (excludes proposals containing `term` in title, details, ID, scope, or states).
 3. **Compound Search**:
-   - Space-delimited multi-token queries with implicit `AND` logic across all positive and negative constraints (e.g. `scope:Workspace_Inventory prio:!D state:!blocked`).
+   - Space-delimited multi-token queries with implicit `AND` logic across all positive and negative constraints (e.g. `scope:LCM_Inventory prio:!D state:!blocked`).
 
 ### 3.3 Generalization into `LcmTableEngine` (`v1.1.0`)
-Upgraded `.lcm/assets/lcm-table-engine.js` and `Workspace_Inventory/assets/lcm-table-engine.js`:
+Upgraded `.lcm/assets/lcm-table-engine.js` and `LCM_Inventory/assets/lcm-table-engine.js`:
 - Added `LcmTableEngine.parseTokens(query)`: Robust parser supporting column qualifiers (`Col:Val`), quoted strings (`Col:"multi word"`), and negation (`!Col:Val`, `Col:!Val`, `!term`).
 - Added `LcmTableEngine.getColumnMap(table)`: Dynamic column header mapping for DOM `<table>` elements.
 - Added `LcmTableEngine.matchesRow(tr, tokens, colMap, options)`: Evaluates DOM table rows against compound parsed tokens with alias support.

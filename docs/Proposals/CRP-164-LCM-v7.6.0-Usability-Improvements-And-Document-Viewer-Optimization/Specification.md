@@ -5,16 +5,16 @@ CRP-ID: CRP-164
 Title: Usability Improvements & Interactive Document Viewer Optimization
 Scope: LCM Governance, CM Control Hub, Documentation Review Engine & Tools Catalog
 Baseline-Version: v7.6.0
-Author: Rolf, Workspace_AI Engine
+Author: Rolf, LCM_AI Engine
 Date: 2026-09-21
 Status: Suggested
 Plan-State: suggested
 Progress-State: queued
 Priority: High
 Impacted-Repositories:
-  - Workspace_Inventory
+  - LCM_Inventory
   - .lcm
-  - Workspace_AI
+  - LCM_AI
 ```
 
 ---
@@ -80,7 +80,7 @@ In `openRepoDocsReview(repoStr)`:
 ## 3. Component Architecture & Affected Files
 
 ```text
-Workspace_Inventory/
+LCM_Inventory/
 ├── docs/
 │   └── Proposals/
 │       └── CRP-164-LCM-v7.6.0-Usability-Improvements-And-Document-Viewer-Optimization/

@@ -2,8 +2,8 @@
 .SYNOPSIS
   Scans, summarizes, and visualizes Quality Gate Readiness Receipts across all workspace repositories.
 .DESCRIPTION
-  Module: Workspace_Inventory/tools/Show-WorkspaceReadiness.ps1
-  Authors: Rolf, Workspace_AI Engine
+  Module: LCM_Inventory/tools/Show-WorkspaceReadiness.ps1
+  Authors: Rolf, LCM_AI Engine
   Version: 1.0.0
   Date: 2026-09-19
   ShortName: ShowReadiness
@@ -31,13 +31,13 @@
   Displays this comprehensive parameter reference and usage instructions (Aliases: -h, -?).
 
 .EXAMPLE
-  pwsh Workspace_Inventory/tools/Show-WorkspaceReadiness.ps1 -h
+  pwsh LCM_Inventory/tools/Show-WorkspaceReadiness.ps1 -h
 .EXAMPLE
-  pwsh Workspace_Inventory/tools/Show-WorkspaceReadiness.ps1
+  pwsh LCM_Inventory/tools/Show-WorkspaceReadiness.ps1
 .EXAMPLE
-  pwsh Workspace_Inventory/tools/Show-WorkspaceReadiness.ps1 -Html
+  pwsh LCM_Inventory/tools/Show-WorkspaceReadiness.ps1 -Html
 .EXAMPLE
-  pwsh Workspace_Inventory/tools/Show-WorkspaceReadiness.ps1 -Repo HaSSD06_Inventory -Html
+  pwsh LCM_Inventory/tools/Show-WorkspaceReadiness.ps1 -Repo HaSSD06_Inventory -Html
 #>
 
 [CmdletBinding()]
@@ -76,7 +76,7 @@ if ($Help) {
     Write-Host "  Scans and reports Quality Gate Readiness across all repositories."
     Write-Host ""
     Write-Host "USAGE:" -ForegroundColor Yellow
-    Write-Host "  pwsh Workspace_Inventory/tools/Show-WorkspaceReadiness.ps1 [[-Repository] <name>] [-Html] [-RunMissing] [-NoLaunch] [-h]"
+    Write-Host "  pwsh LCM_Inventory/tools/Show-WorkspaceReadiness.ps1 [[-Repository] <name>] [-Html] [-RunMissing] [-NoLaunch] [-h]"
     Write-Host ""
     Write-Host "PARAMETERS:" -ForegroundColor Yellow
     Write-Host "  -Repository : Target specific repository to inspect"
@@ -242,11 +242,11 @@ Write-Host "====================================================================
 
 # HTML Dashboard Generation
 if ($Html) {
-    $artifactsDir = Join-Path $WorkspaceRoot 'Workspace_Inventory\data\artifacts'
+    $artifactsDir = Join-Path $WorkspaceRoot 'LCM_Inventory\data\artifacts'
     if (-not (Test-Path -LiteralPath $artifactsDir)) {
         New-Item -Path $artifactsDir -ItemType Directory -Force | Out-Null
     }
-    $scratchDir = Join-Path $WorkspaceRoot 'Workspace_Inventory\scratch'
+    $scratchDir = Join-Path $WorkspaceRoot 'LCM_Inventory\scratch'
     if (-not (Test-Path -LiteralPath $scratchDir)) {
         New-Item -Path $scratchDir -ItemType Directory -Force | Out-Null
     }

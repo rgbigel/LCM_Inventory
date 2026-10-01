@@ -2,15 +2,15 @@
 
 ## Metadata Header
 * **Proposal ID**: `CRP-187`
-* **Title**: LCM Runtime Decoupling, SharedModules Governance Integration, and Editor Review Safety Invariant
-* **Bundle Directory**: `Workspace_Inventory/docs/Proposals/CRP-187-LCM-Decoupling-SharedModules-Governance-Review-Safety/`
+* **Title**: LCM Runtime Decoupling, LCM_Shared Governance Integration, and Editor Review Safety Invariant
+* **Bundle Directory**: `LCM_Inventory/docs/Proposals/CRP-187-LCM-Decoupling-LCM_Shared-Governance-Review-Safety/`
 
 ---
 
 ## 1. Environmental & Directory Integrity Verification
 
-### Verification 1: Purge of Stray `D:\Workspace_Inventory`
-* **Test**: `Test-Path "D:\Workspace_Inventory"`
+### Verification 1: Purge of Stray `D:\LCM_Inventory`
+* **Test**: `Test-Path "D:\LCM_Inventory"`
 * **Expected Result**: `False`
 * **Actual Output**: `False` (Verified deleted).
 
@@ -20,16 +20,16 @@
   - `Test-Path D:\Git_Repositories\.lcm\logs` $\rightarrow$ `False`
   - `Test-Path D:\Git_Repositories\.lcm\archive` $\rightarrow$ `False`
   - `Test-Path D:\Git_Repositories\.lcm\scratch` $\rightarrow$ `False`
-  - Operational logs active in `Workspace_Inventory\data\logs\lcm\` (`actions.jsonl` active).
-  - Background daemon active in Session 1 on Port 9876 logging to `Workspace_Inventory\data\logs\lcm-internal\LcmDesktopDaemon-20260928.log`.
+  - Operational logs active in `LCM_Inventory\data\logs\lcm\` (`actions.jsonl` active).
+  - Background daemon active in Session 1 on Port 9876 logging to `LCM_Inventory\data\logs\lcm-internal\LcmDesktopDaemon-20260928.log`.
 
 ---
 
 ## 2. Governance, Tooling & Subsystem Verification
 
-### Verification 3: `SharedModules` Inclusion in Subsystems Dashboard
+### Verification 3: `LCM_Shared` Inclusion in Subsystems Dashboard
 * **Test**: Execute `Show-Subsystems.ps1`.
-* **Output**: `SharedModules` appears in the rendered Subsystems table with valid commit hash and git tracking status.
+* **Output**: `LCM_Shared` appears in the rendered Subsystems table with valid commit hash and git tracking status.
 
 ### Verification 4: Tool Catalog Trampoline Recursion Hardening
 * **Test**: Execute `Update-ToolCatalog.ps1`.
@@ -46,7 +46,7 @@
 ## 3. Beyond Compare Review Readiness
 
 All four target repositories are staged and prepared for operator visual diff inspection:
-1. `Workspace_Inventory` (Requirements, Proposals ledger, CRP-187 bundle)
-2. `Workspace_AI` (Governance rules, AGENTS index, Optimization specs)
-3. `SharedModules` (Tripartite Architecture and Requirements drafts)
+1. `LCM_Inventory` (Requirements, Proposals ledger, CRP-187 bundle)
+2. `LCM_AI` (Governance rules, AGENTS index, Optimization specs)
+3. `LCM_Shared` (Tripartite Architecture and Requirements drafts)
 4. `D:\Git_Repositories` (Root `.lcm` log decoupling, trampolines, settings)

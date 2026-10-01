@@ -12,7 +12,7 @@
 | **Priority** | `Medium` |
 | **Version Impact** | `v7.5.0` |
 | **Governing Policy** | `ProposalReviewFlowPolicy.md` (`RULE-LCM-012`, `RULE-LCM-015`, `RULE-LCM-016`) |
-| **Originating Proposals** | [`BUG-133`](file:///D:/Git_Repositories/Workspace_Inventory/docs/Proposals/BUG-133-LCM-v7.5.0-Tool-Explorer-UI-Regressions-Help-And-Parameter-Fixes.md) and `BUNDLE-STD-DISPLAY-v7.5.0` (`CRP-025`, `CRP-108`) |
+| **Originating Proposals** | [`BUG-133`](file:///D:/Git_Repositories/LCM_Inventory/docs/Proposals/BUG-133-LCM-v7.5.0-Tool-Explorer-UI-Regressions-Help-And-Parameter-Fixes.md) and `BUNDLE-STD-DISPLAY-v7.5.0` (`CRP-025`, `CRP-108`) |
 
 ---
 

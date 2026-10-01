@@ -10,7 +10,7 @@
 
 2. **Verify CM Control Hub Integration**:
    - In `CM_CONTROL_HUB.html`, `executeBatchReview()` calls `formatBatchReviewTag(proposals, repo)`.
-   - The Beyond Compare window title for 183..185 shows `Live Workspace_Inventory [CRP-183-185]`.
+   - The Beyond Compare window title for 183..185 shows `Live LCM_Inventory [CRP-183-185]`.
 
 3. **Verify Ledger Synchronization (`proposals.json`)**:
    - Proposal 184 state is updated from `suggested` (undecided) to `in_progress`.

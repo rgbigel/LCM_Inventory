@@ -7,7 +7,7 @@ Scope: Multiple
 Baseline-Version: v7.6.0
 Author: Rolf, Antigravity AI Assistant
 Date: 2026-09-24 18:14:00
-Status: ACCEPTED (Committed in Git_Repositories: ff11d81, Workspace_AI: 10061e5)
+Status: ACCEPTED (Committed in Git_Repositories: ff11d81, LCM_AI: 10061e5)
 ```
 
 ---

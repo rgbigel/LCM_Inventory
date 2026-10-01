@@ -3,7 +3,7 @@
 ## Proposed Changes
 
 ### 1. Navigation Dispatcher & CLI Trampoline
-- Create `Workspace_Inventory/tools/Show-SuperController.ps1`:
+- Create `LCM_Inventory/tools/Show-SuperController.ps1`:
   - Parameter `-Subsystem` (defaults to `ALL`, supports all taxonomy subsystems).
   - Parameter `-Tool` (`All`, `Tools` / `ToolsExplorer`, `CM` / `ShowCM`).
   - Parameter `-CliMode` (terminal output).
@@ -19,6 +19,6 @@
 ---
 
 ## Verification Plan
-- Run `pwsh Workspace_Inventory/tools/Show-SuperController.ps1 -Help`.
-- Run `pwsh Workspace_Inventory/tools/Show-SuperController.ps1 -CliMode -Subsystem LCM`.
+- Run `pwsh LCM_Inventory/tools/Show-SuperController.ps1 -Help`.
+- Run `pwsh LCM_Inventory/tools/Show-SuperController.ps1 -CliMode -Subsystem LCM`.
 - Confirm `SuperController.cmd` launches without syntax errors.

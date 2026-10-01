@@ -1,9 +1,9 @@
 # Requirements Specification: Workspace Inventory & Configuration Management Engine
 
 Module: docs/Requirements.md  
-Purpose: Normative technical requirements, environmental prerequisites, safety boundaries, and compliance constraints for Workspace_Inventory.  
-Path: D:/Git_Repositories/Workspace_Inventory/docs/Requirements.md  
-Authors: Rolf, Workspace_AI Engine  
+Purpose: Normative technical requirements, environmental prerequisites, safety boundaries, and compliance constraints for LCM_Inventory.  
+Path: D:/Git_Repositories/LCM_Inventory/docs/Requirements.md  
+Authors: Rolf, LCM_AI Engine  
 Version: 7.0.0  
 Status: Authoritative Requirements  
 Date: 2026-09-19  
@@ -26,13 +26,13 @@ Date: 2026-09-19
 - Direct invocation of `git commit` outside the review runner is strictly prohibited during interactive development.
 
 ### REQ-WINV-002: Audit Receipt Generation & Persistence (`RULE-REV-003`)
-- Every approved commit `MUST` produce an immutable audit receipt in `Workspace_Inventory/data/reviews/review_<Repo>_<timestamp>.json`.
+- Every approved commit `MUST` produce an immutable audit receipt in `LCM_Inventory/data/reviews/review_<Repo>_<timestamp>.json`.
 - Receipts must record repository name, target branch, commit hash, commit message, and changed file paths.
 
 ### REQ-WINV-003: Single Source of Truth for Proposals (`RULE-LCM-001`)
-- All change requests, bug fixes, and feature proposals `MUST` be registered in `Workspace_Inventory/data/proposals/proposals.json`.
+- All change requests, bug fixes, and feature proposals `MUST` be registered in `LCM_Inventory/data/proposals/proposals.json`.
 - Proposals must contain: unique integer `id`, `title`, `state`, `origin_repo`, `priority`, and formal `plan_path`.
-- **Legacy Backward Compatibility Guard**: When parsing legacy proposals, imported historical records, or external CRPs where `origin_repo` is absent or null, tools and consumers `MUST NOT` throw runtime exceptions or break proposal ingestion. They `MUST` fallback gracefully to `'Workspace_Inventory'` (or root repository context) and log a non-fatal warning for metadata backfill.
+- **Legacy Backward Compatibility Guard**: When parsing legacy proposals, imported historical records, or external CRPs where `origin_repo` is absent or null, tools and consumers `MUST NOT` throw runtime exceptions or break proposal ingestion. They `MUST` fallback gracefully to `'LCM_Inventory'` (or root repository context) and log a non-fatal warning for metadata backfill.
 
 ### REQ-WINV-004: Workspace Audit & Drift Detection (`RULE-EFF-001`)
 - `Invoke-WorkspaceAudit.ps1` `MUST` inspect all LCM-governed repositories under `D:\Git_Repositories`, assessing:
@@ -45,7 +45,7 @@ Date: 2026-09-19
 ### REQ-WINV-005: Lockstep Multi-Repository Push (`RULE-LCM-013`)
 - `Invoke-WorkspacePush.ps1` `MUST` conduct pre-push validation (Gemini rules export and tool catalog synchronization).
 - It `MUST` iterate across all ahead repositories, execute `git push origin <branch>`, log structured audit records to `logs/cm_activity.log`, and transition completed proposals to `pushed`.
-- **Directional Lockstep Invariant (`SharedModules` <-> `Workspace_Inventory`)**: Any code, atom, or documentation change in `SharedModules` updates its repository version and commit hash, which `MUST` be reflected in `Workspace_Inventory` (`inventory.json`). Therefore, pushing `SharedModules` without simultaneously pushing `Workspace_Inventory` is prohibited. Conversely, pushing `Workspace_Inventory` in isolation is valid for routine inventory data, audit receipts, and telemetry commits, *unless* an inventory tool change or contract update modifies/inspects `SharedModules`, which again couples both in lockstep.
+- **Directional Lockstep Invariant (`LCM_Shared` <-> `LCM_Inventory`)**: Any code, atom, or documentation change in `LCM_Shared` updates its repository version and commit hash, which `MUST` be reflected in `LCM_Inventory` (`inventory.json`). Therefore, pushing `LCM_Shared` without simultaneously pushing `LCM_Inventory` is prohibited. Conversely, pushing `LCM_Inventory` in isolation is valid for routine inventory data, audit receipts, and telemetry commits, *unless* an inventory tool change or contract update modifies/inspects `LCM_Shared`, which again couples both in lockstep.
 
 ### REQ-WINV-006: Runtime Presentation Artifact Isolation (`RULE-DSP-008` / `CRP-156`)
 - All generated HTML dashboard reports, document viewers, and temporary interactive tables `MUST` be written to `data/artifacts/` or `data/staging/`.
@@ -55,7 +55,7 @@ Date: 2026-09-19
 
 ## 3. UI/UX Display Standards Compliance
 
-All interactive viewers in `Workspace_Inventory` (such as `Show-CmControlHub.ps1`, `Show-WorkspaceInventoryApp.ps1`, `Show-WorkspaceReadiness.ps1`) `MUST` conform to [`DisplayStandardsPolicy.md`](file:///D:/Git_Repositories/.agents/rules/DisplayStandardsPolicy.md):
+All interactive viewers in `LCM_Inventory` (such as `Show-CmControlHub.ps1`, `Show-WorkspaceInventoryApp.ps1`, `Show-WorkspaceReadiness.ps1`) `MUST` conform to [`DisplayStandardsPolicy.md`](file:///D:/Git_Repositories/.agents/rules/DisplayStandardsPolicy.md):
 1. **Canonical Token Architecture**: Must inherit styles from `StandardTableDisplay.css` (Glassmorphic dark mode, hsl custom properties).
 2. **Double-Row Sticky Table Headers**: Row 1 for column titles and multi-column sorting; Row 2 for live filter inputs.
 3. **Action Logging Drawer**: Must provide collapsible floating audit drawer capturing all desktop dispatches with timestamps and exit codes.
@@ -66,21 +66,21 @@ All interactive viewers in `Workspace_Inventory` (such as `Show-CmControlHub.ps1
 ## 4. Constituent Module Inspection & Contract Governance Tools [Draft Concept]
 
 > [!NOTE]
-> **Draft Status Warning**: This section represents an exploratory architectural working concept and is **currently NOT the authoritative source of truth**. It defines planned inspection tools hosted and versioned by `Workspace_Inventory` to audit external satellite modules (such as `SharedModules`).
+> **Draft Status Warning**: This section represents an exploratory architectural working concept and is **currently NOT the authoritative source of truth**. It defines planned inspection tools hosted and versioned by `LCM_Inventory` to audit external satellite modules (such as `LCM_Shared`).
 
 ### REQ-WINV-007: Contract Verification Engine (`ShowContracts`)
-- `Workspace_Inventory` `MUST` host `Show-Contracts.ps1` (`ShowContracts`) to inspect, visualize, and verify public contract specifications, schema invariants, parameter assertions, and return-type expectations across constituent modules.
+- `LCM_Inventory` `MUST` host `Show-Contracts.ps1` (`ShowContracts`) to inspect, visualize, and verify public contract specifications, schema invariants, parameter assertions, and return-type expectations across constituent modules.
 - It `MUST` audit consuming repositories for contract adherence and detect drift between declared contracts and consumer usage.
 
 ### REQ-WINV-008: Interface & Module Structure Discovery (`ShowInterfaces`, `ShowModules`)
-- `Workspace_Inventory` `MUST` host `Show-Interfaces.ps1` (`ShowInterfaces`) to enumerate exported PowerShell functions, cmdlets, classes, and parameter bindings across workspace modules.
-- `Workspace_Inventory` `MUST` host `Show-Modules.ps1` (`ShowModules`) to map manifests (`.psd1`), root scripts (`.psm1`), dependency trees, and load order hierarchies.
+- `LCM_Inventory` `MUST` host `Show-Interfaces.ps1` (`ShowInterfaces`) to enumerate exported PowerShell functions, cmdlets, classes, and parameter bindings across workspace modules.
+- `LCM_Inventory` `MUST` host `Show-Modules.ps1` (`ShowModules`) to map manifests (`.psd1`), root scripts (`.psm1`), dependency trees, and load order hierarchies.
 
 ### REQ-WINV-009: Granular Atom Inventory (`ShowAtoms`)
-- `Workspace_Inventory` `MUST` host `Show-Atoms.ps1` (`ShowAtoms`) to catalogue pure, reusable atomic functions ("Atoms") with their test coverage, Pester test links, and consumption metrics.
+- `LCM_Inventory` `MUST` host `Show-Atoms.ps1` (`ShowAtoms`) to catalogue pure, reusable atomic functions ("Atoms") with their test coverage, Pester test links, and consumption metrics.
 
 ### REQ-WINV-010: Constituent Component Version Registry
-- `Workspace_Inventory` `MUST` maintain an authoritative registry (`inventory.json`) recording the exact versions, commit hashes, and dependency states of all external satellite modules (e.g., `SharedModules`), while allowing each satellite module repository to maintain its own independent source code versioning lifecycle.
+- `LCM_Inventory` `MUST` maintain an authoritative registry (`inventory.json`) recording the exact versions, commit hashes, and dependency states of all external satellite modules (e.g., `LCM_Shared`), while allowing each satellite module repository to maintain its own independent source code versioning lifecycle.
 
 <!-- FixDocumentation: CRP-196 Requirements -->
 ### REQ-WINV-011: Scoped Documentation Reconciliation

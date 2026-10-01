@@ -4,8 +4,8 @@
 .DESCRIPTION
   Module: modules/WorkspacePushEligibility.psm1
   Purpose: Prevents pushes of repositories without completed proposals and enforces
-           Workspace_Inventory lockstep participation before remote dispatch.
-  Path: Workspace_Inventory/modules/WorkspacePushEligibility.psm1
+           LCM_Inventory lockstep participation before remote dispatch.
+  Path: LCM_Inventory/modules/WorkspacePushEligibility.psm1
   Authors: GitHub Copilot
   Version: 8.0.0
   Date: 2026-09-29
@@ -108,7 +108,7 @@ function Resolve-WorkspacePushPlan {
           ConvertTo-WorkspacePushRepositoryName -RepositoryName $_
         }
       } |
-      Where-Object { $_ -ne 'Workspace_Inventory' } |
+      Where-Object { $_ -ne 'LCM_Inventory' } |
       Select-Object -Unique
   )
 
@@ -116,7 +116,7 @@ function Resolve-WorkspacePushPlan {
     $RequestedRepositories |
       Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
       ForEach-Object { ConvertTo-WorkspacePushRepositoryName -RepositoryName $_ } |
-      Where-Object { $_ -ne 'Workspace_Inventory' } |
+      Where-Object { $_ -ne 'LCM_Inventory' } |
       Select-Object -Unique
   )
 
@@ -159,16 +159,16 @@ function Resolve-WorkspacePushPlan {
           ConvertTo-WorkspacePushRepositoryName -RepositoryName $_
         }
       } |
-      Where-Object { $_ -ne 'Workspace_Inventory' } |
+      Where-Object { $_ -ne 'LCM_Inventory' } |
       Select-Object -Unique
   )
   if ($targetRepositories.Count -eq 0) {
-    throw 'PUSH requires at least one completed proposal owned by a non-Workspace_Inventory repository.'
+    throw 'PUSH requires at least one completed proposal owned by a non-LCM_Inventory repository.'
   }
 
   [pscustomobject]@{
     TargetRepositories = @($targetRepositories)
-    RequiredRepositories = @($targetRepositories + 'Workspace_Inventory' | Select-Object -Unique)
+    RequiredRepositories = @($targetRepositories + 'LCM_Inventory' | Select-Object -Unique)
     CompletedProposalIds = @($targetProposals | Select-Object -ExpandProperty id)
     CompletedProposals = @(
       $targetProposals | ForEach-Object {

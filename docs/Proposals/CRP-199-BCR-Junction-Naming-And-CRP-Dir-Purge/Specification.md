@@ -2,12 +2,12 @@
 
 ```yaml
 CRP-ID: CRP-199
-Scope: Workspace_Inventory BCompare review lifecycle
+Scope: LCM_Inventory BCompare review lifecycle
 Status: In Progress
 Plan-State: in_progress
 Progress-State: in_progress
 Affected-Repos:
-  - Workspace_Inventory
+  - LCM_Inventory
 ```
 
 ## Objective

@@ -5,9 +5,9 @@
 | :--- | :--- |
 | **Proposal ID** | `CRP-160` |
 | **Lifecycle State** | `VERIFICATION` |
-| **Origin Repository** | `Workspace_Inventory` |
-| **Target Scope** | CM Control Hub UI (`Workspace_Inventory/assets/CM_CONTROL_HUB.html`, `.lcm/tools/internal/LcmDesktopDaemon.ps1`, `Workspace_Inventory/tools/Show-CmControlHub.ps1`) |
-| **Author** | Rolf, Workspace_AI Intake |
+| **Origin Repository** | `LCM_Inventory` |
+| **Target Scope** | CM Control Hub UI (`LCM_Inventory/assets/CM_CONTROL_HUB.html`, `.lcm/tools/internal/LcmDesktopDaemon.ps1`, `LCM_Inventory/tools/Show-CmControlHub.ps1`) |
+| **Author** | Rolf, LCM_AI Intake |
 | **Date** | 2026-09-19 |
 | **Version Impact** | `v7.0.4` |
 | **Severity / Priority** | Medium / Normal |

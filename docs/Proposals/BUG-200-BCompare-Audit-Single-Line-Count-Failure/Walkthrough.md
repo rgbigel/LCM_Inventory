@@ -15,7 +15,7 @@ when it contains exactly one line.
 - PowerShell AST parsing passed for `Invoke-BeyondCompareReview.ps1` and
 	`Submit-ReviewResult.ps1`.
 - `tests/BCompareReviewLifecycle.Tests.ps1` passed: 6 tests, 0 failures.
-- A live Beyond Compare review launched for `Workspace_Inventory` against
+- A live Beyond Compare review launched for `LCM_Inventory` against
 	baseline `4993fe3` under `BUG-200`. After the session closed, the staging
 	audit completed successfully and wrote its receipt without the former
 	scalar `.Count` exception.

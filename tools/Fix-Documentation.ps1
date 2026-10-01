@@ -8,7 +8,7 @@ param(
     [switch]$Apply,
 
     [Parameter(Mandatory = $false, HelpMessage = 'Fallback repository for unqualified documentation payloads')]
-    [string]$TargetRepo = 'Workspace_AI',
+    [string]$TargetRepo = 'LCM_AI',
 
     [Parameter(Mandatory = $false, HelpMessage = 'Workspace root path')]
     [string]$WorkspaceRoot = 'D:\Git_Repositories',
@@ -178,7 +178,7 @@ if ($Help) {
 
 Write-Host "$scriptName v$scriptVersion" -ForegroundColor Cyan
 
-$ledgerPath = Join-Path $WorkspaceRoot 'Workspace_Inventory\data\proposals\proposals.json'
+$ledgerPath = Join-Path $WorkspaceRoot 'LCM_Inventory\data\proposals\proposals.json'
 if (-not (Test-Path -LiteralPath $ledgerPath)) {
     throw "Proposal ledger was not found at '$ledgerPath'."
 }
@@ -197,7 +197,7 @@ foreach ($proposal in $selected) {
     $proposalId = if ($proposal.crp_id) { [string]$proposal.crp_id } else { [string]$proposal.cr_id }
     $bundlePath = Join-Path $WorkspaceRoot ([string]$proposal.bundle_dir)
     if (-not (Test-Path -LiteralPath $bundlePath)) {
-        $bundlePath = Join-Path (Join-Path $WorkspaceRoot 'Workspace_Inventory') ([string]$proposal.bundle_dir)
+        $bundlePath = Join-Path (Join-Path $WorkspaceRoot 'LCM_Inventory') ([string]$proposal.bundle_dir)
     }
     if (-not (Test-Path -LiteralPath $bundlePath)) {
         throw "Bundle for $proposalId was not found at '$bundlePath'."
@@ -236,7 +236,7 @@ $manifestEntries = foreach ($update in $updates) {
     }
 }
 
-$logRoot = Join-Path $env:TEMP 'Workspace_Inventory\FixDocumentation\Logs'
+$logRoot = Join-Path $env:TEMP 'LCM_Inventory\FixDocumentation\Logs'
 if (-not (Test-Path -LiteralPath $logRoot)) {
     $null = New-Item -ItemType Directory -Path $logRoot -Force
 }
@@ -294,7 +294,7 @@ Write-Host "Applied documentation updates: $($changedPaths.Count). Receipt: $rec
 $changedRepos = @($changedPaths | ForEach-Object { Split-Path (Split-Path $_ -Parent) -Parent | Split-Path -Leaf } | Select-Object -Unique)
 Write-Host "BCompare review is required before local commit for: $($changedRepos -join ', ')" -ForegroundColor Yellow
 if ($OpenReview -and $changedPaths.Count -gt 0) {
-    $reviewTool = Join-Path $WorkspaceRoot 'Workspace_Inventory\tools\Invoke-BeyondCompareReview.ps1'
+    $reviewTool = Join-Path $WorkspaceRoot 'LCM_Inventory\tools\Invoke-BeyondCompareReview.ps1'
     foreach ($repository in $changedRepos) {
         & $reviewTool -RepositoryName $repository -BaseCommit HEAD -CRP $CrpScope
     }

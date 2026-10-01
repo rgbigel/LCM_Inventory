@@ -27,7 +27,7 @@ param(
     Purpose: User command and automated lifecycle hook to inspect and clean up Beyond Compare temp review directories in BC_Review scratch.
              Safely preserves and unlinks Approach A directory junctions (ACTIVE_BASELINE and ACTIVE_LIVE) per RULE-PS-018.
     Path: tools/Clear-BCReviewTemp.ps1
-    Authors: Rolf, Workspace_AI Engine
+    Authors: Rolf, LCM_AI Engine
     Version: 8.0.0
     Date: 2026-09-26
 #>
@@ -43,7 +43,7 @@ if ($Help) {
     Write-Host "  Inspect and clean up Beyond Compare temp review directories in BC_Review scratch."
     Write-Host ""
     Write-Host "USAGE:" -ForegroundColor Yellow
-    Write-Host "  pwsh Workspace_Inventory/tools/Clear-BCReviewTemp.ps1 [-All] [-Purge] [-OlderThanHours <int>] [-NoExplorer] [-h]"
+    Write-Host "  pwsh LCM_Inventory/tools/Clear-BCReviewTemp.ps1 [-All] [-Purge] [-OlderThanHours <int>] [-NoExplorer] [-h]"
     Write-Host ""
     Write-Host "PARAMETERS:" -ForegroundColor Yellow
     Write-Host "  -All             : Purge all review folders (Explorer is skipped in -All mode)"
@@ -72,7 +72,7 @@ $workspaceRoot = 'D:\Git_Repositories'
 if (-not (Test-Path -LiteralPath $workspaceRoot)) {
     $workspaceRoot = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
 }
-$scratchReviewDir = Join-Path $workspaceRoot 'Workspace_Inventory\scratch\BC_Review'
+$scratchReviewDir = Join-Path $workspaceRoot 'LCM_Inventory\scratch\BC_Review'
 $legacyTempParent = Join-Path $env:TEMP 'BC_Review'
 
 $searchDirs = @()
@@ -199,7 +199,7 @@ if ($toDelete.Count -gt 0) {
 }
 
 # Clean stale review staging manifests if requested
-$reviewsDir = Join-Path $workspaceRoot "Workspace_Inventory\data\reviews"
+$reviewsDir = Join-Path $workspaceRoot "LCM_Inventory\data\reviews"
 if (Test-Path -LiteralPath $reviewsDir) {
     $stagedManifests = @(Get-ChildItem -Path $reviewsDir -Filter "staged_review_*.json" -ErrorAction SilentlyContinue)
     foreach ($sm in $stagedManifests) {

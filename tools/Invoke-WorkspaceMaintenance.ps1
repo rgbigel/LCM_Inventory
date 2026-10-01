@@ -6,8 +6,8 @@
   Purpose: Enforces automated workspace hygiene, daemon log line truncation to a manageable tail (~100 lines),
            purges aged transient logs, clears stale Beyond Compare scratch reviews, and prunes temporary junk files.
            Designed to run standalone or as part of the pre-push pipeline in Invoke-WorkspacePush.ps1.
-  Path: Workspace_Inventory/tools/Invoke-WorkspaceMaintenance.ps1
-  Authors: Rolf, Workspace_AI Governance
+  Path: LCM_Inventory/tools/Invoke-WorkspaceMaintenance.ps1
+  Authors: Rolf, LCM_AI Governance
   Version: 8.0.0
   Date: 2026-09-26
   Rule: RULE-PS-001 - RULE-PS-014, RULE-LCM-014
@@ -46,7 +46,7 @@ if ($Help) {
     Write-Host "  cleans BC review scratch, and prunes temporary workspace junk."
     Write-Host ""
     Write-Host "USAGE:" -ForegroundColor Yellow
-    Write-Host "  pwsh Workspace_Inventory/tools/Invoke-WorkspaceMaintenance.ps1 [-TailLines <int>] [-MaxLogAgeDays <int>] [-MaxScriptLogAgeDays <int>] [-DryRun] [-h]"
+    Write-Host "  pwsh LCM_Inventory/tools/Invoke-WorkspaceMaintenance.ps1 [-TailLines <int>] [-MaxLogAgeDays <int>] [-MaxScriptLogAgeDays <int>] [-DryRun] [-h]"
     Write-Host ""
     Write-Host "PARAMETERS:" -ForegroundColor Yellow
     Write-Host "  -TailLines             : Number of lines to retain in daemon log files (default: 100)"
@@ -181,7 +181,7 @@ if (Test-Path -LiteralPath $lcmLogsDir) {
 # ------------------------------------------------------------------------------
 Write-Host "`n[Step 3/4] Maintaining Beyond Compare Review Scratch (Older than $ReviewOlderThanHours hours)..." -ForegroundColor Yellow
 
-$bcCleanupScript = Join-Path $workspaceRoot "Workspace_Inventory\tools\Clear-BCReviewTemp.ps1"
+$bcCleanupScript = Join-Path $workspaceRoot "LCM_Inventory\tools\Clear-BCReviewTemp.ps1"
 if (Test-Path -LiteralPath $bcCleanupScript) {
     try {
         if (-not $DryRun) {
@@ -199,7 +199,7 @@ if (Test-Path -LiteralPath $bcCleanupScript) {
 # ------------------------------------------------------------------------------
 Write-Host "`n[Step 4/4] Pruning Temporary Workspace Junk (*.tmp, *~)..." -ForegroundColor Yellow
 
-$scratchDir = Join-Path $workspaceRoot "Workspace_Inventory\scratch"
+$scratchDir = Join-Path $workspaceRoot "LCM_Inventory\scratch"
 if (Test-Path -LiteralPath $scratchDir) {
     $junkCutoff = (Get-Date).AddHours(-24)
     # Search for non-junction loose temp files

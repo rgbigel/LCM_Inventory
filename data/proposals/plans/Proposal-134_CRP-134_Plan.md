@@ -4,7 +4,7 @@
 | Metadata Field | Value |
 | :--- | :--- |
 | **Proposal ID** | `CRP-134` / `#134` |
-| **Target Repository** | `Workspace_Inventory` |
+| **Target Repository** | `LCM_Inventory` |
 | **Target Version** | `v7.5.0` |
 | **Status** | `IN_PROGRESS` |
 | **Date** | 2026-09-10 |

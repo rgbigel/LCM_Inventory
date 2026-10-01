@@ -3,7 +3,7 @@
     Reconciles, repairs, and standardizes LCM rule discovery junctions and .gitignore entries across repositories.
 .DESCRIPTION
     Module: tools/Repair-LCMRules.ps1
-    Authors: Rolf, Workspace_AI Engine
+    Authors: Rolf, LCM_AI Engine
     Version: 1.1.0
     Date: 2026-09-10
 #>
@@ -40,7 +40,7 @@ if ($Help) {
     Write-Host "  Reconciles, repairs, and standardizes LCM rule discovery junctions across repositories."
     Write-Host ""
     Write-Host "USAGE:" -ForegroundColor Yellow
-    Write-Host "  pwsh Workspace_Inventory/tools/Repair-LCMRules.ps1 [[-TargetRepository] <str>] [-All] [-WorkspaceRoot <str>] [-DryRun] [-Force] [-h]"
+    Write-Host "  pwsh LCM_Inventory/tools/Repair-LCMRules.ps1 [[-TargetRepository] <str>] [-All] [-WorkspaceRoot <str>] [-DryRun] [-Force] [-h]"
     Write-Host ""
     Write-Host "PARAMETERS:" -ForegroundColor Yellow
     Write-Host "  -TargetRepository : Specific target repository to repair"
@@ -54,7 +54,7 @@ if ($Help) {
 }
 
 $canonicalRulesCandidates = @(
-    (Join-Path $WorkspaceRoot 'Workspace_AI\.agents\rules'),
+    (Join-Path $WorkspaceRoot 'LCM_AI\.agents\rules'),
     (Join-Path $WorkspaceRoot '.agents\rules')
 )
 $canonicalRulesDir = $canonicalRulesCandidates | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
@@ -64,7 +64,7 @@ if (-not $canonicalRulesDir) {
 
 # Read global LCM baseline
 $globalVersion = '6.1.1'
-$reqDoc = Join-Path $WorkspaceRoot 'Workspace_AI\docs\Requirements.md'
+$reqDoc = Join-Path $WorkspaceRoot 'LCM_AI\docs\Requirements.md'
 if (Test-Path $reqDoc) {
     $match = Select-String -Path $reqDoc -Pattern '^Version:\s*(\S+)' | Select-Object -First 1
     if ($match -and $match.Matches.Groups.Count -gt 1) {
@@ -74,8 +74,8 @@ if (Test-Path $reqDoc) {
 
 $childDirs = @(Get-ChildItem -Path $WorkspaceRoot -Directory | Where-Object {
     $_.Name -notmatch '^\.' -and
-    $_.Name -ne 'Workspace_AI' -and
-    $_.Name -ne 'Workspace_Inventory' -and
+    $_.Name -ne 'LCM_AI' -and
+    $_.Name -ne 'LCM_Inventory' -and
     (Test-Path (Join-Path $_.FullName '.git'))
 })
 

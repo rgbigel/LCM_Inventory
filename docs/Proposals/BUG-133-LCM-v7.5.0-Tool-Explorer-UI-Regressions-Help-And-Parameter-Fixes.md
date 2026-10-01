@@ -2,7 +2,7 @@
 Bug-ID: BUG-133
 Scope: LCM
 Version: v7.5.0
-Affected-Repos: [LCM, Workspace_AI, Workspace_Inventory]
+Affected-Repos: [LCM, LCM_AI, LCM_Inventory]
 Severity: High
 Status: ACCEPTED
 Date: 2026-09-10
@@ -55,21 +55,21 @@ The operator reported 11 defects, functional discrepancies, and UX enhancements 
 ---
 
 ## 4. Affected Scope
-- `Workspace_Inventory/assets/StandardTableDisplay.css` (canonical static base owned by Workspace_Inventory)
-- `Workspace_Inventory/assets/LCMToolCatalog.css` (modular cascade extension)
-- `Workspace_Inventory/assets/lcm-tool-explorer.js` (client application controller)
+- `LCM_Inventory/assets/StandardTableDisplay.css` (canonical static base owned by LCM_Inventory)
+- `LCM_Inventory/assets/LCMToolCatalog.css` (modular cascade extension)
+- `LCM_Inventory/assets/lcm-tool-explorer.js` (client application controller)
 - `.lcm/modules/LcmToolCatalog.psm1`
-- `Workspace_AI/tools/Advance-Governance.ps1` (and all governed scripts lacking `-h`)
-- `Workspace_Inventory/tools/Invoke-BeyondCompareReview.ps1`
+- `LCM_AI/tools/Advance-Governance.ps1` (and all governed scripts lacking `-h`)
+- `LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1`
 - `.lcm/tools/internal/tool_catalog.json` & `.lcm/config/tool_catalog.json`
-- `Workspace_Inventory/data/proposals/proposals.json`
+- `LCM_Inventory/data/proposals/proposals.json`
 
 ---
 
 ## 5. Proposed Remediation Plan
-1. **Model A: Linked Two-Tier Static CSS Owned by `Workspace_Inventory/assets/`**:
-   - Establish `Workspace_Inventory/assets/StandardTableDisplay.css` as the single static canonical stylesheet for all `Show-*` Standard Displays, establishing authoritative code ownership in `Workspace_Inventory`.
-   - Extract tool-specific rules into dedicated cascading stylesheets (e.g. `Workspace_Inventory/assets/LCMToolCatalog.css`).
+1. **Model A: Linked Two-Tier Static CSS Owned by `LCM_Inventory/assets/`**:
+   - Establish `LCM_Inventory/assets/StandardTableDisplay.css` as the single static canonical stylesheet for all `Show-*` Standard Displays, establishing authoritative code ownership in `LCM_Inventory`.
+   - Extract tool-specific rules into dedicated cascading stylesheets (e.g. `LCM_Inventory/assets/LCMToolCatalog.css`).
    - Use direct `<link rel="stylesheet">` tags (Model A) in generated HTML for full browser caching and instant hot-reloading during development.
    - Standardize version display via CSS classes (`.header-version-subtitle`, `.header-version-badge`) and eliminate hardcoded version strings across all `Show-*` generators.
 2. **Subsystem Metric Binding**: Update metric card 5 to reflect the actively selected subsystem (label and tool count), making card clicking a safe no-op or reset.

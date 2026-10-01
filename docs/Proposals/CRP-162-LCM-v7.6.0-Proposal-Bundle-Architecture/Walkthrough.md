@@ -3,9 +3,9 @@
 ```yaml
 CRP-ID: CRP-162
 Title: Proposal Bundle Directory Architecture, Dual Lifecycle, Git Object Document Retrieval, and Post-Push Working Tree Purge Engine
-Scope: LCM Governance, Workspace_Inventory, & Governed Child Repositories
+Scope: LCM Governance, LCM_Inventory, & Governed Child Repositories
 Baseline-Version: v7.6.0
-Author: Rolf, Workspace_AI Engine
+Author: Rolf, LCM_AI Engine
 Date: 2026-09-20
 Status: Processed
 Plan-State: completed

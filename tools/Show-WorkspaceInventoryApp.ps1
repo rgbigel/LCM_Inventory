@@ -9,8 +9,8 @@
            interactive action suite (Open in Explorer, Onboard, Un-Git, Rename, Delete),
            single-instance tab lifecycle coordination, and live REST daemon integration.
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
-  Path: Workspace_Inventory/tools/Show-WorkspaceInventoryApp.ps1
-  Authors: Rolf, Workspace_AI Engine
+  Path: LCM_Inventory/tools/Show-WorkspaceInventoryApp.ps1
+  Authors: Rolf, LCM_AI Engine
   Version: 6.0.1
   Date: 2026-09-19
   ShortName: ShowLCMExplorer
@@ -79,7 +79,7 @@ $htmlTemplate = Get-Content -LiteralPath $templatePath -Raw -Encoding UTF8
 
 # Load Repo Documentation for Universal Document Table
 $docsCache = @{}
-$governedRepos = @("Workspace_Inventory", ".lcm", "Installation_LCD", "Workspace_AI", "SystemConfiguration", "BackgroundModifier", "VolumeInventory", "HaSSD06", "HaSSD06_Inventory", "AuthorizeMasterUser", "SharedModules", "Git_Repositories")
+$governedRepos = @("LCM_Inventory", ".lcm", "Installation_LCD", "LCM_AI", "SystemConfiguration", "BackgroundModifier", "VolumeInventory", "HaSSD06", "HaSSD06_Inventory", "AuthorizeMasterUser", "LCM_Shared", "Git_Repositories")
 $docNames = @("Architecture.md", "Requirements.md", "Implementation.md", "install/Installation.md", "Installation.md", "README.md", "docs/Architecture.md", "docs/Requirements.md", "docs/Implementation.md", "docs/CM_POLICIES.md")
 
 foreach ($r in $governedRepos) {

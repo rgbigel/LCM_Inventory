@@ -2,11 +2,11 @@
 
 ```yaml
 Bug-ID: BUG-194
-Scope: Workspace_Inventory push preflight
+Scope: LCM_Inventory push preflight
 Status: Completed
 Severity: High
 Affected-Repos:
-  - Workspace_Inventory
+  - LCM_Inventory
 ```
 
 ## Problem

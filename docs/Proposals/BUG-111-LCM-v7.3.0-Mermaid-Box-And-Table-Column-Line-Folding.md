@@ -3,13 +3,13 @@ Proposal-ID: BUG-111
 CR-ID: BUG-111
 Scope: LCM / Documentation & Visualization
 Version: v7.3.0
-Affected-Repos: [LCM, Workspace_AI, Workspace_Inventory]
+Affected-Repos: [LCM, LCM_AI, LCM_Inventory]
 Status: OPEN
 Date: 2026-09-07
 Author: rgbig
 Target Scope: LCM Markdown & HTML Rendering Engines (.lcm/tools/internal/Format-LcmMarkdownDiagrams.ps1, .lcm/assets/lcm-table-print-atom.css, Universal Table CSS)
 Affected Version Range: v7.3.0
-Impacted Repositories: [LCM, Workspace_AI, Workspace_Inventory]
+Impacted Repositories: [LCM, LCM_AI, LCM_Inventory]
 Severity: Medium
 ---
 

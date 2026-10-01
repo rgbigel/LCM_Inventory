@@ -3,10 +3,10 @@
 ## Metadata
 - **Proposal ID**: `152`
 - **Bundle ID**: `CRP-152`
-- **Origin Repo**: `Workspace_Inventory` (Global LCM Engine / All Governed Repositories)
+- **Origin Repo**: `LCM_Inventory` (Global LCM Engine / All Governed Repositories)
 - **Target Components**:
   - `tools/Test-RepoReadiness.ps1` (Child repositories)
-  - `Workspace_Inventory/tools/Test-LCMRuleHealth.ps1`
+  - `LCM_Inventory/tools/Test-LCMRuleHealth.ps1`
   - `tools/assets/StandardTableDisplay.css`, `tools/assets/lcm-table-engine.js`
   - `.lcm/tools/hub/Show-WorkspaceReadiness.ps1`
 - **Author**: Operator Directive / CRP Intake

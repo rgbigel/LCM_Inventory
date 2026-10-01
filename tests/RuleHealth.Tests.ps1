@@ -14,9 +14,9 @@ Describe 'LCM Rule Health Diagnostics & Repair Engine' {
             @($results).Count | Should BeGreaterThan 0
         }
 
-        It 'Validates that Workspace_Inventory has a valid junction' {
-            $results = & $script:diagTool -TargetRepository 'Workspace_Inventory' -WorkspaceRoot 'D:\Git_Repositories'
-            $wi = @($results | Where-Object { $_.Repository -eq 'Workspace_Inventory' })
+        It 'Validates that LCM_Inventory has a valid junction' {
+            $results = & $script:diagTool -TargetRepository 'LCM_Inventory' -WorkspaceRoot 'D:\Git_Repositories'
+            $wi = @($results | Where-Object { $_.Repository -eq 'LCM_Inventory' })
             $wi.Count | Should Be 1
             $wi[0].JunctionState | Should Be 'Junction Valid'
         }

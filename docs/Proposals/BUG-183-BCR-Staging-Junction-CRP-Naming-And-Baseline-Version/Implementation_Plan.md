@@ -2,7 +2,7 @@
 
 ## Proposed Changes
 
-### `Workspace_Inventory/tools/Invoke-BeyondCompareReview.ps1`
+### `LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1`
 1. **Update `Get-ActiveCRP`**:
    - Normalize target repo names and support root repository aliases (`Git_Repositories`, `Root`, `LCM`).
    - Match unpushed proposals (`state -notin @('pushed', 'deleted')`), prioritizing `in_progress`, `review`, `staged`, `suggested`, followed by `completed` and `committed`.
@@ -18,13 +18,13 @@
    - Include `/title1="$title1" /title2="$title2"` in `$bcArgString`.
 6. **Increment Version**: Bump to `8.1.0`.
 
-### `Workspace_Inventory/assets/CM_CONTROL_HUB.html`
+### `LCM_Inventory/assets/CM_CONTROL_HUB.html`
 1. Update `launchReviewForProposal` at line 3867:
    - Change `const crpArg = crp && crp.startsWith("CRP-") ? ...` to `const crpArg = crp ? `-CRP "${crp}"` : "";`.
 
 ## Verification Strategy
-1. Unit test `Get-ActiveCRP` against `Workspace_Inventory` to verify it resolves `CRP-182` or `BUG-183`.
-2. Dry-run `Invoke-BeyondCompareReview.ps1 -RepositoryName Workspace_Inventory` (or inspect path generation) to ensure:
-   - Left path contains `Baseline_Workspace_Inventory_v8.0.0_<SHA>`
-   - Right path contains `Live_Workspace_Inventory_<CRP>`
+1. Unit test `Get-ActiveCRP` against `LCM_Inventory` to verify it resolves `CRP-182` or `BUG-183`.
+2. Dry-run `Invoke-BeyondCompareReview.ps1 -RepositoryName LCM_Inventory` (or inspect path generation) to ensure:
+   - Left path contains `Baseline_LCM_Inventory_v8.0.0_<SHA>`
+   - Right path contains `Live_LCM_Inventory_<CRP>`
 3. Run `Test-RepoReadiness.ps1` to verify quality gates.

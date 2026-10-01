@@ -7,145 +7,145 @@
     {
       "cr_id": "CR-2026-001",
       "legacy_id": "CGL-001",
-      "origin_repo": "Workspace_AI",
+      "origin_repo": "LCM_AI",
       "title": "Initialize LCM Proposal 2-level requirements architecture",
       "status": "closed",
       "target_lcm_version": "4.1.0",
-      "affected_repos": ["Workspace_AI"],
+      "affected_repos": ["LCM_AI"],
       "created_at": "2026-08-15T16:45:00+02:00",
       "closed_at": "2026-08-15T17:00:00+02:00",
       "author": "Rolf",
-      "documentation_path": "Workspace_AI/docs/LCM-Proposal/Requirements.md"
+      "documentation_path": "LCM_AI/docs/LCM-Proposal/Requirements.md"
     },
     {
       "cr_id": "CR-2026-002",
       "legacy_id": "CGL-002",
-      "origin_repo": "Workspace_AI",
+      "origin_repo": "LCM_AI",
       "title": "Purge legacy crash recovery prefixes from state logs",
       "status": "closed",
       "target_lcm_version": "4.1.0",
-      "affected_repos": ["Workspace_AI"],
+      "affected_repos": ["LCM_AI"],
       "created_at": "2026-08-15T17:15:00+02:00",
       "closed_at": "2026-08-15T17:25:00+02:00",
       "author": "Rolf",
-      "documentation_path": "Workspace_AI/docs/Logs/03_Propagation-and-Continuous-History/Continuous_Governance_Ledger.md"
+      "documentation_path": "LCM_AI/docs/Logs/03_Propagation-and-Continuous-History/Continuous_Governance_Ledger.md"
     },
     {
       "cr_id": "CR-2026-003",
       "legacy_id": "CGL-003",
-      "origin_repo": "Workspace_AI",
+      "origin_repo": "LCM_AI",
       "title": "Consolidate Test-WorkspaceReadiness and WorkspaceQualityGates",
       "status": "closed",
       "target_lcm_version": "4.1.0",
-      "affected_repos": ["Workspace_AI"],
+      "affected_repos": ["LCM_AI"],
       "created_at": "2026-08-15T17:30:00+02:00",
       "closed_at": "2026-08-15T17:35:00+02:00",
       "author": "Rolf",
-      "documentation_path": "Workspace_AI/tools/QualityGates/WorkspaceQualityGates.psm1"
+      "documentation_path": "LCM_AI/tools/QualityGates/WorkspaceQualityGates.psm1"
     },
     {
       "cr_id": "CR-2026-004",
       "legacy_id": "CGL-004",
-      "origin_repo": "Workspace_AI",
+      "origin_repo": "LCM_AI",
       "title": "Align git.ignoredRepositories across settings, docs, and quality gates",
       "status": "closed",
       "target_lcm_version": "4.1.0",
-      "affected_repos": ["Workspace_AI"],
+      "affected_repos": ["LCM_AI"],
       "created_at": "2026-08-15T17:40:00+02:00",
       "closed_at": "2026-08-15T17:55:00+02:00",
       "author": "Rolf",
-      "documentation_path": "Workspace_AI/docs/Logs/03_Propagation-and-Continuous-History/Continuous_Governance_Ledger.md"
+      "documentation_path": "LCM_AI/docs/Logs/03_Propagation-and-Continuous-History/Continuous_Governance_Ledger.md"
     },
     {
       "cr_id": "CR-2026-005",
       "legacy_id": "CGL-005",
-      "origin_repo": "Workspace_AI",
+      "origin_repo": "LCM_AI",
       "title": "Design and scaffold 4-Phase LCM Onboarding Engine",
       "status": "closed",
       "target_lcm_version": "4.1.0",
-      "affected_repos": ["Workspace_AI"],
+      "affected_repos": ["LCM_AI"],
       "created_at": "2026-08-15T18:00:00+02:00",
       "closed_at": "2026-08-15T18:30:00+02:00",
       "author": "Rolf",
-      "documentation_path": "Workspace_AI/docs/LCM-Onboarding-Architecture.md"
+      "documentation_path": "LCM_AI/docs/LCM-Onboarding-Architecture.md"
     },
     {
       "cr_id": "CR-2026-006",
       "legacy_id": "CGL-007",
-      "origin_repo": "Workspace_AI",
+      "origin_repo": "LCM_AI",
       "title": "Codify Working scratchpad and .agents/skills standard",
       "status": "closed",
       "target_lcm_version": "4.1.0",
-      "affected_repos": ["Workspace_AI"],
+      "affected_repos": ["LCM_AI"],
       "created_at": "2026-08-15T19:15:00+02:00",
       "closed_at": "2026-08-15T19:40:00+02:00",
       "author": "Rolf",
-      "documentation_path": "Workspace_AI/docs/LCM-Proposal/Requirements.md"
+      "documentation_path": "LCM_AI/docs/LCM-Proposal/Requirements.md"
     },
     {
       "cr_id": "CR-2026-007",
       "legacy_id": "CGL-008",
-      "origin_repo": "Workspace_AI",
+      "origin_repo": "LCM_AI",
       "title": "Implement DryRun simulation and Update mode in LCMOnboarding",
       "status": "closed",
       "target_lcm_version": "4.1.0",
-      "affected_repos": ["Workspace_AI"],
+      "affected_repos": ["LCM_AI"],
       "created_at": "2026-08-15T20:15:00+02:00",
       "closed_at": "2026-08-15T20:45:00+02:00",
       "author": "Rolf",
-      "documentation_path": "Workspace_AI/tools/Onboarding/LCMOnboarding.psm1"
+      "documentation_path": "LCM_AI/tools/Onboarding/LCMOnboarding.psm1"
     },
     {
       "cr_id": "CR-2026-008",
       "legacy_id": "CGL-010",
-      "origin_repo": "Workspace_AI",
+      "origin_repo": "LCM_AI",
       "title": "Reconcile authority order in Workspace-Rules.md and whitelist docs/Logs",
       "status": "closed",
       "target_lcm_version": "4.1.0",
-      "affected_repos": ["Workspace_AI"],
+      "affected_repos": ["LCM_AI"],
       "created_at": "2026-08-15T20:50:00+02:00",
       "closed_at": "2026-08-15T20:58:00+02:00",
       "author": "Rolf",
-      "documentation_path": "Workspace_AI/.github/agents/Workspace-Rules.md"
+      "documentation_path": "LCM_AI/.github/agents/Workspace-Rules.md"
     },
     {
       "cr_id": "CR-2026-009",
       "legacy_id": "CGL-011",
-      "origin_repo": "Workspace_AI",
+      "origin_repo": "LCM_AI",
       "title": "Codify Junction Link Magic visual GUI and cross-volume link standard",
       "status": "closed",
       "target_lcm_version": "4.1.0",
-      "affected_repos": ["Workspace_AI"],
+      "affected_repos": ["LCM_AI"],
       "created_at": "2026-08-15T21:00:00+02:00",
       "closed_at": "2026-08-15T21:15:00+02:00",
       "author": "Rolf",
-      "documentation_path": "Workspace_AI/docs/LCM-Onboarding-Architecture.md"
+      "documentation_path": "LCM_AI/docs/LCM-Onboarding-Architecture.md"
     },
     {
       "cr_id": "CR-2026-010",
       "legacy_id": "CGL-012",
-      "origin_repo": "Workspace_AI",
+      "origin_repo": "LCM_AI",
       "title": "Bump to LCM pre-release Version 4.1.0 and create repository inventory matrix",
       "status": "closed",
       "target_lcm_version": "4.1.0",
-      "affected_repos": ["Workspace_AI"],
+      "affected_repos": ["LCM_AI"],
       "created_at": "2026-08-15T21:20:00+02:00",
       "closed_at": "2026-08-15T21:30:00+02:00",
       "author": "Rolf",
-      "documentation_path": "Workspace_AI/docs/LCM-Repository-Inventory.md"
+      "documentation_path": "LCM_AI/docs/LCM-Repository-Inventory.md"
     },
     {
       "cr_id": "CR-2026-011",
       "legacy_id": "CM-INIT",
-      "origin_repo": "Workspace_Inventory",
-      "title": "Establish Workspace_Inventory as authoritative CM system",
+      "origin_repo": "LCM_Inventory",
+      "title": "Establish LCM_Inventory as authoritative CM system",
       "status": "implemented",
       "target_lcm_version": "6.0.0",
-      "affected_repos": ["Workspace_Inventory", "Workspace_AI"],
+      "affected_repos": ["LCM_Inventory", "LCM_AI"],
       "created_at": "2026-08-15T22:00:00+02:00",
       "closed_at": "2026-08-25T18:20:00+02:00",
       "author": "Rolf",
-      "documentation_path": "Workspace_Inventory/README.md"
+      "documentation_path": "LCM_Inventory/README.md"
     },
     {
       "cr_id": "CR-2026-013",
@@ -154,24 +154,24 @@
       "title": "Migrate %USERPROFILE%\\.gemini to Shared Persistent Drive A:\\.gemini via NTFS Junction",
       "status": "closed",
       "target_lcm_version": "6.0.0",
-      "affected_repos": ["SystemConfiguration", "Workspace_Inventory", "tools"],
+      "affected_repos": ["SystemConfiguration", "LCM_Inventory", "tools"],
       "created_at": "2026-08-25T18:20:00+02:00",
       "closed_at": "2026-08-26T23:00:00+02:00",
       "author": "Rolf",
-      "documentation_path": "Workspace_Inventory/data/proposals/CRP-20260825-Shared-AI-Memory-Junction-Swap.json"
+      "documentation_path": "LCM_Inventory/data/proposals/CRP-20260825-Shared-AI-Memory-Junction-Swap.json"
     },
     {
       "cr_id": "CR-2026-014",
       "legacy_id": "IDEA-3",
-      "origin_repo": "Workspace_Inventory",
+      "origin_repo": "LCM_Inventory",
       "title": "Establish Subsystem Architecture Template D5P0-SSD980-Z with Macrium Reflect Backup Definition Inventory",
       "status": "closed",
       "target_lcm_version": "6.0.0",
-      "affected_repos": ["Workspace_Inventory", "Workspace_AI", "tools"],
+      "affected_repos": ["LCM_Inventory", "LCM_AI", "tools"],
       "created_at": "2026-08-25T18:20:00+02:00",
       "closed_at": "2026-08-26T23:00:00+02:00",
       "author": "Rolf",
-      "documentation_path": "Workspace_Inventory/data/proposals/CRP-20260825-Subsystem-Template-D5P0-SSD980-Z-Macrium-Reflect.json"
+      "documentation_path": "LCM_Inventory/data/proposals/CRP-20260825-Subsystem-Template-D5P0-SSD980-Z-Macrium-Reflect.json"
     },
     {
       "cr_id": "CR-2026-019",
@@ -180,7 +180,7 @@
       "title": "Modernize BackgroundModifier Architecture via Dynamic Rainmeter Skin Engine",
       "status": "closed",
       "target_lcm_version": "6.0.0",
-      "affected_repos": ["BackgroundModifier", "Workspace_Inventory"],
+      "affected_repos": ["BackgroundModifier", "LCM_Inventory"],
       "created_at": "2026-08-26T15:42:35+02:00",
       "closed_at": "2026-08-26T23:00:00+02:00",
       "author": "Rolf",

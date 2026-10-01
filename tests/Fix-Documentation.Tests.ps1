@@ -2,9 +2,9 @@ Describe 'Fix-Documentation' {
     BeforeAll {
         $script:toolPath = Join-Path $PSScriptRoot '..\tools\Fix-Documentation.ps1'
         $script:workspaceRoot = Join-Path $TestDrive 'Workspace'
-        $script:proposalRoot = Join-Path $script:workspaceRoot 'Workspace_Inventory\docs\Proposals\CRP-999-Test'
-        $script:ledgerPath = Join-Path $script:workspaceRoot 'Workspace_Inventory\data\proposals\proposals.json'
-        $script:docsPath = Join-Path $script:workspaceRoot 'Workspace_AI\docs'
+        $script:proposalRoot = Join-Path $script:workspaceRoot 'LCM_Inventory\docs\Proposals\CRP-999-Test'
+        $script:ledgerPath = Join-Path $script:workspaceRoot 'LCM_Inventory\data\proposals\proposals.json'
+        $script:docsPath = Join-Path $script:workspaceRoot 'LCM_AI\docs'
 
         $null = New-Item -ItemType Directory -Path $script:proposalRoot -Force
         $null = New-Item -ItemType Directory -Path (Split-Path $script:ledgerPath -Parent) -Force

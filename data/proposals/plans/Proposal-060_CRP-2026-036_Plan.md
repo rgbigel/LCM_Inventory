@@ -15,7 +15,7 @@
 
 Three converging gaps required resolution before LCM V6.2.0 could be ratified:
 
-1. **Log Fragmentation**: LCM internal tool logs are scattered across `.lcm/tools/internal/logs/`, `tools/logs/`, and `Workspace_Inventory/logs/`. There is no unified CM log repository under Workspace_Inventory data governance.
+1. **Log Fragmentation**: LCM internal tool logs are scattered across `.lcm/tools/internal/logs/`, `tools/logs/`, and `LCM_Inventory/logs/`. There is no unified CM log repository under LCM_Inventory data governance.
 2. **Versioning Protocol Gap**: No canonical rule codifies how the LCM canonical version (`V6.x.y`) is tracked, which files are the authoritative sources of truth, and how the pre-push hook enforces simultaneous version propagation.
 3. **Parent Workspace Opacity**: `D:\VSCode-Workspaces\Solution.code-workspace` configuration is not mirrored into the `docs/Architecture/` hierarchy, violating the documentation parity principle.
 
@@ -48,11 +48,11 @@ Phase 1 tasks completed in the prior session:
 - Update `.agents/ACTIVE_SESSION.md` line 3: `V6.1.1` → `V6.2.0`, plus date.
 
 #### Action 4: Log Re-Routing & Historical Migration
-- Create `Workspace_Inventory/data/logs/` as the new unified CM log directory.
-- Move historical logs from `.lcm/tools/internal/logs/` to `Workspace_Inventory/data/logs/archive/`.
-- Move `tools/logs/` contents to `Workspace_Inventory/data/logs/`.
-- Move `Workspace_Inventory/logs/` contents to `Workspace_Inventory/data/logs/`.
-- Update `Sync-LCMResearchSnapshot.ps1` log path to target `Workspace_Inventory/data/logs/`.
+- Create `LCM_Inventory/data/logs/` as the new unified CM log directory.
+- Move historical logs from `.lcm/tools/internal/logs/` to `LCM_Inventory/data/logs/archive/`.
+- Move `tools/logs/` contents to `LCM_Inventory/data/logs/`.
+- Move `LCM_Inventory/logs/` contents to `LCM_Inventory/data/logs/`.
+- Update `Sync-LCMResearchSnapshot.ps1` log path to target `LCM_Inventory/data/logs/`.
 
 ---
 
@@ -60,7 +60,7 @@ Phase 1 tasks completed in the prior session:
 
 ### Automated Tests
 - PowerShell AST syntax validation on all modified `.ps1` files.
-- Confirm `Workspace_Inventory/data/logs/` contains all migrated files.
+- Confirm `LCM_Inventory/data/logs/` contains all migrated files.
 
 ### Manual Verification
 - Confirm version strings updated in both `.agents/` files.

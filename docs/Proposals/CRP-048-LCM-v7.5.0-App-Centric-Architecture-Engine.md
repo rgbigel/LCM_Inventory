@@ -2,8 +2,8 @@
 
 Module: docs/Proposals/CRP-048-LCM-v7.5.0-App-Centric-Architecture-Engine.md  
 Purpose: Formalizes the App-Centric Architecture Taxonomy (App: #), the Active Context Engine (Workon: A#), and cross-App problem governance in the LCM framework.  
-Path: Workspace_Inventory/docs/Proposals/CRP-048-LCM-v7.5.0-App-Centric-Architecture-Engine.md  
-Authors: Rolf, Workspace_AI Engine  
+Path: LCM_Inventory/docs/Proposals/CRP-048-LCM-v7.5.0-App-Centric-Architecture-Engine.md  
+Authors: Rolf, LCM_AI Engine  
 Version: 7.5.0  
 Status: Approved Proposal  
 Date: 2026-09-19  
@@ -45,7 +45,7 @@ CRP-048 formalizes the **App-Centric Architecture Taxonomy (`App: #`)**, an **Ac
 
 ### Pillar F: Inter-App Contract Governance (The "Glue")
 - Inter-App communication is strictly prohibited from reaching into private internal functions or state.
-- All inter-App interactions are governed by formal, registered **Interface Contracts** (Cmdlet Exports, Typed Schemas/DTOs, REST Endpoints, Event Broadcasts) cataloged in `Workspace_Inventory/data/catalog/contracts.json`.
+- All inter-App interactions are governed by formal, registered **Interface Contracts** (Cmdlet Exports, Typed Schemas/DTOs, REST Endpoints, Event Broadcasts) cataloged in `LCM_Inventory/data/catalog/contracts.json`.
 - AST drift probers audit all calls and flag unsanctioned cross-App coupling.
 
 ### Pillar G: The Atomic Assembly Paradigm (The Ultimate Goal)
@@ -78,7 +78,7 @@ CRP-048 formalizes the **App-Centric Architecture Taxonomy (`App: #`)**, an **Ac
 ---
 
 ## 5. Implementation Phasing
-- **Phase 1 (Documentation & Architecture Sync)**: Codify Section 10 in `Workspace_AI/docs/Architecture.md` (Complete).
+- **Phase 1 (Documentation & Architecture Sync)**: Codify Section 10 in `LCM_AI/docs/Architecture.md` (Complete).
 - **Phase 2 (Governance & Policy Sync)**: Update `DocumentationStandardsPolicy.md` and `ProposalReviewFlowPolicy.md`.
 - **Phase 3 (Core CLI & Context Engine)**: Implement `Workon:`, `App:`, `apps`, and `Sync-LcmAppCatalog.ps1` in `ProposalManager.psm1`.
 - **Phase 4 (CM Control Hub Display Integration)**: Add Active App badge, App Reference Modal/Drawer, and table filtering in `CM_CONTROL_HUB.html`.

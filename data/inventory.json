@@ -8,7 +8,7 @@
     "LifecycleState": "Governed",
     "Branch": "main",
     "HeadCommit": "eb944db",
-    "Path": "D:\\Git_Repositories\\Workspace_AI"
+    "Path": "D:\\Git_Repositories\\LCM_AI"
   },
   "total_directories": 32,
   "governed_count": 16,
@@ -33,7 +33,7 @@
       "CurrentLCMVersion": null,
       "ElevationRequired": false,
       "MinimumPrivilege": "User",
-      "ElevationReason": "Known in Workspace_Inventory",
+      "ElevationReason": "Known in LCM_Inventory",
       "JunctionsHealthy": true,
       "Disposition": null,
       "LastAuditTimestamp": "2026-09-19 19:06:47"
@@ -53,7 +53,7 @@
       "CurrentLCMVersion": null,
       "ElevationRequired": false,
       "MinimumPrivilege": "User",
-      "ElevationReason": "Known in Workspace_Inventory",
+      "ElevationReason": "Known in LCM_Inventory",
       "JunctionsHealthy": true,
       "Disposition": null,
       "LastAuditTimestamp": "2026-09-19 19:06:47"
@@ -73,7 +73,7 @@
       "CurrentLCMVersion": null,
       "ElevationRequired": false,
       "MinimumPrivilege": "User",
-      "ElevationReason": "Known in Workspace_Inventory",
+      "ElevationReason": "Known in LCM_Inventory",
       "JunctionsHealthy": true,
       "Disposition": null,
       "LastAuditTimestamp": "2026-09-19 19:06:47"
@@ -93,7 +93,7 @@
       "CurrentLCMVersion": null,
       "ElevationRequired": false,
       "MinimumPrivilege": "User",
-      "ElevationReason": "Known in Workspace_Inventory",
+      "ElevationReason": "Known in LCM_Inventory",
       "JunctionsHealthy": true,
       "Disposition": null,
       "LastAuditTimestamp": "2026-09-19 19:06:47"
@@ -133,7 +133,7 @@
       "CurrentLCMVersion": null,
       "ElevationRequired": false,
       "MinimumPrivilege": "User",
-      "ElevationReason": "Known in Workspace_Inventory",
+      "ElevationReason": "Known in LCM_Inventory",
       "JunctionsHealthy": true,
       "Disposition": null,
       "LastAuditTimestamp": "2026-09-19 19:06:47"
@@ -153,7 +153,7 @@
       "CurrentLCMVersion": null,
       "ElevationRequired": false,
       "MinimumPrivilege": "User",
-      "ElevationReason": "Known in Workspace_Inventory",
+      "ElevationReason": "Known in LCM_Inventory",
       "JunctionsHealthy": true,
       "Disposition": null,
       "LastAuditTimestamp": "2026-09-19 19:06:47"
@@ -253,7 +253,7 @@
       "CurrentLCMVersion": null,
       "ElevationRequired": false,
       "MinimumPrivilege": "User",
-      "ElevationReason": "Known in Workspace_Inventory",
+      "ElevationReason": "Known in LCM_Inventory",
       "JunctionsHealthy": true,
       "Disposition": null,
       "LastAuditTimestamp": "2026-09-19 19:06:48"
@@ -333,7 +333,7 @@
       "CurrentLCMVersion": null,
       "ElevationRequired": false,
       "MinimumPrivilege": "User",
-      "ElevationReason": "Known in Workspace_Inventory",
+      "ElevationReason": "Known in LCM_Inventory",
       "JunctionsHealthy": true,
       "Disposition": null,
       "LastAuditTimestamp": "2026-09-19 19:06:49"
@@ -353,7 +353,7 @@
       "CurrentLCMVersion": null,
       "ElevationRequired": false,
       "MinimumPrivilege": "User",
-      "ElevationReason": "Known in Workspace_Inventory",
+      "ElevationReason": "Known in LCM_Inventory",
       "JunctionsHealthy": true,
       "Disposition": null,
       "LastAuditTimestamp": "2026-09-19 19:06:49"
@@ -373,7 +373,7 @@
       "CurrentLCMVersion": null,
       "ElevationRequired": false,
       "MinimumPrivilege": "User",
-      "ElevationReason": "Known in Workspace_Inventory",
+      "ElevationReason": "Known in LCM_Inventory",
       "JunctionsHealthy": true,
       "Disposition": null,
       "LastAuditTimestamp": "2026-09-19 19:06:49"
@@ -393,7 +393,7 @@
       "CurrentLCMVersion": null,
       "ElevationRequired": false,
       "MinimumPrivilege": "User",
-      "ElevationReason": "Known in Workspace_Inventory",
+      "ElevationReason": "Known in LCM_Inventory",
       "JunctionsHealthy": true,
       "Disposition": null,
       "LastAuditTimestamp": "2026-09-19 19:06:50"
@@ -453,7 +453,7 @@
       "CurrentLCMVersion": null,
       "ElevationRequired": false,
       "MinimumPrivilege": "User",
-      "ElevationReason": "Known in Workspace_Inventory",
+      "ElevationReason": "Known in LCM_Inventory",
       "JunctionsHealthy": true,
       "Disposition": null,
       "LastAuditTimestamp": "2026-09-19 19:06:51"
@@ -493,14 +493,14 @@
       "CurrentLCMVersion": null,
       "ElevationRequired": false,
       "MinimumPrivilege": "User",
-      "ElevationReason": "Known in Workspace_Inventory",
+      "ElevationReason": "Known in LCM_Inventory",
       "JunctionsHealthy": true,
       "Disposition": null,
       "LastAuditTimestamp": "2026-09-19 19:06:51"
     },
     {
-      "RepositoryName": "SharedModules",
-      "Path": "D:\\Git_Repositories\\SharedModules",
+      "RepositoryName": "LCM_Shared",
+      "Path": "D:\\Git_Repositories\\LCM_Shared",
       "Classification": "lcm-governed",
       "GitStatus": "Git",
       "Branch": "main",
@@ -553,7 +553,7 @@
       "CurrentLCMVersion": null,
       "ElevationRequired": false,
       "MinimumPrivilege": "User",
-      "ElevationReason": "Known in Workspace_Inventory",
+      "ElevationReason": "Known in LCM_Inventory",
       "JunctionsHealthy": true,
       "Disposition": null,
       "LastAuditTimestamp": "2026-09-19 19:06:52"
@@ -573,7 +573,7 @@
       "CurrentLCMVersion": null,
       "ElevationRequired": false,
       "MinimumPrivilege": "User",
-      "ElevationReason": "Known in Workspace_Inventory",
+      "ElevationReason": "Known in LCM_Inventory",
       "JunctionsHealthy": true,
       "Disposition": null,
       "LastAuditTimestamp": "2026-09-19 19:06:52"
@@ -599,8 +599,8 @@
       "LastAuditTimestamp": "2026-09-19 19:06:52"
     },
     {
-      "RepositoryName": "Workspace_AI",
-      "Path": "D:\\Git_Repositories\\Workspace_AI",
+      "RepositoryName": "LCM_AI",
+      "Path": "D:\\Git_Repositories\\LCM_AI",
       "Classification": "active-design-workshop",
       "GitStatus": "Git",
       "Branch": "main",
@@ -613,14 +613,14 @@
       "CurrentLCMVersion": "7.0.0",
       "ElevationRequired": false,
       "MinimumPrivilege": "User",
-      "ElevationReason": "Known in Workspace_Inventory",
+      "ElevationReason": "Known in LCM_Inventory",
       "JunctionsHealthy": true,
       "Disposition": null,
       "LastAuditTimestamp": "2026-09-19 19:06:52"
     },
     {
-      "RepositoryName": "Workspace_Inventory",
-      "Path": "D:\\Git_Repositories\\Workspace_Inventory",
+      "RepositoryName": "LCM_Inventory",
+      "Path": "D:\\Git_Repositories\\LCM_Inventory",
       "Classification": "configuration-management",
       "GitStatus": "Git",
       "Branch": "main",
@@ -639,8 +639,8 @@
       "LastAuditTimestamp": "2026-09-19 19:06:53"
     },
     {
-      "RepositoryName": "Workspace_Supervision",
-      "Path": "D:\\Git_Repositories\\Workspace_Supervision",
+      "RepositoryName": "LCM_Supervision",
+      "Path": "D:\\Git_Repositories\\LCM_Supervision",
       "Classification": "subsystem",
       "GitStatus": "Git",
       "Branch": "main",

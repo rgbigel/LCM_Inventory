@@ -1,12 +1,12 @@
 ---
 Bug-ID: BUG-045
-Scope: Workspace_AI / Workspace_Inventory
+Scope: LCM_AI / LCM_Inventory
 Version: v6.2.0
-Affected-Repos: [Workspace_AI, Workspace_Inventory, Git_Repositories]
+Affected-Repos: [LCM_AI, LCM_Inventory, Git_Repositories]
 Severity: High
 Status: Archived
 Date: 2026-09-02
-Author: Rolf, Workspace_AI
+Author: Rolf, LCM_AI
 Root-Cause: LCM AI platform crash during ShowCmControlHub development at baseline 9bff0c7 resulted in loss of transient chat and in-progress methodology alignment context while underlying git codebase remained intact.
 ---
 
@@ -29,21 +29,21 @@ All five recovery goals set by `BUG-045` were systematically executed, verified,
 
 ### 1. Completion of `ShowCmControlHub` & UI Dashboard
 * **Delivered Artifacts**:
-  * [`Workspace_Inventory/tools/Show-CmControlHub.ps1`](file:///D:/Git_Repositories/Workspace_Inventory/tools/Show-CmControlHub.ps1) (`v1.1.1`): Features `-ReviewMode`, `-Repo`, `-State`, `-DatesMode`, `-NoLaunch`, and `-h` help compliance (`RULE-PS-010`).
-  * [`Workspace_Inventory/docs/CM_CONTROL_HUB.html`](file:///D:/Git_Repositories/Workspace_Inventory/docs/CM_CONTROL_HUB.html) (3,400+ lines): Full single-page dashboard with real-time proposals ledger, dual-state management, Beyond Compare review launch, filtering, and embedded CM Console.
+  * [`LCM_Inventory/tools/Show-CmControlHub.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Show-CmControlHub.ps1) (`v1.1.1`): Features `-ReviewMode`, `-Repo`, `-State`, `-DatesMode`, `-NoLaunch`, and `-h` help compliance (`RULE-PS-010`).
+  * [`LCM_Inventory/docs/CM_CONTROL_HUB.html`](file:///D:/Git_Repositories/LCM_Inventory/docs/CM_CONTROL_HUB.html) (3,400+ lines): Full single-page dashboard with real-time proposals ledger, dual-state management, Beyond Compare review launch, filtering, and embedded CM Console.
   * Trampolines: `CmHub.cmd`, `ShowCmControlHub.cmd`, `DOR.cmd` compiled in `.lcm/Cmd/`.
 * **Status**: **100% Achieved & Operational**.
 
 ### 2. Context Reload & Knowledge Base Synchronization Pipeline
 * **Delivered Artifacts**:
-  * [`Workspace_AI/tools/Update-Gemini.ps1`](file:///D:/Git_Repositories/Workspace_AI/tools/Update-Gemini.ps1): Consolidated export of 17 canonical rules via `Export-LCMRules.ps1` to markdown and plain-text.
+  * [`LCM_AI/tools/Update-Gemini.ps1`](file:///D:/Git_Repositories/LCM_AI/tools/Update-Gemini.ps1): Consolidated export of 17 canonical rules via `Export-LCMRules.ps1` to markdown and plain-text.
   * [`Sync-LCMResearchSnapshot.ps1`](file:///D:/Git_Repositories/.lcm/tools/internal/Sync-LCMResearchSnapshot.ps1): Automated snapshot mirror of 3,527 knowledge base files to `D:\GDrive\LCM`.
   * Pre-Push Pipeline: Integrated into `Invoke-WorkspacePush.ps1` (`RULE-LCM-013`).
 * **Status**: **100% Achieved & Operational**.
 
 ### 3. CM State Audit Engine
 * **Delivered Artifacts**:
-  * [`Workspace_Inventory/tools/Get-WorkspaceProposals.ps1`](file:///D:/Git_Repositories/Workspace_Inventory/tools/Get-WorkspaceProposals.ps1) and [`Get-ReposUnderReview.ps1`](file:///D:/Git_Repositories/Workspace_Inventory/tools/Get-ReposUnderReview.ps1).
+  * [`LCM_Inventory/tools/Get-WorkspaceProposals.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Get-WorkspaceProposals.ps1) and [`Get-ReposUnderReview.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Get-ReposUnderReview.ps1).
   * Strict schema validation and dual-state tracking (`state` and `progress_state`) in `proposals.json`.
   * Real-time visual review receipts in `data/reviews/`.
 * **Status**: **100% Achieved & Operational**.

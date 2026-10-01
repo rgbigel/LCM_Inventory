@@ -2,11 +2,11 @@
 
 ```yaml
 Bug-ID: BUG-195
-Scope: Workspace_Inventory Beyond Compare review launcher
+Scope: LCM_Inventory Beyond Compare review launcher
 Status: Completed
 Severity: Medium
 Affected-Repos:
-  - Workspace_Inventory
+  - LCM_Inventory
 ```
 
 ## Problem

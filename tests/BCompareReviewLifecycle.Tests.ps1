@@ -49,4 +49,18 @@ Describe 'BCompare review lifecycle contracts' {
   It 'keeps the baseline-directory fallback when CRP metadata is unavailable' {
     $submitScript | Should -Match ([regex]::Escape('elseif (Test-Path -LiteralPath $stagedManifest.TempReviewRoot)'))
   }
+
+  It 'rejects completion without a current, matching BCompare staging manifest' {
+    $submitScript | Should -Match ([regex]::Escape('No current review staging manifest exists'))
+    $submitScript | Should -Match ([regex]::Escape('Review staging manifest does not match repository'))
+    $submitScript | Should -Match ([regex]::Escape('Review staging manifest baseline does not match current HEAD'))
+    $submitScript | Should -Match ([regex]::Escape('contains no approved actions'))
+  }
+
+  It 'creates receipts and purges scratch only after a real staged commit' {
+    $submitScript | Should -Match ([regex]::Escape('git -C $targetRepoPath diff --cached --quiet'))
+    $submitScript | Should -Match ([regex]::Escape('$commitCreated = $true'))
+    $submitScript | Should -Match ([regex]::Escape('if ($commitCreated -and (Test-Path -LiteralPath $stagedManifestFile))'))
+    $submitScript | Should -Match ([regex]::Escape('if ($commitCreated -and $stagedManifest -and $stagedManifest.TempReviewRoot)'))
+  }
 }

@@ -1,16 +1,16 @@
 # Change Request Proposal: Universal Table Standard Display Enhancements
 
 - **Proposal ID**: `CRP-108`
-- **Target Repository**: `LCM` (`Git_Repositories/.lcm/assets`, `Workspace_Inventory`)
+- **Target Repository**: `LCM` (`Git_Repositories/.lcm/assets`, `LCM_Inventory`)
 - **Target Version**: `v7.5.0`
 - **Domain**: `Lifecycle Model (LCM) Universal UI/UX & Table Display Standard`
-- **Author**: Rolf, Workspace_AI Governance
+- **Author**: Rolf, LCM_AI Governance
 - **Status**: `OPEN` (Bundled in `BUNDLE-STD-DISPLAY-v7.5.0` - Awaiting Operator PROCEED)
 - **Created**: `2026-09-07 12:35:00`
 - **Priority**: `HIGH`
 - **Target Scope**: `.lcm/assets/lcm-dashboard-theme.css`, `.lcm/assets/lcm-table-engine.js`, `.lcm/tools/internal/Show-Tools.ps1`, `.lcm/tools/internal/Show-Rules.ps1`, `CM_CONTROL_HUB.html`
 - **Affected Version Range**: `v7.0.0 - v7.5.0`
-- **Impacted Repositories**: `Git_Repositories`, `Workspace_Inventory`
+- **Impacted Repositories**: `Git_Repositories`, `LCM_Inventory`
 - **Logical Bundle**: `BUNDLE-STD-DISPLAY-v7.5.0` (Standard Display Interactive Repairs)
 
 ---
@@ -43,8 +43,8 @@ Every LCM table dashboard `MUST` provide standard toolbar controls:
 ### 2.3 Persistent 2-Line Action Results Banner
 - Dashboards executing export, copy, or dispatch commands `MUST` render an Action Results display area located directly beneath the search toolbar.
 - Output `MUST` present structured multi-line feedback (minimum 2 lines) indicating:
-  - **Line 1**: Primary action outcome with full filesystem path (e.g. `D:\Git_Repositories\Workspace_AI\docs\LCM_Rules_Gemini_Export.md`).
-  - **Line 2**: Secondary synchronization outcome, matrix update, or governance directive (e.g. `D:\Git_Repositories\Workspace_AI\docs\LCM-Rules-Cross-Reference.md`).
+  - **Line 1**: Primary action outcome with full filesystem path (e.g. `D:\Git_Repositories\LCM_AI\docs\LCM_Rules_Gemini_Export.md`).
+  - **Line 2**: Secondary synchronization outcome, matrix update, or governance directive (e.g. `D:\Git_Repositories\LCM_AI\docs\LCM-Rules-Cross-Reference.md`).
 - Results banner `MUST` remain visible until dismissed or superseded by another action.
 
 ---
@@ -55,10 +55,10 @@ Every LCM table dashboard `MUST` provide standard toolbar controls:
 > Per operator bundling directive for `BUNDLE-STD-DISPLAY-v7.5.0`, non-table-display sections originally present in CRP-108 have been extracted into dedicated follow-up proposals:
 >
 > 1. **Section 2.4 (Multi-Page Print & PDF Engine Compliance)**:
->    - **Extracted to**: [`CRP-128`](file:///D:/Git_Repositories/Workspace_Inventory/docs/Proposals/CRP-128-LCM-v7.5.0-Universal-Multi-Page-Table-Print-And-PDF-Export-Engine.md) (*Universal Multi-Page Table Print and PDF Export Engine*).
+>    - **Extracted to**: [`CRP-128`](file:///D:/Git_Repositories/LCM_Inventory/docs/Proposals/CRP-128-LCM-v7.5.0-Universal-Multi-Page-Table-Print-And-PDF-Export-Engine.md) (*Universal Multi-Page Table Print and PDF Export Engine*).
 >    - **Rationale**: Separates document print stylesheets and PDF rendering mechanics from interactive DOM table navigation.
 >
 > 2. **Section 2.5 (Standardized Editor Dispatch & Governance Hook)**:
->    - **Extracted to**: [`CRP-129`](file:///D:/Git_Repositories/Workspace_Inventory/docs/Proposals/CRP-129-LCM-v7.5.0-Standard-Desktop-Editor-Dispatch-And-Governance-Advisory-Hook.md) (*Standard Desktop Editor Dispatch and Governance Advisory Hook*).
+>    - **Extracted to**: [`CRP-129`](file:///D:/Git_Repositories/LCM_Inventory/docs/Proposals/CRP-129-LCM-v7.5.0-Standard-Desktop-Editor-Dispatch-And-Governance-Advisory-Hook.md) (*Standard Desktop Editor Dispatch and Governance Advisory Hook*).
 >    - **Rationale**: Separates desktop daemon process dispatch (`notepad++.exe`) and governance modal hooks from table layout and filtering.
 

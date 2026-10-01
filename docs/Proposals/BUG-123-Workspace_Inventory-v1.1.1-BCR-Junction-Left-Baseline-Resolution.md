@@ -3,16 +3,16 @@
 ```yaml
 id: BUG-123
 title: Beyond Compare Review Junction Left Pane Baseline Resolution Defect
-scope: Workspace_Inventory / BCR
+scope: LCM_Inventory / BCR
 status: in_progress
 progress_state: in_progress
 priority: High
-authors: rgbig, Workspace_AI Engine
+authors: rgbig, LCM_AI Engine
 created_at: 2026-09-08T16:22:00+02:00
-target_scope: Workspace_Inventory
+target_scope: LCM_Inventory
 affected_version_range: v1.1.1
 impacted_repositories:
-  - Workspace_Inventory
+  - LCM_Inventory
 ```
 
 ---
@@ -27,7 +27,7 @@ While the right pane correctly loads the live junction target (`D:\Git_Repositor
 
 ## 2. Root Cause Analysis
 
-In [`Workspace_Inventory/tools/Invoke-BeyondCompareReview.ps1`](file:///d:/Git_Repositories/Workspace_Inventory/tools/Invoke-BeyondCompareReview.ps1#L728):
+In [`LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1`](file:///d:/Git_Repositories/LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1#L728):
 ```powershell
 $leftJunctionPath = Join-Path $tempReviewRoot $rel
 if (-not (Test-Path -LiteralPath $leftJunctionPath)) {

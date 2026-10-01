@@ -2,8 +2,8 @@
 
 Module: docs/LCM_METHODOLOGY_AND_MEMORY_ANCHOR.md  
 Purpose: Authoritative architectural memory anchor, governance methodology, and operational principles for the multi-repo LCM platform.  
-Path: Workspace_Inventory/docs/LCM_METHODOLOGY_AND_MEMORY_ANCHOR.md  
-Authors: Rolf, Workspace_AI Engine  
+Path: LCM_Inventory/docs/LCM_METHODOLOGY_AND_MEMORY_ANCHOR.md  
+Authors: Rolf, LCM_AI Engine  
 Version: 1.0.0  
 Date: 2026-09-04  
 
@@ -51,8 +51,8 @@ Everything else—specifically all configurations, metadata, rules, and historic
 Audit logs in LCM are not disposable console output; they constitute the **Configuration Management Ledger**:
 * **Daemon Audit Logs** (`.lcm/tools/internal/logs/LcmDesktopDaemon-*.log`): Record every REST call, tool execution, process dispatch, and client interaction.
 * **Tool Execution Logs** (`.lcm/logs/Show-ToolIndex-*.log`, `Update-ToolCatalog-*.log`, `Sync-GeminiInbox-*.log`): Capture telemetry of metadata compilation, catalog reconciliation, and inbox synchronization.
-* **CM Activity Ledger** (`Workspace_Inventory/logs/cm_activity.log`): Append-only chronological record of every review disposition, commit SHA, proposal state transition, and repository push.
-* **Visual Review Receipts** (`Workspace_Inventory/data/reviews/review_*.json`): Cryptographic evidence receipts linking each Beyond Compare visual review session to its resulting Git commit.
+* **CM Activity Ledger** (`LCM_Inventory/logs/cm_activity.log`): Append-only chronological record of every review disposition, commit SHA, proposal state transition, and repository push.
+* **Visual Review Receipts** (`LCM_Inventory/data/reviews/review_*.json`): Cryptographic evidence receipts linking each Beyond Compare visual review session to its resulting Git commit.
 
 ### 3.2 Version Control & Snapshot Mandate
 * All historical and active logs in `.lcm/logs/` and `.lcm/tools/internal/logs/` must be explicitly allow-listed in root `.gitignore` (`!/.lcm/logs/*.log`).
@@ -90,7 +90,7 @@ Physical Storage (Canonical):
 
 Virtual Junctions (NTFS Reparse Points):
   D:\Git_Repositories\.agents                  ───►  .lcm\.agents
-  D:\Git_Repositories\Workspace_Inventory\.agents ───►  .lcm\.agents
+  D:\Git_Repositories\LCM_Inventory\.agents ───►  .lcm\.agents
   D:\Git_Repositories\HaSSD06\.agents\rules       ───►  .lcm\.agents\rules
   D:\Git_Repositories\<ChildRepo>\.agents\rules   ───►  .lcm\.agents\rules
 ```
@@ -108,7 +108,7 @@ Virtual Junctions (NTFS Reparse Points):
 When `Invoke-WorkspacePush.ps1` runs, it produces a **coherent, cross-repository baseline snapshot**:
 
 1. **Phase 1: Pre-Push Governance Synchronization (`RULE-LCM-013`)**:
-   * Consolidates all 17 rules into `Workspace_AI/docs/LCM_Rules_Gemini_Export.md`.
+   * Consolidates all 17 rules into `LCM_AI/docs/LCM_Rules_Gemini_Export.md`.
    * Mirrors code and tripartite specifications to Google Drive (`D:\GDrive\LCM`).
    * Queries and processes incoming directives in `D:\GDrive\LCM\INBOX`.
    * Automatically stages and commits any updated AI export artifacts.
@@ -159,10 +159,10 @@ Any new table, viewer, or dashboard created in LCM must satisfy:
 
 | Principle | Authoritative Specification | Primary Enforcement Tool / Hook |
 |:---|:---|:---|
-| **DOX Invariant** | [`AGENTS.md`](file:///D:/Git_Repositories/AGENTS.md), [`CM_POLICIES.md`](file:///D:/Git_Repositories/Workspace_Inventory/docs/CM_POLICIES.md) | `.lcm/tools/internal/Sync-GeminiInbox.ps1` |
+| **DOX Invariant** | [`AGENTS.md`](file:///D:/Git_Repositories/AGENTS.md), [`CM_POLICIES.md`](file:///D:/Git_Repositories/LCM_Inventory/docs/CM_POLICIES.md) | `.lcm/tools/internal/Sync-GeminiInbox.ps1` |
 | **Ledger Invariant** | `LCM_METHODOLOGY_AND_MEMORY_ANCHOR.md` | `.gitignore`, `logs/cm_activity.log`, `data/reviews/` |
-| **Review Gate Separation** | [`ProposalReviewFlowPolicy.md`](file:///D:/Git_Repositories/.lcm/.agents/rules/ProposalReviewFlowPolicy.md) | `Workspace_Inventory/tools/Invoke-BeyondCompareReview.ps1` |
+| **Review Gate Separation** | [`ProposalReviewFlowPolicy.md`](file:///D:/Git_Repositories/.lcm/.agents/rules/ProposalReviewFlowPolicy.md) | `LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1` |
 | **Approach 1 Governance** | `LCM_METHODOLOGY_AND_MEMORY_ANCHOR.md` | `.lcm/.agents/`, root `.gitignore` |
-| **Snapshot Push Pipeline** | [`ReviewCommitGovernancePolicy.md`](file:///D:/Git_Repositories/.lcm/.agents/rules/ReviewCommitGovernancePolicy.md) | `Workspace_Inventory/tools/Invoke-WorkspacePush.ps1` |
+| **Snapshot Push Pipeline** | [`ReviewCommitGovernancePolicy.md`](file:///D:/Git_Repositories/.lcm/.agents/rules/ReviewCommitGovernancePolicy.md) | `LCM_Inventory/tools/Invoke-WorkspacePush.ps1` |
 | **Port 9876 REST Bridge** | `CRP-2026-021`, `CM_POLICIES.md` | `.lcm/tools/internal/LcmDesktopDaemon.ps1` |
 

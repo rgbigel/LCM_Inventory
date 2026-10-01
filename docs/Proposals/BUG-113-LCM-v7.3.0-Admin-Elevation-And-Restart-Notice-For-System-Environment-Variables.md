@@ -3,13 +3,13 @@ Proposal-ID: BUG-113
 CR-ID: BUG-113
 Scope: LCM / Security, Elevation & Environment Management
 Version: v7.3.0
-Affected-Repos: [LCM, Workspace_AI, Workspace_Inventory]
+Affected-Repos: [LCM, LCM_AI, LCM_Inventory]
 Status: OPEN
 Date: 2026-09-07
 Author: rgbig
 Target Scope: Environment Variable Configuration Tools, Elevation Interceptors, Admin Policy (.lcm/tools/internal/Set-SystemEnvironment.ps1, .lcm/tools/internal/Invoke-ElevatedCommand.ps1, ElevationPolicy.md)
 Affected Version Range: v7.3.0
-Impacted Repositories: [LCM, Workspace_AI, Workspace_Inventory]
+Impacted Repositories: [LCM, LCM_AI, LCM_Inventory]
 Severity: High
 ---
 

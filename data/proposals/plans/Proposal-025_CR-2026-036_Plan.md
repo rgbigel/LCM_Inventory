@@ -2,8 +2,8 @@
 
 **Proposal ID**: #25  
 **Change Request ID**: `CR-2026-036`  
-**Bundle ID**: `CRP-2026-007-Workspace_Inventory-v7.1.0-Single-Instance-Dashboard-Tab-Coordination`  
-**Origin Repository**: `Workspace_Inventory`  
+**Bundle ID**: `CRP-2026-007-LCM_Inventory-v7.1.0-Single-Instance-Dashboard-Tab-Coordination`  
+**Origin Repository**: `LCM_Inventory`  
 **Author**: rgbig  
 **Status**: Pushed (Accepted)  
 **Date**: 2026-08-30  

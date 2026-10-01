@@ -4,8 +4,8 @@
 # Module: ProposalManager
 # Purpose: Manages LCM proposal lifecycle (suggested -> processed -> deferred / completed / deleted),
 #          batch operations, review granularity ('coarse' | 'tight'), repo review queue inspection,
-#          and persistent ledger storage in Workspace_Inventory.
-# Authors: Rolf, Workspace_AI Engine
+#          and persistent ledger storage in LCM_Inventory.
+# Authors: Rolf, LCM_AI Engine
 # Version: 1.0.4
 # Date: 2026-09-09
 # =====================================================================
@@ -23,16 +23,16 @@ function Get-ProposalStorePath {
     }
 
     $item = Get-Item $scriptRoot
-    while ($item -ne $null -and $item.Name -ne 'Workspace_Inventory' -and $item.Name -ne 'Git_Repositories') {
+    while ($item -ne $null -and $item.Name -ne 'LCM_Inventory' -and $item.Name -ne 'Git_Repositories') {
         $item = $item.Parent
     }
 
-    $wiRoot = if ($item -and $item.Name -eq 'Workspace_Inventory') {
+    $wiRoot = if ($item -and $item.Name -eq 'LCM_Inventory') {
         $item.FullName
     } elseif ($item -and $item.Name -eq 'Git_Repositories') {
-        Join-Path $item.FullName 'Workspace_Inventory'
+        Join-Path $item.FullName 'LCM_Inventory'
     } else {
-        'D:\Git_Repositories\Workspace_Inventory'
+        'D:\Git_Repositories\LCM_Inventory'
     }
 
     $proposalsDir = Join-Path $wiRoot 'data\proposals'
@@ -117,7 +117,7 @@ function New-WorkspaceProposal {
         [Parameter(Mandatory = $true)]
         [string]$Title,
 
-        [string]$OriginRepo = 'Workspace_Inventory',
+        [string]$OriginRepo = 'LCM_Inventory',
         [string]$Details = '',
         [string]$BundleId = 'unassigned',
         [string]$CrId = '',
@@ -156,7 +156,7 @@ function New-WorkspaceProposal {
     $targetRepoDir = if ($OriginRepo -and (Test-Path (Join-Path $WorkspaceRoot $OriginRepo))) {
         Join-Path $WorkspaceRoot $OriginRepo
     } else {
-        Join-Path $WorkspaceRoot 'Workspace_Inventory'
+        Join-Path $WorkspaceRoot 'LCM_Inventory'
     }
 
     $bundleFullPath = Join-Path $targetRepoDir "docs\Proposals\$bundleDirName"
@@ -418,8 +418,8 @@ function Save-ProposalPlan {
     }
 
     $wiRoot = (Get-Item (Get-ProposalStorePath)).Directory.Parent.FullName
-    $relPath = if ($target.plan_path) { $target.plan_path } else { "Workspace_Inventory/data/proposals/plans/Proposal-{0:D3}_Plan.md" -f $Id }
-    $fullPath = Join-Path $wiRoot ($relPath -replace '^Workspace_Inventory[\\\/]', '')
+    $relPath = if ($target.plan_path) { $target.plan_path } else { "LCM_Inventory/data/proposals/plans/Proposal-{0:D3}_Plan.md" -f $Id }
+    $fullPath = Join-Path $wiRoot ($relPath -replace '^LCM_Inventory[\\\/]', '')
 
     $dir = [System.IO.Path]::GetDirectoryName($fullPath)
     if (-not (Test-Path -LiteralPath $dir)) {
@@ -455,8 +455,8 @@ function Save-ProposalWalkthrough {
     }
 
     $wiRoot = (Get-Item (Get-ProposalStorePath)).Directory.Parent.FullName
-    $relPath = if ($target.walkthrough_path) { $target.walkthrough_path } else { "Workspace_Inventory/data/proposals/plans/Proposal-{0:D3}_Walkthrough.md" -f $Id }
-    $fullPath = Join-Path $wiRoot ($relPath -replace '^Workspace_Inventory[\\\/]', '')
+    $relPath = if ($target.walkthrough_path) { $target.walkthrough_path } else { "LCM_Inventory/data/proposals/plans/Proposal-{0:D3}_Walkthrough.md" -f $Id }
+    $fullPath = Join-Path $wiRoot ($relPath -replace '^LCM_Inventory[\\\/]', '')
 
     $dir = [System.IO.Path]::GetDirectoryName($fullPath)
     if (-not (Test-Path -LiteralPath $dir)) {
@@ -647,7 +647,7 @@ function Get-LcmProposalDocument {
     $repoName = if ($proposal.origin_repo -and (Test-Path (Join-Path $WorkspaceRoot $proposal.origin_repo))) {
         $proposal.origin_repo
     } else {
-        'Workspace_Inventory'
+        'LCM_Inventory'
     }
     $repoDir = Join-Path $WorkspaceRoot $repoName
 
@@ -767,7 +767,7 @@ function Remove-LcmProposalBundle {
     $repoName = if ($proposal.origin_repo -and (Test-Path (Join-Path $WorkspaceRoot $proposal.origin_repo))) {
         $proposal.origin_repo
     } else {
-        'Workspace_Inventory'
+        'LCM_Inventory'
     }
     $repoDir = Join-Path $WorkspaceRoot $repoName
 
@@ -865,7 +865,7 @@ function Set-ActiveAppContext {
     }
 
     if ($trimmed -in @('Master', 'Architecture', 'Base', 'Root', '0', 'App: 0', 'A0')) {
-        $targetRepo = if ($Repo) { $Repo } else { 'Workspace_AI' }
+        $targetRepo = if ($Repo) { $Repo } else { 'LCM_AI' }
         $appId = if ($trimmed -eq 'Architecture') { 'Architecture' } else { 'Master' }
         $appTitle = if ($trimmed -eq 'Architecture') { 'Foundational Tripartite Architecture' } else { 'Master Tripartite Architecture (Governing All Apps)' }
         $ctxObj = [ordered]@{
@@ -905,7 +905,7 @@ function Set-ActiveAppContext {
     $appId = if ($appNum -ne $null) { "App: $appNum" } else { $trimmed }
 
     # If title wasn't passed in context string, look up in catalog or tripartite docs
-    $targetRepo = if ($Repo) { $Repo } else { 'Workspace_AI' }
+    $targetRepo = if ($Repo) { $Repo } else { 'LCM_AI' }
     if ([string]::IsNullOrWhiteSpace($appTitle) -and $appNum -ne $null) {
         $catalog = @(Get-LcmApps -Repo $targetRepo -WorkspaceRoot $WorkspaceRoot)
         $found = @($catalog | Where-Object { $_.number -eq $appNum })
@@ -1240,7 +1240,7 @@ function Sync-LcmAppCatalog {
         [string]$WorkspaceRoot = 'D:\Git_Repositories'
     )
 
-    $catalogDir = Join-Path $WorkspaceRoot 'Workspace_Inventory\data\catalog'
+    $catalogDir = Join-Path $WorkspaceRoot 'LCM_Inventory\data\catalog'
     if (-not (Test-Path $catalogDir)) {
         New-Item -ItemType Directory -Path $catalogDir -Force | Out-Null
     }
@@ -1268,7 +1268,7 @@ function New-LcmApp {
         [string]$Title,
 
         [Parameter(Mandatory = $false)]
-        [string]$Repo = 'Workspace_AI',
+        [string]$Repo = 'LCM_AI',
 
         [Parameter(Mandatory = $false)]
         [string]$Description = '',
@@ -1732,7 +1732,7 @@ function Test-RegressionTrigger {
     $details = if ($Proposal.PSObject.Properties['details']) { $Proposal.details } else { '' }
     $combined = "$scope $title $details".ToLowerInvariant()
 
-    if ($scope -in @('LCM', 'Workspace_AI') -or $combined -match '(all repositories|all child repos|workspace-wide|governance rule|\.agents/rules)') {
+    if ($scope -in @('LCM', 'LCM_AI') -or $combined -match '(all repositories|all child repos|workspace-wide|governance rule|\.agents/rules)') {
         $triggers += 'Global scope pattern detected'
         $isRegressionNeeded = $true
     }
@@ -1745,7 +1745,7 @@ function Test-RegressionTrigger {
         })
         if ($activeProps.Count -gt 0) {
             foreach ($ap in $activeProps) {
-                if ($ap.origin_repo -eq $Proposal.origin_repo -and $Proposal.origin_repo -ne 'Workspace_Inventory') {
+                if ($ap.origin_repo -eq $Proposal.origin_repo -and $Proposal.origin_repo -ne 'LCM_Inventory') {
                     $triggers += "Active dependency overlap with CRP-$($ap.id) on repo '$($ap.origin_repo)'"
                     $isRegressionNeeded = $true
                 }
@@ -1932,7 +1932,7 @@ function Get-ReposUnderReview {
     $repos += @(Get-ChildItem -Path $WorkspaceRoot -Directory | Where-Object { Test-Path (Join-Path $_.FullName '.git') })
     $results = @()
 
-    $reviewsDir = Join-Path $WorkspaceRoot 'Workspace_Inventory\data\reviews'
+    $reviewsDir = Join-Path $WorkspaceRoot 'LCM_Inventory\data\reviews'
 
     foreach ($r in $repos) {
         $repoPath = $r.FullName
@@ -1948,8 +1948,8 @@ function Get-ReposUnderReview {
                   $filePath -like ".lcm/scratch/*" -or $filePath -like ".lcm\scratch\*")
         })
 
-        # Path-aware review discrimination for Workspace_Inventory per CRP-054 / RULE-LCM-004
-        if ($repoName -eq 'Workspace_Inventory') {
+        # Path-aware review discrimination for LCM_Inventory per CRP-054 / RULE-LCM-004
+        if ($repoName -eq 'LCM_Inventory') {
             # Filter out auto-accepted dynamic data (data/, logs/, scratch/) per RULE-EFF-001
             $dirtyFiles = @($dirtyFiles | Where-Object {
                 $filePath = $_.Substring(3).Trim()
@@ -1963,7 +1963,7 @@ function Get-ReposUnderReview {
         $matchingProps = @($openProposals | Where-Object { $_.origin_repo -eq $repoName })
         $propIds = if ($matchingProps.Count -gt 0) { ($matchingProps | ForEach-Object { "#$($_.id)" }) -join ', ' } else { '-' }
 
-        if ($repoName -eq 'Workspace_Inventory' -and -not $isDirty -and $matchingProps.Count -eq 0) {
+        if ($repoName -eq 'LCM_Inventory' -and -not $isDirty -and $matchingProps.Count -eq 0) {
             continue
         }
 

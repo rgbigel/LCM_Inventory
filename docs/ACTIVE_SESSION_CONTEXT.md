@@ -2,8 +2,8 @@
 **Timestamp:** 2026-08-18 22:45:00 UTC+2  
 **LCM Governance Version:** 4.1.0  
 **Session Author:** Rolf & Antigravity AI Assistant  
-**Primary Authority Root:** `D:\Git_Repositories\Workspace_AI`  
-**CM Ledger Authority:** `D:\Git_Repositories\Workspace_Inventory`  
+**Primary Authority Root:** `D:\Git_Repositories\LCM_AI`  
+**CM Ledger Authority:** `D:\Git_Repositories\LCM_Inventory`  
 
 ---
 
@@ -37,9 +37,9 @@
 | :--- | :--- | :--- | :--- |
 | **VolumeInventory** | 🟢 Synced | Merged Copilot Pester v5 test fix, added `.githooks/pre-push` AST & Pester gate, verified CI pass on GitHub. | `1a252c5` |
 | **BootEntryManager** | 🟢 Synced | Modernized all 20 assertions to Pester v5 hyphenated syntax, deployed `.githooks/pre-push`, reviewed via BC5, pushed. | `031caa2` |
-| **SharedModules** | 🟢 Synced | Modernized all 25 assertions to Pester v5 hyphenated syntax, deployed `.githooks/pre-push`, reviewed via BC5, pushed. | `06c4c86` |
-| **Workspace_AI** | 🟢 Synced | Added `Assert-PesterV5Syntax` to `WorkspaceQualityGates.psm1`, created pre-push template in `templates/repo-scaffold/`, updated tooling paths to `D:\Tools\`, pushed. | `40e345b` |
-| **Workspace_Inventory** | 🟢 Synced | Fixed `Invoke-BeyondCompareReview.ps1` (`HEAD` default, strict `D:\Tools` check, interactive desktop launcher `/it`), updated `WorkspaceCM.psm1`, audited inventory, pushed. | `391fa4f` |
+| **LCM_Shared** | 🟢 Synced | Modernized all 25 assertions to Pester v5 hyphenated syntax, deployed `.githooks/pre-push`, reviewed via BC5, pushed. | `06c4c86` |
+| **LCM_AI** | 🟢 Synced | Added `Assert-PesterV5Syntax` to `WorkspaceQualityGates.psm1`, created pre-push template in `templates/repo-scaffold/`, updated tooling paths to `D:\Tools\`, pushed. | `40e345b` |
+| **LCM_Inventory** | 🟢 Synced | Fixed `Invoke-BeyondCompareReview.ps1` (`HEAD` default, strict `D:\Tools` check, interactive desktop launcher `/it`), updated `WorkspaceCM.psm1`, audited inventory, pushed. | `391fa4f` |
 | **Root Container** | 🟢 Synced | Synchronized `.agents/ACTIVE_CONTEXT.md`, `.copilot/CopilotTools.md`, and root `Invoke-BeyondCompareReview.ps1`. | `01fe8a6` |
 
 ---

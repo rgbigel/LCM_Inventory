@@ -10,7 +10,7 @@
 ## 1. Summary of Changes
 
 1. **Governance Rule Amendment**: Codified [`RULE-LCM-008`](file:///.agents/rules/ProposalReviewFlowPolicy.md) in `ProposalReviewFlowPolicy.md`.
-2. **Rule Aggregator & Google Drive Synchronization**: Re-exported all consolidated rules via `Export-LCMRules.ps1` to `Workspace_AI/docs/LCM_Rules_Gemini_Export.md` and `D:\GDrive\LCM\`.
+2. **Rule Aggregator & Google Drive Synchronization**: Re-exported all consolidated rules via `Export-LCMRules.ps1` to `LCM_AI/docs/LCM_Rules_Gemini_Export.md` and `D:\GDrive\LCM\`.
 3. **Quality Gate Validation**: Validated workspace readiness via `Test-WorkspaceReadiness.ps1`.
 
 ---

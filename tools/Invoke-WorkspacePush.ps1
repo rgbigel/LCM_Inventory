@@ -4,8 +4,8 @@
 .DESCRIPTION
   Module: tools/Invoke-WorkspacePush.ps1
   Purpose: Iterates across all governed and child repositories under D:\Git_Repositories, detects if a Git remote exists and if local branch is ahead of remote tracking branch, and executes git push with structured audit logging.
-  Path: Workspace_Inventory/tools/Invoke-WorkspacePush.ps1
-  Authors: Rolf, Workspace_AI Engine
+  Path: LCM_Inventory/tools/Invoke-WorkspacePush.ps1
+  Authors: Rolf, LCM_AI Engine
     Version: 8.0.1
     Date: 2026-09-29
 #>
@@ -50,7 +50,7 @@ if ($Help) {
     Write-Host "  Pushes all ahead workspace repositories to remote Git repositories in lockstep."
     Write-Host ""
     Write-Host "USAGE:" -ForegroundColor Yellow
-    Write-Host "  pwsh Workspace_Inventory/tools/Invoke-WorkspacePush.ps1 [[-Reason] <str>] [-Repositories <str[]>] [-SkipGemini] [-Force] [-DryRun] [-h]"
+    Write-Host "  pwsh LCM_Inventory/tools/Invoke-WorkspacePush.ps1 [[-Reason] <str>] [-Repositories <str[]>] [-SkipGemini] [-Force] [-DryRun] [-h]"
     Write-Host ""
     Write-Host "PARAMETERS:" -ForegroundColor Yellow
     Write-Host "  -Reason          : Commit reason and audit message"
@@ -64,9 +64,9 @@ if ($Help) {
 }
 
 $workspaceRoot = 'D:\Git_Repositories'
-$cmLogFile = Join-Path $workspaceRoot "Workspace_Inventory\logs\cm_activity.log"
-$proposalsFile = Join-Path $workspaceRoot "Workspace_Inventory\data\proposals\proposals.json"
-$eligibilityModule = Join-Path $workspaceRoot "Workspace_Inventory\modules\WorkspacePushEligibility.psm1"
+$cmLogFile = Join-Path $workspaceRoot "LCM_Inventory\logs\cm_activity.log"
+$proposalsFile = Join-Path $workspaceRoot "LCM_Inventory\data\proposals\proposals.json"
+$eligibilityModule = Join-Path $workspaceRoot "LCM_Inventory\modules\WorkspacePushEligibility.psm1"
 
 $targetProposalSet = [System.Collections.Generic.HashSet[int]]::new()
 if ($null -ne $ProposalIds) {
@@ -142,14 +142,14 @@ Write-Host "  -> Lockstep preflight passed for: $($pushPlan.RequiredRepositories
 # ------------------------------------------------------------------------------
 if (-not $SkipGemini) {
     Write-Host "`n[Pre-Push Pipeline] Executing Update-Gemini Context & Knowledge Base Synchronization..." -ForegroundColor Yellow
-    $updateGeminiScript = Join-Path $workspaceRoot "Workspace_AI\tools\Update-Gemini.ps1"
+    $updateGeminiScript = Join-Path $workspaceRoot "LCM_AI\tools\Update-Gemini.ps1"
     if (Test-Path -LiteralPath $updateGeminiScript) {
         & pwsh -File $updateGeminiScript
-        # If Workspace_AI updated export files, stage and commit them
-        $aiStatus = git -C (Join-Path $workspaceRoot "Workspace_AI") status --porcelain
+        # If LCM_AI updated export files, stage and commit them
+        $aiStatus = git -C (Join-Path $workspaceRoot "LCM_AI") status --porcelain
         if ($aiStatus) {
-            git -C (Join-Path $workspaceRoot "Workspace_AI") add -A
-            git -C (Join-Path $workspaceRoot "Workspace_AI") commit -m "chore(gemini): pre-push synchronization of rules export and knowledge base" | Out-Null
+            git -C (Join-Path $workspaceRoot "LCM_AI") add -A
+            git -C (Join-Path $workspaceRoot "LCM_AI") commit -m "chore(gemini): pre-push synchronization of rules export and knowledge base" | Out-Null
         }
     } else {
         Write-Warning "Update-Gemini.ps1 not found at $updateGeminiScript"
@@ -173,7 +173,7 @@ if (Test-Path -LiteralPath $updateCatalogScript) {
 # ------------------------------------------------------------------------------
 # 3. Workspace Maintenance & Daemon Log Truncation
 # ------------------------------------------------------------------------------
-$maintenanceScript = Join-Path $workspaceRoot "Workspace_Inventory\tools\Invoke-WorkspaceMaintenance.ps1"
+$maintenanceScript = Join-Path $workspaceRoot "LCM_Inventory\tools\Invoke-WorkspaceMaintenance.ps1"
 if (Test-Path -LiteralPath $maintenanceScript) {
     Write-Host "`n[Pre-Push Pipeline] Executing Workspace Maintenance & Daemon Log Truncation..." -ForegroundColor Yellow
     & pwsh -File $maintenanceScript -TailLines 100
@@ -233,7 +233,7 @@ if ($cohortPushed) {
         Write-Host "  -> [DRY RUN] Total $($pushPlan.CompletedProposalIds.Count) completed proposal(s) would transition to 'pushed'." -ForegroundColor Yellow
     } else {
         $lcmVersion = "v7.0.0"
-        $invFile = Join-Path $workspaceRoot "Workspace_Inventory\data\inventory.json"
+        $invFile = Join-Path $workspaceRoot "LCM_Inventory\data\inventory.json"
         if (Test-Path -LiteralPath $invFile) {
             try {
                 $invData = Get-Content -LiteralPath $invFile -Raw -Encoding UTF8 | ConvertFrom-Json
@@ -281,7 +281,7 @@ if ($cohortPushed) {
 # ------------------------------------------------------------------------------
 # Post-Push Automated Cleanup: BCR Scratch & Stale Baseline Purge
 # ------------------------------------------------------------------------------
-$clearBcrScript = Join-Path $workspaceRoot "Workspace_Inventory\tools\Clear-BCReviewTemp.ps1"
+$clearBcrScript = Join-Path $workspaceRoot "LCM_Inventory\tools\Clear-BCReviewTemp.ps1"
 if ($cohortPushed -and (Test-Path -LiteralPath $clearBcrScript)) {
     if ($DryRun) {
         Write-Host "`n  -> [DRY RUN] Would execute automated Beyond Compare review scratch cleanup (Clear-BCReviewTemp -Purge)" -ForegroundColor Yellow

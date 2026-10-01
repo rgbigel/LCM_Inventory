@@ -5,7 +5,7 @@ Scope: LCM Platform (.lcm)
 Version: v2.2.1
 Status: Suggested
 Date: 2026-08-31
-Author: Rolf, Workspace_AI Engine
+Author: Rolf, LCM_AI Engine
 Target Scope: .lcm / assets / lcm-tool-explorer.js
 ---
 

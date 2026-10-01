@@ -15,8 +15,8 @@ In accordance with [`RULE-LCM-001`](file:///.agents/rules/ProposalReviewFlowPoli
 - **State**: `suggested`
 - **Progress State**: `undecided`
 - **Title**: *Design and Author Comprehensive Tripartite Specifications and Normative Runbook for Installation_LCD*
-- **Plan Path**: `Workspace_Inventory/data/proposals/plans/Proposal-016_CR-2026-027_Plan.md`
-- **Walkthrough Path**: `Workspace_Inventory/data/proposals/plans/Proposal-016_CR-2026-027_Walkthrough.md`
+- **Plan Path**: `LCM_Inventory/data/proposals/plans/Proposal-016_CR-2026-027_Plan.md`
+- **Walkthrough Path**: `LCM_Inventory/data/proposals/plans/Proposal-016_CR-2026-027_Walkthrough.md`
 
 ---
 
@@ -31,8 +31,8 @@ graph TD
     subgraph "Core LCM Platform (Read-Only Source Payload)"
         R1[".agents/rules (v6.1.1)"]
         R2["tools/ (141 Tools & Cmd/)"]
-        R3["Workspace_Inventory/modules/"]
-        R4["Workspace_AI/docs/"]
+        R3["LCM_Inventory/modules/"]
+        R4["LCM_AI/docs/"]
     end
     
     subgraph "Installation_LCD Factory (Independent Repository)"
@@ -116,7 +116,7 @@ graph TD
 2. **Rule Health Diagnostic**:
    - Run `Test-LCMRuleHealth.ps1` to confirm `Installation_LCD` reports `🟢 In Compliance (v6.1.1)`.
 3. **Workspace Readiness Quality Gate**:
-   - Run `Workspace_AI/tools/Test-WorkspaceReadiness.ps1` (`Workspace_AI readiness self-test: OK`).
+   - Run `LCM_AI/tools/Test-WorkspaceReadiness.ps1` (`LCM_AI readiness self-test: OK`).
 
 ---
 

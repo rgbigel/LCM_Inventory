@@ -1,10 +1,10 @@
 {
-  "RepositoryName": "SharedModules",
-  "RepositoryPath": "SharedModules",
+  "RepositoryName": "LCM_Shared",
+  "RepositoryPath": "LCM_Shared",
   "CommitSha": "cf109fd",
   "ReviewResult": "AcceptedAll",
   "Reviewer": "rgbig",
   "Timestamp": "2026-08-29 18:58:15",
-  "Message": "feat(lcm): synchronize SharedModules to baseline v6.1.0 per RULE-DOC-005",
+  "Message": "feat(lcm): synchronize LCM_Shared to baseline v6.1.0 per RULE-DOC-005",
   "ActionsExecuted": []
 }

@@ -2,7 +2,7 @@
 Module: tools/Invoke-WorkspaceAudit.ps1
 Purpose: Runs a complete multi-repository Configuration Management audit across D:\Git_Repositories.
 Path: tools/Invoke-WorkspaceAudit.ps1
-Authors: Rolf, Workspace_AI Engine
+Authors: Rolf, LCM_AI Engine
 Version: 1.1.0
 Date: 2026-09-10
 Changelog:
@@ -27,7 +27,7 @@ if ($Help) {
     Write-Host "  Runs a complete multi-repository Configuration Management audit across workspace."
     Write-Host ""
     Write-Host "USAGE:" -ForegroundColor Yellow
-    Write-Host "  pwsh Workspace_Inventory/tools/Invoke-WorkspaceAudit.ps1 [-h]"
+    Write-Host "  pwsh LCM_Inventory/tools/Invoke-WorkspaceAudit.ps1 [-h]"
     Write-Host ""
     Write-Host "PARAMETERS:" -ForegroundColor Yellow
     Write-Host "  -Help (-h, -?) : Displays this help screen"
@@ -39,7 +39,7 @@ $modulePath = Join-Path $PSScriptRoot '..\modules\WorkspaceCM.psm1'
 Import-Module $modulePath -Force
 
 Write-Host "=================================================================" -ForegroundColor Cyan
-Write-Host " Workspace_Inventory: Configuration Management Audit Runner      " -ForegroundColor Cyan
+Write-Host " LCM_Inventory: Configuration Management Audit Runner      " -ForegroundColor Cyan
 Write-Host "=================================================================" -ForegroundColor Cyan
 
 $results = Update-WorkspaceInventory

@@ -1,9 +1,9 @@
-# Workspace_Inventory (Configuration Management System)
+# LCM_Inventory (Configuration Management System)
 
-Module: Workspace_Inventory  
+Module: LCM_Inventory  
 Purpose: Authoritative Configuration Management (CM), multi-repository state tracking, LCM version lifecycle management, commit/push audit logging, and centralized Change Request (CR) management across `D:\Git_Repositories\`.  
-Path: D:\Git_Repositories\Workspace_Inventory\README.md  
-Authors: Rolf, Workspace_AI Engine  
+Path: D:\Git_Repositories\LCM_Inventory\README.md  
+Authors: Rolf, LCM_AI Engine  
 Version: 7.0.0  
 Date: 2026-09-19  
 
@@ -11,7 +11,7 @@ Date: 2026-09-19
 
 ## 0. Authoritative Tripartite Specifications
 
-In compliance with [`DocumentationStandardsPolicy.md`](file:///D:/Git_Repositories/.agents/rules/DocumentationStandardsPolicy.md) (`RULE-DOC-001` - `003`), `Workspace_Inventory` maintains three formal tripartite specifications:
+In compliance with [`DocumentationStandardsPolicy.md`](file:///D:/Git_Repositories/.agents/rules/DocumentationStandardsPolicy.md) (`RULE-DOC-001` - `003`), `LCM_Inventory` maintains three formal tripartite specifications:
 
 1. **[Architecture Specification](docs/Architecture.md)**: End-user view, system topology diagrams, proposal lifecycle progression, and Beyond Compare review gate architecture.
 2. **[Requirements Specification](docs/Requirements.md)**: Normative technical constraints, prerequisites, CM governance invariants (`RULE-REV-001` - `008`), and display standards compliance.
@@ -21,14 +21,14 @@ In compliance with [`DocumentationStandardsPolicy.md`](file:///D:/Git_Repositori
 
 ## 1. System Overview
 
-`Workspace_Inventory` serves as the operational Configuration Management (CM) system governing all sibling repositories and directories in `D:\Git_Repositories\` managed by `D:\VSCode-Workspaces\Solution.code-workspace`.
+`LCM_Inventory` serves as the operational Configuration Management (CM) system governing all sibling repositories and directories in `D:\Git_Repositories\` managed by `D:\VSCode-Workspaces\Solution.code-workspace`.
 
 ```mermaid
 graph TB
     subgraph Solution["Solution Workspace (D:/Git_Repositories/)"]
         direction TB
-        WI["Workspace_Inventory (CM Engine)"]
-        WAI["Workspace_AI (LCM Design Workshop)"]
+        WI["LCM_Inventory (CM Engine)"]
+        WAI["LCM_AI (LCM Design Workshop)"]
         VI["VolumeInventory (Candidate / Governed)"]
         DAS["DiskAssignmentStatus (Standard Git Repo)"]
         OTHERS["Other Git & Non-Git Repositories"]
@@ -56,8 +56,8 @@ graph TB
    - Distinguishes between `active-design-workshop`, `lcm-governed`, `standard-git`, `non-git`, `legacy-retired`, and `parent-infra`.
    - Records both `absorbed_lcm_version` (when onboarded) and `current_lcm_version`.
 
-2. **Specialized Tracking for `Workspace_AI`**:
-   - Monitors `Workspace_AI`'s 4 lifecycle states (`State1_ActiveWorkshop`, `State2_Verification`, `State3_ReleasedBaseline`, `State4_UnlockedProposal`).
+2. **Specialized Tracking for `LCM_AI`**:
+   - Monitors `LCM_AI`'s 4 lifecycle states (`State1_ActiveWorkshop`, `State2_Verification`, `State3_ReleasedBaseline`, `State4_UnlockedProposal`).
    - Tracks the active global LCM release version.
 
 3. **LCM Version Upgrades & Propagation**:

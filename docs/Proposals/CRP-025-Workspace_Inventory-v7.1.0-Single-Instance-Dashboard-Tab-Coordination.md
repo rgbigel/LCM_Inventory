@@ -1,15 +1,15 @@
 ---
 Proposal-ID: CRP-025
 CR-ID: CR-2026-036
-Scope: Workspace_Inventory
+Scope: LCM_Inventory
 Version: v7.5.0
-Affected-Repos: [Workspace_Inventory, .lcm]
+Affected-Repos: [LCM_Inventory, .lcm]
 Status: OPEN (Bundled in BUNDLE-STD-DISPLAY-v7.5.0)
 Date: 2026-08-30
 Author: rgbig
-Target Scope: Global Standard Displays & Workspace_Inventory
+Target Scope: Global Standard Displays & LCM_Inventory
 Affected Version Range: v7.1.0 -> v7.5.0
-Impacted Repositories: [Workspace_Inventory, .lcm]
+Impacted Repositories: [LCM_Inventory, .lcm]
 Logical-Bundle: BUNDLE-STD-DISPLAY-v7.5.0
 ---
 
@@ -40,7 +40,7 @@ Crucially, **documentation sub-tabs** (`openInNewBrowserTab` for Plans, Walkthro
 4. Peer dashboard tabs receiving the message verify `instanceId !== INSTANCE_ID` and execute graceful tab retirement.
 
 ### 2.3 Quiet Render Parameter (`-NoLaunch`)
-* Updated [`Workspace_Inventory/tools/Show-CmControlHub.ps1`](file:///d:/Git_Repositories/Workspace_Inventory/tools/Show-CmControlHub.ps1) with `[switch]$NoLaunch`.
+* Updated [`LCM_Inventory/tools/Show-CmControlHub.ps1`](file:///d:/Git_Repositories/LCM_Inventory/tools/Show-CmControlHub.ps1) with `[switch]$NoLaunch`.
 * Allows automated tasks, CI scripts, and background daemons to update the offline cache without spawning new browser windows.
 
 ---

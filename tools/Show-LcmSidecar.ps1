@@ -63,8 +63,8 @@ if (-not (Test-Path -LiteralPath $workspaceRoot)) {
     $workspaceRoot = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
 }
 
-$proposalsFile = Join-Path $workspaceRoot "Workspace_Inventory\data\proposals\proposals.json"
-$htmlTemplateFile = Join-Path $workspaceRoot "Workspace_Inventory\assets\LCM_SIDECAR.html"
+$proposalsFile = Join-Path $workspaceRoot "LCM_Inventory\data\proposals\proposals.json"
+$htmlTemplateFile = Join-Path $workspaceRoot "LCM_Inventory\assets\LCM_SIDECAR.html"
 
 if (-not (Test-Path -LiteralPath $proposalsFile)) {
     throw "Proposals ledger not found at: $proposalsFile"
@@ -79,7 +79,7 @@ $htmlContent = Get-Content -LiteralPath $htmlTemplateFile -Raw -Encoding UTF8
 $injectedBlock = "const RAW_PROPOSALS = $proposalsRaw;"
 $htmlContent = $htmlContent.Replace('/*__INJECTED_DATA_PLACEHOLDER__*/', $injectedBlock)
 
-$artifactsDir = Join-Path $workspaceRoot "Workspace_Inventory\data\artifacts"
+$artifactsDir = Join-Path $workspaceRoot "LCM_Inventory\data\artifacts"
 if (-not (Test-Path -LiteralPath $artifactsDir)) {
     New-Item -ItemType Directory -Path $artifactsDir -Force | Out-Null
 }

@@ -35,7 +35,7 @@ param(
              automatic exclusion of .venv/cache/scratch directories, 4-directive action parsing (Complete, Delete, Rename, Defer),
              and SHA-256 staging manifest generation.
     Path: tools/Invoke-BeyondCompareReview.ps1
-    Authors: Rolf, Workspace_AI Engine
+    Authors: Rolf, LCM_AI Engine
     Version: 8.4.2
     Date: 2026-09-30
 .PARAMETER RepositoryName
@@ -115,7 +115,7 @@ function Get-ActiveCRP {
   $isRootRepo = $TargetRepoName -in @('Git_Repositories', 'Root', 'LCM')
 
   # 1. Search proposals.json for matching proposals
-  $pJson = Join-Path $WorkspaceRootPath "Workspace_Inventory\data\proposals\proposals.json"
+  $pJson = Join-Path $WorkspaceRootPath "LCM_Inventory\data\proposals\proposals.json"
   if (Test-Path -LiteralPath $pJson) {
     try {
       $pData = Get-Content -LiteralPath $pJson -Raw -Encoding UTF8 | ConvertFrom-Json
@@ -355,7 +355,7 @@ function Audit-BeyondCompareReviewStaging {
     [string]$CommitSha
   )
 
-  $reviewsDir = "D:\Git_Repositories\Workspace_Inventory\data\reviews"
+  $reviewsDir = "D:\Git_Repositories\LCM_Inventory\data\reviews"
   if (-not (Test-Path $reviewsDir)) { New-Item -ItemType Directory -Path $reviewsDir -Force | Out-Null }
 
   $baselineManifestPath = Join-Path $TempReviewRoot ".lcm_baseline_manifest.json"
@@ -583,7 +583,7 @@ if ($commitSha -ne 'unborn') {
 # ------------------------------------------------------------------------------
 # 3. Export Baseline Commit into Workspace Scratch Review Inspection Tree (Variant A)
 # ------------------------------------------------------------------------------
-$scratchReviewDir = Join-Path $workspaceRoot "Workspace_Inventory\scratch\BC_Review"
+$scratchReviewDir = Join-Path $workspaceRoot "LCM_Inventory\scratch\BC_Review"
 if (-not (Test-Path -LiteralPath $scratchReviewDir)) {
   $null = New-Item -ItemType Directory -Path $scratchReviewDir -Force
 }

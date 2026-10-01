@@ -44,7 +44,7 @@ function Get-RepositoryIndex {
     [string]$WorkspaceRoot,
 
     [Parameter(Mandatory = $false)]
-    [string]$MetadataPath = (Join-Path $WorkspaceRoot 'Workspace_Inventory\data\repository-metadata.json')
+    [string]$MetadataPath = (Join-Path $WorkspaceRoot 'LCM_Inventory\data\repository-metadata.json')
   )
 
   if (-not (Test-Path -LiteralPath $WorkspaceRoot -PathType Container)) {

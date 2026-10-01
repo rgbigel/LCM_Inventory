@@ -2,7 +2,7 @@
 Module: tools/Invoke-LCMOnboardBatch.ps1
 Purpose: Interactively enumerates un-governed repositories in alphabetical order, prompting for disposition (Onboard, Ignore, Retire, Delete) or auto-skipping pre-dispositioned items.
 Path: tools/Invoke-LCMOnboardBatch.ps1
-Authors: Rolf, Workspace_AI Engine
+Authors: Rolf, LCM_AI Engine
 Version: 1.1.0
 Date: 2026-09-10
 #>
@@ -27,7 +27,7 @@ if ($Help) {
     Write-Host "  Enumerates un-governed repositories, prompting for disposition or auto-skipping."
     Write-Host ""
     Write-Host "USAGE:" -ForegroundColor Yellow
-    Write-Host "  pwsh Workspace_Inventory/tools/Invoke-LCMOnboardBatch.ps1 [-NonInteractive] [-h]"
+    Write-Host "  pwsh LCM_Inventory/tools/Invoke-LCMOnboardBatch.ps1 [-NonInteractive] [-h]"
     Write-Host ""
     Write-Host "PARAMETERS:" -ForegroundColor Yellow
     Write-Host "  -NonInteractive : Run without prompting for interactive decisions"
@@ -85,7 +85,7 @@ foreach ($repo in $candidates) {
         '1' {
             Write-Host "`nProceeding with LCM onboarding for $($repo.RepositoryName)..." -ForegroundColor Green
             # Dispatch to Onboarding Runner
-            $onboardScript = Join-Path $workspaceRoot "Workspace_AI\tools\Invoke-LCMOnboardRepo.ps1"
+            $onboardScript = Join-Path $workspaceRoot "LCM_AI\tools\Invoke-LCMOnboardRepo.ps1"
             if (Test-Path -LiteralPath $onboardScript) {
                 & $onboardScript -TargetRepo $repo.RepositoryName
                 Set-RepoDisposition -RepositoryName $repo.RepositoryName -State 'governed' -Reason 'Onboarded into LCM v5.0.1' -WorkspaceRoot $workspaceRoot

@@ -19,18 +19,18 @@ Add a dedicated, space-conserving **`Prio`** column using single-letter priority
 
 ### 3. Proposed Changes
 
-#### [MODIFY] [ProposalManager.psm1](file:///D:/Git_Repositories/Workspace_Inventory/modules/ProposalManager.psm1)
+#### [MODIFY] [ProposalManager.psm1](file:///D:/Git_Repositories/LCM_Inventory/modules/ProposalManager.psm1)
 - Add `Set-WorkspaceProposalPriority` cmdlet supporting `[ValidateSet('C', 'H', 'M', 'L', 'D')]`.
 - Standardize ledger serialization.
 
-#### [MODIFY] [Invoke-ProposalAction.ps1](file:///D:/Git_Repositories/Workspace_Inventory/tools/Invoke-ProposalAction.ps1)
+#### [MODIFY] [Invoke-ProposalAction.ps1](file:///D:/Git_Repositories/LCM_Inventory/tools/Invoke-ProposalAction.ps1)
 - Add `-Action priority` with `-Priority <C|H|M|L|D>` parameter.
 
-#### [MODIFY] [proposals.json](file:///D:/Git_Repositories/Workspace_Inventory/data/proposals/proposals.json)
+#### [MODIFY] [proposals.json](file:///D:/Git_Repositories/LCM_Inventory/data/proposals/proposals.json)
 - Register Proposal #79 (`state: "in_progress"`, `progress_state: "in_progress"`).
 - Backfill existing proposals with canonical priority codes (`High` ➔ `H`, `MEDIUM` ➔ `M`, unassigned ➔ `M`, BUGs without priority ➔ `H`).
 
-#### [MODIFY] [CM_CONTROL_HUB.html](file:///D:/Git_Repositories/Workspace_Inventory/docs/CM_CONTROL_HUB.html)
+#### [MODIFY] [CM_CONTROL_HUB.html](file:///D:/Git_Repositories/LCM_Inventory/docs/CM_CONTROL_HUB.html)
 - Add `Prio` `<th>` with filter dropdown and sort toggle (`Prio ⬍`).
 - Add `.prio-select` styling for `C`, `H`, `M`, `L`, `D`.
 - Render `Prio` cell in table rows with interactive `<select>`.

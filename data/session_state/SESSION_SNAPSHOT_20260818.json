@@ -16,9 +16,9 @@
   "RepositoriesSynced": [
     "VolumeInventory",
     "BootEntryManager",
-    "SharedModules",
-    "Workspace_AI",
-    "Workspace_Inventory"
+    "LCM_Shared",
+    "LCM_AI",
+    "LCM_Inventory"
   ],
   "PendingStreams": [
     "HaSSD06 SSD deployment & boot testing",

@@ -5,10 +5,10 @@ type: CRP
 status: SUGGESTED
 created_at: 2026-09-27 17:30:00
 author: Rolf, Antigravity AI Assistant
-origin_repo: Workspace_Inventory
+origin_repo: LCM_Inventory
 target_baseline: v8.1.0
 affected_repos:
-  - Workspace_Inventory
+  - LCM_Inventory
   - .lcm
 scope: Tool Explorer UI Ergonomics & Dynamic Table Column Resizing
 ---

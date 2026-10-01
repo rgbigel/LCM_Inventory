@@ -3,10 +3,10 @@
     Migrates legacy CRP/BUG identifiers to the universal monotonic CRP/BUG-nnn naming scheme per CRP-119.
 .DESCRIPTION
     Module: tools/Migrate-CrpNamingScheme.ps1
-    Purpose: Renames proposal documents in Workspace_Inventory/docs/Proposals/ and change_requests/ to direct
+    Purpose: Renames proposal documents in LCM_Inventory/docs/Proposals/ and change_requests/ to direct
              1:1 parity with their canonical proposals.json ID (CRP-nnn or BUG-nnn), updates document DOX
              headers, and normalizes crp_id, cr_id, and plan_path across proposals.json.
-    Authors: Rolf, Workspace_AI Engine
+    Authors: Rolf, LCM_AI Engine
     Version: 1.0.3
     Date: 2026-09-10
 #>
@@ -29,16 +29,16 @@ if ($Help) {
     Write-Host "==========================================================================" -ForegroundColor Cyan
     Write-Host "SYNOPSIS:" -ForegroundColor Yellow
     Write-Host "  Normalizes all proposal records in proposals.json and renames proposal files"
-    Write-Host "  in Workspace_Inventory/docs/Proposals/ using Git to match their canonical ID."
+    Write-Host "  in LCM_Inventory/docs/Proposals/ using Git to match their canonical ID."
     Write-Host ""
     Write-Host "USAGE:" -ForegroundColor Yellow
-    Write-Host "  pwsh Workspace_Inventory/tools/Migrate-CrpNamingScheme.ps1 [-WhatIf] [-Force]"
+    Write-Host "  pwsh LCM_Inventory/tools/Migrate-CrpNamingScheme.ps1 [-WhatIf] [-Force]"
     Write-Host "==========================================================================" -ForegroundColor Cyan
     return
 }
 
 $workspaceRoot = 'D:\Git_Repositories'
-$wiRoot = Join-Path $workspaceRoot 'Workspace_Inventory'
+$wiRoot = Join-Path $workspaceRoot 'LCM_Inventory'
 $proposalsJsonPath = Join-Path $wiRoot 'data\proposals\proposals.json'
 
 if (-not (Test-Path -LiteralPath $proposalsJsonPath)) {
@@ -88,8 +88,8 @@ foreach ($p in $proposals) {
         $p.bundle_id = $canonicalId
     }
 
-    # Inspect plan_path to see if it points to a markdown document under Workspace_Inventory
-    if ($currentPlanPath -and ($currentPlanPath -match '^(Workspace_Inventory/(?:docs/Proposals|change_requests/[^/]+))/([^/]+)$')) {
+    # Inspect plan_path to see if it points to a markdown document under LCM_Inventory
+    if ($currentPlanPath -and ($currentPlanPath -match '^(LCM_Inventory/(?:docs/Proposals|change_requests/[^/]+))/([^/]+)$')) {
         $parentRelDir = $Matches[1]
         $currentFileName = $Matches[2]
         $parentFullDir = Join-Path $workspaceRoot $parentRelDir.Replace('/', '\')
@@ -156,7 +156,7 @@ foreach ($p in $proposals) {
 $proposals37to44 = @($proposals | Where-Object { $_.id -ge 37 -and $_.id -le 44 })
 foreach ($pOld in $proposals37to44) {
     $planP = if ($null -ne $pOld.PSObject.Properties['plan_path']) { [string]$pOld.plan_path } else { '' }
-    if ($planP -and ($planP -match 'Workspace_Inventory/docs/Proposals/([^/]+)$')) {
+    if ($planP -and ($planP -match 'LCM_Inventory/docs/Proposals/([^/]+)$')) {
         $oldFile = $Matches[1]
         $matchedNew = $proposals | Where-Object { $_.id -ge 88 -and $_.title -eq $pOld.title } | Select-Object -First 1
         if ($matchedNew -and $matchedNew.plan_path) {

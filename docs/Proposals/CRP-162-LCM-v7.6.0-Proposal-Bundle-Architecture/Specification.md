@@ -3,17 +3,17 @@
 ```yaml
 CRP-ID: CRP-162
 Title: Proposal Bundle Directory Architecture, Dual Lifecycle, Git Object Document Retrieval, and Post-Push Working Tree Purge Engine
-Scope: LCM Governance, Workspace_Inventory, & Governed Child Repositories
+Scope: LCM Governance, LCM_Inventory, & Governed Child Repositories
 Baseline-Version: v7.6.0
-Author: Rolf, Workspace_AI Engine
+Author: Rolf, LCM_AI Engine
 Date: 2026-09-20
 Status: Processed
 Plan-State: completed
 Progress-State: completed
 Priority: High
 Impacted-Repositories:
-  - Workspace_Inventory
-  - Workspace_AI
+  - LCM_Inventory
+  - LCM_AI
   - Governed Child Repositories (Global)
 ```
 
@@ -21,7 +21,7 @@ Impacted-Repositories:
 
 ## 1. Executive Summary & Intent
 
-Currently, proposal specifications across the workspace are stored as flat Markdown files in `docs/Proposals/`, while implementation plans and walkthroughs are archived separately in `Workspace_Inventory/data/proposals/plans/`. As repositories grow, this results in:
+Currently, proposal specifications across the workspace are stored as flat Markdown files in `docs/Proposals/`, while implementation plans and walkthroughs are archived separately in `LCM_Inventory/data/proposals/plans/`. As repositories grow, this results in:
 1. **Directory Clutter**: Dozens of flat proposal files accumulate across repositories.
 2. **Scattered Artifacts**: A single proposal's specification, plan, and walkthrough are stored in disconnected locations.
 3. **Working Tree Residue**: Completed proposals permanently linger in local child repositories even after being merged and pushed to GitHub, causing grep and search pollution.
@@ -31,7 +31,7 @@ Currently, proposal specifications across the workspace are stored as flat Markd
   `docs/Proposals/CRP-nnn-[Scope]-[Version]-[Slug]/` containing `Specification.md`, `Implementation_Plan.md`, and `Walkthrough.md`.
 - **Pre-Push Working Tree Availability**: While active, the proposal bundle lives on disk and is directly accessible to developers, tools, and the CM Control Hub.
 - **Post-Push Working Tree Purge**: Upon `Invoke-WorkspacePush.ps1`, the commit SHA is recorded in `proposals.json`, the changes are pushed to GitHub, and the completed proposal folder is purged from the local working tree.
-- **Post-Push Git Object Document Access**: `Workspace_Inventory` and CM Control Hub retrieve purged proposal documents on-demand using instant, local Git object extraction (`git show <SHA>:<path>`) or direct GitHub links.
+- **Post-Push Git Object Document Access**: `LCM_Inventory` and CM Control Hub retrieve purged proposal documents on-demand using instant, local Git object extraction (`git show <SHA>:<path>`) or direct GitHub links.
 
 ---
 
@@ -53,7 +53,7 @@ Currently, proposal specifications across the workspace are stored as flat Markd
 {
   "id": 162,
   "crp_id": "CRP-162",
-  "origin_repo": "Workspace_Inventory",
+  "origin_repo": "LCM_Inventory",
   "state": "completed",
   "progress_state": "completed",
   "bundle_dir": "docs/Proposals/CRP-162-LCM-v7.6.0-Proposal-Bundle-Architecture",

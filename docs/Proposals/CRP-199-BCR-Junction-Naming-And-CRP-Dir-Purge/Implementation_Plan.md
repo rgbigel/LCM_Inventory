@@ -18,5 +18,5 @@
 1. Parse both PowerShell scripts with the PowerShell AST parser.
 2. Run the CRP-199 focused Pester suite.
 3. Run `git diff --check` on the CRP-199 scope.
-4. Dispatch a BCompare review for `Workspace_Inventory` against `HEAD` using
+4. Dispatch a BCompare review for `LCM_Inventory` against `HEAD` using
    `CRP-199` after automated validation passes.

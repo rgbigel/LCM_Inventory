@@ -48,7 +48,7 @@ param(
              and provides direct terminal/CLI proposal lifecycle date querying.
              Absorbs and consolidates Show-CmControlHub and Show-CrpDates into a single canonical tool.
     Path: tools/Show-LcmControl.ps1
-    Authors: Rolf, Workspace_AI Engine
+    Authors: Rolf, LCM_AI Engine
     Version: 1.4.0
     Date: 2026-09-25
 .PARAMETER ReviewMode
@@ -154,12 +154,12 @@ function Write-TimingLog {
     }
 }
 
-$proposalsFile = Join-Path $workspaceRoot "Workspace_Inventory\data\proposals\proposals.json"
-$activeLogFile = Join-Path $workspaceRoot "Workspace_Inventory\logs\cm_activity.log"
-$historyLogFile = Join-Path $workspaceRoot "Workspace_Inventory\logs\history\cm_activity_v5_v6_history.log"
-$htmlTemplateFile = Join-Path $workspaceRoot "Workspace_Inventory\assets\CM_CONTROL_HUB.html"
+$proposalsFile = Join-Path $workspaceRoot "LCM_Inventory\data\proposals\proposals.json"
+$activeLogFile = Join-Path $workspaceRoot "LCM_Inventory\logs\cm_activity.log"
+$historyLogFile = Join-Path $workspaceRoot "LCM_Inventory\logs\history\cm_activity_v5_v6_history.log"
+$htmlTemplateFile = Join-Path $workspaceRoot "LCM_Inventory\assets\CM_CONTROL_HUB.html"
 if (-not (Test-Path -LiteralPath $htmlTemplateFile)) {
-    $htmlTemplateFile = Join-Path $workspaceRoot "Workspace_Inventory\docs\CM_CONTROL_HUB.html"
+    $htmlTemplateFile = Join-Path $workspaceRoot "LCM_Inventory\docs\CM_CONTROL_HUB.html"
 }
 
 if (-not (Test-Path -LiteralPath $proposalsFile)) {
@@ -307,11 +307,11 @@ foreach ($r in $repoDirs) {
 
 # Gather Proposal Markdown documents
 Write-TimingLog "Gathering proposal markdown documents..."
-$propDocsDir = Join-Path $workspaceRoot "Workspace_Inventory\docs\Proposals"
+$propDocsDir = Join-Path $workspaceRoot "LCM_Inventory\docs\Proposals"
 if (Test-Path -LiteralPath $propDocsDir) {
     $propFiles = Get-ChildItem -LiteralPath $propDocsDir -Filter "*.md" -Recurse
     foreach ($pf in $propFiles) {
-        $rel = "Workspace_Inventory/docs/Proposals/" + $pf.Name
+        $rel = "LCM_Inventory/docs/Proposals/" + $pf.Name
         $docsCache[$rel] = Get-Content -LiteralPath $pf.FullName -Raw -Encoding UTF8
     }
 }
@@ -387,7 +387,7 @@ foreach ($cand in $atomJsCandidates) {
     }
 }
 $atomJsContent = if ($atomJsPath) { Get-Content -LiteralPath $atomJsPath -Raw -Encoding UTF8 } else { "" }
-$appsCatalogFile = Join-Path $workspaceRoot "Workspace_Inventory\data\catalog\apps.json"
+$appsCatalogFile = Join-Path $workspaceRoot "LCM_Inventory\data\catalog\apps.json"
 $appsCatalogRaw = if (Test-Path -LiteralPath $appsCatalogFile) { Get-Content -LiteralPath $appsCatalogFile -Raw -Encoding UTF8 } else { '{"total_apps":0,"apps":[]}' }
 
 Write-TimingLog "Serializing documents and compiling JSON injection blocks..."
@@ -411,11 +411,11 @@ $htmlContent = $htmlContent.Replace('{{HUB_VERSION_SUBTITLE}}', $hubVersionSubti
 $htmlContent = $htmlContent.Replace('{{LCM_BASELINE}}', $lcmBaseline)
 $htmlContent = $htmlContent.Replace('{{COMPILE_DATE}}', $compiledTimestamp)
 
-$scratchDir = Join-Path $workspaceRoot "Workspace_Inventory\scratch"
+$scratchDir = Join-Path $workspaceRoot "LCM_Inventory\scratch"
 if (-not (Test-Path -LiteralPath $scratchDir)) {
     New-Item -ItemType Directory -Path $scratchDir -Force | Out-Null
 }
-$artifactsDir = Join-Path $workspaceRoot "Workspace_Inventory\data\artifacts"
+$artifactsDir = Join-Path $workspaceRoot "LCM_Inventory\data\artifacts"
 if (-not (Test-Path -LiteralPath $artifactsDir)) {
     New-Item -ItemType Directory -Path $artifactsDir -Force | Out-Null
 }

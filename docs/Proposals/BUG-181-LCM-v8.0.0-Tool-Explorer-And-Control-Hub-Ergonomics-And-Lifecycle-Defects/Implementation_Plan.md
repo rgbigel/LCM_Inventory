@@ -2,7 +2,7 @@
 
 ## Proposed Changes
 
-### 1. Workspace_Inventory & .lcm Presentation Assets
+### 1. LCM_Inventory & .lcm Presentation Assets
 - Update `LCMToolCatalog.css` and `.lcm/assets/LCMToolCatalog.css` with dark mode Reset button styling.
 - Update `lcm-tool-explorer.js` and `.lcm/assets/lcm-tool-explorer.js` with inline styles and `finalizeAllBlocked` override merging.
 - Update `StandardTableDisplay.css` and `.lcm/assets/StandardTableDisplay.css` with 12px scrollbars and `overflow-x: scroll !important`.
@@ -27,7 +27,7 @@
 - Delete obsolete trampolines `ShowCMControlHub.cmd`, `ShowHub.cmd`, and `ShowCrpDates.cmd` from `.lcm/Cmd/`.
 
 ### 4. Verification & Ledger Registration
-- Register `BUG-181` in `Workspace_Inventory/data/proposals/proposals.json`.
+- Register `BUG-181` in `LCM_Inventory/data/proposals/proposals.json`.
 - Verify SHA256 hashes across mirrored assets.
 - Test dashboard rendering with `-NoLaunch`.
 
@@ -38,7 +38,7 @@
 ### Automated Tests
 - Run `Show-ToolsExplorer.ps1 -NoLaunch` to verify tool catalog compilation and HTML output.
 - Run `Show-LcmControl.ps1 -NoLaunch` to verify Control Hub and Sidecar compilation.
-- Run hash validation script comparing `Workspace_Inventory/assets/` against `.lcm/assets/`.
+- Run hash validation script comparing `LCM_Inventory/assets/` against `.lcm/assets/`.
 
 ### Manual / Visual Verification
 - Inspect Reset button in dark mode to confirm dark `#0d1117` background with red `#f85149` text.

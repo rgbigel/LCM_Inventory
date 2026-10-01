@@ -8,7 +8,7 @@ Status: Suggested
 Plan-State: suggested
 Progress-State: undecided
 Affected-Repos:
-  - Workspace_Inventory
+  - LCM_Inventory
   - Git_Repositories
 ```
 

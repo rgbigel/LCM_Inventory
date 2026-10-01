@@ -3,7 +3,7 @@
 ```yaml
 BUG-ID: BUG-178
 Title: Tool Explorer Approved Verb Naming, Catalog Deduplication, Self-Tool Filtering, and Scrollbar Hardening
-Scope: .lcm, Workspace_Inventory, Tool Explorer UI, Tool Catalog Sync Engine
+Scope: .lcm, LCM_Inventory, Tool Explorer UI, Tool Catalog Sync Engine
 Baseline-Version: v8.0.0
 Author: Rolf, Antigravity AI Assistant
 Date: 2026-09-26
@@ -13,7 +13,7 @@ Progress-State: completed
 Priority: High
 Impacted-Repositories:
   - Git_Repositories
-  - Workspace_Inventory
+  - LCM_Inventory
 ```
 
 ---
@@ -65,10 +65,10 @@ Following the deployment of CRP-177 and interactive user reorganization, several
 - Added stem identifiers to heuristic `NoExit` whitelist.
 
 ### 2.4 Self-Tool Exclusion in Dashboard UI
-- Updated `lcm-tool-explorer.js` (both `.lcm/assets` and `Workspace_Inventory/assets`) filtering out self-tool stems (`Show-ToolsExplorer`, `ToolsExplorer`, `ShowTools`) during initial data loading and filter passes.
+- Updated `lcm-tool-explorer.js` (both `.lcm/assets` and `LCM_Inventory/assets`) filtering out self-tool stems (`Show-ToolsExplorer`, `ToolsExplorer`, `ShowTools`) during initial data loading and filter passes.
 
 ### 2.5 Table Sizing & Scrollbar Contrast Hardening
-- Enforced `min-width: 1560px !important;` on `table` in [`LCMToolCatalog.css`](file:///Workspace_Inventory/assets/LCMToolCatalog.css).
+- Enforced `min-width: 1560px !important;` on `table` in [`LCMToolCatalog.css`](file:///LCM_Inventory/assets/LCMToolCatalog.css).
 - Configured 10px scrollbar height with high-contrast thumb (`var(--text-muted)` default, `var(--accent)` on hover) and explicit `scrollbar-color: var(--accent) var(--bg-secondary) !important;`.
 - Fixed missing `</tbody>` tag closure in `LcmToolCatalog.psm1`.
 

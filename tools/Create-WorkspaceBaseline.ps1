@@ -2,7 +2,7 @@
 Module: tools/Create-WorkspaceBaseline.ps1
 Purpose: Captures a full configuration baseline snapshot of all workspace repositories.
 Path: tools/Create-WorkspaceBaseline.ps1
-Authors: Rolf, Workspace_AI Engine
+Authors: Rolf, LCM_AI Engine
 Version: 1.1.0
 Date: 2026-08-28
 Changelog:
@@ -33,7 +33,7 @@ if ($Help) {
     Write-Host "  Captures a full configuration baseline snapshot of all workspace repositories."
     Write-Host ""
     Write-Host "USAGE:" -ForegroundColor Yellow
-    Write-Host "  pwsh Workspace_Inventory/tools/Create-WorkspaceBaseline.ps1 -BaselineId <str> [-Description <str>] [-h]"
+    Write-Host "  pwsh LCM_Inventory/tools/Create-WorkspaceBaseline.ps1 -BaselineId <str> [-Description <str>] [-h]"
     Write-Host "==========================================================================" -ForegroundColor Cyan
     return
 }

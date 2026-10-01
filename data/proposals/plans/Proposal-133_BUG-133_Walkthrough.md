@@ -1,15 +1,15 @@
 # Walkthrough - BUG-133 & CRP-134 Implementation and Verification
 
 ## Executive Summary
-All 11 items under [BUG-133](file:///d:/Git_Repositories/Workspace_Inventory/docs/Proposals/BUG-133-LCM-v7.5.0-Tool-Explorer-UI-Regressions-Help-And-Parameter-Fixes.md) and the de-parameterization under [CRP-134](file:///d:/Git_Repositories/Workspace_Inventory/docs/Proposals/CRP-134-Workspace_Inventory-v7.5.0-De-Parameterize-BeyondComparePath-Constant.md) have been implemented, verified, and integrated across `LCM`, `Workspace_Inventory`, and `Workspace_AI`.
+All 11 items under [BUG-133](file:///d:/Git_Repositories/LCM_Inventory/docs/Proposals/BUG-133-LCM-v7.5.0-Tool-Explorer-UI-Regressions-Help-And-Parameter-Fixes.md) and the de-parameterization under [CRP-134](file:///d:/Git_Repositories/LCM_Inventory/docs/Proposals/CRP-134-LCM_Inventory-v7.5.0-De-Parameterize-BeyondComparePath-Constant.md) have been implemented, verified, and integrated across `LCM`, `LCM_Inventory`, and `LCM_AI`.
 
 ---
 
 ## Changes Made by Component
 
-### 1. Canonical Modular Stylesheets (`Workspace_Inventory/assets/` & `.lcm/assets/`)
-- **[StandardTableDisplay.css](file:///d:/Git_Repositories/Workspace_Inventory/assets/StandardTableDisplay.css)**: Authoritative base stylesheet for all standard displays (`Show-*`). Incorporates responsive typography, dark/light theme variables, sticky header, aligned column filters, search inputs, modal overlays, print styles, and badges.
-- **[LCMToolCatalog.css](file:///d:/Git_Repositories/Workspace_Inventory/assets/LCMToolCatalog.css)**: Modular cascaded extension stylesheet for Tool Explorer. Houses metric summary card grids, action dropdown menu styling, inline cell editor popover, short-name pills, and filter presets controls.
+### 1. Canonical Modular Stylesheets (`LCM_Inventory/assets/` & `.lcm/assets/`)
+- **[StandardTableDisplay.css](file:///d:/Git_Repositories/LCM_Inventory/assets/StandardTableDisplay.css)**: Authoritative base stylesheet for all standard displays (`Show-*`). Incorporates responsive typography, dark/light theme variables, sticky header, aligned column filters, search inputs, modal overlays, print styles, and badges.
+- **[LCMToolCatalog.css](file:///d:/Git_Repositories/LCM_Inventory/assets/LCMToolCatalog.css)**: Modular cascaded extension stylesheet for Tool Explorer. Houses metric summary card grids, action dropdown menu styling, inline cell editor popover, short-name pills, and filter presets controls.
 - **HTML Linking (Model A)**: Updated [LcmToolCatalog.psm1](file:///d:/Git_Repositories/.lcm/modules/LcmToolCatalog.psm1) to link directly to `StandardTableDisplay.css` and `LCMToolCatalog.css` using absolute `file:///` URIs, enabling browser caching and hot-reload.
 
 ### 2. LCM Tool Explorer UI & Header Regressions (Items 1, 2, 6, 8, 10)
@@ -24,7 +24,7 @@ All 11 items under [BUG-133](file:///d:/Git_Repositories/Workspace_Inventory/doc
 
 ### 3. Smart Parameter Gating & Console Auto-Closing (Items 3 & 4)
 - **Smart Parameter Gating (Item 3)**:
-  - Added `hasMandatoryUnfilledParams(tool)` in [lcm-tool-explorer.js](file:///d:/Git_Repositories/Workspace_Inventory/assets/lcm-tool-explorer.js).
+  - Added `hasMandatoryUnfilledParams(tool)` in [lcm-tool-explorer.js](file:///d:/Git_Repositories/LCM_Inventory/assets/lcm-tool-explorer.js).
   - Clicking a tool name or `▶ Run` invokes `runToolSmart(idx)`: if any mandatory parameter lacks a default (and has no saved value), the configuration modal opens; otherwise, the tool launches immediately.
   - Added `⚙️ Run with Parameters...` to the three-dot dropdown action menu for operators who wish to configure optional flags explicitly.
 - **Console Auto-Closing (Item 4)**:
@@ -37,11 +37,11 @@ All 11 items under [BUG-133](file:///d:/Git_Repositories/Workspace_Inventory/doc
 - **Execution**: Extracts help output via `-h` into `.lcm\scratch\help_<stem>.txt` and launches `notepad.exe` on Session 1 desktop. Included automated fallback via `/execute` if endpoint is unavailable.
 
 ### 5. Standard Parameter Support (Item 9)
-- **[Advance-Governance.ps1](file:///d:/Git_Repositories/Workspace_AI/tools/Advance-Governance.ps1)**: Added `[Alias('h', '?')][switch]$Help` parameter and standard CLI parameter banner per `RULE-PS-010`.
+- **[Advance-Governance.ps1](file:///d:/Git_Repositories/LCM_AI/tools/Advance-Governance.ps1)**: Added `[Alias('h', '?')][switch]$Help` parameter and standard CLI parameter banner per `RULE-PS-010`.
 
 ### 6. Alternative B Structured Negation & Filter Presets Engine (Items 11 & 12)
 - **Alternative B Structured Query Parser (Item 11)**:
-  - Enhanced `matchRowSearch(tool, query)` in [lcm-tool-explorer.js](file:///d:/Git_Repositories/Workspace_Inventory/assets/lcm-tool-explorer.js) to parse structured tokens:
+  - Enhanced `matchRowSearch(tool, query)` in [lcm-tool-explorer.js](file:///d:/Git_Repositories/LCM_Inventory/assets/lcm-tool-explorer.js) to parse structured tokens:
     - `!group:HaSSD06`, `!env:CMD`, `!role:dev`, `!admin:true`, `!cat:utility`, etc.
     - Positive qualifiers: `group:LCM`, `env:PS1`, etc.
     - Free-text words and standard `!word` negation.
@@ -56,7 +56,7 @@ All 11 items under [BUG-133](file:///d:/Git_Repositories/Workspace_Inventory/doc
   - Custom Presets: Full CRUD (`Save`, `Replace`, `Delete`) saved in persistent `localStorage.getItem('lcm_tool_filter_presets')`.
 
 ### 7. De-Parameterize BeyondComparePath (CRP-134)
-- **[Invoke-BeyondCompareReview.ps1](file:///d:/Git_Repositories/Workspace_Inventory/tools/Invoke-BeyondCompareReview.ps1)**:
+- **[Invoke-BeyondCompareReview.ps1](file:///d:/Git_Repositories/LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1)**:
   - Removed `$BeyondComparePath` from `param()`.
   - Implemented environment constant cascade (`$env:BCOMPARE_PATH` -> `D:\Tools\Beyond Compare 5\BCompare.exe` -> `ProgramFiles` -> `Get-Command`).
   - Added `HelpMessage` attributes and `.PARAMETER CRP` / `.PARAMETER Wait` documentation blocks.

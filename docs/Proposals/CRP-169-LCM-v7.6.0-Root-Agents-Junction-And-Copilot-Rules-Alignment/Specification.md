@@ -7,8 +7,8 @@ Scope: Multiple
 Affected-Scopes:
   - D:\Git_Repositories
   - D:\Git_Repositories\.copilot
-  - Workspace_Inventory
-  - Workspace_AI
+  - LCM_Inventory
+  - LCM_AI
 Baseline-Version: v7.6.0
 Author: Rolf, Antigravity AI Assistant
 Date: 2026-09-24 17:40:00
@@ -24,7 +24,7 @@ App-ID: Architecture
 ## 1. Executive Summary & Intent
 
 This proposal addresses three core architectural requirements across workspace governance:
-1. **Broken Root Discovery Junction**: The root workspace container `D:\Git_Repositories` does not contain an `.agents` directory or junction. While `.lcm\.agents\rules` correctly links to `Workspace_Inventory\.agents\rules`, agents and IDE sessions rooted at `D:\Git_Repositories` fail to discover `.agents/rules`, `ACTIVE_CONTEXT.md`, and `ACTIVE_SESSION.md`.
+1. **Broken Root Discovery Junction**: The root workspace container `D:\Git_Repositories` does not contain an `.agents` directory or junction. While `.lcm\.agents\rules` correctly links to `LCM_Inventory\.agents\rules`, agents and IDE sessions rooted at `D:\Git_Repositories` fail to discover `.agents/rules`, `ACTIVE_CONTEXT.md`, and `ACTIVE_SESSION.md`.
 2. **Command Taxonomy & Lifecycle Reconciliation**: Reconciles the conflicting terms between `RULE-LCM-014` and `RULE-EFF-004` by establishing a strict Finite State Machine:
    - Clean separation of the **Normal Review Cycle** from **`DOIT` Mode** (`always-proceed`).
    - Redefining **`Proceed`** as a deterministic single-status step forward across all gates (`SUGGESTED` $\rightarrow$ `IN_PROGRESS` at Gate 1; `REVIEW` $\rightarrow$ `COMMITTED` at Gate 2).
@@ -41,7 +41,7 @@ This proposal addresses three core architectural requirements across workspace g
 
 ### Requirement 1: Deploy Root `.agents` Directory Junction
 - Deploy an NTFS directory junction at `D:\Git_Repositories\.agents` targeting `D:\Git_Repositories\.lcm\.agents`.
-- Ensure `D:\Git_Repositories\.agents\rules` immediately resolves the 17 authoritative policy files in `Workspace_Inventory\.agents\rules`.
+- Ensure `D:\Git_Repositories\.agents\rules` immediately resolves the 17 authoritative policy files in `LCM_Inventory\.agents\rules`.
 - Ensure `.agents/ACTIVE_CONTEXT.md` and `.agents/ACTIVE_SESSION.md` resolve cleanly at root.
 - Validate that `D:\Git_Repositories\.gitignore` excludes `/.agents/` and `/.agents` to prevent Git tracking churn.
 
@@ -62,7 +62,7 @@ This proposal addresses three core architectural requirements across workspace g
   - Auto-Reset Invariant: At push, both `LCM` and `Testing` unconditionally revert to `ON`.
 
 ### Requirement 3: Align `.copilot` Rules and Eliminate Root Duplicates
-- Synchronize all 17 canonical rule files from `Workspace_Inventory\.agents\rules` into `D:\Git_Repositories\.copilot\Rules\`.
+- Synchronize all 17 canonical rule files from `LCM_Inventory\.agents\rules` into `D:\Git_Repositories\.copilot\Rules\`.
 - Remove legacy duplicate files from `.copilot/` root (`InvariantRules.md`, `macro-definitions.md`) to establish `.copilot/Rules/` as the single authoritative rule location.
 - Update `.copilot/Config.json` durable memory paths to reference `Rules/InvariantRules.md` and `Rules/macro-definitions.md`.
 - Verify cryptographic SHA256 hash parity across all 17 rules in `Rules/`.

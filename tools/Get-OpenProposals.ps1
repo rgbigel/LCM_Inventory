@@ -3,7 +3,7 @@
     Displays all open LCM proposals in chronological order.
 .DESCRIPTION
     Module: tools/Get-OpenProposals.ps1
-    Authors: Rolf, Workspace_AI Engine
+    Authors: Rolf, LCM_AI Engine
     Version: 1.1.0
     Date: 2026-09-10
 #>
@@ -34,7 +34,7 @@ if ($Help) {
     Write-Host "  Displays all open LCM proposals in chronological order."
     Write-Host ""
     Write-Host "USAGE:" -ForegroundColor Yellow
-    Write-Host "  pwsh Workspace_Inventory/tools/Get-OpenProposals.ps1 [-All] [-State <str>] [-OriginRepo <str>] [-h]"
+    Write-Host "  pwsh LCM_Inventory/tools/Get-OpenProposals.ps1 [-All] [-State <str>] [-OriginRepo <str>] [-h]"
     Write-Host ""
     Write-Host "PARAMETERS:" -ForegroundColor Yellow
     Write-Host "  -All             : Display all proposals regardless of state"
@@ -47,8 +47,8 @@ if ($Help) {
 
 $workspaceRoot = 'D:\Git_Repositories'
 $moduleCandidates = @(
-    (Join-Path $workspaceRoot 'Workspace_Inventory\modules\ProposalManager.psm1'),
-    (Join-Path $PSScriptRoot '..\Workspace_Inventory\modules\ProposalManager.psm1'),
+    (Join-Path $workspaceRoot 'LCM_Inventory\modules\ProposalManager.psm1'),
+    (Join-Path $PSScriptRoot '..\LCM_Inventory\modules\ProposalManager.psm1'),
     (Join-Path $PSScriptRoot '..\modules\ProposalManager.psm1')
 )
 $modulePath = $null

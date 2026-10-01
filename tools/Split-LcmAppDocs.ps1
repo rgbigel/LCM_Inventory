@@ -3,7 +3,7 @@
     Migrates a repository's in-document App sections into dedicated tripartite subdirectories.
 .DESCRIPTION
     Module: tools/Split-LcmAppDocs.ps1
-    Authors: Rolf, Workspace_AI Engine
+    Authors: Rolf, LCM_AI Engine
     Version: 7.6.0
     Date: 2026-09-20
     Purpose: High-Order Lifecycle Operator that parses monolithic in-document App: # sections
@@ -34,10 +34,10 @@ if ($Help -or [string]::IsNullOrWhiteSpace($Repo)) {
     Write-Host "  Extracts in-document App: # sections into dedicated docs/App#*/ subdirectories."
     Write-Host ""
     Write-Host "USAGE:" -ForegroundColor Yellow
-    Write-Host "  pwsh Workspace_Inventory/tools/Split-LcmAppDocs.ps1 [-Repo] <str> [-WorkspaceRoot <path>] [-WhatIf] [-h]"
+    Write-Host "  pwsh LCM_Inventory/tools/Split-LcmAppDocs.ps1 [-Repo] <str> [-WorkspaceRoot <path>] [-WhatIf] [-h]"
     Write-Host ""
     Write-Host "PARAMETERS:" -ForegroundColor Yellow
-    Write-Host "  -Repo          : Target repository name (e.g. 'BackgroundModifier', 'Workspace_AI')"
+    Write-Host "  -Repo          : Target repository name (e.g. 'BackgroundModifier', 'LCM_AI')"
     Write-Host "  -WorkspaceRoot : Workspace root directory (default: D:\Git_Repositories)"
     Write-Host "  -WhatIf        : Previews the planned extraction without modifying files"
     Write-Host "  -Help (-h, -?) : Displays this parameter reference"

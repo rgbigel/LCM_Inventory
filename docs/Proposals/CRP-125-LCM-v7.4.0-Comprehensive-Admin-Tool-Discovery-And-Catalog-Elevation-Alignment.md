@@ -7,7 +7,7 @@
 | **Lifecycle State** | `COMPLETED` (Implemented & Accepted in d18119a) |
 | **Origin Repository** | `LCM` / Tool Architecture & Governance |
 | **Target Scope** | `.lcm/config/tool_catalog.json`, `.lcm/tools/internal/Update-ToolCatalog.ps1`, `.lcm/Cmd/*.cmd`, `CRP-107` Retirement |
-| **Author** | Rolf, Workspace_AI |
+| **Author** | Rolf, LCM_AI |
 | **Date** | 2026-09-08 |
 | **Version Impact** | `v7.4.0` |
 | **Predecessor / Supersedes** | `CRP-107` (Operational Gaps A & B) |

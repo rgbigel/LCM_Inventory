@@ -3,14 +3,14 @@ Describe 'BCompare window tools' {
     $modulePath = Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\BCompareWindowTools.psm1'
     Import-Module -Name $modulePath -Force
     $processes = @(
-      [pscustomobject]@{ Id = 1; MainWindowTitle = 'Workspace_Inventory v8 <--> Live Workspace_Inventory' },
-      [pscustomobject]@{ Id = 2; MainWindowTitle = 'Workspace_AI v8 <--> Live Workspace_AI' },
-      [pscustomobject]@{ Id = 3; MainWindowTitle = 'Workspace_Inventory Text Compare' }
+      [pscustomobject]@{ Id = 1; MainWindowTitle = 'LCM_Inventory v8 <--> Live LCM_Inventory' },
+      [pscustomobject]@{ Id = 2; MainWindowTitle = 'LCM_AI v8 <--> Live LCM_AI' },
+      [pscustomobject]@{ Id = 3; MainWindowTitle = 'LCM_Inventory Text Compare' }
     )
   }
 
   It 'selects only repository-specific folder comparison windows' {
-    $result = @(Get-SameRepositoryBCompareProcess -RepositoryName 'Workspace_Inventory' -Process $processes)
+    $result = @(Get-SameRepositoryBCompareProcess -RepositoryName 'LCM_Inventory' -Process $processes)
 
     $result.Count | Should -Be 1
     $result[0].Id | Should -Be 1
@@ -23,7 +23,7 @@ Describe 'BCompare window tools' {
   }
 
   It 'accepts an empty process collection' {
-    $result = @(Get-SameRepositoryBCompareProcess -RepositoryName 'Workspace_Inventory' -Process @())
+    $result = @(Get-SameRepositoryBCompareProcess -RepositoryName 'LCM_Inventory' -Process @())
 
     $result.Count | Should -Be 0
   }

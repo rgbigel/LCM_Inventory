@@ -3,7 +3,7 @@ Target Scope: LCM
 Affected Version Range: v6.2.0
 Impacted Repositories:
   - Root (D:\Git_Repositories)
-  - Workspace_Inventory
+  - LCM_Inventory
 ---
 # CRP-106-LCM-v6.2.0-Tool-Architecture-Consolidation
 
@@ -26,7 +26,7 @@ Currently, `tools` (recently migrated to `.tools`) sits loosely at the root. The
 3. **Engine Modifications**:
    - Update `Update-ToolCatalog.ps1` to output trampolines to `.lcm\tools\cmd`.
    - Update `Set-LcmSystemPath.ps1` to exclusively add `.lcm\tools\cmd` (and `.lcm\Cmd`) to the Machine PATH.
-   - Refactor hardcoded `.tools` references globally across all `Workspace_Inventory` and `.lcm` files.
+   - Refactor hardcoded `.tools` references globally across all `LCM_Inventory` and `.lcm` files.
 4. **.gitignore Update**:
    - Scrub `.tools` exemptions and ensure `.lcm\tools\cmd` and `.lcm\tools\hub` are not improperly tracked (if intended to be tracked) or ignored.
 

@@ -2,8 +2,8 @@
 
 - **Proposal ID**: #21 (`CR-2026-032` / `CRP-2026-002`)
 - **Title**: Google Drive Gemini Inbox Watcher, Mandatory Timestamping, and Security Intake Queue
-- **Origin Repo**: Workspace_AI / .lcd
-- **Author**: Rolf, Workspace_AI Engine
+- **Origin Repo**: LCM_AI / .lcd
+- **Author**: Rolf, LCM_AI Engine
 - **Timestamp**: 2026-08-30 11:26:00
 - **Status**: in_progress
 
@@ -16,14 +16,14 @@ Establish an automated, secure intake bridge for instructions and BUG reports ge
 
 ## 2. Proposed Technical Architecture
 
-1. **Inbox Specification** (`Workspace_AI/docs/GEMINI_INBOX_SPECIFICATION.md`):
+1. **Inbox Specification** (`LCM_AI/docs/GEMINI_INBOX_SPECIFICATION.md`):
    - Enforce mandatory timestamping (`**Timestamp**: YYYY-MM-DD HH:MM:SS` or ISO 8601).
    - Standardize metadata (`Type: BUG | TASK | PROPOSAL`, `Criticality`, `Target Repo`).
 2. **Intake Tool** (`.lcm/tools/internal/Sync-GeminiInbox.ps1`):
    - Scan `D:\GDrive\LCM\INBOX` for incoming `.md`, `.txt`, `.json` files.
    - Validate timestamp header and extract structured fields.
-   - Register item in `Workspace_Inventory/data/proposals/proposals.json` as `state: suggested`, `progress_state: undecided`.
-   - Store full markdown payload into `Workspace_Inventory/data/proposals/plans/`.
+   - Register item in `LCM_Inventory/data/proposals/proposals.json` as `state: suggested`, `progress_state: undecided`.
+   - Store full markdown payload into `LCM_Inventory/data/proposals/plans/`.
    - Move processed item to `D:\GDrive\LCM\INBOX/archive/` and delete from active inbox.
    - Support one-shot and `-Watch -IntervalSeconds <sec>` polling modes.
 3. **Command Hub & Catalog Integration**:

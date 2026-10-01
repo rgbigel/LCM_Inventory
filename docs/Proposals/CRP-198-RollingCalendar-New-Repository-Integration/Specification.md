@@ -1,9 +1,9 @@
 # CRP-198: RollingCalendar — New Repository Integration
 
-Module: Workspace_Inventory/docs/Proposals/CRP-198-RollingCalendar-New-Repository-Integration/Specification.md
+Module: LCM_Inventory/docs/Proposals/CRP-198-RollingCalendar-New-Repository-Integration/Specification.md
 Purpose: Integrate the RollingCalendar PowerShell script as a new LCM-governed repository with full tripartite documentation, install runbook, and governance wiring.
-Path: Workspace_Inventory/docs/Proposals/CRP-198-RollingCalendar-New-Repository-Integration/Specification.md
-Authors: rgbig, Workspace_AI Governance
+Path: LCM_Inventory/docs/Proposals/CRP-198-RollingCalendar-New-Repository-Integration/Specification.md
+Authors: rgbig, LCM_AI Governance
 Version: 8.1.1
 Status: Verification — Interface Refinement Reviewed
 Date: 2026-09-30
@@ -18,7 +18,7 @@ Date: 2026-09-30
 | **Title** | RollingCalendar — New Repository Integration |
 | **Target Scope** | New repository `RollingCalendar` under `D:\Git_Repositories\` |
 | **Affected Version Range** | v1.0.0 (initial) |
-| **Impacted Repositories** | `RollingCalendar` (new), `Workspace_Inventory` (ledger) |
+| **Impacted Repositories** | `RollingCalendar` (new), `LCM_Inventory` (ledger) |
 | **App Context** | App: 1 (active context at intake) |
 | **Priority** | M |
 
@@ -57,7 +57,7 @@ from German to English per `LANGUAGE-POLICY`.
 	supplied.
 
 ### Governance
-- `.agents/rules` NTFS junction pointing to `Workspace_AI\.agents\rules`.
+- `.agents/rules` NTFS junction pointing to `LCM_AI\.agents\rules`.
 - `Set-StrictMode -Version Latest` and `$ErrorActionPreference = 'Stop'` at script top.
 - Advanced script and function declarations with explicit function inputs.
 - Focused Pester structural quality tests before the review gate.

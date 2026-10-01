@@ -6,11 +6,11 @@
     Purpose: Provides a single, unified entry point to dispatch ToolsExplorer and ShowCM
              scoped cleanly to a specific workspace subsystem.
     Path: tools/Show-SuperController.ps1
-    Authors: Rolf, Workspace_AI Engine
+    Authors: Rolf, LCM_AI Engine
     Version: 1.0.0
     Date: 2026-09-27
 .PARAMETER Subsystem
-    Workspace subsystem to scope tools and proposals to (e.g. LCM, Workspace_Inventory, Workspace_AI, HaSSD06, SystemConfiguration, Workspace_Supervision, or ALL).
+    Workspace subsystem to scope tools and proposals to (e.g. LCM, LCM_Inventory, LCM_AI, HaSSD06, SystemConfiguration, LCM_Supervision, or ALL).
 .PARAMETER Tool
     Which tool dashboard to launch: 'Tools' / 'ToolsExplorer', 'CM' / 'ShowCM', or 'All' (both). Default is 'All'.
 .PARAMETER CliMode
@@ -50,13 +50,13 @@ if ($Help) {
     Write-Host "  pwsh tools/Show-SuperController.ps1 [-Subsystem <name>] [-Tool <All|Tools|CM>] [-Cli] [-h]"
     Write-Host ""
     Write-Host "SUBSYSTEMS:" -ForegroundColor Yellow
-    Write-Host "  ALL, LCM, Workspace_Inventory, Workspace_AI, HaSSD06, SystemConfiguration, Workspace_Supervision"
+    Write-Host "  ALL, LCM, LCM_Inventory, LCM_AI, HaSSD06, SystemConfiguration, LCM_Supervision"
     Write-Host ""
     Write-Host "EXAMPLES:" -ForegroundColor Yellow
     Write-Host "  SuperController"
     Write-Host "  SuperController LCM"
     Write-Host "  SuperController HaSSD06 -Tool Tools"
-    Write-Host "  SuperController Workspace_Inventory -Tool CM"
+    Write-Host "  SuperController LCM_Inventory -Tool CM"
     Write-Host "  SuperController -Cli"
     Write-Host "==========================================================================" -ForegroundColor Cyan
     return
@@ -73,7 +73,7 @@ if ([string]::IsNullOrWhiteSpace($normSubsys) -or $normSubsys -eq '*' -or $normS
 }
 
 $toolsExplorerScript = Join-Path $workspaceRoot '.lcm\tools\internal\Show-ToolsExplorer.ps1'
-$showCmScript = Join-Path $workspaceRoot 'Workspace_Inventory\tools\Show-LcmControl.ps1'
+$showCmScript = Join-Path $workspaceRoot 'LCM_Inventory\tools\Show-LcmControl.ps1'
 
 Write-Host "==========================================================================" -ForegroundColor Cyan
 Write-Host " WORKSPACE AI SUPER-CONTROLLER v$scriptVersion" -ForegroundColor Green

@@ -7,7 +7,7 @@
 | **Lifecycle State** | `COMPLETED` (Accepted and Enforced) |
 | **Origin Repository** | `LCM` / Desktop UI & Tools |
 | **Target Scope** | Tool Explorer (`Show-Tools`, `LcmToolCatalog.psm1`, `lcm-tool-explorer.js`, `lcm-dashboard-theme.css`, `LcmDesktopDaemon.ps1`, `Remove-LcmShortName.ps1`) |
-| **Author** | Rolf, Workspace_AI |
+| **Author** | Rolf, LCM_AI |
 | **Date** | 2026-09-07 |
 | **Version Impact** | `v7.3.0` |
 

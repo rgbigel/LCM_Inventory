@@ -8,8 +8,8 @@ Status: Suggested
 Plan-State: suggested
 Progress-State: undecided
 Affected-Repos:
-  - Workspace_AI
-  - Workspace_Inventory
+  - LCM_AI
+  - LCM_Inventory
 ```
 
 ## Objective

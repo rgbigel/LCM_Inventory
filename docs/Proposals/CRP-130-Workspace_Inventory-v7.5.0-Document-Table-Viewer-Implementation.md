@@ -5,9 +5,9 @@
 | :--- | :--- |
 | **Proposal ID** | `CRP-130` |
 | **Lifecycle State** | `OPEN` (Awaiting Operator Review & PROCEED Trigger) |
-| **Origin Repository** | `Workspace_Inventory` |
+| **Origin Repository** | `LCM_Inventory` |
 | **Target Scope** | `WORKSPACE_INVENTORY_VIEWER.html` / `Docs` Modal & Viewer |
-| **Author** | Rolf, Workspace_AI Governance |
+| **Author** | Rolf, LCM_AI Governance |
 | **Date** | 2026-09-09 |
 | **Priority** | `Medium` |
 | **Version Impact** | `v7.5.0` |
@@ -32,5 +32,5 @@ Replaces the legacy unstructured document list with a full interactive Document 
 ---
 
 ## 3. Affected Components
-- `Workspace_Inventory/docs/WORKSPACE_INVENTORY_VIEWER.html`
-- `Workspace_Inventory/tools/Show-WorkspaceInventoryApp.ps1`
+- `LCM_Inventory/docs/WORKSPACE_INVENTORY_VIEWER.html`
+- `LCM_Inventory/tools/Show-WorkspaceInventoryApp.ps1`

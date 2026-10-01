@@ -2,7 +2,7 @@
 Module: tools/Find-ChangeRequest.ps1
 Purpose: Queries and displays Change Requests from the central CM index and junction-mirrored proposals.
 Path: tools/Find-ChangeRequest.ps1
-Authors: Rolf, Workspace_AI Engine
+Authors: Rolf, LCM_AI Engine
 Version: 1.0.0
 Date: 2026-08-15
 Changelog:
@@ -41,7 +41,7 @@ if ($Help) {
     Write-Host "  Queries and displays Change Requests from central CM index and proposals."
     Write-Host ""
     Write-Host "USAGE:" -ForegroundColor Yellow
-    Write-Host "  pwsh Workspace_Inventory/tools/Find-ChangeRequest.ps1 [[-Query] <str>] [-Repository <str>] [-Status <str>] [-BundleId <str>] [-Author <str>] [-h]"
+    Write-Host "  pwsh LCM_Inventory/tools/Find-ChangeRequest.ps1 [[-Query] <str>] [-Repository <str>] [-Status <str>] [-BundleId <str>] [-Author <str>] [-h]"
     Write-Host ""
     Write-Host "PARAMETERS:" -ForegroundColor Yellow
     Write-Host "  -Query         : Search term matching CR ID, title, or repository"

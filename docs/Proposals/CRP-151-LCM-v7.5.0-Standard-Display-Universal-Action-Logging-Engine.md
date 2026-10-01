@@ -3,11 +3,11 @@
 ## Metadata
 - **Proposal ID**: `151`
 - **Bundle ID**: `CRP-151`
-- **Origin Repo**: `Workspace_Inventory` (Global LCM Engine / All Governed Subsystems)
+- **Origin Repo**: `LCM_Inventory` (Global LCM Engine / All Governed Subsystems)
 - **Target Components**:
   - `tools/assets/StandardTableDisplay.css`, `tools/assets/lcm-table-engine.js`
   - `.lcm/tools/internal/lcm_daemon.py` / REST Daemon (`:9876/log`)
-  - `SharedModules/`, `HaSSD06_Inventory/`, `Workspace_Inventory/`
+  - `LCM_Shared/`, `HaSSD06_Inventory/`, `LCM_Inventory/`
 - **Author**: Operator Directive / CRP Intake
 - **Date**: 2026-09-19
 - **Priority**: Normal (`N`)

@@ -5,7 +5,7 @@
 | :--- | :--- |
 | **Proposal ID** | `CRP-173` |
 | **State** | `SUGGESTED` (Gate 1 Planning Gate Halt per RULE-LCM-014) |
-| **Target Files** | `.lcm/tools/internal/Initialize-SharedAiMemory.ps1`, `Workspace_AI/tools/Update-Gemini.ps1`, `Workspace_Inventory/tools/Invoke-WorkspacePush.ps1` |
+| **Target Files** | `.lcm/tools/internal/Initialize-SharedAiMemory.ps1`, `LCM_AI/tools/Update-Gemini.ps1`, `LCM_Inventory/tools/Invoke-WorkspacePush.ps1` |
 | **Author** | Rolf, Antigravity AI Assistant |
 | **Date** | 2026-09-25 |
 
@@ -21,22 +21,22 @@
    - Execute `robocopy` sync to `$targetRoot` (`A:\.gemini`).
    - Verify file count and size before proceeding.
 3. **Age & GitHub Verification**:
-   - Read `gemini_manifest.json` from `Workspace_AI/data/gemini_baseline/`.
+   - Read `gemini_manifest.json` from `LCM_AI/data/gemini_baseline/`.
    - Compare timestamp and git commit date against `A:\.gemini`.
    - If `A:\.gemini` is older than the GitHub baseline, copy newer baseline files to `A:\.gemini`.
 4. **Hash Consistency Check**:
    - Calculate SHA256 of local config files and compare against `gemini_manifest.json`.
    - Log verification receipts.
 
-### Step 2: `Workspace_AI/tools/Update-Gemini.ps1`
+### Step 2: `LCM_AI/tools/Update-Gemini.ps1`
 - Add Phase 4: `Sync-GeminiBaseline`:
   - Scans active `.gemini/config` directory.
   - Computes SHA256 hashes for all files.
-  - Writes `Workspace_AI/data/gemini_baseline/gemini_manifest.json`.
-  - Mirrors core configuration files to `Workspace_AI/data/gemini_baseline/`.
+  - Writes `LCM_AI/data/gemini_baseline/gemini_manifest.json`.
+  - Mirrors core configuration files to `LCM_AI/data/gemini_baseline/`.
 
-### Step 3: `Workspace_Inventory/tools/Invoke-WorkspacePush.ps1`
-- Verify that `Update-Gemini.ps1` commits `Workspace_AI/data/gemini_baseline` and `gemini_manifest.json` in the pre-push hook.
+### Step 3: `LCM_Inventory/tools/Invoke-WorkspacePush.ps1`
+- Verify that `Update-Gemini.ps1` commits `LCM_AI/data/gemini_baseline` and `gemini_manifest.json` in the pre-push hook.
 
 ---
 

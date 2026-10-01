@@ -5,8 +5,8 @@
 | :--- | :--- |
 | **Proposal ID** | `CRP-171` |
 | **State** | `SUGGESTED` (Gate 1 Planning Gate Halt) |
-| **Target Repositories** | `Workspace_Inventory`, `.lcm` (Root) |
-| **Target Files** | `.lcm/modules/LcmToolCatalog.psm1`, `.lcm/assets/lcm-tool-explorer.js`, `Workspace_Inventory/assets/lcm-tool-explorer.js` |
+| **Target Repositories** | `LCM_Inventory`, `.lcm` (Root) |
+| **Target Files** | `.lcm/modules/LcmToolCatalog.psm1`, `.lcm/assets/lcm-tool-explorer.js`, `LCM_Inventory/assets/lcm-tool-explorer.js` |
 | **Author** | Rolf, Antigravity AI Assistant |
 | **Date** | 2026-09-25 |
 
@@ -25,7 +25,7 @@
   </div>
   ```
 
-### Step 2: `lcm-tool-explorer.js` (both `.lcm/assets` and `Workspace_Inventory/assets`)
+### Step 2: `lcm-tool-explorer.js` (both `.lcm/assets` and `LCM_Inventory/assets`)
 - **Default ShowTools Filter on Original Call**:
   - In `initApplication()`, check if `sessionStorage.getItem('lcm_tools_showfilter')` or initial startup is active.
   - If no explicit CLI search/filter override is present (`!searchFilter && currentTool === 'All'`), activate `toggleShowFilter()` / set `isFilteringShowTools = true`, and apply the visual active state to `#btn-show-tools-filter`.
@@ -55,7 +55,7 @@
    - Stop and await operator direction (`Proceed` or `do 171`).
 
 2. **Upon Gate 1 Authorization (`Proceed` / `do 171`)**:
-   - Apply edits to `.lcm/modules/LcmToolCatalog.psm1`, `.lcm/assets/lcm-tool-explorer.js`, and `Workspace_Inventory/assets/lcm-tool-explorer.js`.
+   - Apply edits to `.lcm/modules/LcmToolCatalog.psm1`, `.lcm/assets/lcm-tool-explorer.js`, and `LCM_Inventory/assets/lcm-tool-explorer.js`.
    - Regenerate the tool catalog and HTML viewer via `ShowTools -NoLaunch` or `Update-ToolCatalog.ps1`.
    - Validate that:
      1. Opening `ShowTools` loads with the "ShowTools" filter mode active by default.

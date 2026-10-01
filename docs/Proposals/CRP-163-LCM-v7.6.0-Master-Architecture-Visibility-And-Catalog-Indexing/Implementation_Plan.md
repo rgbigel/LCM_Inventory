@@ -3,9 +3,9 @@
 ```yaml
 CRP-ID: CRP-163
 Title: Master Tripartite Architecture Visibility, Catalog Indexing & Cross-App Governance Focus
-Scope: LCM Governance, Workspace_Inventory & Governed Child Repositories
+Scope: LCM Governance, LCM_Inventory & Governed Child Repositories
 Baseline-Version: v7.6.0
-Author: Rolf, Workspace_AI Engine
+Author: Rolf, LCM_AI Engine
 Date: 2026-09-20
 Status: Suggested
 Plan-State: suggested
@@ -38,6 +38,6 @@ Priority: High
 
 ## 2. Verification Strategy
 
-1. **Unit Tests**: Run `Invoke-Pester -Path 'Workspace_Inventory/tests/ProposalManager.Tests.ps1' -Output Detailed` (21/21 passing).
+1. **Unit Tests**: Run `Invoke-Pester -Path 'LCM_Inventory/tests/ProposalManager.Tests.ps1' -Output Detailed` (21/21 passing).
 2. **Catalog Compilation**: Run `Sync-LcmAppCatalog.ps1` and verify `data/catalog/apps.json`.
 3. **Control Hub Dashboard**: Run `Show-CmControlHub.ps1 -NoLaunch` to ensure clean compilation.

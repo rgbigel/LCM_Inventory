@@ -13,8 +13,8 @@ Encapsulate the core LCD platform engine into a dedicated `.lcd/` standard direc
 - **State**: `approved`
 - **Progress State**: `in_progress`
 - **Title**: *Consolidate LCD Platform Engine into Encapsulated .lcd Structure with .tools/internal and tools/links Separation*
-- **Plan Path**: `Workspace_Inventory/data/proposals/plans/Proposal-020_CR-2026-031_Plan.md`
-- **Walkthrough Path**: `Workspace_Inventory/data/proposals/plans/Proposal-020_CR-2026-031_Walkthrough.md`
+- **Plan Path**: `LCM_Inventory/data/proposals/plans/Proposal-020_CR-2026-031_Plan.md`
+- **Walkthrough Path**: `LCM_Inventory/data/proposals/plans/Proposal-020_CR-2026-031_Walkthrough.md`
 
 ---
 
@@ -38,8 +38,8 @@ D:\Git_Repositories\
   │     └── scratch\                   <── Ephemeral Scratchpad (.gitignored)
   │
   ├── .agents                          <── Root NTFS Junction -> .lcd\.agents (IDE Compatibility)
-  ├── Workspace_AI\                    <── Maintainer & Orchestrator
-  ├── Workspace_Inventory\             <── CM Ledger & Review Receipts
+  ├── LCM_AI\                    <── Maintainer & Orchestrator
+  ├── LCM_Inventory\             <── CM Ledger & Review Receipts
   └── [Child Repositories]\            <── Domain Projects (.agents\rules -> .lcd\.agents\rules)
 ```
 

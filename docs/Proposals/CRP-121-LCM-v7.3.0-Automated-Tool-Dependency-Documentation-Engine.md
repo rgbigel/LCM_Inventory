@@ -7,7 +7,7 @@
 | **Lifecycle State** | `OPEN` (Suggested / Intake Gate per `RULE-LCM-015`) |
 | **Origin Repository** | `LCM` / Tooling & Documentation Governance |
 | **Target Scope** | Tool Documentation Engine (`.lcm/tools/internal/Update-ToolDependencies.ps1`), Storage (`docs/tools/<ToolName>/`), Governance Policies (`.agents/rules/DocumentationStandardsPolicy.md`, `ProposalReviewFlowPolicy.md`) |
-| **Author** | Rolf, Workspace_AI |
+| **Author** | Rolf, LCM_AI |
 | **Date** | 2026-09-08 |
 | **Version Impact** | `v7.3.0` |
 | **Related Proposals** | `CRP-117` (Single Authoritative Tool Catalog), `CRP-119` (Monotonic Naming Scheme), `BUG-120` |
@@ -16,7 +16,7 @@
 
 ## 1. Executive Summary & Problem Statement
 
-Across the LCM solution ecosystem (140+ tools in `.lcm/tools/internal`, `.lcm/Cmd/`, `Workspace_Inventory/tools/`, etc.):
+Across the LCM solution ecosystem (140+ tools in `.lcm/tools/internal`, `.lcm/Cmd/`, `LCM_Inventory/tools/`, etc.):
 1. **Constituent Blindness**: Individual tools lack a deterministic inventory of external constituents they call directly (external executables, imported modules, referenced sub-scripts, and Port 9876 desktop daemon endpoints).
 2. **Reverse Impact Ignorance**: Developers and automated agents modifying or deprecating a tool cannot easily determine *what uses it directly* (which `.cmd` trampolines, which parent scripts, or which HTML dashboards dispatch it).
 3. **Documentation Drift**: While tripartite specifications (`Architecture.md`, `Requirements.md`, `Implementation.md`) exist at the repository level (`RULE-DOC-001`), individual tool capabilities and interface contracts drift out of sync with real code implementations.

@@ -5,8 +5,8 @@
 | :--- | :--- |
 | **Proposal ID** | `CRP-173` |
 | **Status** | `REVIEW` (Gate 2 Review Gate) |
-| **Target Repositories** | `.lcm`, `Workspace_AI`, `Workspace_Inventory` |
-| **Target Files** | `.lcm/tools/internal/Initialize-SharedAiMemory.ps1`, `Workspace_AI/tools/Update-Gemini.ps1`, `Workspace_AI/data/gemini_baseline/*`, `.lcm/tools/internal/Update-ToolCatalog.ps1` |
+| **Target Repositories** | `.lcm`, `LCM_AI`, `LCM_Inventory` |
+| **Target Files** | `.lcm/tools/internal/Initialize-SharedAiMemory.ps1`, `LCM_AI/tools/Update-Gemini.ps1`, `LCM_AI/data/gemini_baseline/*`, `.lcm/tools/internal/Update-ToolCatalog.ps1` |
 | **Date** | 2026-09-25 |
 
 ---
@@ -20,13 +20,13 @@
    - Double-checks `LinkType -eq 'Junction'` and target path normalization against `A:\.gemini`.
    - If already a healthy junction, logs preservation notice and **skips any deletion or recreation**.
 3. **GitHub Baseline & Age Synchronization**:
-   - Compares latest file write time on `A:\.gemini\config` against `Workspace_AI/data/gemini_baseline/config`.
+   - Compares latest file write time on `A:\.gemini\config` against `LCM_AI/data/gemini_baseline/config`.
    - If local `A:\.gemini` is older, updates `A:\.gemini` from GitHub baseline.
 4. **Cryptographic SHA256 Hash Consistency**:
    - Computes individual SHA256 hashes for all 133 configuration files and evaluates cumulative `root_hash`.
-   - Verifies 100% consistency against `Workspace_AI/data/gemini_baseline/gemini_manifest.json`.
+   - Verifies 100% consistency against `LCM_AI/data/gemini_baseline/gemini_manifest.json`.
 5. **Pre-Push Automation**:
-   - Extended [`Workspace_AI/tools/Update-Gemini.ps1`](file:///D:/Git_Repositories/Workspace_AI/tools/Update-Gemini.ps1) with Step `[4/4]` to automatically scan `.gemini/config`, compute SHA256 hashes, generate `gemini_manifest.json`, and commit the baseline during pre-push.
+   - Extended [`LCM_AI/tools/Update-Gemini.ps1`](file:///D:/Git_Repositories/LCM_AI/tools/Update-Gemini.ps1) with Step `[4/4]` to automatically scan `.gemini/config`, compute SHA256 hashes, generate `gemini_manifest.json`, and commit the baseline during pre-push.
 
 ---
 

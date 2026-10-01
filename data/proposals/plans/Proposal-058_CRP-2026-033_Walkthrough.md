@@ -14,10 +14,10 @@
 - **`SHOW_TOOLS.html` & `User_Tools_Explorer_LCM.html`**: Fixed 33 occurrences matching the tool catalog paths.
 - **`AGENTS.md`**: Fixed restore tool link to point to `.lcm/tools/internal/Restore-SystemSettings.ps1`.
 - **`.agents/ACTIVE_SESSION.md`**: Fixed `Show-Tools.ps1` path from `.lcm/.tools/internal/` to `.lcm/tools/internal/`.
-- **`Workspace_AI/docs/`**: Corrected legacy `.tools/hooks/` and `.tools/Cmd/` references to `.lcm/tools/hooks/` and `.lcm/Cmd/`.
+- **`LCM_AI/docs/`**: Corrected legacy `.tools/hooks/` and `.tools/Cmd/` references to `.lcm/tools/hooks/` and `.lcm/Cmd/`.
 
 ### B. BCR Comparison Target & Trampolines
-- **`Workspace_Inventory/tools/Invoke-BeyondCompareReview.ps1`**:
+- **`LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1`**:
   - Enforced local Git `HEAD` anchor for baseline extraction (`git -C $repoPath rev-parse --short HEAD`), completely eliminating any network or `origin/` dependencies.
   - Allowed `$RepositoryName` to default automatically to the current Git repository root (`git rev-parse --show-toplevel`) or `.` when omitted.
 - **`BCR.cmd` Trampoline**:
@@ -30,9 +30,9 @@
 1. **Zero Path Mangling Occurrences**:
    - Audited tracked files across all governed repositories:
      - `Git_Repositories`: 0 occurrences
-     - `Workspace_AI`: 0 occurrences
+     - `LCM_AI`: 0 occurrences
      - `LCM_Backup`: 0 occurrences
-     - `Workspace_Inventory`: 0 occurrences
+     - `LCM_Inventory`: 0 occurrences
      - `.lcm`: 0 occurrences
 
 2. **BCR Invocation & Local Baseline Resolution**:

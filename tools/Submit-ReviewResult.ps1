@@ -29,7 +29,7 @@ param(
     Purpose: Consumes interactive review staging manifests, handles Delete/Rename directives, executes cleanups,
              prompts for uncopied file confirmations (bypassed with 'COMPLETE ALL' or -All), and performs review-gated commits per RULE-REV-001.
     Path: tools/Submit-ReviewResult.ps1
-    Authors: Rolf, Workspace_AI Engine
+    Authors: Rolf, LCM_AI Engine
     Version: 8.1.0
     Date: 2026-09-30
 #>
@@ -45,7 +45,7 @@ if ($Help) {
     Write-Host "  Interactive review response recorder and staging engine for Beyond Compare."
     Write-Host ""
     Write-Host "USAGE:" -ForegroundColor Yellow
-    Write-Host "  pwsh Workspace_Inventory/tools/Submit-ReviewResult.ps1 [[-RepositoryPath] <str>] [-Result <str>] [-Notes <str>] [-All] [-Force] [-h]"
+    Write-Host "  pwsh LCM_Inventory/tools/Submit-ReviewResult.ps1 [[-RepositoryPath] <str>] [-Result <str>] [-Notes <str>] [-All] [-Force] [-h]"
     Write-Host ""
     Write-Host "PARAMETERS:" -ForegroundColor Yellow
     Write-Host "  -RepositoryPath  : Name or path of the repository"
@@ -87,7 +87,7 @@ if (-not [string]::IsNullOrWhiteSpace($RepositoryPath)) {
 }
 
 $repoName = Split-Path $targetRepoPath -Leaf
-$reviewsDir = Join-Path $workspaceRoot "Workspace_Inventory\data\reviews"
+$reviewsDir = Join-Path $workspaceRoot "LCM_Inventory\data\reviews"
 if (-not (Test-Path -LiteralPath $reviewsDir)) { New-Item -ItemType Directory -Path $reviewsDir -Force | Out-Null }
 $stagedManifestFile = Join-Path $reviewsDir "staged_review_${repoName}.json"
 
@@ -152,6 +152,27 @@ if ($Result -eq "Rejected") {
     return
 }
 
+# A completion is valid only for the current repository and its current BCR baseline.
+if (-not $stagedManifest) {
+    throw "No current review staging manifest exists for '$repoName'. Open and complete its BCompare review before submitting completion."
+}
+
+$resolvedTargetPath = (Resolve-Path -LiteralPath $targetRepoPath).Path
+$manifestPath = if ($stagedManifest.RepositoryPath) { (Resolve-Path -LiteralPath $stagedManifest.RepositoryPath -ErrorAction SilentlyContinue).Path } else { $null }
+if ($stagedManifest.RepositoryName -ne $repoName -or -not $manifestPath -or $manifestPath -ne $resolvedTargetPath) {
+    throw "Review staging manifest does not match repository '$repoName'. Completion was not performed."
+}
+
+$currentHead = (git -C $targetRepoPath rev-parse HEAD).Trim()
+if ([string]::IsNullOrWhiteSpace($stagedManifest.BaselineCommit) -or -not $currentHead.StartsWith([string]$stagedManifest.BaselineCommit, [System.StringComparison]::OrdinalIgnoreCase)) {
+    throw "Review staging manifest baseline does not match current HEAD for '$repoName'. Completion was not performed."
+}
+
+$approvedActionCount = @($stagedManifest.Completed).Count + @($stagedManifest.Renames).Count + @($stagedManifest.Deletions).Count
+if (-not $includeUncopied -and $approvedActionCount -eq 0) {
+    throw "Review staging manifest for '$repoName' contains no approved actions. Completion was not performed."
+}
+
 # ------------------------------------------------------------------------------
 # Execute Staging Actions: Deletions, Renames & Cleanups
 # ------------------------------------------------------------------------------
@@ -207,11 +228,13 @@ if ($includeUncopied -or ($null -eq $stagedManifest)) {
     }
 }
 
-$status = @(git -C $targetRepoPath status --short)
-if ($status.Count -gt 0) {
+$commitCreated = $false
+git -C $targetRepoPath diff --cached --quiet
+if ($LASTEXITCODE -ne 0) {
     $commitMsg = if (-not [string]::IsNullOrWhiteSpace($Notes)) { $Notes } else { "feat(review): review completion by $env:USERNAME" }
     git -C $targetRepoPath commit -m "$commitMsg"
     $newCommitSha = (git -C $targetRepoPath rev-parse --short HEAD).Trim()
+    $commitCreated = $true
 
     # Save Permanent Review Record
     $timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
@@ -230,9 +253,9 @@ if ($status.Count -gt 0) {
     $reviewRecord | ConvertTo-Json -Depth 3 | Set-Content -LiteralPath $finalReviewFile -Encoding UTF8
 
     # Append to active CM activity ledger
-    $cmLogFile = Join-Path $workspaceRoot "Workspace_Inventory\logs\cm_activity.log"
+    $cmLogFile = Join-Path $workspaceRoot "LCM_Inventory\logs\cm_activity.log"
     if (Test-Path -LiteralPath (Split-Path $cmLogFile -Parent)) {
-        $cmLogEntry = "[$timestamp] [REVIEW_SUBMITTED] [Target: $repoName] [Version: v7.1.0] [PushDate: $timestamp] [AffectedRepos: $repoName, Workspace_Inventory] REVIEW_COMPLETED - Committed review completion ($newCommitSha): $commitMsg"
+        $cmLogEntry = "[$timestamp] [REVIEW_SUBMITTED] [Target: $repoName] [Version: v7.1.0] [PushDate: $timestamp] [AffectedRepos: $repoName, LCM_Inventory] REVIEW_COMPLETED - Committed review completion ($newCommitSha): $commitMsg"
         Add-Content -LiteralPath $cmLogFile -Value $cmLogEntry -Encoding UTF8
     }
 
@@ -243,13 +266,13 @@ if ($status.Count -gt 0) {
     Write-Host " Receipt    : $finalReviewFile" -ForegroundColor Cyan
     Write-Host "==========================================================================" -ForegroundColor Cyan
 } else {
-    Write-Host "No staged changes to commit for $repoName." -ForegroundColor Gray
+    throw "No approved staged changes are available for '$repoName'. Completion was not performed."
 }
 
 # Cleanup staging manifest and temp baseline tree
-if (Test-Path -LiteralPath $stagedManifestFile) { Remove-Item -LiteralPath $stagedManifestFile -Force -ErrorAction SilentlyContinue }
-if ($stagedManifest -and $stagedManifest.TempReviewRoot) {
-    $scratchBcReviewDir = Join-Path $workspaceRoot "Workspace_Inventory\scratch\BC_Review"
+if ($commitCreated -and (Test-Path -LiteralPath $stagedManifestFile)) { Remove-Item -LiteralPath $stagedManifestFile -Force -ErrorAction SilentlyContinue }
+if ($commitCreated -and $stagedManifest -and $stagedManifest.TempReviewRoot) {
+    $scratchBcReviewDir = Join-Path $workspaceRoot "LCM_Inventory\scratch\BC_Review"
 
     # Resolve the CRP identifier from the BCR session metadata before purging the baseline dir.
     # .lcm_review.json is written by BCR into the TempReviewRoot on every BCR invocation.
@@ -300,7 +323,7 @@ if ($stagedManifest -and $stagedManifest.TempReviewRoot) {
 # Auto-Synchronize Proposals Ledger (RULE-LCM-002: Dual-State Alignment)
 # ------------------------------------------------------------------------------
 try {
-    $propJsonFile = Join-Path $workspaceRoot "Workspace_Inventory\data\proposals\proposals.json"
+    $propJsonFile = Join-Path $workspaceRoot "LCM_Inventory\data\proposals\proposals.json"
     if (Test-Path -LiteralPath $propJsonFile) {
         $propStore = Get-Content -LiteralPath $propJsonFile -Raw -Encoding UTF8 | ConvertFrom-Json
         $matchedProposal = $false
@@ -315,7 +338,7 @@ try {
                 $matchedProposal = $true
             }
         }
-        if ($matchedProposal) {
+        if ($commitCreated -and $matchedProposal) {
             $propStore.updated_at = (Get-Date).ToString("yyyy-MM-ddTHH:mm:sszzz")
             $propStore | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath $propJsonFile -Encoding UTF8
             Write-Host "Auto-synchronized proposals ledger to 'completed'." -ForegroundColor Green

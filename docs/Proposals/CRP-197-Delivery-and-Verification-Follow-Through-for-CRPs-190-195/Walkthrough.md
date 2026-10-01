@@ -10,7 +10,7 @@
 	branch, short HEAD commit, and dirty state. It does not write to discovered
 	repositories.
 - An optional user-owned JSON overlay at
-	`Workspace_Inventory/data/repository-metadata.json` is merged by repository
+	`LCM_Inventory/data/repository-metadata.json` is merged by repository
 	name only when present. Missing overlay files are accepted without mutation.
 - Added `tools/Show-Repos.ps1` with table and `-AsJson` output modes.
 

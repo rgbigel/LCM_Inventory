@@ -1,11 +1,11 @@
 ---
 Bug-ID: BUG-098
 CR-ID: CR-2026-051
-Scope: Workspace_AI
+Scope: LCM_AI
 Version: v7.1.2
 Status: Suggested
 Date: 2026-08-31
-Author: Rolf, Workspace_AI Engine
+Author: Rolf, LCM_AI Engine
 Target Scope: Antigravity IDE Integration & Notification Subsystem
 ---
 

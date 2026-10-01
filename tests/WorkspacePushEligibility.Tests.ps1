@@ -5,7 +5,7 @@
   Module: tests/WorkspacePushEligibility.Tests.ps1
   Purpose: Verifies that PUSH requires completed proposals and preflights every
            member of the required lockstep cohort.
-  Path: Workspace_Inventory/tests/WorkspacePushEligibility.Tests.ps1
+  Path: LCM_Inventory/tests/WorkspacePushEligibility.Tests.ps1
   Authors: GitHub Copilot
   Version: 8.0.0
   Date: 2026-09-29
@@ -25,17 +25,17 @@ Describe 'Workspace push eligibility' {
     { Resolve-WorkspacePushPlan -Proposals $proposals } | Should -Throw '*requires at least one proposal*'
   }
 
-  It 'includes Workspace_Inventory in every completed proposal push cohort' {
+  It 'includes LCM_Inventory in every completed proposal push cohort' {
     $proposals = @(
-      [pscustomobject]@{ id = 102; origin_repo = 'ExampleRepo'; affected_repos = @('Workspace_AI', 'Git_Repositories'); state = 'completed'; progress_state = 'completed' }
+      [pscustomobject]@{ id = 102; origin_repo = 'ExampleRepo'; affected_repos = @('LCM_AI', 'Git_Repositories'); state = 'completed'; progress_state = 'completed' }
     )
 
     $plan = Resolve-WorkspacePushPlan -Proposals $proposals -RequestedRepositories 'ExampleRepo'
 
     $plan.TargetRepositories | Should -Contain 'ExampleRepo'
-    $plan.TargetRepositories | Should -Contain 'Workspace_AI'
+    $plan.TargetRepositories | Should -Contain 'LCM_AI'
     $plan.TargetRepositories | Should -Contain 'Git_Repositories'
-    $plan.RequiredRepositories | Should -Contain 'Workspace_Inventory'
+    $plan.RequiredRepositories | Should -Contain 'LCM_Inventory'
     $plan.CompletedProposalIds | Should -Contain 102
     $plan.CompletedProposals[0].Repository | Should -Be 'ExampleRepo'
     $plan.CompletedProposals[0].BundlePath | Should -Be ''
@@ -44,7 +44,7 @@ Describe 'Workspace push eligibility' {
   It 'includes every completed proposal when no repository filter is supplied' {
     $proposals = @(
       [pscustomobject]@{ id = 105; origin_repo = 'ExampleRepo'; state = 'completed'; progress_state = 'completed' },
-      [pscustomobject]@{ id = 106; origin_repo = 'Workspace_Inventory'; state = 'completed'; progress_state = 'completed' }
+      [pscustomobject]@{ id = 106; origin_repo = 'LCM_Inventory'; state = 'completed'; progress_state = 'completed' }
     )
 
     $plan = Resolve-WorkspacePushPlan -Proposals $proposals -RequestedRepositories @('')
@@ -60,23 +60,23 @@ Describe 'Workspace push eligibility' {
     $plan = Resolve-WorkspacePushPlan -Proposals $proposals
     $repositoryStates = @(
       [pscustomobject]@{ Name = 'ExampleRepo'; HasGit = $true; HasRemote = $true; AheadCount = 1 },
-      [pscustomobject]@{ Name = 'Workspace_Inventory'; HasGit = $true; HasRemote = $true; AheadCount = 1 }
+      [pscustomobject]@{ Name = 'LCM_Inventory'; HasGit = $true; HasRemote = $true; AheadCount = 1 }
     )
 
     Test-WorkspacePushCohort -PushPlan $plan -RepositoryStates $repositoryStates | Should -BeTrue
   }
 
-  It 'rejects a lockstep cohort when Workspace_Inventory is not ahead' {
+  It 'rejects a lockstep cohort when LCM_Inventory is not ahead' {
     $proposals = @(
       [pscustomobject]@{ id = 103; origin_repo = 'ExampleRepo'; state = 'completed'; progress_state = 'completed' }
     )
     $plan = Resolve-WorkspacePushPlan -Proposals $proposals
     $repositoryStates = @(
       [pscustomobject]@{ Name = 'ExampleRepo'; HasGit = $true; HasRemote = $true; AheadCount = 1 },
-      [pscustomobject]@{ Name = 'Workspace_Inventory'; HasGit = $true; HasRemote = $true; AheadCount = 0 }
+      [pscustomobject]@{ Name = 'LCM_Inventory'; HasGit = $true; HasRemote = $true; AheadCount = 0 }
     )
 
-    { Test-WorkspacePushCohort -PushPlan $plan -RepositoryStates $repositoryStates } | Should -Throw '*Workspace_Inventory*ahead*'
+    { Test-WorkspacePushCohort -PushPlan $plan -RepositoryStates $repositoryStates } | Should -Throw '*LCM_Inventory*ahead*'
   }
 
   It 'requires a completed proposal bundle to exist in repository HEAD' {

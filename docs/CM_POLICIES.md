@@ -2,8 +2,8 @@
 
 Module: docs/CM_POLICIES.md
 Purpose: Formal rules, policies, and invariants governing Configuration Management across the multi-repo workspace.
-Path: D:\Git_Repositories\Workspace_Inventory\docs\CM_POLICIES.md
-Authors: Rolf, Workspace_AI Engine
+Path: D:\Git_Repositories\LCM_Inventory\docs\CM_POLICIES.md
+Authors: Rolf, LCM_AI Engine
 Version: 2.0.0
 Date: 2026-08-30
 
@@ -13,7 +13,7 @@ Date: 2026-08-30
 
 This document defines the binding Configuration Management (CM) invariants for all repositories and directories located under `D:\Git_Repositories\`.
 
-1. **CM Authority**: `Workspace_Inventory` is the authoritative CM catalog, auditing authority, and proposals ledger repository.
+1. **CM Authority**: `LCM_Inventory` is the authoritative CM catalog, auditing authority, and proposals ledger repository.
 2. **LCM Governance Authority**: Canonical governance rules reside in `.agents/rules/` and are inherited across all child repositories via NTFS directory junctions.
 3. **Repository Autonomy**: Component repositories own their source code, tests, and target-local tripartite documentation (`Architecture.md`, `Requirements.md`, `Implementation.md`, `install/Installation.md`).
 
@@ -24,7 +24,7 @@ This document defines the binding Configuration Management (CM) invariants for a
 Every directory under `D:\Git_Repositories\` must have an explicit classification:
 
 * **`lcm-governed`**: A software repository onboarded into LCM, possessing valid directory junctions to `.agents/rules/`, root agent instructions, and tripartite documentation.
-* **`active-design-workshop`**: Incubation workshops for development (`Workspace_AI`, `Workspace_Inventory`).
+* **`active-design-workshop`**: Incubation workshops for development (`LCM_AI`, `LCM_Inventory`).
 * **`standard-git`**: A Git repository currently un-onboarded to LCM.
 * **`non-git`**: A component directory lacking a `.git` database, listed in `git.ignoredRepositories`.
 * **`legacy-retired`**: Off-limits historical reference repositories.
@@ -34,7 +34,7 @@ Every directory under `D:\Git_Repositories\` must have an explicit classificatio
 
 ## 3. Two-Tier Proposal & Progress State Lifecycle
 
-Every workspace proposal in `Workspace_Inventory/data/proposals/proposals.json` operates under an authoritative two-tier lifecycle model:
+Every workspace proposal in `LCM_Inventory/data/proposals/proposals.json` operates under an authoritative two-tier lifecycle model:
 
 ### 3.1 Plan State (Governance Intent)
 * `bug`: Raw intake error / issue feedback below suggested. Can be promoted to `suggested` or `approved`.
@@ -57,7 +57,7 @@ Every workspace proposal in `Workspace_Inventory/data/proposals/proposals.json` 
 
 ## 4. Beyond Compare 5 Visual Review Gate & Scratch Baseline
 
-1. **Variant A Scratch Baseline**: Baseline inspection trees are hosted strictly under `Workspace_Inventory/scratch/BC_Review/<CRP>_<Repo>_<CommitSha>`. User-profile AppData directories must **never** be used for workspace review baseline storage.
+1. **Variant A Scratch Baseline**: Baseline inspection trees are hosted strictly under `LCM_Inventory/scratch/BC_Review/<CRP>_<Repo>_<CommitSha>`. User-profile AppData directories must **never** be used for workspace review baseline storage.
 2. **Review Directives**:
    * **Copy Right to Left**: Staged for acceptance upon operator disposition.
    * **Line 'Delete' on Left**: Permanently deletes file on disk and in Git.
@@ -104,7 +104,7 @@ The **LCM Configuration Management Control Hub** (`docs/CM_CONTROL_HUB.html`) pr
 
 ## 8. The Ledger Invariant: Audit Logs as Permanent Memory
 
-1. **Logs Constitute the Ledger**: Historical and active audit logs (`.lcm/logs/*.log`, `.lcm/tools/internal/logs/*.log`, `Workspace_Inventory/logs/cm_activity.log`, and `data/reviews/*.json`) are immutable evidence records of system activity and are never exempt from Git tracking.
+1. **Logs Constitute the Ledger**: Historical and active audit logs (`.lcm/logs/*.log`, `.lcm/tools/internal/logs/*.log`, `LCM_Inventory/logs/cm_activity.log`, and `data/reviews/*.json`) are immutable evidence records of system activity and are never exempt from Git tracking.
 2. **Snapshot Invariant**: Root `.gitignore` must allow-list `.lcm/logs/` so that complete historical causality and execution receipts are committed and preserved across disaster recovery.
 3. **Exempt Runtime Data**: Only purely regenerable transient data (compiled scratchpad HTML in `.lcm/scratch/`, `.tmp` buffers, and lock files) is excluded from version control.
 
@@ -114,7 +114,7 @@ The **LCM Configuration Management Control Hub** (`docs/CM_CONTROL_HUB.html`) pr
 
 1. **Snapshot Guarantee**: Every push dispatched via `Invoke-WorkspacePush.ps1` must represent an immutable, 100% restorable disaster-recovery baseline.
 2. **Pre-Push Sequence**:
-   * **Gemini Rules Mirroring (`RULE-LCM-013`)**: Consolidates 17 rules to `Workspace_AI/docs/LCM_Rules_Gemini_Export.md` and mirrors to `D:\GDrive\LCM`.
+   * **Gemini Rules Mirroring (`RULE-LCM-013`)**: Consolidates 17 rules to `LCM_AI/docs/LCM_Rules_Gemini_Export.md` and mirrors to `D:\GDrive\LCM`.
    * **Catalog Snapshot**: Recompiles and commits `tool_catalog.json` and command trampolines before push dispatch.
    * **Dry-Run Simulation**: Supports `-DryRun` (`-WhatIf`) to inspect queued commits, affected repositories, and proposal transitions prior to remote execution.
    * **Post-Push Finalization**: Transitions completed proposals to `pushed` in `data/proposals/proposals.json` and appends `PUSH_EXECUTED` to `logs/cm_activity.log`.
@@ -127,4 +127,4 @@ The **LCM Configuration Management Control Hub** (`docs/CM_CONTROL_HUB.html`) pr
 2. **Prohibition of Direct Sandbox Egress**: Client-side JavaScript running in web views or browsers must never attempt direct OS execution or silent fallback popups. If the daemon is unreachable, the UI must prompt the user to start `LcmDesktopDaemon.ps1`.
 3. **Shared Asset Reuse**: Display tables must utilize the shared LCM atom modules (`.lcm/assets/lcm-table-print-atom.js`, `.lcm/assets/lcm-table-core.js`) to guarantee uniform behavior and telemetry logging.
 
-See authoritative methodology specification in [`docs/LCM_METHODOLOGY_AND_MEMORY_ANCHOR.md`](file:///D:/Git_Repositories/Workspace_Inventory/docs/LCM_METHODOLOGY_AND_MEMORY_ANCHOR.md).
+See authoritative methodology specification in [`docs/LCM_METHODOLOGY_AND_MEMORY_ANCHOR.md`](file:///D:/Git_Repositories/LCM_Inventory/docs/LCM_METHODOLOGY_AND_MEMORY_ANCHOR.md).

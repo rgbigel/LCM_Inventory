@@ -5,7 +5,7 @@ CRP-ID: CRP-164
 Title: Usability Improvements & Interactive Document Viewer Optimization
 Scope: LCM Governance, CM Control Hub, Documentation Review Engine & Tools Catalog
 Baseline-Version: v7.6.0
-Author: Rolf, Workspace_AI Engine
+Author: Rolf, LCM_AI Engine
 Date: 2026-09-21
 Status: Suggested
 Plan-State: suggested
@@ -38,9 +38,9 @@ Priority: High
 6. **Role Filter Fix**:
    - Update `extractDocMetadata` to classify `README.md` as role `"Overview"` / `"Readme"` and ensure dropdown filters correctly.
 
-### Component 2: Tools Catalog, Defaults & Naming Architecture (`.lcm/config/` & `Workspace_Inventory/tools/`)
+### Component 2: Tools Catalog, Defaults & Naming Architecture (`.lcm/config/` & `LCM_Inventory/tools/`)
 1. **Zero-Parameter Defaults**:
-   - Update `Show-WorkspaceReadiness.ps1` to default `-TargetRepo` to current active focus repo (or `Workspace_AI`/all if none).
+   - Update `Show-WorkspaceReadiness.ps1` to default `-TargetRepo` to current active focus repo (or `LCM_AI`/all if none).
    - Update `Show-CmControlHub.ps1` and other tools to run with zero required parameters.
 2. **Tool Naming & Deduplication**:
    - `Show-CrpDates.ps1` $\rightarrow$ Rename / alias to `Show-CRPs.ps1` producing clean table.

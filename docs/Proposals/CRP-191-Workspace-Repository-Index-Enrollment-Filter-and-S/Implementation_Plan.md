@@ -2,7 +2,7 @@
 
 ## Planned Components
 
-1. Extract governed-repository discovery from the existing `WorkspaceCM` scanner into a reusable `WorkspaceRepositoryIndex` module owned by `Workspace_Inventory`.
+1. Extract governed-repository discovery from the existing `WorkspaceCM` scanner into a reusable `WorkspaceRepositoryIndex` module owned by `LCM_Inventory`.
 2. Generate the scanner-owned index and merge its records with the user-owned metadata overlay.
 3. Add `Show-Repos.ps1` with a `ShowRepos` launcher entry, console matrix, filters, and optional HTML report.
 4. Add explicit metadata-only mutation commands with schema validation and audit logging.
@@ -12,7 +12,7 @@
 
 - Discovery is read-only.
 - The index refresh does not initialize Git repositories or alter `.git` state.
-- Metadata commands modify only the Workspace_Inventory overlay.
+- Metadata commands modify only the LCM_Inventory overlay.
 - A physical repository rename or deletion remains outside `ShowRepos` and requires a separately governed workflow.
 
 ## Verification Plan

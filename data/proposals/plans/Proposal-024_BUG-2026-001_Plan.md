@@ -3,7 +3,7 @@
 **Proposal ID**: #24  
 **Change Request / Bug ID**: `BUG-2026-001`  
 **Bundle ID**: `CRP-2026-006`  
-**Origin Repository**: `Workspace_Inventory`  
+**Origin Repository**: `LCM_Inventory`  
 **Author**: Rolf  
 **Status**: Completed (Accepted)  
 **Date**: 2026-08-30  
@@ -24,13 +24,13 @@ Because the cached PowerShell code files contained dollar-sign variables (`$targ
    * Replace `.NET Regex.Replace` with byte-exact literal string `.Replace('/*__INJECTED_DATA_PLACEHOLDER__*/', $injectedBlock)`.
    * Literal string replacement treats all characters literally, preventing any special interpretation of `$` variables in injected script content.
 2. **Template Deduplication**:
-   * Removed duplicate function blocks from `Workspace_Inventory/docs/CM_CONTROL_HUB.html`.
+   * Removed duplicate function blocks from `LCM_Inventory/docs/CM_CONTROL_HUB.html`.
 3. **Validation**:
-   * Re-rendered `Workspace_Inventory/scratch/CM_CONTROL_HUB.html` and verified valid HTML and script tags.
+   * Re-rendered `LCM_Inventory/scratch/CM_CONTROL_HUB.html` and verified valid HTML and script tags.
 
 ---
 
 ## 3. Verification Plan
 
-* **Automated Quality Gate**: `pwsh -File Workspace_AI/tools/Test-WorkspaceReadiness.ps1`
+* **Automated Quality Gate**: `pwsh -File LCM_AI/tools/Test-WorkspaceReadiness.ps1`
 * **Visual & DOM Verification**: Inspect generated `scratch/CM_CONTROL_HUB.html` to confirm clean HTML parsing.

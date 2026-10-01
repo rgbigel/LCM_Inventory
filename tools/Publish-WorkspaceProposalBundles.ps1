@@ -5,7 +5,7 @@
   Module: tools/Publish-WorkspaceProposalBundles.ps1
   Purpose: Stages only docs/Proposals content, creates proposal-only commits, and
            optionally pushes those commits without staging unrelated changes.
-  Path: Workspace_Inventory/tools/Publish-WorkspaceProposalBundles.ps1
+  Path: LCM_Inventory/tools/Publish-WorkspaceProposalBundles.ps1
   Authors: GitHub Copilot
   Version: 8.0.0
   Date: 2026-09-29
@@ -62,7 +62,7 @@ foreach ($repository in $repositoryTargets) {
   }
 
   $publishPaths = @('docs/Proposals')
-  if ($repository.Name -eq 'Workspace_Inventory') {
+  if ($repository.Name -eq 'LCM_Inventory') {
     $publishPaths += 'data/proposals/proposals.json'
   }
   $proposalChanges = @(git -C $repository.Path status --porcelain=v1 --untracked-files=all -- @publishPaths)
@@ -91,7 +91,7 @@ foreach ($target in $publicationTargets) {
   $preStaged = @(git -C $target.Path diff --cached --name-only)
   $unrelatedStaged = @($preStaged | Where-Object {
     $stagedPath = $_.Replace('\', '/')
-    -not ($stagedPath -like 'docs/Proposals/*' -or ($target.Name -eq 'Workspace_Inventory' -and $stagedPath -eq 'data/proposals/proposals.json'))
+    -not ($stagedPath -like 'docs/Proposals/*' -or ($target.Name -eq 'LCM_Inventory' -and $stagedPath -eq 'data/proposals/proposals.json'))
   })
   if ($unrelatedStaged.Count -gt 0) {
     throw "[$($target.Name)] proposal publication refused because unrelated files are already staged: $($unrelatedStaged -join ', ')"
@@ -105,7 +105,7 @@ foreach ($target in $publicationTargets) {
   $stagedFiles = @(git -C $target.Path diff --cached --name-only)
   $unrelatedStaged = @($stagedFiles | Where-Object {
     $stagedPath = $_.Replace('\', '/')
-    -not ($stagedPath -like 'docs/Proposals/*' -or ($target.Name -eq 'Workspace_Inventory' -and $stagedPath -eq 'data/proposals/proposals.json'))
+    -not ($stagedPath -like 'docs/Proposals/*' -or ($target.Name -eq 'LCM_Inventory' -and $stagedPath -eq 'data/proposals/proposals.json'))
   })
   if ($unrelatedStaged.Count -gt 0) {
     throw "[$($target.Name)] proposal publication refused because staging includes unrelated files: $($unrelatedStaged -join ', ')"

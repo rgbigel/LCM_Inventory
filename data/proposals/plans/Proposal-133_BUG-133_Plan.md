@@ -4,14 +4,14 @@
 | Metadata Field | Value |
 | :--- | :--- |
 | **Proposal ID** | `BUG-133` / `#133` |
-| **Target Repositories** | `LCM`, `Workspace_Inventory`, `Workspace_AI` |
+| **Target Repositories** | `LCM`, `LCM_Inventory`, `LCM_AI` |
 | **Target Version** | `v7.5.0` |
 | **Status** | `IN_PROGRESS` |
 | **Date** | 2026-09-10 |
 
 ## 1. Technical Scope
 Resolves 12 defects and enhancements across Tool Explorer and standard displays:
-1. Model A linked static CSS architecture in `Workspace_Inventory/assets/` (`StandardTableDisplay.css` base + `LCMToolCatalog.css` cascade).
+1. Model A linked static CSS architecture in `LCM_Inventory/assets/` (`StandardTableDisplay.css` base + `LCMToolCatalog.css` cascade).
 2. Dynamic version header and subtitle, eliminating hardcoded `V6.1.0`.
 3. Dynamic Subsystem metric card binding to dropdown selection (clicking is a No-OP).
 4. Smart parameter gating: execute immediately unless mandatory non-default parameters exist.

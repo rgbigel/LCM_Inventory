@@ -12,7 +12,7 @@ Date: 2026-09-26
 
 ## 1. Execution Summary
 
-All planned phases of CRP-177 have been successfully executed and validated across `.lcm` and `Workspace_Inventory`:
+All planned phases of CRP-177 have been successfully executed and validated across `.lcm` and `LCM_Inventory`:
 
 1. **Tool Explorer Ergonomics & Disambiguation**:
    - Short name updated from `HaSSD06InventoryTestRepoReadiness` to `TestHaRepoReady`. Launcher `.lcm/Cmd/TestHaRepoReady.cmd` generated and verified.
@@ -24,14 +24,14 @@ All planned phases of CRP-177 have been successfully executed and validated acro
    - Verified table headers and column filters are consistently titled **Subsystem** and **All Subsystems**.
 
 2. **Workspace Maintenance & Daemon Log Truncation**:
-   - Implemented `Workspace_Inventory/tools/Invoke-WorkspaceMaintenance.ps1` with wrapper `.lcm/tools/internal/Invoke-WorkspaceMaintenance.ps1` and launcher `.lcm/Cmd/WorkspaceMaintenance.cmd`.
+   - Implemented `LCM_Inventory/tools/Invoke-WorkspaceMaintenance.ps1` with wrapper `.lcm/tools/internal/Invoke-WorkspaceMaintenance.ps1` and launcher `.lcm/Cmd/WorkspaceMaintenance.cmd`.
    - Executed live run:
      - Truncated `LcmDesktopDaemon-20260919.log` (37,500 lines / 2.7 MB &rarr; 100 lines).
      - Truncated `LcmDesktopDaemon-20260920.log` (13,811 lines / 1.0 MB &rarr; 100 lines).
      - Truncated `LcmDesktopDaemon-20260925.log` (28,492 lines / 2.1 MB &rarr; 100 lines).
      - Purged 1 aged daemon log and 152 stale transient script logs.
      - **Freed 8.01 MB immediately**.
-   - Integrated as Step 0.2 into `Workspace_Inventory/tools/Invoke-WorkspacePush.ps1`.
+   - Integrated as Step 0.2 into `LCM_Inventory/tools/Invoke-WorkspacePush.ps1`.
 
 3. **Per-CRP Review Directory Isolation & Session Naming**:
    - Updated `Invoke-BeyondCompareReview.ps1` to route inspection trees into dedicated subfolders (`scratch/BC_Review/<CRP>/Baseline_<Repo>_<SHA>/` and `Live_<Repo>/`).
@@ -58,4 +58,4 @@ All planned phases of CRP-177 have been successfully executed and validated acro
 ### 2.2 Pre-Push Integration Dry Run
 - Executed `Invoke-WorkspacePush.ps1 -DryRun`.
 - Confirmed Step 0.2 `[Pre-Push Pipeline] Executing Workspace Maintenance & Daemon Log Truncation...` executed cleanly with zero errors.
-- Verified all ahead repositories (`Git_Repositories`, `Workspace_AI`) detected without collisions.
+- Verified all ahead repositories (`Git_Repositories`, `LCM_AI`) detected without collisions.

@@ -2,7 +2,7 @@
 
 Module: docs/INVENTORY_DASHBOARD.md
 Generated: 2026-09-19 19:06:53
-Global Baseline Version: **v7.0.0** (Source: Workspace_AI)
+Global Baseline Version: **v7.0.0** (Source: LCM_AI)
 
 ---
 
@@ -11,8 +11,8 @@ Global Baseline Version: **v7.0.0** (Source: Workspace_AI)
 | Metric | Count | Description |
 | :--- | :---: | :--- |
 | **Total Directories Audited** | **32** | All child directories under D:\Git_Repositories\ |
-| **Active Design Workshop** | **1** | Workspace_AI (v7.0.0) |
-| **CM Repository** | **1** | Workspace_Inventory |
+| **Active Design Workshop** | **1** | LCM_AI (v7.0.0) |
+| **CM Repository** | **1** | LCM_Inventory |
 | **LCM Governed / Candidates** | **16** | Actively governed under LCM |
 | **Elevation Required Repositories** | **8** | Repositories requiring Administrator privileges |
 | **Standard Git Repositories** | **8** | Un-onboarded Git repos |
@@ -49,12 +49,12 @@ Global Baseline Version: **v7.0.0** (Source: Workspace_AI)
 | **`OutlookVBAConversion`** | Git | `main` | `b999170` | clean | **not-lcm** | - | - | User | standard-git |
 | **`PowerBGInfo`** | Git | `v2-speedygonzales` | `4ed1866` | modified (3 files) | **governed** | v7.0.0 | v7.0.0 | User | lcm-governed |
 | **`ReEnableRadeonRx580`** | Git | `main` | `4773dd4` | clean | **not-lcm** | - | - | User | standard-git |
-| **`SharedModules`** | Git | `main` | `ab96693` | modified (2 files) | **governed** | v7.0.0 | v7.0.0 | User | lcm-governed |
+| **`LCM_Shared`** | Git | `main` | `ab96693` | modified (2 files) | **governed** | v7.0.0 | v7.0.0 | User | lcm-governed |
 | **`SystemConfiguration`** | Git | `main` | `e4df953` | modified (3 files) | **governed** | v7.0.0 | v7.0.0 | **Admin** | lcm-governed |
 | **`TimeStamper`** | Git | `main` | `586f41d` | clean | **not-lcm** | - | - | User | standard-git |
 | **`tools`** | Non-Git | `-` | `-` | clean | **not-lcm** | - | - | User | non-git |
 | **`VolumeInventory`** | Git | `main` | `c3fc9f4` | modified (2 files) | **governed** | v7.0.0 | v7.0.0 | **Admin** | lcm-governed |
-| **`Workspace_AI`** | Git | `main` | `eb944db` | modified (10 files) | **governed** | v7.0.0 | v7.0.0 | User | active-design-workshop |
-| **`Workspace_Inventory`** | Git | `main` | `3d3c128` | modified (11 files) | **governed** | v7.0.0 | v7.0.0 | **Admin** | configuration-management |
-| **`Workspace_Supervision`** | Git | `main` | `70ea365` | modified (3 files) | **governed** | v7.0.0 | v7.0.0 | User | subsystem |
+| **`LCM_AI`** | Git | `main` | `eb944db` | modified (10 files) | **governed** | v7.0.0 | v7.0.0 | User | active-design-workshop |
+| **`LCM_Inventory`** | Git | `main` | `3d3c128` | modified (11 files) | **governed** | v7.0.0 | v7.0.0 | **Admin** | configuration-management |
+| **`LCM_Supervision`** | Git | `main` | `70ea365` | modified (3 files) | **governed** | v7.0.0 | v7.0.0 | User | subsystem |
 

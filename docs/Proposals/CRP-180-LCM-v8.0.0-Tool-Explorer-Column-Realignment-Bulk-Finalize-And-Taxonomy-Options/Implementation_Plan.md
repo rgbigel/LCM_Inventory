@@ -3,7 +3,7 @@
 ```yaml
 CRP-ID: CRP-180
 Title: Tool Explorer Ergonomics: Column Realignment, Bulk Finalize, and Precompiled Dynamic Taxonomy Options
-Scope: .lcm, Workspace_Inventory, Tool Explorer UI, Tool Catalog Sync Engine, LCM Desktop Daemon
+Scope: .lcm, LCM_Inventory, Tool Explorer UI, Tool Catalog Sync Engine, LCM Desktop Daemon
 Status: Completed
 Date: 2026-09-26
 ```
@@ -49,5 +49,5 @@ Date: 2026-09-26
 ### Phase 5: Verification & Governance
 - [x] Run `Show-ToolsExplorer.ps1 -NoLaunch` to compile dashboard.
 - [x] Verify hash equality across mirrored assets.
-- [x] Register `CRP-180` in `Workspace_Inventory/data/proposals/proposals.json`.
-- [x] Commit changes to `Workspace_Inventory` and root `Git_Repositories`.
+- [x] Register `CRP-180` in `LCM_Inventory/data/proposals/proposals.json`.
+- [x] Commit changes to `LCM_Inventory` and root `Git_Repositories`.

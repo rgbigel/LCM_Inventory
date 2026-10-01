@@ -22,10 +22,10 @@ Proposal #56 establishes deterministic runtime guardrails for autonomous agent t
    - Adheres to the **AADR (Architecture / Agile Design & Requirements)** documentation taxonomy.
 2. **Repository Scope**: `LCM Backup` (`D:\Git_Repositories\LCM_Backup`) hosts its own domain tools, engine scripts, test harnesses, and documentation structure.
 3. **Rule Propagation**: Core LCM governance rules (`.agents/rules/`) propagate deterministically to `LCM Backup` via standard NTFS junction.
-4. **CM Centralization**: Change management, proposals, review records, and lifecycle auditing remain strictly centralized in `Workspace_Inventory`.
-5. **Data Placement & Ledger Isolation**: All telemetry, state data, backup manifests, recovery indexes, and payloads reside centrally within `Workspace_Inventory` (`Workspace_Inventory/data/backups/`, `Workspace_Inventory/logs/backups/`), eliminating local scattering.
+4. **CM Centralization**: Change management, proposals, review records, and lifecycle auditing remain strictly centralized in `LCM_Inventory`.
+5. **Data Placement & Ledger Isolation**: All telemetry, state data, backup manifests, recovery indexes, and payloads reside centrally within `LCM_Inventory` (`LCM_Inventory/data/backups/`, `LCM_Inventory/logs/backups/`), eliminating local scattering.
 6. **LCM Extensibility**: The primary `.lcm` platform recognizes and integrates `LCM Backup` as an authoritative tool extension provider via `tool_catalog.json` and `.lcm\Cmd\` trampolines.
-7. **Windows Task Governance via `Workspace_Supervision`**: Whenever `LCM_Backup` utilizes Windows Scheduled Tasks (especially for LCM Events, state capture triggers, or inter-tool communication), all created tasks must be registered with, supervised by, and governed through the `Workspace_Supervision` subsystem (`Manage-SupervisionTask.ps1` / `data/supervision_catalog.json`), ensuring centralized observability, health accounting, and dual-layer schedule resilience.
+7. **Windows Task Governance via `LCM_Supervision`**: Whenever `LCM_Backup` utilizes Windows Scheduled Tasks (especially for LCM Events, state capture triggers, or inter-tool communication), all created tasks must be registered with, supervised by, and governed through the `LCM_Supervision` subsystem (`Manage-SupervisionTask.ps1` / `data/supervision_catalog.json`), ensuring centralized observability, health accounting, and dual-layer schedule resilience.
 
 ---
 
@@ -41,14 +41,14 @@ Proposal #56 establishes deterministic runtime guardrails for autonomous agent t
      - `AGENTS.md` and `README.md`.
    - Establish single-hop NTFS junction: `LCM_Backup\.agents\rules` $\rightarrow$ `D:\Git_Repositories\.lcm\.agents\rules`.
 2. **Centralized Data Path Routing**:
-   - Establish storage directory structure in `Workspace_Inventory`:
-     - `Workspace_Inventory/data/backups/` (manifests, recovery points, snapshot indices).
-     - `Workspace_Inventory/logs/backups/` (telemetry and operational execution logs).
+   - Establish storage directory structure in `LCM_Inventory`:
+     - `LCM_Inventory/data/backups/` (manifests, recovery points, snapshot indices).
+     - `LCM_Inventory/logs/backups/` (telemetry and operational execution logs).
 3. **LCM Platform Integration**:
    - Register backup domain commands in `.lcm/tools/internal/tool_catalog.json`.
    - Generate trampoline shortcuts in `.lcm/Cmd/` per LCM tool standards.
-4. **Workspace_Supervision Task Governance Integration**:
-   - Define integration protocols ensuring all Windows Scheduled Tasks created or utilized by `LCM_Backup` (for LCM events and tool coordination) are registered and tracked in `Workspace_Supervision/data/supervision_catalog.json` via `Manage-SupervisionTask.ps1`.
+4. **LCM_Supervision Task Governance Integration**:
+   - Define integration protocols ensuring all Windows Scheduled Tasks created or utilized by `LCM_Backup` (for LCM events and tool coordination) are registered and tracked in `LCM_Supervision/data/supervision_catalog.json` via `Manage-SupervisionTask.ps1`.
 
 ---
 
@@ -109,17 +109,17 @@ Proposal #56 establishes deterministic runtime guardrails for autonomous agent t
 
 | Component / Subsystem | Path | Action |
 | :--- | :--- | :--- |
-| **LCM Governance** | `Workspace_Inventory/data/proposals/proposals.json` | `[MODIFY]` |
+| **LCM Governance** | `LCM_Inventory/data/proposals/proposals.json` | `[MODIFY]` |
 | **LCM Backup Repo** | `D:\Git_Repositories\LCM_Backup\` | `[NEW REPO]` |
 | **LCM Backup Governance**| `LCM_Backup/AGENTS.md`, `LCM_Backup/README.md` | `[NEW]` |
 | **LCM Backup Docs** | `LCM_Backup/docs/Architecture.md`, `Requirements.md`, `Implementation.md` | `[NEW]` |
 | **LCM Backup Install** | `LCM_Backup/install/Installation.md` | `[NEW]` |
-| **Centralized Backup Data**| `Workspace_Inventory/data/backups/`, `Workspace_Inventory/logs/backups/` | `[NEW DIR]` |
+| **Centralized Backup Data**| `LCM_Inventory/data/backups/`, `LCM_Inventory/logs/backups/` | `[NEW DIR]` |
 | **PreToolUse Hook** | `.lcm/tools/hooks/Enforce-LcmPreToolPolicy.ps1` | `[MODIFY]` |
 | **PostToolUse Hook** | `.lcm/tools/hooks/Enforce-LcmPostToolPolicy.ps1` | `[MODIFY]` |
 | **Session Audit / T0** | `.lcm/tools/hooks/Invoke-LcmSessionAudit.ps1` | `[MODIFY]` |
-| **Process Watchdog** | `Workspace_Inventory/tools/Invoke-LcmScriptRunner.ps1` | `[NEW]` |
-| **Proposal Manager** | `Workspace_Inventory/modules/ProposalManager.psm1` | `[MODIFY]` |
+| **Process Watchdog** | `LCM_Inventory/tools/Invoke-LcmScriptRunner.ps1` | `[NEW]` |
+| **Proposal Manager** | `LCM_Inventory/modules/ProposalManager.psm1` | `[MODIFY]` |
 | **Governance Policy** | `.agents/rules/MethodEfficiencyPolicy.md` | `[MODIFY]` |
 
 ---

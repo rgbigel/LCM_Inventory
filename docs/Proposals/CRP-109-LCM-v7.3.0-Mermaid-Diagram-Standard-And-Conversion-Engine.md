@@ -1,16 +1,16 @@
 # Change Request Proposal: Mermaid Diagram Standard & Multi-Scope Markdown/CM Conversion Engine
 
 - **Proposal ID**: `CRP-109`
-- **Target Repository**: `LCM` (`Git_Repositories/.lcm/tools`, `Workspace_AI`, `Workspace_Inventory`)
+- **Target Repository**: `LCM` (`Git_Repositories/.lcm/tools`, `LCM_AI`, `LCM_Inventory`)
 - **Target Version**: `v7.3.0`
 - **Domain**: `Lifecycle Model (LCM) Documentation Standards & Diagram Automation`
-- **Author**: Rolf, Workspace_AI Governance
+- **Author**: Rolf, LCM_AI Governance
 - **Status**: `OPEN` (Awaiting Operator Review & PROCEED Trigger)
 - **Created**: `2026-09-07 15:25:00`
 - **Priority**: `HIGH`
-- **Target Scope**: `.agents/rules/DocumentationStandardsPolicy.md`, `.lcm/tools/internal/Format-LcmMarkdownDiagrams.ps1`, `.lcm/Cmd/FormatDiagrams.cmd`, `.lcm/tools/hooks/Enforce-LcmPostToolPolicy.ps1`, `Workspace_Inventory/data/proposals/proposals.json`
+- **Target Scope**: `.agents/rules/DocumentationStandardsPolicy.md`, `.lcm/tools/internal/Format-LcmMarkdownDiagrams.ps1`, `.lcm/Cmd/FormatDiagrams.cmd`, `.lcm/tools/hooks/Enforce-LcmPostToolPolicy.ps1`, `LCM_Inventory/data/proposals/proposals.json`
 - **Affected Version Range**: `v7.0.0 - v7.3.0`
-- **Impacted Repositories**: `Git_Repositories`, `Workspace_AI`, `Workspace_Inventory`, `All Governed Repositories`
+- **Impacted Repositories**: `Git_Repositories`, `LCM_AI`, `LCM_Inventory`, `All Governed Repositories`
 
 ---
 
@@ -97,7 +97,7 @@ param(
    - Inserts `classDef default font-size:8pt;` into Mermaid blocks lacking font styling.
    - Replaces recognized ASCII boxes and topological matrix tables with structured Mermaid blocks.
 4. **Audit Logging**:
-   - Writes detailed execution records to `Workspace_Inventory/logs/diagram_conversions.log`.
+   - Writes detailed execution records to `LCM_Inventory/logs/diagram_conversions.log`.
 
 ---
 
@@ -113,7 +113,7 @@ param(
 
 ## 5. Rollout & Staging Plan
 
-1. **Phase 1**: Register `CRP-109` in `Workspace_Inventory/data/proposals/proposals.json` in `OPEN` state.
+1. **Phase 1**: Register `CRP-109` in `LCM_Inventory/data/proposals/proposals.json` in `OPEN` state.
 2. **Phase 2**: Codify `RULE-DOC-007` in `DocumentationStandardsPolicy.md` and synchronize `AGENTS.md` and `LCM-Rules-Cross-Reference.md`.
 3. **Phase 3**: Implement `.lcm/tools/internal/Format-LcmMarkdownDiagrams.ps1` and trampoline `.lcm/Cmd/FormatDiagrams.cmd`.
 4. **Phase 4**: Register the tool in `tool_catalog.json` and execute verification across scopes (`Document`, `Folder`, `Repo`, `Git_root`).

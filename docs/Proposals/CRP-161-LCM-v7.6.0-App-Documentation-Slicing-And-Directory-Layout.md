@@ -5,9 +5,9 @@
 | :--- | :--- |
 | **Proposal ID** | `CRP-161` |
 | **Lifecycle State** | `SUGGESTED` |
-| **Origin Repository** | `Workspace_Inventory` |
+| **Origin Repository** | `LCM_Inventory` |
 | **Target Scope** | Global LCM Governance, `RULE-DOC-007`, `ProposalManager.psm1`, `Split-LcmArchitectureToApps.ps1`, `Split-LcmAppDocs.ps1`, `Invoke-ProposalAction.ps1` |
-| **Author** | Rolf, Workspace_AI Intake |
+| **Author** | Rolf, LCM_AI Intake |
 | **Date** | 2026-09-20 |
 | **Version Impact** | `v7.6.0` |
 | **Severity / Priority** | High / Normal |
@@ -77,12 +77,12 @@ The following modular App slices are documented in dedicated subdirectories per 
 
 ### 3.1 Parameter `-SplitDocs` (Default: `$false`)
 - **`New-LcmApp`**: `New-LcmApp -Repo <Repo> -Title <Title> [-SplitDocs]`
-- **`Split-LcmArchitectureToApps.ps1`**: `pwsh Workspace_Inventory/tools/Split-LcmArchitectureToApps.ps1 -Repo <Repo> [-SplitDocs]`
+- **`Split-LcmArchitectureToApps.ps1`**: `pwsh LCM_Inventory/tools/Split-LcmArchitectureToApps.ps1 -Repo <Repo> [-SplitDocs]`
 
 ### 3.2 Migration Engine `Split-LcmAppDocs` (`SplitDocs`)
 - **Cmdlet**: `Split-LcmAppDocs -Repo <Repo> [-WorkspaceRoot <Path>] [-WhatIf]`
-- **Standalone CLI**: [`Workspace_Inventory/tools/Split-LcmAppDocs.ps1`](file:///D:/Git_Repositories/Workspace_Inventory/tools/Split-LcmAppDocs.ps1)
-- **Invoke-ProposalAction Dispatcher**: `pwsh Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action split-docs -TargetRepo <Repo>`
+- **Standalone CLI**: [`LCM_Inventory/tools/Split-LcmAppDocs.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Split-LcmAppDocs.ps1)
+- **Invoke-ProposalAction Dispatcher**: `pwsh LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action split-docs -TargetRepo <Repo>`
 
 **Execution Flow**:
 1. Parses in-document `## App: # - <Title>` sections from root `Architecture.md`, `Requirements.md`, `Implementation.md`.

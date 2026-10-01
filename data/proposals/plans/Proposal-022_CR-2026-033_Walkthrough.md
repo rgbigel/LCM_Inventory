@@ -10,7 +10,7 @@
 ## 1. Summary of Changes
 
 1. **Governance Rule Amendment**: Updated [`ReviewCommitGovernancePolicy.md`](file:///.agents/rules/ReviewCommitGovernancePolicy.md) adding `RULE-REV-006`.
-2. **Rule Aggregator Export**: Re-ran `Export-LCMRules.ps1` to mirror the updated canonical rules to `Workspace_AI/docs/LCM_Rules_Gemini_Export.md` and `D:\GDrive\LCM\`.
+2. **Rule Aggregator Export**: Re-ran `Export-LCMRules.ps1` to mirror the updated canonical rules to `LCM_AI/docs/LCM_Rules_Gemini_Export.md` and `D:\GDrive\LCM\`.
 3. **Quality Gates Passed**: Validated workspace readiness and rule health with zero errors.
 
 ---

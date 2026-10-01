@@ -430,9 +430,9 @@
 
                 let role = r.Classification;
                 if (r.RepositoryName.includes('HaSSD06')) role = 'Home Assistant Subsystem';
-                else if (r.RepositoryName === 'Workspace_AI') role = 'Active Design Workshop';
-                else if (r.RepositoryName === 'Workspace_Inventory') role = 'Configuration Management';
-                else if (r.RepositoryName === 'SharedModules') role = 'Core PowerShell Modules';
+                else if (r.RepositoryName === 'LCM_AI') role = 'Active Design Workshop';
+                else if (r.RepositoryName === 'LCM_Inventory') role = 'Configuration Management';
+                else if (r.RepositoryName === 'LCM_Shared') role = 'Core PowerShell Modules';
                 else if (r.RepositoryName === '.lcd') role = 'LCD Platform Engine';
                 else if (r.RepositoryName === '.agents') role = 'Authoritative Governance Root';
                 else if (r.RepositoryName === 'Installation_LCD') role = 'Platform Installer & Runner';
@@ -481,7 +481,7 @@
 
         async function onboardRepo(repoName) {
             if (!confirm(`Execute LCM Onboarding for repository '${repoName}'?`)) return;
-            const cmd = `pwsh -File Workspace_AI/tools/Onboarding/LCMOnboardRepo.ps1 -RepositoryName "${repoName}"`;
+            const cmd = `pwsh -File LCM_AI/tools/Onboarding/LCMOnboardRepo.ps1 -RepositoryName "${repoName}"`;
             try {
                 await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
                     method: "POST",
@@ -496,7 +496,7 @@
 
         async function unGitRepo(repoName, path) {
             if (!confirm(`⚠️ Are you sure you want to UN-GIT '${repoName}'?\nThis will permanently remove '${path}\\.git' and convert it to a plain folder.`)) return;
-            const cmd = `Remove-Item -LiteralPath '${path}\\.git' -Recurse -Force; pwsh -File Workspace_Inventory/tools/Invoke-WorkspaceAudit.ps1`;
+            const cmd = `Remove-Item -LiteralPath '${path}\\.git' -Recurse -Force; pwsh -File LCM_Inventory/tools/Invoke-WorkspaceAudit.ps1`;
             try {
                 await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
                     method: "POST",
@@ -515,7 +515,7 @@
             if (!newName || newName === oldName) return;
             const parentDir = oldPath.substring(0, oldPath.lastIndexOf('\\\\'));
             const newPath = parentDir + '\\\\' + newName;
-            const cmd = `Rename-Item -LiteralPath '${oldPath}' -NewName '${newName}'; pwsh -File Workspace_Inventory/tools/Invoke-WorkspaceAudit.ps1`;
+            const cmd = `Rename-Item -LiteralPath '${oldPath}' -NewName '${newName}'; pwsh -File LCM_Inventory/tools/Invoke-WorkspaceAudit.ps1`;
             try {
                 await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
                     method: "POST",
@@ -531,7 +531,7 @@
 
         async function deleteRepo(repoName, path) {
             if (!confirm(`🚨 CRITICAL: Are you sure you want to DELETE '${repoName}'?\nTarget Path: ${path}\nThis action cannot be undone.`)) return;
-            const cmd = `Remove-Item -LiteralPath '${path}' -Recurse -Force; pwsh -File Workspace_Inventory/tools/Invoke-WorkspaceAudit.ps1`;
+            const cmd = `Remove-Item -LiteralPath '${path}' -Recurse -Force; pwsh -File LCM_Inventory/tools/Invoke-WorkspaceAudit.ps1`;
             try {
                 await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
                     method: "POST",
@@ -552,7 +552,7 @@
 
         async function refreshAudit() {
             showToast("🔄 Running Workspace Audit...");
-            const cmd = `pwsh -File Workspace_Inventory/tools/Invoke-WorkspaceAudit.ps1; pwsh -File Workspace_Inventory/tools/Show-WorkspaceInventoryApp.ps1 -NoLaunch`;
+            const cmd = `pwsh -File LCM_Inventory/tools/Invoke-WorkspaceAudit.ps1; pwsh -File LCM_Inventory/tools/Show-WorkspaceInventoryApp.ps1 -NoLaunch`;
             try {
                 await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
                     method: "POST",
@@ -566,7 +566,7 @@
         }
 
         function openControlHub() {
-            window.open('file:///D:/Git_Repositories/Workspace_Inventory/scratch/CM_CONTROL_HUB.html', '_blank');
+            window.open('file:///D:/Git_Repositories/LCM_Inventory/scratch/CM_CONTROL_HUB.html', '_blank');
         }
 
         // Universal Document Table Implementation

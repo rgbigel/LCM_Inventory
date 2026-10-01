@@ -6,7 +6,7 @@ Version: v7.1.2
 Affected-Repos: [HaSSD06, HaSSD06_Inventory]
 Status: Suggested
 Date: 2026-08-31
-Author: Rolf, Workspace_AI Engine
+Author: Rolf, LCM_AI Engine
 Target Scope: HaSSD06 / Bluetooth Architecture & Multi-Hub Ingestion
 Affected Version Range: v7.1.1 -> v7.1.2
 Impacted Repositories: [HaSSD06, HaSSD06_Inventory]

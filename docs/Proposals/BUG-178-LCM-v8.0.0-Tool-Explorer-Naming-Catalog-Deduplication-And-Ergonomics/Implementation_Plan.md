@@ -28,7 +28,7 @@ Status: Completed
 - [x] Execute `Update-ToolCatalog.ps1` to persist manifest and README.
 
 ### Phase 4: UI Ergonomics & Self-Tool Filtering
-- [x] Implement self-tool exclusion filter in `lcm-tool-explorer.js` (both `.lcm/assets` and `Workspace_Inventory/assets`).
+- [x] Implement self-tool exclusion filter in `lcm-tool-explorer.js` (both `.lcm/assets` and `LCM_Inventory/assets`).
 - [x] Enforce `table { min-width: 1560px !important; }` in `LCMToolCatalog.css`.
 - [x] Reconfigure horizontal scrollbar track and thumb styling for high visibility across WebKit and Gecko engines.
 

@@ -3,7 +3,7 @@
 ```yaml
 CRP-ID: CRP-174
 Title: Beyond Compare Review Baseline Caching, Invocation Fix, UI Ergonomics, and COMPLETE Lifecycle Consolidation
-Scope: Review Lifecycle, Workspace_Inventory/tools/Invoke-BeyondCompareReview.ps1, LCM_SIDECAR.html, CM_CONTROL_HUB.html, Submit-ReviewResult.ps1, Tool Explorer
+Scope: Review Lifecycle, LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1, LCM_SIDECAR.html, CM_CONTROL_HUB.html, Submit-ReviewResult.ps1, Tool Explorer
 Baseline-Version: v7.6.0
 Author: Rolf, Antigravity AI Assistant
 Date: 2026-09-25
@@ -12,7 +12,7 @@ Plan-State: in_progress
 Progress-State: in_progress
 Priority: High
 Impacted-Repositories:
-  - Workspace_Inventory
+  - LCM_Inventory
   - .lcm
 ```
 
@@ -23,9 +23,9 @@ Impacted-Repositories:
 Operating experience with `CRP-173` revealed several core friction points across the Beyond Compare Review (BCR) workflow, Sidecar ergonomics, and CM Control Hub synchronization:
 
 1. **Unconditional Baseline Destruction on Re-Launch**:
-   - [`Invoke-BeyondCompareReview.ps1`](file:///D:/Git_Repositories/Workspace_Inventory/tools/Invoke-BeyondCompareReview.ps1) blindly wiped existing baseline temporary trees on every call, forcing repeated tar unpacking and SHA256 re-hashing even when the Git baseline SHA was unchanged.
+   - [`Invoke-BeyondCompareReview.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1) blindly wiped existing baseline temporary trees on every call, forcing repeated tar unpacking and SHA256 re-hashing even when the Git baseline SHA was unchanged.
 2. **Broken Daemon Invocation Path (Exit 1)**:
-   - In [`LCM_SIDECAR.html`](file:///D:/Git_Repositories/Workspace_Inventory/assets/LCM_SIDECAR.html), the review action executed `tools/Invoke-BeyondCompareReview.ps1` instead of `Workspace_Inventory/tools/Invoke-BeyondCompareReview.ps1`, causing the daemon to fail with `Exit 1: The term is not recognized`.
+   - In [`LCM_SIDECAR.html`](file:///D:/Git_Repositories/LCM_Inventory/assets/LCM_SIDECAR.html), the review action executed `tools/Invoke-BeyondCompareReview.ps1` instead of `LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1`, causing the daemon to fail with `Exit 1: The term is not recognized`.
 3. **Misleading Button Wording**:
    - The button text read "Launch Beyond Compare 5 review gate" rather than a concise, active phrase: **"Review with BC"**.
 4. **Sidecar Context Isolation & Proposal Switching**:
@@ -48,7 +48,7 @@ Operating experience with `CRP-173` revealed several core friction points across
 - If present, reuse the cached baseline immediately (0-second I/O). Provide `-ForceRebuild` / `-NoCache` switch for manual override.
 
 ### Invariant 2: Authoritative Invocation Routing
-- All daemon execution strings in `LCM_SIDECAR.html` and `CM_CONTROL_HUB.html` use deterministic relative paths: `Workspace_Inventory/tools/Invoke-BeyondCompareReview.ps1`.
+- All daemon execution strings in `LCM_SIDECAR.html` and `CM_CONTROL_HUB.html` use deterministic relative paths: `LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1`.
 - Review button labeled **"Review with BC"**.
 
 ### Invariant 3: Automated Quality Gate Decoupling
@@ -59,8 +59,8 @@ Operating experience with `CRP-173` revealed several core friction points across
 ### Invariant 4: Unified COMPLETE Workflow
 - Operator command **`complete <id>`** (or Sidecar "Complete" button) executes the unified post-review pipeline:
   1. Validates review staging manifest.
-  2. Executes review Git commit with audit receipt in `Workspace_Inventory/data/reviews/`.
-  3. Updates proposal state to `completed` in `Workspace_Inventory/data/proposals/proposals.json`.
+  2. Executes review Git commit with audit receipt in `LCM_Inventory/data/reviews/`.
+  3. Updates proposal state to `completed` in `LCM_Inventory/data/proposals/proposals.json`.
   4. Purges temporary baseline scratch tree.
   5. Broadcasts reload event to Control Hub and Sidecar.
 - `ACCEPT` is maintained strictly as an internal synonym for backwards compatibility.
@@ -70,13 +70,13 @@ Operating experience with `CRP-173` revealed several core friction points across
 - Shrink intake buttons into a single compact toolbar row.
 - Set initial Sidecar window size to compact dimensions (500px $\times$ 680px).
 
-### Invariant 6: Canonical Rules Relocation to Workspace_AI & Universal Junction Sync
-- Move canonical physical rules repository from `Workspace_Inventory\.agents\rules\` to **`Workspace_AI\.agents\rules\`** (the authoritative domain owner for AI prompts, policies, and governance).
-- Re-link all junctions (`Workspace_Inventory\.agents\rules`, `D:\Git_Repositories\.agents\rules`, `.lcm\.agents\rules`, and child repositories) to point directly or transitively to `Workspace_AI\.agents\rules\`.
-- Update [`AGENTS.md`](file:///d:/Git_Repositories/AGENTS.md) and [`RuleAuthority.md`](file:///d:/Git_Repositories/Workspace_AI/.agents/rules/RuleAuthority.md) to enshrine `Workspace_AI\.agents\rules` as the Canonical Physical Hub (`RULE-AUTH-001`).
+### Invariant 6: Canonical Rules Relocation to LCM_AI & Universal Junction Sync
+- Move canonical physical rules repository from `LCM_Inventory\.agents\rules\` to **`LCM_AI\.agents\rules\`** (the authoritative domain owner for AI prompts, policies, and governance).
+- Re-link all junctions (`LCM_Inventory\.agents\rules`, `D:\Git_Repositories\.agents\rules`, `.lcm\.agents\rules`, and child repositories) to point directly or transitively to `LCM_AI\.agents\rules\`.
+- Update [`AGENTS.md`](file:///d:/Git_Repositories/AGENTS.md) and [`RuleAuthority.md`](file:///d:/Git_Repositories/LCM_AI/.agents/rules/RuleAuthority.md) to enshrine `LCM_AI\.agents\rules` as the Canonical Physical Hub (`RULE-AUTH-001`).
 
 ### Invariant 7: Transparent Single-Session Beyond Compare Review (FollowSymLinks)
 - Configure `<FollowSymLinks Value="True"/>` in Beyond Compare 5 session settings (`BCSessions.xml`).
 - Remove `-.agents\rules\` from the repository exclusion filter list so BC5 evaluates rules inline.
 - Retire the redundant second BC review session dispatch; a single Beyond Compare window traverses directory junctions transparently.
-- Automatically populate baseline rules into `$tempReviewRoot\.agents\rules` from `Workspace_AI` HEAD if a child repo baseline does not natively contain them.
+- Automatically populate baseline rules into `$tempReviewRoot\.agents\rules` from `LCM_AI` HEAD if a child repo baseline does not natively contain them.

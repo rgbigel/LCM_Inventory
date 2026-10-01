@@ -1,16 +1,16 @@
 # Change Request Proposal: Bug/CRP Intake Gate, PROCEED Trigger Invariants, and Batch Execution Granularity
 
 - **Proposal ID**: `CRP-076`
-- **Target Repository**: `LCM` (`Git_Repositories/.agents/rules`, `Workspace_Inventory`)
+- **Target Repository**: `LCM` (`Git_Repositories/.agents/rules`, `LCM_Inventory`)
 - **Target Version**: `v7.3.0`
 - **Domain**: `Lifecycle Model (LCM) Governance & Proposal Review Flow`
-- **Author**: Rolf, Workspace_AI Governance
+- **Author**: Rolf, LCM_AI Governance
 - **Status**: `ACCEPTED` (Reviewed & Approved by Operator)
 - **Created**: `2026-09-05 21:50:00`
 - **Priority**: `HIGH`
 - **Target Scope**: `.agents/rules/ProposalReviewFlowPolicy.md`
 - **Affected Version Range**: `v7.2.0 - v7.3.0`
-- **Impacted Repositories**: `Git_Repositories`, `Workspace_Inventory`
+- **Impacted Repositories**: `Git_Repositories`, `LCM_Inventory`
 
 ---
 
@@ -34,7 +34,7 @@ To permanently eliminate this failure mode, four authoritative governance rules 
 
 ### RULE-LCM-015: Strict BUG: and CRP: Intake Gate Invariant
 1. **Intake Signal Only**: The appearance of `BUG:` or `CRP:` designators in user input `MUST NEVER` be interpreted as a request to begin analysis, develop an Implementation Plan, or execute code modifications.
-2. **Mandatory OPEN Intake**: The AI agent's sole initial responsibility upon receiving `BUG:` or `CRP:` input is to register the items into the Configuration Management ledger (`Workspace_Inventory/data/proposals/proposals.json` and formal specifications under `Workspace_Inventory/docs/Proposals/`) in the **`OPEN`** state (`state: "bug"` or `"suggested"`, `progress_state: "open"`).
+2. **Mandatory OPEN Intake**: The AI agent's sole initial responsibility upon receiving `BUG:` or `CRP:` input is to register the items into the Configuration Management ledger (`LCM_Inventory/data/proposals/proposals.json` and formal specifications under `LCM_Inventory/docs/Proposals/`) in the **`OPEN`** state (`state: "bug"` or `"suggested"`, `progress_state: "open"`).
 3. **Priority Hierarchy**:
    - Items designated `BUG:` `MUST` automatically receive higher initial triage priority than `CRP:` items.
    - Priority markings (including "*highest priority*" or "*critical*") affect ordering only; they `DO NOT` authorize departure from the `OPEN` state.
@@ -72,11 +72,11 @@ Proposals held in the `OPEN` state may transition to Implementation Planning and
    - Update `D:\Git_Repositories\.agents\rules\ProposalReviewFlowPolicy.md` (and propagate via canonical junction to all child repos).
    - Increment version to `v7.3.0`.
 2. **Rule Matrix & Index Synchronization**:
-   - Update `Workspace_AI/docs/LCM-Rules-Cross-Reference.md` and `AGENTS.md` to reflect `RULE-LCM-015` through `RULE-LCM-018`.
+   - Update `LCM_AI/docs/LCM-Rules-Cross-Reference.md` and `AGENTS.md` to reflect `RULE-LCM-015` through `RULE-LCM-018`.
 3. **Pre-Push AI Export Parity**:
-   - Mirror updated rules to `Workspace_AI/docs/LCM_Rules_Gemini_Export.md` and `D:\GDrive\LCM` during the standard pre-push pipeline per `RULE-LCM-013`.
+   - Mirror updated rules to `LCM_AI/docs/LCM_Rules_Gemini_Export.md` and `D:\GDrive\LCM` during the standard pre-push pipeline per `RULE-LCM-013`.
 4. **Implementation.md Design Choices Terminal Section**:
-   - Append a standardized "Design Choices & Implementation Rationale" section to the end of `Workspace_AI/docs/Implementation.md` (and `.lcm/docs/Implementation.md`) documenting the architectural tradeoffs and rationale behind these intake and execution bounds.
+   - Append a standardized "Design Choices & Implementation Rationale" section to the end of `LCM_AI/docs/Implementation.md` (and `.lcm/docs/Implementation.md`) documenting the architectural tradeoffs and rationale behind these intake and execution bounds.
 
 ---
 
@@ -97,7 +97,7 @@ The following summary of design choices and alternative analysis must be appende
 
 ## 5. Verification & Review Flow
 
-1. **Document Review Gate**: Operator inspects this specification (`CRP-076`) in `Workspace_Inventory/docs/Proposals/`.
+1. **Document Review Gate**: Operator inspects this specification (`CRP-076`) in `LCM_Inventory/docs/Proposals/`.
 2. **Review Disposition**: Operator renders a decision (`ACCEPT`, `CHANGE`, or `REJECT`).
 3. **Execution Gating**: **NO CODE OR RULE MODIFICATIONS** will take place until the operator explicitly reviews and accepts this document.
 

@@ -3,17 +3,17 @@
 ```yaml
 CRP-ID: CRP-163
 Title: Master Tripartite Architecture Visibility, Catalog Indexing & Cross-App Governance Focus
-Scope: LCM Governance, Workspace_Inventory & Governed Child Repositories
+Scope: LCM Governance, LCM_Inventory & Governed Child Repositories
 Baseline-Version: v7.6.0
-Author: Rolf, Workspace_AI Engine
+Author: Rolf, LCM_AI Engine
 Date: 2026-09-20
 Status: Suggested
 Plan-State: suggested
 Progress-State: queued
 Priority: High
 Impacted-Repositories:
-  - Workspace_Inventory
-  - Workspace_AI
+  - LCM_Inventory
+  - LCM_AI
   - Governed Child Repositories (Global)
 ```
 
@@ -55,7 +55,7 @@ The CM Control Hub (`CM_CONTROL_HUB.html`) `MUST`:
 ## 3. Component Impact & File Topology
 
 ```text
-Workspace_Inventory/
+LCM_Inventory/
 ├── docs/
 │   └── Proposals/
 │       └── CRP-163-LCM-v7.6.0-Master-Architecture-Visibility-And-Catalog-Indexing/

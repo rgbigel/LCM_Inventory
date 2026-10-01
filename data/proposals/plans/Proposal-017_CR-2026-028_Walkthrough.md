@@ -19,7 +19,7 @@ Fixed runtime path resolution failure when invoking legacy alias wrappers from `
 - [`SystemConfiguration/Source/@20-KillLogitechUpdateFull.ps1`](file:///D:/Git_Repositories/SystemConfiguration/Source/@20-KillLogitechUpdateFull.ps1)
 - [`tools/tool_catalog.json`](file:///D:/Git_Repositories/.lcm/config/tool_catalog.json)
 - [`tools/README.md`](file:///D:/Git_Repositories/.lcm/README.md)
-- [`Workspace_Inventory/data/proposals/proposals.json`](file:///D:/Git_Repositories/Workspace_Inventory/data/proposals/proposals.json)
+- [`LCM_Inventory/data/proposals/proposals.json`](file:///D:/Git_Repositories/LCM_Inventory/data/proposals/proposals.json)
 
 ---
 
@@ -29,5 +29,5 @@ Fixed runtime path resolution failure when invoking legacy alias wrappers from `
 - CMD trampoline test (`.tools/Cmd/FixMouseFlicker.cmd -h`): **PASSED**.
 - Tool catalog synchronization (`Update-ToolCatalog.ps1`): **PASSED** (141 tools, 141 launchers).
 - Dynamic symlink sync (`Sync-ToolSymlinks.ps1`): **PASSED** (0 orphaned links).
-- Quality gate (`Workspace_AI/tools/Test-WorkspaceReadiness.ps1`): **PASSED** (`Workspace_AI readiness self-test: OK`).
+- Quality gate (`LCM_AI/tools/Test-WorkspaceReadiness.ps1`): **PASSED** (`LCM_AI readiness self-test: OK`).
 

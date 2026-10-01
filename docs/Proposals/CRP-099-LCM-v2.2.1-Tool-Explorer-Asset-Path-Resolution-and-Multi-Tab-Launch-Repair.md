@@ -3,13 +3,13 @@ Proposal-ID: CRP-099
 CR-ID: CR-2026-048
 Scope: LCM Platform (.lcm)
 Version: v2.2.1
-Affected-Repos: [.lcm, Workspace_Inventory]
+Affected-Repos: [.lcm, LCM_Inventory]
 Status: Suggested
 Date: 2026-08-31
-Author: Rolf, Workspace_AI Engine
+Author: Rolf, LCM_AI Engine
 Target Scope: .lcm / modules / LcmToolCatalog.psm1 & Show-ToolIndex.ps1
 Affected Version Range: v2.2.0 -> v2.2.1
-Impacted Repositories: [.lcm, Workspace_Inventory]
+Impacted Repositories: [.lcm, LCM_Inventory]
 ---
 
 # CRP-099: Repair Tool Explorer Asset Path Resolution, Multi-Tab Launch Fallthrough, and Legacy Path Candidates
@@ -43,7 +43,7 @@ This proposal documents the root cause analysis, surgical in-place code repairs,
 ### 2.3 Bug 3: Hardcoded `.lcd` Fallback Candidate Paths
 * **Defect Location**:
   * `Get-LcmToolCatalogData` in [`LcmToolCatalog.psm1`](file:///d:/Git_Repositories/.lcm/modules/LcmToolCatalog.psm1).
-  * `$dispatcherCandidates` in [`Workspace_Inventory\tools\Invoke-BeyondCompareReview.ps1`](file:///d:/Git_Repositories/Workspace_Inventory/tools/Invoke-BeyondCompareReview.ps1).
+  * `$dispatcherCandidates` in [`LCM_Inventory\tools\Invoke-BeyondCompareReview.ps1`](file:///d:/Git_Repositories/LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1).
 * **Root Cause**: Both functions relied on legacy fallback arrays containing `.lcd\tools\internal\` paths that became dead references after the removal of the `.lcd` junction in Proposal #35 (`CRP-099`).
 
 ---
@@ -83,12 +83,12 @@ $candidatePaths = @(
   (Join-Path $ToolsDir 'tool_catalog.json'),
   'D:\Git_Repositories\.lcm\config\tool_catalog.json',
   'D:\Git_Repositories\.lcm\tools\internal\tool_catalog.json',
-  'D:\Git_Repositories\tools\tool_catalog.json'
+  'D:\Git_Repositories\LCM_Tools\tool_catalog.json'
 )
 ```
 
 ### 3.3 Hardened Dispatcher Candidates in `Invoke-BeyondCompareReview.ps1`
-Updated `$dispatcherCandidates` in [`Workspace_Inventory\tools\Invoke-BeyondCompareReview.ps1`](file:///d:/Git_Repositories/Workspace_Inventory/tools/Invoke-BeyondCompareReview.ps1):
+Updated `$dispatcherCandidates` in [`LCM_Inventory\tools\Invoke-BeyondCompareReview.ps1`](file:///d:/Git_Repositories/LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1):
 ```powershell
 $dispatcherCandidates = @(
     (Join-Path $workspaceRoot ".lcm\tools\internal\Invoke-InteractiveDesktop.ps1"),
@@ -119,7 +119,7 @@ $dispatcherCandidates = @(
 
 ## 5. Non-Regression & Governance Invariants
 * **Zero Commits & Zero Pushes**: Maintained strictly per operator directive.
-* **Scope Isolation**: Modifications strictly restricted to `.lcm` and `Workspace_Inventory`.
+* **Scope Isolation**: Modifications strictly restricted to `.lcm` and `LCM_Inventory`.
 * **Zero Collateral Loss**: All 24 historical and active CRPs, CRs, and BUG files, session logs, and tripartite specifications remain 100% intact and unaffected.
 
 

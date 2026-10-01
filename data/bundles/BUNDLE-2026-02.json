@@ -1,7 +1,7 @@
-﻿{
+{
     "$schema":  "https://json-schema.org/draft/2020-12/schema",
     "bundle_id":  "BUNDLE-2026-02",
-    "name":  "Workspace_Inventory CM Initialization",
+    "name":  "LCM_Inventory CM Initialization",
     "status":  "implemented",
     "target_lcm_version":  "4.1.0",
     "test_suite":  "Invoke-WorkspaceAudit.ps1",

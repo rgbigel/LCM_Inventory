@@ -8,12 +8,12 @@ We have executed the comprehensive workspace deduplication, archive consolidatio
 
 ### 🛡️ Zero-Deletion Archival Standard (`RULE-LCM-013`)
 * **`BootOpsHub.zip` Duplications Resolved**:
-  * Redundant identical instances from past Beyond Compare staging snapshots (`Workspace_Inventory\scratch\BC_Review\CRP-2026-005_*`, `CRP-2026-006_*`, `CRP-2026-008_*`) have been safely moved to:
-    [`Workspace_Inventory/data/archives/BC_Review_Snapshots/`](file:///d:/Git_Repositories/Workspace_Inventory/data/archives/BC_Review_Snapshots).
-  * Only **1 authoritative copy** remains active in `Workspace_Inventory\data\archives\BootOpsHub.zip`.
+  * Redundant identical instances from past Beyond Compare staging snapshots (`LCM_Inventory\scratch\BC_Review\CRP-2026-005_*`, `CRP-2026-006_*`, `CRP-2026-008_*`) have been safely moved to:
+    [`LCM_Inventory/data/archives/BC_Review_Snapshots/`](file:///d:/Git_Repositories/LCM_Inventory/data/archives/BC_Review_Snapshots).
+  * Only **1 authoritative copy** remains active in `LCM_Inventory\data\archives\BootOpsHub.zip`.
 * **Legacy Baselines Consolidated**:
-  * Older snapshots (`BASELINE-v4.1.0-20260815.json`, `BASELINE-v4.2.0-20260816.json`, `baseline-v4.1.0.json`) moved to [`Workspace_Inventory/data/archives/baselines/`](file:///d:/Git_Repositories/Workspace_Inventory/data/archives/baselines/).
-  * Active baseline [`BASELINE-v4.3.0.json`](file:///d:/Git_Repositories/Workspace_Inventory/data/baselines/BASELINE-v4.3.0.json) preserved in active path.
+  * Older snapshots (`BASELINE-v4.1.0-20260815.json`, `BASELINE-v4.2.0-20260816.json`, `baseline-v4.1.0.json`) moved to [`LCM_Inventory/data/archives/baselines/`](file:///d:/Git_Repositories/LCM_Inventory/data/archives/baselines/).
+  * Active baseline [`BASELINE-v4.3.0.json`](file:///d:/Git_Repositories/LCM_Inventory/data/baselines/BASELINE-v4.3.0.json) preserved in active path.
 * **Physical Script Copies in `.lcm\tools\links\`**:
   * Archived 66 redundant physical script copies to [`.lcm/archive/tools_links_backup/`](file:///d:/Git_Repositories/.lcm/archive/tools_links_backup).
   * Tool execution routes dynamically through `tool_catalog.json` and `.lcm\Cmd\` trampolines directly to canonical source files.
@@ -26,7 +26,7 @@ We have executed the comprehensive workspace deduplication, archive consolidatio
 
 ## 2. New Tool Created
 
-* **[`Workspace_Inventory/tools/Invoke-WorkspaceDeduplication.ps1`](file:///d:/Git_Repositories/Workspace_Inventory/tools/Invoke-WorkspaceDeduplication.ps1)**:
+* **[`LCM_Inventory/tools/Invoke-WorkspaceDeduplication.ps1`](file:///d:/Git_Repositories/LCM_Inventory/tools/Invoke-WorkspaceDeduplication.ps1)**:
   * Reusable PowerShell deduplication runner supporting SHA-256 cryptographic clustering, canonical version preservation, and structured zero-deletion archival moves.
 
 ---

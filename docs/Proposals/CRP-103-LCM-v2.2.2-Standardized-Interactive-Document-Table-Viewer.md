@@ -3,14 +3,14 @@ Proposal-ID: CRP-103
 CR-ID: CR-2026-054
 Scope: LCM Platform (.lcm) & Shared Dashboards
 Version: v7.5.0
-Affected-Repos: [Workspace_Inventory, Workspace_AI, HaSSD06_Inventory, .lcm]
+Affected-Repos: [LCM_Inventory, LCM_AI, HaSSD06_Inventory, .lcm]
 Status: OPEN (Bundled in BUNDLE-STD-DISPLAY-v7.5.0)
 Date: 2026-08-31
-Author: Rolf, Workspace_AI Engine
+Author: Rolf, LCM_AI Engine
 Priority: High
 Target Scope: Universal Dashboard UI/UX Standard & Interactive Table Engine
 Affected Version Range: v2.2.1 -> v7.5.0
-Impacted Repositories: [Workspace_Inventory, Workspace_AI, HaSSD06_Inventory, .lcm]
+Impacted Repositories: [LCM_Inventory, LCM_AI, HaSSD06_Inventory, .lcm]
 Logical-Bundle: BUNDLE-STD-DISPLAY-v7.5.0
 ---
 
@@ -78,13 +78,13 @@ Every table view across the LCM ecosystem will mandate the following unified arc
 > Per operator bundling directive for `BUNDLE-STD-DISPLAY-v7.5.0`:
 >
 > 1. **Document Table Viewer Implementation (Original Section 3, Item 1)**:
->    - **Extracted to**: [`CRP-130`](file:///D:/Git_Repositories/Workspace_Inventory/docs/Proposals/CRP-130-Workspace_Inventory-v7.5.0-Document-Table-Viewer-Implementation.md) (*Workspace Inventory Document Table Viewer Implementation*).
+>    - **Extracted to**: [`CRP-130`](file:///D:/Git_Repositories/LCM_Inventory/docs/Proposals/CRP-130-LCM_Inventory-v7.5.0-Document-Table-Viewer-Implementation.md) (*Workspace Inventory Document Table Viewer Implementation*).
 >    - **Rationale**: The specific modal table redesign of `WORKSPACE_INVENTORY_VIEWER.html` (`Docs` tab) represents repository inventory feature work, whereas `CRP-103` in `BUNDLE-STD-DISPLAY-v7.5.0` establishes the foundational interactive table display engine.
 >
 > 2. **Multi-Page Print & PDF Engine**:
->    - **Extracted to**: [`CRP-128`](file:///D:/Git_Repositories/Workspace_Inventory/docs/Proposals/CRP-128-LCM-v7.5.0-Universal-Multi-Page-Table-Print-And-PDF-Export-Engine.md).
+>    - **Extracted to**: [`CRP-128`](file:///D:/Git_Repositories/LCM_Inventory/docs/Proposals/CRP-128-LCM-v7.5.0-Universal-Multi-Page-Table-Print-And-PDF-Export-Engine.md).
 >
 > 3. **Desktop Editor Dispatch & Governance Advisory**:
->    - **Extracted to**: [`CRP-129`](file:///D:/Git_Repositories/Workspace_Inventory/docs/Proposals/CRP-129-LCM-v7.5.0-Standard-Desktop-Editor-Dispatch-And-Governance-Advisory-Hook.md).
+>    - **Extracted to**: [`CRP-129`](file:///D:/Git_Repositories/LCM_Inventory/docs/Proposals/CRP-129-LCM-v7.5.0-Standard-Desktop-Editor-Dispatch-And-Governance-Advisory-Hook.md).
 
 

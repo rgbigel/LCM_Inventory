@@ -3,7 +3,7 @@
     Displays all repositories under review, dirty file counts, and BC5 review statuses.
 .DESCRIPTION
     Module: tools/Get-ReposUnderReview.ps1
-    Authors: Rolf, Workspace_AI Engine
+    Authors: Rolf, LCM_AI Engine
     Version: 1.1.0
     Date: 2026-09-10
 #>
@@ -28,7 +28,7 @@ if ($Help) {
     Write-Host "  Displays all repositories under review, dirty file counts, and BC5 review statuses."
     Write-Host ""
     Write-Host "USAGE:" -ForegroundColor Yellow
-    Write-Host "  pwsh Workspace_Inventory/tools/Get-ReposUnderReview.ps1 [[-WorkspaceRoot] <str>] [-h]"
+    Write-Host "  pwsh LCM_Inventory/tools/Get-ReposUnderReview.ps1 [[-WorkspaceRoot] <str>] [-h]"
     Write-Host ""
     Write-Host "PARAMETERS:" -ForegroundColor Yellow
     Write-Host "  -WorkspaceRoot   : Root workspace directory to inspect (default: D:\Git_Repositories)"
@@ -38,8 +38,8 @@ if ($Help) {
 }
 
 $moduleCandidates = @(
-    (Join-Path $WorkspaceRoot 'Workspace_Inventory\modules\ProposalManager.psm1'),
-    (Join-Path $PSScriptRoot '..\Workspace_Inventory\modules\ProposalManager.psm1'),
+    (Join-Path $WorkspaceRoot 'LCM_Inventory\modules\ProposalManager.psm1'),
+    (Join-Path $PSScriptRoot '..\LCM_Inventory\modules\ProposalManager.psm1'),
     (Join-Path $PSScriptRoot '..\modules\ProposalManager.psm1')
 )
 $modulePath = $null

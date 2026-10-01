@@ -5,7 +5,7 @@
 - **Title:** Universal LCM Browser Table UI/UX Standard Template Extraction
 - **Domain:** Global Workspace UI/UX
 - **State:** `DEFERRED`
-- **Target Repository:** `Workspace_Inventory`
+- **Target Repository:** `LCM_Inventory`
 - **Lead Architect:** LCM Framework
 
 ## 2. Rationale & Problem Statement

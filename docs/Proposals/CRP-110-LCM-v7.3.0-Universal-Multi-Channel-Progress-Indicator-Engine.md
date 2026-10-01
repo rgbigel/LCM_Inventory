@@ -1,16 +1,16 @@
 # Change Request Proposal: Universal Multi-Channel Progress Indicator Engine
 
 - **Proposal ID**: `CRP-110`
-- **Target Repository**: `LCM` (`Git_Repositories/.lcm/tools`, `Workspace_Inventory`, `SharedModules`)
+- **Target Repository**: `LCM` (`Git_Repositories/.lcm/tools`, `LCM_Inventory`, `LCM_Shared`)
 - **Target Version**: `v7.3.0`
 - **Domain**: `Lifecycle Model (LCM) Execution Telemetry & Cross-Channel Progress Architecture`
-- **Author**: Rolf, Workspace_AI Governance
+- **Author**: Rolf, LCM_AI Governance
 - **Status**: `OPEN` (Awaiting Operator Review & PROCEED Trigger)
 - **Created**: `2026-09-07 15:55:00`
 - **Priority**: `HIGH`
-- **Target Scope**: `.lcm/modules/LcmProgressAtom.psm1`, `.lcm/tools/internal/Set-LcmActionProgress.ps1`, `.lcm/assets/lcm-table-engine.js`, `Workspace_Inventory/docs/CM_CONTROL_HUB.html`, `Workspace_Inventory/tools/Invoke-ProposalAction.ps1`, `RR.ps1`
+- **Target Scope**: `.lcm/modules/LcmProgressAtom.psm1`, `.lcm/tools/internal/Set-LcmActionProgress.ps1`, `.lcm/assets/lcm-table-engine.js`, `LCM_Inventory/docs/CM_CONTROL_HUB.html`, `LCM_Inventory/tools/Invoke-ProposalAction.ps1`, `RR.ps1`
 - **Affected Version Range**: `v7.0.0 - v7.3.0`
-- **Impacted Repositories**: `Git_Repositories`, `Workspace_Inventory`, `.lcm`, `All Governed Repositories`
+- **Impacted Repositories**: `Git_Repositories`, `LCM_Inventory`, `.lcm`, `All Governed Repositories`
 
 ---
 
@@ -116,7 +116,7 @@ The ephemeral progress file is maintained in `.lcm/scratch/active_progress.json`
       "id": "107",
       "cr_id": "CRP-107",
       "label": "CM Control Hub Prio Column Engine",
-      "target_repo": "Workspace_Inventory",
+      "target_repo": "LCM_Inventory",
       "state": "in_progress",
       "phase": "Pester Quality Gate",
       "percent": 50,

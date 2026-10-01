@@ -1,6 +1,6 @@
 {
-  "RepositoryName": "SharedModules",
-  "RepositoryPath": "SharedModules",
+  "RepositoryName": "LCM_Shared",
+  "RepositoryPath": "LCM_Shared",
   "CommitSha": "3e3c2f9",
   "ReviewResult": "AcceptedAll",
   "Reviewer": "rgbig",

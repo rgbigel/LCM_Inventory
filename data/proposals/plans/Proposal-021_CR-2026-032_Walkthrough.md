@@ -9,7 +9,7 @@
 
 ## 1. Summary of Changes
 
-1. **Intake Specification**: Authored [`Workspace_AI/docs/GEMINI_INBOX_SPECIFICATION.md`](file:///Workspace_AI/docs/GEMINI_INBOX_SPECIFICATION.md) defining mandatory timestamping, markdown/JSON schemas, and security gating.
+1. **Intake Specification**: Authored [`LCM_AI/docs/GEMINI_INBOX_SPECIFICATION.md`](file:///LCM_AI/docs/GEMINI_INBOX_SPECIFICATION.md) defining mandatory timestamping, markdown/JSON schemas, and security gating.
 2. **Sync-GeminiInbox Tool**: Implemented [`.lcm/tools/internal/Sync-GeminiInbox.ps1`](file:///.lcm/tools/internal/Sync-GeminiInbox.ps1) with AST validation, strict mode, approved verbs, `-h` help reference, structured logging, and proposal integration.
 3. **Command Trampoline & Catalog**: Generated [`.lcm/Cmd/SyncGeminiInbox.cmd`](file:///.lcm/Cmd/SyncGeminiInbox.cmd) and updated [`.lcm/config/tool_catalog.json`](file:///.lcm/config/tool_catalog.json) (142 tools total).
 4. **Google Drive Mirroring**: Mirrored all rules, specs, and knowledge bases to `D:\GDrive\LCM\` with `.txt` normalization.

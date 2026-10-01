@@ -5,7 +5,7 @@
 | :--- | :--- |
 | **Bug ID** | `BUG-139` |
 | **Lifecycle State** | `OPEN` (Awaiting Operator Activation per RULE-LCM-015) |
-| **Origin Repository** | `Workspace_Inventory` |
+| **Origin Repository** | `LCM_Inventory` |
 | **Target Scope** | Configuration Management Governance / Proposal Flow |
 | **Author** | Operator Directive / BUG Intake |
 | **Date** | 2026-09-11 |

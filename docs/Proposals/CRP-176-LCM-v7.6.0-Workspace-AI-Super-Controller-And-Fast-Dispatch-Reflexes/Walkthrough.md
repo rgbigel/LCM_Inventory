@@ -8,7 +8,7 @@ This walkthrough demonstrates the implementation of **Option A** for the Workspa
 ## 1. CLI Dispatcher Testing
 Execute the Super-Controller in terminal mode:
 ```powershell
-pwsh -File Workspace_Inventory/tools/Show-SuperController.ps1 -Subsystem LCM -CliMode
+pwsh -File LCM_Inventory/tools/Show-SuperController.ps1 -Subsystem LCM -CliMode
 ```
 Output:
 - Summarizes all available tools in `LCM` subsystem.

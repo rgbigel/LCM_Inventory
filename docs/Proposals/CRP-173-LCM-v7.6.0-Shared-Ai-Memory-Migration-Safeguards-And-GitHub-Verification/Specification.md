@@ -3,7 +3,7 @@
 ```yaml
 CRP-ID: CRP-173
 Title: Shared AI Memory (.gemini) Migration Safeguards, GitHub Baseline Verification, Hash Validation, and Pre-Push Integration
-Scope: AI Memory Management, .lcm/tools/internal/Initialize-SharedAiMemory.ps1, Workspace_AI, Pre-Push Pipeline
+Scope: AI Memory Management, .lcm/tools/internal/Initialize-SharedAiMemory.ps1, LCM_AI, Pre-Push Pipeline
 Baseline-Version: v7.6.0
 Author: Rolf, Antigravity AI Assistant
 Date: 2026-09-25
@@ -12,8 +12,8 @@ Plan-State: suggested
 Progress-State: queued
 Priority: High
 Impacted-Repositories:
-  - Workspace_AI
-  - Workspace_Inventory
+  - LCM_AI
+  - LCM_Inventory
   - .lcm
 ```
 
@@ -60,7 +60,7 @@ While [`Initialize-SharedAiMemory.ps1`](file:///D:/Git_Repositories/.lcm/tools/i
 - **Check 2**: Test `(Get-Item $sourcePath).Target`. If normalized target equals `A:\.gemini`, log that the junction is healthy and **exit immediately** without touching the filesystem.
 
 ### Invariant 3: GitHub Baseline & Age Reconciliation
-- Maintain an authoritative `.gemini` configuration baseline in `Workspace_AI/data/gemini_baseline/` tracked in Git and published to GitHub.
+- Maintain an authoritative `.gemini` configuration baseline in `LCM_AI/data/gemini_baseline/` tracked in Git and published to GitHub.
 - If `A:\.gemini` contains older timestamps than the committed GitHub baseline, update `A:\.gemini` from the repository baseline.
 
 ### Invariant 4: Cryptographic Hash Verification (`gemini_manifest.json`)
@@ -74,5 +74,5 @@ While [`Initialize-SharedAiMemory.ps1`](file:///D:/Git_Repositories/.lcm/tools/i
 ### Invariant 5: Pre-Push Manifest Update (`Invoke-WorkspacePush.ps1`)
 - Extend the `[Pre-Push Pipeline]` in `Invoke-WorkspacePush.ps1` to:
   1. Scan active `.gemini/config` and compute current SHA256 hashes.
-  2. If changes exist, update `Workspace_AI/data/gemini_baseline/gemini_manifest.json` and mirror files.
-  3. Commit updates in `Workspace_AI` prior to remote push.
+  2. If changes exist, update `LCM_AI/data/gemini_baseline/gemini_manifest.json` and mirror files.
+  3. Commit updates in `LCM_AI` prior to remote push.

@@ -12,7 +12,7 @@ same repository and closes them before opening the replacement review.
 
 ## Verification
 
-The stale `Workspace_Inventory` BUG-194 review window was closed and exactly
+The stale `LCM_Inventory` BUG-194 review window was closed and exactly
 one replacement BUG-194 review window was launched without the `-Wait` audit
 path.
 

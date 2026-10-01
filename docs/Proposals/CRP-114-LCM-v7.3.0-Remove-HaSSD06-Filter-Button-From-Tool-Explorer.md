@@ -16,7 +16,7 @@ Severity: Low
 # CRP-114 / CRP-114: Remove Deprecated HaSSD06 Subsystem Filter Button from Tool Explorer
 
 ## 1. Proposal Summary & Rationale
-In the LCM Tool Explorer dashboard (`SHOW_TOOLS.html` / `Show-Tools.ps1`), a dedicated quick-filter button for the `HaSSD06` subsystem was historically placed in the primary filter bar. As the LCM workspace has evolved to encompass many additional subsystems (e.g. `SystemConfiguration`, `VolumeInventory`, `Workspace_Inventory`, `BootEntryManager`, etc.), hardcoding a dedicated button for one specific subsystem is obsolete and redundant with the dynamic Group / Subsystem dropdown filter.
+In the LCM Tool Explorer dashboard (`SHOW_TOOLS.html` / `Show-Tools.ps1`), a dedicated quick-filter button for the `HaSSD06` subsystem was historically placed in the primary filter bar. As the LCM workspace has evolved to encompass many additional subsystems (e.g. `SystemConfiguration`, `VolumeInventory`, `LCM_Inventory`, `BootEntryManager`, etc.), hardcoding a dedicated button for one specific subsystem is obsolete and redundant with the dynamic Group / Subsystem dropdown filter.
 
 ## 2. Proposed Changes
 1. **Remove Hardcoded HaSSD06 Button**:

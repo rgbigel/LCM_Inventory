@@ -36,10 +36,10 @@ This defect resolution fixes three intertwined problems in the Tool Explorer eco
   ```cmd
   @echo off
   if not defined Git_Root set "Git_Root=%~dp0..\.."
-  if not exist "%Git_Root%\Workspace_Inventory" set "Git_Root=D:\Git_Repositories"
+  if not exist "%Git_Root%\LCM_Inventory" set "Git_Root=D:\Git_Repositories"
   pwsh.exe -NoExit -NoProfile -ExecutionPolicy Bypass -File "%Git_Root%/.lcm/tools/internal/Invoke-BeyondCompareReview.ps1" %*
   ```
 
 ### 2.2 Tool Explorer HTML Build
 - Ran `Show-ToolsExplorer.ps1 -NoLaunch`: completed cleanly with exit code 0.
-- Verified asset mirroring hash equality between `Workspace_Inventory/assets/lcm-tool-explorer.js` and `.lcm/assets/lcm-tool-explorer.js`.
+- Verified asset mirroring hash equality between `LCM_Inventory/assets/lcm-tool-explorer.js` and `.lcm/assets/lcm-tool-explorer.js`.

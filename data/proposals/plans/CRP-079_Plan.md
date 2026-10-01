@@ -22,14 +22,14 @@ Consolidate and finalize the operator-approved UX polish and architectural enhan
 ### 3. Proposed Changes
 - **`LcmDaemon/Classes/DaemonDto.ps1`**: Added `[string]$WindowStyle` parameter to `DaemonExecuteRequest`.
 - **`LcmDaemon/Classes/DaemonActionController.ps1`**: Defaulted `$windowStyle` to `Hidden` for non-elevated background execution.
-- **`Workspace_Inventory/modules/ProposalManager.psm1`**:
+- **`LCM_Inventory/modules/ProposalManager.psm1`**:
   - Added `committed` and `pushed` to `Set-WorkspaceProposalProgress` ValidateSet.
   - Added reopening sync (reverting progress resets plan state to `suggested`).
   - Added `CRP-` prefix stripping in `Resolve-ProposalIdExpression`.
   - Updated `Format-ProposalsTable` to show `CRP ID` (`CRP-NNN`) and `STATUS`.
-- **`Workspace_Inventory/tools/Invoke-ProposalAction.ps1`**:
+- **`LCM_Inventory/tools/Invoke-ProposalAction.ps1`**:
   - Added `commit` and `committed` actions and `committed` progress state.
-- **`Workspace_Inventory/docs/CM_CONTROL_HUB.html`**:
+- **`LCM_Inventory/docs/CM_CONTROL_HUB.html`**:
   - Merge `ID` + `CRP ID` columns into single `CRP ID` column.
   - Rename `Progress` heading to `STATUS`.
   - Add `committed` badge, styling, and dropdown options.
@@ -37,7 +37,7 @@ Consolidate and finalize the operator-approved UX polish and architectural enhan
   - Prevent `<h1>` wrapping with `white-space: nowrap;`.
   - Relocate Daemon status to top-right unboxed text.
   - Wire status revert sync in `changeProgressState`.
-- **`Workspace_Inventory/data/proposals/proposals.json`**:
+- **`LCM_Inventory/data/proposals/proposals.json`**:
   - Registered CRP-079 in `in_progress` state.
 
 ---

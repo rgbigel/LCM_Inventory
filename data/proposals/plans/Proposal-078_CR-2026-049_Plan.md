@@ -4,9 +4,9 @@
 Implement LCM Display Standard (Light/Dark mode theme toggle, typography, and LcmTablePrintAtom integration) and full interactive console command engine (`submitConsoleCommand`, `handleConsoleKey`, `do #<id>`, `accept`, `review`, etc.) in CM Control Hub.
 
 ## Target Scope
-- `Workspace_Inventory/docs/CM_CONTROL_HUB.html`
-- `Workspace_Inventory/tools/Show-CmControlHub.ps1`
-- `Workspace_Inventory/scratch/CM_CONTROL_HUB.html` (generated artifact)
+- `LCM_Inventory/docs/CM_CONTROL_HUB.html`
+- `LCM_Inventory/tools/Show-CmControlHub.ps1`
+- `LCM_Inventory/scratch/CM_CONTROL_HUB.html` (generated artifact)
 
 ## Proposed Changes
 1. **Show-CmControlHub.ps1**:
@@ -22,6 +22,6 @@ Implement LCM Display Standard (Light/Dark mode theme toggle, typography, and Lc
    - Implement command parsing for `do #<id>`, `accept #<id>`, `review #<id>`, `defer #<id>`, `delete #<id>`, `status`, and `help`.
    - Bind `do #<id>` to proposal state transition and server sync via `syncLedgerToServer()`.
 3. **Verification**:
-   - Re-render dashboard using `pwsh -File Workspace_Inventory\tools\Show-CmControlHub.ps1 -NoLaunch`.
+   - Re-render dashboard using `pwsh -File LCM_Inventory\tools\Show-CmControlHub.ps1 -NoLaunch`.
    - Parse compiled JavaScript in Node.js to verify 0 errors.
    - Run `Test-LCMRuleHealth.ps1`.

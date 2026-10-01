@@ -2,7 +2,7 @@
 Proposal-ID: BUG-148
 Scope: HaSSD06_Inventory
 Version: v5.4.1
-Affected-Repos: [HaSSD06_Inventory, Workspace_Inventory]
+Affected-Repos: [HaSSD06_Inventory, LCM_Inventory]
 Priority: High
 Status: In_Progress
 Target Scope: Subsystem Explorer Breadcrumb Navigation & Hub Link Resolution
@@ -26,7 +26,7 @@ Because `SHOW_HA_INVENTORY.html` resides in `D:\Git_Repositories\HaSSD06_Invento
 1. **Implement `navigateBackToSubsystems()` Navigation Handler**:
    - Inspect `document.referrer`: If the user navigated from an existing dashboard (e.g. `SHOW_SUBSYSTEMS.html`, `WORKSPACE_INVENTORY_VIEWER.html`, `SHOW_LCM.html`, `SHOW_TOOLS.html`), navigate back cleanly via `window.history.back()`.
    - Provide deterministic relative and REST daemon fallback:
-     - Target 1: `../../Workspace_Inventory/docs/SHOW_WORKSPACE_INVENTORY.html` / `WORKSPACE_INVENTORY_VIEWER.html` (Authoritative Subsystems & Repositories list)
+     - Target 1: `../../LCM_Inventory/docs/SHOW_WORKSPACE_INVENTORY.html` / `WORKSPACE_INVENTORY_VIEWER.html` (Authoritative Subsystems & Repositories list)
      - Target 2: `../../.lcm/scratch/SHOW_SUBSYSTEMS.html` / `../../.lcm/scratch/SHOW_LCM.html`
      - Target 3: Dispatches `Show-WorkspaceInventoryApp.ps1` or `Show-Subsystems.ps1` via local REST Daemon / `lcm://` protocol.
 2. **Synchronize Navigation Invariants**:

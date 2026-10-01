@@ -30,20 +30,20 @@
   - `Governance Framework: LCM V6.1.1` → `LCM V6.2.0`
   - `Last Updated: 2026-08-17` → `2026-09-04`
   - Mermaid baseline label updated from `v4.3.0` to `V6.2.0`
-  - Workspace_AI description updated from `v4.3.0` to `V6.2.0`
+  - LCM_AI description updated from `v4.3.0` to `V6.2.0`
 - [`.agents/ACTIVE_SESSION.md`](file:///D:/Git_Repositories/.agents/ACTIVE_SESSION.md):
   - `LCM Version: V6.1.1` → `V6.2.0`
   - `Last Updated: 2026-09-01 13:35:00` → `2026-09-04 10:29:00`
 
 #### Action 4: Log Re-Routing & Historical Migration
-- Created `Workspace_Inventory/data/logs/` as the unified canonical log root.
+- Created `LCM_Inventory/data/logs/` as the unified canonical log root.
 - Created sub-directories: `lcm-internal/`, `history/`.
-- **Migrated 71 files** from `.lcm/tools/internal/logs/` → `Workspace_Inventory/data/logs/lcm-internal/`.
-- **Migrated 2 files** from `tools/logs/` → `Workspace_Inventory/data/logs/`.
-- **Migrated 2 files** from `Workspace_Inventory/logs/` → `Workspace_Inventory/data/logs/`.
-- **Migrated 1 file** from `Workspace_Inventory/logs/history/` → `Workspace_Inventory/data/logs/history/`.
-- Created `Workspace_Inventory/logs/README.md` as deprecation redirector with path mapping table.
-- Updated `tools/Sync-LCMResearchSnapshot.ps1` log path: `tools\logs` → `Workspace_Inventory\data\logs`.
+- **Migrated 71 files** from `.lcm/tools/internal/logs/` → `LCM_Inventory/data/logs/lcm-internal/`.
+- **Migrated 2 files** from `tools/logs/` → `LCM_Inventory/data/logs/`.
+- **Migrated 2 files** from `LCM_Inventory/logs/` → `LCM_Inventory/data/logs/`.
+- **Migrated 1 file** from `LCM_Inventory/logs/history/` → `LCM_Inventory/data/logs/history/`.
+- Created `LCM_Inventory/logs/README.md` as deprecation redirector with path mapping table.
+- Updated `tools/Sync-LCMResearchSnapshot.ps1` log path: `tools\logs` → `LCM_Inventory\data\logs`.
 - Synced updated copy to `.lcm/tools/internal/Sync-LCMResearchSnapshot.ps1`.
 
 ---
@@ -51,7 +51,7 @@
 ## 2. Verification Results
 
 - **PowerShell AST Syntax**: `Sync-LCMResearchSnapshot.ps1` ✅ OK, `Update-Gemini.ps1` ✅ OK.
-- **Log Migration**: 76 files moved, all verified in `Workspace_Inventory/data/logs/` hierarchy.
+- **Log Migration**: 76 files moved, all verified in `LCM_Inventory/data/logs/` hierarchy.
 - **Version Strings**: Both `.agents/` memory files now read `LCM V6.2.0` / `V6.2.0`.
 - **Architecture Mirror**: `docs/Architecture/Parent_Workspace_Solution.md` created with full governance alignment content.
 - **Implementation Doc**: `.lcm/docs/Implementation.md` v2.3.0 contains Sections 7 & 8.

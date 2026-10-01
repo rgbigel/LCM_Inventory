@@ -3,7 +3,7 @@ Module: tools/Show-LcmActiveLauncher.ps1
 Purpose: Interactive Desktop GUI & Active Help Launcher for all LCM and Subsystem tools with one-click execution.
 Governance Invariant (RULE-EFF-001): Direct interactive tool orchestration.
 Path: tools/Show-LcmActiveLauncher.ps1
-Authors: Rolf, Workspace_AI Engine
+Authors: Rolf, LCM_AI Engine
 Version: 5.0.3
 Date: 2026-09-10
 #>
@@ -25,7 +25,7 @@ if ($Help) {
     Write-Host "  Interactive Desktop GUI & Active Help Launcher for LCM and Subsystem tools."
     Write-Host ""
     Write-Host "USAGE:" -ForegroundColor Yellow
-    Write-Host "  pwsh Workspace_Inventory/tools/Show-LcmActiveLauncher.ps1 [-h]"
+    Write-Host "  pwsh LCM_Inventory/tools/Show-LcmActiveLauncher.ps1 [-h]"
     Write-Host ""
     Write-Host "PARAMETERS:" -ForegroundColor Yellow
     Write-Host "  -Help (-h, -?) : Displays this help screen"
@@ -94,26 +94,26 @@ $toolCatalog = @(
     [ordered]@{
         Name        = "Invoke-WorkspaceAudit.ps1"
         Category    = "Workspace Parent CM"
-        Domain      = "Workspace_Inventory"
-        ScriptPath  = "D:\Git_Repositories\Workspace_Inventory\tools\Invoke-WorkspaceAudit.ps1"
+        Domain      = "LCM_Inventory"
+        ScriptPath  = "D:\Git_Repositories\LCM_Inventory\tools\Invoke-WorkspaceAudit.ps1"
         Description = "Audits all 35+ repositories under D:\Git_Repositories, detects drift, evaluates LCM v5.0.2 alignment, and refreshes the master workspace dashboard."
         Risk        = "Low (Telemetry Audit)"
-        Command     = 'pwsh -NoProfile -NoExit -File "D:\Git_Repositories\Workspace_Inventory\tools\Invoke-WorkspaceAudit.ps1"'
+        Command     = 'pwsh -NoProfile -NoExit -File "D:\Git_Repositories\LCM_Inventory\tools\Invoke-WorkspaceAudit.ps1"'
     },
     [ordered]@{
         Name        = "Show-WorkspaceInventoryApp.ps1"
         Category    = "Workspace GUI"
-        Domain      = "Workspace_Inventory"
-        ScriptPath  = "D:\Git_Repositories\Workspace_Inventory\tools\Show-WorkspaceInventoryApp.ps1"
+        Domain      = "LCM_Inventory"
+        ScriptPath  = "D:\Git_Repositories\LCM_Inventory\tools\Show-WorkspaceInventoryApp.ps1"
         Description = "Generates and opens the dark-mode interactive HTML browser dashboard displaying the 35+ repository master ledger and governance rule matrix."
         Risk        = "Zero (Viewer)"
-        Command     = 'pwsh -NoProfile -File "D:\Git_Repositories\Workspace_Inventory\tools\Show-WorkspaceInventoryApp.ps1"'
+        Command     = 'pwsh -NoProfile -File "D:\Git_Repositories\LCM_Inventory\tools\Show-WorkspaceInventoryApp.ps1"'
     },
     [ordered]@{
         Name        = "Invoke-BeyondCompareReview.ps1"
         Category    = "Review Flow"
-        Domain      = "Workspace_Inventory"
-        ScriptPath  = "D:\Git_Repositories\Workspace_Inventory\tools\Invoke-BeyondCompareReview.ps1"
+        Domain      = "LCM_Inventory"
+        ScriptPath  = "D:\Git_Repositories\LCM_Inventory\tools\Invoke-BeyondCompareReview.ps1"
         Description = "Launches Beyond Compare 5 on desktop to visually review repository changes against the baseline commit with automatic exclusion filters."
         Risk        = "Zero (Visual Gate)"
         Command     = 'pwsh -NoProfile -NoExit -Command "& \"D:\Git_Repositories\Invoke-BeyondCompareReview.ps1\" -RepositoryName HaSSD06"'
@@ -121,20 +121,20 @@ $toolCatalog = @(
     [ordered]@{
         Name        = "Test-LCMRuleHealth.ps1"
         Category    = "Governance Health"
-        Domain      = "Workspace_Inventory"
-        ScriptPath  = "D:\Git_Repositories\Workspace_Inventory\tools\Test-LCMRuleHealth.ps1"
+        Domain      = "LCM_Inventory"
+        ScriptPath  = "D:\Git_Repositories\LCM_Inventory\tools\Test-LCMRuleHealth.ps1"
         Description = "Scans all child repositories to verify NTFS reparse point junctions to .agents/rules and validates rule discovery integrity."
         Risk        = "Zero (Audit)"
-        Command     = 'pwsh -NoProfile -NoExit -File "D:\Git_Repositories\Workspace_Inventory\tools\Test-LCMRuleHealth.ps1"'
+        Command     = 'pwsh -NoProfile -NoExit -File "D:\Git_Repositories\LCM_Inventory\tools\Test-LCMRuleHealth.ps1"'
     },
     [ordered]@{
         Name        = "Invoke-LCMOnboardBatch.ps1"
         Category    = "Batch Onboarding"
-        Domain      = "Workspace_Inventory"
-        ScriptPath  = "D:\Git_Repositories\Workspace_Inventory\tools\Invoke-LCMOnboardBatch.ps1"
+        Domain      = "LCM_Inventory"
+        ScriptPath  = "D:\Git_Repositories\LCM_Inventory\tools\Invoke-LCMOnboardBatch.ps1"
         Description = "Batch-migrates all remaining un-governed repositories across D:\Git_Repositories to the full LCM v5.0.2 governance architecture."
         Risk        = "High (Requires Review Gate)"
-        Command     = 'pwsh -NoProfile -NoExit -File "D:\Git_Repositories\Workspace_Inventory\tools\Invoke-LCMOnboardBatch.ps1"'
+        Command     = 'pwsh -NoProfile -NoExit -File "D:\Git_Repositories\LCM_Inventory\tools\Invoke-LCMOnboardBatch.ps1"'
     }
 )
 

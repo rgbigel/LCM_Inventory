@@ -1,9 +1,9 @@
 # Implementation Specification: Workspace Inventory & Configuration Management Engine
 
 Module: docs/Implementation.md  
-Purpose: Code-level catalog, data schemas, exported functions, tool parameters, and testing traceability for Workspace_Inventory.  
-Path: D:/Git_Repositories/Workspace_Inventory/docs/Implementation.md  
-Authors: Rolf, Workspace_AI Engine  
+Purpose: Code-level catalog, data schemas, exported functions, tool parameters, and testing traceability for LCM_Inventory.  
+Path: D:/Git_Repositories/LCM_Inventory/docs/Implementation.md  
+Authors: Rolf, LCM_AI Engine  
 Version: 7.0.0  
 Status: Authoritative Implementation  
 Date: 2026-09-19  
@@ -13,7 +13,7 @@ Date: 2026-09-19
 ## 1. Directory Structure & File Taxonomy
 
 ```
-Workspace_Inventory/
+LCM_Inventory/
 ├── .agents/
 │   └── rules/                  # Canonical authoritative rule files (17 files)
 ├── data/
@@ -43,7 +43,7 @@ Workspace_Inventory/
 
 ## 2. Core Module Architecture (`WorkspaceCM.psm1`)
 
-The central PowerShell module [`modules/WorkspaceCM.psm1`](file:///D:/Git_Repositories/Workspace_Inventory/modules/WorkspaceCM.psm1) exports the foundational CM cmdlets:
+The central PowerShell module [`modules/WorkspaceCM.psm1`](file:///D:/Git_Repositories/LCM_Inventory/modules/WorkspaceCM.psm1) exports the foundational CM cmdlets:
 
 | Exported Cmdlet | Purpose & Contract | Key Parameters |
 |:---|:---|:---|
@@ -88,13 +88,13 @@ All tools in `tools/` conform to `RULE-PS-008` (Headers), `RULE-PS-009` (Logging
       "crp_id": "CRP-156",
       "timestamp": "2026-09-19 15:30:00",
       "title": "Standardize HTML Presentation Artifacts to data/artifacts/",
-      "origin_repo": "Workspace_Inventory",
+      "origin_repo": "LCM_Inventory",
       "state": "pushed",
       "progress_state": "pushed",
       "priority": "M",
-      "author": "Rolf, Workspace_AI",
+      "author": "Rolf, LCM_AI",
       "details": "Relocate runtime HTML viewer generation to untracked data/artifacts/.",
-      "plan_path": "Workspace_Inventory/docs/Proposals/CRP-156-LCM-v7.5.2-Standardize-HTML-Presentation-Artifacts-To-Data-Artifacts.md",
+      "plan_path": "LCM_Inventory/docs/Proposals/CRP-156-LCM-v7.5.2-Standardize-HTML-Presentation-Artifacts-To-Data-Artifacts.md",
       "pushed_at": "2026-09-19 18:05:33"
     }
   ]
@@ -110,8 +110,8 @@ All tools in `tools/` conform to `RULE-PS-008` (Headers), `RULE-PS-009` (Logging
   "workspace_ai_baseline": "7.0.0",
   "repositories": [
     {
-      "RepositoryName": "Workspace_Inventory",
-      "Path": "D:\\Git_Repositories\\Workspace_Inventory",
+      "RepositoryName": "LCM_Inventory",
+      "Path": "D:\\Git_Repositories\\LCM_Inventory",
       "Classification": "governed",
       "GitStatus": "Git",
       "Branch": "main",

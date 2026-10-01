@@ -2,8 +2,8 @@
 
 **Proposal ID**: #26  
 **Change Request ID**: `CR-2026-037`  
-**Bundle ID**: `CRP-2026-008-Workspace_Inventory-v7.1.1-Inventory-Viewer-Interactive-Actions-and-Data-Versioning-Exemption`  
-**Origin Repository**: `Workspace_Inventory`  
+**Bundle ID**: `CRP-2026-008-LCM_Inventory-v7.1.1-Inventory-Viewer-Interactive-Actions-and-Data-Versioning-Exemption`  
+**Origin Repository**: `LCM_Inventory`  
 **Author**: rgbig  
 **Status**: In-Progress  
 **Date**: 2026-08-30  
@@ -11,11 +11,11 @@
 ---
 
 ## 1. Summary of Changes
-1. **Interactive Directory Actions** in [`Workspace_Inventory/tools/Show-WorkspaceInventoryApp.ps1`](file:///d:/Git_Repositories/Workspace_Inventory/tools/Show-WorkspaceInventoryApp.ps1):
+1. **Interactive Directory Actions** in [`LCM_Inventory/tools/Show-WorkspaceInventoryApp.ps1`](file:///d:/Git_Repositories/LCM_Inventory/tools/Show-WorkspaceInventoryApp.ps1):
    * Added action buttons for Open in Explorer, Onboard, Un-Git, Rename, and Delete.
    * Full inclusion of `.lcd` and all non-Git folders.
 2. **Data Versioning Exemption Codified** in [`ReviewCommitGovernancePolicy.md`](file:///d:/Git_Repositories/.agents/rules/ReviewCommitGovernancePolicy.md):
-   * Excluded routine data/telemetry updates in `Workspace_Inventory` from triggering version bumps.
+   * Excluded routine data/telemetry updates in `LCM_Inventory` from triggering version bumps.
 
 ---
 

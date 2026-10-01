@@ -2,10 +2,10 @@
 
 ```yaml
 Bug-ID: BUG-202
-Scope: Workspace_Inventory BCompare launch dispatch
+Scope: LCM_Inventory BCompare launch dispatch
 Version: 8.4.2
 Affected-Repos:
-  - Workspace_Inventory
+  - LCM_Inventory
 Severity: High
 Status: In-Progress
 Root-Cause: The launcher replayed a long folder-compare command line through the interactive desktop bridge after already writing a named BCompare session.

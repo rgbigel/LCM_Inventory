@@ -2,7 +2,7 @@
 
 ```yaml
 CRP-ID: CRP-165
-Scope: Workspace_Inventory Beyond Compare review launcher
+Scope: LCM_Inventory Beyond Compare review launcher
 Status: Pushed
 ```
 

@@ -3,13 +3,13 @@ Proposal-ID: BUG-120
 CR-ID: BUG-120
 Scope: LCM / Desktop UI & Document Viewer
 Version: v2.1.1
-Affected-Repos: [LCM, Workspace_Inventory]
+Affected-Repos: [LCM, LCM_Inventory]
 Status: COMPLETED
 Date: 2026-09-08
 Author: rgbig
 Target Scope: Show-Rules.ps1, SHOW_RULES.html, and embedded document reader modal
 Affected Version Range: v2.1.0 - v2.1.1
-Impacted Repositories: [Git_Repositories, Workspace_Inventory]
+Impacted Repositories: [Git_Repositories, LCM_Inventory]
 Severity: High
 ---
 

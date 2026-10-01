@@ -3,14 +3,14 @@ Proposal-ID: CRP-135
 CR-ID: CRP-135
 Scope: LCM
 Version: v7.5.0
-Affected-Repos: [LCM, Workspace_Inventory, Workspace_AI]
+Affected-Repos: [LCM, LCM_Inventory, LCM_AI]
 Severity: High
 Status: ACCEPTED
 Date: 2026-09-10
 Author: Operator Directive / CRP Intake
-Target Scope: Workspace_Inventory/tools/, .lcm/modules/, Workspace_AI/tools/, Governance Rules
+Target Scope: LCM_Inventory/tools/, .lcm/modules/, LCM_AI/tools/, Governance Rules
 Affected Version Range: v7.5.0+
-Impacted Repositories: [LCM, Workspace_Inventory, Workspace_AI, Governed Child Repositories]
+Impacted Repositories: [LCM, LCM_Inventory, LCM_AI, Governed Child Repositories]
 Max-Regression-Depth: 2
 ---
 
@@ -21,7 +21,7 @@ Max-Regression-Depth: 2
 | :--- | :--- |
 | **Proposal ID** | `CRP-135` |
 | **Lifecycle State** | `ACCEPTED` (Approved by Operator; MaxRegressionDepth=2) |
-| **Origin Repository** | `LCM` / `Workspace_Inventory` |
+| **Origin Repository** | `LCM` / `LCM_Inventory` |
 | **Target Scope** | CM Ledger (`proposals.json`), CM Inspection Tools, Governance Rules (`RULE-LCM-*`) |
 | **Author** | Operator Directive / CRP Intake |
 | **Date** | 2026-09-10 |
@@ -97,7 +97,7 @@ Because child regression CRPs could conceivably trigger further regression evalu
    - Simply halting is insufficient; the Governor `MUST` instantiate an actionable remediation workflow:
      1. **Generate Cycle Mediation Proposal**: The Governor automatically mints a specialized **Cycle Resolution Proposal** (`CRP-<ID> [Cycle Mediation]: Resolve Circular Coupling between <RepoA> and <RepoB>`).
      2. **Propose Automated Disentanglement Strategy**:
-        - **Strategy 1 (Interface Extraction / Hoisting)**: Hoist the oscillating contract, data structure, or configuration constant into a common root parent (e.g. `SharedModules`, an environment constant, or an authoritative JSON schema), breaking the mutual dependency.
+        - **Strategy 1 (Interface Extraction / Hoisting)**: Hoist the oscillating contract, data structure, or configuration constant into a common root parent (e.g. `LCM_Shared`, an environment constant, or an authoritative JSON schema), breaking the mutual dependency.
         - **Strategy 2 (Atomic Joint Review Bundle)**: Collapse the oscillating pair of changes into a single **Joint Atomic Review Batch** where both repositories are reviewed and committed simultaneously under one atomic review session rather than cascading sequentially.
         - **Strategy 3 (One-Way Interface Decoupling / Exemption)**: If one side of the interface offers backward compatibility, the Governor allows the operator to mark the reverse edge as `RegressionExempt: true` with a documented rationale receipt.
      3. **Control Hub Dashboard Alert & Action**: `Show-CmControlHub` surfaces a high-visibility `Blocked_Cycle` badge with direct 1-click links to the mediation proposal and strategy picker.

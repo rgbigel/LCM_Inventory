@@ -2,13 +2,13 @@
 
 ```yaml
 CRP-ID: CRP-192
-Scope: Workspace_Inventory Beyond Compare review preparation
+Scope: LCM_Inventory Beyond Compare review preparation
 Status: Completed
 Plan-State: completed
 Progress-State: completed
 Maturity: Preliminary design record
 Priority: Low
-Owner: Workspace_Inventory
+Owner: LCM_Inventory
 ```
 
 ## Problem

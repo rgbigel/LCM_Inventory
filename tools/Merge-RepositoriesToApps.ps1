@@ -3,7 +3,7 @@
     Merges an external repository into a target umbrella repository as a modular App: # slice.
 .DESCRIPTION
     Module: tools/Merge-RepositoriesToApps.ps1
-    Authors: Rolf, Workspace_AI Engine
+    Authors: Rolf, LCM_AI Engine
     Version: 7.5.0
     Date: 2026-09-19
     Purpose: High-Order Lifecycle Operator that consolidates independent single-purpose repositories
@@ -39,7 +39,7 @@ if ($Help -or [string]::IsNullOrWhiteSpace($SourceRepo) -or [string]::IsNullOrWh
     Write-Host "  Consolidates a child repository into a target umbrella repo as an App: # slice."
     Write-Host ""
     Write-Host "USAGE:" -ForegroundColor Yellow
-    Write-Host "  pwsh Workspace_Inventory/tools/Merge-RepositoriesToApps.ps1 [-SourceRepo] <src> [-TargetRepo] <target> [-AppTitle <title>] [-WhatIf] [-h]"
+    Write-Host "  pwsh LCM_Inventory/tools/Merge-RepositoriesToApps.ps1 [-SourceRepo] <src> [-TargetRepo] <target> [-AppTitle <title>] [-WhatIf] [-h]"
     Write-Host ""
     Write-Host "PARAMETERS:" -ForegroundColor Yellow
     Write-Host "  -SourceRepo    : Name of child repo being absorbed (e.g. 'InstallFonts')"

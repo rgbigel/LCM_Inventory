@@ -97,19 +97,19 @@ Describe 'ProposalManager Core Functions' {
 
     Context 'CRP-048 Active App Context Engine & Inheritance' {
         It 'Sets and retrieves active App context using shorthand A1' {
-            $ctx = Set-ActiveAppContext -Context 'A1' -Repo 'Workspace_AI'
+            $ctx = Set-ActiveAppContext -Context 'A1' -Repo 'LCM_AI'
             $ctx | Should -Not -BeNullOrEmpty
             $ctx.app_id | Should -Be 'App: 1'
             $ctx.app_number | Should -Be 1
-            $ctx.repo | Should -Be 'Workspace_AI'
+            $ctx.repo | Should -Be 'LCM_AI'
 
             $current = Get-ActiveAppContext
             $current.app_id | Should -Be 'App: 1'
         }
 
         It 'Automatically inherits active app_id on New-WorkspaceProposal' {
-            Set-ActiveAppContext -Context 'A2' -Repo 'Workspace_AI' | Out-Null
-            $p = New-WorkspaceProposal -Title 'App Sliced Feature' -OriginRepo 'Workspace_AI' -WorkspaceRoot $TestDrive
+            Set-ActiveAppContext -Context 'A2' -Repo 'LCM_AI' | Out-Null
+            $p = New-WorkspaceProposal -Title 'App Sliced Feature' -OriginRepo 'LCM_AI' -WorkspaceRoot $TestDrive
             $p.app_id | Should -Be 'App: 2'
         }
 
@@ -126,7 +126,7 @@ Describe 'ProposalManager Core Functions' {
             $ctx.app_id | Should -Be 'Architecture'
             $ctx.app_title | Should -Be 'Foundational Tripartite Architecture'
 
-            $p = New-WorkspaceProposal -Title 'Foundational Core Refactor' -OriginRepo 'Workspace_AI' -WorkspaceRoot $TestDrive
+            $p = New-WorkspaceProposal -Title 'Foundational Core Refactor' -OriginRepo 'LCM_AI' -WorkspaceRoot $TestDrive
             # Architecture context does not slice proposal with App: #
             $p.app_id | Should -BeNullOrEmpty
         }

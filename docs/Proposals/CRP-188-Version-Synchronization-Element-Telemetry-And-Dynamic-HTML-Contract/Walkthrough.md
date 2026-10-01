@@ -9,7 +9,7 @@
 
 ## 1. Intake Status & Baseline Verification
 
-* **Intake State**: Registered as `suggested` (Preliminary) in `Workspace_Inventory/data/proposals/proposals.json`.
+* **Intake State**: Registered as `suggested` (Preliminary) in `LCM_Inventory/data/proposals/proposals.json`.
 * **Execution Boundary**: Pure planning and specification phase per `RULE-LCM-001`. No active code or file modifications executed.
 
 ---

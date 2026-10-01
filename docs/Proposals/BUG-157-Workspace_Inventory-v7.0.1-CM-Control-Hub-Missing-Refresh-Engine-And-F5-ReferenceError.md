@@ -3,12 +3,12 @@
 ## Metadata
 - **Proposal ID**: `157`
 - **Bundle ID**: `BUG-157`
-- **Origin Repo**: `Workspace_Inventory`
+- **Origin Repo**: `LCM_Inventory`
 - **Target Components**:
-  - `Workspace_Inventory/assets/CM_CONTROL_HUB.html`
-  - `Workspace_Inventory/data/artifacts/CM_CONTROL_HUB.html`
-  - `Workspace_Inventory/scratch/CM_CONTROL_HUB.html`
-  - `Workspace_Inventory/tools/Show-CmControlHub.ps1`
+  - `LCM_Inventory/assets/CM_CONTROL_HUB.html`
+  - `LCM_Inventory/data/artifacts/CM_CONTROL_HUB.html`
+  - `LCM_Inventory/scratch/CM_CONTROL_HUB.html`
+  - `LCM_Inventory/tools/Show-CmControlHub.ps1`
 - **Author**: Operator Directive / BUG Intake
 - **Date**: 2026-09-19
 - **Priority**: High (`H`)
@@ -25,7 +25,7 @@ When operators interact with the **LCM Configuration Management Control Hub** si
 ---
 
 ## 2. Root Cause Analysis
-In `Workspace_Inventory/assets/CM_CONTROL_HUB.html`:
+In `LCM_Inventory/assets/CM_CONTROL_HUB.html`:
 - Line 1311 contained `if (e.key === "F5") { e.preventDefault(); refreshData(); }`, yet `refreshData` was never declared or implemented in the script scope.
 - `.top-actions` container contained buttons for theme toggling, supervision hub navigation, CRP dates, git pushing, logs, and printing, but omitted a primary refresh action.
 

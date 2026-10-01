@@ -8,8 +8,8 @@ Plan-State: review
 Progress-State: verification
 Affected-Repos:
   - Git_Repositories
-  - Workspace_AI
-  - Workspace_Inventory
+  - LCM_AI
+  - LCM_Inventory
 ```
 
 ## Extracted Scope

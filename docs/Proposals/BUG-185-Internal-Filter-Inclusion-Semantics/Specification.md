@@ -5,10 +5,10 @@ type: BUG
 status: VERIFICATION
 created_at: 2026-09-27 17:45:00
 author: Rolf, Antigravity AI Assistant
-origin_repo: Workspace_Inventory
+origin_repo: LCM_Inventory
 target_baseline: v8.1.0
 affected_repos:
-  - Workspace_Inventory
+  - LCM_Inventory
   - .lcm
 scope: Tool Explorer Filtering Engine & Audience Segregation
 severity: High

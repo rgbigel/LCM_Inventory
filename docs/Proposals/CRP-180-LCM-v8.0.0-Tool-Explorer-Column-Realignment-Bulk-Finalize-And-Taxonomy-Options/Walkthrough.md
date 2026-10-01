@@ -52,4 +52,4 @@ This Change Request Proposal delivers five major ergonomic and functional enhanc
 - Verified `.lcm/config/tool_explorer_options.json` generated with accurate catalog values for Subsystems, Roles, and Categories.
 
 ### 2.2 Asset Hash Equality
-- Verified identical SHA-256 hashes between `Workspace_Inventory/assets/` and `.lcm/assets/` for both `LCMToolCatalog.css` and `lcm-tool-explorer.js`.
+- Verified identical SHA-256 hashes between `LCM_Inventory/assets/` and `.lcm/assets/` for both `LCMToolCatalog.css` and `lcm-tool-explorer.js`.

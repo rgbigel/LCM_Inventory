@@ -1,15 +1,15 @@
 ---
 Proposal-ID: CRP-2026-007
 CR-ID: CR-2026-036
-Scope: Workspace_Inventory
+Scope: LCM_Inventory
 Version: v7.1.0
-Affected-Repos: [Workspace_Inventory, .lcd]
+Affected-Repos: [LCM_Inventory, .lcd]
 Status: Pushed
 Date: 2026-08-30
 Author: rgbig
-Target Scope: Workspace_Inventory / tools
+Target Scope: LCM_Inventory / tools
 Affected Version Range: v7.1.0
-Impacted Repositories: [Workspace_Inventory, .lcd]
+Impacted Repositories: [LCM_Inventory, .lcd]
 ---
 
 # CRP-2026-007: Single-Instance Control Hub Tab Lifecycle Coordination, Auto-Retirement, and Quiet Render Engine
@@ -39,7 +39,7 @@ Crucially, **documentation sub-tabs** (`openInNewBrowserTab` for Plans, Walkthro
 4. Peer dashboard tabs receiving the message verify `instanceId !== INSTANCE_ID` and execute graceful tab retirement.
 
 ### 2.3 Quiet Render Parameter (`-NoLaunch`)
-* Updated [`Workspace_Inventory/tools/Show-CmControlHub.ps1`](file:///d:/Git_Repositories/Workspace_Inventory/tools/Show-CmControlHub.ps1) with `[switch]$NoLaunch`.
+* Updated [`LCM_Inventory/tools/Show-CmControlHub.ps1`](file:///d:/Git_Repositories/LCM_Inventory/tools/Show-CmControlHub.ps1) with `[switch]$NoLaunch`.
 * Allows automated tasks, CI scripts, and background daemons to update the offline cache without spawning new browser windows.
 
 ---

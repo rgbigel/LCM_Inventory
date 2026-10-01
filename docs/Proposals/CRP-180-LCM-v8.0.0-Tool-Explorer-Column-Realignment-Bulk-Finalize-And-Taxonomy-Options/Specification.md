@@ -3,7 +3,7 @@
 ```yaml
 CRP-ID: CRP-180
 Title: Tool Explorer Ergonomics: Column Realignment, Bulk Finalize, and Precompiled Dynamic Taxonomy Options
-Scope: .lcm, Workspace_Inventory, Tool Explorer UI, Tool Catalog Sync Engine, LCM Desktop Daemon
+Scope: .lcm, LCM_Inventory, Tool Explorer UI, Tool Catalog Sync Engine, LCM Desktop Daemon
 Baseline-Version: v8.0.0
 Author: Rolf, Antigravity AI Assistant
 Date: 2026-09-26
@@ -13,7 +13,7 @@ Progress-State: completed
 Priority: High
 Impacted-Repositories:
   - Git_Repositories
-  - Workspace_Inventory
+  - LCM_Inventory
 ```
 
 ---
@@ -81,10 +81,10 @@ Operators navigating and editing tools in the LCM Tool Explorer required ergonom
 - Added `finalizeAllBlocked()` function accessible via the `SetAll` header button.
 - Re-architected `openCellEditor` for `Subsys`, `Role`, and `Category` to populate from `window.__LCM_OPTIONS__` with `+ New...` support.
 - Added `handleSelectFilterChange()` and `handleCellEditSelectChange()` to prompt and invoke daemon `/add_explorer_option`.
-- Mirrored all JS changes from `Workspace_Inventory/assets/lcm-tool-explorer.js` to `.lcm/assets/lcm-tool-explorer.js`.
+- Mirrored all JS changes from `LCM_Inventory/assets/lcm-tool-explorer.js` to `.lcm/assets/lcm-tool-explorer.js`.
 
 ### 2.5 Horizontal Scrollbar Hardening (`LCMToolCatalog.css`)
 - Added `overflow-x: scroll !important;` to `.table-container` to force browsers to always render the scrollbar track.
 - Increased table `min-width` from `1560px` to `1800px !important`.
 - Configured 12px high-contrast scrollbar thumb (`#388bfd` / `#79c0ff` hover) across WebKit and Firefox engines.
-- Mirrored stylesheet from `Workspace_Inventory/assets/LCMToolCatalog.css` to `.lcm/assets/LCMToolCatalog.css`.
+- Mirrored stylesheet from `LCM_Inventory/assets/LCMToolCatalog.css` to `.lcm/assets/LCMToolCatalog.css`.

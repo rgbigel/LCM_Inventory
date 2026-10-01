@@ -7,14 +7,14 @@ scope: LCM / Audit & Governance
 status: suggested
 progress_state: open
 priority: Medium
-authors: Rolf, Workspace_AI Engine
+authors: Rolf, LCM_AI Engine
 created_at: 2026-09-08T15:45:00+02:00
 target_scope: LCM Core Governance & Multi-Repo Tooling
 affected_version_range: v7.3.0+
 impacted_repositories:
-  - Workspace_Inventory
+  - LCM_Inventory
   - Git_Repositories
-  - Workspace_AI
+  - LCM_AI
 ```
 
 ---
@@ -63,16 +63,16 @@ CRP-122 directly shares and extends the AST parser infrastructure established in
 ## 3. Governance Integration & Review Invariants
 
 1. **Non-Waivable Review Gate**: In accordance with [`RULE-REV-001`](file:///d:/Git_Repositories/.agents/rules/ReviewCommitGovernancePolicy.md), an automated finding of `Fully Integrated` **does not waive** visual Beyond Compare 5 diff reviews. It qualifies the component for review and confirms that no regressions occurred during crash recovery.
-2. **Crash Recovery Reconciliation**: Enables rapid, authoritative audit of the Configuration Management ledger ([`proposals.json`](file:///d:/Git_Repositories/Workspace_Inventory/data/proposals/proposals.json)) against ground truth, flagging accidental rollbacks before commits or pushes occur.
+2. **Crash Recovery Reconciliation**: Enables rapid, authoritative audit of the Configuration Management ledger ([`proposals.json`](file:///d:/Git_Repositories/LCM_Inventory/data/proposals/proposals.json)) against ground truth, flagging accidental rollbacks before commits or pushes occur.
 
 ---
 
 ## 4. Implementation Specification
 
 ### 4.1 Deliverables
-- `Workspace_Inventory/tools/Test-LcmIntentSignatures.ps1`: CLI tool to probe target repositories or specific CRP IDs.
-- `Workspace_Inventory/modules/LcmIntentAudit.psm1`: Core AST signature extraction and comparison module.
-- `Workspace_Inventory/data/proposals/intent_signatures.json`: Cached and verified signature registry.
+- `LCM_Inventory/tools/Test-LcmIntentSignatures.ps1`: CLI tool to probe target repositories or specific CRP IDs.
+- `LCM_Inventory/modules/LcmIntentAudit.psm1`: Core AST signature extraction and comparison module.
+- `LCM_Inventory/data/proposals/intent_signatures.json`: Cached and verified signature registry.
 
 ### 4.2 Verification & Test Gates
 - Unit test suite `tests/LcmIntentAudit.Tests.ps1` verifying detection of stubbed vs complete functions.

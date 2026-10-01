@@ -1,12 +1,12 @@
 ---
 Bug-ID: BUG-126
-Scope: Workspace_Inventory
+Scope: LCM_Inventory
 Version: v7.4.2
-Affected-Repos: [Workspace_Inventory]
+Affected-Repos: [LCM_Inventory]
 Severity: Critical
 Status: Completed
 Date: 2026-09-09
-Author: Rolf, Workspace_AI
+Author: Rolf, LCM_AI
 Root-Cause: Show-CmControlHub.ps1 suffered from an indefinite execution hang when invoked under Windows PowerShell 5.1 due to ConvertTo-Json -Depth 6 recursion lock over the large nested docsCache dictionary, combined with the lack of an automatic pwsh.exe runtime enforcement guard.
 ---
 

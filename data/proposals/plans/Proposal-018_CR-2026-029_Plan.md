@@ -2,8 +2,8 @@
 
 - **Proposal ID**: #18 (`CR-2026-029` / `CRP-2026-004`)
 - **Title**: Default to Lightweight BUG Report on Error/Unwanted Behavior Feedback
-- **Origin Repo**: Workspace_AI / Workspace_Inventory
-- **Author**: Rolf, Workspace_AI Engine
+- **Origin Repo**: LCM_AI / LCM_Inventory
+- **Author**: Rolf, LCM_AI Engine
 - **Timestamp**: 2026-08-30 11:37:00
 - **Status**: in_progress
 

@@ -2,7 +2,7 @@
 Module: tools/Test-WorkspaceDrift.ps1
 Purpose: Evaluates workspace repositories for configuration drift (dirty copies, unpushed commits, outdated LCM).
 Path: tools/Test-WorkspaceDrift.ps1
-Authors: Rolf, Workspace_AI Engine
+Authors: Rolf, LCM_AI Engine
 Version: 1.1.0
 Date: 2026-09-10
 Changelog:
@@ -27,7 +27,7 @@ if ($Help) {
     Write-Host "  Evaluates workspace repositories for configuration drift (dirty, unpushed, outdated)."
     Write-Host ""
     Write-Host "USAGE:" -ForegroundColor Yellow
-    Write-Host "  pwsh Workspace_Inventory/tools/Test-WorkspaceDrift.ps1 [-h]"
+    Write-Host "  pwsh LCM_Inventory/tools/Test-WorkspaceDrift.ps1 [-h]"
     Write-Host ""
     Write-Host "PARAMETERS:" -ForegroundColor Yellow
     Write-Host "  -Help (-h, -?) : Displays this help screen"
@@ -37,15 +37,15 @@ if ($Help) {
 
 $cmModule = Join-Path $PSScriptRoot '..\modules\WorkspaceCM.psm1'
 if (-not (Test-Path $cmModule)) {
-    $cmModule = Join-Path (Split-Path $PSScriptRoot -Parent) 'Workspace_Inventory\modules\WorkspaceCM.psm1'
+    $cmModule = Join-Path (Split-Path $PSScriptRoot -Parent) 'LCM_Inventory\modules\WorkspaceCM.psm1'
 }
 if (-not (Test-Path $cmModule)) {
-    $cmModule = Join-Path $PSScriptRoot '..\Workspace_Inventory\modules\WorkspaceCM.psm1'
+    $cmModule = Join-Path $PSScriptRoot '..\LCM_Inventory\modules\WorkspaceCM.psm1'
 }
 Import-Module $cmModule -Force
 
 Write-Host "=================================================================" -ForegroundColor Cyan
-Write-Host " Workspace_Inventory: Configuration Drift Evaluator              " -ForegroundColor Cyan
+Write-Host " LCM_Inventory: Configuration Drift Evaluator              " -ForegroundColor Cyan
 Write-Host "=================================================================" -ForegroundColor Cyan
 
 $drift = Test-WorkspaceDrift

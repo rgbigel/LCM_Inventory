@@ -8,8 +8,8 @@ Plan-State: approved
 Progress-State: design
 Affected-Repos:
   - Git_Repositories
-  - Workspace_Inventory
-  - Workspace_AI
+  - LCM_Inventory
+  - LCM_AI
 ```
 
 ## Objective
@@ -109,7 +109,7 @@ effective switch values in its execution evidence.
 
 ## Documentation Updates
 
-### Workspace_AI/Architecture
+### LCM_AI/Architecture
 ```markdown
 ### 3.4.2 Documentation Reconciliation Flow
 
@@ -120,7 +120,7 @@ authorized, and opens BCompare for every repository whose tripartite documents
 change.
 ```
 
-### Workspace_AI/Requirements
+### LCM_AI/Requirements
 ```markdown
 ### REQ-LCM-196: Scoped Documentation Reconciliation
 
@@ -130,28 +130,28 @@ and competing updates for the same repository/document pair; it MUST NOT infer
 delivery knowledge from unrelated work.
 ```
 
-### Workspace_AI/Implementation
+### LCM_AI/Implementation
 ```markdown
 ### 2.1 Scoped Documentation Reconciliation
 
-`Workspace_Inventory/tools/Fix-Documentation.ps1` reads declared CRP/BUG
+`LCM_Inventory/tools/Fix-Documentation.ps1` reads declared CRP/BUG
 payloads, writes a dry-run manifest or an applied receipt under the
 repository-scoped temporary log root, and dispatches BCompare per changed
 repository. `.lcm/Cmd/FixDocumentation.cmd` exposes the bare-word command.
 ```
 
-### Workspace_Inventory/Architecture
+### LCM_Inventory/Architecture
 ```markdown
 ## 5. Proposed Documentation Reconciliation Service
 
-`Workspace_Inventory` hosts `Fix-Documentation.ps1` as the evidence-bound
+`LCM_Inventory` hosts `Fix-Documentation.ps1` as the evidence-bound
 documentation reconciliation service. It receives explicit CRP/BUG scopes,
 resolves repository-qualified tripartite payloads, records manifests and
 receipts, and dispatches per-repository BCompare review without changing
 implementation or lifecycle state.
 ```
 
-### Workspace_Inventory/Requirements
+### LCM_Inventory/Requirements
 ```markdown
 ### REQ-WINV-011: Scoped Documentation Reconciliation
 
@@ -161,7 +161,7 @@ provenance, produce an operational receipt, and undergo BCompare review before
 commit.
 ```
 
-### Workspace_Inventory/Implementation
+### LCM_Inventory/Implementation
 ```markdown
 ### 3.1 Documentation Reconciliation Tool
 

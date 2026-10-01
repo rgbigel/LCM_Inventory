@@ -1,14 +1,14 @@
 # Implementation Plan: BUG-185 Tool Explorer Internal Button Filter Inversion and Empty Catalog Defect
 
 ## Target Files
-1. `Workspace_Inventory/assets/lcm-tool-explorer.js`
+1. `LCM_Inventory/assets/lcm-tool-explorer.js`
 2. `.lcm/assets/lcm-tool-explorer.js`
-3. `Workspace_Inventory/assets/LCMToolCatalog.css`
+3. `LCM_Inventory/assets/LCMToolCatalog.css`
 4. `.lcm/assets/LCMToolCatalog.css`
-5. `Workspace_Inventory/assets/StandardTableDisplay.css`
+5. `LCM_Inventory/assets/StandardTableDisplay.css`
 6. `.lcm/assets/StandardTableDisplay.css`
 7. `.lcm/modules/LcmToolCatalog.psm1`
-8. `Workspace_Inventory/data/proposals/proposals.json`
+8. `LCM_Inventory/data/proposals/proposals.json`
 
 ## Modifications
 

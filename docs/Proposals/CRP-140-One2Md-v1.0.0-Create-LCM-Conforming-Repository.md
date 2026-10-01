@@ -3,14 +3,14 @@ Proposal-ID: CRP-140
 CR-ID: CRP-140
 Scope: One2Md
 Version: v1.0.0
-Affected-Repos: [One2Md, Workspace_Inventory]
+Affected-Repos: [One2Md, LCM_Inventory]
 Severity: Low
 Status: COMPLETED
 Date: 2026-09-12
 Author: Rolf / Antigravity AI Engine
 Target Scope: One2Md/
 Affected Version Range: v1.0.0
-Impacted Repositories: [One2Md, Workspace_Inventory]
+Impacted Repositories: [One2Md, LCM_Inventory]
 ---
 
 # Change Request Proposal: CRP-140
@@ -51,7 +51,7 @@ The prototype requires improvements to conform with the workspace's authoritativ
    - Mandatory 7-phase procedural lifecycle installation runbook (`install/Installation.md`) per `RULE-DOC-004`.
 4. **Quality Gates & Governance**:
    - Pester v5 test suite and `Test-RepoReadiness.ps1` quality gate.
-   - NTFS junction linking `.agents/rules` to `Workspace_Inventory\.agents\rules`.
+   - NTFS junction linking `.agents/rules` to `LCM_Inventory\.agents\rules`.
 
 ---
 

@@ -2,7 +2,7 @@
 Module: tools/Invoke-LCMUpdate.ps1
 Purpose: Governed CLI entrypoint for proposing or applying LCM version upgrades to target repositories.
 Path: tools/Invoke-LCMUpdate.ps1
-Authors: Rolf, Workspace_AI Engine
+Authors: Rolf, LCM_AI Engine
 Version: 1.0.0
 Date: 2026-08-15
 Changelog:
@@ -35,7 +35,7 @@ if ($Help) {
     Write-Host "  Governed entrypoint for proposing or applying LCM version upgrades to repositories."
     Write-Host ""
     Write-Host "USAGE:" -ForegroundColor Yellow
-    Write-Host "  pwsh Workspace_Inventory/tools/Invoke-LCMUpdate.ps1 [-TargetRepository] <str> [-Execute] [-DryRun] [-h]"
+    Write-Host "  pwsh LCM_Inventory/tools/Invoke-LCMUpdate.ps1 [-TargetRepository] <str> [-Execute] [-DryRun] [-h]"
     Write-Host ""
     Write-Host "PARAMETERS:" -ForegroundColor Yellow
     Write-Host "  -TargetRepository : Target repository name or path"
@@ -65,16 +65,16 @@ if (-not (Test-Path $targetPath)) {
 $repoName = (Get-Item $targetPath).Name
 $aiState = Get-WorkspaceAIState
 $targetLCMVersion = $aiState.GlobalLCMVersion
-$onboardEngine = Join-Path $wsRoot 'Workspace_AI\tools\Invoke-LCMOnboardRepo.ps1'
+$onboardEngine = Join-Path $wsRoot 'LCM_AI\tools\Invoke-LCMOnboardRepo.ps1'
 
 if (-not (Test-Path $onboardEngine)) {
     throw "LCM Onboarding Engine not found at: $onboardEngine"
 }
 
 Write-Host "=================================================================" -ForegroundColor Cyan
-Write-Host " Workspace_Inventory: Governed LCM Version Upgrade Flow         " -ForegroundColor Cyan
+Write-Host " LCM_Inventory: Governed LCM Version Upgrade Flow         " -ForegroundColor Cyan
 Write-Host " Target Repository : $repoName" -ForegroundColor Cyan
-Write-Host " Target Version    : v$targetLCMVersion (from Workspace_AI)" -ForegroundColor Cyan
+Write-Host " Target Version    : v$targetLCMVersion (from LCM_AI)" -ForegroundColor Cyan
 Write-Host " Mode              : $(if ($Execute) { 'LIVE EXECUTION' } elseif ($DryRun) { 'DRY RUN' } else { 'CR PROPOSAL (Default)' })" -ForegroundColor Cyan
 Write-Host "=================================================================" -ForegroundColor Cyan
 

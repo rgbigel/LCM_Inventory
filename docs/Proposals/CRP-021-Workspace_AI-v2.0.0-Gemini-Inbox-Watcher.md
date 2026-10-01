@@ -1,9 +1,9 @@
 # Change Request Proposal (CRP): Google Drive Gemini Inbox Watcher & Security Intake Queue
 
-Module: Workspace_Inventory/docs/Proposals/CRP-021-Gemini-Inbox-Watcher.md  
+Module: LCM_Inventory/docs/Proposals/CRP-021-Gemini-Inbox-Watcher.md  
 Purpose: Change Request Proposal for controlled intake of Google Gemini cloud instructions, mandatory timestamping, and proposal ledger routing.  
-Path: Workspace_Inventory/docs/Proposals/CRP-021-Gemini-Inbox-Watcher.md  
-Authors: Rolf, Workspace_AI Engine  
+Path: LCM_Inventory/docs/Proposals/CRP-021-Gemini-Inbox-Watcher.md  
+Authors: Rolf, LCM_AI Engine  
 Version: 1.0.0 (LCM Baseline: 7.0.0)  
 Status: ACCEPTED / COMPLETED  
 Date: 2026-08-30  
@@ -13,7 +13,7 @@ Date: 2026-08-30
 ## 1. Executive Summary & Impact Classification
 
 * **Proposal ID**: `CRP-021` (`CR-2026-032` / `Proposal #21`)
-* **Target Domain**: `Workspace_AI & .lcd Tooling Hub`
+* **Target Domain**: `LCM_AI & .lcd Tooling Hub`
 * **Impact Level**: `LOW` (Non-breaking security intake layer and tool catalog addition).
 * **Target Milestone**: `LCM v7.0.0`
 
@@ -31,7 +31,7 @@ Cloud-based Google Gemini (Web, Apps, Gems) operates inside Google's cloud bound
 
 ## 3. Implemented Components
 
-1. **Intake Specification**: [`Workspace_AI/docs/GEMINI_INBOX_SPECIFICATION.md`](file:///Workspace_AI/docs/GEMINI_INBOX_SPECIFICATION.md) defining markdown and JSON templates with mandatory headers.
+1. **Intake Specification**: [`LCM_AI/docs/GEMINI_INBOX_SPECIFICATION.md`](file:///LCM_AI/docs/GEMINI_INBOX_SPECIFICATION.md) defining markdown and JSON templates with mandatory headers.
 2. **Core Intake Tool**: [`.lcm/tools/internal/Sync-GeminiInbox.ps1`](file:///.lcm/tools/internal/Sync-GeminiInbox.ps1) implementing parsing, proposal registration via `ProposalManager.psm1`, archive relocation, and structured logging.
 3. **Command Trampoline**: [`.lcm/Cmd/SyncGeminiInbox.cmd`](file:///.lcm/Cmd/SyncGeminiInbox.cmd) for short-name CLI dispatch (`SyncGeminiInbox`).
 4. **Tool Catalog Synchronization**: Catalog entry in `.lcm/config/tool_catalog.json` (142 tools synchronized).

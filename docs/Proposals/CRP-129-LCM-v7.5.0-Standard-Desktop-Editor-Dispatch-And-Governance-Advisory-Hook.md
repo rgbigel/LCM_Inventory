@@ -5,9 +5,9 @@
 | :--- | :--- |
 | **Proposal ID** | `CRP-129` |
 | **Lifecycle State** | `OPEN` (Awaiting Operator Review & PROCEED Trigger) |
-| **Origin Repository** | `LCM` / Desktop Integration (`.lcm/assets`, `Workspace_Inventory`) |
+| **Origin Repository** | `LCM` / Desktop Integration (`.lcm/assets`, `LCM_Inventory`) |
 | **Target Scope** | `.lcm/tools/internal/LcmDesktopDaemon.ps1`, `CM_CONTROL_HUB.html`, `SHOW_TOOLS.html`, `Show-Rules.ps1` |
-| **Author** | Rolf, Workspace_AI Governance |
+| **Author** | Rolf, LCM_AI Governance |
 | **Date** | 2026-09-09 |
 | **Priority** | `Medium` |
 | **Version Impact** | `v7.5.0` |
@@ -35,6 +35,6 @@ When operators click `[✏️ Edit]` on table rows representing authoritative ru
 
 ## 3. Affected Components
 - `.lcm/tools/internal/LcmDesktopDaemon.ps1`
-- `Workspace_Inventory/docs/CM_CONTROL_HUB.html`
+- `LCM_Inventory/docs/CM_CONTROL_HUB.html`
 - `.lcm/tools/internal/SHOW_TOOLS.html`
 - `.lcm/tools/internal/Show-Rules.ps1`

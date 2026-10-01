@@ -2,12 +2,12 @@
 
 ```yaml
 CRP-ID: CRP-191
-Scope: Workspace_Inventory repository discovery, metadata, and change visibility
+Scope: LCM_Inventory repository discovery, metadata, and change visibility
 Status: Completed
 Plan-State: completed
 Progress-State: completed
 Maturity: Preliminary design record
-Owner: Workspace_Inventory
+Owner: LCM_Inventory
 ```
 
 ## Problem
@@ -44,7 +44,7 @@ Expand discovery to every eligible directory below the workspace root and activa
 
 ## Index Ownership and Data Model
 
-`Workspace_Inventory` owns two separate files:
+`LCM_Inventory` owns two separate files:
 
 1. `data/repositories/repository_index.json`: generated scanner facts. Fields include canonical workspace-relative path, `EnrollmentState`, Git branch, head SHA, dirty and ahead/behind state, detected version, scan time, and junction canonical target.
 2. `data/repositories/repository_metadata.json`: user-owned overlay. Fields include `display_name`, `owner`, `tags`, `visibility`, `lifecycle`, `notes`, `pinned`, and `exclusion_reason`.
@@ -53,7 +53,7 @@ Generated facts are never manually editable. The overlay is merged at read time,
 
 ## ShowRepos Contract
 
-`ShowRepos` is a `Workspace_Inventory` command patterned after existing `Show-*` tools. It displays a console matrix and optional HTML table containing version, enrollment state, Git state, dirty-file count, ahead/behind state, owner, tags, lifecycle, visibility, and notes.
+`ShowRepos` is a `LCM_Inventory` command patterned after existing `Show-*` tools. It displays a console matrix and optional HTML table containing version, enrollment state, Git state, dirty-file count, ahead/behind state, owner, tags, lifecycle, visibility, and notes.
 
 Proposed interface:
 

@@ -6,8 +6,8 @@
   Purpose: Identifies duplicate files across workspace directories using SHA-256 / CRC-64 hashing,
            preserves the newest/canonical instance in its active path, and safely moves redundant
            duplicates into dedicated structured \archive folders without deleting any content.
-  Path: Workspace_Inventory/tools/Invoke-WorkspaceDeduplication.ps1
-  Authors: Rolf, Workspace_AI Engine
+  Path: LCM_Inventory/tools/Invoke-WorkspaceDeduplication.ps1
+  Authors: Rolf, LCM_AI Engine
   Version: 1.0.0
   Date: 2026-08-30
   Conforms to: RULE-PS-008, RULE-PS-009, RULE-PS-010, RULE-LCM-001 - RULE-LCM-013
@@ -20,7 +20,7 @@
 .PARAMETER ArchiveRoot
   Base directory where archived duplicates will be stored.
 .PARAMETER LogFile
-  Custom log file destination. Defaults to Workspace_Inventory/logs/Invoke-WorkspaceDeduplication-yyyyMMdd_HHmmss.log.
+  Custom log file destination. Defaults to LCM_Inventory/logs/Invoke-WorkspaceDeduplication-yyyyMMdd_HHmmss.log.
 .PARAMETER Help
   Displays this comprehensive parameter reference and usage instructions (Aliases: -h, -?).
 .EXAMPLE
@@ -72,7 +72,7 @@ if ($Help) {
 # ------------------------------------------------------------------------------
 $timestamp = (Get-Date).ToString("yyyyMMdd_HHmmss")
 if ([string]::IsNullOrWhiteSpace($LogFile)) {
-    $logDir = Join-Path $workspaceRoot "Workspace_Inventory\logs"
+    $logDir = Join-Path $workspaceRoot "LCM_Inventory\logs"
     if (-not (Test-Path -LiteralPath $logDir)) {
         New-Item -ItemType Directory -Path $logDir -Force | Out-Null
     }
@@ -115,8 +115,8 @@ if ($TargetDirectories -and $TargetDirectories.Count -gt 0) {
     }
 } else {
     $candidates = @(
-        (Join-Path $workspaceRoot "Workspace_Inventory\data"),
-        (Join-Path $workspaceRoot "Workspace_Inventory\scratch"),
+        (Join-Path $workspaceRoot "LCM_Inventory\data"),
+        (Join-Path $workspaceRoot "LCM_Inventory\scratch"),
         (Join-Path $workspaceRoot "HaSSD06\scratch"),
         (Join-Path $workspaceRoot "HaSSD06_Inventory\scratch"),
         (Join-Path $workspaceRoot "HaSSD06_Inventory\docs"),
@@ -198,7 +198,7 @@ foreach ($cluster in $clusters) {
         if ($dupPath -match "\\\.lcm\\tools\\links\\") {
             $archiveTargetDir = Join-Path $workspaceRoot ".lcm\archive\tools_links_backup"
         } elseif ($dupPath -match "\\scratch\\BC_Review\\") {
-            $archiveTargetDir = Join-Path $workspaceRoot "Workspace_Inventory\data\archives\BC_Review_Snapshots"
+            $archiveTargetDir = Join-Path $workspaceRoot "LCM_Inventory\data\archives\BC_Review_Snapshots"
         }
 
         $destFile = Join-Path $archiveTargetDir ([System.IO.Path]::GetFileName($dupPath))

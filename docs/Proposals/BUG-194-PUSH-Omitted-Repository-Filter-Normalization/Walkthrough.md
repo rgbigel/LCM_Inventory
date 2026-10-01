@@ -14,8 +14,8 @@ filter values before repository-name normalization.
 ## Verification
 
 - The focused `WorkspacePushEligibility.Tests.ps1` suite passed 6 tests.
-- Full-cohort preflight passed for `Git_Repositories`, `Workspace_AI`, and
-  `Workspace_Inventory`.
+- Full-cohort preflight passed for `Git_Repositories`, `LCM_AI`, and
+  `LCM_Inventory`.
 
 ## Review
 

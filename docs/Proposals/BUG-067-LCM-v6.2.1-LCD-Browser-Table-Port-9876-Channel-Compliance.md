@@ -4,7 +4,7 @@
 - **Target Repository**: `LCM` (`Git_Repositories/.lcm`)
 - **Target Version**: `v6.2.1`
 - **Domain**: `Desktop REST Bridge & Interactive UI/UX`
-- **Author**: Rolf, Workspace_AI Engine
+- **Author**: Rolf, LCM_AI Engine
 - **Status**: `IN_PROGRESS`
 - **Created**: `2026-09-04 20:50:00`
 - **Priority**: `HIGH`

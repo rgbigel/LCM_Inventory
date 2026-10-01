@@ -11,8 +11,8 @@
 
 ## 1. Gate 1 Planning Phase Receipt
 
-- Proposal Bundle scaffolded in `Workspace_Inventory/docs/Proposals/CRP-171-LCM-v7.6.0-Tool-Explorer-ShowTools-Default-And-Metrics/`.
-- Proposal registered in `Workspace_Inventory/data/proposals/proposals.json` with state `suggested`.
+- Proposal Bundle scaffolded in `LCM_Inventory/docs/Proposals/CRP-171-LCM-v7.6.0-Tool-Explorer-ShowTools-Default-And-Metrics/`.
+- Proposal registered in `LCM_Inventory/data/proposals/proposals.json` with state `suggested`.
 - Source code, script, and configuration modifications remain halted at Gate 1 per `RULE-LCM-014`.
 
 ---
@@ -21,7 +21,7 @@
 
 - [ ] Edits applied to `.lcm/modules/LcmToolCatalog.psm1`.
 - [ ] Edits applied to `.lcm/assets/lcm-tool-explorer.js`.
-- [ ] Edits mirrored to `Workspace_Inventory/assets/lcm-tool-explorer.js`.
+- [ ] Edits mirrored to `LCM_Inventory/assets/lcm-tool-explorer.js`.
 - [ ] Tool Explorer regenerated via `ShowTools -NoLaunch`.
 - [ ] Visual UI verification:
   - Default "ShowTools" filter active on start.

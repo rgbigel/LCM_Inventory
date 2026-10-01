@@ -2,8 +2,8 @@
 
 - **Proposal ID**: #22 (`CR-2026-033` / `CRP-2026-003`)
 - **Title**: Codify RULE-REV-006 Mandatory Review Stop and Turn Termination Invariant in Governance Rules
-- **Origin Repo**: .agents / Workspace_AI
-- **Author**: Rolf, Workspace_AI Engine
+- **Origin Repo**: .agents / LCM_AI
+- **Author**: Rolf, LCM_AI Engine
 - **Timestamp**: 2026-08-30 11:34:00
 - **Status**: completed
 

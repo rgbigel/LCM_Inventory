@@ -1,7 +1,7 @@
 # Change Request Proposal: CRP-156
 
 **Proposal ID**: `CRP-156`  
-**Repository**: `Workspace_Inventory` (Workspace-Wide Architecture)  
+**Repository**: `LCM_Inventory` (Workspace-Wide Architecture)  
 **Version**: `v7.5.2`  
 **Date**: 2026-09-19  
 **Status**: `COMPLETED` (`ACCEPTED`)  
@@ -25,10 +25,10 @@ This proposal standardizes all generated HTML presentation artifacts to **`data/
 | :--- | :--- | :--- | :--- |
 | **`HaSSD06_Inventory`** | Presentation Artifact | `docs/SHOW_HA_INVENTORY.html` | `data/artifacts/SHOW_HA_INVENTORY.html` |
 | **`HaSSD06_Inventory`** | Presentation Artifact | `docs/Entities_Inventory_HaSSD06.html` | `data/artifacts/Entities_Inventory_HaSSD06.html` |
-| **`Workspace_Inventory`** | UI Template | `docs/CM_CONTROL_HUB.html` | `assets/CM_CONTROL_HUB.html` |
-| **`Workspace_Inventory`** | UI Template | `docs/WORKSPACE_INVENTORY_VIEWER.html` | `assets/WORKSPACE_INVENTORY_VIEWER.html` |
-| **`Workspace_Inventory`** | Presentation Artifact | `docs/WORKSPACE_READINESS.html` | `data/artifacts/WORKSPACE_READINESS.html` |
-| **`Workspace_Supervision`** | UI Template & Artifact | `docs/SUPERVISION_HUB.html` | Template: `assets/SUPERVISION_HUB.html`<br/>Artifact: `data/artifacts/SUPERVISION_HUB.html` |
+| **`LCM_Inventory`** | UI Template | `docs/CM_CONTROL_HUB.html` | `assets/CM_CONTROL_HUB.html` |
+| **`LCM_Inventory`** | UI Template | `docs/WORKSPACE_INVENTORY_VIEWER.html` | `assets/WORKSPACE_INVENTORY_VIEWER.html` |
+| **`LCM_Inventory`** | Presentation Artifact | `docs/WORKSPACE_READINESS.html` | `data/artifacts/WORKSPACE_READINESS.html` |
+| **`LCM_Supervision`** | UI Template & Artifact | `docs/SUPERVISION_HUB.html` | Template: `assets/SUPERVISION_HUB.html`<br/>Artifact: `data/artifacts/SUPERVISION_HUB.html` |
 
 ---
 
@@ -37,11 +37,11 @@ This proposal standardizes all generated HTML presentation artifacts to **`data/
 1. **`HaSSD06_Inventory`**:
    - Updated `tools/Show-HaInventoryApp.ps1` and `tools/Build-HaInventoryViewer.ps1` to compile and output HTML files to `data/artifacts/`.
    - Untracked `docs/SHOW_HA_INVENTORY.html` and `docs/Entities_Inventory_HaSSD06.html` from Git (`git rm --cached`).
-2. **`Workspace_Inventory`**:
+2. **`LCM_Inventory`**:
    - Moved static templates `CM_CONTROL_HUB.html` and `WORKSPACE_INVENTORY_VIEWER.html` to `assets/`.
    - Updated `tools/Show-CmControlHub.ps1`, `tools/Show-WorkspaceInventoryApp.ps1`, and `tools/Show-WorkspaceReadiness.ps1` to reference templates from `assets/` and render to `data/artifacts/`.
    - Untracked `docs/CM_CONTROL_HUB.html` and `docs/WORKSPACE_INVENTORY_VIEWER.html` from Git.
-3. **`Workspace_Supervision`**:
+3. **`LCM_Supervision`**:
    - Moved `SUPERVISION_HUB.html` template to `assets/`.
    - Updated `tools/Show-SupervisionHub.ps1` to inject telemetry into `data/artifacts/SUPERVISION_HUB.html`.
    - Untracked `docs/SUPERVISION_HUB.html` from Git.
@@ -53,4 +53,4 @@ This proposal standardizes all generated HTML presentation artifacts to **`data/
 ## 4. Verification
 
 - Verified all tools execute cleanly and output to `data/artifacts/` without error.
-- Verified `Test-RepoReadiness.ps1` in `HaSSD06_Inventory` and `Workspace_Inventory` pass with 100% compliance.
+- Verified `Test-RepoReadiness.ps1` in `HaSSD06_Inventory` and `LCM_Inventory` pass with 100% compliance.

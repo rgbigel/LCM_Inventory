@@ -1,10 +1,10 @@
 # Change Request Proposal: LCM Deterministic Hook Engine
 
 - **Proposal ID**: `CRP-104`
-- **Target Repository**: `Workspace_AI`
+- **Target Repository**: `LCM_AI`
 - **Target Version**: `v7.2.0`
 - **Domain**: `Governance & Deterministic Enforcement`
-- **Author**: Rolf, Workspace_AI Engine
+- **Author**: Rolf, LCM_AI Engine
 - **Status**: `PROPOSED`
 - **Created**: `2026-09-01 13:35:00`
 
@@ -16,7 +16,7 @@ Introduce the **LCM Deterministic Hook Engine** to mechanically enforce governan
 ---
 
 ## 2. Deliverables
-1. **Design Specification**: [`Workspace_AI/docs/LCM_Deterministic_Hook_Engine_Architecture.md`](file:///D:/Git_Repositories/Workspace_AI/docs/LCM_Deterministic_Hook_Engine_Architecture.md).
+1. **Design Specification**: [`LCM_AI/docs/LCM_Deterministic_Hook_Engine_Architecture.md`](file:///D:/Git_Repositories/LCM_AI/docs/LCM_Deterministic_Hook_Engine_Architecture.md).
 2. **Hook Scripts**:
    - `tools/hooks/Enforce-LcmPreToolPolicy.ps1`: Intercepts `run_command`, `write_to_file`, `replace_file_content`.
    - `tools/hooks/Enforce-LcmPostToolPolicy.ps1`: Automated AST syntax validation and audit logging.

@@ -3,7 +3,7 @@
 ## Metadata
 - **Proposal ID**: `155`
 - **Bundle ID**: `BUG-155`
-- **Origin Repo**: `Workspace_Inventory` / Root (`.lcm`)
+- **Origin Repo**: `LCM_Inventory` / Root (`.lcm`)
 - **Target Components**:
   - `.lcm/assets/lcm-tool-explorer.js`
   - `.lcm/modules/LcmToolCatalog.psm1`

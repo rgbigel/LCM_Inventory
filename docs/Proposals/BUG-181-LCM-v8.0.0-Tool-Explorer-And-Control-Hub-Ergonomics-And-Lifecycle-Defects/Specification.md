@@ -59,6 +59,6 @@ During intensive operation of the LCM Configuration Management interface (Tool E
 ---
 
 ## 3. Verification & Compliance
-- **Asset Mirroring**: Exact SHA256 match between `Workspace_Inventory/assets/` and `.lcm/assets/`.
+- **Asset Mirroring**: Exact SHA256 match between `LCM_Inventory/assets/` and `.lcm/assets/`.
 - **Zero Syntax Errors**: `Show-ToolsExplorer.ps1 -NoLaunch` and `Show-LcmControl.ps1 -NoLaunch` execute cleanly.
 - **REST Telemetry**: Daemon successfully processes `/execute` and `/rename` operations without unhandled exceptions.

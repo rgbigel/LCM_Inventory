@@ -2,7 +2,7 @@
 Proposal-ID: CRP-142
 Scope: LCM
 Version: v7.5.0
-Affected-Repos: [Workspace_Inventory, .lcm, HaSSD06_Inventory, All Child Repositories]
+Affected-Repos: [LCM_Inventory, .lcm, HaSSD06_Inventory, All Child Repositories]
 Priority: High
 Status: Open
 Target Scope: Workspace-wide
@@ -25,6 +25,6 @@ Establish a new authoritative governance policy in `.agents/rules/DisplayStandar
 8. **RULE-DSP-008 (Desktop Dispatch Invariant)**: HTML viewers launched via CLI MUST route through `Invoke-InteractiveDesktop.ps1` per `RULE-PS-011`.
 
 ## 3. Scope of Impact
-- Authoritative rule file `.agents/rules/DisplayStandardsPolicy.md` in `Workspace_Inventory/.agents/rules/`.
+- Authoritative rule file `.agents/rules/DisplayStandardsPolicy.md` in `LCM_Inventory/.agents/rules/`.
 - Cross-reference matrix updates in `AGENTS.md` and `LCM-Rules-Cross-Reference.md`.
 - Automated quality gate verification across all `Show-*.ps1` viewer tools.

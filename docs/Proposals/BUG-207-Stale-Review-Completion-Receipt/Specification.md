@@ -8,7 +8,7 @@ Status: Active
 Plan-State: approved
 Progress-State: in_progress
 Affected-Repos:
-  - Workspace_Inventory
+  - LCM_Inventory
 ```
 
 ## Defect

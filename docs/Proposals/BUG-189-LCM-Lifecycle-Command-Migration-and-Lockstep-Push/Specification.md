@@ -5,8 +5,8 @@ BUG-ID: BUG-189
 Scope: Lifecycle command and multi-repository publication contract
 Affected-Repos:
 	- Git_Repositories
-	- Workspace_AI
-	- Workspace_Inventory
+	- LCM_AI
+	- LCM_Inventory
 Status: In Progress
 Severity: High
 ```
@@ -23,7 +23,7 @@ The repaired `PUSH` preflight still checks proposal state and repository readine
 
 - Replaced lifecycle command usage with local-only `COMPLETE` and remote-only `PUSH`.
 - Reworked review staging, enforcement, macro definitions, policies, progress help, and catalog metadata to use `COMPLETED` terminology.
-- Added completed-only push planning with a non-mutating cohort preflight that requires `Workspace_Inventory` and all affected repositories to be Git-backed, remotely configured, and ahead.
+- Added completed-only push planning with a non-mutating cohort preflight that requires `LCM_Inventory` and all affected repositories to be Git-backed, remotely configured, and ahead.
 - Prevented proposal state transitions and post-push cleanup after a partial remote dispatch failure.
 
 ## Active Remediation
@@ -38,4 +38,4 @@ The repaired `PUSH` preflight still checks proposal state and repository readine
 - `PUSH` only dispatches a fully preflighted completed cohort.
 - A proposal may name `affected_repos`; every named repository joins its push cohort.
 - A completed proposal cannot transition to `pushed` unless its bundle is tracked in the local `HEAD` that will be pushed.
-- Proposal-document publication stages only `docs/Proposals` content, plus `Workspace_Inventory/data/proposals/proposals.json`, and never stages unrelated working-tree files.
+- Proposal-document publication stages only `docs/Proposals` content, plus `LCM_Inventory/data/proposals/proposals.json`, and never stages unrelated working-tree files.

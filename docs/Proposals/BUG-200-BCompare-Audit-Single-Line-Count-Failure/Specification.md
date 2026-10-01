@@ -2,10 +2,10 @@
 
 ```yaml
 Bug-ID: BUG-200
-Scope: Workspace_Inventory BCompare staging audit
+Scope: LCM_Inventory BCompare staging audit
 Version: 8.4.0
 Affected-Repos:
-  - Workspace_Inventory
+  - LCM_Inventory
 Severity: High
 Status: In-Progress
 Root-Cause: A single meaningful line produced a scalar string, so StrictMode rejected its Count access.

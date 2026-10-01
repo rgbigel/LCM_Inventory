@@ -1078,7 +1078,7 @@
     <div class="hub-header-line hub-line-3">
       <div class="hub-nav-strip">
         <button class="btn btn-purple btn-sm" onclick="openAppsModal()" title="View and manage App-Centric modular architecture catalog">🧩 Apps Catalog</button>
-        <a href="../../../Workspace_Supervision/data/artifacts/SUPERVISION_HUB.html" class="btn btn-blue btn-sm" style="text-decoration: none;" title="Open Workspace Supervision Hub">🛡️ Supervision Hub</a>
+        <a href="../../../LCM_Supervision/data/artifacts/SUPERVISION_HUB.html" class="btn btn-blue btn-sm" style="text-decoration: none;" title="Open Workspace Supervision Hub">🛡️ Supervision Hub</a>
       </div>
       <div class="hub-meta-strip" id="hubVersionSubtitle">
         <span>Tool: <strong id="hubToolVersion">{{HUB_VERSION}}</strong></span>
@@ -1509,7 +1509,7 @@
 
         <h4 style="color: var(--accent-blue); margin-bottom: 6px;">3. Beyond Compare Visual Review Gate</h4>
         <p>Click <strong>🔍 BC</strong> to open Beyond Compare with the Variant A baseline:
-        <br><code>Left: Workspace_Inventory\scratch\BC_Review\&lt;CRP&gt;_&lt;Repo&gt;_&lt;CommitSha&gt;</code> (Baseline)
+        <br><code>Left: LCM_Inventory\scratch\BC_Review\&lt;CRP&gt;_&lt;Repo&gt;_&lt;CommitSha&gt;</code> (Baseline)
         <br><code>Right: Target Repository Working Directory</code> (Current Live)</p>
         <ul style="margin-left: 20px; margin-bottom: 10px;">
           <li><strong>Copy Right &rarr; Left:</strong> Stages modifications for completion.</li>
@@ -2014,7 +2014,7 @@
       if (!text && p.bundle_dir) {
         const leaf = docType === 'specification' ? 'Specification.md' : (docType === 'plan' ? 'Implementation_Plan.md' : 'Walkthrough.md');
         const cand1 = `${p.bundle_dir}/${leaf}`;
-        const cand2 = `Workspace_Inventory/${p.bundle_dir}/${leaf}`;
+        const cand2 = `LCM_Inventory/${p.bundle_dir}/${leaf}`;
         const cand3 = `${crpDisplay}/${leaf}`;
         text = docsCache[cand1] || docsCache[cand2] || docsCache[cand3];
         if (text) docPath = cand1;
@@ -2126,13 +2126,13 @@
 
     // Review Receipt Opener
     function openReceiptForProposal(repoStr, crpBundle) {
-      const primaryRepo = (repoStr || "Workspace_Inventory").split('/')[0].trim();
+      const primaryRepo = (repoStr || "LCM_Inventory").split('/')[0].trim();
       let text = docsCache["receipt_" + primaryRepo];
       let foundPath = "";
 
       if (!text) {
         for (const k in docsCache) {
-          if (k.startsWith("Workspace_Inventory/data/reviews/review_" + primaryRepo)) {
+          if (k.startsWith("LCM_Inventory/data/reviews/review_" + primaryRepo)) {
             text = docsCache[k];
             foundPath = k;
             break;
@@ -2143,7 +2143,7 @@
       if (!text) {
         // Fallback: newest receipt
         for (const k in docsCache) {
-          if (k.startsWith("Workspace_Inventory/data/reviews/")) {
+          if (k.startsWith("LCM_Inventory/data/reviews/")) {
             text = docsCache[k];
             foundPath = k;
             break;
@@ -2164,7 +2164,7 @@
     }
 
     // Universal Document Table Implementation (CRP-2026-019)
-    let currentRepoForDocs = "Workspace_Inventory";
+    let currentRepoForDocs = "LCM_Inventory";
     let currentRepoDocFile = "Architecture.md";
     let currentRepoDocRaw = "";
     let currentRepoDocsList = [];
@@ -2213,7 +2213,7 @@
     }
 
     async function openRepoDocsReview(repoStr) {
-      currentRepoForDocs = (repoStr || "Workspace_Inventory").split("/")[0].trim();
+      currentRepoForDocs = (repoStr || "LCM_Inventory").split("/")[0].trim();
       document.getElementById("repoDocsTitle").innerText = `📚 Repository Documentation Table: ${currentRepoForDocs}`;
 
       // Build document catalog for this repository from docsCache
@@ -2224,8 +2224,8 @@
         let key = `${currentRepoForDocs}/${docFile}`;
         let text = docsCache[key];
         if (!text && (currentRepoForDocs === "LCM" || currentRepoForDocs === "Multiple")) {
-          text = docsCache[`Workspace_Inventory/${docFile}`];
-          key = `Workspace_Inventory/${docFile}`;
+          text = docsCache[`LCM_Inventory/${docFile}`];
+          key = `LCM_Inventory/${docFile}`;
         }
         if (text) {
           const meta = extractDocMetadata(docFile, text, key);
@@ -2261,8 +2261,8 @@
 
       // Also include any Proposals associated with this repo
       for (const k in docsCache) {
-        if (k.startsWith("Workspace_Inventory/docs/Proposals/") && k.includes(currentRepoForDocs)) {
-          const docName = k.replace("Workspace_Inventory/docs/Proposals/", "");
+        if (k.startsWith("LCM_Inventory/docs/Proposals/") && k.includes(currentRepoForDocs)) {
+          const docName = k.replace("LCM_Inventory/docs/Proposals/", "");
           const text = docsCache[k];
           const meta = extractDocMetadata(docName, text, k);
           currentRepoDocsList.push({
@@ -2509,7 +2509,7 @@
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            filePath: "Workspace_Inventory/scratch/cm_console_feed.txt",
+            filePath: "LCM_Inventory/scratch/cm_console_feed.txt",
             content: header + textContent.trim() + "\n",
             editor: "notepad",
             line: 1
@@ -2698,7 +2698,7 @@
       // Command: readiness
       if (lower === "readiness" || lower === "test readiness") {
         appendConsole("Running LCM Rule Health & Readiness check...", "msg-info");
-        await executeHubCommand("pwsh -File Workspace_Inventory/tools/Test-LCMRuleHealth.ps1", "LCM Rule Health & Readiness");
+        await executeHubCommand("pwsh -File LCM_Inventory/tools/Test-LCMRuleHealth.ps1", "LCM Rule Health & Readiness");
         return;
       }
 
@@ -2714,7 +2714,7 @@
         const isAll = completeMatch[1].toLowerCase() === "all";
         const targetExpr = isAll ? "all" : completeMatch[1];
         await executeHubCommand(
-          `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action complete -TargetExpression ${targetExpr}`,
+          `pwsh -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action complete -TargetExpression ${targetExpr}`,
           `Complete CRP ${targetExpr}`,
           isAll ? null : parseInt(targetExpr, 10)
         );
@@ -2727,7 +2727,7 @@
         const isAll = verifyMatch[1].toLowerCase() === "all";
         const targetExpr = isAll ? "all" : verifyMatch[1];
         await executeHubCommand(
-          `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action verify -TargetExpression ${targetExpr}`,
+          `pwsh -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action verify -TargetExpression ${targetExpr}`,
           `Verify CRP ${targetExpr}`,
           isAll ? null : parseInt(targetExpr, 10)
         );
@@ -2740,7 +2740,7 @@
         const isAll = commitMatch[1].toLowerCase() === "all";
         const targetExpr = isAll ? "all" : commitMatch[1];
         await executeHubCommand(
-          `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action commit -TargetExpression ${targetExpr}`,
+          `pwsh -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action commit -TargetExpression ${targetExpr}`,
           `Commit CRP ${targetExpr}`,
           isAll ? null : parseInt(targetExpr, 10)
         );
@@ -2755,7 +2755,7 @@
         const targetExpr = isAll ? "all" : rawTarget;
         const explicitState = proceedMatch[2] ? ` -ProgressState ${proceedMatch[2].toLowerCase()}` : "";
         await executeHubCommand(
-          `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action proceed -TargetExpression ${targetExpr}${explicitState}`,
+          `pwsh -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action proceed -TargetExpression ${targetExpr}${explicitState}`,
           `Proceed CRP ${targetExpr}`,
           isAll ? null : parseInt(rawTarget, 10)
         );
@@ -2773,7 +2773,7 @@
           return;
         }
         await executeHubCommand(
-          `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action progress -TargetExpression ${id} -ProgressState ${targetProg}`,
+          `pwsh -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action progress -TargetExpression ${id} -ProgressState ${targetProg}`,
           `Status CRP-${id} -> ${targetProg}`,
           id
         );
@@ -2786,7 +2786,7 @@
         const isAll = doMatch[1].toLowerCase() === "all";
         const targetExpr = isAll ? "all" : doMatch[1];
         await executeHubCommand(
-          `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action do -TargetExpression ${targetExpr}`,
+          `pwsh -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action do -TargetExpression ${targetExpr}`,
           `Execute CRP ${targetExpr}`,
           isAll ? null : parseInt(doMatch[1], 10)
         );
@@ -2818,7 +2818,7 @@
           return;
         }
         await executeHubCommand(
-          `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action state -TargetExpression ${id} -State ${targetState}`,
+          `pwsh -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action state -TargetExpression ${id} -State ${targetState}`,
           `Plan State CRP-${id} -> ${targetState}`,
           id
         );
@@ -2830,7 +2830,7 @@
       if (rejMatch) {
         const id = parseInt(rejMatch[1], 10);
         await executeHubCommand(
-          `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action state -TargetExpression ${id} -State rejected`,
+          `pwsh -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action state -TargetExpression ${id} -State rejected`,
           `Reject CRP-${id}`,
           id
         );
@@ -2842,7 +2842,7 @@
       if (blockMatch) {
         const id = parseInt(blockMatch[1], 10);
         await executeHubCommand(
-          `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action progress -TargetExpression ${id} -ProgressState blocked`,
+          `pwsh -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action progress -TargetExpression ${id} -ProgressState blocked`,
           `Block CRP-${id}`,
           id
         );
@@ -2854,7 +2854,7 @@
       if (appMatch) {
         const id = parseInt(appMatch[1], 10);
         await executeHubCommand(
-          `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action state -TargetExpression ${id} -State approved`,
+          `pwsh -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action state -TargetExpression ${id} -State approved`,
           `Approve CRP-${id}`,
           id
         );
@@ -2866,7 +2866,7 @@
       if (defMatch) {
         const id = parseInt(defMatch[1], 10);
         await executeHubCommand(
-          `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action defer -TargetExpression ${id}`,
+          `pwsh -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action defer -TargetExpression ${id}`,
           `Defer CRP-${id}`,
           id
         );
@@ -2878,7 +2878,7 @@
       if (delMatch) {
         const id = parseInt(delMatch[1], 10);
         await executeHubCommand(
-          `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action delete -TargetExpression ${id}`,
+          `pwsh -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action delete -TargetExpression ${id}`,
           `Delete CRP-${id}`,
           id
         );
@@ -2894,7 +2894,7 @@
         const isAll = prioMatch[1].toLowerCase() === "all";
         const targetExpr = isAll ? "all" : prioMatch[1];
         await executeHubCommand(
-          `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action priority -TargetExpression ${targetExpr} -Priority ${rawPrio}`,
+          `pwsh -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action priority -TargetExpression ${targetExpr} -Priority ${rawPrio}`,
           `Priority CRP ${targetExpr} -> ${rawPrio}`,
           isAll ? null : parseInt(prioMatch[1], 10)
         );
@@ -2906,7 +2906,7 @@
       if (granMatch) {
         if (granMatch[1]) {
           await executeHubCommand(
-            `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action granularity -TargetExpression ${granMatch[1].toLowerCase()}`,
+            `pwsh -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action granularity -TargetExpression ${granMatch[1].toLowerCase()}`,
             `Granularity -> ${granMatch[1].toUpperCase()}`
           );
           proposalsData.review_granularity = granMatch[1].toLowerCase();
@@ -2922,7 +2922,7 @@
       if (modeMatch) {
         if (modeMatch[1]) {
           await executeHubCommand(
-            `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action mode -TargetExpression ${modeMatch[1].toLowerCase()}`,
+            `pwsh -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action mode -TargetExpression ${modeMatch[1].toLowerCase()}`,
             `LCM Mode -> ${modeMatch[1].toUpperCase()}`
           );
           proposalsData.lcm_mode = modeMatch[1].toLowerCase();
@@ -2939,17 +2939,17 @@
         const targetCtx = workonMatch[1] ? workonMatch[1].trim() : "";
         if (targetCtx) {
           await executeHubCommand(
-            `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action workon -TargetExpression "${targetCtx}"`,
+            `pwsh -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action workon -TargetExpression "${targetCtx}"`,
             `Set Active Focus -> ${targetCtx}`
           );
           if (targetCtx.toLowerCase() === 'clear' || targetCtx.toLowerCase() === 'base') {
             proposalsData.active_context = null;
           } else if (targetCtx.toLowerCase() === 'architecture') {
-            proposalsData.active_context = { app_id: 'Architecture', app_title: 'Foundational Architecture', repo: 'Workspace_AI' };
+            proposalsData.active_context = { app_id: 'Architecture', app_title: 'Foundational Architecture', repo: 'LCM_AI' };
           } else {
             const m = targetCtx.match(/^(?:App:?\s*|A)?(\d+)/i);
             const num = m ? parseInt(m[1], 10) : 1;
-            proposalsData.active_context = { app_id: `App: ${num}`, app_title: '', repo: 'Workspace_AI' };
+            proposalsData.active_context = { app_id: `App: ${num}`, app_title: '', repo: 'LCM_AI' };
           }
           updateHeaderFocusBadge();
         } else {
@@ -2965,7 +2965,7 @@
       if (appCreateMatch) {
         const appTitle = appCreateMatch[1].trim();
         await executeHubCommand(
-          `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action app -TargetExpression "${appTitle}"`,
+          `pwsh -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action app -TargetExpression "${appTitle}"`,
           `Scaffold New App -> ${appTitle}`
         );
         await syncAppsCatalog();
@@ -3006,7 +3006,7 @@
           icon.textContent = "🎯";
           const titleSnippet = act.app_title ? ` (${act.app_title})` : '';
           text.textContent = `Focus: ${act.app_id}${titleSnippet}`;
-          if (modalDisplay) modalDisplay.innerHTML = `<strong style="color:var(--accent-cyan);">${act.app_id}${titleSnippet}</strong> [${act.repo || 'Workspace_AI'}]`;
+          if (modalDisplay) modalDisplay.innerHTML = `<strong style="color:var(--accent-cyan);">${act.app_id}${titleSnippet}</strong> [${act.repo || 'LCM_AI'}]`;
         } else {
           const repo = (act && act.repo) ? act.repo : 'Governing All Apps';
           badge.className = "hub-focus-line focus-master";
@@ -3058,7 +3058,7 @@
 
         let isActive = false;
         if (isMaster) {
-          isActive = (!act || !act.app_id || ['Master', 'Architecture', 'Base', 'clear'].includes(act.app_id)) && (!act || !act.repo || act.repo === a.repo || a.repo === 'BackgroundModifier' || a.repo === 'Workspace_AI');
+          isActive = (!act || !act.app_id || ['Master', 'Architecture', 'Base', 'clear'].includes(act.app_id)) && (!act || !act.repo || act.repo === a.repo || a.repo === 'BackgroundModifier' || a.repo === 'LCM_AI');
         } else {
           isActive = (act && act.app_id === a.id && (!act.repo || act.repo === a.repo));
         }
@@ -3126,7 +3126,7 @@
 
     async function setFocusFromModal(appId, repo, title) {
       await executeHubCommand(
-        `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action workon -TargetExpression "${appId}" -TargetRepo "${repo}"`,
+        `pwsh -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action workon -TargetExpression "${appId}" -TargetRepo "${repo}"`,
         `Set Active Focus -> ${appId}`
       );
       proposalsData.active_context = {
@@ -3143,7 +3143,7 @@
 
     async function clearFocusFromModal() {
       await executeHubCommand(
-        `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action workon -TargetExpression "clear"`,
+        `pwsh -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action workon -TargetExpression "clear"`,
         `Clear Active Focus`
       );
       proposalsData.active_context = null;
@@ -3156,11 +3156,11 @@
     async function promptNewApp() {
       const title = prompt("Enter the title for the new modular App slice:\n(e.g., 'Realtime Log Streamer' or 'Contract Drift Prober')");
       if (!title || !title.trim()) return;
-      const repo = prompt("Enter target repository name:", "Workspace_AI");
+      const repo = prompt("Enter target repository name:", "LCM_AI");
       if (!repo || !repo.trim()) return;
 
       await executeHubCommand(
-        `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action app -TargetExpression "${title.trim()}" -TargetRepo "${repo.trim()}"`,
+        `pwsh -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action app -TargetExpression "${title.trim()}" -TargetRepo "${repo.trim()}"`,
         `Scaffold App -> ${title.trim()}`
       );
       await syncAppsCatalog();
@@ -3169,7 +3169,7 @@
     async function syncAppsCatalog() {
       showToast("Scanning workspace repositories for App specifications...");
       await executeHubCommand(
-        `pwsh -File Workspace_Inventory/tools/Sync-LcmAppCatalog.ps1`,
+        `pwsh -File LCM_Inventory/tools/Sync-LcmAppCatalog.ps1`,
         `Sync App Catalog`
       );
       try {
@@ -3287,7 +3287,7 @@
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            command: `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action granularity -TargetExpression ${next}`,
+            command: `pwsh -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action granularity -TargetExpression ${next}`,
             elevated: false,
             noExit: false
           })
@@ -3309,7 +3309,7 @@
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            command: `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action mode -TargetExpression ${next}`,
+            command: `pwsh -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action mode -TargetExpression ${next}`,
             elevated: false,
             noExit: false
           })
@@ -3744,7 +3744,7 @@
     // State Transitions
     async function changePlanState(id, newState) {
       await executeHubCommand(
-        `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action state -TargetExpression ${id} -State ${newState}`,
+        `pwsh -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action state -TargetExpression ${id} -State ${newState}`,
         `Plan State -> ${newState}`,
         id
       );
@@ -3752,7 +3752,7 @@
 
     async function changeProgressState(id, newState) {
       await executeHubCommand(
-        `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action progress -TargetExpression ${id} -ProgressState ${newState}`,
+        `pwsh -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action progress -TargetExpression ${id} -ProgressState ${newState}`,
         `Status -> ${newState}`,
         id
       );
@@ -3761,7 +3761,7 @@
     async function changeProposalPriority(id, newPrio) {
       const upper = newPrio.toUpperCase();
       await executeHubCommand(
-        `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action priority -TargetExpression ${id} -Priority ${upper}`,
+        `pwsh -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action priority -TargetExpression ${id} -Priority ${upper}`,
         `Priority -> ${upper}`,
         id
       );
@@ -3896,9 +3896,9 @@
 
     // Launch Beyond Compare Review
     async function launchReviewForProposal(id, repoStr, crp) {
-      const primaryRepo = (repoStr || "Workspace_Inventory").split("/")[0].trim();
+      const primaryRepo = (repoStr || "LCM_Inventory").split("/")[0].trim();
       const crpArg = crp ? `-CRP "${crp}"` : "";
-      const cmd = `pwsh -File Workspace_Inventory/tools/Invoke-BeyondCompareReview.ps1 -RepositoryName "${primaryRepo}" ${crpArg}`;
+      const cmd = `pwsh -File LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1 -RepositoryName "${primaryRepo}" ${crpArg}`;
 
       appendConsole(`Launching Beyond Compare review for #${id} (${primaryRepo})...`, "msg-info");
       try {
@@ -3983,7 +3983,7 @@
       resetFilters();
       const validIds = valid.map(v => v.id).join(',');
       await executeHubCommand(
-        `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action complete -TargetExpression ${validIds}`,
+        `pwsh -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action complete -TargetExpression ${validIds}`,
         `Batch Complete ${valid.length} CRP(s)`
       );
       const logMsg = `Batch completed: ${valid.map(v => 'CRP-' + String(v.id).padStart(3, '0')).join(', ')}`;
@@ -4088,7 +4088,7 @@
       // Group reviewable proposals by primary target repository
       const repoGroups = {};
       for (const p of reviewable) {
-        const repo = (p.origin_repo || "Workspace_Inventory").split("/")[0].trim();
+        const repo = (p.origin_repo || "LCM_Inventory").split("/")[0].trim();
         if (!repoGroups[repo]) repoGroups[repo] = [];
         repoGroups[repo].push(p);
       }
@@ -4114,7 +4114,7 @@
       if (chks.length === 0) return;
       const ids = chks.map(c => c.value).join(',');
       await executeHubCommand(
-        `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action defer -TargetExpression ${ids}`,
+        `pwsh -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action defer -TargetExpression ${ids}`,
         `Batch Defer ${chks.length} CRP(s)`
       );
     }
@@ -4125,14 +4125,14 @@
       if (!confirm(`Delete / purge ${chks.length} CRP(s)?`)) return;
       const ids = chks.map(c => c.value).join(',');
       await executeHubCommand(
-        `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action delete -TargetExpression ${ids}`,
+        `pwsh -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action delete -TargetExpression ${ids}`,
         `Batch Delete ${chks.length} CRP(s)`
       );
     }
 
     async function executeBatchCleanBCR() {
       await executeHubCommand(
-        `pwsh -File Workspace_Inventory/tools/Clear-BCReviewTemp.ps1 -Purge -NoExplorer`,
+        `pwsh -File LCM_Inventory/tools/Clear-BCReviewTemp.ps1 -Purge -NoExplorer`,
         `Clean BCR Review Scratch`
       );
     }
@@ -4141,7 +4141,7 @@
       const crpTag = `CRP-${String(id).padStart(3, '0')}`;
       if (confirm(`Permanently delete rejected ${crpTag}?`)) {
         await executeHubCommand(
-          `pwsh -File Workspace_Inventory/tools/Invoke-ProposalAction.ps1 -Action delete -TargetExpression ${id}`,
+          `pwsh -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action delete -TargetExpression ${id}`,
           `Delete ${crpTag}`,
           id
         );
@@ -4284,7 +4284,7 @@
 
       appendConsole(`Dispatching Multi-Repository Push (${targetPropIds.length} completed proposals)...`, "msg-info");
       
-      let cmd = `pwsh -File Workspace_Inventory/tools/Invoke-WorkspacePush.ps1 -Reason "${promptReason.replace(/"/g, '`"')}"`;
+      let cmd = `pwsh -File LCM_Inventory/tools/Invoke-WorkspacePush.ps1 -Reason "${promptReason.replace(/"/g, '`"')}"`;
       if (chks.length > 0 && targetPropIds.length > 0) {
         cmd += ` -ProposalIds ${targetPropIds.join(',')}`;
       }

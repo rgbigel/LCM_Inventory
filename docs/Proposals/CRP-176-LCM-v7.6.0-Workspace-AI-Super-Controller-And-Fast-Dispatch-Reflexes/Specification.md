@@ -3,7 +3,7 @@
 ```yaml
 CRP-ID: CRP-176
 Title: Workspace AI Super-Controller for Unified Subsystem Navigation (ToolsExplorer & ShowCM)
-Scope: Workspace_AI, .lcm, Workspace_Inventory, IDE Answer Box & Companion Interface
+Scope: LCM_AI, .lcm, LCM_Inventory, IDE Answer Box & Companion Interface
 Baseline-Version: v8.0.0
 Author: Rolf, Antigravity AI Assistant
 Date: 2026-09-27
@@ -12,8 +12,8 @@ Plan-State: suggested
 Progress-State: undecided
 Priority: Medium
 Impacted-Repositories:
-  - Workspace_AI
-  - Workspace_Inventory
+  - LCM_AI
+  - LCM_Inventory
   - Git_Repositories
 ```
 
@@ -26,7 +26,7 @@ This proposal defines the architecture and implementation for the **Workspace AI
 Rather than treating tool launching as disconnected actions or relying on complex background discovery, the Super-Controller provides a clear, high-level tripartite control interface:
 
 1. **Subsystem Selector**:
-   - An authoritative dropdown menu listing all workspace subsystems (e.g. `LCM`, `Workspace_Inventory`, `Workspace_AI`, `HaSSD06`, `SystemConfiguration`, `Workspace_Supervision`, and `All`).
+   - An authoritative dropdown menu listing all workspace subsystems (e.g. `LCM`, `LCM_Inventory`, `LCM_AI`, `HaSSD06`, `SystemConfiguration`, `LCM_Supervision`, and `All`).
    - Defaults to the active context or `LCM` / `All`.
    - Selecting a subsystem updates the target context for all child tools and views.
 
@@ -34,7 +34,7 @@ Rather than treating tool launching as disconnected actions or relying on comple
    - Opens or activates the modern [ToolsExplorer](file:///.lcm/tools/internal/Show-ToolsExplorer.ps1) pre-filtered to the chosen Subsystem.
 
 3. **ShowCM Launcher**:
-   - Opens or activates the CM Control Hub ([ShowCM](file:///Workspace_Inventory/tools/Show-LcmControl.ps1)) pre-filtered to proposals, lifecycle states, and reviews for the chosen Subsystem.
+   - Opens or activates the CM Control Hub ([ShowCM](file:///LCM_Inventory/tools/Show-LcmControl.ps1)) pre-filtered to proposals, lifecycle states, and reviews for the chosen Subsystem.
 
 ---
 

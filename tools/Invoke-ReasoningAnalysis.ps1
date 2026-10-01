@@ -3,7 +3,7 @@
     Generates structured execution trace and error triage reports analogous to BC5-Resolution-Analysis.md.
 .DESCRIPTION
     Module: tools/Invoke-ReasoningAnalysis.ps1
-    Authors: Rolf, Workspace_AI Engine
+    Authors: Rolf, LCM_AI Engine
     Version: 1.0.0
     Date: 2026-09-27
     Purpose: Analyzes previous chat turns (offset -0, -1, -2, etc.), extracts tool executions,
@@ -65,7 +65,7 @@ $normalizedOffset = if ($Offset -gt 0) { -$Offset } else { $Offset }
 $absOffset = [Math]::Abs($normalizedOffset)
 
 $workspaceRoot = 'D:\Git_Repositories'
-$invRoot = Join-Path $workspaceRoot 'Workspace_Inventory'
+$invRoot = Join-Path $workspaceRoot 'LCM_Inventory'
 $logsDir = Join-Path $invRoot 'data\logs'
 
 if (-not (Test-Path -LiteralPath $logsDir)) {
@@ -129,7 +129,7 @@ if ($absOffset -eq 2) {
             ErrorEvent = 'Speculative pathing'
             Category   = 'Speculative Assumption'
             Cost       = '1 retry (~10s)'
-            Mechanism  = 'Guessed path in Workspace_AI instead of Workspace_Inventory'
+            Mechanism  = 'Guessed path in LCM_AI instead of LCM_Inventory'
             Rule       = 'RULE-EFF-008'
             Avoidance  = 'Zero speculative pathing; discovery via Get-ChildItem'
         },

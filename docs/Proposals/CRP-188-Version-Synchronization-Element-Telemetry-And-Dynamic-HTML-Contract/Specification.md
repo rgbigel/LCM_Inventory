@@ -8,7 +8,7 @@
 * **Status**: Suggested (Preliminary)
 * **Severity**: High
 * **Priority**: Low
-* **Target Repositories**: `Workspace_Inventory`, `SharedModules`, `Workspace_AI`, `Git_Repositories`
+* **Target Repositories**: `LCM_Inventory`, `LCM_Shared`, `LCM_AI`, `Git_Repositories`
 * **App Context**: `A7` (Proposal Management / LCM Hub) & `A1` (Subsystems & Governance Engine)
 * **Lifecycle State**: Suggested (`RULE-LCM-001`)
 
@@ -69,11 +69,11 @@ This preliminary proposal addresses systemic version tracking drift across docum
   * When data changes (proposals, catalog, telemetry), the HTML UI reads updated `.json` data files directly from disk or via local fetch.
 * **Port 9876 Lightweight Contract**:
   * Instead of passing massive payload structures over the local loopback socket, the daemon action protocol will pass parameter file paths/tokens (e.g. `{"action": "refresh", "param_file": "D:/.../options.json"}`).
-  * This protocol specification will be codified as a formal contract under `SharedModules`.
+  * This protocol specification will be codified as a formal contract under `LCM_Shared`.
 
 ---
 
 ## 4. Architectural Invariants
 * **RULE-LCM-001**: Proposal recorded in `suggested` state for deliberate review prior to implementation.
 * **RULE-DOC-005**: Version progression enforced across all tripartite documentation and software assets.
-* **Contract-First Design**: Communication protocols and parameterization standards versioned under `SharedModules/contracts/`.
+* **Contract-First Design**: Communication protocols and parameterization standards versioned under `LCM_Shared/contracts/`.

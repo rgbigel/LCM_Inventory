@@ -11,14 +11,14 @@
 
 ## Proposed Changes
 
-### Configuration Management & Deduplication Engine (`Workspace_Inventory`)
+### Configuration Management & Deduplication Engine (`LCM_Inventory`)
 
-#### [NEW] [Invoke-WorkspaceDeduplication.ps1](file:///d:/Git_Repositories/Workspace_Inventory/tools/Invoke-WorkspaceDeduplication.ps1)
+#### [NEW] [Invoke-WorkspaceDeduplication.ps1](file:///d:/Git_Repositories/LCM_Inventory/tools/Invoke-WorkspaceDeduplication.ps1)
 * High-performance content-hashing deduplication runner supporting SHA-256 and CRC-64 verification.
 * Safely moves identical older/redundant duplicates from staging and cache directories into organized `data/archives/` subfolders.
 * Supports `-AuditOnly` (dry run) and `-Apply` execution modes.
 
-#### [MODIFY] [Show-WorkspaceInventoryApp.ps1](file:///d:/Git_Repositories/Workspace_Inventory/tools/Show-WorkspaceInventoryApp.ps1)
+#### [MODIFY] [Show-WorkspaceInventoryApp.ps1](file:///d:/Git_Repositories/LCM_Inventory/tools/Show-WorkspaceInventoryApp.ps1)
 * Remove legacy fallback checks to `.lcd`.
 
 ---
@@ -34,13 +34,13 @@
 
 ---
 
-### Subsystems & Staging Clean-up (`HaSSD06` & `Workspace_Inventory`)
+### Subsystems & Staging Clean-up (`HaSSD06` & `LCM_Inventory`)
 
-#### [ARCHIVE] [Workspace_Inventory/scratch/BC_Review/*](file:///d:/Git_Repositories/Workspace_Inventory/scratch/BC_Review)
-* Move the 3 historical staging snapshot directories (`CRP-2026-005_*`, `CRP-2026-006_*`, `CRP-2026-008_*`) containing redundant `BootOpsHub.zip` and review JSONs into `Workspace_Inventory/data/archives/BC_Review_Snapshots/`.
+#### [ARCHIVE] [LCM_Inventory/scratch/BC_Review/*](file:///d:/Git_Repositories/LCM_Inventory/scratch/BC_Review)
+* Move the 3 historical staging snapshot directories (`CRP-2026-005_*`, `CRP-2026-006_*`, `CRP-2026-008_*`) containing redundant `BootOpsHub.zip` and review JSONs into `LCM_Inventory/data/archives/BC_Review_Snapshots/`.
 
-#### [ARCHIVE] [Workspace_Inventory/data/baselines/*](file:///d:/Git_Repositories/Workspace_Inventory/data/baselines)
-* Move legacy baseline snapshots (`BASELINE-v4.1.0-20260815.json`, `BASELINE-v4.2.0-20260816.json`, `baseline-v4.1.0.json`) into `Workspace_Inventory/data/archives/baselines/`, preserving the newest active baseline `BASELINE-v4.3.0.json`.
+#### [ARCHIVE] [LCM_Inventory/data/baselines/*](file:///d:/Git_Repositories/LCM_Inventory/data/baselines)
+* Move legacy baseline snapshots (`BASELINE-v4.1.0-20260815.json`, `BASELINE-v4.2.0-20260816.json`, `baseline-v4.1.0.json`) into `LCM_Inventory/data/archives/baselines/`, preserving the newest active baseline `BASELINE-v4.3.0.json`.
 
 #### [ARCHIVE] [HaSSD06/scratch/srat*](file:///d:/Git_Repositories/HaSSD06/scratch)
 * Move `srat.zip`, `srat_release.zip`, and extracted directories into `HaSSD06/data/archives/srat_archive/`.
@@ -52,15 +52,15 @@
 ### Automated Tests
 1. **Deduplication Audit Dry Run**:
    ```powershell
-   pwsh -File Workspace_Inventory/tools/Invoke-WorkspaceDeduplication.ps1 -AuditOnly
+   pwsh -File LCM_Inventory/tools/Invoke-WorkspaceDeduplication.ps1 -AuditOnly
    ```
 2. **Deduplication Execution**:
    ```powershell
-   pwsh -File Workspace_Inventory/tools/Invoke-WorkspaceDeduplication.ps1 -Apply
+   pwsh -File LCM_Inventory/tools/Invoke-WorkspaceDeduplication.ps1 -Apply
    ```
 3. **Workspace Readiness & Health Check**:
    ```powershell
-   pwsh -File Workspace_Inventory/tools/Invoke-WorkspaceAudit.ps1
+   pwsh -File LCM_Inventory/tools/Invoke-WorkspaceAudit.ps1
    pwsh -File .lcm/tools/internal/Test-LCMRuleHealth.ps1
    ```
 4. **Daemon & Path Validation**:
@@ -69,7 +69,7 @@
    ```
 
 ### Manual Verification
-* Verify that `BootOpsHub.zip` exists in its single authoritative location in `Workspace_Inventory/data/archives/` and no longer duplicates in active working trees.
+* Verify that `BootOpsHub.zip` exists in its single authoritative location in `LCM_Inventory/data/archives/` and no longer duplicates in active working trees.
 * Confirm that `.lcd` is gone while `.lcm` tools and commands continue functioning flawlessly.
 
 

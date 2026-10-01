@@ -1,16 +1,16 @@
 # Change Request Proposal: Automated Privilege-Aware Tool Execution & Elevation Interception
 
 - **Proposal ID**: `CRP-107`
-- **Target Repository**: `LCM` (`Git_Repositories/.agents/rules`, `.lcm/modules`, `Workspace_Inventory`)
+- **Target Repository**: `LCM` (`Git_Repositories/.agents/rules`, `.lcm/modules`, `LCM_Inventory`)
 - **Target Version**: `v7.3.0`
 - **Domain**: `Lifecycle Model (LCM) Security, Elevation & Tool Dispatch Governance`
-- **Author**: Rolf, Workspace_AI Governance
+- **Author**: Rolf, LCM_AI Governance
 - **Status**: `SUPERSEDED_AND_RETIRED` (Superseded by `CRP-125` for operational elevation discovery & catalog alignment; `RULE-ELEV-006` policy preserved in `ElevationPolicy.md`)
 - **Created**: `2026-09-07 11:38:00`
 - **Priority**: `HIGH`
 - **Target Scope**: `.agents/rules/ElevationPolicy.md`, `PowerShellStandardsPolicy.md`, `.lcm/config/tool_catalog.json`
 - **Affected Version Range**: `v7.0.0 - v7.3.0`
-- **Impacted Repositories**: `Git_Repositories`, `Workspace_Inventory`
+- **Impacted Repositories**: `Git_Repositories`, `LCM_Inventory`
 
 ---
 

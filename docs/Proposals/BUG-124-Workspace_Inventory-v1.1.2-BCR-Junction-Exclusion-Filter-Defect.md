@@ -3,16 +3,16 @@
 ```yaml
 id: BUG-124
 title: BCR Junction Exclusion Filter Defect and Directory Root Boundary Isolation
-scope: Workspace_Inventory / BCR
+scope: LCM_Inventory / BCR
 status: deferred
 progress_state: deferred
 priority: Low
-authors: rgbig, Workspace_AI Engine
+authors: rgbig, LCM_AI Engine
 created_at: 2026-09-08T19:25:00+02:00
-target_scope: Workspace_Inventory
+target_scope: LCM_Inventory
 affected_version_range: v1.1.2
 impacted_repositories:
-  - Workspace_Inventory
+  - LCM_Inventory
 ```
 
 ---
@@ -30,7 +30,7 @@ Consequently:
 
 ## 2. Root Cause Analysis
 
-In [`Workspace_Inventory/tools/Invoke-BeyondCompareReview.ps1`](file:///d:/Git_Repositories/Workspace_Inventory/tools/Invoke-BeyondCompareReview.ps1#L585):
+In [`LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1`](file:///d:/Git_Repositories/LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1#L585):
 ```powershell
 # Exclude child repo junction directories
 $junctionFilters = @('-.agents\rules\', '-*\.agents\rules\*', '-.copilot\Rules\', '-*\.copilot\Rules\*', '-.copilot\skills\', '-*\.copilot\skills\*')

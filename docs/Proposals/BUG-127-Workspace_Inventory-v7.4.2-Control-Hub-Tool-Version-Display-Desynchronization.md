@@ -1,8 +1,8 @@
 ---
 Bug-ID: BUG-127
-Scope: Workspace_Inventory
+Scope: LCM_Inventory
 Version: v7.4.2
-Affected-Repos: [Workspace_Inventory]
+Affected-Repos: [LCM_Inventory]
 Severity: High
 Status: In-Progress
 Date: 2026-09-09
@@ -26,9 +26,9 @@ When permanent tools or PowerShell scripts undergo version updates (e.g. `Show-C
 - **Impact**: Operator and audit logs report inconsistent tool versions; discrepancies between UI table displays and actual executing scripts impair configuration management transparency and traceability.
 
 ## 4. Affected Scope
-- `Workspace_Inventory/tools/Show-CmControlHub.ps1`
-- `Workspace_Inventory/docs/CM_CONTROL_HUB.html`
-- `Workspace_Inventory/data/proposals/proposals.json`
+- `LCM_Inventory/tools/Show-CmControlHub.ps1`
+- `LCM_Inventory/docs/CM_CONTROL_HUB.html`
+- `LCM_Inventory/data/proposals/proposals.json`
 
 ## 5. Implementation Specifications
 1. **Compile-Time Static Token Replacement**:

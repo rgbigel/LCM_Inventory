@@ -1,9 +1,9 @@
 # Walkthrough — CRP-198: RollingCalendar New Repository Integration
 
-Module: Workspace_Inventory/docs/Proposals/CRP-198-RollingCalendar-New-Repository-Integration/Walkthrough.md
+Module: LCM_Inventory/docs/Proposals/CRP-198-RollingCalendar-New-Repository-Integration/Walkthrough.md
 Purpose: Execution receipts, verification evidence, and operational audit log for CRP-198.
-Path: Workspace_Inventory/docs/Proposals/CRP-198-RollingCalendar-New-Repository-Integration/Walkthrough.md
-Authors: rgbig, Workspace_AI Governance
+Path: LCM_Inventory/docs/Proposals/CRP-198-RollingCalendar-New-Repository-Integration/Walkthrough.md
+Authors: rgbig, LCM_AI Governance
 Version: 8.1.1
 Status: Verification — Interface Refinement Reviewed
 Date: 2026-09-30
@@ -15,7 +15,7 @@ Date: 2026-09-30
 | Timestamp | Step | Result |
 |:---|:---|:---|
 | 2026-09-30 11:45:32 | `git init D:\Git_Repositories\RollingCalendar` | `Initialized empty Git repository` |
-| 2026-09-30 11:45:37 | `.agents\rules` NTFS junction created | `Junction created <<==>> Workspace_AI\.agents\rules` |
+| 2026-09-30 11:45:37 | `.agents\rules` NTFS junction created | `Junction created <<==>> LCM_AI\.agents\rules` |
 | 2026-09-30 11:47:22 | `Invoke-RollingCalendar.ps1` written | Created — 410 lines, 2-space indent, CRLF, UTF-8 w/o BOM |
 | 2026-09-30 11:47:37 | `.gitignore` written | Created |
 | 2026-09-30 11:47:39 | `README.md` written | Created |

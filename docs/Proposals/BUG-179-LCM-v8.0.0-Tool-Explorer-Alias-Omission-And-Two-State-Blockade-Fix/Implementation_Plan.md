@@ -3,7 +3,7 @@
 ```yaml
 BUG-ID: BUG-179
 Title: Tool Explorer Alias Omission, Subsystem Override Reversion, and Two-State Finalize Blockade Defect
-Scope: .lcm, Workspace_Inventory, Tool Explorer UI, Tool Catalog Sync Engine, LCM Desktop Daemon
+Scope: .lcm, LCM_Inventory, Tool Explorer UI, Tool Catalog Sync Engine, LCM Desktop Daemon
 Status: Completed
 Date: 2026-09-26
 ```
@@ -29,7 +29,7 @@ Date: 2026-09-26
 - [x] Update `renderTable` in `lcm-tool-explorer.js` to key master index by `RelativePath`.
 - [x] Display alias pills in default Short-Names mode when alternative short names exist.
 - [x] Harden `saveCellEdit`, `markToolPending`, `revertTool`, and `finalizeTool` to clear pending flags and unblock tools cleanly.
-- [x] Mirror `lcm-tool-explorer.js` between `Workspace_Inventory/assets/` and `.lcm/assets/`.
+- [x] Mirror `lcm-tool-explorer.js` between `LCM_Inventory/assets/` and `.lcm/assets/`.
 
 ### Phase 3: Daemon State Synchronization
 - [x] Update `DaemonActionController.SyncCatalogState` to update `Group`, `Domain`, and `Subsystem` fields.
@@ -39,4 +39,4 @@ Date: 2026-09-26
 - [x] Validate daemon `/query_all_short_names` endpoint.
 - [x] Verify `Show-ToolsExplorer.ps1 -NoLaunch` dashboard compilation.
 - [x] Register `BUG-179` in `proposals.json`.
-- [x] Complete commit across `Workspace_Inventory` and root `.lcm`.
+- [x] Complete commit across `LCM_Inventory` and root `.lcm`.

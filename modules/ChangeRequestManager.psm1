@@ -4,7 +4,7 @@
 # Module: ChangeRequestManager
 # Purpose: Manages 1-file-per-CR Markdown documents mirrored via NTFS junctions,
 #          CR bundling for batch test sequences, querying, and dashboard export.
-# Authors: Rolf, Workspace_AI Engine
+# Authors: Rolf, LCM_AI Engine
 # Version: 2.0.0
 # Date: 2026-08-15
 # =====================================================================
@@ -22,19 +22,19 @@ function Get-CRMirrorRoot {
     }
     
     $item = Get-Item $scriptRoot
-    while ($item -ne $null -and $item.Name -ne 'Workspace_Inventory' -and $item.Name -ne 'Git_Repositories') {
+    while ($item -ne $null -and $item.Name -ne 'LCM_Inventory' -and $item.Name -ne 'Git_Repositories') {
         $item = $item.Parent
     }
     
     if ($item -ne $null) {
-        if ($item.Name -eq 'Workspace_Inventory') {
+        if ($item.Name -eq 'LCM_Inventory') {
             return (Join-Path $item.FullName 'change_requests')
         } elseif ($item.Name -eq 'Git_Repositories') {
-            return (Join-Path $item.FullName 'Workspace_Inventory\change_requests')
+            return (Join-Path $item.FullName 'LCM_Inventory\change_requests')
         }
     }
     
-    return 'D:\Git_Repositories\Workspace_Inventory\change_requests'
+    return 'D:\Git_Repositories\LCM_Inventory\change_requests'
 }
 
 function Get-BundlesDir {

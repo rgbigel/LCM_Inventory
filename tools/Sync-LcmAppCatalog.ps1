@@ -3,7 +3,7 @@
     Compiles and synchronizes the machine-readable LCM App Catalog (data/catalog/apps.json) across repositories.
 .DESCRIPTION
     Module: tools/Sync-LcmAppCatalog.ps1
-    Authors: Rolf, Workspace_AI Engine
+    Authors: Rolf, LCM_AI Engine
     Version: 7.5.0
     Date: 2026-09-19
 #>
@@ -32,7 +32,7 @@ if ($Help) {
     Write-Host "  headers across repositories to compile a zero-drift machine-readable catalog (apps.json)."
     Write-Host ""
     Write-Host "USAGE:" -ForegroundColor Yellow
-    Write-Host "  pwsh Workspace_Inventory/tools/Sync-LcmAppCatalog.ps1 [[-Repo] <str>] [-WorkspaceRoot <str>] [-h]"
+    Write-Host "  pwsh LCM_Inventory/tools/Sync-LcmAppCatalog.ps1 [[-Repo] <str>] [-WorkspaceRoot <str>] [-h]"
     Write-Host ""
     Write-Host "PARAMETERS:" -ForegroundColor Yellow
     Write-Host "  -Repo          : Target repository to scan (optional, scans all if omitted)"

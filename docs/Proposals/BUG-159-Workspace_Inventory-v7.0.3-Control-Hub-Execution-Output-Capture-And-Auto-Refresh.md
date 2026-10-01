@@ -5,9 +5,9 @@
 | :--- | :--- |
 | **Defect ID** | `BUG-159` |
 | **Lifecycle State** | `OPEN` (Registered via Strict Intake Gate per `RULE-LCM-015`) |
-| **Origin Repository** | `Workspace_Inventory` |
-| **Target Scope** | CM Control Hub & Desktop Daemon Bridge (`Workspace_Inventory/assets/CM_CONTROL_HUB.html`, `.lcm/modules/LcmDaemon/Classes/DaemonActionController.ps1`, `.lcm/tools/internal/LcmDesktopDaemon.ps1`, `Workspace_Inventory/tools/Show-CmControlHub.ps1`) |
-| **Author** | Rolf, Workspace_AI Intake |
+| **Origin Repository** | `LCM_Inventory` |
+| **Target Scope** | CM Control Hub & Desktop Daemon Bridge (`LCM_Inventory/assets/CM_CONTROL_HUB.html`, `.lcm/modules/LcmDaemon/Classes/DaemonActionController.ps1`, `.lcm/tools/internal/LcmDesktopDaemon.ps1`, `LCM_Inventory/tools/Show-CmControlHub.ps1`) |
+| **Author** | Rolf, LCM_AI Intake |
 | **Date** | 2026-09-19 |
 | **Version Impact** | `v7.0.3` |
 | **Severity** | High (Operational Visibility & UI Synchronization Defect) |
@@ -29,7 +29,7 @@ When executing lifecycle commands (such as `proceed <id>`, `do <id>`, `verify <i
 
 ### Root Cause
 - In [`.lcm/modules/LcmDaemon/Classes/DaemonActionController.ps1`](file:///D:/Git_Repositories/.lcm/modules/LcmDaemon/Classes/DaemonActionController.ps1), the `/execute` route dispatches processes asynchronously via `Start-Process` without capturing stdout, stderr, or process exit codes for CLI management commands.
-- In [`Workspace_Inventory/assets/CM_CONTROL_HUB.html`](file:///D:/Git_Repositories/Workspace_Inventory/assets/CM_CONTROL_HUB.html), the console command handlers send a fire-and-forget fetch to `/execute` and immediately append a hardcoded message, without awaiting the process result, displaying stdout/stderr, or calling `GET /proposals` to dynamically reload the updated proposal store.
+- In [`LCM_Inventory/assets/CM_CONTROL_HUB.html`](file:///D:/Git_Repositories/LCM_Inventory/assets/CM_CONTROL_HUB.html), the console command handlers send a fire-and-forget fetch to `/execute` and immediately append a hardcoded message, without awaiting the process result, displaying stdout/stderr, or calling `GET /proposals` to dynamically reload the updated proposal store.
 
 ---
 
@@ -58,7 +58,7 @@ When executing lifecycle commands (such as `proceed <id>`, `do <id>`, `verify <i
      ```
 
 ### 2.2 CM Control Hub Console Output Engine
-1. Update [`CM_CONTROL_HUB.html`](file:///D:/Git_Repositories/Workspace_Inventory/assets/CM_CONTROL_HUB.html) command handler:
+1. Update [`CM_CONTROL_HUB.html`](file:///D:/Git_Repositories/LCM_Inventory/assets/CM_CONTROL_HUB.html) command handler:
    - Await execution response from `http://127.0.0.1:9876/execute` with `sync: true`.
    - Ingest `stdout` and format it in the **Response Feed** console (preserving structured ASCII tables and colorizing status tags).
    - If `stderr` is present or `exitCode !== 0`, render the error lines in `msg-err` (red) with full problem diagnostics.
