@@ -16,8 +16,7 @@
    the left side without modifying the live right side.
 7. Require a final pushed-baseline-to-live roll-up review before local commit,
    regardless of prior snapshot decisions.
-8. Build the standard-display work queue with presets, mode, Intern, filters,
-   integrated sorting, reset controls, and global commands.
+8. Build the standard-display work queue conforming strictly to `DisplayStandardsPolicy.md` v9.0.0 and `CM_CONTROL_HUB_IMPLEMENTATION_0.html`: presets, mode, Intern, filters, integrated sorting, reset controls, and global commands.
 9. Replace the sidecar with a full-width selection and bulk-action work area
    that exposes only actions valid for the selected cohort.
 10. Show Status, Plan State, Progress Status, numeric priority, busy phase, and
@@ -28,7 +27,8 @@
 12. Sort bulk cohorts by numeric priority $10$ through $0$ and provide a
     dependency-, risk-, reversibility-, and validation-cost-aware recommendation
     order for equal-priority items.
-13. Treat `assets/CM_CONTROL_HUB_IMPLEMENTATION_0.html` as a visual prototype
-   and advance it through review before building operational UI behavior.
+13. Maintain the root-owned Control Hub application as the operational UI,
+   clearly identify live instances, and advance each behavior increment
+   through review before enabling lifecycle mutation.
 14. Add migration, transition, action-validity, query-index, UI workflow,
    review, verification-depth, and no-push-before-review tests.

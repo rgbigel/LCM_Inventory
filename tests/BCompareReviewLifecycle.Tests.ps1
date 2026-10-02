@@ -3,12 +3,14 @@ Describe 'BCompare review lifecycle contracts' {
     $repositoryRoot = Split-Path $PSScriptRoot -Parent
     $reviewScriptPath = Join-Path $repositoryRoot 'tools\Invoke-BeyondCompareReview.ps1'
     $submitScriptPath = Join-Path $repositoryRoot 'tools\Submit-ReviewResult.ps1'
+    $gateScriptPath = Join-Path $repositoryRoot 'tools\Test-ReviewCommitGate.ps1'
     $reviewScript = Get-Content -LiteralPath $reviewScriptPath -Raw -Encoding UTF8
     $submitScript = Get-Content -LiteralPath $submitScriptPath -Raw -Encoding UTF8
+    $gateScript = Get-Content -LiteralPath $gateScriptPath -Raw -Encoding UTF8
   }
 
-  It 'parses both review lifecycle scripts' {
-    foreach ($scriptPath in @($reviewScriptPath, $submitScriptPath)) {
+  It 'parses all review lifecycle scripts' {
+    foreach ($scriptPath in @($reviewScriptPath, $submitScriptPath, $gateScriptPath)) {
       $tokens = $null
       $parseErrors = $null
       [System.Management.Automation.Language.Parser]::ParseFile($scriptPath, [ref]$tokens, [ref]$parseErrors) | Out-Null
@@ -62,5 +64,18 @@ Describe 'BCompare review lifecycle contracts' {
     $submitScript | Should -Match ([regex]::Escape('$commitCreated = $true'))
     $submitScript | Should -Match ([regex]::Escape('if ($commitCreated -and (Test-Path -LiteralPath $stagedManifestFile))'))
     $submitScript | Should -Match ([regex]::Escape('if ($commitCreated -and $stagedManifest -and $stagedManifest.TempReviewRoot)'))
+  }
+
+  It 'creates a short-lived authorization bound to the reviewed staged diff' {
+    $submitScript | Should -Match ([regex]::Escape('"pending_commit_${repoName}.json"'))
+    $submitScript | Should -Match ([regex]::Escape('StagedDiffSha256    = Get-StagedDiffSha256 -Path $targetRepoPath'))
+    $submitScript | Should -Match ([regex]::Escape('Remove-Item -LiteralPath $authorizationFile -Force -ErrorAction Stop'))
+  }
+
+  It 'blocks commits without a current authorization for the exact staged diff' {
+    $gateScript | Should -Match ([regex]::Escape('REVIEW GATE BLOCKED: No current review authorization exists'))
+    $gateScript | Should -Match ([regex]::Escape('The reviewed baseline no longer matches the current HEAD'))
+    $gateScript | Should -Match ([regex]::Escape('The staged diff differs from the approved review selection'))
+    $gateScript | Should -Match ([regex]::Escape('ExpiresAt'))
   }
 }

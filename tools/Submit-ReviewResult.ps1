@@ -14,6 +14,9 @@ param(
     [Parameter(Mandatory = $false, HelpMessage = 'Include all changes, including uncopied files, without interactive confirmation')]
     [switch]$All,
 
+    [Parameter(Mandatory = $false, HelpMessage = 'Single-cycle minimal testing scope: fast syntax and AST validation only')]
+    [switch]$MinimalTests,
+
     [Parameter(Mandatory = $false, HelpMessage = 'Force review commit and bypass safety checks')]
     [switch]$Force,
 
@@ -30,12 +33,29 @@ param(
              prompts for uncopied file confirmations (bypassed with 'COMPLETE ALL' or -All), and performs review-gated commits per RULE-REV-001.
     Path: tools/Submit-ReviewResult.ps1
     Authors: Rolf, LCM_AI Engine
-    Version: 8.1.0
-    Date: 2026-09-30
+    Version: 8.3.0
+    Date: 2026-10-02
 #>
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+
+function Get-StagedDiffSha256 {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Path
+    )
+
+    $diff = git -C $Path diff --cached --binary
+    if ($LASTEXITCODE -ne 0) {
+        throw "Unable to read the staged Git diff for '$Path'."
+    }
+
+    $bytes = [System.Text.Encoding]::UTF8.GetBytes(($diff -join "`n"))
+    $hash = [System.Security.Cryptography.SHA256]::HashData($bytes)
+    return [Convert]::ToHexString($hash).ToLowerInvariant()
+}
 
 if ($Help) {
     Write-Host "==========================================================================" -ForegroundColor Cyan
@@ -45,13 +65,14 @@ if ($Help) {
     Write-Host "  Interactive review response recorder and staging engine for Beyond Compare."
     Write-Host ""
     Write-Host "USAGE:" -ForegroundColor Yellow
-    Write-Host "  pwsh LCM_Inventory/tools/Submit-ReviewResult.ps1 [[-RepositoryPath] <str>] [-Result <str>] [-Notes <str>] [-All] [-Force] [-h]"
+    Write-Host "  pwsh LCM_Inventory/tools/Submit-ReviewResult.ps1 [[-RepositoryPath] <str>] [-Result <str>] [-Notes <str>] [-All] [-MinimalTests] [-Force] [-h]"
     Write-Host ""
     Write-Host "PARAMETERS:" -ForegroundColor Yellow
     Write-Host "  -RepositoryPath  : Name or path of the repository"
     Write-Host "  -Result          : Review disposition (Completed, CompleteAll, CompleteWithEdits, Rejected, Deferred)"
     Write-Host "  -Notes           : Review notes or rationale"
     Write-Host "  -All             : Include all uncopied files"
+    Write-Host "  -MinimalTests    : Single-cycle minimal testing scope: fast syntax and AST validation only"
     Write-Host "  -Force           : Force commit"
     Write-Host "  -Help (-h, -?)   : Displays this help screen"
     Write-Host "==========================================================================" -ForegroundColor Cyan
@@ -232,12 +253,31 @@ $commitCreated = $false
 git -C $targetRepoPath diff --cached --quiet
 if ($LASTEXITCODE -ne 0) {
     $commitMsg = if (-not [string]::IsNullOrWhiteSpace($Notes)) { $Notes } else { "feat(review): review completion by $env:USERNAME" }
+    $authorizationFile = Join-Path $reviewsDir "pending_commit_${repoName}.json"
+    $authorization = [ordered]@{
+        RepositoryName      = $repoName
+        RepositoryPath      = $resolvedTargetPath
+        BaselineCommit      = $currentHead
+        ReviewResult        = $Result
+        Reviewer            = $env:USERNAME
+        CreatedAt           = [DateTimeOffset]::UtcNow.ToString('O')
+        ExpiresAt           = [DateTimeOffset]::UtcNow.AddHours(2).ToString('O')
+        StagedDiffSha256    = Get-StagedDiffSha256 -Path $targetRepoPath
+    }
+    $authorization | ConvertTo-Json -Depth 3 | Set-Content -LiteralPath $authorizationFile -Encoding UTF8
+
     git -C $targetRepoPath commit -m "$commitMsg"
+    if ($LASTEXITCODE -ne 0) {
+        throw "Git commit failed for '$repoName'. The review authorization remains available only until its expiry."
+    }
+
+    Remove-Item -LiteralPath $authorizationFile -Force -ErrorAction Stop
     $newCommitSha = (git -C $targetRepoPath rev-parse --short HEAD).Trim()
     $commitCreated = $true
 
     # Save Permanent Review Record
     $timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+    $testScopeVal = if ($MinimalTests) { "minimal" } else { "full" }
     $reviewRecord = [ordered]@{
         RepositoryName   = $repoName
         RepositoryPath   = $targetRepoPath
@@ -247,6 +287,7 @@ if ($LASTEXITCODE -ne 0) {
         Timestamp        = $timestamp
         Message          = $commitMsg
         ActionsExecuted  = $actionsExecuted
+        TestScope        = $testScopeVal
     }
     $timeTag = (Get-Date).ToString('yyyyMMdd_HHmmss')
     $finalReviewFile = Join-Path $reviewsDir "review_${repoName}_${timeTag}.json"
@@ -255,7 +296,7 @@ if ($LASTEXITCODE -ne 0) {
     # Append to active CM activity ledger
     $cmLogFile = Join-Path $workspaceRoot "LCM_Inventory\logs\cm_activity.log"
     if (Test-Path -LiteralPath (Split-Path $cmLogFile -Parent)) {
-        $cmLogEntry = "[$timestamp] [REVIEW_SUBMITTED] [Target: $repoName] [Version: v7.1.0] [PushDate: $timestamp] [AffectedRepos: $repoName, LCM_Inventory] REVIEW_COMPLETED - Committed review completion ($newCommitSha): $commitMsg"
+        $cmLogEntry = "[$timestamp] [REVIEW_SUBMITTED] [Target: $repoName] [Version: v8.3.0] [PushDate: $timestamp] [AffectedRepos: $repoName, LCM_Inventory] [TestScope: $testScopeVal] REVIEW_COMPLETED - Committed review completion ($newCommitSha): $commitMsg"
         Add-Content -LiteralPath $cmLogFile -Value $cmLogEntry -Encoding UTF8
     }
 
@@ -332,7 +373,10 @@ try {
             $isOpenState = ($p.progress_state -in @('verification', 'committed', 'in_progress', 'review') -or $p.state -in @('approved', 'suggested', 'in_progress', 'review'))
             if ($isRepoMatch -and $isOpenState) {
                 $p.progress_state = 'completed'
-                $p.state = 'completed'
+                $p.state = if ($MinimalTests) { 'completed [minimal-tests]' } else { 'completed' }
+                if ($MinimalTests) {
+                    $p | Add-Member -NotePropertyName "test_scope" -NotePropertyValue "minimal" -Force
+                }
                 if (-not $p.dates) { $p | Add-Member -NotePropertyName "dates" -NotePropertyValue ([ordered]@{}) -Force }
                 $p.dates | Add-Member -NotePropertyName "completed" -NotePropertyValue (Get-Date).ToString("yyyy-MM-dd HH:mm:ss") -Force
                 $matchedProposal = $true
@@ -341,7 +385,7 @@ try {
         if ($commitCreated -and $matchedProposal) {
             $propStore.updated_at = (Get-Date).ToString("yyyy-MM-ddTHH:mm:sszzz")
             $propStore | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath $propJsonFile -Encoding UTF8
-            Write-Host "Auto-synchronized proposals ledger to 'completed'." -ForegroundColor Green
+            Write-Host "Auto-synchronized proposals ledger to '$((if ($MinimalTests) { 'completed [minimal-tests]' } else { 'completed' }))'." -ForegroundColor Green
         }
     }
 } catch {

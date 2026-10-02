@@ -28,16 +28,15 @@ snapshot with the current live tree, allowing inspection of interstitial work
 and manual backtracking after an invalidated decision. A final pushed-baseline
 to-live roll-up review remains mandatory before local commit.
 
-## Implementation 0 Visual Prototype
+## Live Control Hub Read-Model
 
-`assets/CM_CONTROL_HUB_IMPLEMENTATION_0.html` provides a desktop-only,
-non-functional review surface. It shows the visible rail, standard display
-controls, integrated filtering and sorting, proposal selection checkboxes,
-the execution ledger, full-width cohort bulk actions, state facets, priorities,
-failure/busy indications, and execution options. Data-world views are
-intentionally delegated to Tool Explorer and other standard displays.
+The root-owned Control Hub application presents the CRP-196 work-queue
+read-model. It uses the accepted layout direction: visible lifecycle rail,
+integrated search, numeric-priority ordering where values are already numeric,
+proposal selection, state facets, and execution switches.
 
-No lifecycle service, ledger schema, query-index implementation, operational
-snapshot capture, or operational Control Hub behavior has changed. Focused
-static validation and desktop-browser rendering passed; a BCompare review is
-required before any commit.
+It additionally persists review-decision drafts for selected cohorts. A draft
+captures the selected proposal identifiers, a fingerprint of the reviewed
+scope, and effective switches without changing proposal state, staging files,
+creating a review acceptance, committing, or publishing. Data-world views
+remain delegated to Tool Explorer and related standard displays.

@@ -6,7 +6,25 @@
    ============================================================================== */
 
 :root {
-    --lcm-baseline-version: "v7.5.0";
+    --lcm-baseline-version: "v8.0.0";
+    /* Antigravity-IDE Light Mode Default per RULE-DSP-001 */
+    --bg-primary: #fdf6e3;
+    --bg-secondary: #eee8d5;
+    --bg-tertiary: #e4decb;
+    --accent: #268bd2;
+    --accent-gradient: linear-gradient(135deg, #268bd2, #1a70ab);
+    --text-primary: #073642;
+    --text-secondary: #586e75;
+    --text-muted: #839496;
+    --border: #d3cbb7;
+    --success: #859900;
+    --warning: #b58900;
+    --danger: #dc322f;
+    --purple: #6c71c4;
+    --card-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+body.dark-theme, :root[data-theme="dark"] {
     --bg-primary: #0d1117;
     --bg-secondary: #161b22;
     --bg-tertiary: #21262d;
@@ -21,23 +39,6 @@
     --danger: #f85149;
     --purple: #bc8cff;
     --card-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-}
-
-body.light-theme, :root[data-theme="light"] {
-    --bg-primary: #f6f8fa;
-    --bg-secondary: #ffffff;
-    --bg-tertiary: #eaeef2;
-    --accent: #0969da;
-    --accent-gradient: linear-gradient(135deg, #0969da, #0550ae);
-    --text-primary: #000000;
-    --text-secondary: #000000;
-    --text-muted: #1f2328;
-    --border: #d0d7de;
-    --success: #1a7f37;
-    --warning: #9a6700;
-    --danger: #cf222e;
-    --purple: #8250df;
-    --card-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
 
 /* Scrollbars */

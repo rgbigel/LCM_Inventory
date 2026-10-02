@@ -459,26 +459,6 @@
       "LastAuditTimestamp": "2026-09-19 19:06:51"
     },
     {
-      "RepositoryName": "PowerBGInfo",
-      "Path": "D:\\Git_Repositories\\PowerBGInfo",
-      "Classification": "lcm-governed",
-      "GitStatus": "Git",
-      "Branch": "v2-speedygonzales",
-      "HeadCommit": "4ed1866",
-      "DirtyState": "modified (3 files)",
-      "AheadBehind": "ahead 3",
-      "HasUnpushed": true,
-      "LCMStatus": "governed",
-      "AbsorbedLCMVersion": "7.0.0",
-      "CurrentLCMVersion": "7.0.0",
-      "ElevationRequired": false,
-      "MinimumPrivilege": "User",
-      "ElevationReason": "Standard user execution",
-      "JunctionsHealthy": true,
-      "Disposition": null,
-      "LastAuditTimestamp": "2026-09-19 19:06:51"
-    },
-    {
       "RepositoryName": "ReEnableRadeonRx580",
       "Path": "D:\\Git_Repositories\\ReEnableRadeonRx580",
       "Classification": "standard-git",

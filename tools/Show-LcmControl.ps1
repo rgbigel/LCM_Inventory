@@ -49,8 +49,8 @@ param(
              Absorbs and consolidates Show-CmControlHub and Show-CrpDates into a single canonical tool.
     Path: tools/Show-LcmControl.ps1
     Authors: Rolf, LCM_AI Engine
-    Version: 1.4.0
-    Date: 2026-09-25
+    Version: 1.8.0
+    Date: 2026-10-02
 .PARAMETER ReviewMode
     Opens the Control Hub filtered directly to pending visual reviews requiring Beyond Compare action.
 .PARAMETER DatesMode
@@ -109,7 +109,7 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
     }
 }
 
-$scriptVersion = "1.4.0"
+$scriptVersion = "1.8.0"
 $scriptName = "Show-LcmControl"
 
 # ------------------------------------------------------------------------------
@@ -117,11 +117,13 @@ $scriptName = "Show-LcmControl"
 # ------------------------------------------------------------------------------
 if ($Help) {
     Write-Host "==========================================================================" -ForegroundColor Cyan
-    Write-Host " UNIFIED LCM CONTROL HUB & LIFECYCLE MANAGER (v$scriptVersion)" -ForegroundColor Cyan
+    Write-Host " LCM CONTROL HUB - SAFE ACTIONS (v$scriptVersion)" -ForegroundColor Cyan
     Write-Host "==========================================================================" -ForegroundColor Cyan
     Write-Host "SYNOPSIS:" -ForegroundColor Yellow
-    Write-Host "  Renders and launches the interactive CM Control Hub single-page web dashboard"
-    Write-Host "  and provides command-line proposal lifecycle dates querying."
+    Write-Host "  Renders and launches the interactive CM Control Hub single-page web dashboard."
+    Write-Host "  This release enables refresh, proposal/document viewing, log viewing, and"
+    Write-Host "  Beyond Compare review launch. Lifecycle changes, cleanup, commit, and push"
+    Write-Host "  remain disabled in the browser."
     Write-Host ""
     Write-Host "USAGE:" -ForegroundColor Yellow
     Write-Host "  pwsh tools/Show-LcmControl.ps1 [-Dates] [-ReviewMode] [-Repo <repo>] [-State <state>] [-Cli] [-h]"
@@ -158,6 +160,12 @@ $proposalsFile = Join-Path $workspaceRoot "LCM_Inventory\data\proposals\proposal
 $activeLogFile = Join-Path $workspaceRoot "LCM_Inventory\logs\cm_activity.log"
 $historyLogFile = Join-Path $workspaceRoot "LCM_Inventory\logs\history\cm_activity_v5_v6_history.log"
 $htmlTemplateFile = Join-Path $workspaceRoot "LCM_Inventory\assets\CM_CONTROL_HUB.html"
+if ($DatesMode) {
+    $htmlTemplateFile = Join-Path $workspaceRoot "LCM_Inventory\assets\CM_CRP_DATES_READONLY.html"
+}
+if (-not (Test-Path -LiteralPath $htmlTemplateFile)) {
+    $htmlTemplateFile = Join-Path $workspaceRoot ".github\extensions\lcm-control-hub\control-hub.html"
+}
 if (-not (Test-Path -LiteralPath $htmlTemplateFile)) {
     $htmlTemplateFile = Join-Path $workspaceRoot "LCM_Inventory\docs\CM_CONTROL_HUB.html"
 }
@@ -315,6 +323,15 @@ if (Test-Path -LiteralPath $propDocsDir) {
         $docsCache[$rel] = Get-Content -LiteralPath $pf.FullName -Raw -Encoding UTF8
     }
 }
+
+$proposalPlansDir = Join-Path $workspaceRoot "LCM_Inventory\data\proposals\plans"
+if (Test-Path -LiteralPath $proposalPlansDir) {
+    $proposalPlanFiles = Get-ChildItem -LiteralPath $proposalPlansDir -Filter "*.md" -Recurse
+    foreach ($proposalPlanFile in $proposalPlanFiles) {
+        $relativePlanPath = $proposalPlanFile.FullName.Substring($workspaceRoot.Length).TrimStart('\').Replace('\', '/')
+        $docsCache[$relativePlanPath] = Get-Content -LiteralPath $proposalPlanFile.FullName -Raw -Encoding UTF8
+    }
+}
 Write-TimingLog "Gathered $($docsCache.Count) total documents into cache."
 
 # Compile Document Metadata Catalog
@@ -401,13 +418,23 @@ $injectedBlock = @"
 "@
 
 $htmlContent = Get-Content -LiteralPath $htmlTemplateFile -Raw -Encoding UTF8
+$standardDisplayCssUri = ([System.Uri](Join-Path $workspaceRoot "LCM_Inventory\assets\StandardTableDisplay.css")).AbsoluteUri
+$htmlContent = $htmlContent.Replace('href="/assets/standard-table-display.css"', "href=`"$standardDisplayCssUri`"")
 $htmlContent = $htmlContent.Replace('/*__INJECTED_ATOM_PLACEHOLDER__*/', $atomJsContent)
 $htmlContent = $htmlContent.Replace('/*__INJECTED_DATA_PLACEHOLDER__*/', $injectedBlock)
 
-# Static Token Substitutions
-$htmlContent = $htmlContent.Replace('{{HUB_TITLE}}', "LCM Control Hub v$scriptVersion")
-$htmlContent = $htmlContent.Replace('{{HUB_VERSION}}', "v$scriptVersion")
-$htmlContent = $htmlContent.Replace('{{HUB_VERSION_SUBTITLE}}', $hubVersionSubtitle)
+# Dynamic Version Token Substitutions per RULE-DSP-016 (Dual Significance: Tool + Template)
+$templateVersion = "1.0.0"
+if ($htmlContent -match '(?i)Version\s*:\s*v?([0-9.]+)') {
+    $templateVersion = $Matches[1]
+}
+$dualVersion = "LCM-Show: v$scriptVersion Template: v$templateVersion"
+$htmlContent = $htmlContent.Replace('v{{HUB_VERSION}}', $dualVersion)
+$htmlContent = $htmlContent.Replace('{{HUB_VERSION}}', $dualVersion)
+$htmlContent = $htmlContent.Replace('{{SHOW_VERSION}}', "v$scriptVersion")
+$htmlContent = $htmlContent.Replace('{{TEMPLATE_VERSION}}', "v$templateVersion")
+$htmlContent = $htmlContent.Replace('{{HUB_TITLE}}', "LCM Control Hub ($dualVersion)")
+$htmlContent = $htmlContent.Replace('{{HUB_VERSION_SUBTITLE}}', "Constructed by Show-LcmControl v$scriptVersion | Template: v$templateVersion | Baseline: $lcmBaseline | Compiled: $compiledTimestamp")
 $htmlContent = $htmlContent.Replace('{{LCM_BASELINE}}', $lcmBaseline)
 $htmlContent = $htmlContent.Replace('{{COMPILE_DATE}}', $compiledTimestamp)
 
@@ -420,36 +447,55 @@ if (-not (Test-Path -LiteralPath $artifactsDir)) {
     New-Item -ItemType Directory -Path $artifactsDir -Force | Out-Null
 }
 
-$renderedHtmlPath = Join-Path $artifactsDir "CM_CONTROL_HUB.html"
+$renderedHtmlLeaf = if ($DatesMode) { "CM_CRP_DATES.html" } else { "CM_CONTROL_HUB.html" }
+$renderedHtmlPath = Join-Path $artifactsDir $renderedHtmlLeaf
 Write-TimingLog "Writing CM_CONTROL_HUB.html to disk..."
 Set-Content -LiteralPath $renderedHtmlPath -Value $htmlContent -Encoding UTF8
-Set-Content -LiteralPath (Join-Path $scratchDir "CM_CONTROL_HUB.html") -Value $htmlContent -Encoding UTF8
+Set-Content -LiteralPath (Join-Path $scratchDir $renderedHtmlLeaf) -Value $htmlContent -Encoding UTF8
 Write-TimingLog "CM_CONTROL_HUB.html written ($([Math]::Round($htmlContent.Length / 1KB, 1)) KB)."
 
 Write-Host "==========================================================================" -ForegroundColor Cyan
-Write-Host " UNIFIED LCM CONTROL HUB COMPILED" -ForegroundColor Green
+Write-Host " LCM CONTROL HUB - SAFE ACTIONS COMPILED" -ForegroundColor Green
 Write-Host "==========================================================================" -ForegroundColor Cyan
 Write-Host " Dashboard : $renderedHtmlPath"
 Write-Host " Ledger    : $proposalsFile"
 
 # ------------------------------------------------------------------------------
-# 3. Dual App Window Dispatch to Session 1 Interactive Desktop
+# 3. Single Window Interactive Desktop Dispatch
 # ------------------------------------------------------------------------------
 if (-not $NoLaunch) {
     Write-Host "==========================================================================" -ForegroundColor Cyan
-    
-    # 1. Compile companion LCM Sidecar dashboard
-    $sidecarScript = Join-Path $PSScriptRoot "Show-LcmSidecar.ps1"
-    if (Test-Path -LiteralPath $sidecarScript) {
-        Write-TimingLog "Compiling companion LCM Sidecar..."
-        & $sidecarScript -NoLaunch
-        Write-TimingLog "Companion LCM Sidecar compiled."
+
+    $daemonPort = if ($env:LCM_DAEMON_PORT -match '^\d+$') { [int]$env:LCM_DAEMON_PORT } else { 9876 }
+    $daemonOnline = $false
+    try {
+        $ping = Invoke-RestMethod -Uri "http://127.0.0.1:$daemonPort/ping" -TimeoutSec 1 -ErrorAction Stop
+        if ($ping -and $ping.status -eq "ONLINE") { $daemonOnline = $true }
+    } catch {}
+
+    if (-not $daemonOnline) {
+        $daemonScript = Join-Path $workspaceRoot ".lcm\tools\internal\LcmDesktopDaemon.ps1"
+        if (Test-Path -LiteralPath $daemonScript) {
+            Write-Host "  -> Port 9876 Daemon offline. Reviving daemon in background..." -ForegroundColor Yellow
+            Start-Process -FilePath "pwsh.exe" -ArgumentList "-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File `"$daemonScript`" -Background" -WindowStyle Hidden
+            for ($i = 0; $i -lt 15; $i++) {
+                Start-Sleep -Milliseconds 200
+                try {
+                    $ping = Invoke-RestMethod -Uri "http://127.0.0.1:$daemonPort/ping" -TimeoutSec 1 -ErrorAction SilentlyContinue
+                    if ($ping -and $ping.status -eq "ONLINE") { $daemonOnline = $true; break }
+                } catch {}
+            }
+        }
     }
 
-    $hubUri = [System.Uri]::new($renderedHtmlPath).AbsoluteUri
-    $launchTarget = if ($DatesMode) { "$hubUri#dates" } else { $hubUri }
-    $sidecarPath = Join-Path $artifactsDir "LCM_SIDECAR.html"
-    $sidecarUri = [System.Uri]::new($sidecarPath).AbsoluteUri
+    if ($daemonOnline) {
+        $launchTarget = if ($DatesMode) { "http://127.0.0.1:$daemonPort/hub#dates" } else { "http://127.0.0.1:$daemonPort/hub" }
+        Write-Host "  -> Port 9876 REST Daemon online. Launching via HTTP bridge (no sandbox)..." -ForegroundColor Green
+    } else {
+        $hubUri = [System.Uri]::new($renderedHtmlPath).AbsoluteUri
+        $launchTarget = if ($DatesMode) { "$hubUri#dates" } else { $hubUri }
+        Write-Host "  -> Port 9876 Daemon offline. Launching via local file fallback..." -ForegroundColor Yellow
+    }
 
     # --------------------------------------------------------------------------
     # Dynamic User Default Browser Discovery (Windows Registry UserChoice)
@@ -484,84 +530,41 @@ if (-not $NoLaunch) {
     }
 
     $dispatcher = Join-Path $workspaceRoot ".lcm\tools\internal\Invoke-InteractiveDesktop.ps1"
-    Write-TimingLog "Browser detected: $browserName ($browserPath). Dispatching windows..."
-    if ($browserPath -and (Test-Path -LiteralPath $browserPath)) {
-        if ($browserName -in @('zen', 'firefox')) {
-            # ------------------------------------------------------------------
-            # Zen Browser / Firefox: Dedicated window with Hub + Sidecar tabs
-            # ------------------------------------------------------------------
-            Write-Host "  -> Launching LCM Control Hub & Sidecar as two tabs in a dedicated $browserName window..." -ForegroundColor Green
-            if (Test-Path -LiteralPath $dispatcher) {
-                Write-TimingLog "Dispatching Tab 1: $launchTarget..."
-                & $dispatcher -FilePath $browserPath -ArgumentList "--new-window `"$launchTarget`""
-                Write-TimingLog "Tab 1 dispatched. Pausing 350ms..."
-                Start-Sleep -Milliseconds 350
-                Write-TimingLog "Dispatching Tab 2: $sidecarUri..."
-                & $dispatcher -FilePath $browserPath -ArgumentList "--new-tab `"$sidecarUri`""
-                Write-TimingLog "Tab 2 dispatched."
-            } else {
-                Start-Process -FilePath $browserPath -ArgumentList "--new-window `"$launchTarget`""
-                Start-Sleep -Milliseconds 350
-                Start-Process -FilePath $browserPath -ArgumentList @("--new-tab", "`"$sidecarUri`"")
+    
+    # --------------------------------------------------------------------------
+    # Check for Existing Active Hub Window to Avoid Duplicate Windows (RULE-DSP-008.5)
+    # --------------------------------------------------------------------------
+    $reused = $false
+    if ($daemonOnline) {
+        try {
+            $fg = Invoke-RestMethod -Uri "http://127.0.0.1:$daemonPort/foreground" -Method Post -Body (@{ title = "LCM Control Hub" } | ConvertTo-Json) -ContentType "application/json" -TimeoutSec 1 -ErrorAction SilentlyContinue
+            if ($fg -and $fg.success) {
+                Write-Host "  -> Existing LCM Control Hub window activated and focused on desktop (no duplicate window opened)." -ForegroundColor Green
+                $reused = $true
             }
-        } elseif ($browserName -in @('msedge', 'chrome', 'brave')) {
-            # ------------------------------------------------------------------
-            # Chromium / Edge: Two windows stacked vertically (one above the other)
-            # ------------------------------------------------------------------
-            Write-Host "  -> Launching LCM Control Hub & Sidecar in vertically stacked $browserName windows (one above the other)..." -ForegroundColor Green
-            
-            # Top Window: Control Hub
-            $topArgs = "--new-window `"$launchTarget`" --window-position=30,20 --window-size=1860,540"
-            if (Test-Path -LiteralPath $dispatcher) {
-                Write-TimingLog "Dispatching Window 1: Control Hub ($topArgs)..."
-                & $dispatcher -FilePath $browserPath -ArgumentList $topArgs
-                Write-TimingLog "Window 1 dispatched. Pausing 450ms..."
-            } else {
-                Start-Process -FilePath $browserPath -ArgumentList $topArgs
-            }
+        } catch {}
+    }
 
-            Start-Sleep -Milliseconds 450
-
-            # Bottom Window: Sidecar
-            $bottomArgs = "--new-window `"$sidecarUri`" --window-position=30,575 --window-size=1860,450"
+    if (-not $reused) {
+        Write-TimingLog "Browser detected: $browserName ($browserPath). Dispatching single Control Hub window..."
+        if ($browserPath -and (Test-Path -LiteralPath $browserPath)) {
+            Write-Host "  -> Launching authoritative LCM Control Hub window ($browserName)..." -ForegroundColor Green
             if (Test-Path -LiteralPath $dispatcher) {
-                Write-TimingLog "Dispatching Window 2: Sidecar ($bottomArgs)..."
-                & $dispatcher -FilePath $browserPath -ArgumentList $bottomArgs
-                Write-TimingLog "Window 2 dispatched."
-            } else {
-                Start-Process -FilePath $browserPath -ArgumentList $bottomArgs
-            }
-        } else {
-            # Generic browser dispatch: two sequential tab launches
-            Write-Host "  -> Launching Hub & Sidecar via detected default browser ($browserName)..." -ForegroundColor Green
-            if (Test-Path -LiteralPath $dispatcher) {
-                Write-TimingLog "Dispatching Tab 1: $launchTarget..."
+                Write-TimingLog "Dispatching Hub: $launchTarget..."
                 & $dispatcher -FilePath $browserPath -ArgumentList "`"$launchTarget`""
-                Write-TimingLog "Tab 1 dispatched. Pausing 300ms..."
-                Start-Sleep -Milliseconds 300
-                Write-TimingLog "Dispatching Tab 2: $sidecarUri..."
-                & $dispatcher -FilePath $browserPath -ArgumentList "`"$sidecarUri`""
-                Write-TimingLog "Tab 2 dispatched."
+                Write-TimingLog "Hub window dispatched."
             } else {
                 Start-Process -FilePath $browserPath -ArgumentList "`"$launchTarget`""
-                Start-Sleep -Milliseconds 300
-                Start-Process -FilePath $browserPath -ArgumentList "`"$sidecarUri`""
             }
-        }
-    } else {
-        Write-Host "  -> Dispatching Control Hub & Sidecar tabs via default browser handler..." -ForegroundColor Cyan
-        if (Test-Path -LiteralPath $dispatcher) {
-            Write-TimingLog "Dispatching Target 1: $launchTarget..."
-            & $dispatcher -FilePath $launchTarget
-            Write-TimingLog "Target 1 dispatched. Pausing 250ms..."
-            Start-Sleep -Milliseconds 250
-            Write-TimingLog "Dispatching Target 2: $sidecarUri..."
-            & $dispatcher -FilePath $sidecarUri
-            Write-TimingLog "Target 2 dispatched."
         } else {
-            Start-Process -FilePath $launchTarget
-            Start-Sleep -Milliseconds 250
-            Start-Process -FilePath $sidecarUri
+            Write-Host "  -> Dispatching Control Hub via default browser handler..." -ForegroundColor Cyan
+            if (Test-Path -LiteralPath $dispatcher) {
+                Write-TimingLog "Dispatching Target: $launchTarget..."
+                & $dispatcher -FilePath $launchTarget
+                Write-TimingLog "Target dispatched."
+            } else {
+                Start-Process -FilePath $launchTarget
+            }
         }
     }
     Write-TimingLog "All dispatches completed. Total execution time: $($script:stopwatch.ElapsedMilliseconds)ms"

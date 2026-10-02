@@ -67,10 +67,57 @@ All tools in `tools/` conform to `RULE-PS-008` (Headers), `RULE-PS-009` (Logging
 | **`Invoke-WorkspacePush.ps1`** | Multi-repo lockstep Git push engine with Gemini export and proposal state transition. | `-Reason <string>`, `-Repositories <string[]>`, `-DryRun`, `-Help` |
 | **`Invoke-WorkspaceAudit.ps1`** | CLI runner for multi-repo audit scan and drift assessment. | `-Help` |
 | **`Test-LCMRuleHealth.ps1`** | Validates NTFS junction integrity and rule header parity across all repositories. | `-Fix`, `-Help` |
-| **`Show-CmControlHub.ps1`** | Interactive loopback web dashboard for complete LCM proposal and repository management. | `-Port <int>`, `-Help` |
+| **`Show-LcmControl.ps1`** | Canonical CM Control Hub renderer and launcher. The first functional release provides refresh, proposal/document viewing, log viewing, and Beyond Compare review launch. | `-ReviewMode`, `-DatesMode`, `-Repo <string>`, `-State <string>`, `-Id <int>`, `-CliMode`, `-NoLaunch`, `-TimerOn` |
 | **`Show-LcmActiveLauncher.ps1`** | LCM Tool Explorer displaying all 192 workspace tools with category filtering and execution routing. | `-Help` |
 | **`Show-WorkspaceReadiness.ps1`** | Workspace readiness rollup viewer displaying test suite passing status and review receipts. | `-Help` |
 | **`Submit-ReviewResult.ps1`** | Programmatic acceptance hook recording review receipts into `data/reviews/`. | `-Repository <string>`, `-ReceiptPath <string>`, `-Help` |
+| **`Test-ReviewCommitGate.ps1`** | Git pre-commit validator for the current BCompare-approved baseline and staged diff. | `-RepositoryPath <string>` |
+
+---
+
+### 3.1 Control Hub Safe-Action Contract
+
+`Show-LcmControl.ps1` renders `assets/CM_CONTROL_HUB_READONLY.html` with the current
+proposal ledger, document cache, and activity logs. The template follows the
+Implementation 0 prototype: a compact control surface, visible state rail, and a
+complete change index. Its browser release is intentionally read-only except for
+launching the existing Beyond Compare review tool:
+
+- enabled: refresh, proposal/document inspection, activity-log viewing, and review launch;
+- disabled: proposal state changes, cleanup, commits, and pushes;
+- enforced: the browser's daemon command bridge accepts only
+  `Invoke-BeyondCompareReview.ps1`.
+
+This keeps the dashboard useful without providing a path to mutate
+`data/proposals/proposals.json` or Git state.
+
+The inspector also makes missing historical plan or walkthrough paths explicit; it
+does not invent cached document content when an old ledger reference no longer exists.
+
+### 3.2 Enforced Review Commit Gate
+
+The root workspace and `LCM_Inventory` repositories use repository-local
+`.githooks/pre-commit` hooks. A material commit from the command line or VS Code
+Source Control is rejected unless `Submit-ReviewResult.ps1` has created a current
+review authorization for the same repository, HEAD baseline, and staged diff.
+
+The authorization expires after two hours and is removed immediately after the
+commit succeeds. This makes an IDE commit attempt visible as a review-gate
+failure instead of silently allowing an unreviewed change. The required sequence
+is: launch BCompare, obtain operator acceptance, run
+`Submit-ReviewResult.ps1`, then let that command create the commit and receipt.
+
+### 3.3 IDE Canvas Read-Only Work Queue Projection
+
+The project canvas extension at
+`.github/extensions/lcm-control-hub/extension.mjs` serves the root-owned live
+Control Hub page within the IDE and exposes a CRP-196 work-queue projection.
+The projection separates visible lifecycle status from plan and progress state,
+includes lifecycle counts, latest state-history evidence, milestone dates, and
+repository-matched App catalog context. The `refresh-ledger` and `get-work-queue` canvas actions do not write proposal,
+Git, or execution state. `prepare-review-decision` persists only a
+non-mutating cohort-and-switches draft; it cannot accept a review, transition
+lifecycle state, stage, commit, or publish.
 
 ---
 
@@ -137,4 +184,3 @@ All tools in `tools/` conform to `RULE-PS-008` (Headers), `RULE-PS-009` (Logging
 |:---|:---|:---|
 | **`Fix-Documentation.ps1`** | Reconciles explicit, repository-qualified CRP/BUG payloads into tripartite documents. | `<CRP/BUG scope>`, `-Apply`, `-OpenReview`, `-Trace` |
 <!-- /FixDocumentation -->
-

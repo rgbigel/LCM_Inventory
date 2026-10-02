@@ -42,10 +42,10 @@ graph TB
         ARTIFACTS[("data/artifacts/<br/>Transient HTML Viewers")]
     end
 
-    subgraph Governed_Space["Governed Repositories (13 Repos)"]
+    subgraph Governed_Space["Current Governed LCM Roots"]
         REPO_ROOT["Git_Repositories (Root)"]
-        REPO_SUBS["Subsystems (HaSSD06, Supervision)"]
-        REPO_COMPS["Components (LCM_Shared, etc.)"]
+        REPO_SUBS["LCM_Backup and LCM_Supervision"]
+        REPO_COMPS["LCM_AI, LCM_Inventory, and LCM_Shared"]
     end
 
     CM_HUB <--> CM_MOD
@@ -159,4 +159,3 @@ resolves repository-qualified tripartite payloads, records manifests and
 receipts, and dispatches per-repository BCompare review without changing
 implementation or lifecycle state.
 <!-- /FixDocumentation -->
-

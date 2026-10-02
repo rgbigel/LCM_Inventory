@@ -91,21 +91,23 @@ initial switch set includes verification depth, testing mode, review granularity
 BCR display scope, trace mode, and logging mode. Every run records the
 effective switch values in its execution evidence.
 
-## Layout Direction
+## Layout Direction and Authoritative UI Design Pattern
 
-- Use the standard display controls: presets, mode, Intern, filters, integrated
-  sorting, reset filters, theme, refresh, help, and back.
-- Keep App focus, search, and global commands in the top row.
-- Replace the persistent sidecar with a full-width selection and bulk-action
-  work area below the execution ledger.
-- Expose only actions valid for every selected proposal in a bulk cohort.
-- Show Status, Plan State, Progress Status, numeric priority, execution busy
-  phase, failure indication, and effective execution switches in the selected
-  proposal or cohort view.
-- Keep data-world and contract views in Tool Explorer and related standard
-  displays rather than in the primary proposal work queue.
-- Record the static `CM_CONTROL_HUB_IMPLEMENTATION_0.html` as a visual-review
-  prototype only; it has no operational behavior.
+- **Governance Compliance**: The Control Hub implementation MUST strictly adhere to `DisplayStandardsPolicy.md` v9.3.0 (`RULE-DSP-001` through `RULE-DSP-016`), embedding the Antigravity-IDE Light Mode default palette with deep-slate topbar (`RULE-DSP-001`, `002`), `IBM Plex Mono` / `IBM Plex Sans` typography, and the two-row sticky header standard.
+- **Authoritative Design Reference**: The design pattern and interactive UI architecture agreed upon in [`assets/CM_CONTROL_HUB_IMPLEMENTATION_0.html`](file:///d:/Git_Repositories/LCM_Inventory/assets/CM_CONTROL_HUB_IMPLEMENTATION_0.html) serves as the authoritative UI specification and prototype for the Control Hub.
+- **Top Row and Control Row**:
+  - Global Topbar: Context badges, application title, active repository selector, and global status metrics.
+  - Sticky Control Row: Search input with clear button, multi-facet status filter pills (`Open`, `Active`, `Review`, `Complete`, `Published`, `Held`, `Cancelled`), intern mode toggle, density selector, column visibility, and action triggers (`ShowTools`, `New Proposal`, `Sync`).
+- **Lifecycle & Execution Rail**:
+  - 7-stage Status Rail pipeline (`Open` -> `Active` -> `Review` -> `Complete` -> `Published`, with `Held` and `Cancelled` off-ramps).
+  - Horizontal Execution Ledger timeline displaying checkpoints (`Scope`, `Baseline`, `Manifest`, `Verify`, `BCR Setup`, `Review`, `Commit`, `Publish`) with progress state indicators.
+- **Vector Iconography**: Embedded Lucide SVG vector iconography (`RULE-DSP-005`) for all actions and status badges.
+- **Selection & Bulk Cohort Action Panel**:
+  - Full-width selection and bulk-action drawer positioned below the work table (`RULE-DSP-011`).
+  - Cohort batch command triggers (`do`, `delete`, `defer`) exposing only actions valid for every selected proposal.
+- **Read-Model Gating**:
+  - The root-owned Control Hub application renders the live work queue. Its source and runtime labels MUST distinguish it from any retired visual prototype.
+  - Data-world and contract views remain accessible via modal peek or delegated standard displays (e.g., Tool Explorer).
 
 ## Documentation Updates
 

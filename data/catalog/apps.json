@@ -323,19 +323,6 @@
     {
       "id": "Master",
       "number": 0,
-      "title": "Master Architecture - PowerBGInfo Architecture",
-      "repo": "PowerBGInfo",
-      "doc_layout": "MasterRoot",
-      "directory": "docs/",
-      "arch_defined": true,
-      "req_defined": true,
-      "impl_defined": true,
-      "is_master": true,
-      "constituents": []
-    },
-    {
-      "id": "Master",
-      "number": 0,
       "title": "Master Architecture - LCM_Shared Architecture",
       "repo": "LCM_Shared",
       "doc_layout": "MasterRoot",

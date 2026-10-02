@@ -29,23 +29,27 @@ graph TB
         direction TB
         WI["LCM_Inventory (CM Engine)"]
         WAI["LCM_AI (LCM Design Workshop)"]
-        VI["VolumeInventory (Candidate / Governed)"]
-        DAS["DiskAssignmentStatus (Standard Git Repo)"]
-        OTHERS["Other Git & Non-Git Repositories"]
+        LB["LCM_Backup (Backup Subsystem)"]
+        LS["LCM_Shared (Shared Modules)"]
+        LSP["LCM_Supervision (Supervision Subsystem)"]
     end
 
-    WAI -->|"LCM Release Baseline (v4.1.0)"| WI
+    WAI -->|"Governance baseline"| WI
     WI -->|"Audits, Baselines & Drift Detection"| WAI
-    WI -->|"Audits, Baselines & Drift Detection"| VI
-    WI -->|"Audits, Baselines & Drift Detection"| DAS
-    WI -->|"Audits, Baselines & Drift Detection"| OTHERS
-    WI -->|"Orchestrates LCM Upgrades"| VI
+    WI -->|"Audits, Baselines & Drift Detection"| LB
+    WI -->|"Audits, Baselines & Drift Detection"| LS
+    WI -->|"Audits, Baselines & Drift Detection"| LSP
     WI -->|"Indexes Change Requests"| WAI
-    WI -->|"Indexes Change Requests"| VI
-    WI -->|"Indexes Change Requests"| DAS
-    WI -->|"Indexes Change Requests"| OTHERS
+    WI -->|"Indexes Change Requests"| LB
+    WI -->|"Indexes Change Requests"| LS
+    WI -->|"Indexes Change Requests"| LSP
 
 ```
+
+**Diagram key:** `WI` = **LCM_Inventory** (Configuration Management engine);
+`WAI` = **LCM_AI** (LCM design workshop); `LB` = **LCM_Backup** (dormant
+backup concept); `LS` = **LCM_Shared** (shared modules); and `LSP` =
+**LCM_Supervision** (supervision subsystem).
 
 ---
 
@@ -140,5 +144,3 @@ The operational governance and lifecycle methodology of the platform are codifie
 * `logs/` - CM activity ledger (`cm_activity.log`) and historical audit records.
 * `modules/` - Reusable PowerShell CM modules (`WorkspaceCM.psm1`, `ChangeRequestManager.psm1`).
 * `tools/` - Standalone executable PowerShell CLI tools (`Invoke-WorkspacePush.ps1`, `Invoke-BeyondCompareReview.ps1`, `Submit-ReviewResult.ps1`, etc.).
-
-
