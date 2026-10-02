@@ -9325,8 +9325,8 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-197-Delivery-and-Verification-Follow-Through-for-CRPs-190-195",
       "docs": {
@@ -9339,7 +9339,8 @@
       "author": "rgbig",
       "details": "Deliver the unimplemented CRP-190/191/192 scopes and add durable verification for BCompare session hygiene from BUG-195; CRP-193 and BUG-194 require no additional extraction.",
       "plan_path": "docs/Proposals/CRP-197-Delivery-and-Verification-Follow-Through-for-CRPs-190-195/Implementation_Plan.md",
-      "walkthrough_path": "docs/Proposals/CRP-197-Delivery-and-Verification-Follow-Through-for-CRPs-190-195/Walkthrough.md"
+      "walkthrough_path": "docs/Proposals/CRP-197-Delivery-and-Verification-Follow-Through-for-CRPs-190-195/Walkthrough.md",
+      "pushed_at": "2026-10-02 21:29:52"
     },
     {
       "id": 196,
@@ -9351,8 +9352,8 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-196-LCM-Control-Hub-Lifecycle-and-Action-Model-Redesign",
       "docs": {
@@ -9365,7 +9366,8 @@
       "author": "rgbig",
       "details": "Redesign the LCM Control Hub lifecycle terminology, transition actions, layout, fast-complete route, and sidecar interaction model.",
       "plan_path": "docs/Proposals/CRP-196-LCM-Control-Hub-Lifecycle-and-Action-Model-Redesign/Implementation_Plan.md",
-      "walkthrough_path": "docs/Proposals/CRP-196-LCM-Control-Hub-Lifecycle-and-Action-Model-Redesign/Walkthrough.md"
+      "walkthrough_path": "docs/Proposals/CRP-196-LCM-Control-Hub-Lifecycle-and-Action-Model-Redesign/Walkthrough.md",
+      "pushed_at": "2026-10-02 21:29:52"
     },
     {
       "id": 195,
@@ -9574,14 +9576,15 @@
       "app_id": "App: 1",
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-199-BCR-Junction-Naming-And-CRP-Dir-Purge",
       "commit_sha": null,
       "github_url": null,
       "author": "rgbig",
-      "details": "Remove redundant _CRP-nnn suffix from Live junction name (CRP already in parent dir). Add post-commit purge of entire BC_Review\\CRP-nnn\\ dir in Submit-ReviewResult. Fix stale-junction cleanup pattern in BCR."
+      "details": "Remove redundant _CRP-nnn suffix from Live junction name (CRP already in parent dir). Add post-commit purge of entire BC_Review\\CRP-nnn\\ dir in Submit-ReviewResult. Fix stale-junction cleanup pattern in BCR.",
+      "pushed_at": "2026-10-02 21:29:52"
     },
     {
       "id": 200,
@@ -9593,14 +9596,15 @@
       "app_id": "App: 1",
       "primary_app": 1,
       "affected_apps": [],
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/BUG-200-BCompare-Audit-Single-Line-Count-Failure",
       "commit_sha": null,
       "github_url": null,
       "author": "rgbig",
-      "details": "Audit-BeyondCompareReviewStaging accessed Count on a scalar string when a baseline file contained one meaningful line under StrictMode."
+      "details": "Audit-BeyondCompareReviewStaging accessed Count on a scalar string when a baseline file contained one meaningful line under StrictMode.",
+      "pushed_at": "2026-10-02 21:29:52"
     },
     {
       "id": 201,
@@ -9632,15 +9636,16 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": [],
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "priority": "High",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/BUG-202-BCompare-Command-Line-Reference-Launch",
       "commit_sha": null,
       "github_url": null,
       "author": "rgbig",
-      "details": "Launch the saved BCompare session name instead of replaying the folder-comparison command line through the interactive desktop bridge."
+      "details": "Launch the saved BCompare session name instead of replaying the folder-comparison command line through the interactive desktop bridge.",
+      "pushed_at": "2026-10-02 21:29:52"
     },
     {
       "id": 203,
@@ -9692,15 +9697,16 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": [],
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "priority": 10,
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/BUG-205-Control-Hub-Numeric-Priority-Filter-Crash",
       "commit_sha": null,
       "github_url": null,
       "author": "rgbig",
-      "details": "Normalize numeric and legacy letter priority values before Control Hub filtering, sorting, and rendering to prevent JavaScript toUpperCase failures."
+      "details": "Normalize numeric and legacy letter priority values before Control Hub filtering, sorting, and rendering to prevent JavaScript toUpperCase failures.",
+      "pushed_at": "2026-10-02 21:29:52"
     },
     {
       "id": 206,
@@ -9712,15 +9718,16 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": [],
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "priority": 6,
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-206-On-Demand-Documentation-Reconciliation",
       "commit_sha": null,
       "github_url": null,
       "author": "rgbig",
-      "details": "Provide FixDocumentation <crp-scope> as a dry-run-capable, scoped, review-gated documentation reconciliation flow."
+      "details": "Provide FixDocumentation <crp-scope> as a dry-run-capable, scoped, review-gated documentation reconciliation flow.",
+      "pushed_at": "2026-10-02 21:29:52"
     },
     {
       "id": 207,
@@ -9732,15 +9739,16 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": [],
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "priority": 9,
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/BUG-207-Stale-Review-Completion-Receipt",
       "commit_sha": null,
       "github_url": null,
       "author": "rgbig",
-      "details": "Prevent Submit-ReviewResult from producing a completed receipt or purging stale review scratch when no matching current review staging manifest exists."
+      "details": "Prevent Submit-ReviewResult from producing a completed receipt or purging stale review scratch when no matching current review staging manifest exists.",
+      "pushed_at": "2026-10-02 21:29:52"
     },
     {
       "id": 208,
@@ -9752,15 +9760,16 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": [],
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "priority": 10,
       "bundle_id": "CRP-208",
       "bundle_dir": "docs/Proposals/CRP-208-LCM-Repository-Naming-Migration",
       "commit_sha": null,
       "github_url": null,
       "author": "rgbig",
-      "details": "Safely rename LCM_AI, LCM_Inventory, LCM_Supervision, and LCM_Shared to their LCM identities and update all live references across the governed cohort."
+      "details": "Safely rename LCM_AI, LCM_Inventory, LCM_Supervision, and LCM_Shared to their LCM identities and update all live references across the governed cohort.",
+      "pushed_at": "2026-10-02 21:29:52"
     },
     {
       "id": 209,
@@ -9772,15 +9781,16 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": [],
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "priority": 8,
       "bundle_id": "CRP-209",
       "bundle_dir": "docs/Proposals/CRP-209-Unified-Workspace-UI-Standards-and-Display-Architecture",
       "commit_sha": null,
       "github_url": null,
       "author": "rgbig",
-      "details": "Comprehensive proposal and rule specification unifying HTML table dashboards, CSS design tokens, WPF modals, WinForms system tray, headless print-to-PDF, and desktop dispatch across all workspace repositories."
+      "details": "Comprehensive proposal and rule specification unifying HTML table dashboards, CSS design tokens, WPF modals, WinForms system tray, headless print-to-PDF, and desktop dispatch across all workspace repositories.",
+      "pushed_at": "2026-10-02 21:29:52"
     },
     {
       "id": 210,
@@ -9792,15 +9802,16 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": [],
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "priority": 8,
       "bundle_id": "CRP-210",
       "bundle_dir": "docs/Proposals/CRP-210-Minimal-Tests-Switch-and-Single-Cycle-State-Modifier",
       "commit_sha": null,
       "github_url": null,
       "author": "rgbig",
-      "details": "Standardized single-cycle Minimal Tests switch restricting test readiness to fast-tier AST/syntax checks, skipping heavy cascades with automatic ephemeral reset and explicit state representation."
+      "details": "Standardized single-cycle Minimal Tests switch restricting test readiness to fast-tier AST/syntax checks, skipping heavy cascades with automatic ephemeral reset and explicit state representation.",
+      "pushed_at": "2026-10-02 21:29:52"
     },
     {
       "id": 211,
@@ -9812,15 +9823,16 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": [],
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "priority": 3,
       "bundle_id": "CRP-211",
       "bundle_dir": "docs/Proposals/CRP-211-RollingCalendar-Locale-Parameter-and-German-Default",
       "commit_sha": null,
       "github_url": null,
       "author": "rgbig",
-      "details": "Configurable locale formatting with German de-DE default, dynamic day/month localization, and tool version display compliance."
+      "details": "Configurable locale formatting with German de-DE default, dynamic day/month localization, and tool version display compliance.",
+      "pushed_at": "2026-10-02 21:29:52"
     },
     {
       "id": 212,
@@ -9832,15 +9844,16 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": [],
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "priority": 8,
       "bundle_id": "CRP-212",
       "bundle_dir": "docs/Proposals/CRP-212-JSON-Primary-Governance-Inventory-and-ShowTools-Nomenclature",
       "commit_sha": null,
       "github_url": null,
       "author": "rgbig",
-      "details": "Establish JSON structured data in LCM_Inventory as the authoritative primary source of truth for LCM tracking policies and junction mappings; render .md presentations in Show-type displays; reinstate ShowTools as canonical primary command with ToolsExplorer degraded to alias; formally ratify .agents/ACTIVE_SESSION.md as tracked living history; and codify deferral handling for bulk lifecycle-action triggers."
+      "details": "Establish JSON structured data in LCM_Inventory as the authoritative primary source of truth for LCM tracking policies and junction mappings; render .md presentations in Show-type displays; reinstate ShowTools as canonical primary command with ToolsExplorer degraded to alias; formally ratify .agents/ACTIVE_SESSION.md as tracked living history; and codify deferral handling for bulk lifecycle-action triggers.",
+      "pushed_at": "2026-10-02 21:29:52"
     },
     {
       "id": 213,
