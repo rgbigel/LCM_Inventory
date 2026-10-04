@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-10-03T21:28:48+02:00",
+  "updated_at": "2026-10-04T16:06:20+02:00",
   "review_granularity": "tight",
   "lcm_mode": "active",
-  "last_proposal_id": 242,
+  "last_proposal_id": 244,
   "proposals": [
     {
       "id": 1,
@@ -10061,6 +10061,58 @@
       "plan_path": "docs/Proposals/CRP-221-Distinguish-Cancelled-vs-Rejected-in-ProposalRevie/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-221-Distinguish-Cancelled-vs-Rejected-in-ProposalRevie/Walkthrough.md",
       "progress_state": "in_progress"
+    },
+    {
+      "id": 243,
+      "crp_id": "CRP-243",
+      "timestamp": "2026-10-04 15:43:18",
+      "title": "Integration of Read-Only Analysis Protocol & Implementation Gating into Workspace Governance",
+      "origin_repo": "LCM_AI",
+      "cr_id": "CRP-2026-005",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "approved",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/CRP-243-Integration-of-Read-Only-Analysis-Protocol-Impleme",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig",
+      "details": "Establishes a formal, model-first analysis lifecycle across all workspace AI interactions (specifically Antigravity IDE and Gemini sessions). This proposal introduces strict modal separation between READ-ONLY ANALYSIS and GOVERNED IMPLEMENTATION, enforced via intent wake words (ANALYZE / IMPLEMENT), verifiable provenance tagging, and explicit human-in-the-loop decision gates. Surfaces runtime state transparency variables (LCM_OperatingMode, LCM_ActiveGate, LCM_SearchRadius, LCM_SettledFacts, LCM_OpenHypotheses, LCM_CircuitBreaker) to LCM Control Hub.",
+      "plan_path": "docs/Proposals/CRP-243-Integration-of-Read-Only-Analysis-Protocol-Impleme/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-243-Integration-of-Read-Only-Analysis-Protocol-Impleme/Walkthrough.md",
+      "progress_state": "verification"
+    },
+    {
+      "id": 244,
+      "crp_id": "CRP-244",
+      "timestamp": "2026-10-04 16:06:20",
+      "title": "WHAT-IF Analysis Sub-Path Protocol and Trial Implementation Branching",
+      "origin_repo": "LCM_AI",
+      "cr_id": "CRP-244",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "suggested",
+      "progress_state": "undecided",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/CRP-244-WHAT-IF-Analysis-Sub-Path-Protocol-and-Trial-Imple",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig",
+      "details": "Enables a formal WHAT-IF exploratory sub-path within ANALYSIS mode when a CRP is unfinalized, blocked, or encounters architectural hurdles. Allows operators and agents to formulate alternative trial hypotheses, execute an isolated trial implementation branch with rollback checkpoints, and evaluate it at review. If accepted at review, the trial is promoted; if rejected, the pre-trial baseline state is cleanly restored and the session drops back into Analysis mode for alternative exploration.",
+      "plan_path": "docs/Proposals/CRP-244-WHAT-IF-Analysis-Sub-Path-Protocol-and-Trial-Imple/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-244-WHAT-IF-Analysis-Sub-Path-Protocol-and-Trial-Imple/Walkthrough.md"
     }
   ],
   "testing_mode": "active",

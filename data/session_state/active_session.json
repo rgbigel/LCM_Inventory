@@ -1,4 +1,10 @@
 {
-  "updated_at": "2026-10-03T21:28:49+02:00",
-  "active_context": null
+  "updated_at": "2026-10-04T15:55:01+02:00",
+  "active_context": null,
+  "operating_mode": "GOVERNED_IMPLEMENTATION",
+  "active_gate": "STEP_001",
+  "search_radius": 2,
+  "settled_facts": [],
+  "open_hypotheses": [],
+  "circuit_breaker": false
 }

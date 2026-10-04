@@ -11,7 +11,7 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $false, Position = 0, HelpMessage = 'Action to perform on proposals or governance settings')]
-    [ValidateSet('do', 'delete', 'defer', 'deferred', 'complete', 'completed', 'suggest', 'suggested', 'granularity', 'mode', 'testing-mode', 'testing', 'list', 'progress', 'state', 'reject', 'rejected', 'approve', 'approved', 'bug', 'push', 'pushed', 'verify', 'priority', 'commit', 'committed', 'proceed', 'regression', 'regressions', 'check-regressions', 'generate-regression', 'workon', 'work-on', 'app', 'new-app', 'apps', 'list-apps', 'sync-apps', 'catalog', 'split-docs', 'splitdocs', 'doc', 'docs', 'show-doc', 'purge-bundle', 'hold', 'held', 'resume')]
+    [ValidateSet('do', 'delete', 'defer', 'deferred', 'complete', 'completed', 'suggest', 'suggested', 'granularity', 'mode', 'testing-mode', 'testing', 'list', 'progress', 'state', 'reject', 'rejected', 'approve', 'approved', 'bug', 'push', 'pushed', 'verify', 'priority', 'commit', 'committed', 'proceed', 'regression', 'regressions', 'check-regressions', 'generate-regression', 'workon', 'work-on', 'app', 'new-app', 'apps', 'list-apps', 'sync-apps', 'catalog', 'split-docs', 'splitdocs', 'doc', 'docs', 'show-doc', 'purge-bundle', 'hold', 'held', 'resume', 'analyze', 'implement', 'operating-mode', 'analysis-mode', 'trip-breaker', 'circuit-breaker', 'reset-breaker')]
     [string]$Action = 'list',
 
     [Parameter(Mandatory = $false, Position = 1, HelpMessage = 'Target proposal expression (e.g. all, #1, 105, 100-105)')]
@@ -96,6 +96,14 @@ if ($Help) {
 $modulePath = Join-Path $PSScriptRoot '..\modules\ProposalManager.psm1'
 Import-Module $modulePath -Force
 
+$analysisModulePath = Join-Path $PSScriptRoot '..\modules\AnalysisGovernance.psm1'
+Import-Module $analysisModulePath -Force
+
+# Assert implementation allowed for modifying actions unless -Force is specified
+if ($Action -in @('do', 'proceed', 'commit', 'verify') -and -not $Force) {
+    Assert-LcmImplementationAllowed
+}
+
 if ($Granularity) {
     Set-ReviewGranularity -Granularity $Granularity | Out-Null
 }
@@ -109,6 +117,39 @@ if ($TestingMode) {
 }
 
 switch -Regex ($Action) {
+    '^analyze$' {
+        Set-LcmOperatingMode -Mode 'READ_ONLY_ANALYSIS' | Out-Null
+        Write-Host "Operating Mode switched to: READ_ONLY_ANALYSIS per RULE-ANA-001" -ForegroundColor Cyan
+        break
+    }
+    '^implement$' {
+        Set-LcmOperatingMode -Mode 'GOVERNED_IMPLEMENTATION' | Out-Null
+        Write-Host "Operating Mode switched to: GOVERNED_IMPLEMENTATION per RULE-ANA-004" -ForegroundColor Green
+        break
+    }
+    '^(operating-mode|analysis-mode)$' {
+        if ($TargetExpression -in @('READ_ONLY_ANALYSIS', 'GOVERNED_IMPLEMENTATION', 'CIRCUIT_BREAKER_HALT')) {
+            Set-LcmOperatingMode -Mode $TargetExpression | Out-Null
+        }
+        $analysisState = Get-LcmAnalysisState
+        Write-Host "LCM Operating Mode : $($analysisState.operating_mode)" -ForegroundColor Cyan
+        Write-Host "Active Gate        : $($analysisState.active_gate)" -ForegroundColor Cyan
+        Write-Host "Search Radius      : $($analysisState.search_radius)" -ForegroundColor Cyan
+        $cbColor = if ($analysisState.circuit_breaker) { 'Red' } else { 'Green' }
+        Write-Host "Circuit Breaker    : $($analysisState.circuit_breaker)" -ForegroundColor $cbColor
+        break
+    }
+    '^(trip-breaker|circuit-breaker)$' {
+        $reason = if ($Details) { $Details } else { 'Manual or execution block tripped circuit breaker' }
+        Invoke-LcmCircuitBreaker -Reason $reason | Out-Null
+        Write-Host "Circuit Breaker Tripped! Mode is now: CIRCUIT_BREAKER_HALT" -ForegroundColor Red
+        break
+    }
+    '^reset-breaker$' {
+        Reset-LcmCircuitBreaker | Out-Null
+        Write-Host "Circuit Breaker Reset. Mode returned to: READ_ONLY_ANALYSIS" -ForegroundColor Yellow
+        break
+    }
     '^granularity$' {
         if ($TargetExpression -in @('coarse', 'tight')) {
             Set-ReviewGranularity -Granularity $TargetExpression | Out-Null

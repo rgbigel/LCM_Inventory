@@ -818,6 +818,15 @@
       background: #0d9488;
       box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.25);
     }
+    .switch-led-analysis {
+      background: #f59e0b;
+      box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.25);
+    }
+    .switch-led-breaker {
+      background: #dc2626;
+      box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.35);
+      animation: pulse 0.8s infinite alternate;
+    }
     .switch-led-active {
       background: #f59e0b;
       box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.25);
@@ -967,6 +976,10 @@
         <div class="switch-item" id="switchGranularity" onclick="toggleGranularity()" title="Toggle Granularity: -Coarse combines batch review; -Tight stops for dedicated BC5 review per proposal (RULE-LCM-003).">
           <span class="switch-led switch-led-coarse" id="ledGranularity"></span>
           <span class="switch-name">Granularity: <strong id="switchValGranularity">-Coarse</strong></span>
+        </div>
+        <div class="switch-item" id="switchAnalysisMode" onclick="toggleAnalysisMode()" title="Analysis Governance Mode (RULE-ANA-001): READ_ONLY_ANALYSIS blocks edits; GOVERNED_IMPLEMENTATION allows execution bound to analysis; CIRCUIT_BREAKER_HALT on gap.">
+          <span class="switch-led switch-led-on" id="ledAnalysisMode"></span>
+          <span class="switch-name">Mode: <strong id="switchValAnalysisMode">IMPLEMENT</strong></span>
         </div>
         <div class="switch-separator"></div>
         <div class="switches-label" style="margin-left: 2px;">
@@ -2212,6 +2225,22 @@
       if ($("switchValGranularity")) $("switchValGranularity").innerText = isTight ? "-Tight" : "-Coarse";
       if ($("ledGranularity")) $("ledGranularity").className = isTight ? "switch-led switch-led-tight" : "switch-led switch-led-coarse";
 
+      const sess = proposalsData.session_state || {};
+      const opMode = (sess.operating_mode || "GOVERNED_IMPLEMENTATION").toUpperCase();
+      window.lcmOperatingMode = opMode;
+      if ($("switchValAnalysisMode")) {
+        if (opMode === "READ_ONLY_ANALYSIS") {
+          $("switchValAnalysisMode").innerText = "ANALYSIS";
+          if ($("ledAnalysisMode")) $("ledAnalysisMode").className = "switch-led switch-led-analysis";
+        } else if (opMode === "CIRCUIT_BREAKER_HALT") {
+          $("switchValAnalysisMode").innerText = "BREAKER";
+          if ($("ledAnalysisMode")) $("ledAnalysisMode").className = "switch-led switch-led-breaker";
+        } else {
+          $("switchValAnalysisMode").innerText = "IMPLEMENT";
+          if ($("ledAnalysisMode")) $("ledAnalysisMode").className = "switch-led switch-led-on";
+        }
+      }
+
       const p = activeProposal || null;
       let isDoit = false;
       let isMinTests = false;
@@ -2346,6 +2375,21 @@
       const targetDisplay = (target === "tight") ? "-Tight (Review per proposal)" : "-Coarse (Combined batch review)";
       const cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action granularity -Granularity ${target}`;
       executeDaemonCommand(cmd, `Setting Review Granularity Switch to ${targetDisplay}...`, cmd);
+    }
+
+    function toggleAnalysisMode() {
+      const current = window.lcmOperatingMode || "GOVERNED_IMPLEMENTATION";
+      let targetAction = "analyze";
+      let targetDisplay = "READ_ONLY_ANALYSIS";
+      if (current === "READ_ONLY_ANALYSIS") {
+        targetAction = "implement";
+        targetDisplay = "GOVERNED_IMPLEMENTATION";
+      } else if (current === "CIRCUIT_BREAKER_HALT") {
+        targetAction = "reset-breaker";
+        targetDisplay = "READ_ONLY_ANALYSIS (Reset Breaker)";
+      }
+      const cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action ${targetAction}`;
+      executeDaemonCommand(cmd, `Setting Analysis Governance Mode to ${targetDisplay}...`, cmd);
     }
 
     function updateTimelineDisplay(targetProposal) {
