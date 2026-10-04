@@ -179,6 +179,30 @@ if (Test-Path -LiteralPath $maintenanceScript) {
     & pwsh -File $maintenanceScript -TailLines 100
 }
 
+# ------------------------------------------------------------------------------
+# 4. Ensure LCM_AI (Governance & Copilot Authority) is Considered by Publish
+# ------------------------------------------------------------------------------
+$aiPath = Join-Path $workspaceRoot "LCM_AI"
+if (Test-Path -LiteralPath (Join-Path $aiPath '.git')) {
+    $aiBranch = (git -C $aiPath rev-parse --abbrev-ref HEAD).Trim()
+    $aiStatus = (git -C $aiPath status -sb) -join "`n"
+    $aiAhead = 0
+    if ($aiStatus -match 'ahead\s+(\d+)') {
+        $aiAhead = [int]$Matches[1]
+    }
+    if ($aiAhead -gt 0 -and (-not ($repositoryStates | Where-Object { $_.Name -eq 'LCM_AI' }))) {
+        $repositoryStates += [pscustomobject]@{
+            Name = 'LCM_AI'
+            Path = $aiPath
+            HasGit = $true
+            HasRemote = $true
+            AheadCount = $aiAhead
+            Branch = $aiBranch
+        }
+        Write-Host "  -> Included LCM_AI authority in push cohort ($aiAhead ahead commit(s))." -ForegroundColor Green
+    }
+}
+
 $pushedRepos = @()
 $skippedRepos = @()
 $failedRepos = @()
@@ -218,7 +242,7 @@ foreach ($repositoryState in $repositoryStates) {
     }
 }
 
-$cohortPushed = $failedRepos.Count -eq 0 -and $pushedRepos.Count -eq $pushPlan.RequiredRepositories.Count
+$cohortPushed = $failedRepos.Count -eq 0 -and $pushedRepos.Count -ge $pushPlan.RequiredRepositories.Count
 $pushTimestamp = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
 if (-not $cohortPushed) {
     Write-Host "`n  -> PUSH cohort did not complete. No proposal state will transition to 'pushed'." -ForegroundColor Red

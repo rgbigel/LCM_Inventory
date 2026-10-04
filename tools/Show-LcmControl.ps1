@@ -313,14 +313,16 @@ foreach ($r in $repoDirs) {
     }
 }
 
-# Gather Proposal Markdown documents
+# Gather Proposal Markdown documents across all workspace repositories
 Write-TimingLog "Gathering proposal markdown documents..."
-$propDocsDir = Join-Path $workspaceRoot "LCM_Inventory\docs\Proposals"
-if (Test-Path -LiteralPath $propDocsDir) {
-    $propFiles = Get-ChildItem -LiteralPath $propDocsDir -Filter "*.md" -Recurse
-    foreach ($pf in $propFiles) {
-        $rel = "LCM_Inventory/docs/Proposals/" + $pf.Name
-        $docsCache[$rel] = Get-Content -LiteralPath $pf.FullName -Raw -Encoding UTF8
+foreach ($r in $repoDirs) {
+    $rDocsDir = Join-Path $r.FullName "docs\Proposals"
+    if (Test-Path -LiteralPath $rDocsDir) {
+        $propFiles = Get-ChildItem -LiteralPath $rDocsDir -Filter "*.md" -Recurse
+        foreach ($pf in $propFiles) {
+            $rel = $pf.FullName.Substring($workspaceRoot.Length).TrimStart('\').Replace('\', '/')
+            $docsCache[$rel] = Get-Content -LiteralPath $pf.FullName -Raw -Encoding UTF8
+        }
     }
 }
 

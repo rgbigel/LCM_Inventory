@@ -22,13 +22,20 @@ function Get-SameRepositoryBCompareProcess {
 
     [Parameter(Mandatory = $true)]
     [AllowEmptyCollection()]
-    [object[]]$Process
+    [object[]]$Process,
+
+    [Parameter(Mandatory = $false)]
+    [string]$CRP = ''
   )
 
   return @($Process | Where-Object {
       $candidate = $_
       $title = [string]$candidate.MainWindowTitle
-      $title -like "*$RepositoryName*" -and $title -like '*<-->*'
+      if ([string]::IsNullOrWhiteSpace($title)) { return $false }
+      if ($CRP -and ($title -like "*$CRP*" -or $title -like "*$($CRP.Replace('-', '_'))*")) {
+        return $true
+      }
+      return ($title -like "*$RepositoryName*" -and ($title -like '*<-->*' -or $title -like '*Review*' -or $title -like '*Beyond Compare*'))
     })
 }
 
@@ -39,10 +46,13 @@ function Remove-StaleBCompareProcess {
     [string]$RepositoryName,
 
     [Parameter(Mandatory = $false)]
-    [object[]]$Process = @(Get-Process -Name 'BCompare' -ErrorAction SilentlyContinue)
+    [object[]]$Process = @(Get-Process -Name 'BCompare' -ErrorAction SilentlyContinue),
+
+    [Parameter(Mandatory = $false)]
+    [string]$CRP = ''
   )
 
-  $staleProcess = @(Get-SameRepositoryBCompareProcess -RepositoryName $RepositoryName -Process $Process)
+  $staleProcess = @(Get-SameRepositoryBCompareProcess -RepositoryName $RepositoryName -Process $Process -CRP $CRP)
   foreach ($candidate in $staleProcess) {
     if ($PSCmdlet.ShouldProcess([string]$candidate.MainWindowTitle, 'Close stale Beyond Compare review window')) {
       Stop-Process -Id $candidate.Id -Force -ErrorAction SilentlyContinue

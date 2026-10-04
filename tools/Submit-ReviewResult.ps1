@@ -119,6 +119,39 @@ if (Test-Path -LiteralPath $stagedManifestFile) {
     } catch {}
 }
 
+if (-not $stagedManifest) {
+    # Dynamically discover active review scratchpad in LCM_Inventory/scratch/BC_Review
+    $reviewBase = Join-Path $workspaceRoot "LCM_Inventory\scratch\BC_Review"
+    if (Test-Path -LiteralPath $reviewBase) {
+        $candidateDirs = @(Get-ChildItem -LiteralPath $reviewBase -Directory | Where-Object { $_.Name -notlike 'ACTIVE_*' } | Sort-Object LastWriteTime -Descending)
+        foreach ($cd in $candidateDirs) {
+            $metaFile = Join-Path $cd.FullName ".lcm_review.json"
+            if (Test-Path -LiteralPath $metaFile) {
+                try {
+                    $meta = Get-Content -LiteralPath $metaFile -Raw -Encoding UTF8 | ConvertFrom-Json
+                    if ($meta.RepositoryName -eq $repoName) {
+                        $baseDirs = @(Get-ChildItem -LiteralPath $cd.FullName -Directory | Where-Object { $_.Name -like "Baseline_${repoName}_*" })
+                        if ($baseDirs.Count -gt 0) {
+                            $activeReviewRoot = $baseDirs[0].FullName
+                            $bcrScript = Join-Path $workspaceRoot "LCM_Inventory\tools\Invoke-BeyondCompareReview.ps1"
+                            if (Test-Path -LiteralPath $bcrScript) {
+                                & pwsh -NoProfile -ExecutionPolicy Bypass -Command "& {
+                                    . `"$bcrScript`"
+                                    Audit-BeyondCompareReviewStaging -TempReviewRoot `"$activeReviewRoot`" -RepoPath `"$targetRepoPath`" -RepoName `"$repoName`" -CommitSha `"$($meta.BaseCommit)`"
+                                }" | Out-Null
+                                if (Test-Path -LiteralPath $stagedManifestFile) {
+                                    $stagedManifest = Get-Content -LiteralPath $stagedManifestFile -Raw -Encoding UTF8 | ConvertFrom-Json
+                                    break
+                                }
+                            }
+                        }
+                    }
+                } catch {}
+            }
+        }
+    }
+}
+
 # ------------------------------------------------------------------------------
 # Check for Uncopied Files and Prompt Operator (Bypassed if COMPLETE ALL / -All is used)
 # ------------------------------------------------------------------------------

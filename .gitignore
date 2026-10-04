@@ -36,3 +36,5 @@ data/logs/lcm-internal/actions.jsonl
 .agents/rules/
 
 temp/
+
+*.backup.json

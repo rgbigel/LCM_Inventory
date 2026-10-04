@@ -445,6 +445,27 @@ function Audit-BeyondCompareReviewStaging {
     }
   }
 
+  $uncopiedFiles = [System.Collections.Generic.List[PSCustomObject]]::new()
+  $gitStatus = @(git -C $RepoPath status --porcelain 2>$null)
+  foreach ($statusLine in $gitStatus) {
+    if ($statusLine.Length -ge 4) {
+      $statusCode = $statusLine.Substring(0, 2).Trim()
+      $filePath = $statusLine.Substring(3).Trim().Trim('"')
+      $normPath = $filePath.Replace('/', '\')
+
+      $alreadyStaged = ($completedFiles | Where-Object { $_.RelativePath -eq $normPath }) -or
+                       ($deleteFiles | Where-Object { $_.RelativePath -eq $normPath }) -or
+                       ($renameFiles | Where-Object { $_.OldRelativePath -eq $normPath })
+      if (-not $alreadyStaged) {
+        $uncopiedFiles.Add([PSCustomObject]@{
+          RelativePath = $normPath
+          LivePath     = Join-Path $RepoPath $normPath
+          Status       = $statusCode
+        })
+      }
+    }
+  }
+
   $stagingManifest = [ordered]@{
     RepositoryName = $RepoName
     RepositoryPath = $RepoPath
@@ -454,7 +475,7 @@ function Audit-BeyondCompareReviewStaging {
     Completed      = $completedFiles
     Renames        = $renameFiles
     Deletions      = $deleteFiles
-    Uncopied       = @()
+    Uncopied       = $uncopiedFiles
     RejectedEmpty  = $rejectedEmpty
   }
 
@@ -680,8 +701,8 @@ if ($repoPath -eq $workspaceRoot) {
     }
   }
 }
-else {
-  # Exclude external tool junction directories (.copilot) while allowing .agents\rules to be traversed transparently via FollowSymLinks
+elseif ($repoName -ne 'LCM_AI') {
+  # Exclude external tool junction directories (.copilot) for child repos while allowing .agents\rules to be traversed transparently via FollowSymLinks
   $junctionFilters = @('-.copilot\Rules\', '-*\.copilot\Rules\*', '-.copilot\skills\', '-*\.copilot\skills\*')
   foreach ($jf in $junctionFilters) {
     if (-not $filterList.Contains($jf)) {
@@ -793,23 +814,28 @@ else {
   "Live $repoName"
 }
 
-$staleReviewProcesses = @(Get-SameRepositoryBCompareProcess -RepositoryName $repoName -Process @(Get-Process -Name 'BCompare' -ErrorAction SilentlyContinue))
-foreach ($staleReviewProcess in $staleReviewProcesses) {
-  Write-Host "Closing stale Beyond Compare review window: $($staleReviewProcess.MainWindowTitle)" -ForegroundColor DarkYellow
+$existingReviewProcesses = @(Get-SameRepositoryBCompareProcess -RepositoryName $repoName -Process @(Get-Process -Name 'BCompare' -ErrorAction SilentlyContinue) -CRP $CRP)
+if ($existingReviewProcesses.Count -gt 1) {
+  # If duplicate windows exist for the exact same comparison, close surplus instances keeping only the primary
+  Write-Host "Closing surplus duplicate Beyond Compare windows (Count: $($existingReviewProcesses.Count))..." -ForegroundColor DarkYellow
+  $surplus = @($existingReviewProcesses | Select-Object -Skip 1)
+  foreach ($s in $surplus) {
+    Stop-Process -Id $s.Id -Force -ErrorAction SilentlyContinue
+  }
 }
-$null = Remove-StaleBCompareProcess -RepositoryName $repoName -Process $staleReviewProcesses -Confirm:$false
 
-Write-Host "Launching Beyond Compare on interactive desktop (Per-CRP Session Isolation)..." -ForegroundColor Green
+Write-Host "Activating Beyond Compare on interactive desktop (Per-CRP Single Window)..." -ForegroundColor Green
 Write-Host ("  Session Name:        {0}" -f $sessionName)
 Write-Host ("  Left (Baseline {0}): {1}" -f $commitSha, $tempReviewRoot)
 Write-Host ("  Right (Live):        {0}" -f $liveJunction)
 Write-Host ("  Pane Titles:         [Left: '{0}'] <--> [Right: '{1}']" -f $title1, $title2)
 Write-Host ("  Filters Applied:     {0}" -f $filterMask)
 
-# Open the configured named session in a fresh BCompare instance. An existing
-# instance caches its session list and otherwise treats a newly written session
-# name as unknown, opening the command-line reference instead.
-$bcArgString = "/solo `"$sessionName`""
+# Immediately compile initial review staging manifest so Submit-ReviewResult & Control Hub recognize active review
+$null = Audit-BeyondCompareReviewStaging -TempReviewRoot $tempReviewRoot -RepoPath $repoPath -RepoName $repoName -CommitSha $commitSha
+
+# Open session without /solo so BCompare opens one window and reuses/refreshes it without duplicates
+$bcArgString = "`"$sessionName`""
 
 $dispatcherCandidates = @(
   (Join-Path $workspaceRoot ".lcm\tools\internal\Invoke-InteractiveDesktop.ps1"),
@@ -825,11 +851,119 @@ foreach ($cand in $dispatcherCandidates) {
   }
 }
 
-if ($dispatcherPath) {
-  & pwsh -File $dispatcherPath -FilePath $BeyondComparePath -ArgumentList $bcArgString | Out-Null
+# ------------------------------------------------------------------------------
+# Dispatch Beyond Compare 5 via Port 9876 Session 1 Desktop Daemon
+# ------------------------------------------------------------------------------
+$daemonPort = if ($env:LCM_DAEMON_PORT -match '^\d+$') { [int]$env:LCM_DAEMON_PORT } else { 9876 }
+$daemonOnline = $false
+try {
+  $ping = Invoke-RestMethod -Uri "http://127.0.0.1:$daemonPort/ping" -TimeoutSec 1 -ErrorAction Stop
+  if ($ping -and $ping.status -eq 'ONLINE') { $daemonOnline = $true }
+} catch {}
+
+$runningReview = @(Get-CimInstance Win32_Process -Filter "Name = 'BCompare.exe'" -ErrorAction SilentlyContinue | Where-Object {
+  $_.CommandLine -and ($_.CommandLine -like "*$sessionName*" -or ($CRP -and $_.CommandLine -like "*$CRP*"))
+})
+
+if ($runningReview.Count -gt 0) {
+  Write-Host "Review session '$sessionName' is already open in Beyond Compare; bringing window to focus without opening duplicate tab." -ForegroundColor Green
+  if ($daemonOnline) {
+    try {
+      $null = Invoke-RestMethod -Uri "http://127.0.0.1:$daemonPort/foreground" -Method Post -Body (@{ title = "Beyond Compare" } | ConvertTo-Json) -ContentType "application/json" -TimeoutSec 2 -ErrorAction SilentlyContinue
+    } catch {}
+  } else {
+    try {
+      $wsh = New-Object -ComObject WScript.Shell
+      $null = $wsh.AppActivate("Beyond Compare")
+    } catch {}
+  }
+} else {
+  if ($daemonOnline) {
+    Write-Host "Dispatching Beyond Compare review window to Interactive Desktop via Port $daemonPort Daemon..." -ForegroundColor Green
+    $execPayload = @{
+      command = "& `"$BeyondComparePath`" $sessionName"
+      windowStyle = "Normal"
+    } | ConvertTo-Json
+    $null = Invoke-RestMethod -Uri "http://127.0.0.1:$daemonPort/execute" -Method Post -Body $execPayload -ContentType "application/json" -TimeoutSec 5
+    Start-Sleep -Milliseconds 300
+    try {
+      $null = Invoke-RestMethod -Uri "http://127.0.0.1:$daemonPort/foreground" -Method Post -Body (@{ title = "Beyond Compare" } | ConvertTo-Json) -ContentType "application/json" -TimeoutSec 2 -ErrorAction SilentlyContinue
+    } catch {}
+  } elseif ($dispatcherPath) {
+    & pwsh -File $dispatcherPath -FilePath $BeyondComparePath -ArgumentList $bcArgString | Out-Null
+  } else {
+    Start-Process -FilePath $BeyondComparePath -ArgumentList @($sessionName)
+  }
 }
-else {
-  Start-Process -FilePath $BeyondComparePath -ArgumentList @('/solo', $sessionName)
+
+# If this CRP affects additional repositories with physical uncommitted changes, open each as a tab in the same window
+if (-not [string]::IsNullOrWhiteSpace($CRP)) {
+  $pJson = Join-Path $workspaceRoot "LCM_Inventory\data\proposals\proposals.json"
+  if (Test-Path -LiteralPath $pJson) {
+    try {
+      $pData = Get-Content -LiteralPath $pJson -Raw -Encoding UTF8 | ConvertFrom-Json
+      $matchedP = $pData.proposals | Where-Object {
+        $_.crp_id -eq $CRP -or $_.cr_id -eq $CRP -or "CRP-$($_.id)" -eq $CRP
+      } | Select-Object -First 1
+
+      if ($matchedP) {
+        $otherCandidates = @()
+        if ($matchedP.PSObject.Properties['impacted_repos'] -and $matchedP.impacted_repos) {
+          $otherCandidates += @($matchedP.impacted_repos)
+        }
+        if ($matchedP.PSObject.Properties['affected_repos'] -and $matchedP.affected_repos) {
+          $otherCandidates += @($matchedP.affected_repos)
+        }
+        $otherCandidates = @($otherCandidates | Select-Object -Unique | Where-Object { $_ -and $_ -ne $repoName })
+
+        foreach ($otherRepo in $otherCandidates) {
+          $otherRepoPath = Join-Path $workspaceRoot $otherRepo
+          if (Test-Path -LiteralPath (Join-Path $otherRepoPath '.git')) {
+            $diffCheck = (git -C $otherRepoPath status --porcelain 2>$null)
+            if (-not [string]::IsNullOrWhiteSpace($diffCheck)) {
+              $otherSession = "${CRP}_${otherRepo}_Review"
+              $runningOther = @(Get-CimInstance Win32_Process -Filter "Name = 'BCompare.exe'" -ErrorAction SilentlyContinue | Where-Object {
+                $_.CommandLine -and $_.CommandLine -like "*$otherSession*"
+              })
+              if ($runningOther.Count -eq 0) {
+                Write-Host "Opening additional tab for affected repository with physical changes: $otherRepo" -ForegroundColor Cyan
+                $otherScratchDir = Join-Path $scratchReviewDir "${CRP}_${otherRepo}"
+                if (-not (Test-Path -LiteralPath $otherScratchDir)) {
+                  New-Item -ItemType Directory -Path $otherScratchDir -Force | Out-Null
+                }
+                $otherDesc = Get-BCompareBaselineDescriptor -RepositoryPath $otherRepoPath -BaseCommit 'HEAD'
+                if ($otherDesc) {
+                  Export-BCompareBaseline -Descriptor $otherDesc -DestinationPath $otherScratchDir
+                }
+                $otherJunction = Join-Path $otherScratchDir "ACTIVE_LIVE_${otherRepo}"
+                if (Test-Path -LiteralPath $otherJunction) {
+                  try { [System.IO.Directory]::Delete($otherJunction, $false) } catch {}
+                }
+                New-Item -ItemType Junction -Path $otherJunction -Target $otherRepoPath | Out-Null
+                Update-BCReviewSession -LeftPath $otherScratchDir -RightPath $otherJunction -FilterMask $filterMask -SessionName $otherSession
+                Start-Sleep -Milliseconds 400
+                if ($daemonOnline) {
+                  $otherPayload = @{
+                    command = "& `"$BeyondComparePath`" $otherSession"
+                    windowStyle = "Normal"
+                  } | ConvertTo-Json
+                  $null = Invoke-RestMethod -Uri "http://127.0.0.1:$daemonPort/execute" -Method Post -Body $otherPayload -ContentType "application/json" -TimeoutSec 5
+                } elseif ($dispatcherPath) {
+                  & pwsh -File $dispatcherPath -FilePath $BeyondComparePath -ArgumentList "`"$otherSession`"" | Out-Null
+                } else {
+                  Start-Process -FilePath $BeyondComparePath -ArgumentList @($otherSession)
+                }
+              } else {
+                Write-Host "Additional tab for '$otherRepo' is already open in Beyond Compare." -ForegroundColor Green
+              }
+            }
+          }
+        }
+      }
+    } catch {
+      Write-Warning "Could not enumerate additional affected repo tabs: $_"
+    }
+  }
 }
 
 # ------------------------------------------------------------------------------

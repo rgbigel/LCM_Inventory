@@ -47,14 +47,16 @@ Describe 'ProposalManager Core Functions' {
             $ids2.Count | Should -Be 3
         }
 
-        It 'Updates state to "processed" on "do" action' {
+        It 'Updates state to "approved" and progress to "in_progress" on "do" action' {
             $p = New-WorkspaceProposal -Title 'Batch Action Test' -OriginRepo 'TestRepo'
             $res = @(Invoke-ProposalBatchAction -Action 'do' -TargetExpression "$($p.id)")
             $res.Count | Should -Be 1
-            $res[0].state | Should -Be 'processed'
+            $res[0].state | Should -Be 'approved'
+            $res[0].progress_state | Should -Be 'in_progress'
 
             $updated = @(Get-WorkspaceProposals -Id $p.id)
-            $updated[0].state | Should -Be 'processed'
+            $updated[0].state | Should -Be 'approved'
+            $updated[0].progress_state | Should -Be 'in_progress'
         }
 
         It 'Updates state to "deferred" on "defer" action' {

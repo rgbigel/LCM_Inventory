@@ -63,6 +63,24 @@ function Get-BCompareBaselineDescriptor {
     RulesBaselineCommit = $null
     RulesBaselineRelativePath = $null
     RulesBaselineSource = 'none'
+    CopilotBaselineRepositoryPath = $null
+    CopilotBaselineCommit = $null
+  }
+
+  $copilotPath = Join-Path $RepositoryPath '.copilot'
+  if (Test-Path -LiteralPath $copilotPath) {
+    $copilotItem = Get-Item -LiteralPath $copilotPath -Force
+    if ($copilotItem.LinkType -eq 'Junction' -and -not [string]::IsNullOrWhiteSpace([string]$copilotItem.Target)) {
+      $copilotTargetPath = [string]$copilotItem.Target
+      $copilotAuthorityPath = (& git -C $copilotTargetPath rev-parse --show-toplevel 2>$null).Trim()
+      if (-not [string]::IsNullOrWhiteSpace($copilotAuthorityPath)) {
+        $copilotCommit = (& git -C $copilotAuthorityPath rev-parse --verify --short HEAD 2>$null).Trim()
+        if (-not [string]::IsNullOrWhiteSpace($copilotCommit)) {
+          $descriptor.CopilotBaselineRepositoryPath = $copilotAuthorityPath
+          $descriptor.CopilotBaselineCommit = $copilotCommit
+        }
+      }
+    }
   }
 
   $rulesPath = Join-Path $RepositoryPath '.agents\rules'
@@ -175,7 +193,89 @@ function Export-BCompareBaseline {
       throw "Could not extract rules baseline commit '$($Descriptor.RulesBaselineCommit)'."
     }
     Remove-Item -LiteralPath $authorityArchivePath -Force
+  }
 
+  # Export .copilot from authority baseline when target repository uses an external junction (e.g. root Git_Repositories)
+  if (-not [string]::IsNullOrWhiteSpace($Descriptor.CopilotBaselineRepositoryPath)) {
+    $copilotArchivePath = Join-Path $DestinationPath 'copilot-authority-baseline.tar'
+    & git -C $Descriptor.CopilotBaselineRepositoryPath archive -o $copilotArchivePath $Descriptor.CopilotBaselineCommit -- '.copilot'
+    if ($LASTEXITCODE -eq 0 -and (Test-Path -LiteralPath $copilotArchivePath)) {
+      & tar -xf $copilotArchivePath -C $DestinationPath 2>$null
+      Remove-Item -LiteralPath $copilotArchivePath -Force -ErrorAction SilentlyContinue
+    }
+  }
+
+  # Recreate internal tool junctions inside baseline .copilot to match live repository topology
+  $destCopilot = Join-Path $DestinationPath '.copilot'
+  if (Test-Path -LiteralPath $destCopilot) {
+    $destRules = Join-Path $DestinationPath '.agents\rules'
+    $destCopilotRules = Join-Path $destCopilot 'Rules'
+    if ((Test-Path -LiteralPath $destRules) -and (-not (Test-Path -LiteralPath $destCopilotRules))) {
+      New-Item -ItemType Junction -Path $destCopilotRules -Target $destRules -Force | Out-Null
+    }
+
+    $destAtoms = Join-Path $DestinationPath '.agents\atoms'
+    $destCopilotAtoms = Join-Path $destCopilot 'Atoms'
+    if ((Test-Path -LiteralPath $destAtoms) -and (-not (Test-Path -LiteralPath $destCopilotAtoms))) {
+      New-Item -ItemType Junction -Path $destCopilotAtoms -Target $destAtoms -Force | Out-Null
+    }
+
+    $destTools = Join-Path $DestinationPath 'tools'
+    $destCopilotMethods = Join-Path $destCopilot 'Methods'
+    if ((Test-Path -LiteralPath $destTools) -and (-not (Test-Path -LiteralPath $destCopilotMethods))) {
+      New-Item -ItemType Junction -Path $destCopilotMethods -Target $destTools -Force | Out-Null
+    }
+  }
+
+  # ----------------------------------------------------------------------------
+  # Timestamp Preservation (RULE-LCM-003 / CRP-221)
+  # ----------------------------------------------------------------------------
+  $targetCommitDateStr = (& git -C $Descriptor.TargetRepositoryPath log -1 --format=%cI $Descriptor.TargetCommit 2>$null)
+  $targetCommitTime = if (-not [string]::IsNullOrWhiteSpace($targetCommitDateStr)) {
+    [System.DateTime]::Parse($targetCommitDateStr)
+  } else {
+    [System.DateTime]::UtcNow
+  }
+
+  $rulesCommitTime = $targetCommitTime
+  if (-not [string]::IsNullOrWhiteSpace($Descriptor.RulesBaselineRepositoryPath)) {
+    $rulesCommitDateStr = (& git -C $Descriptor.RulesBaselineRepositoryPath log -1 --format=%cI $Descriptor.RulesBaselineCommit 2>$null)
+    if (-not [string]::IsNullOrWhiteSpace($rulesCommitDateStr)) {
+      $rulesCommitTime = [System.DateTime]::Parse($rulesCommitDateStr)
+    }
+  }
+
+  $allExportedFiles = @(Get-ChildItem -LiteralPath $DestinationPath -Recurse -File -Force)
+  foreach ($exportedFile in $allExportedFiles) {
+    $relPath = [System.IO.Path]::GetRelativePath($DestinationPath, $exportedFile.FullName)
+    $normalizedRel = $relPath.Replace('\', '/')
+
+    $isRuleFile = (-not [string]::IsNullOrWhiteSpace($Descriptor.RulesBaselineRelativePath)) -and `
+                  ($normalizedRel -eq $Descriptor.RulesBaselineRelativePath -or $normalizedRel.StartsWith("$($Descriptor.RulesBaselineRelativePath)/", [System.StringComparison]::OrdinalIgnoreCase))
+
+    $defaultTime = if ($isRuleFile) { $rulesCommitTime } else { $targetCommitTime }
+
+    $workFilePath = Join-Path $Descriptor.TargetRepositoryPath $relPath
+    $matchedWorkingTime = $null
+
+    if (Test-Path -LiteralPath $workFilePath -PathType Leaf) {
+      $srcItem = Get-Item -LiteralPath $workFilePath -Force
+      if ($exportedFile.Length -eq $srcItem.Length) {
+        $destHash = (Get-FileHash -LiteralPath $exportedFile.FullName -Algorithm SHA256).Hash
+        $srcHash = (Get-FileHash -LiteralPath $srcItem.FullName -Algorithm SHA256).Hash
+        if ($destHash -eq $srcHash) {
+          $matchedWorkingTime = $srcItem
+        }
+      }
+    }
+
+    if ($matchedWorkingTime) {
+      [System.IO.File]::SetCreationTime($exportedFile.FullName, $matchedWorkingTime.CreationTime)
+      [System.IO.File]::SetLastWriteTime($exportedFile.FullName, $matchedWorkingTime.LastWriteTime)
+    } else {
+      [System.IO.File]::SetCreationTime($exportedFile.FullName, $defaultTime)
+      [System.IO.File]::SetLastWriteTime($exportedFile.FullName, $defaultTime)
+    }
   }
 }
 

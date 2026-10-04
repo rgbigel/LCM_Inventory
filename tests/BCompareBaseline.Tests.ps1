@@ -90,4 +90,55 @@ Describe 'BCompare baseline' {
     { Export-BCompareBaseline -Descriptor $descriptor -DestinationPath $destination } | Should -Not -Throw
     (Test-Path -LiteralPath (Join-Path $destination '.agents\rules\DisplayStandardsPolicy.md')) | Should -BeFalse
   }
+
+  It 'preserves historical file timestamps on exported baseline files' {
+    $targetRepository = Join-Path $TestDrive 'TimestampRepo'
+    $destination = Join-Path $TestDrive 'timestamp-baseline'
+    $testFile = Join-Path $targetRepository 'historical.txt'
+
+    $null = New-Item -ItemType Directory -Path $targetRepository -Force
+    Set-Content -LiteralPath $testFile -Value 'historical content' -Encoding UTF8
+    $pastDate = [System.DateTime]::new(2025, 6, 15, 10, 30, 0, [System.DateTimeKind]::Utc)
+    [System.IO.File]::SetLastWriteTimeUtc($testFile, $pastDate)
+    [System.IO.File]::SetCreationTimeUtc($testFile, $pastDate)
+
+    & git -C $targetRepository init --quiet
+    & git -C $targetRepository add historical.txt
+    & git -C $targetRepository -c user.name='Pester' -c user.email='pester@example.invalid' commit --quiet -m 'Historical commit' --date='2025-06-15T10:30:00Z'
+
+    $descriptor = Get-BCompareBaselineDescriptor -RepositoryPath $targetRepository -BaseCommit 'HEAD'
+    Export-BCompareBaseline -Descriptor $descriptor -DestinationPath $destination
+
+    $exportedFile = Join-Path $destination 'historical.txt'
+    (Test-Path -LiteralPath $exportedFile) | Should -BeTrue
+    $exportedItem = Get-Item -LiteralPath $exportedFile
+    $exportedItem.LastWriteTimeUtc | Should -Be $pastDate
+  }
+
+  It 'exports .copilot from authority baseline when target repository uses an external junction' {
+    $authorityRepository = Join-Path $TestDrive 'AuthorityRepoCopilot'
+    $targetRepository = Join-Path $TestDrive 'TargetRepoCopilot'
+    $destination = Join-Path $TestDrive 'copilot-baseline'
+
+    $authorityCopilot = Join-Path $authorityRepository '.copilot'
+    $null = New-Item -ItemType Directory -Path $authorityCopilot -Force
+    Set-Content -LiteralPath (Join-Path $authorityCopilot 'Config.json') -Value '{"test": true}' -Encoding UTF8
+    & git -C $authorityRepository init --quiet
+    & git -C $authorityRepository add .copilot/Config.json
+    & git -C $authorityRepository -c user.name='Pester' -c user.email='pester@example.invalid' commit --quiet -m 'Copilot baseline'
+
+    $null = New-Item -ItemType Directory -Path $targetRepository -Force
+    Set-Content -LiteralPath (Join-Path $targetRepository 'tracked.txt') -Value 'target commit' -Encoding UTF8
+    & git -C $targetRepository init --quiet
+    & git -C $targetRepository add tracked.txt
+    & git -C $targetRepository -c user.name='Pester' -c user.email='pester@example.invalid' commit --quiet -m 'Target baseline'
+
+    $null = New-Item -ItemType Junction -Path (Join-Path $targetRepository '.copilot') -Target $authorityCopilot
+
+    $descriptor = Get-BCompareBaselineDescriptor -RepositoryPath $targetRepository -BaseCommit 'HEAD'
+    $descriptor.CopilotBaselineRepositoryPath | Should -Not -BeNullOrEmpty
+
+    Export-BCompareBaseline -Descriptor $descriptor -DestinationPath $destination
+    (Test-Path -LiteralPath (Join-Path $destination '.copilot\Config.json')) | Should -BeTrue
+  }
 }

@@ -11,7 +11,7 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $false, Position = 0, HelpMessage = 'Action to perform on proposals or governance settings')]
-    [ValidateSet('do', 'delete', 'defer', 'deferred', 'complete', 'completed', 'suggest', 'suggested', 'granularity', 'mode', 'list', 'progress', 'state', 'reject', 'rejected', 'approve', 'approved', 'bug', 'push', 'pushed', 'verify', 'priority', 'commit', 'committed', 'proceed', 'regression', 'regressions', 'check-regressions', 'generate-regression', 'workon', 'work-on', 'app', 'new-app', 'apps', 'list-apps', 'sync-apps', 'catalog', 'split-docs', 'splitdocs', 'doc', 'docs', 'show-doc', 'purge-bundle')]
+    [ValidateSet('do', 'delete', 'defer', 'deferred', 'complete', 'completed', 'suggest', 'suggested', 'granularity', 'mode', 'testing-mode', 'testing', 'list', 'progress', 'state', 'reject', 'rejected', 'approve', 'approved', 'bug', 'push', 'pushed', 'verify', 'priority', 'commit', 'committed', 'proceed', 'regression', 'regressions', 'check-regressions', 'generate-regression', 'workon', 'work-on', 'app', 'new-app', 'apps', 'list-apps', 'sync-apps', 'catalog', 'split-docs', 'splitdocs', 'doc', 'docs', 'show-doc', 'purge-bundle', 'hold', 'held', 'resume')]
     [string]$Action = 'list',
 
     [Parameter(Mandatory = $false, Position = 1, HelpMessage = 'Target proposal expression (e.g. all, #1, 105, 100-105)')]
@@ -20,12 +20,12 @@ param(
     [Parameter(Mandatory = $false, HelpMessage = 'Additional details or notes for proposal transition')]
     [string]$Details = '',
 
-    [Parameter(Mandatory = $false, HelpMessage = 'Target plan state to set (bug, suggested, approved, deferred, rejected, completed, pushed)')]
-    [ValidateSet('bug', 'suggested', 'approved', 'deferred', 'deleted', 'completed', 'rejected', 'pushed', 'processed')]
+    [Parameter(Mandatory = $false, HelpMessage = 'Target plan state to set (bug, suggested, approved, deferred, rejected, completed, pushed, held)')]
+    [ValidateSet('bug', 'suggested', 'approved', 'deferred', 'deleted', 'completed', 'completed [minimal-tests]', 'rejected', 'pushed', 'processed', 'held')]
     [string]$State,
 
     [Parameter(Mandatory = $false, HelpMessage = 'Target implementation progress state to set')]
-    [ValidateSet('undecided', 'queued', 'in_progress', 'verification', 'committed', 'completed', 'pushed', 'blocked', 'failed')]
+    [ValidateSet('undecided', 'queued', 'in_progress', 'verification', 'committed', 'completed', 'pushed', 'blocked', 'failed', 'deferred')]
     [string]$ProgressState,
 
     [Parameter(Mandatory = $false, HelpMessage = 'Priority level to assign (C=Critical, H=High, M=Medium, L=Low, D=Deferred)')]
@@ -49,6 +49,19 @@ param(
     [Parameter(Mandatory = $false, HelpMessage = 'Set LCM governance mode: active (proposal-first) or paused')]
     [ValidateSet('active', 'paused')]
     [string]$Mode,
+
+    [Parameter(Mandatory = $false, HelpMessage = 'Set LCM testing mode: active (syntax/unit) or paused (deferred deep testing)')]
+    [ValidateSet('active', 'paused')]
+    [string]$TestingMode,
+
+    [Parameter(Mandatory = $false, HelpMessage = 'Single-cycle minimal testing scope: fast syntax and AST validation only')]
+    [switch]$MinimalTests,
+
+    [Parameter(Mandatory = $false, HelpMessage = 'Force execution overriding lifecycle safety gates')]
+    [switch]$Force,
+
+    [Parameter(Mandatory = $false, HelpMessage = 'Authorized Gate 2 visual review bypass exception per RULE-REV-002')]
+    [switch]$Immediately,
 
     [Alias('h', '?')]
     [switch]$Help
@@ -91,6 +104,10 @@ if ($Mode) {
     Set-LCMMode -Mode $Mode | Out-Null
 }
 
+if ($TestingMode) {
+    Set-TestingMode -Mode $TestingMode | Out-Null
+}
+
 switch -Regex ($Action) {
     '^granularity$' {
         if ($TargetExpression -in @('coarse', 'tight')) {
@@ -105,6 +122,16 @@ switch -Regex ($Action) {
             Set-LCMMode -Mode $TargetExpression | Out-Null
         } else {
             Write-Host "Current LCM Mode: $(Get-LCMMode)" -ForegroundColor Cyan
+        }
+        break
+    }
+    '^(testing-mode|testing)$' {
+        if ($TestingMode) {
+            Set-TestingMode -Mode $TestingMode | Out-Null
+        } elseif ($TargetExpression -in @('active', 'paused')) {
+            Set-TestingMode -Mode $TargetExpression | Out-Null
+        } else {
+            Write-Host "Current Testing Mode: $(Get-TestingMode)" -ForegroundColor Cyan
         }
         break
     }
@@ -154,7 +181,15 @@ switch -Regex ($Action) {
         $updated = @()
         foreach ($id in $targetIds) {
             $p = Set-WorkspaceProposalProgress -Id $id -ProgressState 'verification' -Details $Details
-            if ($p) { $updated += $p }
+            if ($p) {
+                $updated += $p
+                if (-not $Force -and -not $Immediately) {
+                    $repo = if ($p.origin_repo) { $p.origin_repo } else { 'LCM_Inventory' }
+                    $crpTag = if ($p.crp_id) { $p.crp_id } elseif ($p.cr_id) { $p.cr_id } else { "CRP-$id" }
+                    Write-Host "`n[REVIEW CHECKPOINT] Reached for $($crpTag): Launching Beyond Compare Review immediately..." -ForegroundColor Cyan
+                    & (Join-Path $PSScriptRoot 'Invoke-BeyondCompareReview.ps1') -RepositoryName $repo -CRP $crpTag
+                }
+            }
         }
         Write-Host "`nUpdated Proposal(s) to Verification:" -ForegroundColor Cyan
         Format-ProposalsTable -Proposals $updated
@@ -189,20 +224,40 @@ switch -Regex ($Action) {
                 $cur = if ($existing -and $existing.progress_state) { $existing.progress_state } else { 'undecided' }
                 switch ($cur) {
                     'undecided'    { 'in_progress' }
+                    'deferred'     { 'in_progress' }
                     'queued'       { 'in_progress' }
                     'in_progress'  { 'verification' }
                     'verification' { 'committed' }
                     'committed'    { 'completed' }
-                    default        { 'verification' }
+                    default        { 'in_progress' }
                 }
             }
             if ($targetProg -eq 'completed') {
-                Set-WorkspaceProposalState -Id $id -State 'completed' -Details $Details | Out-Null
-            } elseif ($existing.state -eq 'suggested') {
-                Set-WorkspaceProposalState -Id $id -State 'processed' -Details $Details | Out-Null
+                $targetSt = if ($MinimalTests) { 'completed [minimal-tests]' } else { 'completed' }
+                Set-WorkspaceProposalState -Id $id -State $targetSt -Details $Details | Out-Null
+            } elseif ($existing.state -in @('suggested', 'held', 'deferred')) {
+                Set-WorkspaceProposalState -Id $id -State 'approved' -Details $Details | Out-Null
+            }
+            if ($MinimalTests) {
+                $store = Get-ProposalStore
+                foreach ($item in $store.proposals) {
+                    if ($item.id -eq $id) {
+                        $item.minimal_tests = $true
+                        $item.test_scope = 'minimal'
+                    }
+                }
+                Set-ProposalStore -Store $store
             }
             $p = Set-WorkspaceProposalProgress -Id $id -ProgressState $targetProg -Details $Details
-            if ($p) { $updated += $p }
+            if ($p) {
+                $updated += $p
+                if ($targetProg -eq 'verification' -and -not $Force -and -not $Immediately) {
+                    $repo = if ($p.origin_repo) { $p.origin_repo } else { 'LCM_Inventory' }
+                    $crpTag = if ($p.crp_id) { $p.crp_id } elseif ($p.cr_id) { $p.cr_id } else { "CRP-$id" }
+                    Write-Host "`n[REVIEW CHECKPOINT] Reached for $($crpTag): Launching Beyond Compare Review immediately..." -ForegroundColor Cyan
+                    & (Join-Path $PSScriptRoot 'Invoke-BeyondCompareReview.ps1') -RepositoryName $repo -CRP $crpTag
+                }
+            }
         }
         Write-Host "`nProceeded Proposal(s):" -ForegroundColor Cyan
         Format-ProposalsTable -Proposals $updated

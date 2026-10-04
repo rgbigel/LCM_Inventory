@@ -1,7 +1,7 @@
 <!--
   Template: CM_CONTROL_HUB.html
-  Version: 1.2.0
-  Date: 2026-10-02
+  Version: 1.2.4
+  Date: 2026-10-03
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -308,8 +308,9 @@
     }
     .th-content {
       display: flex;
-      align-items: center;
-      gap: 6px;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 3px;
     }
     .th-filter-select {
       font-family: var(--sans);
@@ -445,18 +446,26 @@
 
     /* Execution Ledger / Timeline (7 Authoritative Milestones) */
     .timeline {
-      padding: 12px 18px;
-      display: grid;
-      grid-template-columns: repeat(7, minmax(80px, 1fr));
+      padding: 14px 18px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
       overflow-x: auto;
       background: var(--surface);
+      gap: 4px;
     }
-    .step { position: relative; padding: 22px 4px 0; text-align: center; }
+    .step {
+      position: relative;
+      flex: 1 1 0;
+      min-width: 80px;
+      padding: 24px 4px 0;
+      text-align: center;
+    }
     .step::before { content: ""; position: absolute; top: 9px; left: 0; right: 0; height: 2px; background: var(--line); }
     .step:first-child::before { left: 50%; }
     .step:last-child::before { right: 50%; }
     .step-dot {
-      position: absolute; z-index: 1; top: 3px; left: calc(50% - 7px);
+      position: absolute; z-index: 2; top: 3px; left: calc(50% - 7px);
       width: 14px; height: 14px; border-radius: 50%;
       background: var(--surface); border: 3px solid var(--line-strong);
     }
@@ -464,6 +473,39 @@
     .step.current .step-dot { border-color: var(--blue); background: var(--surface); box-shadow: 0 0 0 3px var(--blue-soft); }
     .step-name { display: block; font-size: 11.5px; font-weight: 700; color: var(--ink); }
     .step-note { display: block; margin-top: 2px; color: var(--muted); font: 9.5px var(--mono); }
+
+    /* Interstitial Action Transition Connector */
+    .timeline-action {
+      flex: 0 0 auto;
+      margin-top: 2px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 3;
+    }
+    .action-pill {
+      font: 700 9.5px var(--mono);
+      padding: 1px 6px;
+      border-radius: 10px;
+      background: var(--surface-soft);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      text-transform: lowercase;
+      white-space: nowrap;
+      user-select: none;
+    }
+    .action-pill.active {
+      background: var(--blue-soft);
+      border-color: var(--blue);
+      color: var(--blue);
+      box-shadow: 0 1px 3px rgba(33, 115, 70, 0.15);
+    }
+    .action-arrow {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 1px;
+    }
 
     /* Selection & Bulk Actions Panel (Generous Room for Bulk Actions) */
     .selection-panel { }
@@ -636,6 +678,251 @@
     }
     .footer strong { color: var(--ink); }
     .footer code { font-family: var(--mono); color: var(--blue); }
+
+    /* Busy Overlay and Indicator Styles */
+    .busy-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(23, 33, 39, 0.45);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999999;
+      cursor: wait;
+    }
+    .busy-card {
+      background: var(--surface);
+      border: 1px solid var(--line-strong);
+      border-radius: 8px;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.28);
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      max-width: 480px;
+      animation: fadeIn 0.15s ease-out;
+    }
+    .busy-spinner {
+      width: 26px;
+      height: 26px;
+      border: 3px solid var(--line);
+      border-top-color: var(--blue);
+      border-radius: 50%;
+      animation: spin 0.75s linear infinite;
+      flex-shrink: 0;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.97); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .busy-text-col {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .busy-text-col strong {
+      font-size: 13.5px;
+      color: var(--ink);
+      font-family: var(--sans);
+    }
+    .busy-text-col span {
+      font-size: 11.5px;
+      color: var(--muted);
+      font-family: var(--mono);
+    }
+    .sync-dot.busy {
+      background: #f59e0b;
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, .35);
+      animation: pulse 0.8s infinite alternate;
+    }
+    .state-committed {
+      background: var(--blue-soft);
+      color: var(--blue);
+      border: 1px solid var(--blue);
+    }
+
+    /* Internal Flow Switches Strip */
+    .switches-strip {
+      background: var(--surface-soft);
+      border-bottom: 1px solid var(--line);
+      padding: 6px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 11.5px;
+      flex-wrap: wrap;
+    }
+    .switches-label {
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-size: 10.5px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .switch-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 8px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.15s ease;
+    }
+    .switch-item:hover {
+      border-color: var(--blue);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+    .switch-item.static-switch {
+      cursor: default;
+    }
+    .switch-item.static-switch:hover {
+      border-color: var(--line);
+      box-shadow: none;
+    }
+    .switch-separator {
+      width: 1px;
+      height: 14px;
+      background: var(--line-strong);
+      margin: 0 2px;
+    }
+    .switch-led {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #94a3b8;
+    }
+    .switch-led-on {
+      background: #16a34a;
+      box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.25);
+    }
+    .switch-led-off {
+      background: #dc2626;
+      box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.25);
+    }
+    .switch-led-coarse {
+      background: #2563eb;
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
+    }
+    .switch-led-tight {
+      background: #0d9488;
+      box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.25);
+    }
+    .switch-led-active {
+      background: #f59e0b;
+      box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.25);
+      animation: pulse 1s infinite alternate;
+    }
+    .switch-led-idle {
+      background: #94a3b8;
+    }
+    .switch-name {
+      color: var(--ink);
+    }
+    .switch-name strong {
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    /* Timeline Switches Strip */
+    .timeline-switches {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--line);
+      font-size: 11px;
+      flex-wrap: wrap;
+    }
+    .timeline-switches-label {
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .timeline-switch-badges {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .sw-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 10.5px;
+      font-weight: 600;
+      background: var(--surface-soft);
+      border: 1px solid var(--line);
+      color: var(--muted);
+    }
+    .sw-badge-active {
+      background: #fef3c7;
+      color: #b45309;
+      border-color: #f59e0b;
+    }
+    .sw-badge-gov {
+      background: #ecfdf5;
+      color: #047857;
+      border-color: #10b981;
+    }
+    .sw-badge-danger {
+      background: #fef2f2;
+      color: #b91c1c;
+      border-color: #ef4444;
+    }
+
+    /* Table Switch Pills */
+    .pill-switch-doit {
+      display: inline-block;
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-size: 10px;
+      font-weight: 700;
+      background: #fef3c7;
+      color: #b45309;
+      border: 1px solid #f59e0b;
+      margin-right: 4px;
+    }
+    .pill-switch-tests {
+      display: inline-block;
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-size: 10px;
+      font-weight: 700;
+      background: #f0fdf4;
+      color: #15803d;
+      border: 1px solid #22c55e;
+      margin-right: 4px;
+    }
+    .pill-switch-held {
+      display: inline-block;
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-size: 10px;
+      font-weight: 700;
+      background: #f1f5f9;
+      color: #64748b;
+      border: 1px solid #cbd5e1;
+    }
+    .pill-switch-std {
+      display: inline-block;
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-size: 10px;
+      color: var(--muted);
+      border: 1px solid var(--line);
+    }
   </style>
 </head>
 <body>
@@ -664,15 +951,52 @@
   <main>
     <!-- Pinned Top Container: Filters & Rail Never Scroll Away -->
     <div class="pinned-top">
+      <!-- Internal Flow Switches Bar -->
+      <section class="switches-strip" id="lcmSwitchesStrip" aria-label="Internal Flow Switches">
+        <div class="switches-label">
+          <span>⚙️ Flow Switches:</span>
+        </div>
+        <div class="switch-item" id="switchLcmMode" onclick="toggleLcmMode()" title="Toggle Governance: LCM ON enforces gating; LCM OFF suspends scaffolding for emergencies (RULE-LCM-006).">
+          <span class="switch-led switch-led-on" id="ledLcmMode"></span>
+          <span class="switch-name">LCM: <strong id="switchValLcm">ON</strong></span>
+        </div>
+        <div class="switch-item" id="switchTestingMode" onclick="toggleTestingMode()" title="Toggle Testing: Testing ON executes fast tests; Testing OFF defers deep cascades until push (RULE-LCM-006).">
+          <span class="switch-led switch-led-on" id="ledTestingMode"></span>
+          <span class="switch-name">Testing: <strong id="switchValTesting">ON</strong></span>
+        </div>
+        <div class="switch-item" id="switchGranularity" onclick="toggleGranularity()" title="Toggle Granularity: -Coarse combines batch review; -Tight stops for dedicated BC5 review per proposal (RULE-LCM-003).">
+          <span class="switch-led switch-led-coarse" id="ledGranularity"></span>
+          <span class="switch-name">Granularity: <strong id="switchValGranularity">-Coarse</strong></span>
+        </div>
+        <div class="switch-separator"></div>
+        <div class="switches-label" style="margin-left: 2px;">
+          <span>Item:</span>
+          <span class="sw-badge" id="switchesActiveItemLabel" style="font-weight: 700; color: var(--blue); background: var(--blue-soft); border-color: var(--blue);">[None]</span>
+        </div>
+        <div class="switch-item" id="switchDoit" onclick="toggleActiveProposalDoit()" title="Click to toggle -DOIT Mode on active proposal: Continuous flow past Gate 1 planning pause (always-proceed = $true).">
+          <span class="switch-led switch-led-idle" id="ledDoit"></span>
+          <span class="switch-name">-DOIT: <strong id="switchValDoit">Standard Gating</strong></span>
+        </div>
+        <div class="switch-item" id="switchMinimalTests" onclick="toggleActiveProposalMinimalTests()" title="Click to toggle -MinimalTests on active proposal (RULE-LCM-023): Fast AST/hygiene checks vs full test DAG.">
+          <span class="switch-led switch-led-idle" id="ledMinimalTests"></span>
+          <span class="switch-name">-MinimalTests: <strong id="switchValMinimalTests">Standard DAG</strong></span>
+        </div>
+        <div class="switch-item static-switch" id="switchForce" title="-Force / -Immediately Switch (RULE-REV-001): Emergency bypass of Gate 2 visual review stop.">
+          <span class="switch-led switch-led-idle" id="ledForce"></span>
+          <span class="switch-name">-Force: <strong id="switchValForce">Gate 2 Active</strong></span>
+        </div>
+      </section>
+
       <!-- Control Filter Row with Advanced Filter / Find Box -->
       <section class="control-row" aria-label="Filters and controls">
         <div class="control-group">
           <span class="control-label">Preset:</span>
           <select class="control-select" id="presetSelect" onchange="applyPresetFilter(this.value)">
-            <option value="all">All Proposals</option>
-            <option value="inprogress" selected>In Progress</option>
+            <option value="open" selected>Open (All Active Work)</option>
+            <option value="inprogress">In Progress</option>
             <option value="review">Pending Review</option>
             <option value="complete">Ready to Push</option>
+            <option value="all">All Proposals</option>
           </select>
         </div>
         <div class="control-group">
@@ -700,11 +1024,11 @@
 
       <!-- Status Rail (5 Focused Lifecycle States) -->
       <nav class="status-rail" aria-label="Visible proposal statuses">
-        <div class="rail-state" id="rail-open" onclick="filterByRail('open')" title="All active work in flight (not committed or published)">
+        <div class="rail-state active" id="rail-open" onclick="filterByRail('open')" title="All active work in flight (not committed or published)">
           <div class="rail-name">Open <span class="rail-count" id="count-open">0</span></div>
           <span class="rail-detail">all active work</span>
         </div>
-        <div class="rail-state active" id="rail-inprogress" onclick="filterByRail('inprogress')" title="Proposals progressing from Scoped up to Committed">
+        <div class="rail-state" id="rail-inprogress" onclick="filterByRail('inprogress')" title="Proposals progressing from Scoped up to Committed">
           <div class="rail-name">In Progress <span class="rail-count" id="count-inprogress">0</span></div>
           <span class="rail-detail">scoped to review</span>
         </div>
@@ -741,10 +1065,10 @@
               </th>
               <th style="min-width: 220px;">Proposal</th>
               <!-- Headline Elements with Dropdown Filters -->
-              <th style="width: 125px;">
+              <th style="width: 110px;">
                 <div class="th-content">
-                  <span>Status</span>
-                  <select class="th-filter-select" id="thStatusFilter" onchange="applyFilters()" title="Filter by Work Status">
+                  <span>Disposition</span>
+                  <select class="th-filter-select" id="thStatusFilter" onchange="applyFilters()" title="Filter by Work Disposition">
                     <option value="">All</option>
                     <option value="open">Open</option>
                     <option value="active">Active</option>
@@ -774,7 +1098,7 @@
                   </select>
                 </div>
               </th>
-              <th style="min-width: 170px;">
+              <th style="min-width: 160px;">
                 <div class="th-content">
                   <span>Status</span>
                   <select class="th-filter-select" id="thProgressFilter" onchange="applyFilters()" title="Filter by Progress Status">
@@ -786,6 +1110,19 @@
                     <option value="failed">Failed</option>
                     <option value="completed">Completed</option>
                     <option value="pushed">Pushed</option>
+                  </select>
+                </div>
+              </th>
+              <th style="width: 105px;">
+                <div class="th-content">
+                  <span>Switches</span>
+                  <select class="th-filter-select" id="thSwitchFilter" onchange="applyFilters()" title="Filter by Active Internal Flow Switch">
+                    <option value="">All</option>
+                    <option value="doit">-DOIT</option>
+                    <option value="mintest">-MinTests</option>
+                    <option value="force">-Force</option>
+                    <option value="held">HELD</option>
+                    <option value="standard">Standard</option>
                   </select>
                 </div>
               </th>
@@ -831,13 +1168,29 @@
           <span class="panel-kicker" id="timelineDepth">Depth: Focused verification</span>
         </div>
         <div class="timeline" id="lifecycleTimeline">
-          <div class="step done"><span class="step-dot"></span><span class="step-name">Suggested</span><span class="step-note">idea / bug</span></div>
-          <div class="step done"><span class="step-dot"></span><span class="step-name">Scoped</span><span class="step-note">repo bound</span></div>
-          <div class="step done"><span class="step-dot"></span><span class="step-name">Decided</span><span class="step-note">approved</span></div>
-          <div class="step current"><span class="step-dot"></span><span class="step-name">Designed</span><span class="step-note">contracts</span></div>
-          <div class="step"><span class="step-dot"></span><span class="step-name">Verified</span><span class="step-note">review done</span></div>
-          <div class="step"><span class="step-dot"></span><span class="step-name">Committed</span><span class="step-note">local commit</span></div>
-          <div class="step"><span class="step-dot"></span><span class="step-name">Published</span><span class="step-note">remote push</span></div>
+          <div class="step" id="step-0"><span class="step-dot"></span><span class="step-name">Suggested</span><span class="step-note">idea / intake</span></div>
+          <div class="timeline-action" id="action-scope"><span class="action-pill">scope</span><span class="action-arrow">→</span></div>
+          <div class="step" id="step-1"><span class="step-dot"></span><span class="step-name">Scoped</span><span class="step-note">repo / app bound</span></div>
+          <div class="timeline-action" id="action-approve"><span class="action-pill">approve / proceed</span><span class="action-arrow">→</span></div>
+          <div class="step" id="step-2"><span class="step-dot"></span><span class="step-name">Decided</span><span class="step-note">plan ratified</span></div>
+          <div class="timeline-action" id="action-start"><span class="action-pill">do / proceed</span><span class="action-arrow">→</span></div>
+          <div class="step" id="step-3"><span class="step-dot"></span><span class="step-name">In Progress</span><span class="step-note">active flow</span></div>
+          <div class="timeline-action" id="action-verify"><span class="action-pill">verify (bcr)</span><span class="action-arrow">→</span></div>
+          <div class="step" id="step-4"><span class="step-dot"></span><span class="step-name">Verified</span><span class="step-note">tests passed</span></div>
+          <div class="timeline-action" id="action-commit"><span class="action-pill">commit / complete</span><span class="action-arrow">→</span></div>
+          <div class="step" id="step-5"><span class="step-dot"></span><span class="step-name">Committed</span><span class="step-note">local commit</span></div>
+          <div class="timeline-action" id="action-push"><span class="action-pill">publish / push</span><span class="action-arrow">→</span></div>
+          <div class="step" id="step-6"><span class="step-dot"></span><span class="step-name">Published</span><span class="step-note">remote synced</span></div>
+        </div>
+
+        <!-- Active Proposal Internal Switches Strip -->
+        <div class="timeline-switches" id="timelineSwitchesStrip">
+          <span class="timeline-switches-label">Internal Flow Switches on Active Item:</span>
+          <div class="timeline-switch-badges" id="timelineSwitchBadges">
+            <span class="sw-badge" id="badgeDoit">⚡ -DOIT Mode</span>
+            <span class="sw-badge" id="badgeMinTests">🧪 -MinimalTests</span>
+            <span class="sw-badge" id="badgeGate2">👁️ Gate 2 Diff Review Required</span>
+          </div>
         </div>
       </section>
 
@@ -941,9 +1294,9 @@
         </label>
 
         <label class="override-option">
-          <input type="radio" name="overrideSwitch" value="IMMEDIATELY">
+          <input type="radio" name="overrideSwitch" value="-Immediately">
           <div class="override-label">
-            <strong>IMMEDIATELY</strong>
+            <strong>-Immediately</strong>
             <span>Authorized Gate 2 visual review bypass exception per RULE-REV-002.</span>
           </div>
         </label>
@@ -1052,6 +1405,20 @@
     </div>
   </div>
 
+  <!-- LCM Execution Busy Overlay -->
+  <div id="lcmBusyOverlay" class="busy-overlay" style="display: none;">
+    <div class="busy-card">
+      <div class="busy-spinner"></div>
+      <div class="busy-text-col">
+        <strong id="busyTitle">Executing Operation...</strong>
+        <span id="busyDetails">PowerShell action dispatched to local daemon (Port 9876)</span>
+      </div>
+      <button id="lcmBusyAbortBtn" type="button" class="btn" style="background: #dc2626; color: #ffffff; font-weight: 700; border-radius: 6px; padding: 7px 14px; font-size: 12px; margin-left: 14px; cursor: pointer; border: 1px solid #b91c1c; flex-shrink: 0; box-shadow: 0 2px 6px rgba(220, 38, 38, 0.4);">
+        ⛔ Abort
+      </button>
+    </div>
+  </div>
+
   <!-- Global Injected Data -->
   <script>/*__INJECTED_ATOM_PLACEHOLDER__*/</script>
   <script>/*__INJECTED_DATA_PLACEHOLDER__*/</script>
@@ -1061,13 +1428,72 @@
 
     const DAEMON_URL = "http://127.0.0.1:9876";
 
+    // -------------------------------------------------------------------------
+    // Session Lifetime & Conflict Prevention Engine
+    // -------------------------------------------------------------------------
+    const HUB_SESSION_ID = "hub_session_" + Date.now() + "_" + Math.random().toString(36).substring(2, 9);
+    const hubBroadcastChannel = (typeof BroadcastChannel !== "undefined") ? new BroadcastChannel("lcm_control_hub_sessions") : null;
+
+    function broadcastSessionLaunch() {
+      try {
+        localStorage.setItem("lcm_active_hub_session_id", HUB_SESSION_ID);
+        localStorage.setItem("lcm_active_hub_timestamp", String(Date.now()));
+      } catch (e) {}
+      if (hubBroadcastChannel) {
+        try {
+          hubBroadcastChannel.postMessage({ type: "NEW_SESSION_LAUNCHED", sessionId: HUB_SESSION_ID, timestamp: Date.now() });
+        } catch (e) {}
+      }
+    }
+
+    function handleSessionSuperseded() {
+      if (window.pollingTimer) clearInterval(window.pollingTimer);
+      if (window.metricsTimer) clearInterval(window.metricsTimer);
+      if (window.logPollTimer) clearInterval(window.logPollTimer);
+
+      try {
+        window.close();
+      } catch (e) {}
+
+      document.body.innerHTML = `
+        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; background:#0f172a; color:#f8fafc; font-family:'IBM Plex Sans',system-ui,sans-serif; text-align:center; padding:24px; box-sizing:border-box;">
+          <div style="font-size:48px; margin-bottom:16px;">🛑</div>
+          <h1 style="font-size:22px; font-weight:700; margin-bottom:10px; color:#ef4444;">LCM Control Hub Session Superseded</h1>
+          <p style="font-size:14px; color:#94a3b8; max-width:520px; line-height:1.6; margin-bottom:24px;">
+            A newer LCM Control Hub session was launched in another browser window or tab. This session has been deactivated to eliminate state conflicts, stale data displays, and race conditions.
+          </p>
+          <button onclick="location.reload()" style="background:#2563eb; color:#ffffff; border:none; padding:10px 20px; font-size:13.5px; font-weight:600; border-radius:6px; cursor:pointer; box-shadow:0 4px 12px rgba(37,99,235,0.3);">
+            Re-activate This Window
+          </button>
+        </div>
+      `;
+    }
+
+    if (hubBroadcastChannel) {
+      hubBroadcastChannel.onmessage = (event) => {
+        if (event.data && event.data.type === "NEW_SESSION_LAUNCHED" && event.data.sessionId !== HUB_SESSION_ID) {
+          console.warn("[LCM HUB] Newer session launched (" + event.data.sessionId + "). Terminating this instance.");
+          handleSessionSuperseded();
+        }
+      };
+    }
+
+    window.addEventListener("storage", (e) => {
+      if (e.key === "lcm_active_hub_session_id" && e.newValue && e.newValue !== HUB_SESSION_ID) {
+        console.warn("[LCM HUB] Newer session active in storage (" + e.newValue + "). Terminating this instance.");
+        handleSessionSuperseded();
+      }
+    });
+
+    broadcastSessionLaunch();
+
     // Application State
     let proposalsData = (typeof RAW_PROPOSALS !== "undefined" && RAW_PROPOSALS) ? RAW_PROPOSALS : { proposals: [] };
     let docsCache = (typeof RAW_DOCS_CACHE !== "undefined" && RAW_DOCS_CACHE) ? RAW_DOCS_CACHE : {};
     let activeLog = (typeof RAW_ACTIVE_LOG !== "undefined" && RAW_ACTIVE_LOG) ? RAW_ACTIVE_LOG : "";
 
     let selectedIds = new Set();
-    let activeRailFilter = "inprogress";
+    let activeRailFilter = "open";
     let activeSort = "id-desc"; // Highest CRP first by default (e.g. 211 at top)
     let pendingOverrideAction = null;
     let pendingHoldTargets = [];
@@ -1079,63 +1505,88 @@
     })[c]);
 
     function getVisibleStatus(p) {
-      const state = String(p.state || "").toLowerCase();
-      const prog = String(p.progress_state || "").toLowerCase();
-      if (state === "rejected" || state === "deleted") return "cancelled";
-      if (state === "deferred" || prog === "blocked" || prog === "failed" || state === "held") return "held";
-      if (state === "pushed" || prog === "pushed") return "published";
-      if (state === "completed" || prog === "completed") return "complete";
-      if (state === "review" || prog === "verification") return "review";
-      if (state === "in_progress" || prog === "in_progress") return "active";
+      const status = String(p.status || p.state || "").toLowerCase();
+      const disposition = String(p.disposition || "").toLowerCase();
+      const progress = String(p.progress_state || "").toLowerCase();
+
+      // Dispositions take precedence for condition flags
+      if (disposition === "cancelled" || disposition === "rejected" || status === "rejected" || status === "deleted" || status === "cancelled") {
+        return "cancelled";
+      }
+      if (disposition === "held" || status === "held" || status === "deferred" || progress === "blocked" || progress === "failed") {
+        return "held";
+      }
+      if (status === "published" || status === "pushed" || progress === "pushed") {
+        return "published";
+      }
+      if (status === "completed" || progress === "completed") {
+        return "complete";
+      }
+      if (status === "committed" || progress === "committed") {
+        return "committed";
+      }
+      if (status === "verified" || status === "review" || progress === "verification") {
+        return "review";
+      }
+      if (status === "in_progress" || progress === "in_progress") {
+        return "active";
+      }
       return "open";
     }
 
     // Rich Plan State (Distinct from high-level Status)
     function getDetailedPlanState(p) {
-      const state = String(p.state || "").toLowerCase();
-      const prog = String(p.progress_state || "").toLowerCase();
+      const status = String(p.status || p.state || "").toLowerCase();
+      const disposition = String(p.disposition || "").toLowerCase();
+      const progress = String(p.progress_state || "").toLowerCase();
       const testStatus = String(p.test_status || "").toLowerCase();
       const holdReason = p.hold_reason || p.reason || p.status_note;
 
-      if (state === "held" || prog === "blocked" || prog === "failed" || state === "deferred") {
-        return `Held: ${holdReason || "deferred"}`;
+      if (disposition === "held" || status === "held" || status === "deferred" || progress === "blocked" || progress === "failed") {
+        return `Held: ${holdReason || "Paused"}`;
       }
-      if (state === "rejected" || prog === "rejected") {
+      if (disposition === "rejected" || status === "rejected") {
         return "Rejected";
       }
-      if (state === "cancelled" || prog === "cancelled") {
+      if (disposition === "cancelled" || status === "cancelled" || status === "deleted") {
         return "Cancelled";
       }
       if (testStatus === "failed") {
         return "Tests failed";
       }
-      if (prog === "verification" || state === "review") {
-        if (testStatus === "in_progress" || testStatus === "running") return "Tests not finished";
+      if (status === "verified" || status === "review" || progress === "verification") {
+        if (testStatus === "in_progress" || testStatus === "running") return "Tests running";
         return "Review (BCR)";
       }
-      if (testStatus === "passed" || prog === "verified") {
+      if (testStatus === "passed" || progress === "verified") {
         return "Verified";
       }
-      if (state === "completed") {
+      if (status === "committed" || progress === "committed") {
+        return "Committed";
+      }
+      if (status === "completed" || progress === "completed") {
         return "Commit ready";
       }
-      if (state === "pushed") {
+      if (status === "published" || status === "pushed") {
         return "Published";
       }
-      if (state === "in_progress") {
+      if (status === "in_progress" || progress === "in_progress") {
         if (testStatus && testStatus !== "none") return `In Progress (${testStatus})`;
         return "In Progress";
       }
-      if (state === "approved") {
-        return "Approved";
+      if (status === "decided" || status === "approved") {
+        return "Decided";
       }
-      if (state === "suggested") {
-        return "Suggested";
+      if (status === "scoped") {
+        return "Scoped";
       }
-      if (state === "bug") {
+      if (disposition === "bug" || status === "bug") {
         return "Bug report";
       }
-      return state ? state.charAt(0).toUpperCase() + state.slice(1) : "Draft";
+      if (status === "suggested") {
+        return "Suggested";
+      }
+      return status ? status.charAt(0).toUpperCase() + status.slice(1) : "Suggested";
     }
 
     // Initialize Hub
@@ -1167,6 +1618,7 @@
       $("btnActivityLogs").addEventListener("click", showActivityLogs);
       $("btnDatesLedger").addEventListener("click", showDatesModal);
       $("btnHelp").addEventListener("click", showHelpModal);
+      if ($("lcmBusyAbortBtn")) $("lcmBusyAbortBtn").addEventListener("click", abortDaemonExecution);
     });
 
     async function updateDaemonStatus() {
@@ -1220,25 +1672,27 @@
       let publishedCount = 0;
 
       (proposalsData.proposals || []).forEach(p => {
-        const state = String(p.state || "").toLowerCase();
-        const prog = String(p.progress_state || "").toLowerCase();
+        const status = String(p.status || p.state || "").toLowerCase();
+        const progress = String(p.progress_state || "").toLowerCase();
         const vis = getVisibleStatus(p);
 
-        // Open: all active work not committed or published
-        if (state !== "completed" && state !== "pushed" && vis !== "complete" && vis !== "published") {
+        // Open: all active work not committed, published, rejected, deleted, or cancelled
+        const isClosed = ["completed", "pushed", "published", "rejected", "deleted", "cancelled"].includes(status) ||
+                         ["complete", "published", "cancelled"].includes(vis);
+        if (!isClosed) {
           openCount++;
         }
 
         // In Progress: following scoped up to but excluding committed
-        if (state !== "completed" && state !== "pushed") {
-          if (["in_progress", "approved", "review"].includes(state) || ["in_progress", "verification"].includes(prog)) {
+        if (status !== "completed" && status !== "pushed" && status !== "published" && status !== "committed") {
+          if (["in_progress", "approved", "decided", "review", "verified"].includes(status) || ["in_progress", "verification"].includes(progress)) {
             inprogressCount++;
           }
         }
 
-        if (state === "review" || prog === "verification") reviewCount++;
-        if (state === "completed" || vis === "complete") completeCount++;
-        if (state === "pushed" || vis === "published") publishedCount++;
+        if (status === "review" || status === "verified" || progress === "verification") reviewCount++;
+        if (status === "completed" || vis === "complete") completeCount++;
+        if (status === "pushed" || status === "published" || vis === "published") publishedCount++;
       });
 
       if ($("count-open")) $("count-open").innerText = openCount;
@@ -1252,11 +1706,19 @@
       if (activeRailFilter === status) {
         activeRailFilter = null;
         document.querySelectorAll(".rail-state").forEach(el => el.classList.remove("active"));
+        if ($("presetSelect")) $("presetSelect").value = "all";
       } else {
         activeRailFilter = status;
         document.querySelectorAll(".rail-state").forEach(el => el.classList.remove("active"));
         const el = $("rail-" + status);
         if (el) el.classList.add("active");
+        if ($("presetSelect")) {
+          if (["open", "inprogress", "review", "complete"].includes(status)) {
+            $("presetSelect").value = status;
+          } else {
+            $("presetSelect").value = "all";
+          }
+        }
       }
       applyFilters();
     }
@@ -1264,12 +1726,8 @@
     function applyPresetFilter(preset) {
       if (preset === "all") {
         activeRailFilter = null;
-      } else if (preset === "inprogress") {
-        activeRailFilter = "inprogress";
-      } else if (preset === "review") {
-        activeRailFilter = "review";
-      } else if (preset === "complete") {
-        activeRailFilter = "complete";
+      } else {
+        activeRailFilter = preset;
       }
       document.querySelectorAll(".rail-state").forEach(el => el.classList.remove("active"));
       if (activeRailFilter) {
@@ -1282,15 +1740,16 @@
     function resetFilters() {
       $("filterQueryInput").value = "";
       $("scopeSelect").value = "";
-      $("presetSelect").value = "all";
+      if ($("presetSelect")) $("presetSelect").value = "open";
       $("sortSelect").value = "id-desc";
       activeSort = "id-desc";
-      activeRailFilter = null;
+      activeRailFilter = "open";
       
       // Reset column dropdowns
       if ($("thStatusFilter")) $("thStatusFilter").value = "";
       if ($("thPlanFilter")) $("thPlanFilter").value = "";
       if ($("thProgressFilter")) $("thProgressFilter").value = "";
+      if ($("thSwitchFilter")) $("thSwitchFilter").value = "";
       if ($("thPrioFilter")) $("thPrioFilter").value = "";
 
       // Clear all selections & synchronize selection and bulk work section
@@ -1301,6 +1760,8 @@
       }
 
       document.querySelectorAll(".rail-state").forEach(el => el.classList.remove("active"));
+      const el = $("rail-open");
+      if (el) el.classList.add("active");
       renderTable();
       renderSelectionPanel();
       updateTimelineDisplay();
@@ -1318,7 +1779,7 @@
     // -------------------------------------------------------------------------
     // Advanced Query & Column Filtering Engine
     // -------------------------------------------------------------------------
-    function evaluateProposalMatch(p, tokens, scopeVal, thStatus, thPlan, thProg, thPrio) {
+    function evaluateProposalMatch(p, tokens, scopeVal, thStatus, thPlan, thProg, thPrio, thSwitch) {
       const state = String(p.state || "").toLowerCase();
       const prog = String(p.progress_state || "").toLowerCase();
       const vis = getVisibleStatus(p);
@@ -1332,7 +1793,9 @@
 
       // Rail filter check
       if (activeRailFilter === "open") {
-        if (state === "completed" || state === "pushed" || vis === "complete" || vis === "published") return false;
+        const isClosed = ["completed", "pushed", "rejected", "deleted", "cancelled"].includes(state) ||
+                         ["complete", "published", "cancelled"].includes(vis);
+        if (isClosed) return false;
       } else if (activeRailFilter === "inprogress") {
         if (state === "completed" || state === "pushed") return false;
         if (!["in_progress", "approved", "review"].includes(state) && !["in_progress", "verification"].includes(prog)) return false;
@@ -1355,6 +1818,21 @@
       }
       if (thProg && prog !== thProg.toLowerCase()) return false;
       if (thPrio !== "" && prio !== Number(thPrio)) return false;
+
+      // Switch dropdown filter
+      if (thSwitch) {
+        const isBug = (p.disposition === "bug" || p.state === "bug");
+        const isDoit = isBug || (p.flow_mode === "doit" || p.always_proceed || p.action === "do");
+        const isMinTests = Boolean(p.minimal_tests || p.test_depth === "minimal");
+        const isBypass = Boolean(p.force_commit || p.bypass_review);
+        const isHeld = (p.disposition === "held" || p.state === "held" || p.progress_state === "deferred");
+
+        if (thSwitch === "doit" && !isDoit) return false;
+        if (thSwitch === "mintest" && !isMinTests) return false;
+        if (thSwitch === "force" && !isBypass) return false;
+        if (thSwitch === "held" && !isHeld) return false;
+        if (thSwitch === "standard" && (isDoit || isMinTests || isBypass || isHeld)) return false;
+      }
 
       // Advanced query tokens (e.g. !status:deferred, prio:>3, repo:LCM, text)
       for (const rawToken of tokens) {
@@ -1398,7 +1876,7 @@
           continue;
         }
 
-        // Key-value filters: status:value, state:value, repo:value, id:value
+        // Key-value filters: status:value, state:value, repo:value, id:value, switch:value
         if (token.includes(":")) {
           const parts = token.split(":");
           const k = parts[0].toLowerCase().trim();
@@ -1411,6 +1889,16 @@
             if (!repo.includes(v)) return false;
           } else if (k === "id") {
             if (idStr !== v && !crpTag.includes(v)) return false;
+          } else if (k === "switch") {
+            const isBug = (p.disposition === "bug" || p.state === "bug");
+            const isDoit = isBug || (p.flow_mode === "doit" || p.always_proceed || p.action === "do");
+            const isMinTests = Boolean(p.minimal_tests || p.test_depth === "minimal");
+            const isBypass = Boolean(p.force_commit || p.bypass_review);
+            const isHeld = (p.disposition === "held" || p.state === "held" || p.progress_state === "deferred");
+            if (v.includes("doit") && !isDoit) return false;
+            if (v.includes("min") && !isMinTests) return false;
+            if (v.includes("force") && !isBypass) return false;
+            if (v.includes("held") && !isHeld) return false;
           }
           continue;
         }
@@ -1439,10 +1927,11 @@
       const thStatus = $("thStatusFilter") ? $("thStatusFilter").value : "";
       const thPlan = $("thPlanFilter") ? $("thPlanFilter").value : "";
       const thProg = $("thProgressFilter") ? $("thProgressFilter").value : "";
+      const thSwitch = $("thSwitchFilter") ? $("thSwitchFilter").value : "";
       const thPrio = $("thPrioFilter") ? $("thPrioFilter").value : "";
 
       return (proposalsData.proposals || []).filter(p => {
-        return evaluateProposalMatch(p, tokens, scopeVal, thStatus, thPlan, thProg, thPrio);
+        return evaluateProposalMatch(p, tokens, scopeVal, thStatus, thPlan, thProg, thPrio, thSwitch);
       });
     }
 
@@ -1491,7 +1980,7 @@
         const planStateDetail = getDetailedPlanState(p);
 
         return `
-          <tr class="${isChecked ? "selected" : ""}" id="row-${p.id}">
+          <tr class="${isChecked ? "selected" : ""}" id="row-${p.id}" onclick="toggleProposalRowSelection(event, ${p.id})" style="cursor: pointer;">
             <td style="text-align: center;">
               <input type="checkbox" onchange="toggleProposalSelection(${p.id}, this.checked)" ${isChecked ? "checked" : ""}>
             </td>
@@ -1510,6 +1999,28 @@
               <span style="font-size: 11.5px; color: var(--ink);">${esc(progressNote)}</span>
               <span class="repo-sub">${esc(p.status_note || "")}</span>
             </td>
+            <td>
+              ${(() => {
+                const pills = [];
+                const isBug = (p.disposition === "bug" || p.state === "bug");
+                const isDoit = isBug || (p.flow_mode === "doit" || p.always_proceed || p.action === "do");
+                const isHeld = (p.disposition === "held" || p.state === "held" || p.progress_state === "deferred");
+                const isMinTests = Boolean(p.minimal_tests || p.test_depth === "minimal");
+                const isBypass = Boolean(p.force_commit || p.bypass_review);
+
+                if (isHeld) {
+                  pills.push(`<span class="pill-switch-held" title="Work held: Flow switches paused">⏸️ HELD</span>`);
+                } else {
+                  if (isDoit) pills.push(`<span class="pill-switch-doit" title="-DOIT switch active: Continuous flow past Gate 1">⚡ -DOIT</span>`);
+                  if (isMinTests) pills.push(`<span class="pill-switch-tests" title="-MinimalTests switch active: Fast single-cycle DAG">🧪 -Min</span>`);
+                  if (isBypass) pills.push(`<span class="pill-switch-doit" style="background:#fee2e2;color:#991b1b;border-color:#ef4444;" title="-Force switch active: Gate 2 visual review bypass">🚨 -Force</span>`);
+                }
+                if (pills.length === 0) {
+                  pills.push(`<span class="pill-switch-std" title="Standard Gate 1 & Gate 2 flow">⚙️ Std</span>`);
+                }
+                return pills.join(" ");
+              })()}
+            </td>
             <td style="text-align: center;">
               <span class="prio-badge" id="prio-badge-${p.id}" onclick="openPrioEditor(event, ${p.id}, ${prio})" title="Click to change priority">${prio}</span>
             </td>
@@ -1521,7 +2032,14 @@
                 <span>🧙‍♂️</span><span class="dropdown-caret">▾</span>
               </button>
               <div class="show-dropdown-menu" id="dropdown-${p.id}">
-                <div class="show-dropdown-title">Show Actions (#${p.id})</div>
+                <div class="show-dropdown-title">Lifecycle Actions (#${p.id})</div>
+                <button class="show-dropdown-item" onclick="dispatchStandardAction('proceed', [${p.id}], '')"><span class="btn-icon">⚡</span> Proceed</button>
+                <button class="show-dropdown-item" onclick="dispatchStandardAction('do', [${p.id}], '')"><span class="btn-icon">▶️</span> Do (-DOIT)</button>
+                <button class="show-dropdown-item" onclick="dispatchStandardAction('bcr', [${p.id}], '')"><span class="btn-icon">🔍</span> Open Review (BC5)</button>
+                <button class="show-dropdown-item" onclick="dispatchStandardAction('reviewed', [${p.id}], '')"><span class="btn-icon">✅</span> Accept Review</button>
+                <button class="show-dropdown-item" onclick="openHoldModal([${p.id}])"><span class="btn-icon">⏸️</span> Hold with Reason</button>
+                <div style="border-top: 1px solid var(--line); margin: 4px 0;"></div>
+                <div class="show-dropdown-title">Documents (#${p.id})</div>
                 <button class="show-dropdown-item" onclick="showProposalSpec(${p.id})"><span class="btn-icon">📄</span> Show Specification</button>
                 <button class="show-dropdown-item" onclick="showProposalPlan(${p.id})"><span class="btn-icon">📋</span> Show Plan</button>
                 <button class="show-dropdown-item" onclick="showProposalWalkthrough(${p.id})"><span class="btn-icon">🚶</span> Show Walkthrough</button>
@@ -1617,9 +2135,20 @@
       if (row) {
         if (checked) row.classList.add("selected");
         else row.classList.remove("selected");
+        const chk = row.querySelector("input[type='checkbox']");
+        if (chk) chk.checked = checked;
       }
       renderSelectionPanel();
       updateTimelineDisplay();
+    }
+
+    function toggleProposalRowSelection(event, id) {
+      const target = event.target;
+      if (target.closest("input") || target.closest("button") || target.closest("select") || target.closest(".show-dropdown-menu") || target.closest(".prio-badge")) {
+        return;
+      }
+      const isCurrentlySelected = selectedIds.has(id);
+      toggleProposalSelection(id, !isCurrentlySelected);
     }
 
     function toggleSelectAll(checked) {
@@ -1645,39 +2174,209 @@
     // -------------------------------------------------------------------------
     // Execution Ledger / Step Timeline (7 Authoritative Milestones)
     // -------------------------------------------------------------------------
-    function updateTimelineDisplay() {
+    function getProposalSyncIndex(p) {
+      if (!p) return 0;
+      const status = String(p.status || p.state || "").toLowerCase();
+      const progress = String(p.progress_state || "").toLowerCase();
+
+      // Canonical flat sync points:
+      // 6: Published
+      if (status === "published" || status === "pushed" || progress === "pushed") return 6;
+      // 5: Committed
+      if (status === "committed" || progress === "committed" || status === "completed" || progress === "completed") return 5;
+      // 4: Verified
+      if (status === "verified" || progress === "verification" || progress === "verified" || status === "review" || p.test_status === "passed") return 4;
+      // 3: In_Progress
+      if (status === "in_progress" || progress === "in_progress") return 3;
+      // 2: Decided
+      if (status === "decided" || status === "approved") return 2;
+      // 1: Scoped
+      if (status === "scoped" || (p.bundle_id && p.bundle_id !== "unassigned") || (p.origin_repo && status !== "draft")) return 1;
+      // 0: Suggested
+      return 0;
+    }
+
+    function updateInternalSwitchesDisplay(activeProposal) {
+      const lcmMode = (proposalsData.lcm_mode || "active").toLowerCase();
+      const isLcmOn = (lcmMode === "active");
+      if ($("switchValLcm")) $("switchValLcm").innerText = isLcmOn ? "ON" : "OFF";
+      if ($("ledLcmMode")) $("ledLcmMode").className = isLcmOn ? "switch-led switch-led-on" : "switch-led switch-led-off";
+
+      const testingMode = (proposalsData.testing_mode || "active").toLowerCase();
+      const isTestingOn = (testingMode === "active");
+      if ($("switchValTesting")) $("switchValTesting").innerText = isTestingOn ? "ON" : "OFF";
+      if ($("ledTestingMode")) $("ledTestingMode").className = isTestingOn ? "switch-led switch-led-on" : "switch-led switch-led-off";
+
+      const gran = (proposalsData.review_granularity || "coarse").toLowerCase();
+      const isTight = (gran === "tight");
+      if ($("switchValGranularity")) $("switchValGranularity").innerText = isTight ? "-Tight" : "-Coarse";
+      if ($("ledGranularity")) $("ledGranularity").className = isTight ? "switch-led switch-led-tight" : "switch-led switch-led-coarse";
+
+      const p = activeProposal || null;
+      let isDoit = false;
+      let isMinTests = false;
+      let isBypass = false;
+      let isHeld = false;
+
+      const itemTagEl = $("switchesActiveItemLabel");
+      if (itemTagEl) {
+        if (p) {
+          const tag = p.crp_id || p.cr_id || ("#" + p.id);
+          itemTagEl.innerText = `[${tag}]`;
+        } else {
+          itemTagEl.innerText = "[None]";
+        }
+      }
+
+      if (p) {
+        const isBug = (p.disposition === "bug" || p.state === "bug");
+        isDoit = isBug || (p.flow_mode === "doit" || p.always_proceed || p.action === "do");
+        isMinTests = Boolean(p.minimal_tests || p.test_depth === "minimal" || p.test_scope === "minimal" || (p.state && p.state.includes("minimal-tests")));
+        isBypass = Boolean(p.force_commit || p.bypass_review);
+        isHeld = (p.disposition === "held" || p.state === "held" || p.progress_state === "deferred");
+      }
+
+      if ($("ledDoit")) {
+        $("ledDoit").className = isDoit ? "switch-led switch-led-active" : "switch-led switch-led-idle";
+        $("switchValDoit").innerText = isDoit ? "Continuous Flow" : "Standard Gating";
+      }
+      if ($("ledMinimalTests")) {
+        $("ledMinimalTests").className = isMinTests ? "switch-led switch-led-active" : "switch-led switch-led-idle";
+        $("switchValMinimalTests").innerText = isMinTests ? "Fast Single DAG" : "Standard DAG";
+      }
+      if ($("ledForce")) {
+        $("ledForce").className = isBypass ? "switch-led switch-led-off" : "switch-led switch-led-idle";
+        $("switchValForce").innerText = isBypass ? "ARMED (Bypass)" : "Gate 2 Active";
+      }
+
+      const badgesContainer = $("timelineSwitchBadges");
+      if (badgesContainer) {
+        if (!p) {
+          badgesContainer.innerHTML = `<span class="sw-badge">No proposal selected</span>`;
+        } else if (isHeld) {
+          badgesContainer.innerHTML = `
+            <span class="sw-badge" style="background:#f1f5f9; color:#64748b; border-color:#cbd5e1;">⏸️ Disposition HELD: All switches paused</span>
+          `;
+        } else {
+          const badges = [];
+          if (isDoit) {
+            badges.push(`<span class="sw-badge sw-badge-active" title="Always Proceed: Continuous flow past Gate 1">⚡ -DOIT Mode Active</span>`);
+          } else {
+            badges.push(`<span class="sw-badge" title="Gate 1 Planning Ratification Required">🛡️ Gate 1 Ratified</span>`);
+          }
+
+          if (isMinTests) {
+            badges.push(`<span class="sw-badge sw-badge-gov" title="Minimal Fast Regression DAG">🧪 -MinimalTests Switch Active</span>`);
+          } else {
+            badges.push(`<span class="sw-badge" title="Full Unit and Regression Test DAG">🧪 Standard Test DAG</span>`);
+          }
+
+          if (isBypass) {
+            badges.push(`<span class="sw-badge sw-badge-danger" title="Gate 2 Visual Review Bypassed under emergency rule">🚨 -Force Review Bypass Active</span>`);
+          } else {
+            badges.push(`<span class="sw-badge" title="Visual diff review mandatory before commit">👁️ Gate 2 Diff Review Bound</span>`);
+          }
+
+          badgesContainer.innerHTML = badges.join("");
+        }
+      }
+    }
+
+    function getActiveInspectedProposal() {
       const firstId = selectedIds.size > 0 ? Array.from(selectedIds)[0] : null;
-      if (!firstId) {
-        $("timelineProposalTitle").innerText = "Select a proposal to view lifecycle progression";
-        const steps = $("lifecycleTimeline") ? $("lifecycleTimeline").querySelectorAll(".step") : [];
-        steps.forEach(step => step.classList.remove("done", "current"));
+      if (firstId) {
+        return (proposalsData.proposals || []).find(x => x.id === firstId);
+      }
+      const visible = getFilteredProposals();
+      return (visible && visible.length > 0) ? visible[0] : null;
+    }
+
+    function toggleActiveProposalDoit() {
+      const p = getActiveInspectedProposal();
+      if (!p) {
+        alert("Please select a proposal first.");
         return;
       }
-      const p = (proposalsData.proposals || []).find(x => x.id === firstId);
-      if (!p) return;
+      const isBug = (p.disposition === "bug" || p.state === "bug");
+      if (isBug) {
+        alert("Proposal is a BUG report: -DOIT mode is mandatory per RULE-LCM-008.");
+        return;
+      }
+      const current = Boolean(p.flow_mode === "doit" || p.always_proceed || p.action === "do");
+      const target = !current;
+      const id = p.id;
+      const targetDisplay = target ? "Continuous Flow (-DOIT Active)" : "Standard Gating";
+      const cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -Command "$p = Get-Content -LiteralPath 'LCM_Inventory/data/proposals/proposals.json' -Raw | ConvertFrom-Json; foreach (\$item in \$p.proposals) { if (\$item.id -eq ${id}) { \$item.flow_mode = '${target ? "doit" : "standard"}'; \$item.always_proceed = \$${target}; } }; [System.IO.File]::WriteAllText('LCM_Inventory/data/proposals/proposals.json', (\$p | ConvertTo-Json -Depth 10), [System.Text.UTF8Encoding]::new(\$false)); Write-Host 'Proposal #${id} -DOIT set to ${target}.'"`;
+      executeDaemonCommand(cmd, `Updating -DOIT Switch on #${id} to ${targetDisplay}...`, cmd);
+    }
+
+    function toggleActiveProposalMinimalTests() {
+      const p = getActiveInspectedProposal();
+      if (!p) {
+        alert("Please select a proposal first.");
+        return;
+      }
+      const current = Boolean(p.minimal_tests || p.test_depth === "minimal" || p.test_scope === "minimal" || (p.state && p.state.includes("minimal-tests")));
+      const target = !current;
+      const id = p.id;
+      const targetDisplay = target ? "Minimal Tests DAG (Fast)" : "Standard Test DAG";
+      const cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -Command "$p = Get-Content -LiteralPath 'LCM_Inventory/data/proposals/proposals.json' -Raw | ConvertFrom-Json; foreach (\$item in \$p.proposals) { if (\$item.id -eq ${id}) { \$item.minimal_tests = \$${target}; \$item.test_scope = '${target ? "minimal" : "full"}'; } }; [System.IO.File]::WriteAllText('LCM_Inventory/data/proposals/proposals.json', (\$p | ConvertTo-Json -Depth 10), [System.Text.UTF8Encoding]::new(\$false)); Write-Host 'Proposal #${id} Minimal Tests set to ${target}.'"`;
+      executeDaemonCommand(cmd, `Updating -MinimalTests Switch on #${id} to ${targetDisplay}...`, cmd);
+    }
+
+    function toggleLcmMode() {
+      const current = (proposalsData.lcm_mode || "active").toLowerCase();
+      const target = (current === "active") ? "paused" : "active";
+      const targetDisplay = (target === "active") ? "LCM ON (Active)" : "LCM OFF (Suspended)";
+      const cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action mode -Mode ${target}`;
+      executeDaemonCommand(cmd, `Setting Governance Switch to ${targetDisplay}...`, cmd);
+    }
+
+    function toggleTestingMode() {
+      const current = (proposalsData.testing_mode || "active").toLowerCase();
+      const target = (current === "active") ? "paused" : "active";
+      const targetDisplay = (target === "active") ? "Testing ON" : "Testing OFF (Deferred Deep Cascades)";
+      const cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action testing-mode -TestingMode ${target}`;
+      executeDaemonCommand(cmd, `Setting Testing Switch to ${targetDisplay}...`, cmd);
+    }
+
+    function toggleGranularity() {
+      const current = (proposalsData.review_granularity || "coarse").toLowerCase();
+      const target = (current === "coarse") ? "tight" : "coarse";
+      const targetDisplay = (target === "tight") ? "-Tight (Review per proposal)" : "-Coarse (Combined batch review)";
+      const cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action granularity -Granularity ${target}`;
+      executeDaemonCommand(cmd, `Setting Review Granularity Switch to ${targetDisplay}...`, cmd);
+    }
+
+    function updateTimelineDisplay(targetProposal) {
+      let p = targetProposal;
+      if (!p) {
+        const firstId = selectedIds.size > 0 ? Array.from(selectedIds)[0] : null;
+        if (firstId) {
+          p = (proposalsData.proposals || []).find(x => x.id === firstId);
+        } else {
+          const visible = getFilteredProposals();
+          if (visible && visible.length > 0) {
+            p = visible[0];
+          }
+        }
+      }
+
+      if (!p) {
+        $("timelineProposalTitle").innerText = "No Proposal Selected";
+        $("lifecycleTimeline").querySelectorAll(".step").forEach(s => s.classList.remove("done", "current"));
+        $("lifecycleTimeline").querySelectorAll(".action-pill").forEach(a => a.classList.remove("active"));
+        updateInternalSwitchesDisplay(null);
+        return;
+      }
 
       const tag = p.crp_id || p.cr_id || ("#" + p.id);
-      $("timelineProposalTitle").innerText = `${tag} — ${p.title} (${(p.state || "").toUpperCase()})`;
+      const isHeld = (p.disposition === "held" || p.state === "held" || p.progress_state === "deferred");
+      const heldSuffix = isHeld ? " [⏸️ HELD]" : "";
+      const displayStatus = String(p.status || p.state || "").toUpperCase();
+      $("timelineProposalTitle").innerText = `${tag} — ${p.title} (${displayStatus}${heldSuffix})`;
 
-      const st = String(p.state || "").toLowerCase();
-      const prog = String(p.progress_state || "").toLowerCase();
-
-      // Milestones:
-      // 0: Suggested
-      // 1: Scoped
-      // 2: Decided
-      // 3: Designed
-      // 4: Verified
-      // 5: Committed
-      // 6: Published
-      let activeIndex = 0;
-      if (st === "suggested" || st === "draft" || st === "bug") activeIndex = 0;
-      if (p.origin_repo && st !== "draft") activeIndex = 1;
-      if (st === "approved") activeIndex = 2;
-      if (st === "in_progress") activeIndex = 3;
-      if (prog === "verification" || st === "review" || p.test_status === "passed") activeIndex = 4;
-      if (st === "completed") activeIndex = 5;
-      if (st === "pushed") activeIndex = 6;
+      const activeIndex = getProposalSyncIndex(p);
 
       const steps = $("lifecycleTimeline").querySelectorAll(".step");
       steps.forEach((step, idx) => {
@@ -1685,6 +2384,15 @@
         if (idx < activeIndex) step.classList.add("done");
         else if (idx === activeIndex) step.classList.add("current");
       });
+
+      // Highlight active transition pills
+      const actionPills = $("lifecycleTimeline").querySelectorAll(".action-pill");
+      actionPills.forEach((pill, idx) => {
+        pill.classList.remove("active");
+        if (idx < activeIndex) pill.classList.add("active");
+      });
+
+      updateInternalSwitchesDisplay(p);
     }
 
     // -------------------------------------------------------------------------
@@ -1745,28 +2453,54 @@
         return;
       }
 
-      // DO / Start: suitable for suggested, approved, held, bug
-      const doSuitable = selectedList.every(p => ["suggested", "approved", "held", "draft", "bug"].includes(String(p.state).toLowerCase()));
+      // DO / Start: suitable for suggested, approved, held, deferred, draft, bug
+      const doSuitable = selectedList.every(p => {
+        const s = String(p.state || "").toLowerCase();
+        const pr = String(p.progress_state || "").toLowerCase();
+        return ["suggested", "approved", "held", "deferred", "draft", "bug", "processed"].includes(s) ||
+               ["undecided", "deferred", "queued", "in_progress"].includes(pr);
+      });
       toggleButtonPassive("btnBulkDo", !doSuitable);
 
-      // Proceed: suitable for approved or in_progress
-      const proceedSuitable = selectedList.every(p => ["approved", "in_progress"].includes(String(p.state).toLowerCase()));
+      // Proceed: suitable for approved, in_progress, held, deferred, suggested
+      const proceedSuitable = selectedList.every(p => {
+        const s = String(p.state || "").toLowerCase();
+        const pr = String(p.progress_state || "").toLowerCase();
+        return ["approved", "in_progress", "held", "deferred", "suggested"].includes(s) ||
+               ["in_progress", "deferred", "queued", "undecided"].includes(pr);
+      });
       toggleButtonPassive("btnBulkProceed", !proceedSuitable);
 
-      // Open Review: suitable for in_progress, review
-      const bcrSuitable = selectedList.every(p => ["in_progress", "review"].includes(String(p.state).toLowerCase()));
+      // Open Review: suitable for in_progress, review, verification
+      const bcrSuitable = selectedList.every(p => {
+        const s = String(p.state || "").toLowerCase();
+        const pr = String(p.progress_state || "").toLowerCase();
+        return ["in_progress", "review"].includes(s) || ["in_progress", "verification"].includes(pr);
+      });
       toggleButtonPassive("btnBulkReview", !bcrSuitable);
 
-      // Reviewed (Accept): suitable for review
-      const reviewedSuitable = selectedList.every(p => ["review", "in_progress"].includes(String(p.state).toLowerCase()));
+      // Reviewed (Accept): suitable for review, in_progress, verification
+      const reviewedSuitable = selectedList.every(p => {
+        const s = String(p.state || "").toLowerCase();
+        const pr = String(p.progress_state || "").toLowerCase();
+        return ["review", "in_progress"].includes(s) || ["verification", "in_progress"].includes(pr);
+      });
       toggleButtonPassive("btnBulkReviewed", !reviewedSuitable);
 
-      // Complete: suitable for review, in_progress, approved
-      const compSuitable = selectedList.every(p => ["review", "in_progress", "approved"].includes(String(p.state).toLowerCase()));
+      // Complete: suitable for review, in_progress, approved, verification, committed
+      const compSuitable = selectedList.every(p => {
+        const s = String(p.state || "").toLowerCase();
+        const pr = String(p.progress_state || "").toLowerCase();
+        return ["review", "in_progress", "approved"].includes(s) || ["verification", "in_progress", "committed"].includes(pr);
+      });
       toggleButtonPassive("btnBulkComplete", !compSuitable);
 
       // Push: suitable for completed
-      const pushSuitable = selectedList.every(p => ["completed"].includes(String(p.state).toLowerCase()));
+      const pushSuitable = selectedList.every(p => {
+        const s = String(p.state || "").toLowerCase();
+        const pr = String(p.progress_state || "").toLowerCase();
+        return s === "completed" || pr === "completed";
+      });
       toggleButtonPassive("btnBulkPush", !pushSuitable);
 
       // Hold: always active for any open items
@@ -1792,13 +2526,25 @@
     // -------------------------------------------------------------------------
     function handleBulkAction(action) {
       if (action === "purge_temp") {
-        executeDaemonCommand("pwsh -NoProfile -Command \"& .lcm/tools/internal/Clear-LcmBcrState.ps1; Remove-Item -Path LCM_Inventory/scratch/* -Recurse -Force -ErrorAction SilentlyContinue; Write-Host 'Purged temporary review and scratch artifacts.' -ForegroundColor Green\"");
+        executeDaemonCommand("pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Clear-BCReviewTemp.ps1 -Purge", "Purging Temporary Review Files...", "Clear-BCReviewTemp.ps1 -Purge");
         return;
       }
 
       if (selectedIds.size === 0) {
-        alert("Please select at least one proposal from the table first.");
-        return;
+        const p = getActiveInspectedProposal();
+        if (p) {
+          selectedIds.add(p.id);
+          const row = $("row-" + p.id);
+          if (row) {
+            row.classList.add("selected");
+            const chk = row.querySelector("input[type='checkbox']");
+            if (chk) chk.checked = true;
+          }
+          renderSelectionPanel();
+        } else {
+          alert("Please select at least one proposal from the table first.");
+          return;
+        }
       }
 
       const ids = Array.from(selectedIds);
@@ -1833,12 +2579,13 @@
 
       // Check passivity
       let isPassive = false;
-      if (action === "do" && !["suggested", "approved", "held", "draft", "bug"].includes(state)) isPassive = true;
-      if (action === "proceed" && !["approved", "in_progress"].includes(state)) isPassive = true;
-      if (action === "bcr" && !["in_progress", "review"].includes(state)) isPassive = true;
-      if (action === "reviewed" && !["review", "in_progress"].includes(state)) isPassive = true;
-      if (action === "complete" && !["review", "in_progress"].includes(state)) isPassive = true;
-      if (action === "push" && state !== "completed") isPassive = true;
+      const prog = String(p?.progress_state || "").toLowerCase();
+      if (action === "do" && !["suggested", "approved", "held", "deferred", "draft", "bug", "processed"].includes(state) && !["undecided", "deferred", "queued", "in_progress"].includes(prog)) isPassive = true;
+      if (action === "proceed" && !["approved", "in_progress", "held", "deferred", "suggested"].includes(state) && !["in_progress", "deferred", "queued", "undecided"].includes(prog)) isPassive = true;
+      if (action === "bcr" && !["in_progress", "review"].includes(state) && !["in_progress", "verification"].includes(prog)) isPassive = true;
+      if (action === "reviewed" && !["review", "in_progress"].includes(state) && !["verification", "in_progress"].includes(prog)) isPassive = true;
+      if (action === "complete" && !["review", "in_progress", "approved"].includes(state) && !["verification", "in_progress"].includes(prog)) isPassive = true;
+      if (action === "push" && state !== "completed" && prog !== "completed") isPassive = true;
 
       if (isPassive) {
         requestAuthorityOverride(action, [id]);
@@ -1865,57 +2612,150 @@
     }
 
     function dispatchStandardAction(action, ids, overrideSwitch) {
-      const idStr = ids.join(" ");
+      const idStr = ids.join(",");
       const sw = overrideSwitch ? " " + overrideSwitch : "";
       let cmd = "";
 
       switch (action) {
         case "do":
-          cmd = `pwsh tools/Do-Proposal.ps1 -Id ${ids[0]}${sw}`;
+          cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action do -TargetExpression "${idStr}"${sw}`;
           break;
         case "proceed":
-          cmd = `pwsh tools/Proceed-Proposal.ps1 -Id ${idStr}${sw}`;
+          cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action proceed -TargetExpression "${idStr}"${sw}`;
           break;
-        case "bcr":
-          cmd = `pwsh tools/Show-ProposalDiff.ps1 -Id ${ids[0]}${sw}`;
+        case "bcr": {
+          const p = (proposalsData.proposals || []).find(x => x.id === ids[0]);
+          const repo = p?.origin_repo || "LCM_Inventory";
+          const crpTag = p?.crp_id || p?.cr_id || ("CRP-" + ids[0]);
+          cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1 -RepositoryName ${repo} -CRP ${crpTag}${sw}`;
           break;
+        }
         case "reviewed":
-          cmd = `pwsh tools/Submit-ReviewResult.ps1 -Id ${ids[0]} -Accepted${sw}`;
+        case "complete": {
+          const p = (proposalsData.proposals || []).find(x => x.id === ids[0]);
+          const repo = p?.origin_repo || "LCM_Inventory";
+          cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Submit-ReviewResult.ps1 -RepositoryPath ${repo} -Result Completed${sw}`;
           break;
-        case "complete":
-          cmd = `pwsh tools/Complete-Proposal.ps1 -Id ${idStr}${sw}`;
-          break;
+        }
         case "commit":
-          cmd = `pwsh tools/Commit-Proposal.ps1 -Id ${idStr}${sw}`;
+          cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action commit -TargetExpression "${idStr}"${sw}`;
           break;
         case "push":
-          cmd = `pwsh tools/Push-Proposal.ps1${sw}`;
+          cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-WorkspacePush.ps1${sw}`;
           break;
         case "delete":
-          cmd = `pwsh tools/Delete-Proposal.ps1 -Id ${idStr}${sw}`;
+          cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action delete -TargetExpression "${idStr}"${sw}`;
+          break;
+        case "defer":
+          cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action defer -TargetExpression "${idStr}"${sw}`;
           break;
         default:
-          cmd = `pwsh tools/Invoke-LcmAction.ps1 -Action ${action} -Id ${idStr}${sw}`;
+          cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action ${action} -TargetExpression "${idStr}"${sw}`;
       }
 
-      executeDaemonCommand(cmd);
+      const actionTitles = {
+        do: `Starting / Doing #${idStr}...`,
+        proceed: `Proceeding #${idStr}...`,
+        bcr: `Opening Beyond Compare Review for #${idStr}...`,
+        reviewed: `Recording Review Accepted for #${idStr}...`,
+        complete: `Completing Proposal #${idStr}...`,
+        commit: `Creating Git Commit for #${idStr}...`,
+        push: `Publishing Commits to Remote Repositories...`,
+        delete: `Deleting Proposal #${idStr}...`,
+        defer: `Deferring Proposal #${idStr}...`,
+        hold: `Placing Proposal #${idStr} on Hold...`,
+        purge_temp: `Purging Temporary Scratch & Review Artifacts...`
+      };
+      const title = actionTitles[action] || `Executing ${action.toUpperCase()} on #${idStr}...`;
+      executeDaemonCommand(cmd, title, cmd);
     }
 
-    async function executeDaemonCommand(commandStr) {
+    let currentActiveAbortController = null;
+    let isCommandExecuting = false;
+
+    function showBusyIndicator(title, details) {
+      const overlay = $("lcmBusyOverlay");
+      if (overlay) {
+        $("busyTitle").innerText = title || "Executing Operation...";
+        $("busyDetails").innerText = details || "PowerShell action dispatched to local daemon (Port 9876)";
+        overlay.style.display = "flex";
+      }
+      const syncEl = $("daemonSyncDot");
+      if (syncEl) syncEl.classList.add("busy");
+      if ($("daemonStatusText")) $("daemonStatusText").innerText = "⏳ " + (title || "Executing...");
+      document.body.style.cursor = "wait";
+    }
+
+    function hideBusyIndicator() {
+      const overlay = $("lcmBusyOverlay");
+      if (overlay) {
+        overlay.style.display = "none";
+      }
+      const syncEl = $("daemonSyncDot");
+      if (syncEl) syncEl.classList.remove("busy");
+      if ($("daemonStatusText")) $("daemonStatusText").innerText = "REST Daemon Port 9876 Online";
+      document.body.style.cursor = "default";
+    }
+
+    async function abortDaemonExecution() {
+      if (!isCommandExecuting) {
+        hideBusyIndicator();
+        return;
+      }
+      if ($("busyTitle")) $("busyTitle").innerText = "Aborting Execution...";
+      if ($("busyDetails")) $("busyDetails").innerText = "Sending cancellation signal to daemon...";
+      try {
+        if (currentActiveAbortController) {
+          currentActiveAbortController.abort();
+        }
+        await fetch(DAEMON_URL + "/abort", { method: "POST", cache: "no-store" });
+      } catch (e) {
+        console.warn("[LCM HUB] Abort dispatch notice:", e);
+      }
+      isCommandExecuting = false;
+      currentActiveAbortController = null;
+      hideBusyIndicator();
+      alert("Execution aborted by operator.");
+      await refreshHubData();
+    }
+
+    async function executeDaemonCommand(commandStr, userTitle, userDetails) {
+      if (isCommandExecuting) {
+        alert("Another operation is already running. Click 'Abort' on the busy overlay if you wish to cancel it.");
+        return;
+      }
+      isCommandExecuting = true;
+      currentActiveAbortController = new AbortController();
+      showBusyIndicator(userTitle || "Executing daemon command...", userDetails || commandStr);
       try {
         const res = await fetch(DAEMON_URL + "/execute", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ command: commandStr, sync: true })
+          body: JSON.stringify({ command: commandStr, sync: true }),
+          signal: currentActiveAbortController.signal
         });
         const data = await res.json();
-        if (data.error) {
-          alert("Execution error: " + data.error);
-        } else {
-          // Re-query data and update view
-          setTimeout(refreshHubData, 600);
+        isCommandExecuting = false;
+        currentActiveAbortController = null;
+        if (data.error || data.status === "ERROR" || (data.exitCode !== undefined && data.exitCode !== 0)) {
+          hideBusyIndicator();
+          const errMsg = data.error || data.stderr || (data.stdout ? data.stdout : "Command exited with code " + data.exitCode);
+          alert("Execution error:\n" + errMsg);
+          return;
         }
+        // Re-query data and update view
+        setTimeout(async () => {
+          await refreshHubData();
+          hideBusyIndicator();
+        }, 600);
       } catch (err) {
+        isCommandExecuting = false;
+        currentActiveAbortController = null;
+        hideBusyIndicator();
+        if (err.name === "AbortError") {
+          console.log("[LCM HUB] Request aborted cleanly.");
+          return;
+        }
         alert("Failed to connect to REST Daemon on Port 9876: " + err.message);
       }
     }
@@ -1942,10 +2782,10 @@
       }
       closeModal("holdModal");
 
-      const idStr = pendingHoldTargets.join(" ");
-      const cmd = `pwsh tools/Hold-Proposal.ps1 -Id ${idStr} -Reason "${reason}"`;
+      const idStr = pendingHoldTargets.join(",");
+      const cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action hold -TargetExpression "${idStr}" -Details "${reason}"`;
       pendingHoldTargets = [];
-      executeDaemonCommand(cmd);
+      executeDaemonCommand(cmd, `Applying Hold (${reason}) to #${idStr}...`, cmd);
     }
 
     // -------------------------------------------------------------------------
@@ -2034,12 +2874,14 @@
     function showProposalSpec(id) {
       const p = (proposalsData.proposals || []).find(x => x.id === id);
       const tag = p?.crp_id || p?.cr_id || ("#" + id);
-      const specKey = Object.keys(docsCache).find(k => k.includes(`Proposals/${tag}`) || k.includes(`CRP-${id}`) || k.includes(`BUG-${id}`));
-      const content = specKey ? docsCache[specKey] : `No compiled markdown specification file found in cache for ${tag}.`;
+      const specKey = Object.keys(docsCache).find(k => (k.includes(`Proposals/${tag}`) || k.includes(`CRP-${id}`) || k.includes(`BUG-${id}`) || k.includes(`Proposals/CRP-${id}`) || k.includes(`Proposals/BUG-${id}`)) && k.toLowerCase().includes("specification"));
+      const fallbackKey = Object.keys(docsCache).find(k => (k.includes(`${id}`) || k.includes(tag)) && k.toLowerCase().includes("specification"));
+      const finalKey = specKey || fallbackKey;
+      const content = finalKey ? docsCache[finalKey] : `No compiled markdown specification file found in cache for ${tag}.`;
 
       $("docModalTitle").innerText = `📄 Specification: ${tag} — ${p?.title || ""}`;
       $("docModalBody").innerText = content;
-      $("btnEditNotepad").onclick = () => openProposalInNotepad(id);
+      $("btnEditNotepad").onclick = () => openProposalDocInNotepad(id, finalKey);
       $("btnEditNotepad").style.display = "inline-flex";
       openModal("docModal");
     }
@@ -2047,23 +2889,43 @@
     function showProposalPlan(id) {
       const p = (proposalsData.proposals || []).find(x => x.id === id);
       const tag = p?.crp_id || p?.cr_id || ("#" + id);
-      const planKey = Object.keys(docsCache).find(k => k.includes(`plans/`) && (k.includes(`${id}`) || k.includes(tag)));
+      const planKey = Object.keys(docsCache).find(k => (k.includes(`plans/`) || k.includes(`Proposals/`)) && (k.includes(`${id}`) || k.includes(tag)) && k.toLowerCase().includes("plan") && !k.toLowerCase().includes("walkthrough") && !k.toLowerCase().includes("specification"));
       const content = planKey ? docsCache[planKey] : `No compiled plan file found in cache for ${tag}.`;
 
       $("docModalTitle").innerText = `📋 Plan: ${tag} — ${p?.title || ""}`;
       $("docModalBody").innerText = content;
-      $("btnEditNotepad").onclick = () => openProposalInNotepad(id);
+      $("btnEditNotepad").onclick = () => openProposalDocInNotepad(id, planKey);
       $("btnEditNotepad").style.display = "inline-flex";
       openModal("docModal");
     }
 
     function showProposalWalkthrough(id) {
-      const cmd = `pwsh tools/Show-Proposal.ps1 -Id ${id} -Walkthrough`;
-      executeDaemonCommand(cmd);
+      const p = (proposalsData.proposals || []).find(x => x.id === id);
+      const tag = p?.crp_id || p?.cr_id || ("#" + id);
+      const wtKey = Object.keys(docsCache).find(k => (k.includes(`plans/`) || k.includes(`Proposals/`)) && (k.includes(`${id}`) || k.includes(tag)) && k.toLowerCase().includes("walkthrough"));
+      const content = wtKey ? docsCache[wtKey] : `No compiled walkthrough file found in cache for ${tag}.`;
+
+      $("docModalTitle").innerText = `🚶 Walkthrough: ${tag} — ${p?.title || ""}`;
+      $("docModalBody").innerText = content;
+      $("btnEditNotepad").onclick = () => openProposalDocInNotepad(id, wtKey);
+      $("btnEditNotepad").style.display = "inline-flex";
+      openModal("docModal");
+    }
+
+    function openProposalDocInNotepad(id, docKey) {
+      const filePath = docKey ? docKey : `LCM_Inventory/data/proposals/plans/Proposal-${String(id).padStart(3, '0')}_Plan.md`;
+      fetch(DAEMON_URL + "/open_editor", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ filePath })
+      });
     }
 
     function showProposalDiff(id) {
-      const cmd = `pwsh tools/Show-ProposalDiff.ps1 -Id ${id}`;
+      const p = (proposalsData.proposals || []).find(x => x.id === id);
+      const repo = p?.origin_repo || "LCM_Inventory";
+      const crpTag = p?.crp_id || p?.cr_id || `CRP-${id}`;
+      const cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1 -RepositoryName ${repo} -CRP ${crpTag}`;
       executeDaemonCommand(cmd);
     }
 

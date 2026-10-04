@@ -79,11 +79,33 @@ function New-CompactBCompareReviewTree {
     $null = New-Item -ItemType Directory -Path (Split-Path $workingTarget -Parent) -Force
     $null = New-Item -ItemType Directory -Path (Split-Path $baselineTarget -Parent) -Force
     Copy-Item -LiteralPath $workingPath -Destination $workingTarget -Force
+    $srcFile = Get-Item -LiteralPath $workingPath -Force
+    [System.IO.File]::SetCreationTime($workingTarget, $srcFile.CreationTime)
+    [System.IO.File]::SetLastWriteTime($workingTarget, $srcFile.LastWriteTime)
 
     $gitObject = "${BaseCommit}:$($relativePath.Replace('\', '/'))"
     & git -C $repository.FullName show $gitObject 2>$null > $baselineTarget
     if ($LASTEXITCODE -ne 0) {
       throw "Included baseline file not found at ${BaseCommit}: $relativePath"
+    }
+
+    # Preserve baseline file timestamp
+    $destFile = Get-Item -LiteralPath $baselineTarget -Force
+    if ($destFile.Length -eq $srcFile.Length -and (Get-FileHash -LiteralPath $baselineTarget -Algorithm SHA256).Hash -eq (Get-FileHash -LiteralPath $workingPath -Algorithm SHA256).Hash) {
+      [System.IO.File]::SetCreationTime($baselineTarget, $srcFile.CreationTime)
+      [System.IO.File]::SetLastWriteTime($baselineTarget, $srcFile.LastWriteTime)
+    } else {
+      $commitDateStr = (& git -C $repository.FullName log -1 --format=%cI $BaseCommit -- $relativePath 2>$null)
+      if ([string]::IsNullOrWhiteSpace($commitDateStr)) {
+        $commitDateStr = (& git -C $repository.FullName log -1 --format=%cI $BaseCommit 2>$null)
+      }
+      $targetTime = if (-not [string]::IsNullOrWhiteSpace($commitDateStr)) {
+        [System.DateTime]::Parse($commitDateStr)
+      } else {
+        $srcFile.LastWriteTime
+      }
+      [System.IO.File]::SetCreationTime($baselineTarget, $targetTime)
+      [System.IO.File]::SetLastWriteTime($baselineTarget, $targetTime)
     }
   }
 

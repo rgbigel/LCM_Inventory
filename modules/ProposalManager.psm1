@@ -284,7 +284,7 @@ function Set-WorkspaceProposalState {
         [int]$Id,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet('bug', 'suggested', 'processed', 'approved', 'deferred', 'deleted', 'completed', 'rejected', 'pushed')]
+        [ValidateSet('bug', 'suggested', 'processed', 'approved', 'deferred', 'deleted', 'completed', 'completed [minimal-tests]', 'rejected', 'pushed', 'held')]
         [string]$State,
 
         [string]$Details
@@ -296,6 +296,16 @@ function Set-WorkspaceProposalState {
     foreach ($p in $store.proposals) {
         if ($p.id -eq $Id) {
             $p.state = $State
+            # Bidirectional Invariant: State updates keep physical progress synchronized
+            if ($State -in @('held', 'deferred') -and $p.progress_state -ne 'deferred') {
+                $p | Add-Member -NotePropertyName "progress_state" -NotePropertyValue 'deferred' -Force
+            } elseif ($State -eq 'completed' -and $p.progress_state -ne 'completed') {
+                $p | Add-Member -NotePropertyName "progress_state" -NotePropertyValue 'completed' -Force
+            } elseif ($State -eq 'pushed' -and $p.progress_state -ne 'pushed') {
+                $p | Add-Member -NotePropertyName "progress_state" -NotePropertyValue 'pushed' -Force
+            } elseif ($State -in @('rejected', 'deleted') -and $p.progress_state -notin @('blocked', 'deferred')) {
+                $p | Add-Member -NotePropertyName "progress_state" -NotePropertyValue 'deferred' -Force
+            }
             if ($Details) {
                 $p.details = $Details
             }
@@ -321,7 +331,7 @@ function Set-WorkspaceProposalProgress {
         [int]$Id,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet('undecided', 'queued', 'in_progress', 'verification', 'committed', 'completed', 'pushed', 'blocked', 'failed')]
+        [ValidateSet('undecided', 'queued', 'in_progress', 'verification', 'committed', 'completed', 'pushed', 'blocked', 'failed', 'deferred')]
         [string]$ProgressState,
 
         [string]$Details
@@ -336,8 +346,8 @@ function Set-WorkspaceProposalProgress {
 
             # Plan State Synchronization (RULE-LCM-002 / Two-Tier Governance)
             # When physical progress advances, the plan state follows:
-            if ($ProgressState -in @('in_progress', 'queued', 'verification') -and $p.state -in @('completed', 'pushed')) {
-                $p.state = 'suggested'
+            if ($ProgressState -in @('in_progress', 'queued', 'verification') -and $p.state -in @('completed', 'pushed', 'held', 'deferred')) {
+                $p.state = 'approved'
             } elseif ($ProgressState -in @('in_progress', 'verification', 'committed') -and $p.state -eq 'suggested') {
                 $p.state = 'approved'
             } elseif ($ProgressState -eq 'completed' -and $p.state -ne 'completed') {
@@ -521,7 +531,7 @@ function Invoke-ProposalBatchAction {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
-        [ValidateSet('do', 'delete', 'defer', 'deferred', 'complete', 'completed', 'suggest', 'suggested', 'reject', 'rejected', 'approve', 'approved', 'bug', 'push', 'pushed')]
+        [ValidateSet('do', 'delete', 'defer', 'deferred', 'complete', 'completed', 'suggest', 'suggested', 'reject', 'rejected', 'approve', 'approved', 'bug', 'push', 'pushed', 'hold', 'held', 'resume')]
         [string]$Action,
 
         [Parameter(Mandatory = $true)]
@@ -537,9 +547,11 @@ function Invoke-ProposalBatchAction {
     }
 
     $mappedState = switch ($Action) {
-        'do'                                  { 'processed' }
+        'do'                                  { 'approved' }
         'delete'                              { 'deleted' }
         { $_ -in @('defer', 'deferred') }     { 'deferred' }
+        { $_ -in @('hold', 'held') }          { 'held' }
+        'resume'                              { 'approved' }
         { $_ -in @('complete', 'completed') } { 'completed' }
         { $_ -in @('suggest', 'suggested') }   { 'suggested' }
         { $_ -in @('reject', 'rejected') }    { 'rejected' }
@@ -555,6 +567,29 @@ function Invoke-ProposalBatchAction {
             if ($Action -eq 'complete') {
                 $res = Set-WorkspaceProposalProgress -Id $id -ProgressState 'completed' -Details $Details
             } elseif ($Action -eq 'do') {
+                $res = Set-WorkspaceProposalProgress -Id $id -ProgressState 'in_progress' -Details $Details
+                # Flow switch activation per RULE-LCM-008
+                $store = Get-ProposalStore
+                foreach ($item in $store.proposals) {
+                    if ($item.id -eq $id) {
+                        if ($item.PSObject.Properties['flow_mode']) { $item.flow_mode = 'doit' } else { $item | Add-Member -NotePropertyName 'flow_mode' -NotePropertyValue 'doit' -Force }
+                        if ($item.PSObject.Properties['always_proceed']) { $item.always_proceed = $true } else { $item | Add-Member -NotePropertyName 'always_proceed' -NotePropertyValue $true -Force }
+                        $res = $item
+                    }
+                }
+                Set-ProposalStore -Store $store
+            } elseif ($Action -in @('hold', 'held')) {
+                $res = Set-WorkspaceProposalProgress -Id $id -ProgressState 'deferred' -Details $Details
+                $store = Get-ProposalStore
+                foreach ($item in $store.proposals) {
+                    if ($item.id -eq $id) {
+                        if ($item.PSObject.Properties['flow_mode']) { $item.flow_mode = 'standard' } else { $item | Add-Member -NotePropertyName 'flow_mode' -NotePropertyValue 'standard' -Force }
+                        if ($item.PSObject.Properties['always_proceed']) { $item.always_proceed = $false } else { $item | Add-Member -NotePropertyName 'always_proceed' -NotePropertyValue $false -Force }
+                        $res = $item
+                    }
+                }
+                Set-ProposalStore -Store $store
+            } elseif ($Action -eq 'resume') {
                 $res = Set-WorkspaceProposalProgress -Id $id -ProgressState 'in_progress' -Details $Details
             }
             $updated += $res
@@ -575,7 +610,11 @@ function Set-ReviewGranularity {
     )
 
     $store = Get-ProposalStore
-    $store.review_granularity = $Granularity.ToLowerInvariant()
+    if (-not $store.PSObject.Properties['review_granularity']) {
+        $store | Add-Member -NotePropertyName 'review_granularity' -NotePropertyValue $Granularity.ToLowerInvariant()
+    } else {
+        $store.review_granularity = $Granularity.ToLowerInvariant()
+    }
     Set-ProposalStore -Store $store
     Write-Host "Review granularity configured to: $($store.review_granularity)" -ForegroundColor Green
     return $store.review_granularity
@@ -586,7 +625,7 @@ function Get-ReviewGranularity {
     param()
 
     $store = Get-ProposalStore
-    if ($store.review_granularity) {
+    if ($store.PSObject.Properties['review_granularity'] -and $store.review_granularity) {
         return $store.review_granularity
     }
     return 'coarse'
@@ -601,7 +640,11 @@ function Set-LCMMode {
     )
 
     $store = Get-ProposalStore
-    $store.lcm_mode = $Mode.ToLowerInvariant()
+    if (-not $store.PSObject.Properties['lcm_mode']) {
+        $store | Add-Member -NotePropertyName 'lcm_mode' -NotePropertyValue $Mode.ToLowerInvariant()
+    } else {
+        $store.lcm_mode = $Mode.ToLowerInvariant()
+    }
     Set-ProposalStore -Store $store
     Write-Host "LCM Mode configured to: $($store.lcm_mode)" -ForegroundColor Green
     return $store.lcm_mode
@@ -612,8 +655,38 @@ function Get-LCMMode {
     param()
 
     $store = Get-ProposalStore
-    if ($store.lcm_mode) {
+    if ($store.PSObject.Properties['lcm_mode'] -and $store.lcm_mode) {
         return $store.lcm_mode
+    }
+    return 'active'
+}
+
+function Set-TestingMode {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('active', 'paused')]
+        [string]$Mode
+    )
+
+    $store = Get-ProposalStore
+    if (-not $store.PSObject.Properties['testing_mode']) {
+        $store | Add-Member -NotePropertyName 'testing_mode' -NotePropertyValue $Mode.ToLowerInvariant()
+    } else {
+        $store.testing_mode = $Mode.ToLowerInvariant()
+    }
+    Set-ProposalStore -Store $store
+    Write-Host "Testing Mode configured to: $($store.testing_mode)" -ForegroundColor Green
+    return $store.testing_mode
+}
+
+function Get-TestingMode {
+    [CmdletBinding()]
+    param()
+
+    $store = Get-ProposalStore
+    if ($store.PSObject.Properties['testing_mode'] -and $store.testing_mode) {
+        return $store.testing_mode
     }
     return 'active'
 }
@@ -2109,7 +2182,7 @@ Export-ModuleMember -Function Get-ProposalStorePath, Get-ProposalStore, Set-Prop
     Get-WorkspaceProposals, New-WorkspaceProposal, Set-WorkspaceProposalState, Set-WorkspaceProposalProgress, `
     Set-WorkspaceProposalPriority, Save-ProposalPlan, Save-ProposalWalkthrough, `
     Resolve-ProposalIdExpression, Invoke-ProposalBatchAction, `
-    Set-ReviewGranularity, Get-ReviewGranularity, Set-LCMMode, Get-LCMMode, `
+    Set-ReviewGranularity, Get-ReviewGranularity, Set-LCMMode, Get-LCMMode, Set-TestingMode, Get-TestingMode, `
     Get-ActiveAppContext, Set-ActiveAppContext, Get-LcmApps, Sync-LcmAppCatalog, New-LcmApp, Split-LcmAppDocs, Format-LcmAppsTable, `
     Get-LcmProposalDocument, Remove-LcmProposalBundle, `
     Test-RegressionTrigger, Assert-RegressionSafety, Get-RegressionDAGOrder, New-ChildRegressionProposal, `
