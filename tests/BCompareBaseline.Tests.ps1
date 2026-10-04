@@ -141,4 +141,32 @@ Describe 'BCompare baseline' {
     Export-BCompareBaseline -Descriptor $descriptor -DestinationPath $destination
     (Test-Path -LiteralPath (Join-Path $destination '.copilot\Config.json')) | Should -BeTrue
   }
+
+  It 'exports rules when target repository uses a higher-up .agents junction' {
+    $authorityRepository = Join-Path $TestDrive 'HigherUpAuthority'
+    $targetRepository = Join-Path $TestDrive 'HigherUpTarget'
+    $destination = Join-Path $TestDrive 'higher-up-baseline'
+    $ruleFile = Join-Path $authorityRepository '.agents\rules\DisplayStandardsPolicy.md'
+
+    $null = New-Item -ItemType Directory -Path (Split-Path $ruleFile -Parent) -Force
+    Set-Content -LiteralPath $ruleFile -Value 'higher-up rule' -Encoding UTF8
+    & git -C $authorityRepository init --quiet
+    & git -C $authorityRepository add .agents/rules/DisplayStandardsPolicy.md
+    & git -C $authorityRepository -c user.name='Pester' -c user.email='pester@example.invalid' commit --quiet -m 'Authority rules'
+
+    $null = New-Item -ItemType Directory -Path $targetRepository -Force
+    Set-Content -LiteralPath (Join-Path $targetRepository 'tracked.txt') -Value 'target commit' -Encoding UTF8
+    & git -C $targetRepository init --quiet
+    & git -C $targetRepository add tracked.txt
+    & git -C $targetRepository -c user.name='Pester' -c user.email='pester@example.invalid' commit --quiet -m 'Target commit'
+
+    # Higher-up junction at .agents
+    $null = New-Item -ItemType Junction -Path (Join-Path $targetRepository '.agents') -Target (Join-Path $authorityRepository '.agents')
+
+    $descriptor = Get-BCompareBaselineDescriptor -RepositoryPath $targetRepository -BaseCommit 'HEAD'
+    Export-BCompareBaseline -Descriptor $descriptor -DestinationPath $destination
+
+    $descriptor.RulesAuthorityCommit | Should -Be (& git -C $authorityRepository rev-parse --short HEAD).Trim()
+    (Get-Content -LiteralPath (Join-Path $destination '.agents\rules\DisplayStandardsPolicy.md') -Raw).Trim() | Should -Be 'higher-up rule'
+  }
 }

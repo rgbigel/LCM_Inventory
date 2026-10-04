@@ -89,11 +89,24 @@ function Get-BCompareBaselineDescriptor {
   }
 
   $rulesItem = Get-Item -LiteralPath $rulesPath -Force
-  if ($rulesItem.LinkType -ne 'Junction' -or [string]::IsNullOrWhiteSpace([string]$rulesItem.Target)) {
-    return [pscustomobject]$descriptor
+  if ($rulesItem.LinkType -eq 'Junction' -and -not [string]::IsNullOrWhiteSpace([string]$rulesItem.Target)) {
+    $rulesTargetPath = [string]$rulesItem.Target
   }
-
-  $rulesTargetPath = [string]$rulesItem.Target
+  else {
+    $agentsPath = Join-Path $RepositoryPath '.agents'
+    if (Test-Path -LiteralPath $agentsPath) {
+      $agentsItem = Get-Item -LiteralPath $agentsPath -Force
+      if ($agentsItem.LinkType -eq 'Junction' -and -not [string]::IsNullOrWhiteSpace([string]$agentsItem.Target)) {
+        $rulesTargetPath = Join-Path ([string]$agentsItem.Target) 'rules'
+      }
+      else {
+        return [pscustomobject]$descriptor
+      }
+    }
+    else {
+      return [pscustomobject]$descriptor
+    }
+  }
   $authorityPath = (& git -C $rulesTargetPath rev-parse --show-toplevel 2>$null).Trim()
   if ([string]::IsNullOrWhiteSpace($authorityPath)) {
     throw "Rules junction '$rulesPath' does not target a Git repository."
@@ -210,20 +223,29 @@ function Export-BCompareBaseline {
   if (Test-Path -LiteralPath $destCopilot) {
     $destRules = Join-Path $DestinationPath '.agents\rules'
     $destCopilotRules = Join-Path $destCopilot 'Rules'
-    if ((Test-Path -LiteralPath $destRules) -and (-not (Test-Path -LiteralPath $destCopilotRules))) {
-      New-Item -ItemType Junction -Path $destCopilotRules -Target $destRules -Force | Out-Null
+    if (-not (Test-Path -LiteralPath $destCopilotRules)) {
+      $targetRules = if (Test-Path -LiteralPath $destRules) { $destRules } elseif ($Descriptor.RulesAuthorityPath) { Join-Path $Descriptor.RulesAuthorityPath '.agents\rules' } else { $null }
+      if ($targetRules -and (Test-Path -LiteralPath $targetRules)) {
+        New-Item -ItemType Junction -Path $destCopilotRules -Target $targetRules -Force | Out-Null
+      }
     }
 
     $destAtoms = Join-Path $DestinationPath '.agents\atoms'
     $destCopilotAtoms = Join-Path $destCopilot 'Atoms'
-    if ((Test-Path -LiteralPath $destAtoms) -and (-not (Test-Path -LiteralPath $destCopilotAtoms))) {
-      New-Item -ItemType Junction -Path $destCopilotAtoms -Target $destAtoms -Force | Out-Null
+    if (-not (Test-Path -LiteralPath $destCopilotAtoms)) {
+      $targetAtoms = if (Test-Path -LiteralPath $destAtoms) { $destAtoms } elseif ($Descriptor.RulesAuthorityPath) { Join-Path $Descriptor.RulesAuthorityPath '.agents\atoms' } else { $null }
+      if ($targetAtoms -and (Test-Path -LiteralPath $targetAtoms)) {
+        New-Item -ItemType Junction -Path $destCopilotAtoms -Target $targetAtoms -Force | Out-Null
+      }
     }
 
     $destTools = Join-Path $DestinationPath 'tools'
     $destCopilotMethods = Join-Path $destCopilot 'Methods'
-    if ((Test-Path -LiteralPath $destTools) -and (-not (Test-Path -LiteralPath $destCopilotMethods))) {
-      New-Item -ItemType Junction -Path $destCopilotMethods -Target $destTools -Force | Out-Null
+    if (-not (Test-Path -LiteralPath $destCopilotMethods)) {
+      $targetTools = if (Test-Path -LiteralPath $destTools) { $destTools } elseif ($Descriptor.RulesAuthorityPath) { Join-Path $Descriptor.RulesAuthorityPath 'tools' } else { $null }
+      if ($targetTools -and (Test-Path -LiteralPath $targetTools)) {
+        New-Item -ItemType Junction -Path $destCopilotMethods -Target $targetTools -Force | Out-Null
+      }
     }
   }
 

@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-10-04T16:27:53+02:00",
+  "updated_at": "2026-10-04T16:58:41+02:00",
   "review_granularity": "tight",
   "lcm_mode": "active",
-  "last_proposal_id": 245,
+  "last_proposal_id": 246,
   "proposals": [
     {
       "id": 1,
@@ -10139,6 +10139,34 @@
       "plan_path": "docs/Proposals/BUG-245-BCR-Foreground-Console-Window-Hygiene-and-Prematur/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/BUG-245-BCR-Foreground-Console-Window-Hygiene-and-Prematur/Walkthrough.md",
       "progress_state": "completed"
+    },
+    {
+      "id": 246,
+      "crp_id": "CRP-246",
+      "timestamp": "2026-10-04 16:55:00",
+      "title": "Consolidate Canonical Rules in LCM_AI and Migrate Root .lcm Subsystem to LCM_Inventory",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-246",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "approved",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/CRP-246-Consolidate-Rules-in-LCM_AI-and-Migrate-Root-lcm-to-LCM_Inventory",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig",
+      "details": "Consolidates all canonical LCM governance rules into a single authoritative folder in LCM_AI (.agents\\rules) and eliminates local variants and redundant sub-junctions where higher-up junctions exist. Migrates all physical code, PowerShell modules (LcmDaemon), desktop services (LcmDesktopDaemon), command wrappers, and tools from D:\\Git_Repositories\\.lcm into LCM_Inventory, updating system registry startup and PATH. Establishes cross-repo linkage rather than code duplication, and cleans root Git_Repositories to a lightweight governance container.",
+      "plan_path": "docs/Proposals/CRP-246-Consolidate-Rules-in-LCM_AI-and-Migrate-Root-lcm-to-LCM_Inventory/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-246-Consolidate-Rules-in-LCM_AI-and-Migrate-Root-lcm-to-LCM_Inventory/Walkthrough.md",
+      "progress_state": "in_progress",
+      "flow_mode": "doit",
+      "always_proceed": true
     }
   ],
   "testing_mode": "active",

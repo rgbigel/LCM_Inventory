@@ -1,0 +1,20 @@
+﻿{
+  "LCM_Inventory\\tools\\Show-Actions.ps1": {
+    "Audience": "Developer"
+  },
+  "Show-Actions.ps1": {
+    "Audience": "Developer"
+  },
+  "LCM_Inventory\\tools\\Show-CmdFolderAnalysis.ps1": {
+    "Audience": "Developer"
+  },
+  "Show-CmdFolderAnalysis.ps1": {
+    "Audience": "Developer"
+  },
+  "LCM_Inventory\\tools\\Show-ToolsExplorer.ps1": {
+    "Audience": "Developer"
+  },
+  "Show-ToolsExplorer.ps1": {
+    "Audience": "Developer"
+  }
+}

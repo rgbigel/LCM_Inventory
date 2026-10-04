@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "LCM Legacy Repository Name Resolution",
+  "version": "1.0.0",
+  "status": "transition-active",
+  "retirement": "TBD",
+  "purpose": "Resolves legacy root repository and tool-hub names during the LCM naming transition.",
+  "aliases": [
+    {
+      "legacy_name": "Workspace_AI",
+      "current_name": "LCM_AI",
+      "legacy_path": "D:\\Git_Repositories\\Workspace_AI",
+      "current_path": "D:\\Git_Repositories\\LCM_AI",
+      "alias_type": "junction"
+    },
+    {
+      "legacy_name": "Workspace_Inventory",
+      "current_name": "LCM_Inventory",
+      "legacy_path": "D:\\Git_Repositories\\Workspace_Inventory",
+      "current_path": "D:\\Git_Repositories\\LCM_Inventory",
+      "alias_type": "junction"
+    },
+    {
+      "legacy_name": "Workspace_Supervision",
+      "current_name": "LCM_Supervision",
+      "legacy_path": "D:\\Git_Repositories\\Workspace_Supervision",
+      "current_path": "D:\\Git_Repositories\\LCM_Supervision",
+      "alias_type": "junction"
+    },
+    {
+      "legacy_name": "SharedModules",
+      "current_name": "LCM_Shared",
+      "legacy_path": "D:\\Git_Repositories\\SharedModules",
+      "current_path": "D:\\Git_Repositories\\LCM_Shared",
+      "alias_type": "junction"
+    },
+    {
+      "legacy_name": "tools",
+      "current_name": "LCM_Tools",
+      "legacy_path": "D:\\Git_Repositories\\tools",
+      "current_path": "D:\\Git_Repositories\\LCM_Tools",
+      "alias_type": "junction"
+    }
+  ]
+}
