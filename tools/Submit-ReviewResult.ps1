@@ -372,24 +372,29 @@ if ($commitCreated -and $stagedManifest -and $stagedManifest.TempReviewRoot) {
         } catch {}
     }
 
-    # Purge the entire CRP review directory (BC_Review\CRP-nnn\) post-commit.
-    # Junction nodes must be deleted non-recursively first to avoid following them into the live repo.
-    if ($crpReviewDirToPurge -and (Test-Path -LiteralPath $crpReviewDirToPurge)) {
-        try {
-            # Delete all junction nodes within the CRP dir before recursive removal
-            $junctions = @(Get-ChildItem -LiteralPath $crpReviewDirToPurge -Directory -Force -Recurse -ErrorAction SilentlyContinue |
-                Where-Object { $_.LinkType -eq 'Junction' })
-            foreach ($jn in $junctions) {
-                try { [System.IO.Directory]::Delete($jn.FullName, $false) } catch {}
+    # Purge the CRP review directory post-commit only when Beyond Compare is NOT running.
+    # If BCompare is actively open, defer purge to prevent 'Fast refresh / Path not found' errors.
+    $bcRunning = @(Get-CimInstance Win32_Process -Filter "Name = 'BCompare.exe'" -ErrorAction SilentlyContinue).Count -gt 0
+    if ($bcRunning) {
+        Write-Host "  [PRESERVED] Beyond Compare session is active; preserving review scratchpad to prevent fast-refresh error." -ForegroundColor DarkGray
+    } else {
+        if ($crpReviewDirToPurge -and (Test-Path -LiteralPath $crpReviewDirToPurge)) {
+            try {
+                # Delete all junction nodes within the CRP dir before recursive removal
+                $junctions = @(Get-ChildItem -LiteralPath $crpReviewDirToPurge -Directory -Force -Recurse -ErrorAction SilentlyContinue |
+                    Where-Object { $_.LinkType -eq 'Junction' })
+                foreach ($jn in $junctions) {
+                    try { [System.IO.Directory]::Delete($jn.FullName, $false) } catch {}
+                }
+                Remove-Item -LiteralPath $crpReviewDirToPurge -Recurse -Force -ErrorAction SilentlyContinue
+                Write-Host "  [PURGED] BC review scratch directory: $crpReviewDirToPurge" -ForegroundColor DarkGray
+            } catch {
+                Write-Verbose "Could not fully purge CRP review directory '$crpReviewDirToPurge': $($_.Exception.Message)"
             }
-            Remove-Item -LiteralPath $crpReviewDirToPurge -Recurse -Force -ErrorAction SilentlyContinue
-            Write-Host "  [PURGED] BC review scratch directory: $crpReviewDirToPurge" -ForegroundColor DarkGray
-        } catch {
-            Write-Verbose "Could not fully purge CRP review directory '$crpReviewDirToPurge': $($_.Exception.Message)"
+        } elseif (Test-Path -LiteralPath $stagedManifest.TempReviewRoot) {
+            # Fallback: CRP not resolvable — purge baseline dir only
+            Remove-Item -LiteralPath $stagedManifest.TempReviewRoot -Recurse -Force -ErrorAction SilentlyContinue
         }
-    } elseif (Test-Path -LiteralPath $stagedManifest.TempReviewRoot) {
-        # Fallback: CRP not resolvable — purge baseline dir only
-        Remove-Item -LiteralPath $stagedManifest.TempReviewRoot -Recurse -Force -ErrorAction SilentlyContinue
     }
 }
 

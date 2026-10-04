@@ -882,7 +882,7 @@ if ($runningReview.Count -gt 0) {
     Write-Host "Dispatching Beyond Compare review window to Interactive Desktop via Port $daemonPort Daemon..." -ForegroundColor Green
     $execPayload = @{
       command = "& `"$BeyondComparePath`" $sessionName"
-      windowStyle = "Normal"
+      windowStyle = "Hidden"
     } | ConvertTo-Json
     $null = Invoke-RestMethod -Uri "http://127.0.0.1:$daemonPort/execute" -Method Post -Body $execPayload -ContentType "application/json" -TimeoutSec 5
     Start-Sleep -Milliseconds 300
@@ -945,7 +945,7 @@ if (-not [string]::IsNullOrWhiteSpace($CRP)) {
                 if ($daemonOnline) {
                   $otherPayload = @{
                     command = "& `"$BeyondComparePath`" $otherSession"
-                    windowStyle = "Normal"
+                    windowStyle = "Hidden"
                   } | ConvertTo-Json
                   $null = Invoke-RestMethod -Uri "http://127.0.0.1:$daemonPort/execute" -Method Post -Body $otherPayload -ContentType "application/json" -TimeoutSec 5
                 } elseif ($dispatcherPath) {
