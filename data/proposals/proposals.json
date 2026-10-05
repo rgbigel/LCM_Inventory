@@ -6145,7 +6145,7 @@
       "origin_repo": "LCM_Inventory",
       "cr_id": "CRP-121",
       "bundle_id": "CRP-121",
-      "state": "completed",
+      "state": "pushed",
       "author": "Rolf, LCM_AI",
       "priority": 5,
       "details": "Completed after accepted CRP-121 review receipt review_LCM_Inventory_20261005_170931.json and implementation commit 08d3662.",
@@ -6154,7 +6154,7 @@
       "dates": {
         "created": "2026-09-08 15:25:00",
         "suggested": "2026-09-08 15:25:00",
-        "pushed": "2026-09-24 22:06:33"
+        "pushed": "2026-10-05 17:39:04"
       },
       "state_history": [
         {
@@ -6168,12 +6168,17 @@
           "timestamp": "2026-09-24 22:06:33",
           "user": "rgbig",
           "note": "Pushed to remote (Git_Repositories, LCM_AI, LCM_Inventory)"
+        },
+        {
+          "state": "pushed",
+          "timestamp": "2026-10-05 17:39:04",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, LCM_AI, LCM_Inventory)"
         }
       ],
-      "pushed_at": "2026-09-24 22:06:33",
       "flow_mode": "doit",
       "always_proceed": true,
-      "progress_state": "completed",
+      "progress_state": "pushed",
       "disposition": "completed",
       "commit_sha": "08d3662",
       "review_receipt": "data/reviews/review_LCM_Inventory_20261005_170931.json",
@@ -6182,7 +6187,8 @@
         "LCM_AI",
         "LCM_Inventory"
       ],
-      "cm_scope_note": "CRP-121 implementation is owned by LCM_Inventory; the reviewed authority-rule and root-index corrections are affected-repository cohort members."
+      "cm_scope_note": "CRP-121 implementation is owned by LCM_Inventory; the reviewed authority-rule and root-index corrections are affected-repository cohort members.",
+      "pushed_at": "2026-10-05 17:39:04"
     },
     {
       "id": 122,
