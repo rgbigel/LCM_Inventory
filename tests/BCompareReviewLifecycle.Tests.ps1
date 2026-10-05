@@ -4,13 +4,15 @@ Describe 'BCompare review lifecycle contracts' {
     $reviewScriptPath = Join-Path $repositoryRoot 'tools\Invoke-BeyondCompareReview.ps1'
     $submitScriptPath = Join-Path $repositoryRoot 'tools\Submit-ReviewResult.ps1'
     $gateScriptPath = Join-Path $repositoryRoot 'tools\Test-ReviewCommitGate.ps1'
+    $clearScriptPath = Join-Path $repositoryRoot 'tools\Clear-BCReviewSession.ps1'
     $reviewScript = Get-Content -LiteralPath $reviewScriptPath -Raw -Encoding UTF8
     $submitScript = Get-Content -LiteralPath $submitScriptPath -Raw -Encoding UTF8
     $gateScript = Get-Content -LiteralPath $gateScriptPath -Raw -Encoding UTF8
+    $clearScript = Get-Content -LiteralPath $clearScriptPath -Raw -Encoding UTF8
   }
 
   It 'parses all review lifecycle scripts' {
-    foreach ($scriptPath in @($reviewScriptPath, $submitScriptPath, $gateScriptPath)) {
+    foreach ($scriptPath in @($reviewScriptPath, $submitScriptPath, $gateScriptPath, $clearScriptPath)) {
       $tokens = $null
       $parseErrors = $null
       [System.Management.Automation.Language.Parser]::ParseFile($scriptPath, [ref]$tokens, [ref]$parseErrors) | Out-Null
@@ -24,7 +26,7 @@ Describe 'BCompare review lifecycle contracts' {
 
   It 'leaves review materiality to Beyond Compare insignificant-difference rules' {
     $reviewScript | Should -Match ([regex]::Escape("& `$setAttr `$state 'InsigIgnored' 'True'"))
-    $reviewScript | Should -Match ([regex]::Escape('Uncopied       = @()'))
+    $reviewScript | Should -Match ([regex]::Escape('Uncopied       = $uncopiedFiles'))
     $reviewScript | Should -Not -Match ([regex]::Escape('Get-BCompareFileSha256'))
   }
 
@@ -77,5 +79,22 @@ Describe 'BCompare review lifecycle contracts' {
     $gateScript | Should -Match ([regex]::Escape('The reviewed baseline no longer matches the current HEAD'))
     $gateScript | Should -Match ([regex]::Escape('The staged diff differs from the approved review selection'))
     $gateScript | Should -Match ([regex]::Escape('ExpiresAt'))
+  }
+
+  It 'invokes Clear-BCReviewSession post-commit to purge dynamic Beyond Compare sessions' {
+    $submitScript | Should -Match ([regex]::Escape('Clear-BCReviewSession.ps1'))
+    $submitScript | Should -Match ([regex]::Escape('& $cleanerScript -CRP $targetCRP -RepositoryName $repoName -WorkspaceRoot $workspaceRoot'))
+    $submitScript | Should -Match ([regex]::Escape('[CLEANED] Removed dynamic BC session(s)'))
+  }
+
+  It 'Clear-BCReviewSession rejects invalid proposal identifiers' {
+    { & $clearScriptPath -CRP 'INVALID-ID' } | Should -Throw
+  }
+
+  It 'Clear-BCReviewSession supports dry-run preview mode' {
+    $res = & $clearScriptPath -CRP 'CRP-203' -DryRun
+    $res | Should -Not -BeNullOrEmpty
+    $res.DryRun | Should -BeTrue
+    $res.CRP | Should -Be 'CRP-203'
   }
 }

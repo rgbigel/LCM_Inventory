@@ -834,8 +834,8 @@ Write-Host ("  Filters Applied:     {0}" -f $filterMask)
 # Immediately compile initial review staging manifest so Submit-ReviewResult & Control Hub recognize active review
 $null = Audit-BeyondCompareReviewStaging -TempReviewRoot $tempReviewRoot -RepoPath $repoPath -RepoName $repoName -CommitSha $commitSha
 
-# Open session without /solo so BCompare opens one window and reuses/refreshes it without duplicates
-$bcArgString = "`"$sessionName`""
+# Open session with /solo so each CRP opens in its own dedicated top-level window per cohort isolation invariant
+$bcArgString = "/solo `"$sessionName`""
 
 $dispatcherCandidates = @(
   (Join-Path $workspaceRoot ".lcm\tools\internal\Invoke-InteractiveDesktop.ps1"),
@@ -881,7 +881,7 @@ if ($runningReview.Count -gt 0) {
   if ($daemonOnline) {
     Write-Host "Dispatching Beyond Compare review window to Interactive Desktop via Port $daemonPort Daemon..." -ForegroundColor Green
     $execPayload = @{
-      command = "& `"$BeyondComparePath`" $sessionName"
+      command = "& `"$BeyondComparePath`" /solo $sessionName"
       windowStyle = "Hidden"
     } | ConvertTo-Json
     $null = Invoke-RestMethod -Uri "http://127.0.0.1:$daemonPort/execute" -Method Post -Body $execPayload -ContentType "application/json" -TimeoutSec 5
@@ -892,7 +892,7 @@ if ($runningReview.Count -gt 0) {
   } elseif ($dispatcherPath) {
     & pwsh -File $dispatcherPath -FilePath $BeyondComparePath -ArgumentList $bcArgString | Out-Null
   } else {
-    Start-Process -FilePath $BeyondComparePath -ArgumentList @($sessionName)
+    Start-Process -FilePath $BeyondComparePath -ArgumentList @('/solo', $sessionName)
   }
 }
 

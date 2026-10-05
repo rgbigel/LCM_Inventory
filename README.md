@@ -103,6 +103,10 @@ backup concept); `LS` = **LCM_Shared** (shared modules); and `LSP` =
 
 # Snapshot a new configuration management baseline
 .\tools\Create-WorkspaceBaseline.ps1 -BaselineId "BASELINE-v4.2.0"
+
+# Generate the refined Level 1 evidence run and render it in LCM Analysis Viewer
+.\tools\Invoke-Level1AnalysisRefinement.ps1
+.\tools\Show-LcmAnalysisViewer.ps1
 ```
 
 ---
@@ -139,7 +143,7 @@ The operational governance and lifecycle methodology of the platform are codifie
 
 ## 6. Directory Layout
 
-* `data/` - Machine-readable CM databases (`inventory.json`, `change_requests.json`, `proposals/`, `reviews/`, `baselines/`).
+* `data/` - Machine-readable CM databases and generated artifacts only (`inventory.json`, `analysis/`, `proposals/`, `reviews/`, `baselines/`); executable tooling remains under `tools/`.
 * `docs/` - Human-readable documentation, policies, methodology anchors, and generated dashboards (`LCM_METHODOLOGY_AND_MEMORY_ANCHOR.md`, `CM_POLICIES.md`, `INVENTORY_DASHBOARD.md`).
 * `logs/` - CM activity ledger (`cm_activity.log`) and historical audit records.
 * `modules/` - Reusable PowerShell CM modules (`WorkspaceCM.psm1`, `ChangeRequestManager.psm1`).

@@ -1517,16 +1517,35 @@
       "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
     })[c]);
 
+    function normalizePriority(val) {
+      if (val === null || val === undefined || val === "") return 5;
+      if (typeof val === "number" && !isNaN(val)) return Math.max(0, Math.min(10, Math.round(val)));
+      const s = String(val).trim().toLowerCase();
+      const n = parseInt(s, 10);
+      if (!isNaN(n)) return Math.max(0, Math.min(10, n));
+      if (s === "c" || s.startsWith("crit")) return 10;
+      if (s === "h" || s.startsWith("high")) return 8;
+      if (s === "m" || s.startsWith("med")) return 5;
+      if (s === "l" || s.startsWith("low")) return 3;
+      if (s === "d" || s.startsWith("def")) return 1;
+      if (s === "n" || s.startsWith("none")) return 0;
+      return 5;
+    }
+
     function getVisibleStatus(p) {
       const status = String(p.status || p.state || "").toLowerCase();
       const disposition = String(p.disposition || "").toLowerCase();
       const progress = String(p.progress_state || "").toLowerCase();
 
       // Dispositions take precedence for condition flags
-      if (disposition === "cancelled" || disposition === "rejected" || status === "rejected" || status === "deleted" || status === "cancelled") {
+      if (disposition === "cancelled" || status === "cancelled" || status === "deleted") {
         return "cancelled";
       }
-      if (disposition === "held" || status === "held" || status === "deferred" || progress === "blocked" || progress === "failed") {
+      if (disposition === "rejected" || status === "rejected") {
+        return "cancelled";
+      }
+      // Held disposition: only holds if proposal is not actively approved/in_progress
+      if (status === "held" || (disposition === "held" && status !== "approved" && progress !== "in_progress") || status === "deferred" || progress === "blocked" || progress === "failed") {
         return "held";
       }
       if (status === "published" || status === "pushed" || progress === "pushed") {
@@ -1541,7 +1560,7 @@
       if (status === "verified" || status === "review" || progress === "verification") {
         return "review";
       }
-      if (status === "in_progress" || progress === "in_progress") {
+      if (status === "in_progress" || progress === "in_progress" || status === "approved" || p.flow_mode === "doit" || p.always_proceed) {
         return "active";
       }
       return "open";
@@ -1796,7 +1815,7 @@
       const state = String(p.state || "").toLowerCase();
       const prog = String(p.progress_state || "").toLowerCase();
       const vis = getVisibleStatus(p);
-      const prio = Number(p.priority ?? 0);
+      const prio = normalizePriority(p.priority);
       const repo = String(p.origin_repo || "").toLowerCase();
       const planDetail = getDetailedPlanState(p).toLowerCase();
       const title = String(p.title || "").toLowerCase();
@@ -1952,8 +1971,8 @@
       return [...list].sort((a, b) => {
         const idA = Number(a.id ?? 0);
         const idB = Number(b.id ?? 0);
-        const prioA = Number(a.priority ?? 0);
-        const prioB = Number(b.priority ?? 0);
+        const prioA = normalizePriority(a.priority);
+        const prioB = normalizePriority(b.priority);
 
         if (activeSort === "prio-desc") {
           if (prioB !== prioA) return prioB - prioA;
@@ -1987,7 +2006,7 @@
         const isChecked = selectedIds.has(p.id);
         const visStatus = getVisibleStatus(p);
         const crpTag = p.crp_id || p.cr_id || ("CR-" + p.id);
-        const prio = p.priority ?? 5;
+        const prio = normalizePriority(p.priority);
         const progressNote = p.progress_state || "undecided";
         const evidence = p.evidence_summary || p.verification_status || (p.bcr_status ? "BCR: " + p.bcr_status : "Baseline recorded");
         const planStateDetail = getDetailedPlanState(p);
@@ -2093,13 +2112,14 @@
       const badge = $("prio-badge-" + id);
       if (!badge) return;
 
+      const numCurrent = normalizePriority(currentPrio);
       const select = document.createElement("select");
       select.className = "inline-prio-select";
       for (let i = 10; i >= 0; i--) {
         const opt = document.createElement("option");
         opt.value = i;
         opt.textContent = i;
-        if (i === currentPrio) opt.selected = true;
+        if (i === numCurrent) opt.selected = true;
         select.appendChild(opt);
       }
 
@@ -2138,7 +2158,10 @@
       }
     }
 
+    let lastInspectedProposalId = null;
+
     function toggleProposalSelection(id, checked) {
+      lastInspectedProposalId = id;
       if (checked) {
         selectedIds.add(id);
       } else {
@@ -2160,6 +2183,7 @@
       if (target.closest("input") || target.closest("button") || target.closest("select") || target.closest(".show-dropdown-menu") || target.closest(".prio-badge")) {
         return;
       }
+      lastInspectedProposalId = id;
       const isCurrentlySelected = selectedIds.has(id);
       toggleProposalSelection(id, !isCurrentlySelected);
     }
@@ -2312,6 +2336,10 @@
     }
 
     function getActiveInspectedProposal() {
+      if (lastInspectedProposalId) {
+        const found = (proposalsData.proposals || []).find(x => x.id === lastInspectedProposalId);
+        if (found) return found;
+      }
       const firstId = selectedIds.size > 0 ? Array.from(selectedIds)[0] : null;
       if (firstId) {
         return (proposalsData.proposals || []).find(x => x.id === firstId);
@@ -2393,18 +2421,7 @@
     }
 
     function updateTimelineDisplay(targetProposal) {
-      let p = targetProposal;
-      if (!p) {
-        const firstId = selectedIds.size > 0 ? Array.from(selectedIds)[0] : null;
-        if (firstId) {
-          p = (proposalsData.proposals || []).find(x => x.id === firstId);
-        } else {
-          const visible = getFilteredProposals();
-          if (visible && visible.length > 0) {
-            p = visible[0];
-          }
-        }
-      }
+      let p = targetProposal || getActiveInspectedProposal();
 
       if (!p) {
         $("timelineProposalTitle").innerText = "No Proposal Selected";

@@ -372,6 +372,22 @@ if ($commitCreated -and $stagedManifest -and $stagedManifest.TempReviewRoot) {
         } catch {}
     }
 
+    # Call Clear-BCReviewSession tool to clean dynamic BCSessions.xml entries (CRP-203)
+    $cleanerScript = Join-Path $PSScriptRoot "Clear-BCReviewSession.ps1"
+    if (Test-Path -LiteralPath $cleanerScript) {
+        try {
+            $targetCRP = if ($meta -and -not [string]::IsNullOrWhiteSpace($meta.CRP)) { $meta.CRP } else { $null }
+            if ($targetCRP) {
+                $cleanResult = & $cleanerScript -CRP $targetCRP -RepositoryName $repoName -WorkspaceRoot $workspaceRoot
+                if ($cleanResult -and $cleanResult.SessionsRemoved.Count -gt 0) {
+                    Write-Host ("  [CLEANED] Removed dynamic BC session(s): {0}" -f ($cleanResult.SessionsRemoved -join ', ')) -ForegroundColor DarkGray
+                }
+            }
+        } catch {
+            Write-Verbose "Could not clear dynamic BC review session via Clear-BCReviewSession: $($_.Exception.Message)"
+        }
+    }
+
     # Purge the CRP review directory post-commit only when Beyond Compare is NOT running.
     # If BCompare is actively open, defer purge to prevent 'Fast refresh / Path not found' errors.
     $bcRunning = @(Get-CimInstance Win32_Process -Filter "Name = 'BCompare.exe'" -ErrorAction SilentlyContinue).Count -gt 0

@@ -1,0 +1,65 @@
+{
+  "$schema": "https://lcm.local/schemas/analysis-definition.schema.json",
+  "id": "CON-001-L01",
+  "title": "Level 1 Functional Documentation Traceability",
+  "version": "2.0.0",
+  "status": "approved",
+  "created_at": "2026-10-05T15:08:26+02:00",
+  "approved_at": "2026-10-05T15:08:26+02:00",
+  "source_baseline": "history\\CON-001-L01-R001.json",
+  "run_id": "CON-001-L01-R002",
+  "goal": "Classify Level 1 functional elements so public parameter gates are documentation-traceable, purpose and design comments are retained as semantic evidence, and internal control flow is excluded from top-level documentation completeness findings.",
+  "documentation_hierarchy": [
+    {
+      "id": "check1",
+      "name": "Implementation documentation",
+      "file_name": "Implementation.md"
+    },
+    {
+      "id": "check2",
+      "name": "Requirements documentation",
+      "file_name": "Requirements.md"
+    },
+    {
+      "id": "check3",
+      "name": "Repository README",
+      "file_name": "README.md"
+    },
+    {
+      "id": "check4",
+      "name": "Open and non-held CRP documentation",
+      "file_name": "CRP bundle Markdown"
+    }
+  ],
+  "branch_refinement": {
+    "public_parameter_scope": "public command and exported module parameters only",
+    "public_parameter_gate": {
+      "status_found": "parameter-gate-documented",
+      "status_missing": "parameter-gate-not-found",
+      "acceptance": "A documented parameter name is found in the ordered documentation hierarchy."
+    },
+    "design_comment_gate": {
+      "keywords": [
+        "invariant",
+        "rule",
+        "rationale",
+        "must",
+        "safety",
+        "gate",
+        "contract",
+        "compatibility",
+        "design",
+        "policy"
+      ],
+      "acceptance": "Strong nearby comments are retained as semantic evidence and routed for semantic review; literal matching does not claim semantic equivalence."
+    },
+    "internal_control_flow": {
+      "acceptance": "Local implementation mechanics are retained for navigation but excluded from top-level documentation completeness findings."
+    }
+  },
+  "artifact_policy": {
+    "evidence_is_machine_generated": true,
+    "definition_is_operator_editable": true,
+    "preserve_prior_runs": true
+  }
+}

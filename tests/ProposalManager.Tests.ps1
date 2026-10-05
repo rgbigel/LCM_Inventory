@@ -140,7 +140,7 @@ Describe 'ProposalManager Core Functions' {
         }
 
         It 'Synchronizes the machine-readable catalog with Sync-LcmAppCatalog' {
-            $cat = Sync-LcmAppCatalog
+            $cat = Sync-LcmAppCatalog -Repo 'LCM_AI'
             $cat | Should -Not -BeNullOrEmpty
             $cat.title | Should -Be 'LCM Workspace App-Centric Architecture Catalog'
             $cat.updated_at | Should -Not -BeNullOrEmpty

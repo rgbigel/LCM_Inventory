@@ -4,9 +4,9 @@ Module: docs/Implementation.md
 Purpose: Code-level catalog, data schemas, exported functions, tool parameters, and testing traceability for LCM_Inventory.  
 Path: D:/Git_Repositories/LCM_Inventory/docs/Implementation.md  
 Authors: Rolf, LCM_AI Engine  
-Version: 7.0.0  
+Version: 7.0.1  
 Status: Authoritative Implementation  
-Date: 2026-09-19  
+Date: 2026-10-05  
 
 ---
 
@@ -18,6 +18,9 @@ LCM_Inventory/
 │   └── rules/                  # Canonical authoritative rule files (17 files)
 ├── data/
 │   ├── artifacts/              # HTML presentation viewers (untracked)
+│   ├── analysis/               # Retained machine-readable LCM analysis evidence
+│   │   ├── definitions/        # Approved, operator-editable CON definitions
+│   │   └── history/            # Immutable superseded analysis runs
 │   ├── inventory.json          # Live multi-repo configuration audit manifest
 │   ├── proposals/
 │   │   └── proposals.json      # Canonical proposal ledger (single source of truth)
@@ -70,6 +73,8 @@ All tools in `tools/` conform to `RULE-PS-008` (Headers), `RULE-PS-009` (Logging
 | **`Show-LcmControl.ps1`** | Canonical CM Control Hub renderer and launcher. The first functional release provides refresh, proposal/document viewing, log viewing, and Beyond Compare review launch. | `-ReviewMode`, `-DatesMode`, `-Repo <string>`, `-State <string>`, `-Id <int>`, `-CliMode`, `-NoLaunch`, `-TimerOn` |
 | **`Show-LcmActiveLauncher.ps1`** | LCM Tool Explorer displaying all 192 workspace tools with category filtering and execution routing. | `-Help` |
 | **`Show-WorkspaceReadiness.ps1`** | Workspace readiness rollup viewer displaying test suite passing status and review receipts. | `-Help` |
+| **`Invoke-Level1AnalysisRefinement.ps1`** | Generates a new immutable Level 1 evidence run from an approved `CON-001-L01` definition and retained baseline. | `-DefinitionPath <string>`, `-OutputPath <string>`, `-Help` |
+| **`Show-LcmAnalysisViewer.ps1`** | Renders retained CON analysis evidence as an interactive, sortable, filterable LCM Analysis Viewer dashboard. | `-ReportPath <string>`, `-OutputPath <string>`, `-NoLaunch`, `-Help` |
 | **`Submit-ReviewResult.ps1`** | Programmatic acceptance hook recording review receipts into `data/reviews/`. | `-Repository <string>`, `-ReceiptPath <string>`, `-Help` |
 | **`Test-ReviewCommitGate.ps1`** | Git pre-commit validator for the current BCompare-approved baseline and staged diff. | `-RepositoryPath <string>` |
 

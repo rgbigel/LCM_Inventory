@@ -263,6 +263,10 @@ Implementation and verification records for $canonicalId.
         github_url       = $null
         author           = if ($Author) { $Author } else { 'Rolf' }
         details          = $Details
+        priority         = 5
+        disposition      = $null
+        flow_mode        = if ($isBug) { 'doit' } else { 'standard' }
+        always_proceed   = if ($isBug) { $true } else { $false }
         plan_path        = $PlanPath
         walkthrough_path = $WalkthroughPath
     }
@@ -297,14 +301,25 @@ function Set-WorkspaceProposalState {
         if ($p.id -eq $Id) {
             $p.state = $State
             # Bidirectional Invariant: State updates keep physical progress synchronized
-            if ($State -in @('held', 'deferred') -and $p.progress_state -ne 'deferred') {
+            if ($State -in @('held', 'deferred')) {
                 $p | Add-Member -NotePropertyName "progress_state" -NotePropertyValue 'deferred' -Force
-            } elseif ($State -eq 'completed' -and $p.progress_state -ne 'completed') {
+                $p | Add-Member -NotePropertyName "disposition" -NotePropertyValue 'held' -Force
+            } elseif ($State -eq 'completed') {
                 $p | Add-Member -NotePropertyName "progress_state" -NotePropertyValue 'completed' -Force
-            } elseif ($State -eq 'pushed' -and $p.progress_state -ne 'pushed') {
+                $p | Add-Member -NotePropertyName "disposition" -NotePropertyValue 'completed' -Force
+            } elseif ($State -eq 'pushed') {
                 $p | Add-Member -NotePropertyName "progress_state" -NotePropertyValue 'pushed' -Force
-            } elseif ($State -in @('rejected', 'deleted') -and $p.progress_state -notin @('blocked', 'deferred')) {
+                $p | Add-Member -NotePropertyName "disposition" -NotePropertyValue 'published' -Force
+            } elseif ($State -in @('rejected', 'deleted')) {
                 $p | Add-Member -NotePropertyName "progress_state" -NotePropertyValue 'deferred' -Force
+                $p | Add-Member -NotePropertyName "disposition" -NotePropertyValue 'rejected' -Force
+            } elseif ($State -in @('approved', 'suggested', 'bug')) {
+                if ($p.PSObject.Properties['disposition'] -and $p.disposition -eq 'held') {
+                    $p.disposition = $null
+                }
+                if ($p.PSObject.Properties['hold_reason']) {
+                    $p.hold_reason = $null
+                }
             }
             if ($Details) {
                 $p.details = $Details
@@ -381,18 +396,38 @@ function Set-WorkspaceProposalPriority {
         [int]$Id,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet('C', 'H', 'M', 'L', 'D')]
-        [string]$Priority,
+        $Priority,
 
         [string]$Details
     )
+
+    $numericPrio = 5
+    if ($Priority -is [int]) {
+        $numericPrio = [Math]::Max(0, [Math]::Min(10, $Priority))
+    } else {
+        $str = ([string]$Priority).Trim()
+        $parsed = 0
+        if ([int]::TryParse($str, [ref]$parsed)) {
+            $numericPrio = [Math]::Max(0, [Math]::Min(10, $parsed))
+        } else {
+            $numericPrio = switch -Regex ($str) {
+                '^(?i)c(ritical)?$' { 10 }
+                '^(?i)h(igh)?$'     { 8 }
+                '^(?i)m(edium)?$'   { 5 }
+                '^(?i)l(ow)?$'      { 3 }
+                '^(?i)d(eferred)?$' { 1 }
+                '^(?i)n(one)?$'     { 0 }
+                default             { 5 }
+            }
+        }
+    }
 
     $store = Get-ProposalStore
     $found = $null
 
     foreach ($p in $store.proposals) {
         if ($p.id -eq $Id) {
-            $p | Add-Member -NotePropertyName "priority" -NotePropertyValue $Priority -Force
+            $p | Add-Member -NotePropertyName "priority" -NotePropertyValue $numericPrio -Force
             if ($Details) {
                 $p.details = $Details
             }
@@ -407,7 +442,7 @@ function Set-WorkspaceProposalPriority {
     }
 
     Set-ProposalStore -Store $store
-    Write-Host ("Updated Proposal #{0} priority to '{1}'." -f $Id, $Priority) -ForegroundColor Green
+    Write-Host ("Updated Proposal #{0} priority to '{1}'." -f $Id, $numericPrio) -ForegroundColor Green
     return $found
 }
 
@@ -564,33 +599,41 @@ function Invoke-ProposalBatchAction {
     foreach ($id in $targetIds) {
         try {
             $res = Set-WorkspaceProposalState -Id $id -State $mappedState -Details $Details
+
             if ($Action -eq 'complete') {
                 $res = Set-WorkspaceProposalProgress -Id $id -ProgressState 'completed' -Details $Details
             } elseif ($Action -eq 'do') {
                 $res = Set-WorkspaceProposalProgress -Id $id -ProgressState 'in_progress' -Details $Details
-                # Flow switch activation per RULE-LCM-008
-                $store = Get-ProposalStore
-                foreach ($item in $store.proposals) {
-                    if ($item.id -eq $id) {
-                        if ($item.PSObject.Properties['flow_mode']) { $item.flow_mode = 'doit' } else { $item | Add-Member -NotePropertyName 'flow_mode' -NotePropertyValue 'doit' -Force }
-                        if ($item.PSObject.Properties['always_proceed']) { $item.always_proceed = $true } else { $item | Add-Member -NotePropertyName 'always_proceed' -NotePropertyValue $true -Force }
-                        $res = $item
-                    }
-                }
-                Set-ProposalStore -Store $store
             } elseif ($Action -in @('hold', 'held')) {
-                $res = Set-WorkspaceProposalProgress -Id $id -ProgressState 'deferred' -Details $Details
-                $store = Get-ProposalStore
-                foreach ($item in $store.proposals) {
-                    if ($item.id -eq $id) {
-                        if ($item.PSObject.Properties['flow_mode']) { $item.flow_mode = 'standard' } else { $item | Add-Member -NotePropertyName 'flow_mode' -NotePropertyValue 'standard' -Force }
-                        if ($item.PSObject.Properties['always_proceed']) { $item.always_proceed = $false } else { $item | Add-Member -NotePropertyName 'always_proceed' -NotePropertyValue $false -Force }
-                        $res = $item
-                    }
-                }
-                Set-ProposalStore -Store $store
+                $res = Set-WorkspaceProposalProgress -Id $id -ProgressState 'blocked' -Details $Details
             } elseif ($Action -eq 'resume') {
                 $res = Set-WorkspaceProposalProgress -Id $id -ProgressState 'in_progress' -Details $Details
+            }
+
+            $store = Get-ProposalStore
+            $targetItem = $store.proposals | Where-Object { $_.id -eq $id } | Select-Object -First 1
+
+            if ($targetItem) {
+                if ($Action -eq 'complete') {
+                    $targetItem | Add-Member -NotePropertyName 'disposition' -NotePropertyValue 'completed' -Force
+                } elseif ($Action -eq 'do') {
+                    $targetItem | Add-Member -NotePropertyName 'flow_mode' -NotePropertyValue 'doit' -Force
+                    $targetItem | Add-Member -NotePropertyName 'always_proceed' -NotePropertyValue $true -Force
+                    $targetItem | Add-Member -NotePropertyName 'disposition' -NotePropertyValue $null -Force
+                    if ($targetItem.PSObject.Properties['hold_reason']) { $targetItem.hold_reason = $null }
+                } elseif ($Action -in @('hold', 'held')) {
+                    $targetItem | Add-Member -NotePropertyName 'flow_mode' -NotePropertyValue 'standard' -Force
+                    $targetItem | Add-Member -NotePropertyName 'always_proceed' -NotePropertyValue $false -Force
+                    $targetItem | Add-Member -NotePropertyName 'disposition' -NotePropertyValue 'held' -Force
+                    if ($Details) { $targetItem | Add-Member -NotePropertyName 'hold_reason' -NotePropertyValue $Details -Force }
+                } elseif ($Action -eq 'resume') {
+                    $targetItem | Add-Member -NotePropertyName 'disposition' -NotePropertyValue $null -Force
+                    if ($targetItem.PSObject.Properties['hold_reason']) { $targetItem.hold_reason = $null }
+                } elseif ($Action -in @('reject', 'rejected')) {
+                    $targetItem | Add-Member -NotePropertyName 'disposition' -NotePropertyValue 'rejected' -Force
+                }
+                Set-ProposalStore -Store $store
+                $res = $targetItem
             }
             $updated += $res
         } catch {

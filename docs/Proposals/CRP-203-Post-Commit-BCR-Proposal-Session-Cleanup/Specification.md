@@ -2,11 +2,11 @@
 
 ```yaml
 CRP-ID: CRP-203
-Priority: Low
+Priority: 3
 Scope: LCM_Inventory BCompare review lifecycle cleanup
-Status: Suggested
-Plan-State: suggested
-Progress-State: undecided
+Status: In Progress
+Plan-State: approved
+Progress-State: in_progress
 Affected-Repos:
   - LCM_Inventory
 ```
