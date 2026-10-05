@@ -4,7 +4,7 @@
 | Metadata Field | Value |
 | :--- | :--- |
 | **Proposal ID** | `CRP-121` |
-| **Lifecycle State** | `OPEN` (Suggested / Intake Gate per `RULE-LCM-015`) |
+| **Lifecycle State** | `IN_PROGRESS` (`DOIT`; reopened 2026-10-05 after ledger/specification reconciliation) |
 | **Origin Repository** | `LCM` / Tooling & Documentation Governance |
 | **Target Scope** | Tool Documentation Engine (`.lcm/tools/internal/Update-ToolDependencies.ps1`), Storage (`docs/tools/<ToolName>/`), Governance Policies (`.agents/rules/DocumentationStandardsPolicy.md`, `ProposalReviewFlowPolicy.md`) |
 | **Author** | Rolf, LCM_AI |
@@ -25,6 +25,22 @@ Across the LCM solution ecosystem (140+ tools in `.lcm/tools/internal`, `.lcm/Cm
 ---
 
 ## 2. Architecture & Operational Model
+
+### 2.0 Implemented Data-First Delivery
+
+The first delivery implements the two graph data passes before producing
+per-tool Markdown projections:
+
+1. `Complete-ToolDocumentation.ps1 -Pass1` creates
+   `data/dependencies/forward-index.json` with `WIUD` call evidence.
+2. `Complete-ToolDocumentation.ps1 -Pass2` reads only forward evidence and
+   creates `data/dependencies/reverse-index.json` with `WUD` callers.
+
+Static calls are classified as production, test, temporary, generated, or
+unknown. Only uniquely resolved production edges participate in reverse impact
+and candidate-dead-code results; dynamic, external, and duplicate-name targets
+remain explicit unresolved evidence. Per-tool Markdown files are deferred until
+the operator accepts the graph data.
 
 ### 2.1 The Two Core Artifacts per Tool
 Each tool `ToolName.ps1` maintains its dependency documentation in a dedicated directory:
@@ -130,4 +146,3 @@ Codify in [`.agents/rules/DocumentationStandardsPolicy.md`](file:///D:/Git_Repos
 > [!NOTE]
 > **Registered in OPEN State**:
 > Per `RULE-LCM-015` and `RULE-LCM-016`, this proposal is registered in the CM ledger in the `OPEN` state awaiting explicit `PROCEED 121` authorization before implementation planning and execution commence.
-

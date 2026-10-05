@@ -16,6 +16,7 @@ In compliance with [`DocumentationStandardsPolicy.md`](file:///D:/Git_Repositori
 1. **[Architecture Specification](docs/Architecture.md)**: End-user view, system topology diagrams, proposal lifecycle progression, and Beyond Compare review gate architecture.
 2. **[Requirements Specification](docs/Requirements.md)**: Normative technical constraints, prerequisites, CM governance invariants (`RULE-REV-001` - `008`), and display standards compliance.
 3. **[Implementation Specification](docs/Implementation.md)**: Directory layout, `WorkspaceCM.psm1` module cmdlets, tool scripts catalog, and canonical JSON schemas (`proposals.json`, `inventory.json`).
+4. **[Consistency Analysis Operations](docs/AnalysisOperations.md)**: Repeat procedure, immutable evidence contents, and retention/cleanup rules for CON analysis runs.
 
 ---
 
@@ -104,7 +105,7 @@ backup concept); `LS` = **LCM_Shared** (shared modules); and `LSP` =
 # Snapshot a new configuration management baseline
 .\tools\Create-WorkspaceBaseline.ps1 -BaselineId "BASELINE-v4.2.0"
 
-# Generate the refined Level 1 evidence run and render it in LCM Analysis Viewer
+# Generate the next immutable Level 1 evidence run and render the latest run in LCM Analysis Viewer
 .\tools\Invoke-Level1AnalysisRefinement.ps1
 .\tools\Show-LcmAnalysisViewer.ps1
 ```

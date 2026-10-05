@@ -8,7 +8,7 @@
            CON definition without modifying the source baseline evidence.
   Path: tools/Invoke-Level1AnalysisRefinement.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 1.0.0
+  Version: 1.1.0
   Date: 2026-10-05
 #>
 
@@ -16,6 +16,7 @@
 param(
   [string]$DefinitionPath = '',
   [string]$OutputPath = '',
+  [string]$RunId = '',
   [Alias('h', '?')]
   [switch]$Help
 )
@@ -24,7 +25,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 $scriptName = 'Invoke-Level1AnalysisRefinement'
-$scriptVersion = '1.0.0'
+$scriptVersion = '1.1.0'
 
 if ($Help) {
   Write-Host '==========================================================================' 
@@ -34,11 +35,11 @@ if ($Help) {
   Write-Host '  Creates a refined CON-001-L01 evidence run from its immutable R001 baseline.'
   Write-Host ''
   Write-Host 'USAGE:'
-  Write-Host '  pwsh tools\Invoke-Level1AnalysisRefinement.ps1 [-DefinitionPath <path>] [-OutputPath <path>] [-Help]'
+  Write-Host '  pwsh tools\Invoke-Level1AnalysisRefinement.ps1 [-DefinitionPath <path>] [-OutputPath <path>] [-RunId <CON-nnn-Lnn-Rnnn>] [-Help]'
   Write-Host ''
   Write-Host 'DEFAULTS:'
   Write-Host '  Definition: data\analysis\definitions\CON-001-L01.json'
-  Write-Host '  Output:     data\analysis\CON-001-L01-R002.json'
+  Write-Host '  Output:     next available immutable CON-001-L01-Rnnn.json'
   Write-Host '==========================================================================' 
   return
 }
@@ -216,8 +217,10 @@ function Get-StrongNearbyComment {
 $repositoryRoot = Split-Path $PSScriptRoot -Parent
 $analysisDirectory = Join-Path $repositoryRoot 'data\analysis'
 $definitionDirectory = Join-Path $analysisDirectory 'definitions'
+$historyDirectory = Join-Path $analysisDirectory 'history'
 $logDirectory = Join-Path $repositoryRoot 'data\logs\lcm'
 $null = New-Item -ItemType Directory -Path $definitionDirectory -Force
+$null = New-Item -ItemType Directory -Path $historyDirectory -Force
 $null = New-Item -ItemType Directory -Path $logDirectory -Force
 
 if ([string]::IsNullOrWhiteSpace($DefinitionPath)) {
@@ -229,6 +232,7 @@ if (-not (Test-Path -LiteralPath $DefinitionPath -PathType Leaf)) {
 }
 
 $definition = Get-Content -LiteralPath $DefinitionPath -Raw -Encoding utf8 | ConvertFrom-Json -ErrorAction Stop
+$definitionHash = (Get-FileHash -LiteralPath $DefinitionPath -Algorithm SHA256).Hash
 if ($definition.status -ne 'approved') {
   throw "Analysis definition must be approved before execution: $DefinitionPath"
 }
@@ -238,8 +242,27 @@ if (-not (Test-Path -LiteralPath $baselinePath -PathType Leaf)) {
   throw "Immutable baseline evidence was not found: $baselinePath"
 }
 
+$runIdPattern = '^{0}-R\d{{3}}$' -f [regex]::Escape([string]$definition.id)
+if ([string]::IsNullOrWhiteSpace($RunId)) {
+  $existingRunNumbers = @(
+    Get-ChildItem -LiteralPath $analysisDirectory -Filter ('{0}-R*.json' -f $definition.id) -File -Recurse |
+      ForEach-Object {
+        $match = [regex]::Match($_.BaseName, ('^{0}-R(\d{{3}})$' -f [regex]::Escape([string]$definition.id)))
+        if ($match.Success) { [int]$match.Groups[1].Value }
+      }
+  )
+  [int]$nextRunNumber = if ($existingRunNumbers.Count -gt 0) { (($existingRunNumbers | Measure-Object -Maximum).Maximum + 1) } else { 1 }
+  $RunId = '{0}-R{1:D3}' -f $definition.id, $nextRunNumber
+} elseif ($RunId -notmatch $runIdPattern) {
+  throw "RunId must match $($definition.id)-Rnnn: $RunId"
+}
+
 if ([string]::IsNullOrWhiteSpace($OutputPath)) {
-  $OutputPath = Join-Path $analysisDirectory ($definition.run_id + '.json')
+  $OutputPath = Join-Path $historyDirectory ($RunId + '.json')
+}
+
+if (Test-Path -LiteralPath $OutputPath -PathType Leaf) {
+  throw "Immutable evidence run already exists: $OutputPath"
 }
 
 $logPath = Join-Path $logDirectory "$scriptName-$(Get-Date -Format 'yyyyMMdd_HHmmss').log"
@@ -249,6 +272,7 @@ function Write-AnalysisLog {
 }
 
 $baseline = Get-Content -LiteralPath $baselinePath -Raw -Encoding utf8 | ConvertFrom-Json -ErrorAction Stop
+$baselineHash = (Get-FileHash -LiteralPath $baselinePath -Algorithm SHA256).Hash
 if ($baseline.step0_rule_baseline.check0 -ne 'Check 0: OK') {
   throw "Baseline rule-equivalence gate is not OK: $($baseline.step0_rule_baseline.check0)"
 }
@@ -381,10 +405,14 @@ foreach ($element in @($baseline.elements)) {
 
 $report = [ordered]@{
   analysis_id = $definition.id
-  run_id = $definition.run_id
+  run_id = $RunId
   generated_at = Get-Date -Format 'yyyy-MM-ddTHH:mm:ssK'
   definition_path = $DefinitionPath
+  definition_version = $definition.version
+  definition_sha256 = $definitionHash
   baseline_evidence_path = $baselinePath
+  baseline_evidence_sha256 = $baselineHash
+  runner_version = $scriptVersion
   goal = $definition.goal
   matching = 'Deterministic public-parameter reference detection and literal parameter-name documentation evidence. Design comments are retained for semantic review; internal control flow is excluded from top-level documentation completeness.'
   source_scope = $baseline.source_scope

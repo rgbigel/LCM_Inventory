@@ -7,7 +7,7 @@
            and sortable LCM-standard HTML viewer, and optionally opens it.
   Path: tools/Show-LcmAnalysisViewer.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 1.1.0
+  Version: 1.2.0
   Date: 2026-10-05
 #>
 
@@ -29,7 +29,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$scriptVersion = '1.1.0'
+$scriptVersion = '1.2.0'
 $scriptName = 'Show-LcmAnalysisViewer'
 
 if ($Help) {
@@ -55,6 +55,7 @@ if ($Help) {
 
 $repositoryRoot = Split-Path $PSScriptRoot -Parent
 $analysisDirectory = Join-Path $repositoryRoot 'data\analysis'
+$historyDirectory = Join-Path $analysisDirectory 'history'
 $artifactDirectory = Join-Path $repositoryRoot 'data\artifacts'
 $logDirectory = Join-Path $repositoryRoot 'data\logs\lcm'
 $null = New-Item -ItemType Directory -Path $analysisDirectory -Force
@@ -62,11 +63,17 @@ $null = New-Item -ItemType Directory -Path $artifactDirectory -Force
 $null = New-Item -ItemType Directory -Path $logDirectory -Force
 
 if ([string]::IsNullOrWhiteSpace($ReportPath)) {
-  $ReportPath = Join-Path $analysisDirectory 'CON-001-L01-R002.json'
+  $latestReport = Get-ChildItem -LiteralPath $historyDirectory -Filter 'CON-*-R*.json' -File |
+    Sort-Object Name -Descending |
+    Select-Object -First 1
+  if ($null -eq $latestReport) {
+    throw "No CON analysis evidence report was found in $analysisDirectory"
+  }
+  $ReportPath = $latestReport.FullName
 }
 
 if ([string]::IsNullOrWhiteSpace($OutputPath)) {
-  $OutputPath = Join-Path $artifactDirectory 'CON-001-L01-R002.html'
+  $OutputPath = Join-Path $artifactDirectory ((Split-Path -Path $ReportPath -LeafBase) + '.html')
 }
 
 function Write-AnalysisLog {
@@ -169,7 +176,8 @@ $normalizedElements = foreach ($element in $elements) {
 $payload = $normalizedElements | ConvertTo-Json -Depth 4 -Compress
 $payload = $payload -replace '<', '\u003c'
 $payload = $payload -replace '>', '\u003e'
-$title = ConvertTo-HtmlSafe -Value 'LCM Analysis Viewer - CON-001-L01-R002'
+$runId = ConvertTo-HtmlSafe -Value (Get-PropertyValue -Object $report -Name 'run_id' -Default 'CON analysis evidence')
+$title = ConvertTo-HtmlSafe -Value ("LCM Analysis Viewer - $runId")
 $generatedAt = ConvertTo-HtmlSafe -Value (Get-PropertyValue -Object $report -Name 'generated_at')
 $check0Display = ConvertTo-HtmlSafe -Value $check0Status
 $reportDisplayPath = ConvertTo-HtmlSafe -Value $ReportPath
