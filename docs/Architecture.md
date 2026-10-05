@@ -159,3 +159,25 @@ resolves repository-qualified tripartite payloads, records manifests and
 receipts, and dispatches per-repository BCompare review without changing
 implementation or lifecycle state.
 <!-- /FixDocumentation -->
+
+## 6. ADMINMODE Rule-Change Authorization
+
+Rule changes are privileged governance mutations, not ordinary documentation
+edits. `ADMINMODE` gates them independently of process elevation:
+
+1. The workspace initializes hidden ADMINMODE state when it opens.
+2. The current user is eligible only when their Windows identity belongs to the
+   local Administrators group (SID `S-1-5-32-544`).
+3. An eligible user starts with ADMINMODE enabled and may use
+   `Make-Admin -Mode On|Off`; a non-admin request leaves the state unchanged
+   without interactive output.
+4. Before review submission commits staged authority-rule paths, the
+   governance engine verifies ADMINMODE for the same user SID.
+5. Every initialization, enable/disable request, denial, and CRP rule-change
+   authorization writes the current user, SID, CRP identifier, and affected
+   rule paths to `logs/cm_activity.log`.
+
+ADMINMODE is deliberately absent from standard dashboards and is not an
+elevation signal. A non-elevated administrator may be authorized for rule
+changes, while an elevated process without eligible Windows group membership is
+not.

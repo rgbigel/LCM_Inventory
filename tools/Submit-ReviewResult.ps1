@@ -83,6 +83,11 @@ $workspaceRoot = 'D:\Git_Repositories'
 if (-not (Test-Path -LiteralPath $workspaceRoot)) {
     $workspaceRoot = Split-Path $PSScriptRoot -Parent
 }
+$adminModeModulePath = Join-Path $workspaceRoot 'LCM_Inventory\modules\AdminMode.psm1'
+if (-not (Test-Path -LiteralPath $adminModeModulePath -PathType Leaf)) {
+    throw "ADMINMODE module not found: $adminModeModulePath"
+}
+Import-Module -Name $adminModeModulePath -Force
 
 $targetRepoPath = $null
 if (-not [string]::IsNullOrWhiteSpace($RepositoryPath)) {
@@ -280,6 +285,13 @@ if ($includeUncopied -or ($null -eq $stagedManifest)) {
             git -C $targetRepoPath add $rf.NewRelativePath 2>$null | Out-Null
         }
     }
+}
+
+$stagedPaths = @(git -C $targetRepoPath diff --cached --name-only)
+$ruleChangePaths = @(Get-RuleChangePaths -Paths $stagedPaths)
+if ($ruleChangePaths.Count -gt 0) {
+    $reviewCrp = if ($stagedManifest -and $stagedManifest.PSObject.Properties['CRP']) { [string]$stagedManifest.CRP } else { '' }
+    Assert-AdminModeForRuleChange -Paths $ruleChangePaths -CRP $reviewCrp -WorkspaceRoot $workspaceRoot
 }
 
 $commitCreated = $false

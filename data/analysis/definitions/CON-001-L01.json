@@ -2,14 +2,19 @@
   "$schema": "https://lcm.local/schemas/analysis-definition.schema.json",
   "id": "CON-001-L01",
   "title": "Level 1 Functional Documentation Traceability",
-  "version": "2.0.0",
+  "version": "2.2.0",
   "status": "approved",
   "created_at": "2026-10-05T15:08:26+02:00",
   "approved_at": "2026-10-05T15:08:26+02:00",
   "source_baseline": "history\\CON-001-L01-R001.json",
   "run_id": "CON-001-L01-R002",
-  "goal": "Classify Level 1 functional elements so public parameter gates are documentation-traceable, purpose and design comments are retained as semantic evidence, and internal control flow is excluded from top-level documentation completeness findings.",
+  "goal": "Classify Level 1 functional elements and complete PowerShell if/elseif/else branch alternatives so public parameter gates are documentation-traceable, purpose and design comments are retained as semantic evidence, and internal control flow is excluded from top-level documentation completeness findings.",
   "documentation_hierarchy": [
+    {
+      "id": "help",
+      "name": "Header/help evidence adapter (PowerShell .PARAMETER)",
+      "file_name": ".PARAMETER <ParameterName>"
+    },
     {
       "id": "check1",
       "name": "Implementation documentation",
@@ -33,6 +38,11 @@
   ],
   "branch_refinement": {
     "public_parameter_scope": "public command and exported module parameters only",
+    "parameter_help_audit": {
+      "requirement_source": "universal script-header/help rule",
+      "powershell_evidence_adapter": "scoped .PARAMETER <ParameterName> comment help",
+      "acceptance": "Every public PowerShell script parameter and exported-module-function parameter is inventoried independently of conditional use; help compliance is reported separately from parameter-gate documentation coverage."
+    },
     "public_parameter_gate": {
       "status_found": "parameter-gate-documented",
       "status_missing": "parameter-gate-not-found",
@@ -55,6 +65,21 @@
     },
     "internal_control_flow": {
       "acceptance": "Local implementation mechanics are retained for navigation but excluded from top-level documentation completeness findings."
+    },
+    "alternative_branches": {
+      "conditional_kinds": [
+        "if",
+        "elseif"
+      ],
+      "fallback_kind": "else",
+      "acceptance": "Every if and elseif condition is retained as a distinct branch record with branch kind and zero-based branch index. Every else is retained as a non-conditional fallback record and is not a parameter documentation failure.",
+      "deferred_constructs": [
+        "try",
+        "catch",
+        "finally",
+        "trap",
+        "switch"
+      ]
     }
   },
   "artifact_policy": {

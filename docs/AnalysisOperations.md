@@ -54,7 +54,52 @@ Every retained run records:
 
 This makes a historical result reproducible even after definitions or source code change.
 
-## 5. Retention and Cleanup
+## 5. Generate Caller-Intent Reconciliation Evidence
+
+CRP-247 introduces Step 2 caller-intent reconciliation as a new immutable
+derived artifact. It does not modify the retained Step 1 baseline.
+
+From the `LCM_Inventory` repository root, run:
+
+```powershell
+pwsh .\tools\Invoke-CallerIntentReconciliation.ps1
+pwsh .\tools\Show-LcmAnalysisViewer.ps1 -NoLaunch
+```
+
+The reconciliation generator reads the newest retained Level 1 baseline and
+the published CRP-121 forward/reverse indexes. It refuses to overwrite the
+matching `<baseline-run>-S020-CallerIntentReconciliation.json` artifact.
+
+The viewer automatically loads the matching Step 2 artifact when it is
+available. Its coverage rail separates:
+
+- direct documentation;
+- caller-context documentation;
+- total documented coverage; and
+- still-unresolved parameter gates.
+
+Caller-context coverage is source-linked evidence from resolved production
+callers. It contributes to total documented coverage but is never presented as
+direct Step 1 documentation.
+
+## 6. Header/Help Compliance Evidence
+
+The workspace-wide script-header rule requires parameter help. Level 1 keeps
+that compliance result separate from branch-gate documentation coverage: a
+public parameter can require help even when it is never used in a conditional.
+
+For PowerShell sources using CmdletBinding, the runner records a
+`powershell_parameter_help_summary` in each immutable run. It inventories every
+public script parameter and exported-module-function parameter, then treats a
+scoped `.PARAMETER <Name>` entry as the PowerShell evidence adapter for the
+universal header/help requirement. The summary reports documented and missing
+entries and preserves a per-parameter source record.
+
+Language-specific adapters for other script languages may use their native
+header/help forms, but they must report against the same universal rule rather
+than create duplicate language-local policy.
+
+## 7. Retention and Cleanup
 
 | Artifact | Location | Retention |
 |---|---|---|

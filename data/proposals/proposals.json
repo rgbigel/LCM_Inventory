@@ -1,11 +1,107 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-10-05T17:12:48+02:00",
+  "updated_at": "2026-10-05T20:31:51+02:00",
   "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 246,
+  "last_proposal_id": 248,
   "proposals": [
+    {
+      "id": 248,
+      "crp_id": "CRP-248",
+      "timestamp": "2026-10-05 20:31:51",
+      "title": "Standard Display Tri-State Filter and Qualified Search Atom",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-248",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "suggested",
+      "bundle_id": "CRP-248",
+      "bundle_dir": "docs/Proposals/CRP-248-Standard-Display-Tri-State-Filter-and-Qualified-Search-Atom",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig",
+      "details": "Proposes extracting the LCM Analysis Viewer tri-state metric filtering and qualified Boolean search into a reusable Standard Display atom for future Show-* tool adoption. No atom, viewer, or Show-* implementation is authorized by this suggested CRP.",
+      "plan_path": "docs/Proposals/CRP-248-Standard-Display-Tri-State-Filter-and-Qualified-Search-Atom/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-248-Standard-Display-Tri-State-Filter-and-Qualified-Search-Atom/Walkthrough.md",
+      "flow_mode": "normal",
+      "always_proceed": false,
+      "progress_state": "suggested",
+      "priority": 3,
+      "dates": {
+        "created": "2026-10-05 20:31:51",
+        "suggested": "2026-10-05 20:31:51"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-10-05 20:31:51",
+          "user": "rgbig",
+          "note": "Registered from the proven LCM Analysis Viewer interaction pattern; implementation is deferred."
+        }
+      ]
+    },
+    {
+      "id": 247,
+      "crp_id": "CRP-247",
+      "timestamp": "2026-10-05 17:52:12",
+      "title": "Caller Intent Reconciliation and Step 2 Viewer",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-247",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "in_progress",
+      "bundle_id": "CRP-247",
+      "bundle_dir": "docs/Proposals/CRP-247-Caller-Intent-Reconciliation-and-Step-2-Viewer",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig",
+      "details": "Creates immutable Step 2 caller-intent reconciliation evidence from retained CON-001-L01 runs and published CRP-121 dependency indexes, presents direct, caller-context, combined, and unresolved coverage in LCM Analysis Viewer, expands Level 1 if/elseif/else branch analysis, and adds ADMINMODE authorization/audit gating for rule-affecting CRP commits. No deletion capability is included.",
+      "plan_path": "docs/Proposals/CRP-247-Caller-Intent-Reconciliation-and-Step-2-Viewer/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-247-Caller-Intent-Reconciliation-and-Step-2-Viewer/Walkthrough.md",
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "progress_state": "in_progress",
+      "priority": 4,
+      "dates": {
+        "created": "2026-10-05 17:52:12",
+        "suggested": "2026-10-05 17:52:12",
+        "scoped": "2026-10-05 17:52:12",
+        "in_progress": "2026-10-05 17:56:07"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-10-05 17:52:12",
+          "user": "rgbig",
+          "note": "Dedicated caller-intent reconciliation CRP registered."
+        },
+        {
+          "state": "scoped",
+          "timestamp": "2026-10-05 17:52:12",
+          "user": "rgbig",
+          "note": "Advanced exactly one lifecycle increment by operator command Proceed."
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-10-05 17:56:07",
+          "user": "rgbig",
+          "note": "Implementation activated by operator command DO 247."
+        }
+      ]
+    },
     {
       "id": 1,
       "timestamp": "2026-08-20 15:20:00",

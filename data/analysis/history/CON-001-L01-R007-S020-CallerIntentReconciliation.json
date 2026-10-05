@@ -1,0 +1,831 @@
+{
+  "analysis_id": "CON-001-L01",
+  "baseline_run_id": "CON-001-L01-R007",
+  "derived_step_id": "CON-001-L01-S020",
+  "artifact_id": "CON-001-L01-R007-S020-CallerIntentReconciliation",
+  "generated_at": "2026-10-05T18:15:53.9110362+02:00",
+  "generator": {
+    "name": "Invoke-CallerIntentReconciliation",
+    "version": "1.0.0"
+  },
+  "inputs": {
+    "baseline_path": "D:\\Git_Repositories\\LCM_Inventory\\data\\analysis\\history\\CON-001-L01-R007.json",
+    "baseline_sha256": "210AFB9F8441845AD44FC3D593DAC4AEBF069CFE883D56786F4917BADB06F0FE",
+    "forward_index_path": "D:\\Git_Repositories\\LCM_Inventory\\data\\dependencies\\forward-index.json",
+    "forward_index_sha256": "96DA7509C64AA3FED07762952CC0EB2C22DD49709FD5BBACE7707AD0437E6DAF",
+    "reverse_index_path": "D:\\Git_Repositories\\LCM_Inventory\\data\\dependencies\\reverse-index.json",
+    "reverse_index_sha256": "FD0D462AD2EDB65A4ECD6550B32124B9F226D7BE4A1CAADF71A03080B4783E4D"
+  },
+  "reconciliation_rules": {
+    "accepted_forward_edge": "source_classification=production AND resolution=resolved",
+    "baseline_status": "parameter-gate-not-found",
+    "derived_status": "documented-by-caller-contract",
+    "documentation_tier": "caller-context",
+    "deletion_action_supported": false
+  },
+  "statistics": {
+    "public_parameter_gates": 648,
+    "direct_documented": 321,
+    "caller_context_documented": 23,
+    "total_documented": 344,
+    "still_unresolved": 304
+  },
+  "records": [
+    {
+      "baseline_source_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Onboarding\\LCMOnboarding.psm1",
+      "baseline_line": 27,
+      "repository": "LCM_AI",
+      "function": "Test-LCMPreFlight",
+      "public_parameters": [
+        "WorkspaceRoot"
+      ],
+      "baseline_status": "parameter-gate-not-found",
+      "reconciliation_status": "documented-by-caller-contract",
+      "documentation_tier": "caller-context",
+      "relevance": "high",
+      "confidence": 10,
+      "intent": "Validates onboarding targets before governance changes are attempted.",
+      "disposition": "retain-entrypoint",
+      "deletion_eligibility": false,
+      "reverse_classification": "referenced",
+      "caller_evidence": [
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Onboarding\\LCMOnboarding.psm1",
+          "caller_line": 419,
+          "caller_symbol": "Invoke-LCMOnboardRepo",
+          "supplied_arguments": "Test-LCMPreFlight -TargetPath $targetFullPath -WorkspaceRoot $workspaceRoot"
+        }
+      ]
+    },
+    {
+      "baseline_source_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Onboarding\\LCMOnboarding.psm1",
+      "baseline_line": 154,
+      "repository": "LCM_AI",
+      "function": "New-LCMGovernanceLinks",
+      "public_parameters": [
+        "WorkspaceRoot"
+      ],
+      "baseline_status": "parameter-gate-not-found",
+      "reconciliation_status": "documented-by-caller-contract",
+      "documentation_tier": "caller-context",
+      "relevance": "high",
+      "confidence": 9,
+      "intent": "Seeds governed repository instruction pointers under explicit dry-run control.",
+      "disposition": "retain-entrypoint",
+      "deletion_eligibility": false,
+      "reverse_classification": "referenced",
+      "caller_evidence": [
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Onboarding\\LCMOnboarding.psm1",
+          "caller_line": 484,
+          "caller_symbol": "Invoke-LCMOnboardRepo",
+          "supplied_arguments": "New-LCMGovernanceLinks -TargetPath $targetFullPath -WorkspaceRoot $workspaceRoot -DryRun:$DryRun"
+        }
+      ]
+    },
+    {
+      "baseline_source_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Onboarding\\LCMOnboarding.psm1",
+      "baseline_line": 164,
+      "repository": "LCM_AI",
+      "function": "New-LCMGovernanceLinks",
+      "public_parameters": [
+        "DryRun"
+      ],
+      "baseline_status": "parameter-gate-not-found",
+      "reconciliation_status": "documented-by-caller-contract",
+      "documentation_tier": "caller-context",
+      "relevance": "high",
+      "confidence": 9,
+      "intent": "Seeds governed repository instruction pointers under explicit dry-run control.",
+      "disposition": "retain-entrypoint",
+      "deletion_eligibility": false,
+      "reverse_classification": "referenced",
+      "caller_evidence": [
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Onboarding\\LCMOnboarding.psm1",
+          "caller_line": 484,
+          "caller_symbol": "Invoke-LCMOnboardRepo",
+          "supplied_arguments": "New-LCMGovernanceLinks -TargetPath $targetFullPath -WorkspaceRoot $workspaceRoot -DryRun:$DryRun"
+        }
+      ]
+    },
+    {
+      "baseline_source_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Onboarding\\LCMOnboarding.psm1",
+      "baseline_line": 184,
+      "repository": "LCM_AI",
+      "function": "New-LCMGovernanceLinks",
+      "public_parameters": [
+        "DryRun"
+      ],
+      "baseline_status": "parameter-gate-not-found",
+      "reconciliation_status": "documented-by-caller-contract",
+      "documentation_tier": "caller-context",
+      "relevance": "high",
+      "confidence": 9,
+      "intent": "Seeds governed repository instruction pointers under explicit dry-run control.",
+      "disposition": "retain-entrypoint",
+      "deletion_eligibility": false,
+      "reverse_classification": "referenced",
+      "caller_evidence": [
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Onboarding\\LCMOnboarding.psm1",
+          "caller_line": 484,
+          "caller_symbol": "Invoke-LCMOnboardRepo",
+          "supplied_arguments": "New-LCMGovernanceLinks -TargetPath $targetFullPath -WorkspaceRoot $workspaceRoot -DryRun:$DryRun"
+        }
+      ]
+    },
+    {
+      "baseline_source_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Onboarding\\LCMOnboarding.psm1",
+      "baseline_line": 230,
+      "repository": "LCM_AI",
+      "function": "Expand-LCMTemplate",
+      "public_parameters": [
+        "WorkspaceRoot"
+      ],
+      "baseline_status": "parameter-gate-not-found",
+      "reconciliation_status": "documented-by-caller-contract",
+      "documentation_tier": "caller-context",
+      "relevance": "high",
+      "confidence": 9,
+      "intent": "Instantiates governed repository templates with dry-run and overwrite safeguards.",
+      "disposition": "retain-entrypoint",
+      "deletion_eligibility": false,
+      "reverse_classification": "referenced",
+      "caller_evidence": [
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Onboarding\\LCMOnboarding.psm1",
+          "caller_line": 502,
+          "caller_symbol": "Invoke-LCMOnboardRepo",
+          "supplied_arguments": "Expand-LCMTemplate -TargetPath $targetFullPath -Tokens $mergedTokens -WorkspaceRoot $workspaceRoot -DryRun:$DryRun -Overwrite:$overwriteTemplates"
+        }
+      ]
+    },
+    {
+      "baseline_source_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Onboarding\\LCMOnboarding.psm1",
+      "baseline_line": 252,
+      "repository": "LCM_AI",
+      "function": "Expand-LCMTemplate",
+      "public_parameters": [
+        "DryRun"
+      ],
+      "baseline_status": "parameter-gate-not-found",
+      "reconciliation_status": "documented-by-caller-contract",
+      "documentation_tier": "caller-context",
+      "relevance": "high",
+      "confidence": 9,
+      "intent": "Instantiates governed repository templates with dry-run and overwrite safeguards.",
+      "disposition": "retain-entrypoint",
+      "deletion_eligibility": false,
+      "reverse_classification": "referenced",
+      "caller_evidence": [
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Onboarding\\LCMOnboarding.psm1",
+          "caller_line": 502,
+          "caller_symbol": "Invoke-LCMOnboardRepo",
+          "supplied_arguments": "Expand-LCMTemplate -TargetPath $targetFullPath -Tokens $mergedTokens -WorkspaceRoot $workspaceRoot -DryRun:$DryRun -Overwrite:$overwriteTemplates"
+        }
+      ]
+    },
+    {
+      "baseline_source_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Onboarding\\LCMOnboarding.psm1",
+      "baseline_line": 256,
+      "repository": "LCM_AI",
+      "function": "Expand-LCMTemplate",
+      "public_parameters": [
+        "Overwrite"
+      ],
+      "baseline_status": "parameter-gate-not-found",
+      "reconciliation_status": "documented-by-caller-contract",
+      "documentation_tier": "caller-context",
+      "relevance": "high",
+      "confidence": 9,
+      "intent": "Instantiates governed repository templates with dry-run and overwrite safeguards.",
+      "disposition": "retain-entrypoint",
+      "deletion_eligibility": false,
+      "reverse_classification": "referenced",
+      "caller_evidence": [
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Onboarding\\LCMOnboarding.psm1",
+          "caller_line": 502,
+          "caller_symbol": "Invoke-LCMOnboardRepo",
+          "supplied_arguments": "Expand-LCMTemplate -TargetPath $targetFullPath -Tokens $mergedTokens -WorkspaceRoot $workspaceRoot -DryRun:$DryRun -Overwrite:$overwriteTemplates"
+        }
+      ]
+    },
+    {
+      "baseline_source_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Onboarding\\LCMOnboarding.psm1",
+      "baseline_line": 274,
+      "repository": "LCM_AI",
+      "function": "Expand-LCMTemplate",
+      "public_parameters": [
+        "DryRun"
+      ],
+      "baseline_status": "parameter-gate-not-found",
+      "reconciliation_status": "documented-by-caller-contract",
+      "documentation_tier": "caller-context",
+      "relevance": "high",
+      "confidence": 9,
+      "intent": "Instantiates governed repository templates with dry-run and overwrite safeguards.",
+      "disposition": "retain-entrypoint",
+      "deletion_eligibility": false,
+      "reverse_classification": "referenced",
+      "caller_evidence": [
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Onboarding\\LCMOnboarding.psm1",
+          "caller_line": 502,
+          "caller_symbol": "Invoke-LCMOnboardRepo",
+          "supplied_arguments": "Expand-LCMTemplate -TargetPath $targetFullPath -Tokens $mergedTokens -WorkspaceRoot $workspaceRoot -DryRun:$DryRun -Overwrite:$overwriteTemplates"
+        }
+      ]
+    },
+    {
+      "baseline_source_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Onboarding\\LCMOnboarding.psm1",
+      "baseline_line": 318,
+      "repository": "LCM_AI",
+      "function": "Test-LCMIntegrity",
+      "public_parameters": [
+        "WorkspaceRoot"
+      ],
+      "baseline_status": "parameter-gate-not-found",
+      "reconciliation_status": "documented-by-caller-contract",
+      "documentation_tier": "caller-context",
+      "relevance": "high",
+      "confidence": 10,
+      "intent": "Verifies onboarding file coverage and JSON integrity in simulated or physical verification modes.",
+      "disposition": "retain-entrypoint",
+      "deletion_eligibility": false,
+      "reverse_classification": "referenced",
+      "caller_evidence": [
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Onboarding\\LCMOnboarding.psm1",
+          "caller_line": 519,
+          "caller_symbol": "Invoke-LCMOnboardRepo",
+          "supplied_arguments": "Test-LCMIntegrity -TargetPath $targetFullPath -WorkspaceRoot $workspaceRoot -DryRun:$DryRun -PlannedLinks $linkResult.Links -PlannedFiles $templateResult.Files"
+        }
+      ]
+    },
+    {
+      "baseline_source_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Onboarding\\LCMOnboarding.psm1",
+      "baseline_line": 336,
+      "repository": "LCM_AI",
+      "function": "Test-LCMIntegrity",
+      "public_parameters": [
+        "DryRun"
+      ],
+      "baseline_status": "parameter-gate-not-found",
+      "reconciliation_status": "documented-by-caller-contract",
+      "documentation_tier": "caller-context",
+      "relevance": "high",
+      "confidence": 10,
+      "intent": "Verifies onboarding file coverage and JSON integrity in simulated or physical verification modes.",
+      "disposition": "retain-entrypoint",
+      "deletion_eligibility": false,
+      "reverse_classification": "referenced",
+      "caller_evidence": [
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Onboarding\\LCMOnboarding.psm1",
+          "caller_line": 519,
+          "caller_symbol": "Invoke-LCMOnboardRepo",
+          "supplied_arguments": "Test-LCMIntegrity -TargetPath $targetFullPath -WorkspaceRoot $workspaceRoot -DryRun:$DryRun -PlannedLinks $linkResult.Links -PlannedFiles $templateResult.Files"
+        }
+      ]
+    },
+    {
+      "baseline_source_file": "D:\\Git_Repositories\\LCM_AI\\tools\\QualityGates\\WorkspaceQualityGates.psm1",
+      "baseline_line": 80,
+      "repository": "LCM_AI",
+      "function": "Assert-IgnoredRepositories",
+      "public_parameters": [
+        "WorkspaceRoot"
+      ],
+      "baseline_status": "parameter-gate-not-found",
+      "reconciliation_status": "documented-by-caller-contract",
+      "documentation_tier": "caller-context",
+      "relevance": "high",
+      "confidence": 8,
+      "intent": "Validates root-container inventory and non-Git repository safety checks.",
+      "disposition": "retain-entrypoint",
+      "deletion_eligibility": false,
+      "reverse_classification": "referenced",
+      "caller_evidence": [
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Advance-Governance.ps1",
+          "caller_line": 239,
+          "caller_symbol": "Advance-Governance",
+          "supplied_arguments": "Assert-IgnoredRepositories -SettingsPath $rootSettings -WorkspaceParent $rootContainer"
+        },
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Test-WorkspaceReadiness.ps1",
+          "caller_line": 85,
+          "caller_symbol": "Test-WorkspaceReadiness",
+          "supplied_arguments": "Assert-IgnoredRepositories -SettingsPath $rootSettings -WorkspaceParent $rootContainer"
+        }
+      ]
+    },
+    {
+      "baseline_source_file": "D:\\Git_Repositories\\LCM_AI\\tools\\QualityGates\\WorkspaceQualityGates.psm1",
+      "baseline_line": 115,
+      "repository": "LCM_AI",
+      "function": "Assert-StabilizationPolicy",
+      "public_parameters": [
+        "WorkspaceRoot"
+      ],
+      "baseline_status": "parameter-gate-not-found",
+      "reconciliation_status": "documented-by-caller-contract",
+      "documentation_tier": "caller-context",
+      "relevance": "high",
+      "confidence": 9,
+      "intent": "Validates stabilization state, off-limits paths, and disabled external writes.",
+      "disposition": "retain-entrypoint",
+      "deletion_eligibility": false,
+      "reverse_classification": "referenced",
+      "caller_evidence": [
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Advance-Governance.ps1",
+          "caller_line": 240,
+          "caller_symbol": "Advance-Governance",
+          "supplied_arguments": "Assert-StabilizationPolicy -WorkspaceRoot $workspaceRoot -StabilizationPath $StabilizationPath -RealRepoTestPlanPath $RealRepoTestPlanPath"
+        },
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Test-WorkspaceReadiness.ps1",
+          "caller_line": 86,
+          "caller_symbol": "Test-WorkspaceReadiness",
+          "supplied_arguments": "Assert-StabilizationPolicy -WorkspaceRoot $workspaceRoot"
+        }
+      ]
+    },
+    {
+      "baseline_source_file": "D:\\Git_Repositories\\LCM_AI\\tools\\QualityGates\\WorkspaceQualityGates.psm1",
+      "baseline_line": 121,
+      "repository": "LCM_AI",
+      "function": "Assert-StabilizationPolicy",
+      "public_parameters": [
+        "StabilizationPath"
+      ],
+      "baseline_status": "parameter-gate-not-found",
+      "reconciliation_status": "documented-by-caller-contract",
+      "documentation_tier": "caller-context",
+      "relevance": "high",
+      "confidence": 9,
+      "intent": "Validates stabilization state, off-limits paths, and disabled external writes.",
+      "disposition": "retain-entrypoint",
+      "deletion_eligibility": false,
+      "reverse_classification": "referenced",
+      "caller_evidence": [
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Advance-Governance.ps1",
+          "caller_line": 240,
+          "caller_symbol": "Advance-Governance",
+          "supplied_arguments": "Assert-StabilizationPolicy -WorkspaceRoot $workspaceRoot -StabilizationPath $StabilizationPath -RealRepoTestPlanPath $RealRepoTestPlanPath"
+        },
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Test-WorkspaceReadiness.ps1",
+          "caller_line": 86,
+          "caller_symbol": "Test-WorkspaceReadiness",
+          "supplied_arguments": "Assert-StabilizationPolicy -WorkspaceRoot $workspaceRoot"
+        }
+      ]
+    },
+    {
+      "baseline_source_file": "D:\\Git_Repositories\\LCM_AI\\tools\\QualityGates\\WorkspaceQualityGates.psm1",
+      "baseline_line": 125,
+      "repository": "LCM_AI",
+      "function": "Assert-StabilizationPolicy",
+      "public_parameters": [
+        "RealRepoTestPlanPath"
+      ],
+      "baseline_status": "parameter-gate-not-found",
+      "reconciliation_status": "documented-by-caller-contract",
+      "documentation_tier": "caller-context",
+      "relevance": "high",
+      "confidence": 9,
+      "intent": "Validates stabilization state, off-limits paths, and disabled external writes.",
+      "disposition": "retain-entrypoint",
+      "deletion_eligibility": false,
+      "reverse_classification": "referenced",
+      "caller_evidence": [
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Advance-Governance.ps1",
+          "caller_line": 240,
+          "caller_symbol": "Advance-Governance",
+          "supplied_arguments": "Assert-StabilizationPolicy -WorkspaceRoot $workspaceRoot -StabilizationPath $StabilizationPath -RealRepoTestPlanPath $RealRepoTestPlanPath"
+        },
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Test-WorkspaceReadiness.ps1",
+          "caller_line": 86,
+          "caller_symbol": "Test-WorkspaceReadiness",
+          "supplied_arguments": "Assert-StabilizationPolicy -WorkspaceRoot $workspaceRoot"
+        }
+      ]
+    },
+    {
+      "baseline_source_file": "D:\\Git_Repositories\\LCM_AI\\tools\\QualityGates\\WorkspaceQualityGates.psm1",
+      "baseline_line": 180,
+      "repository": "LCM_AI",
+      "function": "Assert-RealRepoTestPlan",
+      "public_parameters": [
+        "WorkspaceRoot"
+      ],
+      "baseline_status": "parameter-gate-not-found",
+      "reconciliation_status": "documented-by-caller-contract",
+      "documentation_tier": "caller-context",
+      "relevance": "high",
+      "confidence": 10,
+      "intent": "Validates real-repository plan policy, read-only boundaries, and target-local ownership.",
+      "disposition": "retain-entrypoint",
+      "deletion_eligibility": false,
+      "reverse_classification": "referenced",
+      "caller_evidence": [
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Advance-Governance.ps1",
+          "caller_line": 241,
+          "caller_symbol": "Advance-Governance",
+          "supplied_arguments": "Assert-RealRepoTestPlan -WorkspaceRoot $workspaceRoot -StabilizationPath $StabilizationPath -RealRepoTestPlanPath $RealRepoTestPlanPath"
+        },
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Get-RealRepoActionPlan.ps1",
+          "caller_line": 56,
+          "caller_symbol": "Get-RealRepoActionPlan",
+          "supplied_arguments": "Assert-RealRepoTestPlan -WorkspaceRoot $workspaceRoot -RealRepoTestPlanPath $planPath -StabilizationPath $stabilizationPath"
+        },
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Get-RealRepoTargetProfile.ps1",
+          "caller_line": 71,
+          "caller_symbol": "Get-RealRepoTargetProfile",
+          "supplied_arguments": "Assert-RealRepoTestPlan -WorkspaceRoot $workspaceRoot -RealRepoTestPlanPath $planPath -StabilizationPath $stabilizationPath"
+        },
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Initialize-RealRepoMethodInstance.ps1",
+          "caller_line": 127,
+          "caller_symbol": "Initialize-RealRepoMethodInstance",
+          "supplied_arguments": "Assert-RealRepoTestPlan -WorkspaceRoot $workspaceRoot -RealRepoTestPlanPath $planPath -StabilizationPath $stabilizationPath"
+        },
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Invoke-RealRepoDryRun.ps1",
+          "caller_line": 59,
+          "caller_symbol": "Invoke-RealRepoDryRun",
+          "supplied_arguments": "Assert-RealRepoTestPlan -WorkspaceRoot $workspaceRoot -RealRepoTestPlanPath $planPath -StabilizationPath $stabilizationPath"
+        },
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Set-RealRepoTestPlan.ps1",
+          "caller_line": 195,
+          "caller_symbol": "Set-RealRepoTestPlan",
+          "supplied_arguments": "Assert-RealRepoTestPlan -WorkspaceRoot $workspaceRoot -RealRepoTestPlanPath $planPath -StabilizationPath $stabilizationPath"
+        },
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Test-RealRepoProposalCleanup.ps1",
+          "caller_line": 112,
+          "caller_symbol": "Test-RealRepoProposalCleanup",
+          "supplied_arguments": "Assert-RealRepoTestPlan -WorkspaceRoot $workspaceRoot -RealRepoTestPlanPath $planPath -StabilizationPath $stabilizationPath"
+        },
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Test-WorkspaceReadiness.ps1",
+          "caller_line": 87,
+          "caller_symbol": "Test-WorkspaceReadiness",
+          "supplied_arguments": "Assert-RealRepoTestPlan -WorkspaceRoot $workspaceRoot"
+        }
+      ]
+    },
+    {
+      "baseline_source_file": "D:\\Git_Repositories\\LCM_AI\\tools\\QualityGates\\WorkspaceQualityGates.psm1",
+      "baseline_line": 186,
+      "repository": "LCM_AI",
+      "function": "Assert-RealRepoTestPlan",
+      "public_parameters": [
+        "RealRepoTestPlanPath"
+      ],
+      "baseline_status": "parameter-gate-not-found",
+      "reconciliation_status": "documented-by-caller-contract",
+      "documentation_tier": "caller-context",
+      "relevance": "high",
+      "confidence": 10,
+      "intent": "Validates real-repository plan policy, read-only boundaries, and target-local ownership.",
+      "disposition": "retain-entrypoint",
+      "deletion_eligibility": false,
+      "reverse_classification": "referenced",
+      "caller_evidence": [
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Advance-Governance.ps1",
+          "caller_line": 241,
+          "caller_symbol": "Advance-Governance",
+          "supplied_arguments": "Assert-RealRepoTestPlan -WorkspaceRoot $workspaceRoot -StabilizationPath $StabilizationPath -RealRepoTestPlanPath $RealRepoTestPlanPath"
+        },
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Get-RealRepoActionPlan.ps1",
+          "caller_line": 56,
+          "caller_symbol": "Get-RealRepoActionPlan",
+          "supplied_arguments": "Assert-RealRepoTestPlan -WorkspaceRoot $workspaceRoot -RealRepoTestPlanPath $planPath -StabilizationPath $stabilizationPath"
+        },
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Get-RealRepoTargetProfile.ps1",
+          "caller_line": 71,
+          "caller_symbol": "Get-RealRepoTargetProfile",
+          "supplied_arguments": "Assert-RealRepoTestPlan -WorkspaceRoot $workspaceRoot -RealRepoTestPlanPath $planPath -StabilizationPath $stabilizationPath"
+        },
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Initialize-RealRepoMethodInstance.ps1",
+          "caller_line": 127,
+          "caller_symbol": "Initialize-RealRepoMethodInstance",
+          "supplied_arguments": "Assert-RealRepoTestPlan -WorkspaceRoot $workspaceRoot -RealRepoTestPlanPath $planPath -StabilizationPath $stabilizationPath"
+        },
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Invoke-RealRepoDryRun.ps1",
+          "caller_line": 59,
+          "caller_symbol": "Invoke-RealRepoDryRun",
+          "supplied_arguments": "Assert-RealRepoTestPlan -WorkspaceRoot $workspaceRoot -RealRepoTestPlanPath $planPath -StabilizationPath $stabilizationPath"
+        },
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Set-RealRepoTestPlan.ps1",
+          "caller_line": 195,
+          "caller_symbol": "Set-RealRepoTestPlan",
+          "supplied_arguments": "Assert-RealRepoTestPlan -WorkspaceRoot $workspaceRoot -RealRepoTestPlanPath $planPath -StabilizationPath $stabilizationPath"
+        },
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Test-RealRepoProposalCleanup.ps1",
+          "caller_line": 112,
+          "caller_symbol": "Test-RealRepoProposalCleanup",
+          "supplied_arguments": "Assert-RealRepoTestPlan -WorkspaceRoot $workspaceRoot -RealRepoTestPlanPath $planPath -StabilizationPath $stabilizationPath"
+        },
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Test-WorkspaceReadiness.ps1",
+          "caller_line": 87,
+          "caller_symbol": "Test-WorkspaceReadiness",
+          "supplied_arguments": "Assert-RealRepoTestPlan -WorkspaceRoot $workspaceRoot"
+        }
+      ]
+    },
+    {
+      "baseline_source_file": "D:\\Git_Repositories\\LCM_AI\\tools\\QualityGates\\WorkspaceQualityGates.psm1",
+      "baseline_line": 190,
+      "repository": "LCM_AI",
+      "function": "Assert-RealRepoTestPlan",
+      "public_parameters": [
+        "StabilizationPath"
+      ],
+      "baseline_status": "parameter-gate-not-found",
+      "reconciliation_status": "documented-by-caller-contract",
+      "documentation_tier": "caller-context",
+      "relevance": "high",
+      "confidence": 10,
+      "intent": "Validates real-repository plan policy, read-only boundaries, and target-local ownership.",
+      "disposition": "retain-entrypoint",
+      "deletion_eligibility": false,
+      "reverse_classification": "referenced",
+      "caller_evidence": [
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Advance-Governance.ps1",
+          "caller_line": 241,
+          "caller_symbol": "Advance-Governance",
+          "supplied_arguments": "Assert-RealRepoTestPlan -WorkspaceRoot $workspaceRoot -StabilizationPath $StabilizationPath -RealRepoTestPlanPath $RealRepoTestPlanPath"
+        },
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Get-RealRepoActionPlan.ps1",
+          "caller_line": 56,
+          "caller_symbol": "Get-RealRepoActionPlan",
+          "supplied_arguments": "Assert-RealRepoTestPlan -WorkspaceRoot $workspaceRoot -RealRepoTestPlanPath $planPath -StabilizationPath $stabilizationPath"
+        },
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Get-RealRepoTargetProfile.ps1",
+          "caller_line": 71,
+          "caller_symbol": "Get-RealRepoTargetProfile",
+          "supplied_arguments": "Assert-RealRepoTestPlan -WorkspaceRoot $workspaceRoot -RealRepoTestPlanPath $planPath -StabilizationPath $stabilizationPath"
+        },
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Initialize-RealRepoMethodInstance.ps1",
+          "caller_line": 127,
+          "caller_symbol": "Initialize-RealRepoMethodInstance",
+          "supplied_arguments": "Assert-RealRepoTestPlan -WorkspaceRoot $workspaceRoot -RealRepoTestPlanPath $planPath -StabilizationPath $stabilizationPath"
+        },
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Invoke-RealRepoDryRun.ps1",
+          "caller_line": 59,
+          "caller_symbol": "Invoke-RealRepoDryRun",
+          "supplied_arguments": "Assert-RealRepoTestPlan -WorkspaceRoot $workspaceRoot -RealRepoTestPlanPath $planPath -StabilizationPath $stabilizationPath"
+        },
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Set-RealRepoTestPlan.ps1",
+          "caller_line": 195,
+          "caller_symbol": "Set-RealRepoTestPlan",
+          "supplied_arguments": "Assert-RealRepoTestPlan -WorkspaceRoot $workspaceRoot -RealRepoTestPlanPath $planPath -StabilizationPath $stabilizationPath"
+        },
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Test-RealRepoProposalCleanup.ps1",
+          "caller_line": 112,
+          "caller_symbol": "Test-RealRepoProposalCleanup",
+          "supplied_arguments": "Assert-RealRepoTestPlan -WorkspaceRoot $workspaceRoot -RealRepoTestPlanPath $planPath -StabilizationPath $stabilizationPath"
+        },
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Test-WorkspaceReadiness.ps1",
+          "caller_line": 87,
+          "caller_symbol": "Test-WorkspaceReadiness",
+          "supplied_arguments": "Assert-RealRepoTestPlan -WorkspaceRoot $workspaceRoot"
+        }
+      ]
+    },
+    {
+      "baseline_source_file": "D:\\Git_Repositories\\LCM_AI\\tools\\QualityGates\\WorkspaceQualityGates.psm1",
+      "baseline_line": 534,
+      "repository": "LCM_AI",
+      "function": "Assert-StaleAuthorityReferences",
+      "public_parameters": [
+        "WorkspaceRoot"
+      ],
+      "baseline_status": "parameter-gate-not-found",
+      "reconciliation_status": "documented-by-caller-contract",
+      "documentation_tier": "caller-context",
+      "relevance": "high",
+      "confidence": 9,
+      "intent": "Prevents stale authority references in governed workspace content.",
+      "disposition": "retain-entrypoint",
+      "deletion_eligibility": false,
+      "reverse_classification": "referenced",
+      "caller_evidence": [
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_AI\\tools\\Test-WorkspaceReadiness.ps1",
+          "caller_line": 88,
+          "caller_symbol": "Test-WorkspaceReadiness",
+          "supplied_arguments": "Assert-StaleAuthorityReferences -WorkspaceRoot $workspaceRoot"
+        }
+      ]
+    },
+    {
+      "baseline_source_file": "D:\\Git_Repositories\\LCM_Inventory\\modules\\CompactBCompareReview.psm1",
+      "baseline_line": 24,
+      "repository": "LCM_Inventory",
+      "function": "Get-CompactBCompareInclusion",
+      "public_parameters": [
+        "InclusionManifest"
+      ],
+      "baseline_status": "parameter-gate-not-found",
+      "reconciliation_status": "documented-by-caller-contract",
+      "documentation_tier": "caller-context",
+      "relevance": "high",
+      "confidence": 9,
+      "intent": "Validates repository-relative inclusion inputs for scratch-only BCompare review projections.",
+      "disposition": "retain-entrypoint",
+      "deletion_eligibility": false,
+      "reverse_classification": "referenced",
+      "caller_evidence": [
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_Inventory\\modules\\CompactBCompareReview.psm1",
+          "caller_line": 64,
+          "caller_symbol": "New-CompactBCompareReviewTree",
+          "supplied_arguments": "Get-CompactBCompareInclusion -InclusionManifest $InclusionManifest"
+        }
+      ]
+    },
+    {
+      "baseline_source_file": "D:\\Git_Repositories\\LCM_Inventory\\modules\\WorkspaceCM.psm1",
+      "baseline_line": 57,
+      "repository": "LCM_Inventory",
+      "function": "Write-CMLog",
+      "public_parameters": [
+        "PushDate"
+      ],
+      "baseline_status": "parameter-gate-not-found",
+      "reconciliation_status": "documented-by-caller-contract",
+      "documentation_tier": "caller-context",
+      "relevance": "high",
+      "confidence": 9,
+      "intent": "Records configuration-management activity with durable push-date provenance.",
+      "disposition": "retain-entrypoint",
+      "deletion_eligibility": false,
+      "reverse_classification": "referenced",
+      "caller_evidence": [
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_Inventory\\modules\\WorkspaceCM.psm1",
+          "caller_line": 422,
+          "caller_symbol": "Update-WorkspaceInventory",
+          "supplied_arguments": "Write-CMLog -Action 'AUDIT_COMPLETE' -TargetRepo 'ALL' -Details \"Audited $totalCount repositories. Governed: $($jsonObj.governed_count)\""
+        },
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_Inventory\\modules\\WorkspaceCM.psm1",
+          "caller_line": 490,
+          "caller_symbol": "New-WorkspaceBaseline",
+          "supplied_arguments": "Write-CMLog -Action 'BASELINE_CREATED' -TargetRepo 'ALL' -Details \"Created baseline snapshot: $BaselineId\""
+        },
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_Inventory\\modules\\WorkspaceCM.psm1",
+          "caller_line": 549,
+          "caller_symbol": "Set-RepoDisposition",
+          "supplied_arguments": "Write-CMLog -Action 'SET_DISPOSITION' -TargetRepo $RepositoryName -Details \"Set disposition to '$State'. Reason: $Reason\""
+        },
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_Inventory\\tools\\Invoke-LCMUpdate.ps1",
+          "caller_line": 93,
+          "caller_symbol": "Invoke-LCMUpdate",
+          "supplied_arguments": "Write-CMLog -Action 'LCM_UPGRADE_PROPOSED' -TargetRepo $repoName -Details \"Proposed upgrade to v$targetLCMVersion via $($cr.cr_id)\""
+        },
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_Inventory\\tools\\Invoke-LCMUpdate.ps1",
+          "caller_line": 117,
+          "caller_symbol": "Invoke-LCMUpdate",
+          "supplied_arguments": "Write-CMLog -Action 'LCM_UPGRADE_EXECUTED' -TargetRepo $repoName -Details \"Upgraded to LCM v$targetLCMVersion\""
+        }
+      ]
+    },
+    {
+      "baseline_source_file": "D:\\Git_Repositories\\LCM_Inventory\\modules\\WorkspaceCM.psm1",
+      "baseline_line": 82,
+      "repository": "LCM_Inventory",
+      "function": "Get-WorkspaceAIState",
+      "public_parameters": [
+        "WorkspacePath"
+      ],
+      "baseline_status": "parameter-gate-not-found",
+      "reconciliation_status": "documented-by-caller-contract",
+      "documentation_tier": "caller-context",
+      "relevance": "high",
+      "confidence": 9,
+      "intent": "Provides authoritative LCM_AI version and lifecycle state for inventory, baseline, and upgrade flows.",
+      "disposition": "retain-entrypoint",
+      "deletion_eligibility": false,
+      "reverse_classification": "referenced",
+      "caller_evidence": [
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_Inventory\\modules\\WorkspaceCM.psm1",
+          "caller_line": 314,
+          "caller_symbol": "Update-WorkspaceInventory",
+          "supplied_arguments": "Get-WorkspaceAIState"
+        },
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_Inventory\\modules\\WorkspaceCM.psm1",
+          "caller_line": 470,
+          "caller_symbol": "New-WorkspaceBaseline",
+          "supplied_arguments": "Get-WorkspaceAIState"
+        },
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_Inventory\\tools\\Invoke-LCMUpdate.ps1",
+          "caller_line": 66,
+          "caller_symbol": "Invoke-LCMUpdate",
+          "supplied_arguments": "Get-WorkspaceAIState"
+        }
+      ]
+    },
+    {
+      "baseline_source_file": "D:\\Git_Repositories\\LCM_Inventory\\modules\\WorkspaceCM.psm1",
+      "baseline_line": 101,
+      "repository": "LCM_Inventory",
+      "function": "Get-WorkspaceAIState",
+      "public_parameters": [
+        "WorkspacePath"
+      ],
+      "baseline_status": "parameter-gate-not-found",
+      "reconciliation_status": "documented-by-caller-contract",
+      "documentation_tier": "caller-context",
+      "relevance": "high",
+      "confidence": 9,
+      "intent": "Provides authoritative LCM_AI version and lifecycle state for inventory, baseline, and upgrade flows.",
+      "disposition": "retain-entrypoint",
+      "deletion_eligibility": false,
+      "reverse_classification": "referenced",
+      "caller_evidence": [
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_Inventory\\modules\\WorkspaceCM.psm1",
+          "caller_line": 314,
+          "caller_symbol": "Update-WorkspaceInventory",
+          "supplied_arguments": "Get-WorkspaceAIState"
+        },
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_Inventory\\modules\\WorkspaceCM.psm1",
+          "caller_line": 470,
+          "caller_symbol": "New-WorkspaceBaseline",
+          "supplied_arguments": "Get-WorkspaceAIState"
+        },
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_Inventory\\tools\\Invoke-LCMUpdate.ps1",
+          "caller_line": 66,
+          "caller_symbol": "Invoke-LCMUpdate",
+          "supplied_arguments": "Get-WorkspaceAIState"
+        }
+      ]
+    },
+    {
+      "baseline_source_file": "D:\\Git_Repositories\\LCM_Inventory\\modules\\WorkspaceCM.psm1",
+      "baseline_line": 255,
+      "repository": "LCM_Inventory",
+      "function": "Get-RepoCMState",
+      "public_parameters": [
+        "CachedRepoState"
+      ],
+      "baseline_status": "parameter-gate-not-found",
+      "reconciliation_status": "documented-by-caller-contract",
+      "documentation_tier": "caller-context",
+      "relevance": "medium",
+      "confidence": 7,
+      "intent": "Builds repository configuration-management state using an optional cached state when available.",
+      "disposition": "retain-entrypoint",
+      "deletion_eligibility": false,
+      "reverse_classification": "referenced",
+      "caller_evidence": [
+        {
+          "caller_file": "D:\\Git_Repositories\\LCM_Inventory\\modules\\WorkspaceCM.psm1",
+          "caller_line": 336,
+          "caller_symbol": "Update-WorkspaceInventory",
+          "supplied_arguments": "Get-RepoCMState -DirectoryPath $dir.FullName -GlobalLCMVersion $globalLCM -CachedRepoState $cached"
+        }
+      ]
+    }
+  ]
+}

@@ -7,7 +7,7 @@
            and sortable LCM-standard HTML viewer, and optionally opens it.
   Path: tools/Show-LcmAnalysisViewer.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 1.2.0
+  Version: 1.5.0
   Date: 2026-10-05
 #>
 
@@ -19,6 +19,13 @@ param(
   [Parameter(Mandatory = $false, HelpMessage = 'Path for the generated interactive HTML viewer.')]
   [string]$OutputPath = '',
 
+  [Parameter(Mandatory = $false, HelpMessage = 'Path to derived caller-intent reconciliation evidence.')]
+  [string]$ReconciliationPath = '',
+
+  [Parameter(Mandatory = $false, HelpMessage = 'VS Code URI scheme used by source-location links.')]
+  [ValidateSet('Auto', 'vscode', 'vscode-insiders')]
+  [string]$EditorUriScheme = 'Auto',
+
   [Parameter(Mandatory = $false, HelpMessage = 'Generate the HTML viewer without launching it.')]
   [switch]$NoLaunch,
 
@@ -29,7 +36,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$scriptVersion = '1.2.0'
+$scriptVersion = '1.5.0'
 $scriptName = 'Show-LcmAnalysisViewer'
 
 if ($Help) {
@@ -40,7 +47,8 @@ if ($Help) {
   Write-Host '  Renders retained CON analysis JSON evidence as an interactive HTML dashboard.'
   Write-Host ''
   Write-Host 'USAGE:'
-  Write-Host '  pwsh tools/Show-LcmAnalysisViewer.ps1 [-ReportPath <path>] [-OutputPath <path>] [-NoLaunch] [-h]'
+  Write-Host '  pwsh tools/Show-LcmAnalysisViewer.ps1 [-ReportPath <path>] [-OutputPath <path>]'
+  Write-Host '    [-ReconciliationPath <path>] [-NoLaunch] [-h]'
   Write-Host ''
   Write-Host 'DEFAULTS:'
   Write-Host '  Input : data\analysis\CON-001-L01-R002.json'
@@ -63,7 +71,8 @@ $null = New-Item -ItemType Directory -Path $artifactDirectory -Force
 $null = New-Item -ItemType Directory -Path $logDirectory -Force
 
 if ([string]::IsNullOrWhiteSpace($ReportPath)) {
-  $latestReport = Get-ChildItem -LiteralPath $historyDirectory -Filter 'CON-*-R*.json' -File |
+  $latestReport = Get-ChildItem -LiteralPath $historyDirectory -File |
+    Where-Object { $_.Name -match '^CON-\d+-L\d+-R\d{3}\.json$' } |
     Sort-Object Name -Descending |
     Select-Object -First 1
   if ($null -eq $latestReport) {
@@ -134,6 +143,33 @@ if (-not $report.PSObject.Properties['elements']) {
 }
 
 $elements = @($report.elements)
+$baselineRunId = Get-PropertyValue -Object $report -Name 'run_id'
+if ([string]::IsNullOrWhiteSpace($ReconciliationPath)) {
+  $candidateReconciliationPath = Join-Path $historyDirectory ((Split-Path -Path $ReportPath -LeafBase) + '-S020-CallerIntentReconciliation.json')
+  if (Test-Path -LiteralPath $candidateReconciliationPath -PathType Leaf) {
+    $ReconciliationPath = $candidateReconciliationPath
+  }
+}
+
+$reconciliation = $null
+if (-not [string]::IsNullOrWhiteSpace($ReconciliationPath)) {
+  if (-not (Test-Path -LiteralPath $ReconciliationPath -PathType Leaf)) {
+    throw "Caller-intent reconciliation evidence was not found: $ReconciliationPath"
+  }
+  $reconciliation = Get-Content -LiteralPath $ReconciliationPath -Raw -Encoding utf8 | ConvertFrom-Json -ErrorAction Stop
+  if ($reconciliation.baseline_run_id -ne $baselineRunId) {
+    throw "Caller-intent reconciliation baseline '$($reconciliation.baseline_run_id)' does not match report '$baselineRunId'."
+  }
+}
+
+$reconciliationByLocation = @{}
+if ($reconciliation) {
+  foreach ($record in @($reconciliation.records)) {
+    $key = '{0}:{1}' -f $record.baseline_source_file, $record.baseline_line
+    $reconciliationByLocation[$key] = $record
+  }
+}
+
 $check0 = if ($report.PSObject.Properties['step0_rule_baseline']) { $report.step0_rule_baseline } else { $null }
 $check0Status = if ($check0) { Get-PropertyValue -Object $check0 -Name 'check0' -Default 'Check 0: not found' } else { 'Check 0: not found' }
 $workspaceRoot = 'D:\Git_Repositories\'
@@ -144,23 +180,55 @@ $refinementSummary = if ($report.PSObject.Properties['refinement_summary']) { $r
 $publicParameterGateCount = if ($refinementSummary) { [int]$refinementSummary.public_parameter_gates } else { 0 }
 $undocumentedParameterGateCount = if ($refinementSummary) { [int]$refinementSummary.undocumented_parameter_gates } else { 0 }
 $internalControlFlowCount = if ($refinementSummary) { [int]$refinementSummary.internal_control_flow } else { 0 }
+$directDocumentedCount = if ($refinementSummary) { [int]$refinementSummary.documented_parameter_gates } else { 0 }
+$callerContextDocumentedCount = if ($reconciliation) { [int]$reconciliation.statistics.caller_context_documented } else { 0 }
+$totalDocumentedCount = if ($reconciliation) { [int]$reconciliation.statistics.total_documented } else { $directDocumentedCount }
+$remainingUnresolvedCount = if ($reconciliation) { [int]$reconciliation.statistics.still_unresolved } else { $undocumentedParameterGateCount }
+$powershellParameterHelpSummary = if ($report.PSObject.Properties['powershell_parameter_help_summary']) { $report.powershell_parameter_help_summary } else { $null }
+$powershellParameterHelpDisplay = if ($powershellParameterHelpSummary) {
+  '{0} / {1}' -f $powershellParameterHelpSummary.help_documented, $powershellParameterHelpSummary.public_parameters
+} else {
+  'N/A'
+}
+$powershellParameterHelpMissingDisplay = if ($powershellParameterHelpSummary) {
+  [string]$powershellParameterHelpSummary.help_missing
+} else {
+  'N/A'
+}
 $repositoryCount = @($elements.repository | Sort-Object -Unique).Count
+$resolvedEditorUriScheme = if ($EditorUriScheme -eq 'Auto') {
+  if (
+    $env:VSCODE_IPC_HOOK_CLI -match 'Code - Insiders' -or
+    (Test-Path -LiteralPath 'Registry::HKEY_CLASSES_ROOT\vscode-insiders')
+  ) {
+    'vscode-insiders'
+  } else {
+    'vscode'
+  }
+} else {
+  $EditorUriScheme
+}
 
 $normalizedElements = foreach ($element in $elements) {
   $sourcePath = Get-PropertyValue -Object $element -Name 'source_file'
   $line = Get-PropertyValue -Object $element -Name 'line'
   $sourceUriPath = $sourcePath.Replace('\', '/')
+  $escapedSourceUriPath = [uri]::EscapeDataString($sourceUriPath).Replace('%2F', '/').Replace('%3A', ':')
   $sourceDisplay = if ($sourcePath.StartsWith($workspaceRoot, [System.StringComparison]::OrdinalIgnoreCase)) {
     $sourcePath.Substring($workspaceRoot.Length)
   } else {
     $sourcePath
   }
+  $reconciliationKey = '{0}:{1}' -f $sourcePath, $line
+  $reconciliationRecord = if ($reconciliationByLocation.ContainsKey($reconciliationKey)) { $reconciliationByLocation[$reconciliationKey] } else { $null }
   [pscustomobject]@{
+    recordKind = 'functional-element'
     repository = Get-PropertyValue -Object $element -Name 'repository'
     source = $sourcePath
     sourceDisplay = $sourceDisplay
+    sourceFile = [System.IO.Path]::GetFileName($sourcePath)
     line = [int]$line
-    sourceUrl = 'vscode://file/{0}:{1}' -f $sourceUriPath, $line
+    sourceUrl = '{0}://file/{1}:{2}:1' -f $resolvedEditorUriScheme, $escapedSourceUriPath, $line
     element = Get-PropertyValue -Object $element -Name 'element'
     type = Get-PropertyValue -Object $element -Name 'kind'
     check1 = Get-PropertyValue -Object $element -Name 'check1' -Default 'not found'
@@ -170,10 +238,65 @@ $normalizedElements = foreach ($element in $elements) {
     classification = Get-PropertyValue -Object $element -Name 'classification' -Default 'named-functional-element'
     refinementStatus = Get-PropertyValue -Object $element -Name 'refinement_status' -Default 'not-applicable'
     publicParameters = @($element.public_parameters) -join ', '
+    branchKind = Get-PropertyValue -Object $element -Name 'branch_kind' -Default (Get-PropertyValue -Object $element -Name 'kind')
+    branchIndex = Get-PropertyValue -Object $element -Name 'branch_index'
+    documentationTier = if ($reconciliationRecord) { [string]$reconciliationRecord.documentation_tier } elseif ($element.refinement_status -eq 'parameter-gate-documented') { 'direct' } else { 'none' }
+    reconciliationStatus = if ($reconciliationRecord) { [string]$reconciliationRecord.reconciliation_status } else { '' }
+    relevance = if ($reconciliationRecord) { [string]$reconciliationRecord.relevance } else { '' }
+    confidence = if ($reconciliationRecord) { [string]$reconciliationRecord.confidence } else { '' }
+    callerEvidence = if ($reconciliationRecord) { (@($reconciliationRecord.caller_evidence | ForEach-Object { "$($_.caller_symbol) ($($_.caller_file):$($_.caller_line))" }) -join '; ') } else { '' }
+    helpDocumented = $null
   }
 }
 
-$payload = $normalizedElements | ConvertTo-Json -Depth 4 -Compress
+$repositoryBySource = @{}
+foreach ($row in $normalizedElements) {
+  if (-not $repositoryBySource.ContainsKey($row.source)) {
+    $repositoryBySource[$row.source] = $row.repository
+  }
+}
+$normalizedHelpRecords = if ($powershellParameterHelpSummary) {
+  foreach ($helpRecord in @($powershellParameterHelpSummary.records)) {
+    $helpSourcePath = [string]$helpRecord.source_file
+    $helpSourceUriPath = $helpSourcePath.Replace('\', '/')
+    $escapedHelpSourceUriPath = [uri]::EscapeDataString($helpSourceUriPath).Replace('%2F', '/').Replace('%3A', ':')
+    $helpSourceDisplay = if ($helpSourcePath.StartsWith($workspaceRoot, [System.StringComparison]::OrdinalIgnoreCase)) {
+      $helpSourcePath.Substring($workspaceRoot.Length)
+    } else {
+      $helpSourcePath
+    }
+    [pscustomobject]@{
+      recordKind = 'parameter-help'
+      repository = if ($repositoryBySource.ContainsKey($helpSourcePath)) { $repositoryBySource[$helpSourcePath] } else { 'Unknown' }
+      source = $helpSourcePath
+      sourceDisplay = $helpSourceDisplay
+      sourceFile = [System.IO.Path]::GetFileName($helpSourcePath)
+      line = if ($helpRecord.help_evidence) { [int]$helpRecord.help_evidence.line } else { 0 }
+      sourceUrl = if ($helpRecord.help_evidence) { '{0}://file/{1}:{2}:1' -f $resolvedEditorUriScheme, $escapedHelpSourceUriPath, $helpRecord.help_evidence.line } else { '{0}://file/{1}' -f $resolvedEditorUriScheme, $escapedHelpSourceUriPath }
+      element = '.PARAMETER {0}' -f $helpRecord.parameter
+      type = 'parameter-help'
+      check1 = 'not applicable'
+      check2 = 'not applicable'
+      check3 = 'not applicable'
+      check4 = 'not applicable'
+      classification = 'header-help'
+      refinementStatus = if ($helpRecord.help_documented) { 'parameter-help-documented' } else { 'parameter-help-missing' }
+      publicParameters = [string]$helpRecord.parameter
+      branchKind = 'parameter-help'
+      branchIndex = $null
+      documentationTier = if ($helpRecord.help_documented) { 'header-help' } else { 'none' }
+      reconciliationStatus = ''
+      relevance = ''
+      confidence = ''
+      callerEvidence = ''
+      helpDocumented = [bool]$helpRecord.help_documented
+    }
+  }
+} else {
+  @()
+}
+$viewerRows = @($normalizedElements) + @($normalizedHelpRecords)
+$payload = $viewerRows | ConvertTo-Json -Depth 4 -Compress
 $payload = $payload -replace '<', '\u003c'
 $payload = $payload -replace '>', '\u003e'
 $runId = ConvertTo-HtmlSafe -Value (Get-PropertyValue -Object $report -Name 'run_id' -Default 'CON analysis evidence')
@@ -256,14 +379,21 @@ $html = @"
     .control-label { color: var(--muted); font: 11px var(--mono); text-transform: uppercase; }
     .control-input, .control-select { min-height: 30px; padding: 0 8px; border: 1px solid var(--line-strong); border-radius: 4px; background: var(--surface-soft); color: var(--ink); font-size: 12px; }
     .control-input { min-width: 320px; font-family: var(--mono); }
-    .status-rail { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+    .status-rail { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 8px; }
     .metric { padding: 9px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }
+    .metric-button { width: 100%; text-align: left; cursor: pointer; }
+    .metric-button[data-state="include"] { border-color: var(--green); background: var(--green-soft); }
+    .metric-button[data-state="exclude"] { border-color: var(--red); background: var(--red-soft); }
+    .metric-button[data-state="include"] .metric-value { color: var(--green); }
+    .metric-button[data-state="exclude"] .metric-value { color: var(--red); }
     .metric-label { display: block; color: var(--muted); font: 11px var(--mono); text-transform: uppercase; }
     .metric-value { display: block; margin-top: 2px; font: 600 20px var(--mono); }
     .metric.ok .metric-value { color: var(--green); } .metric.open .metric-value { color: var(--blue); } .metric.warn .metric-value { color: var(--amber); }
     .table-shell { flex: 1; min-height: 0; overflow: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }
     table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 12px; }
     th { position: sticky; top: 0; z-index: 2; text-align: left; padding: 10px; background: var(--surface-soft); border-bottom: 1px solid var(--line-strong); color: var(--muted); font: 600 11px var(--mono); text-transform: uppercase; white-space: nowrap; cursor: pointer; }
+    .column-filters th { top: 37px; padding: 5px 8px; cursor: default; }
+    .column-filters .control-select { width: 100%; min-width: 0; }
     th:hover { color: var(--blue); } td { padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; } tr:hover td { background: var(--blue-soft); } tr:last-child td { border-bottom: 0; }
     .mono { font-family: var(--mono); } .source, .element { max-width: 420px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } a { color: var(--blue); text-decoration: none; } a:hover { text-decoration: underline; }
     .badge { display: inline-block; padding: 2px 6px; margin: 0 3px 3px 0; border-radius: 3px; font: 10px var(--mono); background: var(--red-soft); color: var(--red); } .badge.ok { background: var(--green-soft); color: var(--green); }
@@ -282,22 +412,24 @@ $html = @"
   </header>
   <main>
     <section class="control-row">
-      <div class="control-group"><span class="control-label">Search</span><input class="control-input" id="query" type="search" placeholder="Repository, source, element, or check result"></div>
-      <div class="control-group"><span class="control-label">Repository</span><select class="control-select" id="repository-filter"><option value="">All</option></select></div>
-      <div class="control-group"><span class="control-label">Type</span><select class="control-select" id="type-filter"><option value="">All</option></select></div>
-      <div class="control-group"><span class="control-label">Result</span><select class="control-select" id="check-filter"><option value="">All</option><option value="parameter-gate-documented">Documented parameter gate</option><option value="parameter-gate-not-found">Parameter gate not found</option><option value="requires-semantic-review">Semantic review</option><option value="internal-control-flow">Internal control flow</option><option value="ok">Any legacy OK</option><option value="unresolved">Legacy unresolved</option></select></div>
+      <div class="control-group"><span class="control-label">Find</span><input class="control-input" id="query" type="search" placeholder="repo:, source:, element:, type:, docs:, results:; AND, OR, !, (), &quot;phrase&quot;"></div>
       <button class="reset-button" id="reset-button" type="button">Reset</button>
     </section>
     <section class="status-rail">
-      <div class="metric open"><span class="metric-label">Functional Elements</span><span class="metric-value" id="total-count">$($elements.Count)</span></div>
-      <div class="metric ok"><span class="metric-label">Public Parameter Gates</span><span class="metric-value">$publicParameterGateCount</span></div>
-      <div class="metric warn"><span class="metric-label">Parameter Gates Not Found</span><span class="metric-value">$undocumentedParameterGateCount</span></div>
-      <div class="metric"><span class="metric-label">Internal Control Flow</span><span class="metric-value">$internalControlFlowCount</span></div>
+      <button class="metric metric-button open" data-filter="functional" data-state="ignore" type="button"><span class="metric-label">Functional Elements</span><span class="metric-value" id="total-count">$($elements.Count)</span></button>
+      <button class="metric metric-button ok" data-filter="direct" data-state="ignore" type="button"><span class="metric-label">Direct Documentation</span><span class="metric-value">$directDocumentedCount</span></button>
+      <button class="metric metric-button ok" data-filter="caller-context" data-state="ignore" type="button"><span class="metric-label">Caller Context</span><span class="metric-value">$callerContextDocumentedCount</span></button>
+      <button class="metric metric-button ok" data-filter="total-documented" data-state="ignore" type="button"><span class="metric-label">Total Documented</span><span class="metric-value">$totalDocumentedCount</span></button>
+      <button class="metric metric-button warn" data-filter="unresolved" data-state="ignore" type="button"><span class="metric-label">Still Unresolved</span><span class="metric-value">$remainingUnresolvedCount</span></button>
+      <button class="metric metric-button open" data-filter="header-help" data-state="ignore" type="button"><span class="metric-label">PowerShell Header/Help</span><span class="metric-value">$powershellParameterHelpDisplay</span></button>
+      <button class="metric metric-button warn" data-filter="header-help-missing" data-state="ignore" type="button"><span class="metric-label">Header/Help Missing</span><span class="metric-value">$powershellParameterHelpMissingDisplay</span></button>
       <div class="metric"><span class="metric-label">Rule Baseline</span><span class="metric-value">$check0Display</span></div>
     </section>
     <section class="table-shell">
       <table>
-        <thead><tr><th data-key="repository">Repository</th><th data-key="source">Source / Location</th><th data-key="element">Functional Element</th><th data-key="type">Type</th><th data-key="checks">Ordered Check Results</th></tr></thead>
+        <thead>
+          <tr><th data-key="repository" style="width: 9%;">Repo</th><th data-key="source" style="width: 22%;">Source / Location</th><th data-key="element" style="width: 25%;">Element</th><th data-key="type" style="width: 9%;">Type</th><th data-key="coverage" style="width: 12%;">Docs</th><th data-key="checks" style="width: 23%;">Results</th></tr>
+        </thead>
         <tbody id="report-body"></tbody>
       </table>
     </section>
@@ -305,23 +437,99 @@ $html = @"
   </main>
   <script>
     const rows = $payload;
-    const state = { sortKey: 'source', sortDirection: 1 };
+    const state = { sortKey: 'source', sortDirection: 1, metricFilters: {} };
     const esc = value => String(value ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
     const checks = row => [1, 2, 3, 4].map(index => ({ index, value: row['check' + index] || 'not found' }));
-    const checkText = row => 'Refinement: ' + row.refinementStatus + '; Classification: ' + row.classification + '; ' + checks(row).map(check => 'C' + check.index + ': ' + check.value).join('; ');
-    const hasOk = row => checks(row).some(check => check.value === 'OK');
-    const fillOptions = (id, values) => {
-      const select = document.getElementById(id);
-      [...new Set(values)].sort().forEach(value => select.add(new Option(value, value)));
+    const checkText = row => 'Refinement: ' + row.refinementStatus + '; Coverage: ' + row.documentationTier + '; Reconciliation: ' + row.reconciliationStatus + '; Classification: ' + row.classification + '; ' + checks(row).map(check => 'C' + check.index + ': ' + check.value).join('; ');
+    const queryFields = row => ({
+      repo: row.repository,
+      source: row.sourceFile + ' ' + row.source,
+      element: row.element,
+      type: row.type,
+      docs: row.documentationTier + ' ' + row.refinementStatus,
+      results: checkText(row)
+    });
+    const tokenizeQuery = query => {
+      const tokens = [];
+      const pattern = /\s*(\(|\)|\||\+|!|(?:[A-Za-z]+:)?(?:"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')|"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|[^\s()|+!]+)\s*/g;
+      let match;
+      while ((match = pattern.exec(query)) !== null) {
+        tokens.push(match[1].replace(/,$/, ''));
+      }
+      return tokens;
     };
+    const evaluateQuery = (query, row) => {
+      const tokens = tokenizeQuery(query);
+      if (!tokens.length) return true;
+      let position = 0;
+      const matchTerm = term => {
+        const normalized = term.replace(/^["']|["']$/g, '').toLowerCase();
+        const qualified = normalized.match(/^(repo|repository|source|element|type|docs|coverage|results|result):(.*)$/);
+        const fields = queryFields(row);
+        if (qualified) {
+          const key = ({ repository: 'repo', coverage: 'docs', result: 'results' })[qualified[1]] || qualified[1];
+          const qualifiedValue = qualified[2].replace(/^["']|["']$/g, '');
+          return String(fields[key] || '').toLowerCase().includes(qualifiedValue);
+        }
+        return Object.values(fields).join(' ').toLowerCase().includes(normalized);
+      };
+      const parsePrimary = () => {
+        const token = tokens[position++];
+        if (token === '(') {
+          const value = parseOr();
+          if (tokens[position] === ')') position++;
+          return value;
+        }
+        return token ? matchTerm(token) : true;
+      };
+      const parseUnary = () => {
+        if (tokens[position] === '!') {
+          position++;
+          return !parseUnary();
+        }
+        if (tokens[position] && tokens[position].startsWith('!')) {
+          const token = tokens[position++];
+          return !matchTerm(token.slice(1));
+        }
+        return parsePrimary();
+      };
+      const parseAnd = () => {
+        let value = parseUnary();
+        while (position < tokens.length && tokens[position] !== ')' && tokens[position].toUpperCase() !== 'OR' && tokens[position] !== '|') {
+          if (tokens[position].toUpperCase() === 'AND' || tokens[position] === '+') position++;
+          const nextValue = parseUnary();
+          value = value && nextValue;
+        }
+        return value;
+      };
+      const parseOr = () => {
+        let value = parseAnd();
+        while (position < tokens.length && (tokens[position].toUpperCase() === 'OR' || tokens[position] === '|')) {
+          position++;
+          const nextValue = parseAnd();
+          value = value || nextValue;
+        }
+        return value;
+      };
+      return parseOr();
+    };
+    const metricMatches = (row, filter) => ({
+      functional: row.recordKind === 'functional-element',
+      direct: row.documentationTier === 'direct',
+      'caller-context': row.documentationTier === 'caller-context',
+      'total-documented': ['direct', 'caller-context'].includes(row.documentationTier),
+      unresolved: row.refinementStatus === 'parameter-gate-not-found' && row.documentationTier === 'none',
+      'header-help': row.recordKind === 'parameter-help' && row.helpDocumented,
+      'header-help-missing': row.recordKind === 'parameter-help' && !row.helpDocumented
+    })[filter];
     const matches = row => {
-      const query = document.getElementById('query').value.trim().toLowerCase();
-      const repository = document.getElementById('repository-filter').value;
-      const type = document.getElementById('type-filter').value;
-      const check = document.getElementById('check-filter').value;
-      const searchable = [row.repository, row.source, row.line, row.element, row.type, checkText(row)].join(' ').toLowerCase();
-      const checkMatches = !check || (check === 'ok' ? hasOk(row) : check === 'unresolved' ? !hasOk(row) : row.refinementStatus === check);
-      return (!query || searchable.includes(query)) && (!repository || row.repository === repository) && (!type || row.type === type) && checkMatches;
+      const query = document.getElementById('query').value.trim();
+      const selected = Object.entries(state.metricFilters);
+      const included = selected.filter(([, mode]) => mode === 'include').map(([filter]) => filter);
+      const excluded = selected.filter(([, mode]) => mode === 'exclude').map(([filter]) => filter);
+      return evaluateQuery(query, row) &&
+        (!included.length || included.some(filter => metricMatches(row, filter))) &&
+        !excluded.some(filter => metricMatches(row, filter));
     };
     const render = () => {
       const selected = rows.filter(matches).sort((left, right) => {
@@ -333,8 +541,9 @@ $html = @"
         const resultBadge = '<span class="badge ' + (row.refinementStatus === 'parameter-gate-documented' || row.refinementStatus === 'internal-control-flow' ? 'ok' : '') + '">' + esc(row.refinementStatus) + '</span>';
         const checkBadges = resultBadge + checks(row).map(check => '<span class="badge ' + (check.value === 'OK' ? 'ok' : '') + '">C' + check.index + ': ' + esc(check.value) + '</span>').join('');
         const source = esc(row.sourceDisplay + ':' + row.line);
-        const element = row.type === 'if' ? 'if (' + row.element + ') {' : row.element;
-        return '<tr><td>' + esc(row.repository) + '</td><td class="mono source"><a href="' + esc(row.sourceUrl) + '">' + source + '</a></td><td class="mono element"><a href="' + esc(row.sourceUrl) + '">' + esc(element) + '</a></td><td>' + esc(row.type) + '</td><td>' + checkBadges + '</td></tr>';
+        const element = row.branchKind === 'if' ? 'if (' + row.element + ') {' : row.branchKind === 'elseif' ? 'elseif (' + row.element + ') {' : row.branchKind === 'else' ? 'else {' : row.element;
+        const coverage = '<span class="badge ' + (row.documentationTier === 'direct' || row.documentationTier === 'caller-context' ? 'ok' : '') + '">' + esc(row.documentationTier) + '</span>' + (row.reconciliationStatus ? '<span class="badge ok">' + esc(row.reconciliationStatus) + '</span><span class="badge">relevance: ' + esc(row.relevance) + '; confidence: ' + esc(row.confidence) + '/10</span>' : '');
+        return '<tr><td>' + esc(row.repository) + '</td><td class="mono source"><a href="' + esc(row.sourceUrl) + '" title="Open ' + esc(row.source) + ' at line ' + esc(row.line) + '">' + source + '</a></td><td class="mono element"><a href="' + esc(row.sourceUrl) + '" title="Open source location">' + esc(element) + '</a></td><td>' + esc(row.type) + '</td><td>' + coverage + '</td><td>' + checkBadges + '</td></tr>';
       }).join('');
       document.getElementById('match-count').textContent = 'Showing ' + selected.length + ' of ' + rows.length + ' functional elements';
     };
@@ -350,20 +559,29 @@ $html = @"
     document.getElementById('refresh-button').addEventListener('click', () => location.reload());
     document.getElementById('reset-button').addEventListener('click', () => {
       document.getElementById('query').value = '';
-      document.getElementById('repository-filter').value = '';
-      document.getElementById('type-filter').value = '';
-      document.getElementById('check-filter').value = '';
+      state.metricFilters = {};
+      document.querySelectorAll('.metric-button').forEach(button => button.dataset.state = 'ignore');
       render();
     });
-    ['query', 'repository-filter', 'type-filter', 'check-filter'].forEach(id => document.getElementById(id).addEventListener(id === 'query' ? 'input' : 'change', render));
+    document.getElementById('query').addEventListener('input', render);
+    document.querySelectorAll('.metric-button').forEach(button => button.addEventListener('click', () => {
+      const filter = button.dataset.filter;
+      const stateOrder = filter === 'functional' ? ['ignore', 'include'] : ['ignore', 'include', 'exclude'];
+      const nextState = stateOrder[(stateOrder.indexOf(button.dataset.state) + 1) % stateOrder.length];
+      button.dataset.state = nextState;
+      if (nextState === 'ignore') {
+        delete state.metricFilters[filter];
+      } else {
+        state.metricFilters[filter] = nextState;
+      }
+      render();
+    }));
     document.querySelectorAll('th[data-key]').forEach(header => header.addEventListener('click', () => {
       const key = header.dataset.key;
       state.sortDirection = state.sortKey === key ? state.sortDirection * -1 : 1;
       state.sortKey = key;
       render();
     }));
-    fillOptions('repository-filter', rows.map(row => row.repository));
-    fillOptions('type-filter', rows.map(row => row.type));
     initTheme();
     render();
   </script>
