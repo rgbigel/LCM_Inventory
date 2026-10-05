@@ -135,14 +135,28 @@ function Get-BCompareBaselineDescriptor {
     $descriptor.RulesBaselineSource = 'target-commit'
   }
   else {
-    $historicalRulesCommits = @(& git -C $RepositoryPath rev-list $targetCommit -- $targetRulesRelativePath 2>$null)
-    foreach ($historicalRulesCommit in $historicalRulesCommits) {
-      if (Test-BCompareGitTreePath -RepositoryPath $RepositoryPath -Commit $historicalRulesCommit -RelativePath $targetRulesRelativePath) {
-        $descriptor.RulesBaselineRepositoryPath = $RepositoryPath
-        $descriptor.RulesBaselineCommit = $historicalRulesCommit
-        $descriptor.RulesBaselineRelativePath = $targetRulesRelativePath
-        $descriptor.RulesBaselineSource = 'target-history'
-        break
+    $targetCommitDate = (& git -C $RepositoryPath show -s --format=%cI $targetCommit 2>$null).Trim()
+    $authorityBaselineCommit = if ([string]::IsNullOrWhiteSpace($targetCommitDate)) {
+      $authorityCommit
+    } else {
+      (& git -C $authorityPath rev-list -1 "--before=$targetCommitDate" $authorityCommit 2>$null).Trim()
+    }
+
+    if (-not [string]::IsNullOrWhiteSpace($authorityBaselineCommit) -and (Test-BCompareGitTreePath -RepositoryPath $authorityPath -Commit $authorityBaselineCommit -RelativePath $relativeRulesPath)) {
+      $descriptor.RulesBaselineRepositoryPath = $authorityPath
+      $descriptor.RulesBaselineCommit = $authorityBaselineCommit
+      $descriptor.RulesBaselineRelativePath = $relativeRulesPath
+      $descriptor.RulesBaselineSource = 'authority-time-aligned'
+    } else {
+      $historicalRulesCommits = @(& git -C $RepositoryPath rev-list $targetCommit -- $targetRulesRelativePath 2>$null)
+      foreach ($historicalRulesCommit in $historicalRulesCommits) {
+        if (Test-BCompareGitTreePath -RepositoryPath $RepositoryPath -Commit $historicalRulesCommit -RelativePath $targetRulesRelativePath) {
+          $descriptor.RulesBaselineRepositoryPath = $RepositoryPath
+          $descriptor.RulesBaselineCommit = $historicalRulesCommit
+          $descriptor.RulesBaselineRelativePath = $targetRulesRelativePath
+          $descriptor.RulesBaselineSource = 'target-history'
+          break
+        }
       }
     }
 
