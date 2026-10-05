@@ -6142,7 +6142,7 @@
       "crp_id": "CRP-121",
       "timestamp": "2026-09-08 15:25:00",
       "title": "Automated Bidirectional Tool Dependency Documentation Engine (WIUD & WUD)",
-      "origin_repo": "LCM / Tooling & Documentation Governance",
+      "origin_repo": "LCM_Inventory",
       "cr_id": "CRP-121",
       "bundle_id": "CRP-121",
       "state": "completed",
@@ -6176,7 +6176,13 @@
       "progress_state": "completed",
       "disposition": "completed",
       "commit_sha": "08d3662",
-      "review_receipt": "data/reviews/review_LCM_Inventory_20261005_170931.json"
+      "review_receipt": "data/reviews/review_LCM_Inventory_20261005_170931.json",
+      "affected_repos": [
+        "Git_Repositories",
+        "LCM_AI",
+        "LCM_Inventory"
+      ],
+      "cm_scope_note": "CRP-121 implementation is owned by LCM_Inventory; the reviewed authority-rule and root-index corrections are affected-repository cohort members."
     },
     {
       "id": 122,
