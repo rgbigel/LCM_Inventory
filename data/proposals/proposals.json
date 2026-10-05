@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-10-05T16:31:27+02:00",
+  "updated_at": "2026-10-05T17:12:48+02:00",
   "review_granularity": "coarse",
   "lcm_mode": "active",
   "last_proposal_id": 246,
@@ -6145,10 +6145,10 @@
       "origin_repo": "LCM / Tooling & Documentation Governance",
       "cr_id": "CRP-121",
       "bundle_id": "CRP-121",
-      "state": "approved",
+      "state": "completed",
       "author": "Rolf, LCM_AI",
       "priority": 5,
-      "details": "Reopened after ledger/specification discrepancy. Implementing CRP-121 as data-first Pass 1 WIUD and Pass 2 WUD dependency indexes; per-tool Markdown projections deferred pending evidence review.",
+      "details": "Completed after accepted CRP-121 review receipt review_LCM_Inventory_20261005_170931.json and implementation commit 08d3662.",
       "plan_path": "LCM_Inventory/docs/Proposals/CRP-121-LCM-v7.3.0-Automated-Tool-Dependency-Documentation-Engine.md",
       "walkthrough_path": "",
       "dates": {
@@ -6171,10 +6171,12 @@
         }
       ],
       "pushed_at": "2026-09-24 22:06:33",
-      "progress_state": "in_progress",
       "flow_mode": "doit",
       "always_proceed": true,
-      "disposition": null
+      "progress_state": "completed",
+      "disposition": "completed",
+      "commit_sha": "08d3662",
+      "review_receipt": "data/reviews/review_LCM_Inventory_20261005_170931.json"
     },
     {
       "id": 122,
