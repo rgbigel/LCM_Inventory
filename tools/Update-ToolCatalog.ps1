@@ -4,12 +4,12 @@
 .DESCRIPTION
   Module: Update-ToolCatalog
   Purpose: Scans and synchronizes all LCM Workspace & Subsystem tools into a canonical JSON catalog
-           (tools/tool_catalog.json), documentation index (tools/README.md), and standardizes
-           clean short-name command trampolines in .lcm/Cmd/ adhering to the 4-category taxonomy
+           (.lcm/config/tool_catalog.json), documentation index (LCM_Inventory/docs/README.md), and standardizes
+           clean short-name command trampolines in LCM_Inventory/Cmd/ adhering to the 4-category taxonomy
            (Setters, Showers, Getters, Action Runners).
            Extracts AST dependencies, enforces ShortName uniqueness, and cleans legacy long .cmd files.
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
-  Path: D:\Git_Repositories\LCM_Tools\Update-ToolCatalog.ps1
+  Path: D:\Git_Repositories\LCM_Inventory\tools\Update-ToolCatalog.ps1
   Authors: Rolf, LCM_AI Engine
   Version: 3.0.0
   Date: 2026-09-08
@@ -18,7 +18,7 @@
 .PARAMETER ShowAll
   Displays granular scan discovery logs for every inspected directory.
 .PARAMETER LogFile
-  Custom log file destination. Defaults to D:\Git_Repositories\LCM_Tools\logs\Update-ToolCatalog-yyyyMMdd_HHmmss.log.
+  Custom log file destination. Defaults to D:\Git_Repositories\LCM_Inventory\data\logs\lcm\Update-ToolCatalog-yyyyMMdd_HHmmss.log.
 .PARAMETER Help
   Displays this comprehensive parameter reference and usage instructions (Aliases: -h, -?).
 .EXAMPLE
@@ -53,8 +53,8 @@ if ($Help) {
   Write-Host "==========================================================================" -ForegroundColor Cyan
   Write-Host "SYNOPSIS:" -ForegroundColor Yellow
   Write-Host "  Scans and synchronizes all LCM Workspace & Subsystem tools into"
-  Write-Host "  tools/tool_catalog.json, tools/README.md, and standardizes short-name"
-  Write-Host "  command trampolines in .lcm/Cmd/ with AST dependency tracking."
+  Write-Host "  .lcm/config/tool_catalog.json, LCM_Inventory/docs/README.md, and standardizes short-name"
+  Write-Host "  command trampolines in LCM_Inventory/Cmd/ with AST dependency tracking."
   Write-Host ""
   Write-Host "USAGE:" -ForegroundColor Yellow
   Write-Host "  pwsh tools/Update-ToolCatalog.ps1 [-Silent] [-ShowAll] [-LogFile <path>] [-h]"
@@ -78,10 +78,10 @@ if ($Help) {
 $workspaceRoot = 'D:\Git_Repositories'
 $lcdRoot = Join-Path $workspaceRoot '.lcm'
 $toolsDir = Join-Path $lcdRoot 'tools\internal'
-$cmdDir = Join-Path $workspaceRoot '.lcm\Cmd'
+$cmdDir = Join-Path $workspaceRoot 'LCM_Inventory\Cmd'
 $logDir = Join-Path $workspaceRoot 'LCM_Inventory\data\logs\lcm'
 $configDir = Join-Path $lcdRoot 'config'
-$docsDir = Join-Path $lcdRoot 'docs'
+$docsDir = Join-Path $workspaceRoot 'LCM_Inventory\docs'
 
 if (-not (Test-Path -Path $logDir)) { New-Item -Path $logDir -ItemType Directory -Force | Out-Null }
 if (-not (Test-Path -Path $cmdDir)) { New-Item -Path $cmdDir -ItemType Directory -Force | Out-Null }
@@ -575,7 +575,7 @@ $metadataOverrides = @{
     Role        = "QualityGate"
     Category    = "Quality Gate"
     Description = "Executes the 5-stage automated LCM readiness quality gate across all repositories."
-    Example     = 'pwsh -File "LCM_AI\tools\Test-WorkspaceReadiness.ps1"'
+    Example     = 'pwsh -File "LCM_Inventory\tools\Test-WorkspaceReadiness.ps1"'
   }
   "Get-ChkdskBootLog.ps1" = @{
     ShortName   = "GetChkdskBootLog"
@@ -625,7 +625,7 @@ $metadataOverrides = @{
     Audience    = "Developer"
     Role        = "Utility"
     Category    = "Tool Scaffolding"
-    Description = "Scaffolds new LCM PowerShell tools, derives short names, and generates trampolines in .lcm/Cmd/."
+    Description = "Scaffolds new LCM PowerShell tools, derives short names, and generates trampolines in LCM_Inventory/Cmd/."
   }
   "Show-LcmControl.ps1" = @{
     ShortName   = "ShowCM"
@@ -839,7 +839,6 @@ function Get-LcmToolDependencies {
 # 4. Scan Locations
 # ------------------------------------------------------------------------------
 $scanDefinitions = @(
-  @{ Group = "LCM_AI";        Domain = "LCM_AI";        Path = "LCM_AI\tools";                    Filter = "*.ps1" },
   @{ Group = "LCM_Inventory"; Domain = "LCM_Inventory"; Path = "LCM_Inventory\tools";             Filter = "*.ps1" },
   @{ Group = "LCM_Inventory"; Domain = "LCM_Inventory"; Path = "LCM_Inventory\tools";             Filter = "*.py" },
   @{ Group = "LCM";                 Domain = "LCM";                 Path = ".lcm\tools\internal";                   Filter = "*.ps1" },
@@ -1138,9 +1137,11 @@ try {
   Write-ToolLog -Message "Persisted canonical catalog: $catalogJsonPath" -Level ACTION
 
   # ----------------------------------------------------------------------------
-  # 5. Generate Short-Name Command Trampolines in .lcm/Cmd/
+  # 5. Generate Short-Name Command Trampolines in LCM_Inventory/Cmd/
   # ----------------------------------------------------------------------------
   $createdCmdCount = 0
+  $preservedCmdCount = 0
+  $generatedLauncherMarker = ':: Generated by Update-ToolCatalog'
   $distinctShortNames = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
 
   foreach ($t in $sortedTools) {
@@ -1167,6 +1168,14 @@ try {
       $distinctShortNames.Add($sn) | Out-Null
 
       $targetCmdPath = Join-Path $cmdDir "$sn.cmd"
+      if (Test-Path -LiteralPath $targetCmdPath) {
+        $existingContent = [System.IO.File]::ReadAllText($targetCmdPath)
+        if (-not $existingContent.Contains($generatedLauncherMarker)) {
+          $preservedCmdCount++
+          Write-ToolLog -Message "Preserved unmanaged launcher: $($targetCmdPath)" -Level INFO
+          continue
+        }
+      }
       
       # Format target relative path with forward slashes anchored to %Git_Root%
       $relPathForward = $t.RelativePath.Replace('\', '/')
@@ -1180,13 +1189,13 @@ try {
       } else { "" }
 
       $cmdBody = if ($t.Type -eq 'Python') {
-        "@echo off`r`n${gitRootPreamble}${elevationCheck}setlocal`r`npython `"$targetRef`" %*`r`nendlocal`r`n"
+        "@echo off`r`n$generatedLauncherMarker`r`n${gitRootPreamble}${elevationCheck}setlocal`r`npython `"$targetRef`" %*`r`nendlocal`r`n"
       } elseif ($t.Type -eq 'Batch') {
-        "@echo off`r`n${gitRootPreamble}${elevationCheck}call `"$targetRef`" %*`r`n"
+        "@echo off`r`n$generatedLauncherMarker`r`n${gitRootPreamble}${elevationCheck}call `"$targetRef`" %*`r`n"
       } elseif ($t.Type -eq 'Executable') {
-        "@echo off`r`n${gitRootPreamble}${elevationCheck}`"$targetRef`" %*`r`n"
+        "@echo off`r`n$generatedLauncherMarker`r`n${gitRootPreamble}${elevationCheck}`"$targetRef`" %*`r`n"
       } else {
-        "@echo off`r`n${gitRootPreamble}${elevationCheck}pwsh.exe $noExitFlag-NoProfile -ExecutionPolicy Bypass -File `"$targetRef`" %*`r`n"
+        "@echo off`r`n$generatedLauncherMarker`r`n${gitRootPreamble}${elevationCheck}pwsh.exe $noExitFlag-NoProfile -ExecutionPolicy Bypass -File `"$targetRef`" %*`r`n"
       }
 
       [System.IO.File]::WriteAllText($targetCmdPath, $cmdBody, [System.Text.Encoding]::ASCII)
@@ -1194,10 +1203,15 @@ try {
     }
   }
   Write-ToolLog -Message "Generated $createdCmdCount short-name .cmd launchers in $cmdDir" -Level ACTION
+  if ($preservedCmdCount -gt 0) {
+    Write-ToolLog -Message "Preserved $preservedCmdCount unmanaged .cmd launchers in $cmdDir" -Level INFO
+  }
 
-  # Purge orphaned .cmd files in .lcm/Cmd/ that do not match active short-names
+  # Purge only generator-owned orphaned .cmd files in LCM_Inventory/Cmd/
   $purgedCmdCount = 0
-  $existingCmds = @(Get-ChildItem -Path $cmdDir -Filter "*.cmd" -File)
+  $existingCmds = @(Get-ChildItem -Path $cmdDir -Filter "*.cmd" -File | Where-Object {
+      [System.IO.File]::ReadAllText($_.FullName).Contains($generatedLauncherMarker)
+    })
   foreach ($cf in $existingCmds) {
     $baseName = [System.IO.Path]::GetFileNameWithoutExtension($cf.Name)
     if (-not $distinctShortNames.Contains($baseName)) {
@@ -1216,7 +1230,12 @@ try {
   # 6. Purge Legacy Long .cmd Companion Files from tools/ Root
   # ----------------------------------------------------------------------------
   $purgedCount = 0
-  $existingRootCmds = @(Get-ChildItem -Path $toolsDir -Filter "*.cmd" -File)
+  $existingRootCmds = if (Test-Path -LiteralPath $toolsDir -PathType Container) {
+    @(Get-ChildItem -LiteralPath $toolsDir -Filter "*.cmd" -File)
+  } else {
+    @()
+    Write-ToolLog -Message "Legacy internal-tools directory is absent; no companion launchers require cleanup." -Level INFO
+  }
   foreach ($rc in $existingRootCmds) {
     try {
       Remove-Item -LiteralPath $rc.FullName -Force
@@ -1234,9 +1253,9 @@ try {
   $sb = [System.Text.StringBuilder]::new()
   [void]$sb.AppendLine("# Workspace & Subsystem Tooling Index")
   [void]$sb.AppendLine("")
-  [void]$sb.AppendLine("Module: tools/README.md  ")
+  [void]$sb.AppendLine("Module: LCM_Inventory/docs/README.md  ")
   [void]$sb.AppendLine("Purpose: Authoritative index of all Lifecycle Model (LCM) and Subsystem tools with Role, ShortName, and User vs Developer classification.  ")
-  [void]$sb.AppendLine("Path: tools/README.md  ")
+  [void]$sb.AppendLine("Path: LCM_Inventory/docs/README.md  ")
   [void]$sb.AppendLine("Authors: Rolf, LCM_AI Engine  ")
   [void]$sb.AppendLine("Version: 2.0.0  ")
   [void]$sb.AppendLine("Status: Authoritative Reference  ")
@@ -1246,7 +1265,7 @@ try {
   [void]$sb.AppendLine('---')
   [void]$sb.AppendLine('')
   [void]$sb.AppendLine('## Quick Execution')
-  [void]$sb.AppendLine('All short-name commands are in `.lcm/Cmd/` (included in System `%PATH%`).')
+  [void]$sb.AppendLine('All short-name commands are in `LCM_Inventory/Cmd/` (included in System `%PATH%`).')
   [void]$sb.AppendLine('Run tools from anywhere in the terminal:')
   [void]$sb.AppendLine('```cmd')
   [void]$sb.AppendLine(':: Launch interactive Tool Explorer dashboard')
@@ -1311,9 +1330,5 @@ try {
   Write-ToolLog -Message " Log File  : $LogFile" -Level SUMMARY
   Write-ToolLog -Message "==========================================================================" -Level SUMMARY
 }
-
-
-
-
 
 

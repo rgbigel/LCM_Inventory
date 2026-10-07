@@ -177,7 +177,7 @@ $targetDir = switch ($Subsystem) {
   'HaSSD06'              { Join-Path $workspaceRoot 'HaSSD06\tools' }
   'BackgroundModifier'   { Join-Path $workspaceRoot 'BackgroundModifier\tools' }
   'LCM_Inventory'  { Join-Path $workspaceRoot 'LCM_Inventory\tools' }
-  'LCM_AI'         { Join-Path $workspaceRoot 'LCM_AI\tools' }
+  'LCM_AI'         { Join-Path $workspaceRoot 'LCM_Inventory\tools' }
   default                { $toolsDir }
 }
 

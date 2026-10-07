@@ -1,11 +1,210 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-10-05T20:31:51+02:00",
+  "updated_at": "2026-10-07T16:14:00+02:00",
   "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 248,
+  "last_proposal_id": 252,
   "proposals": [
+    {
+      "id": 252,
+      "crp_id": "CRP-252",
+      "timestamp": "2026-10-07 16:14:00",
+      "title": "LEV Model Adaptation Prototype and Evidence Replay",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-252",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "suggested",
+      "bundle_id": "CRP-252",
+      "bundle_dir": "docs/Proposals/CRP-252-LEV-Model-Adaptation-Prototype-and-Evidence-Replay",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig",
+      "details": "Evaluates adaptation of the LEV AI model into LCM internal and external tools through a sandboxed prototype. Repeats and exploits the prior Gemini analysis as verified prototype evidence adapted to LCM requirements.",
+      "plan_path": "docs/Proposals/CRP-252-LEV-Model-Adaptation-Prototype-and-Evidence-Replay/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-252-LEV-Model-Adaptation-Prototype-and-Evidence-Replay/Walkthrough.md",
+      "flow_mode": "normal",
+      "always_proceed": false,
+      "progress_state": "suggested",
+      "priority": 2,
+      "dates": {
+        "created": "2026-10-07 16:14:00",
+        "suggested": "2026-10-07 16:14:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-10-07 16:14:00",
+          "user": "rgbig",
+          "note": "Deferred pending LEV identity, provider, access, sandbox, and success-criteria definition."
+        }
+      ]
+    },
+    {
+      "id": 251,
+      "crp_id": "CRP-251",
+      "timestamp": "2026-10-07 16:14:00",
+      "title": "Sandboxed Prototyping Mode",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-251",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "suggested",
+      "bundle_id": "CRP-251",
+      "bundle_dir": "docs/Proposals/CRP-251-Sandboxed-Prototyping-Mode",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig",
+      "details": "Defines a sandboxed Prototyping Mode for design and initial implementation outside the live governed workspace. Prototype promotion into a normal CRP remains optional and requires explicit review.",
+      "plan_path": "docs/Proposals/CRP-251-Sandboxed-Prototyping-Mode/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-251-Sandboxed-Prototyping-Mode/Walkthrough.md",
+      "flow_mode": "normal",
+      "always_proceed": false,
+      "progress_state": "suggested",
+      "priority": 2,
+      "dates": {
+        "created": "2026-10-07 16:14:00",
+        "suggested": "2026-10-07 16:14:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-10-07 16:14:00",
+          "user": "rgbig",
+          "note": "Deferred design request for isolated non-live experimentation and optional CRP promotion."
+        }
+      ]
+    },
+    {
+      "id": 250,
+      "crp_id": "CRP-250",
+      "timestamp": "2026-10-07 15:58:00",
+      "title": "Registry-Authoritative Runtime Topology and GoodNight Lifecycle",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-250",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "in_progress",
+      "bundle_id": "CRP-250",
+      "bundle_dir": "docs/Proposals/CRP-250-Registry-Authoritative-Runtime-Topology-and-GoodNight-Lifecycle",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig",
+      "details": "Replaces active .lcm runtime topology and inherited environment Git_Root authority with Inventory-owned paths and a machine-registry-only resolver. Integrates a non-destructive GoodNight archive-before-publish lifecycle and defines the future GoodMorning converse without authorizing it yet.",
+      "plan_path": "docs/Proposals/CRP-250-Registry-Authoritative-Runtime-Topology-and-GoodNight-Lifecycle/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-250-Registry-Authoritative-Runtime-Topology-and-GoodNight-Lifecycle/Walkthrough.md",
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "progress_state": "in_progress",
+      "priority": 1,
+      "dates": {
+        "created": "2026-10-07 15:58:00",
+        "suggested": "2026-10-07 15:58:00",
+        "scoped": "2026-10-07 15:58:00",
+        "in_progress": "2026-10-07 15:58:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-10-07 15:58:00",
+          "user": "rgbig",
+          "note": "Split from CRP-249 to isolate deferred runtime-topology and lifecycle work."
+        },
+        {
+          "state": "scoped",
+          "timestamp": "2026-10-07 15:58:00",
+          "user": "rgbig",
+          "note": "Includes registry authority, active .lcm path removal, and GoodNight lifecycle integration."
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-10-07 15:58:00",
+          "user": "rgbig",
+          "note": "Prototype and supporting changes are preserved for focused continuation."
+        }
+      ]
+    },
+    {
+      "id": 249,
+      "crp_id": "CRP-249",
+      "timestamp": "2026-10-07 15:00:00",
+      "title": "Canonical LCM Tool Migration and Environment Reconciliation",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-249",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "completed",
+      "bundle_id": "CRP-249",
+      "bundle_dir": "docs/Proposals/CRP-249-Canonical-LCM-Tool-Migration-and-Environment-Reconciliation",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig",
+      "details": "Moves only the physical LCM_AI tools and contained modules into the flat LCM_Inventory tools surface, retaining the newer implementation on collision; retargets command trampolines, callers, catalogs, active documentation, and environment configuration. LCM_AI remains the authority for rules and governance documentation.",
+      "plan_path": "docs/Proposals/CRP-249-Canonical-LCM-Tool-Migration-and-Environment-Reconciliation/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-249-Canonical-LCM-Tool-Migration-and-Environment-Reconciliation/Walkthrough.md",
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "progress_state": "completed",
+      "priority": 1,
+      "dates": {
+        "created": "2026-10-07 15:00:00",
+        "suggested": "2026-10-07 15:00:00",
+        "scoped": "2026-10-07 15:00:00",
+        "in_progress": "2026-10-07 15:00:00",
+        "completed": "2026-10-07 15:58:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-10-07 15:00:00",
+          "user": "rgbig",
+          "note": "Registered from read-only topology and environment analysis."
+        },
+        {
+          "state": "scoped",
+          "timestamp": "2026-10-07 15:00:00",
+          "user": "rgbig",
+          "note": "Operator selected LCM_Inventory as the physical permanent-tool authority."
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-10-07 15:00:00",
+          "user": "rgbig",
+          "note": "Operator directed immediate implementation."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-10-07 15:58:00",
+          "user": "rgbig",
+          "note": "Physical tool migration, callers, launchers, catalog, documentation, archive, and environment reconciliation validated; follow-on runtime topology work is CRP-250."
+        }
+      ]
+    },
     {
       "id": 248,
       "crp_id": "CRP-248",
@@ -9783,19 +9982,20 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": [],
-      "state": "approved",
+      "state": "completed",
       "priority": 3,
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-203-Post-Commit-BCR-Proposal-Session-Cleanup",
-      "commit_sha": null,
+      "commit_sha": "333e8bd",
       "github_url": null,
       "author": "rgbig",
       "details": "Post-commit BCR proposal session cleanup",
-      "flow_mode": "doit",
-      "always_proceed": true,
-      "disposition": null,
-      "progress_state": "in_progress",
-      "hold_reason": null
+      "flow_mode": "standard",
+      "always_proceed": false,
+      "progress_state": "completed",
+      "hold_reason": null,
+      "disposition": "completed",
+      "dates": {}
     },
     {
       "id": 204,

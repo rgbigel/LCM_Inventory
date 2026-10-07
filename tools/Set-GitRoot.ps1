@@ -127,11 +127,11 @@ function Write-ToolLog {
 Write-ToolLog -Message "==========================================================================" -Level INFO
 Write-ToolLog -Message " GIT ROOT & LCM PATH CONFIGURATION TOOL (v$($scriptVersion))" -Level INFO
 Write-ToolLog -Message " Git_Root Target: $workspaceRoot" -Level INFO
-Write-ToolLog -Message " Command Hub    : $workspaceRoot\.lcm\Cmd in PATH" -Level INFO
+Write-ToolLog -Message " Command Hub    : $workspaceRoot\LCM_Inventory\Cmd in PATH" -Level INFO
 Write-ToolLog -Message " Audit Log      : $LogFile" -Level INFO
 Write-ToolLog -Message "==========================================================================" -Level INFO
 
-$lcmCmdPath = Join-Path $workspaceRoot '.lcm\Cmd'
+$lcmCmdPath = Join-Path $workspaceRoot 'LCM_Inventory\Cmd'
 $allLcmPaths = @($lcmCmdPath)
 $execStatus = "COMPLETED"
 
@@ -171,6 +171,8 @@ try {
       'D:\Git_Repositories\.tools',
       'D:\Git_Repositories\.lcm\tools\cmd',
       'D:\Git_Repositories\.lcm\tools\Cmd',
+      'D:\Git_Repositories\.lcm\Cmd',
+      'D:\Git_Repositories\LCM_AI\tools',
       'D:\Git_Repositories\.lcd\Cmd'
     )
     $allPathsToRemove = $allLcmPaths + $legacyPaths

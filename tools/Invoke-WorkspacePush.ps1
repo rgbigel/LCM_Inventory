@@ -142,7 +142,7 @@ Write-Host "  -> Lockstep preflight passed for: $($pushPlan.RequiredRepositories
 # ------------------------------------------------------------------------------
 if (-not $SkipGemini) {
     Write-Host "`n[Pre-Push Pipeline] Executing Update-Gemini Context & Knowledge Base Synchronization..." -ForegroundColor Yellow
-    $updateGeminiScript = Join-Path $workspaceRoot "LCM_AI\tools\Update-Gemini.ps1"
+    $updateGeminiScript = Join-Path $workspaceRoot "LCM_Inventory\tools\Update-Gemini.ps1"
     if (Test-Path -LiteralPath $updateGeminiScript) {
         & pwsh -File $updateGeminiScript
         # If LCM_AI updated export files, stage and commit them

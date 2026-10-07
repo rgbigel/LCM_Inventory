@@ -65,7 +65,7 @@ if (-not (Test-Path $targetPath)) {
 $repoName = (Get-Item $targetPath).Name
 $aiState = Get-WorkspaceAIState
 $targetLCMVersion = $aiState.GlobalLCMVersion
-$onboardEngine = Join-Path $wsRoot 'LCM_AI\tools\Invoke-LCMOnboardRepo.ps1'
+$onboardEngine = Join-Path $wsRoot 'LCM_Inventory\tools\Invoke-LCMOnboardRepo.ps1'
 
 if (-not (Test-Path $onboardEngine)) {
     throw "LCM Onboarding Engine not found at: $onboardEngine"

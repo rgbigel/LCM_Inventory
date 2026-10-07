@@ -85,7 +85,7 @@ foreach ($repo in $candidates) {
         '1' {
             Write-Host "`nProceeding with LCM onboarding for $($repo.RepositoryName)..." -ForegroundColor Green
             # Dispatch to Onboarding Runner
-            $onboardScript = Join-Path $workspaceRoot "LCM_AI\tools\Invoke-LCMOnboardRepo.ps1"
+            $onboardScript = Join-Path $workspaceRoot "LCM_Inventory\tools\Invoke-LCMOnboardRepo.ps1"
             if (Test-Path -LiteralPath $onboardScript) {
                 & $onboardScript -TargetRepo $repo.RepositoryName
                 Set-RepoDisposition -RepositoryName $repo.RepositoryName -State 'governed' -Reason 'Onboarded into LCM v5.0.1' -WorkspaceRoot $workspaceRoot
