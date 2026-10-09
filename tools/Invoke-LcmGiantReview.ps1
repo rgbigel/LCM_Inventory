@@ -3,9 +3,10 @@
   Builds one composite Beyond Compare review across all repositories.
 .DESCRIPTION
   Left  = each repository at its base ref (default: upstream, i.e. what is on GitHub).
-  Right = each repository at HEAD (what is committed locally).
-  Both sides are exported with 'git archive' into <Out>\left\<repo> and
-  <Out>\right\<repo> and opened in a single Beyond Compare folder compare.
+  Right = the live workspace root itself (committed and uncommitted work).
+  Only the left side is generated: 'git archive' exports laid out like the workspace
+  (root repository files at the top, each child repository in its own folder).
+  Beyond Compare ignores what exists only on the right side via its folder view.
   The workspace root is the parent of LCM_Inventory; nothing is hard-coded.
 .PARAMETER Repos
   Repository folder names. Default: every folder under the workspace root with a .git.
@@ -46,8 +47,7 @@ if (-not $Repos) {
 
 if (Test-Path -LiteralPath $Out) { Remove-Item -LiteralPath $Out -Recurse -Force }
 $left = Join-Path $Out 'left'
-$right = Join-Path $Out 'right'
-New-Item -ItemType Directory -Force -Path $left, $right | Out-Null
+New-Item -ItemType Directory -Force -Path $left | Out-Null
 
 function Export-RepoRef {
   param([string]$Path, [string]$Ref, [string]$Dest)
@@ -62,15 +62,15 @@ function Export-RepoRef {
 $summary = foreach ($r in $Repos) {
   $path = if ($r -eq '.') { $workspaceRoot } else { Join-Path $workspaceRoot $r }
   $label = if ($r -eq '.') { '_root' } else { $r }
+  $leftDest = if ($r -eq '.') { $left } else { Join-Path $left $r }
   $base = (git -C $path rev-parse --verify --quiet $BaseRef) 2>$null
   if (-not $base) { Write-Warning "$label : base ref '$BaseRef' not found, skipped"; continue }
   $head = git -C $path rev-parse HEAD
-  Export-RepoRef -Path $path -Ref $base -Dest (Join-Path $left $label)
-  Export-RepoRef -Path $path -Ref $head -Dest (Join-Path $right $label)
+  Export-RepoRef -Path $path -Ref $base -Dest $leftDest
   [pscustomobject]@{ Repo = $label; Base = $base.Substring(0, 8); Head = $head.Substring(0, 8); Same = ($base -eq $head) }
 }
 $summary | Format-Table -AutoSize
 
 $bc = 'C:\Program Files\Beyond Compare 5\BCompare.exe'
-if ($NoLaunch) { Write-Host "Trees ready: $left  |  $right"; return }
-Start-Process -FilePath $bc -ArgumentList @($left, $right, '/fv="Folder Compare"', '/title1="GitHub (base)"', '/title2="Local HEAD"')
+if ($NoLaunch) { Write-Host "Trees ready: $left  |  $workspaceRoot"; return }
+Start-Process -FilePath $bc -ArgumentList @($left, $workspaceRoot, '/fv="Folder Compare"', '/title1="GitHub (base)"', '/title2="Live Git Root"')
