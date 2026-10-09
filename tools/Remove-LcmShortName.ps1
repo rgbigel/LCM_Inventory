@@ -5,11 +5,11 @@
 .DESCRIPTION
   Module: Remove-LcmShortName
   Purpose: Safely removes an extraneous or duplicate short-name command launcher from
-           .lcm/Cmd/<ShortName>.cmd without deleting or altering the target source script (.ps1/.py).
+           LCM_Inventory/Cmd/<ShortName>.cmd without deleting or altering the target source script (.ps1/.py).
            Enforces the Last-Alias Protection Invariant: strictly disallows removing a short-name
            if it is the only remaining launcher pointing to the long-named script file.
            Conforms to RULE-PS-001 through RULE-PS-014.
-  Path: .lcm/tools/internal/Remove-LcmShortName.ps1
+  Path: LCM_Inventory/tools/Remove-LcmShortName.ps1
   Authors: Rolf, LCM_AI Engine
   Version: 1.1.0
   Date: 2026-09-08
@@ -24,13 +24,13 @@
   Suppresses interactive confirmation in terminal mode.
 
 .PARAMETER LogFile
-  Custom log destination. Defaults to .lcm/logs/Remove-LcmShortName-yyyyMMdd.log.
+  Custom log destination. Defaults to LCM_Inventory/data/logs/lcm/Remove-LcmShortName-yyyyMMdd.log.
 
 .PARAMETER Help
   Displays parameter reference and usage instructions (Aliases: -h, -?).
 
 .EXAMPLE
-  pwsh .lcm/tools/internal/Remove-LcmShortName.ps1 -ShortName "ApplyAllCustomzations"
+  pwsh LCM_Inventory/tools/Remove-LcmShortName.ps1 -ShortName "ApplyAllCustomzations"
 #>
 
 [CmdletBinding(SupportsShouldProcess = $true)]
@@ -67,10 +67,10 @@ if ($Help) {
   Write-Host "  Strictly enforces Last-Alias Protection (rejects if it is the only launcher)."
   Write-Host ""
   Write-Host "USAGE:" -ForegroundColor Yellow
-  Write-Host "  pwsh .lcm/tools/internal/Remove-LcmShortName.ps1 -ShortName <name> [-TargetScript <script>] [-Force] [-h]"
+  Write-Host "  pwsh LCM_Inventory/tools/Remove-LcmShortName.ps1 -ShortName <name> [-TargetScript <script>] [-Force] [-h]"
   Write-Host ""
   Write-Host "EXAMPLES:" -ForegroundColor Yellow
-  Write-Host "  pwsh .lcm/tools/internal/Remove-LcmShortName.ps1 -ShortName 'ApplyAllCustomzations'"
+  Write-Host "  pwsh LCM_Inventory/tools/Remove-LcmShortName.ps1 -ShortName 'ApplyAllCustomzations'"
   Write-Host "==========================================================================" -ForegroundColor Cyan
   return
 }
@@ -79,7 +79,7 @@ if ($Help) {
 # 1. Environment & Logging Setup
 # ------------------------------------------------------------------------------
 $workspaceRoot = if (-not [string]::IsNullOrWhiteSpace($env:Git_Root)) { $env:Git_Root.TrimEnd('\', '/') } else { 'D:\Git_Repositories' }
-$cmdDir = Join-Path $workspaceRoot '.lcm\Cmd'
+$cmdDir = Join-Path $workspaceRoot 'LCM_Inventory\Cmd'
 $logDir = Join-Path $workspaceRoot 'LCM_Inventory\data\logs\lcm'
 if (-not (Test-Path -LiteralPath $logDir)) {
   New-Item -Path $logDir -ItemType Directory -Force | Out-Null
@@ -156,7 +156,7 @@ Write-ToolLog -Message "Resolved target script for '$cleanShortName.cmd': $targe
 # ------------------------------------------------------------------------------
 # 3. Enforce Last-Alias Protection Invariant
 # ------------------------------------------------------------------------------
-# Scan all launchers in .lcm/Cmd/*.cmd to find all that resolve to the same target script
+# Scan all launchers in LCM_Inventory/Cmd/*.cmd to find all that resolve to the same target script
 $allCmdFiles = @(Get-ChildItem -Path $cmdDir -Filter '*.cmd' -File)
 $matchingLaunchers = [System.Collections.Generic.List[string]]::new()
 
@@ -200,8 +200,7 @@ if ($matchingLaunchers.Count -le 1) {
 
   # Prune from tool_catalog.json caches
   $catalogPaths = @(
-    (Join-Path $workspaceRoot '.lcm\config\tool_catalog.json'),
-    (Join-Path $workspaceRoot '.lcm\tools\internal\tool_catalog.json')
+    (Join-Path $workspaceRoot 'LCM_Inventory\config\tool_catalog.json')
   )
   foreach ($cp in $catalogPaths) {
     if (Test-Path -LiteralPath $cp) {

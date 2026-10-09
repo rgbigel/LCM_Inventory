@@ -79,7 +79,7 @@ $htmlTemplate = Get-Content -LiteralPath $templatePath -Raw -Encoding UTF8
 
 # Load Repo Documentation for Universal Document Table
 $docsCache = @{}
-$governedRepos = @("LCM_Inventory", ".lcm", "Installation_LCD", "LCM_AI", "SystemConfiguration", "BackgroundModifier", "VolumeInventory", "HaSSD06", "HaSSD06_Inventory", "AuthorizeMasterUser", "LCM_Shared", "Git_Repositories")
+$governedRepos = @("LCM_Inventory", "LCM_Inventory", "Installation_LCD", "LCM_AI", "SystemConfiguration", "BackgroundModifier", "VolumeInventory", "HaSSD06", "HaSSD06_Inventory", "AuthorizeMasterUser", "LCM_Shared", "Git_Repositories")
 $docNames = @("Architecture.md", "Requirements.md", "Implementation.md", "install/Installation.md", "Installation.md", "README.md", "docs/Architecture.md", "docs/Requirements.md", "docs/Implementation.md", "docs/CM_POLICIES.md")
 
 foreach ($r in $governedRepos) {
@@ -113,7 +113,7 @@ Write-Host " Inventory: $invPath"
 if (-not $NoLaunch) {
   Write-Host " Launching interactive desktop browser..." -ForegroundColor Green
   Write-Host "==========================================================================" -ForegroundColor Cyan
-  $dispatcher = Join-Path $workspaceRoot ".lcm\tools\internal\Invoke-InteractiveDesktop.ps1"
+  $dispatcher = Join-Path $workspaceRoot "LCM_Inventory\tools\Invoke-InteractiveDesktop.ps1"
   if (-not (Test-Path -LiteralPath $dispatcher)) {
     $dispatcher = Join-Path $workspaceRoot "tools\Invoke-InteractiveDesktop.ps1"
   }

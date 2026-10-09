@@ -82,7 +82,7 @@ if ($Help) {
   Write-Host "  Instantaneous file and content search powered by Everything 1.5a API."
   Write-Host ""
   Write-Host "USAGE:" -ForegroundColor Yellow
-  Write-Host "  pwsh .lcm/tools/internal/Search-Everything.ps1 [[-Query] <str>] [-Content <str>] [-Path <str>] [-Extension <str>] [-Regex] [-MaxResults <int>] [-h]"
+  Write-Host "  pwsh LCM_Inventory/tools/Search-Everything.ps1 [[-Query] <str>] [-Content <str>] [-Path <str>] [-Extension <str>] [-Regex] [-MaxResults <int>] [-h]"
   Write-Host ""
   Write-Host "PARAMETERS:" -ForegroundColor Yellow
   Write-Host "  -Query         : Search term or pattern for filenames"

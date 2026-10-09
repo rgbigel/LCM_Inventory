@@ -44,7 +44,7 @@ $ErrorActionPreference = 'Stop'
 $scriptVersion = "1.0.0"
 $scriptName = "Update-Gemini"
 $workspaceRoot = 'D:\Git_Repositories'
-$lcdInternal = Join-Path $workspaceRoot '.lcm\tools\internal'
+$lcdInternal = Join-Path $workspaceRoot 'LCM_Inventory\tools'
 
 if ($Help) {
   Write-Host "==========================================================================" -ForegroundColor Cyan

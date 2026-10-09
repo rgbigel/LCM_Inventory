@@ -41,7 +41,7 @@ if ($Help) {
     Write-Host "  Audits and synchronizes LCM module, rule, and doc versions (RULE-DOC-005)."
     Write-Host ""
     Write-Host "USAGE:" -ForegroundColor Yellow
-    Write-Host "  pwsh .lcm/tools/internal/Sync-LcmModuleVersions.ps1 [-TargetMajor <int>] [-TargetBaseline <str>] [-Apply] [-AuditOnly] [-RootPath <str>] [-h]"
+    Write-Host "  pwsh LCM_Inventory/tools/Sync-LcmModuleVersions.ps1 [-TargetMajor <int>] [-TargetBaseline <str>] [-Apply] [-AuditOnly] [-RootPath <str>] [-h]"
     Write-Host ""
     Write-Host "PARAMETERS:" -ForegroundColor Yellow
     Write-Host "  -TargetMajor      : Target major release number (default: 7)"

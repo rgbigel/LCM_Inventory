@@ -7,7 +7,7 @@
   Purpose: CLI entrypoint for the Universal Multi-Channel Progress Indicator Engine (CRP-2026-027).
            Allows terminal commands, scripts, and background workers to broadcast progress
            milestones for single and multi-item operations (PROCEED, COMPLETE, PUSH, do #n-#m).
-  Path: .lcm/tools/internal/Set-LcmActionProgress.ps1
+  Path: LCM_Inventory/tools/Set-LcmActionProgress.ps1
   Authors: Rolf, LCM_AI Governance
   Version: 7.3.0
   Date: 2026-09-07
@@ -40,13 +40,13 @@
   Displays parameter reference and usage examples (Aliases: -h, -?).
 
 .EXAMPLE
-  pwsh .lcm/tools/internal/Set-LcmActionProgress.ps1 -Action Start -Command "PROCEED" -Items 106,107,108
+  pwsh LCM_Inventory/tools/Set-LcmActionProgress.ps1 -Action Start -Command "PROCEED" -Items 106,107,108
 
 .EXAMPLE
-  pwsh .lcm/tools/internal/Set-LcmActionProgress.ps1 -Action Update -Id 106 -Phase "Running Quality Gates" -Percent 50
+  pwsh LCM_Inventory/tools/Set-LcmActionProgress.ps1 -Action Update -Id 106 -Phase "Running Quality Gates" -Percent 50
 
 .EXAMPLE
-  pwsh .lcm/tools/internal/Set-LcmActionProgress.ps1 -Action Complete -Id 106
+  pwsh LCM_Inventory/tools/Set-LcmActionProgress.ps1 -Action Complete -Id 106
 #>
 
 [CmdletBinding()]
@@ -99,7 +99,7 @@ if ($Help) {
   Write-Host "  Terminal, Chat, and Web Dashboards per CRP-2026-027."
   Write-Host ""
   Write-Host "USAGE:" -ForegroundColor Yellow
-  Write-Host "  pwsh .lcm/tools/internal/Set-LcmActionProgress.ps1 -Action <Action> [parameters...]"
+  Write-Host "  pwsh LCM_Inventory/tools/Set-LcmActionProgress.ps1 -Action <Action> [parameters...]"
   Write-Host ""
   Write-Host "ACTIONS:" -ForegroundColor Yellow
   Write-Host "  Start    : Initiates a new progress batch for a list of items."
@@ -115,7 +115,7 @@ if ($Help) {
 # 1. Import Module per RULE-PS-012
 # ------------------------------------------------------------------------------
 $workspaceRoot = if (-not [string]::IsNullOrWhiteSpace($env:Git_Root)) { $env:Git_Root.TrimEnd('\', '/') } else { 'D:\Git_Repositories' }
-$modulePath = Join-Path $workspaceRoot '.lcm\modules\LcmProgressAtom.psm1'
+$modulePath = Join-Path $workspaceRoot 'LCM_Inventory\modules\LcmProgressAtom.psm1'
 
 if (-not (Test-Path -LiteralPath $modulePath)) {
   throw "LcmProgressAtom module not found at: $modulePath"

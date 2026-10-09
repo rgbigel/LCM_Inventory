@@ -8,7 +8,7 @@
            If the caller is un-elevated and the tool requires elevation, routes execution to the
            interactive user desktop (Session 1) via the Desktop Daemon (Port 9876) or Invoke-InteractiveDesktop.ps1,
            preventing Session 0 hangs and silent invariant failures.
-  Path: .lcm/tools/internal/Invoke-PrivilegedTool.ps1
+  Path: LCM_Inventory/tools/Invoke-PrivilegedTool.ps1
   Authors: Rolf, LCM_AI Engine
   Version: 1.0.0
   Date: 2026-09-19
@@ -25,11 +25,11 @@
 .PARAMETER Help
   Displays this parameter reference and usage instructions (Aliases: -h, -?).
 .EXAMPLE
-  pwsh .lcm/tools/internal/Invoke-PrivilegedTool.ps1 -Tool RestoreSettings
+  pwsh LCM_Inventory/tools/Invoke-PrivilegedTool.ps1 -Tool RestoreSettings
 .EXAMPLE
-  pwsh .lcm/tools/internal/Invoke-PrivilegedTool.ps1 -Tool ShowRules -Arguments "-Group LCM"
+  pwsh LCM_Inventory/tools/Invoke-PrivilegedTool.ps1 -Tool ShowRules -Arguments "-Group LCM"
 .EXAMPLE
-  pwsh .lcm/tools/internal/Invoke-PrivilegedTool.ps1 -Tool SetGitRoot -DryRun
+  pwsh LCM_Inventory/tools/Invoke-PrivilegedTool.ps1 -Tool SetGitRoot -DryRun
 #>
 
 [CmdletBinding()]
@@ -75,7 +75,7 @@ if ($Help -or [string]::IsNullOrWhiteSpace($Tool)) {
   Write-Host "  Automated privilege-aware CLI & AI agent dispatcher for all workspace tools."
   Write-Host ""
   Write-Host "USAGE:" -ForegroundColor Yellow
-  Write-Host "  pwsh .lcm/tools/internal/Invoke-PrivilegedTool.ps1 -Tool <ToolName> [-Arguments <str>] [-NoExit] [-DryRun] [-h]"
+  Write-Host "  pwsh LCM_Inventory/tools/Invoke-PrivilegedTool.ps1 -Tool <ToolName> [-Arguments <str>] [-NoExit] [-DryRun] [-h]"
   Write-Host ""
   Write-Host "PARAMETERS:" -ForegroundColor Yellow
   Write-Host "  -Tool <str>      : Tool Name, ShortName, or path (e.g. RestoreSettings, SetGitRoot, ShowRules)"
@@ -86,9 +86,9 @@ if ($Help -or [string]::IsNullOrWhiteSpace($Tool)) {
   Write-Host "  -Help (-h, -?)   : Displays this comprehensive help documentation"
   Write-Host ""
   Write-Host "EXAMPLES:" -ForegroundColor Yellow
-  Write-Host "  pwsh .lcm/tools/internal/Invoke-PrivilegedTool.ps1 -Tool RestoreSettings"
-  Write-Host "  pwsh .lcm/tools/internal/Invoke-PrivilegedTool.ps1 -Tool SetGitRoot -Arguments '-TargetPath D:\Git_Repositories'"
-  Write-Host "  pwsh .lcm/tools/internal/Invoke-PrivilegedTool.ps1 -Tool ShowRules -DryRun"
+  Write-Host "  pwsh LCM_Inventory/tools/Invoke-PrivilegedTool.ps1 -Tool RestoreSettings"
+  Write-Host "  pwsh LCM_Inventory/tools/Invoke-PrivilegedTool.ps1 -Tool SetGitRoot -Arguments '-TargetPath D:\Git_Repositories'"
+  Write-Host "  pwsh LCM_Inventory/tools/Invoke-PrivilegedTool.ps1 -Tool ShowRules -DryRun"
   Write-Host "==========================================================================" -ForegroundColor Cyan
   return
 }
@@ -102,8 +102,8 @@ if (-not (Test-Path -LiteralPath $workspaceRoot)) {
 }
 
 $catalogPathCandidates = @(
-  (Join-Path $workspaceRoot ".lcm\config\tool_catalog.json"),
-  (Join-Path $workspaceRoot ".lcm\tools\internal\tool_catalog.json")
+  (Join-Path $workspaceRoot "LCM_Inventory\config\tool_catalog.json"),
+  (Join-Path $workspaceRoot "LCM_Inventory\tools\tool_catalog.json")
 )
 
 $catalogPath = $null
@@ -350,7 +350,7 @@ if ($daemonOnline) {
 
 # Fallback: Invoke-InteractiveDesktop.ps1
 Write-Host "[LCM-FALLBACK] Desktop daemon not responsive; dispatching via Invoke-InteractiveDesktop.ps1 -Elevated..." -ForegroundColor Cyan
-$desktopDispatcher = Join-Path $workspaceRoot ".lcm\tools\internal\Invoke-InteractiveDesktop.ps1"
+$desktopDispatcher = Join-Path $workspaceRoot "LCM_Inventory\tools\Invoke-InteractiveDesktop.ps1"
 if (Test-Path -LiteralPath $desktopDispatcher) {
   & pwsh.exe -NoProfile -ExecutionPolicy Bypass -File $desktopDispatcher -Command $fullCmdLine -Elevated
   Write-Host "[LCM-SUCCESS] Elevated scheduled task dispatched to Session 1." -ForegroundColor Green

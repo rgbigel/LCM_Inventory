@@ -9,7 +9,7 @@
            filtering via column-header dropdowns, multi-page print and PDF preview,
            action results display, and Notepad++ dispatch via REST daemon (port 9876).
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
-  Path: .lcm/tools/internal/Show-Rules.ps1
+  Path: LCM_Inventory/tools/Show-Rules.ps1
   Authors: Rolf, LCM_AI Governance
   Version: 2.1.1
   Date: 2026-09-08
@@ -22,7 +22,7 @@
 .PARAMETER NoLaunch
   Renders the HTML dashboard and logs without launching the browser window.
 .PARAMETER LogFile
-  Custom log file destination. Defaults to .lcm/logs/Show-Rules-yyyyMMdd_HHmmss.log.
+  Custom log file destination. Defaults to LCM_Inventory/data/logs/lcm/Show-Rules-yyyyMMdd_HHmmss.log.
 .PARAMETER Help
   Displays this comprehensive parameter reference and usage instructions (Aliases: -h, -?).
 .EXAMPLE
@@ -66,7 +66,7 @@ if ($Help) {
   Write-Host "  Notepad++ editor dispatch, and multi-page print preview."
   Write-Host ""
   Write-Host "USAGE:" -ForegroundColor Yellow
-  Write-Host "  pwsh .lcm/tools/internal/Show-Rules.ps1 [-Domain <str>] [-Filter <str>] [-NoBrowser] [-NoLaunch] [-h]"
+  Write-Host "  pwsh LCM_Inventory/tools/Show-Rules.ps1 [-Domain <str>] [-Filter <str>] [-NoBrowser] [-NoLaunch] [-h]"
   Write-Host "  ShowRules"
   Write-Host ""
   Write-Host "PARAMETERS:" -ForegroundColor Yellow
@@ -90,7 +90,7 @@ if ($Help) {
 # 1. Initialize Logging Context per RULE-PS-009
 # ------------------------------------------------------------------------------
 $workspaceRoot = if (-not [string]::IsNullOrWhiteSpace($env:Git_Root)) { $env:Git_Root.TrimEnd('\', '/') } else { 'D:\Git_Repositories' }
-$lcmRoot = Join-Path $workspaceRoot '.lcm'
+$lcmRoot = Join-Path $workspaceRoot 'LCM_Inventory'
 $logDir = Join-Path $workspaceRoot 'LCM_Inventory\data\logs\lcm'
 if (-not (Test-Path -LiteralPath $logDir)) {
   New-Item -Path $logDir -ItemType Directory -Force | Out-Null
@@ -1677,7 +1677,7 @@ $htmlTemplate = @'
         await fetch(DAEMON_URL + '/execute', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ command: 'pwsh -File .lcm/tools/internal/Show-Rules.ps1 -NoLaunch', elevated: false, noExit: false }),
+          body: JSON.stringify({ command: 'pwsh -File LCM_Inventory/tools/Show-Rules.ps1 -NoLaunch', elevated: false, noExit: false }),
           signal: AbortSignal.timeout(2000)
         });
       } catch (e) {}

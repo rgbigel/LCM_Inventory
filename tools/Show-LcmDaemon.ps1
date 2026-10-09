@@ -95,7 +95,7 @@ if ($Port -le 0) {
 }
 
 $workspaceRoot = 'D:\Git_Repositories'
-$lcdRoot = Join-Path $workspaceRoot '.lcm'
+$lcdRoot = Join-Path $workspaceRoot 'LCM_Inventory'
 $toolsDir = Join-Path $lcdRoot 'tools\internal'
 $daemonScript = Join-Path $toolsDir 'LcmDesktopDaemon.ps1'
 $manifestPath = Join-Path $env:TEMP 'lcm_desktop_daemon.json'

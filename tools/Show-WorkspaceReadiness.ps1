@@ -675,9 +675,9 @@ if ($Html) {
 
     if (-not $NoLaunch) {
         Write-Host "Opening interactive Quality Gate Readiness Dashboard in browser..." -ForegroundColor Cyan
-        $dispatcher = Join-Path $WorkspaceRoot '.lcm\tools\internal\Invoke-InteractiveDesktop.ps1'
+        $dispatcher = Join-Path $WorkspaceRoot 'LCM_Inventory\tools\Invoke-InteractiveDesktop.ps1'
         if (-not (Test-Path -LiteralPath $dispatcher)) {
-            $dispatcher = Join-Path $WorkspaceRoot 'tools\Invoke-InteractiveDesktop.ps1'
+            $dispatcher = Join-Path $PSScriptRoot 'Invoke-InteractiveDesktop.ps1'
         }
         if (Test-Path -LiteralPath $dispatcher) {
             & pwsh -File $dispatcher -FilePath "explorer.exe" -ArgumentList "`"$htmlPath`"" | Out-Null

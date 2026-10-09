@@ -51,8 +51,8 @@ if ($Launch) {
   }
   $workspaceRoot = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
   $dispatcherCandidates = @(
-    (Join-Path $workspaceRoot '.lcm\tools\internal\Invoke-InteractiveDesktop.ps1'),
-    (Join-Path $workspaceRoot 'tools\Invoke-InteractiveDesktop.ps1')
+    (Join-Path $PSScriptRoot 'Invoke-InteractiveDesktop.ps1'),
+    (Join-Path $workspaceRoot 'LCM_Inventory\tools\Invoke-InteractiveDesktop.ps1')
   )
   $dispatcherPath = @($dispatcherCandidates | Where-Object { Test-Path -LiteralPath $_ })[0]
   $arguments = ('"{0}" "{1}" /ro1 /ro2' -f $reviewTree.BaselinePath, $reviewTree.WorkingPath)

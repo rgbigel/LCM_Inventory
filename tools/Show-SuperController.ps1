@@ -72,7 +72,7 @@ if ([string]::IsNullOrWhiteSpace($normSubsys) -or $normSubsys -eq '*' -or $normS
     $normSubsys = 'ALL'
 }
 
-$toolsExplorerScript = Join-Path $workspaceRoot '.lcm\tools\internal\Show-ToolsExplorer.ps1'
+$toolsExplorerScript = Join-Path $workspaceRoot 'LCM_Inventory\tools\Show-ToolsExplorer.ps1'
 $showCmScript = Join-Path $workspaceRoot 'LCM_Inventory\tools\Show-LcmControl.ps1'
 
 Write-Host "==========================================================================" -ForegroundColor Cyan

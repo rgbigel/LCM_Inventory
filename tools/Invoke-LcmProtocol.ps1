@@ -41,9 +41,9 @@ if ($Help) {
 }
 
 $workspaceRoot = 'D:\Git_Repositories'
-$lcdRoot = Join-Path $workspaceRoot '.lcm'
-$toolsDir = Join-Path $lcdRoot 'tools\internal'
-$logDir = Join-Path $toolsDir 'logs'
+$lcdRoot = Join-Path $workspaceRoot 'LCM_Inventory'
+$toolsDir = Join-Path $lcdRoot 'tools'
+$logDir = Join-Path $lcdRoot 'data\logs\lcm'
 if (-not (Test-Path -Path $logDir)) { New-Item -Path $logDir -ItemType Directory -Force | Out-Null }
 $timestampStr = (Get-Date).ToString("yyyyMMdd_HHmmss")
 $logFile = Join-Path $logDir "$($scriptName)-$($timestampStr).log"
@@ -87,9 +87,8 @@ try {
     throw "No tool specified in URI: $Uri"
   }
 
-  # Locate tool in workspace
   $toolPath = Join-Path $toolsDir $toolName
-  $catalogPath = Join-Path $toolsDir 'tool_catalog.json'
+  $catalogPath = Join-Path $lcdRoot 'config\tool_catalog.json'
   if (Test-Path -LiteralPath $catalogPath) {
     $catalog = Get-Content -LiteralPath $catalogPath -Raw | ConvertFrom-Json
     $item = $catalog | Where-Object { $_.Name -eq $toolName } | Select-Object -First 1

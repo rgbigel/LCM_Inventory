@@ -8,7 +8,7 @@
               strictmode defaults (RULE-PS-005), param block with -h/Help (RULE-PS-010),
               structured logging context (RULE-PS-009), approved verbs (RULE-PS-002),
               and .DEPENDENCIES documentation.
-           2. Generates the companion <ShortName>.cmd trampoline launcher in .lcm/Cmd/.
+           2. Generates the companion <ShortName>.cmd trampoline launcher in LCM_Inventory/Cmd/.
            3. Creates the NTFS symbolic link in tools/ if located in a child repository.
            4. Synchronizes tool_catalog.json, README.md, and SHOW_TOOLS.html automatically.
   Path: tools/Create-LcmTool.ps1
@@ -89,7 +89,7 @@ if ($Help -or [string]::IsNullOrWhiteSpace($Name)) {
   Write-Host "==========================================================================" -ForegroundColor Cyan
   Write-Host "SYNOPSIS:" -ForegroundColor Yellow
   Write-Host "  Scaffolds a standard-compliant LCM tool with metadata header, logging,"
-  Write-Host "  help handler, ShortName .cmd launcher in .lcm/Cmd/, and auto-synced catalog."
+  Write-Host "  help handler, ShortName .cmd launcher in LCM_Inventory/Cmd/, and auto-synced catalog."
   Write-Host ""
   Write-Host "USAGE:" -ForegroundColor Yellow
   Write-Host "  pwsh tools/Create-LcmTool.ps1 -Name <str> [-ShortName <str>] [-Subsystem <str>]"
@@ -141,10 +141,10 @@ if ([string]::IsNullOrWhiteSpace($ShortName)) {
 }
 
 $workspaceRoot = 'D:\Git_Repositories'
-$lcdRoot = Join-Path $workspaceRoot '.lcm'
-$toolsDir = Join-Path $lcdRoot 'tools\internal'
+$lcdRoot = Join-Path $workspaceRoot 'LCM_Inventory'
+$toolsDir = Join-Path $lcdRoot 'tools'
 $cmdDir = Join-Path $lcdRoot 'Cmd'
-$logDir = Join-Path $toolsDir 'logs'
+$logDir = Join-Path $lcdRoot 'data\logs\lcm'
 
 if (-not (Test-Path -Path $logDir)) { New-Item -Path $logDir -ItemType Directory -Force | Out-Null }
 if (-not (Test-Path -Path $cmdDir)) { New-Item -Path $cmdDir -ItemType Directory -Force | Out-Null }
@@ -318,7 +318,7 @@ if ($isChildRepo) {
   }
 }
 
-# Create companion <ShortName>.cmd in .lcm/Cmd/
+# Create companion <ShortName>.cmd in LCM_Inventory/Cmd/
 $cmdLauncherPath = Join-Path $cmdDir "$ShortName.cmd"
 $cmdContent = "@echo off`r`npwsh.exe -NoProfile -ExecutionPolicy Bypass -File `"%~dp0..\..\$relPath`" %*`r`n"
 [System.IO.File]::WriteAllText($cmdLauncherPath, $cmdContent, [System.Text.Encoding]::ASCII)
@@ -335,7 +335,7 @@ Write-Host " TOOL CREATION COMPLETE" -ForegroundColor Green
 Write-Host "==========================================================================" -ForegroundColor Green
 Write-Host "  Source File : $targetFile"
 Write-Host "  Short-Name  : $ShortName"
-Write-Host "  Command Hub : .lcm/Cmd/$ShortName.cmd"
+Write-Host "  Command Hub : LCM_Inventory/Cmd/$ShortName.cmd"
 Write-Host "  Run Command : $ShortName"
 Write-Host "==========================================================================" -ForegroundColor Green
 

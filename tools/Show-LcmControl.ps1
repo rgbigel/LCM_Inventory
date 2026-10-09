@@ -395,7 +395,7 @@ $hubVersionSubtitle = "Tool: Show-LcmControl v$scriptVersion | LCM Baseline: $lc
 
 # Load Table Atom engine if present
 $atomJsCandidates = @(
-    (Join-Path $workspaceRoot '.lcm\assets\lcm-table-print-atom.js'),
+    (Join-Path $workspaceRoot 'LCM_Inventory\assets\lcm-table-print-atom.js'),
     (Join-Path $workspaceRoot 'tools\assets\lcm-table-print-atom.js')
 )
 $atomJsPath = $null
@@ -476,7 +476,7 @@ if (-not $NoLaunch) {
     } catch {}
 
     if (-not $daemonOnline) {
-        $daemonScript = Join-Path $workspaceRoot ".lcm\tools\internal\LcmDesktopDaemon.ps1"
+        $daemonScript = Join-Path $workspaceRoot "LCM_Inventory\tools\LcmDesktopDaemon.ps1"
         if (Test-Path -LiteralPath $daemonScript) {
             Write-Host "  -> Port 9876 Daemon offline. Reviving daemon in background..." -ForegroundColor Yellow
             Start-Process -FilePath "pwsh.exe" -ArgumentList "-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File `"$daemonScript`" -Background" -WindowStyle Hidden
@@ -531,7 +531,7 @@ if (-not $NoLaunch) {
         }
     }
 
-    $dispatcher = Join-Path $workspaceRoot ".lcm\tools\internal\Invoke-InteractiveDesktop.ps1"
+    $dispatcher = Join-Path $workspaceRoot "LCM_Inventory\tools\Invoke-InteractiveDesktop.ps1"
     
     # --------------------------------------------------------------------------
     # Check for Existing Active Hub Window to Avoid Duplicate Windows (RULE-DSP-008.5)

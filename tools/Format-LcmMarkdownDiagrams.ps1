@@ -8,7 +8,7 @@
            Validates that all Mermaid diagram boxes declare the minimum 8pt typography constraint
            (classDef default font-size:8pt;) and detects legacy ASCII box art (+---+) for conversion.
            Supports execution across Git_root, Repo, Folder, and Document scopes.
-  Path: .lcm/tools/internal/Format-LcmMarkdownDiagrams.ps1
+  Path: LCM_Inventory/tools/Format-LcmMarkdownDiagrams.ps1
   Authors: Rolf, LCM_AI Governance
   Version: 7.3.0
   Date: 2026-09-07
@@ -29,7 +29,7 @@
   Applies diagram formatting and font-size rule enforcement in-place.
 
 .PARAMETER LogFile
-  Custom log file destination. Defaults to .lcm/logs/Format-LcmMarkdownDiagrams-yyyyMMdd_HHmmss.log.
+  Custom log file destination. Defaults to LCM_Inventory/data/logs/lcm/Format-LcmMarkdownDiagrams-yyyyMMdd_HHmmss.log.
 
 .PARAMETER Help
   Displays parameter reference and usage instructions (Aliases: -h, -?).
@@ -97,7 +97,7 @@ if ($Help) {
   Write-Host "  across all LCM-governed documentation."
   Write-Host ""
   Write-Host "USAGE:" -ForegroundColor Yellow
-  Write-Host "  pwsh .lcm/tools/internal/Format-LcmMarkdownDiagrams.ps1 [-Scope <Scope>] [-Target <Path>] [-WrapLength <int>] [-WrapTables] [-Inspect] [-Fix] [-h]"
+  Write-Host "  pwsh LCM_Inventory/tools/Format-LcmMarkdownDiagrams.ps1 [-Scope <Scope>] [-Target <Path>] [-WrapLength <int>] [-WrapTables] [-Inspect] [-Fix] [-h]"
   Write-Host "  FormatDiagrams [-Scope <Scope>] [-Target <Path>] [-WrapLength <int>] [-WrapTables] [-Inspect] [-Fix]"
   Write-Host ""
   Write-Host "SCOPES:" -ForegroundColor Yellow
@@ -126,7 +126,7 @@ if ($Help) {
 # 1. Initialize Context & Logging per RULE-PS-009
 # ------------------------------------------------------------------------------
 $workspaceRoot = if (-not [string]::IsNullOrWhiteSpace($env:Git_Root)) { $env:Git_Root.TrimEnd('\', '/') } else { 'D:\Git_Repositories' }
-$lcmRoot = Join-Path $workspaceRoot '.lcm'
+$lcmRoot = Join-Path $workspaceRoot 'LCM_Inventory'
 $logDir = Join-Path $workspaceRoot 'LCM_Inventory\data\logs\lcm'
 if (-not (Test-Path -LiteralPath $logDir)) {
   New-Item -Path $logDir -ItemType Directory -Force | Out-Null

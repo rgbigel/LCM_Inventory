@@ -110,7 +110,7 @@ if ($Help) {
 }
 
 $workspaceRoot = 'D:\Git_Repositories'
-$lcdRoot = Join-Path $workspaceRoot '.lcm'
+$lcdRoot = Join-Path $workspaceRoot 'LCM_Inventory'
 $toolsDir = Join-Path $lcdRoot 'tools\internal'
 $primaryLogDir = Join-Path $toolsDir 'logs'
 $cmdLogDir = 'D:\OneDrive\cmd\logs'

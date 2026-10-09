@@ -7,7 +7,7 @@
            validates mandatory timestamps, creates lightweight BUG reports / proposals in the LCM Proposal
            ledger (proposals.json), stores the raw plan, and cleanly archives processed files from the inbox.
            Conforms to RULE-PS-001 through RULE-PS-014, RULE-DOC-001 - 004, and the Gemini Inbox Security Invariant.
-  Path: .lcm/tools/internal/Sync-GeminiInbox.ps1
+  Path: LCM_Inventory/tools/Sync-GeminiInbox.ps1
   Authors: Rolf, LCM_AI Engine
   Version: 1.0.0
   Date: 2026-08-30
@@ -20,14 +20,14 @@
 .PARAMETER IntervalSeconds
   Polling interval when running in -Watch mode. Defaults to 30 seconds.
 .PARAMETER LogFile
-  Custom log file path. Defaults to .lcm/logs/Sync-GeminiInbox-yyyyMMdd_HHmmss.log.
+  Custom log file path. Defaults to LCM_Inventory/data/logs/lcm/Sync-GeminiInbox-yyyyMMdd_HHmmss.log.
 .PARAMETER Help
   Displays this command syntax and parameter reference (-h / -Help / -?).
 .EXAMPLE
-  pwsh .lcm/tools/internal/Sync-GeminiInbox.ps1
+  pwsh LCM_Inventory/tools/Sync-GeminiInbox.ps1
   Performs a one-shot intake of all pending items in the Inbox.
 .EXAMPLE
-  pwsh .lcm/tools/internal/Sync-GeminiInbox.ps1 -Watch -IntervalSeconds 15
+  pwsh LCM_Inventory/tools/Sync-GeminiInbox.ps1 -Watch -IntervalSeconds 15
   Runs a continuous watcher polling every 15 seconds.
 #>
 
@@ -60,7 +60,7 @@ if ($Help) {
   Write-Host "  into the LCM Proposal ledger, archives processed files, and clears the Inbox."
   Write-Host ""
   Write-Host "USAGE:" -ForegroundColor Yellow
-  Write-Host "  pwsh .lcm/tools/internal/Sync-GeminiInbox.ps1 [-Watch] [-IntervalSeconds <sec>] [-h]"
+  Write-Host "  pwsh LCM_Inventory/tools/Sync-GeminiInbox.ps1 [-Watch] [-IntervalSeconds <sec>] [-h]"
   Write-Host ""
   Write-Host "PARAMETERS:" -ForegroundColor Yellow
   Write-Host "  -InboxPath <dir>        : Source inbox folder (Default: 'D:\GDrive\LCM\INBOX')."
@@ -77,7 +77,7 @@ if ($Help) {
 # 1. Path Discovery & Logging Setup per RULE-PS-009
 # ------------------------------------------------------------------------------
 $workspaceRoot = 'D:\Git_Repositories'
-$lcdRoot = Join-Path $workspaceRoot '.lcm'
+$lcdRoot = Join-Path $workspaceRoot 'LCM_Inventory'
 $logDir = Join-Path $workspaceRoot 'LCM_Inventory\data\logs\lcm'
 if (-not (Test-Path -LiteralPath $logDir)) {
   New-Item -ItemType Directory -Force -Path $logDir | Out-Null

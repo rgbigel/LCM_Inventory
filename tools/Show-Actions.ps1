@@ -4,7 +4,7 @@
 .DESCRIPTION
   Module: Show-Actions
   Purpose: Fast, lightweight terminal reader that extracts and displays the execution steps,
-           actions, and status results of recent operations from tools/logs/ and .lcm/logs/actions.jsonl.
+           actions, and status results of recent operations from tools/logs/ and LCM_Inventory/data/logs/lcm/actions.jsonl.
            Follows the KISS principle for quick inspection of what the AI/operator executed.
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), RULE-PS-010 (CLI Help), and RULE-PS-011 (Interactive Desktop Dispatch).
   Path: tools/Show-Actions.ps1
@@ -80,7 +80,7 @@ if ($Help) {
 }
 
 $workspaceRoot = 'D:\Git_Repositories'
-$lcdRoot = Join-Path $workspaceRoot '.lcm'
+$lcdRoot = Join-Path $workspaceRoot 'LCM_Inventory'
 $toolsDir = Join-Path $lcdRoot 'tools\internal'
 
 $logDirs = @(

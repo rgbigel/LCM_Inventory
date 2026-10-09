@@ -1,7 +1,7 @@
 <#
 Module: LcmDaemon/Classes/DaemonActionController.ps1
 Purpose: Object-Oriented controller routing and executing daemon REST operations.
-Path: .lcm/modules/LcmDaemon/Classes/DaemonActionController.ps1
+Path: LCM_Inventory/modules/LcmDaemon/Classes/DaemonActionController.ps1
 Authors: Rolf, LCM_AI Engine
 Version: 1.1.0
 Date: 2026-09-08
@@ -593,7 +593,7 @@ class DaemonActionController {
     Move-Item -LiteralPath $sourceFullPath -Destination $archiveTarget -Force
     $this.Env.Log("Archived tool: $sourceFullPath -> $archiveTarget", 'ACTION')
 
-    $updateScript = [System.IO.Path]::Combine($this.Env.WorkspaceRoot, '.lcm\tools\internal\Update-ToolCatalog.ps1')
+    $updateScript = [System.IO.Path]::Combine($this.Env.WorkspaceRoot, 'LCM_Inventory\tools\Update-ToolCatalog.ps1')
     if (Test-Path -LiteralPath $updateScript) {
       & pwsh -File $updateScript -Silent
     }

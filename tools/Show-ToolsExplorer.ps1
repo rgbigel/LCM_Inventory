@@ -16,7 +16,7 @@
            8. Creation timestamp and [🔄 Refresh Data & View] button in top bar.
            9. Modular architecture built on tools/modules/LcmToolCatalog.psm1 and tools/assets/*.
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
-  Path: .lcm/tools/internal/Show-ToolsExplorer.ps1
+  Path: LCM_Inventory/tools/Show-ToolsExplorer.ps1
   Authors: Rolf, LCM_AI Engine
   Version: 3.3.0
   Date: 2026-09-26
@@ -41,7 +41,7 @@
 .PARAMETER NoLaunch
   Generates the HTML dashboard and caches but does NOT automatically trigger browser launch.
 .PARAMETER LogFile
-  Custom log file destination. Defaults to .lcm/logs/Show-ToolsExplorer-yyyyMMdd_HHmmss.log.
+  Custom log file destination. Defaults to LCM_Inventory/data/logs/lcm/Show-ToolsExplorer-yyyyMMdd_HHmmss.log.
 .PARAMETER Help
   Displays this comprehensive parameter reference and usage instructions (Aliases: -h, -?).
 .EXAMPLE
@@ -143,11 +143,23 @@ if ($Help) {
 # ------------------------------------------------------------------------------
 # 1. Initialize Logging Context per RULE-PS-009
 # ------------------------------------------------------------------------------
-$workspaceRoot = 'D:\Git_Repositories'
-$lcdRoot = Join-Path $workspaceRoot '.lcm'
-$toolsDir = Join-Path $lcdRoot 'tools\internal'
-$modulesDir = Join-Path $lcdRoot 'modules'
-$logDir = Join-Path $workspaceRoot 'LCM_Inventory\data\logs\lcm'
+$inventoryRoot = Split-Path $PSScriptRoot -Parent
+$modulesDir = Join-Path $inventoryRoot 'modules'
+$toolsDir = $PSScriptRoot
+
+$contextModule = Join-Path $modulesDir 'LcmWorkspaceContext.psm1'
+if (Test-Path -LiteralPath $contextModule) {
+  try {
+    Import-Module -Name $contextModule -Force
+    $workspaceRoot = Get-LcmMachineGitRoot
+  } catch {
+    $workspaceRoot = Split-Path $inventoryRoot -Parent
+  }
+} else {
+  $workspaceRoot = Split-Path $inventoryRoot -Parent
+}
+
+$logDir = Join-Path $inventoryRoot 'data\logs\lcm'
 if (-not (Test-Path -Path $logDir)) {
   New-Item -Path $logDir -ItemType Directory -Force | Out-Null
 }

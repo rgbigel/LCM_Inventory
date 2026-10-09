@@ -5,7 +5,7 @@
 
 Describe 'Tool validation' {
   BeforeAll {
-    $modulePath = 'D:\Git_Repositories\.lcm\modules\ToolValidation.psm1'
+    $modulePath = 'D:\Git_Repositories\LCM_Inventory\modules\ToolValidation.psm1'
     Import-Module -Name $modulePath -Force
     $validScript = Join-Path $TestDrive 'valid.ps1'
     $invalidScript = Join-Path $TestDrive 'invalid.ps1'

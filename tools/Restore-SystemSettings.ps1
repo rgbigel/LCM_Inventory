@@ -35,7 +35,7 @@ if ($Help) {
   Write-Host "  Restores system background services while permanently enforcing Anti-Flicker Invariants."
   Write-Host ""
   Write-Host "USAGE:" -ForegroundColor Yellow
-  Write-Host "  pwsh .lcm/tools/internal/Restore-SystemSettings.ps1 [-h]"
+  Write-Host "  pwsh LCM_Inventory/tools/Restore-SystemSettings.ps1 [-h]"
   Write-Host ""
   Write-Host "PARAMETERS:" -ForegroundColor Yellow
   Write-Host "  -Help (-h, -?) : Displays this help screen"
@@ -119,7 +119,7 @@ Start-Process "$env:LOCALAPPDATA\PowerToys\PowerToys.exe" -ErrorAction SilentlyC
 
 # 5. Ensure LCM Tools in Machine Environment PATH
 Write-Host "`n[5/6] Enforcing LCM Tools in Machine PATH..." -ForegroundColor Yellow
-$toolsPath = 'D:\Git_Repositories\.lcm\Cmd'
+$toolsPath = 'D:\Git_Repositories\LCM_Inventory\Cmd'
 try {
   $machinePath = [Environment]::GetEnvironmentVariable('Path', 'Machine')
   if ($machinePath -notmatch [regex]::Escape($toolsPath)) {
@@ -140,7 +140,7 @@ try {
     Write-Host "  -> [VERIFIED] Machine PATH already contains '$toolsPath'" -ForegroundColor Green
   }
 } catch {
-  Write-Host "  -> [NOTE] Run 'SetGitRoot' (or 'pwsh .lcm/tools/internal/Set-GitRoot.ps1') with Administrator rights to update Machine PATH." -ForegroundColor Yellow
+  Write-Host "  -> [NOTE] Run 'SetGitRoot' (or 'pwsh LCM_Inventory/tools/Set-GitRoot.ps1') with Administrator rights to update Machine PATH." -ForegroundColor Yellow
 }
 
 # 6. Reload Win32 system parameters

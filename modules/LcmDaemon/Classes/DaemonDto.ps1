@@ -1,7 +1,7 @@
 <#
 Module: LcmDaemon/Classes/DaemonDto.ps1
 Purpose: Strongly-typed data transfer objects (DTOs) for LCM Desktop Daemon REST Bridge.
-Path: .lcm/modules/LcmDaemon/Classes/DaemonDto.ps1
+Path: LCM_Inventory/modules/LcmDaemon/Classes/DaemonDto.ps1
 Authors: Rolf, LCM_AI Engine
 Version: 1.1.0
 Date: 2026-09-19

@@ -15,7 +15,7 @@
            4. Cryptographic Hash Consistency: Validates local files against SHA256 manifest hash codes.
            5. Multi-Boot ACL Enforcement: Enforces AuthorizeMasterUser ACL permissions on A:\.gemini.
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
-  Path: .lcm/tools/internal/Initialize-SharedAiMemory.ps1
+  Path: LCM_Inventory/tools/Initialize-SharedAiMemory.ps1
   Authors: Rolf, LCM_AI Engine
   Version: 1.2.0
   Date: 2026-09-25
@@ -30,17 +30,17 @@
 .PARAMETER ShowAll
   Exposes detailed step-by-step diagnostic and file synchronization telemetry to the console.
 .PARAMETER LogFile
-  Custom log file destination. Defaults to .lcm/logs/Initialize-SharedAiMemory-yyyyMMdd_HHmmss.log.
+  Custom log file destination. Defaults to LCM_Inventory/data/logs/lcm/Initialize-SharedAiMemory-yyyyMMdd_HHmmss.log.
 .PARAMETER Help
   Displays this comprehensive parameter reference and usage instructions (Aliases: -h, -?).
 .EXAMPLE
-  pwsh .lcm/tools/internal/Initialize-SharedAiMemory.ps1 -h
+  pwsh LCM_Inventory/tools/Initialize-SharedAiMemory.ps1 -h
 .EXAMPLE
-  pwsh .lcm/tools/internal/Initialize-SharedAiMemory.ps1 -VerifyOnly
+  pwsh LCM_Inventory/tools/Initialize-SharedAiMemory.ps1 -VerifyOnly
 .EXAMPLE
-  pwsh .lcm/tools/internal/Initialize-SharedAiMemory.ps1
+  pwsh LCM_Inventory/tools/Initialize-SharedAiMemory.ps1
 .EXAMPLE
-  pwsh .lcm/tools/internal/Initialize-SharedAiMemory.ps1 -TargetDrive "A:" -ShowAll
+  pwsh LCM_Inventory/tools/Initialize-SharedAiMemory.ps1 -TargetDrive "A:" -ShowAll
 #>
 
 [CmdletBinding(SupportsShouldProcess)]
@@ -74,7 +74,7 @@ if ($Help) {
   Write-Host "  Drive A:\.gemini and reconciles against the committed GitHub baseline."
   Write-Host ""
   Write-Host "USAGE:" -ForegroundColor Yellow
-  Write-Host "  pwsh .lcm/tools/internal/Initialize-SharedAiMemory.ps1 [-TargetDrive <DriveLetter>] [-VerifyOnly] [-SyncFromGitHub] [-Force] [-ShowAll] [-h]"
+  Write-Host "  pwsh LCM_Inventory/tools/Initialize-SharedAiMemory.ps1 [-TargetDrive <DriveLetter>] [-VerifyOnly] [-SyncFromGitHub] [-Force] [-ShowAll] [-h]"
   Write-Host ""
   Write-Host "PARAMETERS:" -ForegroundColor Yellow
   Write-Host "  -TargetDrive <str> : Destination drive for AI memory storage (Default: 'A:')."
@@ -86,9 +86,9 @@ if ($Help) {
   Write-Host "  -h, -Help, -?      : Displays this comprehensive parameter reference."
   Write-Host ""
   Write-Host "EXAMPLES:" -ForegroundColor Yellow
-  Write-Host "  pwsh .lcm/tools/internal/Initialize-SharedAiMemory.ps1 -VerifyOnly"
-  Write-Host "  pwsh .lcm/tools/internal/Initialize-SharedAiMemory.ps1"
-  Write-Host "  pwsh .lcm/tools/internal/Initialize-SharedAiMemory.ps1 -ShowAll"
+  Write-Host "  pwsh LCM_Inventory/tools/Initialize-SharedAiMemory.ps1 -VerifyOnly"
+  Write-Host "  pwsh LCM_Inventory/tools/Initialize-SharedAiMemory.ps1"
+  Write-Host "  pwsh LCM_Inventory/tools/Initialize-SharedAiMemory.ps1 -ShowAll"
   Write-Host "==========================================================================" -ForegroundColor Cyan
   return
 }

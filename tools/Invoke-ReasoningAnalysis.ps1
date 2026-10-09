@@ -144,10 +144,10 @@ if ($absOffset -eq 2) {
         },
         [PSCustomObject]@{
             Index      = 6
-            ErrorEvent = 'vMissing .lcm on 11 repos'
+            ErrorEvent = 'vMissing LCM_Inventory on 11 repos'
             Category   = 'Environmental / Baseline'
             Cost       = '0 (Diagnostic notice)'
-            Mechanism  = 'Older utility repos lack local .lcm folder'
+            Mechanism  = 'Older utility repos lack local LCM_Inventory folder'
             Rule       = 'RULE-LCM-001'
             Avoidance  = 'Informational baseline; junction compliance is primary'
         },

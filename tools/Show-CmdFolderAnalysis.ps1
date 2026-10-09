@@ -1239,9 +1239,9 @@ $htmlContent = @"
             
             let cmdStr = '';
             if (item.Type === 'PS1') {
-                cmdStr = 'pwsh -File "D:\\Git_Repositories\\.lcm\\tools\\internal\\' + item.Name + '"';
+                cmdStr = 'pwsh -File "D:\\Git_Repositories\\LCM_Inventory\\tools\\internal\\' + item.Name + '"';
             } else {
-                cmdStr = '"D:\\Git_Repositories\\.lcm\\tools\\internal\\' + item.Name + '"';
+                cmdStr = '"D:\\Git_Repositories\\LCM_Inventory\\tools\\internal\\' + item.Name + '"';
             }
 
             params.forEach(p => {

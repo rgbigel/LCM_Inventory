@@ -17,11 +17,11 @@ function Get-LcmToolCatalogData {
   [CmdletBinding()]
   param(
     [Parameter(Mandatory = $false)]
-    [string]$ToolsDir = 'D:\Git_Repositories\.lcm\tools\internal'
+    [string]$ToolsDir = 'D:\Git_Repositories\LCM_Inventory\tools'
   )
 
   $candidatePaths = @(
-    'D:\Git_Repositories\.lcm\config\tool_catalog.json',
+    'D:\Git_Repositories\LCM_Inventory\config\tool_catalog.json',
     'D:\Git_Repositories\LCM_Tools\tool_catalog.json'
   )
   $catalogPath = $null
@@ -35,7 +35,7 @@ function Get-LcmToolCatalogData {
   if (-not $catalogPath) {
     $updateCandidates = @(
       (Join-Path $ToolsDir 'Update-ToolCatalog.ps1'),
-      'D:\Git_Repositories\.lcm\tools\internal\Update-ToolCatalog.ps1',
+      'D:\Git_Repositories\LCM_Inventory\tools\Update-ToolCatalog.ps1',
       'D:\Git_Repositories\LCM_Tools\Update-ToolCatalog.ps1'
     )
     foreach ($u in $updateCandidates) {
@@ -168,7 +168,7 @@ function Build-LcmToolIndexHtml {
     [Parameter(Mandatory = $true)]
     [array]$Catalog,
     [string]$WorkspaceRoot = 'D:\Git_Repositories',
-    [string]$ToolsDir = 'D:\Git_Repositories\.lcm\tools\internal',
+    [string]$ToolsDir = 'D:\Git_Repositories\LCM_Inventory\tools',
     [string]$Audience = 'User',
     [string]$Group = 'All',
     [string]$Role = 'All',
@@ -183,33 +183,17 @@ function Build-LcmToolIndexHtml {
   $timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
   $computerName = $env:COMPUTERNAME
 
-  $lcmRoot = if ($ToolsDir -like '*\.lcm*') {
-    $idx = $ToolsDir.IndexOf('\.lcm')
-    $ToolsDir.Substring(0, $idx + 5)
-  } else {
-    Join-Path $WorkspaceRoot '.lcm'
-  }
-  $assetsDir = Join-Path $lcmRoot 'assets'
+  $inventoryRoot = Join-Path $WorkspaceRoot 'LCM_Inventory'
+  $assetsDir = Join-Path $inventoryRoot 'assets'
   if (-not (Test-Path -LiteralPath $assetsDir)) {
     $assetsDir = Join-Path $ToolsDir 'assets'
   }
-  if (-not (Test-Path -LiteralPath $assetsDir)) {
-    $assetsDir = Join-Path $WorkspaceRoot 'assets'
-  }
 
-  $wiAssetsDir = Join-Path $WorkspaceRoot "LCM_Inventory\assets"
-  $stdCssPath = Join-Path $wiAssetsDir 'StandardTableDisplay.css'
-  $toolCssPath = Join-Path $wiAssetsDir 'LCMToolCatalog.css'
-  $printAtomPath = Join-Path $wiAssetsDir 'lcm-table-print-atom.js'
-  $tableEnginePath = Join-Path $wiAssetsDir 'lcm-table-engine.js'
-  $jsAppPath = Join-Path $wiAssetsDir 'lcm-tool-explorer.js'
-
-  # Fallback to .lcm\assets if not found in LCM_Inventory
-  if (-not (Test-Path $stdCssPath)) { $stdCssPath = Join-Path $assetsDir 'StandardTableDisplay.css' }
-  if (-not (Test-Path $toolCssPath)) { $toolCssPath = Join-Path $assetsDir 'LCMToolCatalog.css' }
-  if (-not (Test-Path $printAtomPath)) { $printAtomPath = Join-Path $assetsDir 'lcm-table-print-atom.js' }
-  if (-not (Test-Path $tableEnginePath)) { $tableEnginePath = Join-Path $assetsDir 'lcm-table-engine.js' }
-  if (-not (Test-Path $jsAppPath)) { $jsAppPath = Join-Path $assetsDir 'lcm-tool-explorer.js' }
+  $stdCssPath = Join-Path $assetsDir 'StandardTableDisplay.css'
+  $toolCssPath = Join-Path $assetsDir 'LCMToolCatalog.css'
+  $printAtomPath = Join-Path $assetsDir 'lcm-table-print-atom.js'
+  $tableEnginePath = Join-Path $assetsDir 'lcm-table-engine.js'
+  $jsAppPath = Join-Path $assetsDir 'lcm-tool-explorer.js'
 
   $stdCssUri = if (Test-Path $stdCssPath) { [System.Uri]::new($stdCssPath).AbsoluteUri } else { "" }
   $toolCssUri = if (Test-Path $toolCssPath) { [System.Uri]::new($toolCssPath).AbsoluteUri } else { "" }
@@ -219,8 +203,8 @@ function Build-LcmToolIndexHtml {
   $tableEngineContent = if (Test-Path $tableEnginePath) { Get-Content -LiteralPath $tableEnginePath -Raw -Encoding UTF8 } else { "" }
   $jsAppContent = if (Test-Path $jsAppPath) { Get-Content -LiteralPath $jsAppPath -Raw -Encoding UTF8 } else { "" }
 
-  # Compile authoritative dropdown options from catalog and persist to .lcm/config/tool_explorer_options.json
-  $optionsPath = Join-Path $lcmRoot 'config\tool_explorer_options.json'
+  # Compile authoritative dropdown options from catalog and persist to LCM_Inventory/config/tool_explorer_options.json
+  $optionsPath = Join-Path $inventoryRoot 'config\tool_explorer_options.json'
   $optionsObj = [PSCustomObject]@{
     Subsystems = @($metrics.DistinctGroups)
     Roles      = @($metrics.DistinctRoles)
@@ -558,7 +542,7 @@ $toolCssContent
                 <input type="text" id="rename-input-source" style="width: 100%; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 6px; padding: 8px 12px; color: var(--text-primary); font-family: 'JetBrains Mono', monospace; font-size: 12px;">
             </div>
             <div style="margin-bottom: 14px;">
-                <label style="font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 4px;">2. Primary Short-Name Command (.lcm/Cmd/&lt;ShortName&gt;.cmd)</label>
+                <label style="font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 4px;">2. Primary Short-Name Command (LCM_Inventory/Cmd/&lt;ShortName&gt;.cmd)</label>
                 <input type="text" id="rename-input-short" style="width: 100%; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 6px; padding: 8px 12px; color: #7ee787; font-family: 'JetBrains Mono', monospace; font-size: 12px;">
             </div>
             <div style="margin-bottom: 16px; padding: 12px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px;">

@@ -4,8 +4,8 @@
 .DESCRIPTION
     Module: Export-LcmKnowledgeBase
     Purpose: Preserves backward compatibility by delegating invocations to the upgraded Sync-LCMResearchSnapshot.ps1.
-             The original predecessor implementation is archived at .lcm/archive/legacy_tools/Export-LcmKnowledgeBase.ps1.
-    Path: .lcm/tools/internal/Export-LcmKnowledgeBase.ps1
+             The original predecessor implementation is archived at LCM_Inventory/data/archives/legacy_tools/Export-LcmKnowledgeBase.ps1.
+    Path: LCM_Inventory/tools/Export-LcmKnowledgeBase.ps1
     Authors: Rolf, Antigravity AI
     Version: 2.0.0-DEPRECATED
     Date: 2026-09-04
@@ -36,7 +36,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 Write-Warning "[DEPRECATED] Export-LcmKnowledgeBase.ps1 has been superseded by Sync-LCMResearchSnapshot.ps1."
-Write-Warning "The legacy implementation is archived at: .lcm\archive\legacy_tools\Export-LcmKnowledgeBase.ps1"
+Write-Warning "The legacy implementation is archived at: LCM_Inventory\data\archives\legacy_tools\Export-LcmKnowledgeBase.ps1"
 
 $targetScript = Join-Path $PSScriptRoot "Sync-LCMResearchSnapshot.ps1"
 if (-not (Test-Path $targetScript)) {

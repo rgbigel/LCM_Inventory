@@ -79,7 +79,7 @@ if ($Help) {
 # 1. Initialize Logging Context per RULE-PS-009
 # ------------------------------------------------------------------------------
 $workspaceRoot = $RootPath.TrimEnd('\', '/')
-$lcmRoot = Join-Path $workspaceRoot '.lcm'
+$lcmRoot = Join-Path $workspaceRoot 'LCM_Inventory'
 $toolsDir = Join-Path $lcmRoot 'tools\internal'
 $logDir = Join-Path $workspaceRoot 'LCM_Inventory\data\logs\lcm'
 if (-not (Test-Path -Path $logDir)) {

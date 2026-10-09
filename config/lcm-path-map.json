@@ -1,0 +1,31 @@
+{
+  "description": "Retired '.lcm' folder to current-structure path map. Consumed by Invoke-LcmPathMigration.ps1. Longest 'from' wins. Paths are relative to the workspace root.",
+  "schemaVersion": 1,
+  "map": [
+    { "from": ".lcm/tools/internal", "to": "LCM_Inventory/tools" },
+    { "from": ".lcm/tools/links",    "to": "LCM_Inventory/Cmd" },
+    { "from": ".lcm/tools/Cmd",      "to": "LCM_Inventory/Cmd" },
+    { "from": ".lcm/tools",          "to": "LCM_Inventory/tools" },
+    { "from": ".lcm/modules",        "to": "LCM_Inventory/modules" },
+    { "from": ".lcm/Cmd",            "to": "LCM_Inventory/Cmd" },
+    { "from": ".lcm/config",         "to": "LCM_Inventory/config" },
+    { "from": ".lcm/hooks",          "to": "LCM_Inventory/.githooks" },
+    { "from": ".lcm/logs",           "to": "LCM_Inventory/data/logs/lcm" },
+    { "from": ".lcm/scratch",        "to": "LCM_Inventory/scratch" },
+    { "from": ".lcm/archive",        "to": "LCM_Inventory/data/archives" },
+    { "from": ".lcm",                "to": "LCM_Inventory" }
+  ],
+  "skipFiles": [
+    "LCM_Tools/Invoke-LcmRepositoryNamingMigration.ps1",
+    "LCM_Tools/Sync-LCMResearchSnapshot.ps1",
+    "LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1",
+    "LCM_Inventory/tools/Flush-LcmLegacyLogs.ps1",
+    "LCM_Inventory/modules/WorkspaceCM.psm1",
+    "LCM_Inventory/config/tool_catalog.json",
+    "LCM_Inventory/config/lcm-path-map.json",
+    "LCM_Inventory/tools/Invoke-LcmPathMigration.ps1",
+    "LCM_Inventory/tools/Set-GitRoot.ps1",
+    "LCM_AI/.agents/hooks.json"
+  ],
+  "skipReason": "Skipped files use '.lcm' as a deliberate legacy marker or exclusion pattern; a blind replacement would turn an exclusion into an exclusion of live folders."
+}

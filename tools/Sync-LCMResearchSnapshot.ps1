@@ -108,7 +108,7 @@ Write-Log -Level "INFO" -Message "Audit Log: $logPath" -Color Gray
 
 # Core subsystems defining the LCM/LCD architecture
 $includeSubsystems = @(
-    ".lcm",
+    "LCM_Inventory",
     ".agents",
     "docs",
     "LCM_Inventory",

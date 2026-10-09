@@ -5,10 +5,10 @@
 .DESCRIPTION
   Module: LcmProgressAtom
   Purpose: Implements the Universal Multi-Channel Progress Indicator Engine governed by CRP-2026-027.
-           Provides thread-safe atomic file updates (.lcm/scratch/active_progress.json), native
+           Provides thread-safe atomic file updates (LCM_Inventory/scratch/active_progress.json), native
            PowerShell Write-Progress rendering, and optional notification to the LcmDesktopDaemon
            (Port 9876) for real-time web dashboard row mutations and console streaming.
-  Path: .lcm/modules/LcmProgressAtom.psm1
+  Path: LCM_Inventory/modules/LcmProgressAtom.psm1
   Authors: Rolf, LCM_AI Governance
   Version: 7.3.0
   Date: 2026-09-07

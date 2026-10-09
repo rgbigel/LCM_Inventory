@@ -83,9 +83,9 @@ if ($Help) {
 # 1. Initialize Logging Context per RULE-PS-009
 # ------------------------------------------------------------------------------
 $workspaceRoot = 'D:\Git_Repositories'
-$lcdRoot = Join-Path $workspaceRoot '.lcm'
-$toolsDir = Join-Path $lcdRoot 'tools\internal'
-$logDir = Join-Path $toolsDir 'logs'
+$lcdRoot = Join-Path $workspaceRoot 'LCM_Inventory'
+$toolsDir = Join-Path $lcdRoot 'tools'
+$logDir = Join-Path $lcdRoot 'data\logs\lcm'
 if (-not (Test-Path -Path $logDir)) {
   New-Item -Path $logDir -ItemType Directory -Force | Out-Null
 }

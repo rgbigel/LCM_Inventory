@@ -1,11 +1,91 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-10-07T16:14:00+02:00",
+  "updated_at": "2026-10-09T12:13:17+02:00",
   "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 252,
+  "last_proposal_id": 254,
   "proposals": [
+    {
+      "id": 254,
+      "crp_id": "CRP-254",
+      "timestamp": "2026-10-09 13:50:00",
+      "title": "Go Implementation Path for Inefficient Scripts",
+      "origin_repo": "LCM_AI",
+      "cr_id": "CRP-254",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "suggested",
+      "bundle_id": "CRP-254",
+      "bundle_dir": "docs/Proposals/CRP-254-Go-Implementation-Path-for-Inefficient-Scripts",
+      "docs": {
+        "specification": "Specification.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig",
+      "details": "Evidence-driven migration of selected slow PowerShell/Python tools to Go executables under GoRules.md, keeping PowerShell wrappers and catalog names stable.",
+      "priority": 5,
+      "dates": {
+        "created": "2026-10-09 13:50:00",
+        "suggested": "2026-10-09 13:50:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-10-09 13:50:00",
+          "user": "rgbig",
+          "note": "Suggested on operator request."
+        }
+      ],
+      "progress_state": "not_started",
+      "flow_mode": "doit",
+      "always_proceed": false,
+      "disposition": null
+    },
+    {
+      "id": 253,
+      "crp_id": "CRP-253",
+      "timestamp": "2026-10-08 15:55:00",
+      "title": "Hybrid Git World Mounting and Child Repository Junction Architecture",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-253",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "approved",
+      "bundle_id": "CRP-253",
+      "bundle_dir": "docs/Proposals/CRP-253-LCM_Mode-World-Switch",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig",
+      "details": "Decouples child application repositories from Git Root into secondary storage (D:\\Git_World) linked via NTFS junctions on demand, while preserving Git Root core repository assets and LCM infrastructure physically intact.",
+      "plan_path": "docs/Proposals/CRP-253-LCM_Mode-World-Switch/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-253-LCM_Mode-World-Switch/Walkthrough.md",
+      "priority": 3,
+      "dates": {
+        "created": "2026-10-08 15:55:00",
+        "suggested": "2026-10-08 15:55:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-10-08 15:55:00",
+          "user": "rgbig",
+          "note": "Registered design proposal for hybrid Git World mounting and governance pre-linking."
+        }
+      ],
+      "progress_state": "in_progress",
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "disposition": null
+    },
     {
       "id": 252,
       "crp_id": "CRP-252",

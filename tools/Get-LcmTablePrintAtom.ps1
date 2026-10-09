@@ -70,9 +70,8 @@ if ($Help) {
 }
 
 $workspaceRoot = 'D:\Git_Repositories'
-$lcdRoot = Join-Path $workspaceRoot '.lcm'
-$toolsDir = Join-Path $lcdRoot 'tools\internal'
-$assetsDir = Join-Path $toolsDir 'assets'
+$lcdRoot = Join-Path $workspaceRoot 'LCM_Inventory'
+$assetsDir = Join-Path $lcdRoot 'assets'
 $atomJsPath = Join-Path $assetsDir 'lcm-table-print-atom.js'
 
 if (-not (Test-Path -LiteralPath $atomJsPath)) {

@@ -5,7 +5,7 @@
   Module: Sync-ToolSymlinks
   Purpose: Dynamically discovers all child repository tools via tool_catalog.json (and tools/modules/LcmToolCatalog.psm1),
            and creates/maintains direct NTFS symbolic links in D:\Git_Repositories\LCM_Tools pointing to their canonical locations.
-           Automatically purges orphaned or stale symlinks, and keeps .lcm/Cmd/ trampolines synchronized.
+           Automatically purges orphaned or stale symlinks, and keeps LCM_Inventory/Cmd/ trampolines synchronized.
            Zero static precompiled tables — fully dynamic, self-healing, and 100% catalog-driven.
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
   Path: D:\Git_Repositories\LCM_Tools\Sync-ToolSymlinks.ps1
@@ -75,15 +75,14 @@ if ($Help) {
 # 1. Initialize Logging Context per RULE-PS-009
 # ------------------------------------------------------------------------------
 $workspaceRoot = 'D:\Git_Repositories'
-$lcdRoot = Join-Path $workspaceRoot '.lcm'
-$internalDir = Join-Path $lcdRoot 'tools\internal'
-$linksDir = Join-Path $lcdRoot 'tools\links'
-$modulesDir = Join-Path $lcdRoot 'modules'
-$logDir = Join-Path $lcdRoot 'logs'
-$configDir = Join-Path $lcdRoot 'config'
+$inventoryRoot = Join-Path $workspaceRoot 'LCM_Inventory'
+$internalDir = Join-Path $inventoryRoot 'tools'
+$linksDir = Join-Path $inventoryRoot 'tools'
+$modulesDir = Join-Path $inventoryRoot 'modules'
+$logDir = Join-Path $inventoryRoot 'data\logs\lcm'
+$configDir = Join-Path $inventoryRoot 'config'
 
 if (-not (Test-Path -LiteralPath $logDir)) { New-Item -Path $logDir -ItemType Directory -Force | Out-Null }
-if (-not (Test-Path -LiteralPath $linksDir)) { New-Item -Path $linksDir -ItemType Directory -Force | Out-Null }
 
 if ([string]::IsNullOrWhiteSpace($LogFile)) {
   $timestampStr = (Get-Date).ToString("yyyyMMdd_HHmmss")
@@ -180,7 +179,7 @@ try {
     $linkPath = Join-Path $linksDir $tool.Name
     $nativePath = Join-Path $internalDir $tool.Name
 
-    # Skip tools that natively reside in .lcm/tools/internal directory (not symlinks)
+    # Skip tools that natively reside in LCM_Inventory/tools directory (not symlinks)
     if ($targetFullPath.ToLowerInvariant() -eq $nativePath.ToLowerInvariant()) {
       Write-ToolLog -Message "Native platform tool detected: $($tool.Name)" -Level DEBUG
       continue
@@ -219,7 +218,7 @@ try {
   }
 
   # ----------------------------------------------------------------------------
-  # 4. Clean up Orphaned Symlinks in .lcm/tools/links/
+  # 4. Clean up Orphaned Symlinks in LCM_Inventory/Cmd/
   # ----------------------------------------------------------------------------
   $existingSymlinks = @(Get-ChildItem -LiteralPath $linksDir -File -Force | Where-Object { $_.LinkType -eq 'SymbolicLink' })
   foreach ($symlink in $existingSymlinks) {
@@ -241,11 +240,11 @@ try {
   }
 
   # ----------------------------------------------------------------------------
-  # 5. Synchronize .lcm/Cmd/ Short-Name Trampolines
+  # 5. Synchronize LCM_Inventory/Cmd/ Short-Name Trampolines
   # ----------------------------------------------------------------------------
   $updateScript = Join-Path $internalDir 'Update-ToolCatalog.ps1'
   if (Test-Path -LiteralPath $updateScript) {
-    Write-ToolLog -Message "Synchronizing .lcm/Cmd/ command trampolines and catalog metadata..." -Level ACTION
+    Write-ToolLog -Message "Synchronizing LCM_Inventory/Cmd/ command trampolines and catalog metadata..." -Level ACTION
     & $updateScript -Silent
   }
 } catch {

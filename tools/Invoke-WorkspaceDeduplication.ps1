@@ -120,7 +120,7 @@ if ($TargetDirectories -and $TargetDirectories.Count -gt 0) {
         (Join-Path $workspaceRoot "HaSSD06\scratch"),
         (Join-Path $workspaceRoot "HaSSD06_Inventory\scratch"),
         (Join-Path $workspaceRoot "HaSSD06_Inventory\docs"),
-        (Join-Path $workspaceRoot ".lcm\tools\links")
+        (Join-Path $workspaceRoot "LCM_Inventory\Cmd")
     )
     foreach ($c in $candidates) {
         if (Test-Path -LiteralPath $c) { $scanDirs.Add($c) }
@@ -195,8 +195,8 @@ foreach ($cluster in $clusters) {
         $repoSegment = $relPath.Split('\')[0]
         $archiveTargetDir = Join-Path $workspaceRoot "$repoSegment\data\archives\deduplicated_snapshots"
         
-        if ($dupPath -match "\\\.lcm\\tools\\links\\") {
-            $archiveTargetDir = Join-Path $workspaceRoot ".lcm\archive\tools_links_backup"
+        if ($dupPath -match "\\\LCM_Inventory\\tools\\links\\") {
+            $archiveTargetDir = Join-Path $workspaceRoot "LCM_Inventory\data\archives\tools_links_backup"
         } elseif ($dupPath -match "\\scratch\\BC_Review\\") {
             $archiveTargetDir = Join-Path $workspaceRoot "LCM_Inventory\data\archives\BC_Review_Snapshots"
         }

@@ -4,7 +4,7 @@
 .DESCRIPTION
   Module: Update-ToolCatalog
   Purpose: Scans and synchronizes all LCM Workspace & Subsystem tools into a canonical JSON catalog
-           (.lcm/config/tool_catalog.json), documentation index (LCM_Inventory/docs/README.md), and standardizes
+           (LCM_Inventory/config/tool_catalog.json), documentation index (LCM_Inventory/docs/README.md), and standardizes
            clean short-name command trampolines in LCM_Inventory/Cmd/ adhering to the 4-category taxonomy
            (Setters, Showers, Getters, Action Runners).
            Extracts AST dependencies, enforces ShortName uniqueness, and cleans legacy long .cmd files.
@@ -53,7 +53,7 @@ if ($Help) {
   Write-Host "==========================================================================" -ForegroundColor Cyan
   Write-Host "SYNOPSIS:" -ForegroundColor Yellow
   Write-Host "  Scans and synchronizes all LCM Workspace & Subsystem tools into"
-  Write-Host "  .lcm/config/tool_catalog.json, LCM_Inventory/docs/README.md, and standardizes short-name"
+  Write-Host "  LCM_Inventory/config/tool_catalog.json, LCM_Inventory/docs/README.md, and standardizes short-name"
   Write-Host "  command trampolines in LCM_Inventory/Cmd/ with AST dependency tracking."
   Write-Host ""
   Write-Host "USAGE:" -ForegroundColor Yellow
@@ -76,12 +76,12 @@ if ($Help) {
 # 1. Initialize Logging Context per RULE-PS-009
 # ------------------------------------------------------------------------------
 $workspaceRoot = 'D:\Git_Repositories'
-$lcdRoot = Join-Path $workspaceRoot '.lcm'
-$toolsDir = Join-Path $lcdRoot 'tools\internal'
-$cmdDir = Join-Path $workspaceRoot 'LCM_Inventory\Cmd'
-$logDir = Join-Path $workspaceRoot 'LCM_Inventory\data\logs\lcm'
-$configDir = Join-Path $lcdRoot 'config'
-$docsDir = Join-Path $workspaceRoot 'LCM_Inventory\docs'
+$inventoryRoot = Join-Path $workspaceRoot 'LCM_Inventory'
+$toolsDir = Join-Path $inventoryRoot 'tools'
+$cmdDir = Join-Path $inventoryRoot 'Cmd'
+$logDir = Join-Path $inventoryRoot 'data\logs\lcm'
+$configDir = Join-Path $inventoryRoot 'config'
+$docsDir = Join-Path $inventoryRoot 'docs'
 
 if (-not (Test-Path -Path $logDir)) { New-Item -Path $logDir -ItemType Directory -Force | Out-Null }
 if (-not (Test-Path -Path $cmdDir)) { New-Item -Path $cmdDir -ItemType Directory -Force | Out-Null }
@@ -94,6 +94,7 @@ if ([string]::IsNullOrWhiteSpace($LogFile)) {
 }
 $script:ActiveLogFile = $LogFile
 $script:ShowDetails = $ShowAll
+$script:RepoElevationCache = @{}
 
 function Write-ToolLog {
   param(
@@ -654,7 +655,7 @@ $metadataOverrides = @{
 }
 
 # ------------------------------------------------------------------------------
-# 2. Authoritative Tool Catalog Baseline (.lcm/config/tool_catalog.json)
+# 2. Authoritative Tool Catalog Baseline (LCM_Inventory/config/tool_catalog.json)
 # ------------------------------------------------------------------------------
 $authoritativeCatalog = @{}
 if (Test-Path -LiteralPath $catalogJsonPath) {
@@ -675,7 +676,7 @@ if (Test-Path -LiteralPath $catalogJsonPath) {
   }
 }
 
-# Merge persistent runtime overrides from .lcm\config\tool_catalog_overrides.json
+# Merge persistent runtime overrides from LCM_Inventory\config\tool_catalog_overrides.json
 $overridesFile = Join-Path $configDir 'tool_catalog_overrides.json'
 if (Test-Path -LiteralPath $overridesFile) {
   try {
@@ -841,7 +842,6 @@ function Get-LcmToolDependencies {
 $scanDefinitions = @(
   @{ Group = "LCM_Inventory"; Domain = "LCM_Inventory"; Path = "LCM_Inventory\tools";             Filter = "*.ps1" },
   @{ Group = "LCM_Inventory"; Domain = "LCM_Inventory"; Path = "LCM_Inventory\tools";             Filter = "*.py" },
-  @{ Group = "LCM";                 Domain = "LCM";                 Path = ".lcm\tools\internal";                   Filter = "*.ps1" },
   @{ Group = "SystemConfiguration"; Domain = "SystemConfiguration"; Path = "SystemConfiguration\Source";            Filter = "@*" },
   @{ Group = "SystemConfiguration"; Domain = "SystemConfiguration"; Path = "SystemConfiguration\Source";            Filter = "$*" },
   @{ Group = "SystemConfiguration"; Domain = "SystemConfiguration"; Path = "SystemConfiguration\Source";            Filter = "*.ps1" },
@@ -874,7 +874,7 @@ try {
 
     $files = @(Get-ChildItem -Path $targetDir -Filter $sd.Filter -File -ErrorAction SilentlyContinue)
     foreach ($f in $files) {
-      if ($f.FullName.Contains("\scratch\") -or $f.FullName.Contains("\.venv\") -or $f.FullName.Contains("\__pycache__\") -or $f.FullName.Contains("\.lcm\tools\Cmd\")) {
+      if ($f.FullName.Contains("\scratch\") -or $f.FullName.Contains("\.venv\") -or $f.FullName.Contains("\__pycache__\") -or $f.FullName.Contains("\LCM_Inventory\Cmd\")) {
         continue
       }
 
@@ -1018,6 +1018,19 @@ try {
             $baseStem -match 'SystemPrivilege|SystemPriviledge|PsExec') {
           $adminRequired = $true
         }
+      }
+
+      # Repository-level declaration (AGENTS.md 'Elevation: Administrator') always applies
+      $repoRelParts = @($f.FullName.Substring($workspaceRoot.Length).TrimStart('\') -split '\\')
+      $repoCandidates = @($baseStem)
+      if ($repoRelParts.Count -gt 1) { $repoCandidates += $repoRelParts[0] }
+      foreach ($repoName in $repoCandidates) {
+        if (-not $script:RepoElevationCache.ContainsKey($repoName)) {
+          $agentsFile = Join-Path (Join-Path $workspaceRoot $repoName) 'AGENTS.md'
+          $script:RepoElevationCache[$repoName] = (Test-Path -LiteralPath $agentsFile) -and
+            [bool](Select-String -LiteralPath $agentsFile -Pattern '^\s*Elevation:\s*Administrator\s*$' -Quiet)
+        }
+        if ($script:RepoElevationCache[$repoName]) { $adminRequired = $true }
       }
 
       # Compute accurate environment-specific Example command (preferring ShortName)
@@ -1185,7 +1198,7 @@ try {
       $gitRootPreamble = "if not defined Git_Root set `"Git_Root=%~dp0..\..`"`r`nif not exist `"%Git_Root%\LCM_Inventory`" set `"Git_Root=D:\Git_Repositories`"`r`n"
 
       $elevationCheck = if ($t.Admin) {
-        "net session >nul 2>&1`r`nif %errorlevel% neq 0 (`r`n  pwsh.exe -NoProfile -ExecutionPolicy Bypass -File `"%Git_Root%/.lcm/tools/internal/Invoke-PrivilegedTool.ps1`" -Tool `"$sn`" -Arguments `"%*`"`r`n  exit /b`r`n)`r`n"
+        "net session >nul 2>&1`r`nif %errorlevel% neq 0 (`r`n  pwsh.exe -NoProfile -ExecutionPolicy Bypass -File `"%Git_Root%/LCM_Inventory/tools/Invoke-PrivilegedTool.ps1`" -Tool `"$sn`" -Arguments `"%*`"`r`n  exit /b`r`n)`r`n"
       } else { "" }
 
       $cmdBody = if ($t.Type -eq 'Python') {

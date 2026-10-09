@@ -21,7 +21,7 @@ param(
     [Parameter(Mandatory = $false, HelpMessage = 'Maximum age in days for retaining daemon log files before deletion (default: 7)')]
     [int]$MaxLogAgeDays = 7,
 
-    [Parameter(Mandatory = $false, HelpMessage = 'Maximum age in days for transient script logs in .lcm/logs (default: 3)')]
+    [Parameter(Mandatory = $false, HelpMessage = 'Maximum age in days for transient script logs in LCM_Inventory/data/logs/lcm (default: 3)')]
     [int]$MaxScriptLogAgeDays = 3,
 
     [Parameter(Mandatory = $false, HelpMessage = 'Maximum age in hours for Beyond Compare scratch review directories (default: 48)')]
@@ -92,7 +92,7 @@ $stats = [PSCustomObject]@{
 Write-Host "`n[Step 1/4] Maintaining LCM Desktop Daemon Logs (Tail: $TailLines lines)..." -ForegroundColor Yellow
 
 $daemonDirs = @(
-    (Join-Path $workspaceRoot ".lcm\tools\internal\logs")
+    (Join-Path $workspaceRoot "LCM_Inventory\tools\logs")
 )
 
 $cutoffDaemon = (Get-Date).AddDays(-$MaxLogAgeDays)
@@ -153,11 +153,11 @@ foreach ($dir in $daemonDirs) {
 }
 
 # ------------------------------------------------------------------------------
-# 2. Purge Stale Transient Script Logs (.lcm/logs/*.log)
+# 2. Purge Stale Transient Script Logs (LCM_Inventory/data/logs/lcm/*.log)
 # ------------------------------------------------------------------------------
-Write-Host "`n[Step 2/4] Purging Stale Script Logs in .lcm/logs (Older than $MaxScriptLogAgeDays days)..." -ForegroundColor Yellow
+Write-Host "`n[Step 2/4] Purging Stale Script Logs in LCM_Inventory/data/logs/lcm (Older than $MaxScriptLogAgeDays days)..." -ForegroundColor Yellow
 
-$lcmLogsDir = Join-Path $workspaceRoot ".lcm\logs"
+$lcmLogsDir = Join-Path $workspaceRoot "LCM_Inventory\data\logs\lcm"
 if (Test-Path -LiteralPath $lcmLogsDir) {
     $scriptCutoff = (Get-Date).AddDays(-$MaxScriptLogAgeDays)
     $staleScriptLogs = @(Get-ChildItem -Path $lcmLogsDir -Filter "*.log" -File -ErrorAction SilentlyContinue | Where-Object { $_.LastWriteTime -lt $scriptCutoff })

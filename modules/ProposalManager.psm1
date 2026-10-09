@@ -2059,9 +2059,9 @@ function Get-ReposUnderReview {
             $filePath = $_.Substring(3).Trim()
             -not ($filePath -like "data/logs/*" -or $filePath -like "data\logs\*" -or
                   $filePath -like "logs/*" -or $filePath -like "logs\*" -or
-                  $filePath -like ".lcm/logs/*" -or $filePath -like ".lcm\logs\*" -or
+                  $filePath -like "LCM_Inventory/data/logs/lcm/*" -or $filePath -like "LCM_Inventory\data\logs\lcm\*" -or
                   $filePath -like "scratch/*" -or $filePath -like "scratch\*" -or
-                  $filePath -like ".lcm/scratch/*" -or $filePath -like ".lcm\scratch\*")
+                  $filePath -like "LCM_Inventory/scratch/*" -or $filePath -like "LCM_Inventory\scratch\*")
         })
 
         # Path-aware review discrimination for LCM_Inventory per CRP-054 / RULE-LCM-004

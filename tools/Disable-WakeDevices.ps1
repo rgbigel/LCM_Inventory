@@ -2,7 +2,7 @@
 .SYNOPSIS
     Disables Wake-on-LAN and Mouse wake triggers in Windows.
 .DESCRIPTION
-    Path: D:\Git_Repositories\.lcm\tools\internal\Disable-WakeDevices.ps1
+    Path: D:\Git_Repositories\LCM_Inventory\tools\Disable-WakeDevices.ps1
     Authors: Rolf, Antigravity
     Version: 1.2.0
     Date: 2026-09-10
@@ -25,7 +25,7 @@ if ($Help) {
     Write-Host "  Disables Wake-on-LAN and Mouse wake triggers in Windows power configuration."
     Write-Host ""
     Write-Host "USAGE:" -ForegroundColor Yellow
-    Write-Host "  pwsh .lcm/tools/internal/Disable-WakeDevices.ps1 [-h]"
+    Write-Host "  pwsh LCM_Inventory/tools/Disable-WakeDevices.ps1 [-h]"
     Write-Host ""
     Write-Host "PARAMETERS:" -ForegroundColor Yellow
     Write-Host "  -Help (-h, -?) : Displays this help screen"

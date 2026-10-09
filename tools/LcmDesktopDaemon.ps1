@@ -13,7 +13,7 @@
            6. /query_cleanup   : Probes exact file counts and byte sizes for logs and archives.
            7. /cleanup         : Atomically purges logs, archive snapshots, or caches based on selections.
            8. /rename          : Safely renames physical source files and updates short-name aliases.
-           9. /archive         : Moves deprecated tools to .lcm/tools/internal/archive/ and updates catalog.
+           9. /archive         : Moves deprecated tools to LCM_Inventory/tools/archive/ and updates catalog.
            10. /sync_json      : Merges window-close dashboard state and review overrides into catalog.
            11. /stop           : Cleanly terminates listener.
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
