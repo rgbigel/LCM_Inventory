@@ -41,7 +41,7 @@ if ($Help) {
     Write-Host "  Prunes transient logs and scratch trees older than 2 major releases (RULE-DOC-006)."
     Write-Host ""
     Write-Host "USAGE:" -ForegroundColor Yellow
-    Write-Host "  pwsh .lcm/tools/internal/Flush-LcmLegacyLogs.ps1 [-TargetMajor <int>] [-RetentionHorizon <int>] [-Apply] [-AuditOnly] [-RootPath <str>] [-h]"
+    Write-Host "  pwsh LCM_Inventory/tools/Flush-LcmLegacyLogs.ps1 [-TargetMajor <int>] [-RetentionHorizon <int>] [-Apply] [-AuditOnly] [-RootPath <str>] [-h]"
     Write-Host ""
     Write-Host "PARAMETERS:" -ForegroundColor Yellow
     Write-Host "  -TargetMajor      : Current active major release version (default: 7)"
@@ -244,7 +244,7 @@ if ($Apply -and -not $AuditOnly) {
     Write-Host "`n Retention flush completed successfully.`n" -ForegroundColor Green
 } else {
     Write-Host "`nTo execute retention flush, run with -Apply:" -ForegroundColor Cyan
-    Write-Host "  pwsh -File .lcm/tools/internal/Flush-LcmLegacyLogs.ps1 -Apply`n" -ForegroundColor Yellow
+    Write-Host "  pwsh -File LCM_Inventory/tools/Flush-LcmLegacyLogs.ps1 -Apply`n" -ForegroundColor Yellow
 }
 
 

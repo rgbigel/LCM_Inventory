@@ -4,11 +4,11 @@
 .DESCRIPTION
   Module: Set-GitRoot
   Purpose: Establishes the Git_Root environment variable (D:\Git_Repositories) at User,
-           Process, and Machine scopes, and ensures D:\Git_Repositories\.lcm\Cmd is present
+           Process, and Machine scopes, and ensures D:\Git_Repositories\LCM_Inventory\Cmd is present
            in the Environment PATH ahead of legacy D:\OneDrive\cmd.
            Scrubs obsolete and deprecated tool paths from PATH.
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
-  Path: .lcm/tools/internal/Set-GitRoot.ps1
+  Path: LCM_Inventory/tools/Set-GitRoot.ps1
   Authors: Rolf, LCM_AI Engine
   Version: 2.0.0
   Date: 2026-09-07
@@ -19,13 +19,13 @@
 .PARAMETER ShowAll
   Displays full detailed registry and environment evaluation logs.
 .PARAMETER LogFile
-  Custom log file destination. Defaults to .lcm/logs/Set-GitRoot-yyyyMMdd_HHmmss.log.
+  Custom log file destination. Defaults to LCM_Inventory/data/logs/lcm/Set-GitRoot-yyyyMMdd_HHmmss.log.
 .PARAMETER Help
   Displays comprehensive parameter reference and usage instructions (Aliases: -h, -?).
 .EXAMPLE
-  pwsh .lcm/tools/internal/Set-GitRoot.ps1 -h
+  pwsh LCM_Inventory/tools/Set-GitRoot.ps1 -h
 .EXAMPLE
-  pwsh .lcm/tools/internal/Set-GitRoot.ps1
+  pwsh LCM_Inventory/tools/Set-GitRoot.ps1
 .EXAMPLE
   SetGitRoot
 #>
@@ -55,10 +55,10 @@ if ($Help) {
   Write-Host "==========================================================================" -ForegroundColor Cyan
   Write-Host "SYNOPSIS:" -ForegroundColor Yellow
   Write-Host "  Configures the Git_Root environment variable and ensures"
-  Write-Host "  $RootPath\.lcm\Cmd is present in PATH ahead of legacy D:\OneDrive\cmd."
+  Write-Host "  $RootPath\LCM_Inventory\Cmd is present in PATH ahead of legacy D:\OneDrive\cmd."
   Write-Host ""
   Write-Host "USAGE:" -ForegroundColor Yellow
-  Write-Host "  pwsh .lcm/tools/internal/Set-GitRoot.ps1 [-RootPath <path>] [-Force] [-ShowAll] [-LogFile <path>] [-h]"
+  Write-Host "  pwsh LCM_Inventory/tools/Set-GitRoot.ps1 [-RootPath <path>] [-Force] [-ShowAll] [-LogFile <path>] [-h]"
   Write-Host "  SetGitRoot"
   Write-Host ""
   Write-Host "PARAMETERS:" -ForegroundColor Yellow
@@ -70,7 +70,7 @@ if ($Help) {
   Write-Host ""
   Write-Host "EXAMPLES:" -ForegroundColor Yellow
   Write-Host "  SetGitRoot"
-  Write-Host "  pwsh .lcm/tools/internal/Set-GitRoot.ps1 -ShowAll"
+  Write-Host "  pwsh LCM_Inventory/tools/Set-GitRoot.ps1 -ShowAll"
   Write-Host "==========================================================================" -ForegroundColor Cyan
   return
 }

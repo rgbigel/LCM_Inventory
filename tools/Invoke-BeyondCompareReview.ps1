@@ -692,7 +692,7 @@ else {
 $filterList = [System.Collections.Generic.List[string]]::new()
 
 if ($repoPath -eq $workspaceRoot) {
-  $keepDirs = @('.copilot', '.vscode', '.github', '.git', '.lcm')
+  $keepDirs = @('.copilot', '.vscode', '.github', '.git')
   $allDirs = @(Get-ChildItem -LiteralPath $workspaceRoot -Directory -Force)
   foreach ($d in $allDirs) {
     if ($d.Name -notin $keepDirs) {
@@ -838,7 +838,7 @@ $null = Audit-BeyondCompareReviewStaging -TempReviewRoot $tempReviewRoot -RepoPa
 $bcArgString = "/solo `"$sessionName`""
 
 $dispatcherCandidates = @(
-  (Join-Path $workspaceRoot ".lcm\tools\internal\Invoke-InteractiveDesktop.ps1"),
+  (Join-Path $workspaceRoot "LCM_Inventory\tools\Invoke-InteractiveDesktop.ps1"),
   (Join-Path $workspaceRoot ".lcd\tools\internal\Invoke-InteractiveDesktop.ps1"),
   (Join-Path $workspaceRoot "tools\Invoke-InteractiveDesktop.ps1")
 )
