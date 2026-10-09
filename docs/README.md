@@ -6,7 +6,7 @@ Path: LCM_Inventory/docs/README.md
 Authors: Rolf, LCM_AI Engine  
 Version: 2.0.0  
 Status: Authoritative Reference  
-Updated: 2026-10-07 15:10:03  
+Updated: 2026-10-09 13:41:49  
 
 ---
 
@@ -37,16 +37,13 @@ TestWorkspaceReadiness
 | **ShowDaemon** | [Show-LcmDaemon.ps1](file:///LCM_Inventory/tools/Show-LcmDaemon.ps1) | Diagnostics | LCM_Inventory | PowerShell | Desktop Bridge | Displays live telemetry, runtime status, and log tailing for the LCM Desktop REST Bridge Daemon. | ShowDaemon |
 | **ShowLastLog** | [Show-LastLog.ps1](file:///LCM_Inventory/tools/Show-LastLog.ps1) | Diagnostics | LCM_Inventory | PowerShell | Log Diagnostics | Displays the most recently updated audit log in the workspace with live tail and level filtering. | ShowLastLog |
 | **ShowCM** | [Show-LcmControl.ps1](file:///LCM_Inventory/tools/Show-LcmControl.ps1) | GUI | LCM | PowerShell | Configuration Management | Unified LCM Control Hub dashboard and proposal lifecycle manager. | ShowCM |
-| **ShowCmdAnalysis** | [Show-CmdFolderAnalysis.ps1](file:///LCM_Inventory/tools/Show-CmdFolderAnalysis.ps1) | GUI | LCM_Inventory | PowerShell | Tool Analysis | Interactive HTML viewer analyzing all legacy batch scripts and modern PowerShell tool equivalents. | ShowCmdAnalysis |
 | **ShowHaInventory** | [Show-HaInventory.ps1](file:///LCM_Inventory/tools/Show-HaInventory.ps1) | GUI | LCM_Inventory | PowerShell | Subsystem GUI | Generates and launches the authoritative Home Assistant HaSSD06 Subsystem Viewer dashboard. | ShowHaInventory |
 | **SuperController** | [Show-SuperController.ps1](file:///LCM_Inventory/tools/Show-SuperController.ps1) | GUI | LCM | PowerShell | Navigation | Workspace AI Super-Controller unified navigation dispatcher for ToolsExplorer and ShowCM. | SuperController |
-| **ToolsExplorer** | [Show-ToolsExplorer.ps1](file:///LCM_Inventory/tools/Show-ToolsExplorer.ps1) | GUI | LCM_Inventory | PowerShell | Tool Discovery | Opens the modern interactive LCM Tool Explorer dashboard in the browser or terminal. | ToolsExplorer |
 | **RestoreSystemSettings** | [Restore-SystemSettings.ps1](file:///LCM_Inventory/tools/Restore-SystemSettings.ps1) | Invariants | LCM_Inventory | PowerShell | System Invariants | Authoritative LCM system restore tool restoring background services while enforcing anti-flicker invariants. | RestoreSystemSettings |
 | **ManageSupervisionTask** | [Manage-SupervisionTask.ps1](file:///LCM_Supervision/tools/Manage-SupervisionTask.ps1) | Management | LCM_Supervision | PowerShell | Supervision & Health | CM Task Controller to Start, Stop, Pause, Resume, Add, Delete, and Run supervision tasks. | ManageSupervisionTask |
 | **HaUpdateGate** | [Invoke-HaUpdateGate.ps1](file:///HaSSD06_Inventory/tools/Invoke-HaUpdateGate.ps1) | QualityGate | HaSSD06 | PowerShell | Subsystem Update Gate | 5-stage update runner (RULE-SUB-006): changelog review, CRP extraction, backup & execution. | HaUpdateGate |
 | **TestWorkspaceReadiness** | [Test-WorkspaceReadiness.ps1](file:///LCM_Inventory/tools/Test-WorkspaceReadiness.ps1) | QualityGate | LCM_Inventory | PowerShell | Quality Gate | Executes the 5-stage automated LCM readiness quality gate across all repositories. | TestWorkspaceReadiness |
 | **BeyondCompareReview** | [Invoke-BeyondCompareReview.ps1](file:///LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1) | ReviewGate | LCM_Inventory | PowerShell | Proposal Review | Launches 3-way Beyond Compare 5 session on Session 1 interactive desktop for staged proposals. | BeyondCompareReview |
-| **ShowActions** | [Show-Actions.ps1](file:///LCM_Inventory/tools/Show-Actions.ps1) | Telemetry | LCM_Inventory | PowerShell | Audit Logs | Fast lightweight terminal reader displaying recent operational actions and tool execution step summaries. | ShowActions |
 | **UpdateHaInventory** | [Update-HaInventory.ps1](file:///HaSSD06_Inventory/tools/Update-HaInventory.ps1) | Telemetry | HaSSD06 | PowerShell | Subsystem Telemetry | Pulls live WebSocket registry & REST data to reconcile all entities, devices, & integrations. | UpdateHaInventory |
 | **SearchEverything** | [Search-Everything.ps1](file:///LCM_Inventory/tools/Search-Everything.ps1) | Utility | LCM_Inventory | PowerShell | File Search | CLI search interface utilizing Voidtools Everything command line utility (es.exe). | SearchEverything |
 
@@ -58,11 +55,15 @@ TestWorkspaceReadiness
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | **LcmDaemon** | [LcmDesktopDaemon.ps1](file:///LCM_Inventory/tools/LcmDesktopDaemon.ps1) | Elevation | LCM_Inventory | PowerShell | Desktop Bridge | Lightweight high-performance HTTP/REST bridge daemon running in Session 1 for cross-session GUI dispatch. | LcmDaemon |
 | **RegisterDaemon** | [Register-LcmDesktopDaemon.ps1](file:///LCM_Inventory/tools/Register-LcmDesktopDaemon.ps1) | Elevation | LCM_Inventory | PowerShell | Desktop Bridge | Registers the persistent LCM Desktop REST Bridge Daemon in Task Scheduler with automatic startup. | RegisterDaemon |
+| **ShowCmdAnalysis** | [Show-CmdFolderAnalysis.ps1](file:///LCM_Inventory/tools/Show-CmdFolderAnalysis.ps1) | GUI | LCM_Inventory | PowerShell | Tool Analysis | Interactive HTML viewer analyzing all legacy batch scripts and modern PowerShell tool equivalents. | ShowCmdAnalysis |
 | **ShowToolIndex** | [Show-ToolIndex.ps1](file:///LCM_Inventory/tools/Show-ToolIndex.ps1) | GUI | LCM_Inventory | PowerShell | Tool Discovery | Underlying generation engine for the interactive LCM Tool Explorer HTML application. | ShowToolIndex |
+| **ToolsExplorer** | [Show-ToolsExplorer.ps1](file:///LCM_Inventory/tools/Show-ToolsExplorer.ps1) | GUI | LCM_Inventory | PowerShell | Tool Discovery | Opens the modern interactive LCM Tool Explorer dashboard in the browser or terminal. | ToolsExplorer |
 | **InvokeSupervisionRunner** | [Invoke-SupervisionRunner.ps1](file:///LCM_Supervision/tools/Invoke-SupervisionRunner.ps1) | Management | LCM_Supervision | PowerShell | Supervision & Health | Unified task dispatcher executing supervision cycles and logging observation telemetry. | InvokeSupervisionRunner |
+| **ShowActions** | [Show-Actions.ps1](file:///LCM_Inventory/tools/Show-Actions.ps1) | Telemetry | LCM_Inventory | PowerShell | Audit Logs | Fast lightweight terminal reader displaying recent operational actions and tool execution step summaries. | ShowActions |
 | **AdvanceGovernance** | [Advance-Governance.ps1](file:///LCM_Inventory/tools/Advance-Governance.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Advance-Governance execution tool. | AdvanceGovernance |
 | **analyzelcmcomponents** | [analyze_lcm_components.py](file:///HaSSD06/analyze_lcm_components.py) | Utility | HaSSD06 | Python | Utility | analyze_lcm_components execution tool. | analyzelcmcomponents |
 | **APPLY** | [APPLY.ps1](file:///LCM_Inventory/tools/APPLY.ps1) | Utility | LCM_Inventory | PowerShell | Utility | APPLY execution tool. | APPLY |
+| **ArchiveLcmDaemonLogs** | [Archive-LcmDaemonLogs.ps1](file:///LCM_Inventory/tools/Archive-LcmDaemonLogs.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Archive-LcmDaemonLogs execution tool. | ArchiveLcmDaemonLogs |
 | **AuthorizeMasterUser** | [AuthorizeMasterUser.ps1](file:///LCM_Inventory/tools/AuthorizeMasterUser.ps1) | Utility | LCM_Inventory | PowerShell | Utility | AuthorizeMasterUser execution tool. | AuthorizeMasterUser |
 | **BuildHaInventoryViewer** | [Build-HaInventoryViewer.ps1](file:///HaSSD06_Inventory/tools/Build-HaInventoryViewer.ps1) | Utility | HaSSD06 | PowerShell | Utility | Build-HaInventoryViewer execution tool. | BuildHaInventoryViewer |
 | **buildmatrix** | [build_matrix.py](file:///HaSSD06/build_matrix.py) | Utility | HaSSD06 | Python | Utility | build_matrix execution tool. | buildmatrix |
@@ -105,13 +106,12 @@ TestWorkspaceReadiness
 | **HaRenameCascade** | [Invoke-HaRenameCascade.ps1](file:///HaSSD06_Inventory/tools/Invoke-HaRenameCascade.ps1) | Utility | HaSSD06 | PowerShell | Utility | Invoke-HaRenameCascade execution tool. | HaRenameCascade |
 | **HaService** | [Invoke-HaService.ps1](file:///HaSSD06_Inventory/tools/Invoke-HaService.ps1) | Utility | HaSSD06 | PowerShell | Utility | Invoke-HaService execution tool. | HaService |
 | **InitializeAdminMode** | [Initialize-AdminMode.ps1](file:///LCM_Inventory/tools/Initialize-AdminMode.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Initialize-AdminMode execution tool. | InitializeAdminMode |
+| **InitializeGitWorld** | [Initialize-GitWorld.ps1](file:///LCM_Inventory/tools/Initialize-GitWorld.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Initialize-GitWorld execution tool. | InitializeGitWorld |
 | **InitializeRealRepoMethodInstance** | [Initialize-RealRepoMethodInstance.ps1](file:///LCM_Inventory/tools/Initialize-RealRepoMethodInstance.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Initialize-RealRepoMethodInstance execution tool. | InitializeRealRepoMethodInstance |
 | **InteractiveDesktop** | [Invoke-InteractiveDesktop.ps1](file:///LCM_Inventory/tools/Invoke-InteractiveDesktop.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-InteractiveDesktop execution tool. | InteractiveDesktop |
 | **LcmJunctionCorrection** | [Invoke-LcmJunctionCorrection.ps1](file:///LCM_Inventory/tools/Invoke-LcmJunctionCorrection.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-LcmJunctionCorrection execution tool. | LcmJunctionCorrection |
-| **LCMOnboardBatch** | [Invoke-LCMOnboardBatch.ps1](file:///LCM_Inventory/tools/Invoke-LCMOnboardBatch.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-LCMOnboardBatch execution tool. | LCMOnboardBatch |
-| **LCMOnboardRepo** | [Invoke-LCMOnboardRepo.ps1](file:///LCM_Inventory/tools/Invoke-LCMOnboardRepo.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-LCMOnboardRepo execution tool. | LCMOnboardRepo |
+| **LcmPathMigration** | [Invoke-LcmPathMigration.ps1](file:///LCM_Inventory/tools/Invoke-LcmPathMigration.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-LcmPathMigration execution tool. | LcmPathMigration |
 | **LcmProtocol** | [Invoke-LcmProtocol.ps1](file:///LCM_Inventory/tools/Invoke-LcmProtocol.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-LcmProtocol execution tool. | LcmProtocol |
-| **LCMUpdate** | [Invoke-LCMUpdate.ps1](file:///LCM_Inventory/tools/Invoke-LCMUpdate.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-LCMUpdate execution tool. | LCMUpdate |
 | **Level1AnalysisRefinement** | [Invoke-Level1AnalysisRefinement.ps1](file:///LCM_Inventory/tools/Invoke-Level1AnalysisRefinement.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-Level1AnalysisRefinement execution tool. | Level1AnalysisRefinement |
 | **LoadAtoms** | [LoadAtoms.ps1](file:///LCM_Inventory/tools/LoadAtoms.ps1) | Utility | LCM_Inventory | PowerShell | Utility | LoadAtoms execution tool. | LoadAtoms |
 | **LoadFixes** | [LoadFixes.ps1](file:///LCM_Inventory/tools/LoadFixes.ps1) | Utility | LCM_Inventory | PowerShell | Utility | LoadFixes execution tool. | LoadFixes |
@@ -168,6 +168,7 @@ TestWorkspaceReadiness
 | **ValidateRules** | [ValidateRules.ps1](file:///LCM_Inventory/tools/ValidateRules.ps1) | Utility | LCM_Inventory | PowerShell | Utility | ValidateRules execution tool. | ValidateRules |
 | **WorkspaceAudit** | [Invoke-WorkspaceAudit.ps1](file:///LCM_Inventory/tools/Invoke-WorkspaceAudit.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-WorkspaceAudit execution tool. | WorkspaceAudit |
 | **WorkspaceDeduplication** | [Invoke-WorkspaceDeduplication.ps1](file:///LCM_Inventory/tools/Invoke-WorkspaceDeduplication.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-WorkspaceDeduplication execution tool. | WorkspaceDeduplication |
+| **WorkspaceGoodNight** | [Invoke-WorkspaceGoodNight.ps1](file:///LCM_Inventory/tools/Invoke-WorkspaceGoodNight.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-WorkspaceGoodNight execution tool. | WorkspaceGoodNight |
 | **WorkspaceMaintenance** | [Invoke-WorkspaceMaintenance.ps1](file:///LCM_Inventory/tools/Invoke-WorkspaceMaintenance.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-WorkspaceMaintenance execution tool. | WorkspaceMaintenance |
 | **WorkspacePush** | [Invoke-WorkspacePush.ps1](file:///LCM_Inventory/tools/Invoke-WorkspacePush.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-WorkspacePush execution tool. | WorkspacePush |
 
