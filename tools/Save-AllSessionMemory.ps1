@@ -56,6 +56,7 @@ foreach ($dir in $repoDirs) {
     $name = if ($dir -eq $gitRoot) { 'Git_Repositories' } else { Split-Path $dir -Leaf }
     $branch = (git -C $dir rev-parse --abbrev-ref HEAD 2>$null)
     $head = (git -C $dir rev-parse --short HEAD 2>$null)
+    if (-not $head) { $head = 'none' }
     $dirty = @(git -C $dir status --short 2>$null).Count
     $ahead = (git -C $dir rev-list --count '@{u}..HEAD' 2>$null)
     if ($LASTEXITCODE -ne 0) { $ahead = 'no upstream' }

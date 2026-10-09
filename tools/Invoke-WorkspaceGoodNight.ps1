@@ -211,6 +211,14 @@ if ($NoCommit) {
     }
 }
 
+# The snapshot is refreshed after the commit step so that it records the final state.
+if (-not $NoCommit -and -not $DryRun) {
+    & $saveScript -Author $Author | Out-Null
+    $aiRepo = Join-Path $gitRoot 'LCM_AI'
+    git -C $aiRepo add -f -- .agents/ACTIVE_CONTEXT.md 2>&1 | Out-Null
+    git -C $aiRepo commit -m 'chore(memory): final session snapshot' -m 'Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>' -- .agents/ACTIVE_CONTEXT.md 2>&1 | Out-Null
+}
+
 # ------------------------------------------------------------------------------
 # 6. Publish (only with -Push)
 # ------------------------------------------------------------------------------
