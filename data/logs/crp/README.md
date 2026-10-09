@@ -11,7 +11,7 @@
 
 This directory serves as the canonical, authoritative repository for all execution traces, tool telemetry, test harness outputs, linter validations, and Git hook execution logs generated during the lifecycle of **Change Request Proposals (CRPs)**.
 
-Per `RULE-CM-009` and LCM subsystem isolation architecture (`LCM_LCD_Subsystem_Architecture.md`), execution traces must never pollute source code directories, transient root folders, or agent scratch spaces. All runtime stdout/stderr artifacts must be captured and persisted in this directory.
+Per `RULE-CM-009` and LCM subsystem isolation architecture (`LCM_Subsystem_Architecture.md`), execution traces must never pollute source code directories, transient root folders, or agent scratch spaces. All runtime stdout/stderr artifacts must be captured and persisted in this directory.
 
 ---
 
