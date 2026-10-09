@@ -73,4 +73,4 @@ $summary | Format-Table -AutoSize
 
 $bc = 'C:\Program Files\Beyond Compare 5\BCompare.exe'
 if ($NoLaunch) { Write-Host "Trees ready: $left  |  $workspaceRoot"; return }
-Start-Process -FilePath $bc -ArgumentList @($left, $workspaceRoot, '/fv="Folder Compare"', '/title1="GitHub (base)"', '/title2="Live Git Root"')
+Start-Process -FilePath $bc -ArgumentList @($left, $workspaceRoot, '/fv="Folder Compare"', '/filters=-.venv\;-__pycache__\;-node_modules\', '/title1="GitHub (base)"', '/title2="Live Git Root"')
