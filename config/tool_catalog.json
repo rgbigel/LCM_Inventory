@@ -899,60 +899,6 @@
     ]
   },
   {
-    "Name": "Initialize-SharedAiMemory.ps1",
-    "ShortName": "InitializeAiMemory",
-    "Aliases": null,
-    "Role": "Customization",
-    "Audience": "User",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "LCM_Inventory",
-    "Domain": "LCM_Inventory",
-    "Type": "PowerShell",
-    "Category": "AI Memory Management",
-    "Description": "Migrates, safeguards, and verifies %USERPROFILE%\\.gemini with persistent Drive A:\\.gemini and GitHub baseline.",
-    "Example": "InitializeAiMemory",
-    "RelativePath": "LCM_Inventory\\tools\\Initialize-SharedAiMemory.ps1",
-    "Parameters": [
-      {
-        "Name": "TargetDrive",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "A:",
-        "Description": "The shared drive letter hosting the persistent AI Memory root. Defaults to 'A:'."
-      },
-      {
-        "Name": "VerifyOnly",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Performs full diagnostic, junction, GitHub baseline, and hash verification without modifying filesystem (Alias: -Verify)."
-      },
-      {
-        "Name": "SyncFromGitHub",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Forces replacing/updating local A:\\.gemini configuration from GitHub baseline if older or divergent."
-      },
-      {
-        "Name": "Force",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Overwrites or replaces existing junction/directory without interactive confirmation."
-      },
-      {
-        "Name": "ShowAll",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Exposes detailed step-by-step diagnostic and file synchronization telemetry to the console."
-      }
-    ],
-    "Dependencies": null
-  },
-  {
     "Name": "Get-SystemPortInventory.ps1",
     "ShortName": "GetSystemPortInventory",
     "Aliases": null,
@@ -2637,60 +2583,6 @@
     ]
   },
   {
-    "Name": "Flush-LcmLegacyLogs.ps1",
-    "ShortName": "FlushLcmLegacyLogs",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "LCM_Inventory",
-    "Domain": "LCM_Inventory",
-    "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "Flush-LcmLegacyLogs execution tool.",
-    "Example": "FlushLcmLegacyLogs",
-    "RelativePath": "LCM_Inventory\\tools\\Flush-LcmLegacyLogs.ps1",
-    "Parameters": [
-      {
-        "Name": "TargetMajor",
-        "Type": "Int32",
-        "Mandatory": false,
-        "Default": "7",
-        "Description": "Current active major release version number (e.g. 7)"
-      },
-      {
-        "Name": "RetentionHorizon",
-        "Type": "Int32",
-        "Mandatory": false,
-        "Default": "2",
-        "Description": "Number of previous major releases to retain before pruning (RULE-DOC-006 M-2)"
-      },
-      {
-        "Name": "Apply",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Execute live deletion and pruning of stale logs and scratch artifacts"
-      },
-      {
-        "Name": "AuditOnly",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Perform audit only without deleting any files (default read-only)"
-      },
-      {
-        "Name": "RootPath",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "D:\\Git_Repositories",
-        "Description": "Root workspace directory containing repository log folders"
-      }
-    ],
-    "Dependencies": null
-  },
-  {
     "Name": "Format-LcmMarkdownDiagrams.ps1",
     "ShortName": "FormatLcmMarkdownDiagrams",
     "Aliases": null,
@@ -3232,8 +3124,8 @@
     ]
   },
   {
-    "Name": "Invoke-LcmJunctionCorrection.ps1",
-    "ShortName": "LcmJunctionCorrection",
+    "Name": "Invoke-LcmGiantReview.ps1",
+    "ShortName": "LcmGiantReview",
     "Aliases": null,
     "Role": "Utility",
     "Audience": "Developer",
@@ -3243,26 +3135,33 @@
     "Domain": "LCM_Inventory",
     "Type": "PowerShell",
     "Category": "Utility",
-    "Description": "Invoke-LcmJunctionCorrection execution tool.",
-    "Example": "LcmJunctionCorrection",
-    "RelativePath": "LCM_Inventory\\tools\\Invoke-LcmJunctionCorrection.ps1",
+    "Description": "Invoke-LcmGiantReview execution tool.",
+    "Example": "LcmGiantReview",
+    "RelativePath": "LCM_Inventory\\tools\\Invoke-LcmGiantReview.ps1",
     "Parameters": [
       {
-        "Name": "LinkPath",
-        "Type": "String",
+        "Name": "Repos",
+        "Type": "String[]",
         "Mandatory": false,
         "Default": "",
-        "Description": ""
+        "Description": "Repository folder names. Default: every folder under the workspace root with a .git."
       },
       {
-        "Name": "TargetPath",
+        "Name": "BaseRef",
         "Type": "String",
         "Mandatory": false,
-        "Default": "",
-        "Description": ""
+        "Default": "@{u}",
+        "Description": "Ref for the left side. Default '@{u}' (the tracked upstream branch)."
+      },
+      {
+        "Name": "Out",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "(Join-Path $env:TEMP 'LCM_GiantBCR')",
+        "Description": "Export folder. Default: %TEMP%\\LCM_GiantBCR."
       }
     ],
-    "Dependencies": null
+    "Dependencies": "BCompare.exe"
   },
   {
     "Name": "Invoke-LcmPathMigration.ps1",
@@ -3467,79 +3366,6 @@
       }
     ],
     "Dependencies": "AdminMode.psm1"
-  },
-  {
-    "Name": "Merge-RepositoriesToApps.ps1",
-    "ShortName": "MergeRepositoriesToApps",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "LCM_Inventory",
-    "Domain": "LCM_Inventory",
-    "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "Merge-RepositoriesToApps execution tool.",
-    "Example": "MergeRepositoriesToApps",
-    "RelativePath": "LCM_Inventory\\tools\\Merge-RepositoriesToApps.ps1",
-    "Parameters": [
-      {
-        "Name": "SourceRepo",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Source child repository to absorb as an App"
-      },
-      {
-        "Name": "TargetRepo",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Target umbrella repository to receive the App"
-      },
-      {
-        "Name": "AppTitle",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Custom App title (defaults to source repository name)"
-      },
-      {
-        "Name": "WorkspaceRoot",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "D:\\Git_Repositories",
-        "Description": "Workspace root path"
-      }
-    ],
-    "Dependencies": null
-  },
-  {
-    "Name": "Migrate-CrpNamingScheme.ps1",
-    "ShortName": "MigrateCrpNamingScheme",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "LCM_Inventory",
-    "Domain": "LCM_Inventory",
-    "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "Migrate-CrpNamingScheme execution tool.",
-    "Example": "MigrateCrpNamingScheme",
-    "RelativePath": "LCM_Inventory\\tools\\Migrate-CrpNamingScheme.ps1",
-    "Parameters": [
-      {
-        "Name": "Force",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Force file rename operations without interactive confirmation prompts"
-      }
-    ],
-    "Dependencies": null
   },
   {
     "Name": "Invoke-PrivilegedTool.ps1",
@@ -4466,86 +4292,6 @@
     ]
   },
   {
-    "Name": "Split-LcmAppDocs.ps1",
-    "ShortName": "SplitLcmAppDocs",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "LCM_Inventory",
-    "Domain": "LCM_Inventory",
-    "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "Split-LcmAppDocs execution tool.",
-    "Example": "SplitLcmAppDocs",
-    "RelativePath": "LCM_Inventory\\tools\\Split-LcmAppDocs.ps1",
-    "Parameters": [
-      {
-        "Name": "Repo",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Target repository name to split into dedicated App documents"
-      },
-      {
-        "Name": "WorkspaceRoot",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "D:\\Git_Repositories",
-        "Description": "Workspace root path"
-      }
-    ],
-    "Dependencies": null
-  },
-  {
-    "Name": "Split-LcmArchitectureToApps.ps1",
-    "ShortName": "SplitLcmArchitectureToApps",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "LCM_Inventory",
-    "Domain": "LCM_Inventory",
-    "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "Split-LcmArchitectureToApps execution tool.",
-    "Example": "SplitLcmArchitectureToApps",
-    "RelativePath": "LCM_Inventory\\tools\\Split-LcmArchitectureToApps.ps1",
-    "Parameters": [
-      {
-        "Name": "Repo",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Target repository name to partition into Apps"
-      },
-      {
-        "Name": "AppTitles",
-        "Type": "String[]",
-        "Mandatory": false,
-        "Default": "@()",
-        "Description": "List of App titles to scaffold/decompose into"
-      },
-      {
-        "Name": "SplitDocs",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "$false",
-        "Description": "Partition into dedicated docs/App#<N>-<Slug>/ subdirectories (default: false)"
-      },
-      {
-        "Name": "WorkspaceRoot",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "D:\\Git_Repositories",
-        "Description": "Workspace root path"
-      }
-    ],
-    "Dependencies": null
-  },
-  {
     "Name": "Split-TextFile.ps1",
     "ShortName": "SplitTextFile",
     "Aliases": null,
@@ -4931,6 +4677,74 @@
     ]
   },
   {
+    "Name": "Test-Guardrail.ps1",
+    "ShortName": "TestGuardrail",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Test-Guardrail execution tool.",
+    "Example": "TestGuardrail",
+    "RelativePath": "LCM_Inventory\\tools\\Test-Guardrail.ps1",
+    "Parameters": [
+      {
+        "Name": "Scan",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Check structure.lock.json invariants. Exit 1 on violations."
+      },
+      {
+        "Name": "Grant",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Rule id (or '*') to allow for -Minutes (default from config)."
+      },
+      {
+        "Name": "Revoke",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Remove all grants."
+      },
+      {
+        "Name": "ListGrants",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Show active grants."
+      },
+      {
+        "Name": "TestPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Dry-run a write to this path."
+      },
+      {
+        "Name": "TestCommand",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Dry-run this shell command."
+      },
+      {
+        "Name": "Minutes",
+        "Type": "Int32",
+        "Mandatory": false,
+        "Default": "0",
+        "Description": "Grant lifetime."
+      }
+    ],
+    "Dependencies": null
+  },
+  {
     "Name": "Test-LCMRuleHealth.ps1",
     "ShortName": "TestLCMRuleHealth",
     "Aliases": null,
@@ -5297,53 +5111,6 @@
     "Example": "WorkspaceAudit",
     "RelativePath": "LCM_Inventory\\tools\\Invoke-WorkspaceAudit.ps1",
     "Parameters": [],
-    "Dependencies": null
-  },
-  {
-    "Name": "Invoke-WorkspaceDeduplication.ps1",
-    "ShortName": "WorkspaceDeduplication",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "LCM_Inventory",
-    "Domain": "LCM_Inventory",
-    "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "Invoke-WorkspaceDeduplication execution tool.",
-    "Example": "WorkspaceDeduplication",
-    "RelativePath": "LCM_Inventory\\tools\\Invoke-WorkspaceDeduplication.ps1",
-    "Parameters": [
-      {
-        "Name": "Apply",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Executes the archival moves. Without -Apply, runs in safe -AuditOnly (dry-run) mode."
-      },
-      {
-        "Name": "AuditOnly",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Explicit dry-run mode that calculates hashes and displays duplicate clusters without moving files."
-      },
-      {
-        "Name": "TargetDirectories",
-        "Type": "String[]",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Explicit directories to scan for duplicates. Defaults to workspace data, scratch, and staging folders."
-      },
-      {
-        "Name": "ArchiveRoot",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Base directory where archived duplicates will be stored."
-      }
-    ],
     "Dependencies": null
   },
   {

@@ -4,7 +4,7 @@
   "updated_at": "2026-10-09T12:13:17+02:00",
   "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 254,
+  "last_proposal_id": 256,
   "proposals": [
     {
       "id": 254,
@@ -10585,6 +10585,32 @@
       "always_proceed": true,
       "progress_state": "completed",
       "priority": 5
+    },
+    {
+      "id": 256,
+      "crp_id": "CRP-256",
+      "timestamp": "2026-10-09 15:40:00",
+      "title": "Archived Restructuring Tools (Reference Material)",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-256",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "suggested",
+      "bundle_id": "CRP-256",
+      "bundle_dir": "docs/Proposals/CRP-256-Archived-Restructuring-Tools-Reference",
+      "docs": { "specification": "Specification.md" },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig",
+      "details": "Keeps finished restructuring tools (app merge/split, junction correction, shared AI memory) as reference scripts inside the proposal instead of the active tool suite.",
+      "priority": 5,
+      "dates": { "created": "2026-10-09 15:40:00", "suggested": "2026-10-09 15:40:00" },
+      "state_history": [ { "state": "suggested", "timestamp": "2026-10-09 15:40:00", "user": "rgbig", "note": "Suggested on operator request." } ],
+      "progress_state": "not_started",
+      "flow_mode": "doit",
+      "always_proceed": false,
+      "disposition": null
     }
   ],
   "testing_mode": "active",
