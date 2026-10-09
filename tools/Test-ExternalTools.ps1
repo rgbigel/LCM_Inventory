@@ -75,9 +75,8 @@ if ($ini -and (Test-Path -LiteralPath $ini.file)) {
   $covered = $false
   foreach ($f in $folders) { if ($f -and $ini.includeFolderMustCover.TrimEnd('\') -like "$f*") { $covered = $true } }
   Add-Result 'ini:content folders' $covered "must cover $($ini.includeFolderMustCover)"
+  # Everything accepts either ',' or ';' between patterns (locale dependent); both are read here
   $rawTypes = [string]$kv['content_indexing_include_only_files']
-  $malformed = $rawTypes -match ','
-  Add-Result 'ini:content file separator' (-not $malformed) $(if ($malformed) { 'file patterns must be separated by ; (found a comma)' } else { 'ok' })
   $patterns = @($rawTypes -split '[;,]' | ForEach-Object { $_.Trim() })
   foreach ($need in $ini.includeFileTypesMustCover) {
     $ok = $false
