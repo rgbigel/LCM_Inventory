@@ -100,6 +100,13 @@ if (-not [string]::IsNullOrWhiteSpace($Repository)) {
 $now = Get-Date
 $readinessRows = @()
 
+# Workspace-level requisite check: external tools, Machine PATH and Everything content-index settings
+$externalToolsCheck = Join-Path $PSScriptRoot 'Test-ExternalTools.ps1'
+if (Test-Path -LiteralPath $externalToolsCheck) {
+    Write-Host " [>] External tools and Everything index (docs\Requisites)..." -ForegroundColor Yellow
+    & pwsh -NoProfile -File $externalToolsCheck | Out-Host
+}
+
 foreach ($dir in $childDirs) {
     $repoName = $dir.Name
     $repoPath = $dir.FullName

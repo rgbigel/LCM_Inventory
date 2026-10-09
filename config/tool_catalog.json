@@ -4287,8 +4287,10 @@
       }
     ],
     "Dependencies": [
+      "Test-ExternalTools.ps1",
       "Test-RepoReadiness.ps1",
-      "Invoke-InteractiveDesktop.ps1"
+      "Invoke-InteractiveDesktop.ps1",
+      "Everything"
     ]
   },
   {
@@ -4674,6 +4676,28 @@
     "Dependencies": [
       "LcmToolCatalog.psm1",
       "Update-ToolCatalog.ps1"
+    ]
+  },
+  {
+    "Name": "Test-ExternalTools.ps1",
+    "ShortName": "TestExternalTools",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Test-ExternalTools execution tool.",
+    "Example": "TestExternalTools",
+    "RelativePath": "LCM_Inventory\\tools\\Test-ExternalTools.ps1",
+    "Parameters": [],
+    "Dependencies": [
+      "Everything",
+      "es.exe",
+      "everything"
     ]
   },
   {

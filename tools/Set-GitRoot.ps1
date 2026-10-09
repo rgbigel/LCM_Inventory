@@ -208,6 +208,26 @@ try {
       }
     }
 
+    # External tools declared in docs\Requisites\external-tools.json (appended, never ahead of the LCM Cmd path)
+    $reqFile = Join-Path $workspaceRoot 'docs\Requisites\external-tools.json'
+    if (Test-Path -LiteralPath $reqFile) {
+      $req = Get-Content -LiteralPath $reqFile -Raw | ConvertFrom-Json
+      foreach ($tool in @($req.tools)) {
+        if (-not $tool.addToPath) { continue }
+        if (-not (Test-Path -LiteralPath (Join-Path $tool.dir $tool.probe))) {
+          Write-ToolLog -Message "External tool $($tool.name) not found at $($tool.dir); PATH entry skipped." -Level WARN
+          continue
+        }
+        $known = @($newParts | Where-Object { $_.TrimEnd('\') -ieq $tool.dir.TrimEnd('\') })
+        if ($known.Count -eq 0) {
+          $newParts.Add($tool.dir)
+          Write-ToolLog -Message "Machine PATH: added external tool $($tool.name) ($($tool.dir))." -Level ACTION
+        }
+      }
+    } else {
+      Write-ToolLog -Message "Requisites manifest not found: $reqFile" -Level WARN
+    }
+
     $newPathString = ($newParts -join ';')
     [Environment]::SetEnvironmentVariable('Path', $newPathString, 'Machine')
     Write-ToolLog -Message "Machine PATH registry updated with LCM command path ($lcmCmdPath)." -Level ACTION

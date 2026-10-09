@@ -138,7 +138,31 @@ if ($PSCmdlet.ParameterSetName -eq 'Raw') {
 $finalQuery = $searchTerms -join ' '
 
 # ------------------------------------------------------------------------------
-# 1. Primary Transport: Everything HTTP REST JSON API (Sandbox Independent)
+# 1. Primary Transport: es.exe CLI (RULE-EFF-007). Resolved via PATH, then the
+#    Requisites manifest (docs\Requisites\external-tools.json) under Machine Git_Root.
+# ------------------------------------------------------------------------------
+$esBin = $null
+$esCmd = Get-Command -Name 'es.exe' -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1
+if ($esCmd) { $esBin = $esCmd.Source }
+if (-not $esBin) {
+  $gitRoot = [Environment]::GetEnvironmentVariable('Git_Root', 'Machine')
+  $manifest = if ($gitRoot) { Join-Path $gitRoot 'docs\Requisites\external-tools.json' } else { '' }
+  if ($manifest -and (Test-Path -LiteralPath $manifest)) {
+    $tool = @((Get-Content -LiteralPath $manifest -Raw | ConvertFrom-Json).tools) | Where-Object { $_.name -eq 'Everything' } | Select-Object -First 1
+    if ($tool -and (Test-Path -LiteralPath (Join-Path $tool.dir 'es.exe'))) { $esBin = Join-Path $tool.dir 'es.exe' }
+  }
+}
+
+if ($esBin) {
+  try {
+    $cliOutput = @(& $esBin -n $MaxResults.ToString() $finalQuery 2>&1)
+    if ($LASTEXITCODE -eq 0) {
+      return $cliOutput
+    }
+  } catch {}
+}
+# ------------------------------------------------------------------------------
+# 2. Secondary Transport: Everything HTTP REST JSON API (only if enabled in Everything)
 # ------------------------------------------------------------------------------
 $encodedSearch = [System.Uri]::EscapeDataString($finalQuery)
 $httpUri = "http://127.0.0.1:$Port/?search=$encodedSearch&json=1&path_column=1&size_column=1&date_modified_column=1&count=$MaxResults"
@@ -164,31 +188,11 @@ try {
 }
 
 # ------------------------------------------------------------------------------
-# 2. Secondary Transport: es.exe CLI Fallback
+# 3. Fallback: rg.exe --files / Get-ChildItem under the workspace root
 # ------------------------------------------------------------------------------
-$esPaths = @(
-  "D:\Tools\Everything 1.5a\es.exe",
-  "D:\Tools\Everything\es.exe",
-  "C:\Program Files\Everything 1.5a\es.exe"
-)
-
-$esBin = $null
-foreach ($p in $esPaths) {
-  if (Test-Path -Path $p) {
-    $esBin = $p
-    break
-  }
+$fbRoot = if (-not [string]::IsNullOrWhiteSpace($Path)) { $Path.Trim().Trim('"') } else { [Environment]::GetEnvironmentVariable('Git_Root', 'Machine') }
+if ($fbRoot -and (Test-Path -LiteralPath $fbRoot) -and -not [string]::IsNullOrWhiteSpace($Query)) {
+  Write-Warning 'Everything not reachable (es.exe missing and HTTP off); falling back to a scoped file scan.'
+  return Get-ChildItem -LiteralPath $fbRoot -Recurse -File -Filter $Query -ErrorAction SilentlyContinue | Select-Object -First $MaxResults -ExpandProperty FullName
 }
-
-if ($null -ne $esBin) {
-  $esArgs = @("-n", $MaxResults.ToString(), $finalQuery)
-  try {
-    $cliOutput = & $esBin @esArgs 2>&1
-    if ($LASTEXITCODE -eq 0) {
-      return $cliOutput
-    }
-  } catch {}
-}
-
-Write-Warning "Could not connect to Everything HTTP Server on port $Port or es.exe CLI."
-Write-Warning "Ensure Everything 1.5a is running with HTTP Server enabled on 127.0.0.1:$Port."
+Write-Warning 'Everything (es.exe or HTTP) is not reachable and no fallback scope was possible. Run Test-ExternalTools.ps1.'

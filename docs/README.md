@@ -6,7 +6,7 @@ Path: LCM_Inventory/docs/README.md
 Authors: Rolf, LCM_AI Engine  
 Version: 2.0.0  
 Status: Authoritative Reference  
-Updated: 2026-10-09 15:31:21  
+Updated: 2026-10-09 16:23:18  
 
 ---
 
@@ -149,6 +149,7 @@ TestWorkspaceReadiness
 | **SyncLcmModuleVersions** | [Sync-LcmModuleVersions.ps1](file:///LCM_Inventory/tools/Sync-LcmModuleVersions.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Sync-LcmModuleVersions execution tool. | SyncLcmModuleVersions |
 | **SyncLCMResearchSnapshot** | [Sync-LCMResearchSnapshot.ps1](file:///LCM_Inventory/tools/Sync-LCMResearchSnapshot.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Sync-LCMResearchSnapshot execution tool. | SyncLCMResearchSnapshot |
 | **SyncToolSymlinks** | [Sync-ToolSymlinks.ps1](file:///LCM_Inventory/tools/Sync-ToolSymlinks.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Sync-ToolSymlinks execution tool. | SyncToolSymlinks |
+| **TestExternalTools** | [Test-ExternalTools.ps1](file:///LCM_Inventory/tools/Test-ExternalTools.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Test-ExternalTools execution tool. | TestExternalTools |
 | **TestGuardrail** | [Test-Guardrail.ps1](file:///LCM_Inventory/tools/Test-Guardrail.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Test-Guardrail execution tool. | TestGuardrail |
 | **TestHaRepoReady** | [Test-RepoReadiness.ps1](file:///HaSSD06_Inventory/tools/Test-RepoReadiness.ps1) | Utility | HaSSD06 | PowerShell | Utility | Test-RepoReadiness execution tool. | TestHaRepoReady |
 | **TestLCMRuleHealth** | [Test-LCMRuleHealth.ps1](file:///LCM_Inventory/tools/Test-LCMRuleHealth.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Test-LCMRuleHealth execution tool. | TestLCMRuleHealth |
