@@ -1,0 +1,65 @@
+{
+  "description": "AI guardrail policy. Consumed by tools/Test-Guardrail.ps1 (preToolUse hook and git pre-commit). Methodology is governed here, Git is only transport.",
+  "schemaVersion": 1,
+  "mode": "enforce",
+  "modeHelp": "enforce = actions as configured | ask = deny becomes ask | warn = everything only logged | off = disabled. Override per session with env LCM_GUARDRAIL_MODE.",
+  "askSupported": true,
+  "askSupportedHelp": "false converts every 'ask' into a deny whose reason tells the agent to call ask_user first, then request a grant.",
+  "grantMinutesDefault": 30,
+  "budget": {
+    "editsPerSession": 120,
+    "action": "ask",
+    "reason": "Large number of file edits in one session. Confirm the plan is still on track before spending more credits."
+  },
+  "rules": [
+    {
+      "id": "G-001-forbidden-structure",
+      "action": "deny",
+      "applies": "write",
+      "pathRegex": "(^|[\\\\/])\\.(lcm|lcd)([\\\\/]|$)",
+      "reason": "Retired folders .lcm/.lcd must not be created (structure.lock.json). Use LCM_Inventory, LCM_AI or LCM_Shared."
+    },
+    {
+      "id": "G-002-forbidden-structure-shell",
+      "action": "deny",
+      "applies": "shell",
+      "commandRegex": "(?i)(New-Item|mkdir|\\bmd\\b|mklink|Copy-Item|Move-Item|Rename-Item|Set-Content|Out-File|git\\s+(mv|add))[^\\r\\n]*(?<![\\w.-])\\.(lcm|lcd)(?![\\w])",
+      "reason": "Shell command would create or stage a retired .lcm/.lcd path."
+    },
+    {
+      "id": "G-010-protected-governance",
+      "action": "ask",
+      "applies": "write",
+      "pathRegex": "(?i)(^|[\\\\/])(\\.agents[\\\\/]rules[\\\\/]|AGENTS\\.md$|GEMINI\\.md$|structure\\.lock\\.json$|guardrails\\.json$|\\.githooks[\\\\/]|\\.github[\\\\/]hooks[\\\\/])",
+      "reason": "Governance file (rules, AGENTS.md, guardrails, hooks). Changes need operator intent."
+    },
+    {
+      "id": "G-020-junction-changes",
+      "action": "ask",
+      "applies": "shell",
+      "commandRegex": "(?i)(New-Item[^\\r\\n]*-ItemType\\s+(Junction|SymbolicLink)|\\bmklink\\b|fsutil\\s+reparsepoint)",
+      "reason": "Creating or changing junctions/symlinks alters the workspace topology."
+    },
+    {
+      "id": "G-021-root-variable",
+      "action": "ask",
+      "applies": "shell",
+      "commandRegex": "(?i)(LCM_ROOT|GIT_ROOT)[^\\r\\n]*(SetEnvironmentVariable|setx|reg\\s+add|Set-ItemProperty)|(SetEnvironmentVariable|setx|reg\\s+add|Set-ItemProperty)[^\\r\\n]*(LCM_ROOT|GIT_ROOT)",
+      "reason": "Changing the machine/registry root value is the cutover step."
+    },
+    {
+      "id": "G-030-destructive",
+      "action": "ask",
+      "applies": "shell",
+      "commandRegex": "(?i)(Remove-Item[^\\r\\n]*-Recurse|\\brm\\s+-[a-z]*r|\\brmdir\\s+/s|git\\s+reset\\s+--hard|git\\s+clean\\s+-[a-z]*f|git\\s+push[^\\r\\n]*(--force|-f\\b)|git\\s+checkout\\s+--\\s+\\.|git\\s+branch\\s+-D)",
+      "reason": "Destructive or history-rewriting command."
+    },
+    {
+      "id": "G-040-bulk-rewrite",
+      "action": "ask",
+      "applies": "shell",
+      "commandRegex": "(?i)(Invoke-LcmPathMigration[^\\r\\n]*-Apply|-replace[^\\r\\n]*\\|\\s*Set-Content|Get-ChildItem[^\\r\\n]*-Recurse[^\\r\\n]*\\|[^\\r\\n]*(Set-Content|WriteAllText))",
+      "reason": "Bulk file rewrite across many files."
+    }
+  ]
+}

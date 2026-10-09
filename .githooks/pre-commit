@@ -1,4 +1,5 @@
 #!/bin/sh
 
 repository_path="$(git rev-parse --show-toplevel)" || exit 1
+pwsh -NoProfile -ExecutionPolicy Bypass -File "$repository_path/tools/Test-Guardrail.ps1" -Scan || exit 1
 exec pwsh -NoProfile -ExecutionPolicy Bypass -File "$repository_path/tools/Test-ReviewCommitGate.ps1" -RepositoryPath "$repository_path"

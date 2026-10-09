@@ -1,0 +1,9 @@
+{
+  "description": "Structural invariants of the workspace. Checked by tools/Test-Guardrail.ps1 -Scan (pre-commit and on demand).",
+  "schemaVersion": 1,
+  "forbiddenFolders": [".lcm", ".lcd"],
+  "forbiddenScope": "workspace root and the top level of every repository folder",
+  "requiredFolders": ["LCM_AI", "LCM_Inventory", "LCM_Shared"],
+  "requiredFiles": ["AGENTS.md", "LCM_Inventory/config/guardrails.json", "LCM_Inventory/config/structure.lock.json"],
+  "requiredJunctions": [".agents", ".copilot"]
+}

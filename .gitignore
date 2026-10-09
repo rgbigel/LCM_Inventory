@@ -38,3 +38,6 @@ data/logs/lcm-internal/actions.jsonl
 temp/
 
 *.backup.json
+
+data/guardrails/
+data/logs/guardrails.log
