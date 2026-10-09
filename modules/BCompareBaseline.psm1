@@ -252,15 +252,6 @@ function Export-BCompareBaseline {
         New-Item -ItemType Junction -Path $destCopilotAtoms -Target $targetAtoms -Force | Out-Null
       }
     }
-
-    $destTools = Join-Path $DestinationPath 'tools'
-    $destCopilotMethods = Join-Path $destCopilot 'Methods'
-    if (-not (Test-Path -LiteralPath $destCopilotMethods)) {
-      $targetTools = if (Test-Path -LiteralPath $destTools) { $destTools } elseif ($Descriptor.RulesAuthorityPath) { Join-Path $Descriptor.RulesAuthorityPath 'tools' } else { $null }
-      if ($targetTools -and (Test-Path -LiteralPath $targetTools)) {
-        New-Item -ItemType Junction -Path $destCopilotMethods -Target $targetTools -Force | Out-Null
-      }
-    }
   }
 
   # ----------------------------------------------------------------------------
