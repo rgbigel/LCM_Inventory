@@ -7,7 +7,7 @@ Affected-Repos: [LCM]
 Status: OPEN
 Date: 2026-09-07
 Author: rgbig
-Target Scope: .lcm/modules/LcmToolCatalog.psm1, .lcm/tools/internal/Show-Tools.ps1, .lcm/assets/lcm-tool-explorer.js, SHOW_TOOLS.html
+Target Scope: LCM_Inventory/modules/LcmToolCatalog.psm1, LCM_Inventory/tools/Show-Tools.ps1, LCM_Inventory/assets/lcm-tool-explorer.js, SHOW_TOOLS.html
 Affected Version Range: v7.3.0
 Impacted Repositories: [LCM]
 Severity: Low

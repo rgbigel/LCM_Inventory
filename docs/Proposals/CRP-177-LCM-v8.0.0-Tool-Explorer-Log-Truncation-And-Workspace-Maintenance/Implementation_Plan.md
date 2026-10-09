@@ -15,18 +15,18 @@ Date: 2026-09-26
 ## Planned Execution Steps
 
 ### Phase 1: Tool Explorer Ergonomics & Disambiguation
-1. Update `.lcm/tools/internal/Update-ToolCatalog.ps1`:
+1. Update `LCM_Inventory/tools/Update-ToolCatalog.ps1`:
    - Add explicit disambiguation mapping for `HaSSD06_Inventory\Test-RepoReadiness.ps1` &rarr; `TestHaRepoReady`.
    - Purge stale `HaSSD06InventoryTestRepoReadiness.cmd` and generate `TestHaRepoReady.cmd`.
-2. Update `.lcm/modules/LcmToolCatalog.psm1`:
+2. Update `LCM_Inventory/modules/LcmToolCatalog.psm1`:
    - Remove `card-noexit` metric card button.
    - Insert `#` index column header (`<th>#</th>`) with `window.LcmTools.sortTable('Index')`.
    - Update column filter dropdown label from "All Groups" to "All Subsystems".
    - Compact header utility buttons (`Refresh`, `Export`, `Theme`, `Help`, `Back`).
-3. Update `LCMToolCatalog.css` in both `.lcm/assets` and `LCM_Inventory/assets`:
+3. Update `LCMToolCatalog.css` in both `LCM_Inventory/assets` and `LCM_Inventory/assets`:
    - Compact `.btn-action` and `.btn-menu-trigger` padding and font size.
    - Adjust table layout for the `#` index column.
-4. Update `lcm-tool-explorer.js` in both `.lcm/assets` and `LCM_Inventory/assets`:
+4. Update `lcm-tool-explorer.js` in both `LCM_Inventory/assets` and `LCM_Inventory/assets`:
    - Strip pictograms (`📁 `, `💬 `) from tool name display.
    - Insert formatted `#` cell with `001-max` sequence number tied to unfiltered index.
    - Implement in-place cell editing for `Group` (Subsystem) with dynamic options including `"Needed?"`.
@@ -38,8 +38,8 @@ Date: 2026-09-26
    - Implement log aging (`-MaxLogAgeDays 7`) and transient script log purging (`-MaxScriptLogAgeDays 3`).
    - Wire `Clear-BCReviewTemp.ps1` for review scratch older than 48 hours.
    - Implement scratch temporary junk pruning (`*.tmp`, `*~`).
-2. Author wrapper `.lcm/tools/internal/Invoke-WorkspaceMaintenance.ps1`.
-3. Create launcher `.lcm/Cmd/WorkspaceMaintenance.cmd`.
+2. Author wrapper `LCM_Inventory/tools/Invoke-WorkspaceMaintenance.ps1`.
+3. Create launcher `LCM_Inventory/Cmd/WorkspaceMaintenance.cmd`.
 ### 2.5 Per-CRP Review Directory Isolation & Session Naming
 1. Update `LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1`:
    - Resolve `$CRP` before path calculation.

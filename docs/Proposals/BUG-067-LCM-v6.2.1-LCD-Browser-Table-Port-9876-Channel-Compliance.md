@@ -27,13 +27,13 @@ Resolve the unresponsiveness defect in the LCM Tool Explorer ("Print / PDF" butt
 
 ## 3. Deliverables & Remediation
 
-1. **DTO Definition**: Add `DaemonPrintRequest` class to `.lcm/modules/LcmDaemon/Classes/DaemonDto.ps1`.
-2. **Daemon Controller Action**: Implement `HandlePrint([DaemonPrintRequest]$req)` in `.lcm/modules/LcmDaemon/Classes/DaemonActionController.ps1` to log structured audit events per `RULE-PS-009`.
-3. **Daemon Route**: Add `POST /print` endpoint handling in `.lcm/tools/internal/LcmDesktopDaemon.ps1`.
+1. **DTO Definition**: Add `DaemonPrintRequest` class to `LCM_Inventory/modules/LcmDaemon/Classes/DaemonDto.ps1`.
+2. **Daemon Controller Action**: Implement `HandlePrint([DaemonPrintRequest]$req)` in `LCM_Inventory/modules/LcmDaemon/Classes/DaemonActionController.ps1` to log structured audit events per `RULE-PS-009`.
+3. **Daemon Route**: Add `POST /print` endpoint handling in `LCM_Inventory/tools/LcmDesktopDaemon.ps1`.
 4. **Print Engine Alignment**:
-   - Update `.lcm/assets/lcm-table-print-atom.js` to export `openPrintPreview` (aliased to `openModal`).
+   - Update `LCM_Inventory/assets/lcm-table-print-atom.js` to export `openPrintPreview` (aliased to `openModal`).
    - Wire asynchronous dispatch to `http://127.0.0.1:9876/print` during print configuration and execution.
-5. **Catalog HTML Generator**: Align button invocation in `.lcm/modules/LcmToolCatalog.psm1` and recompile scratch HTML artifacts.
+5. **Catalog HTML Generator**: Align button invocation in `LCM_Inventory/modules/LcmToolCatalog.psm1` and recompile scratch HTML artifacts.
 
 ---
 

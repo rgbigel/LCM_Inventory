@@ -18,7 +18,7 @@
 ## 1. Executive Summary & Intent
 
 The operator identified an architectural redundancy and potential directory loop in `LCM_Inventory`:
-- An unnecessary NTFS directory junction exists at `LCM_Inventory\.agents\rules` targeting `D:\Git_Repositories\.lcm\.agents\rules` (or `Git_Repositories\.agents`).
+- An unnecessary NTFS directory junction exists at `LCM_Inventory\.agents\rules` targeting `D:\Git_Repositories\LCM_Inventory\.agents\rules` (or `Git_Repositories\.agents`).
 - If `LCM_Inventory` directly contains or hosts physical rules, or if child repositories junction back to a root that physically resides or maps into the same tree, a circular junction reference exists.
 - In Beyond Compare visual reviews (`Invoke-BeyondCompareReview.ps1`), this triggers a redundant second review session traversing `.agents\rules` unnecessarily.
 - This CRP establishes formal intake to analyze the physical rules topology, eliminate redundant junctions, prevent loop traversals, and align `LCM_Inventory` with canonical LCM governance.
@@ -28,11 +28,11 @@ The operator identified an architectural redundancy and potential directory loop
 ## 2. Problem Analysis & Mechanical Findings
 
 1. **Junction Invariant in LCM (`RULE-REV-008`, `RULE-LCM-004`)**:
-   - Governed child repositories are designed to junction `.agents/rules` directly to `D:\Git_Repositories\.agents\rules` (or `.lcm\.agents\rules`).
+   - Governed child repositories are designed to junction `.agents/rules` directly to `D:\Git_Repositories\.agents\rules` (or `LCM_Inventory\.agents\rules`).
    - However, `LCM_Inventory` serves as the central inventory container for the entire workspace.
 2. **Identified Discrepancy**:
    - `LCM_Inventory\.agents\rules` is currently mapped as an NTFS directory junction:
-     `D:\Git_Repositories\LCM_Inventory\.agents\rules` $\rightarrow$ `D:\Git_Repositories\.lcm\.agents\rules`.
+     `D:\Git_Repositories\LCM_Inventory\.agents\rules` $\rightarrow$ `D:\Git_Repositories\LCM_Inventory\.agents\rules`.
    - If physical rule files exist directly within the repository, maintaining a junction pointing back out to the parent root container introduces an unnatural circular dependency.
    - Without careful exclusion handling, Windows tooling and Git review traversals encounter duplicate paths for the identical physical ruleset.
 
@@ -44,7 +44,7 @@ The operator identified an architectural redundancy and potential directory loop
    - `LCM_Inventory` is codified as the authoritative physical owner and single commit gate for LCM governance rules.
    - The physical ruleset is migrated to and tracked by `LCM_Inventory` under `LCM_Inventory\.agents\rules\`.
 2. **Junction Inversion & Root Decoupling**:
-   - The root container `Git_Repositories` un-tracks `.lcm/.agents/rules/` and creates an NTFS directory junction pointing to `LCM_Inventory\.agents\rules\`.
+   - The root container `Git_Repositories` un-tracks `LCM_Inventory/.agents/rules/` and creates an NTFS directory junction pointing to `LCM_Inventory\.agents\rules\`.
    - Root commits in `Git_Repositories` for rule updates are eliminated.
 3. **Tooling & Review Harness Alignment**:
    - `Repair-LCMRules.ps1` recognizes `LCM_Inventory` as the physical canonical source and skips junction creation on it.

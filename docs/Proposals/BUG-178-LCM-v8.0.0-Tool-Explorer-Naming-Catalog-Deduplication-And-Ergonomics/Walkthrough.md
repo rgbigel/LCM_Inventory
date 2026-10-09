@@ -14,12 +14,12 @@ Status: Completed
 This bug fix resolves the naming, state persistence, and display defects in the LCM Tool Explorer:
 
 1. **PowerShell Approved Verb Alignment**:
-   - [`Show-ToolsExplorer.ps1`](file:///.lcm/tools/internal/Show-ToolsExplorer.ps1) is now the authoritative script conforming to `RULE-PS-002`.
-   - Command aliases (`ToolExplorer`, `ToolsExplorer`, `ShowTools`) are fully supported via trampolines in `.lcm/Cmd/`.
+   - [`Show-ToolsExplorer.ps1`](file:///LCM_Inventory/tools/Show-ToolsExplorer.ps1) is now the authoritative script conforming to `RULE-PS-002`.
+   - Command aliases (`ToolExplorer`, `ToolsExplorer`, `ShowTools`) are fully supported via trampolines in `LCM_Inventory/Cmd/`.
 
 2. **Deduplication of Tool Catalog**:
-   - The stale September 11 copy `.lcm/tools/internal/tool_catalog.json` was purged.
-   - All tools and runtime scripts now read strictly from the single source of truth: [`.lcm/config/tool_catalog.json`](file:///.lcm/config/tool_catalog.json).
+   - The stale September 11 copy `LCM_Inventory/tools/tool_catalog.json` was purged.
+   - All tools and runtime scripts now read strictly from the single source of truth: [`LCM_Inventory/config/tool_catalog.json`](file:///LCM_Inventory/config/tool_catalog.json).
 
 3. **Self-Tool Exclusion**:
    - The Tool Explorer UI no longer displays its own runner script within the interactive tools table.
@@ -34,17 +34,17 @@ This bug fix resolves the naming, state persistence, and display defects in the 
 
 ### 2.1 Update-ToolCatalog Execution
 ```powershell
-pwsh -File .lcm/tools/internal/Update-ToolCatalog.ps1
+pwsh -File LCM_Inventory/tools/Update-ToolCatalog.ps1
 ```
 Output:
-- Persisted canonical catalog: `D:\Git_Repositories\.lcm\config\tool_catalog.json`
+- Persisted canonical catalog: `D:\Git_Repositories\LCM_Inventory\config\tool_catalog.json`
 - Generated 206 short-name `.cmd` launchers.
 - Status: `COMPLETED`.
 
 ### 2.2 Dashboard Generation Check
 ```powershell
-pwsh -File .lcm/tools/internal/Show-ToolsExplorer.ps1 -NoLaunch
+pwsh -File LCM_Inventory/tools/Show-ToolsExplorer.ps1 -NoLaunch
 ```
 Output:
 - `Show-ToolsExplorer` completed successfully with code 0.
-- Dashboard generated at `.lcm/tools/internal/scratch/Tools_Explorer_LCM.html`.
+- Dashboard generated at `LCM_Inventory/tools/scratch/Tools_Explorer_LCM.html`.

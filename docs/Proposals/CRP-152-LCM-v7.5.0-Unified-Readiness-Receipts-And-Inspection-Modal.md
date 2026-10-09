@@ -8,7 +8,7 @@
   - `tools/Test-RepoReadiness.ps1` (Child repositories)
   - `LCM_Inventory/tools/Test-LCMRuleHealth.ps1`
   - `tools/assets/StandardTableDisplay.css`, `tools/assets/lcm-table-engine.js`
-  - `.lcm/tools/hub/Show-WorkspaceReadiness.ps1`
+  - `LCM_Inventory/tools/hub/Show-WorkspaceReadiness.ps1`
 - **Author**: Operator Directive / CRP Intake
 - **Date**: 2026-09-19
 - **Status**: Completed (`completed`)
@@ -35,7 +35,7 @@ Provides a universal, transparent mechanism for operators to immediately inspect
   - Clicking the header badge or clicking `🔍 Inspect / Run` in the Tools tab opens an interactive dialog with gate cards, live pass/fail details, and a `▶️ Run Live Check` button that updates the receipt and UI in real time.
 
 ### 2.3 Workspace-Wide Readiness Rollup (`Show-WorkspaceReadiness.ps1`)
-- A central CLI and HTML viewer in `.lcm\tools\hub\Show-WorkspaceReadiness.ps1` aggregating `latest_readiness.json` across all 34 workspace repositories into a single matrix.
+- A central CLI and HTML viewer in `LCM_Inventory\tools\hub\Show-WorkspaceReadiness.ps1` aggregating `latest_readiness.json` across all 34 workspace repositories into a single matrix.
 
 ---
 

@@ -19,7 +19,7 @@ This comprehensive proposal formalizes the structural decoupling of operational 
 
 ## 2. Problem Statement
 1. **Runtime Namespace Sprawl in `.lcm`**:
-   - Runtime operations logged directly to `.lcm/logs/` and `.lcm/scratch/`, causing search slowdowns and coupling volatile telemetry to the core LCM tooling codebase.
+   - Runtime operations logged directly to `LCM_Inventory/data/logs/lcm/` and `LCM_Inventory/scratch/`, causing search slowdowns and coupling volatile telemetry to the core LCM tooling codebase.
    - An orphaned, obsolete directory `D:\LCM_Inventory` existed alongside the governed repository.
 2. **Ambiguous Archive Boundaries**:
    - `D:\Git_Repositories\Archives` was loosely referenced in active tools (`DaemonActionController.ps1`, `lcm-tool-explorer.js`, `LcmToolCatalog.psm1`) as if it were a functional subsystem, violating the principle of an isolated junk yard.
@@ -37,7 +37,7 @@ This comprehensive proposal formalizes the structural decoupling of operational 
 
 ### A. Root Container & `.lcm` Decoupling (`D:\Git_Repositories`)
 * Purged orphaned `D:\LCM_Inventory`.
-* Removed `.lcm/logs/`, `.lcm/archive/`, and `.lcm/scratch/` without junction bridges; redirected operational logs to `LCM_Inventory/data/logs/lcm/` and scratch to `%TEMP%/lcm`.
+* Removed `LCM_Inventory/data/logs/lcm/`, `LCM_Inventory/data/archives/`, and `LCM_Inventory/scratch/` without junction bridges; redirected operational logs to `LCM_Inventory/data/logs/lcm/` and scratch to `%TEMP%/lcm`.
 * Created root NTFS hard links: `/.mcp.json` $\rightarrow$ `LCM_AI/.agents/mcp_config.json`, and `/AGENTS.md` $\rightarrow$ `LCM_AI/AGENTS.md`.
 * Hardened shortname generator in `Update-ToolCatalog.ps1` using non-capturing prefix matching.
 * Cleansed duplicate trampolines; restarted `LcmDesktopDaemon.ps1` on port 9876 logging to `LCM_Inventory/data/logs/lcm-internal/`.

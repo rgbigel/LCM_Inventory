@@ -11,7 +11,7 @@ Fixes the two Beyond Compare Review defects: (1) eliminates the spurious foregro
 - In [`LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1):
   - Change line 885 from `windowStyle = "Normal"` to `windowStyle = "Hidden"`.
   - Also ensure other multi-repo tab launches via `/execute` (line 950) pass `windowStyle = "Hidden"`.
-- In [`DaemonActionController.ps1`](file:///D:/Git_Repositories/.lcm/modules/LcmDaemon/Classes/DaemonActionController.ps1):
+- In [`DaemonActionController.ps1`](file:///D:/Git_Repositories/LCM_Inventory/modules/LcmDaemon/Classes/DaemonActionController.ps1):
   - Detect if `cmdToRun` is a direct `.exe` GUI application and launch directly with `Start-Process` without wrapping in `pwsh.exe`.
 
 ### Phase 2: Scratchpad Deletion Safety & Beyond Compare Process Awareness

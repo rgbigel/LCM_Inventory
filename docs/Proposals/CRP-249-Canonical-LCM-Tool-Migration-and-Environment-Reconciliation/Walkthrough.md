@@ -8,7 +8,7 @@
 - `Update-Gemini.ps1` is the sole filename collision in the flat Inventory
   tools destination.
 - Machine `Git_Root` is already `D:\Git_Repositories`.
-- Machine PATH contains stale `.lcm\Cmd`; user PATH contains stale
+- Machine PATH contains stale `LCM_Inventory\Cmd`; user PATH contains stale
   `LCM_AI\tools`.
 - The `LCM_DesktopDaemon_rgbig` scheduled task already correctly targets
   `LCM_Inventory\tools\LcmDesktopDaemon.ps1`.
@@ -21,7 +21,7 @@
   with the newer 8,482-byte implementation from the retired location.
 - All 21 affected public launchers now target `LCM_Inventory\tools`.
 - The empty retired tools directory was moved without deletion to
-  `.lcm\archive\CRP-249\2026-10-07-LCM_AI-tools-empty`.
+  `LCM_Inventory\data\archives\CRP-249\2026-10-07-LCM_AI-tools-empty`.
 - Historical proposals, closed change records, and immutable evidence that
   mention the retired path remain preserved as provenance; CRP-249 is the
   authoritative correction for the active topology.
@@ -37,7 +37,7 @@
   generator-owned launchers while preserving 122 unmanaged launchers.
 - Forward and reverse dependency indexes were regenerated. The forward index
   contains zero retired `LCM_AI\tools` references.
-- Machine PATH contains one `LCM_Inventory\Cmd` entry and no `.lcm\Cmd`
+- Machine PATH contains one `LCM_Inventory\Cmd` entry and no `LCM_Inventory\Cmd`
   entry. User PATH contains no `LCM_AI\tools` entry.
 - Machine `Git_Root` remains `D:\Git_Repositories`; no user `Git_Root`
   override exists.

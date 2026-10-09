@@ -3,7 +3,7 @@
 ```yaml
 BUG-ID: BUG-245
 Title: BCR Foreground Console Window Hygiene and Premature Review Scratchpad Purge
-Scope: LCM_Inventory, Root (.lcm/modules/LcmDaemon)
+Scope: LCM_Inventory, Root (LCM_Inventory/modules/LcmDaemon)
 Baseline-Version: v8.6.0
 Author: rgbig
 Date: 2026-10-04
@@ -45,7 +45,7 @@ During interactive Beyond Compare Review (BCR) workflows, two disruptive runtime
   } | ConvertTo-Json
   $null = Invoke-RestMethod -Uri "http://127.0.0.1:$daemonPort/execute" -Method Post -Body $execPayload ...
   ```
-- In [`DaemonActionController.ps1`](file:///D:/Git_Repositories/.lcm/modules/LcmDaemon/Classes/DaemonActionController.ps1) (lines 262–265):
+- In [`DaemonActionController.ps1`](file:///D:/Git_Repositories/LCM_Inventory/modules/LcmDaemon/Classes/DaemonActionController.ps1) (lines 262–265):
   ```powershell
   Start-Process -FilePath "pwsh.exe" -ArgumentList "-ExecutionPolicy Bypass $noExitFlag-EncodedCommand $encodedCmd" -WindowStyle $windowStyle
   ```

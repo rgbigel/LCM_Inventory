@@ -8,7 +8,7 @@ Severity: Low
 Status: ACCEPTED
 Date: 2026-09-10
 Author: Operator Directive / CRP Intake
-Target Scope: LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1, .lcm/config/
+Target Scope: LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1, LCM_Inventory/config/
 Affected Version Range: v7.5.0
 Impacted Repositories: [LCM_Inventory, LCM]
 ---

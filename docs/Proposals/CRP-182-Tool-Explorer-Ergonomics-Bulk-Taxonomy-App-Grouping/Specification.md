@@ -1,7 +1,7 @@
 # CRP-182: Tool Explorer Audience Segmentation, Alias Management, Bulk Taxonomy Renaming, Dynamic Sequence Numbering, and App Grouping Alignment
 
 * **Proposal ID**: CRP-182
-* **Target Scope**: `.lcm/assets/lcm-tool-explorer.js`, `.lcm/tools/internal/Show-ToolsExplorer.ps1`, `LCM_Inventory`
+* **Target Scope**: `LCM_Inventory/assets/lcm-tool-explorer.js`, `LCM_Inventory/tools/Show-ToolsExplorer.ps1`, `LCM_Inventory`
 * **Author**: Rolf, LCM_AI Engine
 * **Date**: 2026-09-27
 * **Status**: In-Review / Gated

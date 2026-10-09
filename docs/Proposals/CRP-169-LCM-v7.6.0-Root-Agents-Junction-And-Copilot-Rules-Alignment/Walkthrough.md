@@ -16,7 +16,7 @@ Status: ACCEPTED (Committed in Git_Repositories: ff11d81, LCM_AI: 10061e5)
 
 | Phase | Description | Status | Evidence / Notes |
 |:---:|:---|:---:|:---|
-| **Phase 1** | Deploy NTFS Junction `D:\Git_Repositories\.agents` $\rightarrow$ `D:\Git_Repositories\.lcm\.agents` | `COMPLETED` | Reparse point verified. Resolves 17 rules, `ACTIVE_CONTEXT.md`, and `ACTIVE_SESSION.md`. |
+| **Phase 1** | Deploy NTFS Junction `D:\Git_Repositories\.agents` $\rightarrow$ `D:\Git_Repositories\LCM_Inventory\.agents` | `COMPLETED` | Reparse point verified. Resolves 17 rules, `ACTIVE_CONTEXT.md`, and `ACTIVE_SESSION.md`. |
 | **Phase 2** | Codify Command Taxonomy & Lifecycle Reconciliation | `COMPLETED` | Updated `ProposalReviewFlowPolicy.md`, `MethodEfficiencyPolicy.md`, and `ReviewCommitGovernancePolicy.md`. |
 | **Phase 3** | Codify Tool & Log Timestamp Precision and HTML Unicode Exception | `COMPLETED` | Updated `InvariantRules.md` (`tool-and-log-timestamp-precision`, HTML Unicode exception) and `PowerShellStandardsPolicy.md` (`RULE-PS-009`). |
 | **Phase 4** | Synchronize 17 Canonical Rules to `D:\Git_Repositories\.copilot\Rules\` | `COMPLETED` | 17 policy files copied; 100% cryptographic SHA256 match. |
@@ -31,7 +31,7 @@ Status: ACCEPTED (Committed in Git_Repositories: ff11d81, LCM_AI: 10061e5)
 ```
 FullName   : D:\Git_Repositories\.agents
 Attributes : Directory, ReparsePoint
-Target     : D:\Git_Repositories\.lcm\.agents
+Target     : D:\Git_Repositories\LCM_Inventory\.agents
 LinkType   : Junction
 ```
 

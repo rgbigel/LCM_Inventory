@@ -32,7 +32,7 @@ Transform the current HTML-only [`DisplayStandardsPolicy.md`](file:///d:/Git_Rep
   - Update [`LCM_AI/docs/LCM-Rules-Cross-Reference.md`](file:///d:/Git_Repositories/LCM_AI/docs/LCM-Rules-Cross-Reference.md).
 
 ### Phase 2: Design Token & Shared Asset Consolidation
-- [ ] Reconcile `StandardTableDisplay.css` and `lcm-dashboard-theme.css` in `.lcm/assets/` and `LCM_Inventory/assets/`.
+- [ ] Reconcile `StandardTableDisplay.css` and `lcm-dashboard-theme.css` in `LCM_Inventory/assets/` and `LCM_Inventory/assets/`.
 - [ ] Define standardized CSS custom properties for Paged Media (`@page`, `@media print`).
 - [ ] Create a shared WPF ResourceDictionary snippet (`WpfThemeTokens.xaml` in `LCM_Shared`) mapping standard LCM dark/light hex codes to XAML brushes.
 

@@ -15,7 +15,7 @@
 [1/3] Consolidating & Exporting Authoritative LCM Rules...
 ==========================================================================
  LCM RULES CONSOLIDATION & GEMINI EXPORTER (v1.2.0)
- Log File : D:\Git_Repositories\.lcm\tools\internal\logs\Export-LCMRules-20260904_221953.log
+ Log File : D:\Git_Repositories\LCM_Inventory\tools\logs\Export-LCMRules-20260904_221953.log
  Date     : 2026-09-04 22:19:53 | Host: D5P0-SSD980-Z
 ==========================================================================
 Aggregating canonical rules from D:\Git_Repositories\.agents\rules...
@@ -33,7 +33,7 @@ Aggregating canonical rules from D:\Git_Repositories\.agents\rules...
  Target Output : D:\Git_Repositories\Workspace_AI\docs\LCM_Rules_Gemini_Export.md
  Clipboard     : NO
  Timestamp     : 2026-09-04 22:19:53.264
- Log File      : D:\Git_Repositories\.lcm\tools\internal\logs\Export-LCMRules-20260904_221953.log
+ Log File      : D:\Git_Repositories\LCM_Inventory\tools\logs\Export-LCMRules-20260904_221953.log
 ==========================================================================
 
 [2/3] Mirroring Workspace Knowledge Base Snapshot to Google Drive (D:\GDrive\LCM)...
@@ -69,14 +69,14 @@ Timestamp       : 2026-09-04 22:20:04.333
  Inbox Path  : D:\GDrive\LCM\INBOX
  Archive Path: D:\GDrive\LCM\INBOX\archive
  Mode        : ONE-SHOT INTAKE
- Audit Log   : D:\Git_Repositories\.lcm\logs\Sync-GeminiInbox-20260904_222004.log
+ Audit Log   : D:\Git_Repositories\LCM_Inventory\data\logs\lcm\Sync-GeminiInbox-20260904_222004.log
 ==========================================================================
 
 ==========================================================================
  [SUMMARY] Sync-GeminiInbox (v1.0.0)
  Items Ingested : 0
  Status         : COMPLETED
- Log File       : D:\Git_Repositories\.lcm\logs\Sync-GeminiInbox-20260904_222004.log
+ Log File       : D:\Git_Repositories\LCM_Inventory\data\logs\lcm\Sync-GeminiInbox-20260904_222004.log
 ==========================================================================
 
 ==========================================================================

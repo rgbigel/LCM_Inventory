@@ -1,14 +1,14 @@
 # Change Request Proposal: Universal Table Standard Display Enhancements
 
 - **Proposal ID**: `CRP-108`
-- **Target Repository**: `LCM` (`Git_Repositories/.lcm/assets`, `LCM_Inventory`)
+- **Target Repository**: `LCM` (`Git_Repositories/LCM_Inventory/assets`, `LCM_Inventory`)
 - **Target Version**: `v7.5.0`
 - **Domain**: `Lifecycle Model (LCM) Universal UI/UX & Table Display Standard`
 - **Author**: Rolf, LCM_AI Governance
 - **Status**: `OPEN` (Bundled in `BUNDLE-STD-DISPLAY-v7.5.0` - Awaiting Operator PROCEED)
 - **Created**: `2026-09-07 12:35:00`
 - **Priority**: `HIGH`
-- **Target Scope**: `.lcm/assets/lcm-dashboard-theme.css`, `.lcm/assets/lcm-table-engine.js`, `.lcm/tools/internal/Show-Tools.ps1`, `.lcm/tools/internal/Show-Rules.ps1`, `CM_CONTROL_HUB.html`
+- **Target Scope**: `LCM_Inventory/assets/lcm-dashboard-theme.css`, `LCM_Inventory/assets/lcm-table-engine.js`, `LCM_Inventory/tools/Show-Tools.ps1`, `LCM_Inventory/tools/Show-Rules.ps1`, `CM_CONTROL_HUB.html`
 - **Affected Version Range**: `v7.0.0 - v7.5.0`
 - **Impacted Repositories**: `Git_Repositories`, `LCM_Inventory`
 - **Logical Bundle**: `BUNDLE-STD-DISPLAY-v7.5.0` (Standard Display Interactive Repairs)

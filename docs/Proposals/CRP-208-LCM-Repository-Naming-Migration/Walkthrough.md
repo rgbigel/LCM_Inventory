@@ -7,7 +7,7 @@ repositories and shared module repository.
 
 ## Discovery
 
-The migration cohort contains 15 repositories: 13 with `.lcm/config.json`, plus
+The migration cohort contains 15 repositories: 13 with `LCM_Inventory/config.json`, plus
 the central LCM AI and inventory repositories. The root `.agents` junction
 currently targets `D:\Git_Repositories\LCM_AI\.agents` and is a required
 cutover dependency. The root tool hub is also a cutover dependency:

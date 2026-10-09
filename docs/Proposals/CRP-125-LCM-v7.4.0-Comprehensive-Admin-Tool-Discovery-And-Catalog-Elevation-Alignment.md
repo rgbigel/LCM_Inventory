@@ -6,7 +6,7 @@
 | **Proposal ID** | `CRP-125` |
 | **Lifecycle State** | `COMPLETED` (Implemented & Accepted in d18119a) |
 | **Origin Repository** | `LCM` / Tool Architecture & Governance |
-| **Target Scope** | `.lcm/config/tool_catalog.json`, `.lcm/tools/internal/Update-ToolCatalog.ps1`, `.lcm/Cmd/*.cmd`, `CRP-107` Retirement |
+| **Target Scope** | `LCM_Inventory/config/tool_catalog.json`, `LCM_Inventory/tools/Update-ToolCatalog.ps1`, `LCM_Inventory/Cmd/*.cmd`, `CRP-107` Retirement |
 | **Author** | Rolf, LCM_AI |
 | **Date** | 2026-09-08 |
 | **Version Impact** | `v7.4.0` |
@@ -49,7 +49,7 @@ This unified proposal resolves both Gap A (catalog alignment) and Gap B (deep AS
   - `Forced USO Unlock.cmd`
   - `AcronisMiniFilterCleanup.cmd`
 
-### 2.3 Trampoline Recompilation in `.lcm/Cmd/*.cmd`
+### 2.3 Trampoline Recompilation in `LCM_Inventory/Cmd/*.cmd`
 - Recompile all command trampolines via `Update-ToolCatalog.ps1`.
 - Verify that `SetGitRoot.cmd`, `RepairVolumeAcl.cmd`, and companion launchers now include the deterministic `net session` elevation preamble per `RULE-ELEV-005` and `RULE-ELEV-006`.
 

@@ -12,7 +12,7 @@
 
 1. Add an external-rooted migration runner that relaunches from `%TEMP%` before
    moving the root tool hub that initially contains the runner.
-2. Derive the 15-repository LCM cohort from `.lcm/config.json` plus `LCM_AI` and
+2. Derive the 15-repository LCM cohort from `LCM_Inventory/config.json` plus `LCM_AI` and
    `LCM_Inventory` identities during cutover.
 3. Generate a mapping manifest for directory names, absolute paths, relative
    paths, junction targets, launchers, generated artifacts, and text files.
@@ -23,7 +23,7 @@
 
 1. Rewrite live textual references using the mapping manifest across the root
    container and every governed repository.
-2. Update each `.lcm/config.json`, command launcher, PowerShell module/script,
+2. Update each `LCM_Inventory/config.json`, command launcher, PowerShell module/script,
    documentation path, Control Hub asset, VS Code workspace path, and root tool
    hub path affected by the five identities.
 3. Keep Git metadata and immutable audit evidence untouched.

@@ -70,16 +70,16 @@ NTFS Directory Junctions (Universal Zero-Churn Reparse Points)
 
 | Dot-Directory | Root Container (`D:\Git_Repositories`) | Canonical Hub (`LCM_AI`) | Alignment Action |
 |:---|:---|:---|:---|
-| **`.agents`** | Junction $\rightarrow$ `.lcm\.agents` | Physical folder (`rules/`, `skills/`) | Merge `.lcm\.agents` files (`ACTIVE_*.md`, `hooks.json`, `mcp_config.json`) into `LCM_AI\.agents\`. Eliminate `.lcm\.agents`. Repoint root `.agents` junction directly to `LCM_AI\.agents`. |
+| **`.agents`** | Junction $\rightarrow$ `LCM_Inventory\.agents` | Physical folder (`rules/`, `skills/`) | Merge `LCM_Inventory\.agents` files (`ACTIVE_*.md`, `hooks.json`, `mcp_config.json`) into `LCM_AI\.agents\`. Eliminate `LCM_Inventory\.agents`. Repoint root `.agents` junction directly to `LCM_AI\.agents`. |
 | **`.copilot`** | Physical folder (tracked in root git) | Physical folder (`LCM_AI\.copilot`) | Prune obsolete `Fixes/` & `Step1Engine.json`. Replace `LCM_AI\.copilot\Rules` with junction to `LCM_AI\.agents\rules`. Untrack in root git (`git rm -r --cached .copilot`). Replace root `.copilot` with NTFS junction $\rightarrow$ `LCM_AI\.copilot`. Add `/.copilot/` to root `.gitignore`. |
 | **`.continue`** | Physical folder (untracked stub) | Does not exist | Create `LCM_AI\.continue` (Option B), create internal junction `LCM_AI\.continue\rules` $\rightarrow$ `LCM_AI\.agents\rules`. Replace root `.continue` with NTFS junction $\rightarrow$ `LCM_AI\.continue`. Add `/.continue/` to root `.gitignore`. |
 | **`.github/agents`** | Physical folder (13 tracked files) | Physical folder (15 files) | Verify all 15 agents in `LCM_AI\.github\agents`. Untrack in root git (`git rm -r --cached .github/agents`). Replace root `.github\agents` with NTFS junction $\rightarrow$ `LCM_AI\.github\agents`. Add `/.github/agents/` to root `.gitignore`. |
 | **`.vscode`** | Physical folder (workspace settings) | Physical folder (child repo settings) | Kept separate by scope. Root defines multi-repo workspace settings; `LCM_AI` defines child repo settings. No junction needed. |
 | **`.venv`** | Physical folder (Python virtualenv) | Does not exist | Retained at root. Excluded in `.gitignore`. |
-| **`.lcm`** | Physical folder (LCM engine) | Does not exist | Retained at root. Cleaned up obsolete `.lcm\.agents` directory. |
+| **`.lcm`** | Physical folder (LCM engine) | Does not exist | Retained at root. Cleaned up obsolete `LCM_Inventory\.agents` directory. |
 
-### Elimination of the Redundant `.lcm\.agents` Hop
-Currently, root `D:\Git_Repositories\.agents` points to `.lcm\.agents`, which in turn points to `LCM_AI\.agents\rules`. Unifying all session metadata and MCP configurations directly into `LCM_AI\.agents` eliminates this intermediate reparse hop, allowing the root `.agents` to point directly to `LCM_AI\.agents`.
+### Elimination of the Redundant `LCM_Inventory\.agents` Hop
+Currently, root `D:\Git_Repositories\.agents` points to `LCM_Inventory\.agents`, which in turn points to `LCM_AI\.agents\rules`. Unifying all session metadata and MCP configurations directly into `LCM_AI\.agents` eliminates this intermediate reparse hop, allowing the root `.agents` to point directly to `LCM_AI\.agents`.
 
 ### Pruning of Obsolete `.copilot/Fixes` and `Step1Engine.json`
 - **Audit Finding**: `Fix_S1E01.json` through `Fix_S1E16.json` and `Fix_Atomic.json` date from early August 2026 during the `Workspace_AC` system recovery epoch. They are static JSON patches for pre-AI codebase reconstruction that have not been executed or referenced in months. Zero active scripts reference them.
@@ -104,7 +104,7 @@ To maintain zero-drift Git tracking of Gemini customizations without colliding w
   The live IDE writes temporary caches and databases to its non-junctioned runtime folder, while declarative skills and customizations are instantly versioned in Git without any file locks.
 
 ### Strategy B: Non-Exclusive `FileShare.ReadWrite` Stream Harvesting
-- In [`Update-Gemini.ps1`](file:///D:/Git_Repositories/LCM_AI/tools/Update-Gemini.ps1) and [`Sync-LCMResearchSnapshot.ps1`](file:///D:/Git_Repositories/.lcm/tools/internal/Sync-LCMResearchSnapshot.ps1), replace default `Get-Content` / `[System.IO.File]::ReadAllBytes` with non-exclusive sharing:
+- In [`Update-Gemini.ps1`](file:///D:/Git_Repositories/LCM_AI/tools/Update-Gemini.ps1) and [`Sync-LCMResearchSnapshot.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Sync-LCMResearchSnapshot.ps1), replace default `Get-Content` / `[System.IO.File]::ReadAllBytes` with non-exclusive sharing:
   ```powershell
   $stream = [System.IO.FileStream]::new($filePath, [System.IO.FileMode]::Open, [System.IO.FileAccess]::Read, [System.IO.FileShare]::ReadWrite -bor [System.IO.FileShare]::Delete)
   ```
@@ -145,13 +145,13 @@ A comprehensive search of the workspace revealed multiple files retaining refere
 
 | Target Category | Files Affected | Current Outdated Reference | Target Canonical Reference |
 |:---|:---|:---|:---|
-| **Rule Health Scripts** | `LCM_Inventory/tools/Test-LCMRuleHealth.ps1`<br>`LCM_Inventory/tools/Repair-LCMRules.ps1`<br>`.lcm/tools/internal/Export-LCMRules.ps1` | `LCM_Inventory\.agents\rules`<br>`.lcm\.agents\rules`<br>`legacy .copilot/Rules` | `LCM_AI\.agents\rules`<br>(Validate `.copilot\Rules` is an NTFS junction to `.agents\rules`) |
-| **Review Gate Tooling** | `LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1` | Left baseline resolves to `.lcm\.agents`<br>Filter array has old `.copilot\Rules` paths | Baseline resolves to `LCM_AI\.agents`<br>Clean junction filters |
+| **Rule Health Scripts** | `LCM_Inventory/tools/Test-LCMRuleHealth.ps1`<br>`LCM_Inventory/tools/Repair-LCMRules.ps1`<br>`LCM_Inventory/tools/Export-LCMRules.ps1` | `LCM_Inventory\.agents\rules`<br>`LCM_Inventory\.agents\rules`<br>`legacy .copilot/Rules` | `LCM_AI\.agents\rules`<br>(Validate `.copilot\Rules` is an NTFS junction to `.agents\rules`) |
+| **Review Gate Tooling** | `LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1` | Left baseline resolves to `LCM_Inventory\.agents`<br>Filter array has old `.copilot\Rules` paths | Baseline resolves to `LCM_AI\.agents`<br>Clean junction filters |
 | **Helper Scripts** | `LCM_AI/tools/LoadRules.ps1`<br>`LCM_AI/tools/Advance-Governance.ps1`<br>`LCM_AI/tools/Validate-CopilotProfile.ps1` | `.copilot\Rules`<br>`Step1Engine.json` | `.agents\rules`<br>Remove legacy Step1Engine validation |
-| **Governance Policies** | `LCM_AI/.agents/rules/RuleAuthority.md`<br>`LCM_AI/.agents/rules/ReviewCommitGovernancePolicy.md`<br>`LCM_AI/.agents/rules/ProposalReviewFlowPolicy.md` | `LCM_Inventory\.agents\rules`<br>`.lcm\.agents`<br>`.lcm\.agents\rules` | `LCM_AI\.agents\rules`<br>`LCM_AI\.agents` |
+| **Governance Policies** | `LCM_AI/.agents/rules/RuleAuthority.md`<br>`LCM_AI/.agents/rules/ReviewCommitGovernancePolicy.md`<br>`LCM_AI/.agents/rules/ProposalReviewFlowPolicy.md` | `LCM_Inventory\.agents\rules`<br>`LCM_Inventory\.agents`<br>`LCM_Inventory\.agents\rules` | `LCM_AI\.agents\rules`<br>`LCM_AI\.agents` |
 | **Agent Specs** | `LCM_AI/.github/agents/DirectoryRules.md`<br>`LCM_AI/.github/agents/Workspace-Rules.md` | `.copilot/Rules/core`<br>`LCM_AI\.copilot\Rules` | `.agents/rules/`<br>`LCM_AI\.agents\rules` |
 | **Workspace Anchors** | `LCM_AI/AGENTS.md`<br>`LCM_AI/GEMINI.md` | `**Canonical Source Authority**: .copilot/Rules/` | `**Canonical Source Authority**: .agents/rules/` |
-| **Architecture Docs** | `LCM_AI/docs/LCM-Rules-Cross-Reference.md`<br>`LCM_Inventory/docs/LCM_METHODOLOGY_AND_MEMORY_ANCHOR.md`<br>`LCM_Inventory/docs/CM_POLICIES.md` | Diagrams & text pointing to `LCM_Inventory/.agents/rules` and `.lcm/.agents` | Updated Mermaid diagrams and text pointing to `LCM_AI/.agents/rules` |
+| **Architecture Docs** | `LCM_AI/docs/LCM-Rules-Cross-Reference.md`<br>`LCM_Inventory/docs/LCM_METHODOLOGY_AND_MEMORY_ANCHOR.md`<br>`LCM_Inventory/docs/CM_POLICIES.md` | Diagrams & text pointing to `LCM_Inventory/.agents/rules` and `LCM_Inventory/.agents` | Updated Mermaid diagrams and text pointing to `LCM_AI/.agents/rules` |
 
 ### Mandatory Pre/Post-Check Quality Gate:
 Both before starting file modifications and after completing them, run:

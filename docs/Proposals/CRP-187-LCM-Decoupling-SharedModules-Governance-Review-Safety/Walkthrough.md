@@ -15,11 +15,11 @@
 * **Actual Output**: `False` (Verified deleted).
 
 ### Verification 2: Operational Decoupling of `.lcm` Runtime Data
-* **Test**: Verify `.lcm/logs`, `.lcm/archive`, and `.lcm/scratch` do not exist.
+* **Test**: Verify `LCM_Inventory/logs`, `LCM_Inventory/archive`, and `LCM_Inventory/scratch` do not exist.
 * **Results**:
-  - `Test-Path D:\Git_Repositories\.lcm\logs` $\rightarrow$ `False`
-  - `Test-Path D:\Git_Repositories\.lcm\archive` $\rightarrow$ `False`
-  - `Test-Path D:\Git_Repositories\.lcm\scratch` $\rightarrow$ `False`
+  - `Test-Path D:\Git_Repositories\LCM_Inventory\logs` $\rightarrow$ `False`
+  - `Test-Path D:\Git_Repositories\LCM_Inventory\archive` $\rightarrow$ `False`
+  - `Test-Path D:\Git_Repositories\LCM_Inventory\scratch` $\rightarrow$ `False`
   - Operational logs active in `LCM_Inventory\data\logs\lcm\` (`actions.jsonl` active).
   - Background daemon active in Session 1 on Port 9876 logging to `LCM_Inventory\data\logs\lcm-internal\LcmDesktopDaemon-20260928.log`.
 

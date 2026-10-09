@@ -8,7 +8,7 @@
   - Parameter `-Tool` (`All`, `Tools` / `ToolsExplorer`, `CM` / `ShowCM`).
   - Parameter `-CliMode` (terminal output).
   - Launches Zen Browser (`D:\Tools\Zen Browser\zen.exe`) with `--new-window` via `Invoke-InteractiveDesktop.ps1`.
-- Create `.lcm/Cmd/SuperController.cmd` trampoline.
+- Create `LCM_Inventory/Cmd/SuperController.cmd` trampoline.
 
 ### 2. IDE Answer Box Card Widget
 - Standardized markdown action card embedded into assistant responses:

@@ -139,7 +139,7 @@ delivery knowledge from unrelated work.
 `LCM_Inventory/tools/Fix-Documentation.ps1` reads declared CRP/BUG
 payloads, writes a dry-run manifest or an applied receipt under the
 repository-scoped temporary log root, and dispatches BCompare per changed
-repository. `.lcm/Cmd/FixDocumentation.cmd` exposes the bare-word command.
+repository. `LCM_Inventory/Cmd/FixDocumentation.cmd` exposes the bare-word command.
 ```
 
 ### LCM_Inventory/Architecture

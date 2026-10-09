@@ -19,8 +19,8 @@
 
 ## 2. Telemetry & Verification (To be completed upon Proceed / do)
 
-- [ ] Edits applied to `.lcm/modules/LcmToolCatalog.psm1`.
-- [ ] Edits applied to `.lcm/assets/lcm-tool-explorer.js`.
+- [ ] Edits applied to `LCM_Inventory/modules/LcmToolCatalog.psm1`.
+- [ ] Edits applied to `LCM_Inventory/assets/lcm-tool-explorer.js`.
 - [ ] Edits mirrored to `LCM_Inventory/assets/lcm-tool-explorer.js`.
 - [ ] Tool Explorer regenerated via `ShowTools -NoLaunch`.
 - [ ] Visual UI verification:

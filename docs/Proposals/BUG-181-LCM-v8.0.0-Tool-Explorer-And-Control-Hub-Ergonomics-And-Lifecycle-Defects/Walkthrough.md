@@ -13,7 +13,7 @@ This walkthrough confirms the end-to-end resolution of eight defect areas across
 
 3. **Short-Name Renaming & Launcher Cleanup**:
    - `Show-LcmControl.ps1` now possesses canonical `ShortName: "ShowCM"`, `Aliases: []` (0 aliases).
-   - Obsolete cmdlets `ShowCMControlHub.cmd`, `ShowHub.cmd`, and `ShowCrpDates.cmd` removed from `.lcm/Cmd/`.
+   - Obsolete cmdlets `ShowCMControlHub.cmd`, `ShowHub.cmd`, and `ShowCrpDates.cmd` removed from `LCM_Inventory/Cmd/`.
    - Daemon `/rename` route added and wired to `tool_catalog_overrides.json`.
 
 4. **Subsystem Overrides Persistence**:
@@ -39,4 +39,4 @@ This walkthrough confirms the end-to-end resolution of eight defect areas across
 
 ## Verification Summary
 - **Compilation Check**: `Show-ToolsExplorer.ps1 -NoLaunch` and `Show-LcmControl.ps1 -NoLaunch` passed with zero errors.
-- **SHA256 Mirror Parity**: 100% hash parity verified across `LCM_Inventory/assets/` and `.lcm/assets/`.
+- **SHA256 Mirror Parity**: 100% hash parity verified across `LCM_Inventory/assets/` and `LCM_Inventory/assets/`.

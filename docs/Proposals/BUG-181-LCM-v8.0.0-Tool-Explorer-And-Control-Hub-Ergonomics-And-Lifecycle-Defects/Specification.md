@@ -32,8 +32,8 @@ During intensive operation of the LCM Configuration Management interface (Tool E
 ### 2.3 Short-Name Renaming & Alias Cleanup (`Update-ToolCatalog.ps1`, `LcmDesktopDaemon.ps1`, `DaemonActionController.ps1`)
 - Added explicit metadata override in `Update-ToolCatalog.ps1`: `ShortName = "ShowCM"`, `Aliases = @()`, `Example = 'ShowCM'`.
 - Implemented `POST /rename` REST endpoint in `LcmDesktopDaemon.ps1` routing to `DaemonActionController.RenameTool($dto)`.
-- Enhanced `RenameTool` to persist `ShortName` directly to `.lcm/config/tool_catalog_overrides.json`.
-- Removed stale trampoline scripts `ShowCMControlHub.cmd`, `ShowHub.cmd`, and `ShowCrpDates.cmd` from `.lcm/Cmd/`, retaining only canonical `ShowCM.cmd`.
+- Enhanced `RenameTool` to persist `ShortName` directly to `LCM_Inventory/config/tool_catalog_overrides.json`.
+- Removed stale trampoline scripts `ShowCMControlHub.cmd`, `ShowHub.cmd`, and `ShowCrpDates.cmd` from `LCM_Inventory/Cmd/`, retaining only canonical `ShowCM.cmd`.
 
 ### 2.4 Relative-Path Metadata Overrides Resolution (`Update-ToolCatalog.ps1`, `lcm-tool-explorer.js`)
 - Updated `Update-ToolCatalog.ps1` to match overrides against normalized relative paths (`$normRel` and `$normRelFwd`), in addition to filename stems.
@@ -59,6 +59,6 @@ During intensive operation of the LCM Configuration Management interface (Tool E
 ---
 
 ## 3. Verification & Compliance
-- **Asset Mirroring**: Exact SHA256 match between `LCM_Inventory/assets/` and `.lcm/assets/`.
+- **Asset Mirroring**: Exact SHA256 match between `LCM_Inventory/assets/` and `LCM_Inventory/assets/`.
 - **Zero Syntax Errors**: `Show-ToolsExplorer.ps1 -NoLaunch` and `Show-LcmControl.ps1 -NoLaunch` execute cleanly.
 - **REST Telemetry**: Daemon successfully processes `/execute` and `/rename` operations without unhandled exceptions.

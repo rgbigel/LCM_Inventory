@@ -1,14 +1,14 @@
 # Change Request Proposal: Mermaid Diagram Standard & Multi-Scope Markdown/CM Conversion Engine
 
 - **Proposal ID**: `CRP-109`
-- **Target Repository**: `LCM` (`Git_Repositories/.lcm/tools`, `LCM_AI`, `LCM_Inventory`)
+- **Target Repository**: `LCM` (`Git_Repositories/LCM_Inventory/tools`, `LCM_AI`, `LCM_Inventory`)
 - **Target Version**: `v7.3.0`
 - **Domain**: `Lifecycle Model (LCM) Documentation Standards & Diagram Automation`
 - **Author**: Rolf, LCM_AI Governance
 - **Status**: `OPEN` (Awaiting Operator Review & PROCEED Trigger)
 - **Created**: `2026-09-07 15:25:00`
 - **Priority**: `HIGH`
-- **Target Scope**: `.agents/rules/DocumentationStandardsPolicy.md`, `.lcm/tools/internal/Format-LcmMarkdownDiagrams.ps1`, `.lcm/Cmd/FormatDiagrams.cmd`, `.lcm/tools/hooks/Enforce-LcmPostToolPolicy.ps1`, `LCM_Inventory/data/proposals/proposals.json`
+- **Target Scope**: `.agents/rules/DocumentationStandardsPolicy.md`, `LCM_Inventory/tools/Format-LcmMarkdownDiagrams.ps1`, `LCM_Inventory/Cmd/FormatDiagrams.cmd`, `LCM_Inventory/tools/hooks/Enforce-LcmPostToolPolicy.ps1`, `LCM_Inventory/data/proposals/proposals.json`
 - **Affected Version Range**: `v7.0.0 - v7.3.0`
 - **Impacted Repositories**: `Git_Repositories`, `LCM_AI`, `LCM_Inventory`, `All Governed Repositories`
 
@@ -55,8 +55,8 @@ This Change Request Proposal establishes the **authoritative Mermaid diagramming
 ## 3. Tool Implementation Specification: `Format-LcmMarkdownDiagrams.ps1`
 
 ### 3.1 Script Metadata & Header
-- **Path**: `.lcm/tools/internal/Format-LcmMarkdownDiagrams.ps1`
-- **Short-Name Alias**: `.lcm/Cmd/FormatDiagrams.cmd`
+- **Path**: `LCM_Inventory/tools/Format-LcmMarkdownDiagrams.ps1`
+- **Short-Name Alias**: `LCM_Inventory/Cmd/FormatDiagrams.cmd`
 - **Conformance**: `RULE-PS-008` (Metadata Header), `RULE-PS-009` (Audit Logging), `RULE-PS-010` (-h Help).
 
 ### 3.2 Supported Execution Scopes
@@ -115,7 +115,7 @@ param(
 
 1. **Phase 1**: Register `CRP-109` in `LCM_Inventory/data/proposals/proposals.json` in `OPEN` state.
 2. **Phase 2**: Codify `RULE-DOC-007` in `DocumentationStandardsPolicy.md` and synchronize `AGENTS.md` and `LCM-Rules-Cross-Reference.md`.
-3. **Phase 3**: Implement `.lcm/tools/internal/Format-LcmMarkdownDiagrams.ps1` and trampoline `.lcm/Cmd/FormatDiagrams.cmd`.
+3. **Phase 3**: Implement `LCM_Inventory/tools/Format-LcmMarkdownDiagrams.ps1` and trampoline `LCM_Inventory/Cmd/FormatDiagrams.cmd`.
 4. **Phase 4**: Register the tool in `tool_catalog.json` and execute verification across scopes (`Document`, `Folder`, `Repo`, `Git_root`).
 
 

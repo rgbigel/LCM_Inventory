@@ -8,11 +8,11 @@
 [2026-08-30 15:55:48.449] [DEBUG]   -> Exported: .copilot\Methods\ValidateRules.ps1.txt
 [2026-08-30 15:55:48.630] [DEBUG]   -> Exported: .lcd\config\tool_catalog.json.txt
 [2026-08-30 15:55:48.645] [DEBUG]   -> Exported: .lcd\docs\README.md.txt
-[2026-08-30 15:55:48.664] [DEBUG]   -> Exported: AuthorizeMasterUser\.lcm\config.json.txt
-[2026-08-30 15:55:48.689] [DEBUG]   -> Exported: BackgroundModifier\.lcm\config.json.txt
-[2026-08-30 15:55:48.732] [DEBUG]   -> Exported: BGMSAMVInv\.lcm\config.json.txt
-[2026-08-30 15:55:48.754] [DEBUG]   -> Exported: BootEntryManager\.lcm\config.json.txt
-[2026-08-30 15:55:48.792] [DEBUG]   -> Exported: Installation_LCD\.lcm\config.json.txt
+[2026-08-30 15:55:48.664] [DEBUG]   -> Exported: AuthorizeMasterUser\LCM_Inventory\config.json.txt
+[2026-08-30 15:55:48.689] [DEBUG]   -> Exported: BackgroundModifier\LCM_Inventory\config.json.txt
+[2026-08-30 15:55:48.732] [DEBUG]   -> Exported: BGMSAMVInv\LCM_Inventory\config.json.txt
+[2026-08-30 15:55:48.754] [DEBUG]   -> Exported: BootEntryManager\LCM_Inventory\config.json.txt
+[2026-08-30 15:55:48.792] [DEBUG]   -> Exported: Installation_LCD\LCM_Inventory\config.json.txt
 [2026-08-30 15:55:48.840] [DEBUG]   -> Exported: OutlookVBAConversion\Docs\error_handling.md.txt
 [2026-08-30 15:55:48.852] [DEBUG]   -> Exported: OutlookVBAConversion\Docs\excel_automation.md.txt
 [2026-08-30 15:55:48.864] [DEBUG]   -> Exported: OutlookVBAConversion\Docs\gui_planning for Python Migration.md.txt
@@ -22,8 +22,8 @@
 [2026-08-30 15:55:48.912] [DEBUG]   -> Exported: OutlookVBAConversion\Docs\vba_to_python_map.md.txt
 [2026-08-30 15:55:49.003] [DEBUG]   -> Exported: OutlookVBAConversion\VBA_Sources\References.txt
 [2026-08-30 15:55:49.015] [DEBUG]   -> Exported: PowerBGInfo\.github\FUNDING.yml.txt
-[2026-08-30 15:55:49.044] [DEBUG]   -> Exported: SharedModules\.lcm\config.json.txt
-[2026-08-30 15:55:49.074] [DEBUG]   -> Exported: SystemConfiguration\.lcm\config.json.txt
+[2026-08-30 15:55:49.044] [DEBUG]   -> Exported: SharedModules\LCM_Inventory\config.json.txt
+[2026-08-30 15:55:49.074] [DEBUG]   -> Exported: SystemConfiguration\LCM_Inventory\config.json.txt
 [2026-08-30 15:55:49.094] [DEBUG]   -> Exported: SystemConfiguration\Source\--_2a_Remove_6_Extra_Folders_from_Windows_10_This_PC-MedionPC-2.reg.txt
 [2026-08-30 15:55:49.104] [DEBUG]   -> Exported: SystemConfiguration\Source\--_2b_Remove_all_folders_from_This_PC_in_File_Explorer.reg.txt
 [2026-08-30 15:55:49.117] [DEBUG]   -> Exported: SystemConfiguration\Source\--_2_Remove_6_Extra_Folders_from_Windows_10_This_PC.reg.txt
@@ -31,7 +31,7 @@
 [2026-08-30 15:55:49.146] [DEBUG]   -> Exported: SystemConfiguration\Source\@04-Remove_Removable_Drive_Icon.reg.txt
 [2026-08-30 15:55:49.167] [DEBUG]   -> Exported: SystemConfiguration\Source\Add_all_folders_to_This_PC_in_File_Explorer.reg.txt
 [2026-08-30 15:55:49.209] [DEBUG]   -> Exported: SystemConfiguration\Source\Restore Extra Folders in Windows 10 This PC.reg.txt
-[2026-08-30 15:55:49.246] [DEBUG]   -> Exported: VolumeInventory\.lcm\config.json.txt
+[2026-08-30 15:55:49.246] [DEBUG]   -> Exported: VolumeInventory\LCM_Inventory\config.json.txt
 [2026-08-30 15:55:49.273] [DEBUG]   -> Exported: Workspace_AI\docs\Architecture.md.txt
 [2026-08-30 15:55:49.286] [DEBUG]   -> Exported: Workspace_AI\docs\Implementation.md.txt
 [2026-08-30 15:55:49.304] [DEBUG]   -> Exported: Workspace_AI\docs\LCM_Rules.txt

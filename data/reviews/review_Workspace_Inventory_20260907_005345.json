@@ -5,7 +5,7 @@
   "ReviewResult": "Accepted",
   "Reviewer": "rgbig",
   "Timestamp": "2026-09-07 00:53:45",
-  "Message": "fix(governance): refactor legacy .tools references to .lcm/tools/internal and .lcm/Cmd",
+  "Message": "fix(governance): refactor legacy .tools references to LCM_Inventory/tools/internal and LCM_Inventory/Cmd",
   "ActionsExecuted": [
     "Refactored .tools references across proposals, plans, walkthroughs, and reviews"
   ]

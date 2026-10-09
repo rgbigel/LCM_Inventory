@@ -27,12 +27,12 @@ Because `SHOW_HA_INVENTORY.html` resides in `D:\Git_Repositories\HaSSD06_Invento
    - Inspect `document.referrer`: If the user navigated from an existing dashboard (e.g. `SHOW_SUBSYSTEMS.html`, `WORKSPACE_INVENTORY_VIEWER.html`, `SHOW_LCM.html`, `SHOW_TOOLS.html`), navigate back cleanly via `window.history.back()`.
    - Provide deterministic relative and REST daemon fallback:
      - Target 1: `../../LCM_Inventory/docs/SHOW_WORKSPACE_INVENTORY.html` / `WORKSPACE_INVENTORY_VIEWER.html` (Authoritative Subsystems & Repositories list)
-     - Target 2: `../../.lcm/scratch/SHOW_SUBSYSTEMS.html` / `../../.lcm/scratch/SHOW_LCM.html`
+     - Target 2: `../../LCM_Inventory/scratch/SHOW_SUBSYSTEMS.html` / `../../LCM_Inventory/scratch/SHOW_LCM.html`
      - Target 3: Dispatches `Show-WorkspaceInventoryApp.ps1` or `Show-Subsystems.ps1` via local REST Daemon / `lcm://` protocol.
 2. **Synchronize Navigation Invariants**:
    - Update `Show-HaInventoryApp.ps1` to embed `navigateBackToSubsystems()`.
    - Recompile `docs/SHOW_HA_INVENTORY.html` and `docs/Entities_Inventory_HaSSD06.html`.
-   - Ensure `Show-Subsystems.ps1` and `Show-LCM.ps1` outputs in `.lcm/scratch/` are synced.
+   - Ensure `Show-Subsystems.ps1` and `Show-LCM.ps1` outputs in `LCM_Inventory/scratch/` are synced.
 
 ## 3. Impacted Assets
 - [`HaSSD06_Inventory/tools/Show-HaInventoryApp.ps1`](file:///d:/Git_Repositories/HaSSD06_Inventory/tools/Show-HaInventoryApp.ps1)

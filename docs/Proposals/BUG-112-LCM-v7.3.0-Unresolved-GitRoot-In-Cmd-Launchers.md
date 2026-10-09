@@ -7,7 +7,7 @@ Affected-Repos: [LCM, LCM_Inventory]
 Status: OPEN
 Date: 2026-09-07
 Author: rgbig
-Target Scope: .lcm/Cmd/ShowCrpDates.cmd, .lcm/Cmd/*.cmd, .lcm/tools/internal/Invoke-InteractiveDesktop.ps1
+Target Scope: LCM_Inventory/Cmd/ShowCrpDates.cmd, LCM_Inventory/Cmd/*.cmd, LCM_Inventory/tools/Invoke-InteractiveDesktop.ps1
 Affected Version Range: v7.3.0
 Impacted Repositories: [LCM, LCM_Inventory]
 Severity: High
@@ -27,7 +27,7 @@ The argument '/LCM_Inventory/tools/Show-CrpDates.ps1' is not recognized as the n
 
 ## 2. Root Cause Analysis
 1. **Unchecked %Git_Root% Environment Variable in Batch Launchers**:
-   In `.lcm/Cmd/ShowCrpDates.cmd` (and potentially other `.cmd` launchers in `.lcm/Cmd/`), the command executes:
+   In `LCM_Inventory/Cmd/ShowCrpDates.cmd` (and potentially other `.cmd` launchers in `LCM_Inventory/Cmd/`), the command executes:
    ```cmd
    pwsh.exe -NoProfile -ExecutionPolicy Bypass -File "%Git_Root%/LCM_Inventory/tools/Show-CrpDates.ps1" %*
    ```
@@ -37,7 +37,7 @@ The argument '/LCM_Inventory/tools/Show-CrpDates.ps1' is not recognized as the n
 
 ## 3. Remediation Strategy (Proposed)
 1. **Robust Anchor Fallback in CMD Launchers**:
-   Update `.lcm/Cmd/ShowCrpDates.cmd` and audit all `.cmd` launchers under `.lcm/Cmd/` to ensure robust root resolution:
+   Update `LCM_Inventory/Cmd/ShowCrpDates.cmd` and audit all `.cmd` launchers under `LCM_Inventory/Cmd/` to ensure robust root resolution:
    ```cmd
    @echo off
    setlocal
@@ -46,7 +46,7 @@ The argument '/LCM_Inventory/tools/Show-CrpDates.ps1' is not recognized as the n
    pwsh.exe -NoProfile -ExecutionPolicy Bypass -File "%Git_Root%\LCM_Inventory\tools\Show-CrpDates.ps1" %*
    ```
 2. **Audit and Synchronize All CMD Launchers**:
-   Ensure all `.cmd` files in `.lcm/Cmd/` declare this self-healing path resolution logic.
+   Ensure all `.cmd` files in `LCM_Inventory/Cmd/` declare this self-healing path resolution logic.
 3. **Verification**:
    Execute `ShowCrpDates.cmd` in a clean environment where `Git_Root` is unset to confirm successful resolution.
 

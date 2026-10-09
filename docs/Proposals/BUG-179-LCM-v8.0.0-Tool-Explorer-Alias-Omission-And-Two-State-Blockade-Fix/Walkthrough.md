@@ -12,9 +12,9 @@ Date: 2026-09-26
 ## 1. Overview of Changes
 
 This defect resolution fixes three intertwined problems in the Tool Explorer ecosystem:
-1. **Alias `BCR` Missing**: Generated [`.lcm/Cmd/BCR.cmd`](file:///.lcm/Cmd/BCR.cmd) and enabled alias pills in both Short-Names and Source view modes.
+1. **Alias `BCR` Missing**: Generated [`LCM_Inventory/Cmd/BCR.cmd`](file:///LCM_Inventory/Cmd/BCR.cmd) and enabled alias pills in both Short-Names and Source view modes.
 2. **Permanent Blockade on Finalize**: Solved index derivation collision on tools sharing identical names and ensured all matching instances have their pending status and blockade removed.
-3. **Subsystem Override Reversion**: Daemon `/sync_json` now handles Subsystem/Group/Domain overrides and saves them to `.lcm/config/tool_catalog_overrides.json`, preventing `Update-ToolCatalog.ps1` from reverting them.
+3. **Subsystem Override Reversion**: Daemon `/sync_json` now handles Subsystem/Group/Domain overrides and saves them to `LCM_Inventory/config/tool_catalog_overrides.json`, preventing `Update-ToolCatalog.ps1` from reverting them.
 
 ---
 
@@ -37,9 +37,9 @@ This defect resolution fixes three intertwined problems in the Tool Explorer eco
   @echo off
   if not defined Git_Root set "Git_Root=%~dp0..\.."
   if not exist "%Git_Root%\LCM_Inventory" set "Git_Root=D:\Git_Repositories"
-  pwsh.exe -NoExit -NoProfile -ExecutionPolicy Bypass -File "%Git_Root%/.lcm/tools/internal/Invoke-BeyondCompareReview.ps1" %*
+  pwsh.exe -NoExit -NoProfile -ExecutionPolicy Bypass -File "%Git_Root%/LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1" %*
   ```
 
 ### 2.2 Tool Explorer HTML Build
 - Ran `Show-ToolsExplorer.ps1 -NoLaunch`: completed cleanly with exit code 0.
-- Verified asset mirroring hash equality between `LCM_Inventory/assets/lcm-tool-explorer.js` and `.lcm/assets/lcm-tool-explorer.js`.
+- Verified asset mirroring hash equality between `LCM_Inventory/assets/lcm-tool-explorer.js` and `LCM_Inventory/assets/lcm-tool-explorer.js`.

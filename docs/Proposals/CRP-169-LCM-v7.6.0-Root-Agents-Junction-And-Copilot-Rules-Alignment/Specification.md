@@ -24,7 +24,7 @@ App-ID: Architecture
 ## 1. Executive Summary & Intent
 
 This proposal addresses three core architectural requirements across workspace governance:
-1. **Broken Root Discovery Junction**: The root workspace container `D:\Git_Repositories` does not contain an `.agents` directory or junction. While `.lcm\.agents\rules` correctly links to `LCM_Inventory\.agents\rules`, agents and IDE sessions rooted at `D:\Git_Repositories` fail to discover `.agents/rules`, `ACTIVE_CONTEXT.md`, and `ACTIVE_SESSION.md`.
+1. **Broken Root Discovery Junction**: The root workspace container `D:\Git_Repositories` does not contain an `.agents` directory or junction. While `LCM_Inventory\.agents\rules` correctly links to `LCM_Inventory\.agents\rules`, agents and IDE sessions rooted at `D:\Git_Repositories` fail to discover `.agents/rules`, `ACTIVE_CONTEXT.md`, and `ACTIVE_SESSION.md`.
 2. **Command Taxonomy & Lifecycle Reconciliation**: Reconciles the conflicting terms between `RULE-LCM-014` and `RULE-EFF-004` by establishing a strict Finite State Machine:
    - Clean separation of the **Normal Review Cycle** from **`DOIT` Mode** (`always-proceed`).
    - Redefining **`Proceed`** as a deterministic single-status step forward across all gates (`SUGGESTED` $\rightarrow$ `IN_PROGRESS` at Gate 1; `REVIEW` $\rightarrow$ `COMMITTED` at Gate 2).
@@ -40,7 +40,7 @@ This proposal addresses three core architectural requirements across workspace g
 ## 2. Requirements & Problem Statement
 
 ### Requirement 1: Deploy Root `.agents` Directory Junction
-- Deploy an NTFS directory junction at `D:\Git_Repositories\.agents` targeting `D:\Git_Repositories\.lcm\.agents`.
+- Deploy an NTFS directory junction at `D:\Git_Repositories\.agents` targeting `D:\Git_Repositories\LCM_Inventory\.agents`.
 - Ensure `D:\Git_Repositories\.agents\rules` immediately resolves the 17 authoritative policy files in `LCM_Inventory\.agents\rules`.
 - Ensure `.agents/ACTIVE_CONTEXT.md` and `.agents/ACTIVE_SESSION.md` resolve cleanly at root.
 - Validate that `D:\Git_Repositories\.gitignore` excludes `/.agents/` and `/.agents` to prevent Git tracking churn.

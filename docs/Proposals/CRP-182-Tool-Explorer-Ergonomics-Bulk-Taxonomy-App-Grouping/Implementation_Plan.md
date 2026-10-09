@@ -1,9 +1,9 @@
 # CRP-182 Implementation Plan: Tool Explorer Ergonomics, Bulk Taxonomy & App Grouping
 
 ## 1. Technical Components & Affected Files
-* [d:\Git_Repositories\.lcm\assets\lcm-tool-explorer.js](file:///d:/Git_Repositories/.lcm/assets/lcm-tool-explorer.js) — Core UI rendering, filtering, alias management modal, bulk column assignment, and dynamic sequence numbering.
-* [d:\Git_Repositories\.lcm\tools\internal\Show-ToolsExplorer.ps1](file:///d:/Git_Repositories/.lcm/tools/internal/Show-ToolsExplorer.ps1) — HTML compilation, version metadata injection (`v8.0.0`), and baseline catalog binding.
-* [d:\Git_Repositories\.lcm\docs\README.md](file:///d:/Git_Repositories/.lcm/docs/README.md) — Documentation update for Tool Explorer features.
+* [d:\Git_Repositories\LCM_Inventory\assets\lcm-tool-explorer.js](file:///d:/Git_Repositories/LCM_Inventory/assets/lcm-tool-explorer.js) — Core UI rendering, filtering, alias management modal, bulk column assignment, and dynamic sequence numbering.
+* [d:\Git_Repositories\LCM_Inventory\tools\Show-ToolsExplorer.ps1](file:///d:/Git_Repositories/LCM_Inventory/tools/Show-ToolsExplorer.ps1) — HTML compilation, version metadata injection (`v8.0.0`), and baseline catalog binding.
+* [d:\Git_Repositories\LCM_Inventory\docs\README.md](file:///d:/Git_Repositories/LCM_Inventory/docs/README.md) — Documentation update for Tool Explorer features.
 * [d:\Git_Repositories\LCM_Inventory\data\proposals\proposals.json](file:///d:/Git_Repositories/LCM_Inventory/data/proposals/proposals.json) — Ledger registration.
 
 ---

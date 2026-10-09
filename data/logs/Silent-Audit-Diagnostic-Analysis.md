@@ -8,7 +8,7 @@ This document details the complete technical trace, tool execution log, command 
 * **Workspace Context**: `D:\Git_Repositories` (Root) / `Workspace_Inventory`
 * **Trigger Event**: User requested silent background execution of the formal LCM review tests.
 * **Audit Targets**:
-  - AST / Syntax Integrity across modified files in `.lcm/`
+  - AST / Syntax Integrity across modified files in `LCM_Inventory/`
   - Canonical Rule Health (`Workspace_Inventory/tools/Test-LCMRuleHealth.ps1`)
   - Background Daemon Status (`http://localhost:9876`)
   - Working Directory Cleanliness (Git Diff)
@@ -46,7 +46,7 @@ This document details the complete technical trace, tool execution log, command 
 ---
 
 ### Error 3: Standalone Class Type Resolution Failure (AST Check)
-* **Target File**: `d:\Git_Repositories\.lcm\modules\LcmDaemon\Classes\DaemonActionController.ps1`
+* **Target File**: `d:\Git_Repositories\LCM_Inventory\modules\LcmDaemon\Classes\DaemonActionController.ps1`
 * **Observed Failure**:
   ```
   Unable to find type [DaemonEnvironment].
@@ -87,7 +87,7 @@ This document details the complete technical trace, tool execution log, command 
 * **Target Script**: `Test-LCMRuleHealth.ps1`
 * **Observed Behavior**: 11 out of 24 repositories showed `vMissing .lcm`.
 * **Root Cause**:
-  - In `Test-LCMRuleHealth.ps1` (lines 145–176), the script checks for `.lcm\config.json`.
+  - In `Test-LCMRuleHealth.ps1` (lines 145–176), the script checks for `LCM_Inventory\config.json`.
   - Repositories created prior to LCM v8.0 or standalone utility repos (e.g. `InstallFonts`, `NextBootTray`, `TimeStamper`, `MacriumTemplateUpdater`) do not maintain local `.lcm` directories because they inherit governance globally via `.agents/rules`.
   - The script correctly marks them `🟢 In Compliance` because junction validity and zero duplicate rules are the primary enforcement criteria, but the table column displays `vMissing .lcm` as an informational notice.
 * **Resolution**: This is expected baseline architecture, not a functional failure.

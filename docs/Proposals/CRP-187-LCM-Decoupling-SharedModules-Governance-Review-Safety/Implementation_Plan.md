@@ -11,9 +11,9 @@
 
 | Repository | Component | Path | Nature of Change |
 | :--- | :--- | :--- | :--- |
-| **`D:\Git_Repositories`** (Root) | Operational Logs | `.lcm/logs/`, `.lcm/archive/`, `.lcm/scratch/` | Deleted and redirected to Inventory |
-| **`D:\Git_Repositories`** (Root) | Configuration & Trampolines | `.gitignore`, `.lcm/config/tool_catalog.json`, `.lcm/Cmd/*.cmd` | Hard links, recursion fix, trampoline cleanup |
-| **`D:\Git_Repositories`** (Root) | Tool Scripts & Modules | `.lcm/tools/...`, `.lcm/modules/...` | Redirected log paths to `LCM_Inventory/data/logs/lcm` |
+| **`D:\Git_Repositories`** (Root) | Operational Logs | `LCM_Inventory/data/logs/lcm/`, `LCM_Inventory/data/archives/`, `LCM_Inventory/scratch/` | Deleted and redirected to Inventory |
+| **`D:\Git_Repositories`** (Root) | Configuration & Trampolines | `.gitignore`, `LCM_Inventory/config/tool_catalog.json`, `LCM_Inventory/Cmd/*.cmd` | Hard links, recursion fix, trampoline cleanup |
+| **`D:\Git_Repositories`** (Root) | Tool Scripts & Modules | `LCM_Inventory/tools/...`, `LCM_Inventory/modules/...` | Redirected log paths to `LCM_Inventory/data/logs/lcm` |
 | **`D:\Git_Repositories`** (Root) | Editor Settings | `.vscode/settings.json` | Set `files.autoSave: "off"` |
 | **`D:\Git_Repositories\Archives`** | Junk Yard Utilities | `#PermanentPurge.cmd` | Filtered, confirmation-gated purge script |
 | **`LCM_Shared`** | Architecture Spec | `docs/Architecture.md` | v1.1.0 satellite role and decoupled lifecycle draft |
@@ -31,8 +31,8 @@
    - Purge `D:\LCM_Inventory`.
    - Establish NTFS hard links for `/.mcp.json` and `/AGENTS.md`.
 2. **Step 2: Operational Telemetry Decoupling (Completed)**:
-   - Relocate `.lcm/logs/` to `LCM_Inventory/data/logs/lcm/`.
-   - Update 12 core `.lcm` scripts; purge `.lcm/logs`, `.lcm/archive`, `.lcm/scratch`.
+   - Relocate `LCM_Inventory/data/logs/lcm/` to `LCM_Inventory/data/logs/lcm/`.
+   - Update 12 core `.lcm` scripts; purge `LCM_Inventory/logs`, `LCM_Inventory/archive`, `LCM_Inventory/scratch`.
    - Clean up shortname prefix recursion and duplicate trampolines.
 3. **Step 3: Archives Isolation (Completed)**:
    - Implement `#PermanentPurge.cmd` with typed confirmation.

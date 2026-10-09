@@ -45,7 +45,7 @@ This completely eliminates false positives caused by commented-out code, multili
 Each CRP specification may optionally define a structured `intent_signatures` YAML block or be probed via a standardized registry:
 ```yaml
 intent_signatures:
-  target_file: .lcm/tools/internal/Invoke-PrivilegedTool.ps1
+  target_file: LCM_Inventory/tools/Invoke-PrivilegedTool.ps1
   required_functions:
     - Invoke-PrivilegedTool
   required_parameters:
@@ -76,4 +76,4 @@ CRP-122 directly shares and extends the AST parser infrastructure established in
 
 ### 4.2 Verification & Test Gates
 - Unit test suite `tests/LcmIntentAudit.Tests.ps1` verifying detection of stubbed vs complete functions.
-- Integration pass over `.lcm/` verifying signatures for CRP-107 through CRP-120.
+- Integration pass over `LCM_Inventory/` verifying signatures for CRP-107 through CRP-120.

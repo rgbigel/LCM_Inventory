@@ -5,9 +5,9 @@
 - **Bundle ID**: `BUG-155`
 - **Origin Repo**: `LCM_Inventory` / Root (`.lcm`)
 - **Target Components**:
-  - `.lcm/assets/lcm-tool-explorer.js`
-  - `.lcm/modules/LcmToolCatalog.psm1`
-  - `.lcm/tools/internal/scratch/User_Tools_Explorer_LCM.html`
+  - `LCM_Inventory/assets/lcm-tool-explorer.js`
+  - `LCM_Inventory/modules/LcmToolCatalog.psm1`
+  - `LCM_Inventory/tools/scratch/User_Tools_Explorer_LCM.html`
 - **Author**: Operator Directive / BUG Intake
 - **Date**: 2026-09-19
 - **Priority**: Normal (`M`)
@@ -61,7 +61,7 @@ In the interactive HTML dashboard for LCM Tool Explorer (`User_Tools_Explorer_LC
 ---
 
 ## 3. Verification Plan
-1. Rebuild tool catalog: `pwsh .lcm/tools/internal/Show-Tools.ps1 -NoLaunch`.
+1. Rebuild tool catalog: `pwsh LCM_Inventory/tools/Show-Tools.ps1 -NoLaunch`.
 2. Verify in `lcm-tool-explorer.js` and `User_Tools_Explorer_LCM.html`:
    - Clicking tool name triggers `runToolSmart`.
    - Clicking `▶ Run` triggers `openRunDialog`.

@@ -39,7 +39,7 @@ The operator reported 11 defects, functional discrepancies, and UX enhancements 
 | **4** | Consoles Stay Open for `May Exit` | `noExit: activeRunningTool.NoExit !== false` in `lcm-tool-explorer.js` evaluates to true when `NoExit` is undefined/null; `openToolHelp` hardcodes `noExit: true`. |
 | **5** | Help Fails on `.lnk` & Console Terminal | `openToolHelp` previously attempted dynamic command construction or .lnk parsing. Script path must be resolved statically from `tool.RelativePath` in LCM data, piped to a temporary text file, and launched in `notepad.exe`. |
 | **6** | Missing Refresh Button | `btn-refresh` was removed during previous cleanups. Standard Display requires an explicit `[🔄 Refresh Data & View]` button alongside the F5 keyboard listener. |
-| **7** | `LCD` in Subsystem Dropdown | Legacy `.lcm/tools/internal/tool_catalog.json` and fallback seeds in `LcmToolCatalog.psm1` contain obsolete `LCD` references. |
+| **7** | `LCD` in Subsystem Dropdown | Legacy `LCM_Inventory/tools/tool_catalog.json` and fallback seeds in `LcmToolCatalog.psm1` contain obsolete `LCD` references. |
 | **8** | Broken Back Link | `LcmToolCatalog.psm1` line 267 contains `window.location.href='../scratch/SHOW_LCM.html'` which points to a non-existent path. |
 | **9** | Tools Missing `-h` (Generalized) | `Advance-Governance.ps1` and several legacy tools lack standard `[Alias('h', '?')][switch]$Help` declarations and handlers required by `RULE-PS-010`. |
 | **10** | BCR Parameter Descriptions & CRP-134 | `Invoke-BeyondCompareReview.ps1` lacks `HelpMessage` on parameters and `.PARAMETER` docblocks. Addressed in tandem with `CRP-134` (accepted). |
@@ -58,10 +58,10 @@ The operator reported 11 defects, functional discrepancies, and UX enhancements 
 - `LCM_Inventory/assets/StandardTableDisplay.css` (canonical static base owned by LCM_Inventory)
 - `LCM_Inventory/assets/LCMToolCatalog.css` (modular cascade extension)
 - `LCM_Inventory/assets/lcm-tool-explorer.js` (client application controller)
-- `.lcm/modules/LcmToolCatalog.psm1`
+- `LCM_Inventory/modules/LcmToolCatalog.psm1`
 - `LCM_AI/tools/Advance-Governance.ps1` (and all governed scripts lacking `-h`)
 - `LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1`
-- `.lcm/tools/internal/tool_catalog.json` & `.lcm/config/tool_catalog.json`
+- `LCM_Inventory/tools/tool_catalog.json` & `LCM_Inventory/config/tool_catalog.json`
 - `LCM_Inventory/data/proposals/proposals.json`
 
 ---

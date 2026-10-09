@@ -60,7 +60,7 @@ Additionally, as part of system reconnaissance, facts surrounding `Initialize-Sh
   - In `filterByCard()`, remove the obsolete `noexit` branch.
 
 ### Invariant 4: Dual-File Asset Synchronization
-- Both `LCM_Inventory/assets/lcm-tool-explorer.js` and `.lcm/assets/lcm-tool-explorer.js` must remain synchronized to guarantee identical behavior whether resolving from `LCM_Inventory` or `.lcm`.
+- Both `LCM_Inventory/assets/lcm-tool-explorer.js` and `LCM_Inventory/assets/lcm-tool-explorer.js` must remain synchronized to guarantee identical behavior whether resolving from `LCM_Inventory` or `.lcm`.
 
 ---
 

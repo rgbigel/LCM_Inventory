@@ -15,7 +15,7 @@ Date: 2026-09-26
 2. Update blocked status indicator to single red "no entry" symbol (`⛔`) without text.
 3. Update row action buttons: `Reset` in red `#f85149`, `Set` in green `#3fb950`.
 4. Provide `SetAll` header button to bulk finalize/unblock all blocked tools.
-5. Derive dropdown taxonomy options during catalog build, persist to `.lcm/config/tool_explorer_options.json`, and support dynamic addition via `+ New...` backed by the daemon endpoint `POST /add_explorer_option`.
+5. Derive dropdown taxonomy options during catalog build, persist to `LCM_Inventory/config/tool_explorer_options.json`, and support dynamic addition via `+ New...` backed by the daemon endpoint `POST /add_explorer_option`.
 6. Enforce persistent horizontal scrollbar with `overflow-x: scroll !important` and `min-width: 1800px !important`.
 
 ---
@@ -39,12 +39,12 @@ Date: 2026-09-26
 - [x] Style `Reset` (red) and `Set` (green) buttons.
 - [x] Implement `finalizeAllBlocked()`, `handleSelectFilterChange()`, and `handleCellEditSelectChange()`.
 - [x] Populate in-cell editors dynamically from `window.__LCM_OPTIONS__` with `+ New...`.
-- [x] Mirror JS to `.lcm/assets/lcm-tool-explorer.js`.
+- [x] Mirror JS to `LCM_Inventory/assets/lcm-tool-explorer.js`.
 
 ### Phase 4: CSS Scrollbar Hardening (`LCMToolCatalog.css`)
 - [x] Set `.table-container` to `overflow-x: scroll !important;`.
 - [x] Set `table` to `min-width: 1800px !important;`.
-- [x] Mirror CSS to `.lcm/assets/LCMToolCatalog.css`.
+- [x] Mirror CSS to `LCM_Inventory/assets/LCMToolCatalog.css`.
 
 ### Phase 5: Verification & Governance
 - [x] Run `Show-ToolsExplorer.ps1 -NoLaunch` to compile dashboard.

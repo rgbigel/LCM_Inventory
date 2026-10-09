@@ -5,6 +5,6 @@
   "ReviewResult": "AcceptedAll",
   "Reviewer": "rgbig",
   "Timestamp": "2026-09-04 21:51:37",
-  "Message": "feat(lcm): migrate canonical rule tracking to .lcm/.agents and allow-list .lcm code (Approach 1)",
+  "Message": "feat(lcm): migrate canonical rule tracking to LCM_Inventory/.agents and allow-list .lcm code (Approach 1)",
   "ActionsExecuted": []
 }

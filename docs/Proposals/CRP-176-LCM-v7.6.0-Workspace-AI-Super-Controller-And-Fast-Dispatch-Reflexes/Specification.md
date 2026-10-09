@@ -31,7 +31,7 @@ Rather than treating tool launching as disconnected actions or relying on comple
    - Selecting a subsystem updates the target context for all child tools and views.
 
 2. **ToolsExplorer Launcher**:
-   - Opens or activates the modern [ToolsExplorer](file:///.lcm/tools/internal/Show-ToolsExplorer.ps1) pre-filtered to the chosen Subsystem.
+   - Opens or activates the modern [ToolsExplorer](file:///LCM_Inventory/tools/Show-ToolsExplorer.ps1) pre-filtered to the chosen Subsystem.
 
 3. **ShowCM Launcher**:
    - Opens or activates the CM Control Hub ([ShowCM](file:///LCM_Inventory/tools/Show-LcmControl.ps1)) pre-filtered to proposals, lifecycle states, and reviews for the chosen Subsystem.
@@ -41,7 +41,7 @@ Rather than treating tool launching as disconnected actions or relying on comple
 ## 2. Core Functional Requirements
 
 ### 2.1 Subsystem Selection Engine
-- The Super-Controller dropdown draws directly from the precompiled taxonomy in [`.lcm/config/tool_explorer_options.json`](file:///.lcm/config/tool_explorer_options.json).
+- The Super-Controller dropdown draws directly from the precompiled taxonomy in [`LCM_Inventory/config/tool_explorer_options.json`](file:///LCM_Inventory/config/tool_explorer_options.json).
 - Selection changes immediately propagate to the connected launchers:
   - Passing `-Group <Subsystem>` to `Show-ToolsExplorer.ps1`.
   - Passing `-Repo <Subsystem>` to `Show-LcmControl.ps1` (`ShowCM`).
@@ -114,7 +114,7 @@ Per operator directive on 2026-09-27, **Option A** has been selected and impleme
 2. **Unified Navigation Dispatcher (`Show-SuperController.ps1`)**:
    - Dispatches `Show-ToolsExplorer.ps1 -Group <Subsystem>` and/or `Show-LcmControl.ps1 -Repo <Subsystem>`.
 3. **Canonical Trampoline (`SuperController.cmd`)**:
-   - Fast CLI entry in `.lcm/Cmd/SuperController.cmd`.
+   - Fast CLI entry in `LCM_Inventory/Cmd/SuperController.cmd`.
 4. **Browser Isolation**:
    - Enforces Zen Browser (`D:\Tools\Zen Browser\zen.exe`) with `--new-window` dispatch to prevent window collisions.
 

@@ -47,10 +47,10 @@ window.addEventListener('keydown', (e) => {
 
 ## 3. Affected Components
 - `LCM_Inventory/docs/CM_CONTROL_HUB.html`
-- `.lcm/tools/internal/LcmToolCatalog.psm1` & `SHOW_TOOLS.html`
-- `.lcm/tools/internal/Show-Rules.ps1`
+- `LCM_Inventory/tools/LcmToolCatalog.psm1` & `SHOW_TOOLS.html`
+- `LCM_Inventory/tools/Show-Rules.ps1`
 - `LCM_Inventory/tools/Show-CrpDates.ps1`
-- `.lcm/assets/lcm-dashboard-theme.css` / theme components
+- `LCM_Inventory/assets/lcm-dashboard-theme.css` / theme components
 
 ---
 

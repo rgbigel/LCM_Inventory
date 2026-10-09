@@ -10,7 +10,7 @@ Implement LCM Display Standard (Light/Dark mode theme toggle, typography, and Lc
 
 ## Proposed Changes
 1. **Show-CmControlHub.ps1**:
-   - Resolve and inline `.lcm\assets\lcm-table-print-atom.js`.
+   - Resolve and inline `LCM_Inventory\assets\lcm-table-print-atom.js`.
    - Bump script version to `1.1.0`, date `2026-09-06`.
    - Inject print atom content into placeholder block.
 2. **CM_CONTROL_HUB.html**:

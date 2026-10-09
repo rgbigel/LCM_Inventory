@@ -17,7 +17,7 @@ Status: In_Progress
 ### Phase 1: Establish Root NTFS Directory Junction
 - Execute command:
   ```cmd
-  cmd /c mklink /J "D:\Git_Repositories\.agents" "D:\Git_Repositories\.lcm\.agents"
+  cmd /c mklink /J "D:\Git_Repositories\.agents" "D:\Git_Repositories\LCM_Inventory\.agents"
   ```
 - Verify junction resolution:
   - `Test-Path "D:\Git_Repositories\.agents\rules\RuleAuthority.md"` $\rightarrow$ `True`

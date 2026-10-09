@@ -6,7 +6,7 @@
 | **Defect ID** | `BUG-159` |
 | **Lifecycle State** | `OPEN` (Registered via Strict Intake Gate per `RULE-LCM-015`) |
 | **Origin Repository** | `LCM_Inventory` |
-| **Target Scope** | CM Control Hub & Desktop Daemon Bridge (`LCM_Inventory/assets/CM_CONTROL_HUB.html`, `.lcm/modules/LcmDaemon/Classes/DaemonActionController.ps1`, `.lcm/tools/internal/LcmDesktopDaemon.ps1`, `LCM_Inventory/tools/Show-CmControlHub.ps1`) |
+| **Target Scope** | CM Control Hub & Desktop Daemon Bridge (`LCM_Inventory/assets/CM_CONTROL_HUB.html`, `LCM_Inventory/modules/LcmDaemon/Classes/DaemonActionController.ps1`, `LCM_Inventory/tools/LcmDesktopDaemon.ps1`, `LCM_Inventory/tools/Show-CmControlHub.ps1`) |
 | **Author** | Rolf, LCM_AI Intake |
 | **Date** | 2026-09-19 |
 | **Version Impact** | `v7.0.3` |
@@ -28,7 +28,7 @@ When executing lifecycle commands (such as `proceed <id>`, `do <id>`, `verify <i
    - If an underlying PowerShell script fails or throws an exception, the daemon fire-and-forget execution hides the error, and the Control Hub misleadingly reports `[OK]`.
 
 ### Root Cause
-- In [`.lcm/modules/LcmDaemon/Classes/DaemonActionController.ps1`](file:///D:/Git_Repositories/.lcm/modules/LcmDaemon/Classes/DaemonActionController.ps1), the `/execute` route dispatches processes asynchronously via `Start-Process` without capturing stdout, stderr, or process exit codes for CLI management commands.
+- In [`LCM_Inventory/modules/LcmDaemon/Classes/DaemonActionController.ps1`](file:///D:/Git_Repositories/LCM_Inventory/modules/LcmDaemon/Classes/DaemonActionController.ps1), the `/execute` route dispatches processes asynchronously via `Start-Process` without capturing stdout, stderr, or process exit codes for CLI management commands.
 - In [`LCM_Inventory/assets/CM_CONTROL_HUB.html`](file:///D:/Git_Repositories/LCM_Inventory/assets/CM_CONTROL_HUB.html), the console command handlers send a fire-and-forget fetch to `/execute` and immediately append a hardcoded message, without awaiting the process result, displaying stdout/stderr, or calling `GET /proposals` to dynamically reload the updated proposal store.
 
 ---

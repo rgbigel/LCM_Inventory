@@ -36,7 +36,7 @@ Codify the standard deferral semantic for UI controls displaying `"Available in 
 ## 2. Command Nomenclature Reconciliation: `ShowTools` vs. `ToolsExplorer`
 
 1. **Primary Command**:
-   - **`ShowTools`** is restored as the canonical, authoritative bare-word command across all documentation, trampolines (`.lcm/Cmd/ShowTools.cmd`), and tool catalog definitions.
+   - **`ShowTools`** is restored as the canonical, authoritative bare-word command across all documentation, trampolines (`LCM_Inventory/Cmd/ShowTools.cmd`), and tool catalog definitions.
 2. **Compatibility Aliasing**:
    - `ToolsExplorer.cmd` and `ToolExplorer.cmd` remain available as functional aliases redirecting to `ShowTools`.
    - Macros and rules index `ShowTools` as the primary operational entrypoint.

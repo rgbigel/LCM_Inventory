@@ -40,7 +40,7 @@ Date: 2026-09-25
 
 ### 6. Canonical Rules Migration to `LCM_AI`
 - Migrated 17 physical rule markdown documents from `LCM_Inventory\.agents\rules\` to **`LCM_AI\.agents\rules\`**.
-- Re-pointed all NTFS directory junctions (`LCM_Inventory\.agents\rules`, root `D:\Git_Repositories\.agents\rules`, `D:\Git_Repositories\.lcm\.agents\rules`, `PowerBGInfo\.agents\rules`, etc.) directly or transitively to `LCM_AI\.agents\rules`.
+- Re-pointed all NTFS directory junctions (`LCM_Inventory\.agents\rules`, root `D:\Git_Repositories\.agents\rules`, `D:\Git_Repositories\LCM_Inventory\.agents\rules`, `PowerBGInfo\.agents\rules`, etc.) directly or transitively to `LCM_AI\.agents\rules`.
 - Verified 100% rule discovery across all child repositories with zero broken reparse points.
 
 ### 7. Transparent Single-Session BCR & Symlink Traversal
@@ -52,4 +52,4 @@ Date: 2026-09-25
 ### 8. Governance Documentation Synchronization
 - Updated [`AGENTS.md`](file:///d:/Git_Repositories/AGENTS.md) Section 2 to designate `LCM_AI\.agents\rules\` as the Canonical Hub.
 - Updated [`RuleAuthority.md`](file:///d:/Git_Repositories/LCM_AI/.agents/rules/RuleAuthority.md) (`RULE-AUTH-001`) to reflect `LCM_AI` as the authoritative physical host.
-- Updated [`Export-LCMRules.ps1`](file:///d:/Git_Repositories/.lcm/tools/internal/Export-LCMRules.ps1) to prioritize `LCM_AI\.agents\rules`.
+- Updated [`Export-LCMRules.ps1`](file:///d:/Git_Repositories/LCM_Inventory/tools/Export-LCMRules.ps1) to prioritize `LCM_AI\.agents\rules`.

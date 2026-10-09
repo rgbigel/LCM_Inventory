@@ -8,7 +8,7 @@ Severity: High
 Status: ACCEPTED
 Date: 2026-09-10
 Author: Operator Directive / CRP Intake
-Target Scope: LCM_Inventory/tools/, .lcm/modules/, LCM_AI/tools/, Governance Rules
+Target Scope: LCM_Inventory/tools/, LCM_Inventory/modules/, LCM_AI/tools/, Governance Rules
 Affected Version Range: v7.5.0+
 Impacted Repositories: [LCM, LCM_Inventory, LCM_AI, Governed Child Repositories]
 Max-Regression-Depth: 2

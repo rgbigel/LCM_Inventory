@@ -97,7 +97,7 @@ LCM_Inventory/
 │   ├── Show-CRPs.ps1               # Consolidated from Show-CrpDates.ps1
 │   ├── Show-Inventory.ps1          # Renamed from Show-WorkspaceInventoryApp.ps1 with 0-param defaults
 │   └── Show-WorkspaceReadiness.ps1 # Intelligent default to current repo
-.lcm/
+LCM_Inventory/
 ├── config/
 │   └── tool_catalog.json           # Updated role/audience classifications and renamed tools
 └── Cmd/

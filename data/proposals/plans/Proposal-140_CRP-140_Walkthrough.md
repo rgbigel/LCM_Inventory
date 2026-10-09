@@ -10,7 +10,7 @@
 
 1. **Repository Creation & Architecture**:
    - Initialized Git repository at [D:\Git_Repositories\One2Md](file:///D:/Git_Repositories/One2Md).
-   - Created full LCM directory structure (`Source/`, `docs/`, `install/`, `tests/`, `tools/`, `.lcm/`, `.vscode/`, `.githooks/`).
+   - Created full LCM directory structure (`Source/`, `docs/`, `install/`, `tests/`, `tools/`, `LCM_Inventory/`, `.vscode/`, `.githooks/`).
 
 2. **Core Tool Absorption & Enhancements**:
    - Enhanced [Source/One2Md.ps1](file:///D:/Git_Repositories/One2Md/Source/One2Md.ps1) with:

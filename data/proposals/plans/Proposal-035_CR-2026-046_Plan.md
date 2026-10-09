@@ -2,7 +2,7 @@
 
 ## User Review Required
 > [!IMPORTANT]
-> **Zero-Deletion Archival Invariant**: Redundant duplicate data artifacts (such as older baseline JSON snapshots, duplicate `BootOpsHub.zip` instances in scratch review staging, and physical scripts in `.lcm/tools/links`) will **strictly be moved to dedicated structured `\archive` folders** and will **never be deleted**.
+> **Zero-Deletion Archival Invariant**: Redundant duplicate data artifacts (such as older baseline JSON snapshots, duplicate `BootOpsHub.zip` instances in scratch review staging, and physical scripts in `LCM_Inventory/tools/links`) will **strictly be moved to dedicated structured `\archive` folders** and will **never be deleted**.
 
 > [!NOTE]
 > **`.lcd` Removal**: The temporary backward-compatibility junction `D:\Git_Repositories\.lcd` created during the `.lcm` migration will be removed, establishing `.lcm` as the sole canonical platform root.
@@ -25,9 +25,9 @@
 
 ### Platform Engine (`.lcm`)
 
-#### [MODIFY] [.lcm/tools/links/](file:///d:/Git_Repositories/.lcm/tools/links)
-* Move the 66 physical duplicate scripts currently stored in `.lcm\tools\links` into `.lcm\archive\tools_links_backup\`.
-* Ensure tool discovery and execution are routed dynamically through `tool_catalog.json` and `.lcm\Cmd\` trampolines.
+#### [MODIFY] [LCM_Inventory/Cmd/](file:///d:/Git_Repositories/LCM_Inventory/tools/links)
+* Move the 66 physical duplicate scripts currently stored in `LCM_Inventory\tools\links` into `LCM_Inventory\data\archives\tools_links_backup\`.
+* Ensure tool discovery and execution are routed dynamically through `tool_catalog.json` and `LCM_Inventory\Cmd\` trampolines.
 
 #### [DELETE] [D:\Git_Repositories\.lcd](file:///d:/Git_Repositories/.lcd)
 * Remove the temporary NTFS junction `D:\Git_Repositories\.lcd <<===>> D:\Git_Repositories\.lcm`.
@@ -61,7 +61,7 @@
 3. **Workspace Readiness & Health Check**:
    ```powershell
    pwsh -File LCM_Inventory/tools/Invoke-WorkspaceAudit.ps1
-   pwsh -File .lcm/tools/internal/Test-LCMRuleHealth.ps1
+   pwsh -File LCM_Inventory/tools/Test-LCMRuleHealth.ps1
    ```
 4. **Daemon & Path Validation**:
    ```powershell

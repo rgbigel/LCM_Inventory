@@ -1,14 +1,14 @@
 # Change Request Proposal: Automated Privilege-Aware Tool Execution & Elevation Interception
 
 - **Proposal ID**: `CRP-107`
-- **Target Repository**: `LCM` (`Git_Repositories/.agents/rules`, `.lcm/modules`, `LCM_Inventory`)
+- **Target Repository**: `LCM` (`Git_Repositories/.agents/rules`, `LCM_Inventory/modules`, `LCM_Inventory`)
 - **Target Version**: `v7.3.0`
 - **Domain**: `Lifecycle Model (LCM) Security, Elevation & Tool Dispatch Governance`
 - **Author**: Rolf, LCM_AI Governance
 - **Status**: `SUPERSEDED_AND_RETIRED` (Superseded by `CRP-125` for operational elevation discovery & catalog alignment; `RULE-ELEV-006` policy preserved in `ElevationPolicy.md`)
 - **Created**: `2026-09-07 11:38:00`
 - **Priority**: `HIGH`
-- **Target Scope**: `.agents/rules/ElevationPolicy.md`, `PowerShellStandardsPolicy.md`, `.lcm/config/tool_catalog.json`
+- **Target Scope**: `.agents/rules/ElevationPolicy.md`, `PowerShellStandardsPolicy.md`, `LCM_Inventory/config/tool_catalog.json`
 - **Affected Version Range**: `v7.0.0 - v7.3.0`
 - **Impacted Repositories**: `Git_Repositories`, `LCM_Inventory`
 
@@ -34,7 +34,7 @@ This proposal formalizes `RULE-ELEV-006` to be codified into `.agents/rules/Elev
 Before executing any tool, script, or shorthand command, the AI agent `MUST` perform the following deterministic validation sequence:
 
 1. **Catalog & Schema Lookup**:
-   - Query the authoritative tool catalog (`.lcm/config/tool_catalog.json` / `WorkspaceInventory`) to resolve the target tool's metadata record.
+   - Query the authoritative tool catalog (`LCM_Inventory/config/tool_catalog.json` / `WorkspaceInventory`) to resolve the target tool's metadata record.
    - Inspect the execution profile to determine if `"Admin": true` (or equivalent elevation requirement flag).
 
 2. **Context & Privilege Verification**:
@@ -56,7 +56,7 @@ Upon operator approval via `PROCEED CRP-107` or `PROCEED 107`:
    - Add `RULE-ELEV-006` to `.agents/rules/ElevationPolicy.md`.
    - Update `AGENTS.md` Quick-Reference index table and Cross-Reference Matrix.
 2. **Tool Catalog Alignment**:
-   - Audit `.lcm/config/tool_catalog.json` to ensure tools with administrative requirements (including `Set-GitRoot.ps1`) have `"Admin": true`.
+   - Audit `LCM_Inventory/config/tool_catalog.json` to ensure tools with administrative requirements (including `Set-GitRoot.ps1`) have `"Admin": true`.
 3. **Dispatch & Interception Utilities**:
    - Ensure pre-flight check helper or agent dispatch routines cleanly route calls with `"Admin": true` to the Session 1 daemon bridge without blocking.
 

@@ -14,9 +14,9 @@ We have executed the comprehensive workspace deduplication, archive consolidatio
 * **Legacy Baselines Consolidated**:
   * Older snapshots (`BASELINE-v4.1.0-20260815.json`, `BASELINE-v4.2.0-20260816.json`, `baseline-v4.1.0.json`) moved to [`LCM_Inventory/data/archives/baselines/`](file:///d:/Git_Repositories/LCM_Inventory/data/archives/baselines/).
   * Active baseline [`BASELINE-v4.3.0.json`](file:///d:/Git_Repositories/LCM_Inventory/data/baselines/BASELINE-v4.3.0.json) preserved in active path.
-* **Physical Script Copies in `.lcm\tools\links\`**:
-  * Archived 66 redundant physical script copies to [`.lcm/archive/tools_links_backup/`](file:///d:/Git_Repositories/.lcm/archive/tools_links_backup).
-  * Tool execution routes dynamically through `tool_catalog.json` and `.lcm\Cmd\` trampolines directly to canonical source files.
+* **Physical Script Copies in `LCM_Inventory\Cmd\`**:
+  * Archived 66 redundant physical script copies to [`LCM_Inventory/data/archives/tools_links_backup/`](file:///d:/Git_Repositories/LCM_Inventory/data/archives/tools_links_backup).
+  * Tool execution routes dynamically through `tool_catalog.json` and `LCM_Inventory\Cmd\` trampolines directly to canonical source files.
 * **`HaSSD06` Scratch Cleanup**:
   * Archived `srat.zip`, `srat_release.zip`, and extraction folders to [`HaSSD06/data/archives/srat_archive/`](file:///d:/Git_Repositories/HaSSD06/data/archives/srat_archive).
 * **`.lcd` Removed**:
@@ -33,6 +33,6 @@ We have executed the comprehensive workspace deduplication, archive consolidatio
 
 ## 3. Governance & Quality Gates Passed
 
-* **`Test-LCMRuleHealth.ps1`**: **100% compliant**. All 19 repositories have valid junctions directly pointing to `D:\Git_Repositories\.lcm\.agents\rules`.
+* **`Test-LCMRuleHealth.ps1`**: **100% compliant**. All 19 repositories have valid junctions directly pointing to `D:\Git_Repositories\LCM_Inventory\.agents\rules`.
 * **Desktop Daemon**: Online and responsive on port `9876` (PID `21928`) from `.lcm`.
 * **`Invoke-WorkspaceAudit.ps1`**: Completed with **0 outdated repositories** across the workspace.

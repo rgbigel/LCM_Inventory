@@ -10,7 +10,7 @@ Fix JavaScript syntax error and stale asset path in `HaSSD06_Inventory/tools/Sho
 ## Proposed Changes
 1. **Show-HaInventoryApp.ps1**:
    - Update header version to `5.3.2`, date `2026-09-06`.
-   - Update `$atomJsPath` resolution using candidate list including `.lcm\assets\lcm-table-print-atom.js`.
+   - Update `$atomJsPath` resolution using candidate list including `LCM_Inventory\assets\lcm-table-print-atom.js`.
    - Change line 1415 from template literal to clean string concatenation: `return tabName + '_Inventory_${Instance}.html';`.
    - Wrap `LcmTablePrintAtom.init` call in defensive guard: `if (typeof LcmTablePrintAtom !== 'undefined')`.
 2. **Regeneration & Verification**:

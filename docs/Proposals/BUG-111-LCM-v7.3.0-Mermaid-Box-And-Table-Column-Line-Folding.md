@@ -7,7 +7,7 @@ Affected-Repos: [LCM, LCM_AI, LCM_Inventory]
 Status: OPEN
 Date: 2026-09-07
 Author: rgbig
-Target Scope: LCM Markdown & HTML Rendering Engines (.lcm/tools/internal/Format-LcmMarkdownDiagrams.ps1, .lcm/assets/lcm-table-print-atom.css, Universal Table CSS)
+Target Scope: LCM Markdown & HTML Rendering Engines (LCM_Inventory/tools/Format-LcmMarkdownDiagrams.ps1, LCM_Inventory/assets/lcm-table-print-atom.css, Universal Table CSS)
 Affected Version Range: v7.3.0
 Impacted Repositories: [LCM, LCM_AI, LCM_Inventory]
 Severity: Medium
@@ -26,10 +26,10 @@ In markdown documents and generated HTML dashboards across the workspace:
 
 ## 3. Remediation Strategy (Proposed)
 1. **Mermaid Node Text Folding**:
-   - Enhance the diagram formatting engine ([Format-LcmMarkdownDiagrams.ps1](file:///D:/Git_Repositories/.lcm/tools/internal/Format-LcmMarkdownDiagrams.ps1)) to inspect node labels and insert balanced `<br/>` break tags or wrap long labels when exceeding a threshold (e.g., 30-40 characters).
+   - Enhance the diagram formatting engine ([Format-LcmMarkdownDiagrams.ps1](file:///D:/Git_Repositories/LCM_Inventory/tools/Format-LcmMarkdownDiagrams.ps1)) to inspect node labels and insert balanced `<br/>` break tags or wrap long labels when exceeding a threshold (e.g., 30-40 characters).
    - Ensure Mermaid diagram definitions include responsive styling rules or class definitions permitting text wrapping where supported.
 2. **Table Column Wrapping Standard**:
-   - Update universal table styling across `.lcm/assets/` and generated HTML viewers (`CM_CONTROL_HUB.html`, `SHOW_HA_INVENTORY.html`, etc.) ensuring `word-break: break-word;`, `overflow-wrap: break-word;`, and reasonable column `max-width` constraints are applied to prevent column blowout.
+   - Update universal table styling across `LCM_Inventory/assets/` and generated HTML viewers (`CM_CONTROL_HUB.html`, `SHOW_HA_INVENTORY.html`, etc.) ensuring `word-break: break-word;`, `overflow-wrap: break-word;`, and reasonable column `max-width` constraints are applied to prevent column blowout.
 3. **Automated Verification**:
    - Test markdown rendering with Mermaid diagrams and wide tables across child repositories.
 

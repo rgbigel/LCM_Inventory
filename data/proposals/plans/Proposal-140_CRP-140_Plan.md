@@ -10,6 +10,6 @@
 2. Implement enhanced `Source/One2Md.ps1` and `Source/One2Md.cmd`.
 3. Author tripartite documentation in `docs/` (`Architecture.md`, `Requirements.md`, `Implementation.md`, `Changelog.md`).
 4. Author universal installation runbook `install/Installation.md` and `install/Install-One2Md.ps1`.
-5. Establish governance linkages (`AGENTS.md`, `GEMINI.md`, `.lcm/config.json`, `.agents/rules` junction).
+5. Establish governance linkages (`AGENTS.md`, `GEMINI.md`, `LCM_Inventory/config.json`, `.agents/rules` junction).
 6. Implement Pester v5 tests and `tools/Test-RepoReadiness.ps1` quality gate.
 7. Verify all gates and commit version 1.0.0.

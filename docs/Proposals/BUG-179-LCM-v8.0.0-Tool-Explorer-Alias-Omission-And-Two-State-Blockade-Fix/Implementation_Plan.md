@@ -23,17 +23,17 @@ Date: 2026-09-26
 ### Phase 1: Tool Catalog Metadata & Trampoline Generation
 - [x] Add `Aliases = @("BCR")` to `"Invoke-BeyondCompareReview.ps1"` in `Update-ToolCatalog.ps1`.
 - [x] Allow `$meta.Group` / `$meta.Subsystem` to override `$sd.Group` in catalog entries.
-- [x] Execute `Update-ToolCatalog.ps1` to produce `BCR.cmd` in `.lcm/Cmd/`.
+- [x] Execute `Update-ToolCatalog.ps1` to produce `BCR.cmd` in `LCM_Inventory/Cmd/`.
 
 ### Phase 2: Tool Explorer UI Ergonomics & Blockade Cleanup
 - [x] Update `renderTable` in `lcm-tool-explorer.js` to key master index by `RelativePath`.
 - [x] Display alias pills in default Short-Names mode when alternative short names exist.
 - [x] Harden `saveCellEdit`, `markToolPending`, `revertTool`, and `finalizeTool` to clear pending flags and unblock tools cleanly.
-- [x] Mirror `lcm-tool-explorer.js` between `LCM_Inventory/assets/` and `.lcm/assets/`.
+- [x] Mirror `lcm-tool-explorer.js` between `LCM_Inventory/assets/` and `LCM_Inventory/assets/`.
 
 ### Phase 3: Daemon State Synchronization
 - [x] Update `DaemonActionController.SyncCatalogState` to update `Group`, `Domain`, and `Subsystem` fields.
-- [x] Persist dynamic overrides to `.lcm/config/tool_catalog_overrides.json`.
+- [x] Persist dynamic overrides to `LCM_Inventory/config/tool_catalog_overrides.json`.
 
 ### Phase 4: Validation & Registration
 - [x] Validate daemon `/query_all_short_names` endpoint.

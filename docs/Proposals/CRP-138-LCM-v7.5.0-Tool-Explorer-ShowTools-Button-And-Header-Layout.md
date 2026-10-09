@@ -6,7 +6,7 @@
 | **Proposal ID** | `CRP-138` |
 | **Lifecycle State** | `OPEN` (Awaiting Operator Activation per RULE-LCM-015) |
 | **Origin Repository** | `LCM / Git_Repositories` |
-| **Target Scope** | `.lcm/modules/LcmToolCatalog.psm1`, `.lcm/assets/lcm-tool-explorer.js`, `.lcm/assets/lcm-dashboard-theme.css` |
+| **Target Scope** | `LCM_Inventory/modules/LcmToolCatalog.psm1`, `LCM_Inventory/assets/lcm-tool-explorer.js`, `LCM_Inventory/assets/lcm-dashboard-theme.css` |
 | **Author** | Operator Directive / CRP Intake |
 | **Date** | 2026-09-11 |
 | **Priority** | `Medium` |

@@ -72,7 +72,7 @@ Operating experience with `CRP-173` revealed several core friction points across
 
 ### Invariant 6: Canonical Rules Relocation to LCM_AI & Universal Junction Sync
 - Move canonical physical rules repository from `LCM_Inventory\.agents\rules\` to **`LCM_AI\.agents\rules\`** (the authoritative domain owner for AI prompts, policies, and governance).
-- Re-link all junctions (`LCM_Inventory\.agents\rules`, `D:\Git_Repositories\.agents\rules`, `.lcm\.agents\rules`, and child repositories) to point directly or transitively to `LCM_AI\.agents\rules\`.
+- Re-link all junctions (`LCM_Inventory\.agents\rules`, `D:\Git_Repositories\.agents\rules`, `LCM_Inventory\.agents\rules`, and child repositories) to point directly or transitively to `LCM_AI\.agents\rules\`.
 - Update [`AGENTS.md`](file:///d:/Git_Repositories/AGENTS.md) and [`RuleAuthority.md`](file:///d:/Git_Repositories/LCM_AI/.agents/rules/RuleAuthority.md) to enshrine `LCM_AI\.agents\rules` as the Canonical Physical Hub (`RULE-AUTH-001`).
 
 ### Invariant 7: Transparent Single-Session Beyond Compare Review (FollowSymLinks)

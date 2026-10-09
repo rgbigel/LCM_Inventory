@@ -15,8 +15,8 @@ Date: 2026-09-26
 All planned phases of CRP-177 have been successfully executed and validated across `.lcm` and `LCM_Inventory`:
 
 1. **Tool Explorer Ergonomics & Disambiguation**:
-   - Short name updated from `HaSSD06InventoryTestRepoReadiness` to `TestHaRepoReady`. Launcher `.lcm/Cmd/TestHaRepoReady.cmd` generated and verified.
-   - `card-noexit` removed from summary metrics card band in `.lcm/modules/LcmToolCatalog.psm1`.
+   - Short name updated from `HaSSD06InventoryTestRepoReadiness` to `TestHaRepoReady`. Launcher `LCM_Inventory/Cmd/TestHaRepoReady.cmd` generated and verified.
+   - `card-noexit` removed from summary metrics card band in `LCM_Inventory/modules/LcmToolCatalog.psm1`.
    - All action buttons and header controls compacted across CSS files.
    - Removed pictograms (`📁 `, `💬 `) from tool name display.
    - Added sequential `#` column formatted as `001-max` corresponding to the unfiltered index in `toolsData`.
@@ -24,7 +24,7 @@ All planned phases of CRP-177 have been successfully executed and validated acro
    - Verified table headers and column filters are consistently titled **Subsystem** and **All Subsystems**.
 
 2. **Workspace Maintenance & Daemon Log Truncation**:
-   - Implemented `LCM_Inventory/tools/Invoke-WorkspaceMaintenance.ps1` with wrapper `.lcm/tools/internal/Invoke-WorkspaceMaintenance.ps1` and launcher `.lcm/Cmd/WorkspaceMaintenance.cmd`.
+   - Implemented `LCM_Inventory/tools/Invoke-WorkspaceMaintenance.ps1` with wrapper `LCM_Inventory/tools/Invoke-WorkspaceMaintenance.ps1` and launcher `LCM_Inventory/Cmd/WorkspaceMaintenance.cmd`.
    - Executed live run:
      - Truncated `LcmDesktopDaemon-20260919.log` (37,500 lines / 2.7 MB &rarr; 100 lines).
      - Truncated `LcmDesktopDaemon-20260920.log` (13,811 lines / 1.0 MB &rarr; 100 lines).

@@ -7645,7 +7645,7 @@
       "caller_symbol": "Get-LcmDependencySourceFiles",
       "callee_target": "Join-Path",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Join-Path $WorkspaceRoot '.lcm\\modules'",
+      "supplied_arguments": "Join-Path $WorkspaceRoot 'LCM_Inventory\\modules'",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -7655,7 +7655,7 @@
       "caller_symbol": "Get-LcmDependencySourceFiles",
       "callee_target": "Join-Path",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Join-Path $WorkspaceRoot '.lcm\\tools'",
+      "supplied_arguments": "Join-Path $WorkspaceRoot 'LCM_Inventory\\tools'",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -7665,7 +7665,7 @@
       "caller_symbol": "Get-LcmDependencySourceFiles",
       "callee_target": "Join-Path",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Join-Path $WorkspaceRoot '.lcm\\hooks'",
+      "supplied_arguments": "Join-Path $WorkspaceRoot 'LCM_Inventory\\hooks'",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -13505,7 +13505,7 @@
       "caller_symbol": "Get-ReposUnderReview",
       "callee_target": "Where-Object",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Where-Object {\r\n            $filePath = $_.Substring(3).Trim()\r\n            -not ($filePath -like \"data/logs/*\" -or $filePath -like \"data\\logs\\*\" -or\r\n                  $filePath -like \"logs/*\" -or $filePath -like \"logs\\*\" -or\r\n                  $filePath -like \".lcm/logs/*\" -or $filePath -like \".lcm\\logs\\*\" -or\r\n                  $filePath -like \"scratch/*\" -or $filePath -like \"scratch\\*\" -or\r\n                  $filePath -like \".lcm/scratch/*\" -or $filePath -like \".lcm\\scratch\\*\")\r\n        }",
+      "supplied_arguments": "Where-Object {\r\n            $filePath = $_.Substring(3).Trim()\r\n            -not ($filePath -like \"data/logs/*\" -or $filePath -like \"data\\logs\\*\" -or\r\n                  $filePath -like \"logs/*\" -or $filePath -like \"logs\\*\" -or\r\n                  $filePath -like \"LCM_Inventory/data/logs/lcm/*\" -or $filePath -like \"LCM_Inventory\\logs\\*\" -or\r\n                  $filePath -like \"scratch/*\" -or $filePath -like \"scratch\\*\" -or\r\n                  $filePath -like \"LCM_Inventory/scratch/*\" -or $filePath -like \"LCM_Inventory\\scratch\\*\")\r\n        }",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -14535,7 +14535,7 @@
       "caller_symbol": "Get-RepoCMState",
       "callee_target": "Join-Path",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Join-Path $DirectoryPath '.lcm\\config.json'",
+      "supplied_arguments": "Join-Path $DirectoryPath 'LCM_Inventory\\config.json'",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -19175,7 +19175,7 @@
       "caller_symbol": "Create-LcmTool",
       "callee_target": "Write-Host",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Write-Host \"  help handler, ShortName .cmd launcher in .lcm/Cmd/, and auto-synced catalog.\"",
+      "supplied_arguments": "Write-Host \"  help handler, ShortName .cmd launcher in LCM_Inventory/Cmd/, and auto-synced catalog.\"",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -19885,7 +19885,7 @@
       "caller_symbol": "Create-LcmTool",
       "callee_target": "Write-Host",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Write-Host \"  Command Hub : .lcm/Cmd/$ShortName.cmd\"",
+      "supplied_arguments": "Write-Host \"  Command Hub : LCM_Inventory/Cmd/$ShortName.cmd\"",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -20135,7 +20135,7 @@
       "caller_symbol": "Disable-WakeDevices",
       "callee_target": "Write-Host",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Write-Host \"  pwsh .lcm/tools/internal/Disable-WakeDevices.ps1 [-h]\"",
+      "supplied_arguments": "Write-Host \"  pwsh LCM_Inventory/tools/Disable-WakeDevices.ps1 [-h]\"",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -20495,7 +20495,7 @@
       "caller_symbol": "Export-LcmKnowledgeBase",
       "callee_target": "Write-Warning",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Write-Warning \"The legacy implementation is archived at: .lcm\\archive\\legacy_tools\\Export-LcmKnowledgeBase.ps1\"",
+      "supplied_arguments": "Write-Warning \"The legacy implementation is archived at: LCM_Inventory\\archive\\legacy_tools\\Export-LcmKnowledgeBase.ps1\"",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -22925,7 +22925,7 @@
       "caller_symbol": "Flush-LcmLegacyLogs",
       "callee_target": "Write-Host",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Write-Host \"  pwsh .lcm/tools/internal/Flush-LcmLegacyLogs.ps1 [-TargetMajor <int>] [-RetentionHorizon <int>] [-Apply] [-AuditOnly] [-RootPath <str>] [-h]\"",
+      "supplied_arguments": "Write-Host \"  pwsh LCM_Inventory/tools/Flush-LcmLegacyLogs.ps1 [-TargetMajor <int>] [-RetentionHorizon <int>] [-Apply] [-AuditOnly] [-RootPath <str>] [-h]\"",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -23215,7 +23215,7 @@
       "caller_symbol": "Flush-LcmLegacyLogs",
       "callee_target": "Join-Path",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Join-Path $RootPath '.lcm\\archive'",
+      "supplied_arguments": "Join-Path $RootPath 'LCM_Inventory\\archive'",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -23515,7 +23515,7 @@
       "caller_symbol": "Flush-LcmLegacyLogs",
       "callee_target": "Write-Host",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Write-Host \"  -> Purged obsolete archive in .lcm\\archive\" -ForegroundColor Green",
+      "supplied_arguments": "Write-Host \"  -> Purged obsolete archive in LCM_Inventory\\archive\" -ForegroundColor Green",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -23635,7 +23635,7 @@
       "caller_symbol": "Flush-LcmLegacyLogs",
       "callee_target": "Write-Host",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Write-Host \"  pwsh -File .lcm/tools/internal/Flush-LcmLegacyLogs.ps1 -Apply`n\" -ForegroundColor Yellow",
+      "supplied_arguments": "Write-Host \"  pwsh -File LCM_Inventory/tools/Flush-LcmLegacyLogs.ps1 -Apply`n\" -ForegroundColor Yellow",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -23745,7 +23745,7 @@
       "caller_symbol": "Format-LcmMarkdownDiagrams",
       "callee_target": "Write-Host",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Write-Host \"  pwsh .lcm/tools/internal/Format-LcmMarkdownDiagrams.ps1 [-Scope <Scope>] [-Target <Path>] [-WrapLength <int>] [-WrapTables] [-Inspect] [-Fix] [-h]\"",
+      "supplied_arguments": "Write-Host \"  pwsh LCM_Inventory/tools/Format-LcmMarkdownDiagrams.ps1 [-Scope <Scope>] [-Target <Path>] [-WrapLength <int>] [-WrapTables] [-Inspect] [-Fix] [-h]\"",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -27815,7 +27815,7 @@
       "caller_symbol": "Initialize-SharedAiMemory",
       "callee_target": "Write-Host",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Write-Host \"  pwsh .lcm/tools/internal/Initialize-SharedAiMemory.ps1 [-TargetDrive <DriveLetter>] [-VerifyOnly] [-SyncFromGitHub] [-Force] [-ShowAll] [-h]\"",
+      "supplied_arguments": "Write-Host \"  pwsh LCM_Inventory/tools/Initialize-SharedAiMemory.ps1 [-TargetDrive <DriveLetter>] [-VerifyOnly] [-SyncFromGitHub] [-Force] [-ShowAll] [-h]\"",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -27935,7 +27935,7 @@
       "caller_symbol": "Initialize-SharedAiMemory",
       "callee_target": "Write-Host",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Write-Host \"  pwsh .lcm/tools/internal/Initialize-SharedAiMemory.ps1 -VerifyOnly\"",
+      "supplied_arguments": "Write-Host \"  pwsh LCM_Inventory/tools/Initialize-SharedAiMemory.ps1 -VerifyOnly\"",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -27945,7 +27945,7 @@
       "caller_symbol": "Initialize-SharedAiMemory",
       "callee_target": "Write-Host",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Write-Host \"  pwsh .lcm/tools/internal/Initialize-SharedAiMemory.ps1\"",
+      "supplied_arguments": "Write-Host \"  pwsh LCM_Inventory/tools/Initialize-SharedAiMemory.ps1\"",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -27955,7 +27955,7 @@
       "caller_symbol": "Initialize-SharedAiMemory",
       "callee_target": "Write-Host",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Write-Host \"  pwsh .lcm/tools/internal/Initialize-SharedAiMemory.ps1 -ShowAll\"",
+      "supplied_arguments": "Write-Host \"  pwsh LCM_Inventory/tools/Initialize-SharedAiMemory.ps1 -ShowAll\"",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -31125,7 +31125,7 @@
       "caller_symbol": "Invoke-BeyondCompareReview",
       "callee_target": "Join-Path",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Join-Path $workspaceRoot \".lcm\\tools\\internal\\Invoke-InteractiveDesktop.ps1\"",
+      "supplied_arguments": "Join-Path $workspaceRoot \"LCM_Inventory\\tools\\internal\\Invoke-InteractiveDesktop.ps1\"",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -32375,7 +32375,7 @@
       "caller_symbol": "Invoke-CompactBCompareReview",
       "callee_target": "Join-Path",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Join-Path $workspaceRoot '.lcm\\tools\\internal\\Invoke-InteractiveDesktop.ps1'",
+      "supplied_arguments": "Join-Path $workspaceRoot 'LCM_Inventory\\tools\\internal\\Invoke-InteractiveDesktop.ps1'",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -36865,7 +36865,7 @@
       "caller_symbol": "Invoke-PrivilegedTool",
       "callee_target": "Write-Host",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Write-Host \"  pwsh .lcm/tools/internal/Invoke-PrivilegedTool.ps1 -Tool <ToolName> [-Arguments <str>] [-NoExit] [-DryRun] [-h]\"",
+      "supplied_arguments": "Write-Host \"  pwsh LCM_Inventory/tools/Invoke-PrivilegedTool.ps1 -Tool <ToolName> [-Arguments <str>] [-NoExit] [-DryRun] [-h]\"",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -36975,7 +36975,7 @@
       "caller_symbol": "Invoke-PrivilegedTool",
       "callee_target": "Write-Host",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Write-Host \"  pwsh .lcm/tools/internal/Invoke-PrivilegedTool.ps1 -Tool RestoreSettings\"",
+      "supplied_arguments": "Write-Host \"  pwsh LCM_Inventory/tools/Invoke-PrivilegedTool.ps1 -Tool RestoreSettings\"",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -36985,7 +36985,7 @@
       "caller_symbol": "Invoke-PrivilegedTool",
       "callee_target": "Write-Host",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Write-Host \"  pwsh .lcm/tools/internal/Invoke-PrivilegedTool.ps1 -Tool SetGitRoot -Arguments '-TargetPath D:\\Git_Repositories'\"",
+      "supplied_arguments": "Write-Host \"  pwsh LCM_Inventory/tools/Invoke-PrivilegedTool.ps1 -Tool SetGitRoot -Arguments '-TargetPath D:\\Git_Repositories'\"",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -36995,7 +36995,7 @@
       "caller_symbol": "Invoke-PrivilegedTool",
       "callee_target": "Write-Host",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Write-Host \"  pwsh .lcm/tools/internal/Invoke-PrivilegedTool.ps1 -Tool ShowRules -DryRun\"",
+      "supplied_arguments": "Write-Host \"  pwsh LCM_Inventory/tools/Invoke-PrivilegedTool.ps1 -Tool ShowRules -DryRun\"",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -37055,7 +37055,7 @@
       "caller_symbol": "Invoke-PrivilegedTool",
       "callee_target": "Join-Path",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Join-Path $workspaceRoot \".lcm\\config\\tool_catalog.json\"",
+      "supplied_arguments": "Join-Path $workspaceRoot \"LCM_Inventory\\config\\tool_catalog.json\"",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -37065,7 +37065,7 @@
       "caller_symbol": "Invoke-PrivilegedTool",
       "callee_target": "Join-Path",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Join-Path $workspaceRoot \".lcm\\tools\\internal\\tool_catalog.json\"",
+      "supplied_arguments": "Join-Path $workspaceRoot \"LCM_Inventory\\tools\\internal\\tool_catalog.json\"",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -37535,7 +37535,7 @@
       "caller_symbol": "Invoke-PrivilegedTool",
       "callee_target": "Join-Path",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Join-Path $workspaceRoot \".lcm\\tools\\internal\\Invoke-InteractiveDesktop.ps1\"",
+      "supplied_arguments": "Join-Path $workspaceRoot \"LCM_Inventory\\tools\\internal\\Invoke-InteractiveDesktop.ps1\"",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -40355,7 +40355,7 @@
       "caller_symbol": "Invoke-WorkspaceDeduplication",
       "callee_target": "Join-Path",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Join-Path $workspaceRoot \".lcm\\tools\\links\"",
+      "supplied_arguments": "Join-Path $workspaceRoot \"LCM_Inventory\\tools\\links\"",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -40565,7 +40565,7 @@
       "caller_symbol": "Invoke-WorkspaceDeduplication",
       "callee_target": "Join-Path",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Join-Path $workspaceRoot \".lcm\\archive\\tools_links_backup\"",
+      "supplied_arguments": "Join-Path $workspaceRoot \"LCM_Inventory\\archive\\tools_links_backup\"",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -41105,7 +41105,7 @@
       "caller_symbol": "Invoke-WorkspaceMaintenance",
       "callee_target": "Join-Path",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Join-Path $workspaceRoot \".lcm\\tools\\internal\\logs\"",
+      "supplied_arguments": "Join-Path $workspaceRoot \"LCM_Inventory\\tools\\internal\\logs\"",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -41255,7 +41255,7 @@
       "caller_symbol": "Invoke-WorkspaceMaintenance",
       "callee_target": "Write-Host",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Write-Host \"`n[Step 2/4] Purging Stale Script Logs in .lcm/logs (Older than $MaxScriptLogAgeDays days)...\" -ForegroundColor Yellow",
+      "supplied_arguments": "Write-Host \"`n[Step 2/4] Purging Stale Script Logs in LCM_Inventory/logs (Older than $MaxScriptLogAgeDays days)...\" -ForegroundColor Yellow",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -41265,7 +41265,7 @@
       "caller_symbol": "Invoke-WorkspaceMaintenance",
       "callee_target": "Join-Path",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Join-Path $workspaceRoot \".lcm\\logs\"",
+      "supplied_arguments": "Join-Path $workspaceRoot \"LCM_Inventory\\logs\"",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -42165,7 +42165,7 @@
       "caller_symbol": "Invoke-WorkspacePush",
       "callee_target": "Join-Path",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Join-Path $workspaceRoot \".lcm\\tools\\internal\\Update-ToolCatalog.ps1\"",
+      "supplied_arguments": "Join-Path $workspaceRoot \"LCM_Inventory\\tools\\internal\\Update-ToolCatalog.ps1\"",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -42215,7 +42215,7 @@
       "caller_symbol": "Invoke-WorkspacePush",
       "callee_target": "git",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "git -C $workspaceRoot add .lcm/config/tool_catalog.json",
+      "supplied_arguments": "git -C $workspaceRoot add LCM_Inventory/config/tool_catalog.json",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -45885,7 +45885,7 @@
       "caller_symbol": "Test-LCMPreFlight",
       "callee_target": "Join-Path",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Join-Path $targetFullPath '.lcm\\config.json'",
+      "supplied_arguments": "Join-Path $targetFullPath 'LCM_Inventory\\config.json'",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -48795,7 +48795,7 @@
       "caller_symbol": "Remove-LcmShortName",
       "callee_target": "Write-Host",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Write-Host \"  pwsh .lcm/tools/internal/Remove-LcmShortName.ps1 -ShortName <name> [-TargetScript <script>] [-Force] [-h]\"",
+      "supplied_arguments": "Write-Host \"  pwsh LCM_Inventory/tools/Remove-LcmShortName.ps1 -ShortName <name> [-TargetScript <script>] [-Force] [-h]\"",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -48825,7 +48825,7 @@
       "caller_symbol": "Remove-LcmShortName",
       "callee_target": "Write-Host",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Write-Host \"  pwsh .lcm/tools/internal/Remove-LcmShortName.ps1 -ShortName 'ApplyAllCustomzations'\"",
+      "supplied_arguments": "Write-Host \"  pwsh LCM_Inventory/tools/Remove-LcmShortName.ps1 -ShortName 'ApplyAllCustomzations'\"",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -48845,7 +48845,7 @@
       "caller_symbol": "Remove-LcmShortName",
       "callee_target": "Join-Path",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Join-Path $workspaceRoot '.lcm\\Cmd'",
+      "supplied_arguments": "Join-Path $workspaceRoot 'LCM_Inventory\\Cmd'",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -49175,7 +49175,7 @@
       "caller_symbol": "Remove-LcmShortName",
       "callee_target": "Join-Path",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Join-Path $workspaceRoot '.lcm\\config\\tool_catalog.json'",
+      "supplied_arguments": "Join-Path $workspaceRoot 'LCM_Inventory\\config\\tool_catalog.json'",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -49185,7 +49185,7 @@
       "caller_symbol": "Remove-LcmShortName",
       "callee_target": "Join-Path",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Join-Path $workspaceRoot '.lcm\\tools\\internal\\tool_catalog.json'",
+      "supplied_arguments": "Join-Path $workspaceRoot 'LCM_Inventory\\tools\\internal\\tool_catalog.json'",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -50015,7 +50015,7 @@
       "caller_symbol": "Repair-LCMRules",
       "callee_target": "Join-Path",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Join-Path $repoPath '.lcm\\config.json'",
+      "supplied_arguments": "Join-Path $repoPath 'LCM_Inventory\\config.json'",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -50055,7 +50055,7 @@
       "caller_symbol": "Repair-LCMRules",
       "callee_target": "Write-Host",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Write-Host \"    [+] Aligning .lcm/config.json absorbed_lcm_version: $currentAbsorbed -> v$globalVersion\" -ForegroundColor Green",
+      "supplied_arguments": "Write-Host \"    [+] Aligning LCM_Inventory/config.json absorbed_lcm_version: $currentAbsorbed -> v$globalVersion\" -ForegroundColor Green",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -51425,7 +51425,7 @@
       "caller_symbol": "Restore-SystemSettings",
       "callee_target": "Write-Host",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Write-Host \"  pwsh .lcm/tools/internal/Restore-SystemSettings.ps1 [-h]\"",
+      "supplied_arguments": "Write-Host \"  pwsh LCM_Inventory/tools/Restore-SystemSettings.ps1 [-h]\"",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -51895,7 +51895,7 @@
       "caller_symbol": "Restore-SystemSettings",
       "callee_target": "Write-Host",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Write-Host \"  -> [NOTE] Run 'SetGitRoot' (or 'pwsh .lcm/tools/internal/Set-GitRoot.ps1') with Administrator rights to update Machine PATH.\" -ForegroundColor Yellow",
+      "supplied_arguments": "Write-Host \"  -> [NOTE] Run 'SetGitRoot' (or 'pwsh LCM_Inventory/tools/Set-GitRoot.ps1') with Administrator rights to update Machine PATH.\" -ForegroundColor Yellow",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -52475,7 +52475,7 @@
       "caller_symbol": "Search-Everything",
       "callee_target": "Write-Host",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Write-Host \"  pwsh .lcm/tools/internal/Search-Everything.ps1 [[-Query] <str>] [-Content <str>] [-Path <str>] [-Extension <str>] [-Regex] [-MaxResults <int>] [-h]\"",
+      "supplied_arguments": "Write-Host \"  pwsh LCM_Inventory/tools/Search-Everything.ps1 [[-Query] <str>] [-Content <str>] [-Path <str>] [-Extension <str>] [-Regex] [-MaxResults <int>] [-h]\"",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -52715,7 +52715,7 @@
       "caller_symbol": "Set-GitRoot",
       "callee_target": "Write-Host",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Write-Host \"  $RootPath\\.lcm\\Cmd is present in PATH ahead of legacy D:\\OneDrive\\cmd.\"",
+      "supplied_arguments": "Write-Host \"  $RootPath\\LCM_Inventory\\Cmd is present in PATH ahead of legacy D:\\OneDrive\\cmd.\"",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -52745,7 +52745,7 @@
       "caller_symbol": "Set-GitRoot",
       "callee_target": "Write-Host",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Write-Host \"  pwsh .lcm/tools/internal/Set-GitRoot.ps1 [-RootPath <path>] [-Force] [-ShowAll] [-LogFile <path>] [-h]\"",
+      "supplied_arguments": "Write-Host \"  pwsh LCM_Inventory/tools/Set-GitRoot.ps1 [-RootPath <path>] [-Force] [-ShowAll] [-LogFile <path>] [-h]\"",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -52865,7 +52865,7 @@
       "caller_symbol": "Set-GitRoot",
       "callee_target": "Write-Host",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Write-Host \"  pwsh .lcm/tools/internal/Set-GitRoot.ps1 -ShowAll\"",
+      "supplied_arguments": "Write-Host \"  pwsh LCM_Inventory/tools/Set-GitRoot.ps1 -ShowAll\"",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -53465,7 +53465,7 @@
       "caller_symbol": "Set-LcmActionProgress",
       "callee_target": "Write-Host",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Write-Host \"  pwsh .lcm/tools/internal/Set-LcmActionProgress.ps1 -Action <Action> [parameters...]\"",
+      "supplied_arguments": "Write-Host \"  pwsh LCM_Inventory/tools/Set-LcmActionProgress.ps1 -Action <Action> [parameters...]\"",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -53555,7 +53555,7 @@
       "caller_symbol": "Set-LcmActionProgress",
       "callee_target": "Join-Path",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Join-Path $workspaceRoot '.lcm\\modules\\LcmProgressAtom.psm1'",
+      "supplied_arguments": "Join-Path $workspaceRoot 'LCM_Inventory\\modules\\LcmProgressAtom.psm1'",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -58345,7 +58345,7 @@
       "caller_symbol": "Show-LcmControl",
       "callee_target": "Join-Path",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Join-Path $workspaceRoot '.lcm\\assets\\lcm-table-print-atom.js'",
+      "supplied_arguments": "Join-Path $workspaceRoot 'LCM_Inventory\\assets\\lcm-table-print-atom.js'",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -58695,7 +58695,7 @@
       "caller_symbol": "Show-LcmControl",
       "callee_target": "Join-Path",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Join-Path $workspaceRoot \".lcm\\tools\\internal\\LcmDesktopDaemon.ps1\"",
+      "supplied_arguments": "Join-Path $workspaceRoot \"LCM_Inventory\\tools\\internal\\LcmDesktopDaemon.ps1\"",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -58825,7 +58825,7 @@
       "caller_symbol": "Show-LcmControl",
       "callee_target": "Join-Path",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Join-Path $workspaceRoot \".lcm\\tools\\internal\\Invoke-InteractiveDesktop.ps1\"",
+      "supplied_arguments": "Join-Path $workspaceRoot \"LCM_Inventory\\tools\\internal\\Invoke-InteractiveDesktop.ps1\"",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -60545,7 +60545,7 @@
       "caller_symbol": "Show-Rules",
       "callee_target": "Write-Host",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Write-Host \"  pwsh .lcm/tools/internal/Show-Rules.ps1 [-Domain <str>] [-Filter <str>] [-NoBrowser] [-NoLaunch] [-h]\"",
+      "supplied_arguments": "Write-Host \"  pwsh LCM_Inventory/tools/Show-Rules.ps1 [-Domain <str>] [-Filter <str>] [-NoBrowser] [-NoLaunch] [-h]\"",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -61775,7 +61775,7 @@
       "caller_symbol": "Show-SuperController",
       "callee_target": "Join-Path",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Join-Path $workspaceRoot '.lcm\\tools\\internal\\Show-ToolsExplorer.ps1'",
+      "supplied_arguments": "Join-Path $workspaceRoot 'LCM_Inventory\\tools\\internal\\Show-ToolsExplorer.ps1'",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -63315,7 +63315,7 @@
       "caller_symbol": "Show-WorkspaceInventoryApp",
       "callee_target": "Join-Path",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Join-Path $workspaceRoot \".lcm\\tools\\internal\\Invoke-InteractiveDesktop.ps1\"",
+      "supplied_arguments": "Join-Path $workspaceRoot \"LCM_Inventory\\tools\\internal\\Invoke-InteractiveDesktop.ps1\"",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -64025,7 +64025,7 @@
       "caller_symbol": "Show-WorkspaceReadiness",
       "callee_target": "Join-Path",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Join-Path $WorkspaceRoot '.lcm\\tools\\internal\\Invoke-InteractiveDesktop.ps1'",
+      "supplied_arguments": "Join-Path $WorkspaceRoot 'LCM_Inventory\\tools\\internal\\Invoke-InteractiveDesktop.ps1'",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -67615,7 +67615,7 @@
       "caller_symbol": "Sync-GeminiInbox",
       "callee_target": "Write-Host",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Write-Host \"  pwsh .lcm/tools/internal/Sync-GeminiInbox.ps1 [-Watch] [-IntervalSeconds <sec>] [-h]\"",
+      "supplied_arguments": "Write-Host \"  pwsh LCM_Inventory/tools/Sync-GeminiInbox.ps1 [-Watch] [-IntervalSeconds <sec>] [-h]\"",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -68645,7 +68645,7 @@
       "caller_symbol": "Sync-LcmModuleVersions",
       "callee_target": "Write-Host",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Write-Host \"  pwsh .lcm/tools/internal/Sync-LcmModuleVersions.ps1 [-TargetMajor <int>] [-TargetBaseline <str>] [-Apply] [-AuditOnly] [-RootPath <str>] [-h]\"",
+      "supplied_arguments": "Write-Host \"  pwsh LCM_Inventory/tools/Sync-LcmModuleVersions.ps1 [-TargetMajor <int>] [-TargetBaseline <str>] [-Apply] [-AuditOnly] [-RootPath <str>] [-h]\"",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -69085,7 +69085,7 @@
       "caller_symbol": "Sync-LcmModuleVersions",
       "callee_target": "Get-ChildItem",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Get-ChildItem -Path \"$RootPath\\*\\.lcm\\config.json\" -ErrorAction SilentlyContinue",
+      "supplied_arguments": "Get-ChildItem -Path \"$RootPath\\*\\LCM_Inventory\\config.json\" -ErrorAction SilentlyContinue",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -70555,7 +70555,7 @@
       "caller_symbol": "Sync-ToolSymlinks",
       "callee_target": "Write-ToolLog",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Write-ToolLog -Message \"Synchronizing .lcm/Cmd/ command trampolines and catalog metadata...\" -Level ACTION",
+      "supplied_arguments": "Write-ToolLog -Message \"Synchronizing LCM_Inventory/Cmd/ command trampolines and catalog metadata...\" -Level ACTION",
       "source_classification": "production",
       "resolution": "ambiguous-symbol"
     },
@@ -71155,7 +71155,7 @@
       "caller_symbol": "Test-LCMRuleHealth",
       "callee_target": "Join-Path",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Join-Path $repoPath '.lcm\\config.json'",
+      "supplied_arguments": "Join-Path $repoPath 'LCM_Inventory\\config.json'",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -72835,7 +72835,7 @@
       "caller_symbol": "Update-Gemini",
       "callee_target": "Join-Path",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Join-Path $workspaceRoot '.lcm\\tools\\internal'",
+      "supplied_arguments": "Join-Path $workspaceRoot 'LCM_Inventory\\tools\\internal'",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -76265,7 +76265,7 @@
       "caller_symbol": "Test-ElevationRequired",
       "callee_target": "Join-Path",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Join-Path $TargetRepoRoot '.lcm\\config.json'",
+      "supplied_arguments": "Join-Path $TargetRepoRoot 'LCM_Inventory\\config.json'",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -76815,7 +76815,7 @@
       "caller_symbol": "Assert-RepoStructure",
       "callee_target": "Join-Path",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Join-Path $RepoRoot '.lcm\\config.json'",
+      "supplied_arguments": "Join-Path $RepoRoot 'LCM_Inventory\\config.json'",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -76825,7 +76825,7 @@
       "caller_symbol": "Assert-RepoStructure",
       "callee_target": "Join-Path",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Join-Path $RepoRoot '.lcm\\overrides.json'",
+      "supplied_arguments": "Join-Path $RepoRoot 'LCM_Inventory\\overrides.json'",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -76965,7 +76965,7 @@
       "caller_symbol": "Assert-RepoElevationConsistency",
       "callee_target": "Join-Path",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Join-Path $RepoRoot '.lcm\\config.json'",
+      "supplied_arguments": "Join-Path $RepoRoot 'LCM_Inventory\\config.json'",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },

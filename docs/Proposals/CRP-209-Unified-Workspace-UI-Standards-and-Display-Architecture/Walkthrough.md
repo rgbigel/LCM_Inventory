@@ -23,13 +23,13 @@ This walkthrough documents the initial discovery audit and baseline inventory of
   - `HaSSD06_Inventory/data/artifacts/Entities_Inventory_HaSSD06.html`
   - `.github/extensions/lcm-control-hub/control-hub.html`
 * **CSS Design Systems**:
-  - `.lcm/assets/StandardTableDisplay.css`
-  - `.lcm/assets/LCMToolCatalog.css`
-  - `.lcm/assets/lcm-dashboard-theme.css`
+  - `LCM_Inventory/assets/StandardTableDisplay.css`
+  - `LCM_Inventory/assets/LCMToolCatalog.css`
+  - `LCM_Inventory/assets/lcm-dashboard-theme.css`
 * **JavaScript Presentation & Table Engines**:
-  - `.lcm/assets/lcm-table-engine.js` (Tokenized negation search & live counters)
-  - `.lcm/assets/lcm-table-print-atom.js` (Multi-page PDF pagination)
-  - `.lcm/assets/lcm-tool-explorer.js` (Interactive tool catalog, modals, taxonomy)
+  - `LCM_Inventory/assets/lcm-table-engine.js` (Tokenized negation search & live counters)
+  - `LCM_Inventory/assets/lcm-table-print-atom.js` (Multi-page PDF pagination)
+  - `LCM_Inventory/assets/lcm-tool-explorer.js` (Interactive tool catalog, modals, taxonomy)
   - `.github/extensions/lcm-control-hub/control-hub-client.js` (REST client)
 * **Native Desktop Windows GUIs**:
   - `HaSSD06/tools/subsystem/Show-HaAuthDialog.ps1` (WPF XAML Modal)

@@ -17,8 +17,8 @@
 - `LCM_Inventory/modules/WorkspacePushEligibility.psm1`
 - `LCM_Inventory/tests/WorkspacePushEligibility.Tests.ps1`
 - `LCM_AI/.agents/rules/*.md`
-- `.lcm/tools/hooks/Enforce-LcmPreToolPolicy.ps1`
-- `.lcm/tools/internal/Set-LcmActionProgress.ps1`
+- `LCM_Inventory/tools/hooks/Enforce-LcmPreToolPolicy.ps1`
+- `LCM_Inventory/tools/Set-LcmActionProgress.ps1`
 - Root macro summaries and generated tool catalog artifacts
 - `LCM_Inventory/tools/Publish-WorkspaceProposalBundles.ps1`
 - Proposal bundle publication and bundle-in-HEAD Pester tests

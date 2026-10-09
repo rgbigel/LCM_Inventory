@@ -46,7 +46,7 @@ in every LCM-governed repository and the root container in the same migration.
 
 ## Requirements
 
-1. The migration must discover its repository cohort from local `.lcm/config.json`
+1. The migration must discover its repository cohort from local `LCM_Inventory/config.json`
    metadata and include the two central LCM repositories even though they do not
    currently have local configuration files.
 2. All live operational source, scripts, launchers, configuration, assets,
@@ -56,7 +56,7 @@ in every LCM-governed repository and the root container in the same migration.
    move. The root tool hub must be `LCM_Tools`; repository-local `tools`
    directories retain their existing names. During the transition, root legacy
    names remain as junction aliases described by
-   `.lcm/config/LegacyRepositoryNames.json`; their retirement is explicitly TBD.
+   `LCM_Inventory/config/LegacyRepositoryNames.json`; their retirement is explicitly TBD.
 4. The implementation must produce a preflight report, a deterministic mapping
    manifest, and a rollback command before it changes directories or content.
 5. The migration must preserve Git object history, remote configuration, and

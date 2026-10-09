@@ -2,12 +2,12 @@
 
 ## Target Files
 1. `LCM_Inventory/assets/lcm-tool-explorer.js`
-2. `.lcm/assets/lcm-tool-explorer.js`
+2. `LCM_Inventory/assets/lcm-tool-explorer.js`
 3. `LCM_Inventory/assets/LCMToolCatalog.css`
-4. `.lcm/assets/LCMToolCatalog.css`
+4. `LCM_Inventory/assets/LCMToolCatalog.css`
 5. `LCM_Inventory/assets/StandardTableDisplay.css`
-6. `.lcm/assets/StandardTableDisplay.css`
-7. `.lcm/modules/LcmToolCatalog.psm1`
+6. `LCM_Inventory/assets/StandardTableDisplay.css`
+7. `LCM_Inventory/modules/LcmToolCatalog.psm1`
 8. `LCM_Inventory/data/proposals/proposals.json`
 
 ## Modifications

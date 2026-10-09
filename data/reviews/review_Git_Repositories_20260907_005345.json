@@ -7,10 +7,10 @@
   "Timestamp": "2026-09-07 00:53:45",
   "Message": "feat(tooling): rename Set-LcmSystemPath to Set-GitRoot, eliminate legacy trampolines, and refactor .tools references to .lcm",
   "ActionsExecuted": [
-    "Refactored all .tools references to .lcm/Cmd and .lcm/tools/internal across workspace",
-    "Implemented %Git_Root% forward-slash referencing in .lcm/Cmd launchers",
-    "Deleted redundant .lcm/tools/cmd duplicate folder",
+    "Refactored all .tools references to LCM_Inventory/Cmd and LCM_Inventory/tools/internal across workspace",
+    "Implemented %Git_Root% forward-slash referencing in LCM_Inventory/Cmd launchers",
+    "Deleted redundant LCM_Inventory/tools/cmd duplicate folder",
     "Renamed Set-LcmSystemPath to Set-GitRoot and eliminated legacy trampolines",
-    "Updated Restore-SystemSettings.ps1 toolsPath to .lcm/Cmd and helper note to SetGitRoot"
+    "Updated Restore-SystemSettings.ps1 toolsPath to LCM_Inventory/Cmd and helper note to SetGitRoot"
   ]
 }

@@ -1,14 +1,14 @@
 # Change Request Proposal: Universal Multi-Channel Progress Indicator Engine
 
 - **Proposal ID**: `CRP-110`
-- **Target Repository**: `LCM` (`Git_Repositories/.lcm/tools`, `LCM_Inventory`, `LCM_Shared`)
+- **Target Repository**: `LCM` (`Git_Repositories/LCM_Inventory/tools`, `LCM_Inventory`, `LCM_Shared`)
 - **Target Version**: `v7.3.0`
 - **Domain**: `Lifecycle Model (LCM) Execution Telemetry & Cross-Channel Progress Architecture`
 - **Author**: Rolf, LCM_AI Governance
 - **Status**: `OPEN` (Awaiting Operator Review & PROCEED Trigger)
 - **Created**: `2026-09-07 15:55:00`
 - **Priority**: `HIGH`
-- **Target Scope**: `.lcm/modules/LcmProgressAtom.psm1`, `.lcm/tools/internal/Set-LcmActionProgress.ps1`, `.lcm/assets/lcm-table-engine.js`, `LCM_Inventory/docs/CM_CONTROL_HUB.html`, `LCM_Inventory/tools/Invoke-ProposalAction.ps1`, `RR.ps1`
+- **Target Scope**: `LCM_Inventory/modules/LcmProgressAtom.psm1`, `LCM_Inventory/tools/Set-LcmActionProgress.ps1`, `LCM_Inventory/assets/lcm-table-engine.js`, `LCM_Inventory/docs/CM_CONTROL_HUB.html`, `LCM_Inventory/tools/Invoke-ProposalAction.ps1`, `RR.ps1`
 - **Affected Version Range**: `v7.0.0 - v7.3.0`
 - **Impacted Repositories**: `Git_Repositories`, `LCM_Inventory`, `.lcm`, `All Governed Repositories`
 
@@ -37,7 +37,7 @@ flowchart TD
 
     TRIGGER["🚀 Action Invocation<br/>(PROCEED, ACCEPT, do #n-#m)"] --> BROKER["⚙️ Progress Broker<br/>LcmProgressAtom.psm1"]:::broker
 
-    BROKER -->|"Atomic Write (<2ms)"| FILE[".lcm/scratch/active_progress.json"]
+    BROKER -->|"Atomic Write (<2ms)"| FILE["LCM_Inventory/scratch/active_progress.json"]
     BROKER -->|"HTTP POST (Localhost:9876)"| DAEMON["LcmDesktopDaemon (Session 1)"]:::broker
 
     FILE & DAEMON --> CH_CLI["💻 Terminal CLI<br/>• PowerShell Write-Progress<br/>• Console Step Bar [████░░]"]:::channel
@@ -70,7 +70,7 @@ flowchart TD
 2. **Docked Console Telemetry Stream**:
    - Each phase transition streams a timestamped, color-coded entry into the bottom interactive CM Console via `appendConsole()`.
 3. **Dual Polling / Push Broker**:
-   - Web clients listen to Port 9876 events, with automatic fallback to polling `.lcm/scratch/active_progress.json` every 750ms if the daemon is detached.
+   - Web clients listen to Port 9876 events, with automatic fallback to polling `LCM_Inventory/scratch/active_progress.json` every 750ms if the daemon is detached.
 
 ### 3.3 Channel C: Chat / Agent Response Card
 - In chat turns, the AI agent emits structured Markdown progress cards during multi-item operations:
@@ -85,7 +85,7 @@ flowchart TD
 
 ## 4. Universal Data Contract: `active_progress.json`
 
-The ephemeral progress file is maintained in `.lcm/scratch/active_progress.json` and conforms to the schema:
+The ephemeral progress file is maintained in `LCM_Inventory/scratch/active_progress.json` and conforms to the schema:
 
 ```json
 {

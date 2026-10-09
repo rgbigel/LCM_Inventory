@@ -31,13 +31,13 @@ All five recovery goals set by `BUG-045` were systematically executed, verified,
 * **Delivered Artifacts**:
   * [`LCM_Inventory/tools/Show-CmControlHub.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Show-CmControlHub.ps1) (`v1.1.1`): Features `-ReviewMode`, `-Repo`, `-State`, `-DatesMode`, `-NoLaunch`, and `-h` help compliance (`RULE-PS-010`).
   * [`LCM_Inventory/docs/CM_CONTROL_HUB.html`](file:///D:/Git_Repositories/LCM_Inventory/docs/CM_CONTROL_HUB.html) (3,400+ lines): Full single-page dashboard with real-time proposals ledger, dual-state management, Beyond Compare review launch, filtering, and embedded CM Console.
-  * Trampolines: `CmHub.cmd`, `ShowCmControlHub.cmd`, `DOR.cmd` compiled in `.lcm/Cmd/`.
+  * Trampolines: `CmHub.cmd`, `ShowCmControlHub.cmd`, `DOR.cmd` compiled in `LCM_Inventory/Cmd/`.
 * **Status**: **100% Achieved & Operational**.
 
 ### 2. Context Reload & Knowledge Base Synchronization Pipeline
 * **Delivered Artifacts**:
   * [`LCM_AI/tools/Update-Gemini.ps1`](file:///D:/Git_Repositories/LCM_AI/tools/Update-Gemini.ps1): Consolidated export of 17 canonical rules via `Export-LCMRules.ps1` to markdown and plain-text.
-  * [`Sync-LCMResearchSnapshot.ps1`](file:///D:/Git_Repositories/.lcm/tools/internal/Sync-LCMResearchSnapshot.ps1): Automated snapshot mirror of 3,527 knowledge base files to `D:\GDrive\LCM`.
+  * [`Sync-LCMResearchSnapshot.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Sync-LCMResearchSnapshot.ps1): Automated snapshot mirror of 3,527 knowledge base files to `D:\GDrive\LCM`.
   * Pre-Push Pipeline: Integrated into `Invoke-WorkspacePush.ps1` (`RULE-LCM-013`).
 * **Status**: **100% Achieved & Operational**.
 
@@ -50,7 +50,7 @@ All five recovery goals set by `BUG-045` were systematically executed, verified,
 
 ### 4. CRP Intake Session & Backlog Expansion
 * **Delivered Artifacts**:
-  * [`Sync-GeminiInbox.ps1`](file:///D:/Git_Repositories/.lcm/tools/internal/Sync-GeminiInbox.ps1): Automated proposal intake from `D:\GDrive\LCM\INBOX`.
+  * [`Sync-GeminiInbox.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Sync-GeminiInbox.ps1): Automated proposal intake from `D:\GDrive\LCM\INBOX`.
   * Systematic intake and execution of 80 subsequent proposals/fixes (from `CRP-046` through `CRP-125`), clearing all crash-era backlogged items.
 * **Status**: **100% Achieved & Operational**.
 

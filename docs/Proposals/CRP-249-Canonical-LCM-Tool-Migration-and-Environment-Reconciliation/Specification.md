@@ -17,7 +17,7 @@ under `LCM_AI\tools`, while CRP-246 establishes `LCM_Inventory` as the
 physical authority for LCM runtime and operational tooling. `LCM_Inventory\Cmd`
 contains 21 launchers targeting the old location. User PATH also exposes the
 old direct script directory, and machine PATH still exposes the removed
-`.lcm\Cmd` location.
+`LCM_Inventory\Cmd` location.
 
 ## Objective
 
@@ -35,7 +35,7 @@ launcher directory on machine PATH.
 - Retarget all 21 affected `LCM_Inventory\Cmd` launchers.
 - Update active callers, tool-catalog scan definitions, dependency indexing,
   and active tripartite documentation.
-- Replace machine PATH `.lcm\Cmd` with `LCM_Inventory\Cmd`.
+- Replace machine PATH `LCM_Inventory\Cmd` with `LCM_Inventory\Cmd`.
 - Remove `LCM_AI\tools` from user PATH.
 - Preserve machine `Git_Root=D:\Git_Repositories` and remove any conflicting
   user-scope value if present.

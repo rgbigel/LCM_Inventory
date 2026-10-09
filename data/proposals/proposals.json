@@ -1090,7 +1090,7 @@
       "progress_state": "pushed",
       "bundle_id": "unassigned",
       "author": "rgbig",
-      "details": "Provision dedicated child repository Installation_LCD under LCM governance (.agents/rules junction, .lcm/config.json baseline 6.1.0, tripartite specs) to isolate packaging agent, preflight checker, modular setup deployer, onboarding engine, and UX verifier outside core LCM until release.",
+      "details": "Provision dedicated child repository Installation_LCD under LCM governance (.agents/rules junction, LCM_Inventory/config.json baseline 6.1.0, tripartite specs) to isolate packaging agent, preflight checker, modular setup deployer, onboarding engine, and UX verifier outside core LCM until release.",
       "plan_path": "LCM_Inventory/data/proposals/plans/Proposal-015_CR-2026-026_Plan.md",
       "walkthrough_path": "LCM_Inventory/data/proposals/plans/Proposal-015_CR-2026-026_Walkthrough.md",
       "pushed_at": "2026-08-30 15:29:48",
@@ -1340,7 +1340,7 @@
       "progress_state": "pushed",
       "bundle_id": "unassigned",
       "author": "rgbig",
-      "details": "Consolidate LCD platform governance rules, internal tools, modules, and docs into an encapsulated .lcm/ structure with separate .lcm/tools/internal (real code) and .lcm/tools/links (gitignored symlinks), update %PATH% to .lcm/Cmd, update child repository junctions, and provide root compatibility junctions.",
+      "details": "Consolidate LCD platform governance rules, internal tools, modules, and docs into an encapsulated LCM_Inventory/ structure with separate LCM_Inventory/tools/internal (real code) and LCM_Inventory/tools/links (gitignored symlinks), update %PATH% to LCM_Inventory/Cmd, update child repository junctions, and provide root compatibility junctions.",
       "plan_path": "LCM_Inventory/data/proposals/plans/Proposal-020_CR-2026-031_Plan.md",
       "walkthrough_path": "LCM_Inventory/data/proposals/plans/Proposal-020_CR-2026-031_Walkthrough.md",
       "pushed_at": "2026-08-30 15:29:48",
@@ -2094,7 +2094,7 @@
       "progress_state": "pushed",
       "bundle_id": "CRP-035",
       "author": "rgbig",
-      "details": "Hash-based deduplication, archival of redundant scratch snapshots/baselines, refactoring of .lcm/tools/links, and deletion of legacy .lcd junction.",
+      "details": "Hash-based deduplication, archival of redundant scratch snapshots/baselines, refactoring of LCM_Inventory/tools/links, and deletion of legacy .lcd junction.",
       "plan_path": "LCM_Inventory/data/proposals/plans/Proposal-035_CR-2026-046_Plan.md",
       "walkthrough_path": "LCM_Inventory/data/proposals/plans/Proposal-035_CR-2026-046_Walkthrough.md",
       "dates": {
@@ -3074,7 +3074,7 @@
       "id": 56,
       "timestamp": "2026-09-02 20:16:00",
       "title": "Autonomous Loop-Fencing, Execution Boundaries, and T0 State Recovery Engine",
-      "origin_repo": ".lcm",
+      "origin_repo": "LCM_Inventory",
       "state": "rejected",
       "bundle_id": "unassigned",
       "author": "Technical Engineering & Governance Team",
@@ -3132,13 +3132,13 @@
       "id": 57,
       "timestamp": "2026-09-02 21:07:10",
       "title": "Canonical Single-Hop NTFS Junction Architecture for Subsystem Rules",
-      "origin_repo": ".lcm / All Subsystems",
+      "origin_repo": "LCM_Inventory / All Subsystems",
       "state": "pushed",
       "progress_state": "pushed",
       "bundle_id": "unassigned",
       "author": "Technical Engineering & Governance Team",
       "tier": "T2",
-      "details": "Eliminate nested junction chaining across repos; mandate direct links to physical ground truth (D:\\Git_Repositories\\.lcm\\.agents\\rules). Execution deferred until dedicated audit/migration script is authored.",
+      "details": "Eliminate nested junction chaining across repos; mandate direct links to physical ground truth (D:\\Git_Repositories\\LCM_Inventory\\.agents\\rules). Execution deferred until dedicated audit/migration script is authored.",
       "plan_path": "LCM_Inventory/data/proposals/plans/Proposal-057_CRP-2026-032_Plan.md",
       "walkthrough_path": "LCM_Inventory/data/proposals/plans/Proposal-057_CRP-2026-032_Walkthrough.md",
       "dates": {
@@ -3183,13 +3183,13 @@
       "id": 58,
       "timestamp": "2026-09-03 11:33:30",
       "title": "Fix BCR Baseline Resolution, Path Mangling, and Agent Execution Invariants",
-      "origin_repo": ".lcm / Tooling",
+      "origin_repo": "LCM_Inventory / Tooling",
       "state": "pushed",
       "progress_state": "pushed",
       "bundle_id": "unassigned",
       "author": "Technical Engineering & Governance Team",
       "tier": "T1",
-      "details": "Fix BCR comparison baseline to anchor strictly to local Git HEAD instead of origin/main or network fetches, and correct legacy path mangling across tool trampolines and scripts to canonical .lcm/tools/internal/.",
+      "details": "Fix BCR comparison baseline to anchor strictly to local Git HEAD instead of origin/main or network fetches, and correct legacy path mangling across tool trampolines and scripts to canonical LCM_Inventory/tools/.",
       "plan_path": "LCM_Inventory/data/proposals/plans/Proposal-058_CRP-2026-033_Plan.md",
       "walkthrough_path": "LCM_Inventory/data/proposals/plans/Proposal-058_CRP-2026-033_Walkthrough.md",
       "dates": {
@@ -3258,7 +3258,7 @@
       "id": 59,
       "timestamp": "2026-09-03 13:03:30",
       "title": "Automated Ripgrep Provisioning, System Path Provisioning, and LCM Tool Registration",
-      "origin_repo": ".lcm / Tooling",
+      "origin_repo": "LCM_Inventory / Tooling",
       "state": "pushed",
       "progress_state": "pushed",
       "bundle_id": "unassigned",
@@ -3311,13 +3311,13 @@
       "id": 60,
       "timestamp": "2026-09-03 16:00:13",
       "title": "LCM Subsystem Architecture Formalization: .lcm Whitelisting, Submodule Isolation, and Inventory Log Routing",
-      "origin_repo": ".lcm / Architecture",
+      "origin_repo": "LCM_Inventory / Architecture",
       "state": "pushed",
       "progress_state": "pushed",
       "bundle_id": "unassigned",
       "author": "Technical Engineering & Governance Team",
       "tier": "T1",
-      "details": "Refactor .lcm tracking using an inverted .gitignore whitelist, re-route logging directly into LCM_Inventory, prepare .lcm/tools for submodule isolation, and document LCD/LCM subsystems in docs/Architecture/.",
+      "details": "Refactor .lcm tracking using an inverted .gitignore whitelist, re-route logging directly into LCM_Inventory, prepare LCM_Inventory/tools for submodule isolation, and document LCD/LCM subsystems in docs/Architecture/.",
       "plan_path": "LCM_Inventory/data/proposals/plans/Proposal-060_CRP-2026-036_Plan.md",
       "walkthrough_path": "LCM_Inventory/data/proposals/plans/Proposal-060_CRP-2026-036_Walkthrough.md",
       "dates": {
@@ -3377,15 +3377,14 @@
       "id": 61,
       "timestamp": "2026-09-04 11:05:00",
       "title": "Codification of Tool Traces, Execution Logging & Headless BRC Review Gates",
-      "origin_repo": ".lcm / LCM_Inventory",
+      "origin_repo": "LCM_Inventory",
       "state": "pushed",
       "progress_state": "pushed",
       "bundle_id": "unassigned",
       "author": "Rolf, LCM_AI Engine",
       "tier": "T1",
       "target_subsystems": [
-        "LCM_Inventory",
-        ".lcm"
+        "LCM_Inventory"
       ],
       "details": "Formally establish LCM_Inventory/data/logs/crp/ directory tree and codify rule for capturing CLI/tool execution artifacts during CRP implementations.",
       "dates": {
@@ -3669,7 +3668,7 @@
       "timestamp": "2026-09-05 20:55:30"
     },
     {
-      "description": "Tool renaming persistence via tool_catalog_overrides.json and immediate .cmd trampoline regeneration in .lcm/Cmd.",
+      "description": "Tool renaming persistence via tool_catalog_overrides.json and immediate .cmd trampoline regeneration in LCM_Inventory/Cmd.",
       "origin_repo": "Git_Repositories",
       "type": "BUG",
       "id": 71,
@@ -3678,7 +3677,7 @@
           "state": "completed",
           "timestamp": "2026-09-05 20:55:30",
           "user": "LCM_AI",
-          "note": "Added ShortName override merging in daemon SyncCatalogState and .lcm/Cmd generation."
+          "note": "Added ShortName override merging in daemon SyncCatalogState and LCM_Inventory/Cmd generation."
         },
         {
           "state": "pushed",
@@ -3780,7 +3779,7 @@
           "state": "completed",
           "timestamp": "2026-09-05 20:55:30",
           "user": "LCM_AI",
-          "note": "Expanded log cleaner to scan .lcm/logs, tools/logs, and LCM_Inventory/logs."
+          "note": "Expanded log cleaner to scan LCM_Inventory/logs, tools/logs, and LCM_Inventory/logs."
         },
         {
           "state": "pushed",
@@ -4989,7 +4988,7 @@
       "progress_state": "pushed",
       "author": "rgbig",
       "priority": 5,
-      "details": "Hash-based deduplication, archival of redundant scratch snapshots/baselines, refactoring of .lcm/tools/links, and deletion of legacy .lcd junction. (Re-instated as CRP-095 with verified final state 'pushed' from historical #35 / CR-2026-046).",
+      "details": "Hash-based deduplication, archival of redundant scratch snapshots/baselines, refactoring of LCM_Inventory/tools/links, and deletion of legacy .lcd junction. (Re-instated as CRP-095 with verified final state 'pushed' from historical #35 / CR-2026-046).",
       "plan_path": "LCM_Inventory/data/proposals/plans/Proposal-035_CR-2026-046_Plan.md",
       "walkthrough_path": "LCM_Inventory/data/proposals/plans/Proposal-035_CR-2026-046_Walkthrough.md",
       "dates": {
@@ -6605,7 +6604,7 @@
       "progress_state": "pushed",
       "author": "rgbig",
       "priority": 8,
-      "details": "When Invoke-BeyondCompareReview.ps1 opens a second review session for .agents junctions, the left baseline pane loads an empty or unlinked directory instead of the committed baseline from Git_Repositories (.lcm/.agents).",
+      "details": "When Invoke-BeyondCompareReview.ps1 opens a second review session for .agents junctions, the left baseline pane loads an empty or unlinked directory instead of the committed baseline from Git_Repositories (LCM_Inventory/.agents).",
       "plan_path": "LCM_Inventory/docs/Proposals/BUG-123-LCM_Inventory-v1.1.1-BCR-Junction-Left-Baseline-Resolution.md",
       "walkthrough_path": "",
       "dates": {
@@ -6979,7 +6978,7 @@
       "progress_state": "pushed",
       "bundle_id": "CRP-131",
       "author": "Operator Directive / CRP Intake",
-      "details": "Remediate redundant NTFS directory junction in LCM_Inventory where .agents/rules points to Git_Repositories/.lcm/.agents/rules, creating an unnecessary loop and duplicate review traversal.",
+      "details": "Remediate redundant NTFS directory junction in LCM_Inventory where .agents/rules points to Git_Repositories/LCM_Inventory/.agents/rules, creating an unnecessary loop and duplicate review traversal.",
       "plan_path": "LCM_Inventory/docs/Proposals/CRP-131-LCM_Inventory-v7.5.0-Remediation-Of-Redundant-Rules-Junction-Loop.md",
       "walkthrough_path": "",
       "dates": {
@@ -7030,7 +7029,7 @@
       "progress_state": "pushed",
       "bundle_id": "CRP-132",
       "author": "Operator Directive / CRP Intake",
-      "details": "Clean up and rationalize Git-Root .lcm directory structure following tool migration to LCM_Inventory: eliminate duplicate hooks directories (.lcm/hooks vs .lcm/tools/hooks), de-duplicate hub infrastructure (.lcm/tools/hub vs LCM_Inventory), and re-architect the misplaced .lcm/tools/internal hierarchy safely without breaking desktop shortcuts or daemons.",
+      "details": "Clean up and rationalize Git-Root .lcm directory structure following tool migration to LCM_Inventory: eliminate duplicate hooks directories (LCM_Inventory/hooks vs LCM_Inventory/tools/hooks), de-duplicate hub infrastructure (LCM_Inventory/tools/hub vs LCM_Inventory), and re-architect the misplaced LCM_Inventory/tools/internal hierarchy safely without breaking desktop shortcuts or daemons.",
       "plan_path": "LCM_Inventory/docs/Proposals/CRP-132-LCM-v7.5.0-Git-Root-Directory-Structure-Cleanup-And-De-Duplication.md",
       "walkthrough_path": "",
       "dates": {
@@ -7853,7 +7852,7 @@
           "state": "completed",
           "timestamp": "2026-09-19 14:35:00",
           "user": "Antigravity",
-          "note": "Implemented navigateBackToSubsystems() with multi-tier history/referrer and relative path fallback (../../.lcm/scratch/SHOW_SUBSYSTEMS.html). Fixed scratch path in Show-Subsystems.ps1."
+          "note": "Implemented navigateBackToSubsystems() with multi-tier history/referrer and relative path fallback (../../LCM_Inventory/scratch/SHOW_SUBSYSTEMS.html). Fixed scratch path in Show-Subsystems.ps1."
         },
         {
           "state": "pushed",
@@ -7965,7 +7964,7 @@
       "progress_state": "pushed",
       "bundle_id": "CRP-151",
       "author": "Operator Directive / CRP Intake",
-      "details": "Establishes a universal, zero-friction Action Logging architecture across all interactive HTML Standard Displays, PowerShell helpers, Python diagnostic tools, and scratch scripts, with background REST telemetry (:9876/log), in-browser Action Log drawer, and central .lcm/logs/actions.jsonl ledger.",
+      "details": "Establishes a universal, zero-friction Action Logging architecture across all interactive HTML Standard Displays, PowerShell helpers, Python diagnostic tools, and scratch scripts, with background REST telemetry (:9876/log), in-browser Action Log drawer, and central LCM_Inventory/data/logs/lcm/actions.jsonl ledger.",
       "plan_path": "LCM_Inventory/docs/Proposals/CRP-151-LCM-v7.5.0-Standard-Display-Universal-Action-Logging-Engine.md",
       "walkthrough_path": "",
       "dates": {
@@ -8649,7 +8648,7 @@
       "state": "pushed",
       "bundle_id": "CRP-169",
       "author": "Rolf, Antigravity AI Assistant",
-      "details": "Deploys root NTFS directory junction D:\\Git_Repositories\\.agents -> D:\\Git_Repositories\\.lcm\\.agents, and synchronizes all 17 canonical governance rules into D:\\Git_Repositories\\.copilot\\Rules\\ and root .copilot.",
+      "details": "Deploys root NTFS directory junction D:\\Git_Repositories\\.agents -> D:\\Git_Repositories\\LCM_Inventory\\.agents, and synchronizes all 17 canonical governance rules into D:\\Git_Repositories\\.copilot\\Rules\\ and root .copilot.",
       "bundle_dir": "docs/Proposals/CRP-169-LCM-v7.6.0-Root-Agents-Junction-And-Copilot-Rules-Alignment",
       "docs": {
         "specification": "LCM_Inventory/docs/Proposals/CRP-169-LCM-v7.6.0-Root-Agents-Junction-And-Copilot-Rules-Alignment/Specification.md",
@@ -9125,7 +9124,7 @@
       "state": "pushed",
       "bundle_id": "BUG-178",
       "author": "Rolf, Antigravity AI Assistant",
-      "details": "Aligns Tool Explorer script to Show-ToolsExplorer.ps1 per RULE-PS-002 with ToolExplorer.cmd trampolines, purges obsolete duplicate catalog .lcm/tools/internal/tool_catalog.json, adds self-tool exclusion filter in lcm-tool-explorer.js, closes missing tbody tag in LcmToolCatalog.psm1, and restores horizontal scrollbar with min-width 1560px and high-contrast thumb in LCMToolCatalog.css.",
+      "details": "Aligns Tool Explorer script to Show-ToolsExplorer.ps1 per RULE-PS-002 with ToolExplorer.cmd trampolines, purges obsolete duplicate catalog LCM_Inventory/tools/tool_catalog.json, adds self-tool exclusion filter in lcm-tool-explorer.js, closes missing tbody tag in LcmToolCatalog.psm1, and restores horizontal scrollbar with min-width 1560px and high-contrast thumb in LCMToolCatalog.css.",
       "bundle_dir": "docs/Proposals/BUG-178-LCM-v8.0.0-Tool-Explorer-Naming-Catalog-Deduplication-And-Ergonomics",
       "docs": {
         "specification": "LCM_Inventory/docs/Proposals/BUG-178-LCM-v8.0.0-Tool-Explorer-Naming-Catalog-Deduplication-And-Ergonomics/Specification.md",

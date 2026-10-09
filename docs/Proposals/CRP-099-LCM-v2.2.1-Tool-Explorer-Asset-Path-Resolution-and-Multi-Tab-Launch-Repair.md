@@ -24,25 +24,25 @@ This proposal documents the root cause analysis, surgical in-place code repairs,
 ## 2. Forensic Root Cause Analysis (RCA)
 
 ### 2.1 Bug 1: Asset Path Resolution Discrepancy in `LcmToolCatalog.psm1`
-* **Defect Location**: [`D:\Git_Repositories\.lcm\modules\LcmToolCatalog.psm1`](file:///d:/Git_Repositories/.lcm/modules/LcmToolCatalog.psm1) (Function: `Build-LcmToolIndexHtml`).
+* **Defect Location**: [`D:\Git_Repositories\LCM_Inventory\modules\LcmToolCatalog.psm1`](file:///d:/Git_Repositories/LCM_Inventory/modules/LcmToolCatalog.psm1) (Function: `Build-LcmToolIndexHtml`).
 * **Root Cause**:
   * The HTML compilation function computed the assets directory via:
     ```powershell
     $assetsDir = Join-Path $ToolsDir 'assets'
     ```
-  * When invoked from `Show-ToolIndex.ps1`, `$ToolsDir` was passed as `D:\Git_Repositories\.lcm\tools\internal`. The path `.lcm\tools\internal\assets\` does not exist; the canonical assets directory is located at `D:\Git_Repositories\.lcm\assets\` (`lcm-dashboard-theme.css`, `lcm-table-print-atom.js`, and `lcm-tool-explorer.js`).
+  * When invoked from `Show-ToolIndex.ps1`, `$ToolsDir` was passed as `D:\Git_Repositories\LCM_Inventory\tools\internal`. The path `LCM_Inventory\tools\assets\` does not exist; the canonical assets directory is located at `D:\Git_Repositories\LCM_Inventory\assets\` (`lcm-dashboard-theme.css`, `lcm-table-print-atom.js`, and `lcm-tool-explorer.js`).
   * Because `Test-Path $cssPath` and `Test-Path $jsAppPath` evaluated to `$false`, both `$cssContent` and `$jsAppContent` resolved to empty strings `""`.
 * **Symptom & Impact**: The generated HTML file was reduced to ~20 KB without any embedded CSS styling or JavaScript application engine (`initApplication()`), rendering an empty and seemingly defective dashboard with zero tools displayed.
 
 ### 2.2 Bug 2: Multi-Tab Browser Launch Fallthrough
-* **Defect Location**: [`D:\Git_Repositories\.lcm\tools\internal\Show-ToolIndex.ps1`](file:///d:/Git_Repositories/.lcm/tools/internal/Show-ToolIndex.ps1) (Section 6: Launch Browser).
+* **Defect Location**: [`D:\Git_Repositories\LCM_Inventory\tools\Show-ToolIndex.ps1`](file:///d:/Git_Repositories/LCM_Inventory/tools/Show-ToolIndex.ps1) (Section 6: Launch Browser).
 * **Root Cause**:
   * `Show-ToolIndex.ps1` dispatched the target URL to the LCM Desktop REST Daemon (`http://127.0.0.1:9876/open`).
   * Concurrently, redundant fallback invocations or multiple consecutive calls to `Invoke-InteractiveDesktop.ps1` caused `explorer.exe <fileUri>` to open multiple browser tabs and transient empty CMD trampoline windows on Session 1.
 
 ### 2.3 Bug 3: Hardcoded `.lcd` Fallback Candidate Paths
 * **Defect Location**:
-  * `Get-LcmToolCatalogData` in [`LcmToolCatalog.psm1`](file:///d:/Git_Repositories/.lcm/modules/LcmToolCatalog.psm1).
+  * `Get-LcmToolCatalogData` in [`LcmToolCatalog.psm1`](file:///d:/Git_Repositories/LCM_Inventory/modules/LcmToolCatalog.psm1).
   * `$dispatcherCandidates` in [`LCM_Inventory\tools\Invoke-BeyondCompareReview.ps1`](file:///d:/Git_Repositories/LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1).
 * **Root Cause**: Both functions relied on legacy fallback arrays containing `.lcd\tools\internal\` paths that became dead references after the removal of the `.lcd` junction in Proposal #35 (`CRP-099`).
 
@@ -51,7 +51,7 @@ This proposal documents the root cause analysis, surgical in-place code repairs,
 ## 3. Surgical Code Repairs Applied
 
 ### 3.1 Hardened Dynamic Asset Resolution in `LcmToolCatalog.psm1`
-Updated `Build-LcmToolIndexHtml` in [`D:\Git_Repositories\.lcm\modules\LcmToolCatalog.psm1`](file:///d:/Git_Repositories/.lcm/modules/LcmToolCatalog.psm1) to dynamically locate `.lcm\assets` across arbitrary working directories:
+Updated `Build-LcmToolIndexHtml` in [`D:\Git_Repositories\LCM_Inventory\modules\LcmToolCatalog.psm1`](file:///d:/Git_Repositories/LCM_Inventory/modules/LcmToolCatalog.psm1) to dynamically locate `LCM_Inventory\assets` across arbitrary working directories:
 ```powershell
 $lcmRoot = if ($ToolsDir -like '*\.lcm*') {
   $idx = $ToolsDir.IndexOf('\.lcm')
@@ -81,8 +81,8 @@ Updated candidate paths in `Get-LcmToolCatalogData` to point directly to `.lcm`:
 ```powershell
 $candidatePaths = @(
   (Join-Path $ToolsDir 'tool_catalog.json'),
-  'D:\Git_Repositories\.lcm\config\tool_catalog.json',
-  'D:\Git_Repositories\.lcm\tools\internal\tool_catalog.json',
+  'D:\Git_Repositories\LCM_Inventory\config\tool_catalog.json',
+  'D:\Git_Repositories\LCM_Inventory\tools\tool_catalog.json',
   'D:\Git_Repositories\LCM_Tools\tool_catalog.json'
 )
 ```
@@ -91,7 +91,7 @@ $candidatePaths = @(
 Updated `$dispatcherCandidates` in [`LCM_Inventory\tools\Invoke-BeyondCompareReview.ps1`](file:///d:/Git_Repositories/LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1):
 ```powershell
 $dispatcherCandidates = @(
-    (Join-Path $workspaceRoot ".lcm\tools\internal\Invoke-InteractiveDesktop.ps1"),
+    (Join-Path $workspaceRoot "LCM_Inventory\tools\Invoke-InteractiveDesktop.ps1"),
     (Join-Path $workspaceRoot ".lcd\tools\internal\Invoke-InteractiveDesktop.ps1"),
     (Join-Path $workspaceRoot "tools\Invoke-InteractiveDesktop.ps1")
 )
@@ -102,8 +102,8 @@ $dispatcherCandidates = @(
 ## 4. Verification & Validation Evidence
 
 1. **Artifact Compilation & Bundle Size**:
-   * Executed `pwsh -File .lcm/tools/internal/Show-Tools.ps1 -NoLaunch`.
-   * Generated dashboard: [`D:\Git_Repositories\.lcm\tools\internal\scratch\User_Tools_Explorer_LCM.html`](file:///D:/Git_Repositories/.lcm/tools/internal/scratch/User_Tools_Explorer_LCM.html).
+   * Executed `pwsh -File LCM_Inventory/tools/Show-Tools.ps1 -NoLaunch`.
+   * Generated dashboard: [`D:\Git_Repositories\LCM_Inventory\tools\scratch\User_Tools_Explorer_LCM.html`](file:///D:/Git_Repositories/LCM_Inventory/tools/scratch/User_Tools_Explorer_LCM.html).
    * File size increased from ~20 KB to **314,814 bytes**, confirming 100% self-contained embedding of all stylesheets, Print Atom utilities, and the complete Tool Explorer JavaScript application.
 2. **Interactive Single-Instance Launch**:
    * Executed `ShowTools` (`Show-Tools.ps1`).

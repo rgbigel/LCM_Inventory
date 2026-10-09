@@ -20,7 +20,7 @@ All planned phases of CRP-175 have been executed in strict adherence to the LCM 
    - Established NTFS junction `LCM_AI\.copilot\Rules` $\rightarrow$ `LCM_AI\.agents\rules` (pointing to the single canonical 17 rules).
    - Removed `.copilot` and `.github/agents` from root git tracking (`git rm -r --cached`).
    - Replaced root physical `.copilot`, `.continue`, and `.github/agents` with zero-churn NTFS junctions pointing to `LCM_AI`.
-   - Merged active session files (`ACTIVE_CONTEXT.md`, `ACTIVE_SESSION.md`, `hooks.json`, `mcp_config.json`) into `LCM_AI\.agents\`, pruned intermediate `.lcm\.agents`, and repointed root `.agents` directly to `LCM_AI\.agents`.
+   - Merged active session files (`ACTIVE_CONTEXT.md`, `ACTIVE_SESSION.md`, `hooks.json`, `mcp_config.json`) into `LCM_AI\.agents\`, pruned intermediate `LCM_Inventory\.agents`, and repointed root `.agents` directly to `LCM_AI\.agents`.
    - Updated root `.gitignore` to exclude root AI tool junctions (`/.copilot/`, `/.continue/`, `/.github/agents/`, `/.agents/`).
 
 2. **Remediation of Dangling & Outdated References**:

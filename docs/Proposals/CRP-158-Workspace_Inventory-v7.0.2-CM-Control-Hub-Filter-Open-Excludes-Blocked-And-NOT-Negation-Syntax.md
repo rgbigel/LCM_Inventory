@@ -9,7 +9,7 @@
   - `LCM_Inventory/data/artifacts/CM_CONTROL_HUB.html`
   - `LCM_Inventory/scratch/CM_CONTROL_HUB.html`
   - `LCM_Inventory/tools/Show-CmControlHub.ps1`
-  - `.lcm/assets/lcm-table-engine.js`
+  - `LCM_Inventory/assets/lcm-table-engine.js`
   - `LCM_Inventory/assets/lcm-table-engine.js`
   - `LCM_Inventory/.agents/rules/DisplayStandardsPolicy.md`
 - **Author**: Operator Directive / CRP Intake
@@ -31,7 +31,7 @@ When operators manage change requests and proposals within the **LCM Configurati
 In `LCM_Inventory/assets/CM_CONTROL_HUB.html`:
 - Line 2845: `if (progState === "open" && (p.progress_state === "completed" || p.progress_state === "pushed" || p.state === "completed" || p.state === "pushed")) return false;` did not check for `p.progress_state === "blocked"` or `p.state === "blocked"`.
 - Lines 2852–2861: Search string evaluation only performed a monolithic `search.includes(...)` comparison without tokenizing query terms or parsing field prefixes (`field:value` / `!field:value` / `field:!value`).
-- In `.lcm/assets/lcm-table-engine.js`: `matchesQuery()` only checked simple substring terms without column-name qualifiers or DOM-level header index mapping.
+- In `LCM_Inventory/assets/lcm-table-engine.js`: `matchesQuery()` only checked simple substring terms without column-name qualifiers or DOM-level header index mapping.
 
 ---
 
@@ -58,7 +58,7 @@ Implemented `parseSearchToken()` and `matchesProposalToken()` in `CM_CONTROL_HUB
    - Space-delimited multi-token queries with implicit `AND` logic across all positive and negative constraints (e.g. `scope:LCM_Inventory prio:!D state:!blocked`).
 
 ### 3.3 Generalization into `LcmTableEngine` (`v1.1.0`)
-Upgraded `.lcm/assets/lcm-table-engine.js` and `LCM_Inventory/assets/lcm-table-engine.js`:
+Upgraded `LCM_Inventory/assets/lcm-table-engine.js` and `LCM_Inventory/assets/lcm-table-engine.js`:
 - Added `LcmTableEngine.parseTokens(query)`: Robust parser supporting column qualifiers (`Col:Val`), quoted strings (`Col:"multi word"`), and negation (`!Col:Val`, `Col:!Val`, `!term`).
 - Added `LcmTableEngine.getColumnMap(table)`: Dynamic column header mapping for DOM `<table>` elements.
 - Added `LcmTableEngine.matchesRow(tr, tokens, colMap, options)`: Evaluates DOM table rows against compound parsed tokens with alias support.

@@ -17,9 +17,9 @@
 
 Currently, mapping a tool's **Short-Name** (and aliases) to its **Long-Name executable script** spans **5 separate administrative layers and data stores**:
 1. Hardcoded `$metadataOverrides` dictionary inside `Update-ToolCatalog.ps1` (100+ entries).
-2. Dynamic JSON overrides file (`.lcm/config/tool_catalog_overrides.json`).
-3. Canonical generated catalog (`.lcm/config/tool_catalog.json`) duplicated in `.lcm/tools/internal/tool_catalog.json`.
-4. 191 individual physical `.cmd` batch trampolines in `.lcm/Cmd/*.cmd`.
+2. Dynamic JSON overrides file (`LCM_Inventory/config/tool_catalog_overrides.json`).
+3. Canonical generated catalog (`LCM_Inventory/config/tool_catalog.json`) duplicated in `LCM_Inventory/tools/tool_catalog.json`.
+4. 191 individual physical `.cmd` batch trampolines in `LCM_Inventory/Cmd/*.cmd`.
 5. On-the-fly regex scraping in `LcmDesktopDaemon.ps1` (`POST /query_all_short_names`), which scans all 191 `.cmd` files at runtime to reverse-engineer their targets.
 
 This multi-layer redundancy causes:
@@ -31,24 +31,24 @@ This multi-layer redundancy causes:
 
 ## 2. Architecture & Implementation Scope
 
-### 2.1 Single Authoritative Catalog (`.lcm/config/tool_catalog.json`)
+### 2.1 Single Authoritative Catalog (`LCM_Inventory/config/tool_catalog.json`)
 Consolidate all administrative metadata into **one single canonical JSON file**:
-- `.lcm/config/tool_catalog.json` serves as the sole authoritative repository of:
+- `LCM_Inventory/config/tool_catalog.json` serves as the sole authoritative repository of:
   - `Name` (source filename)
   - `RelativePath` (authoritative script path from workspace root)
   - `ShortName` (primary short launcher)
   - `Aliases` (ordered list of secondary short names)
   - `Role`, `Audience`, `Admin`, `NoExit`, `Category`, `Description`, `Example`
   - `Parameters`, `Dependencies`
-- Eliminate duplicate copies; child tools and internal runners reference `.lcm/config/tool_catalog.json` directly.
+- Eliminate duplicate copies; child tools and internal runners reference `LCM_Inventory/config/tool_catalog.json` directly.
 
 ### 2.2 Retirement of Hardcoded Code Dictionaries
-- Retire the monolithic `$metadataOverrides` hashtable (100+ entries) from [Update-ToolCatalog.ps1](file:///D:/Git_Repositories/.lcm/tools/internal/Update-ToolCatalog.ps1).
+- Retire the monolithic `$metadataOverrides` hashtable (100+ entries) from [Update-ToolCatalog.ps1](file:///D:/Git_Repositories/LCM_Inventory/tools/Update-ToolCatalog.ps1).
 - `Update-ToolCatalog.ps1` transitions from an in-code dictionary writer to a **catalog synchronization & trampoline compiler**:
   1. Scans repository tool folders for new or removed scripts (`.ps1`, `.py`, `.cmd`).
   2. For new scripts, extracts docstrings via AST parser (`.SHORTNAME`, `.ROLE`, `.AUDIENCE`, `.DESCRIPTION`, `.ALIASES`).
   3. Merges scanned additions/deletions directly into the single authoritative `tool_catalog.json`.
-  4. Generates `.lcm/Cmd/<Name>.cmd` trampolines directly from `tool_catalog.json`.
+  4. Generates `LCM_Inventory/Cmd/<Name>.cmd` trampolines directly from `tool_catalog.json`.
 
 ### 2.3 Elimination of `tool_catalog_overrides.json`
 - In-place UI operations in Tool Explorer (renames, metadata edits, role changes) and CLI tools (`Remove-LcmShortName.ps1`) commit directly to `tool_catalog.json`.
@@ -59,7 +59,7 @@ Consolidate all administrative metadata into **one single canonical JSON file**:
 - Generates instant, 100% accurate reverse maps (`TargetScript -> [ShortNames]`) with 0ms disk overhead and zero parsing fragility.
 
 ### 2.5 Preservation of Terminal Execution Trampolines
-- Retain `.lcm/Cmd/*.cmd` strictly as lightweight OS entrypoints for Windows `%PATH%` console usage.
+- Retain `LCM_Inventory/Cmd/*.cmd` strictly as lightweight OS entrypoints for Windows `%PATH%` console usage.
 - All trampoline files are strictly deterministic artifacts compiled from `tool_catalog.json`.
 
 ---

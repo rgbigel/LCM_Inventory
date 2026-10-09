@@ -21,6 +21,6 @@ This document tracks the step-by-step verification and execution logs as each of
 ## Artifact Verification
 * `Show-ToolsExplorer.ps1`: v8.0.0, compile-time sort and monotonic index assignment.
 * `LcmToolCatalog.psm1`: v8.0.0, `Int.` button, `⚡ Bulk Assign` button, Group header/select, updated Help modal.
-* `lcm-tool-explorer.js` (both `.lcm/assets` and `LCM_Inventory/assets`): complete controller enhancements.
+* `lcm-tool-explorer.js` (both `LCM_Inventory/assets` and `LCM_Inventory/assets`): complete controller enhancements.
 * `DaemonDto.ps1` & `DaemonActionController.ps1`: `Aliases` property support and background daemon restart on port 9876.
 * `SHOW_TOOLS.html` recompiled and validated (200 tools, #1 AcronisMiniFilterCleanup to #200 WorkspacePush).

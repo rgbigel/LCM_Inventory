@@ -6,7 +6,7 @@
 | **Proposal ID** | `CRP-121` |
 | **Lifecycle State** | `IN_PROGRESS` (`DOIT`; reopened 2026-10-05 after ledger/specification reconciliation) |
 | **Origin Repository** | `LCM` / Tooling & Documentation Governance |
-| **Target Scope** | Tool Documentation Engine (`.lcm/tools/internal/Update-ToolDependencies.ps1`), Storage (`docs/tools/<ToolName>/`), Governance Policies (`.agents/rules/DocumentationStandardsPolicy.md`, `ProposalReviewFlowPolicy.md`) |
+| **Target Scope** | Tool Documentation Engine (`LCM_Inventory/tools/Update-ToolDependencies.ps1`), Storage (`docs/tools/<ToolName>/`), Governance Policies (`.agents/rules/DocumentationStandardsPolicy.md`, `ProposalReviewFlowPolicy.md`) |
 | **Author** | Rolf, LCM_AI |
 | **Date** | 2026-09-08 |
 | **Version Impact** | `v7.3.0` |
@@ -16,7 +16,7 @@
 
 ## 1. Executive Summary & Problem Statement
 
-Across the LCM solution ecosystem (140+ tools in `.lcm/tools/internal`, `.lcm/Cmd/`, `LCM_Inventory/tools/`, etc.):
+Across the LCM solution ecosystem (140+ tools in `LCM_Inventory/tools/internal`, `LCM_Inventory/Cmd/`, `LCM_Inventory/tools/`, etc.):
 1. **Constituent Blindness**: Individual tools lack a deterministic inventory of external constituents they call directly (external executables, imported modules, referenced sub-scripts, and Port 9876 desktop daemon endpoints).
 2. **Reverse Impact Ignorance**: Developers and automated agents modifying or deprecating a tool cannot easily determine *what uses it directly* (which `.cmd` trampolines, which parent scripts, or which HTML dashboards dispatch it).
 3. **Documentation Drift**: While tripartite specifications (`Architecture.md`, `Requirements.md`, `Implementation.md`) exist at the repository level (`RULE-DOC-001`), individual tool capabilities and interface contracts drift out of sync with real code implementations.
@@ -55,7 +55,7 @@ Each tool `ToolName.ps1` maintains its dependency documentation in a dedicated d
      - Statically inspects the JSON payload (e.g. `command: "notepad++ <file>"`, `filePath: "<doc>"`) to resolve and document the **secondary application or script targeted through the desktop daemon bridge**.
 
 2. **`ToolName-WUD.md` ("What Uses Directly" — Reverse Callers)**:
-   - **Command Trampolines**: All `.cmd` files in `.lcm/Cmd/` targeting this tool.
+   - **Command Trampolines**: All `.cmd` files in `LCM_Inventory/Cmd/` targeting this tool.
    - **Caller Scripts & Modules**: Other `.ps1` / `.psm1` / `.py` files invoking this tool.
    - **Interactive Dashboards**: Buttons, action menus, and anchor links in HTML viewers (`SHOW_TOOLS.html`, `CM_CONTROL_HUB.html`, `SHOW_RULES.html`, `WORKSPACE_INVENTORY_VIEWER.html`).
    - **Daemon Action Controllers & Tasks**: Scheduled tasks, daemon controller methods, or Git hooks referencing this tool.
@@ -137,7 +137,7 @@ Complete-ToolDocumentation [[-Tool] <string>] [-Pass1] [-Pass2] [-All] [-Force] 
 
 Codify in [`.agents/rules/DocumentationStandardsPolicy.md`](file:///D:/Git_Repositories/.agents/rules/DocumentationStandardsPolicy.md):
 - **`RULE-DOC-007: Mandatory Automated Tool Constituent & Caller Documentation Invariant`**:
-  - Every permanent tool in `.lcm/tools/internal/` and governed repositories must maintain up-to-date `WIUD.md` and `WUD.md` records.
+  - Every permanent tool in `LCM_Inventory/tools/` and governed repositories must maintain up-to-date `WIUD.md` and `WUD.md` records.
   - `Pass 1` is mandatory during `COMMITTED` review gating.
   - `Pass 2` is mandatory during `Invoke-WorkspacePush.ps1`.
 

@@ -24,7 +24,7 @@
      - `readiness`: Executes repository readiness quality checks.
      - Fallback / Daemon commands: Passes through to command dispatch.
 3. **Template Generator Enhancements**:
-   - Updated `LCM_Inventory/tools/Show-CmControlHub.ps1` to resolve `lcm-table-print-atom.js` across root `.lcm\assets\`, local `assets\`, and `tools\assets\`.
+   - Updated `LCM_Inventory/tools/Show-CmControlHub.ps1` to resolve `lcm-table-print-atom.js` across root `LCM_Inventory\assets\`, local `assets\`, and `tools\assets\`.
    - Injects the atom via safe literal string replacement (`.Replace(...)`).
    - Bumped generator version to `1.1.0` and updated header metadata to `2026-09-06`.
 

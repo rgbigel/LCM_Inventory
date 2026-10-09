@@ -14,10 +14,10 @@ Status: Completed
 ### Phase 1: Script & Trampoline Realignment
 - [x] Create canonical `Show-ToolsExplorer.ps1` adhering to `RULE-PS-002` approved verb conventions.
 - [x] Create companion forwarder `ToolsExplorer.ps1` for backward script invocation compatibility.
-- [x] Establish `.lcm/Cmd/ToolExplorer.cmd`, `.lcm/Cmd/ToolsExplorer.cmd`, and `.lcm/Cmd/ShowTools.cmd` trampolines.
+- [x] Establish `LCM_Inventory/Cmd/ToolExplorer.cmd`, `LCM_Inventory/Cmd/ToolsExplorer.cmd`, and `LCM_Inventory/Cmd/ShowTools.cmd` trampolines.
 
 ### Phase 2: Catalog Deduplication & Module Hardening
-- [x] Physically delete obsolete `.lcm/tools/internal/tool_catalog.json` artifact.
+- [x] Physically delete obsolete `LCM_Inventory/tools/tool_catalog.json` artifact.
 - [x] Update candidate lookup paths in `LcmToolCatalog.psm1` to isolate authoritative config.
 - [x] Correct fallback catalog path in `Sync-ToolSymlinks.ps1`.
 - [x] Close missing `</tbody>` HTML tag in `LcmToolCatalog.psm1`.
@@ -28,7 +28,7 @@ Status: Completed
 - [x] Execute `Update-ToolCatalog.ps1` to persist manifest and README.
 
 ### Phase 4: UI Ergonomics & Self-Tool Filtering
-- [x] Implement self-tool exclusion filter in `lcm-tool-explorer.js` (both `.lcm/assets` and `LCM_Inventory/assets`).
+- [x] Implement self-tool exclusion filter in `lcm-tool-explorer.js` (both `LCM_Inventory/assets` and `LCM_Inventory/assets`).
 - [x] Enforce `table { min-width: 1560px !important; }` in `LCMToolCatalog.css`.
 - [x] Reconfigure horizontal scrollbar track and thumb styling for high visibility across WebKit and Gecko engines.
 

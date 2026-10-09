@@ -1,7 +1,7 @@
 # Implementation Plan: CRP-212
 
 ## Phase 1: Command Trampoline & Catalog Alignment
-1. Verify `.lcm/Cmd/ShowTools.cmd` is the primary entrypoint and `.lcm/config/tool_catalog.json` designates `ShowTools` as the primary command.
+1. Verify `LCM_Inventory/Cmd/ShowTools.cmd` is the primary entrypoint and `LCM_Inventory/config/tool_catalog.json` designates `ShowTools` as the primary command.
 2. Ensure `ToolsExplorer.cmd` acts as a clean backward-compatible alias.
 3. Update `macro-definitions.md` and `AGENTS.md` indexing `ShowTools` as canonical.
 

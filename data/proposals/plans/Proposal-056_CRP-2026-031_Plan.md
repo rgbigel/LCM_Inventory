@@ -24,7 +24,7 @@ Proposal #56 establishes deterministic runtime guardrails for autonomous agent t
 3. **Rule Propagation**: Core LCM governance rules (`.agents/rules/`) propagate deterministically to `LCM Backup` via standard NTFS junction.
 4. **CM Centralization**: Change management, proposals, review records, and lifecycle auditing remain strictly centralized in `LCM_Inventory`.
 5. **Data Placement & Ledger Isolation**: All telemetry, state data, backup manifests, recovery indexes, and payloads reside centrally within `LCM_Inventory` (`LCM_Inventory/data/backups/`, `LCM_Inventory/logs/backups/`), eliminating local scattering.
-6. **LCM Extensibility**: The primary `.lcm` platform recognizes and integrates `LCM Backup` as an authoritative tool extension provider via `tool_catalog.json` and `.lcm\Cmd\` trampolines.
+6. **LCM Extensibility**: The primary `.lcm` platform recognizes and integrates `LCM Backup` as an authoritative tool extension provider via `tool_catalog.json` and `LCM_Inventory\Cmd\` trampolines.
 7. **Windows Task Governance via `LCM_Supervision`**: Whenever `LCM_Backup` utilizes Windows Scheduled Tasks (especially for LCM Events, state capture triggers, or inter-tool communication), all created tasks must be registered with, supervised by, and governed through the `LCM_Supervision` subsystem (`Manage-SupervisionTask.ps1` / `data/supervision_catalog.json`), ensuring centralized observability, health accounting, and dual-layer schedule resilience.
 
 ---
@@ -39,14 +39,14 @@ Proposal #56 establishes deterministic runtime guardrails for autonomous agent t
      - `install/` (`Installation.md`) standard runbook.
      - `tools/`, `modules/`, `tests/`.
      - `AGENTS.md` and `README.md`.
-   - Establish single-hop NTFS junction: `LCM_Backup\.agents\rules` $\rightarrow$ `D:\Git_Repositories\.lcm\.agents\rules`.
+   - Establish single-hop NTFS junction: `LCM_Backup\.agents\rules` $\rightarrow$ `D:\Git_Repositories\LCM_Inventory\.agents\rules`.
 2. **Centralized Data Path Routing**:
    - Establish storage directory structure in `LCM_Inventory`:
      - `LCM_Inventory/data/backups/` (manifests, recovery points, snapshot indices).
      - `LCM_Inventory/logs/backups/` (telemetry and operational execution logs).
 3. **LCM Platform Integration**:
-   - Register backup domain commands in `.lcm/tools/internal/tool_catalog.json`.
-   - Generate trampoline shortcuts in `.lcm/Cmd/` per LCM tool standards.
+   - Register backup domain commands in `LCM_Inventory/tools/tool_catalog.json`.
+   - Generate trampoline shortcuts in `LCM_Inventory/Cmd/` per LCM tool standards.
 4. **LCM_Supervision Task Governance Integration**:
    - Define integration protocols ensuring all Windows Scheduled Tasks created or utilized by `LCM_Backup` (for LCM events and tool coordination) are registered and tracked in `LCM_Supervision/data/supervision_catalog.json` via `Manage-SupervisionTask.ps1`.
 
@@ -55,7 +55,7 @@ Proposal #56 establishes deterministic runtime guardrails for autonomous agent t
 ### Phase 2: Local-Scratch Lease Engine
 
 1. **OneDrive Sync Isolation**:
-   - Anchor ephemeral lease tracking strictly to local scratch (`.lcm/scratch/` verified in `.gitignore`, or `%LOCALAPPDATA%\LCM\scratch\`).
+   - Anchor ephemeral lease tracking strictly to local scratch (`LCM_Inventory/scratch/` verified in `.gitignore`, or `%LOCALAPPDATA%\LCM\scratch\`).
    - Completely prevents OneDrive sync engine recalculation, lock contention, and background thrashing during rapid tool calls.
 2. **Lease Lifecycle Management (`active_execution_lease.json`)**:
    - Schema tracks:
@@ -99,7 +99,7 @@ Proposal #56 establishes deterministic runtime guardrails for autonomous agent t
    - If `(CurrentTime - Heartbeat) > 180s` OR `Get-Process -Id $host_pid` returns null:
      - Automatically transition affected proposal in `proposals.json` to `progress_state: "blocked"`.
      - Append diagnostic note to `state_history` with exact reason (`SYSTEM_T0_RECOVERY: Orphaned lease detected after unexpected process termination`).
-     - Archive stale lease file to `.lcm/logs/recovery/`.
+     - Archive stale lease file to `LCM_Inventory/data/logs/lcm/recovery/`.
 3. **Atomic Ledger Serialization Pattern**:
    - Mandate `[System.IO.File]::Replace("proposals.json.tmp", "proposals.json", "proposals.json.bak")` across all proposal mutation routines to guarantee zero-byte corruption prevention under `RULE-EFF-003`.
 
@@ -115,9 +115,9 @@ Proposal #56 establishes deterministic runtime guardrails for autonomous agent t
 | **LCM Backup Docs** | `LCM_Backup/docs/Architecture.md`, `Requirements.md`, `Implementation.md` | `[NEW]` |
 | **LCM Backup Install** | `LCM_Backup/install/Installation.md` | `[NEW]` |
 | **Centralized Backup Data**| `LCM_Inventory/data/backups/`, `LCM_Inventory/logs/backups/` | `[NEW DIR]` |
-| **PreToolUse Hook** | `.lcm/tools/hooks/Enforce-LcmPreToolPolicy.ps1` | `[MODIFY]` |
-| **PostToolUse Hook** | `.lcm/tools/hooks/Enforce-LcmPostToolPolicy.ps1` | `[MODIFY]` |
-| **Session Audit / T0** | `.lcm/tools/hooks/Invoke-LcmSessionAudit.ps1` | `[MODIFY]` |
+| **PreToolUse Hook** | `LCM_Inventory/tools/hooks/Enforce-LcmPreToolPolicy.ps1` | `[MODIFY]` |
+| **PostToolUse Hook** | `LCM_Inventory/tools/hooks/Enforce-LcmPostToolPolicy.ps1` | `[MODIFY]` |
+| **Session Audit / T0** | `LCM_Inventory/tools/hooks/Invoke-LcmSessionAudit.ps1` | `[MODIFY]` |
 | **Process Watchdog** | `LCM_Inventory/tools/Invoke-LcmScriptRunner.ps1` | `[NEW]` |
 | **Proposal Manager** | `LCM_Inventory/modules/ProposalManager.psm1` | `[MODIFY]` |
 | **Governance Policy** | `.agents/rules/MethodEfficiencyPolicy.md` | `[MODIFY]` |

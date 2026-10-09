@@ -76,7 +76,7 @@ Proposals held in the `OPEN` state may transition to Implementation Planning and
 3. **Pre-Push AI Export Parity**:
    - Mirror updated rules to `LCM_AI/docs/LCM_Rules_Gemini_Export.md` and `D:\GDrive\LCM` during the standard pre-push pipeline per `RULE-LCM-013`.
 4. **Implementation.md Design Choices Terminal Section**:
-   - Append a standardized "Design Choices & Implementation Rationale" section to the end of `LCM_AI/docs/Implementation.md` (and `.lcm/docs/Implementation.md`) documenting the architectural tradeoffs and rationale behind these intake and execution bounds.
+   - Append a standardized "Design Choices & Implementation Rationale" section to the end of `LCM_AI/docs/Implementation.md` (and `LCM_Inventory/docs/Implementation.md`) documenting the architectural tradeoffs and rationale behind these intake and execution bounds.
 
 ---
 

@@ -35,7 +35,7 @@ Operators navigating and editing tools in the LCM Tool Explorer required ergonom
 
 3. **Precompiled Taxonomy Dropdowns & Dynamic `+ New...` Extension**:
    - Dropdown filters and in-cell editors previously offered hardcoded or arbitrary strings.
-   - Taxonomies must be strictly derived from values actually present in the catalog (`Subsystems`, `Roles`, `Categories`), precompiled during HTML generation and persisted to `.lcm/config/tool_explorer_options.json`.
+   - Taxonomies must be strictly derived from values actually present in the catalog (`Subsystems`, `Roles`, `Categories`), precompiled during HTML generation and persisted to `LCM_Inventory/config/tool_explorer_options.json`.
    - Operators can dynamically add a new taxonomy entry using `+ New...`, which prompts for the new value, synchronously registers it with the daemon (`POST /add_explorer_option`), persists it to `tool_explorer_options.json`, and updates active selects without requiring runtime recalculation or manual file edits.
    - Pruning occurs automatically upon subsequent catalog compilation if a taxonomy value is no longer referenced.
    - Columns `#`, `ToolName`, `Env.`, `Admin`, and `NoExit` do not offer `+ New...`.
@@ -67,8 +67,8 @@ Operators navigating and editing tools in the LCM Tool Explorer required ergonom
 
 ### 2.2 Precompiled Taxonomy Extraction & Persistence (`LcmToolCatalog.psm1`)
 - Extracted unique non-empty, trimmed values for `Subsystems`, `Roles`, and `Categories` across all catalog items during compilation.
-- Merged existing entries from `.lcm/config/tool_explorer_options.json` with active items, pruning obsolete ones upon compilation.
-- Atomic write to `.lcm/config/tool_explorer_options.json`.
+- Merged existing entries from `LCM_Inventory/config/tool_explorer_options.json` with active items, pruning obsolete ones upon compilation.
+- Atomic write to `LCM_Inventory/config/tool_explorer_options.json`.
 
 ### 2.3 Daemon API Dynamic Taxonomy Addition (`LcmDesktopDaemon.ps1`, `DaemonActionController.ps1`)
 - Added endpoint `POST /add_explorer_option` accepting JSON `{ "type": "Subsystems"|"Roles"|"Categories", "value": "..." }`.
@@ -81,10 +81,10 @@ Operators navigating and editing tools in the LCM Tool Explorer required ergonom
 - Added `finalizeAllBlocked()` function accessible via the `SetAll` header button.
 - Re-architected `openCellEditor` for `Subsys`, `Role`, and `Category` to populate from `window.__LCM_OPTIONS__` with `+ New...` support.
 - Added `handleSelectFilterChange()` and `handleCellEditSelectChange()` to prompt and invoke daemon `/add_explorer_option`.
-- Mirrored all JS changes from `LCM_Inventory/assets/lcm-tool-explorer.js` to `.lcm/assets/lcm-tool-explorer.js`.
+- Mirrored all JS changes from `LCM_Inventory/assets/lcm-tool-explorer.js` to `LCM_Inventory/assets/lcm-tool-explorer.js`.
 
 ### 2.5 Horizontal Scrollbar Hardening (`LCMToolCatalog.css`)
 - Added `overflow-x: scroll !important;` to `.table-container` to force browsers to always render the scrollbar track.
 - Increased table `min-width` from `1560px` to `1800px !important`.
 - Configured 12px high-contrast scrollbar thumb (`#388bfd` / `#79c0ff` hover) across WebKit and Firefox engines.
-- Mirrored stylesheet from `LCM_Inventory/assets/LCMToolCatalog.css` to `.lcm/assets/LCMToolCatalog.css`.
+- Mirrored stylesheet from `LCM_Inventory/assets/LCMToolCatalog.css` to `LCM_Inventory/assets/LCMToolCatalog.css`.

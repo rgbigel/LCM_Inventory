@@ -13,7 +13,7 @@
 | Component | Target Location | Planned Action |
 | :--- | :--- | :--- |
 | **Quality Gate Check** | `LCM_Inventory/tools/Test-WorkspaceReadiness.ps1` | Add AST/regex check: fail gate if file content differs from Git HEAD but version string is identical |
-| **Tool Explorer** | `.lcm/assets/lcm-tool-explorer.js`, `.lcm/tools/internal/Show-ToolsExplorer.ps1` | Synchronize internal version header; implement dynamic JSON parameter loading |
+| **Tool Explorer** | `LCM_Inventory/assets/lcm-tool-explorer.js`, `LCM_Inventory/tools/Show-ToolsExplorer.ps1` | Synchronize internal version header; implement dynamic JSON parameter loading |
 | **Logging Atom** | `LCM_Shared/modules/Logging/` | Update `Write-LogMessage` to accept and enforce mandatory element version parameter |
 | **ShowXYZ Dashboards** | `Show-Subsystems.ps1`, `Show-LCM.ps1`, `CM_CONTROL_HUB.html` | Implement Column Set A/B toggle switch or compound timestamp/version cells with sorting |
 | **Daemon Contract** | `LCM_Shared/contracts/DaemonActionContract.json` | Specify lightweight parameter file messaging format over Port 9876 |

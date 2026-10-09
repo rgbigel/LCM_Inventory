@@ -31,7 +31,7 @@ During operational use of the LCM Tool Explorer and workspace push lifecycle, mu
    - Short-name generation created unwieldy, overly long identifiers (e.g. `HaSSD06InventoryTestRepoReadiness` for `Test-RepoReadiness.ps1`).
 
 2. **Unbounded Desktop Daemon Log Growth**:
-   - `LcmDesktopDaemon-*.log` files in `.lcm/tools/internal/logs` grew continuously without truncation, reaching over 2.7 MB and tens of thousands of lines per session.
+   - `LcmDesktopDaemon-*.log` files in `LCM_Inventory/tools/logs` grew continuously without truncation, reaching over 2.7 MB and tens of thousands of lines per session.
    - The daemon's internal log rotation only triggered at 10 MB and only purged files older than 7 days on startup, leaving huge multi-megabyte log files perpetually active.
 
 3. **Absence of Unified Workspace Maintenance Pipeline**:
@@ -42,8 +42,8 @@ During operational use of the LCM Tool Explorer and workspace push lifecycle, mu
 ## 2. Technical Architecture & Modifications
 
 ### 2.1 Tool Explorer UI & Ergonomics
-- **NoExit Button Removal**: Eliminated `card-noexit` metric card from `.lcm/modules/LcmToolCatalog.psm1`.
-- **Button Compaction**: Updated `LCMToolCatalog.css` (both `.lcm/assets` and `LCM_Inventory/assets`) reducing button padding (`2px 7px`), font-size (`10px`–`11px`), and compacting top-bar controls.
+- **NoExit Button Removal**: Eliminated `card-noexit` metric card from `LCM_Inventory/modules/LcmToolCatalog.psm1`.
+- **Button Compaction**: Updated `LCMToolCatalog.css` (both `LCM_Inventory/assets` and `LCM_Inventory/assets`) reducing button padding (`2px 7px`), font-size (`10px`–`11px`), and compacting top-bar controls.
 - **Pictogram Removal & Sequential `#` Counter Column**:
   - Removed decorative icons prefixed to tool names in `lcm-tool-explorer.js`.
   - Added a dedicated `#` column displaying `001-max` (`String(safeIdx + 1).padStart(3, '0')`), representing the unique 1-based sequential index from the master unfiltered list.
@@ -52,18 +52,18 @@ During operational use of the LCM Tool Explorer and workspace push lifecycle, mu
   - Dynamically populated available subsystems from catalog data, prepending `"Needed?"` to support human cleanup triage.
   - Ensured header and dropdown selectors remain strictly titled **Subsystem** and **All Subsystems**.
 - **Short-Name Disambiguation**:
-  - Renamed `HaSSD06InventoryTestRepoReadiness` &rarr; **`TestHaRepoReady`** in `.lcm/tools/internal/Update-ToolCatalog.ps1`.
-  - Created `.lcm/Cmd/TestHaRepoReady.cmd` launcher and purged legacy long companion `.cmd`.
+  - Renamed `HaSSD06InventoryTestRepoReadiness` &rarr; **`TestHaRepoReady`** in `LCM_Inventory/tools/Update-ToolCatalog.ps1`.
+  - Created `LCM_Inventory/Cmd/TestHaRepoReady.cmd` launcher and purged legacy long companion `.cmd`.
 
 ### 2.2 Workspace Maintenance & Daemon Log Truncation Engine
 - **Created `Invoke-WorkspaceMaintenance.ps1`**:
   - Canonical implementation: `LCM_Inventory/tools/Invoke-WorkspaceMaintenance.ps1`.
-  - Internal runner: `.lcm/tools/internal/Invoke-WorkspaceMaintenance.ps1`.
-  - Command launcher: `.lcm/Cmd/WorkspaceMaintenance.cmd`.
+  - Internal runner: `LCM_Inventory/tools/Invoke-WorkspaceMaintenance.ps1`.
+  - Command launcher: `LCM_Inventory/Cmd/WorkspaceMaintenance.cmd`.
   - **Core Functions**:
     1. **Log Tail Truncation**: Safely truncates active `LcmDesktopDaemon-*.log` files to the trailing ~100 lines, prepending a structured truncation header with timestamp and original line count. Employs retry loops to handle transient file concurrency gracefully.
     2. **Daemon Log Aging**: Automatically purges daemon logs older than `$MaxLogAgeDays` (default: 7 days) while strictly preserving the newest active log.
-    3. **Transient Log Purging**: Prunes transient script logs in `.lcm/logs` older than `$MaxScriptLogAgeDays` (default: 3 days).
+    3. **Transient Log Purging**: Prunes transient script logs in `LCM_Inventory/logs` older than `$MaxScriptLogAgeDays` (default: 3 days).
     4. **Beyond Compare Scratch Review Maintenance**: Integrates `Clear-BCReviewTemp.ps1` to clean review scratch folders older than 48 hours while safely preserving `ACTIVE_BASELINE` and `ACTIVE_LIVE` junctions.
     5. **Temporary Junk Pruning**: Prunes temporary junk files (`*.tmp`, `*~`) older than 24 hours.
 

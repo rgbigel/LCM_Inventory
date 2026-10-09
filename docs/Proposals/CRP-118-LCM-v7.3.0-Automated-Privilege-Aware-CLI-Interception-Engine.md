@@ -6,7 +6,7 @@
 | **Proposal ID** | `CRP-118` |
 | **Lifecycle State** | `COMPLETED` (Accepted by Operator) |
 | **Origin Repository** | `LCM` / Execution & Elevation Governance |
-| **Target Scope** | CLI & Agent Execution Layer (`.lcm/tools/internal/Invoke-PrivilegedTool.ps1`, `Invoke-InteractiveDesktop.ps1`, `Update-ToolCatalog.ps1`, `.lcm/Cmd/*.cmd`, `.agents/rules/ElevationPolicy.md`) |
+| **Target Scope** | CLI & Agent Execution Layer (`LCM_Inventory/tools/Invoke-PrivilegedTool.ps1`, `Invoke-InteractiveDesktop.ps1`, `Update-ToolCatalog.ps1`, `LCM_Inventory/Cmd/*.cmd`, `.agents/rules/ElevationPolicy.md`) |
 | **Author** | Rolf, LCM_AI |
 | **Date** | 2026-09-08 (Completed: 2026-09-19) |
 | **Version Impact** | `v7.5.3` |
@@ -31,12 +31,12 @@ While the **Web Tool Explorer UI** (`lcm-tool-explorer.js`) enforces this policy
 ## 2. Architecture & Implementation Scope
 
 ### 2.1 Reusable CLI & Agent Dispatch Engine (`Invoke-PrivilegedTool.ps1`)
-Standardized PowerShell dispatcher in `.lcm/tools/internal/Invoke-PrivilegedTool.ps1`:
+Standardized PowerShell dispatcher in `LCM_Inventory/tools/Invoke-PrivilegedTool.ps1`:
 ```powershell
-pwsh .lcm/tools/internal/Invoke-PrivilegedTool.ps1 -Tool <NameOrShortName> [-Arguments <string>] [-NoExit] [-DryRun] [-Force]
+pwsh LCM_Inventory/tools/Invoke-PrivilegedTool.ps1 -Tool <NameOrShortName> [-Arguments <string>] [-NoExit] [-DryRun] [-Force]
 ```
 **Execution Sequence**:
-1. **Catalog Lookup**: Queries `.lcm/config/tool_catalog.json` to resolve tool metadata and inspect whether `"Admin": true`. Includes word-token fuzzy matching and alias lookup.
+1. **Catalog Lookup**: Queries `LCM_Inventory/config/tool_catalog.json` to resolve tool metadata and inspect whether `"Admin": true`. Includes word-token fuzzy matching and alias lookup.
 2. **Privilege Inspection**: Evaluates whether the current shell process holds administrator rights via `WindowsPrincipal.IsInRole([WindowsBuiltInRole]::Administrator)`.
 3. **Deterministic Routing**:
    - **Case A (`Admin: false` or already elevated)**: Invokes the target script directly in-process with passed arguments.
@@ -47,7 +47,7 @@ pwsh .lcm/tools/internal/Invoke-PrivilegedTool.ps1 -Tool <NameOrShortName> [-Arg
      - Never hangs on Session 0 UAC prompts.
 
 ### 2.2 Trampoline `.cmd` Interception Alignment
-Updated trampoline generation logic in [Update-ToolCatalog.ps1](file:///D:/Git_Repositories/.lcm/tools/internal/Update-ToolCatalog.ps1):
+Updated trampoline generation logic in [Update-ToolCatalog.ps1](file:///D:/Git_Repositories/LCM_Inventory/tools/Update-ToolCatalog.ps1):
 - For tools marked `"Admin": true`, generated batch trampolines check `net session >nul 2>&1`. If un-elevated, they delegate directly to `Invoke-PrivilegedTool.ps1 -Tool <ShortName> -Arguments "%*"` and exit cleanly.
 
 ### 2.3 Agent Operational Rule Integration

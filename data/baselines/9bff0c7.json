@@ -94,7 +94,7 @@
       "LastAuditTimestamp": "2026-09-02 14:49:09"
     },
     {
-      "RepositoryName": ".lcm",
+      "RepositoryName": "LCM_Inventory",
       "Path": "D:\\Git_Repositories\\.lcm",
       "Classification": "platform-engine",
       "GitStatus": "Non-Git",

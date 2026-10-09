@@ -10,7 +10,7 @@ In `SHOW_HA_INVENTORY.html`, all buttons were unresponsive due to an unescaped J
    return tabName + '_Inventory_${Instance}.html';
    ```
 2. **Table Print Atom Path Resolution**:
-   Updated `$atomJsCandidates` to probe `.lcm\assets\lcm-table-print-atom.js`, `tools\assets\`, and local `assets\`. The atom is now successfully inlined.
+   Updated `$atomJsCandidates` to probe `LCM_Inventory\assets\lcm-table-print-atom.js`, `tools\assets\`, and local `assets\`. The atom is now successfully inlined.
 3. **Defensive Initialization Guard**:
    Wrapped `LcmTablePrintAtom.init(...)` with `if (typeof LcmTablePrintAtom !== 'undefined')`.
 4. **Header Maintenance**:

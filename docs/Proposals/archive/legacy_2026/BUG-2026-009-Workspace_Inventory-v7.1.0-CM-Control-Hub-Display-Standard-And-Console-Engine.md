@@ -30,7 +30,7 @@ During operator workflow in the Configuration Management Control Hub (`CM_CONTRO
    - Implement frozen header styling in `CM_CONTROL_HUB.html`: Apply `overflow-y: auto`, `overflow-x: auto`, and constrained `max-height` (e.g. `calc(100vh - 380px)`) to `.table-container`, and `position: sticky; top: 0; z-index: 50/51` to `thead` and `th` in both dark and light modes.
    - Add light-theme CSS variables under `:root` and `.light-theme` in `CM_CONTROL_HUB.html`.
    - Add theme switch toggle button in header with `initTheme()`, `toggleTheme()`, and `applyTheme()` bound to `localStorage['lcm_theme']`.
-   - Update `Show-CmControlHub.ps1` to locate and inline `LcmTablePrintAtom` from `.lcm\assets\lcm-table-print-atom.js`.
+   - Update `Show-CmControlHub.ps1` to locate and inline `LcmTablePrintAtom` from `LCM_Inventory\assets\lcm-table-print-atom.js`.
    - Wire `id="proposalsTable"` and initialize `LcmTablePrintAtom` on proposal and document tables with dedicated Print/PDF header action.
 2. **Console Engine Implementation**:
    - Implement `submitConsoleCommand()`, `handleConsoleKey()`, `setConsoleCommand()`, and `clearConsoleStream()`.

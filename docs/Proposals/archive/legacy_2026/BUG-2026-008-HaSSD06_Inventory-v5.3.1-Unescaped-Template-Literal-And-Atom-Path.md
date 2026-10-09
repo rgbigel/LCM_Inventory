@@ -31,10 +31,10 @@ Two distinct defects in `HaSSD06_Inventory/tools/Show-HaInventoryApp.ps1` caused
    ```
    The browser JavaScript parser threw `SyntaxError: Unexpected token '{'`, causing the entire `<script>` block to fail compilation. None of the global UI functions (`showTab`, `toggleTheme`, `filterTables`, `sortTable`, etc.) were declared, causing all button click handlers to fail.
 2. **Stale Asset Path for Table Print Atom**:
-   Line 108 referenced `$atomJsPath = Join-Path $workspaceRoot 'tools\assets\lcm-table-print-atom.js'`, but the asset resides at `.lcm\assets\lcm-table-print-atom.js`. As a result, `$atomJsContent` was empty.
+   Line 108 referenced `$atomJsPath = Join-Path $workspaceRoot 'tools\assets\lcm-table-print-atom.js'`, but the asset resides at `LCM_Inventory\assets\lcm-table-print-atom.js`. As a result, `$atomJsContent` was empty.
 
 ## 3. Remediation Strategy
 1. **Robust String Concatenation**: Replace the backtick template literal with standard JavaScript string concatenation (`return tabName + '_Inventory_${Instance}.html';`) to eliminate PowerShell escape collision.
-2. **Multi-Candidate Asset Resolution**: Update `$atomJsPath` resolution to probe `.lcm\assets\lcm-table-print-atom.js`, `tools\assets\`, and local `assets\`.
+2. **Multi-Candidate Asset Resolution**: Update `$atomJsPath` resolution to probe `LCM_Inventory\assets\lcm-table-print-atom.js`, `tools\assets\`, and local `assets\`.
 3. **Defensive Initialization**: Wrap `LcmTablePrintAtom.init(...)` with `if (typeof LcmTablePrintAtom !== 'undefined')` to prevent future runtime failures if assets are missing.
 4. **Regeneration & Verification**: Rebuild `SHOW_HA_INVENTORY.html` using `Show-HaInventoryApp.ps1 -NoLaunch`, verify JavaScript parsing with Node.js (0 syntax errors), and run `Test-RepoReadiness.ps1`.

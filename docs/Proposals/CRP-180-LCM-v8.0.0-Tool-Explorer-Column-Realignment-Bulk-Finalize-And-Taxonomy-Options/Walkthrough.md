@@ -36,7 +36,7 @@ This Change Request Proposal delivers five major ergonomic and functional enhanc
    - Finalizes all currently blocked rows across the entire tool catalog in one click.
 
 4. **Precompiled Taxonomy Options & Dynamic `+ New...` Extension**:
-   - Subsystem, Role, and Category dropdowns are precompiled during HTML generation and saved to `.lcm/config/tool_explorer_options.json`.
+   - Subsystem, Role, and Category dropdowns are precompiled during HTML generation and saved to `LCM_Inventory/config/tool_explorer_options.json`.
    - Selecting `+ New...` prompts the operator for a new value, automatically persists it through the daemon REST API (`POST /add_explorer_option`), updates in-memory options, and sets the value immediately.
 
 5. **Guaranteed Horizontal Scrollbar**:
@@ -49,7 +49,7 @@ This Change Request Proposal delivers five major ergonomic and functional enhanc
 
 ### 2.1 Tool Explorer Build & Generation
 - Executed `Show-ToolsExplorer.ps1 -NoLaunch`: exit code 0.
-- Verified `.lcm/config/tool_explorer_options.json` generated with accurate catalog values for Subsystems, Roles, and Categories.
+- Verified `LCM_Inventory/config/tool_explorer_options.json` generated with accurate catalog values for Subsystems, Roles, and Categories.
 
 ### 2.2 Asset Hash Equality
-- Verified identical SHA-256 hashes between `LCM_Inventory/assets/` and `.lcm/assets/` for both `LCMToolCatalog.css` and `lcm-tool-explorer.js`.
+- Verified identical SHA-256 hashes between `LCM_Inventory/assets/` and `LCM_Inventory/assets/` for both `LCMToolCatalog.css` and `lcm-tool-explorer.js`.

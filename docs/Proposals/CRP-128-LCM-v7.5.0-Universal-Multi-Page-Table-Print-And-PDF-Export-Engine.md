@@ -5,8 +5,8 @@
 | :--- | :--- |
 | **Proposal ID** | `CRP-128` |
 | **Lifecycle State** | `OPEN` (Awaiting Operator Review & PROCEED Trigger) |
-| **Origin Repository** | `LCM` / Assets & UI Engines (`.lcm/assets`, `LCM_Inventory`) |
-| **Target Scope** | `.lcm/assets/lcm-table-print-atom.js`, `.lcm/assets/lcm-dashboard-theme.css`, `CM_CONTROL_HUB.html`, `SHOW_TOOLS.html` |
+| **Origin Repository** | `LCM` / Assets & UI Engines (`LCM_Inventory/assets`, `LCM_Inventory`) |
+| **Target Scope** | `LCM_Inventory/assets/lcm-table-print-atom.js`, `LCM_Inventory/assets/lcm-dashboard-theme.css`, `CM_CONTROL_HUB.html`, `SHOW_TOOLS.html` |
 | **Author** | Rolf, LCM_AI Governance |
 | **Date** | 2026-09-09 |
 | **Priority** | `Medium` |
@@ -57,8 +57,8 @@ All LCM table containers `MUST` declare print-specific CSS media rules:
 ---
 
 ## 3. Affected Components
-- `.lcm/assets/lcm-dashboard-theme.css`
-- `.lcm/assets/lcm-table-print-atom.js`
+- `LCM_Inventory/assets/lcm-dashboard-theme.css`
+- `LCM_Inventory/assets/lcm-table-print-atom.js`
 - `LCM_Inventory/docs/CM_CONTROL_HUB.html`
-- `.lcm/tools/internal/SHOW_TOOLS.html`
-- `.lcm/tools/internal/Show-Rules.ps1`
+- `LCM_Inventory/tools/SHOW_TOOLS.html`
+- `LCM_Inventory/tools/Show-Rules.ps1`

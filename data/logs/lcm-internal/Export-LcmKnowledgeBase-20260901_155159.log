@@ -10,198 +10,198 @@
 [2026-09-01 15:52:01.437] [DEBUG]   -> Exported: .copilot\Fixes\Fix_Atomic.json.txt
 [2026-09-01 15:52:01.469] [DEBUG]   -> Exported: .copilot\Methods\LoadRules.ps1.txt
 [2026-09-01 15:52:01.482] [DEBUG]   -> Exported: .copilot\Methods\ValidateRules.ps1.txt
-[2026-09-01 15:52:01.520] [DEBUG]   -> Exported: .lcm\.agents\ACTIVE_SESSION.md.txt
-[2026-09-01 15:52:01.536] [DEBUG]   -> Exported: .lcm\.agents\hooks.json.txt
-[2026-09-01 15:52:01.555] [DEBUG]   -> Exported: .lcm\assets\lcm-dashboard-theme.css.txt
-[2026-09-01 15:52:01.573] [DEBUG]   -> Exported: .lcm\assets\lcm-table-engine.js.txt
-[2026-09-01 15:52:01.594] [DEBUG]   -> Exported: .lcm\assets\lcm-tool-explorer.js.txt
-[2026-09-01 15:52:01.608] [DEBUG]   -> Exported: .lcm\Cmd\AcronisMiniFilterCleanup.cmd.txt
-[2026-09-01 15:52:01.621] [DEBUG]   -> Exported: .lcm\Cmd\AdvanceGovernance.cmd.txt
-[2026-09-01 15:52:01.635] [DEBUG]   -> Exported: .lcm\Cmd\analyzelcmcomponents.cmd.txt
-[2026-09-01 15:52:01.647] [DEBUG]   -> Exported: .lcm\Cmd\APPLY.cmd.txt
-[2026-09-01 15:52:01.659] [DEBUG]   -> Exported: .lcm\Cmd\ApplyAllCustomizations.cmd.txt
-[2026-09-01 15:52:01.671] [DEBUG]   -> Exported: .lcm\Cmd\asusdebloater.cmd.txt
-[2026-09-01 15:52:01.682] [DEBUG]   -> Exported: .lcm\Cmd\AuthorizeMasterUser.cmd.txt
-[2026-09-01 15:52:01.696] [DEBUG]   -> Exported: .lcm\Cmd\AutorunRenderLockScreen.cmd.txt
-[2026-09-01 15:52:01.708] [DEBUG]   -> Exported: .lcm\Cmd\BatchOcr.cmd.txt
-[2026-09-01 15:52:01.721] [DEBUG]   -> Exported: .lcm\Cmd\BeyondCompareReview.cmd.txt
-[2026-09-01 15:52:01.733] [DEBUG]   -> Exported: .lcm\Cmd\BuildHaInventoryViewer.cmd.txt
-[2026-09-01 15:52:01.750] [DEBUG]   -> Exported: .lcm\Cmd\BuildMacriumScheduleTemplate.cmd.txt
-[2026-09-01 15:52:01.764] [DEBUG]   -> Exported: .lcm\Cmd\buildmatrix.cmd.txt
-[2026-09-01 15:52:01.776] [DEBUG]   -> Exported: .lcm\Cmd\buildofflinedocs.cmd.txt
-[2026-09-01 15:52:01.789] [DEBUG]   -> Exported: .lcm\Cmd\checkspecific.cmd.txt
-[2026-09-01 15:52:01.803] [DEBUG]   -> Exported: .lcm\Cmd\ClearBCReviewTemp.cmd.txt
-[2026-09-01 15:52:01.817] [DEBUG]   -> Exported: .lcm\Cmd\CmHub.cmd.txt
-[2026-09-01 15:52:01.832] [DEBUG]   -> Exported: .lcm\Cmd\comparetuyaintegrations.cmd.txt
-[2026-09-01 15:52:01.846] [DEBUG]   -> Exported: .lcm\Cmd\ConfigureEasyContextMenu.cmd.txt
-[2026-09-01 15:52:01.858] [DEBUG]   -> Exported: .lcm\Cmd\ConvertToWorkspaceUtf8.cmd.txt
-[2026-09-01 15:52:01.873] [DEBUG]   -> Exported: .lcm\Cmd\CreateTool.cmd.txt
-[2026-09-01 15:52:01.886] [DEBUG]   -> Exported: .lcm\Cmd\CreateWorkspaceBaseline.cmd.txt
-[2026-09-01 15:52:01.899] [DEBUG]   -> Exported: .lcm\Cmd\deepdevicescan.cmd.txt
-[2026-09-01 15:52:01.913] [DEBUG]   -> Exported: .lcm\Cmd\deeptuyascan.cmd.txt
-[2026-09-01 15:52:01.924] [DEBUG]   -> Exported: .lcm\Cmd\DefineSecureD.cmd.txt
-[2026-09-01 15:52:01.938] [DEBUG]   -> Exported: .lcm\Cmd\DesktopSubFoldersLauncher.cmd.txt
-[2026-09-01 15:52:01.951] [DEBUG]   -> Exported: .lcm\Cmd\DiagnoseOneDriveSync.cmd.txt
-[2026-09-01 15:52:01.964] [DEBUG]   -> Exported: .lcm\Cmd\DisableEncryptionGuide.cmd.txt
-[2026-09-01 15:52:01.976] [DEBUG]   -> Exported: .lcm\Cmd\DisableWakeDevices.cmd.txt
-[2026-09-01 15:52:01.988] [DEBUG]   -> Exported: .lcm\Cmd\DismItFromE.cmd.txt
-[2026-09-01 15:52:02.003] [DEBUG]   -> Exported: .lcm\Cmd\EnterCmdAdmin.cmd.txt
-[2026-09-01 15:52:02.015] [DEBUG]   -> Exported: .lcm\Cmd\EnterPSSystemPrivilege.cmd.txt
-[2026-09-01 15:52:02.026] [DEBUG]   -> Exported: .lcm\Cmd\EnterXYSystemPrivilege.cmd.txt
-[2026-09-01 15:52:02.041] [DEBUG]   -> Exported: .lcm\Cmd\ExportLcmKnowledgeBase.cmd.txt
-[2026-09-01 15:52:02.055] [DEBUG]   -> Exported: .lcm\Cmd\ExportLCMRules.cmd.txt
-[2026-09-01 15:52:02.069] [DEBUG]   -> Exported: .lcm\Cmd\extracthacentralregistry.cmd.txt
-[2026-09-01 15:52:02.082] [DEBUG]   -> Exported: .lcm\Cmd\extracthaupdatecrps.cmd.txt
-[2026-09-01 15:52:02.094] [DEBUG]   -> Exported: .lcm\Cmd\FileMenuTools.cmd.txt
-[2026-09-01 15:52:02.108] [DEBUG]   -> Exported: .lcm\Cmd\FindChangeRequest.cmd.txt
-[2026-09-01 15:52:02.120] [DEBUG]   -> Exported: .lcm\Cmd\FiraFonts.cmd.txt
-[2026-09-01 15:52:02.135] [DEBUG]   -> Exported: .lcm\Cmd\FixLocalizedNames.cmd.txt
-[2026-09-01 15:52:02.148] [DEBUG]   -> Exported: .lcm\Cmd\FixMouseFlickerInvariants.cmd.txt
-[2026-09-01 15:52:02.160] [DEBUG]   -> Exported: .lcm\Cmd\FlushLcmLegacyLogs.cmd.txt
-[2026-09-01 15:52:02.173] [DEBUG]   -> Exported: .lcm\Cmd\Forced USO Unlock.cmd.txt
-[2026-09-01 15:52:02.188] [DEBUG]   -> Exported: .lcm\Cmd\GenerateLog.cmd.txt
-[2026-09-01 15:52:02.201] [DEBUG]   -> Exported: .lcm\Cmd\generatesystemdocs.cmd.txt
-[2026-09-01 15:52:02.216] [DEBUG]   -> Exported: .lcm\Cmd\GetChkdskBootLog.cmd.txt
-[2026-09-01 15:52:02.228] [DEBUG]   -> Exported: .lcm\Cmd\GetDevicePathFromDeviceName.cmd.txt
-[2026-09-01 15:52:02.242] [DEBUG]   -> Exported: .lcm\Cmd\GetInternetConnectivityData.cmd.txt
-[2026-09-01 15:52:02.257] [DEBUG]   -> Exported: .lcm\Cmd\GetLcmTablePrintAtom.cmd.txt
-[2026-09-01 15:52:02.275] [DEBUG]   -> Exported: .lcm\Cmd\GetOpenProposals.cmd.txt
-[2026-09-01 15:52:02.289] [DEBUG]   -> Exported: .lcm\Cmd\GetRealRepoActionPlan.cmd.txt
-[2026-09-01 15:52:02.304] [DEBUG]   -> Exported: .lcm\Cmd\GetRealRepoTargetProfile.cmd.txt
-[2026-09-01 15:52:02.321] [DEBUG]   -> Exported: .lcm\Cmd\GetRealRepoTestPlan.cmd.txt
-[2026-09-01 15:52:02.336] [DEBUG]   -> Exported: .lcm\Cmd\GetReposUnderReview.cmd.txt
-[2026-09-01 15:52:02.352] [DEBUG]   -> Exported: .lcm\Cmd\GetSystemAclAudit.cmd.txt
-[2026-09-01 15:52:02.368] [DEBUG]   -> Exported: .lcm\Cmd\GetSystemPortInventory.cmd.txt
-[2026-09-01 15:52:02.382] [DEBUG]   -> Exported: .lcm\Cmd\GetvEthernetData.cmd.txt
-[2026-09-01 15:52:02.396] [DEBUG]   -> Exported: .lcm\Cmd\GetWorkspaceRepositories.cmd.txt
-[2026-09-01 15:52:02.410] [DEBUG]   -> Exported: .lcm\Cmd\GoAdm.cmd.txt
-[2026-09-01 15:52:02.431] [DEBUG]   -> Exported: .lcm\Cmd\GoAdmchanger.cmd.txt
-[2026-09-01 15:52:02.448] [DEBUG]   -> Exported: .lcm\Cmd\HaAudit.cmd.txt
-[2026-09-01 15:52:02.465] [DEBUG]   -> Exported: .lcm\Cmd\habackup.cmd.txt
-[2026-09-01 15:52:02.481] [DEBUG]   -> Exported: .lcm\Cmd\hacoreupdate.cmd.txt
-[2026-09-01 15:52:02.493] [DEBUG]   -> Exported: .lcm\Cmd\hainventorycollector.cmd.txt
-[2026-09-01 15:52:02.507] [DEBUG]   -> Exported: .lcm\Cmd\HaListUpdates.cmd.txt
-[2026-09-01 15:52:02.523] [DEBUG]   -> Exported: .lcm\Cmd\HaLogs.cmd.txt
-[2026-09-01 15:52:02.537] [DEBUG]   -> Exported: .lcm\Cmd\HaSSD06InventoryTestRepoReadiness.cmd.txt
-[2026-09-01 15:52:02.552] [DEBUG]   -> Exported: .lcm\Cmd\HaUpdateGate.cmd.txt
-[2026-09-01 15:52:02.564] [DEBUG]   -> Exported: .lcm\Cmd\InitializeAiMemory.cmd.txt
-[2026-09-01 15:52:02.576] [DEBUG]   -> Exported: .lcm\Cmd\InitializeRealRepoMethodInstance.cmd.txt
-[2026-09-01 15:52:02.588] [DEBUG]   -> Exported: .lcm\Cmd\InstallOCRTools.cmd.txt
-[2026-09-01 15:52:02.604] [DEBUG]   -> Exported: .lcm\Cmd\InstallPowerShell7Runtime.cmd.txt
-[2026-09-01 15:52:02.619] [DEBUG]   -> Exported: .lcm\Cmd\InstallTesseract.cmd.txt
-[2026-09-01 15:52:02.635] [DEBUG]   -> Exported: .lcm\Cmd\InteractiveDesktop.cmd.txt
-[2026-09-01 15:52:02.650] [DEBUG]   -> Exported: .lcm\Cmd\InvokeSupervisionRunner.cmd.txt
-[2026-09-01 15:52:02.665] [DEBUG]   -> Exported: .lcm\Cmd\KillExplorerFriendlyNames.cmd.txt
-[2026-09-01 15:52:02.680] [DEBUG]   -> Exported: .lcm\Cmd\KillLogitech.cmd.txt
-[2026-09-01 15:52:02.693] [DEBUG]   -> Exported: .lcm\Cmd\KillLogitechUpdateFull.cmd.txt
-[2026-09-01 15:52:02.709] [DEBUG]   -> Exported: .lcm\Cmd\LCDUpdateGemini.cmd.txt
-[2026-09-01 15:52:02.726] [DEBUG]   -> Exported: .lcm\Cmd\LcmDaemon.cmd.txt
-[2026-09-01 15:52:02.743] [DEBUG]   -> Exported: .lcm\Cmd\LCMOnboardBatch.cmd.txt
-[2026-09-01 15:52:02.758] [DEBUG]   -> Exported: .lcm\Cmd\LCMOnboardRepo.cmd.txt
-[2026-09-01 15:52:02.773] [DEBUG]   -> Exported: .lcm\Cmd\LcmProtocol.cmd.txt
-[2026-09-01 15:52:02.790] [DEBUG]   -> Exported: .lcm\Cmd\LCMUpdate.cmd.txt
-[2026-09-01 15:52:02.805] [DEBUG]   -> Exported: .lcm\Cmd\LoadAtoms.cmd.txt
-[2026-09-01 15:52:02.823] [DEBUG]   -> Exported: .lcm\Cmd\LoadFixes.cmd.txt
-[2026-09-01 15:52:02.837] [DEBUG]   -> Exported: .lcm\Cmd\LoadMethods.cmd.txt
-[2026-09-01 15:52:02.851] [DEBUG]   -> Exported: .lcm\Cmd\LoadRules.cmd.txt
-[2026-09-01 15:52:02.864] [DEBUG]   -> Exported: .lcm\Cmd\ManageSupervisionTask.cmd.txt
-[2026-09-01 15:52:02.880] [DEBUG]   -> Exported: .lcm\Cmd\mcphareadonly.cmd.txt
-[2026-09-01 15:52:02.893] [DEBUG]   -> Exported: .lcm\Cmd\MoreOptionsOff.cmd.txt
-[2026-09-01 15:52:02.908] [DEBUG]   -> Exported: .lcm\Cmd\PowerToys.cmd.txt
-[2026-09-01 15:52:02.923] [DEBUG]   -> Exported: .lcm\Cmd\ProposalAction.cmd.txt
-[2026-09-01 15:52:02.939] [DEBUG]   -> Exported: .lcm\Cmd\PS7AppKiller.cmd.txt
-[2026-09-01 15:52:02.959] [DEBUG]   -> Exported: .lcm\Cmd\PSSystemPrivilege.cmd.txt
-[2026-09-01 15:52:02.974] [DEBUG]   -> Exported: .lcm\Cmd\RealRepoDryRun.cmd.txt
-[2026-09-01 15:52:02.988] [DEBUG]   -> Exported: .lcm\Cmd\RegisterBleSupervisionTask.cmd.txt
-[2026-09-01 15:52:03.002] [DEBUG]   -> Exported: .lcm\Cmd\RegisterDaemon.cmd.txt
-[2026-09-01 15:52:03.017] [DEBUG]   -> Exported: .lcm\Cmd\RegKeyDefaultTypeSet.cmd.txt
-[2026-09-01 15:52:03.033] [DEBUG]   -> Exported: .lcm\Cmd\RemoveRemovableDriveIcon.cmd.txt
-[2026-09-01 15:52:03.047] [DEBUG]   -> Exported: .lcm\Cmd\RepairEdgeWebViewRuntime.cmd.txt
-[2026-09-01 15:52:03.061] [DEBUG]   -> Exported: .lcm\Cmd\RepairLCMRules.cmd.txt
-[2026-09-01 15:52:03.075] [DEBUG]   -> Exported: .lcm\Cmd\RepairSystemAcl.cmd.txt
-[2026-09-01 15:52:03.088] [DEBUG]   -> Exported: .lcm\Cmd\RepairUserProfile.cmd.txt
-[2026-09-01 15:52:03.100] [DEBUG]   -> Exported: .lcm\Cmd\RepairVolumeAcl.cmd.txt
-[2026-09-01 15:52:03.115] [DEBUG]   -> Exported: .lcm\Cmd\ResetRecycleBin.cmd.txt
-[2026-09-01 15:52:03.127] [DEBUG]   -> Exported: .lcm\Cmd\RestoreEnvironmentRegistryKeys.cmd.txt
-[2026-09-01 15:52:03.142] [DEBUG]   -> Exported: .lcm\Cmd\RestoreSystemSettings.cmd.txt
-[2026-09-01 15:52:03.155] [DEBUG]   -> Exported: .lcm\Cmd\SafeCopy.cmd.txt
-[2026-09-01 15:52:03.170] [DEBUG]   -> Exported: .lcm\Cmd\SaveClipboard.cmd.txt
-[2026-09-01 15:52:03.185] [DEBUG]   -> Exported: .lcm\Cmd\SaveLCMRules.cmd.txt
-[2026-09-01 15:52:03.198] [DEBUG]   -> Exported: .lcm\Cmd\scancommunityissues.cmd.txt
-[2026-09-01 15:52:03.215] [DEBUG]   -> Exported: .lcm\Cmd\search certificate stores for private key container Guids.cmd.txt
-[2026-09-01 15:52:03.227] [DEBUG]   -> Exported: .lcm\Cmd\SearchEverything.cmd.txt
-[2026-09-01 15:52:03.243] [DEBUG]   -> Exported: .lcm\Cmd\SearchEverywhere.cmd.txt
-[2026-09-01 15:52:03.259] [DEBUG]   -> Exported: .lcm\Cmd\searchsyssensors.cmd.txt
-[2026-09-01 15:52:03.275] [DEBUG]   -> Exported: .lcm\Cmd\SecureDesktopOff.cmd.txt
-[2026-09-01 15:52:03.291] [DEBUG]   -> Exported: .lcm\Cmd\SetBluetoothAlwaysOn.cmd.txt
-[2026-09-01 15:52:03.309] [DEBUG]   -> Exported: .lcm\Cmd\SetDateTimeFormatAdm.cmd.txt
-[2026-09-01 15:52:03.326] [DEBUG]   -> Exported: .lcm\Cmd\SetDateTimeFormatHkcu.cmd.txt
-[2026-09-01 15:52:03.341] [DEBUG]   -> Exported: .lcm\Cmd\SetLcmSystemPath.cmd.txt
-[2026-09-01 15:52:03.357] [DEBUG]   -> Exported: .lcm\Cmd\SetMachineWideExecutionPolicy.cmd.txt
-[2026-09-01 15:52:03.373] [DEBUG]   -> Exported: .lcm\Cmd\SetMouseFlicker.cmd.txt
-[2026-09-01 15:52:03.389] [DEBUG]   -> Exported: .lcm\Cmd\SetOneDriveGitExclusions.cmd.txt
-[2026-09-01 15:52:03.404] [DEBUG]   -> Exported: .lcm\Cmd\SetRealRepoTestPlan.cmd.txt
-[2026-09-01 15:52:03.419] [DEBUG]   -> Exported: .lcm\Cmd\SetSecureD.cmd.txt
-[2026-09-01 15:52:03.432] [DEBUG]   -> Exported: .lcm\Cmd\SetSystemFontVerdana.cmd.txt
-[2026-09-01 15:52:03.447] [DEBUG]   -> Exported: .lcm\Cmd\SetSystemFontVerdanaMedion.cmd.txt
-[2026-09-01 15:52:03.461] [DEBUG]   -> Exported: .lcm\Cmd\SetWindowsSearchService.cmd.txt
-[2026-09-01 15:52:03.477] [DEBUG]   -> Exported: .lcm\Cmd\ShellNewPS1.cmd.txt
-[2026-09-01 15:52:03.492] [DEBUG]   -> Exported: .lcm\Cmd\ShowActions.cmd.txt
-[2026-09-01 15:52:03.506] [DEBUG]   -> Exported: .lcm\Cmd\ShowCmdAnalysis.cmd.txt
-[2026-09-01 15:52:03.520] [DEBUG]   -> Exported: .lcm\Cmd\ShowCrpDates.cmd.txt
-[2026-09-01 15:52:03.533] [DEBUG]   -> Exported: .lcm\Cmd\ShowDaemon.cmd.txt
-[2026-09-01 15:52:03.549] [DEBUG]   -> Exported: .lcm\Cmd\ShowHaAuthDialog.cmd.txt
-[2026-09-01 15:52:03.564] [DEBUG]   -> Exported: .lcm\Cmd\ShowHaInventory.cmd.txt
-[2026-09-01 15:52:03.583] [DEBUG]   -> Exported: .lcm\Cmd\ShowHaInventoryApp.cmd.txt
-[2026-09-01 15:52:03.595] [DEBUG]   -> Exported: .lcm\Cmd\ShowLastLog.cmd.txt
-[2026-09-01 15:52:03.610] [DEBUG]   -> Exported: .lcm\Cmd\ShowLcmActiveLauncher.cmd.txt
-[2026-09-01 15:52:03.627] [DEBUG]   -> Exported: .lcm\Cmd\ShowSupervisionHub.cmd.txt
-[2026-09-01 15:52:03.641] [DEBUG]   -> Exported: .lcm\Cmd\ShowToolIndex.cmd.txt
-[2026-09-01 15:52:03.657] [DEBUG]   -> Exported: .lcm\Cmd\ShowTools.cmd.txt
-[2026-09-01 15:52:03.671] [DEBUG]   -> Exported: .lcm\Cmd\ShowWorkspaceInventoryApp.cmd.txt
-[2026-09-01 15:52:03.687] [DEBUG]   -> Exported: .lcm\Cmd\SkipTpmCheckDynamicUpdate.cmd.txt
-[2026-09-01 15:52:03.701] [DEBUG]   -> Exported: .lcm\Cmd\SplitTextFile.cmd.txt
-[2026-09-01 15:52:03.716] [DEBUG]   -> Exported: .lcm\Cmd\StartRemoteBridge.cmd.txt
-[2026-09-01 15:52:03.730] [DEBUG]   -> Exported: .lcm\Cmd\StopStuckGitProcess.cmd.txt
-[2026-09-01 15:52:03.746] [DEBUG]   -> Exported: .lcm\Cmd\StylefolderCommentsGuide.cmd.txt
-[2026-09-01 15:52:03.765] [DEBUG]   -> Exported: .lcm\Cmd\SubmitReviewResult.cmd.txt
-[2026-09-01 15:52:03.783] [DEBUG]   -> Exported: .lcm\Cmd\SyncGeminiInbox.cmd.txt
-[2026-09-01 15:52:03.799] [DEBUG]   -> Exported: .lcm\Cmd\SyncLcmModuleVersions.cmd.txt
-[2026-09-01 15:52:03.814] [DEBUG]   -> Exported: .lcm\Cmd\SyncToolSymlinks.cmd.txt
-[2026-09-01 15:52:03.830] [DEBUG]   -> Exported: .lcm\Cmd\SystemConfigurationAcronisMiniFilterCleanup.cmd.txt
-[2026-09-01 15:52:03.849] [DEBUG]   -> Exported: .lcm\Cmd\SystemConfigurationAsusDebloater.cmd.txt
-[2026-09-01 15:52:03.867] [DEBUG]   -> Exported: .lcm\Cmd\SystemConfigurationGetInternetConnectivityData.cmd.txt
-[2026-09-01 15:52:03.881] [DEBUG]   -> Exported: .lcm\Cmd\SystemConfigurationGetvEthernetData.cmd.txt
-[2026-09-01 15:52:03.897] [DEBUG]   -> Exported: .lcm\Cmd\SystemConfigurationSetBluetoothAlwaysOn.cmd.txt
-[2026-09-01 15:52:03.910] [DEBUG]   -> Exported: .lcm\Cmd\TestLCMRuleHealth.cmd.txt
-[2026-09-01 15:52:03.922] [DEBUG]   -> Exported: .lcm\Cmd\TestOneDriveSync.cmd.txt
-[2026-09-01 15:52:03.935] [DEBUG]   -> Exported: .lcm\Cmd\TestPowerShellHklmState.cmd.txt
-[2026-09-01 15:52:03.949] [DEBUG]   -> Exported: .lcm\Cmd\TestRealRepoProposalCleanup.cmd.txt
-[2026-09-01 15:52:03.961] [DEBUG]   -> Exported: .lcm\Cmd\TestRepoReadiness.cmd.txt
-[2026-09-01 15:52:03.977] [DEBUG]   -> Exported: .lcm\Cmd\TestUserProfileHealth.cmd.txt
-[2026-09-01 15:52:03.992] [DEBUG]   -> Exported: .lcm\Cmd\TestWorkspaceAsciiCompliance.cmd.txt
-[2026-09-01 15:52:04.005] [DEBUG]   -> Exported: .lcm\Cmd\TestWorkspaceDrift.cmd.txt
-[2026-09-01 15:52:04.017] [DEBUG]   -> Exported: .lcm\Cmd\TestWorkspaceReadiness.cmd.txt
-[2026-09-01 15:52:04.031] [DEBUG]   -> Exported: .lcm\Cmd\ToggleSecure.cmd.txt
-[2026-09-01 15:52:04.043] [DEBUG]   -> Exported: .lcm\Cmd\UnlockForcedUSO.cmd.txt
-[2026-09-01 15:52:04.057] [DEBUG]   -> Exported: .lcm\Cmd\UpdateGemini.cmd.txt
-[2026-09-01 15:52:04.069] [DEBUG]   -> Exported: .lcm\Cmd\UpdateHaInventory.cmd.txt
-[2026-09-01 15:52:04.083] [DEBUG]   -> Exported: .lcm\Cmd\UpdateProposal.cmd.txt
-[2026-09-01 15:52:04.093] [DEBUG]   -> Exported: .lcm\Cmd\UpdateToolCatalog.cmd.txt
-[2026-09-01 15:52:04.107] [DEBUG]   -> Exported: .lcm\Cmd\ValidateCopilotProfile.cmd.txt
-[2026-09-01 15:52:04.120] [DEBUG]   -> Exported: .lcm\Cmd\ValidateRules.cmd.txt
-[2026-09-01 15:52:04.134] [DEBUG]   -> Exported: .lcm\Cmd\WinaeroTweaker.cmd.txt
-[2026-09-01 15:52:04.146] [DEBUG]   -> Exported: .lcm\Cmd\WinSetView.cmd.txt
-[2026-09-01 15:52:04.160] [DEBUG]   -> Exported: .lcm\Cmd\WorkspaceAudit.cmd.txt
-[2026-09-01 15:52:04.174] [DEBUG]   -> Exported: .lcm\Cmd\WorkspaceDeduplication.cmd.txt
-[2026-09-01 15:52:04.190] [DEBUG]   -> Exported: .lcm\Cmd\WorkspacePush.cmd.txt
-[2026-09-01 15:52:04.204] [DEBUG]   -> Exported: .lcm\Cmd\XYSystemPrivilege.cmd.txt
-[2026-09-01 15:52:04.223] [DEBUG]   -> Exported: .lcm\config\tool_catalog.json.txt
-[2026-09-01 15:52:04.241] [DEBUG]   -> Exported: .lcm\docs\README.md.txt
-[2026-09-01 15:52:04.261] [DEBUG]   -> Exported: .lcm\modules\LcmToolCatalog.psm1.txt
-[2026-09-01 15:52:04.378] [DEBUG]   -> Exported: HaSSD06\.lcm\config.json.txt
+[2026-09-01 15:52:01.520] [DEBUG]   -> Exported: LCM_Inventory\.agents\ACTIVE_SESSION.md.txt
+[2026-09-01 15:52:01.536] [DEBUG]   -> Exported: LCM_Inventory\.agents\hooks.json.txt
+[2026-09-01 15:52:01.555] [DEBUG]   -> Exported: LCM_Inventory\assets\lcm-dashboard-theme.css.txt
+[2026-09-01 15:52:01.573] [DEBUG]   -> Exported: LCM_Inventory\assets\lcm-table-engine.js.txt
+[2026-09-01 15:52:01.594] [DEBUG]   -> Exported: LCM_Inventory\assets\lcm-tool-explorer.js.txt
+[2026-09-01 15:52:01.608] [DEBUG]   -> Exported: LCM_Inventory\Cmd\AcronisMiniFilterCleanup.cmd.txt
+[2026-09-01 15:52:01.621] [DEBUG]   -> Exported: LCM_Inventory\Cmd\AdvanceGovernance.cmd.txt
+[2026-09-01 15:52:01.635] [DEBUG]   -> Exported: LCM_Inventory\Cmd\analyzelcmcomponents.cmd.txt
+[2026-09-01 15:52:01.647] [DEBUG]   -> Exported: LCM_Inventory\Cmd\APPLY.cmd.txt
+[2026-09-01 15:52:01.659] [DEBUG]   -> Exported: LCM_Inventory\Cmd\ApplyAllCustomizations.cmd.txt
+[2026-09-01 15:52:01.671] [DEBUG]   -> Exported: LCM_Inventory\Cmd\asusdebloater.cmd.txt
+[2026-09-01 15:52:01.682] [DEBUG]   -> Exported: LCM_Inventory\Cmd\AuthorizeMasterUser.cmd.txt
+[2026-09-01 15:52:01.696] [DEBUG]   -> Exported: LCM_Inventory\Cmd\AutorunRenderLockScreen.cmd.txt
+[2026-09-01 15:52:01.708] [DEBUG]   -> Exported: LCM_Inventory\Cmd\BatchOcr.cmd.txt
+[2026-09-01 15:52:01.721] [DEBUG]   -> Exported: LCM_Inventory\Cmd\BeyondCompareReview.cmd.txt
+[2026-09-01 15:52:01.733] [DEBUG]   -> Exported: LCM_Inventory\Cmd\BuildHaInventoryViewer.cmd.txt
+[2026-09-01 15:52:01.750] [DEBUG]   -> Exported: LCM_Inventory\Cmd\BuildMacriumScheduleTemplate.cmd.txt
+[2026-09-01 15:52:01.764] [DEBUG]   -> Exported: LCM_Inventory\Cmd\buildmatrix.cmd.txt
+[2026-09-01 15:52:01.776] [DEBUG]   -> Exported: LCM_Inventory\Cmd\buildofflinedocs.cmd.txt
+[2026-09-01 15:52:01.789] [DEBUG]   -> Exported: LCM_Inventory\Cmd\checkspecific.cmd.txt
+[2026-09-01 15:52:01.803] [DEBUG]   -> Exported: LCM_Inventory\Cmd\ClearBCReviewTemp.cmd.txt
+[2026-09-01 15:52:01.817] [DEBUG]   -> Exported: LCM_Inventory\Cmd\CmHub.cmd.txt
+[2026-09-01 15:52:01.832] [DEBUG]   -> Exported: LCM_Inventory\Cmd\comparetuyaintegrations.cmd.txt
+[2026-09-01 15:52:01.846] [DEBUG]   -> Exported: LCM_Inventory\Cmd\ConfigureEasyContextMenu.cmd.txt
+[2026-09-01 15:52:01.858] [DEBUG]   -> Exported: LCM_Inventory\Cmd\ConvertToWorkspaceUtf8.cmd.txt
+[2026-09-01 15:52:01.873] [DEBUG]   -> Exported: LCM_Inventory\Cmd\CreateTool.cmd.txt
+[2026-09-01 15:52:01.886] [DEBUG]   -> Exported: LCM_Inventory\Cmd\CreateWorkspaceBaseline.cmd.txt
+[2026-09-01 15:52:01.899] [DEBUG]   -> Exported: LCM_Inventory\Cmd\deepdevicescan.cmd.txt
+[2026-09-01 15:52:01.913] [DEBUG]   -> Exported: LCM_Inventory\Cmd\deeptuyascan.cmd.txt
+[2026-09-01 15:52:01.924] [DEBUG]   -> Exported: LCM_Inventory\Cmd\DefineSecureD.cmd.txt
+[2026-09-01 15:52:01.938] [DEBUG]   -> Exported: LCM_Inventory\Cmd\DesktopSubFoldersLauncher.cmd.txt
+[2026-09-01 15:52:01.951] [DEBUG]   -> Exported: LCM_Inventory\Cmd\DiagnoseOneDriveSync.cmd.txt
+[2026-09-01 15:52:01.964] [DEBUG]   -> Exported: LCM_Inventory\Cmd\DisableEncryptionGuide.cmd.txt
+[2026-09-01 15:52:01.976] [DEBUG]   -> Exported: LCM_Inventory\Cmd\DisableWakeDevices.cmd.txt
+[2026-09-01 15:52:01.988] [DEBUG]   -> Exported: LCM_Inventory\Cmd\DismItFromE.cmd.txt
+[2026-09-01 15:52:02.003] [DEBUG]   -> Exported: LCM_Inventory\Cmd\EnterCmdAdmin.cmd.txt
+[2026-09-01 15:52:02.015] [DEBUG]   -> Exported: LCM_Inventory\Cmd\EnterPSSystemPrivilege.cmd.txt
+[2026-09-01 15:52:02.026] [DEBUG]   -> Exported: LCM_Inventory\Cmd\EnterXYSystemPrivilege.cmd.txt
+[2026-09-01 15:52:02.041] [DEBUG]   -> Exported: LCM_Inventory\Cmd\ExportLcmKnowledgeBase.cmd.txt
+[2026-09-01 15:52:02.055] [DEBUG]   -> Exported: LCM_Inventory\Cmd\ExportLCMRules.cmd.txt
+[2026-09-01 15:52:02.069] [DEBUG]   -> Exported: LCM_Inventory\Cmd\extracthacentralregistry.cmd.txt
+[2026-09-01 15:52:02.082] [DEBUG]   -> Exported: LCM_Inventory\Cmd\extracthaupdatecrps.cmd.txt
+[2026-09-01 15:52:02.094] [DEBUG]   -> Exported: LCM_Inventory\Cmd\FileMenuTools.cmd.txt
+[2026-09-01 15:52:02.108] [DEBUG]   -> Exported: LCM_Inventory\Cmd\FindChangeRequest.cmd.txt
+[2026-09-01 15:52:02.120] [DEBUG]   -> Exported: LCM_Inventory\Cmd\FiraFonts.cmd.txt
+[2026-09-01 15:52:02.135] [DEBUG]   -> Exported: LCM_Inventory\Cmd\FixLocalizedNames.cmd.txt
+[2026-09-01 15:52:02.148] [DEBUG]   -> Exported: LCM_Inventory\Cmd\FixMouseFlickerInvariants.cmd.txt
+[2026-09-01 15:52:02.160] [DEBUG]   -> Exported: LCM_Inventory\Cmd\FlushLcmLegacyLogs.cmd.txt
+[2026-09-01 15:52:02.173] [DEBUG]   -> Exported: LCM_Inventory\Cmd\Forced USO Unlock.cmd.txt
+[2026-09-01 15:52:02.188] [DEBUG]   -> Exported: LCM_Inventory\Cmd\GenerateLog.cmd.txt
+[2026-09-01 15:52:02.201] [DEBUG]   -> Exported: LCM_Inventory\Cmd\generatesystemdocs.cmd.txt
+[2026-09-01 15:52:02.216] [DEBUG]   -> Exported: LCM_Inventory\Cmd\GetChkdskBootLog.cmd.txt
+[2026-09-01 15:52:02.228] [DEBUG]   -> Exported: LCM_Inventory\Cmd\GetDevicePathFromDeviceName.cmd.txt
+[2026-09-01 15:52:02.242] [DEBUG]   -> Exported: LCM_Inventory\Cmd\GetInternetConnectivityData.cmd.txt
+[2026-09-01 15:52:02.257] [DEBUG]   -> Exported: LCM_Inventory\Cmd\GetLcmTablePrintAtom.cmd.txt
+[2026-09-01 15:52:02.275] [DEBUG]   -> Exported: LCM_Inventory\Cmd\GetOpenProposals.cmd.txt
+[2026-09-01 15:52:02.289] [DEBUG]   -> Exported: LCM_Inventory\Cmd\GetRealRepoActionPlan.cmd.txt
+[2026-09-01 15:52:02.304] [DEBUG]   -> Exported: LCM_Inventory\Cmd\GetRealRepoTargetProfile.cmd.txt
+[2026-09-01 15:52:02.321] [DEBUG]   -> Exported: LCM_Inventory\Cmd\GetRealRepoTestPlan.cmd.txt
+[2026-09-01 15:52:02.336] [DEBUG]   -> Exported: LCM_Inventory\Cmd\GetReposUnderReview.cmd.txt
+[2026-09-01 15:52:02.352] [DEBUG]   -> Exported: LCM_Inventory\Cmd\GetSystemAclAudit.cmd.txt
+[2026-09-01 15:52:02.368] [DEBUG]   -> Exported: LCM_Inventory\Cmd\GetSystemPortInventory.cmd.txt
+[2026-09-01 15:52:02.382] [DEBUG]   -> Exported: LCM_Inventory\Cmd\GetvEthernetData.cmd.txt
+[2026-09-01 15:52:02.396] [DEBUG]   -> Exported: LCM_Inventory\Cmd\GetWorkspaceRepositories.cmd.txt
+[2026-09-01 15:52:02.410] [DEBUG]   -> Exported: LCM_Inventory\Cmd\GoAdm.cmd.txt
+[2026-09-01 15:52:02.431] [DEBUG]   -> Exported: LCM_Inventory\Cmd\GoAdmchanger.cmd.txt
+[2026-09-01 15:52:02.448] [DEBUG]   -> Exported: LCM_Inventory\Cmd\HaAudit.cmd.txt
+[2026-09-01 15:52:02.465] [DEBUG]   -> Exported: LCM_Inventory\Cmd\habackup.cmd.txt
+[2026-09-01 15:52:02.481] [DEBUG]   -> Exported: LCM_Inventory\Cmd\hacoreupdate.cmd.txt
+[2026-09-01 15:52:02.493] [DEBUG]   -> Exported: LCM_Inventory\Cmd\hainventorycollector.cmd.txt
+[2026-09-01 15:52:02.507] [DEBUG]   -> Exported: LCM_Inventory\Cmd\HaListUpdates.cmd.txt
+[2026-09-01 15:52:02.523] [DEBUG]   -> Exported: LCM_Inventory\Cmd\HaLogs.cmd.txt
+[2026-09-01 15:52:02.537] [DEBUG]   -> Exported: LCM_Inventory\Cmd\HaSSD06InventoryTestRepoReadiness.cmd.txt
+[2026-09-01 15:52:02.552] [DEBUG]   -> Exported: LCM_Inventory\Cmd\HaUpdateGate.cmd.txt
+[2026-09-01 15:52:02.564] [DEBUG]   -> Exported: LCM_Inventory\Cmd\InitializeAiMemory.cmd.txt
+[2026-09-01 15:52:02.576] [DEBUG]   -> Exported: LCM_Inventory\Cmd\InitializeRealRepoMethodInstance.cmd.txt
+[2026-09-01 15:52:02.588] [DEBUG]   -> Exported: LCM_Inventory\Cmd\InstallOCRTools.cmd.txt
+[2026-09-01 15:52:02.604] [DEBUG]   -> Exported: LCM_Inventory\Cmd\InstallPowerShell7Runtime.cmd.txt
+[2026-09-01 15:52:02.619] [DEBUG]   -> Exported: LCM_Inventory\Cmd\InstallTesseract.cmd.txt
+[2026-09-01 15:52:02.635] [DEBUG]   -> Exported: LCM_Inventory\Cmd\InteractiveDesktop.cmd.txt
+[2026-09-01 15:52:02.650] [DEBUG]   -> Exported: LCM_Inventory\Cmd\InvokeSupervisionRunner.cmd.txt
+[2026-09-01 15:52:02.665] [DEBUG]   -> Exported: LCM_Inventory\Cmd\KillExplorerFriendlyNames.cmd.txt
+[2026-09-01 15:52:02.680] [DEBUG]   -> Exported: LCM_Inventory\Cmd\KillLogitech.cmd.txt
+[2026-09-01 15:52:02.693] [DEBUG]   -> Exported: LCM_Inventory\Cmd\KillLogitechUpdateFull.cmd.txt
+[2026-09-01 15:52:02.709] [DEBUG]   -> Exported: LCM_Inventory\Cmd\LCDUpdateGemini.cmd.txt
+[2026-09-01 15:52:02.726] [DEBUG]   -> Exported: LCM_Inventory\Cmd\LcmDaemon.cmd.txt
+[2026-09-01 15:52:02.743] [DEBUG]   -> Exported: LCM_Inventory\Cmd\LCMOnboardBatch.cmd.txt
+[2026-09-01 15:52:02.758] [DEBUG]   -> Exported: LCM_Inventory\Cmd\LCMOnboardRepo.cmd.txt
+[2026-09-01 15:52:02.773] [DEBUG]   -> Exported: LCM_Inventory\Cmd\LcmProtocol.cmd.txt
+[2026-09-01 15:52:02.790] [DEBUG]   -> Exported: LCM_Inventory\Cmd\LCMUpdate.cmd.txt
+[2026-09-01 15:52:02.805] [DEBUG]   -> Exported: LCM_Inventory\Cmd\LoadAtoms.cmd.txt
+[2026-09-01 15:52:02.823] [DEBUG]   -> Exported: LCM_Inventory\Cmd\LoadFixes.cmd.txt
+[2026-09-01 15:52:02.837] [DEBUG]   -> Exported: LCM_Inventory\Cmd\LoadMethods.cmd.txt
+[2026-09-01 15:52:02.851] [DEBUG]   -> Exported: LCM_Inventory\Cmd\LoadRules.cmd.txt
+[2026-09-01 15:52:02.864] [DEBUG]   -> Exported: LCM_Inventory\Cmd\ManageSupervisionTask.cmd.txt
+[2026-09-01 15:52:02.880] [DEBUG]   -> Exported: LCM_Inventory\Cmd\mcphareadonly.cmd.txt
+[2026-09-01 15:52:02.893] [DEBUG]   -> Exported: LCM_Inventory\Cmd\MoreOptionsOff.cmd.txt
+[2026-09-01 15:52:02.908] [DEBUG]   -> Exported: LCM_Inventory\Cmd\PowerToys.cmd.txt
+[2026-09-01 15:52:02.923] [DEBUG]   -> Exported: LCM_Inventory\Cmd\ProposalAction.cmd.txt
+[2026-09-01 15:52:02.939] [DEBUG]   -> Exported: LCM_Inventory\Cmd\PS7AppKiller.cmd.txt
+[2026-09-01 15:52:02.959] [DEBUG]   -> Exported: LCM_Inventory\Cmd\PSSystemPrivilege.cmd.txt
+[2026-09-01 15:52:02.974] [DEBUG]   -> Exported: LCM_Inventory\Cmd\RealRepoDryRun.cmd.txt
+[2026-09-01 15:52:02.988] [DEBUG]   -> Exported: LCM_Inventory\Cmd\RegisterBleSupervisionTask.cmd.txt
+[2026-09-01 15:52:03.002] [DEBUG]   -> Exported: LCM_Inventory\Cmd\RegisterDaemon.cmd.txt
+[2026-09-01 15:52:03.017] [DEBUG]   -> Exported: LCM_Inventory\Cmd\RegKeyDefaultTypeSet.cmd.txt
+[2026-09-01 15:52:03.033] [DEBUG]   -> Exported: LCM_Inventory\Cmd\RemoveRemovableDriveIcon.cmd.txt
+[2026-09-01 15:52:03.047] [DEBUG]   -> Exported: LCM_Inventory\Cmd\RepairEdgeWebViewRuntime.cmd.txt
+[2026-09-01 15:52:03.061] [DEBUG]   -> Exported: LCM_Inventory\Cmd\RepairLCMRules.cmd.txt
+[2026-09-01 15:52:03.075] [DEBUG]   -> Exported: LCM_Inventory\Cmd\RepairSystemAcl.cmd.txt
+[2026-09-01 15:52:03.088] [DEBUG]   -> Exported: LCM_Inventory\Cmd\RepairUserProfile.cmd.txt
+[2026-09-01 15:52:03.100] [DEBUG]   -> Exported: LCM_Inventory\Cmd\RepairVolumeAcl.cmd.txt
+[2026-09-01 15:52:03.115] [DEBUG]   -> Exported: LCM_Inventory\Cmd\ResetRecycleBin.cmd.txt
+[2026-09-01 15:52:03.127] [DEBUG]   -> Exported: LCM_Inventory\Cmd\RestoreEnvironmentRegistryKeys.cmd.txt
+[2026-09-01 15:52:03.142] [DEBUG]   -> Exported: LCM_Inventory\Cmd\RestoreSystemSettings.cmd.txt
+[2026-09-01 15:52:03.155] [DEBUG]   -> Exported: LCM_Inventory\Cmd\SafeCopy.cmd.txt
+[2026-09-01 15:52:03.170] [DEBUG]   -> Exported: LCM_Inventory\Cmd\SaveClipboard.cmd.txt
+[2026-09-01 15:52:03.185] [DEBUG]   -> Exported: LCM_Inventory\Cmd\SaveLCMRules.cmd.txt
+[2026-09-01 15:52:03.198] [DEBUG]   -> Exported: LCM_Inventory\Cmd\scancommunityissues.cmd.txt
+[2026-09-01 15:52:03.215] [DEBUG]   -> Exported: LCM_Inventory\Cmd\search certificate stores for private key container Guids.cmd.txt
+[2026-09-01 15:52:03.227] [DEBUG]   -> Exported: LCM_Inventory\Cmd\SearchEverything.cmd.txt
+[2026-09-01 15:52:03.243] [DEBUG]   -> Exported: LCM_Inventory\Cmd\SearchEverywhere.cmd.txt
+[2026-09-01 15:52:03.259] [DEBUG]   -> Exported: LCM_Inventory\Cmd\searchsyssensors.cmd.txt
+[2026-09-01 15:52:03.275] [DEBUG]   -> Exported: LCM_Inventory\Cmd\SecureDesktopOff.cmd.txt
+[2026-09-01 15:52:03.291] [DEBUG]   -> Exported: LCM_Inventory\Cmd\SetBluetoothAlwaysOn.cmd.txt
+[2026-09-01 15:52:03.309] [DEBUG]   -> Exported: LCM_Inventory\Cmd\SetDateTimeFormatAdm.cmd.txt
+[2026-09-01 15:52:03.326] [DEBUG]   -> Exported: LCM_Inventory\Cmd\SetDateTimeFormatHkcu.cmd.txt
+[2026-09-01 15:52:03.341] [DEBUG]   -> Exported: LCM_Inventory\Cmd\SetLcmSystemPath.cmd.txt
+[2026-09-01 15:52:03.357] [DEBUG]   -> Exported: LCM_Inventory\Cmd\SetMachineWideExecutionPolicy.cmd.txt
+[2026-09-01 15:52:03.373] [DEBUG]   -> Exported: LCM_Inventory\Cmd\SetMouseFlicker.cmd.txt
+[2026-09-01 15:52:03.389] [DEBUG]   -> Exported: LCM_Inventory\Cmd\SetOneDriveGitExclusions.cmd.txt
+[2026-09-01 15:52:03.404] [DEBUG]   -> Exported: LCM_Inventory\Cmd\SetRealRepoTestPlan.cmd.txt
+[2026-09-01 15:52:03.419] [DEBUG]   -> Exported: LCM_Inventory\Cmd\SetSecureD.cmd.txt
+[2026-09-01 15:52:03.432] [DEBUG]   -> Exported: LCM_Inventory\Cmd\SetSystemFontVerdana.cmd.txt
+[2026-09-01 15:52:03.447] [DEBUG]   -> Exported: LCM_Inventory\Cmd\SetSystemFontVerdanaMedion.cmd.txt
+[2026-09-01 15:52:03.461] [DEBUG]   -> Exported: LCM_Inventory\Cmd\SetWindowsSearchService.cmd.txt
+[2026-09-01 15:52:03.477] [DEBUG]   -> Exported: LCM_Inventory\Cmd\ShellNewPS1.cmd.txt
+[2026-09-01 15:52:03.492] [DEBUG]   -> Exported: LCM_Inventory\Cmd\ShowActions.cmd.txt
+[2026-09-01 15:52:03.506] [DEBUG]   -> Exported: LCM_Inventory\Cmd\ShowCmdAnalysis.cmd.txt
+[2026-09-01 15:52:03.520] [DEBUG]   -> Exported: LCM_Inventory\Cmd\ShowCrpDates.cmd.txt
+[2026-09-01 15:52:03.533] [DEBUG]   -> Exported: LCM_Inventory\Cmd\ShowDaemon.cmd.txt
+[2026-09-01 15:52:03.549] [DEBUG]   -> Exported: LCM_Inventory\Cmd\ShowHaAuthDialog.cmd.txt
+[2026-09-01 15:52:03.564] [DEBUG]   -> Exported: LCM_Inventory\Cmd\ShowHaInventory.cmd.txt
+[2026-09-01 15:52:03.583] [DEBUG]   -> Exported: LCM_Inventory\Cmd\ShowHaInventoryApp.cmd.txt
+[2026-09-01 15:52:03.595] [DEBUG]   -> Exported: LCM_Inventory\Cmd\ShowLastLog.cmd.txt
+[2026-09-01 15:52:03.610] [DEBUG]   -> Exported: LCM_Inventory\Cmd\ShowLcmActiveLauncher.cmd.txt
+[2026-09-01 15:52:03.627] [DEBUG]   -> Exported: LCM_Inventory\Cmd\ShowSupervisionHub.cmd.txt
+[2026-09-01 15:52:03.641] [DEBUG]   -> Exported: LCM_Inventory\Cmd\ShowToolIndex.cmd.txt
+[2026-09-01 15:52:03.657] [DEBUG]   -> Exported: LCM_Inventory\Cmd\ShowTools.cmd.txt
+[2026-09-01 15:52:03.671] [DEBUG]   -> Exported: LCM_Inventory\Cmd\ShowWorkspaceInventoryApp.cmd.txt
+[2026-09-01 15:52:03.687] [DEBUG]   -> Exported: LCM_Inventory\Cmd\SkipTpmCheckDynamicUpdate.cmd.txt
+[2026-09-01 15:52:03.701] [DEBUG]   -> Exported: LCM_Inventory\Cmd\SplitTextFile.cmd.txt
+[2026-09-01 15:52:03.716] [DEBUG]   -> Exported: LCM_Inventory\Cmd\StartRemoteBridge.cmd.txt
+[2026-09-01 15:52:03.730] [DEBUG]   -> Exported: LCM_Inventory\Cmd\StopStuckGitProcess.cmd.txt
+[2026-09-01 15:52:03.746] [DEBUG]   -> Exported: LCM_Inventory\Cmd\StylefolderCommentsGuide.cmd.txt
+[2026-09-01 15:52:03.765] [DEBUG]   -> Exported: LCM_Inventory\Cmd\SubmitReviewResult.cmd.txt
+[2026-09-01 15:52:03.783] [DEBUG]   -> Exported: LCM_Inventory\Cmd\SyncGeminiInbox.cmd.txt
+[2026-09-01 15:52:03.799] [DEBUG]   -> Exported: LCM_Inventory\Cmd\SyncLcmModuleVersions.cmd.txt
+[2026-09-01 15:52:03.814] [DEBUG]   -> Exported: LCM_Inventory\Cmd\SyncToolSymlinks.cmd.txt
+[2026-09-01 15:52:03.830] [DEBUG]   -> Exported: LCM_Inventory\Cmd\SystemConfigurationAcronisMiniFilterCleanup.cmd.txt
+[2026-09-01 15:52:03.849] [DEBUG]   -> Exported: LCM_Inventory\Cmd\SystemConfigurationAsusDebloater.cmd.txt
+[2026-09-01 15:52:03.867] [DEBUG]   -> Exported: LCM_Inventory\Cmd\SystemConfigurationGetInternetConnectivityData.cmd.txt
+[2026-09-01 15:52:03.881] [DEBUG]   -> Exported: LCM_Inventory\Cmd\SystemConfigurationGetvEthernetData.cmd.txt
+[2026-09-01 15:52:03.897] [DEBUG]   -> Exported: LCM_Inventory\Cmd\SystemConfigurationSetBluetoothAlwaysOn.cmd.txt
+[2026-09-01 15:52:03.910] [DEBUG]   -> Exported: LCM_Inventory\Cmd\TestLCMRuleHealth.cmd.txt
+[2026-09-01 15:52:03.922] [DEBUG]   -> Exported: LCM_Inventory\Cmd\TestOneDriveSync.cmd.txt
+[2026-09-01 15:52:03.935] [DEBUG]   -> Exported: LCM_Inventory\Cmd\TestPowerShellHklmState.cmd.txt
+[2026-09-01 15:52:03.949] [DEBUG]   -> Exported: LCM_Inventory\Cmd\TestRealRepoProposalCleanup.cmd.txt
+[2026-09-01 15:52:03.961] [DEBUG]   -> Exported: LCM_Inventory\Cmd\TestRepoReadiness.cmd.txt
+[2026-09-01 15:52:03.977] [DEBUG]   -> Exported: LCM_Inventory\Cmd\TestUserProfileHealth.cmd.txt
+[2026-09-01 15:52:03.992] [DEBUG]   -> Exported: LCM_Inventory\Cmd\TestWorkspaceAsciiCompliance.cmd.txt
+[2026-09-01 15:52:04.005] [DEBUG]   -> Exported: LCM_Inventory\Cmd\TestWorkspaceDrift.cmd.txt
+[2026-09-01 15:52:04.017] [DEBUG]   -> Exported: LCM_Inventory\Cmd\TestWorkspaceReadiness.cmd.txt
+[2026-09-01 15:52:04.031] [DEBUG]   -> Exported: LCM_Inventory\Cmd\ToggleSecure.cmd.txt
+[2026-09-01 15:52:04.043] [DEBUG]   -> Exported: LCM_Inventory\Cmd\UnlockForcedUSO.cmd.txt
+[2026-09-01 15:52:04.057] [DEBUG]   -> Exported: LCM_Inventory\Cmd\UpdateGemini.cmd.txt
+[2026-09-01 15:52:04.069] [DEBUG]   -> Exported: LCM_Inventory\Cmd\UpdateHaInventory.cmd.txt
+[2026-09-01 15:52:04.083] [DEBUG]   -> Exported: LCM_Inventory\Cmd\UpdateProposal.cmd.txt
+[2026-09-01 15:52:04.093] [DEBUG]   -> Exported: LCM_Inventory\Cmd\UpdateToolCatalog.cmd.txt
+[2026-09-01 15:52:04.107] [DEBUG]   -> Exported: LCM_Inventory\Cmd\ValidateCopilotProfile.cmd.txt
+[2026-09-01 15:52:04.120] [DEBUG]   -> Exported: LCM_Inventory\Cmd\ValidateRules.cmd.txt
+[2026-09-01 15:52:04.134] [DEBUG]   -> Exported: LCM_Inventory\Cmd\WinaeroTweaker.cmd.txt
+[2026-09-01 15:52:04.146] [DEBUG]   -> Exported: LCM_Inventory\Cmd\WinSetView.cmd.txt
+[2026-09-01 15:52:04.160] [DEBUG]   -> Exported: LCM_Inventory\Cmd\WorkspaceAudit.cmd.txt
+[2026-09-01 15:52:04.174] [DEBUG]   -> Exported: LCM_Inventory\Cmd\WorkspaceDeduplication.cmd.txt
+[2026-09-01 15:52:04.190] [DEBUG]   -> Exported: LCM_Inventory\Cmd\WorkspacePush.cmd.txt
+[2026-09-01 15:52:04.204] [DEBUG]   -> Exported: LCM_Inventory\Cmd\XYSystemPrivilege.cmd.txt
+[2026-09-01 15:52:04.223] [DEBUG]   -> Exported: LCM_Inventory\config\tool_catalog.json.txt
+[2026-09-01 15:52:04.241] [DEBUG]   -> Exported: LCM_Inventory\docs\README.md.txt
+[2026-09-01 15:52:04.261] [DEBUG]   -> Exported: LCM_Inventory\modules\LcmToolCatalog.psm1.txt
+[2026-09-01 15:52:04.378] [DEBUG]   -> Exported: HaSSD06\LCM_Inventory\config.json.txt
 [2026-09-01 15:52:04.406] [DEBUG]   -> Exported: HaSSD06\tools\Register-BleSupervisionTask.ps1.txt
-[2026-09-01 15:52:04.423] [DEBUG]   -> Exported: HaSSD06_Inventory\.lcm\config.json.txt
+[2026-09-01 15:52:04.423] [DEBUG]   -> Exported: HaSSD06_Inventory\LCM_Inventory\config.json.txt
 [2026-09-01 15:52:04.539] [DEBUG]   -> Exported: HaSSD06_Inventory\data\subsystem_inventory.json.txt
 [2026-09-01 15:52:04.828] [DEBUG]   -> Exported: HaSSD06_Inventory\docs\Entities_Inventory_HaSSD06.html.txt
 [2026-09-01 15:52:05.103] [DEBUG]   -> Exported: HaSSD06_Inventory\docs\SHOW_HA_INVENTORY.html.txt
@@ -252,76 +252,76 @@
 [2026-09-01 15:52:06.459] [DEBUG]   -> Exported: Workspace_Supervision\tools\Invoke-SupervisionRunner.ps1.txt
 [2026-09-01 15:52:06.475] [DEBUG]   -> Exported: Workspace_Supervision\tools\Manage-SupervisionTask.ps1.txt
 [2026-09-01 15:52:06.492] [DEBUG]   -> Exported: Workspace_Supervision\tools\Show-SupervisionHub.ps1.txt
-[2026-09-01 15:52:06.509] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\@20-KillLogitechUpdateFull.ps1.txt
-[2026-09-01 15:52:06.525] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\@21-FixMouseFlickerInvariants.ps1.txt
-[2026-09-01 15:52:06.543] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\Advance-Governance.ps1.txt
-[2026-09-01 15:52:06.575] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\analyze_lcm_components.py.txt
-[2026-09-01 15:52:06.591] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\APPLY.ps1.txt
-[2026-09-01 15:52:06.607] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\asus-debloater.ps1.txt
-[2026-09-01 15:52:06.622] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\Build-HaInventoryViewer.ps1.txt
-[2026-09-01 15:52:06.650] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\build_matrix.py.txt
-[2026-09-01 15:52:06.680] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\build_offline_docs.py.txt
-[2026-09-01 15:52:06.701] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\check_specific.py.txt
-[2026-09-01 15:52:06.714] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\Clear-BCReviewTemp.ps1.txt
-[2026-09-01 15:52:06.731] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\compare_tuya_integrations.py.txt
-[2026-09-01 15:52:06.746] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\Create-WorkspaceBaseline.ps1.txt
-[2026-09-01 15:52:06.778] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\deep_device_scan.py.txt
-[2026-09-01 15:52:06.804] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\deep_tuya_scan.py.txt
-[2026-09-01 15:52:06.817] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\Diagnose-OneDriveSync.ps1.txt
-[2026-09-01 15:52:06.832] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\extract_ha_central_registry.py.txt
-[2026-09-01 15:52:06.859] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\extract_ha_update_crps.py.txt
-[2026-09-01 15:52:06.872] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\Find-ChangeRequest.ps1.txt
-[2026-09-01 15:52:06.886] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\Generate-Log.ps1.txt
-[2026-09-01 15:52:06.912] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\generate_system_docs.py.txt
-[2026-09-01 15:52:06.924] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\Get-OpenProposals.ps1.txt
-[2026-09-01 15:52:06.936] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\Get-RealRepoActionPlan.ps1.txt
-[2026-09-01 15:52:06.948] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\Get-RealRepoTargetProfile.ps1.txt
-[2026-09-01 15:52:06.962] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\Get-RealRepoTestPlan.ps1.txt
-[2026-09-01 15:52:06.973] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\Get-ReposUnderReview.ps1.txt
-[2026-09-01 15:52:06.985] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\Get-WorkspaceRepositories.ps1.txt
-[2026-09-01 15:52:06.997] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\GetInternetConnectivityData.ps1.txt
-[2026-09-01 15:52:07.010] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\GetvEthernetData.ps1.txt
-[2026-09-01 15:52:07.038] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\ha_inventory_collector.py.txt
-[2026-09-01 15:52:07.057] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\Initialize-RealRepoMethodInstance.ps1.txt
-[2026-09-01 15:52:07.082] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\inspect_ha_logs.py.txt
-[2026-09-01 15:52:07.095] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\Invoke-BeyondCompareReview.ps1.txt
-[2026-09-01 15:52:07.109] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\Invoke-LCMOnboardBatch.ps1.txt
-[2026-09-01 15:52:07.123] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\Invoke-LCMOnboardRepo.ps1.txt
-[2026-09-01 15:52:07.137] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\Invoke-LCMUpdate.ps1.txt
-[2026-09-01 15:52:07.150] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\Invoke-ProposalAction.ps1.txt
-[2026-09-01 15:52:07.164] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\Invoke-RealRepoDryRun.ps1.txt
-[2026-09-01 15:52:07.177] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\Invoke-WorkspaceAudit.ps1.txt
-[2026-09-01 15:52:07.206] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\invoke_ha_backup.py.txt
-[2026-09-01 15:52:07.222] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\invoke_ha_core_update.py.txt
-[2026-09-01 15:52:07.237] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\list_all_updates.py.txt
-[2026-09-01 15:52:07.253] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\LoadAtoms.ps1.txt
-[2026-09-01 15:52:07.268] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\LoadFixes.ps1.txt
-[2026-09-01 15:52:07.282] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\LoadMethods.ps1.txt
-[2026-09-01 15:52:07.298] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\LoadRules.ps1.txt
-[2026-09-01 15:52:07.335] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\mcp_ha_readonly.py.txt
-[2026-09-01 15:52:07.349] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\Repair-LCMRules.ps1.txt
-[2026-09-01 15:52:07.380] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\run_audit.py.txt
-[2026-09-01 15:52:07.412] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\scan_community_issues.py.txt
-[2026-09-01 15:52:07.427] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\search certificate stores for private key container Guids.ps1.txt
-[2026-09-01 15:52:07.455] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\search_sys_sensors.py.txt
-[2026-09-01 15:52:07.472] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\Set-RealRepoTestPlan.ps1.txt
-[2026-09-01 15:52:07.488] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\SetBluetoothAlwaysOn.ps1.txt
-[2026-09-01 15:52:07.502] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\Show-LcmActiveLauncher.ps1.txt
-[2026-09-01 15:52:07.519] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\Show-WorkspaceInventoryApp.ps1.txt
-[2026-09-01 15:52:07.535] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\Submit-ReviewResult.ps1.txt
-[2026-09-01 15:52:07.548] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\Test-LCMRuleHealth.ps1.txt
-[2026-09-01 15:52:07.561] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\Test-OneDriveSync.ps1.txt
-[2026-09-01 15:52:07.575] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\Test-RealRepoProposalCleanup.ps1.txt
-[2026-09-01 15:52:07.589] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\Test-RepoReadiness.ps1.txt
-[2026-09-01 15:52:07.603] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\Test-WorkspaceDrift.ps1.txt
-[2026-09-01 15:52:07.616] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\Test-WorkspaceReadiness.ps1.txt
-[2026-09-01 15:52:07.631] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\Update-Proposal.ps1.txt
-[2026-09-01 15:52:07.655] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\Validate-CopilotProfile.ps1.txt
-[2026-09-01 15:52:07.682] [DEBUG]   -> Exported: .lcm\archive\tools_links_backup\ValidateRules.ps1.txt
-[2026-09-01 15:52:07.702] [DEBUG]   -> Exported: .lcm\tools\internal\Disable-WakeDevices.ps1.txt
-[2026-09-01 15:52:07.728] [DEBUG]   -> Exported: .lcm\tools\internal\README.md.txt
-[2026-09-01 15:52:07.792] [DEBUG]   -> Exported: .lcm\tools\internal\tool_catalog.json.txt
-[2026-09-01 15:52:07.821] [DEBUG]   -> Exported: .lcm\tools\internal\Update-ToolCatalog.ps1.txt
+[2026-09-01 15:52:06.509] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\@20-KillLogitechUpdateFull.ps1.txt
+[2026-09-01 15:52:06.525] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\@21-FixMouseFlickerInvariants.ps1.txt
+[2026-09-01 15:52:06.543] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\Advance-Governance.ps1.txt
+[2026-09-01 15:52:06.575] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\analyze_lcm_components.py.txt
+[2026-09-01 15:52:06.591] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\APPLY.ps1.txt
+[2026-09-01 15:52:06.607] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\asus-debloater.ps1.txt
+[2026-09-01 15:52:06.622] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\Build-HaInventoryViewer.ps1.txt
+[2026-09-01 15:52:06.650] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\build_matrix.py.txt
+[2026-09-01 15:52:06.680] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\build_offline_docs.py.txt
+[2026-09-01 15:52:06.701] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\check_specific.py.txt
+[2026-09-01 15:52:06.714] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\Clear-BCReviewTemp.ps1.txt
+[2026-09-01 15:52:06.731] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\compare_tuya_integrations.py.txt
+[2026-09-01 15:52:06.746] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\Create-WorkspaceBaseline.ps1.txt
+[2026-09-01 15:52:06.778] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\deep_device_scan.py.txt
+[2026-09-01 15:52:06.804] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\deep_tuya_scan.py.txt
+[2026-09-01 15:52:06.817] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\Diagnose-OneDriveSync.ps1.txt
+[2026-09-01 15:52:06.832] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\extract_ha_central_registry.py.txt
+[2026-09-01 15:52:06.859] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\extract_ha_update_crps.py.txt
+[2026-09-01 15:52:06.872] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\Find-ChangeRequest.ps1.txt
+[2026-09-01 15:52:06.886] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\Generate-Log.ps1.txt
+[2026-09-01 15:52:06.912] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\generate_system_docs.py.txt
+[2026-09-01 15:52:06.924] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\Get-OpenProposals.ps1.txt
+[2026-09-01 15:52:06.936] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\Get-RealRepoActionPlan.ps1.txt
+[2026-09-01 15:52:06.948] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\Get-RealRepoTargetProfile.ps1.txt
+[2026-09-01 15:52:06.962] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\Get-RealRepoTestPlan.ps1.txt
+[2026-09-01 15:52:06.973] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\Get-ReposUnderReview.ps1.txt
+[2026-09-01 15:52:06.985] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\Get-WorkspaceRepositories.ps1.txt
+[2026-09-01 15:52:06.997] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\GetInternetConnectivityData.ps1.txt
+[2026-09-01 15:52:07.010] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\GetvEthernetData.ps1.txt
+[2026-09-01 15:52:07.038] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\ha_inventory_collector.py.txt
+[2026-09-01 15:52:07.057] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\Initialize-RealRepoMethodInstance.ps1.txt
+[2026-09-01 15:52:07.082] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\inspect_ha_logs.py.txt
+[2026-09-01 15:52:07.095] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\Invoke-BeyondCompareReview.ps1.txt
+[2026-09-01 15:52:07.109] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\Invoke-LCMOnboardBatch.ps1.txt
+[2026-09-01 15:52:07.123] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\Invoke-LCMOnboardRepo.ps1.txt
+[2026-09-01 15:52:07.137] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\Invoke-LCMUpdate.ps1.txt
+[2026-09-01 15:52:07.150] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\Invoke-ProposalAction.ps1.txt
+[2026-09-01 15:52:07.164] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\Invoke-RealRepoDryRun.ps1.txt
+[2026-09-01 15:52:07.177] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\Invoke-WorkspaceAudit.ps1.txt
+[2026-09-01 15:52:07.206] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\invoke_ha_backup.py.txt
+[2026-09-01 15:52:07.222] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\invoke_ha_core_update.py.txt
+[2026-09-01 15:52:07.237] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\list_all_updates.py.txt
+[2026-09-01 15:52:07.253] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\LoadAtoms.ps1.txt
+[2026-09-01 15:52:07.268] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\LoadFixes.ps1.txt
+[2026-09-01 15:52:07.282] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\LoadMethods.ps1.txt
+[2026-09-01 15:52:07.298] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\LoadRules.ps1.txt
+[2026-09-01 15:52:07.335] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\mcp_ha_readonly.py.txt
+[2026-09-01 15:52:07.349] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\Repair-LCMRules.ps1.txt
+[2026-09-01 15:52:07.380] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\run_audit.py.txt
+[2026-09-01 15:52:07.412] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\scan_community_issues.py.txt
+[2026-09-01 15:52:07.427] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\search certificate stores for private key container Guids.ps1.txt
+[2026-09-01 15:52:07.455] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\search_sys_sensors.py.txt
+[2026-09-01 15:52:07.472] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\Set-RealRepoTestPlan.ps1.txt
+[2026-09-01 15:52:07.488] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\SetBluetoothAlwaysOn.ps1.txt
+[2026-09-01 15:52:07.502] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\Show-LcmActiveLauncher.ps1.txt
+[2026-09-01 15:52:07.519] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\Show-WorkspaceInventoryApp.ps1.txt
+[2026-09-01 15:52:07.535] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\Submit-ReviewResult.ps1.txt
+[2026-09-01 15:52:07.548] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\Test-LCMRuleHealth.ps1.txt
+[2026-09-01 15:52:07.561] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\Test-OneDriveSync.ps1.txt
+[2026-09-01 15:52:07.575] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\Test-RealRepoProposalCleanup.ps1.txt
+[2026-09-01 15:52:07.589] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\Test-RepoReadiness.ps1.txt
+[2026-09-01 15:52:07.603] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\Test-WorkspaceDrift.ps1.txt
+[2026-09-01 15:52:07.616] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\Test-WorkspaceReadiness.ps1.txt
+[2026-09-01 15:52:07.631] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\Update-Proposal.ps1.txt
+[2026-09-01 15:52:07.655] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\Validate-CopilotProfile.ps1.txt
+[2026-09-01 15:52:07.682] [DEBUG]   -> Exported: LCM_Inventory\data\archives\tools_links_backup\ValidateRules.ps1.txt
+[2026-09-01 15:52:07.702] [DEBUG]   -> Exported: LCM_Inventory\tools\Disable-WakeDevices.ps1.txt
+[2026-09-01 15:52:07.728] [DEBUG]   -> Exported: LCM_Inventory\tools\README.md.txt
+[2026-09-01 15:52:07.792] [DEBUG]   -> Exported: LCM_Inventory\tools\tool_catalog.json.txt
+[2026-09-01 15:52:07.821] [DEBUG]   -> Exported: LCM_Inventory\tools\Update-ToolCatalog.ps1.txt
 [2026-09-01 15:52:07.992] [DEBUG]   -> Exported: Workspace_Inventory\data\bundles\BUNDLE-2026-01.json.txt
 [2026-09-01 15:52:08.008] [DEBUG]   -> Exported: Workspace_Inventory\data\bundles\BUNDLE-2026-02.json.txt
 [2026-09-01 15:52:08.026] [DEBUG]   -> Exported: Workspace_Inventory\data\proposals\proposals.json.txt
@@ -1945,11 +1945,11 @@
 [2026-09-01 15:52:40.939] [DEBUG]   -> Removed orphan: .lcd\modules\LcmDaemonCore.ps1.txt
 [2026-09-01 15:52:40.951] [DEBUG]   -> Removed orphan: .lcd\modules\LcmDaemonCore.psm1.txt
 [2026-09-01 15:52:40.961] [DEBUG]   -> Removed orphan: .lcd\modules\LcmToolCatalog.psm1.txt
-[2026-09-01 15:52:40.977] [DEBUG]   -> Removed orphan: .lcm\Cmd\FixMouseFlicker.cmd.txt
-[2026-09-01 15:52:40.991] [DEBUG]   -> Removed orphan: .lcm\Cmd\KillLogitechFull.cmd.txt
-[2026-09-01 15:52:41.005] [DEBUG]   -> Removed orphan: .lcm\Cmd\Setthedateandtimeformat(ADMsystemwide).cmd.txt
-[2026-09-01 15:52:41.015] [DEBUG]   -> Removed orphan: .lcm\Cmd\ShowCmControlHub.cmd.txt
-[2026-09-01 15:52:41.028] [DEBUG]   -> Removed orphan: .lcm\Cmd\ShowInventory.cmd.txt
+[2026-09-01 15:52:40.977] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\FixMouseFlicker.cmd.txt
+[2026-09-01 15:52:40.991] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\KillLogitechFull.cmd.txt
+[2026-09-01 15:52:41.005] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\Setthedateandtimeformat(ADMsystemwide).cmd.txt
+[2026-09-01 15:52:41.015] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\ShowCmControlHub.cmd.txt
+[2026-09-01 15:52:41.028] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\ShowInventory.cmd.txt
 [2026-09-01 15:52:41.049] [DEBUG]   -> Removed orphan: SystemConfiguration\Source\--_$21_DesktopSubFoldersLauncher.cmd.txt
 [2026-09-01 15:52:41.072] [DEBUG]   -> Removed orphan: .lcd\modules\LcmDaemon\LcmDaemon.psd1.txt
 [2026-09-01 15:52:41.082] [DEBUG]   -> Removed orphan: .lcd\modules\LcmDaemon\LcmDaemon.psm1.txt
@@ -2053,72 +2053,72 @@
 [2026-09-01 15:52:43.012] [DEBUG]   -> Removed orphan: .lcd\tools\links\Update-Proposal.ps1.txt
 [2026-09-01 15:52:43.048] [DEBUG]   -> Removed orphan: .lcd\tools\links\Validate-CopilotProfile.ps1.txt
 [2026-09-01 15:52:43.082] [DEBUG]   -> Removed orphan: .lcd\tools\links\ValidateRules.ps1.txt
-[2026-09-01 15:52:43.103] [DEBUG]   -> Removed orphan: .lcm\tools\links\@20-KillLogitechUpdateFull.ps1.txt
-[2026-09-01 15:52:43.117] [DEBUG]   -> Removed orphan: .lcm\tools\links\@21-FixMouseFlickerInvariants.ps1.txt
-[2026-09-01 15:52:43.133] [DEBUG]   -> Removed orphan: .lcm\tools\links\Advance-Governance.ps1.txt
-[2026-09-01 15:52:43.148] [DEBUG]   -> Removed orphan: .lcm\tools\links\analyze_lcm_components.py.txt
-[2026-09-01 15:52:43.165] [DEBUG]   -> Removed orphan: .lcm\tools\links\APPLY.ps1.txt
-[2026-09-01 15:52:43.224] [DEBUG]   -> Removed orphan: .lcm\tools\links\asus-debloater.ps1.txt
-[2026-09-01 15:52:43.260] [DEBUG]   -> Removed orphan: .lcm\tools\links\Build-HaInventoryViewer.ps1.txt
-[2026-09-01 15:52:43.315] [DEBUG]   -> Removed orphan: .lcm\tools\links\build_matrix.py.txt
-[2026-09-01 15:52:43.361] [DEBUG]   -> Removed orphan: .lcm\tools\links\build_offline_docs.py.txt
-[2026-09-01 15:52:43.398] [DEBUG]   -> Removed orphan: .lcm\tools\links\check_specific.py.txt
-[2026-09-01 15:52:43.413] [DEBUG]   -> Removed orphan: .lcm\tools\links\Clear-BCReviewTemp.ps1.txt
-[2026-09-01 15:52:43.428] [DEBUG]   -> Removed orphan: .lcm\tools\links\compare_tuya_integrations.py.txt
-[2026-09-01 15:52:43.445] [DEBUG]   -> Removed orphan: .lcm\tools\links\Create-WorkspaceBaseline.ps1.txt
-[2026-09-01 15:52:43.462] [DEBUG]   -> Removed orphan: .lcm\tools\links\deep_device_scan.py.txt
-[2026-09-01 15:52:43.481] [DEBUG]   -> Removed orphan: .lcm\tools\links\deep_tuya_scan.py.txt
-[2026-09-01 15:52:43.499] [DEBUG]   -> Removed orphan: .lcm\tools\links\Diagnose-OneDriveSync.ps1.txt
-[2026-09-01 15:52:43.529] [DEBUG]   -> Removed orphan: .lcm\tools\links\extract_ha_central_registry.py.txt
-[2026-09-01 15:52:43.591] [DEBUG]   -> Removed orphan: .lcm\tools\links\extract_ha_update_crps.py.txt
-[2026-09-01 15:52:43.630] [DEBUG]   -> Removed orphan: .lcm\tools\links\Find-ChangeRequest.ps1.txt
-[2026-09-01 15:52:43.645] [DEBUG]   -> Removed orphan: .lcm\tools\links\Generate-Log.ps1.txt
-[2026-09-01 15:52:43.664] [DEBUG]   -> Removed orphan: .lcm\tools\links\generate_system_docs.py.txt
-[2026-09-01 15:52:43.680] [DEBUG]   -> Removed orphan: .lcm\tools\links\Get-OpenProposals.ps1.txt
-[2026-09-01 15:52:43.697] [DEBUG]   -> Removed orphan: .lcm\tools\links\Get-RealRepoActionPlan.ps1.txt
-[2026-09-01 15:52:43.716] [DEBUG]   -> Removed orphan: .lcm\tools\links\Get-RealRepoTargetProfile.ps1.txt
-[2026-09-01 15:52:43.740] [DEBUG]   -> Removed orphan: .lcm\tools\links\Get-RealRepoTestPlan.ps1.txt
-[2026-09-01 15:52:43.781] [DEBUG]   -> Removed orphan: .lcm\tools\links\Get-ReposUnderReview.ps1.txt
-[2026-09-01 15:52:43.812] [DEBUG]   -> Removed orphan: .lcm\tools\links\Get-WorkspaceRepositories.ps1.txt
-[2026-09-01 15:52:43.840] [DEBUG]   -> Removed orphan: .lcm\tools\links\GetInternetConnectivityData.ps1.txt
-[2026-09-01 15:52:43.875] [DEBUG]   -> Removed orphan: .lcm\tools\links\GetvEthernetData.ps1.txt
-[2026-09-01 15:52:43.893] [DEBUG]   -> Removed orphan: .lcm\tools\links\ha_inventory_collector.py.txt
-[2026-09-01 15:52:43.911] [DEBUG]   -> Removed orphan: .lcm\tools\links\Initialize-RealRepoMethodInstance.ps1.txt
-[2026-09-01 15:52:43.925] [DEBUG]   -> Removed orphan: .lcm\tools\links\inspect_ha_logs.py.txt
-[2026-09-01 15:52:43.942] [DEBUG]   -> Removed orphan: .lcm\tools\links\Invoke-BeyondCompareReview.ps1.txt
-[2026-09-01 15:52:43.957] [DEBUG]   -> Removed orphan: .lcm\tools\links\Invoke-LCMOnboardBatch.ps1.txt
-[2026-09-01 15:52:43.975] [DEBUG]   -> Removed orphan: .lcm\tools\links\Invoke-LCMOnboardRepo.ps1.txt
-[2026-09-01 15:52:43.990] [DEBUG]   -> Removed orphan: .lcm\tools\links\Invoke-LCMUpdate.ps1.txt
-[2026-09-01 15:52:44.007] [DEBUG]   -> Removed orphan: .lcm\tools\links\Invoke-ProposalAction.ps1.txt
-[2026-09-01 15:52:44.029] [DEBUG]   -> Removed orphan: .lcm\tools\links\Invoke-RealRepoDryRun.ps1.txt
-[2026-09-01 15:52:44.044] [DEBUG]   -> Removed orphan: .lcm\tools\links\Invoke-WorkspaceAudit.ps1.txt
-[2026-09-01 15:52:44.062] [DEBUG]   -> Removed orphan: .lcm\tools\links\invoke_ha_backup.py.txt
-[2026-09-01 15:52:44.080] [DEBUG]   -> Removed orphan: .lcm\tools\links\invoke_ha_core_update.py.txt
-[2026-09-01 15:52:44.108] [DEBUG]   -> Removed orphan: .lcm\tools\links\list_all_updates.py.txt
-[2026-09-01 15:52:44.125] [DEBUG]   -> Removed orphan: .lcm\tools\links\LoadAtoms.ps1.txt
-[2026-09-01 15:52:44.139] [DEBUG]   -> Removed orphan: .lcm\tools\links\LoadFixes.ps1.txt
-[2026-09-01 15:52:44.156] [DEBUG]   -> Removed orphan: .lcm\tools\links\LoadMethods.ps1.txt
-[2026-09-01 15:52:44.173] [DEBUG]   -> Removed orphan: .lcm\tools\links\LoadRules.ps1.txt
-[2026-09-01 15:52:44.195] [DEBUG]   -> Removed orphan: .lcm\tools\links\mcp_ha_readonly.py.txt
-[2026-09-01 15:52:44.232] [DEBUG]   -> Removed orphan: .lcm\tools\links\Repair-LCMRules.ps1.txt
-[2026-09-01 15:52:44.256] [DEBUG]   -> Removed orphan: .lcm\tools\links\run_audit.py.txt
-[2026-09-01 15:52:44.280] [DEBUG]   -> Removed orphan: .lcm\tools\links\scan_community_issues.py.txt
-[2026-09-01 15:52:44.300] [DEBUG]   -> Removed orphan: .lcm\tools\links\search certificate stores for private key container Guids.ps1.txt
-[2026-09-01 15:52:44.316] [DEBUG]   -> Removed orphan: .lcm\tools\links\search_sys_sensors.py.txt
-[2026-09-01 15:52:44.346] [DEBUG]   -> Removed orphan: .lcm\tools\links\Set-RealRepoTestPlan.ps1.txt
-[2026-09-01 15:52:44.385] [DEBUG]   -> Removed orphan: .lcm\tools\links\SetBluetoothAlwaysOn.ps1.txt
-[2026-09-01 15:52:44.419] [DEBUG]   -> Removed orphan: .lcm\tools\links\Show-LcmActiveLauncher.ps1.txt
-[2026-09-01 15:52:44.451] [DEBUG]   -> Removed orphan: .lcm\tools\links\Show-WorkspaceInventoryApp.ps1.txt
-[2026-09-01 15:52:44.470] [DEBUG]   -> Removed orphan: .lcm\tools\links\Submit-ReviewResult.ps1.txt
-[2026-09-01 15:52:44.485] [DEBUG]   -> Removed orphan: .lcm\tools\links\Test-LCMRuleHealth.ps1.txt
-[2026-09-01 15:52:44.505] [DEBUG]   -> Removed orphan: .lcm\tools\links\Test-OneDriveSync.ps1.txt
-[2026-09-01 15:52:44.520] [DEBUG]   -> Removed orphan: .lcm\tools\links\Test-RealRepoProposalCleanup.ps1.txt
-[2026-09-01 15:52:44.538] [DEBUG]   -> Removed orphan: .lcm\tools\links\Test-RepoReadiness.ps1.txt
-[2026-09-01 15:52:44.576] [DEBUG]   -> Removed orphan: .lcm\tools\links\Test-WorkspaceDrift.ps1.txt
-[2026-09-01 15:52:44.592] [DEBUG]   -> Removed orphan: .lcm\tools\links\Test-WorkspaceReadiness.ps1.txt
-[2026-09-01 15:52:44.609] [DEBUG]   -> Removed orphan: .lcm\tools\links\Update-Proposal.ps1.txt
-[2026-09-01 15:52:44.628] [DEBUG]   -> Removed orphan: .lcm\tools\links\Validate-CopilotProfile.ps1.txt
-[2026-09-01 15:52:44.648] [DEBUG]   -> Removed orphan: .lcm\tools\links\ValidateRules.ps1.txt
+[2026-09-01 15:52:43.103] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\@20-KillLogitechUpdateFull.ps1.txt
+[2026-09-01 15:52:43.117] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\@21-FixMouseFlickerInvariants.ps1.txt
+[2026-09-01 15:52:43.133] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\Advance-Governance.ps1.txt
+[2026-09-01 15:52:43.148] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\analyze_lcm_components.py.txt
+[2026-09-01 15:52:43.165] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\APPLY.ps1.txt
+[2026-09-01 15:52:43.224] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\asus-debloater.ps1.txt
+[2026-09-01 15:52:43.260] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\Build-HaInventoryViewer.ps1.txt
+[2026-09-01 15:52:43.315] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\build_matrix.py.txt
+[2026-09-01 15:52:43.361] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\build_offline_docs.py.txt
+[2026-09-01 15:52:43.398] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\check_specific.py.txt
+[2026-09-01 15:52:43.413] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\Clear-BCReviewTemp.ps1.txt
+[2026-09-01 15:52:43.428] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\compare_tuya_integrations.py.txt
+[2026-09-01 15:52:43.445] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\Create-WorkspaceBaseline.ps1.txt
+[2026-09-01 15:52:43.462] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\deep_device_scan.py.txt
+[2026-09-01 15:52:43.481] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\deep_tuya_scan.py.txt
+[2026-09-01 15:52:43.499] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\Diagnose-OneDriveSync.ps1.txt
+[2026-09-01 15:52:43.529] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\extract_ha_central_registry.py.txt
+[2026-09-01 15:52:43.591] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\extract_ha_update_crps.py.txt
+[2026-09-01 15:52:43.630] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\Find-ChangeRequest.ps1.txt
+[2026-09-01 15:52:43.645] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\Generate-Log.ps1.txt
+[2026-09-01 15:52:43.664] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\generate_system_docs.py.txt
+[2026-09-01 15:52:43.680] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\Get-OpenProposals.ps1.txt
+[2026-09-01 15:52:43.697] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\Get-RealRepoActionPlan.ps1.txt
+[2026-09-01 15:52:43.716] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\Get-RealRepoTargetProfile.ps1.txt
+[2026-09-01 15:52:43.740] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\Get-RealRepoTestPlan.ps1.txt
+[2026-09-01 15:52:43.781] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\Get-ReposUnderReview.ps1.txt
+[2026-09-01 15:52:43.812] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\Get-WorkspaceRepositories.ps1.txt
+[2026-09-01 15:52:43.840] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\GetInternetConnectivityData.ps1.txt
+[2026-09-01 15:52:43.875] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\GetvEthernetData.ps1.txt
+[2026-09-01 15:52:43.893] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\ha_inventory_collector.py.txt
+[2026-09-01 15:52:43.911] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\Initialize-RealRepoMethodInstance.ps1.txt
+[2026-09-01 15:52:43.925] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\inspect_ha_logs.py.txt
+[2026-09-01 15:52:43.942] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\Invoke-BeyondCompareReview.ps1.txt
+[2026-09-01 15:52:43.957] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\Invoke-LCMOnboardBatch.ps1.txt
+[2026-09-01 15:52:43.975] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\Invoke-LCMOnboardRepo.ps1.txt
+[2026-09-01 15:52:43.990] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\Invoke-LCMUpdate.ps1.txt
+[2026-09-01 15:52:44.007] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\Invoke-ProposalAction.ps1.txt
+[2026-09-01 15:52:44.029] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\Invoke-RealRepoDryRun.ps1.txt
+[2026-09-01 15:52:44.044] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\Invoke-WorkspaceAudit.ps1.txt
+[2026-09-01 15:52:44.062] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\invoke_ha_backup.py.txt
+[2026-09-01 15:52:44.080] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\invoke_ha_core_update.py.txt
+[2026-09-01 15:52:44.108] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\list_all_updates.py.txt
+[2026-09-01 15:52:44.125] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\LoadAtoms.ps1.txt
+[2026-09-01 15:52:44.139] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\LoadFixes.ps1.txt
+[2026-09-01 15:52:44.156] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\LoadMethods.ps1.txt
+[2026-09-01 15:52:44.173] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\LoadRules.ps1.txt
+[2026-09-01 15:52:44.195] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\mcp_ha_readonly.py.txt
+[2026-09-01 15:52:44.232] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\Repair-LCMRules.ps1.txt
+[2026-09-01 15:52:44.256] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\run_audit.py.txt
+[2026-09-01 15:52:44.280] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\scan_community_issues.py.txt
+[2026-09-01 15:52:44.300] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\search certificate stores for private key container Guids.ps1.txt
+[2026-09-01 15:52:44.316] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\search_sys_sensors.py.txt
+[2026-09-01 15:52:44.346] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\Set-RealRepoTestPlan.ps1.txt
+[2026-09-01 15:52:44.385] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\SetBluetoothAlwaysOn.ps1.txt
+[2026-09-01 15:52:44.419] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\Show-LcmActiveLauncher.ps1.txt
+[2026-09-01 15:52:44.451] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\Show-WorkspaceInventoryApp.ps1.txt
+[2026-09-01 15:52:44.470] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\Submit-ReviewResult.ps1.txt
+[2026-09-01 15:52:44.485] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\Test-LCMRuleHealth.ps1.txt
+[2026-09-01 15:52:44.505] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\Test-OneDriveSync.ps1.txt
+[2026-09-01 15:52:44.520] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\Test-RealRepoProposalCleanup.ps1.txt
+[2026-09-01 15:52:44.538] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\Test-RepoReadiness.ps1.txt
+[2026-09-01 15:52:44.576] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\Test-WorkspaceDrift.ps1.txt
+[2026-09-01 15:52:44.592] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\Test-WorkspaceReadiness.ps1.txt
+[2026-09-01 15:52:44.609] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\Update-Proposal.ps1.txt
+[2026-09-01 15:52:44.628] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\Validate-CopilotProfile.ps1.txt
+[2026-09-01 15:52:44.648] [DEBUG]   -> Removed orphan: LCM_Inventory\Cmd\ValidateRules.ps1.txt
 [2026-09-01 15:52:44.674] [DEBUG]   -> Removed orphan: Workspace_Inventory\data\baselines\BASELINE-v4.1.0-20260815.json.txt
 [2026-09-01 15:52:44.689] [DEBUG]   -> Removed orphan: Workspace_Inventory\data\baselines\baseline-v4.1.0.json.txt
 [2026-09-01 15:52:44.705] [DEBUG]   -> Removed orphan: Workspace_Inventory\data\baselines\BASELINE-v4.2.0-20260816.json.txt

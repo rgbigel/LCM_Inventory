@@ -14,7 +14,7 @@
 ---
 
 ## 1. Executive Summary & Problem Statement
-During operational audit of command launchers in `.lcm/Cmd/*.cmd`, multiple duplicate and spelling-variant short-names were identified mapping to the same underlying long-named script file (e.g., 5 spelling variants for `Apply-AllCustomizations.ps1`).
+During operational audit of command launchers in `LCM_Inventory/Cmd/*.cmd`, multiple duplicate and spelling-variant short-names were identified mapping to the same underlying long-named script file (e.g., 5 spelling variants for `Apply-AllCustomizations.ps1`).
 
 In the Tool Explorer (`ShowTools`), operators lacked an elementary action to prune or delete an extraneous short-name alias without deleting the underlying script code. Furthermore, safety requires that a script must never become orphaned: **if a short-name is the last remaining launcher for a long-named script, deleting it must be strictly disallowed**.
 
@@ -25,7 +25,7 @@ In the Rename modal (`#rename-modal-overlay`):
 1. Introduce a dedicated checkmark:
    `[ ] Delete short name only (removes .cmd launcher, preserves script)`
 2. When checked:
-   - Queries all active `.cmd` launchers in `.lcm/Cmd/` pointing to the target script.
+   - Queries all active `.cmd` launchers in `LCM_Inventory/Cmd/` pointing to the target script.
    - If count <= 1 (Last Alias Protection Invariant):
      - Displays an explicit warning banner: `⚠️ Disallowed: '<ShortName>' is the last remaining short-name launcher for '<ScriptName>'. Every tool must retain at least one short name.`
      - Disables the delete execution button.
@@ -46,8 +46,8 @@ Provide a reusable PowerShell tool adhering to `RULE-PS-001` - `014`:
 ```powershell
 Remove-LcmShortName.ps1 -ShortName <name> [-TargetScript <script>] [-Force]
 ```
-- Validates the target launcher in `.lcm/Cmd/<ShortName>.cmd`.
-- Scans `.lcm/Cmd/*.cmd` to identify all trampolines targeting the same underlying script.
+- Validates the target launcher in `LCM_Inventory/Cmd/<ShortName>.cmd`.
+- Scans `LCM_Inventory/Cmd/*.cmd` to identify all trampolines targeting the same underlying script.
 - Enforces the **Last-Alias Invariant**: rejects removal if fewer than 2 launchers point to the script.
 - Atomically deletes the specified `.cmd` file.
 - Automatically prunes alias overrides from `Update-ToolCatalog.ps1` and `tool_catalog.json`.

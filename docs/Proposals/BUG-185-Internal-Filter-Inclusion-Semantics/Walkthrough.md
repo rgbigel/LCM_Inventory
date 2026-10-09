@@ -46,6 +46,6 @@
    - Drag the window edge to narrow the browser width: verify the table auto-shrinks dynamically without requiring a page refresh.
 
 9. **Verify Single HTML Output Architecture**:
-   - Verify only a single authoritative file `SHOW_TOOLS.html` exists in `.lcm/scratch/` and `.lcm/tools/internal/scratch/`.
+   - Verify only a single authoritative file `SHOW_TOOLS.html` exists in `LCM_Inventory/scratch/` and `LCM_Inventory/tools/scratch/`.
    - Verify all obsolete alias/mode HTML files (`User_Tools_Explorer_LCM.html`, `Developer_Tools_Explorer_LCM.html`, `Dev_Tools_Explorer_LCM.html`, `Tools_Explorer_LCM.html`) are purged.
    - Verify Print Preview Atom references `SHOW_TOOLS.html`.

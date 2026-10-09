@@ -25,10 +25,10 @@ Following the deployment of CRP-177 and interactive user reorganization, several
 1. **Tool Explorer Naming Ambiguity & Verb Non-Compliance (`RULE-PS-002`)**:
    - The tool name `ShowTools` was overloaded in three conflicting ways: (a) the script runner itself, (b) the self-tool entry within the table, and (c) the toolbar button and preset filtering `Show-*` visual displays.
    - An interactive rename to `ToolsExplorer.ps1` introduced a violation of PowerShell Standards Policy (`RULE-PS-002`), which mandates Microsoft-approved verbs (`Get-Verb`). `ToolsExplorer` lacks an approved verb.
-   - Script launchers in `.lcm/Cmd/` required canonicalization to `ToolExplorer.cmd` while preserving backward compatibility for `ShowTools.cmd`.
+   - Script launchers in `LCM_Inventory/Cmd/` required canonicalization to `ToolExplorer.cmd` while preserving backward compatibility for `ShowTools.cmd`.
 
 2. **Dual-Catalog State Desynchronization**:
-   - Two physical `tool_catalog.json` files existed on disk: the active authoritative catalog `.lcm\config\tool_catalog.json` (regularly updated) and a stale legacy copy `.lcm\tools\internal\tool_catalog.json` (outdated from September 11).
+   - Two physical `tool_catalog.json` files existed on disk: the active authoritative catalog `LCM_Inventory\config\tool_catalog.json` (regularly updated) and a stale legacy copy `LCM_Inventory\tools\tool_catalog.json` (outdated from September 11).
    - In fallback scenarios, tools fell back to the obsolete copy, causing reverted states and missing tool definitions.
 
 3. **Two-State Lifecycle "Blocked" State Misunderstanding & Storage Decoupling**:
@@ -48,24 +48,24 @@ Following the deployment of CRP-177 and interactive user reorganization, several
 ## 2. Technical Modifications
 
 ### 2.1 Approved-Verb Realignment & Command Trampolines
-- **Canonical Script**: [`Show-ToolsExplorer.ps1`](file:///.lcm/tools/internal/Show-ToolsExplorer.ps1) with `[Alias('ShowTools', 'ToolsExplorer', 'ToolExplorer')]`.
-- **Forwarder**: [`.lcm/tools/internal/ToolsExplorer.ps1`](file:///.lcm/tools/internal/ToolsExplorer.ps1) delegating execution directly to `Show-ToolsExplorer.ps1`.
+- **Canonical Script**: [`Show-ToolsExplorer.ps1`](file:///LCM_Inventory/tools/Show-ToolsExplorer.ps1) with `[Alias('ShowTools', 'ToolsExplorer', 'ToolExplorer')]`.
+- **Forwarder**: [`LCM_Inventory/tools/ToolsExplorer.ps1`](file:///LCM_Inventory/tools/ToolsExplorer.ps1) delegating execution directly to `Show-ToolsExplorer.ps1`.
 - **Command Trampolines**:
-  - [`.lcm/Cmd/ToolExplorer.cmd`](file:///.lcm/Cmd/ToolExplorer.cmd)
-  - [`.lcm/Cmd/ToolsExplorer.cmd`](file:///.lcm/Cmd/ToolsExplorer.cmd)
-  - [`.lcm/Cmd/ShowTools.cmd`](file:///.lcm/Cmd/ShowTools.cmd)
+  - [`LCM_Inventory/Cmd/ToolExplorer.cmd`](file:///LCM_Inventory/Cmd/ToolExplorer.cmd)
+  - [`LCM_Inventory/Cmd/ToolsExplorer.cmd`](file:///LCM_Inventory/Cmd/ToolsExplorer.cmd)
+  - [`LCM_Inventory/Cmd/ShowTools.cmd`](file:///LCM_Inventory/Cmd/ShowTools.cmd)
 
 ### 2.2 Stale Duplicate Catalog Deletion
-- Deleted obsolete artifact `.lcm/tools/internal/tool_catalog.json`.
-- Updated [`Sync-ToolSymlinks.ps1`](file:///.lcm/tools/internal/Sync-ToolSymlinks.ps1) fallback path to `.lcm/config/tool_catalog.json`.
-- Hardened [`LcmToolCatalog.psm1`](file:///.lcm/modules/LcmToolCatalog.psm1) candidate discovery paths.
+- Deleted obsolete artifact `LCM_Inventory/tools/tool_catalog.json`.
+- Updated [`Sync-ToolSymlinks.ps1`](file:///LCM_Inventory/tools/Sync-ToolSymlinks.ps1) fallback path to `LCM_Inventory/config/tool_catalog.json`.
+- Hardened [`LcmToolCatalog.psm1`](file:///LCM_Inventory/modules/LcmToolCatalog.psm1) candidate discovery paths.
 
 ### 2.3 Catalog Generator Metadata Updates
-- Updated `$metadataOverrides` in [`Update-ToolCatalog.ps1`](file:///.lcm/tools/internal/Update-ToolCatalog.ps1) mapping `Show-ToolsExplorer.ps1`, `ToolsExplorer.ps1`, and `Show-Tools.ps1` to ShortName `ToolExplorer`.
+- Updated `$metadataOverrides` in [`Update-ToolCatalog.ps1`](file:///LCM_Inventory/tools/Update-ToolCatalog.ps1) mapping `Show-ToolsExplorer.ps1`, `ToolsExplorer.ps1`, and `Show-Tools.ps1` to ShortName `ToolExplorer`.
 - Added stem identifiers to heuristic `NoExit` whitelist.
 
 ### 2.4 Self-Tool Exclusion in Dashboard UI
-- Updated `lcm-tool-explorer.js` (both `.lcm/assets` and `LCM_Inventory/assets`) filtering out self-tool stems (`Show-ToolsExplorer`, `ToolsExplorer`, `ShowTools`) during initial data loading and filter passes.
+- Updated `lcm-tool-explorer.js` (both `LCM_Inventory/assets` and `LCM_Inventory/assets`) filtering out self-tool stems (`Show-ToolsExplorer`, `ToolsExplorer`, `ShowTools`) during initial data loading and filter passes.
 
 ### 2.5 Table Sizing & Scrollbar Contrast Hardening
 - Enforced `min-width: 1560px !important;` on `table` in [`LCMToolCatalog.css`](file:///LCM_Inventory/assets/LCMToolCatalog.css).
@@ -75,6 +75,6 @@ Following the deployment of CRP-177 and interactive user reorganization, several
 ---
 
 ## 3. Verification & Compliance
-- `pwsh .lcm/tools/internal/Update-ToolCatalog.ps1` completed with 0 errors.
+- `pwsh LCM_Inventory/tools/Update-ToolCatalog.ps1` completed with 0 errors.
 - `Show-ToolsExplorer.ps1 -NoLaunch` successfully generated the interactive HTML catalog.
 - Conforms to `RULE-PS-002` (Approved Verbs), `RULE-PS-008` (Metadata Headers), `RULE-PS-009` (Audit Logging), and `RULE-PS-010` (Help Handling).

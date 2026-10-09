@@ -7926,15 +7926,15 @@
 [2026-08-30 19:37:50.768] [DEBUG] POST /execute from 127.0.0.1:60842
 [2026-08-30 19:37:50.857] [ACTION] Dispatching execution: cmd.exe /c powercfg /devicedisablewake "Intel(R) Ethernet Controller I226-V" & powercfg /devicedisablewake "HID-compliant mouse (001)" (Elevated: False, NoExit: True, Cwd: D:\Git_Repositories)
 [2026-08-30 19:38:21.963] [DEBUG] POST /execute from 127.0.0.1:60849
-[2026-08-30 19:38:21.970] [ACTION] Dispatching execution: cmd.exe /c start pwsh.exe -ExecutionPolicy Bypass -File D:\Git_Repositories\.lcm\tools\internal\Disable-WakeDevices.ps1 (Elevated: False, NoExit: True, Cwd: D:\Git_Repositories)
+[2026-08-30 19:38:21.970] [ACTION] Dispatching execution: cmd.exe /c start pwsh.exe -ExecutionPolicy Bypass -File D:\Git_Repositories\LCM_Inventory\tools\Disable-WakeDevices.ps1 (Elevated: False, NoExit: True, Cwd: D:\Git_Repositories)
 [2026-08-30 19:39:46.705] [DEBUG] POST /execute from 127.0.0.1:60015
-[2026-08-30 19:39:46.709] [ACTION] Dispatching execution: cmd.exe /c start D:\Git_Repositories\.lcm\Cmd\DisableWakeDevices.cmd (Elevated: False, NoExit: True, Cwd: D:\Git_Repositories)
+[2026-08-30 19:39:46.709] [ACTION] Dispatching execution: cmd.exe /c start D:\Git_Repositories\LCM_Inventory\Cmd\DisableWakeDevices.cmd (Elevated: False, NoExit: True, Cwd: D:\Git_Repositories)
 [2026-08-31 17:18:53.567] [DEBUG] POST /open from 127.0.0.1:54099
-[2026-08-31 17:18:53.586] [ACTION] Opening target: file:///D:/Git_Repositories/.lcm/tools/internal/scratch/User_Tools_Explorer_LCM.html (Args: , Foreground: True)
+[2026-08-31 17:18:53.586] [ACTION] Opening target: file:///D:/Git_Repositories/LCM_Inventory/tools/scratch/User_Tools_Explorer_LCM.html (Args: , Foreground: True)
 [2026-08-31 17:19:09.477] [DEBUG] POST /execute from 127.0.0.1:54137
-[2026-08-31 17:19:09.483] [ACTION] Dispatching execution: cmd.exe /c pwsh -File D:\Git_Repositories\.lcm\tools\internal\Show-Tools.ps1 (Elevated: False, NoExit: True, Cwd: D:\Git_Repositories)
+[2026-08-31 17:19:09.483] [ACTION] Dispatching execution: cmd.exe /c pwsh -File D:\Git_Repositories\LCM_Inventory\tools\Show-Tools.ps1 (Elevated: False, NoExit: True, Cwd: D:\Git_Repositories)
 [2026-08-31 17:19:12.217] [DEBUG] POST /open from 127.0.0.1:54138
-[2026-08-31 17:19:12.219] [ACTION] Opening target: file:///D:/Git_Repositories/.lcm/tools/internal/scratch/User_Tools_Explorer_LCM.html (Args: , Foreground: True)
+[2026-08-31 17:19:12.219] [ACTION] Opening target: file:///D:/Git_Repositories/LCM_Inventory/tools/scratch/User_Tools_Explorer_LCM.html (Args: , Foreground: True)
 [2026-08-31 17:33:54.187] [DEBUG] GET /ping from 127.0.0.1:64278
 [2026-08-31 17:33:54.229] [DEBUG] GET /ping from 127.0.0.1:64278
 [2026-08-31 17:33:59.487] [DEBUG] GET /ping from 127.0.0.1:64278
@@ -7946,7 +7946,7 @@
 [2026-08-31 18:51:13.722] [DEBUG] POST /open from 127.0.0.1:57244
 [2026-08-31 18:51:13.744] [ACTION] Opening target: about:blank (Args: , Foreground: False)
 [2026-08-31 18:53:27.410] [DEBUG] POST /open from 127.0.0.1:58980
-[2026-08-31 18:53:27.421] [ACTION] Opening target: file:///D:/Git_Repositories/.lcm/tools/internal/scratch/User_Tools_Explorer_LCM.html (Args: , Foreground: True)
+[2026-08-31 18:53:27.421] [ACTION] Opening target: file:///D:/Git_Repositories/LCM_Inventory/tools/scratch/User_Tools_Explorer_LCM.html (Args: , Foreground: True)
 [2026-08-31 19:38:19.203] [DEBUG] GET /ping from 127.0.0.1:64604
 [2026-08-31 19:38:19.229] [DEBUG] GET /ping from 127.0.0.1:64604
 [2026-08-31 19:38:24.324] [DEBUG] GET /ping from 127.0.0.1:64604
@@ -9362,7 +9362,7 @@
 [2026-08-31 20:46:11.604] [DEBUG] GET /ping from 127.0.0.1:50964
 [2026-08-31 20:46:11.611] [DEBUG] GET /ping from 127.0.0.1:50964
 [2026-08-31 20:46:26.507] [DEBUG] POST /open from 127.0.0.1:55236
-[2026-08-31 20:46:26.515] [ACTION] Opening target: file:///D:/Git_Repositories/.lcm/tools/internal/scratch/User_Tools_Explorer_LCM.html (Args: , Foreground: True)
+[2026-08-31 20:46:26.515] [ACTION] Opening target: file:///D:/Git_Repositories/LCM_Inventory/tools/scratch/User_Tools_Explorer_LCM.html (Args: , Foreground: True)
 [2026-08-31 21:17:11.491] [DEBUG] OPTIONS /sync_json from 127.0.0.1:53142
 [2026-08-31 21:17:11.512] [DEBUG] OPTIONS /sync_json from 127.0.0.1:53142
 [2026-08-31 21:17:11.528] [DEBUG] OPTIONS /sync_json from 127.0.0.1:53142
@@ -9373,7 +9373,7 @@
 [2026-08-31 21:17:33.572] [DEBUG] GET /ping from 127.0.0.1:53142
 [2026-08-31 21:17:33.580] [DEBUG] GET /ping from 127.0.0.1:53142
 [2026-08-31 21:22:13.639] [DEBUG] POST /open from 127.0.0.1:59517
-[2026-08-31 21:22:13.661] [ACTION] Opening target: file:///D:/Git_Repositories/.lcm/tools/internal/scratch/User_Tools_Explorer_LCM.html (Args: , Foreground: True)
+[2026-08-31 21:22:13.661] [ACTION] Opening target: file:///D:/Git_Repositories/LCM_Inventory/tools/scratch/User_Tools_Explorer_LCM.html (Args: , Foreground: True)
 [2026-08-31 21:25:57.994] [DEBUG] OPTIONS /rename from 127.0.0.1:59566
 [2026-08-31 21:25:57.998] [DEBUG] POST /rename from 127.0.0.1:59566
 [2026-08-31 21:25:58.048] [ACTION] Renaming tool: --_$21_DesktopSubFoldersLauncher.cmd -> --_$21-DesktopSubFoldersLauncher.cmd [ShortName: $21DesktopSubFoldersLauncher -> DesktopSubFoldersLauncher]
@@ -9386,17 +9386,17 @@
 [2026-08-31 21:27:26.784] [DEBUG] OPTIONS /sync_json from 127.0.0.1:59566
 [2026-08-31 21:27:26.813] [DEBUG] OPTIONS /sync_json from 127.0.0.1:59566
 [2026-08-31 21:32:36.477] [DEBUG] POST /open from 127.0.0.1:62536
-[2026-08-31 21:32:36.479] [ACTION] Opening target: file:///D:/Git_Repositories/.lcm/tools/internal/scratch/User_Tools_Explorer_LCM.html (Args: , Foreground: True)
+[2026-08-31 21:32:36.479] [ACTION] Opening target: file:///D:/Git_Repositories/LCM_Inventory/tools/scratch/User_Tools_Explorer_LCM.html (Args: , Foreground: True)
 [2026-09-01 11:59:22.084] [DEBUG] OPTIONS /sync_json from 127.0.0.1:59723
 [2026-09-01 11:59:22.120] [DEBUG] OPTIONS /sync_json from 127.0.0.1:59723
 [2026-09-01 11:59:22.868] [DEBUG] OPTIONS /sync_json from 127.0.0.1:59723
 [2026-09-01 15:46:07.208] [DEBUG] POST /open from 127.0.0.1:55186
-[2026-09-01 15:46:07.247] [ACTION] Opening target: file:///D:/Git_Repositories/.lcm/tools/internal/scratch/User_Tools_Explorer_LCM.html (Args: , Foreground: True)
+[2026-09-01 15:46:07.247] [ACTION] Opening target: file:///D:/Git_Repositories/LCM_Inventory/tools/scratch/User_Tools_Explorer_LCM.html (Args: , Foreground: True)
 [2026-09-01 15:52:22.326] [DEBUG] OPTIONS /execute from 127.0.0.1:51555
 [2026-09-01 15:52:22.330] [DEBUG] POST /execute from 127.0.0.1:51555
 [2026-09-01 15:52:22.347] [ACTION] Dispatching execution: ApplyCustomizations -StartAt "1" -TraceMode -ShowAll (Elevated: True, NoExit: True, Cwd: D:\Git_Repositories)
 [2026-09-01 16:02:08.257] [DEBUG] POST /open from 127.0.0.1:60213
-[2026-09-01 16:02:08.270] [ACTION] Opening target: file:///D:/Git_Repositories/.lcm/tools/internal/scratch/User_Tools_Explorer_LCM.html (Args: , Foreground: True)
+[2026-09-01 16:02:08.270] [ACTION] Opening target: file:///D:/Git_Repositories/LCM_Inventory/tools/scratch/User_Tools_Explorer_LCM.html (Args: , Foreground: True)
 [2026-09-01 16:12:33.940] [DEBUG] OPTIONS /sync_json from 127.0.0.1:57302
 [2026-09-01 16:12:33.945] [DEBUG] OPTIONS /sync_json from 127.0.0.1:57303
 [2026-09-01 16:15:36.016] [DEBUG] OPTIONS /rename from 127.0.0.1:57317
@@ -9408,7 +9408,7 @@
 [2026-09-01 20:41:37.092] [DEBUG] OPTIONS /sync_json from 127.0.0.1:60735
 [2026-09-01 20:41:37.106] [DEBUG] OPTIONS /sync_json from 127.0.0.1:60736
 [2026-09-01 21:27:30.016] [DEBUG] POST /open from 127.0.0.1:49468
-[2026-09-01 21:27:30.049] [ACTION] Opening target: file:///D:/Git_Repositories/.lcm/tools/internal/scratch/User_Tools_Explorer_LCM.html (Args: , Foreground: True)
+[2026-09-01 21:27:30.049] [ACTION] Opening target: file:///D:/Git_Repositories/LCM_Inventory/tools/scratch/User_Tools_Explorer_LCM.html (Args: , Foreground: True)
 [2026-09-01 21:28:49.377] [DEBUG] OPTIONS /execute from 127.0.0.1:49486
 [2026-09-01 21:28:49.380] [DEBUG] POST /execute from 127.0.0.1:49486
 [2026-09-01 21:28:49.399] [ACTION] Dispatching execution: & "D:\Git_Repositories\tools\Show-LcmDaemon.ps1" -Port "0" -Lines "50" -MaxAgeDays "7" (Elevated: False, NoExit: True, Cwd: D:\Git_Repositories)
@@ -9445,7 +9445,7 @@
 [2026-09-01 21:42:14.082] [DEBUG] POST /execute from 127.0.0.1:62097
 [2026-09-01 21:42:14.084] [ACTION] Dispatching execution: RepairLCMRules -WorkspaceRoot "D:\Git_Repositories" (Elevated: False, NoExit: True, Cwd: D:\Git_Repositories)
 [2026-09-01 21:43:12.492] [DEBUG] POST /open from 127.0.0.1:62124
-[2026-09-01 21:43:12.494] [ACTION] Opening target: file:///D:/Git_Repositories/.lcm/tools/internal/scratch/User_Tools_Explorer_LCM.html (Args: , Foreground: True)
+[2026-09-01 21:43:12.494] [ACTION] Opening target: file:///D:/Git_Repositories/LCM_Inventory/tools/scratch/User_Tools_Explorer_LCM.html (Args: , Foreground: True)
 [2026-09-01 21:44:46.812] [DEBUG] OPTIONS /execute from 127.0.0.1:62137
 [2026-09-01 21:44:46.815] [DEBUG] POST /execute from 127.0.0.1:62137
 [2026-09-01 21:44:46.818] [ACTION] Dispatching execution: & "D:\Git_Repositories\Workspace_Supervision\tools\Show-SupervisionHub.ps1" (Elevated: False, NoExit: True, Cwd: D:\Git_Repositories)
@@ -9462,7 +9462,7 @@
 [2026-09-01 23:09:01.391] [DEBUG] OPTIONS /sync_json from 127.0.0.1:58073
 [2026-09-01 23:09:06.217] [DEBUG] OPTIONS /sync_json from 127.0.0.1:58069
 [2026-09-01 23:11:18.518] [DEBUG] POST /open from 127.0.0.1:58108
-[2026-09-01 23:11:18.536] [ACTION] Opening target: file:///D:/Git_Repositories/.lcm/tools/internal/scratch/User_Tools_Explorer_LCM.html (Args: , Foreground: True)
+[2026-09-01 23:11:18.536] [ACTION] Opening target: file:///D:/Git_Repositories/LCM_Inventory/tools/scratch/User_Tools_Explorer_LCM.html (Args: , Foreground: True)
 [2026-09-01 23:12:40.577] [DEBUG] OPTIONS /sync_json from 127.0.0.1:55313
 [2026-09-01 23:12:40.599] [DEBUG] OPTIONS /sync_json from 127.0.0.1:55313
 [2026-09-01 23:16:45.270] [DEBUG] OPTIONS /sync_json from 127.0.0.1:55339
@@ -9473,7 +9473,7 @@
 [2026-09-02 13:41:12.641] [DEBUG] POST /open from 127.0.0.1:57307
 [2026-09-02 13:41:12.662] [ACTION] Opening target: D:\Tools\Beyond Compare 5\BCompare.exe (Args: "D:\Git_Repositories\Workspace_Inventory\scratch\BC_Review\Git_Repositories_eb87f96" "D:\Git_Repositories" "/title1=Baseline (eb87f96)" "/title2=Current Live (Git_Repositories)" "/filters=-.\AuthorizeMasterUser\;-.\BackgroundModifier\;-.\BGMSAMVInv\;-.\BootEntryManager\;-.\HaSSD06\;-.\HaSSD06_Inventory\;-.\Installation_LCD\;-.\InstallFonts\;-.\MacriumTemplateUpdater\;-.\MSG file conversion\;-.\NextBootTray\;-.\OutlookVBAConversion\;-.\PowerBGInfo\;-.\ReEnableRadeonRx580\;-.\SharedModules\;-.\SystemConfiguration\;-.\TimeStamper\;-.\VolumeInventory\;-.\Workspace_AI\;-.\Workspace_Inventory\;-.\Workspace_Supervision\;-.git\;-*\.git\*;-.git*;-.venv\;-*\.venv\*;-venv\;-*\venv\*;-.env\;-*\.env\*;-__pycache__\;-*\__pycache__\*;-*.pyc;-*.pyo;-scratch\;-*\scratch\*;-logs\;-*\logs\*;-work\;-*\work\*;-*.inventory;-data\inventory.json;-inventory.json;-*.log;-*.tmp;-*.bak;-*.swp;-*.lock;-node_modules\;-*\node_modules\*;-bin\;-*\bin\*;-obj\;-*\obj\*", Foreground: True)
 [2026-09-03 12:43:30.292] [DEBUG] POST /open from 127.0.0.1:49920
-[2026-09-03 12:43:30.309] [ACTION] Opening target: file:///D:/Git_Repositories/.lcm/tools/internal/scratch/User_Tools_Explorer_LCM.html (Args: , Foreground: True)
+[2026-09-03 12:43:30.309] [ACTION] Opening target: file:///D:/Git_Repositories/LCM_Inventory/tools/scratch/User_Tools_Explorer_LCM.html (Args: , Foreground: True)
 [2026-09-03 18:10:49.262] [DEBUG] OPTIONS /sync_json from 127.0.0.1:56516
 [2026-09-03 18:10:49.352] [DEBUG] OPTIONS /sync_json from 127.0.0.1:56516
 [2026-09-03 18:12:22.139] [DEBUG] OPTIONS /execute from 127.0.0.1:56516

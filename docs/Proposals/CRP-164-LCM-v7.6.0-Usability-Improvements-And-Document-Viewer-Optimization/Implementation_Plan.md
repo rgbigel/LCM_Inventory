@@ -38,7 +38,7 @@ Priority: High
 6. **Role Filter Fix**:
    - Update `extractDocMetadata` to classify `README.md` as role `"Overview"` / `"Readme"` and ensure dropdown filters correctly.
 
-### Component 2: Tools Catalog, Defaults & Naming Architecture (`.lcm/config/` & `LCM_Inventory/tools/`)
+### Component 2: Tools Catalog, Defaults & Naming Architecture (`LCM_Inventory/config/` & `LCM_Inventory/tools/`)
 1. **Zero-Parameter Defaults**:
    - Update `Show-WorkspaceReadiness.ps1` to default `-TargetRepo` to current active focus repo (or `LCM_AI`/all if none).
    - Update `Show-CmControlHub.ps1` and other tools to run with zero required parameters.

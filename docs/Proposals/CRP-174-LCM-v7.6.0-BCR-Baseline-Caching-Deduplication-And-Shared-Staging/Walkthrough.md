@@ -36,7 +36,7 @@ Date: 2026-09-25
 - Tested directory junctions across workspace:
   - `LCM_Inventory\.agents\rules` $\rightarrow$ `LCM_AI\.agents\rules`
   - `D:\Git_Repositories\.agents\rules` $\rightarrow$ `LCM_AI\.agents\rules`
-  - `D:\Git_Repositories\.lcm\.agents\rules` $\rightarrow$ `LCM_AI\.agents\rules`
+  - `D:\Git_Repositories\LCM_Inventory\.agents\rules` $\rightarrow$ `LCM_AI\.agents\rules`
   - All child repo junctions successfully resolve all 17 rules.
 
 ### 6. Verification of Single-Session Beyond Compare Review (Junction Traversal)

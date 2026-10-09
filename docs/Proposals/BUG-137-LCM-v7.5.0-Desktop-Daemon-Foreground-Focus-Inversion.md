@@ -6,7 +6,7 @@
 | **Bug ID** | `BUG-137` |
 | **Lifecycle State** | `OPEN` (Awaiting Operator Activation per RULE-LCM-015) |
 | **Origin Repository** | `LCM / Git_Repositories` |
-| **Target Scope** | `.lcm/modules/LcmDaemon/Classes/DaemonActionController.ps1` |
+| **Target Scope** | `LCM_Inventory/modules/LcmDaemon/Classes/DaemonActionController.ps1` |
 | **Author** | Operator Directive / BUG Intake |
 | **Date** | 2026-09-11 |
 | **Severity** | `Medium` |

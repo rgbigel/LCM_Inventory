@@ -7,20 +7,20 @@ All 11 items under [BUG-133](file:///d:/Git_Repositories/LCM_Inventory/docs/Prop
 
 ## Changes Made by Component
 
-### 1. Canonical Modular Stylesheets (`LCM_Inventory/assets/` & `.lcm/assets/`)
+### 1. Canonical Modular Stylesheets (`LCM_Inventory/assets/` & `LCM_Inventory/assets/`)
 - **[StandardTableDisplay.css](file:///d:/Git_Repositories/LCM_Inventory/assets/StandardTableDisplay.css)**: Authoritative base stylesheet for all standard displays (`Show-*`). Incorporates responsive typography, dark/light theme variables, sticky header, aligned column filters, search inputs, modal overlays, print styles, and badges.
 - **[LCMToolCatalog.css](file:///d:/Git_Repositories/LCM_Inventory/assets/LCMToolCatalog.css)**: Modular cascaded extension stylesheet for Tool Explorer. Houses metric summary card grids, action dropdown menu styling, inline cell editor popover, short-name pills, and filter presets controls.
-- **HTML Linking (Model A)**: Updated [LcmToolCatalog.psm1](file:///d:/Git_Repositories/.lcm/modules/LcmToolCatalog.psm1) to link directly to `StandardTableDisplay.css` and `LCMToolCatalog.css` using absolute `file:///` URIs, enabling browser caching and hot-reload.
+- **HTML Linking (Model A)**: Updated [LcmToolCatalog.psm1](file:///d:/Git_Repositories/LCM_Inventory/modules/LcmToolCatalog.psm1) to link directly to `StandardTableDisplay.css` and `LCMToolCatalog.css` using absolute `file:///` URIs, enabling browser caching and hot-reload.
 
 ### 2. LCM Tool Explorer UI & Header Regressions (Items 1, 2, 6, 8, 10)
-- **Dynamic Versioning (Item 1)**: Replaced hardcoded `V6.1.0` in `<title>` and `<h1>` with dynamic `$Version` (`v7.5.0`). Also updated [Show-LCM.ps1](file:///d:/Git_Repositories/.lcm/tools/hub/Show-LCM.ps1) to `v7.5.0`.
+- **Dynamic Versioning (Item 1)**: Replaced hardcoded `V6.1.0` in `<title>` and `<h1>` with dynamic `$Version` (`v7.5.0`). Also updated [Show-LCM.ps1](file:///d:/Git_Repositories/LCM_Inventory/tools/hub/Show-LCM.ps1) to `v7.5.0`.
 - **Dynamic Subsystem Metric Card (Item 2)**: Replaced static `#card-hassd06` with dynamic `#card-subsystem`. Clicking the card is a safe No-OP (`onclick="void(0)"`, `cursor: default`). Selecting any subsystem from `#group-select` or `#header-subsystem-select` dynamically updates the card label and tool count in real-time.
-- **Back Button Fallback (Item 6)**: Implemented `window.LcmTools.goBack()` which falls back cleanly to `SHOW_LCM.html`. Updated [Show-LCM.ps1](file:///d:/Git_Repositories/.lcm/tools/hub/Show-LCM.ps1) and [LcmToolCatalog.psm1](file:///d:/Git_Repositories/.lcm/modules/LcmToolCatalog.psm1) so `SHOW_LCM.html` and `SHOW_TOOLS.html` are generated and co-located in `.lcm/scratch/`.
+- **Back Button Fallback (Item 6)**: Implemented `window.LcmTools.goBack()` which falls back cleanly to `SHOW_LCM.html`. Updated [Show-LCM.ps1](file:///d:/Git_Repositories/LCM_Inventory/tools/hub/Show-LCM.ps1) and [LcmToolCatalog.psm1](file:///d:/Git_Repositories/LCM_Inventory/modules/LcmToolCatalog.psm1) so `SHOW_LCM.html` and `SHOW_TOOLS.html` are generated and co-located in `LCM_Inventory/scratch/`.
 - **Top Bar Refresh Button (Item 8)**: Added `[🔄 Refresh]` button (`btn-refresh`) to the top bar header actions, binding to `window.LcmTools.refreshToolCatalog()`.
 - **Removed Legacy 'LCD' (Item 10)**:
-  - Updated scan definitions in [Update-ToolCatalog.ps1](file:///d:/Git_Repositories/.lcm/tools/internal/Update-ToolCatalog.ps1) so `.lcm\tools\internal` scans as `LCM` instead of `LCD`.
-  - Filtered `'LCD'` out of distinct groups in [LcmToolCatalog.psm1](file:///d:/Git_Repositories/.lcm/modules/LcmToolCatalog.psm1).
-  - Purged legacy `.lcm/Cmd/LCD*.cmd` trampolines.
+  - Updated scan definitions in [Update-ToolCatalog.ps1](file:///d:/Git_Repositories/LCM_Inventory/tools/Update-ToolCatalog.ps1) so `LCM_Inventory\tools\internal` scans as `LCM` instead of `LCD`.
+  - Filtered `'LCD'` out of distinct groups in [LcmToolCatalog.psm1](file:///d:/Git_Repositories/LCM_Inventory/modules/LcmToolCatalog.psm1).
+  - Purged legacy `LCM_Inventory/Cmd/LCD*.cmd` trampolines.
 
 ### 3. Smart Parameter Gating & Console Auto-Closing (Items 3 & 4)
 - **Smart Parameter Gating (Item 3)**:
@@ -29,12 +29,12 @@ All 11 items under [BUG-133](file:///d:/Git_Repositories/LCM_Inventory/docs/Prop
   - Added `⚙️ Run with Parameters...` to the three-dot dropdown action menu for operators who wish to configure optional flags explicitly.
 - **Console Auto-Closing (Item 4)**:
   - Implemented `isToolNoExit(tool)` to strictly evaluate `NoExit` booleans.
-  - Updated [DaemonDto.ps1](file:///d:/Git_Repositories/.lcm/modules/LcmDaemon/Classes/DaemonDto.ps1) and [DaemonActionController.ps1](file:///d:/Git_Repositories/.lcm/modules/LcmDaemon/Classes/DaemonActionController.ps1) so commands with `NoExit = false` ("May Exit") close cleanly upon completion.
+  - Updated [DaemonDto.ps1](file:///d:/Git_Repositories/LCM_Inventory/modules/LcmDaemon/Classes/DaemonDto.ps1) and [DaemonActionController.ps1](file:///d:/Git_Repositories/LCM_Inventory/modules/LcmDaemon/Classes/DaemonActionController.ps1) so commands with `NoExit = false` ("May Exit") close cleanly upon completion.
 
 ### 4. Help in Notepad Dispatcher (Item 5)
 - **Statically Resolved Script Path**: Script location is resolved statically from `tool.RelativePath` in LCM catalog data (no `.lnk` evaluation).
-- **Dedicated REST Endpoint**: Added route `POST /tool_help` in [LcmDesktopDaemon.ps1](file:///d:/Git_Repositories/.lcm/tools/internal/LcmDesktopDaemon.ps1) and `ShowToolHelp` in [DaemonActionController.ps1](file:///d:/Git_Repositories/.lcm/modules/LcmDaemon/Classes/DaemonActionController.ps1).
-- **Execution**: Extracts help output via `-h` into `.lcm\scratch\help_<stem>.txt` and launches `notepad.exe` on Session 1 desktop. Included automated fallback via `/execute` if endpoint is unavailable.
+- **Dedicated REST Endpoint**: Added route `POST /tool_help` in [LcmDesktopDaemon.ps1](file:///d:/Git_Repositories/LCM_Inventory/tools/LcmDesktopDaemon.ps1) and `ShowToolHelp` in [DaemonActionController.ps1](file:///d:/Git_Repositories/LCM_Inventory/modules/LcmDaemon/Classes/DaemonActionController.ps1).
+- **Execution**: Extracts help output via `-h` into `LCM_Inventory\scratch\help_<stem>.txt` and launches `notepad.exe` on Session 1 desktop. Included automated fallback via `/execute` if endpoint is unavailable.
 
 ### 5. Standard Parameter Support (Item 9)
 - **[Advance-Governance.ps1](file:///d:/Git_Repositories/LCM_AI/tools/Advance-Governance.ps1)**: Added `[Alias('h', '?')][switch]$Help` parameter and standard CLI parameter banner per `RULE-PS-010`.

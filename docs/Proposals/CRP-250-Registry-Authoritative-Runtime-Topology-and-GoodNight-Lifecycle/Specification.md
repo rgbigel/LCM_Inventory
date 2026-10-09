@@ -22,10 +22,10 @@ for a later, separately approved converse workflow.
   validation and no hard-coded or environment fallback.
 - Migrate active `LCM_Inventory\Cmd` launchers from inherited `%Git_Root%` to
   a registry-query preamble.
-- Replace active `.lcm\tools`, `.lcm\modules`, and `.lcm\Cmd` paths with
+- Replace active `LCM_Inventory\tools`, `LCM_Inventory\modules`, and `LCM_Inventory\Cmd` paths with
   Inventory-owned locations.
 - Select and migrate the canonical Inventory-owned catalog/config location.
-- Preserve `.lcm\archive` as archive-only historical material.
+- Preserve `LCM_Inventory\archive` as archive-only historical material.
 - Archive daemon-log evidence before GoodNight delegates to publish.
 - Permit `COPILOT_AGENT_SESSION_ID`, `COPILOT_HOME`, and `USERPROFILE` only
   for Copilot runtime session discovery in `Export-CopilotSessionHandoff.ps1`.
