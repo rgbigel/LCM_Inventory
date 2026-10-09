@@ -232,28 +232,6 @@ function Export-BCompareBaseline {
     }
   }
 
-  # Recreate internal tool junctions inside baseline .copilot to match live repository topology
-  $destCopilot = Join-Path $DestinationPath '.copilot'
-  if (Test-Path -LiteralPath $destCopilot) {
-    $destRules = Join-Path $DestinationPath '.agents\rules'
-    $destCopilotRules = Join-Path $destCopilot 'Rules'
-    if (-not (Test-Path -LiteralPath $destCopilotRules)) {
-      $targetRules = if (Test-Path -LiteralPath $destRules) { $destRules } elseif ($Descriptor.RulesAuthorityPath) { Join-Path $Descriptor.RulesAuthorityPath '.agents\rules' } else { $null }
-      if ($targetRules -and (Test-Path -LiteralPath $targetRules)) {
-        New-Item -ItemType Junction -Path $destCopilotRules -Target $targetRules -Force | Out-Null
-      }
-    }
-
-    $destAtoms = Join-Path $DestinationPath '.agents\atoms'
-    $destCopilotAtoms = Join-Path $destCopilot 'Atoms'
-    if (-not (Test-Path -LiteralPath $destCopilotAtoms)) {
-      $targetAtoms = if (Test-Path -LiteralPath $destAtoms) { $destAtoms } elseif ($Descriptor.RulesAuthorityPath) { Join-Path $Descriptor.RulesAuthorityPath '.agents\atoms' } else { $null }
-      if ($targetAtoms -and (Test-Path -LiteralPath $targetAtoms)) {
-        New-Item -ItemType Junction -Path $destCopilotAtoms -Target $targetAtoms -Force | Out-Null
-      }
-    }
-  }
-
   # ----------------------------------------------------------------------------
   # Timestamp Preservation (RULE-LCM-003 / CRP-221)
   # ----------------------------------------------------------------------------

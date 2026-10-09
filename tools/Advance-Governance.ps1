@@ -121,8 +121,8 @@ if (-not $RealRepoTestPlanPath) {
 $requiredPaths = @(
   (Join-Path $workspaceRoot 'AGENTS.md'),
   (Join-Path $workspaceRoot '.github\agents\Workspace-Rules.md'),
-  (Join-Path $workspaceRoot '.copilot\Rules\RuleAuthority.md'),
-  (Join-Path $workspaceRoot '.copilot\Rules\InvariantRules.md'),
+  (Join-Path $workspaceRoot '.agents\rules\RuleAuthority.md'),
+  (Join-Path $workspaceRoot '.agents\rules\InvariantRules.md'),
   $ProposalLogPath,
   $StabilizationPath,
   $RealRepoTestPlanPath,

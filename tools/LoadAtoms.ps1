@@ -28,9 +28,6 @@ Changelog:
 
 $workspaceRoot = Split-Path $PSScriptRoot -Parent
 $atomsRoot = Join-Path $workspaceRoot '.agents\atoms'
-if (-not (Test-Path -LiteralPath $atomsRoot)) {
-  $atomsRoot = Join-Path $workspaceRoot '.copilot\Atoms'
-}
 $atoms = @{}
 
 Get-ChildItem -Path $atomsRoot -Filter '*.atom' -File | Sort-Object -Property Name | ForEach-Object {
