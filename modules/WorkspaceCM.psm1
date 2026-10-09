@@ -135,7 +135,6 @@ function Get-RepoClassification {
                        'FileUtilities', 'GitTools', 'SystemConfiguration')
     if ($repoName -eq 'LCM_AI') { return 'active-design-workshop' }
     if ($repoName -eq 'LCM_Inventory') { return 'configuration-management' }
-    if ($repoName -in @('.lcd', '.lcm')) { return 'platform-engine' }
     if ($retiredList -contains $repoName) { return 'legacy-retired' }
     if ($parentInfraList -contains $repoName) { return 'parent-infra' }
     if (-not $isGit -or ($nonGitIgnored -contains $repoName)) { return 'non-git' }

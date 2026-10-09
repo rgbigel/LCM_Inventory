@@ -100,7 +100,7 @@
     },
     {
       "RepositoryName": "LCM_Inventory",
-      "Path": "D:\\Git_Repositories\\.lcm",
+      "Path": "D:\\Git_Repositories\\LCM_Inventory",
       "Classification": "platform-engine",
       "GitStatus": "Non-Git",
       "Branch": "-",
