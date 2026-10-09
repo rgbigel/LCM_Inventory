@@ -79,7 +79,7 @@ $childDirs = @(Get-ChildItem -Path $WorkspaceRoot -Directory | Where-Object {
 # Filter: Default to Tier 1 Governed repositories unless -IncludeUngoverned is specified or a specific target is requested
 if (-not $IncludeUngoverned -and [string]::IsNullOrWhiteSpace($TargetRepository)) {
     $childDirs = @($childDirs | Where-Object {
-        (Test-Path (Join-Path $_.FullName '.lcm')) -or
+        (Test-Path (Join-Path $_.FullName 'AGENTS.md')) -or
         $_.Name -in @('LCM_AI', 'LCM_Inventory')
     })
 }
@@ -154,39 +154,9 @@ foreach ($dir in $childDirs) {
         }
     }
     
-    # 3. Inspect .lcm/config.json
-    $cfgPath = Join-Path $repoPath '.lcm\config.json'
+    # 3. Baseline is the global version (no per-repo configuration record exists)
     $absorbedVersion = '-'
-    $versionAligned = $false
-    
-    if (Test-Path -LiteralPath $cfgPath) {
-        try {
-            $cfg = Get-Content -Path $cfgPath -Raw -Encoding UTF8 | ConvertFrom-Json
-            $gov = if ($cfg.PSObject.Properties['governance']) { $cfg.governance } else { $null }
-            
-            if ($cfg.PSObject.Properties['absorbed_lcm_version']) {
-                $absorbedVersion = [string]$cfg.absorbed_lcm_version
-            } elseif ($cfg.PSObject.Properties['current_lcm_version']) {
-                $absorbedVersion = [string]$cfg.current_lcm_version
-            } elseif ($gov -and $gov.PSObject.Properties['absorbed_lcm_version']) {
-                $absorbedVersion = [string]$gov.absorbed_lcm_version
-            } elseif ($gov -and $gov.PSObject.Properties['lcm_version']) {
-                $absorbedVersion = [string]$gov.lcm_version
-            } elseif ($cfg.PSObject.Properties['lcm_version']) {
-                $absorbedVersion = [string]$cfg.lcm_version
-            } else {
-                $absorbedVersion = 'Unspecified'
-            }
-
-            if ($absorbedVersion -eq $globalVersion) {
-                $versionAligned = $true
-            }
-        } catch {
-            $absorbedVersion = 'Invalid JSON'
-        }
-    } else {
-        $absorbedVersion = 'N/A (Standalone)'
-    }
+    $versionAligned = $true
     
     # 4. Inspect .gitignore for .agents/
     $gitignorePath = Join-Path $repoPath '.gitignore'

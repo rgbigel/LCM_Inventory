@@ -190,48 +190,22 @@ function Get-RepoCMState {
     $lcmStatus = 'not-lcm'
     $absorbedVersion = $null
     $currentVersion = $null
-    $lcmConfigFile = Join-Path $DirectoryPath '.lcm\config.json'
+    $agentsGovFile = Join-Path $DirectoryPath 'AGENTS.md'
     $junctionsHealthy = $true
     
     if ($classification -eq 'active-design-workshop' -or $classification -eq 'configuration-management' -or $classification -eq 'platform-engine') {
         $lcmStatus = 'governed'
         $absorbedVersion = $GlobalLCMVersion
         $currentVersion = $GlobalLCMVersion
-    } elseif (Test-Path $lcmConfigFile) {
+    } elseif ((Test-Path $agentsGovFile) -and ((Get-Content -Path $agentsGovFile -Raw) -match 'Governed by root LCM standard')) {
         $lcmStatus = 'governed'
-        try {
-            $cfg = Get-Content -Path $lcmConfigFile -Raw | ConvertFrom-Json
-            if ($cfg.PSObject.Properties['classification']) {
-                $classification = [string]$cfg.classification
-            } else {
-                $classification = 'lcm-governed'
-            }
-            if ($cfg.PSObject.Properties['current_lcm_version']) {
-                $currentVersion = [string]$cfg.current_lcm_version
-            } elseif ($cfg.PSObject.Properties['governance'] -and $cfg.governance.PSObject.Properties['lcm_version']) {
-                $currentVersion = [string]$cfg.governance.lcm_version
-            } elseif ($cfg.PSObject.Properties['lcm_version']) {
-                $currentVersion = [string]$cfg.lcm_version
-            }
-
-            if ($cfg.PSObject.Properties['absorbed_lcm_version']) {
-                $absorbedVersion = [string]$cfg.absorbed_lcm_version
-            } elseif ($cfg.PSObject.Properties['governance'] -and $cfg.governance.PSObject.Properties['absorbed_lcm_version']) {
-                $absorbedVersion = [string]$cfg.governance.absorbed_lcm_version
-            } else {
-                $absorbedVersion = $currentVersion
-            }
-        } catch {
-            $classification = 'lcm-governed'
-        }
+        $classification = 'lcm-governed'
+        $absorbedVersion = $GlobalLCMVersion
+        $currentVersion = $GlobalLCMVersion
         
         $agentJunction = Join-Path $DirectoryPath '.agents\rules'
         if (-not (Test-Path $agentJunction)) {
             $junctionsHealthy = $false
-        }
-        
-        if ($currentVersion -ne $GlobalLCMVersion) {
-            $lcmStatus = 'outdated'
         }
     }
     
@@ -240,16 +214,12 @@ function Get-RepoCMState {
     $minPrivilege = 'User'
     $elevationDetermined = $false
     
-    if (Test-Path $lcmConfigFile) {
-        try {
-            $cfg = Get-Content -Path $lcmConfigFile -Raw | ConvertFrom-Json
-            if ($cfg.execution_context -and ($null -ne $cfg.execution_context.elevation_required)) {
-                $elevationRequired = [bool]$cfg.execution_context.elevation_required
-                $minPrivilege = if ($cfg.execution_context.minimum_privilege) { [string]$cfg.execution_context.minimum_privilege } else { if ($elevationRequired) { 'Administrator' } else { 'User' } }
-                $elevationReason = if ($cfg.execution_context.reason) { [string]$cfg.execution_context.reason } else { 'Configured in .lcm/config.json' }
-                $elevationDetermined = $true
-            }
-        } catch { }
+    $agentsFile = Join-Path $DirectoryPath 'AGENTS.md'
+    if ((Test-Path $agentsFile) -and ((Get-Content -Path $agentsFile -Raw) -match '(?im)^\s*Elevation:\s*Administrator\s*$')) {
+        $elevationRequired = $true
+        $minPrivilege = 'Administrator'
+        $elevationReason = 'Declared in AGENTS.md'
+        $elevationDetermined = $true
     }
     
     if (-not $elevationDetermined -and $CachedRepoState -and ($null -ne $CachedRepoState.ElevationRequired)) {

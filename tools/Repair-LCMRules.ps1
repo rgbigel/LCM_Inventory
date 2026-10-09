@@ -186,35 +186,6 @@ foreach ($dir in $childDirs) {
         $actionsTaken += 'Added .agents/ to .gitignore'
     }
     
-    # 3. Update .lcm/config.json baseline version
-    $cfgPath = Join-Path $repoPath '.lcm\config.json'
-    if (Test-Path -LiteralPath $cfgPath) {
-        try {
-            $cfg = Get-Content -Path $cfgPath -Raw -Encoding UTF8 | ConvertFrom-Json
-            $gov = if ($cfg.PSObject.Properties['governance']) { $cfg.governance } else { $null }
-            $currentAbsorbed = if ($gov -and $gov.PSObject.Properties['absorbed_lcm_version']) {
-                [string]$gov.absorbed_lcm_version
-            } elseif ($gov -and $gov.PSObject.Properties['lcm_version']) {
-                [string]$gov.lcm_version
-            } else {
-                ''
-            }
-            
-            if ($currentAbsorbed -ne $globalVersion) {
-                Write-Host "    [+] Aligning .lcm/config.json absorbed_lcm_version: $currentAbsorbed -> v$globalVersion" -ForegroundColor Green
-                if (-not $DryRun) {
-                    if ($gov) {
-                        $gov | Add-Member -NotePropertyName 'absorbed_lcm_version' -NotePropertyValue $globalVersion -Force
-                    } else {
-                        $cfg | Add-Member -NotePropertyName 'absorbed_lcm_version' -NotePropertyValue $globalVersion -Force
-                    }
-                    $cfg | ConvertTo-Json -Depth 5 | Set-Content -Path $cfgPath -Encoding UTF8
-                }
-                $actionsTaken += "Updated absorbed_lcm_version to v$globalVersion"
-            }
-        } catch { }
-    }
-    
     if ($actionsTaken.Count -gt 0) {
         $repairedCount++
         Write-Host "    Summary: $($actionsTaken -join ', ')" -ForegroundColor Cyan

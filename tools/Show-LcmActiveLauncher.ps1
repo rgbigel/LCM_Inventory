@@ -126,15 +126,6 @@ $toolCatalog = @(
         Description = "Scans all child repositories to verify NTFS reparse point junctions to .agents/rules and validates rule discovery integrity."
         Risk        = "Zero (Audit)"
         Command     = 'pwsh -NoProfile -NoExit -File "D:\Git_Repositories\LCM_Inventory\tools\Test-LCMRuleHealth.ps1"'
-    },
-    [ordered]@{
-        Name        = "Invoke-LCMOnboardBatch.ps1"
-        Category    = "Batch Onboarding"
-        Domain      = "LCM_Inventory"
-        ScriptPath  = "D:\Git_Repositories\LCM_Inventory\tools\Invoke-LCMOnboardBatch.ps1"
-        Description = "Batch-migrates all remaining un-governed repositories across D:\Git_Repositories to the full LCM v5.0.2 governance architecture."
-        Risk        = "High (Requires Review Gate)"
-        Command     = 'pwsh -NoProfile -NoExit -File "D:\Git_Repositories\LCM_Inventory\tools\Invoke-LCMOnboardBatch.ps1"'
     }
 )
 

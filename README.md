@@ -99,9 +99,6 @@ backup concept); `LS` = **LCM_Shared** (shared modules); and `LSP` =
 .\tools\Submit-ReviewResult.ps1 -RepositoryPath "BootEntryManager"
 # (Or using the root alias: .\RR.ps1 BootEntryManager)
 
-# Upgrade a target repository to the latest LCM baseline
-.\tools\Invoke-LCMUpdate.ps1 -TargetRepository "VolumeInventory"
-
 # Snapshot a new configuration management baseline
 .\tools\Create-WorkspaceBaseline.ps1 -BaselineId "BASELINE-v4.2.0"
 

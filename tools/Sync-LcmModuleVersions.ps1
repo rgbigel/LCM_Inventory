@@ -209,55 +209,7 @@ foreach ($doc in $waiDocs) {
     }
 }
 
-# 5. Scan child repositories .lcm/config.json
-$childLcmConfigs = @(Get-ChildItem -Path "$RootPath\*\.lcm\config.json" -ErrorAction SilentlyContinue)
-foreach ($cfg in $childLcmConfigs) {
-    $relPath = $cfg.FullName.Replace("$RootPath\", '')
-    $content = Get-Content -LiteralPath $cfg.FullName -Raw -Encoding UTF8
-    try {
-        $json = $content | ConvertFrom-Json
-        $absorbed = $null
-        $isNested = $false
-
-        if ($json.PSObject.Properties['governance'] -and $json.governance.PSObject.Properties['absorbed_lcm_version']) {
-            $absorbed = [string]$json.governance.absorbed_lcm_version
-            $isNested = $true
-        } elseif ($json.PSObject.Properties['absorbed_lcm_version']) {
-            $absorbed = [string]$json.absorbed_lcm_version
-            $isNested = $false
-        }
-
-        if ($absorbed) {
-            $isAligned = ($absorbed -eq $TargetBaseline)
-            
-            $auditResults.Add([PSCustomObject]@{
-                File     = $relPath
-                Category = 'Child Baseline (.lcm)'
-                Current  = $absorbed
-                Target   = $TargetBaseline
-                Aligned  = $isAligned
-                Action   = if (-not $isAligned -and $Apply) { 'UPDATED' } elseif ($isAligned) { 'CONFORMANT' } else { 'NEEDS_UPDATE' }
-            })
-
-            if ($Apply -and -not $isAligned) {
-                if ($isNested) {
-                    $json.governance.absorbed_lcm_version = $TargetBaseline
-                    if ($json.governance.PSObject.Properties['lcm_version']) {
-                        $json.governance.lcm_version = $TargetBaseline
-                    }
-                } else {
-                    $json.absorbed_lcm_version = $TargetBaseline
-                    if ($json.PSObject.Properties['current_lcm_version']) {
-                        $json.current_lcm_version = $TargetBaseline
-                    }
-                }
-                $json | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $cfg.FullName -Encoding UTF8
-            }
-        }
-    } catch {}
-}
-
-# 6. Render Audit Table
+# 5. Render Audit Table
 $auditList = @($auditResults)
 $misalignedCount = @($auditList | Where-Object { -not $_.Aligned }).Count
 $totalCount = $auditList.Count
