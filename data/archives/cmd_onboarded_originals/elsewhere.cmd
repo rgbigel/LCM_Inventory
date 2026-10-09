@@ -1,1 +1,0 @@
-C:\Windows\System32\runas.exe /user:Administrator /noprofile /savecred "\"D:\Tools\Everything 1.5a\Everything.exe\" -regex -s \"!ext:lnk ^%*\""

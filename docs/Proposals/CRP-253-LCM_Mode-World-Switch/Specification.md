@@ -35,7 +35,7 @@
 An exhaustive analysis demonstrated that replacing the entire Git Root (`D:\Git_Repositories`) or all internal folders with junctions to an external world is broken:
 - **Root Git Tracking (`typechange`)**: `D:\Git_Repositories` tracks `.github/`, `.githooks/`, `.vscode/`, `docs/`, and `LCM_Tools/` in Git. Converting them to junctions creates permanent `typechange` index conflicts in Git for Windows.
 - **Machine Registry `Git_Root` Mismatch**: LCM tools resolve `$gitRoot` via `HKLM:\...\Environment\Git_Root` (`D:\Git_Repositories`). If target paths resolve to `D:\Git_World\...`, path prefix boundary checks (`$path.StartsWith($gitRoot)`) fail across security and search gates.
-- **Chained Junction Failures**: Repositories already contain internal junctions (`.agents/rules`, `.copilot/Rules`, BCR scratchpads). Nesting parent junctions creates reparse-point loops and depth exceptions in recursive tools.
+- **Chained Junction Failures**: Repositories already contain internal junctions (`.agents/rules`, `.agents/rules`, BCR scratchpads). Nesting parent junctions creates reparse-point loops and depth exceptions in recursive tools.
 - **IDE File Watchers Disconnect**: Windows `ReadDirectoryChangesW` APIs do not propagate change events across junction boundaries into the open IDE root.
 
 ### 2. Refined Hybrid Architecture

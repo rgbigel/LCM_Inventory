@@ -17,7 +17,7 @@ All planned phases of CRP-175 have been executed in strict adherence to the LCM 
 1. **AI Adapter & Dot-Directory Consolidation**:
    - Consolidated physical prompt atoms, configuration, instructions, and methods from root `.copilot` into `LCM_AI\.copilot`.
    - Pruned obsolete `Fixes/` and `Step1Engine.json`.
-   - Established NTFS junction `LCM_AI\.copilot\Rules` $\rightarrow$ `LCM_AI\.agents\rules` (pointing to the single canonical 17 rules).
+   - Established NTFS junction `LCM_AI\.agents\rules` $\rightarrow$ `LCM_AI\.agents\rules` (pointing to the single canonical 17 rules).
    - Removed `.copilot` and `.github/agents` from root git tracking (`git rm -r --cached`).
    - Replaced root physical `.copilot`, `.continue`, and `.github/agents` with zero-churn NTFS junctions pointing to `LCM_AI`.
    - Merged active session files (`ACTIVE_CONTEXT.md`, `ACTIVE_SESSION.md`, `hooks.json`, `mcp_config.json`) into `LCM_AI\.agents\`, pruned intermediate `LCM_Inventory\.agents`, and repointed root `.agents` directly to `LCM_AI\.agents`.
@@ -46,7 +46,7 @@ D:\Git_Repositories\.agents        -> D:\Git_Repositories\LCM_AI\.agents        
 D:\Git_Repositories\.copilot       -> D:\Git_Repositories\LCM_AI\.copilot       [Pass: True]
 D:\Git_Repositories\.continue      -> D:\Git_Repositories\LCM_AI\.continue      [Pass: True]
 D:\Git_Repositories\.github\agents -> D:\Git_Repositories\LCM_AI\.github\agents [Pass: True]
-LCM_AI\.copilot\Rules        -> D:\Git_Repositories\LCM_AI\.agents\rules  [Pass: True]
+LCM_AI\.agents\rules        -> D:\Git_Repositories\LCM_AI\.agents\rules  [Pass: True]
 LCM_AI\.continue\rules       -> D:\Git_Repositories\LCM_AI\.agents\rules  [Pass: True]
 ```
 

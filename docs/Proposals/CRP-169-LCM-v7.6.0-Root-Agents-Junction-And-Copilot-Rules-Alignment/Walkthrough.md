@@ -19,7 +19,7 @@ Status: ACCEPTED (Committed in Git_Repositories: ff11d81, LCM_AI: 10061e5)
 | **Phase 1** | Deploy NTFS Junction `D:\Git_Repositories\.agents` $\rightarrow$ `D:\Git_Repositories\LCM_Inventory\.agents` | `COMPLETED` | Reparse point verified. Resolves 17 rules, `ACTIVE_CONTEXT.md`, and `ACTIVE_SESSION.md`. |
 | **Phase 2** | Codify Command Taxonomy & Lifecycle Reconciliation | `COMPLETED` | Updated `ProposalReviewFlowPolicy.md`, `MethodEfficiencyPolicy.md`, and `ReviewCommitGovernancePolicy.md`. |
 | **Phase 3** | Codify Tool & Log Timestamp Precision and HTML Unicode Exception | `COMPLETED` | Updated `InvariantRules.md` (`tool-and-log-timestamp-precision`, HTML Unicode exception) and `PowerShellStandardsPolicy.md` (`RULE-PS-009`). |
-| **Phase 4** | Synchronize 17 Canonical Rules to `D:\Git_Repositories\.copilot\Rules\` | `COMPLETED` | 17 policy files copied; 100% cryptographic SHA256 match. |
+| **Phase 4** | Synchronize 17 Canonical Rules to `D:\Git_Repositories\.agents\rules\` | `COMPLETED` | 17 policy files copied; 100% cryptographic SHA256 match. |
 | **Phase 5** | Consolidate `.copilot` Root & Eliminate Duplicates | `COMPLETED` | Deleted duplicate `.copilot/InvariantRules.md` and `.copilot/macro-definitions.md`. Updated `.copilot/Config.json`. |
 | **Phase 6** | Gate 2 Review Presentation | `ACTIVE` | Ready for operator inspection and `Proceed` to `COMMITTED`. |
 
@@ -73,5 +73,5 @@ Overall Parity Status: 100% MATCH
 Deleted: D:\Git_Repositories\.copilot\InvariantRules.md
 Deleted: D:\Git_Repositories\.copilot\macro-definitions.md
 Config.json: Updated durable_memory_files to reference Rules/InvariantRules.md and Rules/macro-definitions.md
-All 17 rules housed strictly within D:\Git_Repositories\.copilot\Rules\ (0 duplicates).
+All 17 rules housed strictly within D:\Git_Repositories\.agents\rules\ (0 duplicates).
 ```

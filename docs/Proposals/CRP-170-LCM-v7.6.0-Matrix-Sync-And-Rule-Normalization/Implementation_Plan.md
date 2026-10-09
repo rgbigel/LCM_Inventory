@@ -16,11 +16,11 @@ Status: In_Progress
 
 ### Phase 1: Sanitize Rule Source Authority Headers
 - Modify `LCM_Inventory\.agents\rules\PowerShellRules.md`:
-  - Update `Path:` from `.copilot/Rules/PowerShellRules.md` to `.agents/rules/PowerShellRules.md`.
-  - Remove `<!-- Source Authority: .copilot/Rules/PowerShellRules.md -->`.
+  - Update `Path:` from `.agents/rules/PowerShellRules.md` to `.agents/rules/PowerShellRules.md`.
+  - Remove `<!-- Source Authority: .agents/rules/PowerShellRules.md -->`.
 - Modify `LCM_Inventory\.agents\rules\macro-definitions.md`:
   - Update `# location:` to `.agents/rules/macro-definitions.md`.
-  - Remove `<!-- Source Authority: .copilot/Rules/macro-definitions.md -->`.
+  - Remove `<!-- Source Authority: .agents/rules/macro-definitions.md -->`.
 
 ### Phase 2: Synchronize Master Cross-Reference Matrix & Root AGENTS.md
 - Modify `LCM_AI\docs\LCM-Rules-Cross-Reference.md`:
@@ -44,7 +44,7 @@ Status: In_Progress
 - Modify `LCM_Inventory\.agents\rules\MethodEfficiencyPolicy.md`:
   - Add search fallback to `RULE-EFF-007`.
 
-### Phase 5: Mirror to `.copilot/Rules/` & Parity Verification
-- Copy all 17 normalized rule files to `D:\Git_Repositories\.copilot\Rules\`.
+### Phase 5: Mirror to `.agents/rules/` & Parity Verification
+- Copy all 17 normalized rule files to `D:\Git_Repositories\.agents\rules\`.
 - Compute SHA256 hashes to guarantee 100% cryptographic parity across all 17 rules.
 - Populate `Walkthrough.md` with complete verification receipts.

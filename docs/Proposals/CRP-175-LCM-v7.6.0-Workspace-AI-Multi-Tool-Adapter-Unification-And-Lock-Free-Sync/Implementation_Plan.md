@@ -17,7 +17,7 @@ Date: 2026-09-25
 ### Phase 1: AI Adapter & Dot-Directory Consolidation
 1. Audit all files in `D:\Git_Repositories\.copilot` and `D:\Git_Repositories\LCM_AI\.copilot`.
 2. Migrate active prompt atoms and instructions to `LCM_AI\.copilot`; completely prune obsolete `Fixes/` and `Step1Engine.json`.
-3. In `LCM_AI\.copilot\Rules`, remove stale 544-byte prototype files and establish junction to `LCM_AI\.agents\rules`.
+3. In `LCM_AI\.agents\rules`, remove stale 544-byte prototype files and establish junction to `LCM_AI\.agents\rules`.
 4. Remove `.copilot` from root git tracking (`git rm -r --cached .copilot`), delete root physical `.copilot` directory, create NTFS junction `D:\Git_Repositories\.copilot` $\rightarrow$ `LCM_AI\.copilot`, and add `/.copilot/` to root `.gitignore`.
 5. Create `LCM_AI\.continue` (Option B), establish junction `LCM_AI\.continue\rules` $\rightarrow$ `LCM_AI\.agents\rules`, replace root `.continue` with NTFS junction $\rightarrow$ `LCM_AI\.continue`, and add `/.continue/` to root `.gitignore`.
 6. Consolidate GitHub agent templates in `LCM_AI\.github\agents`, untrack `.github/agents` in root git (`git rm -r --cached .github/agents`), replace root `.github\agents` with an NTFS junction $\rightarrow$ `LCM_AI\.github\agents`, and add `/.github/agents/` to root `.gitignore`.
@@ -26,7 +26,7 @@ Date: 2026-09-25
 1. Run pre-check ripgrep audit across `D:\Git_Repositories` to catalog all occurrences.
 2. Update [`LCM_Inventory/tools/Test-LCMRuleHealth.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Test-LCMRuleHealth.ps1) and [`Repair-LCMRules.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Repair-LCMRules.ps1):
    - Set canonical rules directory to `LCM_AI\.agents\rules`.
-   - Update `.copilot\Rules` check to verify it is an NTFS junction to `.agents\rules`.
+   - Update `.agents\rules` check to verify it is an NTFS junction to `.agents\rules`.
 3. Update [`LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1):
    - Resolve `.agents` junction baseline directly to `LCM_AI\.agents` (eliminating legacy `LCM_Inventory\.agents` lookup).
 4. Update [`LCM_AI/tools/Advance-Governance.ps1`](file:///D:/Git_Repositories/LCM_AI/tools/Advance-Governance.ps1), [`LoadRules.ps1`](file:///D:/Git_Repositories/LCM_AI/tools/LoadRules.ps1), and [`Validate-CopilotProfile.ps1`](file:///D:/Git_Repositories/LCM_AI/tools/Validate-CopilotProfile.ps1):
@@ -49,7 +49,7 @@ Date: 2026-09-25
 
 ### Phase 3: Verification & Quality Gate
 1. **Dangling Reference Post-Check**:
-   - Execute ripgrep pattern audit across `D:\Git_Repositories` to assert **0 active occurrences** of superseded paths (`LCM_Inventory\.agents`, `.copilot\Rules` [non-junction], `.copilot\Fixes`, `Step1Engine`, `LCM_Inventory\.agents`).
+   - Execute ripgrep pattern audit across `D:\Git_Repositories` to assert **0 active occurrences** of superseded paths (`LCM_Inventory\.agents`, `.agents\rules` [non-junction], `.copilot\Fixes`, `Step1Engine`, `LCM_Inventory\.agents`).
 2. **Rule Health Verification**:
    - Execute `Test-LCMRuleHealth.ps1` to verify 100% junction health across all child repos.
 3. **Review Gate Verification**:

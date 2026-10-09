@@ -33,7 +33,7 @@ Consequently:
 In [`LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1`](file:///d:/Git_Repositories/LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1#L585):
 ```powershell
 # Exclude child repo junction directories
-$junctionFilters = @('-.agents\rules\', '-*\.agents\rules\*', '-.copilot\Rules\', '-*\.copilot\Rules\*', '-.copilot\skills\', '-*\.copilot\skills\*')
+$junctionFilters = @('-.agents\rules\', '-*\.agents\rules\*', '-.agents\rules\', '-*\.agents\rules\*', '-.copilot\skills\', '-*\.copilot\skills\*')
 ```
 1. It explicitly filters `-.agents\rules\`, but leaves the parent `.agents` container unmasked in child repositories.
 2. When `.agents` is an NTFS junction, or when `.agents` contains junction child folders, `.agents` continues to display in the primary comparison view.

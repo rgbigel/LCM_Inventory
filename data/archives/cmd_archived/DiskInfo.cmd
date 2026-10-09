@@ -1,1 +1,0 @@
-wmic volume get BlockSize, Capacity, Compressed, DeviceID, DriveLetter, DriveType, FileSystem, FreeSpace, ID, IndexingEnabled, Label, MaximumFileNameLength, Name, PageFilePresent, QuotasEnabled, QuotasIncomplete, QuotasRebuilding, SerialNumber, SystemName, SystemVolume | more > d:\onedrive\cmd\DiskInfo.txt

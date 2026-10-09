@@ -33,7 +33,7 @@ This proposal addresses three core architectural requirements across workspace g
    - Strict BUG Invariant: BUGs birth in `DOIT` mode, but **MUST NOT** circumvent Gate 2 review.
    - Escape mechanisms: `LCM OFF` (emergency bypass) and `Testing OFF` (deferred deep testing to pre-push, where pre-push failures automatically spawn formal BUG proposals).
    - Auto-Reset Invariant: Upon push, both `LCM` and `Testing` unconditionally reset to `ON`.
-3. **Outdated `.copilot` Rules Repository**: The tracked directory `D:\Git_Repositories\.copilot\Rules` contains only 8 stale rule files dating to July 2026. This proposal synchronizes all 17 canonical rules into `.copilot/Rules/` and `.copilot/` root.
+3. **Outdated `.copilot` Rules Repository**: The tracked directory `D:\Git_Repositories\.agents\rules` contains only 8 stale rule files dating to July 2026. This proposal synchronizes all 17 canonical rules into `.agents/rules/` and `.copilot/` root.
 
 ---
 
@@ -62,7 +62,7 @@ This proposal addresses three core architectural requirements across workspace g
   - Auto-Reset Invariant: At push, both `LCM` and `Testing` unconditionally revert to `ON`.
 
 ### Requirement 3: Align `.copilot` Rules and Eliminate Root Duplicates
-- Synchronize all 17 canonical rule files from `LCM_Inventory\.agents\rules` into `D:\Git_Repositories\.copilot\Rules\`.
-- Remove legacy duplicate files from `.copilot/` root (`InvariantRules.md`, `macro-definitions.md`) to establish `.copilot/Rules/` as the single authoritative rule location.
+- Synchronize all 17 canonical rule files from `LCM_Inventory\.agents\rules` into `D:\Git_Repositories\.agents\rules\`.
+- Remove legacy duplicate files from `.copilot/` root (`InvariantRules.md`, `macro-definitions.md`) to establish `.agents/rules/` as the single authoritative rule location.
 - Update `.copilot/Config.json` durable memory paths to reference `Rules/InvariantRules.md` and `Rules/macro-definitions.md`.
 - Verify cryptographic SHA256 hash parity across all 17 rules in `Rules/`.
