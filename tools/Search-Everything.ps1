@@ -99,34 +99,43 @@ if ($Help) {
 
 # Construct search query string
 $searchTerms = [System.Collections.Generic.List[string]]::new()
+# es.exe needs one argument per search token; content terms are grouped with <...>
+$esTokens = [System.Collections.Generic.List[string]]::new()
 
 if ($PSCmdlet.ParameterSetName -eq 'Raw') {
   $searchTerms.Add($Raw)
+  $esTokens.Add($Raw)
 } else {
   if ($CaseSensitive) {
     $searchTerms.Add("case:")
+    $esTokens.Add("case:")
   }
 
   if ($Regex) {
     $searchTerms.Add("regex:")
+    $esTokens.Add("regex:")
   }
 
   if (-not [string]::IsNullOrWhiteSpace($Path)) {
     $resolvedPath = $Path.Trim().Trim('"')
     $searchTerms.Add("path:`"$resolvedPath`"")
+    $esTokens.Add($resolvedPath)
   }
 
   if (-not [string]::IsNullOrWhiteSpace($Extension)) {
     $ext = $Extension.Trim().TrimStart('.')
     $searchTerms.Add("ext:$ext")
+    $esTokens.Add("ext:$ext")
   }
 
   if (-not [string]::IsNullOrWhiteSpace($Content)) {
     $searchTerms.Add("content:`"$Content`"")
+    $esTokens.Add("content:<$Content>")
   }
 
   if (-not [string]::IsNullOrWhiteSpace($Query)) {
     $searchTerms.Add($Query)
+    $esTokens.Add($Query)
   }
 
   if ($searchTerms.Count -eq 0) {
@@ -155,7 +164,7 @@ if (-not $esBin) {
 
 if ($esBin) {
   try {
-    $cliOutput = @(& $esBin -n $MaxResults.ToString() $finalQuery 2>&1)
+    $cliOutput = @(& $esBin -n $MaxResults.ToString() @esTokens 2>&1)
     if ($LASTEXITCODE -eq 0) {
       return $cliOutput
     }
