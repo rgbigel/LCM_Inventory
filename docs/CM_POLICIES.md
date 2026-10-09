@@ -96,17 +96,17 @@ The **LCM Configuration Management Control Hub** (`docs/CM_CONTROL_HUB.html`) pr
 
 ## 7. Canonical Governance Tracking Architecture (Approach 1)
 
-1. **Physical Tracking Anchor**: Version control tracks canonical governance rules, hook configurations, and session context strictly under the physical directory `.lcm/.agents/`.
+1. **Physical Tracking Anchor**: Version control tracks canonical governance rules, hook configurations, and session context strictly under the physical directory `LCM_Inventory/.agents/`.
 2. **NTFS Directory Junction Exemption**: Root container junction `/.agents/` is excluded in root `.gitignore` to prevent Windows NTFS reparse point collision and duplicate index tracking.
-3. **Single Source of Truth**: Sibling and child repositories link `.agents/rules/` to `.lcm\.agents\rules` via NTFS directory junctions. Modifying rules in any child updates the canonical physical store immediately.
+3. **Single Source of Truth**: Sibling and child repositories link `.agents/rules/` to `LCM_Inventory\.agents\rules` via NTFS directory junctions. Modifying rules in any child updates the canonical physical store immediately.
 
 ---
 
 ## 8. The Ledger Invariant: Audit Logs as Permanent Memory
 
-1. **Logs Constitute the Ledger**: Historical and active audit logs (`.lcm/logs/*.log`, `.lcm/tools/internal/logs/*.log`, `LCM_Inventory/logs/cm_activity.log`, and `data/reviews/*.json`) are immutable evidence records of system activity and are never exempt from Git tracking.
-2. **Snapshot Invariant**: Root `.gitignore` must allow-list `.lcm/logs/` so that complete historical causality and execution receipts are committed and preserved across disaster recovery.
-3. **Exempt Runtime Data**: Only purely regenerable transient data (compiled scratchpad HTML in `.lcm/scratch/`, `.tmp` buffers, and lock files) is excluded from version control.
+1. **Logs Constitute the Ledger**: Historical and active audit logs (`LCM_Inventory/data/logs/lcm/*.log`, `LCM_Inventory/tools/logs/*.log`, `LCM_Inventory/logs/cm_activity.log`, and `data/reviews/*.json`) are immutable evidence records of system activity and are never exempt from Git tracking.
+2. **Snapshot Invariant**: Root `.gitignore` must allow-list `LCM_Inventory/data/logs/lcm/` so that complete historical causality and execution receipts are committed and preserved across disaster recovery.
+3. **Exempt Runtime Data**: Only purely regenerable transient data (compiled scratchpad HTML in `LCM_Inventory/scratch/`, `.tmp` buffers, and lock files) is excluded from version control.
 
 ---
 
@@ -125,6 +125,6 @@ The **LCM Configuration Management Control Hub** (`docs/CM_CONTROL_HUB.html`) pr
 
 1. **Universal Channel Compliance**: All browser-rendered display tables, viewers, and tool explorers across the workspace must route interactive host commands (tool execution, file opening, document printing/export) exclusively through the localhost Port 9876 REST Bridge Daemon (`http://127.0.0.1:9876/`).
 2. **Prohibition of Direct Sandbox Egress**: Client-side JavaScript running in web views or browsers must never attempt direct OS execution or silent fallback popups. If the daemon is unreachable, the UI must prompt the user to start `LcmDesktopDaemon.ps1`.
-3. **Shared Asset Reuse**: Display tables must utilize the shared LCM atom modules (`.lcm/assets/lcm-table-print-atom.js`, `.lcm/assets/lcm-table-core.js`) to guarantee uniform behavior and telemetry logging.
+3. **Shared Asset Reuse**: Display tables must utilize the shared LCM atom modules (`LCM_Inventory/assets/lcm-table-print-atom.js`, `LCM_Inventory/assets/lcm-table-core.js`) to guarantee uniform behavior and telemetry logging.
 
 See authoritative methodology specification in [`docs/LCM_METHODOLOGY_AND_MEMORY_ANCHOR.md`](file:///D:/Git_Repositories/LCM_Inventory/docs/LCM_METHODOLOGY_AND_MEMORY_ANCHOR.md).

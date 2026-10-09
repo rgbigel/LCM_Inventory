@@ -66,7 +66,7 @@ backup concept); `LS` = **LCM_Shared** (shared modules); and `LSP` =
    - Tracks the active global LCM release version.
 
 3. **LCM Version Upgrades & Propagation**:
-   - Safely upgrades repositories to the latest LCM version while preserving target `.lcm/overrides.json` and refreshing NTFS directory junctions.
+   - Safely upgrades repositories to the latest LCM version while preserving target `LCM_Inventory/overrides.json` and refreshing NTFS directory junctions.
 
 4. **Commit & Push Audit Logging**:
    - Detects dirty working trees, untracked files, branch heads, and unpushed commits (`ahead`/`behind` relative to remotes).
@@ -128,9 +128,9 @@ The operational governance and lifecycle methodology of the platform are codifie
 
 1. **[LCM Methodology & Memory Anchor](docs/LCM_METHODOLOGY_AND_MEMORY_ANCHOR.md)**:
    * **The DOX Invariant**: All documenting and executable assets are binding across the system; no code anywhere is exempt from visual review or Git tracking.
-   * **The Ledger Invariant**: Historical audit logs (`.lcm/logs/`, `logs/cm_activity.log`) and visual review receipts (`data/reviews/`) are permanent system memory, strictly tracked and pushed for disaster recovery.
+   * **The Ledger Invariant**: Historical audit logs (`LCM_Inventory/data/logs/lcm/`, `logs/cm_activity.log`) and visual review receipts (`data/reviews/`) are permanent system memory, strictly tracked and pushed for disaster recovery.
    * **Review Gate Separation**: Beyond Compare visual diff review is a human inspection gate, strictly distinct from Git `.gitignore`.
-   * **Approach 1 Governance**: Physical tracking in `.lcm/.agents/` with virtual NTFS junctions at the root and child repositories.
+   * **Approach 1 Governance**: Physical tracking in `LCM_Inventory/.agents/` with virtual NTFS junctions at the root and child repositories.
    * **Restorable Snapshot Push Pipeline**: Pre-push rule compilation, catalog synchronization, ahead-detection, and `-DryRun` simulation.
    * **Browser Display Table Channel Compliance**: Port 9876 REST bridge daemon standard for all LCD tables.
 

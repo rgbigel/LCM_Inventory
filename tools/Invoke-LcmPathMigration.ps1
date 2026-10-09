@@ -38,7 +38,7 @@ $map = Get-Content -LiteralPath $mapPath -Raw | ConvertFrom-Json
 
 $entries = @($map.map | Sort-Object { $_.from.Length } -Descending)
 $skip = @($map.skipFiles | ForEach-Object { ($_ -replace '/', '\').ToLowerInvariant() })
-$excludeDirs = '\scratch\', '\data\', '\logs\', '\Archives\', '\.git\', '\.venv\', '\node_modules\', '\__pycache__\'
+$excludeDirs = '\scratch\', '\data\', '\logs\', '\Archives\', '\Proposals\', '\.git\', '\.venv\', '\node_modules\', '\__pycache__\'
 
 # Whole-token '.lcm' followed by a separator, quote, whitespace, bracket or end
 $tail = '(?=[\\/''"\s,;)\]]|$)'

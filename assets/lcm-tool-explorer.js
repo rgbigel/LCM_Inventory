@@ -684,7 +684,7 @@
         }
 
         const remaining = aliases.filter(x => x.toLowerCase() !== targetShort.toLowerCase());
-        const confirmMsg = `Are you sure you want to delete short-name launcher '${targetShort}.cmd'?\n\nPreserved Script: ${t.Name} (Retained intact)\nRemaining Launchers (${remaining.length}): ${remaining.join(', ')}\n\nOnly the launcher in .lcm\\Cmd\\ will be deleted. The source script will NOT be touched.`;
+        const confirmMsg = `Are you sure you want to delete short-name launcher '${targetShort}.cmd'?\n\nPreserved Script: ${t.Name} (Retained intact)\nRemaining Launchers (${remaining.length}): ${remaining.join(', ')}\n\nOnly the launcher in LCM_Inventory\\Cmd\\ will be deleted. The source script will NOT be touched.`;
         if (!confirm(confirmMsg)) {
             return;
         }
@@ -794,7 +794,7 @@
 
         if (title) title.innerText = '🧹 Cleanup: ' + (activeCleanupTool.ShortName || activeCleanupTool.Name);
         if (logsInfo) logsInfo.innerText = 'Querying audit logs in tools/logs/...';
-        if (archiveInfo) archiveInfo.innerText = 'Querying archived snapshots in .lcm/tools/internal/archive/...';
+        if (archiveInfo) archiveInfo.innerText = 'Querying archived snapshots in LCM_Inventory/tools/archive/...';
 
         if (modal) modal.style.display = 'flex';
 
@@ -815,7 +815,7 @@
             }
         }).catch(e => {
             if (logsInfo) logsInfo.innerText = 'tools/logs/' + activeCleanupTool.Name + '-*.log';
-            if (archiveInfo) archiveInfo.innerText = '.lcm/tools/internal/archive/' + activeCleanupTool.Name.replace(/\.[^/.]+$/, "") + '/';
+            if (archiveInfo) archiveInfo.innerText = 'LCM_Inventory/tools/archive/' + activeCleanupTool.Name.replace(/\.[^/.]+$/, "") + '/';
         });
     }
 
@@ -861,7 +861,7 @@
     }
 
     function confirmAndArchiveTool(tool) {
-        if (!confirm('Are you sure you want to archive "' + tool.Name + '"?\n\nThis will move the script to .lcm/tools/internal/archive/ and remove its active command launcher.')) {
+        if (!confirm('Are you sure you want to archive "' + tool.Name + '"?\n\nThis will move the script to LCM_Inventory/tools/archive/ and remove its active command launcher.')) {
             return;
         }
         showToast('📦 Archiving ' + tool.Name + '...');
@@ -1620,7 +1620,7 @@
 
     function getDispatcherCommand(tool) {
         const elevatedFlag = tool.Admin ? ' -Elevated' : '';
-        return 'pwsh -File "D:\\Git_Repositories\\.lcm\\tools\\internal\\Invoke-InteractiveDesktop.ps1" -Command "' + tool.Example.replace(/"/g, '\\"') + '"' + elevatedFlag;
+        return 'pwsh -File "D:\\Git_Repositories\\LCM_Inventory\\tools\\internal\\Invoke-InteractiveDesktop.ps1" -Command "' + tool.Example.replace(/"/g, '\\"') + '"' + elevatedFlag;
     }
 
     function dispatchLcmProtocol(uri) {
@@ -1688,7 +1688,7 @@
 
     function fallbackToolHelp(tool, relPath) {
         const toolStem = (tool.ShortName || tool.Name).replace(/\.[^/.]+$/, "");
-        const fallbackCmd = 'pwsh.exe -NoProfile -ExecutionPolicy Bypass -Command "$ws = \'D:\\Git_Repositories\'; $p = Join-Path $ws (\'.lcm\\scratch\\help_' + toolStem + '.txt\'); $h = & (Join-Path $ws \'' + relPath + '\') -h 2>&1 | Out-String; Set-Content -LiteralPath $p -Value $h -Encoding UTF8; Start-Process notepad.exe -ArgumentList $p"';
+        const fallbackCmd = 'pwsh.exe -NoProfile -ExecutionPolicy Bypass -Command "$ws = \'D:\\Git_Repositories\'; $p = Join-Path $ws (\'LCM_Inventory\\scratch\\help_' + toolStem + '.txt\'); $h = & (Join-Path $ws \'' + relPath + '\') -h 2>&1 | Out-String; Set-Content -LiteralPath $p -Value $h -Encoding UTF8; Start-Process notepad.exe -ArgumentList $p"';
         fetch(DAEMON_URL + '/execute', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -2502,7 +2502,7 @@
             await fetch(`${DAEMON_URL}/execute`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ command: 'pwsh -File .lcm/tools/internal/Show-Tools.ps1 -NoLaunch', elevated: false, noExit: false }),
+                body: JSON.stringify({ command: 'pwsh -File LCM_Inventory/tools/Show-Tools.ps1 -NoLaunch', elevated: false, noExit: false }),
                 signal: AbortSignal.timeout(2000)
             });
         } catch (e) {}

@@ -13,7 +13,7 @@ Date: 2026-08-30
 ## 1. Executive Summary & Impact Classification
 
 * **Proposal ID**: `CRP-2026-002` (`CR-2026-032` / `Proposal #21`)
-* **Target Domain**: `LCM_AI & .lcm Tooling Hub`
+* **Target Domain**: `LCM_AI & LCM_Inventory Tooling Hub`
 * **Impact Level**: `LOW` (Non-breaking security intake layer and tool catalog addition).
 * **Target Milestone**: `LCM v7.0.0`
 
@@ -32,9 +32,9 @@ Cloud-based Google Gemini (Web, Apps, Gems) operates inside Google's cloud bound
 ## 3. Implemented Components
 
 1. **Intake Specification**: [`LCM_AI/docs/GEMINI_INBOX_SPECIFICATION.md`](file:///LCM_AI/docs/GEMINI_INBOX_SPECIFICATION.md) defining markdown and JSON templates with mandatory headers.
-2. **Core Intake Tool**: [`.lcm/tools/internal/Sync-GeminiInbox.ps1`](file:///.lcm/tools/internal/Sync-GeminiInbox.ps1) implementing parsing, proposal registration via `ProposalManager.psm1`, archive relocation, and structured logging.
-3. **Command Trampoline**: [`.lcm/Cmd/SyncGeminiInbox.cmd`](file:///.lcm/Cmd/SyncGeminiInbox.cmd) for short-name CLI dispatch (`SyncGeminiInbox`).
-4. **Tool Catalog Synchronization**: Catalog entry in `.lcm/config/tool_catalog.json` (142 tools synchronized).
+2. **Core Intake Tool**: [`LCM_Inventory/tools/Sync-GeminiInbox.ps1`](file:///LCM_Inventory/tools/Sync-GeminiInbox.ps1) implementing parsing, proposal registration via `ProposalManager.psm1`, archive relocation, and structured logging.
+3. **Command Trampoline**: [`LCM_Inventory/Cmd/SyncGeminiInbox.cmd`](file:///LCM_Inventory/Cmd/SyncGeminiInbox.cmd) for short-name CLI dispatch (`SyncGeminiInbox`).
+4. **Tool Catalog Synchronization**: Catalog entry in `LCM_Inventory/config/tool_catalog.json` (142 tools synchronized).
 5. **GDrive Mirror Synchronization**: Automatic mirroring of specifications and tools to `D:\GDrive\LCM\` via `Export-LCMRules.ps1` and `Export-LcmKnowledgeBase.ps1`.
 
 ---

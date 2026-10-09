@@ -20,7 +20,7 @@ The **Lifecycle Model (LCM)** architecture is anchored upon deterministic reprod
   1. DOX Invariant        : All documenting & code assets are binding.
   2. Ledger Invariant     : Historical logs & receipts are precious memory.
   3. Review Gate Separation: BCR is human visual review; not .gitignore.
-  4. Approach 1 Governance: Physical tracking in .lcm/.agents; junctions on disk.
+  4. Approach 1 Governance: Physical tracking in LCM_Inventory/.agents; junctions on disk.
   5. Snapshot Push Pipeline: Pre-push validation ensures restorable disaster recovery.
   6. Display Table Channel: Port 9876 REST bridge for all LCD browser tables.
 ==========================================================================
@@ -37,9 +37,9 @@ In an LCM-governed workspace, **anything that documents or executes is binding a
 
 ### 2.2 The Exemption Boundary
 The only items exempt from visual review and permanent version tracking are:
-1. **Regenerable Scratchpad Artifacts**: Dynamically compiled HTML viewers in `.lcm/scratch/` (e.g. `SHOW_TOOLS.html`, `User_Tools_Explorer_LCM.html`) that are generated on the fly by tool indexers.
+1. **Regenerable Scratchpad Artifacts**: Dynamically compiled HTML viewers in `LCM_Inventory/scratch/` (e.g. `SHOW_TOOLS.html`, `User_Tools_Explorer_LCM.html`) that are generated on the fly by tool indexers.
 2. **Temporary Execution Buffers**: Local temporary lock files (`*.lock`), PID manifests, and volatile swap files (`*.swp`, `*.tmp`).
-3. **Local Tool Symlinks**: Platform symlinks in `.lcm/tools/links/`.
+3. **Local Tool Symlinks**: Platform symlinks in `LCM_Inventory/Cmd/`.
 
 Everything else—specifically all configurations, metadata, rules, and historical audit logs—is part of the permanent system state.
 
@@ -49,13 +49,13 @@ Everything else—specifically all configurations, metadata, rules, and historic
 
 ### 3.1 Logs are the Memory of the System
 Audit logs in LCM are not disposable console output; they constitute the **Configuration Management Ledger**:
-* **Daemon Audit Logs** (`.lcm/tools/internal/logs/LcmDesktopDaemon-*.log`): Record every REST call, tool execution, process dispatch, and client interaction.
-* **Tool Execution Logs** (`.lcm/logs/Show-ToolIndex-*.log`, `Update-ToolCatalog-*.log`, `Sync-GeminiInbox-*.log`): Capture telemetry of metadata compilation, catalog reconciliation, and inbox synchronization.
+* **Daemon Audit Logs** (`LCM_Inventory/tools/logs/LcmDesktopDaemon-*.log`): Record every REST call, tool execution, process dispatch, and client interaction.
+* **Tool Execution Logs** (`LCM_Inventory/data/logs/lcm/Show-ToolIndex-*.log`, `Update-ToolCatalog-*.log`, `Sync-GeminiInbox-*.log`): Capture telemetry of metadata compilation, catalog reconciliation, and inbox synchronization.
 * **CM Activity Ledger** (`LCM_Inventory/logs/cm_activity.log`): Append-only chronological record of every review disposition, commit SHA, proposal state transition, and repository push.
 * **Visual Review Receipts** (`LCM_Inventory/data/reviews/review_*.json`): Cryptographic evidence receipts linking each Beyond Compare visual review session to its resulting Git commit.
 
 ### 3.2 Version Control & Snapshot Mandate
-* All historical and active logs in `.lcm/logs/` and `.lcm/tools/internal/logs/` must be explicitly allow-listed in root `.gitignore` (`!/.lcm/logs/*.log`).
+* All historical and active logs in `LCM_Inventory/data/logs/lcm/` and `LCM_Inventory/tools/logs/` must be explicitly allow-listed in root `.gitignore` (`!/LCM_Inventory/data/logs/lcm/*.log`).
 * These logs must be staged, committed, and pushed as part of repository snapshots so that historical causality is preserved across disaster recovery.
 
 ---
@@ -70,7 +70,7 @@ A critical failure mode identified in platform evolution was the conflation of t
 ### 4.2 The BCR Inclusion Rule
 * `Invoke-BeyondCompareReview.ps1` must never apply blanket exclusions to code directories (such as `.lcm`).
 * The root review filter `$keepDirs` must explicitly retain `.lcm`.
-* Only non-code transient directories (`.lcm\logs\`, `.lcm\scratch\`, `.lcm\archive\`, `.lcm\tools\links\`) may be filtered from the visual display. All modified modules, assets, tools, commands, and governance specifications must be offered for human review.
+* Only non-code transient directories (`LCM_Inventory\data\logs\lcm\`, `LCM_Inventory\scratch\`, `LCM_Inventory\data\archives\`, `LCM_Inventory\Cmd\`) may be filtered from the visual display. All modified modules, assets, tools, commands, and governance specifications must be offered for human review.
 
 ---
 
@@ -81,7 +81,7 @@ The workspace operates under the NTFS Directory Junction pattern to ensure singl
 
 ```
 Physical Storage (Canonical):
-  D:\Git_Repositories\.lcm\.agents\
+  D:\Git_Repositories\LCM_Inventory\.agents\
     ├── rules\                    (17 Authoritative LCM Rules)
     ├── hooks.json                (Global Antigravity Hook Bindings)
     ├── mcp_config.json           (Model Context Protocol Server Config)
@@ -89,16 +89,16 @@ Physical Storage (Canonical):
     └── ACTIVE_CONTEXT.md         (Active Task Context)
 
 Virtual Junctions (NTFS Reparse Points):
-  D:\Git_Repositories\.agents                  ───►  .lcm\.agents
-  D:\Git_Repositories\LCM_Inventory\.agents ───►  .lcm\.agents
-  D:\Git_Repositories\HaSSD06\.agents\rules       ───►  .lcm\.agents\rules
-  D:\Git_Repositories\<ChildRepo>\.agents\rules   ───►  .lcm\.agents\rules
+  D:\Git_Repositories\.agents                  ───►  LCM_Inventory\.agents
+  D:\Git_Repositories\LCM_Inventory\.agents ───►  LCM_Inventory\.agents
+  D:\Git_Repositories\HaSSD06\.agents\rules       ───►  LCM_Inventory\.agents\rules
+  D:\Git_Repositories\<ChildRepo>\.agents\rules   ───►  LCM_Inventory\.agents\rules
 ```
 
 ### 5.2 Approach 1 Git Tracking Invariant
-1. **Git Tracks Physical Path**: Version control tracks files strictly under `.lcm/.agents/*`.
+1. **Git Tracks Physical Path**: Version control tracks files strictly under `LCM_Inventory/.agents/*`.
 2. **Root Junction Excluded in Git**: The root virtual path `/.agents/` is excluded in root `.gitignore` to prevent Windows NTFS junction collision and duplicate index tracking.
-3. **Disaster Recovery Bootstrapping**: A clean `git clone` restores `.lcm/.agents/` with 100% fidelity. Workspace bootstrap utilities (`Sync-ToolSymlinks.ps1` / `Invoke-LcmSessionAudit.ps1`) verify and recreate the root junction automatically.
+3. **Disaster Recovery Bootstrapping**: A clean `git clone` restores `LCM_Inventory/.agents/` with 100% fidelity. Workspace bootstrap utilities (`Sync-ToolSymlinks.ps1` / `Invoke-LcmSessionAudit.ps1`) verify and recreate the root junction automatically.
 
 ---
 
@@ -114,7 +114,7 @@ When `Invoke-WorkspacePush.ps1` runs, it produces a **coherent, cross-repository
    * Automatically stages and commits any updated AI export artifacts.
 
 2. **Phase 2: Metadata & Catalog Snapshot**:
-   * Runs `Update-ToolCatalog.ps1 -Silent` to synchronize `tool_catalog.json` and command trampolines in `.lcm/tools/Cmd/`.
+   * Runs `Update-ToolCatalog.ps1 -Silent` to synchronize `tool_catalog.json` and command trampolines in `LCM_Inventory/Cmd/`.
    * Stages and commits catalog updates before push dispatch.
 
 3. **Phase 3: Ahead-Check & Atomic Push**:
@@ -136,7 +136,7 @@ When `Invoke-WorkspacePush.ps1` runs, it produces a **coherent, cross-repository
 All browser-rendered user interfaces, tool explorers, and tabular components across the LCM ecosystem (such as the LCM Tool Explorer `User_Tools_Explorer_LCM.html`, CM Control Hub `CM_CONTROL_HUB.html`, and Table Print Atom `lcm-table-print-atom.js`) **must communicate host actions strictly through the local Port 9876 REST Bridge Daemon**.
 
 * **Endpoint Authority**: `http://127.0.0.1:9876/`
-* **Daemon Provider**: `.lcm/tools/internal/LcmDesktopDaemon.ps1`
+* **Daemon Provider**: `LCM_Inventory/tools/LcmDesktopDaemon.ps1`
 * **Architecture Rationale**: Browser JavaScript executing from `file://` URIs is security-sandboxed and cannot invoke host operating system binaries, native editors, printers, or PowerShell commands directly. Attempting to bypass the daemon via ad-hoc browser popups or inline eval violates system integrity and creates unrepeatable, broken user flows.
 
 ### 7.2 Standard API Endpoints
@@ -150,8 +150,8 @@ All LCD display table interactions map to standardized daemon REST controllers:
 ### 7.3 Compliance Checklist for Future Components
 Any new table, viewer, or dashboard created in LCM must satisfy:
 1. **No Silent Failures**: All user action clicks must either succeed via Port 9876 or display a graceful modal prompt informing the user to start `LcmDesktopDaemon.ps1`.
-2. **Channel Parity**: Use the shared asset atoms (`.lcm/assets/lcm-table-print-atom.js`, `.lcm/assets/lcm-table-core.js`) rather than re-inventing table print, filtering, or IPC routines.
-3. **Structured Telemetry**: Every call through Port 9876 must log a structured record in `.lcm/tools/internal/logs/LcmDesktopDaemon-*.log`.
+2. **Channel Parity**: Use the shared asset atoms (`LCM_Inventory/assets/lcm-table-print-atom.js`, `LCM_Inventory/assets/lcm-table-core.js`) rather than re-inventing table print, filtering, or IPC routines.
+3. **Structured Telemetry**: Every call through Port 9876 must log a structured record in `LCM_Inventory/tools/logs/LcmDesktopDaemon-*.log`.
 
 ---
 
@@ -159,10 +159,10 @@ Any new table, viewer, or dashboard created in LCM must satisfy:
 
 | Principle | Authoritative Specification | Primary Enforcement Tool / Hook |
 |:---|:---|:---|
-| **DOX Invariant** | [`AGENTS.md`](file:///D:/Git_Repositories/AGENTS.md), [`CM_POLICIES.md`](file:///D:/Git_Repositories/LCM_Inventory/docs/CM_POLICIES.md) | `.lcm/tools/internal/Sync-GeminiInbox.ps1` |
+| **DOX Invariant** | [`AGENTS.md`](file:///D:/Git_Repositories/AGENTS.md), [`CM_POLICIES.md`](file:///D:/Git_Repositories/LCM_Inventory/docs/CM_POLICIES.md) | `LCM_Inventory/tools/Sync-GeminiInbox.ps1` |
 | **Ledger Invariant** | `LCM_METHODOLOGY_AND_MEMORY_ANCHOR.md` | `.gitignore`, `logs/cm_activity.log`, `data/reviews/` |
-| **Review Gate Separation** | [`ProposalReviewFlowPolicy.md`](file:///D:/Git_Repositories/.lcm/.agents/rules/ProposalReviewFlowPolicy.md) | `LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1` |
-| **Approach 1 Governance** | `LCM_METHODOLOGY_AND_MEMORY_ANCHOR.md` | `.lcm/.agents/`, root `.gitignore` |
-| **Snapshot Push Pipeline** | [`ReviewCommitGovernancePolicy.md`](file:///D:/Git_Repositories/.lcm/.agents/rules/ReviewCommitGovernancePolicy.md) | `LCM_Inventory/tools/Invoke-WorkspacePush.ps1` |
-| **Port 9876 REST Bridge** | `CRP-2026-021`, `CM_POLICIES.md` | `.lcm/tools/internal/LcmDesktopDaemon.ps1` |
+| **Review Gate Separation** | [`ProposalReviewFlowPolicy.md`](file:///D:/Git_Repositories/LCM_Inventory/.agents/rules/ProposalReviewFlowPolicy.md) | `LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1` |
+| **Approach 1 Governance** | `LCM_METHODOLOGY_AND_MEMORY_ANCHOR.md` | `LCM_Inventory/.agents/`, root `.gitignore` |
+| **Snapshot Push Pipeline** | [`ReviewCommitGovernancePolicy.md`](file:///D:/Git_Repositories/LCM_Inventory/.agents/rules/ReviewCommitGovernancePolicy.md) | `LCM_Inventory/tools/Invoke-WorkspacePush.ps1` |
+| **Port 9876 REST Bridge** | `CRP-2026-021`, `CM_POLICIES.md` | `LCM_Inventory/tools/LcmDesktopDaemon.ps1` |
 
