@@ -25,6 +25,7 @@ param(
     [string[]]$Advice = @(),
     [string[]]$Lesson = @(),
     [string]$Author = 'AI',
+    [switch]$DryRun,
     [Alias('h', '?')]
     [switch]$Help
 )
