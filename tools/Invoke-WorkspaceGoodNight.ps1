@@ -32,6 +32,12 @@ param(
     [Parameter(Mandatory = $false, HelpMessage = 'Operator advice lines to append to OPERATOR_ADVICE.md')]
     [string[]]$Advice = @(),
 
+    [Parameter(Mandatory = $false, HelpMessage = 'AI-to-AI lessons to append to AI_MEMORY.md')]
+    [string[]]$Lesson = @(),
+
+    [Parameter(Mandatory = $false, HelpMessage = 'Name of the AI writing the lessons')]
+    [string]$Author = 'AI',
+
     [Parameter(Mandatory = $false, HelpMessage = 'Skip Gemini and knowledge base export synchronization')]
     [switch]$SkipGemini,
 
@@ -144,7 +150,7 @@ if ($dirtyRepos.Count -gt 0) {
 Write-Host "`n[2/6] Save All: Writing Session Memory..." -ForegroundColor Yellow
 $saveScript = Join-Path $toolsDir 'Save-AllSessionMemory.ps1'
 if (-not (Test-Path -LiteralPath $saveScript)) { throw "Save-AllSessionMemory.ps1 was not found: $saveScript" }
-$saveParams = @{ Advice = $Advice }
+$saveParams = @{ Advice = $Advice; Lesson = $Lesson; Author = $Author }
 if ($DryRun) { $saveParams['DryRun'] = $true }
 & $saveScript @saveParams
 

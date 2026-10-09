@@ -23,7 +23,8 @@
 [CmdletBinding()]
 param(
     [string[]]$Advice = @(),
-    [switch]$DryRun,
+    [string[]]$Lesson = @(),
+    [string]$Author = 'AI',
     [Alias('h', '?')]
     [switch]$Help
 )
@@ -93,10 +94,20 @@ foreach ($line in @($Advice | Where-Object { -not [string]::IsNullOrWhiteSpace($
     $added++
 }
 
+$memFile = Join-Path $agentsDir 'AI_MEMORY.md'
+$mem = [System.IO.File]::ReadAllText($memFile)
+$lessonsAdded = 0
+foreach ($line in @($Lesson | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })) {
+    if ($mem.Contains($line.Trim())) { continue }
+    $mem = $mem.TrimEnd() + "`r`n- $($line.Trim()) ($today, $Author)`r`n"
+    $lessonsAdded++
+}
+
 if ($DryRun) {
-    Write-Host "[DryRun] ACTIVE_CONTEXT.md would be stamped $today with $($rows.Count) repo row(s); $added advice line(s) would be added."
+    Write-Host "[DryRun] ACTIVE_CONTEXT.md would be stamped $today with $($rows.Count) repo row(s); $added advice and $lessonsAdded lesson line(s) would be added."
     return
 }
 [System.IO.File]::WriteAllText($contextFile, $ctx, $utf8)
 [System.IO.File]::WriteAllText($adviceFile, $adv, $utf8)
-Write-Host "  [OK] ACTIVE_CONTEXT.md stamped $today ($($rows.Count) repo row(s)); OPERATOR_ADVICE.md +$added line(s)." -ForegroundColor Green
+[System.IO.File]::WriteAllText($memFile, $mem, $utf8)
+Write-Host "  [OK] ACTIVE_CONTEXT.md stamped $today ($($rows.Count) repo row(s)); OPERATOR_ADVICE.md +$added; AI_MEMORY.md +$lessonsAdded." -ForegroundColor Green
