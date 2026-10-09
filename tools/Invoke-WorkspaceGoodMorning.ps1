@@ -68,8 +68,8 @@ function Get-RepoList {
 $ctx = [System.IO.File]::ReadAllText($contextFile)
 $repos = @(Get-RepoList)
 $savedAt = $null
-if ($ctx -match '(?m)^Saved: (\d{4}-\d{2}-\d{2} \d{2}:\d{2})') {
-    $savedAt = [datetime]::ParseExact($Matches[1], 'yyyy-MM-dd HH:mm', $null)
+if ($ctx -match '(?m)^Saved: (\d{4}-\d{2}-\d{2} \d{2}:\d{2}(:\d{2})?)') {
+    $savedAt = [datetime]::Parse($Matches[1])
 }
 $lastCommit = $null
 foreach ($r in $repos) {

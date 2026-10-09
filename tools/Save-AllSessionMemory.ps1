@@ -45,7 +45,7 @@ $gitRoot = Get-LcmMachineGitRoot
 $agentsDir = Join-Path $gitRoot 'LCM_AI\.agents'
 $contextFile = Join-Path $agentsDir 'ACTIVE_CONTEXT.md'
 $today = Get-Date -Format 'yyyy-MM-dd'
-$stamp = Get-Date -Format 'yyyy-MM-dd HH:mm'
+$stamp = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
 $utf8 = [System.Text.UTF8Encoding]::new($false)
 
 # --- Session Snapshot ---------------------------------------------------------
@@ -76,7 +76,7 @@ $snapshot = @(
 $snapshotText = ($snapshot -join "`r`n")
 
 $ctx = [System.IO.File]::ReadAllText($contextFile)
-$ctx = [regex]::Replace($ctx, '(?m)^\*\*Last Updated:\*\* .*?(\s*)$', "**Last Updated:** $today`$1", 1)
+$ctx = [regex]::Replace($ctx, '(?m)^\*\*Last Updated:\*\* .*?(\s*)$', "**Last Updated:** $stamp`$1", 1)
 $block = '(?s)<!-- SESSION_SNAPSHOT:BEGIN.*?SESSION_SNAPSHOT:END -->'
 if ($ctx -match $block) {
     $ctx = [regex]::Replace($ctx, $block, { param($m) $snapshotText })
