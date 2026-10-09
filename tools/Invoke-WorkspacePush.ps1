@@ -86,6 +86,15 @@ Write-Host " Push Reason : $Reason"
 Write-Host " Timestamp   : $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
 Write-Host "==========================================================================" -ForegroundColor Cyan
 
+# Learned-advice review gate (RULE-CTX-005): no publish while candidates are pending.
+$learnReview = Join-Path $workspaceRoot 'LCM_Inventory\tools\Invoke-LearnedAdviceReview.ps1'
+if (Test-Path -LiteralPath $learnReview) {
+    & pwsh -NoProfile -File $learnReview -Check
+    if ($LASTEXITCODE -ne 0) {
+        throw 'PUSH refused: learned-advice candidates are pending review. Run Invoke-LearnedAdviceReview.ps1, decide each one, then push again.'
+    }
+}
+
 # ------------------------------------------------------------------------------
 # 0. Read-only completion and lockstep preflight. This must precede all mutation.
 # ------------------------------------------------------------------------------

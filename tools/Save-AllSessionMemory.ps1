@@ -6,7 +6,7 @@
   Purpose: Session memory is saved in two places under LCM_AI\.agents:
            1. ACTIVE_CONTEXT.md   - the "Last Updated" stamp and an auto-generated
                                     "Session Snapshot" block (repo, branch, HEAD, state).
-           2. OPERATOR_ADVICE.md  - gets the lines passed via -Advice appended (dated,
+           2. LEARNED_ADVICE.md   - gets the lines passed via -Learn appended as candidates (dated,
                                     duplicates skipped, existing lines never rewritten).
            The narrative parts of ACTIVE_CONTEXT.md are written by the agent, not by this script.
   Path: LCM_Inventory/tools/Save-AllSessionMemory.ps1
@@ -14,16 +14,15 @@
   Version: 1.0.0
   Date: 2026-10-09
   Rule: RULE-PS-001 - RULE-PS-021
-.PARAMETER Advice
-  New operator advice lines to append to OPERATOR_ADVICE.md.
+.PARAMETER Learn
+  New lines for LEARNED_ADVICE.md; they enter as candidates (/learn) and need a review.
 .PARAMETER DryRun
   Report what would be written, change nothing.
 #>
 
 [CmdletBinding()]
 param(
-    [string[]]$Advice = @(),
-    [string[]]$Lesson = @(),
+    [string[]]$Learn = @(),
     [string]$Author = 'AI',
     [switch]$DryRun,
     [Alias('h', '?')]
@@ -34,8 +33,8 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 if ($Help) {
-    Write-Host 'Save-AllSessionMemory.ps1 [-Advice <string[]>] [-DryRun] [-h]'
-    Write-Host '  Updates ACTIVE_CONTEXT.md (stamp + Session Snapshot) and appends -Advice to OPERATOR_ADVICE.md.'
+    Write-Host 'Save-AllSessionMemory.ps1 [-Learn <string[]>] [-Author <name>] [-DryRun] [-h]'
+    Write-Host '  Updates ACTIVE_CONTEXT.md (stamp + Session Snapshot) and adds -Learn lines as candidates to LEARNED_ADVICE.md.'
     Write-Host '  Never commits or pushes.'
     return
 }
@@ -45,7 +44,6 @@ Import-Module -Name $contextModule -Force
 $gitRoot = Get-LcmMachineGitRoot
 $agentsDir = Join-Path $gitRoot 'LCM_AI\.agents'
 $contextFile = Join-Path $agentsDir 'ACTIVE_CONTEXT.md'
-$adviceFile = Join-Path $agentsDir 'OPERATOR_ADVICE.md'
 $today = Get-Date -Format 'yyyy-MM-dd'
 $stamp = Get-Date -Format 'yyyy-MM-dd HH:mm'
 $utf8 = [System.Text.UTF8Encoding]::new($false)
@@ -85,30 +83,20 @@ if ($ctx -match $block) {
     $ctx = $ctx.TrimEnd() + "`r`n`r`n---`r`n`r`n" + $snapshotText + "`r`n"
 }
 
-# --- Operator advice ----------------------------------------------------------
-$adv = [System.IO.File]::ReadAllText($adviceFile)
+# --- Learned advice candidates ---------------------------------------------------
+$learnFile = Join-Path $agentsDir 'LEARNED_ADVICE.md'
+$learned = [System.IO.File]::ReadAllText($learnFile)
 $added = 0
-foreach ($line in @($Advice | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })) {
-    $entry = "- $($line.Trim()) ($today)"
-    if ($adv.Contains($line.Trim())) { continue }
-    $adv = $adv.TrimEnd() + "`r`n" + $entry + "`r`n"
+foreach ($line in @($Learn | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })) {
+    if ($learned.Contains($line.Trim())) { continue }
+    $learned = $learned.TrimEnd() + "`r`n- [ ] $($line.Trim()) ($today, $Author)`r`n"
     $added++
 }
 
-$memFile = Join-Path $agentsDir 'AI_MEMORY.md'
-$mem = [System.IO.File]::ReadAllText($memFile)
-$lessonsAdded = 0
-foreach ($line in @($Lesson | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })) {
-    if ($mem.Contains($line.Trim())) { continue }
-    $mem = $mem.TrimEnd() + "`r`n- $($line.Trim()) ($today, $Author)`r`n"
-    $lessonsAdded++
-}
-
 if ($DryRun) {
-    Write-Host "[DryRun] ACTIVE_CONTEXT.md would be stamped $today with $($rows.Count) repo row(s); $added advice and $lessonsAdded lesson line(s) would be added."
+    Write-Host "[DryRun] ACTIVE_CONTEXT.md would be stamped $today with $($rows.Count) repo row(s); $added learn candidate(s) would be added."
     return
 }
 [System.IO.File]::WriteAllText($contextFile, $ctx, $utf8)
-[System.IO.File]::WriteAllText($adviceFile, $adv, $utf8)
-[System.IO.File]::WriteAllText($memFile, $mem, $utf8)
-Write-Host "  [OK] ACTIVE_CONTEXT.md stamped $today ($($rows.Count) repo row(s)); OPERATOR_ADVICE.md +$added; AI_MEMORY.md +$lessonsAdded." -ForegroundColor Green
+[System.IO.File]::WriteAllText($learnFile, $learned, $utf8)
+Write-Host "  [OK] ACTIVE_CONTEXT.md stamped $today ($($rows.Count) repo row(s)); LEARNED_ADVICE.md +$added candidate(s)." -ForegroundColor Green

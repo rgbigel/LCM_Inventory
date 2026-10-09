@@ -29,13 +29,10 @@ param(
     [Parameter(Mandatory = $false, HelpMessage = 'Skip the commit step (save all, archival and exports only)')]
     [switch]$NoCommit,
 
-    [Parameter(Mandatory = $false, HelpMessage = 'Operator advice lines to append to OPERATOR_ADVICE.md')]
-    [string[]]$Advice = @(),
+    [Parameter(Mandatory = $false, HelpMessage = 'Learned-advice candidates to add to LEARNED_ADVICE.md')]
+    [string[]]$Learn = @(),
 
-    [Parameter(Mandatory = $false, HelpMessage = 'AI-to-AI lessons to append to AI_MEMORY.md')]
-    [string[]]$Lesson = @(),
-
-    [Parameter(Mandatory = $false, HelpMessage = 'Name of the AI writing the lessons')]
+    [Parameter(Mandatory = $false, HelpMessage = 'Name of the AI writing the candidates')]
     [string]$Author = 'AI',
 
     [Parameter(Mandatory = $false, HelpMessage = 'Skip Gemini and knowledge base export synchronization')]
@@ -68,7 +65,7 @@ if ($Help) {
     Write-Host '  Publishing (push) happens only with -Push.'
     Write-Host ''
     Write-Host 'USAGE:' -ForegroundColor Yellow
-    Write-Host '  pwsh LCM_Inventory/tools/Invoke-WorkspaceGoodNight.ps1 [[-Reason] <str>] [-Push] [-NoCommit] [-Advice <str[]>] [-SkipGemini] [-DryRun] [-h]'
+    Write-Host '  pwsh LCM_Inventory/tools/Invoke-WorkspaceGoodNight.ps1 [[-Reason] <str>] [-Push] [-NoCommit] [-Learn <str[]>] [-Author <name>] [-SkipGemini] [-DryRun] [-h]'
     Write-Host '  GoodNight'
     Write-Host '  SaveAll'
     Write-Host ''
@@ -76,7 +73,7 @@ if ($Help) {
     Write-Host '  -Reason      : Commit/audit reason for the push operation'
     Write-Host '  -Push        : Also publish (git push) after committing. Default: off, the sequence ends at Committed'
     Write-Host '  -NoCommit    : Skip the commit step'
-    Write-Host '  -Advice      : New operator advice lines for OPERATOR_ADVICE.md'
+    Write-Host '  -Learn       : New learned-advice candidates for LEARNED_ADVICE.md'
     Write-Host '  -SkipGemini  : Skip Gemini AI export and knowledge base mirror'
     Write-Host '  -DryRun      : Simulate the sequence without pushing or deleting'
     Write-Host '  -h, -Help, -? : Displays this comprehensive parameter reference'
@@ -150,7 +147,7 @@ if ($dirtyRepos.Count -gt 0) {
 Write-Host "`n[2/6] Save All: Writing Session Memory..." -ForegroundColor Yellow
 $saveScript = Join-Path $toolsDir 'Save-AllSessionMemory.ps1'
 if (-not (Test-Path -LiteralPath $saveScript)) { throw "Save-AllSessionMemory.ps1 was not found: $saveScript" }
-$saveParams = @{ Advice = $Advice; Lesson = $Lesson; Author = $Author }
+$saveParams = @{ Learn = $Learn; Author = $Author }
 if ($DryRun) { $saveParams['DryRun'] = $true }
 & $saveScript @saveParams
 
