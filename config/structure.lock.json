@@ -5,5 +5,23 @@
   "forbiddenScope": "workspace root and the top level of every repository folder",
   "requiredFolders": ["LCM_AI", "LCM_Inventory", "LCM_Shared"],
   "requiredFiles": ["AGENTS.md", "LCM_Inventory/config/guardrails.json", "LCM_Inventory/config/structure.lock.json"],
-  "requiredJunctions": [".agents", ".copilot"]
+  "requiredJunctions": [".agents", ".copilot"],
+  "blastRadius": {
+    "description": "Governed code folders. .gitignore never limits checks here: ignored files are violations and content scans use the file system, not git.",
+    "folders": ["tools", "modules", "config", ".githooks", ".github"],
+    "contentExtensions": [".ps1", ".psm1", ".psd1", ".cmd", ".bat", ".py", ".json", ".go"],
+    "forbiddenTokenRegex": "(?<![\\w.-])\\.lcm(?=[\\\\/'\"\\s,;)\\]]|$)",
+    "allowTokenFiles": [
+      "LCM_Inventory/config/lcm-path-map.json",
+      "LCM_Inventory/config/guardrails.json",
+      "LCM_Inventory/config/structure.lock.json",
+      "LCM_Inventory/config/tool_catalog.json",
+      "LCM_Inventory/tools/Invoke-LcmPathMigration.ps1",
+      "LCM_Inventory/tools/Set-GitRoot.ps1",
+      "LCM_Inventory/tools/Flush-LcmLegacyLogs.ps1",
+      "LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1",
+      "LCM_Inventory/tools/Test-Guardrail.ps1",
+      "LCM_Inventory/modules/WorkspaceCM.psm1"
+    ]
+  }
 }

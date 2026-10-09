@@ -114,6 +114,38 @@ if ($Scan) {
   foreach ($f in @($lock.requiredFiles)) {
     if (-not (Test-Path -LiteralPath (Join-Path $workspaceRoot $f))) { $violations.Add("REQUIRED file missing: $f") }
   }
+  # .gitignore never limits the blast radius: ignored files inside it are violations,
+  # and the content scan walks the file system directly.
+  $radius = @($lock.blastRadius.folders)
+  foreach ($s in $scopes) {
+    if (-not (Test-Path -LiteralPath (Join-Path $s '.git'))) { continue }
+    $ign = @(git -C $s ls-files -oi --exclude-standard -- @($radius) 2>$null | Where-Object { $_ -notmatch '__pycache__|\.pyc$' })
+    foreach ($i in $ign) {
+      $full = Join-Path $s $i
+      $viaLink = $false
+      $cur = Split-Path $full -Parent
+      while ($cur.Length -gt $s.Length) {
+        if ((Get-Item -LiteralPath $cur -Force).Attributes -band [IO.FileAttributes]::ReparsePoint) { $viaLink = $true; break }
+        $cur = Split-Path $cur -Parent
+      }
+      if (-not $viaLink) { $violations.Add("IGNORED in blast radius: $full") }
+    }
+  }
+  $extRx = '(?i)\.(' + ((@($lock.blastRadius.contentExtensions) | ForEach-Object { $_.TrimStart('.') }) -join '|') + ')$'
+  $tokenRx = [regex]$lock.blastRadius.forbiddenTokenRegex
+  $allowed = @($lock.blastRadius.allowTokenFiles | ForEach-Object { ($_ -replace '/', '\').ToLowerInvariant() })
+  foreach ($s in $scopes) {
+    foreach ($d in $radius) {
+      $dir = Join-Path $s $d
+      if (-not (Test-Path -LiteralPath $dir -PathType Container)) { continue }
+      foreach ($f in Get-ChildItem -LiteralPath $dir -Recurse -File -Force -ErrorAction SilentlyContinue) {
+        if ($f.FullName -notmatch $extRx) { continue }
+        $rel = $f.FullName.Substring($workspaceRoot.Length).TrimStart('\').ToLowerInvariant()
+        if ($allowed -contains $rel) { continue }
+        if ($tokenRx.IsMatch([IO.File]::ReadAllText($f.FullName))) { $violations.Add("FORBIDDEN token in: $($f.FullName)") }
+      }
+    }
+  }
   foreach ($j in @($lock.requiredJunctions)) {
     $p = Join-Path $workspaceRoot $j
     if (-not (Test-Path -LiteralPath $p)) { $violations.Add("REQUIRED link missing: $j") }
