@@ -5,14 +5,16 @@
   Module: tools/Invoke-WorkspaceGoodNight.ps1
   Purpose: Executes the canonical LCM "Good Night" / "Save All" sequence:
            1. Scans workspace repositories for uncommitted changes and reports working-tree state.
-           2. Archives daemon-log evidence before any publish-owned maintenance can change it.
-           3. Refreshes Control Hub data and AI governance exports (Update-Gemini.ps1, Show-LcmControl.ps1 -NoLaunch).
-           4. Performs lockstep multi-repository push to remote tracking branches (Invoke-WorkspacePush.ps1).
-           5. Logs structured [GOOD_NIGHT] audit receipt to cm_activity.log.
+           2. Save all: writes the session memory (Save-AllSessionMemory.ps1).
+           3. Archives daemon-log evidence before any publish-owned maintenance can change it.
+           4. Refreshes Control Hub data and AI governance exports (Update-Gemini.ps1, Show-LcmControl.ps1 -NoLaunch).
+           5. Commits the governed repositories (state Committed; hooks are not bypassed).
+           6. Only with -Push: lockstep multi-repository publish (Invoke-WorkspacePush.ps1).
+           7. Logs structured [GOOD_NIGHT] audit receipt to cm_activity.log.
   Path: LCM_Inventory/tools/Invoke-WorkspaceGoodNight.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 1.0.0
-  Date: 2026-10-07
+  Version: 2.0.0
+  Date: 2026-10-09
   Rule: RULE-PS-001 - RULE-PS-021, RULE-LCM-014, RULE-REV-001
 #>
 
@@ -21,8 +23,14 @@ param(
     [Parameter(Mandatory = $false, Position = 0, HelpMessage = 'Commit and audit reason for the end-of-day push')]
     [string]$Reason = 'chore(workspace): save all and good night - end of day synchronization',
 
-    [Parameter(Mandatory = $false, HelpMessage = 'Skip remote git push (local save, log archival, and exports only)')]
-    [switch]$NoPush,
+    [Parameter(Mandatory = $false, HelpMessage = 'Publish (git push) all repos after committing. Default: off; Good Night ends at Committed.')]
+    [switch]$Push,
+
+    [Parameter(Mandatory = $false, HelpMessage = 'Skip the commit step (save all, archival and exports only)')]
+    [switch]$NoCommit,
+
+    [Parameter(Mandatory = $false, HelpMessage = 'Operator advice lines to append to OPERATOR_ADVICE.md')]
+    [string[]]$Advice = @(),
 
     [Parameter(Mandatory = $false, HelpMessage = 'Skip Gemini and knowledge base export synchronization')]
     [switch]$SkipGemini,
@@ -41,7 +49,7 @@ if ($PSVersionTable.PSEdition -ne 'Core' -or $PSVersionTable.PSVersion.Major -lt
     throw 'Invoke-WorkspaceGoodNight.ps1 requires PowerShell 7 (pwsh.exe). Windows PowerShell (powershell.exe) is not supported.'
 }
 
-$scriptVersion = '1.0.0'
+$scriptVersion = '2.0.0'
 $scriptName = 'Invoke-WorkspaceGoodNight'
 
 if ($Help) {
@@ -50,16 +58,19 @@ if ($Help) {
     Write-Host '==========================================================================' -ForegroundColor Cyan
     Write-Host 'SYNOPSIS:' -ForegroundColor Yellow
     Write-Host '  Executes the end-of-day workspace sequence: repository cleanliness preflight,'
-    Write-Host '  daemon-log archival, AI export refresh, and multi-repo remote push.'
+    Write-Host '  save all (session memory), daemon-log archival, AI export refresh and commit.'
+    Write-Host '  Publishing (push) happens only with -Push.'
     Write-Host ''
     Write-Host 'USAGE:' -ForegroundColor Yellow
-    Write-Host '  pwsh LCM_Inventory/tools/Invoke-WorkspaceGoodNight.ps1 [[-Reason] <str>] [-NoPush] [-SkipGemini] [-DryRun] [-h]'
+    Write-Host '  pwsh LCM_Inventory/tools/Invoke-WorkspaceGoodNight.ps1 [[-Reason] <str>] [-Push] [-NoCommit] [-Advice <str[]>] [-SkipGemini] [-DryRun] [-h]'
     Write-Host '  GoodNight'
     Write-Host '  SaveAll'
     Write-Host ''
     Write-Host 'PARAMETERS:' -ForegroundColor Yellow
     Write-Host '  -Reason      : Commit/audit reason for the push operation'
-    Write-Host '  -NoPush      : Skip git push (local save, log archival, and exports only)'
+    Write-Host '  -Push        : Also publish (git push) after committing. Default: off, the sequence ends at Committed'
+    Write-Host '  -NoCommit    : Skip the commit step'
+    Write-Host '  -Advice      : New operator advice lines for OPERATOR_ADVICE.md'
     Write-Host '  -SkipGemini  : Skip Gemini AI export and knowledge base mirror'
     Write-Host '  -DryRun      : Simulate the sequence without pushing or deleting'
     Write-Host '  -h, -Help, -? : Displays this comprehensive parameter reference'
@@ -86,7 +97,7 @@ Write-Host '====================================================================
 # ------------------------------------------------------------------------------
 # 2. Preflight Check: Repository Cleanliness
 # ------------------------------------------------------------------------------
-Write-Host "`n[1/5] Checking Repository Working-Tree Cleanliness..." -ForegroundColor Yellow
+Write-Host "`n[1/6] Checking Repository Working-Tree Cleanliness..." -ForegroundColor Yellow
 
 $governedRepos = @(
     'Git_Repositories',
@@ -128,9 +139,19 @@ if ($dirtyRepos.Count -gt 0) {
 }
 
 # ------------------------------------------------------------------------------
+# 2b. Save All (session memory only)
+# ------------------------------------------------------------------------------
+Write-Host "`n[2/6] Save All: Writing Session Memory..." -ForegroundColor Yellow
+$saveScript = Join-Path $toolsDir 'Save-AllSessionMemory.ps1'
+if (-not (Test-Path -LiteralPath $saveScript)) { throw "Save-AllSessionMemory.ps1 was not found: $saveScript" }
+$saveParams = @{ Advice = $Advice }
+if ($DryRun) { $saveParams['DryRun'] = $true }
+& $saveScript @saveParams
+
+# ------------------------------------------------------------------------------
 # 3. Daemon Log Archive
 # ------------------------------------------------------------------------------
-Write-Host "`n[2/5] Archiving Daemon Logs Before Publish..." -ForegroundColor Yellow
+Write-Host "`n[3/6] Archiving Daemon Logs Before Publish..." -ForegroundColor Yellow
 $archiveScript = Join-Path $toolsDir 'Archive-LcmDaemonLogs.ps1'
 if (Test-Path -LiteralPath $archiveScript) {
     $archiveParams = @{}
@@ -144,7 +165,7 @@ if (Test-Path -LiteralPath $archiveScript) {
 # ------------------------------------------------------------------------------
 # 4. Refresh Exports & Control Hub Artifact
 # ------------------------------------------------------------------------------
-Write-Host "`n[3/5] Refreshing Control Hub Artifacts & AI Exports..." -ForegroundColor Yellow
+Write-Host "`n[4/6] Refreshing Control Hub Artifacts & AI Exports..." -ForegroundColor Yellow
 
 if (-not $SkipGemini) {
     $updateGeminiScript = Join-Path $toolsDir 'Update-Gemini.ps1'
@@ -163,10 +184,37 @@ if (Test-Path -LiteralPath $controlScript) {
 # ------------------------------------------------------------------------------
 # 5. Remote Push Pipeline (Lockstep Multi-Repo Push)
 # ------------------------------------------------------------------------------
-if ($NoPush) {
-    Write-Host "`n[4/5] Skipping Remote Git Push (-NoPush switch specified)." -ForegroundColor DarkGray
+# ------------------------------------------------------------------------------
+# 5. Commit (state Committed; hooks are not bypassed)
+# ------------------------------------------------------------------------------
+$commitFailed = [System.Collections.Generic.List[string]]::new()
+if ($NoCommit) {
+    Write-Host "`n[5/6] Skipping Commit (-NoCommit specified)." -ForegroundColor DarkGray
 } else {
-    Write-Host "`n[4/5] Executing Multi-Repository Push (Invoke-WorkspacePush.ps1)..." -ForegroundColor Yellow
+    Write-Host "`n[5/6] Committing governed repositories..." -ForegroundColor Yellow
+    foreach ($repo in $governedRepos) {
+        $repoPath = if ($repo -eq 'Git_Repositories') { $gitRoot } else { Join-Path $gitRoot $repo }
+        if (-not (Test-Path -LiteralPath (Join-Path $repoPath '.git'))) { continue }
+        if (@(git -C $repoPath status --short 2>$null).Count -eq 0) { continue }
+        if ($DryRun) { Write-Host "  [DryRun] would commit $repo" -ForegroundColor Gray; continue }
+        git -C $repoPath add -A 2>&1 | Out-Null
+        git -C $repoPath commit -m $Reason -m 'Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>' 2>&1 | Out-Null
+        if ($LASTEXITCODE -eq 0) {
+            Write-Host "  [OK] $repo committed." -ForegroundColor Green
+        } else {
+            $commitFailed.Add($repo)
+            Write-Warning "$repo was not committed (hook or git refused); working tree left as is."
+        }
+    }
+}
+
+# ------------------------------------------------------------------------------
+# 6. Publish (only with -Push)
+# ------------------------------------------------------------------------------
+if (-not $Push) {
+    Write-Host "`n[6/6] Not publishing (default). State is Committed; use -Push to publish." -ForegroundColor DarkGray
+} else {
+    Write-Host "`n[6/6] Publishing (Invoke-WorkspacePush.ps1)..." -ForegroundColor Yellow
     $pushScript = Join-Path $toolsDir 'Invoke-WorkspacePush.ps1'
     if (Test-Path -LiteralPath $pushScript) {
         $pushParams = @{ Reason = $Reason }
@@ -185,10 +233,10 @@ if ($NoPush) {
 # ------------------------------------------------------------------------------
 # 6. Audit Logging & Summary
 # ------------------------------------------------------------------------------
-Write-Host "`n[5/5] Recording Audit Receipt..." -ForegroundColor Yellow
+Write-Host "`nAudit receipt..." -ForegroundColor Yellow
 $timestamp = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
 $actor = [Security.Principal.WindowsIdentity]::GetCurrent().Name
-$auditEntry = "[$timestamp] [GOOD_NIGHT] [Action: SAVE_ALL_AND_GOOD_NIGHT] [User: $actor] [DirtyRepos: $($dirtyRepos.Count)] [NoPush: $NoPush] [DryRun: $DryRun] [ArchivedDaemonLogs: $($archiveResult.FilesArchived)] Sequence completed."
+$auditEntry = "[$timestamp] [GOOD_NIGHT] [Action: SAVE_ALL_AND_GOOD_NIGHT] [User: $actor] [DirtyRepos: $($dirtyRepos.Count)] [NoCommit: $NoCommit] [CommitFailed: $($commitFailed.Count)] [Push: $Push] [DryRun: $DryRun] [ArchivedDaemonLogs: $($archiveResult.FilesArchived)] Sequence completed."
 
 if (-not $DryRun -and (Test-Path -LiteralPath $logFile)) {
     try {
