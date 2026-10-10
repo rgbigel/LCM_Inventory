@@ -255,7 +255,7 @@
             } else if (t.Audience === 'Internal') {
                 audBadge = '<span class="badge badge-internal" style="background: #8957e5; color: #fff; font-weight: 600;">Internal</span>';
             }
-            const admBadge = t.Admin ? '<span class="badge badge-admin-yes" title="Admin elevation required">🛡️ Admin</span>' : '<span class="badge badge-admin-no" title="Standard user execution">👤 User</span>';
+            const admBadge = t.Admin ? '<span class="badge badge-admin-yes" title="ADMINMODE design criterion: elevation required">🛡️ Admin</span>' : '<span class="badge badge-admin-no" title="ADMINMODE design criterion: elevation not required">👤 User</span>';
             const editedMarker = t._edited ? '<span class="edited-tag" title="Cell overridden client-side">✏️</span>' : '';
 
             const extDisplay = '<span class="tool-ext-badge ' + ext.cls + '">' + ext.label + '</span>';
@@ -1868,10 +1868,10 @@
                 '<option value="Developer" ' + (tool.Audience === 'Developer' ? 'selected' : '') + '>Developer (Plumbing)</option>' +
                 '</select>';
         } else if (field === 'Admin') {
-            controlHtml = '<label style="font-size: 11px; color: var(--text-secondary); font-weight: 600;">Admin Required:</label>' +
+            controlHtml = '<label style="font-size: 11px; color: var(--text-secondary); font-weight: 600;">ADMINMODE Design Criterion:</label>' +
                 '<select id="inline-edit-input">' +
-                '<option value="true" ' + (tool.Admin ? 'selected' : '') + '>🛡️ Admin Required (Elevated)</option>' +
-                '<option value="false" ' + (!tool.Admin ? 'selected' : '') + '>👤 Standard User</option>' +
+                '<option value="true" ' + (tool.Admin ? 'selected' : '') + '>🛡️ Elevation required by design</option>' +
+                '<option value="false" ' + (!tool.Admin ? 'selected' : '') + '>👤 Elevation no longer required by redesign</option>' +
                 '</select>';
         } else if (field === 'Category') {
             const curCat = tool.Category || 'General';
@@ -1966,7 +1966,10 @@
 
         closeCellEditor();
         applyFilters();
-        showToast('✓ Staged ' + activeEditCell.field + ' for ' + (targetTool.ShortName || baseStem) + ' (Blocked pending Finalize/Revert)');
+        const editSummary = activeEditCell.field === 'Admin'
+            ? ('ADMINMODE staged as ' + (parsedVal ? 'elevation required' : 'elevation no longer required by redesign'))
+            : ('Staged ' + activeEditCell.field);
+        showToast('✓ ' + editSummary + ' for ' + (targetTool.ShortName || baseStem) + ' (Blocked pending Finalize/Revert)');
     }
 
     function closeCellEditor() {
@@ -2956,4 +2959,3 @@
         initApplication();
     }
 })(window, document);
-

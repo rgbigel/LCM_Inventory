@@ -917,4 +917,3 @@ function Send-LcmIncidentTelemetry {
 }
 
 Export-ModuleMember -Function Get-LcmToolCatalogData, Measure-LcmToolCatalogMetrics, Format-LcmToolCatalogCli, Build-LcmToolIndexHtml, Send-LcmIncidentTelemetry
-

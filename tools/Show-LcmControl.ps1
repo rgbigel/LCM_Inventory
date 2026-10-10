@@ -12,7 +12,7 @@ param(
     [Alias('Scope')]
     [string]$Repo,
 
-    [Parameter(Mandatory = $false, HelpMessage = 'Filter by plan state (bug, suggested, approved, completed, deferred, etc.)')]
+    [Parameter(Mandatory = $false, HelpMessage = 'Filter by authoritative lifecycle state (suggested, in_progress, verified, in_review, completed, pushed, held, withdrawn, rejected, superseded)')]
     [string]$State,
 
     [Parameter(Mandatory = $false, HelpMessage = 'Optional array of Proposal IDs to filter (e.g. 1, 28, 44, 164)')]
@@ -27,6 +27,9 @@ param(
 
     [Parameter(Mandatory = $false, HelpMessage = 'Displays detailed individual state transition timeline in terminal CLI mode')]
     [switch]$Detail,
+
+    [Parameter(Mandatory = $false, HelpMessage = 'Open the lifecycle ledger in terminal detail mode')]
+    [switch]$Lifecycle,
 
     [Parameter(Mandatory = $false, HelpMessage = 'Render HTML data cache without launching desktop browser')]
     [switch]$NoLaunch,
@@ -121,26 +124,37 @@ if ($Help) {
     Write-Host "==========================================================================" -ForegroundColor Cyan
     Write-Host "SYNOPSIS:" -ForegroundColor Yellow
     Write-Host "  Renders and launches the interactive CM Control Hub single-page web dashboard."
-    Write-Host "  This release enables refresh, proposal/document viewing, log viewing, and"
-    Write-Host "  Beyond Compare review launch. Lifecycle changes, cleanup, commit, and push"
-    Write-Host "  remain disabled in the browser."
+    Write-Host "  The dashboard displays authoritative proposal lifecycle state and routes"
+    Write-Host "  lifecycle actions through Invoke-ProposalAction.ps1."
     Write-Host ""
     Write-Host "USAGE:" -ForegroundColor Yellow
-    Write-Host "  pwsh tools/Show-LcmControl.ps1 [-Dates] [-ReviewMode] [-Repo <repo>] [-State <state>] [-Cli] [-h]"
+    Write-Host "  pwsh tools/Show-LcmControl.ps1 [-Lifecycle] [-Dates] [-ReviewMode] [-Repo <repo>] [-State <state>] [-Id <CRP-ID>] [-Cli] [-h]"
     Write-Host ""
     Write-Host "MODES:" -ForegroundColor Yellow
     Write-Host "  (default)          : Opens full CM Control Hub on interactive desktop"
     Write-Host "  -Dates / -DatesMode: Opens Control Hub with CRP Dates modal active"
     Write-Host "  -ReviewMode        : Opens Control Hub filtered to pending Beyond Compare reviews"
     Write-Host "  -Cli / -NoBrowser  : Outputs proposal dates table directly to terminal"
+    Write-Host "  -Lifecycle         : Outputs authoritative lifecycle state and transition history in terminal"
     Write-Host ""
     Write-Host "ALIASES & SHORT-NAMES:" -ForegroundColor Yellow
     Write-Host "  ShowLcmControl.cmd : Canonical launcher"
     Write-Host "  ShowCMControlHub   : Compatibility alias"
     Write-Host "  ShowCrpDates       : Compatibility alias"
     Write-Host "  CmHub.cmd / DOR.cmd: Quick desktop dispatchers"
+    Write-Host ""
+    Write-Host "LIFECYCLE QUICK REFERENCE:" -ForegroundColor Yellow
+    Write-Host "  Suggested -> In Progress -> Verified -> In Review -> Completed -> Pushed"
+    Write-Host "  BCR and COMPLETE require one exact CRP/BUG identity; repository inference is blocked."
+    Write-Host "  -Immediately is a temporary documented BUG-cohort quality-check deferral; it is not -Force."
+    Write-Host "  Inspect: ShowCM -Lifecycle -Id <CRP-ID>"
     Write-Host "==========================================================================" -ForegroundColor Cyan
     return
+}
+
+if ($Lifecycle) {
+    $CliMode = $true
+    $Detail = $true
 }
 
 $workspaceRoot = 'D:\Git_Repositories'
@@ -206,8 +220,7 @@ if ($CliMode) {
     if ($State) {
         $sNorm = $State.ToLower()
         $list = @($list | Where-Object {
-            ((Get-ObjProperty $_ 'state').ToLower() -eq $sNorm) -or
-            ((Get-ObjProperty $_ 'progress_state').ToLower() -eq $sNorm)
+            (Get-ObjProperty $_ 'state').ToLower() -eq $sNorm
         })
     }
 
@@ -234,6 +247,7 @@ if ($CliMode) {
         $inProg  = if ($d) { Get-ObjProperty $d 'in_progress' } else { '-' }
         $comp    = if ($d) { Get-ObjProperty $d 'completed' } else { '-' }
         $pushed  = if ($d) { Get-ObjProperty $d 'pushed' (Get-ObjProperty $p 'pushed_at') } else { Get-ObjProperty $p 'pushed_at' }
+        $qualityDeferred = if ((Get-ObjProperty $p 'quality_checks_deferred' 'false').ToLowerInvariant() -eq 'true') { 'YES' } else { '-' }
 
         [PSCustomObject]@{
             ID          = $p.id
@@ -245,11 +259,12 @@ if ($CliMode) {
             InProgress  = $inProg
             Completed   = $comp
             Pushed      = $pushed
+            QualityDeferred = $qualityDeferred
             Title       = $p.title
         }
     }
 
-    $rows | Sort-Object ID -Descending | Format-Table -Property ID, Tag, Scope, State, Status, Created, InProgress, Completed, Pushed, Title -AutoSize
+    $rows | Sort-Object ID -Descending | Format-Table -Property ID, Tag, Scope, State, Status, QualityDeferred, Created, InProgress, Completed, Pushed, Title -AutoSize
 
     if ($Detail) {
         Write-Host ""

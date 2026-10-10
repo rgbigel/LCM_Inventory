@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Executes proposal batch actions ('do', 'delete', 'defer', 'complete', 'suggest') and sets review granularity.
+    Executes proposal lifecycle actions and configures lifecycle governance settings.
 .DESCRIPTION
     Module: tools/Invoke-ProposalAction.ps1
     Authors: Rolf, LCM_AI Engine
@@ -11,7 +11,7 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $false, Position = 0, HelpMessage = 'Action to perform on proposals or governance settings')]
-    [ValidateSet('do', 'delete', 'defer', 'deferred', 'complete', 'completed', 'suggest', 'suggested', 'granularity', 'mode', 'testing-mode', 'testing', 'list', 'progress', 'state', 'reject', 'rejected', 'approve', 'approved', 'bug', 'push', 'pushed', 'verify', 'priority', 'commit', 'committed', 'proceed', 'regression', 'regressions', 'check-regressions', 'generate-regression', 'workon', 'work-on', 'app', 'new-app', 'apps', 'list-apps', 'sync-apps', 'catalog', 'split-docs', 'splitdocs', 'doc', 'docs', 'show-doc', 'purge-bundle', 'hold', 'held', 'resume', 'analyze', 'implement', 'operating-mode', 'analysis-mode', 'trip-breaker', 'circuit-breaker', 'reset-breaker')]
+    [ValidateSet('do', 'delete', 'defer', 'deferred', 'complete', 'completed', 'suggest', 'suggested', 'granularity', 'mode', 'testing-mode', 'testing', 'list', 'progress', 'state', 'reject', 'rejected', 'approve', 'approved', 'bug', 'push', 'pushed', 'verify', 'bcr', 'priority', 'commit', 'committed', 'proceed', 'regression', 'regressions', 'check-regressions', 'generate-regression', 'workon', 'work-on', 'app', 'new-app', 'apps', 'list-apps', 'sync-apps', 'catalog', 'split-docs', 'splitdocs', 'doc', 'docs', 'show-doc', 'purge-bundle', 'hold', 'held', 'resume', 'continue', 'withdraw', 'supersede', 'reopen', 'reset', 'analyze', 'implement', 'operating-mode', 'analysis-mode', 'trip-breaker', 'circuit-breaker', 'reset-breaker')]
     [string]$Action = 'list',
 
     [Parameter(Mandatory = $false, Position = 1, HelpMessage = 'Target proposal expression (e.g. all, #1, 105, 100-105)')]
@@ -57,10 +57,10 @@ param(
     [Parameter(Mandatory = $false, HelpMessage = 'Single-cycle minimal testing scope: fast syntax and AST validation only')]
     [switch]$MinimalTests,
 
-    [Parameter(Mandatory = $false, HelpMessage = 'Force execution overriding lifecycle safety gates')]
+    [Parameter(Mandatory = $false, HelpMessage = 'Authorized exception to interactive visual-review confirmation only; does not waive lifecycle or preflight checks')]
     [switch]$Force,
 
-    [Parameter(Mandatory = $false, HelpMessage = 'Authorized Gate 2 visual review bypass exception per RULE-REV-002')]
+    [Parameter(Mandatory = $false, HelpMessage = 'Emergency quality-check deferral; a single CRP target is reclassified as BUG, while a multi-target cohort requires a BUG; requires -Details and ends at BCR')]
     [switch]$Immediately,
 
     [Alias('h', '?')]
@@ -75,7 +75,7 @@ if ($Help) {
     Write-Host " INVOKE PROPOSAL ACTION (Invoke-ProposalAction)" -ForegroundColor Cyan
     Write-Host "==========================================================================" -ForegroundColor Cyan
     Write-Host "SYNOPSIS:" -ForegroundColor Yellow
-    Write-Host "  Executes proposal batch actions ('do', 'delete', 'defer', etc.) and configures review granularity."
+    Write-Host "  Executes proposal lifecycle actions and configures lifecycle governance settings."
     Write-Host ""
     Write-Host "USAGE:" -ForegroundColor Yellow
     Write-Host "  pwsh LCM_Inventory/tools/Invoke-ProposalAction.ps1 [[-Action] <str>] [[-TargetExpression] <str>] [-Details <str>] [-ProgressState <str>] [-Priority <str>] [-Granularity <str>] [-Mode <str>] [-h]"
@@ -87,6 +87,8 @@ if ($Help) {
     Write-Host "  -ProgressState    : Target progress state (undecided, queued, in_progress, completed, pushed, etc.)"
     Write-Host "  -Priority         : Priority level (C, H, M, L, D)"
     Write-Host "  -Granularity      : Review granularity: coarse or tight"
+    Write-Host "  -Force            : Visual-review confirmation exception only; lifecycle and preflight rules still apply"
+    Write-Host "  -Immediately      : Emergency quality deferral; one CRP target becomes BUG, multi-target cohort requires BUG"
     Write-Host "  -Mode             : Governance mode: active or paused"
     Write-Host "  -Help (-h, -?)    : Displays this help screen"
     Write-Host "==========================================================================" -ForegroundColor Cyan
@@ -98,6 +100,36 @@ Import-Module $modulePath -Force
 
 $analysisModulePath = Join-Path $PSScriptRoot '..\modules\AnalysisGovernance.psm1'
 Import-Module $analysisModulePath -Force
+
+function Convert-LegacyProposalStateToLifecycleState {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Value,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('state', 'progress')]
+        [string]$Source
+    )
+
+    $map = if ($Source -eq 'state') {
+        @{
+            bug = 'in_progress'; suggested = 'suggested'; approved = 'in_progress'; processed = 'in_progress'
+            deferred = 'held'; deleted = 'withdrawn'; completed = 'completed'; 'completed [minimal-tests]' = 'completed'
+            rejected = 'rejected'; pushed = 'pushed'; held = 'held'
+        }
+    } else {
+        @{
+            undecided = 'suggested'; queued = 'in_progress'; in_progress = 'in_progress'; verification = 'verified'
+            committed = 'completed'; completed = 'completed'; pushed = 'pushed'; blocked = 'held'; failed = 'held'; deferred = 'held'
+        }
+    }
+
+    if (-not $map.ContainsKey($Value)) {
+        throw "Legacy $Source value '$Value' has no lifecycle transition equivalent."
+    }
+    return $map[$Value]
+}
 
 # Assert implementation allowed for modifying actions unless -Force is specified
 if ($Action -in @('do', 'proceed', 'commit', 'verify') -and -not $Force) {
@@ -114,6 +146,13 @@ if ($Mode) {
 
 if ($TestingMode) {
     Set-TestingMode -Mode $TestingMode | Out-Null
+}
+
+if ($Immediately) {
+    if ([string]::IsNullOrWhiteSpace($TargetExpression)) {
+        throw '-Immediately requires an explicit target. A single CRP target is reclassified as BUG; a multi-proposal cohort must contain a BUG.'
+    }
+    Enable-LcmImmediateBugRecovery -Ids @(Resolve-ProposalIdExpression -Expression $TargetExpression) -Reason $Details
 }
 
 switch -Regex ($Action) {
@@ -189,8 +228,9 @@ switch -Regex ($Action) {
         }
         $targetIds = @(Resolve-ProposalIdExpression -Expression $TargetExpression)
         $updated = @()
+        $lifecycleState = Convert-LegacyProposalStateToLifecycleState -Value $State -Source state
         foreach ($id in $targetIds) {
-            $p = Set-WorkspaceProposalState -Id $id -State $State -Details $Details
+            $p = Move-LcmProposalLifecycleState -Id $id -State $lifecycleState -Details $Details
             if ($p) { $updated += $p }
         }
         Write-Host "`nUpdated Proposal(s) Plan State:" -ForegroundColor Cyan
@@ -206,8 +246,9 @@ switch -Regex ($Action) {
         }
         $targetIds = @(Resolve-ProposalIdExpression -Expression $TargetExpression)
         $updated = @()
+        $lifecycleState = Convert-LegacyProposalStateToLifecycleState -Value $ProgressState -Source progress
         foreach ($id in $targetIds) {
-            $p = Set-WorkspaceProposalProgress -Id $id -ProgressState $ProgressState -Details $Details
+            $p = Move-LcmProposalLifecycleState -Id $id -State $lifecycleState -Details $Details
             if ($p) { $updated += $p }
         }
         Write-Host "`nUpdated Proposal(s) Progress:" -ForegroundColor Cyan
@@ -221,32 +262,65 @@ switch -Regex ($Action) {
         $targetIds = @(Resolve-ProposalIdExpression -Expression $TargetExpression)
         $updated = @()
         foreach ($id in $targetIds) {
-            $p = Set-WorkspaceProposalProgress -Id $id -ProgressState 'verification' -Details $Details
-            if ($p) {
-                $updated += $p
-                if (-not $Force -and -not $Immediately) {
-                    $repo = if ($p.origin_repo) { $p.origin_repo } else { 'LCM_Inventory' }
-                    $crpTag = if ($p.crp_id) { $p.crp_id } elseif ($p.cr_id) { $p.cr_id } else { "CRP-$id" }
-                    Write-Host "`n[REVIEW CHECKPOINT] Reached for $($crpTag): Launching Beyond Compare Review immediately..." -ForegroundColor Cyan
-                    & (Join-Path $PSScriptRoot 'Invoke-BeyondCompareReview.ps1') -RepositoryName $repo -CRP $crpTag
-                }
-            }
+            $p = Move-LcmProposalLifecycleState -Id $id -State 'verified' -Details $Details
+            if ($p) { $updated += $p }
         }
         Write-Host "`nUpdated Proposal(s) to Verification:" -ForegroundColor Cyan
         Format-ProposalsTable -Proposals $updated
         break
     }
-    '^(commit|committed)$' {
+    '^bcr$' {
         if ([string]::IsNullOrWhiteSpace($TargetExpression)) {
-            throw "TargetExpression is required for action 'commit'."
+            throw "TargetExpression is required for action 'bcr'."
         }
         $targetIds = @(Resolve-ProposalIdExpression -Expression $TargetExpression)
         $updated = @()
         foreach ($id in $targetIds) {
-            $p = Set-WorkspaceProposalProgress -Id $id -ProgressState 'committed' -Details $Details
+            $store = Get-ProposalStore
+            $proposal = @($store.proposals | Where-Object { $_.id -eq $id })[0]
+            if ($null -eq $proposal) { throw "Proposal #$Id was not found." }
+            $repo = if ($proposal.origin_repo) { $proposal.origin_repo } else { 'LCM_Inventory' }
+            $crpTag = if ($proposal.crp_id) { $proposal.crp_id } elseif ($proposal.cr_id) { $proposal.cr_id } else { "CRP-$id" }
+            & (Join-Path $PSScriptRoot 'Invoke-BeyondCompareReview.ps1') -RepositoryName $repo -CRP $crpTag
+            $p = Move-LcmProposalLifecycleState -Id $id -State 'in_review' -Details $Details
+            if ($proposal.PSObject.Properties['quality_checks_deferred'] -and $proposal.quality_checks_deferred) {
+                $store = Get-ProposalStore
+                $proposal = @($store.proposals | Where-Object { $_.id -eq $id })[0]
+                $proposal.quality_checks_deferred = $false
+                $proposal | Add-Member -NotePropertyName 'immediate_recovery_ended_at' -NotePropertyValue (Get-Date).ToString('yyyy-MM-dd HH:mm:ss') -Force
+                Set-ProposalStore -Store $store
+            }
+            $updated += $p
+        }
+        Write-Host "`nUpdated Proposal(s) to Review Pending:" -ForegroundColor Cyan
+        Format-ProposalsTable -Proposals $updated
+        break
+    }
+    '^(commit|committed|complete|completed)$' {
+        if ([string]::IsNullOrWhiteSpace($TargetExpression)) {
+            throw "TargetExpression is required for action '$Action'."
+        }
+        $targetIds = @(Resolve-ProposalIdExpression -Expression $TargetExpression)
+        $updated = @()
+        foreach ($id in $targetIds) {
+            $store = Get-ProposalStore
+            $proposal = @($store.proposals | Where-Object { $_.id -eq $id })[0]
+            if ($null -eq $proposal) { throw "Proposal #$Id was not found." }
+            $repo = if ($proposal.origin_repo) { $proposal.origin_repo } else { 'LCM_Inventory' }
+            $crpTag = if ($proposal.crp_id) { $proposal.crp_id } elseif ($proposal.cr_id) { $proposal.cr_id } else { "CRP-$id" }
+            $reviewResultArgs = @{
+                RepositoryPath = $repo
+                CRP = $crpTag
+                Result = 'Completed'
+                Notes = $Details
+            }
+            if ($MinimalTests) { $reviewResultArgs.MinimalTests = $true }
+            if ($Force) { $reviewResultArgs.Force = $true }
+            & (Join-Path $PSScriptRoot 'Submit-ReviewResult.ps1') @reviewResultArgs
+            $p = Get-ProposalStore | ForEach-Object { @($_.proposals | Where-Object { $_.id -eq $id })[0] }
             if ($p) { $updated += $p }
         }
-        Write-Host "`nUpdated Proposal(s) to Committed:" -ForegroundColor Cyan
+        Write-Host "`nCompleted Proposal(s) through the exact-CRP review result path:" -ForegroundColor Cyan
         Format-ProposalsTable -Proposals $updated
         break
     }
@@ -262,23 +336,16 @@ switch -Regex ($Action) {
             $targetProg = if ($ProgressState) {
                 $ProgressState
             } else {
-                $cur = if ($existing -and $existing.progress_state) { $existing.progress_state } else { 'undecided' }
+                $cur = if ($existing -and $existing.state) { $existing.state } else { 'suggested' }
                 switch ($cur) {
-                    'undecided'    { 'in_progress' }
-                    'deferred'     { 'in_progress' }
-                    'queued'       { 'in_progress' }
-                    'in_progress'  { 'verification' }
-                    'verification' { 'committed' }
-                    'committed'    { 'completed' }
-                    default        { 'in_progress' }
+                    'suggested'    { 'in_progress' }
+                    'approved'     { 'verified' }
+                    'held'         { if ($existing.resume_state) { $existing.resume_state } else { 'in_progress' } }
+                    'in_progress'  { 'verified' }
+                    default        { throw "Proceed cannot transition proposal #$id from '$cur'. Use BCR, COMPLETE, or PUSH as required by the lifecycle." }
                 }
             }
-            if ($targetProg -eq 'completed') {
-                $targetSt = if ($MinimalTests) { 'completed [minimal-tests]' } else { 'completed' }
-                Set-WorkspaceProposalState -Id $id -State $targetSt -Details $Details | Out-Null
-            } elseif ($existing.state -in @('suggested', 'held', 'deferred')) {
-                Set-WorkspaceProposalState -Id $id -State 'approved' -Details $Details | Out-Null
-            }
+            Move-LcmProposalLifecycleState -Id $id -State $targetProg -Details $Details | Out-Null
             if ($MinimalTests) {
                 $store = Get-ProposalStore
                 foreach ($item in $store.proposals) {
@@ -289,15 +356,9 @@ switch -Regex ($Action) {
                 }
                 Set-ProposalStore -Store $store
             }
-            $p = Set-WorkspaceProposalProgress -Id $id -ProgressState $targetProg -Details $Details
+            $p = Get-ProposalStore | ForEach-Object { @($_.proposals | Where-Object { $_.id -eq $id })[0] }
             if ($p) {
                 $updated += $p
-                if ($targetProg -eq 'verification' -and -not $Force -and -not $Immediately) {
-                    $repo = if ($p.origin_repo) { $p.origin_repo } else { 'LCM_Inventory' }
-                    $crpTag = if ($p.crp_id) { $p.crp_id } elseif ($p.cr_id) { $p.cr_id } else { "CRP-$id" }
-                    Write-Host "`n[REVIEW CHECKPOINT] Reached for $($crpTag): Launching Beyond Compare Review immediately..." -ForegroundColor Cyan
-                    & (Join-Path $PSScriptRoot 'Invoke-BeyondCompareReview.ps1') -RepositoryName $repo -CRP $crpTag
-                }
             }
         }
         Write-Host "`nProceeded Proposal(s):" -ForegroundColor Cyan

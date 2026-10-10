@@ -994,9 +994,13 @@
           <span class="switch-led switch-led-idle" id="ledMinimalTests"></span>
           <span class="switch-name">-MinimalTests: <strong id="switchValMinimalTests">Standard DAG</strong></span>
         </div>
-        <div class="switch-item static-switch" id="switchForce" title="-Force / -Immediately Switch (RULE-REV-001): Emergency bypass of Gate 2 visual review stop.">
+        <div class="switch-item static-switch" id="switchForce" title="-Force is an authorized exception to interactive visual-review confirmation only. It cannot waive lifecycle state, exact-CRP, syntax, quality, readiness, or push-preflight checks.">
           <span class="switch-led switch-led-idle" id="ledForce"></span>
           <span class="switch-name">-Force: <strong id="switchValForce">Gate 2 Active</strong></span>
+        </div>
+        <div class="switch-item static-switch" id="switchImmediately" title="-Immediately is an emergency quality-check deferral marker. A single CRP target is reclassified as BUG; a multi-proposal cohort must include a BUG. It requires details, ends at BCR, and is not a -Force alias.">
+          <span class="switch-led switch-led-idle" id="ledImmediately"></span>
+          <span class="switch-name">-Immediately: <strong id="switchValImmediately">Inactive</strong></span>
         </div>
       </section>
 
@@ -1287,14 +1291,14 @@
       </div>
       <div class="modal-body">
         <p id="overrideModalDesc" style="margin-top: 0; color: var(--ink);">
-          The selected action is not normally permitted in the item's current state. Select an authorized override switch to proceed:
+          The selected action is not normally permitted in the item's current state. No operator switch can bypass lifecycle transition, exact-CRP, syntax, readiness, or push-preflight requirements. `-Immediately` is a separate documented emergency quality-deferral path.
         </p>
 
         <label class="override-option">
           <input type="radio" name="overrideSwitch" value="-Force" checked>
           <div class="override-label">
             <strong>-Force</strong>
-            <span>Overrides lifecycle state invariants and execution preflight constraints.</span>
+            <span>Authorized exception to interactive visual-review confirmation only; it does not override lifecycle or preflight requirements.</span>
           </div>
         </label>
 
@@ -1306,13 +1310,6 @@
           </div>
         </label>
 
-        <label class="override-option">
-          <input type="radio" name="overrideSwitch" value="-Immediately">
-          <div class="override-label">
-            <strong>-Immediately</strong>
-            <span>Authorized Gate 2 visual review bypass exception per RULE-REV-002.</span>
-          </div>
-        </label>
       </div>
       <div class="modal-footer">
         <button class="modal-btn modal-btn-cancel" onclick="closeModal('overrideModal')">Cancel</button>
@@ -1533,92 +1530,68 @@
     }
 
     function getVisibleStatus(p) {
-      const status = String(p.status || p.state || "").toLowerCase();
-      const disposition = String(p.disposition || "").toLowerCase();
-      const progress = String(p.progress_state || "").toLowerCase();
-
-      // Dispositions take precedence for condition flags
-      if (disposition === "cancelled" || status === "cancelled" || status === "deleted") {
-        return "cancelled";
-      }
-      if (disposition === "rejected" || status === "rejected") {
-        return "cancelled";
-      }
-      // Held disposition: only holds if proposal is not actively approved/in_progress
-      if (status === "held" || (disposition === "held" && status !== "approved" && progress !== "in_progress") || status === "deferred" || progress === "blocked" || progress === "failed") {
-        return "held";
-      }
-      if (status === "published" || status === "pushed" || progress === "pushed") {
-        return "published";
-      }
-      if (status === "completed" || progress === "completed") {
-        return "complete";
-      }
-      if (status === "committed" || progress === "committed") {
-        return "committed";
-      }
-      if (status === "verified" || status === "review" || progress === "verification") {
-        return "review";
-      }
-      if (status === "in_progress" || progress === "in_progress" || status === "approved" || p.flow_mode === "doit" || p.always_proceed) {
-        return "active";
-      }
+      const state = getLifecycleState(p);
+      if (state === "held") return "held";
+      if (["withdrawn", "rejected", "superseded"].includes(state)) return "cancelled";
+      if (state === "pushed") return "published";
+      if (state === "completed") return "complete";
+      if (["verified", "in_review"].includes(state)) return "review";
+      if (state === "in_progress") return "active";
       return "open";
+    }
+
+    function getLifecycleState(p) {
+      return String(p.state || "").toLowerCase();
+    }
+
+    function isBugProposal(p) {
+      return /^bug-\d+$/i.test(String(p.crp_id || p.cr_id || ""));
     }
 
     // Rich Plan State (Distinct from high-level Status)
     function getDetailedPlanState(p) {
-      const status = String(p.status || p.state || "").toLowerCase();
-      const disposition = String(p.disposition || "").toLowerCase();
-      const progress = String(p.progress_state || "").toLowerCase();
+      const state = String(p.state || "").toLowerCase();
       const testStatus = String(p.test_status || "").toLowerCase();
       const holdReason = p.hold_reason || p.reason || p.status_note;
+      const qualityChecksDeferred = p.quality_checks_deferred === true;
 
-      if (disposition === "held" || status === "held" || status === "deferred" || progress === "blocked" || progress === "failed") {
+      if (state === "held") {
         return `Held: ${holdReason || "Paused"}`;
       }
-      if (disposition === "rejected" || status === "rejected") {
+      if (state === "rejected") {
         return "Rejected";
       }
-      if (disposition === "cancelled" || status === "cancelled" || status === "deleted") {
-        return "Cancelled";
+      if (state === "withdrawn") {
+        return "Withdrawn";
+      }
+      if (state === "superseded") {
+        return "Superseded";
       }
       if (testStatus === "failed") {
         return "Tests failed";
       }
-      if (status === "verified" || status === "review" || progress === "verification") {
-        if (testStatus === "in_progress" || testStatus === "running") return "Tests running";
-        return "Review (BCR)";
+      if (state === "in_review") {
+        return "Review pending";
       }
-      if (testStatus === "passed" || progress === "verified") {
+      if (state === "verified") {
+        if (testStatus === "in_progress" || testStatus === "running") return "Tests running";
         return "Verified";
       }
-      if (status === "committed" || progress === "committed") {
-        return "Committed";
+      if (state === "completed") {
+        return "Committed / Ready to Push";
       }
-      if (status === "completed" || progress === "completed") {
-        return "Commit ready";
+      if (state === "pushed") {
+        return "Pushed";
       }
-      if (status === "published" || status === "pushed") {
-        return "Published";
-      }
-      if (status === "in_progress" || progress === "in_progress") {
+      if (state === "in_progress") {
+        if (qualityChecksDeferred) return "Emergency recovery: quality checks deferred";
         if (testStatus && testStatus !== "none") return `In Progress (${testStatus})`;
         return "In Progress";
       }
-      if (status === "decided" || status === "approved") {
-        return "Decided";
-      }
-      if (status === "scoped") {
-        return "Scoped";
-      }
-      if (disposition === "bug" || status === "bug") {
-        return "Bug report";
-      }
-      if (status === "suggested") {
+      if (state === "suggested") {
         return "Suggested";
       }
-      return status ? status.charAt(0).toUpperCase() + status.slice(1) : "Suggested";
+      return state ? state.charAt(0).toUpperCase() + state.slice(1) : "Suggested";
     }
 
     // Initialize Hub
@@ -1704,8 +1677,7 @@
       let publishedCount = 0;
 
       (proposalsData.proposals || []).forEach(p => {
-        const status = String(p.status || p.state || "").toLowerCase();
-        const progress = String(p.progress_state || "").toLowerCase();
+        const status = getLifecycleState(p);
         const vis = getVisibleStatus(p);
 
         // Open: all active work not committed, published, rejected, deleted, or cancelled
@@ -1717,12 +1689,12 @@
 
         // In Progress: following scoped up to but excluding committed
         if (status !== "completed" && status !== "pushed" && status !== "published" && status !== "committed") {
-          if (["in_progress", "approved", "decided", "review", "verified"].includes(status) || ["in_progress", "verification"].includes(progress)) {
+          if (["in_progress", "verified", "in_review"].includes(status)) {
             inprogressCount++;
           }
         }
 
-        if (status === "review" || status === "verified" || progress === "verification") reviewCount++;
+        if (["verified", "in_review"].includes(status)) reviewCount++;
         if (status === "completed" || vis === "complete") completeCount++;
         if (status === "pushed" || status === "published" || vis === "published") publishedCount++;
       });
@@ -1830,9 +1802,9 @@
         if (isClosed) return false;
       } else if (activeRailFilter === "inprogress") {
         if (state === "completed" || state === "pushed") return false;
-        if (!["in_progress", "approved", "review"].includes(state) && !["in_progress", "verification"].includes(prog)) return false;
+        if (!["in_progress", "verified", "in_review"].includes(state)) return false;
       } else if (activeRailFilter === "review") {
-        if (state !== "review" && prog !== "verification") return false;
+        if (!["verified", "in_review"].includes(state)) return false;
       } else if (activeRailFilter === "complete") {
         if (state !== "completed" && vis !== "complete") return false;
       } else if (activeRailFilter === "published") {
@@ -1853,11 +1825,12 @@
 
       // Switch dropdown filter
       if (thSwitch) {
-        const isBug = (p.disposition === "bug" || p.state === "bug");
+        const isBug = isBugProposal(p);
         const isDoit = isBug || (p.flow_mode === "doit" || p.always_proceed || p.action === "do");
         const isMinTests = Boolean(p.minimal_tests || p.test_depth === "minimal");
         const isBypass = Boolean(p.force_commit || p.bypass_review);
-        const isHeld = (p.disposition === "held" || p.state === "held" || p.progress_state === "deferred");
+        const isImmediately = p.quality_checks_deferred === true;
+        const isHeld = state === "held";
 
         if (thSwitch === "doit" && !isDoit) return false;
         if (thSwitch === "mintest" && !isMinTests) return false;
@@ -1922,11 +1895,11 @@
           } else if (k === "id") {
             if (idStr !== v && !crpTag.includes(v)) return false;
           } else if (k === "switch") {
-            const isBug = (p.disposition === "bug" || p.state === "bug");
+            const isBug = isBugProposal(p);
             const isDoit = isBug || (p.flow_mode === "doit" || p.always_proceed || p.action === "do");
             const isMinTests = Boolean(p.minimal_tests || p.test_depth === "minimal");
             const isBypass = Boolean(p.force_commit || p.bypass_review);
-            const isHeld = (p.disposition === "held" || p.state === "held" || p.progress_state === "deferred");
+            const isHeld = getLifecycleState(p) === "held";
             if (v.includes("doit") && !isDoit) return false;
             if (v.includes("min") && !isMinTests) return false;
             if (v.includes("force") && !isBypass) return false;
@@ -2034,9 +2007,9 @@
             <td>
               ${(() => {
                 const pills = [];
-                const isBug = (p.disposition === "bug" || p.state === "bug");
+                const isBug = isBugProposal(p);
                 const isDoit = isBug || (p.flow_mode === "doit" || p.always_proceed || p.action === "do");
-                const isHeld = (p.disposition === "held" || p.state === "held" || p.progress_state === "deferred");
+                const isHeld = getLifecycleState(p) === "held";
                 const isMinTests = Boolean(p.minimal_tests || p.test_depth === "minimal");
                 const isBypass = Boolean(p.force_commit || p.bypass_review);
 
@@ -2046,6 +2019,7 @@
                   if (isDoit) pills.push(`<span class="pill-switch-doit" title="-DOIT switch active: Continuous flow past Gate 1">⚡ -DOIT</span>`);
                   if (isMinTests) pills.push(`<span class="pill-switch-tests" title="-MinimalTests switch active: Fast single-cycle DAG">🧪 -Min</span>`);
                   if (isBypass) pills.push(`<span class="pill-switch-doit" style="background:#fee2e2;color:#991b1b;border-color:#ef4444;" title="-Force switch active: Gate 2 visual review bypass">🚨 -Force</span>`);
+                  if (isImmediately) pills.push(`<span class="pill-switch-doit" style="background:#fef3c7;color:#92400e;border-color:#f59e0b;" title="-Immediately emergency recovery: quality checks deferred until BCR handoff">⚠ -Immediately</span>`);
                 }
                 if (pills.length === 0) {
                   pills.push(`<span class="pill-switch-std" title="Standard Gate 1 & Gate 2 flow">⚙️ Std</span>`);
@@ -2213,22 +2187,19 @@
     // -------------------------------------------------------------------------
     function getProposalSyncIndex(p) {
       if (!p) return 0;
-      const status = String(p.status || p.state || "").toLowerCase();
-      const progress = String(p.progress_state || "").toLowerCase();
+      const status = getLifecycleState(p);
 
       // Canonical flat sync points:
       // 6: Published
-      if (status === "published" || status === "pushed" || progress === "pushed") return 6;
+      if (status === "pushed") return 6;
       // 5: Committed
-      if (status === "committed" || progress === "committed" || status === "completed" || progress === "completed") return 5;
+      if (status === "completed") return 5;
       // 4: Verified
-      if (status === "verified" || progress === "verification" || progress === "verified" || status === "review" || p.test_status === "passed") return 4;
+      if (status === "verified" || status === "in_review") return 4;
       // 3: In_Progress
-      if (status === "in_progress" || progress === "in_progress") return 3;
+      if (status === "in_progress") return 3;
       // 2: Decided
-      if (status === "decided" || status === "approved") return 2;
-      // 1: Scoped
-      if (status === "scoped" || (p.bundle_id && p.bundle_id !== "unassigned") || (p.origin_repo && status !== "draft")) return 1;
+      if (status === "suggested" && (p.bundle_id && p.bundle_id !== "unassigned")) return 1;
       // 0: Suggested
       return 0;
     }
@@ -2269,6 +2240,7 @@
       let isDoit = false;
       let isMinTests = false;
       let isBypass = false;
+      let isImmediately = false;
       let isHeld = false;
 
       const itemTagEl = $("switchesActiveItemLabel");
@@ -2282,11 +2254,12 @@
       }
 
       if (p) {
-        const isBug = (p.disposition === "bug" || p.state === "bug");
+        const isBug = isBugProposal(p);
         isDoit = isBug || (p.flow_mode === "doit" || p.always_proceed || p.action === "do");
         isMinTests = Boolean(p.minimal_tests || p.test_depth === "minimal" || p.test_scope === "minimal" || (p.state && p.state.includes("minimal-tests")));
         isBypass = Boolean(p.force_commit || p.bypass_review);
-        isHeld = (p.disposition === "held" || p.state === "held" || p.progress_state === "deferred");
+        isImmediately = p.quality_checks_deferred === true;
+        isHeld = getLifecycleState(p) === "held";
       }
 
       if ($("ledDoit")) {
@@ -2300,6 +2273,10 @@
       if ($("ledForce")) {
         $("ledForce").className = isBypass ? "switch-led switch-led-off" : "switch-led switch-led-idle";
         $("switchValForce").innerText = isBypass ? "ARMED (Bypass)" : "Gate 2 Active";
+      }
+      if ($("ledImmediately")) {
+        $("ledImmediately").className = isImmediately ? "switch-led switch-led-active" : "switch-led switch-led-idle";
+        $("switchValImmediately").innerText = isImmediately ? "Quality Deferred" : "Inactive";
       }
 
       const badgesContainer = $("timelineSwitchBadges");
@@ -2325,9 +2302,12 @@
           }
 
           if (isBypass) {
-            badges.push(`<span class="sw-badge sw-badge-danger" title="Gate 2 Visual Review Bypassed under emergency rule">🚨 -Force Review Bypass Active</span>`);
+            badges.push(`<span class="sw-badge sw-badge-danger" title="-Force applies only to interactive visual-review confirmation">🚨 -Force Review Confirmation Exception Active</span>`);
           } else {
             badges.push(`<span class="sw-badge" title="Visual diff review mandatory before commit">👁️ Gate 2 Diff Review Bound</span>`);
+          }
+          if (isImmediately) {
+            badges.push(`<span class="sw-badge sw-badge-gov" title="Emergency recovery; quality checks are deferred until BCR handoff">⚠ -Immediately Quality Deferral Active</span>`);
           }
 
           badgesContainer.innerHTML = badges.join("");
@@ -2354,7 +2334,7 @@
         alert("Please select a proposal first.");
         return;
       }
-      const isBug = (p.disposition === "bug" || p.state === "bug");
+      const isBug = isBugProposal(p);
       if (isBug) {
         alert("Proposal is a BUG report: -DOIT mode is mandatory per RULE-LCM-008.");
         return;
@@ -2432,9 +2412,9 @@
       }
 
       const tag = p.crp_id || p.cr_id || ("#" + p.id);
-      const isHeld = (p.disposition === "held" || p.state === "held" || p.progress_state === "deferred");
+      const isHeld = getLifecycleState(p) === "held";
       const heldSuffix = isHeld ? " [⏸️ HELD]" : "";
-      const displayStatus = String(p.status || p.state || "").toUpperCase();
+      const displayStatus = getLifecycleState(p).toUpperCase();
       $("timelineProposalTitle").innerText = `${tag} — ${p.title} (${displayStatus}${heldSuffix})`;
 
       const activeIndex = getProposalSyncIndex(p);
@@ -2514,62 +2494,14 @@
         return;
       }
 
-      // DO / Start: suitable for suggested, approved, held, deferred, draft, bug
-      const doSuitable = selectedList.every(p => {
-        const s = String(p.state || "").toLowerCase();
-        const pr = String(p.progress_state || "").toLowerCase();
-        return ["suggested", "approved", "held", "deferred", "draft", "bug", "processed"].includes(s) ||
-               ["undecided", "deferred", "queued", "in_progress"].includes(pr);
-      });
-      toggleButtonPassive("btnBulkDo", !doSuitable);
-
-      // Proceed: suitable for approved, in_progress, held, deferred, suggested
-      const proceedSuitable = selectedList.every(p => {
-        const s = String(p.state || "").toLowerCase();
-        const pr = String(p.progress_state || "").toLowerCase();
-        return ["approved", "in_progress", "held", "deferred", "suggested"].includes(s) ||
-               ["in_progress", "deferred", "queued", "undecided"].includes(pr);
-      });
-      toggleButtonPassive("btnBulkProceed", !proceedSuitable);
-
-      // Open Review: suitable for in_progress, review, verification
-      const bcrSuitable = selectedList.every(p => {
-        const s = String(p.state || "").toLowerCase();
-        const pr = String(p.progress_state || "").toLowerCase();
-        return ["in_progress", "review"].includes(s) || ["in_progress", "verification"].includes(pr);
-      });
-      toggleButtonPassive("btnBulkReview", !bcrSuitable);
-
-      // Reviewed (Accept): suitable for review, in_progress, verification
-      const reviewedSuitable = selectedList.every(p => {
-        const s = String(p.state || "").toLowerCase();
-        const pr = String(p.progress_state || "").toLowerCase();
-        return ["review", "in_progress"].includes(s) || ["verification", "in_progress"].includes(pr);
-      });
-      toggleButtonPassive("btnBulkReviewed", !reviewedSuitable);
-
-      // Complete: suitable for review, in_progress, approved, verification, committed
-      const compSuitable = selectedList.every(p => {
-        const s = String(p.state || "").toLowerCase();
-        const pr = String(p.progress_state || "").toLowerCase();
-        return ["review", "in_progress", "approved"].includes(s) || ["verification", "in_progress", "committed"].includes(pr);
-      });
-      toggleButtonPassive("btnBulkComplete", !compSuitable);
-
-      // Push: suitable for completed
-      const pushSuitable = selectedList.every(p => {
-        const s = String(p.state || "").toLowerCase();
-        const pr = String(p.progress_state || "").toLowerCase();
-        return s === "completed" || pr === "completed";
-      });
-      toggleButtonPassive("btnBulkPush", !pushSuitable);
-
-      // Hold: always active for any open items
-      toggleButtonPassive("btnBulkHold", false);
-
-      // Delete/Cancel: suitable for suggested, draft, bug, held
-      const delSuitable = selectedList.every(p => ["suggested", "draft", "bug", "held", "deferred"].includes(String(p.state).toLowerCase()));
-      toggleButtonPassive("btnBulkDelete", !delSuitable);
+      toggleButtonPassive("btnBulkDo", !selectedList.every(p => isLifecycleActionAvailable(p, "do")));
+      toggleButtonPassive("btnBulkProceed", !selectedList.every(p => isLifecycleActionAvailable(p, "proceed")));
+      toggleButtonPassive("btnBulkReview", !selectedList.every(p => isLifecycleActionAvailable(p, "bcr")));
+      toggleButtonPassive("btnBulkReviewed", !selectedList.every(p => isLifecycleActionAvailable(p, "reviewed")));
+      toggleButtonPassive("btnBulkComplete", !selectedList.every(p => isLifecycleActionAvailable(p, "complete")));
+      toggleButtonPassive("btnBulkPush", !selectedList.every(p => isLifecycleActionAvailable(p, "push")));
+      toggleButtonPassive("btnBulkHold", !selectedList.every(p => isLifecycleActionAvailable(p, "hold")));
+      toggleButtonPassive("btnBulkDelete", !selectedList.every(p => isLifecycleActionAvailable(p, "delete")));
 
       // Purge Temp: always executable
       toggleButtonPassive("btnBulkPurgeTemp", false);
@@ -2580,6 +2512,23 @@
       if (!btn) return;
       if (isPassive) btn.classList.add("btn-passive");
       else btn.classList.remove("btn-passive");
+    }
+
+    const lifecycleActionStates = {
+      do: ["suggested"],
+      proceed: ["suggested", "in_progress", "held"],
+      bcr: ["verified"],
+      reviewed: ["in_review"],
+      complete: ["in_review"],
+      push: ["completed"],
+      hold: ["suggested", "in_progress", "verified", "in_review", "completed"],
+      delete: ["suggested", "in_progress", "held"]
+    };
+
+    function isLifecycleActionAvailable(proposal, action) {
+      let state = String(proposal?.state || "").toLowerCase();
+      if (state === "approved") state = "in_progress";
+      return (lifecycleActionStates[action] || []).includes(state);
     }
 
     // -------------------------------------------------------------------------
@@ -2636,19 +2585,7 @@
       }
 
       const p = (proposalsData.proposals || []).find(x => x.id === id);
-      const state = String(p?.state || "").toLowerCase();
-
-      // Check passivity
-      let isPassive = false;
-      const prog = String(p?.progress_state || "").toLowerCase();
-      if (action === "do" && !["suggested", "approved", "held", "deferred", "draft", "bug", "processed"].includes(state) && !["undecided", "deferred", "queued", "in_progress"].includes(prog)) isPassive = true;
-      if (action === "proceed" && !["approved", "in_progress", "held", "deferred", "suggested"].includes(state) && !["in_progress", "deferred", "queued", "undecided"].includes(prog)) isPassive = true;
-      if (action === "bcr" && !["in_progress", "review"].includes(state) && !["in_progress", "verification"].includes(prog)) isPassive = true;
-      if (action === "reviewed" && !["review", "in_progress"].includes(state) && !["verification", "in_progress"].includes(prog)) isPassive = true;
-      if (action === "complete" && !["review", "in_progress", "approved"].includes(state) && !["verification", "in_progress"].includes(prog)) isPassive = true;
-      if (action === "push" && state !== "completed" && prog !== "completed") isPassive = true;
-
-      if (isPassive) {
+      if (!isLifecycleActionAvailable(p, action)) {
         requestAuthorityOverride(action, [id]);
       } else {
         dispatchStandardAction(action, [id], "");
@@ -2677,6 +2614,11 @@
       const sw = overrideSwitch ? " " + overrideSwitch : "";
       let cmd = "";
 
+      if (["bcr", "reviewed", "complete"].includes(action) && ids.length !== 1) {
+        alert(`${action.toUpperCase()} requires exactly one proposal. Select one proposal and try again.`);
+        return;
+      }
+
       switch (action) {
         case "do":
           cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action do -TargetExpression "${idStr}"${sw}`;
@@ -2684,18 +2626,15 @@
         case "proceed":
           cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action proceed -TargetExpression "${idStr}"${sw}`;
           break;
-        case "bcr": {
-          const p = (proposalsData.proposals || []).find(x => x.id === ids[0]);
-          const repo = p?.origin_repo || "LCM_Inventory";
-          const crpTag = p?.crp_id || p?.cr_id || ("CRP-" + ids[0]);
-          cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1 -RepositoryName ${repo} -CRP ${crpTag}${sw}`;
+        case "bcr":
+          cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action bcr -TargetExpression "${idStr}"${sw}`;
           break;
-        }
         case "reviewed":
         case "complete": {
           const p = (proposalsData.proposals || []).find(x => x.id === ids[0]);
           const repo = p?.origin_repo || "LCM_Inventory";
-          cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Submit-ReviewResult.ps1 -RepositoryPath ${repo} -Result Completed${sw}`;
+          const crpTag = p?.crp_id || p?.cr_id || ("CRP-" + ids[0]);
+          cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Submit-ReviewResult.ps1 -RepositoryPath ${repo} -CRP ${crpTag} -Result Completed${sw}`;
           break;
         }
         case "commit":
@@ -3085,9 +3024,9 @@ TAXONOMY OF ACTIONS:
 3. Authority-Overriding Switches ("Switches to Hell"):
    - Actions not normally permitted in an item's current state are rendered in a PASSIVE color.
    - Clicking a passive action prompts the operator to select an override switch:
-     • -Force          : Bypasses state transition invariants
+     • -Force          : Authorized exception to interactive visual-review confirmation only
      • -MinimalTests   : Executes single-cycle minimal tests switch (RULE-LCM-023)
-     • IMMEDIATELY     : Authorized Gate 2 visual review bypass exception (RULE-REV-002)
+     • -Immediately    : Emergency quality-check deferral; a single CRP becomes BUG, multi-target cohorts require BUG
 
 REST DAEMON BRIDGE:
 - Runs on http://127.0.0.1:9876 to guarantee zero browser sandbox restrictions.`;

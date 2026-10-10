@@ -281,6 +281,272 @@ Implementation and verification records for $canonicalId.
     return [PSCustomObject]$proposal
 }
 
+function Get-LcmProposalLifecycleActions {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('suggested', 'in_progress', 'verified', 'in_review', 'completed', 'pushed', 'held', 'withdrawn', 'rejected', 'superseded')]
+        [string]$State
+    )
+
+    $actions = @{
+        suggested = @('edit', 'do', 'hold', 'withdraw', 'supersede')
+        in_progress = @('edit', 'verify', 'hold', 'reset', 'withdraw', 'supersede')
+        verified = @('bcr', 'reopen', 'hold', 'supersede')
+        in_review = @('complete', 'commit', 'reject', 'reopen', 'hold')
+        completed = @('push', 'hold')
+        pushed = @('view')
+        held = @('continue', 'edit', 'withdraw')
+        withdrawn = @('view', 'supersede')
+        rejected = @('view', 'supersede', 'create-linked-bug')
+        superseded = @('view')
+    }
+    return @($actions[$State])
+}
+
+function Test-LcmProposalLifecycleTransition {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$FromState,
+
+        [Parameter(Mandatory = $true)]
+        [string]$ToState
+    )
+
+    $allowed = @{
+        suggested = @('in_progress', 'held', 'withdrawn', 'superseded')
+        in_progress = @('suggested', 'verified', 'held', 'withdrawn', 'superseded')
+        verified = @('in_progress', 'in_review', 'held', 'superseded')
+        in_review = @('in_progress', 'completed', 'held', 'rejected')
+        completed = @('pushed', 'held')
+        pushed = @()
+        held = @('suggested', 'in_progress', 'verified', 'in_review', 'completed', 'withdrawn')
+        withdrawn = @('superseded')
+        rejected = @('superseded')
+        superseded = @()
+    }
+    return $ToState -in @($allowed[$FromState])
+}
+
+function Move-LcmProposalLifecycleState {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [int]$Id,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('suggested', 'in_progress', 'verified', 'in_review', 'completed', 'pushed', 'held', 'withdrawn', 'rejected', 'superseded')]
+        [string]$State,
+
+        [string]$Details
+    )
+
+    $store = Get-ProposalStore
+    $proposal = @($store.proposals | Where-Object { $_.id -eq $Id })[0]
+    if ($null -eq $proposal) { throw "Proposal #$Id was not found." }
+    $fromState = [string]$proposal.state
+    if ($fromState -eq 'approved') {
+        $fromState = 'in_progress'
+        $proposal.state = $fromState
+    }
+    if (-not (Test-LcmProposalLifecycleTransition -FromState $fromState -ToState $State)) {
+        throw "Invalid lifecycle transition for proposal #$($Id): $fromState -> $State"
+    }
+    $legacyProgressState = @{
+        suggested   = 'undecided'
+        in_progress = 'in_progress'
+        verified    = 'verification'
+        in_review   = 'verification'
+        completed   = 'completed'
+        pushed      = 'pushed'
+        held        = 'blocked'
+        withdrawn   = 'deferred'
+        rejected    = 'deferred'
+        superseded  = 'deferred'
+    }
+    $legacyDisposition = @{
+        completed   = 'completed'
+        pushed      = 'published'
+        held        = 'held'
+        rejected    = 'rejected'
+        withdrawn   = 'withdrawn'
+        superseded  = 'superseded'
+    }
+
+    if ($State -eq 'held') {
+        $proposal | Add-Member -NotePropertyName 'resume_state' -NotePropertyValue $fromState -Force
+    }
+    $proposal.state = $State
+    $proposal | Add-Member -NotePropertyName 'progress_state' -NotePropertyValue $legacyProgressState[$State] -Force
+    $proposal | Add-Member -NotePropertyName 'disposition' -NotePropertyValue $legacyDisposition[$State] -Force
+    if ($State -ne 'held' -and $proposal.PSObject.Properties['hold_reason']) {
+        $proposal.hold_reason = $null
+    }
+    if ($State -eq 'held' -and $Details) {
+        $proposal | Add-Member -NotePropertyName 'hold_reason' -NotePropertyValue $Details -Force
+    }
+    if (-not $proposal.PSObject.Properties['state_history']) {
+        $proposal | Add-Member -NotePropertyName 'state_history' -NotePropertyValue @() -Force
+    }
+    if (-not $proposal.PSObject.Properties['dates'] -or $null -eq $proposal.dates) {
+        $proposal | Add-Member -NotePropertyName 'dates' -NotePropertyValue ([PSCustomObject]@{}) -Force
+    }
+    $proposal.dates | Add-Member -NotePropertyName $State -NotePropertyValue (Get-Date).ToString('yyyy-MM-dd HH:mm:ss') -Force
+    $proposal.state_history = @($proposal.state_history) + [PSCustomObject]@{
+        from_state = $fromState
+        state      = $State
+        timestamp  = (Get-Date).ToString('yyyy-MM-dd HH:mm:ss')
+        user       = $env:USERNAME
+        note       = $Details
+    }
+    Set-ProposalStore -Store $store
+    return $proposal
+}
+
+function Set-LcmProposalBugIdentity {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [int]$Id,
+
+        [Parameter(Mandatory = $true)]
+        [string]$Details
+    )
+
+    if ([string]::IsNullOrWhiteSpace($Details)) {
+        throw 'BUG reclassification requires documented details.'
+    }
+
+    $store = Get-ProposalStore
+    $proposal = @($store.proposals | Where-Object { $_.id -eq $Id })[0]
+    if ($null -eq $proposal) { throw "Proposal #$Id was not found." }
+
+    $identityProperty = if ($proposal.PSObject.Properties['crp_id'] -and $proposal.crp_id) { 'crp_id' } else { 'cr_id' }
+    $currentIdentity = [string]$proposal.$identityProperty
+    if ($currentIdentity -match '^BUG-\d+$') {
+        return $proposal
+    }
+
+    if ([string]::IsNullOrWhiteSpace($currentIdentity)) {
+        $currentIdentity = "CRP-$Id"
+    }
+    $bugIdentity = "BUG-$Id"
+
+    $proposal | Add-Member -NotePropertyName 'original_crp_id' -NotePropertyValue $currentIdentity -Force
+    $proposal | Add-Member -NotePropertyName 'crp_id' -NotePropertyValue $bugIdentity -Force
+    if ($proposal.PSObject.Properties['cr_id']) {
+        $proposal.cr_id = $null
+    }
+    $proposal | Add-Member -NotePropertyName 'bug_reclassified_at' -NotePropertyValue (Get-Date).ToString('yyyy-MM-dd HH:mm:ss') -Force
+    $proposal | Add-Member -NotePropertyName 'bug_reclassification_reason' -NotePropertyValue $Details -Force
+    if (-not $proposal.PSObject.Properties['identity_history']) {
+        $proposal | Add-Member -NotePropertyName 'identity_history' -NotePropertyValue @() -Force
+    }
+    $proposal.identity_history = @($proposal.identity_history) + [PSCustomObject]@{
+        from_identity = $currentIdentity
+        identity      = $bugIdentity
+        timestamp     = (Get-Date).ToString('yyyy-MM-dd HH:mm:ss')
+        user          = $env:USERNAME
+        reason        = $Details
+    }
+
+    Set-ProposalStore -Store $store
+    return $proposal
+}
+
+function Enable-LcmImmediateBugRecovery {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [int[]]$Ids,
+
+        [Parameter(Mandatory = $true)]
+        [string]$Reason
+    )
+
+    if ([string]::IsNullOrWhiteSpace($Reason)) {
+        throw '-Immediately requires -Details documenting the severity, deadlock, loop, race condition, or inability to self-remedy.'
+    }
+
+    $store = Get-ProposalStore
+    $proposals = @()
+    foreach ($id in $Ids) {
+        $proposal = @($store.proposals | Where-Object { $_.id -eq $id })[0]
+        if ($null -eq $proposal) { throw "Proposal #$Id was not found." }
+        $proposals += $proposal
+    }
+    $triggerBugs = @($proposals | Where-Object {
+        $proposalId = if ($_.PSObject.Properties['crp_id'] -and $_.crp_id) { [string]$_.crp_id } else { [string]$_.cr_id }
+        $proposalId -match '^BUG-\d+$'
+    })
+    if ($triggerBugs.Count -eq 0) {
+        if ($proposals.Count -ne 1) {
+            throw '-Immediately requires an explicit multi-proposal cohort containing at least one BUG proposal.'
+        }
+        $reclassified = Set-LcmProposalBugIdentity -Id $proposals[0].id -Details $Reason
+        $proposals = @($reclassified)
+        $triggerBugs = @($reclassified)
+        $store = Get-ProposalStore
+    }
+    $triggerBugIds = @($triggerBugs | ForEach-Object {
+        if ($_.PSObject.Properties['crp_id'] -and $_.crp_id) { [string]$_.crp_id } else { [string]$_.cr_id }
+    }) -join ', '
+    foreach ($proposal in $proposals) {
+        $proposal | Add-Member -NotePropertyName 'quality_checks_deferred' -NotePropertyValue $true -Force
+        $proposal | Add-Member -NotePropertyName 'immediate_recovery_reason' -NotePropertyValue $Reason -Force
+        $proposal | Add-Member -NotePropertyName 'immediate_recovery_started_at' -NotePropertyValue (Get-Date).ToString('yyyy-MM-dd HH:mm:ss') -Force
+        $proposal | Add-Member -NotePropertyName 'immediate_recovery_trigger_bugs' -NotePropertyValue $triggerBugIds -Force
+    }
+    Set-ProposalStore -Store $store
+    return @($proposals)
+}
+
+function Get-LcmProposalLifecycleAudit {
+    [CmdletBinding()]
+    param()
+
+    $validStates = @('suggested', 'in_progress', 'verified', 'in_review', 'completed', 'pushed', 'held', 'withdrawn', 'rejected', 'superseded')
+    $store = Get-ProposalStore
+    $inventoryRoot = Split-Path (Split-Path (Split-Path (Get-ProposalStorePath) -Parent) -Parent) -Parent
+    $findings = foreach ($proposal in @($store.proposals)) {
+        $issues = @()
+        if ($proposal.state -notin $validStates) {
+            $issues += "invalid state '$($proposal.state)'"
+        }
+        $bundleDir = if ($proposal.PSObject.Properties['bundle_dir']) { [string]$proposal.bundle_dir } else { '' }
+        if ([string]::IsNullOrWhiteSpace($bundleDir)) {
+            $issues += 'missing bundle_dir'
+        } else {
+            $bundlePath = Join-Path $inventoryRoot $bundleDir
+            if (-not (Test-Path -LiteralPath $bundlePath -PathType Container)) {
+                $issues += "bundle directory not found: $bundleDir"
+            } else {
+                foreach ($documentName in @('specification', 'plan', 'walkthrough')) {
+                    $documentPath = if ($proposal.PSObject.Properties['docs'] -and $proposal.docs -and $proposal.docs.PSObject.Properties[$documentName] -and $proposal.docs.$documentName) {
+                        Join-Path $bundlePath $proposal.docs.$documentName
+                    } else {
+                        $null
+                    }
+                    if ([string]::IsNullOrWhiteSpace($documentPath) -or -not (Test-Path -LiteralPath $documentPath -PathType Leaf)) {
+                        $issues += "missing $documentName document"
+                    }
+                }
+            }
+        }
+        if ($issues.Count -gt 0) {
+            [PSCustomObject]@{
+                Id = $proposal.id
+                CrpId = if ($proposal.crp_id) { $proposal.crp_id } else { $proposal.cr_id }
+                State = $proposal.state
+                Findings = $issues -join '; '
+            }
+        }
+    }
+
+    return @($findings)
+}
+
 function Set-WorkspaceProposalState {
     [CmdletBinding()]
     param(
@@ -294,49 +560,20 @@ function Set-WorkspaceProposalState {
         [string]$Details
     )
 
-    $store = Get-ProposalStore
-    $found = $null
-
-    foreach ($p in $store.proposals) {
-        if ($p.id -eq $Id) {
-            $p.state = $State
-            # Bidirectional Invariant: State updates keep physical progress synchronized
-            if ($State -in @('held', 'deferred')) {
-                $p | Add-Member -NotePropertyName "progress_state" -NotePropertyValue 'deferred' -Force
-                $p | Add-Member -NotePropertyName "disposition" -NotePropertyValue 'held' -Force
-            } elseif ($State -eq 'completed') {
-                $p | Add-Member -NotePropertyName "progress_state" -NotePropertyValue 'completed' -Force
-                $p | Add-Member -NotePropertyName "disposition" -NotePropertyValue 'completed' -Force
-            } elseif ($State -eq 'pushed') {
-                $p | Add-Member -NotePropertyName "progress_state" -NotePropertyValue 'pushed' -Force
-                $p | Add-Member -NotePropertyName "disposition" -NotePropertyValue 'published' -Force
-            } elseif ($State -in @('rejected', 'deleted')) {
-                $p | Add-Member -NotePropertyName "progress_state" -NotePropertyValue 'deferred' -Force
-                $p | Add-Member -NotePropertyName "disposition" -NotePropertyValue 'rejected' -Force
-            } elseif ($State -in @('approved', 'suggested', 'bug')) {
-                if ($p.PSObject.Properties['disposition'] -and $p.disposition -eq 'held') {
-                    $p.disposition = $null
-                }
-                if ($p.PSObject.Properties['hold_reason']) {
-                    $p.hold_reason = $null
-                }
-            }
-            if ($Details) {
-                $p.details = $Details
-            }
-            $found = $p
-            break
-        }
-    }
-
-    if (-not $found) {
-        Write-Error "Proposal #$Id not found in proposals store."
-        return $null
-    }
-
-    Set-ProposalStore -Store $store
-    Write-Host ("Updated Proposal #{0} state to '{1}'." -f $Id, $State) -ForegroundColor Green
-    return $found
+    $lifecycleState = @{
+        bug = 'in_progress'
+        suggested = 'suggested'
+        processed = 'in_progress'
+        approved = 'in_progress'
+        deferred = 'held'
+        deleted = 'withdrawn'
+        completed = 'completed'
+        'completed [minimal-tests]' = 'completed'
+        rejected = 'rejected'
+        pushed = 'pushed'
+        held = 'held'
+    }[$State]
+    return Move-LcmProposalLifecycleState -Id $Id -State $lifecycleState -Details $Details
 }
 
 function Set-WorkspaceProposalProgress {
@@ -352,41 +589,19 @@ function Set-WorkspaceProposalProgress {
         [string]$Details
     )
 
-    $store = Get-ProposalStore
-    $found = $null
-
-    foreach ($p in $store.proposals) {
-        if ($p.id -eq $Id) {
-            $p | Add-Member -NotePropertyName "progress_state" -NotePropertyValue $ProgressState -Force
-
-            # Plan State Synchronization (RULE-LCM-002 / Two-Tier Governance)
-            # When physical progress advances, the plan state follows:
-            if ($ProgressState -in @('in_progress', 'queued', 'verification') -and $p.state -in @('completed', 'pushed', 'held', 'deferred')) {
-                $p.state = 'approved'
-            } elseif ($ProgressState -in @('in_progress', 'verification', 'committed') -and $p.state -eq 'suggested') {
-                $p.state = 'approved'
-            } elseif ($ProgressState -eq 'completed' -and $p.state -ne 'completed') {
-                $p.state = 'completed'
-            } elseif ($ProgressState -eq 'pushed' -and $p.state -ne 'pushed') {
-                $p.state = 'pushed'
-            }
-
-            if ($Details) {
-                $p.details = $Details
-            }
-            $found = $p
-            break
-        }
-    }
-
-    if (-not $found) {
-        Write-Error "Proposal #$Id not found in proposals store."
-        return $null
-    }
-
-    Set-ProposalStore -Store $store
-    Write-Host ("Updated Proposal #{0} progress state to '{1}'." -f $Id, $ProgressState) -ForegroundColor Green
-    return $found
+    $lifecycleState = @{
+        undecided = 'suggested'
+        queued = 'in_progress'
+        in_progress = 'in_progress'
+        verification = 'verified'
+        committed = 'completed'
+        completed = 'completed'
+        pushed = 'pushed'
+        blocked = 'held'
+        failed = 'held'
+        deferred = 'held'
+    }[$ProgressState]
+    return Move-LcmProposalLifecycleState -Id $Id -State $lifecycleState -Details $Details
 }
 
 function Set-WorkspaceProposalPriority {
@@ -531,7 +746,8 @@ function Resolve-ProposalIdExpression {
     $store = Get-ProposalStore
 
     if ($cleaned -eq 'all') {
-        return @($store.proposals | Where-Object { $_.state -in @('suggested', 'processed', 'deferred') } | Select-Object -ExpandProperty id)
+        $excludedStates = @('held', 'withdrawn', 'rejected', 'superseded', 'pushed')
+        return @($store.proposals | Where-Object { $_.state -notin $excludedStates } | Select-Object -ExpandProperty id)
     }
 
     $targetIds = [System.Collections.Generic.List[int]]::new()
@@ -566,7 +782,7 @@ function Invoke-ProposalBatchAction {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
-        [ValidateSet('do', 'delete', 'defer', 'deferred', 'complete', 'completed', 'suggest', 'suggested', 'reject', 'rejected', 'approve', 'approved', 'bug', 'push', 'pushed', 'hold', 'held', 'resume')]
+        [ValidateSet('do', 'delete', 'defer', 'deferred', 'complete', 'completed', 'suggest', 'suggested', 'reject', 'rejected', 'approve', 'approved', 'bug', 'push', 'pushed', 'hold', 'held', 'resume', 'continue', 'withdraw', 'supersede', 'reopen', 'reset')]
         [string]$Action,
 
         [Parameter(Mandatory = $true)]
@@ -582,63 +798,60 @@ function Invoke-ProposalBatchAction {
     }
 
     $mappedState = switch ($Action) {
-        'do'                                  { 'approved' }
-        'delete'                              { 'deleted' }
-        { $_ -in @('defer', 'deferred') }     { 'deferred' }
-        { $_ -in @('hold', 'held') }          { 'held' }
-        'resume'                              { 'approved' }
+        { $_ -in @('do', 'approve', 'approved', 'bug', 'reopen') } { 'in_progress' }
+        { $_ -in @('delete', 'defer', 'deferred', 'hold', 'held') } { 'held' }
         { $_ -in @('complete', 'completed') } { 'completed' }
-        { $_ -in @('suggest', 'suggested') }   { 'suggested' }
-        { $_ -in @('reject', 'rejected') }    { 'rejected' }
-        { $_ -in @('approve', 'approved') }   { 'approved' }
-        'bug'                                 { 'bug' }
-        { $_ -in @('push', 'pushed') }        { 'pushed' }
+        { $_ -in @('suggest', 'suggested', 'reset') } { 'suggested' }
+        { $_ -in @('reject', 'rejected') } { 'rejected' }
+        { $_ -in @('push', 'pushed') } { 'pushed' }
+        'withdraw' { 'withdrawn' }
+        'supersede' { 'superseded' }
+    }
+
+    if ($TargetExpression.Trim().ToLowerInvariant() -eq 'all') {
+        $store = Get-ProposalStore
+        $targetIds = @(
+            foreach ($proposal in $store.proposals) {
+                $currentState = [string]$proposal.state
+                if ($currentState -eq 'approved') { $currentState = 'in_progress' }
+                $targetState = $mappedState
+                if ($Action -in @('resume', 'continue')) {
+                    $targetState = if ($proposal.PSObject.Properties['resume_state']) { [string]$proposal.resume_state } else { '' }
+                }
+                if (-not [string]::IsNullOrWhiteSpace($targetState) -and
+                    (Test-LcmProposalLifecycleTransition -FromState $currentState -ToState $targetState)) {
+                    $proposal.id
+                }
+            }
+        )
+        if ($targetIds.Count -eq 0) {
+            throw "No proposals are eligible for lifecycle action '$Action'."
+        }
     }
 
     $updated = @()
     foreach ($id in $targetIds) {
-        try {
-            $res = Set-WorkspaceProposalState -Id $id -State $mappedState -Details $Details
-
-            if ($Action -eq 'complete') {
-                $res = Set-WorkspaceProposalProgress -Id $id -ProgressState 'completed' -Details $Details
-            } elseif ($Action -eq 'do') {
-                $res = Set-WorkspaceProposalProgress -Id $id -ProgressState 'in_progress' -Details $Details
-            } elseif ($Action -in @('hold', 'held')) {
-                $res = Set-WorkspaceProposalProgress -Id $id -ProgressState 'blocked' -Details $Details
-            } elseif ($Action -eq 'resume') {
-                $res = Set-WorkspaceProposalProgress -Id $id -ProgressState 'in_progress' -Details $Details
-            }
-
+        $targetState = $mappedState
+        if ($Action -in @('resume', 'continue')) {
             $store = Get-ProposalStore
-            $targetItem = $store.proposals | Where-Object { $_.id -eq $id } | Select-Object -First 1
-
-            if ($targetItem) {
-                if ($Action -eq 'complete') {
-                    $targetItem | Add-Member -NotePropertyName 'disposition' -NotePropertyValue 'completed' -Force
-                } elseif ($Action -eq 'do') {
-                    $targetItem | Add-Member -NotePropertyName 'flow_mode' -NotePropertyValue 'doit' -Force
-                    $targetItem | Add-Member -NotePropertyName 'always_proceed' -NotePropertyValue $true -Force
-                    $targetItem | Add-Member -NotePropertyName 'disposition' -NotePropertyValue $null -Force
-                    if ($targetItem.PSObject.Properties['hold_reason']) { $targetItem.hold_reason = $null }
-                } elseif ($Action -in @('hold', 'held')) {
-                    $targetItem | Add-Member -NotePropertyName 'flow_mode' -NotePropertyValue 'standard' -Force
-                    $targetItem | Add-Member -NotePropertyName 'always_proceed' -NotePropertyValue $false -Force
-                    $targetItem | Add-Member -NotePropertyName 'disposition' -NotePropertyValue 'held' -Force
-                    if ($Details) { $targetItem | Add-Member -NotePropertyName 'hold_reason' -NotePropertyValue $Details -Force }
-                } elseif ($Action -eq 'resume') {
-                    $targetItem | Add-Member -NotePropertyName 'disposition' -NotePropertyValue $null -Force
-                    if ($targetItem.PSObject.Properties['hold_reason']) { $targetItem.hold_reason = $null }
-                } elseif ($Action -in @('reject', 'rejected')) {
-                    $targetItem | Add-Member -NotePropertyName 'disposition' -NotePropertyValue 'rejected' -Force
-                }
-                Set-ProposalStore -Store $store
-                $res = $targetItem
+            $proposal = @($store.proposals | Where-Object { $_.id -eq $id })[0]
+            if ($null -eq $proposal) { throw "Proposal #$Id was not found." }
+            $targetState = [string]$proposal.resume_state
+            if ([string]::IsNullOrWhiteSpace($targetState)) {
+                throw "Proposal #$Id cannot resume because it has no resume_state."
             }
-            $updated += $res
-        } catch {
-            Write-Warning $_.Exception.Message
         }
+
+        $res = Move-LcmProposalLifecycleState -Id $id -State $targetState -Details $Details
+        if ($Action -in @('do', 'approve', 'approved', 'bug')) {
+            $store = Get-ProposalStore
+            $proposal = @($store.proposals | Where-Object { $_.id -eq $id })[0]
+            $proposal | Add-Member -NotePropertyName 'flow_mode' -NotePropertyValue 'doit' -Force
+            $proposal | Add-Member -NotePropertyName 'always_proceed' -NotePropertyValue $true -Force
+            Set-ProposalStore -Store $store
+            $res = $proposal
+        }
+        $updated += $res
     }
 
     return $updated
@@ -2222,7 +2435,7 @@ Set-Alias -Name Purge-Bundle -Value Remove-LcmProposalBundle
 Set-Alias -Name Get-Doc -Value Get-LcmProposalDocument
 
 Export-ModuleMember -Function Get-ProposalStorePath, Get-ProposalStore, Set-ProposalStore, `
-    Get-WorkspaceProposals, New-WorkspaceProposal, Set-WorkspaceProposalState, Set-WorkspaceProposalProgress, `
+    Get-WorkspaceProposals, New-WorkspaceProposal, Get-LcmProposalLifecycleActions, Test-LcmProposalLifecycleTransition, Move-LcmProposalLifecycleState, Set-LcmProposalBugIdentity, Enable-LcmImmediateBugRecovery, Get-LcmProposalLifecycleAudit, Set-WorkspaceProposalState, Set-WorkspaceProposalProgress, `
     Set-WorkspaceProposalPriority, Save-ProposalPlan, Save-ProposalWalkthrough, `
     Resolve-ProposalIdExpression, Invoke-ProposalBatchAction, `
     Set-ReviewGranularity, Get-ReviewGranularity, Set-LCMMode, Get-LCMMode, Set-TestingMode, Get-TestingMode, `
@@ -2231,4 +2444,3 @@ Export-ModuleMember -Function Get-ProposalStorePath, Get-ProposalStore, Set-Prop
     Test-RegressionTrigger, Assert-RegressionSafety, Get-RegressionDAGOrder, New-ChildRegressionProposal, `
     Get-ReposUnderReview, Format-ProposalsTable, Format-ReposUnderReviewTable `
     -Alias Parse-ProposalIdExpression, Workon, Apps, App, SplitDocs, Purge-LcmPushedProposalBundle, Purge-Bundle, Get-Doc
-

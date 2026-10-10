@@ -11,8 +11,9 @@ param(
   [Alias('Exclude', 'Filters')]
   [string[]]$Exclusions = @(),
 
-  [Parameter(Mandatory = $false, HelpMessage = 'CRP or Change Request identifier (e.g. CRP-2026-005, CR-2026-034)')]
+  [Parameter(Mandatory = $false, HelpMessage = 'Exact CRP or BUG identifier (e.g. CRP-257)')]
   [Alias('Cr', 'ChangeRequest', 'Proposal', 'ProposalId')]
+  [ValidatePattern('^(CRP|BUG)-\d+$')]
   [string]$CRP = '',
 
   [Parameter(Mandatory = $false, HelpMessage = 'Wait synchronously for the Beyond Compare review session to close before evaluating staging')]
@@ -45,15 +46,15 @@ param(
 .PARAMETER Exclusions
     Additional file or directory exclusion masks (Aliases: -Exclude, -Filters). Standard LCM exclusions are always applied.
 .PARAMETER CRP
-    Change Request Proposal identifier (e.g. 'CRP-134', 'CR-2026-012') to correlate with review receipts.
+    Exact Change Request Proposal or BUG identifier (e.g. 'CRP-134' or 'BUG-12') to correlate with review receipts.
 .PARAMETER Wait
     Wait synchronously for the Beyond Compare review session to close before evaluating staging.
 .PARAMETER Help
     Displays this parameter reference (Aliases: -h, -?).
 .EXAMPLE
-    pwsh tools/Invoke-BeyondCompareReview.ps1 -RepositoryName Git_Repositories
+    pwsh tools/Invoke-BeyondCompareReview.ps1 -CRP CRP-261 -RepositoryName Git_Repositories
 .EXAMPLE
-    pwsh tools/Invoke-BeyondCompareReview.ps1 -RepositoryName AuthorizeMasterUser -BaseCommit HEAD~1
+    pwsh tools/Invoke-BeyondCompareReview.ps1 -CRP BUG-12 -RepositoryName AuthorizeMasterUser -BaseCommit HEAD~1
 #>
 
 Set-StrictMode -Version Latest
@@ -79,16 +80,19 @@ if ($Help) {
   Write-Host "  Beyond Compare on your interactive desktop with out-of-scope filter exclusions."
   Write-Host ""
   Write-Host "USAGE:" -ForegroundColor Yellow
-  Write-Host "  pwsh tools/Invoke-BeyondCompareReview.ps1 [-RepositoryName <repo>] [-BaseCommit <commit>] [-Exclusions <array>] [-Wait] [-h]"
-  Write-Host "  BCR [-RepositoryName <repo>] [-BaseCommit <commit>]"
+  Write-Host "  pwsh tools/Invoke-BeyondCompareReview.ps1 -CRP <CRP-ID> [-RepositoryName <repo>] [-BaseCommit <commit>] [-Exclusions <array>] [-Wait] [-h]"
+  Write-Host "  BCR -CRP <CRP-ID> [-RepositoryName <repo>] [-BaseCommit <commit>]"
   Write-Host ""
-  Write-Host "REVIEW DIRECTIVES (APPLIED IN LEFT PANE):" -ForegroundColor Yellow
-  Write-Host "  1. Copy Right -> Left     : Staged for completion upon 'COMPLETE' command."
-  Write-Host "  2. Line 'Delete' on Left  : Permanently DELETE file on disk and in Git."
-  Write-Host "  3. Line 'Rename [to] X'   : RENAME file on disk and in Git to X (cleans up old file)."
-  Write-Host "  4. Leave Left Untouched   : Skipped / remains uncommitted in working directory."
+  Write-Host "REVIEW PROTOCOL:" -ForegroundColor Yellow
+  Write-Host "  1. Left pane is the read-only baseline; never copy files into it."
+  Write-Host "  2. Review or edit the live right pane. Right-pane edits are accepted changes."
+  Write-Host "  3. Close the review and issue COMPLETE to record acceptance and commit the reviewed live worktree."
   Write-Host "==========================================================================" -ForegroundColor Cyan
   return
+}
+
+if ([string]::IsNullOrWhiteSpace($CRP)) {
+  throw '-CRP is required. Repository-based CRP inference is not permitted.'
 }
 
 if ([string]::IsNullOrWhiteSpace($RepositoryName)) {
@@ -352,7 +356,11 @@ function Audit-BeyondCompareReviewStaging {
     [string]$RepoName,
 
     [Parameter(Mandatory = $true)]
-    [string]$CommitSha
+    [string]$CommitSha,
+
+    [Parameter(Mandatory = $true)]
+    [ValidatePattern('^(CRP|BUG)-\d+$')]
+    [string]$CRP
   )
 
   $reviewsDir = "D:\Git_Repositories\LCM_Inventory\data\reviews"
@@ -467,6 +475,7 @@ function Audit-BeyondCompareReviewStaging {
   }
 
   $stagingManifest = [ordered]@{
+    CRP            = $CRP
     RepositoryName = $RepoName
     RepositoryPath = $RepoPath
     BaselineCommit = $CommitSha
@@ -513,8 +522,8 @@ function Audit-BeyondCompareReviewStaging {
 
   Write-Host "==========================================================================" -ForegroundColor Cyan
   Write-Host " Awaiting Operator Command:" -ForegroundColor Yellow
-  Write-Host "   - 'COMPLETE'      -> Commits staged files, executes renames & clean deletions locally."
-  Write-Host "   - 'REJECT'        -> Discards review staging; zero changes committed."
+  Write-Host "   - 'COMPLETE'      -> Records acceptance and commits the reviewed live worktree."
+  Write-Host "   - 'REJECT'        -> Records rejection; zero changes committed."
   Write-Host "==========================================================================" -ForegroundColor Cyan
 
   return $stagingManifest
@@ -609,11 +618,7 @@ if (-not (Test-Path -LiteralPath $scratchReviewDir)) {
   $null = New-Item -ItemType Directory -Path $scratchReviewDir -Force
 }
 
-if ([string]::IsNullOrWhiteSpace($CRP)) {
-  $CRP = Get-ActiveCRP -TargetRepoName $repoName -WorkspaceRootPath $workspaceRoot
-}
-
-$crpSegment = if (-not [string]::IsNullOrWhiteSpace($CRP)) { $CRP } else { "Review_${repoName}" }
+$crpSegment = $CRP
 $crpReviewDir = Join-Path $scratchReviewDir $crpSegment
 if (-not (Test-Path -LiteralPath $crpReviewDir)) {
   $null = New-Item -ItemType Directory -Path $crpReviewDir -Force
@@ -832,7 +837,7 @@ Write-Host ("  Pane Titles:         [Left: '{0}'] <--> [Right: '{1}']" -f $title
 Write-Host ("  Filters Applied:     {0}" -f $filterMask)
 
 # Immediately compile initial review staging manifest so Submit-ReviewResult & Control Hub recognize active review
-$null = Audit-BeyondCompareReviewStaging -TempReviewRoot $tempReviewRoot -RepoPath $repoPath -RepoName $repoName -CommitSha $commitSha
+$null = Audit-BeyondCompareReviewStaging -TempReviewRoot $tempReviewRoot -RepoPath $repoPath -RepoName $repoName -CommitSha $commitSha -CRP $CRP
 
 # Open session with /solo so each CRP opens in its own dedicated top-level window per cohort isolation invariant
 $bcArgString = "/solo `"$sessionName`""
@@ -974,6 +979,5 @@ if (-not [string]::IsNullOrWhiteSpace($CRP)) {
 
 if ($Wait) {
   Write-Host "Waiting for Beyond Compare review session to close..." -ForegroundColor DarkGray
-  Audit-BeyondCompareReviewStaging -TempReviewRoot $tempReviewRoot -RepoPath $repoPath -RepoName $repoName -CommitSha $commitSha
+  Audit-BeyondCompareReviewStaging -TempReviewRoot $tempReviewRoot -RepoPath $repoPath -RepoName $repoName -CommitSha $commitSha -CRP $CRP
 }
-

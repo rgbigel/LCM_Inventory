@@ -106,6 +106,7 @@ if (-not (Test-Path -LiteralPath $eligibilityModule)) {
 }
 
 Import-Module -Name $eligibilityModule -Force
+Import-Module -Name (Join-Path $workspaceRoot 'LCM_Inventory\modules\ProposalManager.psm1') -Force
 $ledgerJson = Get-Content -LiteralPath $proposalsFile -Raw -Encoding UTF8 | ConvertFrom-Json
 $requestedProposalIds = @($targetProposalSet)
 $requestedRepositories = if ($null -eq $Repositories) { @() } else { @($Repositories | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }) }
@@ -278,7 +279,6 @@ if ($cohortPushed) {
         Write-Host "`n  -> Appended PUSH_EXECUTED record to cm_activity.log" -ForegroundColor Green
 
         # Transition only completed proposals in the successfully pushed cohort.
-        $ledgerJson = Get-Content -LiteralPath $proposalsFile -Raw -Encoding UTF8 | ConvertFrom-Json
         $transitionCount = 0
         foreach ($p in $ledgerJson.proposals) {
             $plannedProposal = @($pushPlan.CompletedProposals | Where-Object { $_.Id -eq [int]$p.id })
@@ -286,26 +286,14 @@ if ($cohortPushed) {
                 continue
             }
 
-            $p.state = "pushed"
-            $p.progress_state = "pushed"
-            $p | Add-Member -NotePropertyName "pushed_at" -NotePropertyValue $pushTimestamp -Force
-            if ($p.PSObject.Properties['dates'] -and $p.dates) {
-                $p.dates | Add-Member -NotePropertyName "pushed" -NotePropertyValue $pushTimestamp -Force
-            }
-            if ($p.PSObject.Properties['state_history'] -and $p.state_history) {
-                $newHist = [System.Collections.Generic.List[object]]::new(@($p.state_history))
-                $newHist.Add([PSCustomObject]@{
-                    state = "pushed"
-                    timestamp = $pushTimestamp
-                    user = $env:USERNAME
-                    note = "Pushed to remote ($($pushedRepos -join ', '))"
-                })
-                $p.state_history = @($newHist)
-            }
+            $transitioned = Move-LcmProposalLifecycleState -Id $p.id -State 'pushed' -Details "Pushed to remote ($($pushedRepos -join ', '))"
+            $proposalStore = Get-ProposalStore
+            $updatedProposal = @($proposalStore.proposals | Where-Object { $_.id -eq $transitioned.id })[0]
+            $updatedProposal | Add-Member -NotePropertyName 'pushed_at' -NotePropertyValue $pushTimestamp -Force
+            Set-ProposalStore -Store $proposalStore
             $transitionCount++
         }
         if ($transitionCount -gt 0) {
-            $ledgerJson | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $proposalsFile -Encoding UTF8
             Write-Host "  -> Transitioned $transitionCount proposal(s) from 'completed' to 'pushed' state in proposals.json." -ForegroundColor Green
         }
     }

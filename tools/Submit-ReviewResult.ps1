@@ -11,17 +11,18 @@ param(
     [Parameter(Mandatory = $false, HelpMessage = 'Review notes, rationale, or instructions for the audit receipt')]
     [string]$Notes,
 
-    [Parameter(Mandatory = $false, HelpMessage = 'Include all changes, including uncopied files, without interactive confirmation')]
+    [Parameter(Mandatory = $false, HelpMessage = 'Legacy compatibility switch; accepted reviews commit the live working tree')]
     [switch]$All,
 
     [Parameter(Mandatory = $false, HelpMessage = 'Single-cycle minimal testing scope: fast syntax and AST validation only')]
     [switch]$MinimalTests,
 
-    [Parameter(Mandatory = $false, HelpMessage = 'Force review commit and bypass safety checks')]
+    [Parameter(Mandatory = $false, HelpMessage = 'Authorized exception to interactive visual-review confirmation only; does not waive lifecycle or preflight checks')]
     [switch]$Force,
 
-    [Parameter(Mandatory = $false, HelpMessage = 'CRP or Change Request identifier (e.g. CRP-257)')]
+    [Parameter(Mandatory = $false, HelpMessage = 'Exact CRP or BUG identifier (e.g. CRP-257)')]
     [Alias('Cr', 'ChangeRequest', 'Proposal', 'ProposalId')]
+    [ValidatePattern('^(CRP|BUG)-\d+$')]
     [string]$CRP = '',
 
     [Alias('h', '?')]
@@ -30,11 +31,11 @@ param(
 
 <#
 .SYNOPSIS
-    Interactive review response recorder and staging execution engine for Beyond Compare and LCM governance.
+    Interactive review acceptance recorder and exact-CRP commit gate for Beyond Compare and LCM governance.
 .DESCRIPTION
     Module: tools/Submit-ReviewResult.ps1
-    Purpose: Consumes interactive review staging manifests, handles Delete/Rename directives, executes cleanups,
-             prompts for uncopied file confirmations (bypassed with 'COMPLETE ALL' or -All), and performs review-gated commits per RULE-REV-001.
+    Purpose: Records operator review acceptance from Beyond Compare and commits the accepted live working tree
+             through the exact-CRP review gate.
     Path: tools/Submit-ReviewResult.ps1
     Authors: Rolf, LCM_AI Engine
     Version: 8.3.0
@@ -66,21 +67,26 @@ if ($Help) {
     Write-Host " SUBMIT REVIEW RESULT (Submit-ReviewResult)" -ForegroundColor Cyan
     Write-Host "==========================================================================" -ForegroundColor Cyan
     Write-Host "SYNOPSIS:" -ForegroundColor Yellow
-    Write-Host "  Interactive review response recorder and staging engine for Beyond Compare."
+    Write-Host "  Records an accepted Beyond Compare review and commits the reviewed live worktree."
     Write-Host ""
     Write-Host "USAGE:" -ForegroundColor Yellow
-    Write-Host "  pwsh LCM_Inventory/tools/Submit-ReviewResult.ps1 [[-RepositoryPath] <str>] [-Result <str>] [-Notes <str>] [-All] [-MinimalTests] [-Force] [-h]"
+    Write-Host "  pwsh LCM_Inventory/tools/Submit-ReviewResult.ps1 -CRP <CRP-ID> [[-RepositoryPath] <str>] [-Result <str>] [-Notes <str>] [-All] [-MinimalTests] [-Force] [-h]"
     Write-Host ""
     Write-Host "PARAMETERS:" -ForegroundColor Yellow
     Write-Host "  -RepositoryPath  : Name or path of the repository"
     Write-Host "  -Result          : Review disposition (Completed, CompleteAll, CompleteWithEdits, Rejected, Deferred)"
     Write-Host "  -Notes           : Review notes or rationale"
-    Write-Host "  -All             : Include all uncopied files"
+    Write-Host "  -All             : Legacy compatibility switch; accepted reviews commit the live worktree"
     Write-Host "  -MinimalTests    : Single-cycle minimal testing scope: fast syntax and AST validation only"
-    Write-Host "  -Force           : Force commit"
+    Write-Host "  -Force           : Visual-review confirmation exception only; lifecycle and preflight rules still apply"
+    Write-Host "  -CRP             : Exact CRP or BUG identifier required for completion"
     Write-Host "  -Help (-h, -?)   : Displays this help screen"
     Write-Host "==========================================================================" -ForegroundColor Cyan
     return
+}
+
+if ([string]::IsNullOrWhiteSpace($CRP)) {
+    throw '-CRP is required. Repository-based proposal completion is not permitted.'
 }
 
 $workspaceRoot = 'D:\Git_Repositories'
@@ -146,7 +152,7 @@ if (-not $stagedManifest) {
                             if (Test-Path -LiteralPath $bcrScript) {
                                 & pwsh -NoProfile -ExecutionPolicy Bypass -Command "& {
                                     . `"$bcrScript`"
-                                    Audit-BeyondCompareReviewStaging -TempReviewRoot `"$activeReviewRoot`" -RepoPath `"$targetRepoPath`" -RepoName `"$repoName`" -CommitSha `"$($meta.BaseCommit)`"
+                                    Audit-BeyondCompareReviewStaging -TempReviewRoot `"$activeReviewRoot`" -RepoPath `"$targetRepoPath`" -RepoName `"$repoName`" -CommitSha `"$($meta.BaseCommit)`" -CRP `"$CRP`"
                                 }" | Out-Null
                                 if (Test-Path -LiteralPath $stagedManifestFile) {
                                     $stagedManifest = Get-Content -LiteralPath $stagedManifestFile -Raw -Encoding UTF8 | ConvertFrom-Json
@@ -159,50 +165,6 @@ if (-not $stagedManifest) {
             }
         }
     }
-}
-
-# ------------------------------------------------------------------------------
-# Check for Uncopied Files and Prompt Operator (Bypassed if COMPLETE ALL / -All is used)
-# ------------------------------------------------------------------------------
-$includeUncopied = $false
-$isExplicitCompleteAll = ($All -or $Result -in @("CompleteAll", "ALL", "COMPLETE ALL"))
-
-if ($stagedManifest -and $stagedManifest.Uncopied -and $stagedManifest.Uncopied.Count -gt 0) {
-    if ($isExplicitCompleteAll) {
-        $includeUncopied = $true
-        $Result = "CompleteAll"
-        Write-Host "[COMPLETE ALL] Confirmed: Automatically including all $($stagedManifest.Uncopied.Count) uncopied/modified file(s) without prompt." -ForegroundColor Green
-    } elseif ($Result -eq "CompleteStaged") {
-        $includeUncopied = $false
-    } elseif (-not $Force -and ($null -eq $Result -or $Result -in @("Complete", "CompleteWithEdits"))) {
-        Write-Host ""
-        Write-Host "==========================================================================" -ForegroundColor Yellow
-        Write-Host " NOTICE: UNCOPIED FILES DETECTED IN REVIEW" -ForegroundColor Yellow
-        Write-Host "==========================================================================" -ForegroundColor Yellow
-        Write-Host " You have $($stagedManifest.Uncopied.Count) modified/new file(s) that were NOT copied to the Left pane:"
-        foreach ($uf in $stagedManifest.Uncopied) {
-            Write-Host "   ? $($uf.RelativePath)" -ForegroundColor Yellow
-        }
-        Write-Host "--------------------------------------------------------------------------"
-        Write-Host " Did you forget to copy them, or do you want to include them in this commit?" -ForegroundColor Cyan
-        Write-Host "   [1] Yes, Include All    - Complete staged files PLUS these uncopied files" -ForegroundColor Green
-        Write-Host "   [2] No, Staged Only     - Commit ONLY explicitly copied files (leave these uncommitted)" -ForegroundColor Gray
-        Write-Host "   [q] Cancel Review"
-        $resp = Read-Host " Enter choice [1-2, q]"
-        if ($resp -eq "1" -or $resp -eq "y" -or $resp -eq "yes") {
-            $includeUncopied = $true
-            $Result = "Complete"
-        } elseif ($resp -eq "2" -or $resp -eq "n" -or $resp -eq "no") {
-            $includeUncopied = $false
-            $Result = "Complete"
-        } else {
-            Write-Host "Review submission cancelled." -ForegroundColor Gray
-            return
-        }
-    }
-} elseif ($isExplicitCompleteAll) {
-    $includeUncopied = $true
-    $Result = "CompleteAll"
 }
 
 if ([string]::IsNullOrWhiteSpace($Result)) {
@@ -225,71 +187,25 @@ $manifestPath = if ($stagedManifest.RepositoryPath) { (Resolve-Path -LiteralPath
 if ($stagedManifest.RepositoryName -ne $repoName -or -not $manifestPath -or $manifestPath -ne $resolvedTargetPath) {
     throw "Review staging manifest does not match repository '$repoName'. Completion was not performed."
 }
+if (-not $stagedManifest.PSObject.Properties['CRP'] -or $stagedManifest.CRP -ne $CRP) {
+    throw "Review staging manifest does not match exact proposal '$CRP'. Completion was not performed."
+}
 
 $currentHead = (git -C $targetRepoPath rev-parse HEAD).Trim()
 if ([string]::IsNullOrWhiteSpace($stagedManifest.BaselineCommit) -or -not $currentHead.StartsWith([string]$stagedManifest.BaselineCommit, [System.StringComparison]::OrdinalIgnoreCase)) {
     throw "Review staging manifest baseline does not match current HEAD for '$repoName'. Completion was not performed."
 }
 
-$approvedActionCount = @($stagedManifest.Completed).Count + @($stagedManifest.Renames).Count + @($stagedManifest.Deletions).Count
-if (-not $includeUncopied -and $approvedActionCount -eq 0) {
-    throw "Review staging manifest for '$repoName' contains no approved actions. Completion was not performed."
-}
-
 # ------------------------------------------------------------------------------
-# Execute Staging Actions: Deletions, Renames & Cleanups
+# Record Accepted Review
 # ------------------------------------------------------------------------------
 $actionsExecuted = [System.Collections.Generic.List[string]]::new()
-
-if ($stagedManifest) {
-    # 1. Execute Deletions
-    if ($stagedManifest.Deletions) {
-        foreach ($df in $stagedManifest.Deletions) {
-            $liveFile = Join-Path $targetRepoPath $df.RelativePath
-            if (Test-Path -LiteralPath $liveFile) {
-                Remove-Item -LiteralPath $liveFile -Force -ErrorAction SilentlyContinue
-                git -C $targetRepoPath rm -f --ignore-unmatch $df.RelativePath 2>$null | Out-Null
-                $actionsExecuted.Add("Deleted: $($df.RelativePath)")
-                Write-Host "  [PURGED] Deleted file and Git tracking: $($df.RelativePath)" -ForegroundColor Red
-            }
-        }
-    }
-
-    # 2. Execute Renames
-    if ($stagedManifest.Renames) {
-        foreach ($rf in $stagedManifest.Renames) {
-            $oldLive = Join-Path $targetRepoPath $rf.OldRelativePath
-            $newLive = Join-Path $targetRepoPath $rf.NewRelativePath
-            if (Test-Path -LiteralPath $oldLive) {
-                $newDir = Split-Path $newLive -Parent
-                if (-not (Test-Path -LiteralPath $newDir)) { New-Item -ItemType Directory -Path $newDir -Force | Out-Null }
-                git -C $targetRepoPath mv -f $rf.OldRelativePath $rf.NewRelativePath 2>$null | Out-Null
-                if (Test-Path -LiteralPath $oldLive) { Remove-Item -LiteralPath $oldLive -Force -ErrorAction SilentlyContinue }
-                $actionsExecuted.Add("Renamed: $($rf.OldRelativePath) => $($rf.NewRelativePath)")
-                Write-Host "  [RENAMED] $($rf.OldRelativePath) => $($rf.NewRelativePath)" -ForegroundColor Yellow
-            }
-        }
-    }
-}
+$actionsExecuted.Add("Accepted live worktree through BCR disposition '$Result'.")
 
 # ------------------------------------------------------------------------------
 # Git Staging & Commit
 # ------------------------------------------------------------------------------
-if ($includeUncopied -or ($null -eq $stagedManifest)) {
-    git -C $targetRepoPath add -A
-} else {
-    # Stage reviewed files
-    if ($stagedManifest.Completed) {
-        foreach ($af in $stagedManifest.Completed) {
-            git -C $targetRepoPath add $af.RelativePath 2>$null | Out-Null
-        }
-    }
-    if ($stagedManifest.Renames) {
-        foreach ($rf in $stagedManifest.Renames) {
-            git -C $targetRepoPath add $rf.NewRelativePath 2>$null | Out-Null
-        }
-    }
-}
+git -C $targetRepoPath add -A
 
 $stagedPaths = @(git -C $targetRepoPath diff --cached --name-only)
 $ruleChangePaths = @(Get-RuleChangePaths -Paths $stagedPaths)
@@ -356,7 +272,7 @@ if ($LASTEXITCODE -ne 0) {
     Write-Host " Receipt    : $finalReviewFile" -ForegroundColor Cyan
     Write-Host "==========================================================================" -ForegroundColor Cyan
 } else {
-    throw "No approved staged changes are available for '$repoName'. Completion was not performed."
+    throw "The accepted review for '$repoName' has no live working-tree changes to commit."
 }
 
 # Cleanup staging manifest and temp baseline tree
@@ -434,42 +350,26 @@ if ($commitCreated -and $stagedManifest -and $stagedManifest.TempReviewRoot) {
 # Auto-Synchronize Proposals Ledger (RULE-LCM-002: Dual-State Alignment)
 # ------------------------------------------------------------------------------
 try {
-    $propJsonFile = Join-Path $workspaceRoot "LCM_Inventory\data\proposals\proposals.json"
-    if (Test-Path -LiteralPath $propJsonFile) {
-        $propStore = Get-Content -LiteralPath $propJsonFile -Raw -Encoding UTF8 | ConvertFrom-Json
-        $matchedProposal = $false
-        $resolvedCRP = if ($CRP) { $CRP } elseif ($meta -and -not [string]::IsNullOrWhiteSpace($meta.CRP)) { $meta.CRP } else { $null }
-        foreach ($p in $propStore.proposals) {
-            $isCrpMatch = if ($resolvedCRP) {
-                ($p.crp_id -eq $resolvedCRP -or $p.cr_id -eq $resolvedCRP -or ("CRP-$($p.id)" -eq $resolvedCRP) -or ("$($p.id)" -eq $resolvedCRP))
-            } else {
-                ($p.origin_repo -and $p.origin_repo.StartsWith($repoName))
-            }
-            $isOpenState = ($p.progress_state -in @('verification', 'committed', 'in_progress', 'review', 'verified') -or $p.state -in @('approved', 'suggested', 'in_progress', 'review', 'verified'))
-            if ($isCrpMatch -and $isOpenState) {
-                $p.progress_state = 'completed'
-                $p.state = if ($MinimalTests) { 'completed [minimal-tests]' } else { 'completed' }
-                if ($MinimalTests) {
-                    $p | Add-Member -NotePropertyName "test_scope" -NotePropertyValue "minimal" -Force
-                }
-                if (-not $p.dates) { $p | Add-Member -NotePropertyName "dates" -NotePropertyValue ([ordered]@{}) -Force }
-                $p.dates | Add-Member -NotePropertyName "completed" -NotePropertyValue (Get-Date).ToString("yyyy-MM-dd HH:mm:ss") -Force
-                if (-not $p.state_history) { $p | Add-Member -NotePropertyName "state_history" -NotePropertyValue @() -Force }
-                $p.state_history += [ordered]@{
-                    state = $p.state
-                    timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
-                    user = $env:USERNAME
-                    note = "Review completed and committed ($newCommitSha)."
-                }
-                $matchedProposal = $true
-            }
+    $proposalModulePath = Join-Path $workspaceRoot 'LCM_Inventory\modules\ProposalManager.psm1'
+    Import-Module $proposalModulePath -Force
+    $propStore = Get-ProposalStore
+    $matchingProposals = @($propStore.proposals | Where-Object {
+        $_.crp_id -eq $CRP -or $_.cr_id -eq $CRP -or ("CRP-$($_.id)" -eq $CRP)
+    })
+    if ($matchingProposals.Count -ne 1) {
+        throw "Review result for $CRP must resolve to exactly one proposal; found $($matchingProposals.Count)."
+    }
+    if ($commitCreated) {
+        $proposal = Move-LcmProposalLifecycleState -Id $matchingProposals[0].id -State 'completed' -Details "Review completed and committed ($newCommitSha)."
+        if ($MinimalTests) {
+            $propStore = Get-ProposalStore
+            $proposal = @($propStore.proposals | Where-Object { $_.id -eq $proposal.id })[0]
+            $proposal | Add-Member -NotePropertyName 'test_scope' -NotePropertyValue 'minimal' -Force
+            $proposal | Add-Member -NotePropertyName 'minimal_tests' -NotePropertyValue $true -Force
+            Set-ProposalStore -Store $propStore
         }
-        if ($commitCreated -and $matchedProposal) {
-            $propStore.updated_at = (Get-Date).ToString("yyyy-MM-ddTHH:mm:sszzz")
-            $propStore | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath $propJsonFile -Encoding UTF8
-            Write-Host "Auto-synchronized proposals ledger to '$((if ($MinimalTests) { 'completed [minimal-tests]' } else { 'completed' }))'." -ForegroundColor Green
-        }
+        Write-Host "Auto-synchronized proposals ledger to 'completed'." -ForegroundColor Green
     }
 } catch {
-    Write-Verbose "Could not auto-update proposals.json: $($_.Exception.Message)"
+    throw "Review result was committed, but the CRP lifecycle ledger could not be updated: $($_.Exception.Message)"
 }

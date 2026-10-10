@@ -1,11 +1,132 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-10-10T15:34:22+02:00",
+  "updated_at": "2026-10-10T18:02:20+02:00",
   "review_granularity": "coarse",
-  "lcm_mode": "active",
-  "last_proposal_id": 258,
+  "lcm_mode": "paused",
+  "last_proposal_id": 261,
   "proposals": [
+    {
+      "id": 261,
+      "crp_id": "CRP-261",
+      "timestamp": "2026-10-10 16:28:31",
+      "title": "Proposal Lifecycle Status and Action Model",
+      "origin_repo": "LCM_Inventory",
+      "state": "in_progress",
+      "bundle_id": "CRP-261",
+      "bundle_dir": "docs/Proposals/CRP-261-Proposal-Lifecycle-Status-And-Action-Model",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "author": "rgbig",
+      "details": "Normalizes internal and external proposal statuses, actionability, atomic creation, and exact lifecycle transitions.",
+      "priority": 9,
+      "dates": {
+        "created": "2026-10-10 16:28:31",
+        "suggested": "2026-10-10 16:28:31",
+        "in_progress": "2026-10-10 17:38:49"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-10-10 16:28:31",
+          "user": "rgbig",
+          "note": "Suggested on operator request."
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-10-10 17:38:49",
+          "user": "rgbig",
+          "note": "Operator directed CRP-261 to proceed before BUG-215."
+        }
+      ],
+      "progress_state": "in_progress",
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "disposition": null
+    },
+    {
+      "id": 260,
+      "crp_id": "CRP-260",
+      "timestamp": "2026-10-10 16:08:40",
+      "title": "Cohort Conflict Analysis and Push Gate",
+      "origin_repo": "LCM_Inventory",
+      "state": "held",
+      "bundle_id": "CRP-260",
+      "bundle_dir": "docs/Proposals/CRP-260-Cohort-Conflict-Analysis-And-Push-Gate",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "author": "rgbig",
+      "details": "Held proposal for realistic cohort conflict analysis and push-gate receipts.",
+      "priority": 7,
+      "dates": {
+        "created": "2026-10-10 16:08:40",
+        "held": "2026-10-10 16:08:40"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-10-10 16:08:40",
+          "user": "rgbig",
+          "note": "Created on operator request."
+        },
+        {
+          "state": "held",
+          "timestamp": "2026-10-10 16:08:40",
+          "user": "rgbig",
+          "note": "Held pending operator scheduling."
+        }
+      ],
+      "progress_state": "held",
+      "flow_mode": "normal",
+      "always_proceed": false,
+      "disposition": null
+    },
+    {
+      "id": 259,
+      "crp_id": "CRP-259",
+      "timestamp": "2026-10-10 15:52:22",
+      "title": "Exact CRP Review and Scope Amendments",
+      "origin_repo": "LCM_Inventory",
+      "state": "in_progress",
+      "bundle_id": "CRP-259",
+      "bundle_dir": "docs/Proposals/CRP-259-Exact-CRP-Review-And-Scope-Amendments",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "author": "rgbig",
+      "details": "Urgent DOIT correction for exact CRP review completion, scope amendments, and pre-commit review verification.",
+      "priority": 10,
+      "dates": {
+        "created": "2026-10-10 15:52:22",
+        "in_progress": "2026-10-10 15:52:22"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-10-10 15:52:22",
+          "user": "rgbig",
+          "note": "Urgent rule change requested."
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-10-10 15:52:22",
+          "user": "rgbig",
+          "note": "DOIT mode activated."
+        }
+      ],
+      "progress_state": "in_progress",
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "disposition": null
+    },
     {
       "id": 258,
       "crp_id": "CRP-258",
@@ -10431,15 +10552,41 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": [],
-      "state": "suggested",
-      "progress_state": "undecided",
+      "state": "in_progress",
+      "progress_state": "in_progress",
       "priority": 7,
       "bundle_id": "BUG-215",
       "bundle_dir": "docs/Proposals/BUG-215-Reinstate-FIX-Emergency-Review-Bypass-Switch-in-LCM-Control-Hub",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
       "commit_sha": null,
       "github_url": null,
       "author": "rgbig",
-      "details": "Restore the visible FIX / emergency review bypass switch in the LCM Control Hub interface, allowing operator-authorized expedited commits for critical blocking issues."
+      "details": "Restore the visible FIX / emergency review bypass switch in the LCM Control Hub interface, allowing operator-authorized expedited commits for critical blocking issues.",
+      "dates": {
+        "created": "2026-10-03 12:36:04",
+        "in_progress": "2026-10-10 17:36:56"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-10-03 12:36:04",
+          "user": "rgbig",
+          "note": "Historical ledger intake without a proposal bundle."
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-10-10 17:36:56",
+          "user": "rgbig",
+          "note": "Missing authoritative BUG bundle scaffolded; investigation activated by operator."
+        }
+      ],
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "disposition": null
     },
     {
       "id": 216,

@@ -36,6 +36,8 @@
   Pre-filter by tool environment ('PS1', 'CMD', 'PY', 'REG', 'LNK', 'All'). Defaults to 'All'.
 .PARAMETER Filter
   Initial search keyword to apply on dashboard startup. Defaults to ''.
+.PARAMETER Lifecycle
+  Pre-filters the catalog for proposal lifecycle, review, and push tooling.
 .PARAMETER NoBrowser
   Suppresses launching the web browser and outputs the tool catalog directly as formatted text in the terminal (Aliases: -Cli, -Text, -Console).
 .PARAMETER NoLaunch
@@ -80,6 +82,8 @@ param(
 
   [string]$Filter = '',
 
+  [switch]$Lifecycle,
+
   [Alias('Cli', 'Text', 'Console')]
   [switch]$NoBrowser,
 
@@ -96,6 +100,10 @@ $ErrorActionPreference = 'Stop'
 
 if ($HaSSD06) { $Group = 'HaSSD06' }
 elseif ($Subsystem -ne 'All') { $Group = $Subsystem }
+if ($Lifecycle) {
+  if ([string]::IsNullOrWhiteSpace($Filter)) { $Filter = 'proposal' }
+  if ($Audience -eq 'User') { $Audience = 'All' }
+}
 
 $scriptVersion = "8.0.0"
 $scriptName = "Show-ToolsExplorer"
@@ -112,7 +120,7 @@ if ($Help) {
   Write-Host "  viewer on your desktop. Use -NoBrowser for terminal text output."
   Write-Host ""
   Write-Host "USAGE:" -ForegroundColor Yellow
-  Write-Host "  ToolExplorer [-Subsystem <Subsystem>] [-Audience <User|Dev|All>] [-Group <Group>] [-Role <Role>] [-Tool <Name>] [-Env <PS1|CMD|PY>] [-Filter <Text>] [-NoBrowser] [-NoLaunch] [-h]"
+  Write-Host "  ToolExplorer [-Lifecycle] [-Subsystem <Subsystem>] [-Audience <User|Dev|All>] [-Group <Group>] [-Role <Role>] [-Tool <Name>] [-Env <PS1|CMD|PY>] [-Filter <Text>] [-NoBrowser] [-NoLaunch] [-h]"
   Write-Host ""
   Write-Host "PARAMETERS:" -ForegroundColor Yellow
   Write-Host "  -Subsystem <str> : Pre-filter specific subsystem (e.g. 'HaSSD06', 'SystemConfiguration', 'LCM_Inventory')."
@@ -123,6 +131,7 @@ if ($Help) {
   Write-Host "  -Tool <str>      : Pre-filter specific tool by name (Default: 'All')."
   Write-Host "  -Env <str>       : Pre-filter execution environment (PS1, CMD, PY)."
   Write-Host "  -Filter <str>    : Initial search filter text."
+  Write-Host "  -Lifecycle       : Pre-filter proposal lifecycle, exact-CRP review, and push tooling."
   Write-Host "  -NoBrowser       : Suppresses web browser and outputs catalog as terminal text (Aliases: -Cli, -Text)."
   Write-Host "  -NoLaunch        : Generates HTML viewer without opening browser."
   Write-Host "  -LogFile <str>   : Custom log file destination."
@@ -136,6 +145,7 @@ if ($Help) {
   Write-Host "  ToolExplorer -NoBrowser"
   Write-Host "  ToolExplorer -Cli -Audience User"
   Write-Host "  ToolExplorer -Role SystemInvariants"
+  Write-Host "  ToolExplorer -Lifecycle"
   Write-Host "==========================================================================" -ForegroundColor Cyan
   return
 }
@@ -249,6 +259,13 @@ $rawJson = $sortedCatalog | ConvertTo-Json -Depth 10
 # 4. Handle Terminal Text Output Mode (-NoBrowser / -Cli / -Text)
 # ------------------------------------------------------------------------------
 if ($NoBrowser) {
+  if ($Lifecycle) {
+    Write-Host "LIFECYCLE QUICK REFERENCE: Suggested -> In Progress -> Verified -> In Review -> Completed -> Pushed" -ForegroundColor Cyan
+    Write-Host "Use BCR <CRP-ID> and COMPLETE <CRP-ID>; repository-only review and completion are blocked." -ForegroundColor Yellow
+    Write-Host "-Immediately is a temporary documented BUG-cohort quality-check deferral; it is not -Force." -ForegroundColor Yellow
+    Write-Host "Inspect proposal state with: ShowCM -Lifecycle -Id <CRP-ID>" -ForegroundColor Green
+    Write-Host ""
+  }
   Format-LcmToolCatalogCli -Catalog $catalog -Audience $Audience -Group $Group -Role $Role -Tool $Tool -Env $Env -Filter $Filter
   return
 }
