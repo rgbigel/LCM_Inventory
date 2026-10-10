@@ -167,7 +167,7 @@ function Assert-AdminModeForRuleChange {
     [string]$WorkspaceRoot = 'D:\Git_Repositories'
   )
 
-  $rulePaths = Get-RuleChangePaths -Paths $Paths
+  $rulePaths = @(Get-RuleChangePaths -Paths $Paths)
   if ($rulePaths.Count -eq 0) {
     return
   }

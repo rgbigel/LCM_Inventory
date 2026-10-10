@@ -1,11 +1,127 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-10-09T12:13:17+02:00",
+  "updated_at": "2026-10-10T15:34:22+02:00",
   "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 256,
+  "last_proposal_id": 258,
   "proposals": [
+    {
+      "id": 258,
+      "crp_id": "CRP-258",
+      "timestamp": "2026-10-10 15:22:05",
+      "title": "GoodMorning Context Remarks and Editor",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-258",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "suggested",
+      "bundle_id": "CRP-258",
+      "bundle_dir": "docs/Proposals/CRP-258-GoodMorning-Context-Remarks-And-Editor",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig",
+      "details": "Displays timestamped GoodMorning context sources and adds an editor command for learned advice and operator remarks.",
+      "plan_path": "docs/Proposals/CRP-258-GoodMorning-Context-Remarks-And-Editor/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-258-GoodMorning-Context-Remarks-And-Editor/Walkthrough.md",
+      "priority": 8,
+      "dates": {
+        "created": "2026-10-10 15:22:05",
+        "suggested": "2026-10-10 15:22:05"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-10-10 15:22:05",
+          "user": "rgbig",
+          "note": "Suggested on operator request."
+        }
+      ],
+      "progress_state": "not_started",
+      "flow_mode": "normal",
+      "always_proceed": false,
+      "disposition": null
+    },
+    {
+      "id": 257,
+      "crp_id": "CRP-257",
+      "timestamp": "2026-10-10 14:18:32",
+      "title": "Evidence-Based Reasoning Analysis",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-257",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "completed",
+      "bundle_id": "CRP-257",
+      "bundle_dir": "docs/Proposals/CRP-257-Evidence-Based-Reasoning-Analysis",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig",
+      "details": "Replaces static reasoning reports with explicit transcript evidence, quote-based selection, repaired command wrappers, active-host-only automatic transcript provider with temporary file lifecycle cleanup, and offline fallback retention.",
+      "plan_path": "docs/Proposals/CRP-257-Evidence-Based-Reasoning-Analysis/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-257-Evidence-Based-Reasoning-Analysis/Walkthrough.md",
+      "priority": 10,
+      "dates": {
+        "created": "2026-10-10 14:18:32",
+        "in_progress": "2026-10-10 14:18:32",
+        "verified": "2026-10-10 15:26:00",
+        "completed": "2026-10-10 15:34:22"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-10-10 14:18:32",
+          "user": "rgbig",
+          "note": "Suggested and immediately activated by explicit operator DOIT instruction."
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-10-10 14:18:32",
+          "user": "rgbig",
+          "note": "DOIT mode activated."
+        },
+        {
+          "state": "verified",
+          "timestamp": "2026-10-10 14:18:32",
+          "user": "Copilot",
+          "note": "PowerShell AST validation, proposal JSON validation, global command alias validation, quote-selected behavior, and 3 focused Pester tests passed."
+        },
+        {
+          "state": "in_progress",
+          "timestamp": "2026-10-10 14:27:50",
+          "user": "rgbig",
+          "note": "Operator rejected the staged review to extend the CRP with active-host-only automatic transcript collection."
+        },
+        {
+          "state": "verified",
+          "timestamp": "2026-10-10 15:26:00",
+          "user": "Antigravity",
+          "note": "Implemented Antigravity reasoning-transcript provider (Export-AntigravityReasoningTranscript.ps1, Export-AntigravityExtractor.py), host-neutral dispatcher (Invoke-ReasoningAnalysisAuto.ps1), preserved Copilot provider, updated wrappers and repository trampolines, and passed 10 Pester tests."
+        },
+        {
+          "state": "completed",
+          "timestamp": "2026-10-10 15:34:22",
+          "user": "rgbig",
+          "note": "Review completed and committed (86f31bb)."
+        }
+      ],
+      "progress_state": "completed",
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "disposition": null
+    },
     {
       "id": 254,
       "crp_id": "CRP-254",
@@ -10599,14 +10715,26 @@
       "state": "suggested",
       "bundle_id": "CRP-256",
       "bundle_dir": "docs/Proposals/CRP-256-Archived-Restructuring-Tools-Reference",
-      "docs": { "specification": "Specification.md" },
+      "docs": {
+        "specification": "Specification.md"
+      },
       "commit_sha": null,
       "github_url": null,
       "author": "rgbig",
       "details": "Keeps finished restructuring tools (app merge/split, junction correction, shared AI memory) as reference scripts inside the proposal instead of the active tool suite.",
       "priority": 5,
-      "dates": { "created": "2026-10-09 15:40:00", "suggested": "2026-10-09 15:40:00" },
-      "state_history": [ { "state": "suggested", "timestamp": "2026-10-09 15:40:00", "user": "rgbig", "note": "Suggested on operator request." } ],
+      "dates": {
+        "created": "2026-10-09 15:40:00",
+        "suggested": "2026-10-09 15:40:00"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-10-09 15:40:00",
+          "user": "rgbig",
+          "note": "Suggested on operator request."
+        }
+      ],
       "progress_state": "not_started",
       "flow_mode": "doit",
       "always_proceed": false,

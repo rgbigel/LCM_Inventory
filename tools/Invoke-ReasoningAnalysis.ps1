@@ -1,37 +1,61 @@
 <#
 .SYNOPSIS
-    Generates structured execution trace and error triage reports analogous to BC5-Resolution-Analysis.md.
+    Generates an evidence-based execution trace from a conversation transcript.
 .DESCRIPTION
-    Module: tools/Invoke-ReasoningAnalysis.ps1
-    Authors: Rolf, LCM_AI Engine
-    Version: 1.0.0
-    Date: 2026-09-27
-    Purpose: Analyzes previous chat turns (offset -0, -1, -2, etc.), extracts tool executions,
-             error traces, and decision rationale, and writes a comprehensive diagnostic
-             report with a dedicated Error Triage & Avoidance Diagnostics matrix.
+    Module: Invoke-ReasoningAnalysis
+    Purpose: Selects transcript events by quoted message text or legacy offset and writes a
+             bounded, evidence-only Markdown report. During interactive chat use, the active
+             IDE host automatically provides its current session transcript; -TranscriptPath
+             is retained as an offline fallback for explicit exported files.
+    Path: LCM_Inventory/tools/Invoke-ReasoningAnalysis.ps1
+    Authors: Rolf, LCM_AI Engine, Copilot, Antigravity
+    Version: 2.0.0
+    Date: 2026-10-10
+.PARAMETER TranscriptPath
+    Optional offline fallback: path to an exported JSON or JSONL transcript file. During normal
+    chat use, the active IDE host supplies its session transcript automatically.
+.PARAMETER From
+    Case-insensitive quoted text that identifies the start event. Matching multiple events
+    stops with an explicit ambiguity error; use -ListMatches to inspect candidates.
+.PARAMETER Until
+    Optional case-insensitive quoted text that identifies the inclusive final event.
+.PARAMETER ListMatches
+    Lists matching event metadata and does not generate a report.
 .PARAMETER Offset
-    Relative chat turn offset to analyze (default: 0). Supports 0, -1, -2, etc.
-.PARAMETER OutputPath
-    Optional destination path for the generated markdown report.
-.PARAMETER View
-    Opens the generated report in default editor or viewer upon completion.
-.PARAMETER Help
-    Displays this parameter reference.
+    Legacy user-message offset. Zero is the newest user message in the supplied transcript.
 .EXAMPLE
-    pwsh tools/Invoke-ReasoningAnalysis.ps1 -Offset 0
+    ar -TranscriptPath .\conversation.jsonl -From 'good morning routine'
 .EXAMPLE
-    pwsh tools/Invoke-ReasoningAnalysis.ps1 -Offset -2 -View
+    ar -TranscriptPath .\conversation.json -From 'good morning routine' -Until 'found problems'
+.EXAMPLE
+    ar -TranscriptPath .\conversation.jsonl -Find 'GoodMorning' -ListMatches
 #>
 
-[CmdletBinding()]
+[CmdletBinding(DefaultParameterSetName = 'Quote')]
 param(
-    [Parameter(Mandatory = $false, Position = 0, HelpMessage = 'Relative chat turn offset to analyze (e.g. 0, -1, -2)')]
-    [int]$Offset = 0,
+    [string]$TranscriptPath,
 
-    [Parameter(Mandatory = $false, HelpMessage = 'Custom output path for the report')]
+    [Parameter(ParameterSetName = 'Quote')]
+    [Alias('Find')]
+    [string]$From,
+
+    [Parameter(ParameterSetName = 'Quote')]
+    [string]$Until,
+
+    [Parameter(ParameterSetName = 'Quote')]
+    [switch]$ListMatches,
+
+    [Parameter(ParameterSetName = 'Offset')]
+    [int]$Offset,
+
+    [ValidateRange(0, 50)]
+    [int]$Context = 0,
+
+    [ValidateSet('All', 'Messages', 'ToolCalls', 'Errors')]
+    [string[]]$Include = @('All'),
+
     [string]$OutputPath,
 
-    [Parameter(Mandatory = $false, HelpMessage = 'Open generated report in default viewer')]
     [switch]$View,
 
     [Alias('h', '?')]
@@ -41,198 +65,318 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
+function ConvertTo-ReasoningText {
+    [CmdletBinding()]
+    param(
+        [AllowNull()]
+        [object]$Value
+    )
+
+    if ($null -eq $Value) {
+        return ''
+    }
+    if ($Value -is [string]) {
+        return $Value
+    }
+    if ($Value -is [System.Collections.IEnumerable]) {
+        return (@($Value | ForEach-Object { ConvertTo-ReasoningText -Value $_ }) -join [Environment]::NewLine)
+    }
+    return ($Value | ConvertTo-Json -Depth 20 -Compress)
+}
+
+function Get-ReasoningProperty {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [object]$InputObject,
+
+        [Parameter(Mandatory = $true)]
+        [string[]]$Names
+    )
+
+    foreach ($name in $Names) {
+        $property = $InputObject.PSObject.Properties[$name]
+        if ($null -ne $property -and $null -ne $property.Value) {
+            return $property.Value
+        }
+    }
+    return $null
+}
+
+function ConvertTo-ReasoningEvent {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [object]$InputObject,
+
+        [Parameter(Mandatory = $true)]
+        [int]$Index
+    )
+
+    $textValue = Get-ReasoningProperty -InputObject $InputObject -Names @(
+        'content', 'text', 'message', 'user_message', 'assistant_response', 'body', 'summary'
+    )
+    $typeValue = Get-ReasoningProperty -InputObject $InputObject -Names @('type', 'event_type', 'kind')
+    $roleValue = Get-ReasoningProperty -InputObject $InputObject -Names @('role', 'speaker', 'author', 'source')
+    $toolValue = Get-ReasoningProperty -InputObject $InputObject -Names @('tool_name', 'tool', 'name')
+    $timeValue = Get-ReasoningProperty -InputObject $InputObject -Names @(
+        'timestamp', 'created_at', 'time', 'datetime', 'occurred_at'
+    )
+    $idValue = Get-ReasoningProperty -InputObject $InputObject -Names @('id', 'event_id', 'uuid', 'step_index')
+
+    $eventType = ConvertTo-ReasoningText -Value $typeValue
+    $role = ConvertTo-ReasoningText -Value $roleValue
+    $tool = ConvertTo-ReasoningText -Value $toolValue
+
+    $toolCallsProp = Get-ReasoningProperty -InputObject $InputObject -Names @('tool_calls', 'tools')
+    if ([string]::IsNullOrWhiteSpace($tool) -and $null -ne $toolCallsProp) {
+        $extractedNames = @()
+        foreach ($call in @($toolCallsProp)) {
+            if ($call -is [System.Collections.IDictionary] -or $call.PSObject) {
+                $cName = Get-ReasoningProperty -InputObject $call -Names @('name', 'tool', 'tool_name', 'toolAction')
+                if (-not [string]::IsNullOrWhiteSpace((ConvertTo-ReasoningText -Value $cName))) {
+                    $extractedNames += ConvertTo-ReasoningText -Value $cName
+                }
+            }
+        }
+        if ($extractedNames.Count -gt 0) {
+            $tool = $extractedNames -join ', '
+        }
+    }
+
+    $rawText = ConvertTo-ReasoningText -Value $textValue
+    if ([string]::IsNullOrWhiteSpace($rawText) -and $null -ne $toolCallsProp) {
+        $rawText = ConvertTo-ReasoningText -Value $toolCallsProp
+    }
+
+    $category = if ($eventType -match 'error|fail' -or $role -match 'error|fail') {
+        'Error'
+    } elseif (-not [string]::IsNullOrWhiteSpace($tool) -or $eventType -match 'tool|PLANNER_RESPONSE') {
+        'ToolCall'
+    } else {
+        'Message'
+    }
+
+    [pscustomobject]@{
+        Index = $Index
+        EventId = if ([string]::IsNullOrWhiteSpace((ConvertTo-ReasoningText -Value $idValue))) { "event-$Index" } else { ConvertTo-ReasoningText -Value $idValue }
+        Timestamp = ConvertTo-ReasoningText -Value $timeValue
+        Role = $role
+        Category = $category
+        Tool = $tool
+        Text = $rawText
+        Raw = $InputObject
+    }
+}
+
+function Get-ReasoningTranscriptEvents {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Path
+    )
+
+    $raw = Get-Content -LiteralPath $Path -Raw -Encoding UTF8
+    if ([string]::IsNullOrWhiteSpace($raw)) {
+        throw "Transcript is empty: $Path"
+    }
+
+    $items = @()
+    if ([System.IO.Path]::GetExtension($Path) -ieq '.jsonl') {
+        $lineNumber = 0
+        foreach ($line in @($raw -split "`r?`n")) {
+            $lineNumber++
+            if ([string]::IsNullOrWhiteSpace($line)) {
+                continue
+            }
+            try {
+                $items += $line | ConvertFrom-Json -ErrorAction Stop
+            } catch {
+                throw "Transcript JSONL line $lineNumber cannot be parsed: $($_.Exception.Message)"
+            }
+        }
+    } else {
+        try {
+            $document = $raw | ConvertFrom-Json -ErrorAction Stop
+        } catch {
+            throw "Transcript JSON cannot be parsed: $($_.Exception.Message)"
+        }
+        if ($document -is [System.Collections.IEnumerable] -and -not ($document -is [string])) {
+            $items = @($document)
+        } else {
+            $collection = Get-ReasoningProperty -InputObject $document -Names @('events', 'messages', 'turns', 'records')
+            if ($null -eq $collection) {
+                throw 'Transcript JSON must be an event array or contain events, messages, turns, or records.'
+            }
+            $items = @($collection)
+        }
+    }
+
+    if ($items.Count -eq 0) {
+        throw "Transcript contains no events: $Path"
+    }
+    return @($items | ForEach-Object -Begin { $index = 0 } -Process {
+        $index++
+        ConvertTo-ReasoningEvent -InputObject $_ -Index $index
+    })
+}
+
+function Get-ReasoningMatches {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [object[]]$Events,
+
+        [Parameter(Mandatory = $true)]
+        [string]$Phrase
+    )
+
+    return @($Events | Where-Object { $_.Text.IndexOf($Phrase, [System.StringComparison]::OrdinalIgnoreCase) -ge 0 })
+}
+
+function Resolve-ReasoningMatch {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [object[]]$Events,
+
+        [Parameter(Mandatory = $true)]
+        [string]$Phrase,
+
+        [Parameter(Mandatory = $true)]
+        [string]$Label
+    )
+
+    $matches = @(Get-ReasoningMatches -Events $Events -Phrase $Phrase)
+    if ($matches.Count -eq 0) {
+        throw "No transcript event matches $Label text: $Phrase"
+    }
+    if ($matches.Count -gt 1) {
+        $candidates = $matches | ForEach-Object { "[$($_.Index)] $($_.Timestamp) $($_.Role): $($_.Text.Substring(0, [Math]::Min(120, $_.Text.Length)))" }
+        throw "Ambiguous $Label text '$Phrase' matched $($matches.Count) events. Use -ListMatches to inspect candidates.`n$($candidates -join [Environment]::NewLine)"
+    }
+    return $matches[0]
+}
+
+function ConvertTo-MarkdownCell {
+    [CmdletBinding()]
+    param([AllowNull()][string]$Value)
+
+    return (($Value -replace '\|', '\|' -replace "`r?`n", '<br>') -replace '`', '\`')
+}
+
 if ($Help) {
-    Write-Host "==========================================================================" -ForegroundColor Cyan
-    Write-Host " INVOKE REASONING ANALYSIS (Invoke-ReasoningAnalysis v1.0.0)" -ForegroundColor Cyan
-    Write-Host "==========================================================================" -ForegroundColor Cyan
-    Write-Host "SYNOPSIS:" -ForegroundColor Yellow
-    Write-Host "  Generates execution traces and error triage reports from chat history."
-    Write-Host ""
-    Write-Host "USAGE:" -ForegroundColor Yellow
-    Write-Host "  AnalyzeReasoning.cmd [-Offset <int>] [-View] [-Help]"
-    Write-Host "  pwsh Invoke-ReasoningAnalysis.ps1 [[-Offset] <int>] [-View]"
-    Write-Host ""
-    Write-Host "PARAMETERS:" -ForegroundColor Yellow
-    Write-Host "  -Offset : Chat turn offset (0 = latest, -1 = previous, -2 = 2 back)."
-    Write-Host "  -View   : Automatically open the report upon generation."
-    Write-Host "  -Help   : Displays this parameter reference."
-    Write-Host "==========================================================================" -ForegroundColor Cyan
+    @'
+Invoke-ReasoningAnalysis.ps1 -TranscriptPath <path> [-From <quoted text> [-Until <quoted text>]]
+                                [-ListMatches] [-Context <count>] [-Include <All|Messages|ToolCalls|Errors>]
+Invoke-ReasoningAnalysis.ps1 -TranscriptPath <path> -Offset <legacy user-message offset>
+
+The active IDE host automatically obtains and normalizes its current session transcript when
+invoking 'ar -From "<quoted chat input>"'. -TranscriptPath is retained as an offline fallback
+when analyzing an explicit exported JSON or JSONL file. Use -From (or -Find) with quoted prompt text
+as the primary selection mechanism. Use -ListMatches before selecting duplicate text.
+'@ | Write-Host
     return
 }
 
-# Normalize offset: allow user to pass positive or negative (e.g. -2 or 2 both resolve to turn offset -2)
-$normalizedOffset = if ($Offset -gt 0) { -$Offset } else { $Offset }
-$absOffset = [Math]::Abs($normalizedOffset)
+if ([string]::IsNullOrWhiteSpace($TranscriptPath)) {
+    throw 'TranscriptPath is required for offline invocation. In normal chat use, enter ''ar -From "<quoted chat input>"'' in the active IDE host, which automatically exports and normalizes its current session transcript.'
+}
+if (-not (Test-Path -LiteralPath $TranscriptPath -PathType Leaf)) {
+    throw "TranscriptPath does not exist or is not a file: $TranscriptPath"
+}
+
+$events = @(Get-ReasoningTranscriptEvents -Path $TranscriptPath)
+if ($ListMatches) {
+    if ([string]::IsNullOrWhiteSpace($From)) {
+        throw '-ListMatches requires -From or -Find text.'
+    }
+    $matches = @(Get-ReasoningMatches -Events $events -Phrase $From)
+    if ($matches.Count -eq 0) {
+        throw "No transcript event matches text: $From"
+    }
+    $matches | Select-Object Index, EventId, Timestamp, Role, Category, Tool, @{ Name = 'Preview'; Expression = { $_.Text.Substring(0, [Math]::Min(160, $_.Text.Length)) } } | Format-Table -AutoSize
+    return
+}
+
+if ($PSCmdlet.ParameterSetName -eq 'Offset') {
+    $userMessages = @($events | Where-Object { $_.Role -match '^user$|human|operator' })
+    if ($userMessages.Count -eq 0) {
+        throw 'Legacy -Offset selection requires transcript events with role user, human, or operator.'
+    }
+    $offsetIndex = [Math]::Abs($Offset)
+    if ($offsetIndex -ge $userMessages.Count) {
+        throw "Legacy offset $Offset is outside the $($userMessages.Count) available user messages."
+    }
+    $startEvent = @($userMessages | Sort-Object Index -Descending)[$offsetIndex]
+} elseif ([string]::IsNullOrWhiteSpace($From)) {
+    throw 'Specify -From (or -Find) quoted text. Legacy -Offset remains available only when explicitly requested.'
+} else {
+    $startEvent = Resolve-ReasoningMatch -Events $events -Phrase $From -Label 'start'
+}
+
+$endEvent = if ([string]::IsNullOrWhiteSpace($Until)) {
+    $events[-1]
+} else {
+    Resolve-ReasoningMatch -Events $events -Phrase $Until -Label 'end'
+}
+if ($endEvent.Index -lt $startEvent.Index) {
+    throw "The end event precedes the selected start event."
+}
+
+$startIndex = [Math]::Max(1, $startEvent.Index - $Context)
+$endIndex = [Math]::Min($events.Count, $endEvent.Index + $Context)
+$selectedEvents = @($events | Where-Object { $_.Index -ge $startIndex -and $_.Index -le $endIndex })
+if ($Include -notcontains 'All') {
+    $selectedEvents = @($selectedEvents | Where-Object { $Include -contains $_.Category -or ($_.Category -eq 'Message' -and $Include -contains 'Messages') -or ($_.Category -eq 'ToolCall' -and $Include -contains 'ToolCalls') -or ($_.Category -eq 'Error' -and $Include -contains 'Errors') })
+}
 
 $workspaceRoot = 'D:\Git_Repositories'
-$invRoot = Join-Path $workspaceRoot 'LCM_Inventory'
-$logsDir = Join-Path $invRoot 'data\logs'
-
-if (-not (Test-Path -LiteralPath $logsDir)) {
-    New-Item -Path $logsDir -ItemType Directory -Force | Out-Null
-}
-
-$timestamp = (Get-Date).ToString('yyyyMMdd_HHmmss')
+$logsDir = Join-Path $workspaceRoot 'LCM_Inventory\data\logs'
 if ([string]::IsNullOrWhiteSpace($OutputPath)) {
-    $reportFileName = "Reasoning-Analysis_Turn-${absOffset}_${timestamp}.md"
-    $OutputPath = Join-Path $logsDir $reportFileName
+    $timestamp = Get-Date -Format 'yyyyMMdd_HHmmss'
+    $OutputPath = Join-Path $logsDir "Reasoning-Analysis_$timestamp.md"
+}
+$outputDirectory = Split-Path -Path $OutputPath -Parent
+if (-not (Test-Path -LiteralPath $outputDirectory -PathType Container)) {
+    New-Item -ItemType Directory -Path $outputDirectory -Force | Out-Null
 }
 
-Write-Host "==========================================================================" -ForegroundColor Cyan
-Write-Host " ANALYZING CHAT TURN [Offset: $normalizedOffset]" -ForegroundColor Cyan
-Write-Host " Target Report: $OutputPath" -ForegroundColor DarkGray
-Write-Host "==========================================================================" -ForegroundColor Cyan
-
-# Pre-populated error triage catalog for known turn offsets
-$errorTriageTable = @()
-$scopeTitle = ""
-$decisions = @()
-
-if ($absOffset -eq 2) {
-    $scopeTitle = "Silent Audit Headless Execution (Rule Health, AST, Daemon & Diff Audit)"
-    $decisions = @(
-        "Goal: Run workspace validation headlessly without popping up windows or stealing focus.",
-        "AST Check: Discovered type dependency in PowerShell classes (DaemonActionController requires DaemonDto).",
-        "Daemon Endpoint: Audited /status vs /health routes to ensure reliable health check.",
-        "Rule Health: Verified 24 child repository junctions and confirmed canonical link compliance."
-    )
-    $errorTriageTable = @(
-        [PSCustomObject]@{
-            Index      = 1
-            ErrorEvent = 'PowerShell $f: interpolation'
-            Category   = 'Self-Inflicted Syntax'
-            Cost       = '1 retry (~15s)'
-            Mechanism  = 'Colon treated as drive/scope boundary'
-            Rule       = 'RULE-PS-003'
-            Avoidance  = 'Enforce ${var} delimiter or string concat'
-        },
-        [PSCustomObject]@{
-            Index      = 2
-            ErrorEvent = 'Outer shell var expansion'
-            Category   = 'Self-Inflicted Syntax'
-            Cost       = '1 retry (~15s)'
-            Mechanism  = 'Double quotes in CLI expanded vars early'
-            Rule       = 'RULE-PS-001'
-            Avoidance  = 'Wrap inline CLI script blocks in single quotes'
-        },
-        [PSCustomObject]@{
-            Index      = 3
-            ErrorEvent = 'AST class type resolution'
-            Category   = 'Dependency Isolation'
-            Cost       = '1 retry (~15s)'
-            Mechanism  = 'Classes in separate file not pre-loaded'
-            Rule       = 'RULE-PS-001'
-            Avoidance  = 'Dot-source prerequisite class files before parsing'
-        },
-        [PSCustomObject]@{
-            Index      = 4
-            ErrorEvent = 'Speculative pathing'
-            Category   = 'Speculative Assumption'
-            Cost       = '1 retry (~10s)'
-            Mechanism  = 'Guessed path in LCM_AI instead of LCM_Inventory'
-            Rule       = 'RULE-EFF-008'
-            Avoidance  = 'Zero speculative pathing; discovery via Get-ChildItem'
-        },
-        [PSCustomObject]@{
-            Index      = 5
-            ErrorEvent = 'Daemon /health 404'
-            Category   = 'API Assumption'
-            Cost       = '1 retry (~10s)'
-            Mechanism  = 'Endpoint named /status, not /health'
-            Rule       = 'RULE-EFF-006'
-            Avoidance  = 'Consult route table dispatcher before invocation'
-        },
-        [PSCustomObject]@{
-            Index      = 6
-            ErrorEvent = 'vMissing LCM_Inventory on 11 repos'
-            Category   = 'Environmental / Baseline'
-            Cost       = '0 (Diagnostic notice)'
-            Mechanism  = 'Older utility repos lack local LCM_Inventory folder'
-            Rule       = 'RULE-LCM-001'
-            Avoidance  = 'Informational baseline; junction compliance is primary'
-        },
-        [PSCustomObject]@{
-            Index      = 7
-            ErrorEvent = 'Console encoding ?? glyphs'
-            Category   = 'Environmental Display'
-            Cost       = '0 (Display only)'
-            Mechanism  = 'Windows-1252 console vs UTF-8 checkmark'
-            Rule       = 'INVARIANT-RULES'
-            Avoidance  = 'Sanitize output for standard ASCII or set UTF-8 encoding'
-        }
-    )
-} else {
-    $scopeTitle = "Recent Chat Turn (Offset: $normalizedOffset)"
-    $decisions = @(
-        "Evaluated user request at relative offset $normalizedOffset.",
-        "Extracted tool calls, parameters, and observed responses.",
-        "Diagnosed error occurrences and logged resolution paths."
-    )
-    $errorTriageTable = @(
-        [PSCustomObject]@{
-            Index      = 1
-            ErrorEvent = 'General Error Triage'
-            Category   = 'General Analysis'
-            Cost       = '1 check'
-            Mechanism  = 'Standard evaluation'
-            Rule       = 'RULE-LCM-001'
-            Avoidance  = 'Standard procedure'
-        }
-    )
-}
-
-# Build Report Markdown Content
+$rows = @($selectedEvents | ForEach-Object {
+    "| $($_.Index) | $(ConvertTo-MarkdownCell $_.EventId) | $(ConvertTo-MarkdownCell $_.Timestamp) | $(ConvertTo-MarkdownCell $_.Role) | $($_.Category) | $(ConvertTo-MarkdownCell $_.Tool) | $(ConvertTo-MarkdownCell $_.Text) |"
+})
 $reportContent = @"
-# Comprehensive Execution Trace: Turn Offset $normalizedOffset Analysis
+# Evidence-Based Execution Trace
 
-* **Generated**: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')
-* **Scope**: $scopeTitle
-* **Target Offset**: $normalizedOffset
-* **Workspace**: $workspaceRoot
+* **Generated:** $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')
+* **Transcript:** $(ConvertTo-MarkdownCell ([System.IO.Path]::GetFullPath($TranscriptPath)))
+* **Selection start:** event $($startEvent.Index) / $(ConvertTo-MarkdownCell $startEvent.EventId)
+* **Selection end:** event $($endEvent.Index) / $(ConvertTo-MarkdownCell $endEvent.EventId)
+* **Selected events:** $($selectedEvents.Count)
 
----
+## Selection Evidence
 
-## 1. High-Level Decision & Rationale Summary
-$($decisions | ForEach-Object { "* $_" } | Out-String)
+| Field | Value |
+|---|---|
+| Start event | $($startEvent.Index) - $(ConvertTo-MarkdownCell $startEvent.Text) |
+| End event | $($endEvent.Index) - $(ConvertTo-MarkdownCell $endEvent.Text) |
+| Selection method | $(if ($PSCmdlet.ParameterSetName -eq 'Offset') { "Legacy offset $Offset" } else { "Quoted text: $(ConvertTo-MarkdownCell $From)" }) |
 
----
+## Observed Events
 
-## 2. Error Triage & Avoidance Diagnostics
+| # | Event ID | Timestamp | Role | Category | Tool | Evidence |
+|---|---|---|---|---|---|---|
+$($rows -join [Environment]::NewLine)
 
-Error triage consumes significant conversation time and token budget. This section breaks down each encountered issue, its root mechanism, applicable workspace governance rule, and mechanical avoidance strategy to prevent future recurrence.
+## Scope Note
 
-| # | Error Event | Category | Triage Cost | Root Mechanism | Governing Rule | Avoidance Strategy |
-|---|-------------|----------|-------------|----------------|----------------|-------------------|
-$($errorTriageTable | ForEach-Object { "| $($_.Index) | $($_.ErrorEvent) | $($_.Category) | $($_.Cost) | $($_.Mechanism) | $($_.Rule) | $($_.Avoidance) |" } | Out-String)
-
----
-
-## 3. Avoidance Strategy Key Recommendations
-1. **Quoting Invariant**: Always wrap `-Command` script blocks in single quotes when passing from shell to prevent host variable pre-expansion.
-2. **Colon Boundary Invariant**: When interpolating variable followed immediately by punctuation or colons, enclose variable in curly braces (`${var}:`).
-3. **Class Dependency Order**: Custom PowerShell classes used as type annotations in other files must be dot-sourced into the runspace before invoking AST parsers.
-4. **Zero Speculative Pathing**: Never assume child repo file locations; query the catalog or disk before invoking script paths.
-
----
-
-## 4. Verification & Final Status
-* **AST Integrity**: Validated with zero syntax errors.
-* **Rule Health**: 24/24 repositories in compliance.
-* **Daemon Status**: Online and responsive on port 9876.
+This report lists only source events selected from the supplied transcript. It makes no
+independent assertions about AST health, rule compliance, daemon state, repository state, or
+intent. Any conclusion must cite an event above.
 "@
 
-# Write Report File
-[System.IO.File]::WriteAllText($OutputPath, $reportContent, [System.Text.Encoding]::UTF8)
-
-Write-Host " [OK] Reasoning Analysis report successfully generated:" -ForegroundColor Green
-Write-Host "      $OutputPath" -ForegroundColor Yellow
-Write-Host ""
-
-# Print Summary Table to Terminal
-Write-Host "=== ERROR TRIAGE & AVOIDANCE SUMMARY ===" -ForegroundColor Cyan
-$errorTriageTable | Format-Table Index, ErrorEvent, Category, Cost, Rule -AutoSize
-
+[System.IO.File]::WriteAllText($OutputPath, $reportContent, [System.Text.UTF8Encoding]::new($false))
+Write-Host "Evidence-based reasoning report generated: $OutputPath"
 if ($View) {
-    Write-Host " Opening report in default viewer..." -ForegroundColor DarkGray
-    Start-Process $OutputPath
+    Start-Process -FilePath $OutputPath
 }

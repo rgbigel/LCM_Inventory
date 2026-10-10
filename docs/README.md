@@ -121,7 +121,7 @@ TestWorkspaceReadiness
 | **ProposalAction** | [Invoke-ProposalAction.ps1](file:///LCM_Inventory/tools/Invoke-ProposalAction.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-ProposalAction execution tool. | ProposalAction |
 | **PublishWorkspaceProposalBundles** | [Publish-WorkspaceProposalBundles.ps1](file:///LCM_Inventory/tools/Publish-WorkspaceProposalBundles.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Publish-WorkspaceProposalBundles execution tool. | PublishWorkspaceProposalBundles |
 | **RealRepoDryRun** | [Invoke-RealRepoDryRun.ps1](file:///LCM_Inventory/tools/Invoke-RealRepoDryRun.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-RealRepoDryRun execution tool. | RealRepoDryRun |
-| **ReasoningAnalysis** | [Invoke-ReasoningAnalysis.ps1](file:///LCM_Inventory/tools/Invoke-ReasoningAnalysis.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-ReasoningAnalysis execution tool. | ReasoningAnalysis |
+| **ReasoningAnalysis** | [Invoke-ReasoningAnalysis.ps1](file:///LCM_Inventory/tools/Invoke-ReasoningAnalysis.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Evidence-based transcript analysis tool; invoke in active IDE host with `ar -From <quoted text>`, or offline with `ar -TranscriptPath <export> -From <quoted text>`. | ReasoningAnalysis |
 | **RegisterBleSupervisionTask** | [Register-BleSupervisionTask.ps1](file:///HaSSD06/tools/Register-BleSupervisionTask.ps1) | Utility | HaSSD06 | PowerShell | Utility | Register-BleSupervisionTask execution tool. | RegisterBleSupervisionTask |
 | **RemoveLcmShortName** | [Remove-LcmShortName.ps1](file:///LCM_Inventory/tools/Remove-LcmShortName.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Remove-LcmShortName execution tool. | RemoveLcmShortName |
 | **RepairLCMRules** | [Repair-LCMRules.ps1](file:///LCM_Inventory/tools/Repair-LCMRules.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Repair-LCMRules execution tool. | RepairLCMRules |
@@ -166,4 +166,3 @@ TestWorkspaceReadiness
 | **WorkspaceGoodNight** | [Invoke-WorkspaceGoodNight.ps1](file:///LCM_Inventory/tools/Invoke-WorkspaceGoodNight.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-WorkspaceGoodNight execution tool. | WorkspaceGoodNight |
 | **WorkspaceMaintenance** | [Invoke-WorkspaceMaintenance.ps1](file:///LCM_Inventory/tools/Invoke-WorkspaceMaintenance.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-WorkspaceMaintenance execution tool. | WorkspaceMaintenance |
 | **WorkspacePush** | [Invoke-WorkspacePush.ps1](file:///LCM_Inventory/tools/Invoke-WorkspacePush.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-WorkspacePush execution tool. | WorkspacePush |
-

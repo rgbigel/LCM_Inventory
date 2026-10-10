@@ -20,6 +20,10 @@ param(
     [Parameter(Mandatory = $false, HelpMessage = 'Force review commit and bypass safety checks')]
     [switch]$Force,
 
+    [Parameter(Mandatory = $false, HelpMessage = 'CRP or Change Request identifier (e.g. CRP-257)')]
+    [Alias('Cr', 'ChangeRequest', 'Proposal', 'ProposalId')]
+    [string]$CRP = '',
+
     [Alias('h', '?')]
     [switch]$Help
 )
@@ -434,10 +438,15 @@ try {
     if (Test-Path -LiteralPath $propJsonFile) {
         $propStore = Get-Content -LiteralPath $propJsonFile -Raw -Encoding UTF8 | ConvertFrom-Json
         $matchedProposal = $false
+        $resolvedCRP = if ($CRP) { $CRP } elseif ($meta -and -not [string]::IsNullOrWhiteSpace($meta.CRP)) { $meta.CRP } else { $null }
         foreach ($p in $propStore.proposals) {
-            $isRepoMatch = ($p.origin_repo -and $p.origin_repo.StartsWith($repoName))
-            $isOpenState = ($p.progress_state -in @('verification', 'committed', 'in_progress', 'review') -or $p.state -in @('approved', 'suggested', 'in_progress', 'review'))
-            if ($isRepoMatch -and $isOpenState) {
+            $isCrpMatch = if ($resolvedCRP) {
+                ($p.crp_id -eq $resolvedCRP -or $p.cr_id -eq $resolvedCRP -or ("CRP-$($p.id)" -eq $resolvedCRP) -or ("$($p.id)" -eq $resolvedCRP))
+            } else {
+                ($p.origin_repo -and $p.origin_repo.StartsWith($repoName))
+            }
+            $isOpenState = ($p.progress_state -in @('verification', 'committed', 'in_progress', 'review', 'verified') -or $p.state -in @('approved', 'suggested', 'in_progress', 'review', 'verified'))
+            if ($isCrpMatch -and $isOpenState) {
                 $p.progress_state = 'completed'
                 $p.state = if ($MinimalTests) { 'completed [minimal-tests]' } else { 'completed' }
                 if ($MinimalTests) {
@@ -445,6 +454,13 @@ try {
                 }
                 if (-not $p.dates) { $p | Add-Member -NotePropertyName "dates" -NotePropertyValue ([ordered]@{}) -Force }
                 $p.dates | Add-Member -NotePropertyName "completed" -NotePropertyValue (Get-Date).ToString("yyyy-MM-dd HH:mm:ss") -Force
+                if (-not $p.state_history) { $p | Add-Member -NotePropertyName "state_history" -NotePropertyValue @() -Force }
+                $p.state_history += [ordered]@{
+                    state = $p.state
+                    timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+                    user = $env:USERNAME
+                    note = "Review completed and committed ($newCommitSha)."
+                }
                 $matchedProposal = $true
             }
         }
