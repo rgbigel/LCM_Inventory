@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-10-10T18:02:20+02:00",
+  "updated_at": "2026-10-10T19:50:17+02:00",
   "review_granularity": "coarse",
   "lcm_mode": "paused",
-  "last_proposal_id": 261,
+  "last_proposal_id": 262,
   "proposals": [
     {
       "id": 261,
@@ -12,7 +12,7 @@
       "timestamp": "2026-10-10 16:28:31",
       "title": "Proposal Lifecycle Status and Action Model",
       "origin_repo": "LCM_Inventory",
-      "state": "in_progress",
+      "state": "completed",
       "bundle_id": "CRP-261",
       "bundle_dir": "docs/Proposals/CRP-261-Proposal-Lifecycle-Status-And-Action-Model",
       "docs": {
@@ -26,7 +26,10 @@
       "dates": {
         "created": "2026-10-10 16:28:31",
         "suggested": "2026-10-10 16:28:31",
-        "in_progress": "2026-10-10 17:38:49"
+        "in_progress": "2026-10-10 17:38:49",
+        "verified": "2026-10-10 19:49:36",
+        "in_review": "2026-10-10 19:49:36",
+        "completed": "2026-10-10 19:49:36"
       },
       "state_history": [
         {
@@ -40,12 +43,33 @@
           "timestamp": "2026-10-10 17:38:49",
           "user": "rgbig",
           "note": "Operator directed CRP-261 to proceed before BUG-215."
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-10-10 19:49:36",
+          "user": "rgbig",
+          "note": "Focused lifecycle validation passed before Gate 2 BCR (11 Pester tests, AST, and Control Hub script parsing)."
+        },
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-10-10 19:49:36",
+          "user": "rgbig",
+          "note": "Exact CRP-261 BCR launched and accepted by operator."
+        },
+        {
+          "from_state": "in_review",
+          "state": "completed",
+          "timestamp": "2026-10-10 19:49:36",
+          "user": "rgbig",
+          "note": "Gate 2 BCR accepted and committed (10a894b)."
         }
       ],
-      "progress_state": "in_progress",
       "flow_mode": "doit",
       "always_proceed": true,
-      "disposition": null
+      "progress_state": "completed",
+      "disposition": "completed"
     },
     {
       "id": 260,
@@ -10885,6 +10909,56 @@
       "progress_state": "not_started",
       "flow_mode": "doit",
       "always_proceed": false,
+      "disposition": null
+    },
+    {
+      "id": 262,
+      "crp_id": "BUG-262",
+      "timestamp": "2026-10-10 19:50:04",
+      "title": "[BUG] Prevent post-commit lifecycle synchronization failures",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "BUG-262",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "verified",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/BUG-262-BUG-Prevent-post-commit-lifecycle-synchronization",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig",
+      "details": "CRP-261 Gate 2 completion created commit 10a894b before failing to synchronize the ledger when the proposal omitted cr_id and had not entered in_review. The fix safely matches optional identity fields and requires in_review before any commit.",
+      "priority": 5,
+      "plan_path": "docs/Proposals/BUG-262-BUG-Prevent-post-commit-lifecycle-synchronization/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/BUG-262-BUG-Prevent-post-commit-lifecycle-synchronization/Walkthrough.md",
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-10-10 19:50:11",
+          "user": "rgbig",
+          "note": "DOIT remediation for the post-commit lifecycle synchronization defect discovered during CRP-261 completion."
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-10-10 19:50:17",
+          "user": "rgbig",
+          "note": "PowerShell AST validation passed for Submit-ReviewResult and lifecycle tests passed 11/11."
+        }
+      ],
+      "dates": {
+        "in_progress": "2026-10-10 19:50:11",
+        "verified": "2026-10-10 19:50:17"
+      },
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "progress_state": "verification",
       "disposition": null
     }
   ],

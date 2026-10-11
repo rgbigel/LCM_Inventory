@@ -19,6 +19,27 @@ a valid action. Completion can also infer repository scope instead of proving ex
 Implement one authoritative internal lifecycle state, explicit external display status, auditable
 transition actions, exact-CRP review/commit/push identity, and atomic proposal creation.
 
+## Recovery Documentation Amendment
+
+The active lifecycle record is the flat `state`/`state_reason` pair. The
+reason explains the current state and does not create a second lifecycle axis.
+Existing history remains immutable; future events append forward-only richer
+records with transition, revision, cohort, semantic-delta, review, and test
+metadata as available.
+
+CRP bundles are temporary active specifications. Push absorbs delivered content
+into baseline documentation. A needed revision reopens the same ID at
+`suggested` and appends a revision event. A semantic specification change
+restarts affected CRPs at `suggested` and requires delta-only review/testing.
+Cohort coordination bundles may define shared repository/cohort scope and
+verification without replacing member records.
+
+BCR remains the main visual review. `ShowCM` provides overview and requested
+state navigation, including accept/reject and repository, cohort, and complete
+forms. Generated artifacts, scratch content, data, logs, and routine test
+output do not require review; an unfiltered BCR peek and advisory remain
+permitted. Managed lifecycle hooks are retained.
+
 ## Transition Compatibility
 
 During migration, the legacy `progress_state` and `disposition` fields remain readable compatibility

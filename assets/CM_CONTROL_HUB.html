@@ -2012,6 +2012,7 @@
                 const isHeld = getLifecycleState(p) === "held";
                 const isMinTests = Boolean(p.minimal_tests || p.test_depth === "minimal");
                 const isBypass = Boolean(p.force_commit || p.bypass_review);
+                const isImmediately = p.quality_checks_deferred === true;
 
                 if (isHeld) {
                   pills.push(`<span class="pill-switch-held" title="Work held: Flow switches paused">⏸️ HELD</span>`);

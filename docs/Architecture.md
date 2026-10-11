@@ -68,7 +68,7 @@ graph TB
 
 ---
 
-## 2. Proposal Lifecycle & Dual-State Progression
+## 2. Proposal Lifecycle & Recovery Progression
 
 All modifications to workspace code, documentation, and configuration operate under a strict, non-bypassable proposal lifecycle:
 
@@ -94,6 +94,43 @@ stateDiagram-v2
 - **`review_gated`**: Physical code changes staged in temporary isolation for operator side-by-side verification in Beyond Compare.
 - **`accepted`**: Operator review complete; cryptographic review receipt generated in `data/reviews/` and changes committed to Git.
 - **`pushed`**: Commits synchronized to remote GitHub repositories via `Invoke-WorkspacePush.ps1`.
+
+### 2.1 Recovery Lifecycle Record
+
+The canonical lifecycle record is a flat `state_reason` pair: `state` is the
+current lifecycle value and `state_reason` is the operator or system reason for
+that current value. The pair replaces competing lifecycle interpretations from
+`progress_state` and `disposition`; retained legacy fields are display-only
+compatibility data.
+
+Existing `state_history` entries are immutable evidence. New lifecycle events
+are appended only and may carry richer transition metadata (previous state,
+reason, actor, timestamp, cohort, review/test scope, and linkage). They do not
+rewrite historical records to fit the newer shape.
+
+CRP bundles are temporary active-work specifications, not permanent duplicate
+history. On a successful push, their delivered content is absorbed into the
+repository baseline documentation and retained ledger/history evidence. If
+further work is required, the same identifier reopens in `suggested` with a
+new forward-only revision record rather than creating a replacement CRP solely
+to revise the prior work.
+
+### 2.2 Cohorts, Specifications, and Review Surfaces
+
+A cohort coordination bundle may group repository and/or cohort work, exact
+members, dependencies, semantic specification deltas, and shared verification.
+It does not replace member history or permit ambiguous scope.
+
+Baseline tripartite documentation defines durable behavior; an active CRP/BUG
+specification defines the temporary delta. A semantic change to an active
+specification restarts each affected CRP at `suggested`, records the delta, and
+requires delta-only review and testing for the changed semantics. Unaffected
+validated evidence remains intact.
+
+Beyond Compare Review (BCR) is the primary visual review surface. `ShowCM` is
+both the overview and the requested state-navigation surface: it must expose
+state-appropriate accept/reject actions and repository, cohort, and complete
+forms without inferring an ambiguous CRP-only scope.
 
 ---
 

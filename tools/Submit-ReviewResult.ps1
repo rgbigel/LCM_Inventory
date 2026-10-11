@@ -196,6 +196,21 @@ if ([string]::IsNullOrWhiteSpace($stagedManifest.BaselineCommit) -or -not $curre
     throw "Review staging manifest baseline does not match current HEAD for '$repoName'. Completion was not performed."
 }
 
+$proposalModulePath = Join-Path $workspaceRoot 'LCM_Inventory\modules\ProposalManager.psm1'
+Import-Module $proposalModulePath -Force
+$propStore = Get-ProposalStore
+$matchingProposals = @($propStore.proposals | Where-Object {
+    $proposalCrpId = if ($_.PSObject.Properties['crp_id']) { [string]$_.crp_id } else { '' }
+    $proposalCrId = if ($_.PSObject.Properties['cr_id']) { [string]$_.cr_id } else { '' }
+    $proposalCrpId -eq $CRP -or $proposalCrId -eq $CRP -or ("CRP-$($_.id)" -eq $CRP)
+})
+if ($matchingProposals.Count -ne 1) {
+    throw "Review result for $CRP must resolve to exactly one proposal; found $($matchingProposals.Count)."
+}
+if ($matchingProposals[0].state -ne 'in_review') {
+    throw "Review result for $CRP requires lifecycle state 'in_review'; found '$($matchingProposals[0].state)'."
+}
+
 # ------------------------------------------------------------------------------
 # Record Accepted Review
 # ------------------------------------------------------------------------------
@@ -350,15 +365,6 @@ if ($commitCreated -and $stagedManifest -and $stagedManifest.TempReviewRoot) {
 # Auto-Synchronize Proposals Ledger (RULE-LCM-002: Dual-State Alignment)
 # ------------------------------------------------------------------------------
 try {
-    $proposalModulePath = Join-Path $workspaceRoot 'LCM_Inventory\modules\ProposalManager.psm1'
-    Import-Module $proposalModulePath -Force
-    $propStore = Get-ProposalStore
-    $matchingProposals = @($propStore.proposals | Where-Object {
-        $_.crp_id -eq $CRP -or $_.cr_id -eq $CRP -or ("CRP-$($_.id)" -eq $CRP)
-    })
-    if ($matchingProposals.Count -ne 1) {
-        throw "Review result for $CRP must resolve to exactly one proposal; found $($matchingProposals.Count)."
-    }
     if ($commitCreated) {
         $proposal = Move-LcmProposalLifecycleState -Id $matchingProposals[0].id -State 'completed' -Details "Review completed and committed ($newCommitSha)."
         if ($MinimalTests) {

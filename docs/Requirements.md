@@ -91,3 +91,25 @@ provenance, produce an operational receipt, and undergo BCompare review before
 commit.
 <!-- /FixDocumentation -->
 
+### REQ-WINV-012: Recovery Lifecycle, Cohort, and Review Contract
+
+- The authoritative current lifecycle representation MUST be the flat
+  `state`/`state_reason` pair. `state_reason` records why the current state
+  applies; it is not a second state axis.
+- Existing history MUST remain immutable. Newer lifecycle events MUST append
+  forward-only records and may add transition, cohort, reviewer, test-scope,
+  and delta metadata without rewriting prior records.
+- CRP bundles are temporary active specifications. A successful push absorbs
+  delivered intent into baseline documentation. Reopened work MUST reuse the
+  same identifier, return it to `suggested`, and append a revision record.
+- A semantic active-specification change MUST restart affected CRPs at
+  `suggested` and limit renewed review/testing to the documented semantic
+  delta. Cohort coordination bundles MAY define shared repository/cohort
+  members and verification.
+- BCR MUST remain the principal visual review mechanism. `ShowCM` MUST support
+  overview plus requested state navigation, including accept/reject and
+  repository, cohort, and complete forms.
+- Generated artifacts, scratch content, data, logs, and routine test output
+  MUST NOT require review. BCR MAY inspect those paths unfiltered on request,
+  and tools MAY provide non-blocking advisory findings. Managed lifecycle hooks
+  remain in force for governed changes.

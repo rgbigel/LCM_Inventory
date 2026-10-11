@@ -73,6 +73,16 @@ Every workspace proposal in `LCM_Inventory/data/proposals/proposals.json` operat
    `[Timestamp] [Status] [Target: <Repo>] [Version: <Version>] [PushDate: <PushDate>] [AffectedRepos: <Repos>] <Action> - <Details>`
 2. **History Archive Horizon ($M-2$)**: Historical activity is preserved permanently in `logs/history/` across major version boundaries ($\ge 2$ major versions retained).
 
+3. **Recovery Lifecycle Records**: The current lifecycle is a flat
+   `state`/`state_reason` pair. Existing history is immutable; later events
+   append richer records rather than rewriting old entries.
+4. **Temporary CRP Absorption**: CRP bundles are active specifications. Push
+   absorbs delivered behavior into baseline documentation. A revision reopens
+   the same ID in `suggested` and records a forward-only revision event.
+5. **Semantic Delta Restart**: A semantic active-specification change restarts
+   only affected CRPs and requires review/testing only for the declared delta.
+   Cohort coordination bundles may record shared scope and verification.
+
 ---
 
 ## 6. CM Control Hub Web Application (`Show-CmControlHub`)
@@ -91,6 +101,15 @@ The **LCM Configuration Management Control Hub** (`docs/CM_CONTROL_HUB.html`) pr
    * **Push & Synchronization Engine**: 1-click `🚀 Push / Sync Repos` with custom or default CRP reason prompts.
    * **Print-Ready Documents**: Export/print plans, walkthroughs, and specs to PDF with `@media print` typography.
    * **Docked Interactive Console**: Bottom terminal feed for real-time CLI command execution and operator status feedback.
+   * **State Navigation**: `ShowCM` is both overview and requested
+     state-navigation surface, including accept/reject and repository, cohort,
+     and complete forms.
+
+The BCR surface remains the principal visual review mechanism. Generated
+artifacts, scratch content, data, logs, and routine test output require no
+review, but may be inspected through an explicitly unfiltered BCR peek and may
+produce helpful non-blocking advice. Managed lifecycle hooks remain retained
+for governed transitions.
 
 ---
 

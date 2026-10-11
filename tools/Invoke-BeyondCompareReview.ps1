@@ -785,7 +785,8 @@ New-Item -ItemType Junction -Path $junctionLiveRoot -Target $repoPath | Out-Null
 
 $sessionName = if (-not [string]::IsNullOrWhiteSpace($CRP)) { "${CRP}_Review" } else { "LCM_Review" }
 
-# Update BCSessions.xml for both the dedicated CRP session and legacy LCM_Review
+# Update BCSessions.xml for both the dedicated CRP session and legacy LCM_Review.
+# The right-pane bridge retains the CRP-specific display name while targeting the live repository.
 Update-BCReviewSession -LeftPath $tempReviewRoot -RightPath $liveJunction -FilterMask $filterMask -SessionName $sessionName
 Update-BCReviewSession -LeftPath $tempReviewRoot -RightPath $liveJunction -FilterMask $filterMask -SessionName 'LCM_Review'
 
@@ -832,7 +833,7 @@ if ($existingReviewProcesses.Count -gt 1) {
 Write-Host "Activating Beyond Compare on interactive desktop (Per-CRP Single Window)..." -ForegroundColor Green
 Write-Host ("  Session Name:        {0}" -f $sessionName)
 Write-Host ("  Left (Baseline {0}): {1}" -f $commitSha, $tempReviewRoot)
-Write-Host ("  Right (Live):        {0}" -f $liveJunction)
+Write-Host ("  Right (Live Bridge): {0} -> {1}" -f $liveJunction, $repoPath)
 Write-Host ("  Pane Titles:         [Left: '{0}'] <--> [Right: '{1}']" -f $title1, $title2)
 Write-Host ("  Filters Applied:     {0}" -f $filterMask)
 
@@ -908,7 +909,9 @@ if (-not [string]::IsNullOrWhiteSpace($CRP)) {
     try {
       $pData = Get-Content -LiteralPath $pJson -Raw -Encoding UTF8 | ConvertFrom-Json
       $matchedP = $pData.proposals | Where-Object {
-        $_.crp_id -eq $CRP -or $_.cr_id -eq $CRP -or "CRP-$($_.id)" -eq $CRP
+        $proposalCrpId = if ($_.PSObject.Properties['crp_id']) { [string]$_.crp_id } else { '' }
+        $proposalCrId = if ($_.PSObject.Properties['cr_id']) { [string]$_.cr_id } else { '' }
+        $proposalCrpId -eq $CRP -or $proposalCrId -eq $CRP -or "CRP-$($_.id)" -eq $CRP
       } | Select-Object -First 1
 
       if ($matchedP) {

@@ -154,6 +154,42 @@ lifecycle state, stage, commit, or publish.
 }
 ```
 
+### 4.1 Recovery-Lifecycle Documentation Contract
+
+The planned ledger/tool evolution uses `state` plus `state_reason` as one flat
+current lifecycle record. Historical `state_history` data is append-only:
+legacy entries remain byte-for-byte historical evidence, while future entries
+may include `from_state`, `state_reason`, revision, cohort, semantic-delta,
+review, and test-scope fields.
+
+Active CRP/BUG bundles are temporary specifications. Push absorbs their
+implemented delta into baseline tripartite documentation; reopening the same
+work returns the same ID to `suggested` and appends a revision event. A semantic
+specification change similarly restarts only affected IDs and drives
+delta-only review/testing. A cohort coordination bundle records shared members,
+dependencies, and aggregate verification without replacing individual records.
+
+`ShowCM` is documented as both an overview and requested state-navigation
+surface, with accept/reject and repository/cohort/complete forms. BCR remains
+the main visual review surface. Review is not required for generated artifacts,
+scratch content, data, logs, or routine test output; an unfiltered BCR peek and
+helpful advisory are allowed. Managed lifecycle hooks remain applicable to
+governed lifecycle transitions.
+
+#### Unresolved Design Questions
+
+1. Confirm the exact persisted JSON names and required/optional metadata for
+   future rich history events while preserving legacy records unchanged.
+2. Define the authoritative baseline-document absorption receipt and retention
+   location after push.
+3. Define cohort coordination bundle schema, member ordering, and partial
+   reopen behavior.
+4. Define how `ShowCM` renders repository/cohort/complete forms when a request
+   intentionally has no single CRP identity.
+5. Reconcile the ledger's `last_proposal_id: 262` with the absence of a
+   discoverable `BUG-262` bundle/material in the inspected proposal locations
+   before implementing any BUG-262-specific behavior.
+
 ### Inventory Manifest Schema (`data/inventory.json`)
 ```json
 {
