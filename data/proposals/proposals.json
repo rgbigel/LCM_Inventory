@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-10-12T19:07:12+02:00",
+  "updated_at": "2026-10-12T21:40:21+02:00",
   "review_granularity": "coarse",
   "lcm_mode": "paused",
-  "last_proposal_id": 263,
+  "last_proposal_id": 265,
   "proposals": [
     {
       "id": 261,
@@ -11029,7 +11029,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "in_progress",
+      "state": "held",
       "bundle_id": "CRP-263",
       "bundle_dir": "docs/Proposals/CRP-263-LCM-Inbox-Two-Phase-Acknowledgement",
       "docs": {
@@ -11044,8 +11044,6 @@
       "plan_path": "docs/Proposals/CRP-263-LCM-Inbox-Two-Phase-Acknowledgement/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-263-LCM-Inbox-Two-Phase-Acknowledgement/Walkthrough.md",
       "priority": 10,
-      "progress_state": "in_progress",
-      "disposition": null,
       "state_history": [
         {
           "from_state": "suggested",
@@ -11053,13 +11051,25 @@
           "timestamp": "2026-10-12 16:21:26",
           "user": "rgbig",
           "note": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "held",
+          "timestamp": "2026-10-12 21:40:21",
+          "user": "rgbig",
+          "note": "Parked cleanly for session pause"
         }
       ],
       "dates": {
-        "in_progress": "2026-10-12 16:21:26"
+        "in_progress": "2026-10-12 16:21:26",
+        "held": "2026-10-12 21:40:21"
       },
       "flow_mode": "doit",
-      "always_proceed": true
+      "always_proceed": true,
+      "resume_state": "in_progress",
+      "progress_state": "blocked",
+      "disposition": "held",
+      "hold_reason": "Parked cleanly for session pause"
     },
     {
       "id": 264,
@@ -11126,6 +11136,36 @@
       "always_proceed": true,
       "progress_state": "completed",
       "disposition": "completed"
+    },
+    {
+      "id": 265,
+      "crp_id": "CRP-265",
+      "timestamp": "2026-10-12 21:39:02",
+      "title": "Control Hub Rich Action Feedback and Detailed Status Message Area",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-264",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "suggested",
+      "progress_state": "undecided",
+      "bundle_id": "CRP-265",
+      "bundle_dir": "docs/Proposals/CRP-265-Control-Hub-Rich-Action-Feedback",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig",
+      "details": "Provide rich contextual feedback in ShowCM (Control Hub) for actions, buttons, and errors. Implement a dedicated message area displaying substantive diagnostic and execution information beyond basic OK/NOK/Error badges.",
+      "priority": 5,
+      "disposition": null,
+      "flow_mode": "standard",
+      "always_proceed": false,
+      "plan_path": "docs/Proposals/CRP-265-Control-Hub-Rich-Action-Feedback/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-265-Control-Hub-Rich-Action-Feedback/Walkthrough.md"
     }
   ],
   "testing_mode": "active",
