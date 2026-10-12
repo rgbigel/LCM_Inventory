@@ -23,6 +23,9 @@ param(
   [Alias('Force', 'RebuildBaseline', 'NoCache')]
   [switch]$ForceRebuild,
 
+  [Parameter(Mandatory = $false, HelpMessage = 'Prepare the review baseline and staging manifest without opening a Beyond Compare window')]
+  [switch]$NoLaunch,
+
   [Alias('h', '?')]
   [switch]$Help
 )
@@ -820,6 +823,12 @@ else {
   "Live $repoName"
 }
 
+$null = Audit-BeyondCompareReviewStaging -TempReviewRoot $tempReviewRoot -RepoPath $repoPath -RepoName $repoName -CommitSha $commitSha -CRP $CRP
+
+if ($NoLaunch) {
+  Write-Host "Prepared review staging without launching Beyond Compare." -ForegroundColor DarkGray
+}
+else {
 $existingReviewProcesses = @(Get-SameRepositoryBCompareProcess -RepositoryName $repoName -Process @(Get-Process -Name 'BCompare' -ErrorAction SilentlyContinue) -CRP $CRP)
 if ($existingReviewProcesses.Count -gt 1) {
   # If duplicate windows exist for the exact same comparison, close surplus instances keeping only the primary
@@ -837,9 +846,6 @@ Write-Host ("  Right (Live Bridge): {0} -> {1}" -f $liveJunction, $repoPath)
 Write-Host ("  Pane Titles:         [Left: '{0}'] <--> [Right: '{1}']" -f $title1, $title2)
 Write-Host ("  Filters Applied:     {0}" -f $filterMask)
 
-# Immediately compile initial review staging manifest so Submit-ReviewResult & Control Hub recognize active review
-$null = Audit-BeyondCompareReviewStaging -TempReviewRoot $tempReviewRoot -RepoPath $repoPath -RepoName $repoName -CommitSha $commitSha -CRP $CRP
-
 # Open session with /solo so each CRP opens in its own dedicated top-level window per cohort isolation invariant
 $bcArgString = "/solo `"$sessionName`""
 
@@ -855,6 +861,7 @@ foreach ($cand in $dispatcherCandidates) {
     $dispatcherPath = $cand
     break
   }
+}
 }
 
 # ------------------------------------------------------------------------------

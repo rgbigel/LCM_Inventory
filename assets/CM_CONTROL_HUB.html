@@ -349,6 +349,10 @@
     .state-open { background: #edf0f1; color: #506168; border: 1px solid #bccad0; }
     .state-published { background: #e7f3ea; color: #2e6930; border: 1px solid #95c599; }
     .state-closed { background: var(--red-soft); color: var(--red); border: 1px solid var(--red); }
+    .cohort-badge { display: inline-flex; align-items: center; margin: 3px 4px 0 0; padding: 1px 5px; border: 1px solid #7c3aed; border-radius: 3px; background: #f5f3ff; color: #6d28d9; font: 700 10px var(--mono); }
+    .cohort-card { margin: 10px 0; padding: 9px; border: 1px solid #c4b5fd; border-radius: 6px; background: #faf5ff; font-size: 11.5px; }
+    .cohort-card-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 7px; }
+    .cohort-card-actions button { padding: 3px 7px; border: 1px solid #a78bfa; border-radius: 4px; background: #ffffff; color: #5b21b6; cursor: pointer; font: 700 10px var(--mono); }
 
     /* Editable Priority Badge */
     .prio-badge {
@@ -1023,6 +1027,12 @@
           </select>
         </div>
         <div class="control-group">
+          <span class="control-label">Cohort:</span>
+          <select class="control-select" id="cohortSelect" onchange="applyFilters()">
+            <option value="">All Proposals</option>
+          </select>
+        </div>
+        <div class="control-group">
           <span class="control-label">Sort:</span>
           <select class="control-select" id="sortSelect" onchange="applySort(this.value)">
             <option value="id-desc" selected>CRP ID (Highest First)</option>
@@ -1237,6 +1247,18 @@
             <span class="panel-kicker">Bulk Actions</span>
             <h3>Execute Action on Selected Proposals</h3>
             <p id="bulkSummaryText">Select one or more proposals to activate bulk operations. Incompatible actions are marked with passive colors; clicking them allows selecting an authority-overriding switch.</p>
+            <div id="reviewCohortPreview" style="margin: 10px 0; padding: 9px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); font-size: 11.5px;"></div>
+            <button class="bulk-btn" type="button" onclick="previewDefaultReviewCohort()" style="margin-bottom: 10px;">
+              <span class="btn-icon">🔎</span> <span>Preview Default BCR Cohort</span>
+            </button>
+            <div class="bulk-action-grid" style="margin-bottom: 10px;">
+              <button class="bulk-btn" type="button" onclick="manageReviewCohort('create')"><span class="btn-icon">➕</span> <span>Create COH from Selection</span></button>
+              <button class="bulk-btn" type="button" onclick="manageReviewCohort('add')"><span class="btn-icon">↪</span> <span>Add Selection to COH</span></button>
+              <button class="bulk-btn" type="button" onclick="manageReviewCohort('remove')"><span class="btn-icon">⊖</span> <span>Exclude Selection from COH</span></button>
+              <button class="bulk-btn" type="button" onclick="manageReviewCohort('hold')"><span class="btn-icon">⏸️</span> <span>Hold Active COH</span></button>
+              <button class="bulk-btn" type="button" onclick="manageReviewCohort('reopen')"><span class="btn-icon">↩️</span> <span>ReOpen Held COH</span></button>
+              <button class="bulk-btn" type="button" onclick="manageReviewCohort('close')"><span class="btn-icon">✕</span> <span>Close Active COH</span></button>
+            </div>
 
             <div class="bulk-action-grid">
               <button class="bulk-btn" id="btnBulkDo" onclick="handleBulkAction('do')">
@@ -1253,6 +1275,9 @@
               </button>
               <button class="bulk-btn" id="btnBulkHold" onclick="handleBulkAction('hold')">
                 <span class="btn-icon">⏸️</span> <span>Hold with Reason</span>
+              </button>
+              <button class="bulk-btn" id="btnBulkReopen" onclick="handleBulkAction('reopen')">
+                <span class="btn-icon">↩️</span> <span>ReOpen Held</span>
               </button>
               <button class="bulk-btn" id="btnBulkComplete" onclick="handleBulkAction('complete')">
                 <span class="btn-icon">✅</span> <span>Complete</span>
@@ -1597,6 +1622,7 @@
     // Initialize Hub
     document.addEventListener("DOMContentLoaded", () => {
       populateScopeFilter();
+      populateCohortFilter();
       calculateStatusCounts();
       renderTable();
       updateDaemonStatus();
@@ -1648,6 +1674,8 @@
           const fresh = await res.json();
           if (fresh && fresh.proposals) {
             proposalsData = fresh;
+            populateScopeFilter();
+            populateCohortFilter();
           }
         }
       } catch (err) {
@@ -1656,6 +1684,7 @@
       calculateStatusCounts();
       renderTable();
       renderSelectionPanel();
+      renderReviewCohortPreview();
       updateDaemonStatus();
     }
 
@@ -1669,6 +1698,34 @@
         Array.from(repos).sort().map(r => `<option value="${esc(r)}">${esc(r)}</option>`).join("");
     }
 
+    function getProposalCohorts(proposalId) {
+      const id = Number(proposalId);
+      return (proposalsData.review_cohorts || []).filter(cohort =>
+        (cohort.proposal_ids || []).map(Number).includes(id)
+      );
+    }
+
+    function populateCohortFilter() {
+      const select = $("cohortSelect");
+      if (!select) return;
+
+      const selected = select.value;
+      const cohorts = [...(proposalsData.review_cohorts || [])].sort((a, b) =>
+        String(a.id || "").localeCompare(String(b.id || ""))
+      );
+      select.innerHTML = '<option value="">All Proposals</option>' +
+        '<option value="__any">All Cohorts</option>' +
+        '<option value="__none">No Cohort</option>' +
+        cohorts.map(cohort => {
+          const id = esc(String(cohort.id || "unnamed"));
+          const state = esc(String(cohort.state || "open").toUpperCase());
+          return `<option value="${id}">${id} (${state})</option>`;
+        }).join("");
+      if ([...select.options].some(option => option.value === selected)) {
+        select.value = selected;
+      }
+    }
+
     function calculateStatusCounts() {
       let openCount = 0;
       let inprogressCount = 0;
@@ -1680,8 +1737,8 @@
         const status = getLifecycleState(p);
         const vis = getVisibleStatus(p);
 
-        // Open: all active work not committed, published, rejected, deleted, or cancelled
-        const isClosed = ["completed", "pushed", "published", "rejected", "deleted", "cancelled"].includes(status) ||
+        // Open: active lifecycle work only; held and completed work are outside OPEN.
+        const isClosed = ["held", "completed", "pushed", "published", "rejected", "deleted", "cancelled"].includes(status) ||
                          ["complete", "published", "cancelled"].includes(vis);
         if (!isClosed) {
           openCount++;
@@ -1704,6 +1761,54 @@
       if ($("count-review")) $("count-review").innerText = reviewCount;
       if ($("count-complete")) $("count-complete").innerText = completeCount;
       if ($("count-published")) $("count-published").innerText = publishedCount;
+    }
+
+    function renderReviewCohortPreview() {
+      const container = $("reviewCohortPreview");
+      if (!container) return;
+
+      const cohorts = proposalsData.review_cohorts || [];
+      const declared = cohorts.filter(c => String(c.state || "open").toLowerCase() === "open");
+      const held = cohorts.filter(c => String(c.state || "").toLowerCase() === "held");
+      const members = (proposalsData.proposals || []).filter(p => ["in_progress", "verified", "in_review"].includes(getLifecycleState(p)));
+      const byState = state => members.filter(p => getLifecycleState(p) === state);
+      const displayedCohorts = cohorts.filter(cohort => ["open", "held"].includes(String(cohort.state || "open").toLowerCase()));
+      const cohortCards = displayedCohorts.length > 0
+        ? displayedCohorts.map(cohort => {
+            const id = String(cohort.id || cohort.name || "unnamed");
+            const state = String(cohort.state || "open").toUpperCase();
+            const memberIds = cohort.proposal_ids || cohort.members || [];
+            return `<div class="cohort-card"><strong>${esc(id)}</strong> <span class="cohort-badge">${esc(state)}</span><br>` +
+              `${memberIds.length} member${memberIds.length === 1 ? "" : "s"}: ${memberIds.map(memberId => `#${esc(String(memberId))}`).join(", ")}` +
+              `<div class="cohort-card-actions"><button type="button" onclick="filterByCohort('${esc(id)}')">Show Members</button></div></div>`;
+          }).join("")
+        : '<div class="cohort-card"><strong>No active or held declared cohort</strong></div>';
+      const candidateText = `Computed candidates: ${byState("verified").length} review-ready, ${byState("in_review").length} already in review, ${byState("in_progress").length} pending verification.`;
+      container.innerHTML = `<strong>Declared review cohorts</strong>${cohortCards}<strong>Default BCR cohort</strong><br>${candidateText}`;
+    }
+
+    function filterByCohort(cohortId) {
+      const select = $("cohortSelect");
+      if (!select) return;
+      select.value = cohortId;
+      applyFilters();
+    }
+
+    function previewDefaultReviewCohort() {
+      const cmd = "pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action bcr -Preview";
+      executeDaemonCommand(cmd, "Resolving Default BCR Cohort...", cmd);
+    }
+
+    function manageReviewCohort(action) {
+      const ids = Array.from(selectedIds);
+      if (!["close", "hold", "reopen"].includes(action) && ids.length === 0) {
+        alert("Select proposal members first. For Create, select the prime proposal first; it determines the COH-nnn identity.");
+        return;
+      }
+      const selected = ids.join(",");
+      const confirm = action === "create" || action === "add" ? " -Confirm" : "";
+      const cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action cohort -CohortAction ${action}${selected ? ` -TargetExpression "${selected}"` : ""}${confirm}`;
+      executeDaemonCommand(cmd, `${action.charAt(0).toUpperCase() + action.slice(1)} review cohort...`, cmd);
     }
 
     function filterByRail(status) {
@@ -1744,6 +1849,7 @@
     function resetFilters() {
       $("filterQueryInput").value = "";
       $("scopeSelect").value = "";
+      if ($("cohortSelect")) $("cohortSelect").value = "";
       if ($("presetSelect")) $("presetSelect").value = "open";
       $("sortSelect").value = "id-desc";
       activeSort = "id-desc";
@@ -1783,7 +1889,7 @@
     // -------------------------------------------------------------------------
     // Advanced Query & Column Filtering Engine
     // -------------------------------------------------------------------------
-    function evaluateProposalMatch(p, tokens, scopeVal, thStatus, thPlan, thProg, thPrio, thSwitch) {
+    function evaluateProposalMatch(p, tokens, scopeVal, cohortVal, thStatus, thPlan, thProg, thPrio, thSwitch) {
       const state = String(p.state || "").toLowerCase();
       const prog = String(p.progress_state || "").toLowerCase();
       const vis = getVisibleStatus(p);
@@ -1794,10 +1900,12 @@
       const idStr = String(p.id);
       const crpTag = (p.crp_id || p.cr_id || "").toLowerCase();
       const evidence = (p.evidence_summary || p.verification_status || p.bcr_status || "").toLowerCase();
+      const cohortIds = getProposalCohorts(p.id).map(cohort => String(cohort.id || "").toLowerCase()).filter(Boolean);
+      const cohortText = cohortIds.join(" ");
 
       // Rail filter check
       if (activeRailFilter === "open") {
-        const isClosed = ["completed", "pushed", "rejected", "deleted", "cancelled"].includes(state) ||
+        const isClosed = ["held", "completed", "pushed", "rejected", "deleted", "cancelled"].includes(state) ||
                          ["complete", "published", "cancelled"].includes(vis);
         if (isClosed) return false;
       } else if (activeRailFilter === "inprogress") {
@@ -1813,6 +1921,9 @@
 
       // Scope select check
       if (scopeVal && (p.origin_repo || "") !== scopeVal) return false;
+      if (cohortVal === "__any" && cohortIds.length === 0) return false;
+      if (cohortVal === "__none" && cohortIds.length !== 0) return false;
+      if (cohortVal && !["__any", "__none"].includes(cohortVal) && !cohortIds.includes(cohortVal.toLowerCase())) return false;
 
       // Column header dropdown filters
       if (thStatus && vis !== thStatus.toLowerCase()) return false;
@@ -1855,6 +1966,7 @@
             if ((k === "state" || k === "plan") && (state === v || planDetail.includes(v))) return false;
             if (k === "repo" && repo.includes(v)) return false;
             if (k === "prio" && prio === Number(v)) return false;
+            if (k === "cohort" && cohortText.includes(v)) return false;
           } else {
             // General negation across fields
             if (title.includes(sub) || repo.includes(sub) || vis.includes(sub) || state.includes(sub) || planDetail.includes(sub)) return false;
@@ -1892,6 +2004,8 @@
             if (!state.includes(v) && !planDetail.includes(v)) return false;
           } else if (k === "repo" || k === "scope") {
             if (!repo.includes(v)) return false;
+          } else if (k === "cohort") {
+            if (!cohortText.includes(v)) return false;
           } else if (k === "id") {
             if (idStr !== v && !crpTag.includes(v)) return false;
           } else if (k === "switch") {
@@ -1914,6 +2028,7 @@
                             crpTag.includes(term) ||
                             title.includes(term) ||
                             repo.includes(term) ||
+                            cohortText.includes(term) ||
                             vis.includes(term) ||
                             state.includes(term) ||
                             planDetail.includes(term) ||
@@ -1928,6 +2043,7 @@
       const rawQuery = ($("filterQueryInput") ? $("filterQueryInput").value : "").trim();
       const tokens = rawQuery ? rawQuery.split(/\s+/) : [];
       const scopeVal = $("scopeSelect") ? $("scopeSelect").value : "";
+      const cohortVal = $("cohortSelect") ? $("cohortSelect").value : "";
 
       const thStatus = $("thStatusFilter") ? $("thStatusFilter").value : "";
       const thPlan = $("thPlanFilter") ? $("thPlanFilter").value : "";
@@ -1936,7 +2052,7 @@
       const thPrio = $("thPrioFilter") ? $("thPrioFilter").value : "";
 
       return (proposalsData.proposals || []).filter(p => {
-        return evaluateProposalMatch(p, tokens, scopeVal, thStatus, thPlan, thProg, thPrio, thSwitch);
+        return evaluateProposalMatch(p, tokens, scopeVal, cohortVal, thStatus, thPlan, thProg, thPrio, thSwitch);
       });
     }
 
@@ -1993,6 +2109,7 @@
               <span class="proposal-id">${crpTag}</span>
               <span class="proposal-title">${esc(p.title)}</span>
               <span class="repo-sub">${esc(p.origin_repo || "LCM_Inventory")}</span>
+              ${getProposalCohorts(p.id).map(cohort => `<span class="cohort-badge" title="Declared cohort membership">${esc(cohort.id || "COH")}</span>`).join("")}
             </td>
             <td>
               <span class="state-badge state-${visStatus}">${visStatus.toUpperCase()}</span>
@@ -2044,6 +2161,9 @@
                 <button class="show-dropdown-item" onclick="dispatchStandardAction('do', [${p.id}], '')"><span class="btn-icon">▶️</span> Do (-DOIT)</button>
                 <button class="show-dropdown-item" onclick="dispatchStandardAction('bcr', [${p.id}], '')"><span class="btn-icon">🔍</span> Open Review (BC5)</button>
                 <button class="show-dropdown-item" onclick="dispatchStandardAction('reviewed', [${p.id}], '')"><span class="btn-icon">✅</span> Accept Review</button>
+                ${getLifecycleState(p) === "held"
+                  ? `<button class="show-dropdown-item" onclick="dispatchStandardAction('reopen', [${p.id}], '')"><span class="btn-icon">↩️</span> ReOpen</button>`
+                  : ""}
                 <button class="show-dropdown-item" onclick="openHoldModal([${p.id}])"><span class="btn-icon">⏸️</span> Hold with Reason</button>
                 <div style="border-top: 1px solid var(--line); margin: 4px 0;"></div>
                 <div class="show-dropdown-title">Documents (#${p.id})</div>
@@ -2344,7 +2464,7 @@
       const target = !current;
       const id = p.id;
       const targetDisplay = target ? "Continuous Flow (-DOIT Active)" : "Standard Gating";
-      const cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -Command "$p = Get-Content -LiteralPath 'LCM_Inventory/data/proposals/proposals.json' -Raw | ConvertFrom-Json; foreach (\$item in \$p.proposals) { if (\$item.id -eq ${id}) { \$item.flow_mode = '${target ? "doit" : "standard"}'; \$item.always_proceed = \$${target}; } }; [System.IO.File]::WriteAllText('LCM_Inventory/data/proposals/proposals.json', (\$p | ConvertTo-Json -Depth 10), [System.Text.UTF8Encoding]::new(\$false)); Write-Host 'Proposal #${id} -DOIT set to ${target}.'"`;
+      const cmd = `pwsh -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action doit-mode -TargetExpression "${id}" -SwitchState ${target ? "active" : "paused"}`;
       executeDaemonCommand(cmd, `Updating -DOIT Switch on #${id} to ${targetDisplay}...`, cmd);
     }
 
@@ -2358,7 +2478,7 @@
       const target = !current;
       const id = p.id;
       const targetDisplay = target ? "Minimal Tests DAG (Fast)" : "Standard Test DAG";
-      const cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -Command "$p = Get-Content -LiteralPath 'LCM_Inventory/data/proposals/proposals.json' -Raw | ConvertFrom-Json; foreach (\$item in \$p.proposals) { if (\$item.id -eq ${id}) { \$item.minimal_tests = \$${target}; \$item.test_scope = '${target ? "minimal" : "full"}'; } }; [System.IO.File]::WriteAllText('LCM_Inventory/data/proposals/proposals.json', (\$p | ConvertTo-Json -Depth 10), [System.Text.UTF8Encoding]::new(\$false)); Write-Host 'Proposal #${id} Minimal Tests set to ${target}.'"`;
+      const cmd = `pwsh -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action minimal-tests -TargetExpression "${id}" -SwitchState ${target ? "active" : "paused"}`;
       executeDaemonCommand(cmd, `Updating -MinimalTests Switch on #${id} to ${targetDisplay}...`, cmd);
     }
 
@@ -2502,6 +2622,7 @@
       toggleButtonPassive("btnBulkComplete", !selectedList.every(p => isLifecycleActionAvailable(p, "complete")));
       toggleButtonPassive("btnBulkPush", !selectedList.every(p => isLifecycleActionAvailable(p, "push")));
       toggleButtonPassive("btnBulkHold", !selectedList.every(p => isLifecycleActionAvailable(p, "hold")));
+      toggleButtonPassive("btnBulkReopen", !selectedList.every(p => isLifecycleActionAvailable(p, "reopen")));
       toggleButtonPassive("btnBulkDelete", !selectedList.every(p => isLifecycleActionAvailable(p, "delete")));
 
       // Purge Temp: always executable
@@ -2523,6 +2644,7 @@
       complete: ["in_review"],
       push: ["completed"],
       hold: ["suggested", "in_progress", "verified", "in_review", "completed"],
+      reopen: ["held"],
       delete: ["suggested", "in_progress", "held"]
     };
 
@@ -2615,7 +2737,7 @@
       const sw = overrideSwitch ? " " + overrideSwitch : "";
       let cmd = "";
 
-      if (["bcr", "reviewed", "complete"].includes(action) && ids.length !== 1) {
+      if (["reviewed", "complete"].includes(action) && ids.length !== 1) {
         alert(`${action.toUpperCase()} requires exactly one proposal. Select one proposal and try again.`);
         return;
       }
@@ -2627,8 +2749,11 @@
         case "proceed":
           cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action proceed -TargetExpression "${idStr}"${sw}`;
           break;
+        case "reopen":
+          cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action reopen -TargetExpression "${idStr}"${sw}`;
+          break;
         case "bcr":
-          cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action bcr -TargetExpression "${idStr}"${sw}`;
+          cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action bcr -TargetExpression "${idStr}"${ids.length > 1 ? " -Confirm" : ""}${sw}`;
           break;
         case "reviewed":
         case "complete": {
@@ -2657,6 +2782,7 @@
       const actionTitles = {
         do: `Starting / Doing #${idStr}...`,
         proceed: `Proceeding #${idStr}...`,
+        reopen: `ReOpening held proposal(s) #${idStr}...`,
         bcr: `Opening Beyond Compare Review for #${idStr}...`,
         reviewed: `Recording Review Accepted for #${idStr}...`,
         complete: `Completing Proposal #${idStr}...`,

@@ -316,7 +316,20 @@ if ($PSCmdlet.ParameterSetName -eq 'Offset') {
 }
 
 $endEvent = if ([string]::IsNullOrWhiteSpace($Until)) {
-    $events[-1]
+    $arInvocation = @($events | Where-Object {
+        $_.Index -gt $startEvent.Index -and
+        $_.Role -match '^(?i)user$' -and
+        $_.Text.Trim() -match '^(?i)(?:@?ar|AnalyzeReasoning)(?:\s|$)'
+    } | Select-Object -Last 1)
+    if ($arInvocation.Count -gt 0) {
+        $priorEvents = @($events | Where-Object { $_.Index -lt $arInvocation[0].Index })
+        if ($priorEvents.Count -eq 0) {
+            throw 'The AR invocation is the first selected event; provide -Until or a later -From boundary.'
+        }
+        $priorEvents[-1]
+    } else {
+        $events[-1]
+    }
 } else {
     Resolve-ReasoningMatch -Events $events -Phrase $Until -Label 'end'
 }

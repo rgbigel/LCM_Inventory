@@ -145,7 +145,7 @@ if ($Help) {
     Write-Host ""
     Write-Host "LIFECYCLE QUICK REFERENCE:" -ForegroundColor Yellow
     Write-Host "  Suggested -> In Progress -> Verified -> In Review -> Completed -> Pushed"
-    Write-Host "  BCR and COMPLETE require one exact CRP/BUG identity; repository inference is blocked."
+    Write-Host "  BCR accepts exact CRP/BUG, repository, or declared cohort scope; omitted scope previews a bounded cohort."
     Write-Host "  -Immediately is a temporary documented BUG-cohort quality-check deferral; it is not -Force."
     Write-Host "  Inspect: ShowCM -Lifecycle -Id <CRP-ID>"
     Write-Host "==========================================================================" -ForegroundColor Cyan

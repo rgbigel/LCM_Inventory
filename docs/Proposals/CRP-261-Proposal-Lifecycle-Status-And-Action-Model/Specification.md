@@ -27,6 +27,13 @@ Existing history remains immutable; future events append forward-only richer
 records with transition, revision, cohort, semantic-delta, review, and test
 metadata as available.
 
+`OPEN` is an operator-facing active-work grouping, not a second lifecycle state. A CRP enters
+OPEN at `in_progress`; it leaves OPEN on `held` or `completed`. `ReOpen` restores a held CRP or
+BUG to its recorded `resume_state` and re-enters OPEN when that state is active. `ReOpen` for a
+held cohort restores its declaration only; it does not change member lifecycle states.
+For legacy held records without `resume_state`, `ReOpen` derives the immediately preceding state
+from immutable lifecycle history.
+
 CRP bundles are temporary active specifications. Push absorbs delivered content
 into baseline documentation. A needed revision reopens the same ID at
 `suggested` and appends a revision event. A semantic specification change
@@ -39,6 +46,13 @@ state navigation, including accept/reject and repository, cohort, and complete
 forms. Generated artifacts, scratch content, data, logs, and routine test
 output do not require review; an unfiltered BCR peek and advisory remain
 permitted. Managed lifecycle hooks are retained.
+
+CRP-260 owns cohort resolution and its receipts. CRP-261 consumes a resolved cohort without
+creating a second lifecycle authority: `in_progress` members remain pending verification,
+`verified` members may enter `in_review` only after a successful review handoff, and
+`in_review` members refresh the existing review rather than creating a duplicate session.
+ShowCM presents declared cohorts and the proposed default BCR cohort with their member
+classifications, baseline, and broadening reasons.
 
 ## Transition Compatibility
 
@@ -81,7 +95,7 @@ flowchart TB
   end
 
   subgraph L2[" "]
-    direction RL
+    direction LR
     W["IN_PROGRESS<br/><i>* DOIT active *</i>"] --> VERIFY["VERIFY"]
   end
 
@@ -91,35 +105,32 @@ flowchart TB
   end
 
   subgraph L4[" "]
-    direction RL
+    direction LR
     R["IN_REVIEW<br/><i>* FORCE only if authorized *</i>"] --> COMPLETE["COMPLETE / COMMIT"]
   end
 
   subgraph L5[" "]
     direction LR
-    C["COMPLETED<br/><i>* MINIMAL-TESTS marked if used *</i>"] --> PUSH["PUSH"]
-    PAUSE["HOLD / WITHDRAW<br/>REJECT / SUPERSEDE"]
+    C["COMPLETED<br/><i>* MINIMAL-TESTS marked if used *</i>"] --> PUSH["PUSH"] --> P["PUSHED<br/><i>* Publication complete *</i>"] --> PG["PUSH GATE"]
   end
 
   subgraph L6[" "]
     direction LR
-    PG["PUSH GATE"] --> CONTINUE["CONTINUE / REOPEN"]
+    CONTINUE["CONTINUE / REOPEN<br/><i>* restore recorded resume state *</i>"] ~~~ PAUSE["HOLD / WITHDRAW<br/>REJECT / SUPERSEDE"] --> X["NON-OPEN<br/>Held / Withdrawn / Rejected / Superseded"]
   end
 
-  DO --> W
+  DO -->|CRP enters OPEN| W
   VERIFY --> V
   BCR --> G["REVIEW GATE"] --> R
-  COMPLETE --> C
-  PUSH --> P["PUSHED<br/><i>* Publication complete *</i>"]
-  P --> PG
+  COMPLETE -->|CRP no longer OPEN| C
 
-  S --> PAUSE --> X["NON-ACTIVE<br/>Held / Withdrawn / Rejected / Superseded"]
+  S --> PAUSE
   W --> PAUSE
   V --> PAUSE
   R --> PAUSE
   C --> PAUSE
-  G --> CONTINUE --> W
-  P ~~~ X
+  G -->|return for rework| W
+  X --> CONTINUE
 
   classDef internal fill:#fef3c7,stroke:#d97706,color:#78350f,font-weight:bold,font-size:16px
   classDef action fill:#dcfce7,stroke:#15803d,color:#14532d,font-weight:bold,font-size:20px
@@ -146,7 +157,7 @@ flowchart TB
 | `IN_REVIEW` | Review Pending | Complete, Commit, Reject, Reopen, Hold |
 | `COMPLETED` | Committed / Ready to Push | Push, Hold |
 | `PUSHED` | Pushed | View only |
-| `HELD` | Held | Continue, Edit, Withdraw |
+| `HELD` | Held | ReOpen, Edit, Withdraw |
 | `WITHDRAWN` | Withdrawn | View, Supersede |
 | `REJECTED` | Rejected | View, Supersede, Create linked BUG |
 | `SUPERSEDED` | Superseded | View linked replacement |
@@ -161,7 +172,7 @@ flowchart TB
 | <span style="color:#a16207"><strong>IN_REVIEW</strong></span> | Review Pending | <span style="color:#15803d"><strong>COMPLETE, COMMIT, REJECT, REOPEN, HOLD</strong></span> |
 | <span style="color:#a16207"><strong>COMPLETED</strong></span> | Committed / Ready to Push | <span style="color:#15803d"><strong>PUSH, HOLD</strong></span> |
 | <span style="color:#a16207"><strong>PUSHED</strong></span> | Pushed | <span style="color:#15803d"><strong>VIEW</strong></span> |
-| <span style="color:#a16207"><strong>HELD</strong></span> | Held | <span style="color:#15803d"><strong>CONTINUE, EDIT, WITHDRAW</strong></span> |
+| <span style="color:#a16207"><strong>HELD</strong></span> | Held | <span style="color:#15803d"><strong>REOPEN, EDIT, WITHDRAW</strong></span> |
 | <span style="color:#a16207"><strong>WITHDRAWN</strong></span> | Withdrawn | <span style="color:#15803d"><strong>VIEW, SUPERSEDE</strong></span> |
 | <span style="color:#a16207"><strong>REJECTED</strong></span> | Rejected | <span style="color:#15803d"><strong>VIEW, SUPERSEDE, CREATE LINKED BUG</strong></span> |
 | <span style="color:#a16207"><strong>SUPERSEDED</strong></span> | Superseded | <span style="color:#15803d"><strong>VIEW LINKED REPLACEMENT</strong></span> |

@@ -296,7 +296,7 @@ function Get-LcmProposalLifecycleActions {
         in_review = @('complete', 'commit', 'reject', 'reopen', 'hold')
         completed = @('push', 'hold')
         pushed = @('view')
-        held = @('continue', 'edit', 'withdraw')
+        held = @('reopen', 'edit', 'withdraw')
         withdrawn = @('view', 'supersede')
         rejected = @('view', 'supersede', 'create-linked-bug')
         superseded = @('view')
@@ -327,6 +327,27 @@ function Test-LcmProposalLifecycleTransition {
         superseded = @()
     }
     return $ToState -in @($allowed[$FromState])
+}
+
+function Get-LcmProposalResumeState {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [psobject]$Proposal
+    )
+
+    if ($Proposal.PSObject.Properties['resume_state'] -and -not [string]::IsNullOrWhiteSpace([string]$Proposal.resume_state)) {
+        return [string]$Proposal.resume_state
+    }
+
+    $history = @($Proposal.state_history)
+    for ($index = $history.Count - 1; $index -ge 1; $index--) {
+        if ([string]$history[$index].state -eq 'held') {
+            return [string]$history[$index - 1].state
+        }
+    }
+
+    return ''
 }
 
 function Move-LcmProposalLifecycleState {
@@ -778,6 +799,357 @@ function Resolve-ProposalIdExpression {
     return @($targetIds)
 }
 
+function Get-LcmReviewCohortResolution {
+    [CmdletBinding()]
+    param(
+        [string]$Scope = '',
+
+        [string]$BaseCommit = 'HEAD',
+
+        [ValidateRange(1, 20)]
+        [int]$MaxProposalCount = 3,
+
+        [ValidateRange(1, 10)]
+        [int]$MaxRepositoryCount = 1
+    )
+
+    $store = Get-ProposalStore
+    $scopeValue = $Scope.Trim()
+    $eligibleStates = @('in_progress', 'verified', 'in_review')
+    $declaredCohorts = @(
+    if ($store.PSObject.Properties['review_cohorts'] -and $store.review_cohorts) {
+        @($store.review_cohorts | Where-Object {
+            $state = if ($_.PSObject.Properties['state']) { [string]$_.state } else { 'open' }
+            $state -eq 'open'
+        })
+    }
+    )
+
+    $resolutionKind = 'computed'
+    $cohortId = $null
+    $candidates = @()
+    if ([string]::IsNullOrWhiteSpace($scopeValue)) {
+        if ($declaredCohorts.Count -eq 1) {
+            $declared = $declaredCohorts[0]
+            $cohortId = if ($declared.PSObject.Properties['id']) { [string]$declared.id } else { [string]$declared.name }
+            $memberIds = if ($declared.PSObject.Properties['proposal_ids']) { @($declared.proposal_ids) } else { @($declared.members) }
+            if ($cohortId -notmatch '^COH-(\d+)$') {
+                throw "Declared review cohort '$cohortId' must use the COH-<prime proposal ID> naming scheme."
+            }
+            if ($memberIds -notcontains [int]$Matches[1]) {
+                throw "Declared review cohort '$cohortId' does not include its prime proposal ID."
+            }
+            $candidates = @($store.proposals | Where-Object { $_.id -in $memberIds })
+            $resolutionKind = 'declared'
+        } elseif ($declaredCohorts.Count -gt 1) {
+            throw 'More than one declared open review cohort exists. Select an explicit cohort.'
+        } else {
+            $candidates = @($store.proposals | Where-Object { $_.state -in $eligibleStates })
+        }
+    } elseif ($scopeValue -match '^(?i)(?:#?(?:CRP|BUG)-?)?\d+(?:\s*,?\s*#?(?:CRP|BUG)-?\d+)*$') {
+        $ids = @(Resolve-ProposalIdExpression -Expression $scopeValue)
+        $candidates = @($store.proposals | Where-Object { $_.id -in $ids })
+        if ($candidates.Count -ne $ids.Count) {
+            throw "One or more explicit proposal identities in '$scopeValue' do not exist."
+        }
+        $resolutionKind = 'exact'
+    } else {
+        $declaredMatches = @($declaredCohorts | Where-Object {
+            ($_.PSObject.Properties['id'] -and [string]$_.id -eq $scopeValue) -or
+            ($_.PSObject.Properties['name'] -and [string]$_.name -eq $scopeValue)
+        })
+        if ($declaredMatches.Count -gt 1) {
+            throw "Review cohort '$scopeValue' is ambiguous."
+        }
+        if ($declaredMatches.Count -eq 1) {
+            $declared = $declaredMatches[0]
+            $cohortId = if ($declared.PSObject.Properties['id']) { [string]$declared.id } else { [string]$declared.name }
+            $memberIds = if ($declared.PSObject.Properties['proposal_ids']) { @($declared.proposal_ids) } else { @($declared.members) }
+            if ($cohortId -notmatch '^COH-(\d+)$') {
+                throw "Declared review cohort '$cohortId' must use the COH-<prime proposal ID> naming scheme."
+            }
+            if ($memberIds -notcontains [int]$Matches[1]) {
+                throw "Declared review cohort '$cohortId' does not include its prime proposal ID."
+            }
+            $candidates = @($store.proposals | Where-Object { $_.id -in $memberIds })
+            $resolutionKind = 'declared'
+        } else {
+            $candidates = @($store.proposals | Where-Object { $_.origin_repo -eq $scopeValue })
+            if ($candidates.Count -eq 0) {
+                throw "No declared review cohort, proposal, or repository matches '$scopeValue'."
+            }
+            $resolutionKind = 'repository'
+        }
+    }
+
+    $members = @(
+        foreach ($proposal in $candidates | Sort-Object id) {
+            $state = [string]$proposal.state
+            $classification = switch ($state) {
+                'verified' { 'review_ready' }
+                'in_review' { 'already_in_review' }
+                'in_progress' { 'pending_verification' }
+                default { 'excluded' }
+            }
+            [PSCustomObject]@{
+                Id             = [int]$proposal.id
+                Identity       = if ($proposal.PSObject.Properties['crp_id'] -and $proposal.crp_id) { [string]$proposal.crp_id } elseif ($proposal.PSObject.Properties['cr_id'] -and $proposal.cr_id) { [string]$proposal.cr_id } else { "CRP-$($proposal.id)" }
+                Repository     = if ($proposal.PSObject.Properties['origin_repo'] -and $proposal.origin_repo) { [string]$proposal.origin_repo } else { 'LCM_Inventory' }
+                State          = $state
+                Classification = $classification
+            }
+        }
+    )
+    $repositories = @($members | Select-Object -ExpandProperty Repository -Unique | Sort-Object)
+    $broadeningReasons = [System.Collections.Generic.List[string]]::new()
+    if ([string]::IsNullOrWhiteSpace($scopeValue)) { $broadeningReasons.Add('scope omitted') }
+    if ($members.Count -gt 1) { $broadeningReasons.Add('multiple proposals') }
+    if ($repositories.Count -gt 1) { $broadeningReasons.Add('multiple repositories') }
+    if ($members.Count -gt $MaxProposalCount) { $broadeningReasons.Add("proposal limit $MaxProposalCount exceeded") }
+    if ($repositories.Count -gt $MaxRepositoryCount) { $broadeningReasons.Add("repository limit $MaxRepositoryCount exceeded") }
+
+    $needsSelection = $members.Count -eq 0 -or $members.Count -gt $MaxProposalCount -or $repositories.Count -gt $MaxRepositoryCount
+    $receiptPayload = [ordered]@{
+        resolution_kind     = $resolutionKind
+        declared_cohort_id  = $cohortId
+        scope               = $scopeValue
+        baseline            = $BaseCommit
+        members             = $members
+        repositories        = $repositories
+        broadening_reasons  = @($broadeningReasons)
+        needs_selection     = $needsSelection
+    }
+    $fingerprintBytes = [Text.Encoding]::UTF8.GetBytes(($receiptPayload | ConvertTo-Json -Depth 5 -Compress))
+    $fingerprint = ([Security.Cryptography.SHA256]::Create().ComputeHash($fingerprintBytes) | ForEach-Object ToString x2) -join ''
+
+    return [PSCustomObject]@{
+        ResolutionKind      = $resolutionKind
+        DeclaredCohortId    = $cohortId
+        Baseline            = $BaseCommit
+        Members             = $members
+        Repositories        = $repositories
+        BroadeningReasons   = @($broadeningReasons)
+        RequiresConfirmation = $broadeningReasons.Count -gt 0
+        NeedsSelection      = $needsSelection
+        Fingerprint         = $fingerprint
+    }
+}
+
+function Save-LcmReviewCohortReceipt {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCustomObject]$Resolution
+    )
+
+    $inventoryRoot = Split-Path (Split-Path (Split-Path (Get-ProposalStorePath) -Parent) -Parent) -Parent
+    $receiptScope = if (-not [string]::IsNullOrWhiteSpace($Resolution.DeclaredCohortId)) {
+        $Resolution.DeclaredCohortId
+    } else {
+        "BCR-Cohort-$($Resolution.Fingerprint.Substring(0, 12))"
+    }
+    $reviewsDirectory = Join-Path $inventoryRoot "scratch\BC_Review\$receiptScope"
+    if (-not (Test-Path -LiteralPath $reviewsDirectory)) {
+        New-Item -ItemType Directory -Path $reviewsDirectory -Force | Out-Null
+    }
+    $receipt = [ordered]@{
+        resolved_at          = (Get-Date).ToString('o')
+        resolution_kind      = $Resolution.ResolutionKind
+        declared_cohort_id   = $Resolution.DeclaredCohortId
+        baseline             = $Resolution.Baseline
+        members              = $Resolution.Members
+        repositories         = $Resolution.Repositories
+        broadening_reasons   = $Resolution.BroadeningReasons
+        requires_confirmation = $Resolution.RequiresConfirmation
+        needs_selection      = $Resolution.NeedsSelection
+        fingerprint          = $Resolution.Fingerprint
+    }
+    $receiptPath = Join-Path $reviewsDirectory ("BCR-Cohort-{0}.json" -f $Resolution.Fingerprint.Substring(0, 12))
+    $receipt | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath $receiptPath -Encoding UTF8
+    $canonicalPath = Join-Path $reviewsDirectory 'cohort-resolution.json'
+    $receipt | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath $canonicalPath -Encoding UTF8
+    return $receiptPath
+}
+
+function Get-LcmReviewCohortCompletionPlan {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$CohortId
+    )
+
+    $resolution = Get-LcmReviewCohortResolution -Scope $CohortId
+    if ($resolution.ResolutionKind -ne 'declared') {
+        throw "Completion requires a declared cohort; '$CohortId' did not resolve to one."
+    }
+    $notReviewing = @($resolution.Members | Where-Object { $_.State -ne 'in_review' })
+    if ($notReviewing.Count -gt 0) {
+        throw "Cohort '$CohortId' cannot complete because these members are not in_review: $($notReviewing.Identity -join ', ')."
+    }
+    $inventoryRoot = Split-Path (Split-Path (Split-Path (Get-ProposalStorePath) -Parent) -Parent) -Parent
+    $stagingRoot = Join-Path $inventoryRoot "scratch\BC_Review\$CohortId"
+    $candidateReceipts = @(
+        (Join-Path $stagingRoot 'cohort-resolution.json')
+    ) + @(Get-ChildItem -LiteralPath $stagingRoot -Filter 'BCR-Cohort-*.json' -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -ExpandProperty FullName)
+    $receiptPath = @($candidateReceipts | Where-Object { Test-Path -LiteralPath $_ })[0]
+    if (-not $receiptPath) {
+        throw "Cohort staging receipt is missing: $(Join-Path $stagingRoot 'cohort-resolution.json')"
+    }
+    $receipt = Get-Content -LiteralPath $receiptPath -Raw -Encoding UTF8 | ConvertFrom-Json
+    $receiptMemberIds = @($receipt.members | ForEach-Object { [int]$_.Id } | Sort-Object)
+    $currentMemberIds = @($resolution.Members | ForEach-Object { [int]$_.Id } | Sort-Object)
+    $memberMismatch = ($receiptMemberIds -join ',') -ne ($currentMemberIds -join ',')
+    if ($receipt.fingerprint -ne $resolution.Fingerprint -and $memberMismatch) {
+        throw "Cohort staging receipt is stale for '$CohortId'. Relaunch BCR before completion."
+    }
+    return [PSCustomObject]@{
+        CohortId = $CohortId
+        ReceiptPath = $receiptPath
+        Repositories = @($resolution.Members | Group-Object Repository | ForEach-Object {
+            [PSCustomObject]@{
+                Repository = $_.Name
+                Members = @($_.Group)
+            }
+        })
+    }
+}
+
+function Set-LcmReviewCohort {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('create', 'add', 'remove', 'hold', 'reopen', 'close')]
+        [string]$Action,
+
+        [int[]]$ProposalIds = @(),
+
+        [string]$CohortId = '',
+
+        [switch]$AllowCrossRepository
+    )
+
+    $store = Get-ProposalStore
+    if (-not $store.PSObject.Properties['review_cohorts'] -or $null -eq $store.review_cohorts) {
+        $store | Add-Member -NotePropertyName 'review_cohorts' -NotePropertyValue @() -Force
+    }
+    $openCohorts = @($store.review_cohorts | Where-Object { $_.state -eq 'open' })
+    $heldCohorts = @($store.review_cohorts | Where-Object { $_.state -eq 'held' })
+    if ($openCohorts.Count -gt 1) {
+        throw 'The proposal ledger contains more than one open review cohort. Resolve the ledger conflict before changing membership.'
+    }
+
+    if ($Action -eq 'create') {
+        if ($openCohorts.Count -ne 0) {
+            throw "Open review cohort '$($openCohorts[0].id)' already exists. Close it before creating another cohort."
+        }
+        if ($ProposalIds.Count -eq 0) {
+            throw 'Creating a review cohort requires one or more explicit proposal IDs; the first ID is the prime member.'
+        }
+        $primeId = $ProposalIds[0]
+        $CohortId = if ([string]::IsNullOrWhiteSpace($CohortId)) { "COH-$primeId" } else { $CohortId }
+        if ($CohortId -ne "COH-$primeId") {
+            throw "Cohort ID '$CohortId' must match its first prime proposal ID: COH-$primeId."
+        }
+        $memberIds = @($ProposalIds | Select-Object -Unique)
+        $members = @($store.proposals | Where-Object { $_.id -in $memberIds })
+        if ($members.Count -ne $memberIds.Count) {
+            throw 'A review cohort cannot include an unknown proposal ID.'
+        }
+        $repositories = @($members | ForEach-Object { if ($_.PSObject.Properties['origin_repo'] -and $_.origin_repo) { [string]$_.origin_repo } else { 'LCM_Inventory' } } | Select-Object -Unique)
+        if ($repositories.Count -gt 1 -and -not $AllowCrossRepository) {
+            throw 'A cross-repository cohort requires explicit confirmation.'
+        }
+        $cohort = [PSCustomObject]@{
+            id                  = $CohortId
+            state               = 'open'
+            prime_proposal_id   = $primeId
+            proposal_ids        = $memberIds
+            repositories        = $repositories
+            created_at          = (Get-Date).ToString('o')
+            updated_at          = (Get-Date).ToString('o')
+        }
+        $store.review_cohorts = @($store.review_cohorts) + $cohort
+        Set-ProposalStore -Store $store
+        return $cohort
+    }
+
+    if ($Action -eq 'reopen') {
+        if ($openCohorts.Count -ne 0) {
+            throw "Open review cohort '$($openCohorts[0].id)' already exists. Close or hold it before reopening another cohort."
+        }
+        $reopenCandidates = if ([string]::IsNullOrWhiteSpace($CohortId)) {
+            $heldCohorts
+        } else {
+            @($heldCohorts | Where-Object { $_.id -eq $CohortId })
+        }
+        if ($reopenCandidates.Count -eq 0) {
+            throw 'No held review cohort is available to reopen.'
+        }
+        if ($reopenCandidates.Count -gt 1) {
+            throw 'Multiple held review cohorts exist. Specify -CohortId to reopen one.'
+        }
+        $cohort = $reopenCandidates[0]
+        $cohort.state = 'open'
+        $reopenedAt = (Get-Date).ToString('o')
+        $cohort | Add-Member -NotePropertyName 'reopened_at' -NotePropertyValue $reopenedAt -Force
+        $cohort.updated_at = $reopenedAt
+        Set-ProposalStore -Store $store
+        return $cohort
+    }
+
+    if ($openCohorts.Count -eq 0) {
+        throw 'No open review cohort exists.'
+    }
+    $cohort = $openCohorts[0]
+    if (-not [string]::IsNullOrWhiteSpace($CohortId) -and $CohortId -ne $cohort.id) {
+        throw "Open review cohort '$($cohort.id)' does not match requested cohort '$CohortId'."
+    }
+
+    if ($Action -eq 'close') {
+        $cohort.state = 'closed'
+        $cohort.closed_at = (Get-Date).ToString('o')
+        $cohort.updated_at = $cohort.closed_at
+        Set-ProposalStore -Store $store
+        return $cohort
+    }
+
+    if ($Action -eq 'hold') {
+        $cohort.state = 'held'
+        $heldAt = (Get-Date).ToString('o')
+        $cohort | Add-Member -NotePropertyName 'held_at' -NotePropertyValue $heldAt -Force
+        $cohort.updated_at = $heldAt
+        Set-ProposalStore -Store $store
+        return $cohort
+    }
+
+    if ($ProposalIds.Count -eq 0) {
+        throw "Cohort action '$Action' requires one or more explicit proposal IDs."
+    }
+    $currentIds = @($cohort.proposal_ids | ForEach-Object { [int]$_ })
+    if ($Action -eq 'add') {
+        $allIds = @($currentIds + $ProposalIds | Select-Object -Unique)
+        $members = @($store.proposals | Where-Object { $_.id -in $allIds })
+        if ($members.Count -ne $allIds.Count) {
+            throw 'A review cohort cannot include an unknown proposal ID.'
+        }
+        $repositories = @($members | ForEach-Object { if ($_.PSObject.Properties['origin_repo'] -and $_.origin_repo) { [string]$_.origin_repo } else { 'LCM_Inventory' } } | Select-Object -Unique)
+        if ($repositories.Count -gt 1 -and -not $AllowCrossRepository) {
+            throw 'Adding this proposal creates a cross-repository cohort and requires explicit confirmation.'
+        }
+        $cohort.proposal_ids = $allIds
+        $cohort.repositories = $repositories
+    } else {
+        if ($ProposalIds -contains [int]$cohort.prime_proposal_id) {
+            throw "The prime proposal #$($cohort.prime_proposal_id) cannot be removed from '$($cohort.id)'. Close the cohort instead."
+        }
+        $cohort.proposal_ids = @($currentIds | Where-Object { $_ -notin $ProposalIds })
+        $cohort.repositories = @($store.proposals | Where-Object { $_.id -in $cohort.proposal_ids } | ForEach-Object { if ($_.PSObject.Properties['origin_repo'] -and $_.origin_repo) { [string]$_.origin_repo } else { 'LCM_Inventory' } } | Select-Object -Unique)
+    }
+    $cohort.updated_at = (Get-Date).ToString('o')
+    Set-ProposalStore -Store $store
+    return $cohort
+}
+
 function Invoke-ProposalBatchAction {
     [CmdletBinding()]
     param(
@@ -798,7 +1170,8 @@ function Invoke-ProposalBatchAction {
     }
 
     $mappedState = switch ($Action) {
-        { $_ -in @('do', 'approve', 'approved', 'bug', 'reopen') } { 'in_progress' }
+        { $_ -in @('do', 'approve', 'approved', 'bug') } { 'in_progress' }
+        'reopen' { 'in_progress' }
         { $_ -in @('delete', 'defer', 'deferred', 'hold', 'held') } { 'held' }
         { $_ -in @('complete', 'completed') } { 'completed' }
         { $_ -in @('suggest', 'suggested', 'reset') } { 'suggested' }
@@ -815,8 +1188,8 @@ function Invoke-ProposalBatchAction {
                 $currentState = [string]$proposal.state
                 if ($currentState -eq 'approved') { $currentState = 'in_progress' }
                 $targetState = $mappedState
-                if ($Action -in @('resume', 'continue')) {
-                    $targetState = if ($proposal.PSObject.Properties['resume_state']) { [string]$proposal.resume_state } else { '' }
+                if ($Action -in @('resume', 'continue', 'reopen') -and $currentState -eq 'held') {
+                    $targetState = Get-LcmProposalResumeState -Proposal $proposal
                 }
                 if (-not [string]::IsNullOrWhiteSpace($targetState) -and
                     (Test-LcmProposalLifecycleTransition -FromState $currentState -ToState $targetState)) {
@@ -832,13 +1205,13 @@ function Invoke-ProposalBatchAction {
     $updated = @()
     foreach ($id in $targetIds) {
         $targetState = $mappedState
-        if ($Action -in @('resume', 'continue')) {
-            $store = Get-ProposalStore
-            $proposal = @($store.proposals | Where-Object { $_.id -eq $id })[0]
-            if ($null -eq $proposal) { throw "Proposal #$Id was not found." }
-            $targetState = [string]$proposal.resume_state
+        $store = Get-ProposalStore
+        $proposal = @($store.proposals | Where-Object { $_.id -eq $id })[0]
+        if ($null -eq $proposal) { throw "Proposal #$Id was not found." }
+        if ($Action -in @('resume', 'continue', 'reopen') -and $proposal.state -eq 'held') {
+            $targetState = Get-LcmProposalResumeState -Proposal $proposal
             if ([string]::IsNullOrWhiteSpace($targetState)) {
-                throw "Proposal #$Id cannot resume because it has no resume_state."
+                throw "Proposal #$Id cannot reopen because it has no recorded resume state or pre-hold history."
             }
         }
 
@@ -2437,7 +2810,7 @@ Set-Alias -Name Get-Doc -Value Get-LcmProposalDocument
 Export-ModuleMember -Function Get-ProposalStorePath, Get-ProposalStore, Set-ProposalStore, `
     Get-WorkspaceProposals, New-WorkspaceProposal, Get-LcmProposalLifecycleActions, Test-LcmProposalLifecycleTransition, Move-LcmProposalLifecycleState, Set-LcmProposalBugIdentity, Enable-LcmImmediateBugRecovery, Get-LcmProposalLifecycleAudit, Set-WorkspaceProposalState, Set-WorkspaceProposalProgress, `
     Set-WorkspaceProposalPriority, Save-ProposalPlan, Save-ProposalWalkthrough, `
-    Resolve-ProposalIdExpression, Invoke-ProposalBatchAction, `
+    Resolve-ProposalIdExpression, Get-LcmReviewCohortResolution, Save-LcmReviewCohortReceipt, Get-LcmReviewCohortCompletionPlan, Set-LcmReviewCohort, Invoke-ProposalBatchAction, `
     Set-ReviewGranularity, Get-ReviewGranularity, Set-LCMMode, Get-LCMMode, Set-TestingMode, Get-TestingMode, `
     Get-ActiveAppContext, Set-ActiveAppContext, Get-LcmApps, Sync-LcmAppCatalog, New-LcmApp, Split-LcmAppDocs, Format-LcmAppsTable, `
     Get-LcmProposalDocument, Remove-LcmProposalBundle, `

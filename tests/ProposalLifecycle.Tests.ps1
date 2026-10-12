@@ -22,6 +22,83 @@ Describe 'Proposal lifecycle authority' {
     Test-LcmProposalLifecycleTransition -FromState suggested -ToState pushed | Should -BeFalse
   }
 
+  It 'classifies a computed BCR cohort without advancing lifecycle state' {
+    InModuleScope ProposalManager {
+      $script:testProposalStore = [PSCustomObject]@{
+        proposals = @(
+          [PSCustomObject]@{ id = 9101; crp_id = 'CRP-9101'; origin_repo = 'LCM_Inventory'; state = 'in_progress' },
+          [PSCustomObject]@{ id = 9102; crp_id = 'CRP-9102'; origin_repo = 'LCM_Inventory'; state = 'verified' },
+          [PSCustomObject]@{ id = 9103; crp_id = 'CRP-9103'; origin_repo = 'LCM_Inventory'; state = 'in_review' }
+        )
+      }
+      Mock Get-ProposalStore { $script:testProposalStore }
+
+      $resolution = Get-LcmReviewCohortResolution
+
+      $resolution.ResolutionKind | Should -Be 'computed'
+      $resolution.RequiresConfirmation | Should -BeTrue
+      $resolution.NeedsSelection | Should -BeFalse
+      @($resolution.Members | Where-Object Classification -eq 'review_ready').Id | Should -Be 9102
+      @($resolution.Members | Where-Object Classification -eq 'pending_verification').Id | Should -Be 9101
+      @($resolution.Members | Where-Object Classification -eq 'already_in_review').Id | Should -Be 9103
+      $script:testProposalStore.proposals[1].state | Should -Be 'verified'
+    }
+  }
+
+  It 'resolves one declared BCR cohort before using computed candidates' {
+    InModuleScope ProposalManager {
+      $script:testProposalStore = [PSCustomObject]@{
+        review_cohorts = @(
+          [PSCustomObject]@{ id = 'COH-9104'; state = 'open'; proposal_ids = @(9104) }
+        )
+        proposals = @(
+          [PSCustomObject]@{ id = 9104; crp_id = 'CRP-9104'; origin_repo = 'LCM_AI'; state = 'verified' },
+          [PSCustomObject]@{ id = 9105; crp_id = 'CRP-9105'; origin_repo = 'LCM_AI'; state = 'verified' }
+        )
+      }
+      Mock Get-ProposalStore { $script:testProposalStore }
+
+      $resolution = Get-LcmReviewCohortResolution
+
+      $resolution.ResolutionKind | Should -Be 'declared'
+      $resolution.DeclaredCohortId | Should -Be 'COH-9104'
+      @($resolution.Members).Count | Should -Be 1
+      $resolution.Members[0].Id | Should -Be 9104
+    }
+  }
+
+  It 'manages one declared cohort without allowing its prime member to be excluded' {
+    InModuleScope ProposalManager {
+      $script:testProposalStore = [PSCustomObject]@{
+        proposals = @(
+          [PSCustomObject]@{ id = 9106; crp_id = 'CRP-9106'; origin_repo = 'LCM_Inventory'; state = 'verified' },
+          [PSCustomObject]@{ id = 9107; crp_id = 'CRP-9107'; origin_repo = 'LCM_Inventory'; state = 'verified' },
+          [PSCustomObject]@{ id = 9108; crp_id = 'CRP-9108'; origin_repo = 'LCM_Inventory'; state = 'verified' }
+        )
+      }
+      Mock Get-ProposalStore { $script:testProposalStore }
+      Mock Set-ProposalStore {}
+
+      $cohort = Set-LcmReviewCohort -Action create -ProposalIds @(9106, 9107)
+      $cohort.id | Should -Be 'COH-9106'
+      $cohort.proposal_ids | Should -Contain 9107
+
+      $cohort = Set-LcmReviewCohort -Action add -ProposalIds 9108
+      $cohort.proposal_ids | Should -Contain 9108
+
+      { Set-LcmReviewCohort -Action remove -ProposalIds 9106 } | Should -Throw '*cannot be removed*'
+      $cohort = Set-LcmReviewCohort -Action remove -ProposalIds 9107
+      $cohort.proposal_ids | Should -Not -Contain 9107
+
+      $cohort = Set-LcmReviewCohort -Action hold
+      $cohort.state | Should -Be 'held'
+      $script:testProposalStore.proposals[0].state | Should -Be 'verified'
+
+      $cohort = Set-LcmReviewCohort -Action reopen
+      $cohort.state | Should -Be 'open'
+    }
+  }
+
   It 'gives every lifecycle state its documented action set' {
     $expectedActions = @{
       suggested = @('edit', 'do', 'hold', 'withdraw', 'supersede')
@@ -30,7 +107,7 @@ Describe 'Proposal lifecycle authority' {
       in_review = @('complete', 'commit', 'reject', 'reopen', 'hold')
       completed = @('push', 'hold')
       pushed = @('view')
-      held = @('continue', 'edit', 'withdraw')
+      held = @('reopen', 'edit', 'withdraw')
       withdrawn = @('view', 'supersede')
       rejected = @('view', 'supersede', 'create-linked-bug')
       superseded = @('view')
@@ -64,7 +141,8 @@ Describe 'Proposal lifecycle authority' {
       $held.hold_reason | Should -Be 'Waiting for dependency.'
       $held.dates.held | Should -Not -BeNullOrEmpty
 
-      $resumed = Move-LcmProposalLifecycleState -Id 9001 -State $held.resume_state
+      $resumed = Invoke-ProposalBatchAction -Action reopen -TargetExpression '9001'
+      $resumed = $resumed[0]
       $resumed.state | Should -Be 'in_progress'
       $resumed.progress_state | Should -Be 'in_progress'
       $resumed.disposition | Should -BeNullOrEmpty
@@ -72,6 +150,32 @@ Describe 'Proposal lifecycle authority' {
       $resumed.dates.in_progress | Should -Not -BeNullOrEmpty
       $resumed.state_history.Count | Should -Be 2
       $resumed.state_history[1].from_state | Should -Be 'held'
+    }
+  }
+
+  It 'derives a legacy held proposal resume state from its history' {
+    InModuleScope ProposalManager {
+      $script:testProposalStore = [PSCustomObject]@{
+        proposals = @(
+          [PSCustomObject]@{
+            id = 9003
+            state = 'held'
+            progress_state = 'blocked'
+            disposition = 'held'
+            state_history = @(
+              [PSCustomObject]@{ state = 'suggested'; timestamp = '2026-10-01 10:00:00' },
+              [PSCustomObject]@{ state = 'held'; timestamp = '2026-10-01 10:01:00' }
+            )
+          }
+        )
+      }
+      Mock Get-ProposalStore { $script:testProposalStore }
+      Mock Set-ProposalStore {}
+
+      $resumed = @(Invoke-ProposalBatchAction -Action reopen -TargetExpression '9003')[0]
+
+      $resumed.state | Should -Be 'suggested'
+      $resumed.state_history[-1].from_state | Should -Be 'held'
     }
   }
 

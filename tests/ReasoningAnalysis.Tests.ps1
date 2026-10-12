@@ -49,6 +49,21 @@ Describe 'Invoke-ReasoningAnalysis transcript selection and host providers' {
     (Get-Content -LiteralPath $reportPath -Raw) | Should -Match 'Legacy offset 0'
   }
 
+  It 'stops before the current AR command flow when no explicit end is supplied' {
+    $reportPath = Join-Path $TestDrive 'ar-boundary.md'
+    $events = (Get-Content -LiteralPath $transcriptPath -Raw | ConvertFrom-Json).events
+    $events += [pscustomobject]@{ id = 'five'; timestamp = '2026-10-10T14:02:00+02:00'; role = 'user'; content = 'AR' }
+    $events += [pscustomobject]@{ id = 'six'; timestamp = '2026-10-10T14:02:01+02:00'; type = 'tool_call'; tool_name = 'powershell'; content = 'Invoke-ReasoningAnalysis.ps1' }
+    @{ events = $events } | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $transcriptPath -Encoding UTF8
+
+    & $scriptPath -TranscriptPath $transcriptPath -From 'good morning routine' -OutputPath $reportPath
+
+    $report = Get-Content -LiteralPath $reportPath -Raw
+    $report | Should -Match 'event 4 / four'
+    $report | Should -Not -Match 'event 5 / five'
+    $report | Should -Not -Match 'Invoke-ReasoningAnalysis.ps1'
+  }
+
   It 'parses active host normalized JSONL transcript with tool calls and step indices' {
     $jsonlPath = Join-Path $TestDrive 'active_host_session.jsonl'
     @'

@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-10-10T19:50:17+02:00",
+  "updated_at": "2026-10-12T19:00:07+02:00",
   "review_granularity": "coarse",
   "lcm_mode": "paused",
-  "last_proposal_id": 262,
+  "last_proposal_id": 263,
   "proposals": [
     {
       "id": 261,
@@ -77,7 +77,7 @@
       "timestamp": "2026-10-10 16:08:40",
       "title": "Cohort Conflict Analysis and Push Gate",
       "origin_repo": "LCM_Inventory",
-      "state": "held",
+      "state": "in_review",
       "bundle_id": "CRP-260",
       "bundle_dir": "docs/Proposals/CRP-260-Cohort-Conflict-Analysis-And-Push-Gate",
       "docs": {
@@ -90,7 +90,11 @@
       "priority": 7,
       "dates": {
         "created": "2026-10-10 16:08:40",
-        "held": "2026-10-10 16:08:40"
+        "held": "2026-10-10 16:08:40",
+        "suggested": "2026-10-12 15:48:57",
+        "in_progress": "2026-10-12 16:06:43",
+        "verified": "2026-10-12 18:58:44",
+        "in_review": "2026-10-12 18:59:42"
       },
       "state_history": [
         {
@@ -104,11 +108,41 @@
           "timestamp": "2026-10-10 16:08:40",
           "user": "rgbig",
           "note": "Held pending operator scheduling."
+        },
+        {
+          "from_state": "held",
+          "state": "suggested",
+          "timestamp": "2026-10-12 15:48:57",
+          "user": "rgbig",
+          "note": ""
+        },
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-10-12 16:06:43",
+          "user": "rgbig",
+          "note": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-10-12 18:58:44",
+          "user": "rgbig",
+          "note": "Verified: 15/15 ProposalLifecycle tests and 11/11 ReasoningAnalysis tests pass."
+        },
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-10-12 18:59:42",
+          "user": "rgbig",
+          "note": ""
         }
       ],
-      "progress_state": "held",
       "flow_mode": "normal",
       "always_proceed": false,
+      "minimal_tests": true,
+      "test_scope": "minimal",
+      "progress_state": "verification",
       "disposition": null
     },
     {
@@ -10921,7 +10955,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "verified",
+      "state": "in_review",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/BUG-262-BUG-Prevent-post-commit-lifecycle-synchronization",
       "docs": {
@@ -10950,18 +10984,150 @@
           "timestamp": "2026-10-10 19:50:17",
           "user": "rgbig",
           "note": "PowerShell AST validation passed for Submit-ReviewResult and lifecycle tests passed 11/11."
+        },
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-10-12 19:00:07",
+          "user": "rgbig",
+          "note": ""
         }
       ],
       "dates": {
         "in_progress": "2026-10-10 19:50:11",
-        "verified": "2026-10-10 19:50:17"
+        "verified": "2026-10-10 19:50:17",
+        "in_review": "2026-10-12 19:00:07"
       },
       "flow_mode": "doit",
       "always_proceed": true,
       "progress_state": "verification",
       "disposition": null
+    },
+    {
+      "id": 263,
+      "crp_id": "CRP-263",
+      "timestamp": "2026-10-12 16:15:33",
+      "title": "LCM Inbox Two-Phase Acknowledgement",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-263",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "in_progress",
+      "bundle_id": "CRP-263",
+      "bundle_dir": "docs/Proposals/CRP-263-LCM-Inbox-Two-Phase-Acknowledgement",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig",
+      "details": "Urgent: implement a two-phase acknowledgement protocol for the LCM inbox return channel. Phase 1 records immediate receipt acknowledgement when an inbox item is accepted for processing. Phase 2 publishes a terminal success or failure outcome only after processing completes. Senders must receive a deterministic outcome when processing fails, blocks, or classifies an item unexpectedly.",
+      "plan_path": "docs/Proposals/CRP-263-LCM-Inbox-Two-Phase-Acknowledgement/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-263-LCM-Inbox-Two-Phase-Acknowledgement/Walkthrough.md",
+      "priority": 10,
+      "progress_state": "in_progress",
+      "disposition": null,
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-10-12 16:21:26",
+          "user": "rgbig",
+          "note": ""
+        }
+      ],
+      "dates": {
+        "in_progress": "2026-10-12 16:21:26"
+      },
+      "flow_mode": "doit",
+      "always_proceed": true
+    },
+    {
+      "id": 264,
+      "crp_id": "BUG-264",
+      "timestamp": "2026-10-12 18:46:58",
+      "title": "[BUG] Prohibition of POSIX Backslash Escaping in PowerShell and AST Gate Enforcement",
+      "origin_repo": "LCM_AI",
+      "cr_id": "BUG-264",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "completed",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/BUG-264-Prohibition-Of-POSIX-Backslash-Escaping-In-PowerShell",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig & Antigravity",
+      "details": "Codifies RULE-PS-022 and no-posix-backslash-escapes prohibiting POSIX-style backslash escaping in PowerShell, updates rule matrices, and fixes Antigravity transcript extractor.",
+      "priority": 1,
+      "plan_path": "docs/Proposals/BUG-264-Prohibition-Of-POSIX-Backslash-Escaping-In-PowerShell/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/BUG-264-Prohibition-Of-POSIX-Backslash-Escaping-In-PowerShell/Walkthrough.md",
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-10-12 18:46:58",
+          "user": "rgbig",
+          "note": "Immediate DOIT triage and remediation for PowerShell backslash escaping failure and transcript extractor bug."
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-10-12 18:50:13",
+          "user": "rgbig",
+          "note": "Rules codified (RULE-PS-022, no-posix-backslash-escapes), matrices synchronized, extractor patched, and rules exported."
+        },
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-10-12 18:54:32",
+          "user": "rgbig",
+          "note": "Transition to in_review upon Beyond Compare review launch."
+        },
+        {
+          "from_state": "in_review",
+          "state": "completed",
+          "timestamp": "2026-10-12 18:54:40",
+          "user": "rgbig",
+          "note": "Review completed and committed (39cae2f)."
+        }
+      ],
+      "dates": {
+        "in_progress": "2026-10-12 18:46:58",
+        "verified": "2026-10-12 18:50:20",
+        "in_review": "2026-10-12 18:54:32",
+        "completed": "2026-10-12 18:54:40"
+      },
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "progress_state": "completed",
+      "disposition": "completed"
     }
   ],
   "testing_mode": "active",
-  "active_context": null
+  "active_context": null,
+  "review_cohorts": [
+    {
+      "id": "COH-260",
+      "state": "open",
+      "prime_proposal_id": 260,
+      "proposal_ids": [
+        260,
+        262
+      ],
+      "repositories": [
+        "LCM_Inventory"
+      ],
+      "created_at": "2026-10-12T15:53:46.9539828+02:00",
+      "updated_at": "2026-10-12T18:57:59.9819797+02:00"
+    }
+  ]
 }
