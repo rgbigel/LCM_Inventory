@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-10-12T19:00:07+02:00",
+  "updated_at": "2026-10-12T19:07:12+02:00",
   "review_granularity": "coarse",
   "lcm_mode": "paused",
   "last_proposal_id": 263,
@@ -77,7 +77,7 @@
       "timestamp": "2026-10-10 16:08:40",
       "title": "Cohort Conflict Analysis and Push Gate",
       "origin_repo": "LCM_Inventory",
-      "state": "in_review",
+      "state": "completed",
       "bundle_id": "CRP-260",
       "bundle_dir": "docs/Proposals/CRP-260-Cohort-Conflict-Analysis-And-Push-Gate",
       "docs": {
@@ -94,7 +94,8 @@
         "suggested": "2026-10-12 15:48:57",
         "in_progress": "2026-10-12 16:06:43",
         "verified": "2026-10-12 18:58:44",
-        "in_review": "2026-10-12 18:59:42"
+        "in_review": "2026-10-12 18:59:42",
+        "completed": "2026-10-12 19:06:50"
       },
       "state_history": [
         {
@@ -136,14 +137,21 @@
           "timestamp": "2026-10-12 18:59:42",
           "user": "rgbig",
           "note": ""
+        },
+        {
+          "from_state": "in_review",
+          "state": "completed",
+          "timestamp": "2026-10-12 19:06:50",
+          "user": "rgbig",
+          "note": "Cohort COH-260 review completed with BUG-262."
         }
       ],
       "flow_mode": "normal",
       "always_proceed": false,
       "minimal_tests": true,
       "test_scope": "minimal",
-      "progress_state": "verification",
-      "disposition": null
+      "progress_state": "completed",
+      "disposition": "completed"
     },
     {
       "id": 259,
@@ -10955,7 +10963,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "in_review",
+      "state": "completed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/BUG-262-BUG-Prevent-post-commit-lifecycle-synchronization",
       "docs": {
@@ -10991,17 +10999,25 @@
           "timestamp": "2026-10-12 19:00:07",
           "user": "rgbig",
           "note": ""
+        },
+        {
+          "from_state": "in_review",
+          "state": "completed",
+          "timestamp": "2026-10-12 19:06:50",
+          "user": "rgbig",
+          "note": "Review completed and committed (b5eebe9)."
         }
       ],
       "dates": {
         "in_progress": "2026-10-10 19:50:11",
         "verified": "2026-10-10 19:50:17",
-        "in_review": "2026-10-12 19:00:07"
+        "in_review": "2026-10-12 19:00:07",
+        "completed": "2026-10-12 19:06:50"
       },
       "flow_mode": "doit",
       "always_proceed": true,
-      "progress_state": "verification",
-      "disposition": null
+      "progress_state": "completed",
+      "disposition": "completed"
     },
     {
       "id": 263,
@@ -11117,7 +11133,7 @@
   "review_cohorts": [
     {
       "id": "COH-260",
-      "state": "open",
+      "state": "closed",
       "prime_proposal_id": 260,
       "proposal_ids": [
         260,
@@ -11127,7 +11143,8 @@
         "LCM_Inventory"
       ],
       "created_at": "2026-10-12T15:53:46.9539828+02:00",
-      "updated_at": "2026-10-12T18:57:59.9819797+02:00"
+      "updated_at": "2026-10-12T19:07:12.3362901+02:00",
+      "closed_at": "2026-10-12T19:07:12.3362901+02:00"
     }
   ]
 }

@@ -1107,8 +1107,9 @@ function Set-LcmReviewCohort {
 
     if ($Action -eq 'close') {
         $cohort.state = 'closed'
-        $cohort.closed_at = (Get-Date).ToString('o')
-        $cohort.updated_at = $cohort.closed_at
+        $closedAt = (Get-Date).ToString('o')
+        $cohort | Add-Member -NotePropertyName 'closed_at' -NotePropertyValue $closedAt -Force
+        $cohort.updated_at = $closedAt
         Set-ProposalStore -Store $store
         return $cohort
     }

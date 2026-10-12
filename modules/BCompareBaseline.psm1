@@ -135,11 +135,11 @@ function Get-BCompareBaselineDescriptor {
     $descriptor.RulesBaselineSource = 'target-commit'
   }
   else {
-    $targetCommitDate = (& git -C $RepositoryPath show -s --format=%cI $targetCommit 2>$null).Trim()
+    $targetCommitDate = ((& git -C $RepositoryPath show -s --format=%cI $targetCommit 2>$null) -join '').Trim()
     $authorityBaselineCommit = if ([string]::IsNullOrWhiteSpace($targetCommitDate)) {
       $authorityCommit
     } else {
-      (& git -C $authorityPath rev-list -1 "--before=$targetCommitDate" $authorityCommit 2>$null).Trim()
+      ((& git -C $authorityPath rev-list -1 "--before=$targetCommitDate" $authorityCommit 2>$null) -join '').Trim()
     }
 
     if (-not [string]::IsNullOrWhiteSpace($authorityBaselineCommit) -and (Test-BCompareGitTreePath -RepositoryPath $authorityPath -Commit $authorityBaselineCommit -RelativePath $relativeRulesPath)) {
@@ -235,7 +235,10 @@ function Export-BCompareBaseline {
   # ----------------------------------------------------------------------------
   # Timestamp Preservation (RULE-LCM-003 / CRP-221)
   # ----------------------------------------------------------------------------
-  $targetCommitDateStr = (& git -C $Descriptor.TargetRepositoryPath log -1 --format=%cI $Descriptor.TargetCommit 2>$null)
+  $targetCommitDateStr = (& git -C $Descriptor.TargetRepositoryPath log -1 --format=%aI $Descriptor.TargetCommit 2>$null)
+  if ([string]::IsNullOrWhiteSpace($targetCommitDateStr)) {
+    $targetCommitDateStr = (& git -C $Descriptor.TargetRepositoryPath log -1 --format=%cI $Descriptor.TargetCommit 2>$null)
+  }
   $targetCommitTime = if (-not [string]::IsNullOrWhiteSpace($targetCommitDateStr)) {
     [System.DateTime]::Parse($targetCommitDateStr)
   } else {
@@ -244,7 +247,10 @@ function Export-BCompareBaseline {
 
   $rulesCommitTime = $targetCommitTime
   if (-not [string]::IsNullOrWhiteSpace($Descriptor.RulesBaselineRepositoryPath)) {
-    $rulesCommitDateStr = (& git -C $Descriptor.RulesBaselineRepositoryPath log -1 --format=%cI $Descriptor.RulesBaselineCommit 2>$null)
+    $rulesCommitDateStr = (& git -C $Descriptor.RulesBaselineRepositoryPath log -1 --format=%aI $Descriptor.RulesBaselineCommit 2>$null)
+    if ([string]::IsNullOrWhiteSpace($rulesCommitDateStr)) {
+      $rulesCommitDateStr = (& git -C $Descriptor.RulesBaselineRepositoryPath log -1 --format=%cI $Descriptor.RulesBaselineCommit 2>$null)
+    }
     if (-not [string]::IsNullOrWhiteSpace($rulesCommitDateStr)) {
       $rulesCommitTime = [System.DateTime]::Parse($rulesCommitDateStr)
     }
@@ -278,9 +284,66 @@ function Export-BCompareBaseline {
       [System.IO.File]::SetCreationTime($exportedFile.FullName, $matchedWorkingTime.CreationTime)
       [System.IO.File]::SetLastWriteTime($exportedFile.FullName, $matchedWorkingTime.LastWriteTime)
     } else {
-      [System.IO.File]::SetCreationTime($exportedFile.FullName, $defaultTime)
-      [System.IO.File]::SetLastWriteTime($exportedFile.FullName, $defaultTime)
+      $fileCommitTime = $null
+      if ($isRuleFile -and -not [string]::IsNullOrWhiteSpace($Descriptor.RulesBaselineRepositoryPath)) {
+        $ruleSubPath = if ($normalizedRel.StartsWith("$($Descriptor.RulesBaselineRelativePath)/", [System.StringComparison]::OrdinalIgnoreCase)) {
+          $normalizedRel.Substring($Descriptor.RulesBaselineRelativePath.Length + 1)
+        } else {
+          [System.IO.Path]::GetFileName($normalizedRel)
+        }
+        $fileCommitDateStr = (& git -C $Descriptor.RulesBaselineRepositoryPath log -1 --format=%aI $Descriptor.RulesBaselineCommit -- $ruleSubPath 2>$null)
+        if ([string]::IsNullOrWhiteSpace($fileCommitDateStr)) {
+          $fileCommitDateStr = (& git -C $Descriptor.RulesBaselineRepositoryPath log -1 --format=%cI $Descriptor.RulesBaselineCommit -- $ruleSubPath 2>$null)
+        }
+        if (-not [string]::IsNullOrWhiteSpace($fileCommitDateStr)) {
+          $fileCommitTime = [System.DateTime]::Parse($fileCommitDateStr)
+        }
+      } else {
+        $fileCommitDateStr = (& git -C $Descriptor.TargetRepositoryPath log -1 --format=%aI $Descriptor.TargetCommit -- $normalizedRel 2>$null)
+        if ([string]::IsNullOrWhiteSpace($fileCommitDateStr)) {
+          $fileCommitDateStr = (& git -C $Descriptor.TargetRepositoryPath log -1 --format=%cI $Descriptor.TargetCommit -- $normalizedRel 2>$null)
+        }
+        if (-not [string]::IsNullOrWhiteSpace($fileCommitDateStr)) {
+          $fileCommitTime = [System.DateTime]::Parse($fileCommitDateStr)
+        }
+      }
+
+      $resolvedTime = if ($fileCommitTime) { $fileCommitTime } else { $defaultTime }
+      [System.IO.File]::SetCreationTime($exportedFile.FullName, $resolvedTime)
+      [System.IO.File]::SetLastWriteTime($exportedFile.FullName, $resolvedTime)
     }
+  }
+
+  # ----------------------------------------------------------------------------
+  # Folder Timestamp Propagation (Bottom-Up Induction)
+  # ----------------------------------------------------------------------------
+  $allExportedDirs = @(Get-ChildItem -LiteralPath $DestinationPath -Recurse -Directory -Force |
+    Sort-Object -Property { $_.FullName.Length } -Descending)
+
+  foreach ($exportedDir in $allExportedDirs) {
+    $children = @(Get-ChildItem -LiteralPath $exportedDir.FullName -Force)
+    if ($children.Count -gt 0) {
+      $maxChildTime = ($children | Measure-Object -Property LastWriteTime -Maximum).Maximum
+      if ($maxChildTime) {
+        [System.IO.Directory]::SetCreationTime($exportedDir.FullName, $maxChildTime)
+        [System.IO.Directory]::SetLastWriteTime($exportedDir.FullName, $maxChildTime)
+      }
+    } else {
+      [System.IO.Directory]::SetCreationTime($exportedDir.FullName, $targetCommitTime)
+      [System.IO.Directory]::SetLastWriteTime($exportedDir.FullName, $targetCommitTime)
+    }
+  }
+
+  $rootChildren = @(Get-ChildItem -LiteralPath $DestinationPath -Force)
+  if ($rootChildren.Count -gt 0) {
+    $maxRootTime = ($rootChildren | Measure-Object -Property LastWriteTime -Maximum).Maximum
+    if ($maxRootTime) {
+      [System.IO.Directory]::SetCreationTime($DestinationPath, $maxRootTime)
+      [System.IO.Directory]::SetLastWriteTime($DestinationPath, $maxRootTime)
+    }
+  } else {
+    [System.IO.Directory]::SetCreationTime($DestinationPath, $targetCommitTime)
+    [System.IO.Directory]::SetLastWriteTime($DestinationPath, $targetCommitTime)
   }
 }
 

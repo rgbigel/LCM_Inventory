@@ -109,6 +109,32 @@ function New-CompactBCompareReviewTree {
     }
   }
 
+  # Propagate folder timestamps bottom-up across baselineRoot and workingRoot
+  foreach ($treeRoot in @($baselineRoot, $workingRoot)) {
+    if (Test-Path -LiteralPath $treeRoot) {
+      $allDirs = @(Get-ChildItem -LiteralPath $treeRoot -Recurse -Directory -Force |
+        Sort-Object -Property { $_.FullName.Length } -Descending)
+      foreach ($d in $allDirs) {
+        $ch = @(Get-ChildItem -LiteralPath $d.FullName -Force)
+        if ($ch.Count -gt 0) {
+          $maxT = ($ch | Measure-Object -Property LastWriteTime -Maximum).Maximum
+          if ($maxT) {
+            [System.IO.Directory]::SetCreationTime($d.FullName, $maxT)
+            [System.IO.Directory]::SetLastWriteTime($d.FullName, $maxT)
+          }
+        }
+      }
+      $rootCh = @(Get-ChildItem -LiteralPath $treeRoot -Force)
+      if ($rootCh.Count -gt 0) {
+        $maxRootT = ($rootCh | Measure-Object -Property LastWriteTime -Maximum).Maximum
+        if ($maxRootT) {
+          [System.IO.Directory]::SetCreationTime($treeRoot, $maxRootT)
+          [System.IO.Directory]::SetLastWriteTime($treeRoot, $maxRootT)
+        }
+      }
+    }
+  }
+
   Copy-Item -LiteralPath $InclusionManifest -Destination (Join-Path $sessionRoot 'inclusion-manifest.json') -Force
   [pscustomobject]@{
     SessionRoot = $sessionRoot

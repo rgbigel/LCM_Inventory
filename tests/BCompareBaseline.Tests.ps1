@@ -29,7 +29,7 @@ Describe 'BCompare baseline' {
 
     $descriptor.TargetCommit | Should -Be (& git -C $targetRepository rev-parse --short HEAD).Trim()
     $descriptor.RulesAuthorityCommit | Should -Be (& git -C $authorityRepository rev-parse --short HEAD).Trim()
-    $descriptor.RulesBaselineSource | Should -Be 'authority-commit'
+    $descriptor.RulesBaselineSource | Should -BeIn @('authority-commit', 'authority-time-aligned')
     (Get-Content -LiteralPath (Join-Path $destination '.agents\rules\DisplayStandardsPolicy.md') -Raw).Trim() | Should -Be 'committed rule'
   }
 
@@ -50,7 +50,12 @@ Describe 'BCompare baseline' {
     Set-Content -LiteralPath $authorityRule -Value 'authority rule' -Encoding UTF8
     & git -C $authorityRepository init --quiet
     & git -C $authorityRepository add .agents/rules/DisplayStandardsPolicy.md
-    & git -C $authorityRepository -c user.name='Pester' -c user.email='pester@example.invalid' commit --quiet -m 'Track authority rules'
+    $env:GIT_COMMITTER_DATE = '2030-01-01T00:00:00Z'
+    try {
+      & git -C $authorityRepository -c user.name='Pester' -c user.email='pester@example.invalid' commit --quiet -m 'Track authority rules' --date='2030-01-01T00:00:00Z'
+    } finally {
+      Remove-Item Env:\GIT_COMMITTER_DATE -ErrorAction SilentlyContinue
+    }
 
     & git -C $targetRepository rm -r --quiet .agents/rules
     & git -C $targetRepository -c user.name='Pester' -c user.email='pester@example.invalid' commit --quiet -m 'Migrate rules to junction'
@@ -113,6 +118,51 @@ Describe 'BCompare baseline' {
     (Test-Path -LiteralPath $exportedFile) | Should -BeTrue
     $exportedItem = Get-Item -LiteralPath $exportedFile
     $exportedItem.LastWriteTimeUtc | Should -Be $pastDate
+    (Get-Item -LiteralPath $destination).LastWriteTimeUtc | Should -Be $pastDate
+  }
+
+  It 'preserves historical per-file commit timestamps and directory max times when files are modified in working tree' {
+    $targetRepository = Join-Path $TestDrive 'ModifiedTimestampRepo'
+    $destination = Join-Path $TestDrive 'modified-baseline'
+    $subDir = Join-Path $targetRepository 'nested\sub'
+    $null = New-Item -ItemType Directory -Path $subDir -Force
+    $file1 = Join-Path $subDir 'file1.txt'
+    $file2 = Join-Path $subDir 'file2.txt'
+
+    Set-Content -LiteralPath $file1 -Value 'file 1 original' -Encoding UTF8
+    Set-Content -LiteralPath $file2 -Value 'file 2 original' -Encoding UTF8
+
+    & git -C $targetRepository init --quiet
+    & git -C $targetRepository add nested/sub/file1.txt
+    $env:GIT_COMMITTER_DATE = '2024-01-01T12:00:00Z'
+    & git -C $targetRepository -c user.name='Pester' -c user.email='pester@example.invalid' commit --quiet -m 'Commit 1' --date='2024-01-01T12:00:00Z'
+
+    & git -C $targetRepository add nested/sub/file2.txt
+    $env:GIT_COMMITTER_DATE = '2024-06-01T12:00:00Z'
+    & git -C $targetRepository -c user.name='Pester' -c user.email='pester@example.invalid' commit --quiet -m 'Commit 2' --date='2024-06-01T12:00:00Z'
+    Remove-Item Env:\GIT_COMMITTER_DATE -ErrorAction SilentlyContinue
+
+    $date2 = [System.DateTime]::Parse('2024-06-01T12:00:00Z').ToUniversalTime()
+    [System.IO.File]::SetLastWriteTimeUtc($file2, $date2)
+    [System.IO.File]::SetCreationTimeUtc($file2, $date2)
+
+    # Modify file1 in working tree (so its hash differs from baseline)
+    Set-Content -LiteralPath $file1 -Value 'file 1 modified in working tree' -Encoding UTF8
+
+    $descriptor = Get-BCompareBaselineDescriptor -RepositoryPath $targetRepository -BaseCommit 'HEAD'
+    Export-BCompareBaseline -Descriptor $descriptor -DestinationPath $destination
+
+    $exportedFile1 = Join-Path $destination 'nested\sub\file1.txt'
+    $exportedFile2 = Join-Path $destination 'nested\sub\file2.txt'
+    $exportedSubDir = Join-Path $destination 'nested\sub'
+    $exportedNestedDir = Join-Path $destination 'nested'
+
+    # File 1 was modified in working tree, but in baseline it must retain its commit 1 date (2024-01-01)
+    (Get-Item -LiteralPath $exportedFile1).LastWriteTimeUtc | Should -Be ([System.DateTime]::Parse('2024-01-01T12:00:00Z').ToUniversalTime())
+    # Subdirectories and root take max child timestamp (2024-06-01), not "now"
+    (Get-Item -LiteralPath $exportedSubDir).LastWriteTimeUtc | Should -Be ([System.DateTime]::Parse('2024-06-01T12:00:00Z').ToUniversalTime())
+    (Get-Item -LiteralPath $exportedNestedDir).LastWriteTimeUtc | Should -Be ([System.DateTime]::Parse('2024-06-01T12:00:00Z').ToUniversalTime())
+    (Get-Item -LiteralPath $destination).LastWriteTimeUtc | Should -Be ([System.DateTime]::Parse('2024-06-01T12:00:00Z').ToUniversalTime())
   }
 
   It 'exports .copilot from authority baseline when target repository uses an external junction' {

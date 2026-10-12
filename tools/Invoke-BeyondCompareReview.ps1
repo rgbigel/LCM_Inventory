@@ -815,6 +815,31 @@ $sessionMeta = [ordered]@{
 $sessionMeta | ConvertTo-Json -Depth 3 | Set-Content -LiteralPath (Join-Path $tempReviewRoot ".lcm_review.json") -Encoding utf8
 $sessionMeta | ConvertTo-Json -Depth 3 | Set-Content -LiteralPath (Join-Path $crpReviewDir ".lcm_review.json") -Encoding utf8
 
+# Freeze baseline metadata timestamps to commit date so NTFS does not stamp baseline root with 'now'
+$metaCommitTime = if ($commitSha -ne 'unborn') {
+  $dateStr = (& git -C $repoPath log -n 1 --pretty=format:"%cI" $commitSha 2>$null)
+  if (-not [string]::IsNullOrWhiteSpace($dateStr)) { [System.DateTime]::Parse($dateStr) } else { [System.DateTime]::UtcNow }
+} else { [System.DateTime]::UtcNow }
+
+$reviewJsonPath = Join-Path $tempReviewRoot ".lcm_review.json"
+if (Test-Path -LiteralPath $baselineManifestFile) {
+  [System.IO.File]::SetCreationTime($baselineManifestFile, $metaCommitTime)
+  [System.IO.File]::SetLastWriteTime($baselineManifestFile, $metaCommitTime)
+}
+if (Test-Path -LiteralPath $reviewJsonPath) {
+  [System.IO.File]::SetCreationTime($reviewJsonPath, $metaCommitTime)
+  [System.IO.File]::SetLastWriteTime($reviewJsonPath, $metaCommitTime)
+}
+
+$tempChildren = @(Get-ChildItem -LiteralPath $tempReviewRoot -Force | Where-Object { $_.Name -notin @('.lcm_baseline_manifest.json', '.lcm_review.json') })
+if ($tempChildren.Count -gt 0) {
+  $maxTime = ($tempChildren | Measure-Object -Property LastWriteTime -Maximum).Maximum
+  if ($maxTime) {
+    [System.IO.Directory]::SetCreationTime($tempReviewRoot, $maxTime)
+    [System.IO.Directory]::SetLastWriteTime($tempReviewRoot, $maxTime)
+  }
+}
+
 $title1 = "$repoName local-$commitSha ($rulesBaselineSegment)"
 $title2 = if (-not [string]::IsNullOrWhiteSpace($CRP)) {
   "Live $repoName [$CRP]"
