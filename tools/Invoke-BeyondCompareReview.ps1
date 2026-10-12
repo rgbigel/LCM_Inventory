@@ -94,19 +94,6 @@ if ($Help) {
   return
 }
 
-if ([string]::IsNullOrWhiteSpace($CRP)) {
-  throw '-CRP is required. Repository-based CRP inference is not permitted.'
-}
-
-if ([string]::IsNullOrWhiteSpace($RepositoryName)) {
-  $currentToplevel = (git rev-parse --show-toplevel 2>$null)
-  if ($currentToplevel) {
-    $RepositoryName = $currentToplevel.Trim()
-  }
-  else {
-    $RepositoryName = '.'
-  }
-}
 
 function Get-ActiveCRP {
   [CmdletBinding()]
@@ -530,6 +517,24 @@ function Audit-BeyondCompareReviewStaging {
   Write-Host "==========================================================================" -ForegroundColor Cyan
 
   return $stagingManifest
+}
+
+if ($MyInvocation.InvocationName -eq '.') {
+  return
+}
+
+if ([string]::IsNullOrWhiteSpace($CRP)) {
+  throw '-CRP is required. Repository-based CRP inference is not permitted.'
+}
+
+if ([string]::IsNullOrWhiteSpace($RepositoryName)) {
+  $currentToplevel = (git rev-parse --show-toplevel 2>$null)
+  if ($currentToplevel) {
+    $RepositoryName = $currentToplevel.Trim()
+  }
+  else {
+    $RepositoryName = '.'
+  }
 }
 
 # ------------------------------------------------------------------------------
