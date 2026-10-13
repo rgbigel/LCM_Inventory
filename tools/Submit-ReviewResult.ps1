@@ -25,6 +25,12 @@ param(
     [ValidatePattern('^(CRP|BUG)-\d+$')]
     [string]$CRP = '',
 
+    [Parameter(Mandatory = $false, HelpMessage = 'Commits and records review evidence without independently changing the proposal lifecycle; reserved for atomic cohort completion')]
+    [switch]$SkipLifecycleSynchronization,
+
+    [Parameter(Mandatory = $false, HelpMessage = 'Explicitly include durable unreviewed paths disclosed by the current BCR staging manifest')]
+    [switch]$IncludeUnreviewed,
+
     [Alias('h', '?')]
     [switch]$Help
 )
@@ -55,6 +61,18 @@ function Get-StagedDiffSha256 {
     $diff = git -C $Path diff --cached --binary
     if ($LASTEXITCODE -ne 0) {
         throw "Unable to read the staged Git diff for '$Path'."
+    }
+
+    function Test-StandardBcrExcludedPath {
+        [CmdletBinding()]
+        param(
+            [Parameter(Mandatory = $true)]
+            [string]$RelativePath
+        )
+
+        $normalizedPath = $RelativePath.Replace('/', '\').TrimStart('\')
+        $lcmDirectory = [regex]::Escape('.' + 'lcm')
+        return $normalizedPath -match "^(?i)(?:\.git|\.venv|venv|\.env|__pycache__|scratch|logs|work|data|node_modules|bin|obj)(?:\\|$)|(?:^|\\)$lcmDirectory\\(?:logs|scratch|archive|tools\\links)(?:\\|$)|(?i)\.(?:pyc|pyo|inventory|log|tmp|bak|swp|lock)$"
     }
 
     $bytes = [System.Text.Encoding]::UTF8.GetBytes(($diff -join "`n"))
@@ -220,7 +238,85 @@ $actionsExecuted.Add("Accepted live worktree through BCR disposition '$Result'."
 # ------------------------------------------------------------------------------
 # Git Staging & Commit
 # ------------------------------------------------------------------------------
-git -C $targetRepoPath add -A
+git -C $targetRepoPath diff --cached --quiet
+if ($LASTEXITCODE -ne 0) {
+    throw "Repository '$repoName' already has staged changes. Reset or commit the index before submitting this reviewed manifest."
+}
+
+$manifestUncopied = @($stagedManifest.Uncopied)
+$manifestExcluded = @(
+    if ($stagedManifest.PSObject.Properties['Excluded']) {
+        @($stagedManifest.Excluded)
+    }
+)
+$manifestCompleted = @(
+    if ($stagedManifest.PSObject.Properties['Completed']) {
+        @($stagedManifest.Completed)
+    }
+)
+$manifestDeletions = @(
+    if ($stagedManifest.PSObject.Properties['Deletions']) {
+        @($stagedManifest.Deletions)
+    }
+)
+$manifestRenames = @(
+    if ($stagedManifest.PSObject.Properties['Renames']) {
+        @($stagedManifest.Renames)
+    }
+)
+$excludedPaths = @($manifestExcluded | ForEach-Object {
+    if ($_.PSObject.Properties['RelativePath']) { [string]$_.RelativePath } else { [string]$_ }
+})
+$durableUnreviewed = @($manifestUncopied | Where-Object {
+    $candidatePath = if ($_.PSObject.Properties['RelativePath']) { [string]$_.RelativePath } else { [string]$_ }
+    -not (Test-StandardBcrExcludedPath -RelativePath $candidatePath)
+})
+if ($durableUnreviewed.Count -gt 0 -and -not $IncludeUnreviewed) {
+    $paths = @($durableUnreviewed | ForEach-Object {
+        if ($_.PSObject.Properties['RelativePath']) { [string]$_.RelativePath } else { [string]$_ }
+    })
+    throw "Review staging manifest contains durable unreviewed paths. Re-run with -IncludeUnreviewed only after explicit review: $($paths -join ', ')"
+}
+if ($manifestCompleted.Count -eq 0 -and $manifestDeletions.Count -eq 0 -and $manifestRenames.Count -eq 0 -and $durableUnreviewed.Count -eq 0) {
+    throw "Review staging manifest contains no approved actions."
+}
+
+$excludedPaths += @($manifestUncopied | ForEach-Object {
+    $candidatePath = if ($_.PSObject.Properties['RelativePath']) { [string]$_.RelativePath } else { [string]$_ }
+    if (Test-StandardBcrExcludedPath -RelativePath $candidatePath) { $candidatePath }
+})
+$excludedPaths = @($excludedPaths | Sort-Object -Unique)
+if ($excludedPaths.Count -gt 0) {
+    Write-Host "Excluded non-committable paths: $($excludedPaths -join ', ')" -ForegroundColor DarkGray
+}
+
+foreach ($completed in $manifestCompleted) {
+    if (Test-StandardBcrExcludedPath -RelativePath $completed.RelativePath) {
+        throw "Review manifest attempted to stage standard excluded path '$($completed.RelativePath)'. Relaunch BCR."
+    }
+    git -C $targetRepoPath add -- $completed.RelativePath
+    if ($LASTEXITCODE -ne 0) { throw "Unable to stage reviewed path '$($completed.RelativePath)'." }
+}
+foreach ($deletion in $manifestDeletions) {
+    if (Test-StandardBcrExcludedPath -RelativePath $deletion.RelativePath) {
+        throw "Review manifest attempted to stage standard excluded path '$($deletion.RelativePath)'. Relaunch BCR."
+    }
+    git -C $targetRepoPath rm -- $deletion.RelativePath
+    if ($LASTEXITCODE -ne 0) { throw "Unable to stage reviewed deletion '$($deletion.RelativePath)'." }
+}
+foreach ($rename in $manifestRenames) {
+    if ((Test-StandardBcrExcludedPath -RelativePath $rename.OldRelativePath) -or
+        (Test-StandardBcrExcludedPath -RelativePath $rename.NewRelativePath)) {
+        throw "Review manifest attempted to stage standard excluded rename '$($rename.OldRelativePath)' -> '$($rename.NewRelativePath)'. Relaunch BCR."
+    }
+    git -C $targetRepoPath mv -- $rename.OldRelativePath $rename.NewRelativePath
+    if ($LASTEXITCODE -ne 0) { throw "Unable to stage reviewed rename '$($rename.OldRelativePath)'." }
+}
+foreach ($unreviewed in $durableUnreviewed) {
+    $relativePath = if ($unreviewed.PSObject.Properties['RelativePath']) { [string]$unreviewed.RelativePath } else { [string]$unreviewed }
+    git -C $targetRepoPath add -- $relativePath
+    if ($LASTEXITCODE -ne 0) { throw "Unable to stage explicitly included path '$relativePath'." }
+}
 
 $stagedPaths = @(git -C $targetRepoPath diff --cached --name-only)
 $ruleChangePaths = @(Get-RuleChangePaths -Paths $stagedPaths)
@@ -365,7 +461,13 @@ if ($commitCreated -and $stagedManifest -and $stagedManifest.TempReviewRoot) {
 # Auto-Synchronize Proposals Ledger (RULE-LCM-002: Dual-State Alignment)
 # ------------------------------------------------------------------------------
 try {
-    if ($commitCreated) {
+    if ($commitCreated -and -not $SkipLifecycleSynchronization) {
+        $propStore = Get-ProposalStore
+        $reviewedProposal = @($propStore.proposals | Where-Object { $_.id -eq $matchingProposals[0].id })[0]
+        $reviewedProposal | Add-Member -NotePropertyName 'bcr_disposition' -NotePropertyValue $Result -Force
+        $reviewedProposal | Add-Member -NotePropertyName 'bcr_disposition_at' -NotePropertyValue (Get-Date).ToString('yyyy-MM-dd HH:mm:ss') -Force
+        $reviewedProposal | Add-Member -NotePropertyName 'bcr_disposition_notes' -NotePropertyValue $Notes -Force
+        Set-ProposalStore -Store $propStore
         $proposal = Move-LcmProposalLifecycleState -Id $matchingProposals[0].id -State 'completed' -Details "Review completed and committed ($newCommitSha)."
         if ($MinimalTests) {
             $propStore = Get-ProposalStore
@@ -378,4 +480,12 @@ try {
     }
 } catch {
     throw "Review result was committed, but the CRP lifecycle ledger could not be updated: $($_.Exception.Message)"
+}
+
+if ($commitCreated -and $SkipLifecycleSynchronization) {
+    [PSCustomObject]@{
+        RepositoryName = $repoName
+        ReviewReceiptPath = $finalReviewFile
+        CommitSha = $newCommitSha
+    }
 }

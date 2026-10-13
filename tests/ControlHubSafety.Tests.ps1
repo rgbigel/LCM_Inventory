@@ -1,0 +1,55 @@
+Describe 'Control Hub rendered-artifact safety' {
+  BeforeAll {
+    $script:repositoryRoot = Split-Path $PSScriptRoot -Parent
+    $script:templatePath = Join-Path $script:repositoryRoot 'assets\CM_CONTROL_HUB.html'
+    $script:rendererPath = Join-Path $script:repositoryRoot 'tools\Show-LcmControl.ps1'
+    $script:daemonPath = Join-Path $script:repositoryRoot 'tools\LcmDesktopDaemon.ps1'
+  }
+
+  It 'disables daemon execution when the raw developer template is opened' {
+    $template = Get-Content -LiteralPath $script:templatePath -Raw -Encoding UTF8
+
+    $template | Should -Match 'Developer template detected'
+    $template | Should -Match 'const IS_RENDERED_CONTROL_HUB = typeof RAW_PROPOSALS'
+    $template | Should -Match 'Developer template is not executable; no daemon command was sent'
+    $template | Should -Match '(?s)async function executeDaemonCommand.*?if \(!IS_RENDERED_CONTROL_HUB\).*?return;.*?fetch\(DAEMON_URL \+ "/execute"'
+  }
+
+  It 'validates stale CRP and COH targets before command construction' {
+    $template = Get-Content -LiteralPath $script:templatePath -Raw -Encoding UTF8
+
+    $template | Should -Match 'function validateCurrentProposalTargets'
+    $template | Should -Match 'function validateCurrentCohortTarget'
+    $template | Should -Match 'function reconcileActiveItemTarget'
+    $template | Should -Match 'if \(!validateCurrentProposalTargets\(ids\)\) return;'
+    $template | Should -Match 'if \(!validateCurrentCohortTarget\(cohortId\)\) return;'
+  }
+
+  It 'routes row wizard lifecycle actions through the explicit active ITEM target' {
+    $template = Get-Content -LiteralPath $script:templatePath -Raw -Encoding UTF8
+
+    $template | Should -Match 'function getTargetActionLabel'
+    $template | Should -Match 'id="itemActionSelect"'
+    $template | Should -Match 'function dispatchSelectedItemMenuAction'
+    $template | Should -Match 'ITEM explicitly switched from'
+    $template | Should -Match 'ACTIONS: ITEM \$\{crpTag\}'
+    $template | Should -Match 'dispatchTargetAction\(''do''\)'
+    $template | Should -Match 'dispatchTargetAction\(''proceed''\)'
+    $template | Should -Match 'dispatchTargetAction\(''bcr''\)'
+    $template | Should -Match 'COH ITEM to act on its full membership'
+    $template | Should -Not -Match 'onclick="dispatchStandardAction\(''do'', \[\$\{p\.id\}\], ''''\)"'
+    $template | Should -Not -Match 'onclick="dispatchStandardAction\(''proceed'', \[\$\{p\.id\}\], ''''\)"'
+  }
+
+  It 'renders a token-free artifact and never serves the source template as the Hub' {
+    & $script:rendererPath -NoLaunch
+    $artifactPath = Join-Path $script:repositoryRoot 'data\artifacts\CM_CONTROL_HUB.html'
+    $artifact = Get-Content -LiteralPath $artifactPath -Raw -Encoding UTF8
+    $daemon = Get-Content -LiteralPath $script:daemonPath -Raw -Encoding UTF8
+
+    $artifact | Should -Not -Match '\{\{[^}]+\}\}'
+    $artifact | Should -Match 'const RAW_PROPOSALS ='
+    $daemon | Should -Not -Match "LCM_Inventory\\assets\\CM_CONTROL_HUB\.html"
+    $daemon | Should -Match 'generated Control Hub artifact is unavailable'
+  }
+}

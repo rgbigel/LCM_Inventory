@@ -283,9 +283,6 @@ try {
       # Route: GET /hub or /control or /control_hub (LCM Control Hub over Port 9876 Daemon)
       if ($httpMethod -eq 'GET' -and ($reqPath -in @('/hub', '/control', '/control_hub', '/cm_control_hub.html'))) {
         $hubFile = Join-Path $envObj.WorkspaceRoot 'LCM_Inventory\data\artifacts\CM_CONTROL_HUB.html'
-        if (-not (Test-Path -LiteralPath $hubFile)) {
-          $hubFile = Join-Path $envObj.WorkspaceRoot 'LCM_Inventory\assets\CM_CONTROL_HUB.html'
-        }
         if (Test-Path -LiteralPath $hubFile) {
           try {
             $hubBytes = [System.IO.File]::ReadAllBytes($hubFile)
@@ -298,6 +295,8 @@ try {
           }
           continue
         }
+        Send-DaemonJsonResponse -Response $response -Data @{ error = 'The generated Control Hub artifact is unavailable. Run Show-LcmControl.ps1 to render it; the source template is not served.' } -StatusCode 503
+        continue
       }
 
       # Route: GET /dates or /cm_crp_dates or /cm_crp_dates.html
@@ -680,5 +679,4 @@ try {
   if (Test-Path $manifestPath) { Remove-Item $manifestPath -Force -ErrorAction SilentlyContinue }
   $envObj.Log("LCM Desktop Daemon stopped.", 'INFO')
 }
-
 

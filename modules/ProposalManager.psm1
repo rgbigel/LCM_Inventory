@@ -360,10 +360,21 @@ function Move-LcmProposalLifecycleState {
         [ValidateSet('suggested', 'in_progress', 'verified', 'in_review', 'completed', 'pushed', 'held', 'withdrawn', 'rejected', 'superseded')]
         [string]$State,
 
-        [string]$Details
+        [string]$Details,
+
+        [PSCustomObject]$Store,
+
+        [switch]$SkipPersist,
+
+        [string]$CohortId = '',
+
+        [string]$Gate = '',
+
+        [ValidateSet('synchronized', 'no_op', '')]
+        [string]$SynchronizationOutcome = ''
     )
 
-    $store = Get-ProposalStore
+    $store = if ($null -ne $Store) { $Store } else { Get-ProposalStore }
     $proposal = @($store.proposals | Where-Object { $_.id -eq $Id })[0]
     if ($null -eq $proposal) { throw "Proposal #$Id was not found." }
     $fromState = [string]$proposal.state
@@ -373,6 +384,15 @@ function Move-LcmProposalLifecycleState {
     }
     if (-not (Test-LcmProposalLifecycleTransition -FromState $fromState -ToState $State)) {
         throw "Invalid lifecycle transition for proposal #$($Id): $fromState -> $State"
+    }
+    if ($State -eq 'completed') {
+        $hasDisposition = $proposal.PSObject.Properties['bcr_disposition'] -and
+            -not [string]::IsNullOrWhiteSpace([string]$proposal.bcr_disposition)
+        $hasAuthorizedBypass = $proposal.PSObject.Properties['bcr_bypass_authorized'] -and
+            [bool]$proposal.bcr_bypass_authorized
+        if (-not $hasDisposition -and -not $hasAuthorizedBypass) {
+            throw "Proposal #$Id cannot pass the review gate without a recorded BCR disposition or explicit authorized BCR bypass."
+        }
     }
     $legacyProgressState = @{
         suggested   = 'undecided'
@@ -415,13 +435,18 @@ function Move-LcmProposalLifecycleState {
     }
     $proposal.dates | Add-Member -NotePropertyName $State -NotePropertyValue (Get-Date).ToString('yyyy-MM-dd HH:mm:ss') -Force
     $proposal.state_history = @($proposal.state_history) + [PSCustomObject]@{
-        from_state = $fromState
-        state      = $State
-        timestamp  = (Get-Date).ToString('yyyy-MM-dd HH:mm:ss')
-        user       = $env:USERNAME
-        note       = $Details
+        from_state              = $fromState
+        state                   = $State
+        timestamp               = (Get-Date).ToString('yyyy-MM-dd HH:mm:ss')
+        user                    = $env:USERNAME
+        note                    = $Details
+        cohort_id               = $CohortId
+        cohort_gate             = $Gate
+        synchronization_outcome = $SynchronizationOutcome
     }
-    Set-ProposalStore -Store $store
+    if (-not $SkipPersist) {
+        Set-ProposalStore -Store $store
+    }
     return $proposal
 }
 
@@ -908,7 +933,11 @@ function Get-LcmReviewCohortResolution {
     if ($members.Count -gt $MaxProposalCount) { $broadeningReasons.Add("proposal limit $MaxProposalCount exceeded") }
     if ($repositories.Count -gt $MaxRepositoryCount) { $broadeningReasons.Add("repository limit $MaxRepositoryCount exceeded") }
 
-    $needsSelection = $members.Count -eq 0 -or $members.Count -gt $MaxProposalCount -or $repositories.Count -gt $MaxRepositoryCount
+    $needsSelection = $members.Count -eq 0 -or (
+        $resolutionKind -ne 'declared' -and
+        ($members.Count -gt $MaxProposalCount -or $repositories.Count -gt $MaxRepositoryCount)
+    )
+    $requiresConfirmation = $resolutionKind -ne 'declared' -and $broadeningReasons.Count -gt 0
     $receiptPayload = [ordered]@{
         resolution_kind     = $resolutionKind
         declared_cohort_id  = $cohortId
@@ -929,7 +958,7 @@ function Get-LcmReviewCohortResolution {
         Members             = $members
         Repositories        = $repositories
         BroadeningReasons   = @($broadeningReasons)
-        RequiresConfirmation = $broadeningReasons.Count -gt 0
+        RequiresConfirmation = $requiresConfirmation
         NeedsSelection      = $needsSelection
         Fingerprint         = $fingerprint
     }
@@ -991,7 +1020,8 @@ function Get-LcmReviewCohortCompletionPlan {
     $candidateReceipts = @(
         (Join-Path $stagingRoot 'cohort-resolution.json')
     ) + @(Get-ChildItem -LiteralPath $stagingRoot -Filter 'BCR-Cohort-*.json' -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -ExpandProperty FullName)
-    $receiptPath = @($candidateReceipts | Where-Object { Test-Path -LiteralPath $_ })[0]
+    $existingReceipts = @($candidateReceipts | Where-Object { Test-Path -LiteralPath $_ })
+    $receiptPath = if ($existingReceipts.Count -gt 0) { $existingReceipts[0] } else { $null }
     if (-not $receiptPath) {
         throw "Cohort staging receipt is missing: $(Join-Path $stagingRoot 'cohort-resolution.json')"
     }
@@ -1014,6 +1044,106 @@ function Get-LcmReviewCohortCompletionPlan {
     }
 }
 
+function Complete-LcmReviewCohortAcceptance {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [ValidatePattern('^COH-\d+$')]
+        [string]$CohortId,
+
+        [Parameter(Mandatory = $true)]
+        [string]$ResolutionReceiptPath,
+
+        [Parameter(Mandatory = $true)]
+        [hashtable]$ReviewReceiptPaths,
+
+        [string]$Details = ''
+    )
+
+    $plan = Get-LcmReviewCohortCompletionPlan -CohortId $CohortId
+    if (-not (Test-Path -LiteralPath $ResolutionReceiptPath -PathType Leaf)) {
+        throw "Cohort BCR receipt is missing: $ResolutionReceiptPath"
+    }
+
+    $store = Get-ProposalStore
+    $cohort = @($store.review_cohorts | Where-Object { $_.id -eq $CohortId })[0]
+    if ($null -eq $cohort -or [string]$cohort.state -ne 'open') {
+        throw "Review cohort '$CohortId' is not open for accepted completion."
+    }
+
+    $memberIds = @($cohort.proposal_ids | ForEach-Object { [int]$_ } | Sort-Object)
+    $plannedMemberIds = @($plan.Repositories | ForEach-Object Members | ForEach-Object { [int]$_.Id } | Sort-Object)
+    if (($memberIds -join ',') -ne ($plannedMemberIds -join ',')) {
+        throw "Cohort '$CohortId' membership changed after completion preflight. Relaunch BCR before completion."
+    }
+
+    $failures = [System.Collections.Generic.List[string]]::new()
+    foreach ($repositoryPlan in $plan.Repositories) {
+        $repository = [string]$repositoryPlan.Repository
+        if (-not $ReviewReceiptPaths.ContainsKey($repository) -or
+            -not (Test-Path -LiteralPath ([string]$ReviewReceiptPaths[$repository]) -PathType Leaf)) {
+            $failures.Add("Repository '$repository' has no accepted review receipt.")
+        }
+        foreach ($member in $repositoryPlan.Members) {
+            $proposal = @($store.proposals | Where-Object { $_.id -eq $member.Id })[0]
+            if ($null -eq $proposal) {
+                $failures.Add("Proposal #$($member.Id) is missing.")
+            } elseif ([string]$proposal.state -ne 'in_review') {
+                $failures.Add("Proposal #$($member.Id) is '$($proposal.state)', not in_review.")
+            } elseif (-not $proposal.PSObject.Properties['bcr_initiated_at'] -or
+                [string]::IsNullOrWhiteSpace([string]$proposal.bcr_initiated_at)) {
+                $failures.Add("Proposal #$($member.Id) has no BCR initiation evidence.")
+            } elseif (-not $proposal.PSObject.Properties['bcr_scope'] -or
+                [string]$proposal.bcr_scope -ne $CohortId) {
+                $failures.Add("Proposal #$($member.Id) is not scoped to BCR cohort '$CohortId'.")
+            }
+        }
+    }
+    if ($failures.Count -gt 0) {
+        throw "Cohort '$CohortId' accepted completion was rejected; no member changed. $($failures -join ' ')"
+    }
+
+    $timestamp = (Get-Date).ToString('yyyy-MM-dd HH:mm:ss')
+    $updated = @()
+    foreach ($repositoryPlan in $plan.Repositories) {
+        $repository = [string]$repositoryPlan.Repository
+        $reviewReceiptPath = [string]$ReviewReceiptPaths[$repository]
+        foreach ($member in $repositoryPlan.Members) {
+            $proposal = @($store.proposals | Where-Object { $_.id -eq $member.Id })[0]
+            $proposal | Add-Member -NotePropertyName 'bcr_disposition' -NotePropertyValue 'Completed' -Force
+            $proposal | Add-Member -NotePropertyName 'bcr_disposition_at' -NotePropertyValue $timestamp -Force
+            $proposal | Add-Member -NotePropertyName 'bcr_disposition_notes' -NotePropertyValue $Details -Force
+            $proposal | Add-Member -NotePropertyName 'bcr_resolution_receipt' -NotePropertyValue $ResolutionReceiptPath -Force
+            $proposal | Add-Member -NotePropertyName 'bcr_review_receipt' -NotePropertyValue $reviewReceiptPath -Force
+            $proposal | Add-Member -NotePropertyName 'bcr_audit' -NotePropertyValue @(
+                [PSCustomObject]@{
+                    disposition = 'Completed'
+                    timestamp = $timestamp
+                    cohort_id = $CohortId
+                    resolution_receipt = $ResolutionReceiptPath
+                    review_receipt = $reviewReceiptPath
+                    note = $Details
+                }
+            ) -Force
+            $updated += Move-LcmProposalLifecycleState -Id $member.Id -State completed -Details "Cohort $CohortId accepted review completed." -Store $store -SkipPersist -CohortId $CohortId -Gate Completion -SynchronizationOutcome synchronized
+        }
+    }
+
+    $cohort | Add-Member -NotePropertyName 'state' -NotePropertyValue 'closed' -Force
+    $cohort | Add-Member -NotePropertyName 'closed_at' -NotePropertyValue $timestamp -Force
+    $cohort | Add-Member -NotePropertyName 'updated_at' -NotePropertyValue $timestamp -Force
+    $cohort | Add-Member -NotePropertyName 'completion_audit' -NotePropertyValue ([PSCustomObject]@{
+        disposition = 'Completed'
+        timestamp = $timestamp
+        resolution_receipt = $ResolutionReceiptPath
+        review_receipts = $ReviewReceiptPaths
+        member_ids = $memberIds
+        note = $Details
+    }) -Force
+    Set-ProposalStore -Store $store
+    return @($updated)
+}
+
 function Set-LcmReviewCohort {
     [CmdletBinding()]
     param(
@@ -1033,17 +1163,13 @@ function Set-LcmReviewCohort {
         $store | Add-Member -NotePropertyName 'review_cohorts' -NotePropertyValue @() -Force
     }
     $openCohorts = @($store.review_cohorts | Where-Object { $_.state -eq 'open' })
-    $heldCohorts = @($store.review_cohorts | Where-Object { $_.state -eq 'held' })
     if ($openCohorts.Count -gt 1) {
         throw 'The proposal ledger contains more than one open review cohort. Resolve the ledger conflict before changing membership.'
     }
 
     if ($Action -eq 'create') {
-        if ($openCohorts.Count -ne 0) {
-            throw "Open review cohort '$($openCohorts[0].id)' already exists. Close it before creating another cohort."
-        }
         if ($ProposalIds.Count -eq 0) {
-            throw 'Creating a review cohort requires one or more explicit proposal IDs; the first ID is the prime member.'
+            throw 'Creating a review cohort requires one explicit head/prime proposal ID; additional member IDs are optional.'
         }
         $primeId = $ProposalIds[0]
         $CohortId = if ([string]::IsNullOrWhiteSpace($CohortId)) { "COH-$primeId" } else { $CohortId }
@@ -1068,8 +1194,17 @@ function Set-LcmReviewCohort {
             created_at          = (Get-Date).ToString('o')
             updated_at          = (Get-Date).ToString('o')
         }
-        $store.review_cohorts = @($store.review_cohorts) + $cohort
-        Set-ProposalStore -Store $store
+        $persistStore = Get-ProposalStore
+        if (-not $persistStore.PSObject.Properties['review_cohorts'] -or $null -eq $persistStore.review_cohorts) {
+            $persistStore | Add-Member -NotePropertyName 'review_cohorts' -NotePropertyValue @() -Force
+        }
+        $persistOpenCohorts = @($persistStore.review_cohorts | Where-Object { $_.state -eq 'open' })
+        if ($persistOpenCohorts.Count -gt 1) {
+            throw 'The proposal ledger contains more than one open review cohort. Resolve the ledger conflict before creating another cohort.'
+        }
+        $cohort.state = if ($persistOpenCohorts.Count -eq 0) { 'open' } else { 'inactive' }
+        $persistStore.review_cohorts = @($persistStore.review_cohorts) + $cohort
+        Set-ProposalStore -Store $persistStore
         return $cohort
     }
 
@@ -1077,28 +1212,41 @@ function Set-LcmReviewCohort {
         if ($openCohorts.Count -ne 0) {
             throw "Open review cohort '$($openCohorts[0].id)' already exists. Close or hold it before reopening another cohort."
         }
+        $inactiveCohorts = @($store.review_cohorts | Where-Object { $_.state -in @('held', 'inactive') })
         $reopenCandidates = if ([string]::IsNullOrWhiteSpace($CohortId)) {
-            $heldCohorts
+            $inactiveCohorts
         } else {
-            @($heldCohorts | Where-Object { $_.id -eq $CohortId })
+            @($inactiveCohorts | Where-Object { $_.id -eq $CohortId })
         }
         if ($reopenCandidates.Count -eq 0) {
-            throw 'No held review cohort is available to reopen.'
+            throw 'No inactive review cohort is available to open.'
         }
         if ($reopenCandidates.Count -gt 1) {
-            throw 'Multiple held review cohorts exist. Specify -CohortId to reopen one.'
+            throw 'Multiple inactive review cohorts exist. Specify -CohortId to open one.'
         }
-        $cohort = $reopenCandidates[0]
+        $reopenCandidate = $reopenCandidates[0]
+        $persistStore = Get-ProposalStore
+        $persistOpenCohorts = @($persistStore.review_cohorts | Where-Object { $_.state -eq 'open' })
+        if ($persistOpenCohorts.Count -ne 0) {
+            throw "Open review cohort '$($persistOpenCohorts[0].id)' already exists. Close or hold it before reopening another cohort."
+        }
+        $persistCandidates = @($persistStore.review_cohorts | Where-Object {
+            $_.id -eq $reopenCandidate.id -and $_.state -in @('held', 'inactive')
+        })
+        if ($persistCandidates.Count -ne 1) {
+            throw "Inactive review cohort '$($reopenCandidate.id)' is no longer available to open."
+        }
+        $cohort = $persistCandidates[0]
         $cohort.state = 'open'
         $reopenedAt = (Get-Date).ToString('o')
         $cohort | Add-Member -NotePropertyName 'reopened_at' -NotePropertyValue $reopenedAt -Force
         $cohort.updated_at = $reopenedAt
-        Set-ProposalStore -Store $store
+        Set-ProposalStore -Store $persistStore
         return $cohort
     }
 
     if ($openCohorts.Count -eq 0) {
-        throw 'No open review cohort exists.'
+        throw 'No open review cohort exists. Create a review cohort before adding members.'
     }
     $cohort = $openCohorts[0]
     if (-not [string]::IsNullOrWhiteSpace($CohortId) -and $CohortId -ne $cohort.id) {
@@ -1126,10 +1274,26 @@ function Set-LcmReviewCohort {
     if ($ProposalIds.Count -eq 0) {
         throw "Cohort action '$Action' requires one or more explicit proposal IDs."
     }
+    $persistStore = Get-ProposalStore
+    $persistOpenCohorts = @($persistStore.review_cohorts | Where-Object { $_.state -eq 'open' })
+    if ($persistOpenCohorts.Count -eq 0) {
+        throw 'No open review cohort exists. Create a review cohort before adding members.'
+    }
+    if ($persistOpenCohorts.Count -gt 1) {
+        throw 'The proposal ledger contains more than one open review cohort. Resolve the ledger conflict before changing membership.'
+    }
+    if ($persistOpenCohorts[0].id -ne $cohort.id) {
+        throw "Open review cohort '$($persistOpenCohorts[0].id)' does not match requested cohort '$($cohort.id)'."
+    }
+    $cohort = $persistOpenCohorts[0]
     $currentIds = @($cohort.proposal_ids | ForEach-Object { [int]$_ })
     if ($Action -eq 'add') {
+        $duplicateIds = @($ProposalIds | Where-Object { $currentIds -contains $_ } | Select-Object -Unique)
+        if ($duplicateIds.Count -gt 0) {
+            throw "Cohort '$($cohort.id)' already includes proposal ID(s): #$($duplicateIds -join ', #')."
+        }
         $allIds = @($currentIds + $ProposalIds | Select-Object -Unique)
-        $members = @($store.proposals | Where-Object { $_.id -in $allIds })
+        $members = @($persistStore.proposals | Where-Object { $_.id -in $allIds })
         if ($members.Count -ne $allIds.Count) {
             throw 'A review cohort cannot include an unknown proposal ID.'
         }
@@ -1144,11 +1308,262 @@ function Set-LcmReviewCohort {
             throw "The prime proposal #$($cohort.prime_proposal_id) cannot be removed from '$($cohort.id)'. Close the cohort instead."
         }
         $cohort.proposal_ids = @($currentIds | Where-Object { $_ -notin $ProposalIds })
-        $cohort.repositories = @($store.proposals | Where-Object { $_.id -in $cohort.proposal_ids } | ForEach-Object { if ($_.PSObject.Properties['origin_repo'] -and $_.origin_repo) { [string]$_.origin_repo } else { 'LCM_Inventory' } } | Select-Object -Unique)
+        $cohort.repositories = @($persistStore.proposals | Where-Object { $_.id -in $cohort.proposal_ids } | ForEach-Object { if ($_.PSObject.Properties['origin_repo'] -and $_.origin_repo) { [string]$_.origin_repo } else { 'LCM_Inventory' } } | Select-Object -Unique)
     }
-    $cohort.updated_at = (Get-Date).ToString('o')
-    Set-ProposalStore -Store $store
+    $cohort | Add-Member -NotePropertyName 'updated_at' -NotePropertyValue (Get-Date).ToString('o') -Force
+    Set-ProposalStore -Store $persistStore
     return $cohort
+}
+
+function Invoke-LcmCohortLifecycleAction {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$CohortId,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('do', 'proceed', 'verify', 'bcr', 'complete', 'push', 'hold', 'reopen', 'withdraw')]
+        [string]$Action,
+
+        [string]$Details
+    )
+
+    $gate = switch ($Action) {
+        { $_ -in @('do', 'proceed') } { 'Gate1' }
+        'verify' { 'Verification' }
+        'bcr' { 'BCR' }
+        'complete' { 'Completion' }
+        default { '' }
+    }
+    if ($gate) {
+        $synchronization = Sync-LcmCohortGateState -CohortId $CohortId -Gate $gate -Details $Details
+        if ($Action -in @('do', 'proceed', 'verify')) {
+            return @($synchronization.Members)
+        }
+        if ($Action -eq 'bcr') {
+            return @($synchronization.Members)
+        }
+    }
+
+    $store = Get-ProposalStore
+    $cohort = @($store.review_cohorts | Where-Object { $_.id -eq $CohortId })[0]
+    if ($null -eq $cohort) { throw "Review cohort '$CohortId' was not found." }
+    $memberIds = @($cohort.proposal_ids | ForEach-Object { [int]$_ })
+    $targetState = @{
+        complete = 'completed'; push = 'pushed'; hold = 'held'; reopen = $null; withdraw = 'withdrawn'
+    }[$Action]
+    $failures = @()
+    $members = @()
+    foreach ($id in $memberIds) {
+        $proposal = @($store.proposals | Where-Object { $_.id -eq $id })[0]
+        if ($null -eq $proposal) {
+            $failures += "Proposal #$id was not found."
+            continue
+        }
+        $toState = if ($Action -eq 'reopen') {
+            Get-LcmProposalResumeState -Proposal $proposal
+        } else {
+            $targetState
+        }
+        $fromState = if ([string]$proposal.state -eq 'approved') { 'in_progress' } else { [string]$proposal.state }
+        if ([string]::IsNullOrWhiteSpace($toState) -or -not (Test-LcmProposalLifecycleTransition -FromState $fromState -ToState $toState)) {
+            $failures += "Proposal #$id is '$fromState' and cannot transition for cohort action '$Action'."
+            continue
+        }
+        if ($toState -eq 'completed') {
+            $hasDisposition = $proposal.PSObject.Properties['bcr_disposition'] -and
+                -not [string]::IsNullOrWhiteSpace([string]$proposal.bcr_disposition)
+            $hasAuthorizedBypass = $proposal.PSObject.Properties['bcr_bypass_authorized'] -and
+                [bool]$proposal.bcr_bypass_authorized
+            if (-not $hasDisposition -and -not $hasAuthorizedBypass) {
+                $failures += "Proposal #$id cannot pass the review gate without a recorded BCR disposition or explicit authorized BCR bypass."
+                continue
+            }
+        }
+        $members += [PSCustomObject]@{ Id = $id; State = $toState }
+    }
+    if ($failures.Count -gt 0) {
+        throw "Cohort action '$Action' was rejected; no member changed. $($failures -join ' ')"
+    }
+
+    $updated = foreach ($member in $members) {
+        Move-LcmProposalLifecycleState -Id $member.Id -State $member.State -Details $Details -Store $store -SkipPersist -CohortId $CohortId -Gate $gate -SynchronizationOutcome synchronized
+    }
+    $cohort | Add-Member -NotePropertyName 'updated_at' -NotePropertyValue (Get-Date).ToString('o') -Force
+    Set-ProposalStore -Store $store
+    return @($updated)
+}
+
+function Test-LcmProposalVerificationPrecondition {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [psobject]$Proposal
+    )
+
+    $status = if ($Proposal.PSObject.Properties['verification_status']) { [string]$Proposal.verification_status } else { '' }
+    $hasEvidence = $Proposal.PSObject.Properties['verification_evidence'] -and
+        -not [string]::IsNullOrWhiteSpace([string]$Proposal.verification_evidence)
+    return $status -in @('passed', 'validated') -or $hasEvidence
+}
+
+function Sync-LcmCohortGateState {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$CohortId,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('Gate1', 'Verification', 'BCR', 'Completion')]
+        [string]$Gate,
+
+        [string]$Details = ''
+    )
+
+    $store = Get-ProposalStore
+    $cohort = @($store.review_cohorts | Where-Object { $_.id -eq $CohortId })[0]
+    if ($null -eq $cohort) { throw "Review cohort '$CohortId' was not found." }
+    if ([string]$cohort.state -ne 'open') {
+        throw "Review cohort '$CohortId' is '$($cohort.state)' and cannot pass lifecycle gate '$Gate'."
+    }
+
+    $requiredState = @{
+        Gate1 = 'in_progress'
+        Verification = 'verified'
+        BCR = 'verified'
+        Completion = 'in_review'
+    }[$Gate]
+    $memberIds = @($cohort.proposal_ids | ForEach-Object { [int]$_ } | Select-Object -Unique)
+    $plans = @()
+    $stopped = @()
+    foreach ($id in $memberIds) {
+        $proposal = @($store.proposals | Where-Object { $_.id -eq $id })[0]
+        if ($null -eq $proposal) {
+            $stopped += "Proposal #$id is missing."
+            continue
+        }
+        $currentState = if ([string]$proposal.state -eq 'approved') { 'in_progress' } else { [string]$proposal.state }
+        if ($currentState -eq $requiredState) {
+            $plans += [PSCustomObject]@{ Proposal = $proposal; TargetState = $requiredState; Outcome = 'no_op' }
+            continue
+        }
+        if (($requiredState -eq 'in_progress' -and $currentState -in @('verified', 'in_review', 'completed', 'pushed')) -or
+            ($requiredState -eq 'verified' -and $currentState -in @('in_review', 'completed', 'pushed'))) {
+            $stopped += "Proposal #$id cannot synchronize from '$currentState' to '$requiredState' for $Gate because it has already passed the required gate state."
+            continue
+        }
+        if ($requiredState -eq 'verified' -and $currentState -eq 'in_progress' -and -not (Test-LcmProposalVerificationPrecondition -Proposal $proposal)) {
+            $stopped += "Proposal #$id cannot synchronize to verified: validated verification evidence is missing."
+            continue
+        }
+        if (-not (Test-LcmProposalLifecycleTransition -FromState $currentState -ToState $requiredState)) {
+            $stopped += "Proposal #$id cannot synchronize from '$currentState' to '$requiredState' for $Gate."
+            continue
+        }
+        $plans += [PSCustomObject]@{ Proposal = $proposal; TargetState = $requiredState; Outcome = 'synchronized' }
+    }
+    if ($stopped.Count -gt 0) {
+        $timestamp = (Get-Date).ToString('o')
+        if (-not $cohort.PSObject.Properties['gate_history']) {
+            $cohort | Add-Member -NotePropertyName 'gate_history' -NotePropertyValue @() -Force
+        }
+        $cohort.gate_history = @($cohort.gate_history) + [PSCustomObject]@{
+            gate = $Gate
+            required_state = $requiredState
+            timestamp = $timestamp
+            synchronized_member_ids = @()
+            no_op_member_ids = @()
+            stopped_members = @($stopped)
+        }
+        $cohort | Add-Member -NotePropertyName 'updated_at' -NotePropertyValue $timestamp -Force
+        Set-ProposalStore -Store $store
+        throw "Cohort gate '$Gate' stopped; no member changed. $($stopped -join ' ')"
+    }
+
+    $updated = foreach ($plan in $plans) {
+        if ($plan.Outcome -eq 'no_op') {
+            $plan.Proposal | Add-Member -NotePropertyName 'cohort_gate_last_outcome' -NotePropertyValue 'no_op' -Force
+            $plan.Proposal | Add-Member -NotePropertyName 'cohort_gate_last_gate' -NotePropertyValue $Gate -Force
+            $plan.Proposal
+        } else {
+            Move-LcmProposalLifecycleState -Id $plan.Proposal.id -State $plan.TargetState -Details $Details -Store $store -SkipPersist -CohortId $CohortId -Gate $Gate -SynchronizationOutcome synchronized
+        }
+    }
+    $timestamp = (Get-Date).ToString('o')
+    if (-not $cohort.PSObject.Properties['gate_history']) {
+        $cohort | Add-Member -NotePropertyName 'gate_history' -NotePropertyValue @() -Force
+    }
+    $cohort.gate_history = @($cohort.gate_history) + [PSCustomObject]@{
+        gate = $Gate
+        required_state = $requiredState
+        timestamp = $timestamp
+        synchronized_member_ids = @($plans | Where-Object Outcome -eq 'synchronized' | ForEach-Object { $_.Proposal.id })
+        no_op_member_ids = @($plans | Where-Object Outcome -eq 'no_op' | ForEach-Object { $_.Proposal.id })
+        stopped_members = @()
+    }
+    $cohort | Add-Member -NotePropertyName 'updated_at' -NotePropertyValue $timestamp -Force
+    Set-ProposalStore -Store $store
+    return [PSCustomObject]@{
+        CohortId = $CohortId
+        Gate = $Gate
+        RequiredState = $requiredState
+        Members = @($updated)
+        SynchronizedMemberIds = @($plans | Where-Object Outcome -eq 'synchronized' | ForEach-Object { $_.Proposal.id })
+        NoOpMemberIds = @($plans | Where-Object Outcome -eq 'no_op' | ForEach-Object { $_.Proposal.id })
+        StoppedMembers = @()
+    }
+}
+
+function Set-LcmProposalSupersession {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [int]$Id,
+
+        [Parameter(Mandatory = $true)]
+        [int]$SuccessorId,
+
+        [string]$Details
+    )
+
+    if ($Id -eq $SuccessorId) { throw 'A proposal cannot supersede itself.' }
+    $store = Get-ProposalStore
+    $proposal = @($store.proposals | Where-Object { $_.id -eq $Id })[0]
+    $successor = @($store.proposals | Where-Object { $_.id -eq $SuccessorId })[0]
+    if ($null -eq $proposal) { throw "Proposal #$Id was not found." }
+    if ($null -eq $successor) { throw "Successor proposal #$SuccessorId was not found." }
+    if ([string]$successor.state -in @('withdrawn', 'rejected', 'superseded')) {
+        throw "Successor proposal #$SuccessorId is not active."
+    }
+
+    $updated = Move-LcmProposalLifecycleState -Id $Id -State superseded -Details $Details
+    $timestamp = (Get-Date).ToString('yyyy-MM-dd HH:mm:ss')
+    $updated | Add-Member -NotePropertyName 'superseded_by_id' -NotePropertyValue $SuccessorId -Force
+    $updated | Add-Member -NotePropertyName 'superseded_at' -NotePropertyValue $timestamp -Force
+    $successor | Add-Member -NotePropertyName 'supersedes_id' -NotePropertyValue $Id -Force
+    $successor | Add-Member -NotePropertyName 'supersedes_at' -NotePropertyValue $timestamp -Force
+    Set-ProposalStore -Store (Get-ProposalStore)
+    return $updated
+}
+
+function Set-LcmProposalRetirement {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [int]$Id,
+
+        [Parameter(Mandatory = $true)]
+        [string]$Details
+    )
+
+    if ([string]::IsNullOrWhiteSpace($Details)) {
+        throw 'Retiring a proposal requires documented details.'
+    }
+    $updated = Move-LcmProposalLifecycleState -Id $Id -State withdrawn -Details $Details
+    $updated | Add-Member -NotePropertyName 'retired_at' -NotePropertyValue (Get-Date).ToString('yyyy-MM-dd HH:mm:ss') -Force
+    $updated | Add-Member -NotePropertyName 'retirement_reason' -NotePropertyValue $Details -Force
+    Set-ProposalStore -Store (Get-ProposalStore)
+    return $updated
 }
 
 function Invoke-ProposalBatchAction {
@@ -1166,8 +1581,16 @@ function Invoke-ProposalBatchAction {
 
     $targetIds = @(Resolve-ProposalIdExpression -Expression $TargetExpression)
     if ($targetIds.Count -eq 0) {
-        Write-Warning ("No valid proposal IDs resolved from expression: '{0}'" -f $TargetExpression)
-        return @()
+        throw "Target expression '$TargetExpression' did not resolve to any CRP IDs."
+    }
+
+    if ($TargetExpression.Trim().ToLowerInvariant() -ne 'all') {
+        $store = Get-ProposalStore
+        $knownIds = @($store.proposals | ForEach-Object { [int]$_.id })
+        $unresolvedIds = @($targetIds | Where-Object { $_ -notin $knownIds })
+        if ($unresolvedIds.Count -gt 0) {
+            throw ("Target expression '{0}' contains unresolved CRP ID(s): {1}. No lifecycle action was applied." -f $TargetExpression, ($unresolvedIds -join ', '))
+        }
     }
 
     $mappedState = switch ($Action) {
@@ -1201,6 +1624,31 @@ function Invoke-ProposalBatchAction {
         if ($targetIds.Count -eq 0) {
             throw "No proposals are eligible for lifecycle action '$Action'."
         }
+    }
+
+    $validationFailures = @()
+    foreach ($id in $targetIds) {
+        $targetState = $mappedState
+        $store = Get-ProposalStore
+        $proposal = @($store.proposals | Where-Object { $_.id -eq $id })[0]
+        if ($null -eq $proposal) {
+            $validationFailures += "Proposal #$id was not found."
+            continue
+        }
+        if ($Action -in @('resume', 'continue', 'reopen') -and $proposal.state -eq 'held') {
+            $targetState = Get-LcmProposalResumeState -Proposal $proposal
+        }
+        $currentState = [string]$proposal.state
+        if ($currentState -eq 'approved') {
+            $currentState = 'in_progress'
+        }
+        if ([string]::IsNullOrWhiteSpace($targetState) -or
+            -not (Test-LcmProposalLifecycleTransition -FromState $currentState -ToState $targetState)) {
+            $validationFailures += "Proposal #$id cannot transition from '$currentState' for action '$Action'."
+        }
+    }
+    if ($validationFailures.Count -gt 0) {
+        throw ("Lifecycle action '$Action' was not applied because the target set is ineligible: " + ($validationFailures -join ' '))
     }
 
     $updated = @()
@@ -2811,7 +3259,7 @@ Set-Alias -Name Get-Doc -Value Get-LcmProposalDocument
 Export-ModuleMember -Function Get-ProposalStorePath, Get-ProposalStore, Set-ProposalStore, `
     Get-WorkspaceProposals, New-WorkspaceProposal, Get-LcmProposalLifecycleActions, Test-LcmProposalLifecycleTransition, Move-LcmProposalLifecycleState, Set-LcmProposalBugIdentity, Enable-LcmImmediateBugRecovery, Get-LcmProposalLifecycleAudit, Set-WorkspaceProposalState, Set-WorkspaceProposalProgress, `
     Set-WorkspaceProposalPriority, Save-ProposalPlan, Save-ProposalWalkthrough, `
-    Resolve-ProposalIdExpression, Get-LcmReviewCohortResolution, Save-LcmReviewCohortReceipt, Get-LcmReviewCohortCompletionPlan, Set-LcmReviewCohort, Invoke-ProposalBatchAction, `
+    Resolve-ProposalIdExpression, Get-LcmReviewCohortResolution, Save-LcmReviewCohortReceipt, Get-LcmReviewCohortCompletionPlan, Complete-LcmReviewCohortAcceptance, Set-LcmReviewCohort, Test-LcmProposalVerificationPrecondition, Sync-LcmCohortGateState, Invoke-LcmCohortLifecycleAction, Set-LcmProposalSupersession, Set-LcmProposalRetirement, Invoke-ProposalBatchAction, `
     Set-ReviewGranularity, Get-ReviewGranularity, Set-LCMMode, Get-LCMMode, Set-TestingMode, Get-TestingMode, `
     Get-ActiveAppContext, Set-ActiveAppContext, Get-LcmApps, Sync-LcmAppCatalog, New-LcmApp, Split-LcmAppDocs, Format-LcmAppsTable, `
     Get-LcmProposalDocument, Remove-LcmProposalBundle, `

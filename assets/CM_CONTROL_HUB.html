@@ -8,7 +8,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{HUB_TITLE}}</title>
+  <title>LCM Control Hub Developer Template - Render Required</title>
   <script>
     (function() {
       function showLcmErrorBanner(msg, src, line, col, err) {
@@ -162,7 +162,7 @@
       background: var(--surface);
       border: 1px solid var(--line);
       border-radius: 6px;
-      flex-wrap: nowrap;
+      flex-wrap: wrap;
     }
     .control-group { display: flex; align-items: center; gap: 6px; padding-right: 10px; border-right: 1px solid var(--line); flex-shrink: 0; }
     .control-group:last-child { padding-right: 0; border-right: 0; }
@@ -182,7 +182,7 @@
     /* Advanced Query Filter Box */
     .filter-query-box {
       flex: 1 1 auto;
-      min-width: 280px;
+      min-width: 320px;
       position: relative;
       display: flex;
       align-items: center;
@@ -350,6 +350,17 @@
     .state-published { background: #e7f3ea; color: #2e6930; border: 1px solid #95c599; }
     .state-closed { background: var(--red-soft); color: var(--red); border: 1px solid var(--red); }
     .cohort-badge { display: inline-flex; align-items: center; margin: 3px 4px 0 0; padding: 1px 5px; border: 1px solid #7c3aed; border-radius: 3px; background: #f5f3ff; color: #6d28d9; font: 700 10px var(--mono); }
+    .cohort-column { width: 130px; min-width: 130px; }
+    .cohort-cell { max-width: 130px; }
+    .cohort-empty { color: var(--muted); font: 11px var(--mono); }
+    .evidence-column { width: 140px; min-width: 140px; }
+    .evidence-cell {
+      width: 140px;
+      max-width: 140px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
     .cohort-card { margin: 10px 0; padding: 9px; border: 1px solid #c4b5fd; border-radius: 6px; background: #faf5ff; font-size: 11.5px; }
     .cohort-card-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 7px; }
     .cohort-card-actions button { padding: 3px 7px; border: 1px solid #a78bfa; border-radius: 4px; background: #ffffff; color: #5b21b6; cursor: pointer; font: 700 10px var(--mono); }
@@ -385,12 +396,12 @@
     /* SHOW Column & Magician Wand Button */
     .action-cell { text-align: center; position: relative; width: 70px; }
     .wand-btn {
-      border: 1px solid var(--line);
-      padding: 2px 6px;
+      border: 1px solid var(--blue);
+      padding: 5px 8px;
       border-radius: 4px;
-      background: var(--surface);
+      background: var(--blue-soft);
       color: var(--blue);
-      font-size: 17px;
+      font-size: 21px;
       display: inline-flex;
       align-items: center;
       gap: 3px;
@@ -437,17 +448,21 @@
     }
     .show-dropdown-item:hover { background: var(--blue-soft); color: var(--blue); }
     .show-dropdown-item .btn-icon { font-size: 16px; }
+    .show-dropdown-section { padding: 5px 12px; margin-top: 3px; border-top: 1px solid var(--line); color: var(--muted); font: 700 10px var(--mono); text-transform: uppercase; }
+    .lifecycle-strip { display: inline-flex; align-items: center; gap: 3px; max-width: 100%; overflow-x: auto; font: 10px var(--mono); }
+    .lifecycle-node { padding: 2px 5px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-soft); white-space: nowrap; }
+    .lifecycle-node.current { border-color: var(--blue); color: var(--blue); background: var(--blue-soft); font-weight: 700; }
+    .lifecycle-node.done { border-color: var(--green); color: var(--green); background: var(--green-soft); }
+    .lifecycle-arrow { color: var(--muted); font-weight: 700; white-space: nowrap; }
+    .selected-item-lifecycle { min-height: 38px; padding: 7px 14px; border-bottom: 1px solid var(--line); background: var(--surface); display: flex; align-items: center; gap: 10px; }
+    .selected-item-lifecycle-label { color: var(--muted); font: 10px var(--mono); font-weight: 700; text-transform: uppercase; white-space: nowrap; }
+    .selected-item-lifecycle-empty { color: var(--muted); font-size: 12px; }
+    .action-result-zone { min-height: 30px; padding: 6px 12px; margin-bottom: 10px; border: 1px solid var(--line); border-radius: 5px; background: var(--surface-soft); color: var(--muted); font: 11px var(--mono); }
+    .action-result-zone.success { border-color: var(--green); background: var(--green-soft); color: var(--green); }
+    .action-result-zone.error { border-color: var(--red); background: var(--red-soft); color: var(--red); }
+    .template-safety-notice { margin: 12px; padding: 12px; border: 2px solid var(--red); border-radius: 6px; background: var(--red-soft); color: var(--red); font: 600 13px var(--sans); }
 
-    /* Lower Workspace (Scrollable or Collapsible) */
-    .lower-workspace {
-      flex: 0 0 auto;
-      max-height: 42vh;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
+    /* Target-oriented action panel */
     /* Execution Ledger / Timeline (7 Authoritative Milestones) */
     .timeline {
       padding: 14px 18px;
@@ -939,6 +954,9 @@
   </style>
 </head>
 <body>
+<div id="templateSafetyNotice" class="template-safety-notice" hidden>
+  Developer template detected. This file is not an executable Control Hub. Run <code>Show-LcmControl.ps1</code> and open the generated <code>data\artifacts\CM_CONTROL_HUB.html</code> instead. Daemon commands are disabled.
+</div>
 
   <!-- Topbar -->
   <header class="topbar">
@@ -955,7 +973,7 @@
     </div>
     <div class="header-actions">
       <button class="top-button" id="btnRefresh" title="Re-query proposal ledger from daemon"><span class="btn-icon">🔄</span> Refresh</button>
-      <button class="top-button" id="btnActivityLogs" title="View activity log"><span class="btn-icon">📋</span> Logs</button>
+      <button class="top-button" id="btnActivityLogs" title="View the activity and audit log"><span class="btn-icon">📋</span> Activity / Audit Log</button>
       <button class="top-button" id="btnDatesLedger" title="Open CRP lifecycle dates ledger"><span class="btn-icon">📅</span> Dates</button>
       <button class="top-button" id="btnHelp" title="Show policy and keyboard shortcuts"><span class="btn-icon">❓</span> Help</button>
     </div>
@@ -964,52 +982,36 @@
   <main>
     <!-- Pinned Top Container: Filters & Rail Never Scroll Away -->
     <div class="pinned-top">
-      <!-- Internal Flow Switches Bar -->
-      <section class="switches-strip" id="lcmSwitchesStrip" aria-label="Internal Flow Switches">
-        <div class="switches-label">
-          <span>⚙️ Flow Switches:</span>
-        </div>
-        <div class="switch-item" id="switchLcmMode" onclick="toggleLcmMode()" title="Toggle Governance: LCM ON enforces gating; LCM OFF suspends scaffolding for emergencies (RULE-LCM-006).">
-          <span class="switch-led switch-led-on" id="ledLcmMode"></span>
-          <span class="switch-name">LCM: <strong id="switchValLcm">ON</strong></span>
-        </div>
-        <div class="switch-item" id="switchTestingMode" onclick="toggleTestingMode()" title="Toggle Testing: Testing ON executes fast tests; Testing OFF defers deep cascades until push (RULE-LCM-006).">
-          <span class="switch-led switch-led-on" id="ledTestingMode"></span>
-          <span class="switch-name">Testing: <strong id="switchValTesting">ON</strong></span>
-        </div>
-        <div class="switch-item" id="switchGranularity" onclick="toggleGranularity()" title="Toggle Granularity: -Coarse combines batch review; -Tight stops for dedicated BC5 review per proposal (RULE-LCM-003).">
-          <span class="switch-led switch-led-coarse" id="ledGranularity"></span>
-          <span class="switch-name">Granularity: <strong id="switchValGranularity">-Coarse</strong></span>
-        </div>
-        <div class="switch-item" id="switchAnalysisMode" onclick="toggleAnalysisMode()" title="Analysis Governance Mode (RULE-ANA-001): READ_ONLY_ANALYSIS blocks edits; GOVERNED_IMPLEMENTATION allows execution bound to analysis; CIRCUIT_BREAKER_HALT on gap.">
-          <span class="switch-led switch-led-on" id="ledAnalysisMode"></span>
-          <span class="switch-name">Mode: <strong id="switchValAnalysisMode">IMPLEMENT</strong></span>
-        </div>
-        <div class="switch-separator"></div>
-        <div class="switches-label" style="margin-left: 2px;">
-          <span>Item:</span>
-          <span class="sw-badge" id="switchesActiveItemLabel" style="font-weight: 700; color: var(--blue); background: var(--blue-soft); border-color: var(--blue);">[None]</span>
-        </div>
-        <div class="switch-item" id="switchDoit" onclick="toggleActiveProposalDoit()" title="Click to toggle -DOIT Mode on active proposal: Continuous flow past Gate 1 planning pause (always-proceed = $true).">
-          <span class="switch-led switch-led-idle" id="ledDoit"></span>
-          <span class="switch-name">-DOIT: <strong id="switchValDoit">Standard Gating</strong></span>
-        </div>
-        <div class="switch-item" id="switchMinimalTests" onclick="toggleActiveProposalMinimalTests()" title="Click to toggle -MinimalTests on active proposal (RULE-LCM-023): Fast AST/hygiene checks vs full test DAG.">
-          <span class="switch-led switch-led-idle" id="ledMinimalTests"></span>
-          <span class="switch-name">-MinimalTests: <strong id="switchValMinimalTests">Standard DAG</strong></span>
-        </div>
-        <div class="switch-item static-switch" id="switchForce" title="-Force is an authorized exception to interactive visual-review confirmation only. It cannot waive lifecycle state, exact-CRP, syntax, quality, readiness, or push-preflight checks.">
-          <span class="switch-led switch-led-idle" id="ledForce"></span>
-          <span class="switch-name">-Force: <strong id="switchValForce">Gate 2 Active</strong></span>
-        </div>
-        <div class="switch-item static-switch" id="switchImmediately" title="-Immediately is an emergency quality-check deferral marker. A single CRP target is reclassified as BUG; a multi-proposal cohort must include a BUG. It requires details, ends at BCR, and is not a -Force alias.">
-          <span class="switch-led switch-led-idle" id="ledImmediately"></span>
-          <span class="switch-name">-Immediately: <strong id="switchValImmediately">Inactive</strong></span>
-        </div>
-      </section>
-
       <!-- Control Filter Row with Advanced Filter / Find Box -->
       <section class="control-row" aria-label="Filters and controls">
+        <div class="control-group" style="position:relative;">
+          <span class="control-label">ITEM:</span>
+          <select class="control-select" id="itemTargetSelect" onchange="selectItemTarget(this.value)" title="Explicit CRP or COH target">
+            <option value="">Select CRP or COH</option>
+          </select>
+        </div>
+        <div class="control-group" style="position:relative;">
+          <span class="control-label" id="itemActionLabel">ACTIONS:</span>
+          <select class="control-select" id="itemActionSelect" onchange="dispatchSelectedItemMenuAction(this.value); this.value='';" disabled title="Lifecycle actions always apply to the explicit ITEM">
+            <option value="">Select ITEM first</option>
+            <option value="do">Do / Start ITEM</option>
+            <option value="proceed">Proceed ITEM</option>
+            <option value="verify">Verify ITEM</option>
+            <option value="bcr">Open Review for ITEM</option>
+            <option value="complete">Complete ITEM</option>
+            <option value="push">Push ITEM</option>
+            <option value="hold">Hold ITEM</option>
+            <option value="reopen">Reopen ITEM</option>
+          </select>
+        </div>
+        <div class="control-group">
+          <button class="top-button" style="color:var(--ink);border-color:var(--line);" onclick="requestWorkspaceMaintenance()" title="Workspace maintenance and audit-log hygiene (requires confirmation)">🧹 Maintenance</button>
+        </div>
+        <div class="filter-query-box" aria-label="Proposal filter">
+          <span class="control-label" style="margin-right:6px;">Filter:</span>
+          <span class="filter-query-icon" style="left:52px;">🔍</span>
+          <input class="filter-query-input" id="filterQueryInput" style="padding-left:74px;" placeholder="ID:198-205, status:review, prio:>3, repo:LCM" oninput="applyFilters()" aria-label="Filter proposals">
+        </div>
         <div class="control-group">
           <span class="control-label">Preset:</span>
           <select class="control-select" id="presetSelect" onchange="applyPresetFilter(this.value)">
@@ -1041,13 +1043,9 @@
             <option value="prio-asc">Priority (Low → High)</option>
           </select>
         </div>
-        <!-- Find / Filter Input Preceding Reset Filters Button -->
-        <div class="filter-query-box">
-          <span class="filter-query-icon">🔍</span>
-          <input class="filter-query-input" id="filterQueryInput" placeholder="Filter e.g. !status:deferred prio:>3 repo:LCM ... (Enter or type)" oninput="applyFilters()">
-        </div>
         <button class="reset-button" onclick="resetFilters()"><span class="btn-icon">↺</span> Reset Filters</button>
       </section>
+      <div class="action-result-zone" id="actionResultZone" role="status">Status / Action Result: Ready. Select an ITEM, then use ACTIONS.</div>
 
       <!-- Status Rail (5 Focused Lifecycle States) -->
       <nav class="status-rail" aria-label="Visible proposal statuses">
@@ -1083,15 +1081,17 @@
         </div>
         <span class="panel-kicker" id="matchCounter">0 results / CRP ID order</span>
       </div>
+      <div class="selected-item-lifecycle" id="selectedItemLifecycle">
+        <span class="selected-item-lifecycle-label">ITEM Lifecycle</span>
+        <span class="selected-item-lifecycle-empty">Select an ITEM to view lifecycle.</span>
+      </div>
       <div class="proposal-table-container">
         <table class="proposal-table">
           <thead>
             <tr>
-              <th style="width: 38px; text-align: center;">
-                <input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll(this.checked)" title="Select all visible proposals">
-              </th>
               <th style="min-width: 220px;">Proposal</th>
-              <!-- Headline Elements with Dropdown Filters -->
+              <th class="cohort-column">Cohort</th>
+              <!-- Target-oriented proposal index filters -->
               <th style="width: 110px;">
                 <div class="th-content">
                   <span>Disposition</span>
@@ -1140,19 +1140,6 @@
                   </select>
                 </div>
               </th>
-              <th style="width: 105px;">
-                <div class="th-content">
-                  <span>Switches</span>
-                  <select class="th-filter-select" id="thSwitchFilter" onchange="applyFilters()" title="Filter by Active Internal Flow Switch">
-                    <option value="">All</option>
-                    <option value="doit">-DOIT</option>
-                    <option value="mintest">-MinTests</option>
-                    <option value="force">-Force</option>
-                    <option value="held">HELD</option>
-                    <option value="standard">Standard</option>
-                  </select>
-                </div>
-              </th>
               <th style="width: 75px; text-align: center;">
                 <div class="th-content" style="justify-content: center;">
                   <span>Prio</span>
@@ -1172,8 +1159,8 @@
                   </select>
                 </div>
               </th>
-              <th style="min-width: 170px;">Execution Evidence</th>
-              <th style="width: 75px; text-align: center;" title="Show Actions Menu">SHOW</th>
+              <th class="evidence-column">Execution Evidence</th>
+              <th style="width: 75px; text-align: center;" title="Target Actions Menu">ACTIONS</th>
             </tr>
           </thead>
           <tbody id="proposalRows">
@@ -1183,129 +1170,10 @@
       </div>
     </section>
 
-    <!-- Lower Workspace: Execution Ledger & Selection/Bulk Actions -->
-    <div class="lower-workspace">
-      <!-- Execution Ledger / Step Timeline (7 Authoritative Milestones) -->
-      <section class="panel">
-        <div class="panel-heading">
-          <div>
-            <span class="panel-kicker">Execution Ledger</span>
-            <h2 id="timelineProposalTitle">Select a proposal to view lifecycle progression</h2>
-          </div>
-          <span class="panel-kicker" id="timelineDepth">Depth: Focused verification</span>
-        </div>
-        <div class="timeline" id="lifecycleTimeline">
-          <div class="step" id="step-0"><span class="step-dot"></span><span class="step-name">Suggested</span><span class="step-note">idea / intake</span></div>
-          <div class="timeline-action" id="action-scope"><span class="action-pill">scope</span><span class="action-arrow">→</span></div>
-          <div class="step" id="step-1"><span class="step-dot"></span><span class="step-name">Scoped</span><span class="step-note">repo / app bound</span></div>
-          <div class="timeline-action" id="action-approve"><span class="action-pill">approve / proceed</span><span class="action-arrow">→</span></div>
-          <div class="step" id="step-2"><span class="step-dot"></span><span class="step-name">Decided</span><span class="step-note">plan ratified</span></div>
-          <div class="timeline-action" id="action-start"><span class="action-pill">do / proceed</span><span class="action-arrow">→</span></div>
-          <div class="step" id="step-3"><span class="step-dot"></span><span class="step-name">In Progress</span><span class="step-note">active flow</span></div>
-          <div class="timeline-action" id="action-verify"><span class="action-pill">verify (bcr)</span><span class="action-arrow">→</span></div>
-          <div class="step" id="step-4"><span class="step-dot"></span><span class="step-name">Verified</span><span class="step-note">tests passed</span></div>
-          <div class="timeline-action" id="action-commit"><span class="action-pill">commit / complete</span><span class="action-arrow">→</span></div>
-          <div class="step" id="step-5"><span class="step-dot"></span><span class="step-name">Committed</span><span class="step-note">local commit</span></div>
-          <div class="timeline-action" id="action-push"><span class="action-pill">publish / push</span><span class="action-arrow">→</span></div>
-          <div class="step" id="step-6"><span class="step-dot"></span><span class="step-name">Published</span><span class="step-note">remote synced</span></div>
-        </div>
-
-        <!-- Active Proposal Internal Switches Strip -->
-        <div class="timeline-switches" id="timelineSwitchesStrip">
-          <span class="timeline-switches-label">Internal Flow Switches on Active Item:</span>
-          <div class="timeline-switch-badges" id="timelineSwitchBadges">
-            <span class="sw-badge" id="badgeDoit">⚡ -DOIT Mode</span>
-            <span class="sw-badge" id="badgeMinTests">🧪 -MinimalTests</span>
-            <span class="sw-badge" id="badgeGate2">👁️ Gate 2 Diff Review Required</span>
-          </div>
-        </div>
-      </section>
-
-      <!-- Selection and Bulk Actions Panel (Ample Room for Bulk Actions) -->
-      <section class="panel selection-panel">
-        <div class="panel-heading">
-          <div>
-            <span class="panel-kicker">Selection and Bulk Work</span>
-            <h2 id="bulkSelectionTitle">0 Selected Proposals</h2>
-          </div>
-          <span class="panel-kicker">Actions validate state before execution</span>
-        </div>
-        <div class="selection-body">
-          <!-- Left: Selected Items List -->
-          <div class="selection-list">
-            <div class="selection-list-header">
-              <strong>Selected Items</strong>
-              <span class="proposal-id" id="bulkScopeTag">Bulk scope</span>
-            </div>
-            <div id="selectedItemsContainer">
-              <p style="padding: 16px; color: var(--muted); font-size: 13px;">No proposals checked. Select items using checkboxes in the table above.</p>
-            </div>
-          </div>
-
-          <!-- Right: Bulk Actions (Given more room) -->
-          <div class="bulk-actions-area">
-            <span class="panel-kicker">Bulk Actions</span>
-            <h3>Execute Action on Selected Proposals</h3>
-            <p id="bulkSummaryText">Select one or more proposals to activate bulk operations. Incompatible actions are marked with passive colors; clicking them allows selecting an authority-overriding switch.</p>
-            <div id="reviewCohortPreview" style="margin: 10px 0; padding: 9px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); font-size: 11.5px;"></div>
-            <button class="bulk-btn" type="button" onclick="previewDefaultReviewCohort()" style="margin-bottom: 10px;">
-              <span class="btn-icon">🔎</span> <span>Preview Default BCR Cohort</span>
-            </button>
-            <div class="bulk-action-grid" style="margin-bottom: 10px;">
-              <button class="bulk-btn" type="button" onclick="manageReviewCohort('create')"><span class="btn-icon">➕</span> <span>Create COH from Selection</span></button>
-              <button class="bulk-btn" type="button" onclick="manageReviewCohort('add')"><span class="btn-icon">↪</span> <span>Add Selection to COH</span></button>
-              <button class="bulk-btn" type="button" onclick="manageReviewCohort('remove')"><span class="btn-icon">⊖</span> <span>Exclude Selection from COH</span></button>
-              <button class="bulk-btn" type="button" onclick="manageReviewCohort('hold')"><span class="btn-icon">⏸️</span> <span>Hold Active COH</span></button>
-              <button class="bulk-btn" type="button" onclick="manageReviewCohort('reopen')"><span class="btn-icon">↩️</span> <span>ReOpen Held COH</span></button>
-              <button class="bulk-btn" type="button" onclick="manageReviewCohort('close')"><span class="btn-icon">✕</span> <span>Close Active COH</span></button>
-            </div>
-
-            <div class="bulk-action-grid">
-              <button class="bulk-btn" id="btnBulkDo" onclick="handleBulkAction('do')">
-                <span class="btn-icon">▶️</span> <span>Start or Resume (Do)</span>
-              </button>
-              <button class="bulk-btn" id="btnBulkProceed" onclick="handleBulkAction('proceed')">
-                <span class="btn-icon">⚡</span> <span>Proceed</span>
-              </button>
-              <button class="bulk-btn" id="btnBulkReview" onclick="handleBulkAction('bcr')">
-                <span class="btn-icon">🔍</span> <span>Open Review</span>
-              </button>
-              <button class="bulk-btn" id="btnBulkReviewed" onclick="handleBulkAction('reviewed')">
-                <span class="btn-icon">✅</span> <span>Reviewed (Accept Review)</span>
-              </button>
-              <button class="bulk-btn" id="btnBulkHold" onclick="handleBulkAction('hold')">
-                <span class="btn-icon">⏸️</span> <span>Hold with Reason</span>
-              </button>
-              <button class="bulk-btn" id="btnBulkReopen" onclick="handleBulkAction('reopen')">
-                <span class="btn-icon">↩️</span> <span>ReOpen Held</span>
-              </button>
-              <button class="bulk-btn" id="btnBulkComplete" onclick="handleBulkAction('complete')">
-                <span class="btn-icon">✅</span> <span>Complete</span>
-              </button>
-              <button class="bulk-btn" id="btnBulkCommit" onclick="handleBulkAction('commit')">
-                <span class="btn-icon">📦</span> <span>Commit</span>
-              </button>
-              <button class="bulk-btn" id="btnBulkPush" onclick="handleBulkAction('push')">
-                <span class="btn-icon">🚀</span> <span>Push</span>
-              </button>
-              <button class="bulk-btn" id="btnBulkDelete" onclick="handleBulkAction('delete')">
-                <span class="btn-icon">🗑️</span> <span>Cancel / Delete</span>
-              </button>
-              <button class="bulk-btn" id="btnBulkPurgeTemp" onclick="handleBulkAction('purge_temp')" style="grid-column: span 3;">
-                <span class="btn-icon">🧹</span> <span>Purge Temp & Scratch</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Footer Status Line -->
-      <footer class="footer">
-        <span>Compilation Timestamp: <strong>{{COMPILE_DATE}}</strong> — Constructed by <code>Show-LcmControl.ps1 {{HUB_VERSION}}</code></span>
-        <span>Active Baseline: <code>{{LCM_BASELINE}}</code></span>
-      </footer>
-    </div>
-  </main>
+    <footer class="footer">
+      <span>Compilation Timestamp: <strong>{{COMPILE_DATE}}</strong> — Constructed by <code>Show-LcmControl.ps1 {{HUB_VERSION}}</code></span>
+      <span>Active Baseline: <code>{{LCM_BASELINE}}</code></span>
+    </footer>  </main>
 
   <!-- Authority Override Modal ("Switches to Hell") -->
   <div class="modal" id="overrideModal">
@@ -1388,6 +1256,70 @@
     </div>
   </div>
 
+  <div class="modal" id="targetActionModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <strong id="targetActionModalTitle">Target Action</strong>
+        <button class="mini-action" onclick="closeModal('targetActionModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <p id="targetActionModalDescription" style="margin-top:0;"></p>
+        <label id="targetActionSuccessorLabel" style="display:none;">
+          Successor CRP ID
+          <input id="targetActionSuccessorId" type="number" min="1" step="1" style="width:100%; margin-top:6px; padding:6px; border:1px solid var(--line); border-radius:4px;">
+        </label>
+        <label style="display:block; margin-top:10px;">
+          <span id="targetActionReasonLabel">Reason</span>
+          <textarea id="targetActionReason" rows="3" style="width:100%; margin-top:6px; padding:6px; border:1px solid var(--line); border-radius:4px;"></textarea>
+        </label>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn modal-btn-cancel" onclick="closeModal('targetActionModal')">Cancel</button>
+        <button class="modal-btn modal-btn-primary" onclick="confirmTargetActionModal()">Confirm Target Action</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="cohortMembershipModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <strong id="cohortMembershipModalTitle">Cohort Membership</strong>
+        <button class="mini-action" onclick="closeModal('cohortMembershipModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <p id="cohortMembershipModalDescription" style="margin-top:0;"></p>
+        <label id="cohortMembershipTargetLabel" style="display:none; margin-bottom:10px;">
+          Active Cohort
+          <input id="cohortMembershipTarget" type="text" readonly style="width:100%; margin-top:6px; padding:6px; border:1px solid var(--line); border-radius:4px; background:var(--surface-alt);" aria-label="Active review cohort">
+        </label>
+        <label>
+          Proposal IDs
+          <input id="cohortMembershipIds" type="text" inputmode="numeric" placeholder="266" style="width:100%; margin-top:6px; padding:6px; border:1px solid var(--line); border-radius:4px;">
+        </label>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn modal-btn-cancel" onclick="closeModal('cohortMembershipModal')">Cancel</button>
+        <button class="modal-btn modal-btn-primary" onclick="confirmCohortMembershipModal()">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="maintenanceConfirmModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <strong>Confirm Workspace Maintenance</strong>
+        <button class="mini-action" onclick="closeModal('maintenanceConfirmModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <p style="margin-top:0;">Maintenance is workspace-wide hygiene and does not act on the current ITEM. Confirm to execute it.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn modal-btn-cancel" onclick="closeModal('maintenanceConfirmModal')">Cancel</button>
+        <button class="modal-btn modal-btn-primary" onclick="confirmWorkspaceMaintenance()">Run Maintenance</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Dates Ledger Modal (Max Date Top, Timestamp Column) -->
   <div class="modal" id="datesModal">
     <div class="modal-card" style="max-width: 1200px; width: 95%;">
@@ -1462,6 +1394,7 @@
     "use strict";
 
     const DAEMON_URL = "http://127.0.0.1:9876";
+    const IS_RENDERED_CONTROL_HUB = typeof RAW_PROPOSALS !== "undefined" && RAW_PROPOSALS !== null;
 
     // -------------------------------------------------------------------------
     // Session Lifetime & Conflict Prevention Engine
@@ -1528,6 +1461,7 @@
     let activeLog = (typeof RAW_ACTIVE_LOG !== "undefined" && RAW_ACTIVE_LOG) ? RAW_ACTIVE_LOG : "";
 
     let selectedIds = new Set();
+    let activeItemTarget = "";
     let activeRailFilter = "open";
     let activeSort = "id-desc"; // Highest CRP first by default (e.g. 211 at top)
     let pendingOverrideAction = null;
@@ -1567,6 +1501,45 @@
 
     function getLifecycleState(p) {
       return String(p.state || "").toLowerCase();
+    }
+
+    function getSelectedItemLifecycleMarkup(p) {
+      const state = getLifecycleState(p);
+      const stages = [
+        { key: "suggested", label: "Suggested" },
+        { key: "in_progress", label: "In Progress" },
+        { key: "verified", label: "Verified" },
+        { key: "completed", label: "Completed" },
+        { key: "pushed", label: "Published" }
+      ];
+      const activeIndex = state === "in_review" ? 2 : stages.findIndex(stage => stage.key === state);
+      const labels = ["do", "verify", "BCR", "push"];
+      return `<div class="lifecycle-strip" title="Lifecycle actions are available through ACTIONS only">${stages.map((stage, index) => {
+        const className = index < activeIndex ? "done" : index === activeIndex ? "current" : "";
+        const node = `<span class="lifecycle-node ${className}">${stage.label}</span>`;
+        const arrow = index < labels.length ? `<span class="lifecycle-arrow">—${labels[index]}→</span>` : "";
+        return node + arrow;
+      }).join("")}</div>`;
+    }
+
+    function renderSelectedItemLifecycle() {
+      const container = $("selectedItemLifecycle");
+      if (!container) return;
+      const target = getActiveItemTarget();
+      if (!target) {
+        container.innerHTML = '<span class="selected-item-lifecycle-label">ITEM Lifecycle</span><span class="selected-item-lifecycle-empty">Select an ITEM to view lifecycle.</span>';
+        return;
+      }
+      if (target.kind === "CRP") {
+        const tag = target.item.crp_id || target.item.cr_id || `CRP-${target.item.id}`;
+        container.innerHTML = `<span class="selected-item-lifecycle-label">${esc(tag)}</span>${getSelectedItemLifecycleMarkup(target.item)}`;
+        return;
+      }
+      const cohort = target.item;
+      const members = (cohort.proposal_ids || []).map(Number).map(id => (proposalsData.proposals || []).find(p => Number(p.id) === id)).filter(Boolean);
+      const representative = members.find(p => getLifecycleState(p) === "in_review") || members[0];
+      const status = representative ? getSelectedItemLifecycleMarkup(representative) : '<span class="selected-item-lifecycle-empty">No cohort members are available.</span>';
+      container.innerHTML = `<span class="selected-item-lifecycle-label">${esc(cohort.id)} lifecycle</span>${status}`;
     }
 
     function isBugProposal(p) {
@@ -1621,10 +1594,17 @@
 
     // Initialize Hub
     document.addEventListener("DOMContentLoaded", () => {
+      if (!IS_RENDERED_CONTROL_HUB) {
+        $("templateSafetyNotice").hidden = false;
+        setActionResult("Developer template is not executable. Render and open data\\artifacts\\CM_CONTROL_HUB.html; no daemon command was sent.", "error");
+        return;
+      }
       populateScopeFilter();
       populateCohortFilter();
+      populateItemTargets();
       calculateStatusCounts();
       renderTable();
+      renderSelectedItemLifecycle();
       updateDaemonStatus();
 
       // Close dropdowns on outside click
@@ -1676,6 +1656,8 @@
             proposalsData = fresh;
             populateScopeFilter();
             populateCohortFilter();
+            populateItemTargets();
+            reconcileActiveItemTarget();
           }
         }
       } catch (err) {
@@ -1685,6 +1667,7 @@
       renderTable();
       renderSelectionPanel();
       renderReviewCohortPreview();
+      renderSelectedItemLifecycle();
       updateDaemonStatus();
     }
 
@@ -1704,6 +1687,343 @@
         (cohort.proposal_ids || []).map(Number).includes(id)
       );
     }
+
+    function populateItemTargets() {
+      const select = $("itemTargetSelect");
+      if (!select) return;
+      const selected = activeItemTarget || select.value;
+      // ITEM targets intentionally use the complete ledger, never queue filters.
+      const crps = [...(proposalsData.proposals || [])].sort((a, b) => Number(b.id) - Number(a.id));
+      const cohorts = [...(proposalsData.review_cohorts || [])].sort((a, b) => String(a.id).localeCompare(String(b.id)));
+      select.innerHTML = '<option value="">Select CRP or COH</option>' +
+        '<optgroup label="CRP targets">' + crps.map(p => `<option value="CRP:${Number(p.id)}">${esc(p.crp_id || p.cr_id || `CRP-${p.id}`)} — ${esc(p.title || "")}</option>`).join("") + '</optgroup>' +
+        '<optgroup label="COH targets">' + cohorts.map(c => {
+          const members = (c.proposal_ids || []).map(Number);
+          const head = Number(c.prime_proposal_id || members[0] || 0);
+          return `<option value="COH:${esc(c.id)}">${esc(c.id)} — HEAD #${head} · ${members.length} member${members.length === 1 ? "" : "s"} (${esc(String(c.state || "open").toUpperCase())})</option>`;
+        }).join("") + '</optgroup>';
+      if ([...select.options].some(option => option.value === selected)) select.value = selected;
+    }
+
+    function selectCreatedCohortTarget(cohortId) {
+      const available = (proposalsData.review_cohorts || []).some(cohort => String(cohort.id) === cohortId);
+      if (!available) {
+        setActionResult(`Cohort ${cohortId} was created, but is not yet present in the refreshed ledger. Use Refresh to retry.`, "error");
+        return;
+      }
+      selectItemTarget(`COH:${cohortId}`);
+      setActionResult(`Cohort ${cohortId} created and selected. ITEM targets remain available independently of Work Queue filters.`, "success");
+    }
+
+    function selectItemTarget(value) {
+      activeItemTarget = value || "";
+      const select = $("itemTargetSelect");
+      if (select && select.value !== activeItemTarget) select.value = activeItemTarget;
+      const target = getActiveItemTarget();
+      if (target && target.kind === "CRP") lastInspectedProposalId = target.item.id;
+      updateItemActionAffordance(target);
+      updateInternalSwitchesDisplay(target && target.kind === "CRP" ? target.item : null);
+      renderSelectedItemLifecycle();
+    }
+
+    function updateItemActionAffordance(target) {
+      const actionSelect = $("itemActionSelect");
+      const label = $("itemActionLabel");
+      if (!actionSelect || !label) return;
+      actionSelect.disabled = !target;
+      actionSelect.options[0].text = target ? `Actions for ${getTargetActionLabel(target)}` : "Select ITEM first";
+      label.innerText = target ? `ACTIONS: ${target.kind}` : "ACTIONS:";
+    }
+
+    function dispatchSelectedItemMenuAction(action) {
+      if (!action) return;
+      if (!getActiveItemTarget()) {
+        setActionResult("Select an explicit CRP or COH ITEM before choosing an action; no daemon command was sent.", "error");
+        return;
+      }
+      dispatchTargetAction(action);
+    }
+
+    function getActiveItemTarget() {
+      if (!activeItemTarget) return null;
+      const [kind, rawId] = activeItemTarget.split(":");
+      if (kind === "CRP" && /^\d+$/.test(rawId || "")) {
+        const item = (proposalsData.proposals || []).find(p => String(p.id) === rawId);
+        return item ? { kind, item } : null;
+      }
+      if (kind === "COH" && /^COH-\d+$/.test(rawId || "")) {
+        const item = (proposalsData.review_cohorts || []).find(c => String(c.id) === rawId);
+        return item ? { kind, item } : null;
+      }
+      return null;
+    }
+
+    function reconcileActiveItemTarget() {
+      if (!activeItemTarget || getActiveItemTarget()) return true;
+      const staleTarget = activeItemTarget;
+      activeItemTarget = "";
+      const select = $("itemTargetSelect");
+      if (select) select.value = "";
+      setActionResult(`Target ${staleTarget} is no longer present in the current ledger. It was cleared; no command was sent.`, "error");
+      return false;
+    }
+
+    function validateCurrentProposalTargets(ids) {
+      const currentIds = new Set((proposalsData.proposals || []).map(proposal => String(proposal.id)));
+      const requestedIds = (ids || []).map(id => String(id));
+      const unresolvedIds = requestedIds.filter(id => !/^\d+$/.test(id) || !currentIds.has(id));
+      if (unresolvedIds.length > 0) {
+        setActionResult(`CRP target ${unresolvedIds.join(", ")} is not in the current ledger. Refresh the Hub and select a current CRP; no daemon command was sent.`, "error");
+        return false;
+      }
+      return true;
+    }
+
+    function validateCurrentCohortTarget(cohortId) {
+      const isCurrent = (proposalsData.review_cohorts || []).some(cohort => String(cohort.id) === String(cohortId));
+      if (!isCurrent) {
+        setActionResult(`Cohort target ${cohortId} is not in the current ledger. Refresh the Hub and select a current COH; no daemon command was sent.`, "error");
+      }
+      return isCurrent;
+    }
+
+    function getTargetActionLabel(target) {
+      if (target.kind === "CRP") {
+        return target.item.crp_id || target.item.cr_id || `CRP-${target.item.id}`;
+      }
+      const memberIds = (target.item.proposal_ids || []).map(Number);
+      return `${target.item.id} / all members [${memberIds.join(", ")}]`;
+    }
+
+    function setActionResult(message, kind = "") {
+      const zone = $("actionResultZone");
+      if (!zone) return;
+      zone.className = `action-result-zone ${kind}`.trim();
+      zone.innerText = `Status / Action Result: ${message}`;
+    }
+
+    function confirmWorkspaceMaintenance() {
+      closeModal("maintenanceConfirmModal");
+      runWorkspaceMaintenance();
+    }
+
+    function requestWorkspaceMaintenance() {
+      openModal("maintenanceConfirmModal");
+    }
+
+    function runWorkspaceMaintenance() {
+      const cmd = "pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-WorkspaceMaintenance.ps1";
+      setActionResult("Maintenance confirmed; executing workspace-wide hygiene.", "");
+      executeDaemonCommand(cmd, "Running workspace maintenance...", cmd);
+    }
+
+    function dispatchTargetAction(action) {
+      const target = getActiveItemTarget();
+      if (!target) {
+        reconcileActiveItemTarget();
+        return;
+      }
+      if (!IS_RENDERED_CONTROL_HUB) {
+        setActionResult("Developer template is not executable; no daemon command was sent.", "error");
+        return;
+      }
+      if (target.kind === "COH" && !validateCurrentCohortTarget(target.item.id)) return;
+      if (target.kind === "CRP" && !validateCurrentProposalTargets([target.item.id])) return;
+      const expression = target.kind === "COH" ? target.item.id : String(target.item.id);
+      const targetLabel = getTargetActionLabel(target);
+      if (["force", "immediately", "retire", "supersede"].includes(action)) { openTargetActionModal(action); return; }
+      const cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action ${action} -TargetExpression "${expression}"`;
+      if (target.kind === "COH" && ["do", "proceed", "verify", "bcr", "complete"].includes(action)) {
+        setActionResult(`Cohort gate synchronization is running for ${targetLabel}. The result will list synchronized, already-aligned (no-op), or stopped members; BCR cannot begin if any member stops.`, "");
+      }
+      executeDaemonCommand(cmd, `Applying ${action.toUpperCase()} to ${targetLabel}...`, `Target ITEM: ${targetLabel}\n${cmd}`);
+    }
+
+    function selectTargetAndOpenActions(event, id) {
+      event.stopPropagation();
+      const previousTarget = getActiveItemTarget();
+      selectItemTarget(`CRP:${id}`);
+      const tag = (proposalsData.proposals || []).find(proposal => Number(proposal.id) === Number(id))?.crp_id || `CRP-${id}`;
+      const previousLabel = previousTarget ? getTargetActionLabel(previousTarget) : "no ITEM";
+      setActionResult(`ITEM explicitly switched from ${previousLabel} to ${tag}. Row actions now target ${tag}; select a COH ITEM to act on its full membership.`, "");
+      toggleShowDropdown(event, id);
+    }
+
+    let pendingTargetAction = "";
+    function openTargetActionModal(action) {
+      const target = getActiveItemTarget();
+      if (!target || target.kind !== "CRP") {
+        alert("FIX and terminal actions require one explicit CRP ITEM target.");
+        return;
+      }
+      pendingTargetAction = action;
+      const tag = target.item.crp_id || target.item.cr_id || `CRP-${target.item.id}`;
+      const descriptions = {
+        force: "-Force remains an exception only to interactive Gate 2 visual-review confirmation. It does not waive lifecycle, syntax, readiness, or push checks.",
+        immediately: "-Immediately is a distinct emergency quality-check deferral. It requires a documented reason and uses the selected CRP only.",
+        retire: "Retire changes this CRP to withdrawn and records a required retirement reason.",
+        supersede: "Supersede records the selected CRP as superseded and stores the relationship on both it and its active successor."
+      };
+      $("targetActionModalTitle").innerText = `${action.toUpperCase()}: ${tag}`;
+      $("targetActionModalDescription").innerText = descriptions[action];
+      $("targetActionSuccessorLabel").style.display = action === "supersede" ? "block" : "none";
+      $("targetActionSuccessorId").value = "";
+      $("targetActionReason").value = "";
+      $("targetActionReasonLabel").innerText = action === "force" ? "Optional review note" : "Documented reason";
+      openModal("targetActionModal");
+    }
+
+    function confirmTargetActionModal() {
+      const target = getActiveItemTarget();
+      if (!target || target.kind !== "CRP" || !pendingTargetAction) return;
+      const action = pendingTargetAction;
+      const reason = $("targetActionReason").value.trim();
+      const successor = $("targetActionSuccessorId").value.trim();
+      if (["immediately", "retire"].includes(action) && !reason) { alert(`${action} requires a documented reason.`); return; }
+      if (action === "supersede" && (!/^\d+$/.test(successor) || Number(successor) === Number(target.item.id))) { alert("Supersede requires a distinct numeric successor CRP ID."); return; }
+      closeModal("targetActionModal");
+      pendingTargetAction = "";
+      const id = target.item.id;
+      const safeReason = reason.replace(/"/g, "'");
+      let command = "";
+      if (action === "force") command = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action bcr -TargetExpression "${id}" -Force${safeReason ? ` -Details "${safeReason}"` : ""}`;
+      else if (action === "immediately") command = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action proceed -TargetExpression "${id}" -Immediately -Details "${safeReason}"`;
+      else if (action === "retire") command = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action retire -TargetExpression "${id}" -Details "${safeReason}"`;
+      else command = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action supersede -TargetExpression "${id}" -SuccessorId ${successor}${safeReason ? ` -Details "${safeReason}"` : ""}`;
+      executeDaemonCommand(command, `Applying ${action.toUpperCase()} to CRP-${id}...`, command);
+    }
+
+    function showCohortMembers() {
+      const target = getActiveItemTarget();
+      if (!target || target.kind !== "COH") return;
+      const members = (target.item.proposal_ids || []).map(Number).map(id => {
+        const proposal = (proposalsData.proposals || []).find(p => Number(p.id) === id);
+        return proposal
+          ? `#${id} ${proposal.crp_id || proposal.cr_id || ""} — ${proposal.title || ""} (${getLifecycleState(proposal)})`
+          : `#${id} — missing from proposal ledger`;
+      });
+      const memberIds = (target.item.proposal_ids || []).map(Number);
+      const headId = Number(target.item.prime_proposal_id || memberIds[0] || 0);
+      const labelledMembers = members.map((member, index) =>
+        `${Number(memberIds[index]) === headId ? "HEAD / PRIME" : "MEMBER"} — ${member}`
+      );
+      $("docModalTitle").innerText = `Cohort Head / Prime and Members: ${target.item.id}`;
+      $("docModalBody").innerText = `Head / prime: #${headId}\nMembers (including head): ${memberIds.length}\n\n${labelledMembers.join("\n") || "No members."}`;
+      $("btnEditNotepad").style.display = "none";
+      openModal("docModal");
+    }
+
+    let pendingCohortMembershipAction = null;
+    function openCohortMembershipModal(action, cohortId, defaultIds = "") {
+      const isCreate = action === "create";
+      const isAdd = action === "add";
+      const activeCohorts = [...(proposalsData.review_cohorts || [])]
+        .filter(cohort => String(cohort.state || "").toLowerCase() === "open")
+        .sort((left, right) => String(left.id).localeCompare(String(right.id)));
+      const targetLabel = $("cohortMembershipTargetLabel");
+      const targetSelect = $("cohortMembershipTarget");
+      if (isAdd && activeCohorts.length !== 1) {
+        setActionResult(
+          activeCohorts.length === 0
+            ? "No open review cohort exists. Create a review cohort before adding members."
+            : "More than one open review cohort exists. Resolve the ledger conflict before adding members.",
+          "error"
+        );
+        return;
+      }
+      targetLabel.style.display = isAdd ? "block" : "none";
+      targetSelect.value = isAdd ? String(activeCohorts[0].id) : "";
+      pendingCohortMembershipAction = { action, cohortId: isAdd ? targetSelect.value : cohortId };
+      $("cohortMembershipModalTitle").innerText = isCreate ? "Create Head / Prime Cohort" : `${action === "add" ? "Add" : "Remove"} Cohort Members`;
+      $("cohortMembershipModalDescription").innerText = isCreate
+        ? activeCohorts.length === 1
+          ? `Enter the head / prime CRP ID first. Additional member IDs are optional. COH-<prime> may contain only its head. ${activeCohorts[0].id} remains active; the new cohort will be inactive.`
+          : "Enter the head / prime CRP ID first. Additional member IDs are optional. COH-<prime> may contain only its head and becomes active when no other cohort is open."
+        : isAdd
+          ? `The sole open review cohort, ${targetSelect.value}, is resolved automatically. Add the selected CRPs as members; the head / prime remains immutable. Inactive and closed cohorts are not eligible for Add.`
+          : `Remove members from ${cohortId}. Its head / prime cannot be removed.`;
+      $("cohortMembershipIds").value = defaultIds;
+      $("cohortMembershipIds").placeholder = isCreate ? "266" : "267, 268";
+      $("cohortMembershipIds").disabled = false;
+      document.querySelector("#cohortMembershipModal .modal-btn-primary").disabled = false;
+      openModal("cohortMembershipModal");
+      $("cohortMembershipIds").focus();
+    }
+
+    function confirmCohortMembershipModal() {
+      if (!pendingCohortMembershipAction) return;
+      const ids = $("cohortMembershipIds").value.trim();
+      if (!/^\d+(?:\s*,\s*\d+)*$/.test(ids)) {
+        setActionResult("Enter one or more comma-separated numeric proposal IDs.", "error");
+        return;
+      }
+      const { action, cohortId: pendingCohortId } = pendingCohortMembershipAction;
+      const cohortId = pendingCohortId;
+      if (action === "add" && !cohortId) {
+        setActionResult("No open review cohort exists. Create a review cohort before adding members.", "error");
+        return;
+      }
+      pendingCohortMembershipAction = null;
+      closeModal("cohortMembershipModal");
+      const command = action === "create"
+        ? `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action cohort -CohortAction create -TargetExpression "${ids}" -Confirm`
+        : `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action cohort -CohortAction ${action} -CohortId ${cohortId} -TargetExpression "${ids}"${action === "add" ? " -Confirm" : ""}`;
+      const createdCohortId = action === "create" ? `COH-${ids.split(",")[0]}` : "";
+      executeDaemonCommand(
+        command,
+        `${action} cohort membership...`,
+        command,
+        createdCohortId ? () => selectCreatedCohortTarget(createdCohortId) : null
+      );
+    }
+
+    function manageTargetCohort(action) {
+      const target = getActiveItemTarget();
+      if (!target || target.kind !== "COH") return;
+      const ids = (target.item.proposal_ids || []).map(Number);
+      if (action === "preview") { alert(`${target.item.id} preview\nHead / prime: #${target.item.prime_proposal_id || ids[0]}\nMembers (including head): ${ids.map(id => "#" + id).join(", ")}\nChanges remain atomic and use ProposalManager validation.`); return; }
+      if (action !== "close") {
+        openCohortMembershipModal(action, target.item.id);
+        return;
+      }
+      const command = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action cohort -CohortAction ${action} -CohortId ${target.item.id}`;
+      executeDaemonCommand(command, `${action} cohort membership...`, command);
+    }
+
+    function manageCrpCohort(action, id) {
+      const cohort = getProposalCohorts(id)[0];
+      if (action === "create") {
+        openCohortMembershipModal("create", "", String(id));
+        return;
+      }
+      if (action === "add") {
+        openCohortMembershipModal("add", "", String(id));
+        return;
+      }
+      if (!cohort) {
+        setActionResult(`CRP #${id} has no declared cohort. Create one first.`, "error");
+        return;
+      }
+      const command = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action cohort -CohortAction ${action} -CohortId ${cohort.id} -TargetExpression "${id}"${action === "add" ? " -Confirm" : ""}`;
+      executeDaemonCommand(command, `${action} CRP #${id} ${action === "add" ? "to" : "from"} ${cohort.id}...`, command);
+    }
+
+    function dispatchCohortAction(cohortId, action) {
+      if (!validateCurrentCohortTarget(cohortId)) return;
+      selectItemTarget(`COH:${cohortId}`);
+      dispatchTargetAction(action);
+    }
+
+    function manageCohortState(cohortId, action) {
+      if (!validateCurrentCohortTarget(cohortId)) return;
+      selectItemTarget(`COH:${cohortId}`);
+      const command = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action cohort -CohortAction ${action} -CohortId ${cohortId}`;
+      executeDaemonCommand(command, `${action} ${cohortId}...`, command);
+    }
+
+    function retireTarget() { openTargetActionModal("retire"); }
+
+    function supersedeTarget() { openTargetActionModal("supersede"); }
 
     function populateCohortFilter() {
       const select = $("cohortSelect");
@@ -1778,8 +2098,9 @@
             const id = String(cohort.id || cohort.name || "unnamed");
             const state = String(cohort.state || "open").toUpperCase();
             const memberIds = cohort.proposal_ids || cohort.members || [];
+            const headId = Number(cohort.prime_proposal_id || memberIds[0] || 0);
             return `<div class="cohort-card"><strong>${esc(id)}</strong> <span class="cohort-badge">${esc(state)}</span><br>` +
-              `${memberIds.length} member${memberIds.length === 1 ? "" : "s"}: ${memberIds.map(memberId => `#${esc(String(memberId))}`).join(", ")}` +
+              `Head / prime: #${headId}; ${memberIds.length} member${memberIds.length === 1 ? "" : "s"} including head: ${memberIds.map(memberId => `#${esc(String(memberId))}`).join(", ")}` +
               `<div class="cohort-card-actions"><button type="button" onclick="filterByCohort('${esc(id)}')">Show Members</button></div></div>`;
           }).join("")
         : '<div class="cohort-card"><strong>No active or held declared cohort</strong></div>';
@@ -1859,7 +2180,6 @@
       if ($("thStatusFilter")) $("thStatusFilter").value = "";
       if ($("thPlanFilter")) $("thPlanFilter").value = "";
       if ($("thProgressFilter")) $("thProgressFilter").value = "";
-      if ($("thSwitchFilter")) $("thSwitchFilter").value = "";
       if ($("thPrioFilter")) $("thPrioFilter").value = "";
 
       // Clear all selections & synchronize selection and bulk work section
@@ -1889,7 +2209,7 @@
     // -------------------------------------------------------------------------
     // Advanced Query & Column Filtering Engine
     // -------------------------------------------------------------------------
-    function evaluateProposalMatch(p, tokens, scopeVal, cohortVal, thStatus, thPlan, thProg, thPrio, thSwitch) {
+    function evaluateProposalMatch(p, tokens, scopeVal, cohortVal, thStatus, thPlan, thProg, thPrio) {
       const state = String(p.state || "").toLowerCase();
       const prog = String(p.progress_state || "").toLowerCase();
       const vis = getVisibleStatus(p);
@@ -1934,21 +2254,6 @@
       if (thProg && prog !== thProg.toLowerCase()) return false;
       if (thPrio !== "" && prio !== Number(thPrio)) return false;
 
-      // Switch dropdown filter
-      if (thSwitch) {
-        const isBug = isBugProposal(p);
-        const isDoit = isBug || (p.flow_mode === "doit" || p.always_proceed || p.action === "do");
-        const isMinTests = Boolean(p.minimal_tests || p.test_depth === "minimal");
-        const isBypass = Boolean(p.force_commit || p.bypass_review);
-        const isImmediately = p.quality_checks_deferred === true;
-        const isHeld = state === "held";
-
-        if (thSwitch === "doit" && !isDoit) return false;
-        if (thSwitch === "mintest" && !isMinTests) return false;
-        if (thSwitch === "force" && !isBypass) return false;
-        if (thSwitch === "held" && !isHeld) return false;
-        if (thSwitch === "standard" && (isDoit || isMinTests || isBypass || isHeld)) return false;
-      }
 
       // Advanced query tokens (e.g. !status:deferred, prio:>3, repo:LCM, text)
       for (const rawToken of tokens) {
@@ -2007,7 +2312,12 @@
           } else if (k === "cohort") {
             if (!cohortText.includes(v)) return false;
           } else if (k === "id") {
-            if (idStr !== v && !crpTag.includes(v)) return false;
+            const range = v.match(/^(\d+)-(\d+)$/);
+            if (range) {
+              const low = Math.min(Number(range[1]), Number(range[2]));
+              const high = Math.max(Number(range[1]), Number(range[2]));
+              if (Number(p.id) < low || Number(p.id) > high) return false;
+            } else if (idStr !== v && !crpTag.includes(v)) return false;
           } else if (k === "switch") {
             const isBug = isBugProposal(p);
             const isDoit = isBug || (p.flow_mode === "doit" || p.always_proceed || p.action === "do");
@@ -2048,11 +2358,10 @@
       const thStatus = $("thStatusFilter") ? $("thStatusFilter").value : "";
       const thPlan = $("thPlanFilter") ? $("thPlanFilter").value : "";
       const thProg = $("thProgressFilter") ? $("thProgressFilter").value : "";
-      const thSwitch = $("thSwitchFilter") ? $("thSwitchFilter").value : "";
       const thPrio = $("thPrioFilter") ? $("thPrioFilter").value : "";
 
       return (proposalsData.proposals || []).filter(p => {
-        return evaluateProposalMatch(p, tokens, scopeVal, cohortVal, thStatus, thPlan, thProg, thPrio, thSwitch);
+        return evaluateProposalMatch(p, tokens, scopeVal, cohortVal, thStatus, thPlan, thProg, thPrio);
       });
     }
 
@@ -2101,15 +2410,21 @@
         const planStateDetail = getDetailedPlanState(p);
 
         return `
-          <tr class="${isChecked ? "selected" : ""}" id="row-${p.id}" onclick="toggleProposalRowSelection(event, ${p.id})" style="cursor: pointer;">
-            <td style="text-align: center;">
-              <input type="checkbox" onchange="toggleProposalSelection(${p.id}, this.checked)" ${isChecked ? "checked" : ""}>
-            </td>
+          <tr id="row-${p.id}" onclick="selectItemTarget('CRP:${p.id}')" style="cursor: pointer;">
             <td>
               <span class="proposal-id">${crpTag}</span>
               <span class="proposal-title">${esc(p.title)}</span>
               <span class="repo-sub">${esc(p.origin_repo || "LCM_Inventory")}</span>
-              ${getProposalCohorts(p.id).map(cohort => `<span class="cohort-badge" title="Declared cohort membership">${esc(cohort.id || "COH")}</span>`).join("")}
+            </td>
+            <td class="cohort-cell">
+              ${getProposalCohorts(p.id).length
+                ? getProposalCohorts(p.id).map(cohort => {
+                    const memberIds = (cohort.proposal_ids || []).map(Number);
+                    const headId = Number(cohort.prime_proposal_id || memberIds[0] || 0);
+                    const role = Number(p.id) === headId ? "HEAD" : "MEMBER";
+                    return `<span class="cohort-badge" title="${esc(cohort.id || "COH")} head / prime: #${headId}; ${memberIds.length} member${memberIds.length === 1 ? "" : "s"} including head">${esc(cohort.id || "COH")} · ${role}</span>`;
+                  }).join("")
+                : '<span class="cohort-empty" title="No declared cohort membership">—</span>'}
             </td>
             <td>
               <span class="state-badge state-${visStatus}">${visStatus.toUpperCase()}</span>
@@ -2121,50 +2436,49 @@
               <span style="font-size: 11.5px; color: var(--ink);">${esc(progressNote)}</span>
               <span class="repo-sub">${esc(p.status_note || "")}</span>
             </td>
-            <td>
-              ${(() => {
-                const pills = [];
-                const isBug = isBugProposal(p);
-                const isDoit = isBug || (p.flow_mode === "doit" || p.always_proceed || p.action === "do");
-                const isHeld = getLifecycleState(p) === "held";
-                const isMinTests = Boolean(p.minimal_tests || p.test_depth === "minimal");
-                const isBypass = Boolean(p.force_commit || p.bypass_review);
-                const isImmediately = p.quality_checks_deferred === true;
-
-                if (isHeld) {
-                  pills.push(`<span class="pill-switch-held" title="Work held: Flow switches paused">⏸️ HELD</span>`);
-                } else {
-                  if (isDoit) pills.push(`<span class="pill-switch-doit" title="-DOIT switch active: Continuous flow past Gate 1">⚡ -DOIT</span>`);
-                  if (isMinTests) pills.push(`<span class="pill-switch-tests" title="-MinimalTests switch active: Fast single-cycle DAG">🧪 -Min</span>`);
-                  if (isBypass) pills.push(`<span class="pill-switch-doit" style="background:#fee2e2;color:#991b1b;border-color:#ef4444;" title="-Force switch active: Gate 2 visual review bypass">🚨 -Force</span>`);
-                  if (isImmediately) pills.push(`<span class="pill-switch-doit" style="background:#fef3c7;color:#92400e;border-color:#f59e0b;" title="-Immediately emergency recovery: quality checks deferred until BCR handoff">⚠ -Immediately</span>`);
-                }
-                if (pills.length === 0) {
-                  pills.push(`<span class="pill-switch-std" title="Standard Gate 1 & Gate 2 flow">⚙️ Std</span>`);
-                }
-                return pills.join(" ");
-              })()}
-            </td>
             <td style="text-align: center;">
               <span class="prio-badge" id="prio-badge-${p.id}" onclick="openPrioEditor(event, ${p.id}, ${prio})" title="Click to change priority">${prio}</span>
             </td>
-            <td>
-              <span class="repo-sub" style="color: var(--ink);">${esc(evidence)}</span>
+            <td class="evidence-cell" title="${esc(evidence)}">
+              <span class="repo-sub" style="color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${esc(evidence)}</span>
             </td>
             <td class="action-cell">
-              <button class="mini-action wand-btn" onclick="toggleShowDropdown(event, ${p.id})" title="Show actions for #${p.id}">
-                <span>🧙‍♂️</span><span class="dropdown-caret">▾</span>
+              <button class="mini-action wand-btn" onclick="selectTargetAndOpenActions(event, ${p.id})" title="Explicitly switch ITEM to this CRP, then open its ACTIONS">
+                <span aria-hidden="true">🧙</span><span class="dropdown-caret">▾</span>
               </button>
               <div class="show-dropdown-menu" id="dropdown-${p.id}">
-                <div class="show-dropdown-title">Lifecycle Actions (#${p.id})</div>
-                <button class="show-dropdown-item" onclick="dispatchStandardAction('proceed', [${p.id}], '')"><span class="btn-icon">⚡</span> Proceed</button>
-                <button class="show-dropdown-item" onclick="dispatchStandardAction('do', [${p.id}], '')"><span class="btn-icon">▶️</span> Do (-DOIT)</button>
-                <button class="show-dropdown-item" onclick="dispatchStandardAction('bcr', [${p.id}], '')"><span class="btn-icon">🔍</span> Open Review (BC5)</button>
-                <button class="show-dropdown-item" onclick="dispatchStandardAction('reviewed', [${p.id}], '')"><span class="btn-icon">✅</span> Accept Review</button>
+                <div class="show-dropdown-title">ACTIONS: ITEM ${crpTag}</div>
+                <div class="show-dropdown-title">This wizard explicitly selects ${crpTag}. Select a COH in ITEM to act on all cohort members.</div>
+                <div class="show-dropdown-title">Lifecycle</div>
+                <button class="show-dropdown-item" onclick="dispatchTargetAction('proceed')"><span class="btn-icon">⚡</span> Proceed ITEM</button>
+                <button class="show-dropdown-item" onclick="dispatchTargetAction('do')"><span class="btn-icon">▶️</span> Do ITEM (-DOIT)</button>
+                <button class="show-dropdown-item" onclick="dispatchTargetAction('bcr')"><span class="btn-icon">🔍</span> Open Review for ITEM (BC5)</button>
+                <button class="show-dropdown-item" onclick="dispatchStandardAction('reviewed', [getActiveItemTarget()?.item?.id], '')"><span class="btn-icon">✅</span> Accept Review (CRP ITEM only)</button>
                 ${getLifecycleState(p) === "held"
-                  ? `<button class="show-dropdown-item" onclick="dispatchStandardAction('reopen', [${p.id}], '')"><span class="btn-icon">↩️</span> ReOpen</button>`
+                  ? `<button class="show-dropdown-item" onclick="dispatchTargetAction('reopen')"><span class="btn-icon">↩️</span> ReOpen ITEM</button>`
                   : ""}
-                <button class="show-dropdown-item" onclick="openHoldModal([${p.id}])"><span class="btn-icon">⏸️</span> Hold with Reason</button>
+                <button class="show-dropdown-item" onclick="dispatchTargetAction('hold')"><span class="btn-icon">⏸️</span> Hold ITEM</button>
+                <div style="border-top: 1px solid var(--line); margin: 4px 0;"></div>
+                <div class="show-dropdown-title">Flow Switches</div>
+                <button class="show-dropdown-item" onclick="toggleActiveProposalDoit()"><span class="btn-icon">⚡</span> Toggle Flow Gate (-DOIT)</button>
+                <button class="show-dropdown-item" onclick="toggleActiveProposalMinimalTests()"><span class="btn-icon">🧪</span> Toggle Minimal Tests</button>
+                <button class="show-dropdown-item" onclick="toggleLcmMode()"><span class="btn-icon">⚙️</span> Toggle LCM Mode</button>
+                <button class="show-dropdown-item" onclick="toggleTestingMode()"><span class="btn-icon">🧪</span> Toggle Testing Mode</button>
+                <button class="show-dropdown-item" onclick="toggleGranularity()"><span class="btn-icon">↔️</span> Toggle Review Granularity</button>
+                <div style="border-top: 1px solid var(--line); margin: 4px 0;"></div>
+                <div class="show-dropdown-title" style="color:var(--red);">FIX</div>
+                <button class="show-dropdown-item" onclick="openTargetActionModal('force')"><span class="btn-icon">🚨</span> Force (Gate 2 only)</button>
+                <button class="show-dropdown-item" onclick="openTargetActionModal('immediately')"><span class="btn-icon">⚠️</span> Immediately (quality deferral)</button>
+                <div style="border-top: 1px solid var(--line); margin: 4px 0;"></div>
+                <div class="show-dropdown-title">Terminal Disposition</div>
+                <button class="show-dropdown-item" onclick="openTargetActionModal('retire')"><span class="btn-icon">🗄️</span> Retire</button>
+                <button class="show-dropdown-item" onclick="openTargetActionModal('supersede')"><span class="btn-icon">⇄</span> Supersede…</button>
+                <div style="border-top: 1px solid var(--line); margin: 4px 0;"></div>
+                <div class="show-dropdown-title">Cohort Head / Member Management</div>
+                <button class="show-dropdown-item" onclick="manageCrpCohort('create', ${p.id})"><span class="btn-icon">➕</span> Create Head Cohort</button>
+                <button class="show-dropdown-item" onclick="manageCrpCohort('add', ${p.id})"><span class="btn-icon">↪</span> Add as Cohort Member</button>
+                <button class="show-dropdown-item" onclick="manageCrpCohort('remove', ${p.id})"><span class="btn-icon">⊖</span> Remove Cohort Member</button>
+                ${getProposalCohorts(p.id).map(cohort => `<button class="show-dropdown-item" onclick="dispatchCohortAction('${esc(cohort.id)}', 'bcr')"><span class="btn-icon">🔍</span> BCR ${esc(cohort.id)}</button><button class="show-dropdown-item" onclick="dispatchCohortAction('${esc(cohort.id)}', 'hold')"><span class="btn-icon">⏸️</span> Hold ${esc(cohort.id)}</button><button class="show-dropdown-item" onclick="dispatchCohortAction('${esc(cohort.id)}', 'reopen')"><span class="btn-icon">↩️</span> Reopen ${esc(cohort.id)}</button><button class="show-dropdown-item" onclick="manageCohortState('${esc(cohort.id)}', 'close')"><span class="btn-icon">✕</span> Close ${esc(cohort.id)}</button>`).join("")}
                 <div style="border-top: 1px solid var(--line); margin: 4px 0;"></div>
                 <div class="show-dropdown-title">Documents (#${p.id})</div>
                 <button class="show-dropdown-item" onclick="showProposalSpec(${p.id})"><span class="btn-icon">📄</span> Show Specification</button>
@@ -2385,7 +2699,7 @@
 
       if ($("ledDoit")) {
         $("ledDoit").className = isDoit ? "switch-led switch-led-active" : "switch-led switch-led-idle";
-        $("switchValDoit").innerText = isDoit ? "Continuous Flow" : "Standard Gating";
+        $("switchValDoit").innerText = isDoit ? "DOIT" : "DO";
       }
       if ($("ledMinimalTests")) {
         $("ledMinimalTests").className = isMinTests ? "switch-led switch-led-active" : "switch-led switch-led-idle";
@@ -2437,16 +2751,8 @@
     }
 
     function getActiveInspectedProposal() {
-      if (lastInspectedProposalId) {
-        const found = (proposalsData.proposals || []).find(x => x.id === lastInspectedProposalId);
-        if (found) return found;
-      }
-      const firstId = selectedIds.size > 0 ? Array.from(selectedIds)[0] : null;
-      if (firstId) {
-        return (proposalsData.proposals || []).find(x => x.id === firstId);
-      }
-      const visible = getFilteredProposals();
-      return (visible && visible.length > 0) ? visible[0] : null;
+      const target = getActiveItemTarget();
+      return target && target.kind === "CRP" ? target.item : null;
     }
 
     function toggleActiveProposalDoit() {
@@ -2522,6 +2828,7 @@
     }
 
     function updateTimelineDisplay(targetProposal) {
+      if (!$("timelineProposalTitle") || !$("lifecycleTimeline")) return;
       let p = targetProposal || getActiveInspectedProposal();
 
       if (!p) {
@@ -2561,6 +2868,7 @@
     // Selection and Bulk Actions Panel
     // -------------------------------------------------------------------------
     function renderSelectionPanel() {
+      if (!$("bulkSelectionTitle") || !$("selectedItemsContainer")) return;
       const count = selectedIds.size;
       $("bulkSelectionTitle").innerText = `${count} Selected Proposal${count === 1 ? "" : "s"}`;
       $("bulkScopeTag").innerText = count > 0 ? `Bulk Scope: ${count} CRPs` : "Bulk Scope";
@@ -2702,16 +3010,17 @@
 
     function handleSingleItemAction(id, action) {
       if (!action) return;
+      selectItemTarget(`CRP:${id}`);
       if (action === "hold") {
-        openHoldModal([id]);
+        dispatchTargetAction("hold");
         return;
       }
 
-      const p = (proposalsData.proposals || []).find(x => x.id === id);
+      const p = getActiveItemTarget()?.item;
       if (!isLifecycleActionAvailable(p, action)) {
         requestAuthorityOverride(action, [id]);
       } else {
-        dispatchStandardAction(action, [id], "");
+        dispatchTargetAction(action);
       }
     }
 
@@ -2733,9 +3042,27 @@
     }
 
     function dispatchStandardAction(action, ids, overrideSwitch) {
+      if (!IS_RENDERED_CONTROL_HUB) {
+        setActionResult("Developer template is not executable; no daemon command was sent.", "error");
+        return;
+      }
+      if (!validateCurrentProposalTargets(ids)) return;
       const idStr = ids.join(",");
       const sw = overrideSwitch ? " " + overrideSwitch : "";
       let cmd = "";
+
+      if (["reviewed", "complete"].includes(action)) {
+        const requiresBcr = ids.some(id => {
+          const proposal = (proposalsData.proposals || []).find(p => p.id === id);
+          return proposal && getLifecycleState(proposal) !== "in_review";
+        });
+        if (requiresBcr) {
+          const bcrCommand = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action bcr -TargetExpression "${idStr}"${ids.length > 1 ? " -Confirm" : ""}`;
+          setActionResult("BCR is required before review-gate continuation. Launching BCR; continue only after its recorded disposition.", "");
+          executeDaemonCommand(bcrCommand, `Running required BCR for #${idStr} before gate continuation...`, bcrCommand);
+          return;
+        }
+      }
 
       if (["reviewed", "complete"].includes(action) && ids.length !== 1) {
         alert(`${action.toUpperCase()} requires exactly one proposal. Select one proposal and try again.`);
@@ -2846,13 +3173,18 @@
       await refreshHubData();
     }
 
-    async function executeDaemonCommand(commandStr, userTitle, userDetails) {
+    async function executeDaemonCommand(commandStr, userTitle, userDetails, onSuccess = null) {
+      if (!IS_RENDERED_CONTROL_HUB) {
+        setActionResult("Developer template is not executable; no daemon command was sent.", "error");
+        return;
+      }
       if (isCommandExecuting) {
         alert("Another operation is already running. Click 'Abort' on the busy overlay if you wish to cancel it.");
         return;
       }
       isCommandExecuting = true;
       currentActiveAbortController = new AbortController();
+      setActionResult(userTitle || "Command dispatched.", "");
       showBusyIndicator(userTitle || "Executing daemon command...", userDetails || commandStr);
       try {
         const res = await fetch(DAEMON_URL + "/execute", {
@@ -2867,6 +3199,7 @@
         if (data.error || data.status === "ERROR" || (data.exitCode !== undefined && data.exitCode !== 0)) {
           hideBusyIndicator();
           const errMsg = data.error || data.stderr || (data.stdout ? data.stdout : "Command exited with code " + data.exitCode);
+          setActionResult(errMsg, "error");
           alert("Execution error:\n" + errMsg);
           return;
         }
@@ -2874,15 +3207,22 @@
         setTimeout(async () => {
           await refreshHubData();
           hideBusyIndicator();
+          if (onSuccess) {
+            onSuccess();
+          } else {
+            setActionResult(data.stdout || `${userTitle || "Command"} completed successfully.`, "success");
+          }
         }, 600);
       } catch (err) {
         isCommandExecuting = false;
         currentActiveAbortController = null;
         hideBusyIndicator();
         if (err.name === "AbortError") {
+          setActionResult("Command aborted by operator.", "error");
           console.log("[LCM HUB] Request aborted cleanly.");
           return;
         }
+        setActionResult("Daemon connection failed: " + err.message, "error");
         alert("Failed to connect to REST Daemon on Port 9876: " + err.message);
       }
     }
@@ -3137,23 +3477,19 @@ ADVANCED SEARCH / FILTER SYNTAX:
 - repo:LCM           : Filter by repository substring
 - id:196             : Filter by proposal ID
 
-TAXONOMY OF ACTIONS:
-1. Show Actions (SHOW column with 🧙‍♂️▾):
-   - Located on each proposal row.
-   - Includes Show Specification, Show Plan, Show Walkthrough, Show Diff / BCR,
-     Show Review Receipt, Show State History, Edit in Notepad++, and Show Repo Docs.
+TARGETED ACTIONS:
+1. ITEM:
+   - Select exactly one CRP or COH. Table filters and visible rows never become an implicit target.
+   - The ACTIONS button on a row sets that CRP as ITEM.
 
-2. CM-Actions (State-Mutating):
-   - Located in the 'Selection and Bulk Actions' panel below the table.
-   - Operates on individual checked items or in bulk across all selected items.
-   - Actions include Do, Proceed, Open Review, Reviewed, Hold with Reason, Complete, Commit, Push, Delete.
+2. ACTIONS:
+   - Lifecycle, documents, cohort membership, Flow Switches, FIX, retirement, and supersession act only on ITEM.
+   - Cohort lifecycle requests are validated for every member before any member changes.
 
-3. Authority-Overriding Switches ("Switches to Hell"):
-   - Actions not normally permitted in an item's current state are rendered in a PASSIVE color.
-   - Clicking a passive action prompts the operator to select an override switch:
-     • -Force          : Authorized exception to interactive visual-review confirmation only
-     • -MinimalTests   : Executes single-cycle minimal tests switch (RULE-LCM-023)
-     • -Immediately    : Emergency quality-check deferral; a single CRP becomes BUG, multi-target cohorts require BUG
+3. FIX:
+   - -Force is a Gate 2 visual-review confirmation exception only.
+   - -Immediately is a separate emergency quality-check deferral with its own documented reason.
+   - Workspace maintenance is separate from ITEM actions.
 
 REST DAEMON BRIDGE:
 - Runs on http://127.0.0.1:9876 to guarantee zero browser sandbox restrictions.`;

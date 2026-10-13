@@ -11,7 +11,7 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $false, Position = 0, HelpMessage = 'Action to perform on proposals or governance settings')]
-    [ValidateSet('do', 'delete', 'defer', 'deferred', 'complete', 'completed', 'suggest', 'suggested', 'granularity', 'mode', 'testing-mode', 'testing', 'minimal-tests', 'doit-mode', 'list', 'progress', 'state', 'reject', 'rejected', 'approve', 'approved', 'bug', 'push', 'pushed', 'verify', 'bcr', 'cohort', 'priority', 'commit', 'committed', 'proceed', 'regression', 'regressions', 'check-regressions', 'generate-regression', 'workon', 'work-on', 'app', 'new-app', 'apps', 'list-apps', 'sync-apps', 'catalog', 'split-docs', 'splitdocs', 'doc', 'docs', 'show-doc', 'purge-bundle', 'hold', 'held', 'resume', 'continue', 'withdraw', 'supersede', 'reopen', 'reset', 'analyze', 'implement', 'operating-mode', 'analysis-mode', 'trip-breaker', 'circuit-breaker', 'reset-breaker')]
+    [ValidateSet('do', 'delete', 'defer', 'deferred', 'complete', 'completed', 'suggest', 'suggested', 'granularity', 'mode', 'testing-mode', 'testing', 'minimal-tests', 'doit-mode', 'list', 'progress', 'state', 'reject', 'rejected', 'approve', 'approved', 'bug', 'push', 'pushed', 'verify', 'bcr', 'cohort', 'priority', 'commit', 'committed', 'proceed', 'regression', 'regressions', 'check-regressions', 'generate-regression', 'workon', 'work-on', 'app', 'new-app', 'apps', 'list-apps', 'sync-apps', 'catalog', 'split-docs', 'splitdocs', 'doc', 'docs', 'show-doc', 'purge-bundle', 'hold', 'held', 'resume', 'continue', 'withdraw', 'retire', 'supersede', 'reopen', 'reset', 'analyze', 'implement', 'operating-mode', 'analysis-mode', 'trip-breaker', 'circuit-breaker', 'reset-breaker')]
     [string]$Action = 'list',
 
     [Parameter(Mandatory = $false, Position = 1, HelpMessage = 'Target proposal expression (e.g. all, #1, 105, 100-105)')]
@@ -83,6 +83,9 @@ param(
     [Parameter(Mandatory = $false, HelpMessage = 'Declared cohort ID (COH-<prime proposal ID>)')]
     [ValidatePattern('^COH-\d+$')]
     [string]$CohortId = '',
+
+    [Parameter(Mandatory = $false, HelpMessage = 'Successor proposal ID required by the supersede action')]
+    [int]$SuccessorId,
 
     [Parameter(Mandatory = $false, HelpMessage = 'Include unreviewed live paths during cohort completion')]
     [switch]$IncludeUnreviewed,
@@ -182,6 +185,14 @@ if ($Immediately) {
         throw '-Immediately requires an explicit target. A single CRP target is reclassified as BUG; a multi-proposal cohort must contain a BUG.'
     }
     Enable-LcmImmediateBugRecovery -Ids @(Resolve-ProposalIdExpression -Expression $TargetExpression) -Reason $Details
+}
+
+if ($TargetExpression -match '^COH-\d+$' -and $Action -in @('do', 'proceed', 'verify', 'push', 'hold', 'reopen', 'withdraw')) {
+    $updated = @(Invoke-LcmCohortLifecycleAction -CohortId $TargetExpression -Action $Action -Details $Details)
+    $memberIds = @($updated | Select-Object -ExpandProperty id)
+    Write-Host "`nApplied '$Action' atomically to cohort ${TargetExpression}: $($memberIds.Count) member(s) affected (#$($memberIds -join ', #'))." -ForegroundColor Cyan
+    Format-ProposalsTable -Proposals $updated
+    return
 }
 
 switch -Regex ($Action) {
@@ -363,8 +374,40 @@ switch -Regex ($Action) {
         Write-Host "Cohort $($cohort.id) is $($cohort.state): #$($cohort.proposal_ids -join ', #')" -ForegroundColor Green
         break
     }
+    '^retire$' {
+        if ([string]::IsNullOrWhiteSpace($TargetExpression)) {
+            throw "TargetExpression is required for action 'retire'."
+        }
+        $targetIds = @(Resolve-ProposalIdExpression -Expression $TargetExpression)
+        if ($targetIds.Count -ne 1) {
+            throw "Retire requires exactly one CRP target."
+        }
+        $updated = Set-LcmProposalRetirement -Id $targetIds[0] -Details $Details
+        Format-ProposalsTable -Proposals @($updated)
+        break
+    }
+    '^supersede$' {
+        if ([string]::IsNullOrWhiteSpace($TargetExpression) -or $SuccessorId -le 0) {
+            throw "Supersede requires one CRP target and -SuccessorId <proposal ID>."
+        }
+        $targetIds = @(Resolve-ProposalIdExpression -Expression $TargetExpression)
+        if ($targetIds.Count -ne 1) {
+            throw "Supersede requires exactly one CRP target."
+        }
+        $updated = Set-LcmProposalSupersession -Id $targetIds[0] -SuccessorId $SuccessorId -Details $Details
+        Format-ProposalsTable -Proposals @($updated)
+        break
+    }
     '^bcr$' {
         $resolution = Get-LcmReviewCohortResolution -Scope $TargetExpression -BaseCommit $BaseCommit
+        $synchronization = $null
+        if (-not [string]::IsNullOrWhiteSpace($resolution.DeclaredCohortId)) {
+            $synchronization = Sync-LcmCohortGateState -CohortId $resolution.DeclaredCohortId -Gate BCR -Details $Details
+            Write-Host ("Cohort gate synchronization for {0}: {1} synchronized, {2} already aligned, {3} stopped." -f `
+                $resolution.DeclaredCohortId, $synchronization.SynchronizedMemberIds.Count, `
+                $synchronization.NoOpMemberIds.Count, $synchronization.StoppedMembers.Count) -ForegroundColor Cyan
+            $resolution = Get-LcmReviewCohortResolution -Scope $TargetExpression -BaseCommit $BaseCommit
+        }
         $receiptPath = Save-LcmReviewCohortReceipt -Resolution $resolution
         Write-Host "`nResolved BCR Cohort ($($resolution.ResolutionKind)):" -ForegroundColor Cyan
         $resolution.Members | Format-Table Identity, Repository, State, Classification -AutoSize
@@ -398,13 +441,26 @@ switch -Regex ($Action) {
                 }
                 if (-not $launchReview) { $reviewArgs.NoLaunch = $true }
                 & (Join-Path $PSScriptRoot 'Invoke-BeyondCompareReview.ps1') @reviewArgs
-                $p = Move-LcmProposalLifecycleState -Id $id -State 'in_review' -Details $Details
-                $updated += $p
             }
         }
 
         foreach ($member in $alreadyInReview) {
             & (Join-Path $PSScriptRoot 'Invoke-BeyondCompareReview.ps1') -RepositoryName $member.Repository -CRP $member.Identity -BaseCommit $BaseCommit
+        }
+
+        $store = Get-ProposalStore
+        foreach ($member in $reviewReady) {
+            $id = $member.Id
+            $p = Move-LcmProposalLifecycleState -Id $id -State 'in_review' -Details $Details -Store $store -SkipPersist `
+                -CohortId $resolution.DeclaredCohortId -Gate BCR -SynchronizationOutcome synchronized
+            $reviewedProposal = @($store.proposals | Where-Object { $_.id -eq $id })[0]
+            $reviewedProposal | Add-Member -NotePropertyName 'bcr_initiated_at' -NotePropertyValue (Get-Date).ToString('yyyy-MM-dd HH:mm:ss') -Force
+            $reviewedProposal | Add-Member -NotePropertyName 'bcr_disposition' -NotePropertyValue $null -Force
+            $reviewedProposal | Add-Member -NotePropertyName 'bcr_scope' -NotePropertyValue $(if ($resolution.DeclaredCohortId) { $resolution.DeclaredCohortId } else { $member.Identity }) -Force
+            $updated += $p
+        }
+        if ($reviewReady.Count -gt 0) {
+            Set-ProposalStore -Store $store
         }
 
         foreach ($id in @($updated | Select-Object -ExpandProperty id)) {
@@ -653,7 +709,10 @@ switch -Regex ($Action) {
         if ([string]::IsNullOrWhiteSpace($TargetExpression)) {
             throw "TargetExpression (e.g. '1-3', 'all', '1,2') is required for action '$Action'."
         }
-        $updated = Invoke-ProposalBatchAction -Action $Action -TargetExpression $TargetExpression -Details $Details
+        $updated = @(Invoke-ProposalBatchAction -Action $Action -TargetExpression $TargetExpression -Details $Details)
+        if ($updated.Count -eq 0) {
+            throw "Action '$Action' resolved no current proposal targets for expression '$TargetExpression'; the result cannot be formatted."
+        }
         Write-Host "`nUpdated Proposal(s):" -ForegroundColor Cyan
         Format-ProposalsTable -Proposals $updated
         break

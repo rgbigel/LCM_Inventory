@@ -450,10 +450,16 @@ $htmlContent = $htmlContent.Replace('v{{HUB_VERSION}}', $dualVersion)
 $htmlContent = $htmlContent.Replace('{{HUB_VERSION}}', $dualVersion)
 $htmlContent = $htmlContent.Replace('{{SHOW_VERSION}}', "v$scriptVersion")
 $htmlContent = $htmlContent.Replace('{{TEMPLATE_VERSION}}', "v$templateVersion")
+$htmlContent = $htmlContent.Replace('LCM Control Hub Developer Template - Render Required', "LCM Control Hub ($dualVersion)")
 $htmlContent = $htmlContent.Replace('{{HUB_TITLE}}', "LCM Control Hub ($dualVersion)")
 $htmlContent = $htmlContent.Replace('{{HUB_VERSION_SUBTITLE}}', "Constructed by Show-LcmControl v$scriptVersion | Template: v$templateVersion | Baseline: $lcmBaseline | Compiled: $compiledTimestamp")
 $htmlContent = $htmlContent.Replace('{{LCM_BASELINE}}', $lcmBaseline)
 $htmlContent = $htmlContent.Replace('{{COMPILE_DATE}}', $compiledTimestamp)
+
+$unresolvedTemplateTokens = @([regex]::Matches($htmlContent, '\{\{(?:HUB_VERSION|SHOW_VERSION|TEMPLATE_VERSION|HUB_TITLE|HUB_VERSION_SUBTITLE|LCM_BASELINE|COMPILE_DATE)\}\}') | ForEach-Object { $_.Value } | Select-Object -Unique)
+if ($unresolvedTemplateTokens.Count -gt 0) {
+    throw ("Control Hub rendering failed: unresolved template token(s) remain in the generated artifact: {0}" -f ($unresolvedTemplateTokens -join ', '))
+}
 
 $scratchDir = Join-Path $workspaceRoot "LCM_Inventory\scratch"
 if (-not (Test-Path -LiteralPath $scratchDir)) {
