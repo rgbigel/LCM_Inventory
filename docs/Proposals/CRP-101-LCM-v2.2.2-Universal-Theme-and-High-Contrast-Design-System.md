@@ -2,13 +2,13 @@
 Proposal-ID: CRP-101
 CR-ID: CR-2026-052
 Scope: LCM Platform (.lcm)
-Version: v2.2.2
+Version: 10.0.0
 Affected-Repos: [.lcm, LCM_Inventory, HaSSD06_Inventory]
 Status: Suggested
-Date: 2026-08-31
+Date: 2026-10-13
 Author: Rolf, LCM_AI Engine
 Target Scope: .lcm / assets / lcm-dashboard-theme.css & Shared Web Dashboards
-Affected Version Range: v2.2.1 -> v2.2.2
+Affected Version Range: 10.0.0 -> 10.0.0
 Impacted Repositories: [.lcm, LCM_Inventory, HaSSD06_Inventory]
 ---
 

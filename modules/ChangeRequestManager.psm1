@@ -5,8 +5,8 @@
 # Purpose: Manages 1-file-per-CR Markdown documents mirrored via NTFS junctions,
 #          CR bundling for batch test sequences, querying, and dashboard export.
 # Authors: Rolf, LCM_AI Engine
-# Version: 2.0.0
-# Date: 2026-08-15
+# Version: 10.0.0
+# Date: 2026-10-13
 # =====================================================================
 
 Set-StrictMode -Version Latest
@@ -106,7 +106,7 @@ function ConvertFrom-CRFrontmatter {
         origin_repo        = 'Unknown'
         title              = [System.IO.Path]::GetFileNameWithoutExtension($FilePath)
         status             = 'proposed'
-        target_lcm_version = '4.1.0'
+        target_lcm_version = '10.0.0'
         bundle_id          = 'unassigned'
         affected_repos     = @()
         author             = 'Rolf'
@@ -223,7 +223,7 @@ function New-ChangeRequest {
         [Parameter(Mandatory=$true)] [string]$Title,
         [Parameter(Mandatory=$true)] [string]$OriginRepo,
         [string]$Status = 'proposed',
-        [string]$TargetLCMVersion = '4.1.0',
+        [string]$TargetLCMVersion = '10.0.0',
         [string]$BundleId = 'unassigned',
         [string]$Author = 'Rolf',
         [string]$Summary = '',
@@ -297,7 +297,7 @@ function New-CRBundle {
         [Parameter(Mandatory=$true)] [string]$Name,
         [string[]]$CRIds = @(),
         [string]$TestSuite = 'Test-WorkspaceReadiness.ps1',
-        [string]$TargetLCMVersion = '4.1.0',
+        [string]$TargetLCMVersion = '10.0.0',
         [string]$Status = 'draft'
     )
     

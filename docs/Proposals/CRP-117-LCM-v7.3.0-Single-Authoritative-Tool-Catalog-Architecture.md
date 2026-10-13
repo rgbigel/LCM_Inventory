@@ -8,8 +8,8 @@
 | **Origin Repository** | `LCM` / Tool Architecture & Governance |
 | **Target Scope** | Tool Management Core (`Update-ToolCatalog.ps1`, `tool_catalog.json`, `tool_catalog_overrides.json`, `LcmDesktopDaemon.ps1`, `DaemonActionController.ps1`, `lcm-tool-explorer.js`, `Remove-LcmShortName.ps1`) |
 | **Author** | Rolf, LCM_AI |
-| **Date** | 2026-09-07 |
-| **Version Impact** | `v7.3.0` |
+| **Date** | 2026-10-13 |
+| **Version Impact** | `10.0.0` |
 
 ---
 

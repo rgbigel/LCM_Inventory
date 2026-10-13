@@ -2,13 +2,13 @@
 Proposal-ID: CRP-102
 CR-ID: CR-2026-053
 Scope: LCM Platform (.lcm)
-Version: v2.2.2
+Version: 10.0.0
 Affected-Repos: [LCM_Inventory, .lcm]
 Status: Suggested
-Date: 2026-08-31
+Date: 2026-10-13
 Author: Rolf, LCM_AI Engine
 Target Scope: LCM_Inventory / docs / CM_CONTROL_HUB.html & Show-CmControlHub.ps1
-Affected Version Range: v7.1.1 -> v7.1.2
+Affected Version Range: 10.0.0 -> 10.0.0
 Impacted Repositories: [LCM_Inventory, .lcm]
 ---
 

@@ -4,12 +4,12 @@
 | Metadata Field | Value |
 | :--- | :--- |
 | **Proposal ID** | `CRP-121` |
-| **Lifecycle State** | `IN_PROGRESS` (`DOIT`; reopened 2026-10-05 after ledger/specification reconciliation) |
+| **Lifecycle State** | `IN_PROGRESS` (`DOIT`; reopened 2026-10-13 after ledger/specification reconciliation) |
 | **Origin Repository** | `LCM` / Tooling & Documentation Governance |
 | **Target Scope** | Tool Documentation Engine (`LCM_Inventory/tools/Update-ToolDependencies.ps1`), Storage (`docs/tools/<ToolName>/`), Governance Policies (`.agents/rules/DocumentationStandardsPolicy.md`, `ProposalReviewFlowPolicy.md`) |
 | **Author** | Rolf, LCM_AI |
-| **Date** | 2026-09-08 |
-| **Version Impact** | `v7.3.0` |
+| **Date** | 2026-10-13 |
+| **Version Impact** | `10.0.0` |
 | **Related Proposals** | `CRP-117` (Single Authoritative Tool Catalog), `CRP-119` (Monotonic Naming Scheme), `BUG-120` |
 
 ---
@@ -107,7 +107,7 @@ To prevent unnecessary file writes, modified timestamp churn, and dirty Git work
   {
     "Show-Rules.ps1": {
       "source_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "last_scanned": "2026-09-08 15:25:00",
+      "last_scanned": "2026-10-13 15:25:00",
       "last_crp": "BUG-120",
       "wiud_file": "docs/tools/Show-Rules/Show-Rules-WIUD.md",
       "wud_file": "docs/tools/Show-Rules/Show-Rules-WUD.md"

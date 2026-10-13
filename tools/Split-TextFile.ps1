@@ -7,8 +7,8 @@
            Each part is limited by a maximum character count.
   Path: tools/Split-TextFile.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 2.0.0
-  Date: 2026-08-29
+  Version: 10.0.0
+  Date: 2026-10-13
 .PARAMETER InputFile
   Path to the input text file to split.
 .PARAMETER MaxChars
@@ -44,7 +44,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$scriptVersion = "2.0.0"
+$scriptVersion = "10.0.0"
 $scriptName = "Split-TextFile"
 
 if ($Help) {

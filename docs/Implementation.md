@@ -4,9 +4,9 @@ Module: docs/Implementation.md
 Purpose: Code-level catalog, data schemas, exported functions, tool parameters, and testing traceability for LCM_Inventory.  
 Path: D:/Git_Repositories/LCM_Inventory/docs/Implementation.md  
 Authors: Rolf, LCM_AI Engine  
-Version: 7.0.1  
+Version: 10.0.0
 Status: Authoritative Implementation  
-Date: 2026-10-05  
+Date: 2026-10-13
 
 ---
 
@@ -133,13 +133,13 @@ lifecycle state, stage, commit, or publish.
 ```json
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "version": "7.0.0",
-  "updated_at": "2026-09-19 18:05:38",
+  "version": "10.0.0",
+  "updated_at": "2026-10-13 18:05:38",
   "proposals": [
     {
       "id": 156,
       "crp_id": "CRP-156",
-      "timestamp": "2026-09-19 15:30:00",
+      "timestamp": "2026-10-13 15:30:00",
       "title": "Standardize HTML Presentation Artifacts to data/artifacts/",
       "origin_repo": "LCM_Inventory",
       "state": "pushed",
@@ -147,8 +147,8 @@ lifecycle state, stage, commit, or publish.
       "priority": "M",
       "author": "Rolf, LCM_AI",
       "details": "Relocate runtime HTML viewer generation to untracked data/artifacts/.",
-      "plan_path": "LCM_Inventory/docs/Proposals/CRP-156-LCM-v7.5.2-Standardize-HTML-Presentation-Artifacts-To-Data-Artifacts.md",
-      "pushed_at": "2026-09-19 18:05:33"
+      "plan_path": "LCM_Inventory/docs/Proposals/CRP-156-LCM-10.0.0-Standardize-HTML-Presentation-Artifacts-To-Data-Artifacts.md",
+      "pushed_at": "2026-10-13 18:05:33"
     }
   ]
 }
@@ -190,13 +190,47 @@ governed lifecycle transitions.
    discoverable `BUG-262` bundle/material in the inspected proposal locations
    before implementing any BUG-262-specific behavior.
 
+### 4.2 Cohort Control-Hub Contract (CRP-259)
+
+The following is the implementation contract for the cohort controls; it does
+not claim that the current read-only Hub has mutation capability. A cohort
+record must persist an Item target of kind `COH`, `coh_id` in the form
+`COH-<prime>`, exactly one `head_id`, zero or more additional `member_ids`, an
+`open`/`closed` status, and append-only lifecycle, synchronization, BCR, and
+member-disposition evidence. The corresponding CRP/BUG target uses kind
+`CRP`; it must not be coerced into a COH.
+
+Target resolution occurs before an action is enabled or dispatched. Row actions
+operate on their own explicit Item target: CRP rows act on that CRP, and COH
+rows act on that COH. No backend handler may use a repository, selection cache,
+or active-cohort fallback. The sole convenience rule is unqualified
+add-member: it resolves to the sole open COH only when exactly one exists.
+
+The future mutation boundary must construct and validate a complete prospective
+ledger change before writing it. It must reject duplicate or missing members,
+an absent/non-member/non-unique head, an invalid status transition, ambiguous
+target resolution, and a second open cohort. Opening a closed cohort performs
+close-current/open-selected in one transaction. Failed validation, write, gate
+sync, BCR launch, or disposition recording leaves no partial cohort, member,
+or lifecycle update.
+
+For a COH Gate 2 request, the dispatcher first evaluates every member's
+required gate and evidence. It either records an all-member aligned/no-op
+result or returns the specific failing member without launching BCR. Only an
+aligned cohort can create one BCR session/receipt for the cohort, and that
+receipt contains the exact COH target and a disposition for every member.
+Result UI and the activity/audit record must show target resolution, member
+dispositions, synchronization checks/result, BCR identity/disposition, and
+refusal details. Gate 1 planning actions and Gate 2 BCR actions remain
+separate; `DOIT` may automate flow to, but never through, the latter.
+
 ### Inventory Manifest Schema (`data/inventory.json`)
 ```json
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Inventory",
-  "generated_at": "2026-09-19 18:24:12",
-  "workspace_ai_baseline": "7.0.0",
+  "generated_at": "2026-10-13 18:24:12",
+  "workspace_ai_baseline": "10.0.0",
   "repositories": [
     {
       "RepositoryName": "LCM_Inventory",
@@ -209,8 +243,8 @@ governed lifecycle transitions.
       "AheadBehind": "synced",
       "HasUnpushed": false,
       "LCMStatus": "governed",
-      "AbsorbedLCMVersion": "7.0.0",
-      "CurrentLCMVersion": "7.0.0",
+      "AbsorbedLCMVersion": "10.0.0",
+      "CurrentLCMVersion": "10.0.0",
       "ElevationRequired": false,
       "MinimumPrivilege": "User",
       "JunctionsHealthy": true

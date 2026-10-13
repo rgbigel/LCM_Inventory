@@ -4,9 +4,9 @@
 CRP-ID: CRP-170
 Title: Master Cross-Reference Matrix Synchronization, Rule Header Normalization, and Governance Fallback Codification
 Scope: Multiple
-Baseline-Version: v7.6.0
+Baseline-Version: 10.0.0
 Author: Rolf, Antigravity AI Assistant
-Date: 2026-09-24 18:21:00
+Date: 2026-10-13 18:21:00
 Status: In_Progress
 ```
 
@@ -24,7 +24,7 @@ Status: In_Progress
 
 ### Phase 2: Synchronize Master Cross-Reference Matrix & Root AGENTS.md
 - Modify `LCM_AI\docs\LCM-Rules-Cross-Reference.md`:
-  - Update header to `v7.6.0`.
+  - Update header to `10.0.0`.
   - Update discovery diagram to show Canonical Hub at `LCM_Inventory\.agents\rules\` linking to root `D:/Git_Repositories/.agents/rules/`.
   - Update table rows with all missing rules (`RULE-LCM-020`, `RULE-PS-015`, `RULE-REV-006..008`, `RULE-EFF-006..008`, `RULE-ENV-003`, `RULE-SUB-007`).
 - Modify `D:\Git_Repositories\AGENTS.md`:

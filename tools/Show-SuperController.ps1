@@ -7,8 +7,8 @@
              scoped cleanly to a specific workspace subsystem.
     Path: tools/Show-SuperController.ps1
     Authors: Rolf, LCM_AI Engine
-    Version: 1.0.0
-    Date: 2026-09-27
+    Version: 10.0.0
+    Date: 2026-10-13
 .PARAMETER Subsystem
     Workspace subsystem to scope tools and proposals to (e.g. LCM, LCM_Inventory, LCM_AI, HaSSD06, SystemConfiguration, LCM_Supervision, or ALL).
 .PARAMETER Tool
@@ -36,7 +36,7 @@ param(
     [switch]$Help
 )
 
-$scriptVersion = "1.0.0"
+$scriptVersion = "10.0.0"
 $scriptName = "Show-SuperController"
 
 if ($Help) {

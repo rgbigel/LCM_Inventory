@@ -5,9 +5,9 @@
 | :--- | :--- |
 | **Proposal ID** | `BUG-172` |
 | **State** | `IN_PROGRESS` (DOIT Mode Execution directly to Gate 2) |
-| **Target Files** | `SystemConfiguration/Source/Apply-AllCustomizations.ps1`, `.lcm/tools/internal/Update-ToolCatalog.ps1`, `.lcm/tools/internal/Flush-LcmLegacyLogs.ps1` |
+| **Target Files** | `SystemConfiguration/Source/Apply-AllCustomizations.ps1`, `LCM_Inventory/tools/Update-ToolCatalog.ps1`, `LCM_Inventory/tools/Flush-LcmLegacyLogs.ps1` |
 | **Author** | Rolf, Antigravity AI Assistant |
-| **Date** | 2026-09-25 |
+| **Date** | 2026-10-13 |
 
 ---
 
@@ -18,10 +18,10 @@
 - Line 229 (.cmd): Replace `Get-Content -LiteralPath $Path -TotalCount 20 -Raw` with `(Get-Content -LiteralPath $Path -TotalCount 20 -ErrorAction SilentlyContinue) -join "`n"`.
 - Line 236 (.ps1): Replace `Get-Content -LiteralPath $Path -TotalCount 40 -Raw` with `(Get-Content -LiteralPath $Path -TotalCount 40 -ErrorAction SilentlyContinue) -join "`n"`.
 
-### Step 2: `.lcm/tools/internal/Update-ToolCatalog.ps1`
+### Step 2: `LCM_Inventory/tools/Update-ToolCatalog.ps1`
 - Line 981: Replace `Get-Content -LiteralPath $f.FullName -TotalCount 250 -Raw` with `(Get-Content -LiteralPath $f.FullName -TotalCount 250 -ErrorAction SilentlyContinue) -join "`n"`.
 
-### Step 3: `.lcm/tools/internal/Flush-LcmLegacyLogs.ps1`
+### Step 3: `LCM_Inventory/tools/Flush-LcmLegacyLogs.ps1`
 - Line 78: Replace `Get-Content -LiteralPath $Path -TotalCount 15 -Raw` with `(Get-Content -LiteralPath $Path -TotalCount 15 -ErrorAction SilentlyContinue) -join "`n"`.
 
 ---

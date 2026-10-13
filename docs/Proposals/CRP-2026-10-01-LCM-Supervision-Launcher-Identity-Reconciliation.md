@@ -1,12 +1,12 @@
 # CRP: LCM_Supervision Launcher Identity Reconciliation
 
-Module: docs/Proposals/CRP-2026-10-01-LCM-Supervision-Launcher-Identity-Reconciliation.md  
+Module: docs/Proposals/CRP-2026-10-13-LCM-Supervision-Launcher-Identity-Reconciliation.md  
 Purpose: Suggested correction proposal for the supervision launcher filename and self-reported invocation.  
-Path: D:\Git_Repositories\LCM_Inventory\docs\Proposals\CRP-2026-10-01-LCM-Supervision-Launcher-Identity-Reconciliation.md  
+Path: D:\Git_Repositories\LCM_Inventory\docs\Proposals\CRP-2026-10-13-LCM-Supervision-Launcher-Identity-Reconciliation.md  
 Authors: LCM documentation reconciliation  
-Version: 1.0.0  
+Version: 10.0.0
 Status: Suggested  
-Date: 2026-10-01  
+Date: 2026-10-13
 
 ---
 

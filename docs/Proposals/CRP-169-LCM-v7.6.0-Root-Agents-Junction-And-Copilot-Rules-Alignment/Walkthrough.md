@@ -4,9 +4,9 @@
 CRP-ID: CRP-169
 Title: Deploy Root .agents Junction, Reconcile Command Taxonomy, and Align .copilot Rules
 Scope: Multiple
-Baseline-Version: v7.6.0
+Baseline-Version: 10.0.0
 Author: Rolf, Antigravity AI Assistant
-Date: 2026-09-24 18:14:00
+Date: 2026-10-13 18:14:00
 Status: ACCEPTED (Committed in Git_Repositories: ff11d81, LCM_AI: 10061e5)
 ```
 

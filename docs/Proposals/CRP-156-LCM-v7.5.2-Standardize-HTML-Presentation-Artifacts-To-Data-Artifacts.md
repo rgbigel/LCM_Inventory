@@ -2,8 +2,8 @@
 
 **Proposal ID**: `CRP-156`  
 **Repository**: `LCM_Inventory` (Workspace-Wide Architecture)  
-**Version**: `v7.5.2`  
-**Date**: 2026-09-19  
+**Version**: `10.0.0`  
+**Date**: 2026-10-13  
 **Status**: `COMPLETED` (`ACCEPTED`)  
 **Author**: Operator Directive / CRP Intake  
 
@@ -46,7 +46,7 @@ This proposal standardizes all generated HTML presentation artifacts to **`data/
    - Updated `tools/Show-SupervisionHub.ps1` to inject telemetry into `data/artifacts/SUPERVISION_HUB.html`.
    - Untracked `docs/SUPERVISION_HUB.html` from Git.
 4. **BCR Universal Exclusions**:
-   - Because `data/` is universally excluded in `Invoke-BeyondCompareReview.ps1` (v2.3.4), generated HTML artifacts in `data/artifacts/` will never pollute visual reviews or Git commits.
+   - Because `data/` is universally excluded in `Invoke-BeyondCompareReview.ps1` (10.0.0), generated HTML artifacts in `data/artifacts/` will never pollute visual reviews or Git commits.
 
 ---
 

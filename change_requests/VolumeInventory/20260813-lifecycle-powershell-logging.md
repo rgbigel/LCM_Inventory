@@ -4,7 +4,7 @@ proposal_id: VI-20260813-lifecycle-powershell-logging
 status: pending-review
 repository: VolumeInventory
 created: 20260813_194051
-version: 2.5.0
+version: 10.0.0
 scope: VolumeInventory; read-only observations under D:/Git_Repositories
 
 ## Summary
@@ -14,9 +14,9 @@ Bring VolumeInventory PowerShell structure into Workspace_GC lifecycle methodolo
 ## Implemented Local Slice
 
 - Updated `src/VolumeInventory.ps1` helper functions to include `[CmdletBinding()]` and explicit `param()` blocks.
-- Updated `src/VolumeInventory.ps1` header metadata to version `2.5.0` and date `2026-08-13`.
+- Updated `src/VolumeInventory.ps1` header metadata to version `10.0.0` and date `2026-10-13`.
 - Added Pester coverage requiring helper functions to remain advanced and self-contained.
-- Updated `docs/CHANGELOG.md` with the `2.5.0` method-clean structural conformance entry.
+- Updated `docs/CHANGELOG.md` with the `10.0.0` method-clean structural conformance entry.
 
 ## Validation
 

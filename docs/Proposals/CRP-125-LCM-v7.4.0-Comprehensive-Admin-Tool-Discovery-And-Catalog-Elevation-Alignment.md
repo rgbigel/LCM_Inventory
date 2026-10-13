@@ -8,8 +8,8 @@
 | **Origin Repository** | `LCM` / Tool Architecture & Governance |
 | **Target Scope** | `LCM_Inventory/config/tool_catalog.json`, `LCM_Inventory/tools/Update-ToolCatalog.ps1`, `LCM_Inventory/Cmd/*.cmd`, `CRP-107` Retirement |
 | **Author** | Rolf, LCM_AI |
-| **Date** | 2026-09-08 |
-| **Version Impact** | `v7.4.0` |
+| **Date** | 2026-10-13 |
+| **Version Impact** | `10.0.0` |
 | **Predecessor / Supersedes** | `CRP-107` (Operational Gaps A & B) |
 
 ---

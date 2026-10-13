@@ -2,13 +2,13 @@
 Proposal-ID: BUG-2026-009
 CR-ID: CR-2026-049
 Scope: LCM_Inventory
-Version: v7.1.0
+Version: 10.0.0
 Affected-Repos: [LCM_Inventory]
 Status: In_Progress
-Date: 2026-09-06
+Date: 2026-10-13
 Author: rgbig
 Target Scope: LCM_Inventory / docs / CM_CONTROL_HUB.html, tools / Show-CmControlHub.ps1, docs / Proposals / CRP-2026-019
-Affected Version Range: v7.1.0
+Affected Version Range: 10.0.0
 Impacted Repositories: [LCM_Inventory]
 Severity: High
 ---
@@ -26,7 +26,7 @@ During operator workflow in the Configuration Management Control Hub (`CM_CONTRO
 
 ## 3. Remediation Strategy
 1. **LCM Display Standard Integration & Rule Codification**:
-   - **Codify Rule in Display Standard Specification**: Update authoritative Universal LCM Table UI/UX Standard ([`CRP-2026-019`](file:///d:/Git_Repositories/LCM_Inventory/docs/Proposals/CRP-2026-019-LCM-v2.2.2-Standardized-Interactive-Document-Table-Viewer.md), Section 2.4) to formally mandate that *the head of table displays must be frozen, i.e., excluded from scrolling*. Column headers, sort indicators, and filter controls must remain continuously pinned and visible while scrolling records.
+   - **Codify Rule in Display Standard Specification**: Update authoritative Universal LCM Table UI/UX Standard ([`CRP-2026-019`](file:///d:/Git_Repositories/LCM_Inventory/docs/Proposals/CRP-2026-019-LCM-10.0.0-Standardized-Interactive-Document-Table-Viewer.md), Section 2.4) to formally mandate that *the head of table displays must be frozen, i.e., excluded from scrolling*. Column headers, sort indicators, and filter controls must remain continuously pinned and visible while scrolling records.
    - Implement frozen header styling in `CM_CONTROL_HUB.html`: Apply `overflow-y: auto`, `overflow-x: auto`, and constrained `max-height` (e.g. `calc(100vh - 380px)`) to `.table-container`, and `position: sticky; top: 0; z-index: 50/51` to `thead` and `th` in both dark and light modes.
    - Add light-theme CSS variables under `:root` and `.light-theme` in `CM_CONTROL_HUB.html`.
    - Add theme switch toggle button in header with `initTheme()`, `toggleTheme()`, and `applyTheme()` bound to `localStorage['lcm_theme']`.

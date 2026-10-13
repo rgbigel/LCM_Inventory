@@ -5,8 +5,8 @@
 # Purpose: Deep multi-repository state auditing, classification, Git inspection,
 #          LCM version tracking, baseline management, and drift detection.
 # Authors: Rolf, LCM_AI Engine
-# Version: 1.0.0
-# Date: 2026-08-15
+# Version: 10.0.0
+# Date: 2026-10-13
 # =====================================================================
 
 Set-StrictMode -Version Latest
@@ -65,7 +65,7 @@ function Write-CMLog {
     $resolvedVersion = if (-not [string]::IsNullOrWhiteSpace($Version)) {
         $Version
     } else {
-        'v7.1.0'
+        '10.0.0'
     }
     
     $entry = "[$timestamp] [$Status] [Target: $TargetRepo] [Version: $resolvedVersion] [PushDate: $PushDate] [AffectedRepos: $affectedStr] $Action - $Details"
@@ -87,7 +87,7 @@ function Get-WorkspaceAIState {
         }
     }
     
-    $lcmVersion = '4.3.0'
+    $lcmVersion = '10.0.0'
     $reqDoc = Join-Path $WorkspacePath 'docs\Requirements.md'
     if (Test-Path $reqDoc) {
         $match = Select-String -Path $reqDoc -Pattern '^Version:\s*(\S+)' | Select-Object -First 1
@@ -148,7 +148,7 @@ function Get-RepoCMState {
         [string]$DirectoryPath,
         
         [Parameter(Mandatory=$false)]
-        [string]$GlobalLCMVersion = '4.2.0',
+        [string]$GlobalLCMVersion = '10.0.0',
         
         [Parameter(Mandatory=$false)]
         [PSCustomObject]$CachedRepoState = $null

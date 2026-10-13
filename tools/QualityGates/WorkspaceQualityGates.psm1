@@ -3,26 +3,26 @@ Module: WorkspaceQualityGates.psm1
 Purpose: Provide reusable LCM_AI readiness and stabilization quality gates.
 Path: tools/QualityGates/WorkspaceQualityGates.psm1
 Authors: LCM_AI Engine
-Version: 1.15.1
+Version: 10.0.0
 Caller Contract: Imported by native governance scripts; validates LCM_AI state without writing to external repositories.
 Changelog:
-- 2026-08-17: Clarified SettingsPath root-container scope for Assert-IgnoredRepositories.
-- 2026-08-02: Added target-local proposal cleanup scanner validation.
-- 2026-08-02: Added target-local method instance bootstrap policy validation.
-- 2026-08-02: Added proposal-directory cleanup methodology validation.
-- 2026-08-02: Added target-local method instance ownership validation.
-- 2026-08-02: Added target-local Markdown proposal authority validation.
-- 2026-08-02: Added repository lifecycle and explicit event-triggered integrity preflight validation.
-- 2026-08-01: Allowed confirmed read-only real-repository dry-run while keeping external writes blocked.
-- 2026-08-01: Added bottom-up concrete change-request flow validation.
-- 2026-08-01: Added phased dry-run sequence validation for documentation-first real-repository testing.
-- 2026-08-01: Added adapter content comparison state validation for intended action preview.
-- 2026-08-01: Added intended action preview policy validation for real-repository dry-run.
-- 2026-08-01: Added read-only Git command allow-list validation for real-repository dry-run.
-- 2026-08-01: Added dry-run target profile and adapter surface inventory checks.
-- 2026-08-01: Added transition-policy and dry-run state consistency checks.
-- 2026-08-01: Added real-repository test plan and dry-run policy quality gate.
-- 2026-08-01: Consolidated helper Test-* scripts into one quality-gate module.
+- 2026-10-13: Clarified SettingsPath root-container scope for Assert-IgnoredRepositories.
+- 2026-10-13: Added target-local proposal cleanup scanner validation.
+- 2026-10-13: Added target-local method instance bootstrap policy validation.
+- 2026-10-13: Added proposal-directory cleanup methodology validation.
+- 2026-10-13: Added target-local method instance ownership validation.
+- 2026-10-13: Added target-local Markdown proposal authority validation.
+- 2026-10-13: Added repository lifecycle and explicit event-triggered integrity preflight validation.
+- 2026-10-13: Allowed confirmed read-only real-repository dry-run while keeping external writes blocked.
+- 2026-10-13: Added bottom-up concrete change-request flow validation.
+- 2026-10-13: Added phased dry-run sequence validation for documentation-first real-repository testing.
+- 2026-10-13: Added adapter content comparison state validation for intended action preview.
+- 2026-10-13: Added intended action preview policy validation for real-repository dry-run.
+- 2026-10-13: Added read-only Git command allow-list validation for real-repository dry-run.
+- 2026-10-13: Added dry-run target profile and adapter surface inventory checks.
+- 2026-10-13: Added transition-policy and dry-run state consistency checks.
+- 2026-10-13: Added real-repository test plan and dry-run policy quality gate.
+- 2026-10-13: Consolidated helper Test-* scripts into one quality-gate module.
 #>
 
 function Get-WorkspaceRoot {

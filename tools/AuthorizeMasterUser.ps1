@@ -5,8 +5,8 @@
   Module: AuthorizeMasterUser Wrapper
   Path: D:\Git_Repositories\LCM_Tools\AuthorizeMasterUser.ps1
   Authors: Rolf, LCM_AI Governance
-  Version: 6.0.0
-  Date: 2026-08-28
+  Version: 10.0.0
+  Date: 2026-10-13
 #>
 
 [CmdletBinding()]

@@ -10,7 +10,7 @@ priority: Low
 authors: rgbig, LCM_AI Engine
 created_at: 2026-09-08T19:25:00+02:00
 target_scope: LCM_Inventory
-affected_version_range: v1.1.2
+affected_version_range: 10.0.0
 impacted_repositories:
   - LCM_Inventory
 ```
@@ -43,7 +43,7 @@ $junctionFilters = @('-.agents\rules\', '-*\.agents\rules\*', '-.agents\rules\',
 
 ## 3. Remediation Plan
 
-1. Update `Invoke-BeyondCompareReview.ps1` (`v2.3.2`):
+1. Update `Invoke-BeyondCompareReview.ps1` (`10.0.0`):
    - In the exclusion filter generation (Section 5), add `-.agents\` and `-*\.agents\*` to `$junctionFilters`.
    - Dynamically inspect all detected junctions: if any junction is within `.agents` or is `.agents`, guarantee both `-.agents\` and `-*\.agents\*` are in `$filterList`.
    - Ensure the secondary session exclusively compares the junction root (`.agents\rules` or `.agents`) without any residual appearance in the primary window.

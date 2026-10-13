@@ -11,8 +11,8 @@
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
   Path: LCM_Inventory/tools/Show-WorkspaceInventoryApp.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 6.0.1
-  Date: 2026-09-19
+  Version: 10.0.0
+  Date: 2026-10-13
   ShortName: ShowLCMExplorer
 .PARAMETER NoLaunch
   Generates the HTML dashboard file without automatically launching it in the web browser.
@@ -34,7 +34,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$scriptVersion = "6.0.1"
+$scriptVersion = "10.0.0"
 $scriptName = "Show-WorkspaceInventoryApp"
 
 if ($Help) {

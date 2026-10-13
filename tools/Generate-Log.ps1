@@ -56,19 +56,20 @@ Module: Generate-Log.ps1
 Purpose: Generate native LCM_AI step and permanent governance logs.
 Path: tools/Generate-Log.ps1
 Authors: LCM_AI Engine
-Version: 1.5.0
+Version: 10.0.0
 Caller Contract: Called from VS Code tasks or terminal; writes deterministic checkpoint and accepted-change governance logs.
 Changelog:
-- 2026-08-01: Added proposal disposition summary section.
-- 2026-08-01: Grouped generated artifact changes separately from reviewable pending changes.
-- 2026-08-01: Added generated-artifact section so logs are not treated as reviewable proposal files.
-- 2026-08-01: Added normalized disposition detail output for step proposal records.
-- 2026-08-01: Loaded step proposal records from Proposals.json instead of hardcoding entries.
-- 2026-08-01: Added separate step-oriented and permanent accepted-change log outputs.
-- 2026-08-01: Added native governance log generator for Gemini/Continue migration.
+- 2026-10-13: Added proposal disposition summary section.
+- 2026-10-13: Grouped generated artifact changes separately from reviewable pending changes.
+- 2026-10-13: Added generated-artifact section so logs are not treated as reviewable proposal files.
+- 2026-10-13: Added normalized disposition detail output for step proposal records.
+- 2026-10-13: Loaded step proposal records from Proposals.json instead of hardcoding entries.
+- 2026-10-13: Added separate step-oriented and permanent accepted-change log outputs.
+- 2026-10-13: Added native governance log generator for Gemini/Continue migration.
 #>
 
-$workspaceRoot = Split-Path $PSScriptRoot -Parent
+$inventoryRoot = Split-Path $PSScriptRoot -Parent
+$workspaceRoot = Split-Path $inventoryRoot -Parent
 $copilotRoot = Join-Path $workspaceRoot '.copilot'
 
 if (-not $OutputPath) {

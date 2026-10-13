@@ -11,8 +11,8 @@
            Conforms to RULE-PS-001 through RULE-PS-014.
   Path: LCM_Inventory/tools/Remove-LcmShortName.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 1.1.0
-  Date: 2026-09-08
+  Version: 10.0.0
+  Date: 2026-10-13
 
 .PARAMETER ShortName
   The short-name command alias to remove (with or without .cmd extension).
@@ -52,7 +52,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$scriptVersion = '1.1.0'
+$scriptVersion = '10.0.0'
 $scriptName = 'Remove-LcmShortName'
 
 # ------------------------------------------------------------------------------

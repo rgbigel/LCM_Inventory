@@ -5,7 +5,7 @@ CRP-ID: CRP-180
 Title: Tool Explorer Ergonomics: Column Realignment, Bulk Finalize, and Precompiled Dynamic Taxonomy Options
 Scope: .lcm, LCM_Inventory, Tool Explorer UI, Tool Catalog Sync Engine, LCM Desktop Daemon
 Status: Completed
-Date: 2026-09-26
+Date: 2026-10-13
 ```
 
 ---

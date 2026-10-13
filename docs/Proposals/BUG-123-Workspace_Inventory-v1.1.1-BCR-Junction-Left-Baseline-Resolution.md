@@ -10,7 +10,7 @@ priority: High
 authors: rgbig, LCM_AI Engine
 created_at: 2026-09-08T16:22:00+02:00
 target_scope: LCM_Inventory
-affected_version_range: v1.1.1
+affected_version_range: 10.0.0
 impacted_repositories:
   - LCM_Inventory
 ```

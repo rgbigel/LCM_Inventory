@@ -11,7 +11,7 @@
 .EXAMPLE
   pwsh LCM_Inventory/tools/Test-ExternalTools.ps1
 .NOTES
-  Version: 1.0.0
+  Version: 10.0.0
 #>
 [CmdletBinding()]
 param(

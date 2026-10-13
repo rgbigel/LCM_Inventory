@@ -7,8 +7,8 @@
            member of the required lockstep cohort.
   Path: LCM_Inventory/tests/WorkspacePushEligibility.Tests.ps1
   Authors: GitHub Copilot
-  Version: 8.0.0
-  Date: 2026-09-29
+  Version: 10.0.0
+  Date: 2026-10-13
 #>
 
 Describe 'Workspace push eligibility' {

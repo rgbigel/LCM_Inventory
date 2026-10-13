@@ -2,16 +2,16 @@
 
 - **Proposal ID**: `CRP-108`
 - **Target Repository**: `LCM` (`Git_Repositories/LCM_Inventory/assets`, `LCM_Inventory`)
-- **Target Version**: `v7.5.0`
+- **Target Version**: `10.0.0`
 - **Domain**: `Lifecycle Model (LCM) Universal UI/UX & Table Display Standard`
 - **Author**: Rolf, LCM_AI Governance
-- **Status**: `OPEN` (Bundled in `BUNDLE-STD-DISPLAY-v7.5.0` - Awaiting Operator PROCEED)
-- **Created**: `2026-09-07 12:35:00`
+- **Status**: `OPEN` (Bundled in `BUNDLE-STD-DISPLAY-10.0.0` - Awaiting Operator PROCEED)
+- **Created**: `2026-10-13 12:35:00`
 - **Priority**: `HIGH`
 - **Target Scope**: `LCM_Inventory/assets/lcm-dashboard-theme.css`, `LCM_Inventory/assets/lcm-table-engine.js`, `LCM_Inventory/tools/Show-Tools.ps1`, `LCM_Inventory/tools/Show-Rules.ps1`, `CM_CONTROL_HUB.html`
-- **Affected Version Range**: `v7.0.0 - v7.5.0`
+- **Affected Version Range**: `10.0.0 - 10.0.0`
 - **Impacted Repositories**: `Git_Repositories`, `LCM_Inventory`
-- **Logical Bundle**: `BUNDLE-STD-DISPLAY-v7.5.0` (Standard Display Interactive Repairs)
+- **Logical Bundle**: `BUNDLE-STD-DISPLAY-10.0.0` (Standard Display Interactive Repairs)
 
 ---
 
@@ -52,13 +52,13 @@ Every LCM table dashboard `MUST` provide standard toolbar controls:
 ## 3. Extracted Proposals (Processed Separately)
 
 > [!NOTE]
-> Per operator bundling directive for `BUNDLE-STD-DISPLAY-v7.5.0`, non-table-display sections originally present in CRP-108 have been extracted into dedicated follow-up proposals:
+> Per operator bundling directive for `BUNDLE-STD-DISPLAY-10.0.0`, non-table-display sections originally present in CRP-108 have been extracted into dedicated follow-up proposals:
 >
 > 1. **Section 2.4 (Multi-Page Print & PDF Engine Compliance)**:
->    - **Extracted to**: [`CRP-128`](file:///D:/Git_Repositories/LCM_Inventory/docs/Proposals/CRP-128-LCM-v7.5.0-Universal-Multi-Page-Table-Print-And-PDF-Export-Engine.md) (*Universal Multi-Page Table Print and PDF Export Engine*).
+>    - **Extracted to**: [`CRP-128`](file:///D:/Git_Repositories/LCM_Inventory/docs/Proposals/CRP-128-LCM-10.0.0-Universal-Multi-Page-Table-Print-And-PDF-Export-Engine.md) (*Universal Multi-Page Table Print and PDF Export Engine*).
 >    - **Rationale**: Separates document print stylesheets and PDF rendering mechanics from interactive DOM table navigation.
 >
 > 2. **Section 2.5 (Standardized Editor Dispatch & Governance Hook)**:
->    - **Extracted to**: [`CRP-129`](file:///D:/Git_Repositories/LCM_Inventory/docs/Proposals/CRP-129-LCM-v7.5.0-Standard-Desktop-Editor-Dispatch-And-Governance-Advisory-Hook.md) (*Standard Desktop Editor Dispatch and Governance Advisory Hook*).
+>    - **Extracted to**: [`CRP-129`](file:///D:/Git_Repositories/LCM_Inventory/docs/Proposals/CRP-129-LCM-10.0.0-Standard-Desktop-Editor-Dispatch-And-Governance-Advisory-Hook.md) (*Standard Desktop Editor Dispatch and Governance Advisory Hook*).
 >    - **Rationale**: Separates desktop daemon process dispatch (`notepad++.exe`) and governance modal hooks from table layout and filtering.
 

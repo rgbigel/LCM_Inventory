@@ -2,13 +2,13 @@
 Proposal-ID: CRP-100
 CR-ID: CR-2026-049
 Scope: HaSSD06
-Version: v7.1.2
+Version: 10.0.0
 Affected-Repos: [HaSSD06, HaSSD06_Inventory]
 Status: Suggested
-Date: 2026-08-31
+Date: 2026-10-13
 Author: Rolf, LCM_AI Engine
 Target Scope: HaSSD06 / Bluetooth Architecture & Multi-Hub Ingestion
-Affected Version Range: v7.1.1 -> v7.1.2
+Affected Version Range: 10.0.0 -> 10.0.0
 Impacted Repositories: [HaSSD06, HaSSD06_Inventory]
 ---
 

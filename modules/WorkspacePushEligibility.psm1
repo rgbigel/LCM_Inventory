@@ -7,8 +7,8 @@
            LCM_Inventory lockstep participation before remote dispatch.
   Path: LCM_Inventory/modules/WorkspacePushEligibility.psm1
   Authors: GitHub Copilot
-  Version: 8.0.0
-  Date: 2026-09-29
+  Version: 10.0.0
+  Date: 2026-10-13
 #>
 
 Set-StrictMode -Version Latest

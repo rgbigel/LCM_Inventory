@@ -2,11 +2,11 @@
 
 - **Proposal ID**: `BUG-067`
 - **Target Repository**: `LCM` (`Git_Repositories/.lcm`)
-- **Target Version**: `v6.2.1`
+- **Target Version**: `10.0.0`
 - **Domain**: `Desktop REST Bridge & Interactive UI/UX`
 - **Author**: Rolf, LCM_AI Engine
 - **Status**: `IN_PROGRESS`
-- **Created**: `2026-09-04 20:50:00`
+- **Created**: `2026-10-13 20:50:00`
 - **Priority**: `HIGH`
 
 ---

@@ -35,24 +35,25 @@ Module: Get-RealRepoTestPlan.ps1
 Purpose: Read LCM_AI real-repository test plan state without changing it.
 Path: tools/Get-RealRepoTestPlan.ps1
 Authors: LCM_AI Engine
-Version: 1.11.0
+Version: 10.0.0
 Caller Contract: Called by operators or governance scripts when inspecting real-repository dry-run state; performs no external repository access.
 Changelog:
-- 2026-08-02: Added proposal cleanup check summary field.
-- 2026-08-02: Added target-local method instance bootstrap summary field.
-- 2026-08-02: Added proposal-directory cleanup summary fields.
-- 2026-08-02: Added target-local method instance ownership summary fields.
-- 2026-08-02: Added proposal location and Markdown authority summary fields.
-- 2026-08-02: Added lifecycle and integrity preflight policy summary fields.
-- 2026-08-01: Added bottom-up change-request flow summary fields.
-- 2026-08-01: Added phased dry-run sequence summary fields.
-- 2026-08-01: Added intended-action preview status fields.
-- 2026-08-01: Added read-only Git command allow-list count.
-- 2026-08-01: Added adapter surface and target profile summary fields.
-- 2026-08-01: Added read-only real-repository test plan inspection command.
+- 2026-10-13: Added proposal cleanup check summary field.
+- 2026-10-13: Added target-local method instance bootstrap summary field.
+- 2026-10-13: Added proposal-directory cleanup summary fields.
+- 2026-10-13: Added target-local method instance ownership summary fields.
+- 2026-10-13: Added proposal location and Markdown authority summary fields.
+- 2026-10-13: Added lifecycle and integrity preflight policy summary fields.
+- 2026-10-13: Added bottom-up change-request flow summary fields.
+- 2026-10-13: Added phased dry-run sequence summary fields.
+- 2026-10-13: Added intended-action preview status fields.
+- 2026-10-13: Added read-only Git command allow-list count.
+- 2026-10-13: Added adapter surface and target profile summary fields.
+- 2026-10-13: Added read-only real-repository test plan inspection command.
 #>
 
-$workspaceRoot = Split-Path $PSScriptRoot -Parent
+$inventoryRoot = Split-Path $PSScriptRoot -Parent
+$workspaceRoot = Split-Path $inventoryRoot -Parent
 $planPath = Join-Path $workspaceRoot '.copilot\History\Logs\RealRepoTestPlan.json'
 
 if (-not (Test-Path -LiteralPath $planPath)) {

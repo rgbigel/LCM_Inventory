@@ -4,7 +4,7 @@
 CRP-ID: CRP-180
 Title: Tool Explorer Ergonomics: Column Realignment, Bulk Finalize, and Precompiled Dynamic Taxonomy Options
 Status: Completed
-Date: 2026-09-26
+Date: 2026-10-13
 ```
 
 ---

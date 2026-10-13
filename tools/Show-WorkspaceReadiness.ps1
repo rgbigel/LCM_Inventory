@@ -4,8 +4,8 @@
 .DESCRIPTION
   Module: LCM_Inventory/tools/Show-WorkspaceReadiness.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 1.0.0
-  Date: 2026-09-19
+  Version: 10.0.0
+  Date: 2026-10-13
   ShortName: ShowReadiness
   
   Features:
@@ -65,7 +65,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$scriptVersion = "1.0.0"
+$scriptVersion = "10.0.0"
 $scriptName = "Show-WorkspaceReadiness"
 
 if ($Help) {
@@ -534,7 +534,7 @@ if ($Html) {
                 <span id="modalStatusBadge" class="badge badge-success">PASSED</span>
                 <span id="modalRepoName" style="font-size: 18px; font-weight: 700;">Repo Name</span>
             </div>
-            <div id="modalSubtitle" style="font-size: 12px; color: var(--text-secondary); margin-bottom: 16px;">Verified: 2026-09-19 &bull; Duration: 341ms</div>
+            <div id="modalSubtitle" style="font-size: 12px; color: var(--text-secondary); margin-bottom: 16px;">Verified: 2026-10-13 &bull; Duration: 341ms</div>
 
             <div id="modalGatesList" style="margin-top: 14px;">
             </div>

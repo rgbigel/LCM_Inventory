@@ -35,20 +35,21 @@ Module: Invoke-RealRepoDryRun.ps1
 Purpose: Report LCM_AI real-repository dry-run readiness without writing to any target repository.
 Path: tools/Invoke-RealRepoDryRun.ps1
 Authors: LCM_AI Engine
-Version: 1.7.0
+Version: 10.0.0
 Caller Contract: Called during readiness and operator preparation; reports blocked/ready state and performs read-only git status only after dry-run is enabled.
 Changelog:
-- 2026-08-01: Added bottom-up change-request flow summary.
-- 2026-08-01: Added phased dry-run sequence summary.
-- 2026-08-01: Added intended-action content-state count summary.
-- 2026-08-01: Added intended-action preview summary to dry-run report.
-- 2026-08-01: Added read-only Git metadata summary from target profile.
-- 2026-08-01: Added read-only target profile summary to dry-run report.
-- 2026-08-01: Added observation and forbidden-action counts to dry-run report.
-- 2026-08-01: Added read-only real-repository dry-run reporter.
+- 2026-10-13: Added bottom-up change-request flow summary.
+- 2026-10-13: Added phased dry-run sequence summary.
+- 2026-10-13: Added intended-action content-state count summary.
+- 2026-10-13: Added intended-action preview summary to dry-run report.
+- 2026-10-13: Added read-only Git metadata summary from target profile.
+- 2026-10-13: Added read-only target profile summary to dry-run report.
+- 2026-10-13: Added observation and forbidden-action counts to dry-run report.
+- 2026-10-13: Added read-only real-repository dry-run reporter.
 #>
 
-$workspaceRoot = Split-Path $PSScriptRoot -Parent
+$inventoryRoot = Split-Path $PSScriptRoot -Parent
+$workspaceRoot = Split-Path $inventoryRoot -Parent
 $copilotRoot = Join-Path $workspaceRoot '.copilot'
 $planPath = Join-Path $copilotRoot 'History\Logs\RealRepoTestPlan.json'
 $stabilizationPath = Join-Path $copilotRoot 'History\Logs\Stabilization.json'
@@ -56,7 +57,7 @@ $qualityGateModulePath = Join-Path $PSScriptRoot 'QualityGates\WorkspaceQualityG
 
 Import-Module $qualityGateModulePath -Force
 
-$planValidation = Assert-RealRepoTestPlan -WorkspaceRoot $workspaceRoot -RealRepoTestPlanPath $planPath -StabilizationPath $stabilizationPath
+$planValidation = Assert-RealRepoTestPlan -WorkspaceRoot $inventoryRoot -RealRepoTestPlanPath $planPath -StabilizationPath $stabilizationPath
 $plan = Get-Content -Raw -Path $planPath | ConvertFrom-Json
 $targetProfilePath = Join-Path $PSScriptRoot 'Get-RealRepoTargetProfile.ps1'
 $targetProfile = & $targetProfilePath

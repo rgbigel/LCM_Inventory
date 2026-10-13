@@ -8,6 +8,6 @@ numeric ledger priority was passed directly to JavaScript `toUpperCase()`.
 ## Status
 
 The source template now normalizes priority with `String(value ?? 'M')` before
-case conversion in filtering, sorting, and rendering. The regenerated v1.4.0
+case conversion in filtering, sorting, and rendering. The regenerated 10.0.0
 artifact loaded 202 proposal rows containing numeric priority `3`; Reset filters
 completed with no browser page errors.

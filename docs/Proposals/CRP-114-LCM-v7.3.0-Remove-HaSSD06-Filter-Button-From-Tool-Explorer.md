@@ -2,13 +2,13 @@
 Proposal-ID: CRP-114
 CR-ID: CRP-114
 Scope: LCM / Tool Explorer & Dashboard UI
-Version: v7.3.0
+Version: 10.0.0
 Affected-Repos: [LCM]
 Status: OPEN
-Date: 2026-09-07
+Date: 2026-10-13
 Author: rgbig
 Target Scope: LCM_Inventory/modules/LcmToolCatalog.psm1, LCM_Inventory/tools/Show-Tools.ps1, LCM_Inventory/assets/lcm-tool-explorer.js, SHOW_TOOLS.html
-Affected Version Range: v7.3.0
+Affected Version Range: 10.0.0
 Impacted Repositories: [LCM]
 Severity: Low
 ---

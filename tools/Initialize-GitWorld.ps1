@@ -12,8 +12,8 @@
            Does NOT alter or replace existing repositories in Git Root.
   Path: LCM_Inventory/tools/Initialize-GitWorld.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 1.0.0
-  Date: 2026-10-08
+  Version: 10.0.0
+  Date: 2026-10-13
   Rule: RULE-PS-001 - RULE-PS-021, RULE-LCM-020
 #>
 
@@ -45,7 +45,7 @@ if ($PSVersionTable.PSEdition -ne 'Core' -or $PSVersionTable.PSVersion.Major -lt
     throw 'Initialize-GitWorld.ps1 requires PowerShell 7 (pwsh.exe). Windows PowerShell (powershell.exe) is not supported.'
 }
 
-$scriptVersion = '1.0.0'
+$scriptVersion = '10.0.0'
 $scriptName = 'Initialize-GitWorld'
 
 if ($Help) {

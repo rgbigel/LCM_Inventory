@@ -7,8 +7,8 @@
            and sortable LCM-standard HTML viewer, and optionally opens it.
   Path: tools/Show-LcmAnalysisViewer.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 1.5.0
-  Date: 2026-10-05
+  Version: 10.0.0
+  Date: 2026-10-13
 #>
 
 [CmdletBinding()]
@@ -36,7 +36,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$scriptVersion = '1.5.0'
+$scriptVersion = '10.0.0'
 $scriptName = 'Show-LcmAnalysisViewer'
 
 if ($Help) {

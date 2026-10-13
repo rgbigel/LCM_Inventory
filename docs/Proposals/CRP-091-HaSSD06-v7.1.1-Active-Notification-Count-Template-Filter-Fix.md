@@ -2,13 +2,13 @@
 Proposal-ID: CRP-091
 CR-ID: CR-2026-042
 Scope: HaSSD06
-Version: v7.1.1
+Version: 10.0.0
 Affected-Repos: [HaSSD06, HaSSD06_Inventory]
 Status: Suggested
-Date: 2026-08-30
+Date: 2026-10-13
 Author: rgbig
 Target Scope: HaSSD06 / templates / sensor.active_notification_count_fixed
-Affected Version Range: v7.1.1
+Affected Version Range: 10.0.0
 Impacted Repositories: [HaSSD06, HaSSD06_Inventory]
 ---
 

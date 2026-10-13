@@ -17,8 +17,8 @@
            7. Conforms to RULE-PS-001 through RULE-PS-012, RULE-ELEV-002, and LCM structured logging.
   Path: D:\Git_Repositories\LCM_Tools\Repair-VolumeAcl.ps1
   Authors: Rolf, LCM_AI Governance
-  Version: 1.0.0
-  Date: 2026-08-28
+  Version: 10.0.0
+  Date: 2026-10-13
 .PARAMETER TargetVolume
   The drive letter or root path to repair (e.g. 'D:', 'A:', 'E:'). Defaults to 'D:'.
 .PARAMETER SkipFolders
@@ -60,7 +60,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$scriptVersion = "1.0.0"
+$scriptVersion = "10.0.0"
 $scriptName = "Repair-VolumeAcl"
 
 # ------------------------------------------------------------------------------

@@ -6,7 +6,7 @@
 - **Origin Repo**: `HaSSD06_Inventory`
 - **Target Component**: [`HaSSD06_Inventory/tools/Show-HaInventoryApp.ps1`](file:///d:/Git_Repositories/HaSSD06_Inventory/tools/Show-HaInventoryApp.ps1), [`HaSSD06_Inventory/tools/Invoke-HaRenameCascade.ps1`](file:///d:/Git_Repositories/HaSSD06_Inventory/tools/Invoke-HaRenameCascade.ps1)
 - **Author**: Operator Directive / CRP Intake
-- **Date**: 2026-09-19
+- **Date**: 2026-10-13
 - **Priority**: High (`H`)
 - **Status**: Suggested / Open
 

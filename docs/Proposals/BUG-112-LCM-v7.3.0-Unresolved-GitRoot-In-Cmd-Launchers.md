@@ -2,13 +2,13 @@
 Proposal-ID: BUG-112
 CR-ID: BUG-112
 Scope: LCM / Command Launchers & Dispatch
-Version: v7.3.0
+Version: 10.0.0
 Affected-Repos: [LCM, LCM_Inventory]
 Status: OPEN
-Date: 2026-09-07
+Date: 2026-10-13
 Author: rgbig
 Target Scope: LCM_Inventory/Cmd/ShowCrpDates.cmd, LCM_Inventory/Cmd/*.cmd, LCM_Inventory/tools/Invoke-InteractiveDesktop.ps1
-Affected Version Range: v7.3.0
+Affected Version Range: 10.0.0
 Impacted Repositories: [LCM, LCM_Inventory]
 Severity: High
 ---

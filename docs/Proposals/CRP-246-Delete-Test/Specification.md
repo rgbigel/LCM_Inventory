@@ -4,9 +4,9 @@
 CRP-ID: CRP-246
 Title: Delete Test
 Scope: TestRepo
-Baseline-Version: v7.6.0
+Baseline-Version: 10.0.0
 Author: rgbig
-Date: 2026-10-03 21:28:44
+Date: 2026-10-13 21:28:44
 Status: Suggested
 Plan-State: suggested
 Progress-State: undecided

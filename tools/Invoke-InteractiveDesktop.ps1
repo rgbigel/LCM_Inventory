@@ -10,8 +10,8 @@
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
   Path: D:\Git_Repositories\LCM_Tools\Invoke-InteractiveDesktop.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 1.0.0
-  Date: 2026-08-25
+  Version: 10.0.0
+  Date: 2026-10-13
 .PARAMETER FilePath
   The executable or script to launch on the interactive desktop.
 .PARAMETER ArgumentList
@@ -63,7 +63,7 @@ begin {
   Set-StrictMode -Version Latest
   $ErrorActionPreference = 'Stop'
 
-  $scriptVersion = "1.1.0"
+  $scriptVersion = "10.0.0"
   $scriptName = "Invoke-InteractiveDesktop"
 
   # ------------------------------------------------------------------------------

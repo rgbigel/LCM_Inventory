@@ -1,6 +1,6 @@
 /**
  * ==============================================================================
- * LCM UNIVERSAL TABLE & THEME ENGINE (v1.1.0)
+ * LCM UNIVERSAL TABLE & THEME ENGINE (10.0.0)
  * Canonical shared UI/UX module for all LCM dashboards and viewers.
  * Conforms to CRP-2026-017, CRP-2026-018, CRP-2026-019, CRP-108, CRP-158.
  * ==============================================================================
@@ -12,7 +12,7 @@
     const STORAGE_KEY_THEME = 'lcm_theme_mode';
 
     const LcmTableEngine = {
-        version: '1.1.0',
+        version: '10.0.0',
 
         // --------------------------------------------------------------------------
         // 1. Theme Management (Light / Dark with High Contrast Persistence)

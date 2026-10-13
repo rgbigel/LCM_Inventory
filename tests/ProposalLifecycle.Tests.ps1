@@ -363,8 +363,8 @@ Describe 'Proposal lifecycle authority' {
             progress_state = 'blocked'
             disposition = 'held'
             state_history = @(
-              [PSCustomObject]@{ state = 'suggested'; timestamp = '2026-10-01 10:00:00' },
-              [PSCustomObject]@{ state = 'held'; timestamp = '2026-10-01 10:01:00' }
+              [PSCustomObject]@{ state = 'suggested'; timestamp = '2026-10-13 10:00:00' },
+              [PSCustomObject]@{ state = 'held'; timestamp = '2026-10-13 10:01:00' }
             )
           }
         )

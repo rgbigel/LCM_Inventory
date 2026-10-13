@@ -57,17 +57,18 @@ Module: Initialize-RealRepoMethodInstance.ps1
 Purpose: Create a target-local Docs/Methods method instance for a selected real repository.
 Path: tools/Initialize-RealRepoMethodInstance.ps1
 Authors: LCM_AI Engine
-Version: 1.0.0
+Version: 10.0.0
 Caller Contract: Called only after explicit operator approval; writes method scaffolding inside the target repository and never stages or commits target changes.
 Changelog:
-- 2026-08-02: Added target-local method instance bootstrap command.
+- 2026-10-13: Added target-local method instance bootstrap command.
 #>
 
 $scriptName = 'Initialize-RealRepoMethodInstance.ps1'
-$scriptVersion = '1.0.0'
+$scriptVersion = '10.0.0'
 Write-Host "$scriptName version $scriptVersion"
 
-$workspaceRoot = Split-Path $PSScriptRoot -Parent
+$inventoryRoot = Split-Path $PSScriptRoot -Parent
+$workspaceRoot = Split-Path $inventoryRoot -Parent
 $copilotRoot = Join-Path $workspaceRoot '.copilot'
 $planPath = Join-Path $copilotRoot 'History\Logs\RealRepoTestPlan.json'
 $stabilizationPath = Join-Path $copilotRoot 'History\Logs\Stabilization.json'
@@ -124,7 +125,7 @@ function Set-MethodFile {
   return 'written'
 }
 
-$planValidation = Assert-RealRepoTestPlan -WorkspaceRoot $workspaceRoot -RealRepoTestPlanPath $planPath -StabilizationPath $stabilizationPath
+$planValidation = Assert-RealRepoTestPlan -WorkspaceRoot $inventoryRoot -RealRepoTestPlanPath $planPath -StabilizationPath $stabilizationPath
 $plan = Get-Content -Raw -Path $planPath | ConvertFrom-Json
 
 if (-not $RepositoryPath) {
@@ -180,7 +181,7 @@ $manifest = [ordered]@{
   meta = [ordered]@{
     module = 'MethodInstance.json'
     path = "$relativeMethodRoot/MethodInstance.json"
-    version = '1.0.0'
+    version = '10.0.0'
     config_type = 'target-local-method-instance'
     generated_by = $scriptName
     generated_by_version = $scriptVersion

@@ -2,14 +2,14 @@
 
 - **Proposal ID**: `CRP-076`
 - **Target Repository**: `LCM` (`Git_Repositories/.agents/rules`, `LCM_Inventory`)
-- **Target Version**: `v7.3.0`
+- **Target Version**: `10.0.0`
 - **Domain**: `Lifecycle Model (LCM) Governance & Proposal Review Flow`
 - **Author**: Rolf, LCM_AI Governance
 - **Status**: `ACCEPTED` (Reviewed & Approved by Operator)
-- **Created**: `2026-09-05 21:50:00`
+- **Created**: `2026-10-13 21:50:00`
 - **Priority**: `HIGH`
 - **Target Scope**: `.agents/rules/ProposalReviewFlowPolicy.md`
-- **Affected Version Range**: `v7.2.0 - v7.3.0`
+- **Affected Version Range**: `10.0.0 - 10.0.0`
 - **Impacted Repositories**: `Git_Repositories`, `LCM_Inventory`
 
 ---
@@ -70,7 +70,7 @@ Proposals held in the `OPEN` state may transition to Implementation Planning and
 
 1. **Rule File Update**:
    - Update `D:\Git_Repositories\.agents\rules\ProposalReviewFlowPolicy.md` (and propagate via canonical junction to all child repos).
-   - Increment version to `v7.3.0`.
+   - Increment version to `10.0.0`.
 2. **Rule Matrix & Index Synchronization**:
    - Update `LCM_AI/docs/LCM-Rules-Cross-Reference.md` and `AGENTS.md` to reflect `RULE-LCM-015` through `RULE-LCM-018`.
 3. **Pre-Push AI Export Parity**:

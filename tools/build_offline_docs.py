@@ -2,8 +2,8 @@
 Module: tools/build_offline_docs.py
 Purpose: Converts Markdown specifications and runbooks into standalone, beautifully styled HTML documents for offline travel reading.
 Authors: Rolf, Workspace_AI Engine
-Version: 5.0.2
-Date: 2026-08-21
+Version: 10.0.0
+Date: 2026-10-13
 """
 
 import os
@@ -397,7 +397,7 @@ def convert_md_to_html(source_path: str, target_path: str, title: str, category:
 
         <hr>
         <div style="text-align: center; color: var(--text-muted); font-size: 12px; margin-top: 20px;">
-            LCM v5.0.2 Governance Architecture &bull; Generated for Offline Travel Reading on {os.path.basename(target_path)}
+            LCM 10.0.0 Governance Architecture &bull; Generated for Offline Travel Reading on {os.path.basename(target_path)}
         </div>
     </div>
 </body>
@@ -447,7 +447,7 @@ def build_index_portal(target_dir: str, title: str, subtitle: str, doc_list: lis
 
         <hr>
         <div style="text-align: center; color: var(--text-muted); font-size: 12px;">
-            Lifecycle Model (LCM) Framework &bull; Full Offline Travel Reading Suite &bull; Date: 2026-08-21
+            Lifecycle Model (LCM) Framework &bull; Full Offline Travel Reading Suite &bull; Date: 2026-10-13
         </div>
     </div>
 </body>

@@ -40,8 +40,8 @@ param(
              and SHA-256 staging manifest generation.
     Path: tools/Invoke-BeyondCompareReview.ps1
     Authors: Rolf, LCM_AI Engine
-    Version: 8.4.2
-    Date: 2026-09-30
+    Version: 10.0.0
+    Date: 2026-10-13
 .PARAMETER RepositoryName
     The name or directory path of the Git repository to review (e.g. 'AuthorizeMasterUser', 'Git_Repositories', '.').
 .PARAMETER BaseCommit
@@ -49,7 +49,7 @@ param(
 .PARAMETER Exclusions
     Additional file or directory exclusion masks (Aliases: -Exclude, -Filters). Standard LCM exclusions are always applied.
 .PARAMETER CRP
-    Exact Change Request Proposal or BUG identifier (e.g. 'CRP-134' or 'BUG-12') to correlate with review receipts.
+    Exact Change Request Proposal or BUG identifier (e.g. 'CRP-134' or 'BUG-12') to correlate with lifecycle review receipts.
 .PARAMETER Wait
     Wait synchronously for the Beyond Compare review session to close before evaluating staging.
 .PARAMETER Help
@@ -68,7 +68,7 @@ Import-Module -Name $bcompareWindowToolsPath -Force
 $bcompareBaselinePath = Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\BCompareBaseline.psm1'
 Import-Module -Name $bcompareBaselinePath -Force
 
-$scriptVersion = "8.4.2"
+$scriptVersion = "10.0.0"
 $scriptName = "Invoke-BeyondCompareReview"
 
 # ------------------------------------------------------------------------------
@@ -333,6 +333,17 @@ function Get-FileSha256 {
   return [System.BitConverter]::ToString($hashBytes).Replace('-', '').ToLowerInvariant()
 }
 
+function Test-StandardBcrExcludedPath {
+  [CmdletBinding()]
+  param(
+    [Parameter(Mandatory = $true)]
+    [string]$RelativePath
+  )
+
+  $normalizedPath = $RelativePath.Replace('/', '\').TrimStart('\')
+  return $normalizedPath -match '^(?i)(?:\.git|\.venv|venv|\.env|__pycache__|scratch|logs|work|data|node_modules|bin|obj)(?:\\|$)|(?:^|\\)\.lcm\\(?:logs|scratch|archive|tools\\links)(?:\\|$)|(?i)\.(?:pyc|pyo|inventory|log|tmp|bak|swp|lock)$'
+}
+
 function Audit-BeyondCompareReviewStaging {
   [CmdletBinding()]
   param(
@@ -444,6 +455,7 @@ function Audit-BeyondCompareReviewStaging {
   }
 
   $uncopiedFiles = [System.Collections.Generic.List[PSCustomObject]]::new()
+  $excludedFiles = [System.Collections.Generic.List[PSCustomObject]]::new()
   $gitStatus = @(git -C $RepoPath status --porcelain 2>$null)
   foreach ($statusLine in $gitStatus) {
     if ($statusLine.Length -ge 4) {
@@ -454,7 +466,15 @@ function Audit-BeyondCompareReviewStaging {
       $alreadyStaged = ($completedFiles | Where-Object { $_.RelativePath -eq $normPath }) -or
                        ($deleteFiles | Where-Object { $_.RelativePath -eq $normPath }) -or
                        ($renameFiles | Where-Object { $_.OldRelativePath -eq $normPath })
-      if (-not $alreadyStaged) {
+      if (Test-StandardBcrExcludedPath -RelativePath $normPath) {
+        $excludedFiles.Add([PSCustomObject]@{
+          RelativePath = $normPath
+          LivePath     = Join-Path $RepoPath $normPath
+          Status       = $statusCode
+          Reason       = 'Standard BCR exclusion'
+        })
+      }
+      elseif (-not $alreadyStaged) {
         $uncopiedFiles.Add([PSCustomObject]@{
           RelativePath = $normPath
           LivePath     = Join-Path $RepoPath $normPath
@@ -465,7 +485,8 @@ function Audit-BeyondCompareReviewStaging {
   }
 
   $stagingManifest = [ordered]@{
-    CRP            = $CRP
+    ReviewIdentity = $CRP
+    ReviewType     = 'Lifecycle'
     RepositoryName = $RepoName
     RepositoryPath = $RepoPath
     BaselineCommit = $CommitSha
@@ -475,9 +496,11 @@ function Audit-BeyondCompareReviewStaging {
     Renames        = $renameFiles
     Deletions      = $deleteFiles
     Uncopied       = $uncopiedFiles
+    Excluded       = $excludedFiles
     RejectedEmpty  = $rejectedEmpty
   }
 
+  $stagingManifest['CRP'] = $CRP
   $manifestFile = Join-Path $reviewsDir "staged_review_${RepoName}.json"
   $stagingManifest | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath $manifestFile -Encoding UTF8
 
@@ -485,6 +508,7 @@ function Audit-BeyondCompareReviewStaging {
   Write-Host "==========================================================================" -ForegroundColor Cyan
   Write-Host " BEYOND COMPARE INTERACTIVE REVIEW STAGING EVALUATION" -ForegroundColor Cyan
   Write-Host "==========================================================================" -ForegroundColor Cyan
+  Write-Host " Review Identity : $CRP (Lifecycle)"
   Write-Host " Repository      : $RepoName"
   Write-Host " Baseline Commit : $CommitSha"
   Write-Host " Staging Record  : $manifestFile" -ForegroundColor DarkCyan
@@ -508,6 +532,11 @@ function Audit-BeyondCompareReviewStaging {
   if ($rejectedEmpty.Count -gt 0) {
     Write-Host " [REJECTED - EMPTY] ($($rejectedEmpty.Count) files):" -ForegroundColor Magenta
     foreach ($re in $rejectedEmpty) { Write-Host "   ! $($re.RelativePath) (0 bytes)" -ForegroundColor Magenta }
+  }
+
+  if ($excludedFiles.Count -gt 0) {
+    Write-Host " [EXCLUDED - NON-COMMITTABLE] ($($excludedFiles.Count) files):" -ForegroundColor DarkGray
+    foreach ($excluded in $excludedFiles) { Write-Host "   - $($excluded.RelativePath) ($($excluded.Reason))" -ForegroundColor DarkGray }
   }
 
   Write-Host "==========================================================================" -ForegroundColor Cyan
@@ -581,7 +610,7 @@ $BeyondComparePath = if (-not [string]::IsNullOrWhiteSpace($env:BCOMPARE_PATH) -
   if ($cmd) { $cmd.Source } else { 'D:\Tools\Beyond Compare 5\BCompare.exe' }
 }
 
-if (-not (Test-Path -LiteralPath $BeyondComparePath)) {
+if (-not $NoLaunch -and -not (Test-Path -LiteralPath $BeyondComparePath)) {
   throw "Beyond Compare executable not found at: '$BeyondComparePath'"
 }
 
@@ -626,10 +655,10 @@ if (-not (Test-Path -LiteralPath $scratchReviewDir)) {
   $null = New-Item -ItemType Directory -Path $scratchReviewDir -Force
 }
 
-$crpSegment = $CRP
-$crpReviewDir = Join-Path $scratchReviewDir $crpSegment
-if (-not (Test-Path -LiteralPath $crpReviewDir)) {
-  $null = New-Item -ItemType Directory -Path $crpReviewDir -Force
+$reviewIdentity = $CRP
+$reviewStagingDir = Join-Path $scratchReviewDir $reviewIdentity
+if (-not (Test-Path -LiteralPath $reviewStagingDir)) {
+  $null = New-Item -ItemType Directory -Path $reviewStagingDir -Force
 }
 
 # Left-hand side: identifies the local target commit and the committed rules snapshot used to replace a junction.
@@ -645,12 +674,11 @@ $reviewFolderStem = if ($commitSha -ne 'unborn') {
 } else {
   "Baseline_${repoName}_unborn_${rulesBaselineSegment}"
 }
-$tempReviewRoot = Join-Path $crpReviewDir $reviewFolderStem
+$tempReviewRoot = Join-Path $reviewStagingDir $reviewFolderStem
 
-# Right-hand side: CRP context is already captured by $crpReviewDir (BC_Review\CRP-nnn\).
-# The junction name needs only the repo name — no redundant _CRP-nnn suffix.
+# The lifecycle review directory is scoped by its exact CRP/BUG identity.
 $liveJunctionStem = "Live_${repoName}"
-$liveJunction = Join-Path $crpReviewDir $liveJunctionStem
+$liveJunction = Join-Path $reviewStagingDir $liveJunctionStem
 $baselineManifestFile = Join-Path $tempReviewRoot ".lcm_baseline_manifest.json"
 
 $reuseCache = $false
@@ -770,7 +798,7 @@ $filterMask = ($filterList -join ';')
 # 6. Establish Dedicated Per-CRP Review Bridge & Update Review Session
 # ------------------------------------------------------------------------------
 # Purge any stale live junction for this repo in this CRP directory (exact name match — no suffix).
-$oldJunctions = @(Get-ChildItem -LiteralPath $crpReviewDir -Directory -Force -ErrorAction SilentlyContinue | Where-Object { $_.Name -eq "Live_${repoName}" -and $_.LinkType -eq 'Junction' })
+$oldJunctions = @(Get-ChildItem -LiteralPath $reviewStagingDir -Directory -Force -ErrorAction SilentlyContinue | Where-Object { $_.Name -eq "Live_${repoName}" -and $_.LinkType -eq 'Junction' })
 foreach ($oj in $oldJunctions) {
   try { [System.IO.Directory]::Delete($oj.FullName, $false) } catch {}
 }
@@ -779,7 +807,6 @@ if (Test-Path -LiteralPath $liveJunction) {
 }
 New-Item -ItemType Junction -Path $liveJunction -Target $repoPath | Out-Null
 
-# Backwards compatibility: maintain root-level ACTIVE_BASELINE & ACTIVE_LIVE bridges
 $junctionBaseline = Join-Path $scratchReviewDir "ACTIVE_BASELINE"
 $junctionLiveRoot = Join-Path $scratchReviewDir "ACTIVE_LIVE"
 if (Test-Path -LiteralPath $junctionBaseline) {
@@ -791,12 +818,14 @@ if (Test-Path -LiteralPath $junctionLiveRoot) {
 New-Item -ItemType Junction -Path $junctionBaseline -Target $tempReviewRoot | Out-Null
 New-Item -ItemType Junction -Path $junctionLiveRoot -Target $repoPath | Out-Null
 
-$sessionName = if (-not [string]::IsNullOrWhiteSpace($CRP)) { "${CRP}_Review" } else { "LCM_Review" }
+$sessionName = "${CRP}_Review"
 
 # Update BCSessions.xml for both the dedicated CRP session and legacy LCM_Review.
 # The right-pane bridge retains the CRP-specific display name while targeting the live repository.
-Update-BCReviewSession -LeftPath $tempReviewRoot -RightPath $liveJunction -FilterMask $filterMask -SessionName $sessionName
-Update-BCReviewSession -LeftPath $tempReviewRoot -RightPath $liveJunction -FilterMask $filterMask -SessionName 'LCM_Review'
+if (-not $NoLaunch) {
+  Update-BCReviewSession -LeftPath $tempReviewRoot -RightPath $liveJunction -FilterMask $filterMask -SessionName $sessionName
+  Update-BCReviewSession -LeftPath $tempReviewRoot -RightPath $liveJunction -FilterMask $filterMask -SessionName 'LCM_Review'
+}
 
 $sessionMeta = [ordered]@{
   RepositoryName   = $repoName
@@ -815,10 +844,12 @@ $sessionMeta = [ordered]@{
   CommitDate       = if ($commitSha -ne 'unborn') { (git -C $repoPath log -n 1 --pretty=format:"%cI" $commitSha) } else { (Get-Date).ToString("o") }
   SessionStartedAt = (Get-Date).ToString("o")
   FilterMask       = $filterMask
-  CRP              = $CRP
+  ReviewIdentity   = $reviewIdentity
+  ReviewType       = 'Lifecycle'
 }
+$sessionMeta['CRP'] = $CRP
 $sessionMeta | ConvertTo-Json -Depth 3 | Set-Content -LiteralPath (Join-Path $tempReviewRoot ".lcm_review.json") -Encoding utf8
-$sessionMeta | ConvertTo-Json -Depth 3 | Set-Content -LiteralPath (Join-Path $crpReviewDir ".lcm_review.json") -Encoding utf8
+$sessionMeta | ConvertTo-Json -Depth 3 | Set-Content -LiteralPath (Join-Path $reviewStagingDir ".lcm_review.json") -Encoding utf8
 
 # Freeze baseline metadata timestamps to commit date so NTFS does not stamp baseline root with 'now'
 $metaCommitTime = if ($commitSha -ne 'unborn') {
@@ -856,7 +887,8 @@ else {
 $null = Audit-BeyondCompareReviewStaging -TempReviewRoot $tempReviewRoot -RepoPath $repoPath -RepoName $repoName -CommitSha $commitSha -CRP $CRP
 
 if ($NoLaunch) {
-  Write-Host "Prepared review staging without launching Beyond Compare." -ForegroundColor DarkGray
+  Write-Host "Prepared $reviewType review staging without launching Beyond Compare." -ForegroundColor DarkGray
+  return
 }
 else {
 $existingReviewProcesses = @(Get-SameRepositoryBCompareProcess -RepositoryName $repoName -Process @(Get-Process -Name 'BCompare' -ErrorAction SilentlyContinue) -CRP $CRP)

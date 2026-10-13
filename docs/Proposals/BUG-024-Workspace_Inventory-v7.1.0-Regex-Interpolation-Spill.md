@@ -1,11 +1,11 @@
 ---
 Bug-ID: BUG-024
 Scope: LCM_Inventory
-Version: v7.1.0
+Version: 10.0.0
 Affected-Repos: [LCM_Inventory]
 Severity: High
 Status: Completed
-Date: 2026-08-30
+Date: 2026-10-13
 Author: Rolf
 Root-Cause: .NET Regex.Replace interpreted PowerShell dollar-sign variables as regex capture groups during HTML data injection, corrupting script tags.
 ---

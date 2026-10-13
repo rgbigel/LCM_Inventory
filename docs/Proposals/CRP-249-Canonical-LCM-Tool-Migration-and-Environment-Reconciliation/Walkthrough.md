@@ -21,7 +21,7 @@
   with the newer 8,482-byte implementation from the retired location.
 - All 21 affected public launchers now target `LCM_Inventory\tools`.
 - The empty retired tools directory was moved without deletion to
-  `LCM_Inventory\data\archives\CRP-249\2026-10-07-LCM_AI-tools-empty`.
+  `LCM_Inventory\data\archives\CRP-249\2026-10-13-LCM_AI-tools-empty`.
 - Historical proposals, closed change records, and immutable evidence that
   mention the retired path remain preserved as provenance; CRP-249 is the
   authoritative correction for the active topology.

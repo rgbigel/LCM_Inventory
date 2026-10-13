@@ -5,7 +5,7 @@ BUG-ID: BUG-179
 Title: Tool Explorer Alias Omission, Subsystem Override Reversion, and Two-State Finalize Blockade Defect
 Scope: .lcm, LCM_Inventory, Tool Explorer UI, Tool Catalog Sync Engine, LCM Desktop Daemon
 Status: Completed
-Date: 2026-09-26
+Date: 2026-10-13
 ```
 
 ---

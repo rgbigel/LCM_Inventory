@@ -9,8 +9,8 @@
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
   Path: tools/Invoke-LcmProtocol.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 1.1.0
-  Date: 2026-08-27
+  Version: 10.0.0
+  Date: 2026-10-13
 .PARAMETER Uri
   The incoming lcm:// URI string (e.g. lcm://run?tool=Kill-LogitechUpdate.ps1&elevated=true).
 .PARAMETER Help
@@ -29,7 +29,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$scriptVersion = "1.0.0"
+$scriptVersion = "10.0.0"
 $scriptName = "Invoke-LcmProtocol"
 
 if ($Help) {

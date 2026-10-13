@@ -9,8 +9,8 @@
            milestones for single and multi-item operations (PROCEED, COMPLETE, PUSH, do #n-#m).
   Path: LCM_Inventory/tools/Set-LcmActionProgress.ps1
   Authors: Rolf, LCM_AI Governance
-  Version: 7.3.0
-  Date: 2026-09-07
+  Version: 10.0.0
+  Date: 2026-10-13
 
 .PARAMETER Action
   Operation to execute: 'Start', 'Update', 'Complete', 'Stop', or 'Get'. Defaults to 'Get'.
@@ -84,7 +84,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$scriptVersion = '7.3.0'
+$scriptVersion = '10.0.0'
 $scriptName = 'Set-LcmActionProgress'
 
 # ------------------------------------------------------------------------------

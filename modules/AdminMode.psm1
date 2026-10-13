@@ -3,8 +3,8 @@ Module: AdminMode.psm1
 Purpose: Provides non-elevation administrator authorization for governed rule changes.
 Path: modules/AdminMode.psm1
 Authors: Rolf, LCM_AI Engine
-Version: 1.0.0
-Date: 2026-10-05
+Version: 10.0.0
+Date: 2026-10-13
 #>
 
 Set-StrictMode -Version Latest

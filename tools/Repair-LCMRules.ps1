@@ -4,8 +4,8 @@
 .DESCRIPTION
     Module: tools/Repair-LCMRules.ps1
     Authors: Rolf, LCM_AI Engine
-    Version: 1.1.0
-    Date: 2026-09-10
+    Version: 10.0.0
+    Date: 2026-10-13
 #>
 
 [CmdletBinding(SupportsShouldProcess = $true)]
@@ -63,7 +63,7 @@ if (-not $canonicalRulesDir) {
 }
 
 # Read global LCM baseline
-$globalVersion = '6.1.1'
+$globalVersion = '10.0.0'
 $reqDoc = Join-Path $WorkspaceRoot 'LCM_AI\docs\Requirements.md'
 if (Test-Path $reqDoc) {
     $match = Select-String -Path $reqDoc -Pattern '^Version:\s*(\S+)' | Select-Object -First 1

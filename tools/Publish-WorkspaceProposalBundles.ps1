@@ -7,8 +7,8 @@
            optionally pushes those commits without staging unrelated changes.
   Path: LCM_Inventory/tools/Publish-WorkspaceProposalBundles.ps1
   Authors: GitHub Copilot
-  Version: 8.0.0
-  Date: 2026-09-29
+  Version: 10.0.0
+  Date: 2026-10-13
 #>
 
 [CmdletBinding()]

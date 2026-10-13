@@ -1,11 +1,11 @@
 ---
 Bug-ID: BUG-127
 Scope: LCM_Inventory
-Version: v7.4.2
+Version: 10.0.0
 Affected-Repos: [LCM_Inventory]
 Severity: High
 Status: In-Progress
-Date: 2026-09-09
+Date: 2026-10-13
 Author: Operator Directive / Bug Intake
 Root-Cause: Desynchronization between header metadata, script runtime version variables, and UI/dashboard tables in Control Hub (CM_CONTROL_HUB.html, Show-CmControlHub.ps1, and tool documentation parsers), causing stale or hardcoded tool versions to be displayed in tables, console feeds, and logs.
 ---
@@ -13,11 +13,11 @@ Root-Cause: Desynchronization between header metadata, script runtime version va
 # BUG-127: Control Hub Table and Runtime Tool Version Desynchronization Across Messages, Logs, and UI Tables
 
 ## 1. Issue Summary
-When permanent tools or PowerShell scripts undergo version updates (e.g. `Show-CmControlHub.ps1` updated from `v1.1.1` to `v1.2.0`), the tabular displays, console output, and logs within the Control Hub do not consistently reflect the updated tool version. The correct version must be deterministically propagated and displayed across all messages, logs, and tabular interfaces.
+When permanent tools or PowerShell scripts undergo version updates (e.g. `Show-CmControlHub.ps1` updated from `10.0.0` to `10.0.0`), the tabular displays, console output, and logs within the Control Hub do not consistently reflect the updated tool version. The correct version must be deterministically propagated and displayed across all messages, logs, and tabular interfaces.
 
 ## 2. Root Cause & Architectural Decision
-1. **Fragile Client-Side Regex Guessing**: Previously, the HTML dashboard relied on client-side JavaScript regexes (`extractDocMetadata`) executed at runtime in the browser to guess version strings from raw text strings, which frequently fell back to defaults (`v1.0.0`) or missed internal script variables (`$scriptVersion`).
-2. **Hardcoded Header Strings**: Static version labels in `<title>` and `<h1>` (e.g. `V6.1.0`) were out of sync with the active LCM baseline and tool versions.
+1. **Fragile Client-Side Regex Guessing**: Previously, the HTML dashboard relied on client-side JavaScript regexes (`extractDocMetadata`) executed at runtime in the browser to guess version strings from raw text strings, which frequently fell back to defaults (`10.0.0`) or missed internal script variables (`$scriptVersion`).
+2. **Hardcoded Header Strings**: Static version labels in `<title>` and `<h1>` (e.g. `V10.0.0`) were out of sync with the active LCM baseline and tool versions.
 3. **Compile-Time Pre-Compilation Invariant**: Rather than guessing dynamically at runtime in the browser, the authoritative tool and document versions must be extracted and pre-compiled directly during the PowerShell compilation step (`Show-CmControlHub.ps1`), baking a verified metadata catalog (`RAW_COMPILED_CATALOG`) and explicit template tokens directly into the rendered HTML.
 4. **Dedicated Version Subtitle Layout**: Because the full versioning string (Tool version, LCM baseline version, and build timestamp) is long, it is displayed on a dedicated subtitle line below the main heading rather than crowding the primary title bar.
 

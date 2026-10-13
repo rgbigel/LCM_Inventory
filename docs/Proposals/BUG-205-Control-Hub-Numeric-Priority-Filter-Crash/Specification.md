@@ -3,7 +3,7 @@
 ```yaml
 Bug-ID: BUG-205
 Priority: 10
-Scope: LCM Control Hub v1.4.0 proposal filtering and rendering
+Scope: LCM Control Hub 10.0.0 proposal filtering and rendering
 Status: Active
 Plan-State: approved
 Progress-State: in_progress

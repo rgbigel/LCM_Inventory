@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LCM Workspace Inventory Explorer V6.1.0</title>
+    <title>LCM Workspace Inventory Explorer V10.0.0</title>
     <style>
         :root {
             --bg-primary: #0d1117;
@@ -229,7 +229,7 @@
         <header>
             <div class="header-title">
                 <div>
-                    <h1>🛠️ LCM Workspace Inventory Explorer <span style="font-size: 0.6em; color: var(--text-muted); vertical-align: middle;">V6.1.0</span></h1>
+                    <h1>🛠️ LCM Workspace Inventory Explorer <span style="font-size: 0.6em; color: var(--text-muted); vertical-align: middle;">V10.0.0</span></h1>
                     <div class="header-meta">
                         <span>Workspace Root: <strong>D:\Git_Repositories</strong></span>
                         <span>•</span>
@@ -247,7 +247,7 @@
                 <button class="btn" onclick="openControlHub()">
                     <span>🎛️</span> Open CM Control Hub
                 </button>
-                <span class="badge badge-success" id="schemaBadge">LCM Active &bull; v7.1.1</span>
+                <span class="badge badge-success" id="schemaBadge">LCM Active &bull; 10.0.0</span>
             </div>
         </header>
 
@@ -424,7 +424,7 @@
                 const isGit = r.GitStatus === 'Git';
                 const isGov = r.LCMStatus && r.LCMStatus.includes('governed');
                 const isPlatform = r.Classification === 'platform-engine';
-                const ver = r.CurrentLCMVersion || r.AbsorbedLCMVersion || (isPlatform ? 'v7.1.1' : (isGov ? 'v7.1.1' : (isGit ? 'Legacy' : '-')));
+                const ver = r.CurrentLCMVersion || r.AbsorbedLCMVersion || (isPlatform ? '10.0.0' : (isGov ? '10.0.0' : (isGit ? 'Legacy' : '-')));
                 const head = r.HeadCommit || '-';
                 const dirty = r.DirtyState || r.GitStatus;
 
@@ -574,8 +574,8 @@
         let currentDocsList = [];
 
         function extractDocMeta(fileName, content) {
-            let version = "v1.0.0";
-            let date = "2026-08-30";
+            let version = "10.0.0";
+            let date = "2026-10-13";
             let reviewState = "ACCEPTED";
             let role = "Specification";
 

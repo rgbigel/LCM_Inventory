@@ -2,15 +2,15 @@
 Proposal-ID: CRP-025
 CR-ID: CR-2026-036
 Scope: LCM_Inventory
-Version: v7.5.0
+Version: 10.0.0
 Affected-Repos: [LCM_Inventory, .lcm]
-Status: OPEN (Bundled in BUNDLE-STD-DISPLAY-v7.5.0)
-Date: 2026-08-30
+Status: OPEN (Bundled in BUNDLE-STD-DISPLAY-10.0.0)
+Date: 2026-10-13
 Author: rgbig
 Target Scope: Global Standard Displays & LCM_Inventory
-Affected Version Range: v7.1.0 -> v7.5.0
+Affected Version Range: 10.0.0 -> 10.0.0
 Impacted Repositories: [LCM_Inventory, .lcm]
-Logical-Bundle: BUNDLE-STD-DISPLAY-v7.5.0
+Logical-Bundle: BUNDLE-STD-DISPLAY-10.0.0
 ---
 
 # CRP-025: Single-Instance Control Hub Tab Lifecycle Coordination, Auto-Retirement, and Quiet Render Engine

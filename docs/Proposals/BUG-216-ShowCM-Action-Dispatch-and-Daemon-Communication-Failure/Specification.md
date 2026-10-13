@@ -4,9 +4,9 @@ Module: LCM_Inventory/assets/CM_CONTROL_HUB.html
 Purpose: Fix ShowCM proposal lifecycle action dispatching to non-existent scripts, correct silent error swallowing in executeDaemonCommand, and validate held/deferred lifecycle states in backend tools.  
 Path: LCM_Inventory/docs/Proposals/BUG-216-ShowCM-Action-Dispatch-and-Daemon-Communication-Failure/Specification.md  
 Authors: rgbig, LCM_AI Engine  
-Version: 1.0.0  
+Version: 10.0.0
 Status: Authoritative Specification  
-Date: 2026-10-03  
+Date: 2026-10-13
 App: App: 1 - CM Interactive Control Hub  
 
 ---

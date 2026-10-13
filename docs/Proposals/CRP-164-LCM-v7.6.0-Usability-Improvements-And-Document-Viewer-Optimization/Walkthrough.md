@@ -4,9 +4,9 @@
 CRP-ID: CRP-164
 Title: Usability Improvements & Interactive Document Viewer Optimization
 Scope: LCM Governance, CM Control Hub, Documentation Review Engine & Tools Catalog
-Baseline-Version: v7.6.0
+Baseline-Version: 10.0.0
 Author: Rolf, LCM_AI Engine
-Date: 2026-09-21
+Date: 2026-10-13
 Status: Suggested
 Plan-State: suggested
 Progress-State: queued

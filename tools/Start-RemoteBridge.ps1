@@ -9,8 +9,8 @@
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), RULE-PS-010 (CLI Help), and RULE-PS-011 (Interactive Desktop Dispatch).
   Path: tools/Start-RemoteBridge.ps1
   Authors: Rolf, LCM Workspace Automation
-  Version: 2.0.0
-  Date: 2026-08-26
+  Version: 10.0.0
+  Date: 2026-10-13
 .PARAMETER BindIp
   IP address interface to bind the remote bridge daemon on (Defaults to detected LAN IP e.g. 192.168.10.2).
 .PARAMETER StartPort
@@ -55,7 +55,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
-$scriptVersion = "2.0.0"
+$scriptVersion = "10.0.0"
 $scriptName = "Start-RemoteBridge"
 
 # ------------------------------------------------------------------------------
@@ -253,7 +253,7 @@ Write-ToolLog -Message "--------------------------------------------------------
 # 5. Render Mobile Pairing QR Code in Terminal
 # ------------------------------------------------------------------------------
 try {
-  $qrAscii = Invoke-RestMethod -Uri "https://qrenco.de/$targetUrl" -Headers @{ "User-Agent" = "curl/7.68.0" } -Method Get -TimeoutSec 5
+  $qrAscii = Invoke-RestMethod -Uri "https://qrenco.de/$targetUrl" -Headers @{ "User-Agent" = "curl/10.0.0" } -Method Get -TimeoutSec 5
   Write-Host "`nScan with phone camera (while WireGuard is active):`n" -ForegroundColor Yellow
   Write-Host $qrAscii
 } catch {

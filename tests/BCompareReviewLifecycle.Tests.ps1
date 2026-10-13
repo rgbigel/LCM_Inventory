@@ -2,22 +2,34 @@ Describe 'BCompare review lifecycle contracts' {
   BeforeAll {
     $repositoryRoot = Split-Path $PSScriptRoot -Parent
     $reviewScriptPath = Join-Path $repositoryRoot 'tools\Invoke-BeyondCompareReview.ps1'
+    $dispatcherScriptPath = Join-Path $repositoryRoot 'tools\Invoke-BcrDispatcher.ps1'
     $submitScriptPath = Join-Path $repositoryRoot 'tools\Submit-ReviewResult.ps1'
+    $completeCohortScriptPath = Join-Path $repositoryRoot 'tools\Complete-ReviewCohort.ps1'
     $gateScriptPath = Join-Path $repositoryRoot 'tools\Test-ReviewCommitGate.ps1'
     $clearScriptPath = Join-Path $repositoryRoot 'tools\Clear-BCReviewSession.ps1'
     $reviewScript = Get-Content -LiteralPath $reviewScriptPath -Raw -Encoding UTF8
+    $dispatcherScript = Get-Content -LiteralPath $dispatcherScriptPath -Raw -Encoding UTF8
     $submitScript = Get-Content -LiteralPath $submitScriptPath -Raw -Encoding UTF8
+    $completeCohortScript = Get-Content -LiteralPath $completeCohortScriptPath -Raw -Encoding UTF8
     $gateScript = Get-Content -LiteralPath $gateScriptPath -Raw -Encoding UTF8
     $clearScript = Get-Content -LiteralPath $clearScriptPath -Raw -Encoding UTF8
   }
 
   It 'parses all review lifecycle scripts' {
-    foreach ($scriptPath in @($reviewScriptPath, $submitScriptPath, $gateScriptPath, $clearScriptPath)) {
+    foreach ($scriptPath in @($reviewScriptPath, $dispatcherScriptPath, $submitScriptPath, $completeCohortScriptPath, $gateScriptPath, $clearScriptPath)) {
       $tokens = $null
       $parseErrors = $null
       [System.Management.Automation.Language.Parser]::ParseFile($scriptPath, [ref]$tokens, [ref]$parseErrors) | Out-Null
       $parseErrors | Should -BeNullOrEmpty
     }
+  }
+
+  It 'keeps BCR lifecycle-only without workspace review mode' {
+    $reviewScript | Should -Not -Match '\[switch\]\$Workspace'
+    $reviewScript | Should -Not -Match 'staged_workspace_review_'
+    $reviewScript | Should -Not -Match 'WORKSPACE_\$repoName'
+    $dispatcherScript | Should -Not -Match 'BCR workspace'
+    $dispatcherScript | Should -Not -Match 'Workspace = \$true'
   }
 
   It 'normalizes single-line review directives to an array before Count checks' {
@@ -27,7 +39,27 @@ Describe 'BCompare review lifecycle contracts' {
   It 'leaves review materiality to Beyond Compare insignificant-difference rules' {
     $reviewScript | Should -Match ([regex]::Escape("& `$setAttr `$state 'InsigIgnored' 'True'"))
     $reviewScript | Should -Match ([regex]::Escape('Uncopied       = $uncopiedFiles'))
+    $reviewScript | Should -Match ([regex]::Escape('Excluded       = $excludedFiles'))
+    $reviewScript | Should -Match ([regex]::Escape('[EXCLUDED - NON-COMMITTABLE]'))
     $reviewScript | Should -Not -Match ([regex]::Escape('Get-BCompareFileSha256'))
+  }
+
+  It 'classifies standard transient paths as non-committable and stages only reviewed manifest paths' {
+    $reviewScript | Should -Match 'function Test-StandardBcrExcludedPath'
+    $reviewScript | Should -Match 'scratch\|logs\|work\|data'
+    $submitScript | Should -Match 'function Test-StandardBcrExcludedPath'
+    $submitScript | Should -Match ([regex]::Escape('git -C $targetRepoPath diff --cached --quiet'))
+    $submitScript | Should -Match ([regex]::Escape('git -C $targetRepoPath add -- $completed.RelativePath'))
+    $submitScript | Should -Match ([regex]::Escape('git -C $targetRepoPath add -- $relativePath'))
+    $submitScript | Should -Not -Match ([regex]::Escape('git -C $targetRepoPath add -A'))
+  }
+
+  It 'discloses excluded paths separately and requires explicit inclusion for durable paths' {
+    $completeCohortScript | Should -Match ([regex]::Escape('Excluded non-committable paths'))
+    $completeCohortScript | Should -Match ([regex]::Escape('Test-StandardBcrExcludedPath -RelativePath $candidatePath'))
+    $completeCohortScript | Should -Match ([regex]::Escape('-IncludeUnreviewed:$repositoryPlan.IncludeUnreviewed'))
+    $submitScript | Should -Match ([regex]::Escape('Review staging manifest contains durable unreviewed paths. Re-run with -IncludeUnreviewed'))
+    $submitScript | Should -Match ([regex]::Escape('Review manifest attempted to stage standard excluded path'))
   }
 
   It 'uses one deterministic live-junction name per repository and CRP directory' {

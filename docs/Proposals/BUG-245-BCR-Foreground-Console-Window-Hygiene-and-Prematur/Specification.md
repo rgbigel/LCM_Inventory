@@ -4,9 +4,9 @@
 BUG-ID: BUG-245
 Title: BCR Foreground Console Window Hygiene and Premature Review Scratchpad Purge
 Scope: LCM_Inventory, Root (LCM_Inventory/modules/LcmDaemon)
-Baseline-Version: v8.6.0
+Baseline-Version: 10.0.0
 Author: rgbig
-Date: 2026-10-04
+Date: 2026-10-13
 Status: Suggested
 Plan-State: suggested
 Progress-State: undecided
@@ -26,9 +26,9 @@ During interactive Beyond Compare Review (BCR) workflows, two disruptive runtime
    - When `Submit-ReviewResult.ps1` commits a review, it immediately deletes the entire scratch directory (`LCM_Inventory\scratch\BC_Review\CRP-nnn`).
    - Beyond Compare 5 (which is still open in the background with file watchers active) detects the sudden deletion of its loaded paths during auto-refresh, throwing an error dialog:
      ```
-     2026-10-04 16:19:10 Fast refresh
-     2026-10-04 16:19:10 Unable to load ...\scratch\BC_Review\CRP-243\Baseline_...: The system cannot find the path specified
-     2026-10-04 16:19:10 Unable to load ...\scratch\BC_Review\CRP-243\Live_...: The system cannot find the path specified
+     2026-10-13 16:19:10 Fast refresh
+     2026-10-13 16:19:10 Unable to load ...\scratch\BC_Review\CRP-243\Baseline_...: The system cannot find the path specified
+     2026-10-13 16:19:10 Unable to load ...\scratch\BC_Review\CRP-243\Live_...: The system cannot find the path specified
      ```
    - In multi-repository CRP cohorts, this prematurely destroys the baseline folders for subsequent repos before they can be reviewed.
 

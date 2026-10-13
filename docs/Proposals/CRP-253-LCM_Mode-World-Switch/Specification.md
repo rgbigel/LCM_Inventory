@@ -5,7 +5,7 @@
 | **Proposal ID** | `CRP-253` (registered in proposals.json) |
 | **Lifecycle State** | `SUGGESTED` |
 | **Origin Repository** | `LCM_Inventory` |
-| **Date** | 2026-10-08 |
+| **Date** | 2026-10-13 |
 | **Related** | `CRP-251` (Sandboxed Prototyping Mode), `RULE-LCM-020` |
 
 ## Problem
@@ -13,10 +13,10 @@
 - Governance (rules, entry points, commit gate) must be switchable off during
   major method realignment and during prototype runs of an LCM variant, and back
   on afterwards, without harming the physical storage in `LCM_AI`.
-- On 2026-10-01 `D:\Git_Repositories\.agents` was renamed to
+- On 2026-10-13 `D:\Git_Repositories\.agents` was renamed to
   `.agents.disabled` outside any tool. Nothing detected it, nothing restored it,
   and it persisted for a week.
-- Rules reach agents through several independent channels (verified 2026-10-08):
+- Rules reach agents through several independent channels (verified 2026-10-13):
   - `AGENTS.md` / `GEMINI.md`: physical files in the root and in child repos;
     child copies differ in content.
   - Junctions: root `.agents`, `.copilot`, `.github\agents` to `LCM_AI`;
@@ -31,7 +31,7 @@
 
 ## Proposed Architecture ("World Switch") & Analysis Insights
 
-### 1. Empirical Analysis Findings (2026-10-08 Trial)
+### 1. Empirical Analysis Findings (2026-10-13 Trial)
 An exhaustive analysis demonstrated that replacing the entire Git Root (`D:\Git_Repositories`) or all internal folders with junctions to an external world is broken:
 - **Root Git Tracking (`typechange`)**: `D:\Git_Repositories` tracks `.github/`, `.githooks/`, `.vscode/`, `docs/`, and `LCM_Tools/` in Git. Converting them to junctions creates permanent `typechange` index conflicts in Git for Windows.
 - **Machine Registry `Git_Root` Mismatch**: LCM tools resolve `$gitRoot` via `HKLM:\...\Environment\Git_Root` (`D:\Git_Repositories`). If target paths resolve to `D:\Git_World\...`, path prefix boundary checks (`$path.StartsWith($gitRoot)`) fail across security and search gates.
@@ -45,7 +45,7 @@ To make the World Switch functional without breaking Git or LCM governance:
 - **Child Governance Pre-linking**: Each offloaded child repo in `D:\Git_World` is adjusted via `Initialize-GitWorld.ps1`, establishing `.agents/rules` junctions back to the canonical hub in Git Root and configuring Git global `safe.directory`.
 - **Linkage Switch**: A future operational switch determines how and when child application repositories in `D:\Git_Repositories` are linked to `D:\Git_World`. Git Root remains untouched until this switch is activated.
 
-### 3. Prototype World (`CRP-Proto-nnn`) - merged design conclusions (2026-10-08)
+### 3. Prototype World (`CRP-Proto-nnn`) - merged design conclusions (2026-10-13)
 
 A prototype is a per-CRP world built by a tool, using branches for content and
 junctions for everything the CRP does not touch. It lives outside Git Root and
@@ -104,7 +104,7 @@ never replaces the physical Git Root assets (section 2 still holds).
 
 | Alternative | Verdict |
 |---|---|
-| Root `D:\Git_Repositories` as junction to a world folder | Rejected by the 2026-10-08 trial (section 1). |
+| Root `D:\Git_Repositories` as junction to a world folder | Rejected by the 2026-10-13 trial (section 1). |
 | Ghost copy of Git Root acting on Git World | Duplicates registries; data not isolated; superseded by the prototype world. |
 | Branch-only (no clone) in the base repo | Shares one working directory; no concurrent prototypes; prototype acts on the authoritative repo. |
 | Super-junction `D:\LCM_Active` that all rule links resolve through | Attractive (one switch), but conflicts with requirement 2 (hub physical in `LCM_AI`), the `Git_Root` registry prefix checks and the correction tool's no-reparse-target guard. Not adopted; revisit after the open questions below. |

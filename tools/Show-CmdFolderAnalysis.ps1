@@ -10,8 +10,8 @@
            and localStorage priority persistence with automatic sorting.
   Path: tools/Show-CmdFolderAnalysis.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 1.7.0
-  Date: 2026-08-26
+  Version: 10.0.0
+  Date: 2026-10-13
 .PARAMETER Path
   Target directory to analyze (default: D:\OneDrive\cmd). Supports D:\@cmd, D:\OneDrive\cmd\@Repair, etc.
 .PARAMETER NoLaunch
@@ -37,7 +37,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$scriptVersion = "1.7.0"
+$scriptVersion = "10.0.0"
 
 if ($Help) {
   Write-Host "==========================================================================" -ForegroundColor Cyan

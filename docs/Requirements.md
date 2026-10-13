@@ -4,9 +4,9 @@ Module: docs/Requirements.md
 Purpose: Normative technical requirements, environmental prerequisites, safety boundaries, and compliance constraints for LCM_Inventory.  
 Path: D:/Git_Repositories/LCM_Inventory/docs/Requirements.md  
 Authors: Rolf, LCM_AI Engine  
-Version: 7.0.0  
+Version: 10.0.0
 Status: Authoritative Requirements  
-Date: 2026-09-19  
+Date: 2026-10-13
 
 ---
 
@@ -113,3 +113,43 @@ commit.
   MUST NOT require review. BCR MAY inspect those paths unfiltered on request,
   and tools MAY provide non-blocking advisory findings. Managed lifecycle hooks
   remain in force for governed changes.
+
+### REQ-WINV-013: Cohort Identity, Resolution, and Gate Contract (CRP-259)
+
+- Every lifecycle, membership, review, or completion request MUST resolve one
+  explicit **Item** target: an individual CRP/BUG or a declared COH. `CRP` and
+  `COH` are different target kinds. Resolution MUST NOT fall back to a row,
+  repository, prior selection, or merely active cohort when a selector is
+  required.
+- A cohort identity MUST be `COH-<prime>`, where `<prime>` identifies its
+  single head CRP/BUG. A cohort is invalid unless that head exists, belongs to
+  the cohort, and is its only head. Additional members are optional.
+- There MUST be no more than one active/open cohort. Inactive/closed cohorts
+  are retained as closed evidence. Creating an inactive cohort while an active
+  cohort exists is permitted. Opening an inactive cohort MUST atomically close
+  the existing active cohort before opening the selected one and MUST refuse if
+  it would leave two active cohorts.
+- Adding a member without a cohort selector is permitted only when exactly one
+  active cohort exists; it targets that cohort. All membership and lifecycle
+  changes MUST validate the complete prospective cohort before persistence and
+  MUST roll back as a unit on validation or persistence failure.
+- Before Gate 2 continuation, a COH operation MUST automatically synchronize
+  every declared member to the required gate state. Synchronization is
+  fail-closed: an unmet precondition, invalid evidence, unresolved target, or
+  member error stops the operation, starts no BCR, and advances no member.
+  Gate-state equivalence is satisfied only by the same required lifecycle gate
+  with valid evidence; a similarly named or later-looking state is not a
+  substitute.
+- Once alignment succeeds, the system MUST launch and record exactly one BCR
+  for the resolved cohort scope. Its disposition MUST enumerate and resolve
+  every member. Individual CRP BCRs remain individual scopes and MUST NOT be
+  represented as cohort acceptance.
+- Gate 1 is the CRP planning/activation halt. Gate 2 is the aligned visual BCR
+  decision. `DOIT` is a flow switch that may cross Gate 1 execution pauses but
+  MUST stop at Gate 2; it is never a Gate 2 bypass. Lifecycle actions,
+  including open/close, synchronization, BCR disposition, completion, and
+  their audit records, MUST be atomic.
+- The Control Hub MUST expose deterministic row actions appropriate to the
+  row's Item kind and state, disable or refuse invalid actions, and show the
+  resolved target, member dispositions, synchronization/no-op result, BCR
+  result, and failure reason in both result UI and append-only audit evidence.

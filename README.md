@@ -4,8 +4,8 @@ Module: LCM_Inventory
 Purpose: Authoritative Configuration Management (CM), multi-repository state tracking, LCM version lifecycle management, commit/push audit logging, and centralized Change Request (CR) management across `D:\Git_Repositories\`.  
 Path: D:\Git_Repositories\LCM_Inventory\README.md  
 Authors: Rolf, LCM_AI Engine  
-Version: 7.0.0  
-Date: 2026-09-19  
+Version: 10.0.0
+Date: 2026-10-13
 
 ---
 
@@ -100,7 +100,7 @@ backup concept); `LS` = **LCM_Shared** (shared modules); and `LSP` =
 # (Or using the root alias: .\RR.ps1 BootEntryManager)
 
 # Snapshot a new configuration management baseline
-.\tools\Create-WorkspaceBaseline.ps1 -BaselineId "BASELINE-v4.2.0"
+.\tools\Create-WorkspaceBaseline.ps1 -BaselineId "BASELINE-10.0.0"
 
 # Generate the next immutable Level 1 evidence run and render the latest run in LCM Analysis Viewer
 .\tools\Invoke-Level1AnalysisRefinement.ps1

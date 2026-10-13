@@ -4,8 +4,8 @@ Purpose: Interactive Desktop GUI & Active Help Launcher for all LCM and Subsyste
 Governance Invariant (RULE-EFF-001): Direct interactive tool orchestration.
 Path: tools/Show-LcmActiveLauncher.ps1
 Authors: Rolf, LCM_AI Engine
-Version: 5.0.3
-Date: 2026-09-10
+Version: 10.0.0
+Date: 2026-10-13
 #>
 
 [CmdletBinding()]
@@ -96,7 +96,7 @@ $toolCatalog = @(
         Category    = "Workspace Parent CM"
         Domain      = "LCM_Inventory"
         ScriptPath  = "D:\Git_Repositories\LCM_Inventory\tools\Invoke-WorkspaceAudit.ps1"
-        Description = "Audits all 35+ repositories under D:\Git_Repositories, detects drift, evaluates LCM v5.0.2 alignment, and refreshes the master workspace dashboard."
+        Description = "Audits all 35+ repositories under D:\Git_Repositories, detects drift, evaluates LCM 10.0.0 alignment, and refreshes the master workspace dashboard."
         Risk        = "Low (Telemetry Audit)"
         Command     = 'pwsh -NoProfile -NoExit -File "D:\Git_Repositories\LCM_Inventory\tools\Invoke-WorkspaceAudit.ps1"'
     },
@@ -132,7 +132,7 @@ $toolCatalog = @(
 [xml]$xaml = @"
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="⚡ LCM Tool Launcher &amp; Active Help Console (v5.0.2)"
+        Title="⚡ LCM Tool Launcher &amp; Active Help Console (10.0.0)"
         Height="700" Width="1050"
         WindowStartupLocation="CenterScreen"
         Background="#0D1117" Foreground="#F0F6FC"
@@ -154,7 +154,7 @@ $toolCatalog = @(
                     <TextBlock Text="Click any tool to view active guidance, syntax, and execute directly in a live terminal" FontSize="13" Foreground="#8B949E" Margin="0,4,0,0"/>
                 </StackPanel>
                 <Border DockPanel.Dock="Right" Background="#161B22" BorderBrush="#30363D" BorderThickness="1" CornerRadius="6" Padding="10,6" VerticalAlignment="Center">
-                    <TextBlock Text="LCM v5.0.2 Baseline" Foreground="#3FB950" FontWeight="SemiBold" FontSize="12"/>
+                    <TextBlock Text="LCM 10.0.0 Baseline" Foreground="#3FB950" FontWeight="SemiBold" FontSize="12"/>
                 </Border>
             </DockPanel>
         </Border>

@@ -6,10 +6,10 @@
 | **Lifecycle State** | `IN_PROGRESS` (`DO 247` activated implementation) |
 | **Origin Repository** | `LCM_Inventory` |
 | **Target Scope** | `CON-001-L01` alternative-branch refinement, derived caller-intent evidence, LCM Analysis Viewer presentation, and ADMINMODE rule-change authorization |
-| **Affected Version Range** | LCM_Inventory analysis tooling `v7.0.0+`; viewer `v1.2.0+`; Analysis and Review Governance Policies `v9.0.0+` |
+| **Affected Version Range** | LCM_Inventory analysis tooling `10.0.0+`; viewer `10.0.0+`; Analysis and Review Governance Policies `10.0.0+` |
 | **Impacted Repositories** | `["Git_Repositories", "LCM_Inventory", "LCM_AI"]` |
 | **Author** | Rolf, LCM_AI Engine |
-| **Date** | 2026-10-05 |
+| **Date** | 2026-10-13 |
 | **Flow Mode** | Normal review cycle |
 
 ## 1. Problem Statement

@@ -3,7 +3,7 @@
 ```yaml
 BUG-ID: BUG-178
 Title: Tool Explorer Approved Verb Naming, Catalog Deduplication, Self-Tool Filtering, and Scrollbar Hardening
-Date: 2026-09-26
+Date: 2026-10-13
 Status: Completed
 ```
 

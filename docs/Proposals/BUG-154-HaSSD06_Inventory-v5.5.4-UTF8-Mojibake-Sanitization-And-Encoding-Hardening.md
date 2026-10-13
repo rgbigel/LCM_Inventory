@@ -12,7 +12,7 @@
   - `tools/Show-HaInventoryApp.ps1`
   - `docs/SHOW_HA_INVENTORY.html`
 - **Author**: Operator Directive / BUG Intake
-- **Date**: 2026-09-19
+- **Date**: 2026-10-13
 - **Priority**: High (`H`)
 - **Status**: Completed (`completed`)
 

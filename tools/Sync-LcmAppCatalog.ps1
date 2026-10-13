@@ -4,8 +4,8 @@
 .DESCRIPTION
     Module: tools/Sync-LcmAppCatalog.ps1
     Authors: Rolf, LCM_AI Engine
-    Version: 7.5.0
-    Date: 2026-09-19
+    Version: 10.0.0
+    Date: 2026-10-13
 #>
 
 [CmdletBinding()]

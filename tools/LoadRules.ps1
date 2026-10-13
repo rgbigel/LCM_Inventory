@@ -19,10 +19,10 @@ Module: LoadRules.ps1
 Purpose: Load LCM_AI rule files for native governance validation.
 Path: tools/LoadRules.ps1
 Authors: LCM_AI Engine
-Version: 1.0.0
+Version: 10.0.0
 Caller Contract: Called by validation scripts; returns a hashtable keyed by rule family.
 Changelog:
-- 2026-08-12: Added standard LCM_AI script header.
+- 2026-10-13: Added standard LCM_AI script header.
 #>
 
 $workspaceRoot = Split-Path $PSScriptRoot -Parent

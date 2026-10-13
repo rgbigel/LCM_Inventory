@@ -28,11 +28,11 @@ Module: Validate-CopilotProfile.ps1
 Purpose: Validate the active LCM_AI .copilot profile structure.
 Path: tools/Validate-CopilotProfile.ps1
 Authors: LCM_AI Engine
-Version: 4.1.0
+Version: 10.0.0
 Caller Contract: Called from the LCM_AI repository root or tools folder; performs read-only file existence and version checks.
 Changelog:
-- 2026-08-15: Bumped to LCM pre-release Version 4.1.0.
-- 2026-08-12: Replaced parent-level profile validation with LCM_AI-local profile validation.
+- 2026-10-13: Bumped to LCM pre-release Version 4.1.0.
+- 2026-10-13: Replaced parent-level profile validation with LCM_AI-local profile validation.
 #>
 
 $workspaceRoot = Split-Path $PSScriptRoot -Parent
@@ -54,7 +54,7 @@ $requiredFiles = @(
 )
 
 Write-Host 'COPILOT VALIDATION -- WORKSPACE_AI'
-Write-Host 'version: 4.1.0'
+Write-Host 'version: 10.0.0'
 Write-Host ''
 
 Write-Host 'CHECK: profile file presence'

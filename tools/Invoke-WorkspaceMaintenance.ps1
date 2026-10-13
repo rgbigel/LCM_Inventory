@@ -8,8 +8,8 @@
            Designed to run standalone or as part of the pre-push pipeline in Invoke-WorkspacePush.ps1.
   Path: LCM_Inventory/tools/Invoke-WorkspaceMaintenance.ps1
   Authors: Rolf, LCM_AI Governance
-  Version: 8.0.0
-  Date: 2026-09-26
+  Version: 10.0.0
+  Date: 2026-10-13
   Rule: RULE-PS-001 - RULE-PS-014, RULE-LCM-014
 #>
 

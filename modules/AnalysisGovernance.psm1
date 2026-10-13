@@ -7,8 +7,8 @@
            READ_ONLY_ANALYSIS, GOVERNED_IMPLEMENTATION, and CIRCUIT_BREAKER_HALT.
   Path: LCM_Inventory/modules/AnalysisGovernance.psm1
   Authors: Rolf, LCM_AI Engine
-  Version: 8.6.0
-  Date: 2026-10-04
+  Version: 10.0.0
+  Date: 2026-10-13
 #>
 
 Set-StrictMode -Version Latest

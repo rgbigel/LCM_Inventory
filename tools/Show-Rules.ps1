@@ -11,8 +11,8 @@
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
   Path: LCM_Inventory/tools/Show-Rules.ps1
   Authors: Rolf, LCM_AI Governance
-  Version: 2.1.1
-  Date: 2026-09-08
+  Version: 10.0.0
+  Date: 2026-10-13
 .PARAMETER Domain
   Pre-filter by governance domain (e.g. 'Proposal & Review Flow', 'PowerShell Standards', 'Security', 'All'). Defaults to 'All'.
 .PARAMETER Filter
@@ -50,7 +50,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$scriptVersion = '2.1.1'
+$scriptVersion = '10.0.0'
 $scriptName = 'Show-Rules'
 
 # ------------------------------------------------------------------------------
@@ -1138,7 +1138,7 @@ $htmlTemplate = @'
     </div>
     <div class="header-badges">
       <span class="badge badge-primary" id="total-badge">19 Rules Loaded</span>
-      <span class="badge badge-success">LCM v7.3.1</span>
+      <span class="badge badge-success">LCM 10.0.0</span>
     </div>
   </header>
 

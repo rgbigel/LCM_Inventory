@@ -12,8 +12,8 @@
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
   Path: tools/Show-LcmDaemon.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 1.1.0
-  Date: 2026-08-28
+  Version: 10.0.0
+  Date: 2026-10-13
 .PARAMETER Port
   Target TCP port to inspect (Default: 9876). Configurable via $env:LCM_DAEMON_PORT.
 .PARAMETER Log
@@ -82,7 +82,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$scriptVersion = "1.1.0"
+$scriptVersion = "10.0.0"
 $scriptName = "Show-LcmDaemon"
 
 # Resolve port

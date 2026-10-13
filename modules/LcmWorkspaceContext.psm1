@@ -7,8 +7,8 @@
 .NOTES
   Module: LcmWorkspaceContext
   Path: LCM_Inventory/modules/LcmWorkspaceContext.psm1
-  Version: 1.0.0
-  Date: 2026-10-07
+  Version: 10.0.0
+  Date: 2026-10-13
 #>
 
 Set-StrictMode -Version Latest

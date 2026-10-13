@@ -6,14 +6,14 @@
 | **Proposal ID** | `CRP-173` |
 | **Status** | `REVIEW` (Gate 2 Review Gate) |
 | **Target Repositories** | `.lcm`, `LCM_AI`, `LCM_Inventory` |
-| **Target Files** | `.lcm/tools/internal/Initialize-SharedAiMemory.ps1`, `LCM_AI/tools/Update-Gemini.ps1`, `LCM_AI/data/gemini_baseline/*`, `.lcm/tools/internal/Update-ToolCatalog.ps1` |
-| **Date** | 2026-09-25 |
+| **Target Files** | `LCM_Inventory/tools/Initialize-SharedAiMemory.ps1`, `LCM_AI/tools/Update-Gemini.ps1`, `LCM_AI/data/gemini_baseline/*`, `LCM_Inventory/tools/Update-ToolCatalog.ps1` |
+| **Date** | 2026-10-13 |
 
 ---
 
 ## 1. Summary of Changes Implemented
 
-1. **Two-Phase Fail-Safe Migration in [`Initialize-SharedAiMemory.ps1`](file:///D:/Git_Repositories/.lcm/tools/internal/Initialize-SharedAiMemory.ps1)**:
+1. **Two-Phase Fail-Safe Migration in [`Initialize-SharedAiMemory.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Initialize-SharedAiMemory.ps1)**:
    - **Phase 1**: Copies all files from live `C:\Users\<user>\.gemini` to `A:\.gemini` via `robocopy` and verifies that target file count matches or exceeds the source *before* touching source.
    - **Phase 2**: Tests atomic directory rename. If file locks are held by open IDE processes, warns gracefully without modifying the original source. When locks are clear, replaces directory with junction and double-checks link.
 2. **Double-Checked Junction Idempotency**:
@@ -38,7 +38,7 @@
   Source 'C:\Users\rgbig\.gemini' is currently a physical directory on Drive C: (not yet a junction).
   [2/5] Validating target volume 'A:'... Target volume 'A:' verified and accessible.
   [4/5] Checking GitHub baseline and age synchronization...
-  GitHub Baseline Manifest found: Version 1.2.0 (Updated: 2026-09-25T16:03:49Z, Total files: 133).
+  GitHub Baseline Manifest found: Version 10.0.0 (Updated: 2026-09-25T16:03:49Z, Total files: 133).
   Age Evaluation: Target 'A:\.gemini\config' latest write: 09/25/2026 14:23:17 | GitHub Baseline: 09/25/2026 14:23:17
     -> Target 'A:\.gemini\config' is up-to-date with or newer than GitHub baseline.
   [5/5] Performing cryptographic hash consistency verification...

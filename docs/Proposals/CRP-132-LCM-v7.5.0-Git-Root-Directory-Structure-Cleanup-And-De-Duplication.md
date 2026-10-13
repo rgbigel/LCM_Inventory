@@ -8,9 +8,9 @@
 | **Origin Repository** | `LCM / Git_Repositories` |
 | **Target Scope** | Git-Root `LCM_Inventory/` Structure (`LCM_Inventory/hooks`, `LCM_Inventory/tools/hooks`, `LCM_Inventory/tools/hub`, `LCM_Inventory/tools/internal`) |
 | **Author** | Operator Directive / CRP Intake |
-| **Date** | 2026-09-09 |
+| **Date** | 2026-10-13 |
 | **Priority** | `High` |
-| **Version Impact** | `v7.5.0` |
+| **Version Impact** | `10.0.0` |
 | **Governing Policy** | `ProposalReviewFlowPolicy.md` (`RULE-LCM-015`, `RULE-LCM-016`) |
 
 ---

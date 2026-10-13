@@ -34,19 +34,19 @@ This document consolidates all historical context, evolutionary milestones, oper
 This section traces the chronological evolution of UI paradigms, specifications, and defect remediations across the workspace from earliest prototypes to the current baseline:
 
 ```
-[Phase 1: Raw Scripts & Monolithic HTML] (Pre-v6.0.0)
+[Phase 1: Raw Scripts & Monolithic HTML] (Pre-10.0.0)
    ├── Raw PowerShell console output & ad-hoc Write-Host color tables.
    ├── Isolated WinForms dialogs in BootEntryManager (OpenFileDialog).
    ├── Standalone NextBootTray system tray utility (WinForms NotifyIcon).
    └── Monolithic single-file HTML reports with hardcoded inline CSS styling.
           │
-[Phase 2: LCM Foundation & First-Generation Dashboards] (v6.0.0 - v7.2.0)
+[Phase 2: LCM Foundation & First-Generation Dashboards] (10.0.0 - 10.0.0)
    ├── CRP-019 / CRP-025 / CRP-026: CM Control Hub & Inventory Viewer introduced.
    ├── BUG-067: Browser table Port 9876 channel compliance & REST bridge.
    ├── CRP-101 / CRP-102 / CRP-103: Universal theme engine & Standard Document Table Viewer.
    └── BUG-097 / BUG-111 / BUG-120: Tool Explorer @-prefix filtering, Mermaid folding, and print hang fixes.
           │
-[Phase 3: Standard Display Design System Codification] (v7.3.0 - v7.5.2)
+[Phase 3: Standard Display Design System Codification] (10.0.0 - 10.0.0)
    ├── CRP-108: Universal Table Standard Display Enhancements.
    ├── CRP-109: Mermaid Diagram standard and Markdown diagram formatting.
    ├── CRP-110: Universal Multi-Channel Progress Indicator Engine (LcmProgressAtom).
@@ -57,7 +57,7 @@ This section traces the chronological evolution of UI paradigms, specifications,
    ├── CRP-151: Standard Display Universal Action Logging Engine.
    └── CRP-156: Separation of presentation artifacts (.html) into data artifacts (.json).
           │
-[Phase 4: Ergonomics, Daemon Dispatch & Slicing] (v7.6.0 - v8.2.0)
+[Phase 4: Ergonomics, Daemon Dispatch & Slicing] (10.0.0 - 10.0.0)
    ├── CRP-158 / CRP-160: Control Hub NOT negation syntax, open filters, minimal stream & notepad output.
    ├── CRP-164: Document Viewer layout optimization and sticky header tuning.
    ├── CRP-171 / CRP-176: ShowTools default view, execution metrics, and SuperController trampoline.
@@ -66,7 +66,7 @@ This section traces the chronological evolution of UI paradigms, specifications,
    ├── CRP-187 / CRP-188: Decoupling, Element Telemetry Logging, and dynamic HTML-JSON runtime contract.
    └── CRP-196: Control Hub Lifecycle & Action Model redesign (multi-action buttons, real-time status reflection).
           │
-[Phase 5: Print Engines, Subsystem WPF & Multi-Repo Alignment] (v8.3.0 - Current)
+[Phase 5: Print Engines, Subsystem WPF & Multi-Repo Alignment] (10.0.0 - Current)
    ├── CRP-198: RollingCalendar automated print-ready HTML grid matrix & headless Edge PDF generation.
    ├── HaSSD06 Show-HaAuthDialog: Modern WPF modal authentication dialog with password peek and mutation preview.
    ├── BUG-205: Control Hub numeric priority filter crash remediation.
@@ -77,7 +77,7 @@ This section traces the chronological evolution of UI paradigms, specifications,
 
 | Timeline / Proposal | Category | Primary Repos | UI Aspects Introduced & Codified |
 |:---|:---|:---|:---|
-| **Pre-v6.0.0** | Desktop GUI | `BootEntryManager`, `NextBootTray` | WinForms `OpenFileDialog` integration; WinForms `NotifyIcon` system tray app with dynamic context menus for EFI boot entries. |
+| **Pre-10.0.0** | Desktop GUI | `BootEntryManager`, `NextBootTray` | WinForms `OpenFileDialog` integration; WinForms `NotifyIcon` system tray app with dynamic context menus for EFI boot entries. |
 | **CRP-019 / CRP-025** | HTML Dashboard | `LCM_Inventory` | CM Control Hub foundation; single-instance dashboard coordination and tab lifecycle management. |
 | **CRP-026** | HTML Dashboard | `LCM_Inventory` | Inventory Viewer interactive action buttons, inspect drawer, and mechanical data versioning exemption. |
 | **BUG-067** | IPC / Web | `LCM_Inventory` | Port 9876 REST communication channel compliance for browser-to-desktop command execution. |

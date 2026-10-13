@@ -8,9 +8,9 @@
 .PATH
   tools/Show-HaInventory.ps1
 .VERSION
-  1.1.0
+  10.0.0
 .DATE
-  2026-08-27
+  2026-10-13
 .PARAMETER Instance
   The target Home Assistant subsystem instance name (e.g. 'HaSSD06'). Defaults to 'HaSSD06' (Aliases: -Subsystem, -Name, -HaName).
 .PARAMETER Refresh

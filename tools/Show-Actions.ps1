@@ -9,8 +9,8 @@
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), RULE-PS-010 (CLI Help), and RULE-PS-011 (Interactive Desktop Dispatch).
   Path: tools/Show-Actions.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 2.0.0
-  Date: 2026-09-19
+  Version: 10.0.0
+  Date: 2026-10-13
 .PARAMETER Count
   Number of recent actions to display (Default: 5).
 .PARAMETER Subsystem
@@ -52,7 +52,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$scriptVersion = "2.0.0"
+$scriptVersion = "10.0.0"
 $scriptName = "Show-Actions"
 
 # ------------------------------------------------------------------------------

@@ -8,10 +8,10 @@
 | **Origin Repository** | `LCM` / Desktop Integration (`LCM_Inventory/assets`, `LCM_Inventory`) |
 | **Target Scope** | `LCM_Inventory/tools/LcmDesktopDaemon.ps1`, `CM_CONTROL_HUB.html`, `SHOW_TOOLS.html`, `Show-Rules.ps1` |
 | **Author** | Rolf, LCM_AI Governance |
-| **Date** | 2026-09-09 |
+| **Date** | 2026-10-13 |
 | **Priority** | `Medium` |
-| **Version Impact** | `v7.5.0` |
-| **Extracted From** | Extracted from `CRP-108` (Section 2.5) and `CRP-103` (Section 2.2 Edit Action) to separate desktop editor process dispatch from interactive table display bundling (`BUNDLE-STD-DISPLAY-v7.5.0`). |
+| **Version Impact** | `10.0.0` |
+| **Extracted From** | Extracted from `CRP-108` (Section 2.5) and `CRP-103` (Section 2.2 Edit Action) to separate desktop editor process dispatch from interactive table display bundling (`BUNDLE-STD-DISPLAY-10.0.0`). |
 
 ---
 

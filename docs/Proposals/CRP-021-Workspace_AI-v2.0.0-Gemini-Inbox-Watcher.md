@@ -4,9 +4,9 @@ Module: LCM_Inventory/docs/Proposals/CRP-021-Gemini-Inbox-Watcher.md
 Purpose: Change Request Proposal for controlled intake of Google Gemini cloud instructions, mandatory timestamping, and proposal ledger routing.  
 Path: LCM_Inventory/docs/Proposals/CRP-021-Gemini-Inbox-Watcher.md  
 Authors: Rolf, LCM_AI Engine  
-Version: 1.0.0 (LCM Baseline: 7.0.0)  
+Version: 10.0.0 (LCM Baseline: 10.0.0)
 Status: ACCEPTED / COMPLETED  
-Date: 2026-08-30  
+Date: 2026-10-13
 
 ---
 
@@ -15,7 +15,7 @@ Date: 2026-08-30
 * **Proposal ID**: `CRP-021` (`CR-2026-032` / `Proposal #21`)
 * **Target Domain**: `LCM_AI & .lcd Tooling Hub`
 * **Impact Level**: `LOW` (Non-breaking security intake layer and tool catalog addition).
-* **Target Milestone**: `LCM v7.0.0`
+* **Target Milestone**: `LCM 10.0.0`
 
 ---
 

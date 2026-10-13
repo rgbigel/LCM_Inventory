@@ -15,8 +15,8 @@
            5. Prints the confirmation the AI must give before working.
   Path: LCM_Inventory/tools/Invoke-WorkspaceGoodMorning.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 1.0.0
-  Date: 2026-10-09
+  Version: 10.0.0
+  Date: 2026-10-13
   Rule: RULE-CTX-006
 .PARAMETER Auto
   Session-start mode: silent (one line) when the gap is below -GapHours.

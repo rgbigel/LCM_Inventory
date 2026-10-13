@@ -16,7 +16,7 @@
    - Purge stale `Live_*` junctions in `$crpReviewDir` before creating the fresh junction.
 5. **Pass Title Arguments**:
    - Include `/title1="$title1" /title2="$title2"` in `$bcArgString`.
-6. **Increment Version**: Bump to `8.1.0`.
+6. **Increment Version**: Bump to `10.0.0`.
 
 ### `LCM_Inventory/assets/CM_CONTROL_HUB.html`
 1. Update `launchReviewForProposal` at line 3867:
@@ -25,6 +25,6 @@
 ## Verification Strategy
 1. Unit test `Get-ActiveCRP` against `LCM_Inventory` to verify it resolves `CRP-182` or `BUG-183`.
 2. Dry-run `Invoke-BeyondCompareReview.ps1 -RepositoryName LCM_Inventory` (or inspect path generation) to ensure:
-   - Left path contains `Baseline_LCM_Inventory_v8.0.0_<SHA>`
+   - Left path contains `Baseline_LCM_Inventory_10.0.0_<SHA>`
    - Right path contains `Live_LCM_Inventory_<CRP>`
 3. Run `Test-RepoReadiness.ps1` to verify quality gates.

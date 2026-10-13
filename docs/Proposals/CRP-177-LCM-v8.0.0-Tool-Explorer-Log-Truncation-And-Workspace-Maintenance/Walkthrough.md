@@ -5,7 +5,7 @@ CRP-ID: CRP-177
 Title: Tool Explorer Ergonomics, Daemon Log Truncation, and Automated Workspace Maintenance Engine
 Gate: Gate 2 (Visual Review & Disposition Gate)
 Status: completed
-Date: 2026-09-26
+Date: 2026-10-13
 ```
 
 ---

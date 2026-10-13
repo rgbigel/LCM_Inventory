@@ -8,8 +8,8 @@
 | **Origin Repository** | `LCM` / Configuration Management & Governance |
 | **Target Scope** | Proposal Lifecycle & Naming Standard (`proposals.json`, `LCM_Inventory/docs/Proposals/`, `Show-CmControlHub.ps1`, `Invoke-BeyondCompareReview.ps1`, `Invoke-ProposalAction.ps1`, `ProposalManager.psm1`) |
 | **Author** | Rolf, LCM_AI |
-| **Date** | 2026-09-08 |
-| **Version Impact** | `v7.3.0` |
+| **Date** | 2026-10-13 |
+| **Version Impact** | `10.0.0` |
 | **Predecessors** | `CRP-107`, `CRP-116`, `CRP-117`, `CRP-118` |
 
 ---
@@ -30,7 +30,7 @@ Replace the dual-numbering system with a **single canonical identifier in the fo
    - Defect/bug fix proposals use the prefix **`BUG-nnn`** (e.g. `BUG-024`, `BUG-072`), drawing from the exact same numerical sequence.
    - This eliminates the need for an additional `type: "bug" | "feature"` column or database field.
 3. **1:1 Direct Filename Parity**: Specification documents in `docs/Proposals/` match the identifier directly:
-   `LCM_Inventory/docs/Proposals/CRP-nnn-LCM-v7.3.0-<Slug>.md` or `BUG-nnn-LCM-v7.3.0-<Slug>.md`.
+   `LCM_Inventory/docs/Proposals/CRP-nnn-LCM-10.0.0-<Slug>.md` or `BUG-nnn-LCM-10.0.0-<Slug>.md`.
 
 ---
 

@@ -2,14 +2,14 @@
 Proposal-ID: CRP-135
 CR-ID: CRP-135
 Scope: LCM
-Version: v7.5.0
+Version: 10.0.0
 Affected-Repos: [LCM, LCM_Inventory, LCM_AI]
 Severity: High
 Status: ACCEPTED
-Date: 2026-09-10
+Date: 2026-10-13
 Author: Operator Directive / CRP Intake
 Target Scope: LCM_Inventory/tools/, LCM_Inventory/modules/, LCM_AI/tools/, Governance Rules
-Affected Version Range: v7.5.0+
+Affected Version Range: 10.0.0+
 Impacted Repositories: [LCM, LCM_Inventory, LCM_AI, Governed Child Repositories]
 Max-Regression-Depth: 2
 ---
@@ -24,9 +24,9 @@ Max-Regression-Depth: 2
 | **Origin Repository** | `LCM` / `LCM_Inventory` |
 | **Target Scope** | CM Ledger (`proposals.json`), CM Inspection Tools, Governance Rules (`RULE-LCM-*`) |
 | **Author** | Operator Directive / CRP Intake |
-| **Date** | 2026-09-10 |
+| **Date** | 2026-10-13 |
 | **Priority** | `High` |
-| **Version Impact** | `v7.5.0+` |
+| **Version Impact** | `10.0.0+` |
 | **Max Regression Depth** | `2` |
 
 ---

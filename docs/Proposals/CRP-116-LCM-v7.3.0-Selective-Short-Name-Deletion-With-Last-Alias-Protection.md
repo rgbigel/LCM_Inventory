@@ -8,8 +8,8 @@
 | **Origin Repository** | `LCM` / Desktop UI & Tools |
 | **Target Scope** | Tool Explorer (`Show-Tools`, `LcmToolCatalog.psm1`, `lcm-tool-explorer.js`, `lcm-dashboard-theme.css`, `LcmDesktopDaemon.ps1`, `Remove-LcmShortName.ps1`) |
 | **Author** | Rolf, LCM_AI |
-| **Date** | 2026-09-07 |
-| **Version Impact** | `v7.3.0` |
+| **Date** | 2026-10-13 |
+| **Version Impact** | `10.0.0` |
 
 ---
 

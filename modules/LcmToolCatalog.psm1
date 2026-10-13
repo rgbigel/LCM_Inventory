@@ -1,13 +1,13 @@
 <#
 .SYNOPSIS
-  LCM Tool Catalog & Viewer Generation Module (v1.0.0)
+  LCM Tool Catalog & Viewer Generation Module (10.0.0)
 .DESCRIPTION
   Provides modular services for loading tool catalogs, measuring metric summaries,
   formatting terminal text output, and compiling the self-contained HTML Tool Explorer dashboard.
   Conforms to RULE-PS-001 (StrictMode), RULE-PS-002 (Approved Verbs), and RULE-PS-008.
 .NOTES
   Path: tools/modules/LcmToolCatalog.psm1
-  Version: 1.0.0
+  Version: 10.0.0
 #>
 
 Set-StrictMode -Version Latest
@@ -176,7 +176,7 @@ function Build-LcmToolIndexHtml {
     [string]$Env = 'All',
     [string]$Filter = '',
     [string]$Subsystem = 'LCM',
-    [string]$Version = 'v8.0.0'
+    [string]$Version = '10.0.0'
   )
 
   $metrics = Measure-LcmToolCatalogMetrics -Catalog $Catalog

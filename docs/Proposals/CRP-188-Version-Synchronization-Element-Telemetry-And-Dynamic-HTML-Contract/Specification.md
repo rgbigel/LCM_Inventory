@@ -4,7 +4,7 @@
 * **Proposal ID**: `CRP-188`
 * **Title**: Version Synchronization Invariant, Element Telemetry Logging, ShowXYZ View Density, and Dynamic HTML-JSON Runtime Contract
 * **Author**: Rolf, Antigravity AI Assistant
-* **Date**: 2026-09-28
+* **Date**: 2026-10-13
 * **Status**: Suggested (Preliminary)
 * **Severity**: High
 * **Priority**: Low
@@ -61,7 +61,7 @@ This preliminary proposal addresses systemic version tracking drift across docum
   * Implement an interactive **Column Set Toggle** (e.g. `[Set A: Operational]` vs. `[Set B: Diagnostics & Audit]`).
   * **Set A**: Name, Status, Role, Actions.
   * **Set B**: Name, Version (sortable), Last Modified Timestamp (sortable ISO 8601), Author/Commit SHA.
-  * Alternatively, implement compact compound cells (e.g. primary title with muted sub-text displaying `v1.4.0 • 2026-09-28 21:00`).
+  * Alternatively, implement compact compound cells (e.g. primary title with muted sub-text displaying `10.0.0 • 2026-10-13 21:00`).
 
 ### Item 6: Dynamic HTML-JSON Parameterization & Port 9876 Contract
 * **Compile-Time vs. Runtime Decoupling**:

@@ -2,14 +2,14 @@
 
 - **Proposal ID**: `CRP-109`
 - **Target Repository**: `LCM` (`Git_Repositories/LCM_Inventory/tools`, `LCM_AI`, `LCM_Inventory`)
-- **Target Version**: `v7.3.0`
+- **Target Version**: `10.0.0`
 - **Domain**: `Lifecycle Model (LCM) Documentation Standards & Diagram Automation`
 - **Author**: Rolf, LCM_AI Governance
 - **Status**: `OPEN` (Awaiting Operator Review & PROCEED Trigger)
-- **Created**: `2026-09-07 15:25:00`
+- **Created**: `2026-10-13 15:25:00`
 - **Priority**: `HIGH`
 - **Target Scope**: `.agents/rules/DocumentationStandardsPolicy.md`, `LCM_Inventory/tools/Format-LcmMarkdownDiagrams.ps1`, `LCM_Inventory/Cmd/FormatDiagrams.cmd`, `LCM_Inventory/tools/hooks/Enforce-LcmPostToolPolicy.ps1`, `LCM_Inventory/data/proposals/proposals.json`
-- **Affected Version Range**: `v7.0.0 - v7.3.0`
+- **Affected Version Range**: `10.0.0 - 10.0.0`
 - **Impacted Repositories**: `Git_Repositories`, `LCM_AI`, `LCM_Inventory`, `All Governed Repositories`
 
 ---

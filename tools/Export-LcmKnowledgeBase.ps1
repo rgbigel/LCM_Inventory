@@ -7,8 +7,8 @@
              The original predecessor implementation is archived at LCM_Inventory/data/archives/legacy_tools/Export-LcmKnowledgeBase.ps1.
     Path: LCM_Inventory/tools/Export-LcmKnowledgeBase.ps1
     Authors: Rolf, Antigravity AI
-    Version: 2.0.0-DEPRECATED
-    Date: 2026-09-04
+    Version: 10.0.0-DEPRECATED
+    Date: 2026-10-13
 .PARAMETER DestinationPath
     Mapped to TargetRoot for backward compatibility.
 .PARAMETER SourcePath

@@ -8,11 +8,11 @@
 | **Origin Repository** | `LCM / Git_Repositories` |
 | **Target Scope** | `LCM_Inventory/modules/LcmDaemon/Classes/DaemonActionController.ps1` |
 | **Author** | Operator Directive / BUG Intake |
-| **Date** | 2026-09-11 |
+| **Date** | 2026-10-13 |
 | **Severity** | `Medium` |
-| **Version Impact** | `v7.5.0` |
+| **Version Impact** | `10.0.0` |
 | **Governing Policy** | `ProposalReviewFlowPolicy.md` (`RULE-LCM-008`, `RULE-LCM-010`, `RULE-LCM-015`) |
-| **Originating Proposal** | [`BUG-133`](file:///D:/Git_Repositories/LCM_Inventory/docs/Proposals/BUG-133-LCM-v7.5.0-Tool-Explorer-UI-Regressions-Help-And-Parameter-Fixes.md) (Desktop Daemon /open Target Activation) |
+| **Originating Proposal** | [`BUG-133`](file:///D:/Git_Repositories/LCM_Inventory/docs/Proposals/BUG-133-LCM-10.0.0-Tool-Explorer-UI-Regressions-Help-And-Parameter-Fixes.md) (Desktop Daemon /open Target Activation) |
 
 ---
 

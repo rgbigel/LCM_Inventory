@@ -4,8 +4,8 @@
 .DESCRIPTION
     Module: tools/Invoke-ProposalAction.ps1
     Authors: Rolf, LCM_AI Engine
-    Version: 1.1.0
-    Date: 2026-09-10
+    Version: 10.0.0
+    Date: 2026-10-13
 #>
 
 [CmdletBinding()]

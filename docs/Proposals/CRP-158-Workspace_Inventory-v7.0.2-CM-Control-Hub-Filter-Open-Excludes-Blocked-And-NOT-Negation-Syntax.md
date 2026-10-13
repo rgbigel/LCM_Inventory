@@ -13,7 +13,7 @@
   - `LCM_Inventory/assets/lcm-table-engine.js`
   - `LCM_Inventory/.agents/rules/DisplayStandardsPolicy.md`
 - **Author**: Operator Directive / CRP Intake
-- **Date**: 2026-09-19
+- **Date**: 2026-10-13
 - **Priority**: Medium (`M`)
 - **Status**: Completed (`completed`) / Pushed (`pushed`)
 
@@ -57,7 +57,7 @@ Implemented `parseSearchToken()` and `matchesProposalToken()` in `CM_CONTROL_HUB
 3. **Compound Search**:
    - Space-delimited multi-token queries with implicit `AND` logic across all positive and negative constraints (e.g. `scope:LCM_Inventory prio:!D state:!blocked`).
 
-### 3.3 Generalization into `LcmTableEngine` (`v1.1.0`)
+### 3.3 Generalization into `LcmTableEngine` (`10.0.0`)
 Upgraded `LCM_Inventory/assets/lcm-table-engine.js` and `LCM_Inventory/assets/lcm-table-engine.js`:
 - Added `LcmTableEngine.parseTokens(query)`: Robust parser supporting column qualifiers (`Col:Val`), quoted strings (`Col:"multi word"`), and negation (`!Col:Val`, `Col:!Val`, `!term`).
 - Added `LcmTableEngine.getColumnMap(table)`: Dynamic column header mapping for DOM `<table>` elements.

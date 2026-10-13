@@ -2,13 +2,13 @@
 Proposal-ID: CRP-2026-013
 CR-ID: CR-2026-046
 Scope: LCM_AI
-Version: v7.1.1
+Version: 10.0.0
 Affected-Repos: [LCM_AI, LCM_Inventory, .lcm, HaSSD06]
 Status: Suggested
-Date: 2026-08-30
+Date: 2026-10-13
 Author: rgbig
 Target Scope: Workspace-wide Maintenance, Deduplication & Platform Optimization
-Affected Version Range: v7.1.1
+Affected Version Range: 10.0.0
 Impacted Repositories: [LCM_AI, LCM_Inventory, .lcm, HaSSD06]
 ---
 

@@ -18,8 +18,8 @@
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
   Path: LCM_Inventory/tools/Show-ToolsExplorer.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 3.3.0
-  Date: 2026-09-26
+  Version: 10.0.0
+  Date: 2026-10-13
 .PARAMETER Audience
   Pre-filter by audience category: 'User' (daily operations), 'Dev' (internal plumbing), or 'All'. Defaults to 'User'.
 .PARAMETER Group
@@ -105,7 +105,7 @@ if ($Lifecycle) {
   if ($Audience -eq 'User') { $Audience = 'All' }
 }
 
-$scriptVersion = "8.0.0"
+$scriptVersion = "10.0.0"
 $scriptName = "Show-ToolsExplorer"
 
 # ------------------------------------------------------------------------------
@@ -226,7 +226,7 @@ $catalogData = Get-LcmToolCatalogData -ToolsDir $toolsDir
 $catalog = $catalogData.Catalog
 
 # Dynamic Global Baseline Version Extraction
-$globalBaseline = '8.0.0'
+$globalBaseline = '10.0.0'
 $reqDoc = Join-Path $workspaceRoot 'LCM_AI\docs\Requirements.md'
 if (Test-Path $reqDoc) {
   $match = Select-String -Path $reqDoc -Pattern '^Version:\s*(\S+)' | Select-Object -First 1

@@ -7,7 +7,7 @@
            temporary tool is executed.
   Path: LCM_Inventory/modules/ToolValidation.psm1
   Authors: LCM_AI Governance
-  Version: 1.0.0
+  Version: 10.0.0
   Caller Contract: Import the module and call the exported Test-* functions.
 #>
 

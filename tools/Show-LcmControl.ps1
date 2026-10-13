@@ -52,8 +52,8 @@ param(
              Absorbs and consolidates Show-CmControlHub and Show-CrpDates into a single canonical tool.
     Path: tools/Show-LcmControl.ps1
     Authors: Rolf, LCM_AI Engine
-    Version: 1.8.0
-    Date: 2026-10-02
+    Version: 10.0.0
+    Date: 2026-10-13
 .PARAMETER ReviewMode
     Opens the Control Hub filtered directly to pending visual reviews requiring Beyond Compare action.
 .PARAMETER DatesMode
@@ -112,7 +112,7 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
     }
 }
 
-$scriptVersion = "1.8.0"
+$scriptVersion = "10.0.0"
 $scriptName = "Show-LcmControl"
 
 # ------------------------------------------------------------------------------
@@ -355,7 +355,7 @@ Write-TimingLog "Gathered $($docsCache.Count) total documents into cache."
 function Get-CompiledDocMetadata {
     param([string]$Name, [string]$Content)
     $role = "Specification"
-    $version = "v1.0.0"
+    $version = "10.0.0"
     $date = (Get-Date).ToString("yyyy-MM-dd")
     $reviewState = "COMPLETED"
 
@@ -395,7 +395,7 @@ foreach ($k in $docsCache.Keys) {
 }
 
 # Resolve active LCM baseline
-$lcmBaseline = "v7.5.2"
+$lcmBaseline = "10.0.0"
 $sessionFile = Join-Path $workspaceRoot ".agents\ACTIVE_SESSION.md"
 if (Test-Path -LiteralPath $sessionFile) {
     $sessContent = Get-Content -LiteralPath $sessionFile -Raw
@@ -441,7 +441,7 @@ $htmlContent = $htmlContent.Replace('/*__INJECTED_ATOM_PLACEHOLDER__*/', $atomJs
 $htmlContent = $htmlContent.Replace('/*__INJECTED_DATA_PLACEHOLDER__*/', $injectedBlock)
 
 # Dynamic Version Token Substitutions per RULE-DSP-016 (Dual Significance: Tool + Template)
-$templateVersion = "1.0.0"
+$templateVersion = "10.0.0"
 if ($htmlContent -match '(?i)Version\s*:\s*v?([0-9.]+)') {
     $templateVersion = $Matches[1]
 }

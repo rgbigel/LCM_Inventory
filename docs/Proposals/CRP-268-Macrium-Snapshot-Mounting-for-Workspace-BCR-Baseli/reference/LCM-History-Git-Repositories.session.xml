@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Extracted reference session from Beyond Compare 5 BCSessions.xml on 2026-10-13. -->
+<BCSessions Version="2" MinVersion="2">
+  <TDirCompareSession Value="_LCM F:\History&lt;->Git_Repositories">
+    <Filters>
+      <NameFilter Value="-*\.git\*;-.git*;-*\.venv\*;-*\venv\*;-*\.env\*;-*\__pycache__\*;-*.pyc;-*.pyo;-*\scratch\*;-*\logs\*;-*\work\*;-*\data\*;-*.log';-*.tmp;-*.bak;-*.swp;-*.lock;-*\node_modules\*;-*\bin\*;-*\obj\*;-.git\;-.venv\;-venv\;-.env\;-__pycache__\;-scratch\;-logs\;-data\;-node_modules\;-bin\;-obj\;-.\assets\;-.\tests\"/>
+    </Filters>
+    <LastModified Value="2026-10-13 18:19:45"/>
+    <NoEdit>
+      <Left Value="True"/>
+    </NoEdit>
+    <Rules>
+      <ExpandAllOnLoad Value="True"/>
+      <ExpandDiffsOnLoad Value="True"/>
+      <IgnoreFileExts Value="True"/>
+      <UseContentComparison Value="True"/>
+      <UseTimestampComparison Value="False"/>
+    </Rules>
+    <Specs>
+      <Left Value="F:\Git_Repositories"/>
+      <Right Value="D:\Git_Repositories"/>
+    </Specs>
+    <State>
+      <ColAttributesVisible Value="True"/>
+      <DirHandling Value="dirCompareFilesOnly"/>
+      <DisplayFilter Value="[showLeftAdded, showRightAdded, showLeftChanged, showRightChanged, showConflict]"/>
+      <InsigIgnored Value="True"/>
+    </State>
+  </TDirCompareSession>
+</BCSessions>

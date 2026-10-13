@@ -2,14 +2,14 @@
 Proposal-ID: CRP-134
 CR-ID: CRP-134
 Scope: LCM_Inventory
-Version: v7.5.0
+Version: 10.0.0
 Affected-Repos: [LCM_Inventory, LCM]
 Severity: Low
 Status: ACCEPTED
-Date: 2026-09-10
+Date: 2026-10-13
 Author: Operator Directive / CRP Intake
 Target Scope: LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1, LCM_Inventory/config/
-Affected Version Range: v7.5.0
+Affected Version Range: 10.0.0
 Impacted Repositories: [LCM_Inventory, LCM]
 ---
 
@@ -23,9 +23,9 @@ Impacted Repositories: [LCM_Inventory, LCM]
 | **Origin Repository** | `LCM_Inventory` |
 | **Target Scope** | `LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1` |
 | **Author** | Operator Directive / CRP Intake |
-| **Date** | 2026-09-10 |
+| **Date** | 2026-10-13 |
 | **Priority** | `Medium` |
-| **Version Impact** | `v7.5.0` |
+| **Version Impact** | `10.0.0` |
 
 ---
 

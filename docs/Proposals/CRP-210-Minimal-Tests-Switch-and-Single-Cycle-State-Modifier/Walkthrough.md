@@ -4,14 +4,14 @@
 CRP-ID: CRP-210
 Status: Completed
 Author: rgbig
-Date: 2026-10-02
+Date: 2026-10-13
 ```
 
 ## 1. Summary of Delivered Changes
 
 1. **Governance Codification**:
-   - `ProposalReviewFlowPolicy.md`: Codified `RULE-LCM-023: Minimal Tests Single-Cycle Execution Switch & State Reflection Invariant` (v9.0.0).
-   - `ReviewCommitGovernancePolicy.md`: Updated `RULE-REV-001` (item 3 loop breaker) and `RULE-REV-002` (item 4 minimal-tests completion disposition) (v8.4.0).
+   - `ProposalReviewFlowPolicy.md`: Codified `RULE-LCM-023: Minimal Tests Single-Cycle Execution Switch & State Reflection Invariant` (10.0.0).
+   - `ReviewCommitGovernancePolicy.md`: Updated `RULE-REV-001` (item 3 loop breaker) and `RULE-REV-002` (item 4 minimal-tests completion disposition) (10.0.0).
    - `AGENTS.md`: Updated quick-reference index with `RULE-LCM-023`.
 2. **Readiness Tooling Enhancement**:
    - `HaSSD06/tools/Test-RepoReadiness.ps1`: Added `-MinimalTests` switch to restrict verification to fast-tier syntax and structure validation while skipping tool-catalog cascades.

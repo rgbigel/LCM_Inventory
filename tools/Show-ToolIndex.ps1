@@ -6,8 +6,8 @@
   Delegates all invocation parameters directly to Show-Tools.ps1.
   Path: tools/Show-ToolIndex.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 3.3.0
-  Date: 2026-09-05
+  Version: 10.0.0
+  Date: 2026-10-13
 #>
 
 [CmdletBinding()]

@@ -5,15 +5,15 @@
 | :--- | :--- |
 | **Proposal ID** | `CRP-173` |
 | **State** | `SUGGESTED` (Gate 1 Planning Gate Halt per RULE-LCM-014) |
-| **Target Files** | `.lcm/tools/internal/Initialize-SharedAiMemory.ps1`, `LCM_AI/tools/Update-Gemini.ps1`, `LCM_Inventory/tools/Invoke-WorkspacePush.ps1` |
+| **Target Files** | `LCM_Inventory/tools/Initialize-SharedAiMemory.ps1`, `LCM_AI/tools/Update-Gemini.ps1`, `LCM_Inventory/tools/Invoke-WorkspacePush.ps1` |
 | **Author** | Rolf, Antigravity AI Assistant |
-| **Date** | 2026-09-25 |
+| **Date** | 2026-10-13 |
 
 ---
 
 ## 1. Planned Code Changes
 
-### Step 1: `.lcm/tools/internal/Initialize-SharedAiMemory.ps1`
+### Step 1: `LCM_Inventory/tools/Initialize-SharedAiMemory.ps1`
 1. **Double-Checked Junction Preservation**:
    - Double-check existing junctions using `(Get-Item $sourcePath).LinkType` and target path normalization.
    - If pointing to `$targetRoot`, return immediately with zero modifications.

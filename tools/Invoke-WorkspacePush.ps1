@@ -6,8 +6,8 @@
   Purpose: Iterates across all governed and child repositories under D:\Git_Repositories, detects if a Git remote exists and if local branch is ahead of remote tracking branch, and executes git push with structured audit logging.
   Path: LCM_Inventory/tools/Invoke-WorkspacePush.ps1
   Authors: Rolf, LCM_AI Engine
-    Version: 8.0.1
-    Date: 2026-09-29
+    Version: 10.0.0
+    Date: 2026-10-13
 #>
 
 [CmdletBinding()]
@@ -266,7 +266,7 @@ if ($cohortPushed) {
         }
         Write-Host "  -> [DRY RUN] Total $($pushPlan.CompletedProposalIds.Count) completed proposal(s) would transition to 'pushed'." -ForegroundColor Yellow
     } else {
-        $lcmVersion = "v7.0.0"
+        $lcmVersion = "10.0.0"
         $invFile = Join-Path $workspaceRoot "LCM_Inventory\data\inventory.json"
         if (Test-Path -LiteralPath $invFile) {
             try {

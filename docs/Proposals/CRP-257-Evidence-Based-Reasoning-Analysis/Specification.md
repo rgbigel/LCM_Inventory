@@ -5,7 +5,7 @@
 | Proposal ID | `CRP-257` |
 | Lifecycle State | `IN_PROGRESS` (`DOIT`) |
 | Target Scope | `LCM_Inventory` toolchain and `D:\OneDrive\cmd` command wrappers |
-| Affected Version Range | `Invoke-ReasoningAnalysis` v1.0.0 to v2.0.0 |
+| Affected Version Range | `Invoke-ReasoningAnalysis` 10.0.0 to 10.0.0 |
 | Impacted Repositories | `LCM_Inventory`, `LCM_AI` |
 | Priority | `10` |
 

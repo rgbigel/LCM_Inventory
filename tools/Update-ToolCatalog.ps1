@@ -11,8 +11,8 @@
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
   Path: D:\Git_Repositories\LCM_Inventory\tools\Update-ToolCatalog.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 3.0.0
-  Date: 2026-09-08
+  Version: 10.0.0
+  Date: 2026-10-13
 .PARAMETER Silent
   Suppresses non-error terminal output (useful in automated pipelines).
 .PARAMETER ShowAll
@@ -41,7 +41,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$scriptVersion = "3.0.0"
+$scriptVersion = "10.0.0"
 $scriptName = "Update-ToolCatalog"
 
 # ------------------------------------------------------------------------------
@@ -1270,7 +1270,7 @@ try {
   [void]$sb.AppendLine("Purpose: Authoritative index of all Lifecycle Model (LCM) and Subsystem tools with Role, ShortName, and User vs Developer classification.  ")
   [void]$sb.AppendLine("Path: LCM_Inventory/docs/README.md  ")
   [void]$sb.AppendLine("Authors: Rolf, LCM_AI Engine  ")
-  [void]$sb.AppendLine("Version: 2.0.0  ")
+  [void]$sb.AppendLine("Version: 10.0.0  ")
   [void]$sb.AppendLine("Status: Authoritative Reference  ")
   $now = (Get-Date).ToString('yyyy-MM-dd HH:mm:ss')
   [void]$sb.AppendLine("Updated: $now  ")

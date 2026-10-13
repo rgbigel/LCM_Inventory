@@ -2,16 +2,16 @@
 Proposal-ID: CRP-103
 CR-ID: CR-2026-054
 Scope: LCM Platform (.lcm) & Shared Dashboards
-Version: v7.5.0
+Version: 10.0.0
 Affected-Repos: [LCM_Inventory, LCM_AI, HaSSD06_Inventory, .lcm]
-Status: OPEN (Bundled in BUNDLE-STD-DISPLAY-v7.5.0)
-Date: 2026-08-31
+Status: OPEN (Bundled in BUNDLE-STD-DISPLAY-10.0.0)
+Date: 2026-10-13
 Author: Rolf, LCM_AI Engine
 Priority: High
 Target Scope: Universal Dashboard UI/UX Standard & Interactive Table Engine
-Affected Version Range: v2.2.1 -> v7.5.0
+Affected Version Range: 10.0.0 -> 10.0.0
 Impacted Repositories: [LCM_Inventory, LCM_AI, HaSSD06_Inventory, .lcm]
-Logical-Bundle: BUNDLE-STD-DISPLAY-v7.5.0
+Logical-Bundle: BUNDLE-STD-DISPLAY-10.0.0
 ---
 
 # CRP-103: Universal LCM Table UI/UX Standard & Interactive Table Display Specification
@@ -75,16 +75,16 @@ Every table view across the LCM ecosystem will mandate the following unified arc
 ## 4. Extracted Proposals (Processed Separately)
 
 > [!NOTE]
-> Per operator bundling directive for `BUNDLE-STD-DISPLAY-v7.5.0`:
+> Per operator bundling directive for `BUNDLE-STD-DISPLAY-10.0.0`:
 >
 > 1. **Document Table Viewer Implementation (Original Section 3, Item 1)**:
->    - **Extracted to**: [`CRP-130`](file:///D:/Git_Repositories/LCM_Inventory/docs/Proposals/CRP-130-LCM_Inventory-v7.5.0-Document-Table-Viewer-Implementation.md) (*Workspace Inventory Document Table Viewer Implementation*).
->    - **Rationale**: The specific modal table redesign of `WORKSPACE_INVENTORY_VIEWER.html` (`Docs` tab) represents repository inventory feature work, whereas `CRP-103` in `BUNDLE-STD-DISPLAY-v7.5.0` establishes the foundational interactive table display engine.
+>    - **Extracted to**: [`CRP-130`](file:///D:/Git_Repositories/LCM_Inventory/docs/Proposals/CRP-130-LCM_Inventory-10.0.0-Document-Table-Viewer-Implementation.md) (*Workspace Inventory Document Table Viewer Implementation*).
+>    - **Rationale**: The specific modal table redesign of `WORKSPACE_INVENTORY_VIEWER.html` (`Docs` tab) represents repository inventory feature work, whereas `CRP-103` in `BUNDLE-STD-DISPLAY-10.0.0` establishes the foundational interactive table display engine.
 >
 > 2. **Multi-Page Print & PDF Engine**:
->    - **Extracted to**: [`CRP-128`](file:///D:/Git_Repositories/LCM_Inventory/docs/Proposals/CRP-128-LCM-v7.5.0-Universal-Multi-Page-Table-Print-And-PDF-Export-Engine.md).
+>    - **Extracted to**: [`CRP-128`](file:///D:/Git_Repositories/LCM_Inventory/docs/Proposals/CRP-128-LCM-10.0.0-Universal-Multi-Page-Table-Print-And-PDF-Export-Engine.md).
 >
 > 3. **Desktop Editor Dispatch & Governance Advisory**:
->    - **Extracted to**: [`CRP-129`](file:///D:/Git_Repositories/LCM_Inventory/docs/Proposals/CRP-129-LCM-v7.5.0-Standard-Desktop-Editor-Dispatch-And-Governance-Advisory-Hook.md).
+>    - **Extracted to**: [`CRP-129`](file:///D:/Git_Repositories/LCM_Inventory/docs/Proposals/CRP-129-LCM-10.0.0-Standard-Desktop-Editor-Dispatch-And-Governance-Advisory-Hook.md).
 
 

@@ -5,13 +5,13 @@
 | :--- | :--- |
 | **Proposal ID** | `CRP-171` |
 | **Status** | `SUGGESTED` (Awaiting Operator Trigger) |
-| **Date** | 2026-09-25 |
+| **Date** | 2026-10-13 |
 
 ---
 
 ## 1. Gate 1 Planning Phase Receipt
 
-- Proposal Bundle scaffolded in `LCM_Inventory/docs/Proposals/CRP-171-LCM-v7.6.0-Tool-Explorer-ShowTools-Default-And-Metrics/`.
+- Proposal Bundle scaffolded in `LCM_Inventory/docs/Proposals/CRP-171-LCM-10.0.0-Tool-Explorer-ShowTools-Default-And-Metrics/`.
 - Proposal registered in `LCM_Inventory/data/proposals/proposals.json` with state `suggested`.
 - Source code, script, and configuration modifications remain halted at Gate 1 per `RULE-LCM-014`.
 

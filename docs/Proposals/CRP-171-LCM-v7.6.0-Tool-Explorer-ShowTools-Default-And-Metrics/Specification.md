@@ -4,9 +4,9 @@
 CRP-ID: CRP-171
 Title: LCM Tool Explorer ShowTools Default Mode, Self-Tool Exclusion, and Dynamic Filtered Count Metric Card
 Scope: LCM Tool Explorer, Tools Catalog, UI Filtering & Metrics Cards
-Baseline-Version: v7.6.0
+Baseline-Version: 10.0.0
 Author: Rolf, Antigravity AI Assistant
-Date: 2026-09-25
+Date: 2026-10-13
 Status: Suggested
 Plan-State: suggested
 Progress-State: queued
@@ -69,6 +69,6 @@ Additionally, as part of system reconnaissance, facts surrounding `Initialize-Sh
 An audit was conducted on `Initialize-SharedAiMemory.ps1` and the active environment:
 - **Junction Status**: `C:\Users\rgbig\.gemini` is a real NTFS directory (`LinkType` is empty), **not** an NTFS Directory Junction.
 - **Drive A: Status**: Shared Drive `A:\.gemini` exists.
-- **Historical Execution Log**: The script was executed once on 2026-08-30 (`Initialize-SharedAiMemory-20260830_110459.log`). While `robocopy` replicated 753 files to `A:\.gemini`, the directory rename step failed because the Antigravity IDE process held open file locks. As a result, the junction swap never completed.
-- **Current Data Divergence**: `C:\Users\rgbig\.gemini` has received active writes up to the present date (2026-09-25), whereas `A:\.gemini` has remained frozen since 2026-08-30 and lacks newer directories (`antigravity-obsidian`, updated `bin`, and logs).
+- **Historical Execution Log**: The script was executed once on 2026-10-13 (`Initialize-SharedAiMemory-20260830_110459.log`). While `robocopy` replicated 753 files to `A:\.gemini`, the directory rename step failed because the Antigravity IDE process held open file locks. As a result, the junction swap never completed.
+- **Current Data Divergence**: `C:\Users\rgbig\.gemini` has received active writes up to the present date (2026-10-13), whereas `A:\.gemini` has remained frozen since 2026-10-13 and lacks newer directories (`antigravity-obsidian`, updated `bin`, and logs).
 - **Recommendation**: In accordance with the prompt directive ("do not change anything yet"), zero modifications have been made to `Initialize-SharedAiMemory.ps1` or the filesystem.

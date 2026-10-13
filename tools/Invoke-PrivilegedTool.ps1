@@ -10,8 +10,8 @@
            preventing Session 0 hangs and silent invariant failures.
   Path: LCM_Inventory/tools/Invoke-PrivilegedTool.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 1.0.0
-  Date: 2026-09-19
+  Version: 10.0.0
+  Date: 2026-10-13
 .PARAMETER Tool
   The tool Name, ShortName, or relative path to execute (e.g., 'RestoreSettings', 'Restore-SystemSettings.ps1', 'SetGitRoot').
 .PARAMETER Arguments
@@ -57,7 +57,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$scriptVersion = "1.0.1"
+$scriptVersion = "10.0.0"
 $scriptName = "Invoke-PrivilegedTool"
 
 # Aggregate explicit and remaining arguments seamlessly

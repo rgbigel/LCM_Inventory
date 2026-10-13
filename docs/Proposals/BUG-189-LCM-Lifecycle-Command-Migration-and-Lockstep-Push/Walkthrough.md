@@ -15,4 +15,4 @@ Completed the lifecycle command migration and push cohort hardening across the r
 
 ## Reopened Publication Integrity Repair
 
-Inspection on 2026-09-29 found that completed proposal bundles were untracked in `LCM_Inventory`, while CRP-190 was untracked in `LCM_AI`. The lifecycle push script does not stage proposal bundles and can transition a proposal to `pushed` without proving its bundle is committed. BUG-189 is reopened to add proposal-only publication and bundle commit verification.
+Inspection on 2026-10-13 found that completed proposal bundles were untracked in `LCM_Inventory`, while CRP-190 was untracked in `LCM_AI`. The lifecycle push script does not stage proposal bundles and can transition a proposal to `pushed` without proving its bundle is committed. BUG-189 is reopened to add proposal-only publication and bundle commit verification.

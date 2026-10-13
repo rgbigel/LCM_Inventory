@@ -4,9 +4,9 @@
 CRP-ID: CRP-162
 Title: Proposal Bundle Directory Architecture, Dual Lifecycle, Git Object Document Retrieval, and Post-Push Working Tree Purge Engine
 Scope: LCM Governance, LCM_Inventory, & Governed Child Repositories
-Baseline-Version: v7.6.0
+Baseline-Version: 10.0.0
 Author: Rolf, LCM_AI Engine
-Date: 2026-09-20
+Date: 2026-10-13
 Status: Processed
 Plan-State: completed
 Progress-State: completed
@@ -42,7 +42,7 @@ Currently, proposal specifications across the workspace are stored as flat Markd
 <RepositoryRoot>/
 └── docs/
     └── Proposals/
-        └── CRP-162-LCM-v7.6.0-Proposal-Bundle-Architecture/
+        └── CRP-162-LCM-10.0.0-Proposal-Bundle-Architecture/
             ├── Specification.md       # Requirements, intent, architecture
             ├── Implementation_Plan.md # Technical diffs, component plans, tests
             └── Walkthrough.md         # Verification evidence, receipts, logs
@@ -56,11 +56,11 @@ Currently, proposal specifications across the workspace are stored as flat Markd
   "origin_repo": "LCM_Inventory",
   "state": "completed",
   "progress_state": "completed",
-  "bundle_dir": "docs/Proposals/CRP-162-LCM-v7.6.0-Proposal-Bundle-Architecture",
+  "bundle_dir": "docs/Proposals/CRP-162-LCM-10.0.0-Proposal-Bundle-Architecture",
   "docs": {
-    "specification": "docs/Proposals/CRP-162-LCM-v7.6.0-Proposal-Bundle-Architecture/Specification.md",
-    "plan": "docs/Proposals/CRP-162-LCM-v7.6.0-Proposal-Bundle-Architecture/Implementation_Plan.md",
-    "walkthrough": "docs/Proposals/CRP-162-LCM-v7.6.0-Proposal-Bundle-Architecture/Walkthrough.md"
+    "specification": "docs/Proposals/CRP-162-LCM-10.0.0-Proposal-Bundle-Architecture/Specification.md",
+    "plan": "docs/Proposals/CRP-162-LCM-10.0.0-Proposal-Bundle-Architecture/Implementation_Plan.md",
+    "walkthrough": "docs/Proposals/CRP-162-LCM-10.0.0-Proposal-Bundle-Architecture/Walkthrough.md"
   }
 }
 ```

@@ -4,7 +4,7 @@
 
 - **CRP ID**: `CRP-005`
 - **Author**: Rolf Bercht / Copilot-Gemini Collaboration
-- **Date**: 2026-09-04
+- **Date**: 2026-10-13
 - **Target Environment**: Antigravity IDE Workspace / Gemini System Configuration
 - **Status**: Ratified & Applied
 

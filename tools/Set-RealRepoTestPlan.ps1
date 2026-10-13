@@ -71,13 +71,13 @@ Module: Set-RealRepoTestPlan.ps1
 Purpose: Update the LCM_AI real-repository test plan without enabling writes.
 Path: tools/Set-RealRepoTestPlan.ps1
 Authors: LCM_AI Engine
-Version: 1.3.0
+Version: 10.0.0
 Caller Contract: Called only for LCM_AI governance preparation; refuses write enablement and validates policy after updating the local plan file.
 Changelog:
-- 2026-08-02: Blocked LCM_AI-local dry-run enablement; target repos must own dry-run state through Docs/Methods.
-- 2026-08-01: Synchronized target-profile and action-preview status fields during candidate transitions.
-- 2026-08-01: Added candidate Git repository validation and explicit read-only dry-run confirmation.
-- 2026-08-01: Added guarded real-repository test plan update command.
+- 2026-10-13: Blocked LCM_AI-local dry-run enablement; target repos must own dry-run state through Docs/Methods.
+- 2026-10-13: Synchronized target-profile and action-preview status fields during candidate transitions.
+- 2026-10-13: Added candidate Git repository validation and explicit read-only dry-run confirmation.
+- 2026-10-13: Added guarded real-repository test plan update command.
 #>
 
 $workspaceRoot = Split-Path $PSScriptRoot -Parent

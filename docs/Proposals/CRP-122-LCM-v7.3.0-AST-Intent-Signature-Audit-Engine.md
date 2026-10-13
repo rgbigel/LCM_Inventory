@@ -10,7 +10,7 @@ priority: Medium
 authors: Rolf, LCM_AI Engine
 created_at: 2026-09-08T15:45:00+02:00
 target_scope: LCM Core Governance & Multi-Repo Tooling
-affected_version_range: v7.3.0+
+affected_version_range: 10.0.0+
 impacted_repositories:
   - LCM_Inventory
   - Git_Repositories

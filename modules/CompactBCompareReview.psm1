@@ -7,8 +7,8 @@
              Working repository roots without changing the live repository.
     Path: modules/CompactBCompareReview.psm1
     Authors: Rolf, GitHub Copilot
-    Version: 1.0.0
-    Date: 2026-09-29
+    Version: 10.0.0
+    Date: 2026-10-13
 #>
 
 Set-StrictMode -Version Latest

@@ -30,40 +30,40 @@ Module: Advance-Governance.ps1
 Purpose: Validate native LCM_AI governance readiness and log separation without staging or committing changes.
 Path: tools/Advance-Governance.ps1
 Authors: LCM_AI Engine
-Version: 2.15.2
-Date: 2026-09-10
+Version: 10.0.0
+Date: 2026-10-13
 Caller Contract: Called from VS Code tasks or terminal; validates native governance inputs and reports status.
 Changelog:
-- 2026-09-10: Added -h / -Help CLI parameter per RULE-PS-010.
-- 2026-08-17: Scoped ignored-repositories check to root container settings.json.
-- 2026-08-02: Added proposal cleanup check reporting.
-- 2026-08-02: Added target-local method instance bootstrap reporting.
-- 2026-08-02: Added proposal-directory cleanup reporting.
-- 2026-08-02: Added target-local method instance ownership reporting.
-- 2026-08-02: Added proposal location and Markdown authority reporting.
-- 2026-08-02: Added lifecycle and integrity preflight policy reporting.
-- 2026-08-01: Added bottom-up change-request flow reporting.
-- 2026-08-01: Added phased documentation-first dry-run sequence reporting.
-- 2026-08-01: Added real-repository intended-action preview status reporting.
-- 2026-08-01: Added real-repository read-only Git command allow-list reporting.
-- 2026-08-01: Added real-repository adapter surface candidate count reporting.
-- 2026-08-01: Added real-repository dry-run confirmation requirement reporting.
-- 2026-08-01: Added real-repository dry-run status reporting.
-- 2026-08-01: Consolidated helper quality gates behind WorkspaceQualityGates module.
-- 2026-08-01: Added real-repository test plan and stabilization policy validation reporting.
-- 2026-08-01: Added LCM_AI stabilization state and sibling repository ignore validation output.
-- 2026-08-01: Added proposal disposition summary output.
-- 2026-08-01: Grouped generated artifact changes separately from reviewable pending changes.
-- 2026-08-01: Added optional accepted/rejected/modified proposal validation fixture check.
-- 2026-08-01: Added normalized proposal disposition validation.
-- 2026-08-01: Added validation for structured step proposal registry.
-- 2026-08-01: Added validation for step-oriented and permanent accepted governance logs.
-- 2026-08-01: Added native governance advancement check for Gemini/Continue migration.
+- 2026-10-13: Added -h / -Help CLI parameter per RULE-PS-010.
+- 2026-10-13: Scoped ignored-repositories check to root container settings.json.
+- 2026-10-13: Added proposal cleanup check reporting.
+- 2026-10-13: Added target-local method instance bootstrap reporting.
+- 2026-10-13: Added proposal-directory cleanup reporting.
+- 2026-10-13: Added target-local method instance ownership reporting.
+- 2026-10-13: Added proposal location and Markdown authority reporting.
+- 2026-10-13: Added lifecycle and integrity preflight policy reporting.
+- 2026-10-13: Added bottom-up change-request flow reporting.
+- 2026-10-13: Added phased documentation-first dry-run sequence reporting.
+- 2026-10-13: Added real-repository intended-action preview status reporting.
+- 2026-10-13: Added real-repository read-only Git command allow-list reporting.
+- 2026-10-13: Added real-repository adapter surface candidate count reporting.
+- 2026-10-13: Added real-repository dry-run confirmation requirement reporting.
+- 2026-10-13: Added real-repository dry-run status reporting.
+- 2026-10-13: Consolidated helper quality gates behind WorkspaceQualityGates module.
+- 2026-10-13: Added real-repository test plan and stabilization policy validation reporting.
+- 2026-10-13: Added LCM_AI stabilization state and sibling repository ignore validation output.
+- 2026-10-13: Added proposal disposition summary output.
+- 2026-10-13: Grouped generated artifact changes separately from reviewable pending changes.
+- 2026-10-13: Added optional accepted/rejected/modified proposal validation fixture check.
+- 2026-10-13: Added normalized proposal disposition validation.
+- 2026-10-13: Added validation for structured step proposal registry.
+- 2026-10-13: Added validation for step-oriented and permanent accepted governance logs.
+- 2026-10-13: Added native governance advancement check for Gemini/Continue migration.
 #>
 
 if ($Help) {
   Write-Host "==========================================================================" -ForegroundColor Cyan
-  Write-Host " WORKSPACE_AI ADVANCE GOVERNANCE VALIDATOR (v2.15.2)" -ForegroundColor Cyan
+  Write-Host " WORKSPACE_AI ADVANCE GOVERNANCE VALIDATOR (10.0.0)" -ForegroundColor Cyan
   Write-Host "==========================================================================" -ForegroundColor Cyan
   Write-Host "SYNOPSIS:" -ForegroundColor Yellow
   Write-Host "  Validates native LCM_AI governance readiness, log separation, and"
@@ -85,7 +85,8 @@ if ($Help) {
   return
 }
 
-$workspaceRoot = Split-Path $PSScriptRoot -Parent
+$inventoryRoot = Split-Path $PSScriptRoot -Parent
+$workspaceRoot = Split-Path $inventoryRoot -Parent
 $copilotRoot = Join-Path $workspaceRoot '.copilot'
 $qualityGateModulePath = Join-Path $PSScriptRoot 'QualityGates\WorkspaceQualityGates.psm1'
 Import-Module $qualityGateModulePath -Force
@@ -234,11 +235,10 @@ if (Test-Path -LiteralPath $ProposalValidationPath) {
 }
 
 $stabilizationState = Get-Content -Raw -Path $StabilizationPath | ConvertFrom-Json
-$rootContainer = Split-Path $workspaceRoot -Parent
-$rootSettings = Join-Path $rootContainer '.vscode\settings.json'
-$ignoreValidation = Assert-IgnoredRepositories -SettingsPath $rootSettings -WorkspaceParent $rootContainer
-$policyValidation = Assert-StabilizationPolicy -WorkspaceRoot $workspaceRoot -StabilizationPath $StabilizationPath -RealRepoTestPlanPath $RealRepoTestPlanPath
-$realRepoPlanValidation = Assert-RealRepoTestPlan -WorkspaceRoot $workspaceRoot -StabilizationPath $StabilizationPath -RealRepoTestPlanPath $RealRepoTestPlanPath
+$rootSettings = Join-Path $workspaceRoot '.vscode\settings.json'
+$ignoreValidation = Assert-IgnoredRepositories -SettingsPath $rootSettings -WorkspaceParent $workspaceRoot
+$policyValidation = Assert-StabilizationPolicy -WorkspaceRoot $inventoryRoot -StabilizationPath $StabilizationPath -RealRepoTestPlanPath $RealRepoTestPlanPath
+$realRepoPlanValidation = Assert-RealRepoTestPlan -WorkspaceRoot $inventoryRoot -StabilizationPath $StabilizationPath -RealRepoTestPlanPath $RealRepoTestPlanPath
 $realRepoPlan = Get-Content -Raw -Path $RealRepoTestPlanPath | ConvertFrom-Json
 
 Write-Host 'LCM_AI native governance check: OK'

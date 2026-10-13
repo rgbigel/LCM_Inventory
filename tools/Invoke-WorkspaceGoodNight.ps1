@@ -13,8 +13,8 @@
            7. Logs structured [GOOD_NIGHT] audit receipt to cm_activity.log.
   Path: LCM_Inventory/tools/Invoke-WorkspaceGoodNight.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 2.0.0
-  Date: 2026-10-09
+  Version: 10.0.0
+  Date: 2026-10-13
   Rule: RULE-PS-001 - RULE-PS-021, RULE-LCM-014, RULE-REV-001
 #>
 
@@ -52,7 +52,7 @@ if ($PSVersionTable.PSEdition -ne 'Core' -or $PSVersionTable.PSVersion.Major -lt
     throw 'Invoke-WorkspaceGoodNight.ps1 requires PowerShell 7 (pwsh.exe). Windows PowerShell (powershell.exe) is not supported.'
 }
 
-$scriptVersion = '2.0.0'
+$scriptVersion = '10.0.0'
 $scriptName = 'Invoke-WorkspaceGoodNight'
 
 if ($Help) {

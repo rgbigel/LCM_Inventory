@@ -6,8 +6,8 @@
 #          batch operations, review granularity ('coarse' | 'tight'), repo review queue inspection,
 #          and persistent ledger storage in LCM_Inventory.
 # Authors: Rolf, LCM_AI Engine
-# Version: 1.0.4
-# Date: 2026-09-09
+# Version: 10.0.0
+# Date: 2026-10-13
 # =====================================================================
 
 Set-StrictMode -Version Latest
@@ -175,7 +175,7 @@ function New-WorkspaceProposal {
 CRP-ID: $canonicalId
 Title: $Title
 Scope: $OriginRepo
-Baseline-Version: v7.6.0
+Baseline-Version: 10.0.0
 Author: $Author
 Date: $timestamp
 Status: Suggested

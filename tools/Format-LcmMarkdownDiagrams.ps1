@@ -10,8 +10,8 @@
            Supports execution across Git_root, Repo, Folder, and Document scopes.
   Path: LCM_Inventory/tools/Format-LcmMarkdownDiagrams.ps1
   Authors: Rolf, LCM_AI Governance
-  Version: 7.3.0
-  Date: 2026-09-07
+  Version: 10.0.0
+  Date: 2026-10-13
 
 .PARAMETER Scope
   Execution scope: 'Git_root', 'Repo', 'Folder', 'Document', or 'Auto' (default).
@@ -81,7 +81,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$scriptVersion = '7.3.0'
+$scriptVersion = '10.0.0'
 $scriptName = 'Format-LcmMarkdownDiagrams'
 
 # ------------------------------------------------------------------------------

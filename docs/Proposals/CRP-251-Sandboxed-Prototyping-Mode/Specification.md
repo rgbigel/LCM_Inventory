@@ -5,7 +5,7 @@
 | **Proposal ID** | `CRP-251` |
 | **Lifecycle State** | `SUGGESTED` |
 | **Origin Repository** | `LCM_Inventory` |
-| **Date** | 2026-10-07 |
+| **Date** | 2026-10-13 |
 
 ## Objective
 

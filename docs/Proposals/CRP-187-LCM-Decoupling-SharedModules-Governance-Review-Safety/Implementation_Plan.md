@@ -16,8 +16,8 @@
 | **`D:\Git_Repositories`** (Root) | Tool Scripts & Modules | `LCM_Inventory/tools/...`, `LCM_Inventory/modules/...` | Redirected log paths to `LCM_Inventory/data/logs/lcm` |
 | **`D:\Git_Repositories`** (Root) | Editor Settings | `.vscode/settings.json` | Set `files.autoSave: "off"` |
 | **`D:\Git_Repositories\Archives`** | Junk Yard Utilities | `#PermanentPurge.cmd` | Filtered, confirmation-gated purge script |
-| **`LCM_Shared`** | Architecture Spec | `docs/Architecture.md` | v1.1.0 satellite role and decoupled lifecycle draft |
-| **`LCM_Shared`** | Requirements Spec | `docs/Requirements.md` | v1.4.0 Section 3 (`REQ-TOOL-*`) inspection tooling draft |
+| **`LCM_Shared`** | Architecture Spec | `docs/Architecture.md` | 10.0.0 satellite role and decoupled lifecycle draft |
+| **`LCM_Shared`** | Requirements Spec | `docs/Requirements.md` | 10.0.0 Section 3 (`REQ-TOOL-*`) inspection tooling draft |
 | **`LCM_Inventory`** | Governance Requirements | `docs/Requirements.md` | `REQ-WINV-003`, `004`, `005`, and Section 4 (`007`-`010`) |
 | **`LCM_Inventory`** | Proposals Ledger | `data/proposals/proposals.json` | Register `CRP-187` as in-progress |
 | **`LCM_AI`** | Optimization Specs | `docs/Optimizations/*.md` | Catalog of Errors and Data Atoms design docs |

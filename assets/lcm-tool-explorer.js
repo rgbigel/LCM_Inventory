@@ -1,5 +1,5 @@
 /**
- * LCM Tool Explorer Client Application (v8.0.0)
+ * LCM Tool Explorer Client Application (10.0.0)
  * Modern dashboard controller supporting:
  * - Switched Short-Names default column with source-file toggle mode
  * - Unified 8-mode action dropdown (Run, Help, Run with parms, Code editor, Rename, Archive, Delete, Cleanup)

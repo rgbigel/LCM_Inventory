@@ -8,11 +8,11 @@
 | **Origin Repository** | `LCM / Git_Repositories` |
 | **Target Scope** | `LCM_Inventory/modules/LcmToolCatalog.psm1`, `LCM_Inventory/assets/lcm-tool-explorer.js`, `LCM_Inventory/assets/lcm-dashboard-theme.css` |
 | **Author** | Operator Directive / CRP Intake |
-| **Date** | 2026-09-11 |
+| **Date** | 2026-10-13 |
 | **Priority** | `Medium` |
-| **Version Impact** | `v7.5.0` |
+| **Version Impact** | `10.0.0` |
 | **Governing Policy** | `ProposalReviewFlowPolicy.md` (`RULE-LCM-012`, `RULE-LCM-015`, `RULE-LCM-016`) |
-| **Originating Proposals** | [`BUG-133`](file:///D:/Git_Repositories/LCM_Inventory/docs/Proposals/BUG-133-LCM-v7.5.0-Tool-Explorer-UI-Regressions-Help-And-Parameter-Fixes.md) and `BUNDLE-STD-DISPLAY-v7.5.0` (`CRP-025`, `CRP-108`) |
+| **Originating Proposals** | [`BUG-133`](file:///D:/Git_Repositories/LCM_Inventory/docs/Proposals/BUG-133-LCM-10.0.0-Tool-Explorer-UI-Regressions-Help-And-Parameter-Fixes.md) and `BUNDLE-STD-DISPLAY-10.0.0` (`CRP-025`, `CRP-108`) |
 
 ---
 

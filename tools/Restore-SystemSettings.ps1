@@ -14,8 +14,8 @@
   - Services Restored: OneDrive, Everything, Macrium, TightVNC, HASS.Agent, MediaTek Bluetooth, PowerToys (all other modules).
 .NOTES
   Author: Rolf + Antigravity
-  Date: 2026-09-10
-  Version: 2.2.1
+  Date: 2026-10-13
+  Version: 10.0.0
 #>
 
 [CmdletBinding()]

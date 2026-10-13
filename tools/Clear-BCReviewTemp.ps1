@@ -28,8 +28,8 @@ param(
              Safely preserves and unlinks Approach A directory junctions (ACTIVE_BASELINE and ACTIVE_LIVE) per RULE-PS-018.
     Path: tools/Clear-BCReviewTemp.ps1
     Authors: Rolf, LCM_AI Engine
-    Version: 8.0.0
-    Date: 2026-09-26
+    Version: 10.0.0
+    Date: 2026-10-13
 #>
 
 Set-StrictMode -Version Latest

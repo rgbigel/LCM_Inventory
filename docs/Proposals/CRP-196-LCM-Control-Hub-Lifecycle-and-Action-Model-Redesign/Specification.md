@@ -93,7 +93,7 @@ effective switch values in its execution evidence.
 
 ## Layout Direction and Authoritative UI Design Pattern
 
-- **Governance Compliance**: The Control Hub implementation MUST strictly adhere to `DisplayStandardsPolicy.md` v9.3.0 (`RULE-DSP-001` through `RULE-DSP-016`), embedding the Antigravity-IDE Light Mode default palette with deep-slate topbar (`RULE-DSP-001`, `002`), `IBM Plex Mono` / `IBM Plex Sans` typography, and the two-row sticky header standard.
+- **Governance Compliance**: The Control Hub implementation MUST strictly adhere to `DisplayStandardsPolicy.md` 10.0.0 (`RULE-DSP-001` through `RULE-DSP-016`), embedding the Antigravity-IDE Light Mode default palette with deep-slate topbar (`RULE-DSP-001`, `002`), `IBM Plex Mono` / `IBM Plex Sans` typography, and the two-row sticky header standard.
 - **Authoritative Design Reference**: The design pattern and interactive UI architecture agreed upon in [`assets/CM_CONTROL_HUB_IMPLEMENTATION_0.html`](file:///d:/Git_Repositories/LCM_Inventory/assets/CM_CONTROL_HUB_IMPLEMENTATION_0.html) serves as the authoritative UI specification and prototype for the Control Hub.
 - **Top Row and Control Row**:
   - Global Topbar: Context badges, application title, active repository selector, and global status metrics.
@@ -113,7 +113,7 @@ effective switch values in its execution evidence.
 
 ### LCM_AI/Architecture
 ```markdown
-### 3.4.2 Documentation Reconciliation Flow
+### 10.0.0 Documentation Reconciliation Flow
 
 `FixDocumentation <CRP/BUG scope>` reconciles explicit, repository-qualified
 documentation payloads from selected proposal bundles. It produces a manifest

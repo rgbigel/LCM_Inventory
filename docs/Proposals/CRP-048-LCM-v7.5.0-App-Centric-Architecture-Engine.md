@@ -1,12 +1,12 @@
 # CRP-048: App-Centric Architectural Synthesis, Active Context Engine & High-Order Decomposition Tooling
 
-Module: docs/Proposals/CRP-048-LCM-v7.5.0-App-Centric-Architecture-Engine.md  
+Module: docs/Proposals/CRP-048-LCM-10.0.0-App-Centric-Architecture-Engine.md  
 Purpose: Formalizes the App-Centric Architecture Taxonomy (App: #), the Active Context Engine (Workon: A#), and cross-App problem governance in the LCM framework.  
-Path: LCM_Inventory/docs/Proposals/CRP-048-LCM-v7.5.0-App-Centric-Architecture-Engine.md  
+Path: LCM_Inventory/docs/Proposals/CRP-048-LCM-10.0.0-App-Centric-Architecture-Engine.md  
 Authors: Rolf, LCM_AI Engine  
-Version: 7.5.0  
+Version: 10.0.0
 Status: Approved Proposal  
-Date: 2026-09-19  
+Date: 2026-10-13
 
 ---
 

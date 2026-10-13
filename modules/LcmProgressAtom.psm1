@@ -10,8 +10,8 @@
            (Port 9876) for real-time web dashboard row mutations and console streaming.
   Path: LCM_Inventory/modules/LcmProgressAtom.psm1
   Authors: Rolf, LCM_AI Governance
-  Version: 7.3.0
-  Date: 2026-09-07
+  Version: 10.0.0
+  Date: 2026-10-13
 #>
 
 Set-StrictMode -Version Latest

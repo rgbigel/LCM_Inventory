@@ -10,8 +10,8 @@
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
   Path: tools/Export-LCMRules.ps1
   Authors: Rolf, LCM_AI Governance
-  Version: 1.2.0
-  Date: 2026-08-26
+  Version: 10.0.0
+  Date: 2026-10-13
 .PARAMETER OutputPath
   Target file path for the consolidated markdown artifact. Defaults to LCM_AI/docs/LCM_Rules_Gemini_Export.md.
 .PARAMETER ToClipboard
@@ -48,7 +48,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$scriptVersion = "1.2.0"
+$scriptVersion = "10.0.0"
 $scriptName = "Export-LCMRules"
 
 # ------------------------------------------------------------------------------

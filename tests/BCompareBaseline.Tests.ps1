@@ -157,9 +157,9 @@ Describe 'BCompare baseline' {
     $exportedSubDir = Join-Path $destination 'nested\sub'
     $exportedNestedDir = Join-Path $destination 'nested'
 
-    # File 1 was modified in working tree, but in baseline it must retain its commit 1 date (2024-01-01)
+    # File 1 was modified in working tree, but in baseline it must retain its commit 1 date (2026-10-13)
     (Get-Item -LiteralPath $exportedFile1).LastWriteTimeUtc | Should -Be ([System.DateTime]::Parse('2024-01-01T12:00:00Z').ToUniversalTime())
-    # Subdirectories and root take max child timestamp (2024-06-01), not "now"
+    # Subdirectories and root take max child timestamp (2026-10-13), not "now"
     (Get-Item -LiteralPath $exportedSubDir).LastWriteTimeUtc | Should -Be ([System.DateTime]::Parse('2024-06-01T12:00:00Z').ToUniversalTime())
     (Get-Item -LiteralPath $exportedNestedDir).LastWriteTimeUtc | Should -Be ([System.DateTime]::Parse('2024-06-01T12:00:00Z').ToUniversalTime())
     (Get-Item -LiteralPath $destination).LastWriteTimeUtc | Should -Be ([System.DateTime]::Parse('2024-06-01T12:00:00Z').ToUniversalTime())

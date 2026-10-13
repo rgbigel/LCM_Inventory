@@ -6,8 +6,8 @@
   Purpose: Copies files from source to target with error recovery, optional exclusion masks, and audit logging.
   Path: tools/Safe-Copy.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 2.0.0
-  Date: 2026-08-29
+  Version: 10.0.0
+  Date: 2026-10-13
 .PARAMETER SourcePath
   Source directory path to copy files from (default 'F:\OneDrive').
 .PARAMETER TargetPath
@@ -43,7 +43,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$scriptVersion = "2.0.0"
+$scriptVersion = "10.0.0"
 $scriptName = "Safe-Copy"
 
 if ($Help) {

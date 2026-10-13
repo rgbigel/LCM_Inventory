@@ -1,12 +1,12 @@
 # CRP: LCM_Backup Path and Implementation Reconciliation
 
-Module: docs/Proposals/CRP-2026-10-01-LCM-Backup-Path-and-Implementation-Reconciliation.md  
+Module: docs/Proposals/CRP-2026-10-13-LCM-Backup-Path-and-Implementation-Reconciliation.md  
 Purpose: Suggested correction proposal for active `Workspace_Inventory` path references and implementation claims in LCM_Backup.  
-Path: D:\Git_Repositories\LCM_Inventory\docs\Proposals\CRP-2026-10-01-LCM-Backup-Path-and-Implementation-Reconciliation.md  
+Path: D:\Git_Repositories\LCM_Inventory\docs\Proposals\CRP-2026-10-13-LCM-Backup-Path-and-Implementation-Reconciliation.md  
 Authors: LCM documentation reconciliation  
-Version: 1.0.0  
+Version: 10.0.0
 Status: Suggested  
-Date: 2026-10-01  
+Date: 2026-10-13
 
 ---
 

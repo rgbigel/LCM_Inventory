@@ -50,14 +50,14 @@ Module: Test-RealRepoProposalCleanup.ps1
 Purpose: Report target-local proposal files that are void because they are accepted and implemented.
 Path: tools/Test-RealRepoProposalCleanup.ps1
 Authors: LCM_AI Engine
-Version: 1.0.0
+Version: 10.0.0
 Caller Contract: Performs a read-only scan of the selected target repository's method proposal queue; does not delete, stage, or commit files.
 Changelog:
-- 2026-08-02: Added target-local proposal cleanup candidate scanner.
+- 2026-10-13: Added target-local proposal cleanup candidate scanner.
 #>
 
 $scriptName = 'Test-RealRepoProposalCleanup.ps1'
-$scriptVersion = '1.0.0'
+$scriptVersion = '10.0.0'
 Write-Host "$scriptName version $scriptVersion"
 
 $workspaceRoot = Split-Path $PSScriptRoot -Parent

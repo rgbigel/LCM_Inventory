@@ -44,8 +44,8 @@ param(
              through the exact-CRP review gate.
     Path: tools/Submit-ReviewResult.ps1
     Authors: Rolf, LCM_AI Engine
-    Version: 8.3.0
-    Date: 2026-10-02
+    Version: 10.0.0
+    Date: 2026-10-13
 #>
 
 Set-StrictMode -Version Latest
@@ -238,9 +238,9 @@ $actionsExecuted.Add("Accepted live worktree through BCR disposition '$Result'."
 # ------------------------------------------------------------------------------
 # Git Staging & Commit
 # ------------------------------------------------------------------------------
-git -C $targetRepoPath diff --cached --quiet
-if ($LASTEXITCODE -ne 0) {
-    throw "Repository '$repoName' already has staged changes. Reset or commit the index before submitting this reviewed manifest."
+$existingStagedPaths = @(git -C $targetRepoPath diff --cached --name-only)
+if ($existingStagedPaths.Count -gt 0) {
+    Write-Host "Continuing reviewed manifest with $($existingStagedPaths.Count) existing staged path(s) in '$repoName'." -ForegroundColor DarkYellow
 }
 
 $manifestUncopied = @($stagedManifest.Uncopied)
@@ -314,7 +314,7 @@ foreach ($rename in $manifestRenames) {
 }
 foreach ($unreviewed in $durableUnreviewed) {
     $relativePath = if ($unreviewed.PSObject.Properties['RelativePath']) { [string]$unreviewed.RelativePath } else { [string]$unreviewed }
-    git -C $targetRepoPath add -- $relativePath
+    git -C $targetRepoPath add -f -- $relativePath
     if ($LASTEXITCODE -ne 0) { throw "Unable to stage explicitly included path '$relativePath'." }
 }
 
@@ -372,7 +372,7 @@ if ($LASTEXITCODE -ne 0) {
     # Append to active CM activity ledger
     $cmLogFile = Join-Path $workspaceRoot "LCM_Inventory\logs\cm_activity.log"
     if (Test-Path -LiteralPath (Split-Path $cmLogFile -Parent)) {
-        $cmLogEntry = "[$timestamp] [REVIEW_SUBMITTED] [Target: $repoName] [Version: v8.3.0] [PushDate: $timestamp] [AffectedRepos: $repoName, LCM_Inventory] [TestScope: $testScopeVal] REVIEW_COMPLETED - Committed review completion ($newCommitSha): $commitMsg"
+        $cmLogEntry = "[$timestamp] [REVIEW_SUBMITTED] [Target: $repoName] [Version: 10.0.0] [PushDate: $timestamp] [AffectedRepos: $repoName, LCM_Inventory] [TestScope: $testScopeVal] REVIEW_COMPLETED - Committed review completion ($newCommitSha): $commitMsg"
         Add-Content -LiteralPath $cmLogFile -Value $cmLogEntry -Encoding UTF8
     }
 

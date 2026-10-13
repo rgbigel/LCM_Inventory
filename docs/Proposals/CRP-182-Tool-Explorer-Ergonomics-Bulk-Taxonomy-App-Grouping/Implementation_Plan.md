@@ -2,7 +2,7 @@
 
 ## 1. Technical Components & Affected Files
 * [d:\Git_Repositories\LCM_Inventory\assets\lcm-tool-explorer.js](file:///d:/Git_Repositories/LCM_Inventory/assets/lcm-tool-explorer.js) — Core UI rendering, filtering, alias management modal, bulk column assignment, and dynamic sequence numbering.
-* [d:\Git_Repositories\LCM_Inventory\tools\Show-ToolsExplorer.ps1](file:///d:/Git_Repositories/LCM_Inventory/tools/Show-ToolsExplorer.ps1) — HTML compilation, version metadata injection (`v8.0.0`), and baseline catalog binding.
+* [d:\Git_Repositories\LCM_Inventory\tools\Show-ToolsExplorer.ps1](file:///d:/Git_Repositories/LCM_Inventory/tools/Show-ToolsExplorer.ps1) — HTML compilation, version metadata injection (`10.0.0`), and baseline catalog binding.
 * [d:\Git_Repositories\LCM_Inventory\docs\README.md](file:///d:/Git_Repositories/LCM_Inventory/docs/README.md) — Documentation update for Tool Explorer features.
 * [d:\Git_Repositories\LCM_Inventory\data\proposals\proposals.json](file:///d:/Git_Repositories/LCM_Inventory/data/proposals/proposals.json) — Ledger registration.
 
@@ -12,8 +12,8 @@
 
 ### Phase 1: Version Baseline & Header Branding (Items 5 & 6)
 1. **Version Parity**:
-   - In `Show-ToolsExplorer.ps1`, update `$scriptVersion = "8.0.0"` and dynamic header extraction from `Requirements.md`.
-   - In `lcm-tool-explorer.js`, ensure all references to `v7.5.0` are updated to `v8.0.0`.
+   - In `Show-ToolsExplorer.ps1`, update `$scriptVersion = "10.0.0"` and dynamic header extraction from `Requirements.md`.
+   - In `lcm-tool-explorer.js`, ensure all references to `10.0.0` are updated to `10.0.0`.
 2. **Column Header Rebranding (`Subsys` $\rightarrow$ `Group`)**:
    - In `Show-ToolsExplorer.ps1` and `lcm-tool-explorer.js`, change the column header text from `Subsys` to `Group`.
    - Update column filters and sort labels to reflect `Group`.

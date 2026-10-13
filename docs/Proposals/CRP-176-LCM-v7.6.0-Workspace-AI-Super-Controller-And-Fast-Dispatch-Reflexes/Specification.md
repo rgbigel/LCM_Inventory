@@ -4,9 +4,9 @@
 CRP-ID: CRP-176
 Title: Workspace AI Super-Controller for Unified Subsystem Navigation (ToolsExplorer & ShowCM)
 Scope: LCM_AI, .lcm, LCM_Inventory, IDE Answer Box & Companion Interface
-Baseline-Version: v8.0.0
+Baseline-Version: 10.0.0
 Author: Rolf, Antigravity AI Assistant
-Date: 2026-09-27
+Date: 2026-10-13
 Status: Suggested
 Plan-State: suggested
 Progress-State: undecided
@@ -106,7 +106,7 @@ flowchart TD
 
 ## 5. Implementation Decision: Option A (IDE Answer Box Action Widget)
 
-Per operator directive on 2026-09-27, **Option A** has been selected and implemented as the authoritative design. Alternatives B and C imply keeping an extra browser window open, whereas the operator interface is centered within the IDE and uses Zen Browser (`D:\Tools\Zen Browser\zen.exe`) when external dashboards are required.
+Per operator directive on 2026-10-13, **Option A** has been selected and implemented as the authoritative design. Alternatives B and C imply keeping an extra browser window open, whereas the operator interface is centered within the IDE and uses Zen Browser (`D:\Tools\Zen Browser\zen.exe`) when external dashboards are required.
 
 ### 5.1 Artifacts Implemented
 1. **Interactive Answer Box Widget**:

@@ -2,14 +2,14 @@
 Proposal-ID: CRP-054
 CR-ID: CRP-054
 Scope: LCM_Inventory
-Version: v7.4.2
+Version: 10.0.0
 Affected-Repos: [LCM_Inventory, Git_Repositories]
 Severity: Medium
 Status: In-Progress
-Date: 2026-09-02
+Date: 2026-10-13
 Author: Rolf, LCM_AI
 Target Scope: LCM_Inventory Tool Governance Scope & Data Exemption Split
-Affected Version Range: v7.4.0 -> v7.4.2
+Affected Version Range: 10.0.0 -> 10.0.0
 Impacted Repositories: [LCM_Inventory, Git_Repositories]
 ---
 
@@ -40,7 +40,7 @@ Modify `Get-ReposUnderReview` in `LCM_Inventory/modules/ProposalManager.psm1`:
 ---
 
 ## 3. Affected Components
-* `LCM_Inventory/docs/Proposals/CRP-054-LCM-v7.4.2-Workspace-Inventory-Tool-Governance-Scope-And-Data-Exemption-Split.md`
+* `LCM_Inventory/docs/Proposals/CRP-054-LCM-10.0.0-Workspace-Inventory-Tool-Governance-Scope-And-Data-Exemption-Split.md`
 * `.agents/rules/ProposalReviewFlowPolicy.md` (`RULE-LCM-004`)
 * `LCM_Inventory/modules/ProposalManager.psm1` (`Get-ReposUnderReview`)
 * `LCM_Inventory/data/proposals/proposals.json`

@@ -8,10 +8,10 @@
 | **Origin Repository** | `LCM_Inventory` |
 | **Target Scope** | `WORKSPACE_INVENTORY_VIEWER.html` / `Docs` Modal & Viewer |
 | **Author** | Rolf, LCM_AI Governance |
-| **Date** | 2026-09-09 |
+| **Date** | 2026-10-13 |
 | **Priority** | `Medium` |
-| **Version Impact** | `v7.5.0` |
-| **Extracted From** | Extracted from `CRP-103` (Section 3, Item 1 "Document Table Viewer") to separate inventory document table viewer implementation from interactive table display bundling (`BUNDLE-STD-DISPLAY-v7.5.0`). |
+| **Version Impact** | `10.0.0` |
+| **Extracted From** | Extracted from `CRP-103` (Section 3, Item 1 "Document Table Viewer") to separate inventory document table viewer implementation from interactive table display bundling (`BUNDLE-STD-DISPLAY-10.0.0`). |
 
 ---
 

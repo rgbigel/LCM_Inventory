@@ -2,14 +2,14 @@
 
 - **Proposal ID**: `CRP-110`
 - **Target Repository**: `LCM` (`Git_Repositories/LCM_Inventory/tools`, `LCM_Inventory`, `LCM_Shared`)
-- **Target Version**: `v7.3.0`
+- **Target Version**: `10.0.0`
 - **Domain**: `Lifecycle Model (LCM) Execution Telemetry & Cross-Channel Progress Architecture`
 - **Author**: Rolf, LCM_AI Governance
 - **Status**: `OPEN` (Awaiting Operator Review & PROCEED Trigger)
-- **Created**: `2026-09-07 15:55:00`
+- **Created**: `2026-10-13 15:55:00`
 - **Priority**: `HIGH`
 - **Target Scope**: `LCM_Inventory/modules/LcmProgressAtom.psm1`, `LCM_Inventory/tools/Set-LcmActionProgress.ps1`, `LCM_Inventory/assets/lcm-table-engine.js`, `LCM_Inventory/docs/CM_CONTROL_HUB.html`, `LCM_Inventory/tools/Invoke-ProposalAction.ps1`, `RR.ps1`
-- **Affected Version Range**: `v7.0.0 - v7.3.0`
+- **Affected Version Range**: `10.0.0 - 10.0.0`
 - **Impacted Repositories**: `Git_Repositories`, `LCM_Inventory`, `.lcm`, `All Governed Repositories`
 
 ---
@@ -93,8 +93,8 @@ The ephemeral progress file is maintained in `LCM_Inventory/scratch/active_progr
   "action_id": "ACT-2026-0907-154500",
   "command": "PROCEED",
   "origin_channel": "Chat",
-  "created_at": "2026-09-07 15:45:00",
-  "updated_at": "2026-09-07 15:45:08",
+  "created_at": "2026-10-13 15:45:00",
+  "updated_at": "2026-10-13 15:45:08",
   "total_items": 3,
   "completed_items": 1,
   "overall_percent": 45,
@@ -108,8 +108,8 @@ The ephemeral progress file is maintained in `LCM_Inventory/scratch/active_progr
       "state": "completed",
       "phase": "Completed",
       "percent": 100,
-      "started_at": "2026-09-07 15:45:00",
-      "completed_at": "2026-09-07 15:45:05",
+      "started_at": "2026-10-13 15:45:00",
+      "completed_at": "2026-10-13 15:45:05",
       "error": null
     },
     {
@@ -120,7 +120,7 @@ The ephemeral progress file is maintained in `LCM_Inventory/scratch/active_progr
       "state": "in_progress",
       "phase": "Pester Quality Gate",
       "percent": 50,
-      "started_at": "2026-09-07 15:45:05",
+      "started_at": "2026-10-13 15:45:05",
       "completed_at": null,
       "error": null
     },

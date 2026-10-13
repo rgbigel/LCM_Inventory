@@ -8,9 +8,9 @@
 | **Origin Repository** | `LCM_Inventory` |
 | **Target Scope** | Configuration Management Governance / Proposal Flow |
 | **Author** | Operator Directive / BUG Intake |
-| **Date** | 2026-09-11 |
+| **Date** | 2026-10-13 |
 | **Severity** | `High` |
-| **Version Impact** | `v7.5.0` |
+| **Version Impact** | `10.0.0` |
 | **Governing Policy** | `ProposalReviewFlowPolicy.md` (`RULE-LCM-007`, `RULE-LCM-008`, `RULE-LCM-010`, `RULE-LCM-015`) |
 
 ---
@@ -26,7 +26,7 @@ During triage and intake of newly reported issues from testing:
 
 ## 2. Root Cause Analysis
 
-1. In the active session, `BUG-133`, `CRP-134`, and `CRP-135` were previously completed and pushed (`pushed_at: 2026-09-10 18:33:01`).
+1. In the active session, `BUG-133`, `CRP-134`, and `CRP-135` were previously completed and pushed (`pushed_at: 2026-10-13 18:33:01`).
 2. The agent's initial sequence lookup during intake failed to query the true maximum ID in `proposals.json`, causing an attempted overwrite of IDs 133–135.
 3. This violated the core LCM invariant that pushed proposals are immutable historical artifacts.
 
@@ -45,4 +45,4 @@ During triage and intake of newly reported issues from testing:
 4. **Lineage Alignment**:
    - `BUG-136` (ShowActions log filter) links to `BUG-133` (where ShowActions parameter dispatch was introduced).
    - `BUG-137` (Daemon foreground focus inversion) links to `BUG-133` (where daemon `/open` handling was modified).
-   - `CRP-138` (ShowTools button and header layout) links to `BUG-133` and `BUNDLE-STD-DISPLAY-v7.5.0` (where ShowTools buttons were introduced).
+   - `CRP-138` (ShowTools button and header layout) links to `BUG-133` and `BUNDLE-STD-DISPLAY-10.0.0` (where ShowTools buttons were introduced).

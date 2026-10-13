@@ -4,7 +4,7 @@
 BUG-ID: BUG-179
 Title: Tool Explorer Alias Omission, Subsystem Override Reversion, and Two-State Finalize Blockade Defect
 Status: Completed
-Date: 2026-09-26
+Date: 2026-10-13
 ```
 
 ---

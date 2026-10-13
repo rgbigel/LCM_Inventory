@@ -2,13 +2,13 @@
 Proposal-ID: BUG-2026-002
 CR-ID: CR-2026-038
 Scope: HaSSD06_Inventory
-Version: v5.3.0
+Version: 10.0.0
 Affected-Repos: [HaSSD06_Inventory]
 Status: Suggested
-Date: 2026-08-30
+Date: 2026-10-13
 Author: rgbig
 Target Scope: HaSSD06_Inventory / tools / Show-HaInventoryApp.ps1
-Affected Version Range: v5.3.0
+Affected Version Range: 10.0.0
 Impacted Repositories: [HaSSD06_Inventory]
 ---
 

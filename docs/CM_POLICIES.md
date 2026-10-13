@@ -4,8 +4,8 @@ Module: docs/CM_POLICIES.md
 Purpose: Formal rules, policies, and invariants governing Configuration Management across the multi-repo workspace.
 Path: D:\Git_Repositories\LCM_Inventory\docs\CM_POLICIES.md
 Authors: Rolf, LCM_AI Engine
-Version: 2.0.0
-Date: 2026-08-30
+Version: 10.0.0
+Date: 2026-10-13
 
 ---
 
@@ -110,6 +110,32 @@ artifacts, scratch content, data, logs, and routine test output require no
 review, but may be inspected through an explicitly unfiltered BCR peek and may
 produce helpful non-blocking advice. Managed lifecycle hooks remain retained
 for governed transitions.
+
+### 6.1 Cohort Control and Review Policy (CRP-259)
+
+The Hub must resolve each command and row action to an explicit **Item**:
+either a CRP/BUG or a COH. These are distinct scopes; there is no repository,
+row-selection, history, or active-cohort fallback where the action requires a
+selector. A COH is named `COH-<prime>` and has one, and only one, head member
+identified by `<prime>`; it may have no additional members. A missing,
+non-member, or non-unique head invalidates the cohort.
+
+Only one COH may be active/open. Closed/inactive cohorts are retained as
+closed audit evidence. An inactive cohort may be created while another is
+open; opening it atomically closes the existing open cohort and opens the
+selected cohort. Adding without a selector is allowed only for adding a member
+to the sole active cohort. All membership, open/close, and lifecycle work is
+validate-then-commit atomic and fails without partial changes.
+
+At Gate 2, an open COH automatically synchronizes every member to the required
+gate state. The check fails closed on any member's missing or invalid evidence
+or precondition; no member advances and no BCR starts. Equivalent gate state
+means the same required gate with valid evidence, not a state that appears
+similar. After alignment, exactly one BCR covers the COH and records each
+member's disposition. Gate 1 remains the CRP planning halt; Gate 2 is the BCR
+decision. `DOIT` is a flow switch through Gate 1 work only and cannot bypass
+Gate 2. The UI and audit result must disclose the target, member dispositions,
+synchronization outcome, BCR result, and every refusal reason.
 
 ---
 

@@ -5,7 +5,7 @@
 | **Proposal ID** | `CRP-250` |
 | **Lifecycle State** | `IN_PROGRESS` |
 | **Origin Repository** | `LCM_Inventory` |
-| **Date** | 2026-10-07 |
+| **Date** | 2026-10-13 |
 | **Flow Mode** | DOIT |
 
 ## Objective

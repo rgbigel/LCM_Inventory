@@ -28,31 +28,32 @@ Module: Test-WorkspaceReadiness.ps1
 Purpose: Run native LCM_AI self-readiness checks before real-repository testing.
 Path: tools/Test-WorkspaceReadiness.ps1
 Authors: LCM_AI Engine
-Version: 1.8.1
+Version: 10.0.0
 Caller Contract: Called manually before enabling real-repository tests; validates current native governance pipeline.
 Changelog:
-- 2026-08-17: Decoupled ignored-repositories validation to root container settings.json.
-- 2026-08-02: Added target-local proposal cleanup scanner parsing.
-- 2026-08-02: Added target-local method instance bootstrap command parsing.
-- 2026-08-01: Added intended-action preview command parsing and readiness output.
-- 2026-08-01: Added target-profile command parsing and readiness output.
-- 2026-08-01: Added guarded real-repository transition command parsing and plan inspection.
-- 2026-08-01: Added real-repository dry-run contract checks.
-- 2026-08-01: Consolidated helper checks behind WorkspaceQualityGates module.
-- 2026-08-01: Added stabilization policy and stale-reference checks.
-- 2026-08-01: Added LCM_AI readiness self-test wrapper.
+- 2026-10-13: Decoupled ignored-repositories validation to root container settings.json.
+- 2026-10-13: Added target-local proposal cleanup scanner parsing.
+- 2026-10-13: Added target-local method instance bootstrap command parsing.
+- 2026-10-13: Added intended-action preview command parsing and readiness output.
+- 2026-10-13: Added target-profile command parsing and readiness output.
+- 2026-10-13: Added guarded real-repository transition command parsing and plan inspection.
+- 2026-10-13: Added real-repository dry-run contract checks.
+- 2026-10-13: Consolidated helper checks behind WorkspaceQualityGates module.
+- 2026-10-13: Added stabilization policy and stale-reference checks.
+- 2026-10-13: Added LCM_AI readiness self-test wrapper.
 #>
 
-$workspaceRoot = Split-Path $PSScriptRoot -Parent
-Set-Location $workspaceRoot
+$inventoryRoot = Split-Path $PSScriptRoot -Parent
+$workspaceRoot = Split-Path $inventoryRoot -Parent
+Set-Location $inventoryRoot
 
 $qualityGateModulePath = Join-Path $PSScriptRoot 'QualityGates\WorkspaceQualityGates.psm1'
 Import-Module $qualityGateModulePath -Force
 
-Get-Content -Raw .\.vscode\settings.json | ConvertFrom-Json | Out-Null
-Get-Content -Raw .\.copilot\History\Logs\Proposals.json | ConvertFrom-Json | Out-Null
-Get-Content -Raw .\.copilot\History\Logs\Stabilization.json | ConvertFrom-Json | Out-Null
-Get-Content -Raw .\.copilot\History\Logs\RealRepoTestPlan.json | ConvertFrom-Json | Out-Null
+Get-Content -Raw (Join-Path $workspaceRoot '.vscode\settings.json') | ConvertFrom-Json | Out-Null
+Get-Content -Raw (Join-Path $workspaceRoot '.copilot\History\Logs\Proposals.json') | ConvertFrom-Json | Out-Null
+Get-Content -Raw (Join-Path $workspaceRoot '.copilot\History\Logs\Stabilization.json') | ConvertFrom-Json | Out-Null
+Get-Content -Raw (Join-Path $workspaceRoot '.copilot\History\Logs\RealRepoTestPlan.json') | ConvertFrom-Json | Out-Null
 
 $scriptFiles = @(
   '.\tools/APPLY.ps1',
@@ -79,13 +80,12 @@ foreach ($scriptFile in $scriptFiles) {
   }
 }
 
-.\tools/APPLY.ps1 -FixName Fix_S3E03 -NoLog
-$rootContainer = Split-Path $workspaceRoot -Parent
-$rootSettings = Join-Path $rootContainer '.vscode\settings.json'
-Assert-IgnoredRepositories -SettingsPath $rootSettings -WorkspaceParent $rootContainer | Out-Host
-Assert-StabilizationPolicy -WorkspaceRoot $workspaceRoot | Out-Host
-Assert-RealRepoTestPlan -WorkspaceRoot $workspaceRoot | Out-Host
-Assert-StaleAuthorityReferences -WorkspaceRoot $workspaceRoot | Out-Host
+Assert-IgnoredRepositories -SettingsPath (Join-Path $workspaceRoot '.vscode\settings.json') -WorkspaceParent $workspaceRoot | Out-Host
+$stabilizationPath = Join-Path $workspaceRoot '.copilot\History\Logs\Stabilization.json'
+$realRepoTestPlanPath = Join-Path $workspaceRoot '.copilot\History\Logs\RealRepoTestPlan.json'
+Assert-StabilizationPolicy -StabilizationPath $stabilizationPath -RealRepoTestPlanPath $realRepoTestPlanPath -WorkspaceRoot $inventoryRoot | Out-Host
+Assert-RealRepoTestPlan -RealRepoTestPlanPath $realRepoTestPlanPath -StabilizationPath $stabilizationPath -WorkspaceRoot $inventoryRoot | Out-Host
+Assert-StaleAuthorityReferences -WorkspaceRoot $inventoryRoot | Out-Host
 .\tools/Get-RealRepoTestPlan.ps1 | Out-Host
 .\tools/Get-RealRepoTargetProfile.ps1 | Out-Host
 .\tools/Get-RealRepoActionPlan.ps1 | Out-Host
@@ -93,7 +93,7 @@ Assert-StaleAuthorityReferences -WorkspaceRoot $workspaceRoot | Out-Host
 .\tools/Generate-Log.ps1
 .\tools/Advance-Governance.ps1
 
-$toolUpdater = Join-Path $rootContainer 'tools\Update-ToolCatalog.ps1'
+$toolUpdater = Join-Path $workspaceRoot 'tools\Update-ToolCatalog.ps1'
 if (Test-Path $toolUpdater) {
   & $toolUpdater -Silent
 }

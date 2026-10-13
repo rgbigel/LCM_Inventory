@@ -1,11 +1,11 @@
 ---
 Target Scope: LCM
-Affected Version Range: v6.2.0
+Affected Version Range: 10.0.0
 Impacted Repositories:
   - Root (D:\Git_Repositories)
   - LCM_Inventory
 ---
-# CRP-106-LCM-v6.2.0-Tool-Architecture-Consolidation
+# CRP-106-LCM-10.0.0-Tool-Architecture-Consolidation
 
 ## 1. Description
 This Change Request proposes consolidating the `.tools` global command hub into the `LCM_Inventory\tools` directory. By doing so, the architecture clearly delineates between:

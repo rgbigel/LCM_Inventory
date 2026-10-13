@@ -16,7 +16,7 @@
    the left side without modifying the live right side.
 7. Require a final pushed-baseline-to-live roll-up review before local commit,
    regardless of prior snapshot decisions.
-8. Build the standard-display work queue conforming strictly to `DisplayStandardsPolicy.md` v9.0.0 and `CM_CONTROL_HUB_IMPLEMENTATION_0.html`: presets, mode, Intern, filters, integrated sorting, reset controls, and global commands.
+8. Build the standard-display work queue conforming strictly to `DisplayStandardsPolicy.md` 10.0.0 and `CM_CONTROL_HUB_IMPLEMENTATION_0.html`: presets, mode, Intern, filters, integrated sorting, reset controls, and global commands.
 9. Replace the sidecar with a full-width selection and bulk-action work area
    that exposes only actions valid for the selected cohort.
 10. Show Status, Plan State, Progress Status, numeric priority, busy phase, and

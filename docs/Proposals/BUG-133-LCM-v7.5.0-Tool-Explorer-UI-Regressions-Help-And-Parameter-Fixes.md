@@ -1,11 +1,11 @@
 ---
 Bug-ID: BUG-133
 Scope: LCM
-Version: v7.5.0
+Version: 10.0.0
 Affected-Repos: [LCM, LCM_AI, LCM_Inventory]
 Severity: High
 Status: ACCEPTED
-Date: 2026-09-10
+Date: 2026-10-13
 Author: Operator Directive / Bug Intake
 Root-Cause: Hardcoded title version strings in LcmToolCatalog, unparameterized smart-run defaults in lcm-tool-explorer.js, .lnk path resolution failure in help dispatcher, missing Help (-h) parameter in Advance-Governance.ps1, legacy LCD catalog residue, broken relative scratch back link, and missing parameter descriptions in Invoke-BeyondCompareReview.
 ---
@@ -14,7 +14,7 @@ Root-Cause: Hardcoded title version strings in LcmToolCatalog, unparameterized s
 
 ## 1. Issue Summary
 The operator reported 11 defects, functional discrepancies, and UX enhancements across the LCM Tool Explorer dashboard (`SHOW_TOOLS.html`, `LcmToolCatalog.psm1`, `lcm-tool-explorer.js`) and associated governed tools:
-1. **Stale Version Display across Standard Displays**: Header and title display `V6.1.0` despite numerous updates. This defect impacts not only `LcmToolCatalog.psm1` / `SHOW_TOOLS.html`, but all `Show-*` (Standard Display) items. Where possible, standard versioning and header layouts should be centralized and styled via CSS (`StandardTableDisplay.css`).
+1. **Stale Version Display across Standard Displays**: Header and title display `V10.0.0` despite numerous updates. This defect impacts not only `LcmToolCatalog.psm1` / `SHOW_TOOLS.html`, but all `Show-*` (Standard Display) items. Where possible, standard versioning and header layouts should be centralized and styled via CSS (`StandardTableDisplay.css`).
 2. **Hardcoded Subsystem Metric Card**: The metric card for `HaSSD06` is static; it should dynamically reflect the Subsystem selected in the dropdown (or clicking it should be a safe No-OP rather than forcing HaSSD06).
 3. **Over-Aggressive Parameter Prompting**: Clicking a tool name always opens the parameter modal dialog, even when a tool has no required parameters or no parameters at all (e.g. `@06-Configure_Easy_Context_Menu`). Parameter modal should only appear when a required, non-defaulted value is missing.
 4. **Command Console Non-Auto-Closing**: For actions in the three-dot dropdown, console windows remain open even when the tool is configured as `May Exit` (NoExit = false).
@@ -33,7 +33,7 @@ The operator reported 11 defects, functional discrepancies, and UX enhancements 
 
 | Item # | Defect Symptom | Technical Root Cause |
 | :--- | :--- | :--- |
-| **1** | Title shows `V6.1.0` across Show-* tools | `LcmToolCatalog.psm1` (and other Show-* HTML generators) hardcode static version strings in HTML templates. In addition, the universal stylesheet (`lcm-dashboard-theme.css`) is dynamically read and inlined via `Get-Content` on every launch rather than utilizing a static, compiled `StandardTableDisplay.css` with modular cascaded stylesheets (`LCMToolCatalog.css`). |
+| **1** | Title shows `V10.0.0` across Show-* tools | `LcmToolCatalog.psm1` (and other Show-* HTML generators) hardcode static version strings in HTML templates. In addition, the universal stylesheet (`lcm-dashboard-theme.css`) is dynamically read and inlined via `Get-Content` on every launch rather than utilizing a static, compiled `StandardTableDisplay.css` with modular cascaded stylesheets (`LCMToolCatalog.css`). |
 | **2** | Static `HaSSD06` Metric Card | `card-hassd06` in `LcmToolCatalog.psm1` is hardcoded to `<div class="metric-label">HaSSD06 Subsystem</div>` and `filterBySubsystem('HaSSD06')`. |
 | **3** | Unconditional Parameter Modal | `runToolSmart(idx)` in `lcm-tool-explorer.js` unconditionally calls `openRunDialog(idx)` instead of inspecting `tool.Parameters` for mandatory parameters without defaults. |
 | **4** | Consoles Stay Open for `May Exit` | `noExit: activeRunningTool.NoExit !== false` in `lcm-tool-explorer.js` evaluates to true when `NoExit` is undefined/null; `openToolHelp` hardcodes `noExit: true`. |

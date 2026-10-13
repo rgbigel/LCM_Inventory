@@ -8,8 +8,8 @@
 | **Origin Repository** | `LCM_Inventory` |
 | **Target Scope** | Global LCM Governance, `RULE-DOC-007`, `ProposalManager.psm1`, `Split-LcmArchitectureToApps.ps1`, `Split-LcmAppDocs.ps1`, `Invoke-ProposalAction.ps1` |
 | **Author** | Rolf, LCM_AI Intake |
-| **Date** | 2026-09-20 |
-| **Version Impact** | `v7.6.0` |
+| **Date** | 2026-10-13 |
+| **Version Impact** | `10.0.0` |
 | **Severity / Priority** | High / Normal |
 
 ---

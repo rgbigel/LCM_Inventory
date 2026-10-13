@@ -3,10 +3,10 @@
 ```yaml
 CRP-ID: CRP-173
 Title: Shared AI Memory (.gemini) Migration Safeguards, GitHub Baseline Verification, Hash Validation, and Pre-Push Integration
-Scope: AI Memory Management, .lcm/tools/internal/Initialize-SharedAiMemory.ps1, LCM_AI, Pre-Push Pipeline
-Baseline-Version: v7.6.0
+Scope: AI Memory Management, LCM_Inventory/tools/Initialize-SharedAiMemory.ps1, LCM_AI, Pre-Push Pipeline
+Baseline-Version: 10.0.0
 Author: Rolf, Antigravity AI Assistant
-Date: 2026-09-25
+Date: 2026-10-13
 Status: Suggested
 Plan-State: suggested
 Progress-State: queued
@@ -23,7 +23,7 @@ Impacted-Repositories:
 
 In multi-boot environments (e.g., across partitions `W:`, `X:`, `Y:`, `Z:`), the AI Memory and configuration store (`.gemini`) must reside on a shared physical volume (`A:\.gemini`) and be accessible from `%USERPROFILE%\.gemini` via an **NTFS Directory Junction**.
 
-While [`Initialize-SharedAiMemory.ps1`](file:///D:/Git_Repositories/.lcm/tools/internal/Initialize-SharedAiMemory.ps1) establishes the foundational mechanism, operational experience and risk analysis require enhanced safeguards:
+While [`Initialize-SharedAiMemory.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Initialize-SharedAiMemory.ps1) establishes the foundational mechanism, operational experience and risk analysis require enhanced safeguards:
 
 1. **Risk of Data Loss During Migration**:
    - The live directory at `C:\Users\<user>\.gemini` must be fully copied and verified on `A:\.gemini` *before* attempting any directory swap or junction creation.
@@ -65,7 +65,7 @@ While [`Initialize-SharedAiMemory.ps1`](file:///D:/Git_Repositories/.lcm/tools/i
 
 ### Invariant 4: Cryptographic Hash Verification (`gemini_manifest.json`)
 - Maintain a manifest file `gemini_manifest.json` containing:
-  - `version`: SemVer string (e.g., `1.2.0`)
+  - `version`: SemVer string (e.g., `10.0.0`)
   - `timestamp`: UTC ISO 8601 string
   - `root_hash`: SHA256 checksum over canonical configuration files (`config/`, plugins, skills, hooks)
   - `file_hashes`: Dictionary mapping relative paths to SHA256 hashes

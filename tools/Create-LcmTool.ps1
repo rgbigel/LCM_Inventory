@@ -13,8 +13,8 @@
            4. Synchronizes tool_catalog.json, README.md, and SHOW_TOOLS.html automatically.
   Path: tools/Create-LcmTool.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 2.1.0
-  Date: 2026-08-28
+  Version: 10.0.0
+  Date: 2026-10-13
 .PARAMETER Name
   The canonical tool file name or base name (e.g. 'Test-NetworkAdapter.ps1' or 'Test-NetworkAdapter').
 .PARAMETER ShortName
@@ -77,7 +77,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$scriptVersion = "2.1.0"
+$scriptVersion = "10.0.0"
 $scriptName = "Create-LcmTool"
 
 # ------------------------------------------------------------------------------
@@ -216,7 +216,7 @@ $scriptContent = @"
   Purpose: $Description
   Path: $relPath
   Authors: Rolf, LCM_AI Engine
-  Version: 1.0.0
+  Version: 10.0.0
   Date: $todayStr
 .PARAMETER Help
   Displays this parameter reference (Aliases: -h, -?).
@@ -237,7 +237,7 @@ param(
 Set-StrictMode -Version Latest
 `$ErrorActionPreference = 'Stop'
 
-`$scriptVersion = "1.0.0"
+`$scriptVersion = "10.0.0"
 `$scriptName = "$baseStem"
 
 # ------------------------------------------------------------------------------

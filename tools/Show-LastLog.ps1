@@ -11,8 +11,8 @@
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
   Path: tools/Show-LastLog.ps1
   Authors: Rolf, LCM Workspace Automation
-  Version: 1.5.0
-  Date: 2026-09-18
+  Version: 10.0.0
+  Date: 2026-10-13
 .PARAMETER ToolName
   Optional filter to locate the latest log for a specific tool (e.g. 'Start-RemoteBridge', 'Update-HaInventory', 'Diagnose-OneDriveSync').
 .PARAMETER Subsystem
@@ -72,7 +72,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$scriptVersion = "1.5.0"
+$scriptVersion = "10.0.0"
 $scriptName = "Show-LastLog"
 
 # ------------------------------------------------------------------------------

@@ -2,19 +2,19 @@
 Proposal-ID: CRP-140
 CR-ID: CRP-140
 Scope: One2Md
-Version: v1.0.0
+Version: 10.0.0
 Affected-Repos: [One2Md, LCM_Inventory]
 Severity: Low
 Status: COMPLETED
-Date: 2026-09-12
+Date: 2026-10-13
 Author: Rolf / Antigravity AI Engine
 Target Scope: One2Md/
-Affected Version Range: v1.0.0
+Affected Version Range: 10.0.0
 Impacted Repositories: [One2Md, LCM_Inventory]
 ---
 
 # Change Request Proposal: CRP-140
-# Create LCM-Conforming Repository "One2Md" with Enhanced Wrapper Script and Baseline v1.0.0
+# Create LCM-Conforming Repository "One2Md" with Enhanced Wrapper Script and Baseline 10.0.0
 
 | Metadata Field | Value |
 | :--- | :--- |
@@ -23,9 +23,9 @@ Impacted Repositories: [One2Md, LCM_Inventory]
 | **Origin Repository** | `One2Md` |
 | **Target Scope** | `One2Md/` |
 | **Author** | Rolf / Antigravity AI Engine |
-| **Date** | 2026-09-12 |
+| **Date** | 2026-10-13 |
 | **Priority** | `Medium` |
-| **Version Impact** | `v1.0.0` |
+| **Version Impact** | `10.0.0` |
 
 ---
 
@@ -74,4 +74,4 @@ The prototype requires improvements to conform with the workspace's authoritativ
 - **RULE-DOC-001 / 002 / 003**: Tripartite documentation and DOX headers.
 - **RULE-DOC-004**: Universal `install/Installation.md` runbook standard.
 - **RULE-PS-001 - 015**: Complete PowerShell coding standards adherence.
-- **RULE-REV-001 / 007**: Quality gate verification and version alignment (`v1.0.0`).
+- **RULE-REV-001 / 007**: Quality gate verification and version alignment (`10.0.0`).

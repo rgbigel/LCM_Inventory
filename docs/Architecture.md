@@ -4,9 +4,9 @@ Module: docs/Architecture.md
 Purpose: Authoritative architectural specification for LCM_Inventory, the central Configuration Management (CM), proposal ledger, and review-gating engine of the Lifecycle Model (LCM).  
 Path: D:/Git_Repositories/LCM_Inventory/docs/Architecture.md  
 Authors: Rolf, LCM_AI Engine  
-Version: 7.0.0  
+Version: 10.0.0
 Status: Authoritative Architecture  
-Date: 2026-09-19  
+Date: 2026-10-13
 
 ---
 
@@ -131,6 +131,37 @@ Beyond Compare Review (BCR) is the primary visual review surface. `ShowCM` is
 both the overview and the requested state-navigation surface: it must expose
 state-appropriate accept/reject actions and repository, cohort, and complete
 forms without inferring an ambiguous CRP-only scope.
+
+### 2.3 Cohort Coordination Model (CRP-259 Baseline Absorption)
+
+The Control Hub coordinates two different targets. A **CRP** is an individual
+proposal or BUG work item; a **COH** is a declared coordination cohort. An
+operator action always resolves to one explicit **Item** target: either a
+CRP/BUG or a COH. A repository name, a visible row, an active cohort, or a
+previous selection is not an implicit substitute for that target.
+
+A COH has the identity `COH-<prime>`. Its prime is the identity of its single
+head CRP/BUG, so a COH is valid only while that head is a valid member and is
+the sole head. Additional members are optional. A cohort is either active/open
+or inactive/closed. At most one active/open COH may exist at a time; closed
+cohorts remain historical, immutable coordination evidence and are never
+silently reactivated.
+
+An inactive COH may be created while another COH is active. Opening it first
+closes the currently active cohort, then opens the selected inactive cohort as
+one lifecycle operation; opening cannot produce a second active cohort. When
+exactly one active COH exists, an otherwise unqualified add-member action adds
+to that COH. Every other cohort action requires a resolved explicit target.
+Membership validation is atomic: duplicate members, absent members, a changed
+or missing head, invalid state, or a conflicting active COH rejects the entire
+operation without partial membership or lifecycle changes.
+
+The hub must make this scope visible in its result/audit surfaces: the resolved
+Item target, COH identity and head, member dispositions, synchronization
+result, exact BCR scope, and any refusal reason are displayed and recorded.
+This baseline absorbs the durable cohort decisions from CRP-259; its proposal
+bundle remains the historical delivery record rather than a competing
+methodology source.
 
 ---
 

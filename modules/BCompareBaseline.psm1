@@ -1,6 +1,6 @@
 <#
 Module: BCompareBaseline.psm1
-Version: 1.0.0
+Version: 10.0.0
 Purpose: Resolves reproducible local Git baselines for repository reviews.
 Caller Contract: Invoke-BeyondCompareReview supplies a target repository and local base reference.
 #>

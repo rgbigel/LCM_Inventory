@@ -13,8 +13,8 @@
 .NOTES
   Module: Archive-LcmDaemonLogs
   Path: LCM_Inventory/tools/Archive-LcmDaemonLogs.ps1
-  Version: 1.0.0
-  Date: 2026-10-07
+  Version: 10.0.0
+  Date: 2026-10-13
 #>
 
 [CmdletBinding(SupportsShouldProcess = $true)]
@@ -33,7 +33,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 $scriptName = 'Archive-LcmDaemonLogs'
-$scriptVersion = '1.0.0'
+$scriptVersion = '10.0.0'
 
 if ($Help) {
   Write-Host '==========================================================================' -ForegroundColor Cyan

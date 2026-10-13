@@ -1,6 +1,6 @@
 # CRP-253 Implementation Plan (Draft)
 
-## Phase 0 - Empirical Trial & Separation (Completed 2026-10-08)
+## Phase 0 - Empirical Trial & Separation (Completed 2026-10-13)
 
 1. Replicated workspace tree to `D:\Git_World` via `robocopy /E /XJ`.
 2. Executed analysis on junctioning root vs hybrid child mounting; confirmed that root core and `LCM_*` repos must remain physical in Git Root (`D:\Git_Repositories`).
@@ -22,7 +22,7 @@
 2. Reuse the reparse-point-only guard from `Invoke-LcmJunctionCorrection.ps1`.
 3. Log each transition; print the restart notice.
 4. Session-start / pre-commit check that reports a non-norm world (visibility
-   gap found on 2026-10-01).
+   gap found on 2026-10-13).
 
 ## Phase 2b - Prototype World tooling (Specification section 3)
 

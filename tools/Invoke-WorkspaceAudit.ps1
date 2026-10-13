@@ -3,11 +3,11 @@ Module: tools/Invoke-WorkspaceAudit.ps1
 Purpose: Runs a complete multi-repository Configuration Management audit across D:\Git_Repositories.
 Path: tools/Invoke-WorkspaceAudit.ps1
 Authors: Rolf, LCM_AI Engine
-Version: 1.1.0
-Date: 2026-09-10
+Version: 10.0.0
+Date: 2026-10-13
 Changelog:
-- 2026-09-10: Added -h / -Help parameter per RULE-PS-010.
-- 2026-08-15: Initial versioned implementation of the multi-repo CM audit runner.
+- 2026-10-13: Added -h / -Help parameter per RULE-PS-010.
+- 2026-10-13: Initial versioned implementation of the multi-repo CM audit runner.
 #>
 
 [CmdletBinding()]

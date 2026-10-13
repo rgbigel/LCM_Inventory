@@ -4,9 +4,9 @@ Module: LCM_Inventory/docs/Proposals/CRP-198-RollingCalendar-New-Repository-Inte
 Purpose: Integrate the RollingCalendar PowerShell script as a new LCM-governed repository with full tripartite documentation, install runbook, and governance wiring.
 Path: LCM_Inventory/docs/Proposals/CRP-198-RollingCalendar-New-Repository-Integration/Specification.md
 Authors: rgbig, LCM_AI Governance
-Version: 8.1.1
+Version: 10.0.0
 Status: Verification — Interface Refinement Reviewed
-Date: 2026-09-30
+Date: 2026-10-13
 
 ---
 
@@ -17,7 +17,7 @@ Date: 2026-09-30
 | **CRP-ID** | CRP-198 |
 | **Title** | RollingCalendar — New Repository Integration |
 | **Target Scope** | New repository `RollingCalendar` under `D:\Git_Repositories\` |
-| **Affected Version Range** | v1.0.0 (initial) |
+| **Affected Version Range** | 10.0.0 (initial) |
 | **Impacted Repositories** | `RollingCalendar` (new), `LCM_Inventory` (ledger) |
 | **App Context** | App: 1 (active context at intake) |
 | **Priority** | M |

@@ -34,8 +34,8 @@
   pwsh tools/Search-Everything.ps1 -Query "Test-*" -Extension "ps1" -MaxResults 20
 .NOTES
   Author: Rolf + Antigravity
-  Date: 2026-08-24
-  Version: 2.0.0
+  Date: 2026-10-13
+  Version: 10.0.0
 #>
 
 [CmdletBinding(DefaultParameterSetName = 'Structured')]

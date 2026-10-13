@@ -3,8 +3,8 @@ Module: LcmDaemon/Classes/DaemonActionController.ps1
 Purpose: Object-Oriented controller routing and executing daemon REST operations.
 Path: LCM_Inventory/modules/LcmDaemon/Classes/DaemonActionController.ps1
 Authors: Rolf, LCM_AI Engine
-Version: 1.1.0
-Date: 2026-09-08
+Version: 10.0.0
+Date: 2026-10-13
 #>
 
 Set-StrictMode -Version Latest

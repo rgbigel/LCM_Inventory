@@ -8,9 +8,9 @@
 | **Origin Repository** | `LCM_Inventory` |
 | **Target Scope** | `LCM_Inventory\.agents\rules` Junction Topology & Review Exclusions |
 | **Author** | Operator Directive / CRP Intake |
-| **Date** | 2026-09-09 |
+| **Date** | 2026-10-13 |
 | **Priority** | `Medium` |
-| **Version Impact** | `v7.5.0` |
+| **Version Impact** | `10.0.0` |
 | **Governing Policy** | `ProposalReviewFlowPolicy.md` (`RULE-LCM-015`, `RULE-LCM-016`) |
 
 ---

@@ -17,8 +17,8 @@
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
   Path: LCM_Inventory/tools/Initialize-SharedAiMemory.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 1.2.0
-  Date: 2026-09-25
+  Version: 10.0.0
+  Date: 2026-10-13
 .PARAMETER TargetDrive
   The shared drive letter hosting the persistent AI Memory root. Defaults to 'A:'.
 .PARAMETER VerifyOnly
@@ -59,7 +59,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$scriptVersion = "1.2.0"
+$scriptVersion = "10.0.0"
 $scriptName = "Initialize-SharedAiMemory"
 
 # ------------------------------------------------------------------------------

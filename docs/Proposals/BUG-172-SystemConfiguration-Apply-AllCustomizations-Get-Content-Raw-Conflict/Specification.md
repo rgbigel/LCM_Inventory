@@ -4,9 +4,9 @@
 BUG-ID: BUG-172
 Title: Remediate Get-Content Parameter Conflict in Apply-AllCustomizations
 Scope: SystemConfiguration / Source / Apply-AllCustomizations.ps1
-Baseline-Version: v1.3.0
+Baseline-Version: 10.0.0
 Author: Rolf, Antigravity AI Assistant
-Date: 2026-09-25
+Date: 2026-10-13
 Status: In Progress
 Plan-State: in_progress
 Progress-State: in_progress
@@ -38,7 +38,7 @@ In PowerShell `Get-Content`:
 - The `-TotalCount` (or `-Head`) parameter reads a specified number of lines from the top of the file as an array of strings.
 - Combining `-Raw` and `-TotalCount` is invalid and forbidden by the PowerShell engine parameter binder.
 - Because `Apply-AllCustomizations.ps1` runs under `Set-StrictMode -Version Latest` and `$ErrorActionPreference = 'Stop'`, parameter binding errors terminate execution immediately.
-- The same defect existed in lines 222 (`.bat`), 229 (`.cmd`), and 236 (`.ps1`). Latent instances were also identified in `.lcm/tools/internal/Update-ToolCatalog.ps1` (line 981) and `.lcm/tools/internal/Flush-LcmLegacyLogs.ps1` (line 78).
+- The same defect existed in lines 222 (`.bat`), 229 (`.cmd`), and 236 (`.ps1`). Latent instances were also identified in `LCM_Inventory/tools/Update-ToolCatalog.ps1` (line 981) and `LCM_Inventory/tools/Flush-LcmLegacyLogs.ps1` (line 78).
 
 ---
 
@@ -46,4 +46,4 @@ In PowerShell `Get-Content`:
 
 1. Replace `Get-Content -LiteralPath $Path -TotalCount <N> -Raw` with `(Get-Content -LiteralPath $Path -TotalCount <N> -ErrorAction SilentlyContinue) -join "`n"`.
 2. This safely reads the top `<N>` lines and joins them into a single string for downstream regex `-match` operations (`$t`, `$ShowAll`).
-3. Remediate latent occurrences in `.lcm/tools/internal/Update-ToolCatalog.ps1` and `.lcm/tools/internal/Flush-LcmLegacyLogs.ps1`.
+3. Remediate latent occurrences in `LCM_Inventory/tools/Update-ToolCatalog.ps1` and `LCM_Inventory/tools/Flush-LcmLegacyLogs.ps1`.

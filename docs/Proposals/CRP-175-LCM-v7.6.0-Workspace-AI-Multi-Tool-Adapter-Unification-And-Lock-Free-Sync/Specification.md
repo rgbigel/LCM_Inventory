@@ -4,9 +4,9 @@
 CRP-ID: CRP-175
 Title: Workspace AI Multi-Tool Adapter Unification and Lock-Free Gemini Synchronization
 Scope: LCM_AI, Root Git_Repositories, .copilot, .continue, .gemini, Update-Gemini.ps1, Invoke-BeyondCompareReview.ps1
-Baseline-Version: v7.6.0
+Baseline-Version: 10.0.0
 Author: Rolf, Antigravity AI Assistant
-Date: 2026-09-25
+Date: 2026-10-13
 Status: Completed
 Plan-State: completed
 Progress-State: completed
@@ -25,7 +25,7 @@ Following the successful relocation of the 17 canonical governance rules to `LCM
 
 1. **Fragmented & Divergent Copilot Folders**:
    - `D:\Git_Repositories\.agents\rules\` contains a static physical copy of 17 rules from early September (CRP-169).
-   - `D:\Git_Repositories\LCM_AI\.agents\rules\` contains 9 obsolete, frozen prototype rules from August 16, 2026 (v1.0.0 era).
+   - `D:\Git_Repositories\LCM_AI\.agents\rules\` contains 9 obsolete, frozen prototype rules from August 16, 2026 (10.0.0 era).
 2. **Scattered Tool Adapters**:
    - AI tools (`.agents`, `.copilot`, `.continue`) have physical files scattered between the root container and `LCM_AI`.
    - Modifying a tool prompt or instruction creates dirty working tree churn in the root container instead of being isolated in `LCM_AI`.

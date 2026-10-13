@@ -4,7 +4,7 @@
 * **Proposal ID**: `CRP-187`
 * **Title**: LCM Runtime Decoupling, LCM_Shared Governance Integration, and Editor Review Safety Invariant
 * **Author**: Rolf, Antigravity AI Assistant
-* **Date**: 2026-09-28
+* **Date**: 2026-10-13
 * **Status**: In-Progress
 * **Target Repositories**: `D:\Git_Repositories` (Root), `LCM_Inventory`, `LCM_AI`, `LCM_Shared`
 * **App Context**: `A7` (Proposal Management / LCM Hub) & `A1` (Subsystems & Governance Engine)
@@ -48,7 +48,7 @@ This comprehensive proposal formalizes the structural decoupling of operational 
 
 ### C. `LCM_Shared` Governance & Requirements (`LCM_Shared`)
 * Restored `LCM_Shared` inclusion in `Show-Subsystems.ps1`.
-* Updated `LCM_Shared/docs/Architecture.md` (v1.1.0) and `LCM_Shared/docs/Requirements.md` (v1.4.0) with draft status banners and Section 3 (`REQ-TOOL-001` through `REQ-TOOL-004`) defining satellite execution architecture and central tooling governance by `LCM_Inventory`.
+* Updated `LCM_Shared/docs/Architecture.md` (10.0.0) and `LCM_Shared/docs/Requirements.md` (10.0.0) with draft status banners and Section 3 (`REQ-TOOL-001` through `REQ-TOOL-004`) defining satellite execution architecture and central tooling governance by `LCM_Inventory`.
 
 ### D. `LCM_Inventory` Requirements & Directional Lockstep (`LCM_Inventory`)
 * Updated `LCM_Inventory/docs/Requirements.md`:
@@ -60,7 +60,7 @@ This comprehensive proposal formalizes the structural decoupling of operational 
 ### E. Optimization Documentation & Governance Policy (`LCM_AI`)
 * Authored `LCM_AI/docs/Optimizations/Catalog-of-Errors-and-Failure-Modes.md` analyzing 7 failure mode categories across sessions.
 * Authored `LCM_AI/docs/Optimizations/Data-Atoms-and-Design-Patterns.md` specifying 6 candidate Data Atoms for database design.
-* Added `RULE-LCM-022` (Atomic Edit Consolidation & Editor Review Safety Invariant) to `ProposalReviewFlowPolicy.md` (v8.8.0) and `AGENTS.md`.
+* Added `RULE-LCM-022` (Atomic Edit Consolidation & Editor Review Safety Invariant) to `ProposalReviewFlowPolicy.md` (10.0.0) and `AGENTS.md`.
 * Configured `"files.autoSave": "off"` in `.vscode/settings.json`.
 
 ---

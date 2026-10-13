@@ -8,8 +8,8 @@
 | **Origin Repository** | `LCM_Inventory` |
 | **Target Scope** | CM Control Hub & Desktop Daemon Bridge (`LCM_Inventory/assets/CM_CONTROL_HUB.html`, `LCM_Inventory/modules/LcmDaemon/Classes/DaemonActionController.ps1`, `LCM_Inventory/tools/LcmDesktopDaemon.ps1`, `LCM_Inventory/tools/Show-CmControlHub.ps1`) |
 | **Author** | Rolf, LCM_AI Intake |
-| **Date** | 2026-09-19 |
-| **Version Impact** | `v7.0.3` |
+| **Date** | 2026-10-13 |
+| **Version Impact** | `10.0.0` |
 | **Severity** | High (Operational Visibility & UI Synchronization Defect) |
 
 ---

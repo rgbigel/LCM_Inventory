@@ -3,10 +3,10 @@ id: CRP-184
 title: Tool Explorer Runtime Dropdown Column Dynamic Auto-Widening
 type: CRP
 status: SUGGESTED
-created_at: 2026-09-27 17:30:00
+created_at: 2026-10-13 17:30:00
 author: Rolf, Antigravity AI Assistant
 origin_repo: LCM_Inventory
-target_baseline: v8.1.0
+target_baseline: 10.0.0
 affected_repos:
   - LCM_Inventory
   - .lcm

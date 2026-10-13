@@ -3,11 +3,11 @@ Module: tools/Test-WorkspaceDrift.ps1
 Purpose: Evaluates workspace repositories for configuration drift (dirty copies, unpushed commits, outdated LCM).
 Path: tools/Test-WorkspaceDrift.ps1
 Authors: Rolf, LCM_AI Engine
-Version: 1.1.0
-Date: 2026-09-10
+Version: 10.0.0
+Date: 2026-10-13
 Changelog:
-- 2026-09-10: Added -h / -Help parameter per RULE-PS-010.
-- 2026-08-15: Initial versioned implementation of configuration drift tester.
+- 2026-10-13: Added -h / -Help parameter per RULE-PS-010.
+- 2026-10-13: Initial versioned implementation of configuration drift tester.
 #>
 
 [CmdletBinding()]

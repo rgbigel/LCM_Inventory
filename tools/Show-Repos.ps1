@@ -21,8 +21,8 @@ param(
              JSON overlay without modifying repository state.
     Path: tools/Show-Repos.ps1
     Authors: Rolf, GitHub Copilot
-    Version: 1.0.0
-    Date: 2026-09-29
+    Version: 10.0.0
+    Date: 2026-10-13
 #>
 
 Set-StrictMode -Version Latest

@@ -2,11 +2,11 @@
 
 - **Proposal ID**: `CRP-104`
 - **Target Repository**: `LCM_AI`
-- **Target Version**: `v7.2.0`
+- **Target Version**: `10.0.0`
 - **Domain**: `Governance & Deterministic Enforcement`
 - **Author**: Rolf, LCM_AI Engine
 - **Status**: `PROPOSED`
-- **Created**: `2026-09-01 13:35:00`
+- **Created**: `2026-10-13 13:35:00`
 
 ---
 

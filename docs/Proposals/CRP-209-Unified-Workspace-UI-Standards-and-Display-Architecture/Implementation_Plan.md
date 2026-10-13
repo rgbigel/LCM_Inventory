@@ -25,7 +25,7 @@ Transform the current HTML-only [`DisplayStandardsPolicy.md`](file:///d:/Git_Rep
 ## 2. Phase Breakdown
 
 ### Phase 1: Policy Synthesis & Rule Authority Alignment
-- [x] Expand `.agents/rules/DisplayStandardsPolicy.md` to version 9.0.0 with `RULE-DSP-001` through `RULE-DSP-015`.
+- [x] Expand `.agents/rules/DisplayStandardsPolicy.md` to version 10.0.0 with `RULE-DSP-001` through `RULE-DSP-015`.
 - [x] Incorporate `CM_CONTROL_HUB_IMPLEMENTATION_0.html` architecture, Lucide SVG vector iconography, IBM Plex typography, native Windows Desktop GUIs (WPF, WinForms), NotifyIcon System Tray lifecycles, and Print-to-PDF CSS paged media standards.
 - [x] Synchronize discovery surfaces:
   - Update root [`AGENTS.md`](file:///d:/Git_Repositories/AGENTS.md) Quick-Reference table.

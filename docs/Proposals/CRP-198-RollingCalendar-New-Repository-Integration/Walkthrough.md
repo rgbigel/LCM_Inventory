@@ -4,9 +4,9 @@ Module: LCM_Inventory/docs/Proposals/CRP-198-RollingCalendar-New-Repository-Inte
 Purpose: Execution receipts, verification evidence, and operational audit log for CRP-198.
 Path: LCM_Inventory/docs/Proposals/CRP-198-RollingCalendar-New-Repository-Integration/Walkthrough.md
 Authors: rgbig, LCM_AI Governance
-Version: 8.1.1
+Version: 10.0.0
 Status: Verification — Interface Refinement Reviewed
-Date: 2026-09-30
+Date: 2026-10-13
 
 ---
 
@@ -14,24 +14,24 @@ Date: 2026-09-30
 
 | Timestamp | Step | Result |
 |:---|:---|:---|
-| 2026-09-30 11:45:32 | `git init D:\Git_Repositories\RollingCalendar` | `Initialized empty Git repository` |
-| 2026-09-30 11:45:37 | `.agents\rules` NTFS junction created | `Junction created <<==>> LCM_AI\.agents\rules` |
-| 2026-09-30 11:47:22 | `Invoke-RollingCalendar.ps1` written | Created — 410 lines, 2-space indent, CRLF, UTF-8 w/o BOM |
-| 2026-09-30 11:47:37 | `.gitignore` written | Created |
-| 2026-09-30 11:47:39 | `README.md` written | Created |
-| 2026-09-30 11:48:16 | `docs\Architecture.md` written | Created |
-| 2026-09-30 11:48:18 | `docs\Requirements.md` written | Created |
-| 2026-09-30 11:49:07 | `docs\Implementation.md` written | Created |
-| 2026-09-30 11:49:09 | `install\Installation.md` written | Created |
-| 2026-09-30 11:50:04 | `proposals.json` updated — CRP-198 registered | state: review |
-| 2026-09-30 11:50:05 | Initial commit `1407386` | 24 files, 2568 insertions |
-| 2026-09-30 | Quality-gate audit | Reopened: script and test contracts require remediation before review |
-| 2026-09-30 | Focused Pester quality contract | Passed: 4 tests, 0 failures |
-| 2026-09-30 18:46:20 | Automated BCompare staging review | Completed against `1407386`; three intended live-side remediation files recorded |
-| 2026-09-30 | Interface refinement implementation | Added timestamp normalization, `-o`/`C:\Temp`, `-NoShow`, and captured Edge diagnostics |
-| 2026-09-30 | Focused Pester regression suite | Passed: 7 tests, 0 failures |
-| 2026-09-30 | Functional smoke test | Generated `C:\Temp\Calendar_2W_2026-09-30.pdf` using default output and `-NoShow`; no Edge diagnostic shown |
-| 2026-09-30 20:05:09 | Refreshed BCompare staging review | Completed against `1407386`; exactly five intended tracked files recorded |
+| 2026-10-13 11:45:32 | `git init D:\Git_Repositories\RollingCalendar` | `Initialized empty Git repository` |
+| 2026-10-13 11:45:37 | `.agents\rules` NTFS junction created | `Junction created <<==>> LCM_AI\.agents\rules` |
+| 2026-10-13 11:47:22 | `Invoke-RollingCalendar.ps1` written | Created — 410 lines, 2-space indent, CRLF, UTF-8 w/o BOM |
+| 2026-10-13 11:47:37 | `.gitignore` written | Created |
+| 2026-10-13 11:47:39 | `README.md` written | Created |
+| 2026-10-13 11:48:16 | `docs\Architecture.md` written | Created |
+| 2026-10-13 11:48:18 | `docs\Requirements.md` written | Created |
+| 2026-10-13 11:49:07 | `docs\Implementation.md` written | Created |
+| 2026-10-13 11:49:09 | `install\Installation.md` written | Created |
+| 2026-10-13 11:50:04 | `proposals.json` updated — CRP-198 registered | state: review |
+| 2026-10-13 11:50:05 | Initial commit `1407386` | 24 files, 2568 insertions |
+| 2026-10-13 | Quality-gate audit | Reopened: script and test contracts require remediation before review |
+| 2026-10-13 | Focused Pester quality contract | Passed: 4 tests, 0 failures |
+| 2026-10-13 18:46:20 | Automated BCompare staging review | Completed against `1407386`; three intended live-side remediation files recorded |
+| 2026-10-13 | Interface refinement implementation | Added timestamp normalization, `-o`/`C:\Temp`, `-NoShow`, and captured Edge diagnostics |
+| 2026-10-13 | Focused Pester regression suite | Passed: 7 tests, 0 failures |
+| 2026-10-13 | Functional smoke test | Generated `C:\Temp\Calendar_2W_2026-09-30.pdf` using default output and `-NoShow`; no Edge diagnostic shown |
+| 2026-10-13 20:05:09 | Refreshed BCompare staging review | Completed against `1407386`; exactly five intended tracked files recorded |
 
 ---
 

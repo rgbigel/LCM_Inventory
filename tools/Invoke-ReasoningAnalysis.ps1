@@ -9,8 +9,8 @@
              is retained as an offline fallback for explicit exported files.
     Path: LCM_Inventory/tools/Invoke-ReasoningAnalysis.ps1
     Authors: Rolf, LCM_AI Engine, Copilot, Antigravity
-    Version: 2.0.0
-    Date: 2026-10-10
+    Version: 10.0.0
+    Date: 2026-10-13
 .PARAMETER TranscriptPath
     Optional offline fallback: path to an exported JSON or JSONL transcript file. During normal
     chat use, the active IDE host supplies its session transcript automatically.

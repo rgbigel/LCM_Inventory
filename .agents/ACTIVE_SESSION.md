@@ -1,6 +1,6 @@
 # Active Session State: CRP-164 Usability Improvements Batch
 
-- **Date / Timestamp**: 2026-09-21 00:15:00
+- **Date / Timestamp**: 2026-10-13 00:15:00
 - **Operator**: Rolf
 - **Session Status**: Clean Workspace Checkpoint (Paused at Midnight)
 
@@ -11,7 +11,7 @@
 - **Active CRP**: **`CRP-164`** (*Usability Improvements & Interactive Document Viewer Optimization*)
   - **State**: `suggested` (Plan State: `suggested` | Progress State: `queued` / `open`)
   - **Status**: Kept **OPEN** intentionally to allow iterative collection of further display, panel, and usability improvements across LCM tools.
-  - **Bundle Directory**: [`LCM_Inventory/docs/Proposals/CRP-164-LCM-v7.6.0-Usability-Improvements-And-Document-Viewer-Optimization/`](file:///D:/Git_Repositories/LCM_Inventory/docs/Proposals/CRP-164-LCM-v7.6.0-Usability-Improvements-And-Document-Viewer-Optimization)
+  - **Bundle Directory**: [`LCM_Inventory/docs/Proposals/CRP-164-LCM-10.0.0-Usability-Improvements-And-Document-Viewer-Optimization/`](file:///D:/Git_Repositories/LCM_Inventory/docs/Proposals/CRP-164-LCM-10.0.0-Usability-Improvements-And-Document-Viewer-Optimization)
   - **Initial 13 Items Captured**:
     1. Document deduplication in `#repoDocsModal` (3 rows instead of 6).
     2. High-fidelity Markdown preview with proper paragraph formatting (CRLF/LF).

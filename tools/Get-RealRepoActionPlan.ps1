@@ -35,16 +35,17 @@ Module: Get-RealRepoActionPlan.ps1
 Purpose: Build a read-only intended-action preview for a selected real-repository dry-run target.
 Path: tools/Get-RealRepoActionPlan.ps1
 Authors: LCM_AI Engine
-Version: 1.3.0
+Version: 10.0.0
 Caller Contract: Called during real-repository dry-run preparation; reports intended adapter actions without writing to the target repository.
 Changelog:
-- 2026-08-01: Added bottom-up concrete change-request phase preview.
-- 2026-08-01: Added phased documentation-first governance sequence preview.
-- 2026-08-01: Added read-only source/target adapter content comparison.
-- 2026-08-01: Added read-only real-repository intended-action preview command.
+- 2026-10-13: Added bottom-up concrete change-request phase preview.
+- 2026-10-13: Added phased documentation-first governance sequence preview.
+- 2026-10-13: Added read-only source/target adapter content comparison.
+- 2026-10-13: Added read-only real-repository intended-action preview command.
 #>
 
-$workspaceRoot = Split-Path $PSScriptRoot -Parent
+$inventoryRoot = Split-Path $PSScriptRoot -Parent
+$workspaceRoot = Split-Path $inventoryRoot -Parent
 $copilotRoot = Join-Path $workspaceRoot '.copilot'
 $planPath = Join-Path $copilotRoot 'History\Logs\RealRepoTestPlan.json'
 $stabilizationPath = Join-Path $copilotRoot 'History\Logs\Stabilization.json'
@@ -53,7 +54,7 @@ $targetProfilePath = Join-Path $PSScriptRoot 'Get-RealRepoTargetProfile.ps1'
 
 Import-Module $qualityGateModulePath -Force
 
-$planValidation = Assert-RealRepoTestPlan -WorkspaceRoot $workspaceRoot -RealRepoTestPlanPath $planPath -StabilizationPath $stabilizationPath
+$planValidation = Assert-RealRepoTestPlan -WorkspaceRoot $inventoryRoot -RealRepoTestPlanPath $planPath -StabilizationPath $stabilizationPath
 $plan = Get-Content -Raw -Path $planPath | ConvertFrom-Json
 $targetProfile = & $targetProfilePath
 $phasePreview = @($plan.action_preview.phases | ForEach-Object {

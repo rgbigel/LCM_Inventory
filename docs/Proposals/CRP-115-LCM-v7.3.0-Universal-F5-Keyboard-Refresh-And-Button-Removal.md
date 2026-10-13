@@ -4,14 +4,14 @@
 | Metadata Field | Value |
 | :--- | :--- |
 | **Proposal ID** | `CRP-115` |
-| **Lifecycle State** | `OPEN` (Bundled in `BUNDLE-STD-DISPLAY-v7.5.0` - Awaiting Operator PROCEED) |
+| **Lifecycle State** | `OPEN` (Bundled in `BUNDLE-STD-DISPLAY-10.0.0` - Awaiting Operator PROCEED) |
 | **Origin Repository** | `LCM` / Desktop UI & Dashboards |
 | **Target Scope** | Global `Show-*` Displays (`Show-Tools`, `Show-CmControlHub`, `Show-Rules`, `Show-CrpDates`, `Show-RepositoryInventory`, etc.) |
 | **Author** | Rolf, LCM_AI |
-| **Date** | 2026-09-07 |
+| **Date** | 2026-10-13 |
 | **Priority** | `High` |
-| **Version Impact** | `v7.5.0` |
-| **Logical Bundle** | `BUNDLE-STD-DISPLAY-v7.5.0` (Standard Display Interactive Repairs) |
+| **Version Impact** | `10.0.0` |
+| **Logical Bundle** | `BUNDLE-STD-DISPLAY-10.0.0` (Standard Display Interactive Repairs) |
 
 ---
 

@@ -1,14 +1,14 @@
 # Change Request Proposal (CRP): Configuration Management (CM) Control Hub & Batch Review Engine
 
-Module: LCM_Inventory/docs/Proposals/CRP-019-LCM-v7.1.0-CM-Control-Hub.md  
+Module: LCM_Inventory/docs/Proposals/CRP-019-LCM-10.0.0-CM-Control-Hub.md  
 Purpose: Interactive browser dashboard and batch governance engine for CM lifecycle, dual-state and BUG tracking, multi-facet filtering, Notepad++ editing, and Beyond Compare review dispatch.  
 Target Scope: LCM_Inventory / LCM Tooling  
-Affected Version Range: v7.1.0+  
+Affected Version Range: 10.0.0+  
 Impacted Repositories: [LCM_Inventory, Root Container, Child Repositories]  
 Authors: Rolf, LCM_AI Engine  
-Version: 1.0.0 (LCM Baseline: 7.1.0)  
+Version: 10.0.0 (LCM Baseline: 10.0.0)
 Status: IN_PROGRESS  
-Date: 2026-08-30  
+Date: 2026-10-13
 Rule: RULE-LCM-001, RULE-LCM-007, RULE-LCM-008, RULE-LCM-009, RULE-REV-001 - RULE-REV-006  
 
 ---
@@ -19,7 +19,7 @@ Rule: RULE-LCM-001, RULE-LCM-007, RULE-LCM-008, RULE-LCM-009, RULE-REV-001 - RUL
 * **CR Reference**: `CR-2026-030` (Proposal #19)
 * **Target Domain**: `LCM Governance, Visual Review & Change Management Operations`
 * **Impact Level**: `MEDIUM` (Provides authoritative interactive UI for proposal management, review staging, and batch acceptance).
-* **Target Milestone**: `LCM v7.1.0`
+* **Target Milestone**: `LCM 10.0.0`
 
 ---
 

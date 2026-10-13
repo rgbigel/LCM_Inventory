@@ -27,8 +27,8 @@ param(
              preserving each repository-relative path and never staging or editing live files.
     Path: tools/Invoke-CompactBCompareReview.ps1
     Authors: Rolf, GitHub Copilot
-    Version: 1.0.0
-    Date: 2026-09-29
+    Version: 10.0.0
+    Date: 2026-10-13
 #>
 
 Set-StrictMode -Version Latest

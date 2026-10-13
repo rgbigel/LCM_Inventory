@@ -32,7 +32,7 @@ param(
     Reconciles explicit CRP and BUG documentation payloads into tripartite LCM documents.
 .DESCRIPTION
     Module: tools/Fix-Documentation.ps1
-    Version: 1.0.0
+    Version: 10.0.0
     Purpose: Provides the review-gated FixDocumentation <crp-scope> workflow.
     Caller Contract: Bundles must declare updates in a Documentation Updates section.
 #>
@@ -41,7 +41,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 $scriptName = 'Fix-Documentation'
-$scriptVersion = '1.0.0'
+$scriptVersion = '10.0.0'
 
 function Write-DocumentationTrace {
     [CmdletBinding()]

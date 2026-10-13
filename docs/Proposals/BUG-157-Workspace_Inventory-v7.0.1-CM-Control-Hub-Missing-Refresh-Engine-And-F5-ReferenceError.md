@@ -10,7 +10,7 @@
   - `LCM_Inventory/scratch/CM_CONTROL_HUB.html`
   - `LCM_Inventory/tools/Show-CmControlHub.ps1`
 - **Author**: Operator Directive / BUG Intake
-- **Date**: 2026-09-19
+- **Date**: 2026-10-13
 - **Priority**: High (`H`)
 - **Status**: Completed (`completed`) / Pushed (`pushed`)
 

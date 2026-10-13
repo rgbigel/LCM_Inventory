@@ -5,8 +5,8 @@
 | :--- | :--- |
 | **Proposal ID** | `BUG-172` |
 | **Status** | `REVIEW` (Gate 2 Review Gate) |
-| **Target Files** | `SystemConfiguration/Source/Apply-AllCustomizations.ps1`, `.lcm/tools/internal/Update-ToolCatalog.ps1`, `.lcm/tools/internal/Flush-LcmLegacyLogs.ps1` |
-| **Date** | 2026-09-25 |
+| **Target Files** | `SystemConfiguration/Source/Apply-AllCustomizations.ps1`, `LCM_Inventory/tools/Update-ToolCatalog.ps1`, `LCM_Inventory/tools/Flush-LcmLegacyLogs.ps1` |
+| **Date** | 2026-10-13 |
 
 ---
 
@@ -16,8 +16,8 @@
    - Lines 222, 229, and 236: Replaced `Get-Content -LiteralPath $Path -TotalCount <N> -Raw` with `(Get-Content -LiteralPath $Path -TotalCount <N> -ErrorAction SilentlyContinue) -join "`n"`.
    - Prevents parameter binding exception under PowerShell `StrictMode` when checking for `$TraceMode` and `$ShowAll` flags.
 2. **Latent Invariant Protection**:
-   - `.lcm/tools/internal/Update-ToolCatalog.ps1` (Line 981): Replaced `-TotalCount 250 -Raw` with `(Get-Content -LiteralPath $f.FullName -TotalCount 250 -ErrorAction SilentlyContinue) -join "`n"`.
-   - `.lcm/tools/internal/Flush-LcmLegacyLogs.ps1` (Line 78): Replaced `-TotalCount 15 -Raw` with `(Get-Content -LiteralPath $Path -TotalCount 15 -ErrorAction SilentlyContinue) -join "`n"`.
+   - `LCM_Inventory/tools/Update-ToolCatalog.ps1` (Line 981): Replaced `-TotalCount 250 -Raw` with `(Get-Content -LiteralPath $f.FullName -TotalCount 250 -ErrorAction SilentlyContinue) -join "`n"`.
+   - `LCM_Inventory/tools/Flush-LcmLegacyLogs.ps1` (Line 78): Replaced `-TotalCount 15 -Raw` with `(Get-Content -LiteralPath $Path -TotalCount 15 -ErrorAction SilentlyContinue) -join "`n"`.
 
 ---
 

@@ -1,7 +1,7 @@
 /**
  * LCM Table Print & PDF Export Atom (LcmTablePrintAtom)
- * Version: 1.1.0
- * Date: 2026-08-27
+ * Version: 10.0.0
+ * Date: 2026-10-13
  * 
  * Modular, zero-dependency Print & PDF Export engine for any HTML table display.
  * Provides live WYSIWYG A4/Letter paper preview with a non-blocking floating toolbar,

@@ -3,16 +3,16 @@ Module: tools/Create-WorkspaceBaseline.ps1
 Purpose: Captures a full configuration baseline snapshot of all workspace repositories.
 Path: tools/Create-WorkspaceBaseline.ps1
 Authors: Rolf, LCM_AI Engine
-Version: 1.1.0
-Date: 2026-08-28
+Version: 10.0.0
+Date: 2026-10-13
 Changelog:
-- 2026-08-28: Renamed to Create-WorkspaceBaseline conforming to Creator naming taxonomy.
-- 2026-08-15: Initial versioned implementation for multi-repo CM baseline capture.
+- 2026-10-13: Renamed to Create-WorkspaceBaseline conforming to Creator naming taxonomy.
+- 2026-10-13: Initial versioned implementation for multi-repo CM baseline capture.
 #>
 
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory=$true, Position=0, HelpMessage='Unique baseline identifier (e.g. BASELINE-v4.1.0-20260815)')]
+    [Parameter(Mandatory=$true, Position=0, HelpMessage='Unique baseline identifier (e.g. BASELINE-10.0.0-20260815)')]
     [string]$BaselineId,
     
     [Parameter(Mandatory=$false, HelpMessage='Description of baseline release')]
@@ -27,7 +27,7 @@ $ErrorActionPreference = 'Stop'
 
 if ($Help) {
     Write-Host "==========================================================================" -ForegroundColor Cyan
-    Write-Host " CREATE WORKSPACE BASELINE (v1.1.0)" -ForegroundColor Cyan
+    Write-Host " CREATE WORKSPACE BASELINE (10.0.0)" -ForegroundColor Cyan
     Write-Host "==========================================================================" -ForegroundColor Cyan
     Write-Host "SYNOPSIS:" -ForegroundColor Yellow
     Write-Host "  Captures a full configuration baseline snapshot of all workspace repositories."

@@ -6,8 +6,8 @@
     Purpose: Dedicated tool invoked post-commit to purge dynamic Beyond Compare named sessions and
              scratchpad artifacts associated with a specific CRP or BUG per CRP-203.
     Authors: Rolf, LCM_AI Engine
-    Version: 1.0.0
-    Date: 2026-10-04
+    Version: 10.0.0
+    Date: 2026-10-13
 #>
 
 [CmdletBinding(SupportsShouldProcess = $true)]

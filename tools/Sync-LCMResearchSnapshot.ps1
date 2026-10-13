@@ -6,8 +6,8 @@
     Purpose: Mirrors core LCM subsystems, documentation, and root-level files to Google Drive with .txt extensions for cloud inspection and LLM analysis.
     Path: tools/Sync-LCMResearchSnapshot.ps1
     Authors: Rolf, Antigravity AI
-    Version: 1.0.0
-    Date: 2026-09-04
+    Version: 10.0.0
+    Date: 2026-10-13
 .PARAMETER SourceRoot
     The source workspace root directory. Defaults to "D:\Git_Repositories".
 .PARAMETER TargetRoot
@@ -52,7 +52,7 @@ $ErrorActionPreference = 'Stop'
 if ($Help) {
     Write-Host @"
 
-=== Sync-LCMResearchSnapshot v1.0.0 Help ===
+=== Sync-LCMResearchSnapshot 10.0.0 Help ===
 
 SYNOPSIS:
     Mirrors core LCM subsystems and root governance files to Google Drive, appending '.txt'
@@ -245,7 +245,7 @@ $summaryBlock = @"
 [SUMMARY] Sync-LCMResearchSnapshot Execution Complete
 =======================================================
 Tool Name       : Sync-LCMResearchSnapshot
-Version         : 1.0.0
+Version         : 10.0.0
 Execution Status: COMPLETED
 Files Mirrored  : $copiedCount
 Manifest Path   : $manifestPath

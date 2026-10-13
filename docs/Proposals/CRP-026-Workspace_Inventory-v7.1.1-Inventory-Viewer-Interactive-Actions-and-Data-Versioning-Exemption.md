@@ -2,13 +2,13 @@
 Proposal-ID: CRP-026
 CR-ID: CR-2026-037
 Scope: LCM_Inventory
-Version: v7.1.1
+Version: 10.0.0
 Affected-Repos: [LCM_Inventory, .agents, LCM_AI]
 Status: In-Progress
-Date: 2026-08-30
+Date: 2026-10-13
 Author: rgbig
 Target Scope: LCM_Inventory / tools / governance
-Affected Version Range: v7.1.1
+Affected Version Range: 10.0.0
 Impacted Repositories: [LCM_Inventory, .agents, LCM_AI]
 ---
 
@@ -44,7 +44,7 @@ Additionally, formally codify the **LCM_Inventory Data Versioning Exemption Inva
 
 ### 2.3 Data Versioning Exemption Invariant (`RULE-REV-007.3`)
 * Regular operational writes to `LCM_Inventory/data/inventory.json`, `LCM_Inventory/data/proposals/proposals.json`, and `LCM_Inventory/logs/cm_activity.log` do not increment semantic versioning.
-* Semantic version increments (`+0.0.1`, `+0.1.0`) apply strictly when scripts (`tools/*.ps1`), modules (`modules/*.psm1`), specifications (`docs/*.md`), or governance rules are modified.
+* Semantic version increments (`+10.0.0`, `+10.0.0`) apply strictly when scripts (`tools/*.ps1`), modules (`modules/*.psm1`), specifications (`docs/*.md`), or governance rules are modified.
 
 ---
 

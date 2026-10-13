@@ -38,7 +38,7 @@
 ### Verification 5: Policy Activation & Editor Settings
 * **Test**: Inspect `ProposalReviewFlowPolicy.md` and `.vscode/settings.json`.
 * **Results**:
-  - `RULE-LCM-022` active in `ProposalReviewFlowPolicy.md` (v8.8.0) and indexed in `AGENTS.md`.
+  - `RULE-LCM-022` active in `ProposalReviewFlowPolicy.md` (10.0.0) and indexed in `AGENTS.md`.
   - `"files.autoSave": "off"` confirmed active in `.vscode/settings.json`.
 
 ---

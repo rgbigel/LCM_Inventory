@@ -2340,7 +2340,7 @@
         "Type": "String",
         "Mandatory": true,
         "Default": "",
-        "Description": "Unique baseline identifier (e.g. BASELINE-v4.1.0-20260815)"
+        "Description": "Unique baseline identifier (e.g. BASELINE-10.0.0-20260815)"
       },
       {
         "Name": "Description",
@@ -4561,8 +4561,8 @@
         "Name": "TargetBaseline",
         "Type": "String",
         "Mandatory": false,
-        "Default": "7.5.0",
-        "Description": "Target active release baseline version string (e.g. 7.5.0)"
+        "Default": "10.0.0",
+        "Description": "Target active release baseline version string (e.g. 10.0.0)"
       },
       {
         "Name": "Apply",

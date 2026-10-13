@@ -7,8 +7,8 @@
            WIUD call evidence and inverting accepted production edges into WUD data.
   Path: modules/LcmDependencyIndex.psm1
   Authors: Rolf, LCM_AI Engine
-  Version: 1.0.0
-  Date: 2026-10-05
+  Version: 10.0.0
+  Date: 2026-10-13
 #>
 
 Set-StrictMode -Version Latest
@@ -235,7 +235,7 @@ function New-LcmForwardDependencyIndex {
     }
   }
   return [ordered]@{
-    schema_version = '1.0.0'
+    schema_version = '10.0.0'
     generated_at = Get-Date -Format 'yyyy-MM-ddTHH:mm:ssK'
     workspace_root = $WorkspaceRoot
     symbols = @($symbols | Sort-Object name, source_file, line)
@@ -265,7 +265,7 @@ function New-LcmReverseDependencyIndex {
     }
   }
   return [ordered]@{
-    schema_version = '1.0.0'
+    schema_version = '10.0.0'
     generated_at = Get-Date -Format 'yyyy-MM-ddTHH:mm:ssK'
     forward_generated_at = $ForwardIndex.generated_at
     reverse_entries = @($reverse | Sort-Object callee_name, callee_file, callee_line)

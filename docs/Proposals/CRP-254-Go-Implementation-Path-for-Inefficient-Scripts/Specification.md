@@ -5,7 +5,7 @@
 | **Proposal ID** | `CRP-254` |
 | **Lifecycle State** | `SUGGESTED` |
 | **Origin Repository** | `LCM_AI` |
-| **Date** | 2026-10-09 |
+| **Date** | 2026-10-13 |
 | **Governing Rule** | `GoRules.md` (`LCM-RULE-GO-001`) |
 
 ## Objective

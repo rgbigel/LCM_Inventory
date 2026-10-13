@@ -3,10 +3,10 @@ id: BUG-185
 title: Tool Explorer Internal Button Filter Inversion and Empty Catalog Defect
 type: BUG
 status: VERIFICATION
-created_at: 2026-09-27 17:45:00
+created_at: 2026-10-13 17:45:00
 author: Rolf, Antigravity AI Assistant
 origin_repo: LCM_Inventory
-target_baseline: v8.1.0
+target_baseline: 10.0.0
 affected_repos:
   - LCM_Inventory
   - .lcm

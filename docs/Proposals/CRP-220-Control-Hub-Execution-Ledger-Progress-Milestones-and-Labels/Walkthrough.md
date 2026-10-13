@@ -4,9 +4,9 @@ Module: LCM_Inventory/assets/CM_CONTROL_HUB.html
 Purpose: Operational walkthrough and verification record for Execution Ledger milestone evaluation, action step indicators, busy indication, and governance matrix documentation.  
 Path: LCM_Inventory/docs/Proposals/CRP-220-Control-Hub-Execution-Ledger-Progress-Milestones-and-Labels/Walkthrough.md  
 Authors: rgbig, LCM_AI Engine  
-Version: 1.2.0  
+Version: 10.0.0
 Status: Verified  
-Date: 2026-10-03  
+Date: 2026-10-13
 App: App: 1 - CM Interactive Control Hub  
 
 ---
@@ -32,6 +32,6 @@ App: App: 1 - CM Interactive Control Hub
 
 ## 2. Verification Evidence
 
-* **Compiled Artifact**: `LCM_Inventory/data/artifacts/CM_CONTROL_HUB.html` (Version 1.2.4)
+* **Compiled Artifact**: `LCM_Inventory/data/artifacts/CM_CONTROL_HUB.html` (Version 10.0.0)
 * **Daemon Endpoint**: `http://127.0.0.1:9876/hub` verified live via REST bridge.
 * **Test Suite**: `tests/ProposalManager.Tests.ps1` passed all core assertions under the Two-Tier Lifecycle Model.

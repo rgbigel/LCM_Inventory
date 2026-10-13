@@ -4,9 +4,9 @@ Module: LCM_Inventory/assets/CM_CONTROL_HUB.html
 Purpose: Step-by-step implementation blueprint to re-route ShowCM action dispatches, harden daemon error handling, and support held/deferred states.  
 Path: LCM_Inventory/docs/Proposals/BUG-216-ShowCM-Action-Dispatch-and-Daemon-Communication-Failure/Implementation_Plan.md  
 Authors: rgbig, LCM_AI Engine  
-Version: 1.0.0  
+Version: 10.0.0
 Status: Authoritative Plan  
-Date: 2026-10-03  
+Date: 2026-10-13
 App: App: 1 - CM Interactive Control Hub  
 
 ---
@@ -44,9 +44,9 @@ App: App: 1 - CM Interactive Control Hub
    - In row action dropdown:
      - Route `showProposalWalkthrough()` to modal cache lookup (`docsCache`).
      - Route `showProposalDiff()` to [`Invoke-BeyondCompareReview.ps1`](file:///d:/Git_Repositories/LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1).
-2. Bump template version in header to `1.2.1` (Date: `2026-10-03`).
+2. Bump template version in header to `10.0.0` (Date: `2026-10-13`).
 
 ### Phase 3: Artifact Recompilation & Verification
 1. Run [`LCM_Inventory/tools/Show-LcmControl.ps1 -NoLaunch`](file:///d:/Git_Repositories/LCM_Inventory/tools/Show-LcmControl.ps1) to compile `data/artifacts/CM_CONTROL_HUB.html`.
-2. Verify live daemon endpoint `http://127.0.0.1:9876/hub` serves Version `1.2.1`.
+2. Verify live daemon endpoint `http://127.0.0.1:9876/hub` serves Version `10.0.0`.
 3. Verify `Invoke-RestMethod` execution of `Invoke-ProposalAction.ps1 -Action do -TargetExpression "201"` returns exit code 0.

@@ -35,15 +35,16 @@ Module: Get-RealRepoTargetProfile.ps1
 Purpose: Build a read-only profile of the selected real-repository dry-run target.
 Path: tools/Get-RealRepoTargetProfile.ps1
 Authors: LCM_AI Engine
-Version: 1.2.0
+Version: 10.0.0
 Caller Contract: Called only after LCM_AI dry-run policy validation; reads target path, git status, and adapter surface presence without writing to the target.
 Changelog:
-- 2026-08-01: Handled selected repositories without a resolvable HEAD without noisy Git stderr.
-- 2026-08-01: Added read-only Git root, branch, and HEAD metadata reporting.
-- 2026-08-01: Added read-only real-repository target profile command.
+- 2026-10-13: Handled selected repositories without a resolvable HEAD without noisy Git stderr.
+- 2026-10-13: Added read-only Git root, branch, and HEAD metadata reporting.
+- 2026-10-13: Added read-only real-repository target profile command.
 #>
 
-$workspaceRoot = Split-Path $PSScriptRoot -Parent
+$inventoryRoot = Split-Path $PSScriptRoot -Parent
+$workspaceRoot = Split-Path $inventoryRoot -Parent
 $copilotRoot = Join-Path $workspaceRoot '.copilot'
 $planPath = Join-Path $copilotRoot 'History\Logs\RealRepoTestPlan.json'
 $stabilizationPath = Join-Path $copilotRoot 'History\Logs\Stabilization.json'
@@ -68,7 +69,7 @@ function Invoke-ReadOnlyGit {
   }
 }
 
-$planValidation = Assert-RealRepoTestPlan -WorkspaceRoot $workspaceRoot -RealRepoTestPlanPath $planPath -StabilizationPath $stabilizationPath
+$planValidation = Assert-RealRepoTestPlan -WorkspaceRoot $inventoryRoot -RealRepoTestPlanPath $planPath -StabilizationPath $stabilizationPath
 $plan = Get-Content -Raw -Path $planPath | ConvertFrom-Json
 $canObserveTarget = $planValidation.SelectedRepository -and ($planValidation.DryRunEnabled -eq $true -or $planValidation.DryRunStatus -eq 'ready-for-read-only-dry-run')
 

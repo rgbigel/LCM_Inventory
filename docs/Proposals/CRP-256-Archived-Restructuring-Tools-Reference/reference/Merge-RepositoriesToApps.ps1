@@ -4,8 +4,8 @@
 .DESCRIPTION
     Module: tools/Merge-RepositoriesToApps.ps1
     Authors: Rolf, LCM_AI Engine
-    Version: 7.5.0
-    Date: 2026-09-19
+    Version: 10.0.0
+    Date: 2026-10-13
     Purpose: High-Order Lifecycle Operator that consolidates independent single-purpose repositories
              into an umbrella system as distinct App: # slices with preserved tripartite history per RULE-DOC-007.
 #>

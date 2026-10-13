@@ -2,13 +2,13 @@
 Proposal-ID: CRP-2026-007
 CR-ID: CR-2026-036
 Scope: LCM_Inventory
-Version: v7.1.0
+Version: 10.0.0
 Affected-Repos: [LCM_Inventory, .lcd]
 Status: Pushed
-Date: 2026-08-30
+Date: 2026-10-13
 Author: rgbig
 Target Scope: LCM_Inventory / tools
-Affected Version Range: v7.1.0
+Affected Version Range: 10.0.0
 Impacted Repositories: [LCM_Inventory, .lcd]
 ---
 
