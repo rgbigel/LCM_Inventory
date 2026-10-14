@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "10.0.0",
   "generated_at": "2026-10-07T15:09:43+02:00",
   "workspace_root": "D:\\Git_Repositories",
   "symbols": [
@@ -3165,7 +3165,7 @@
       "caller_symbol": "Invoke-LcmBackup",
       "callee_target": "Write-Host",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Write-Host \"  Version:      1.0.0\"",
+      "supplied_arguments": "Write-Host \"  Version:      10.0.0\"",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -15945,7 +15945,7 @@
       "caller_symbol": "Advance-Governance",
       "callee_target": "Write-Host",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Write-Host \" WORKSPACE_AI ADVANCE GOVERNANCE VALIDATOR (v2.15.2)\" -ForegroundColor Cyan",
+      "supplied_arguments": "Write-Host \" WORKSPACE_AI ADVANCE GOVERNANCE VALIDATOR (10.0.0)\" -ForegroundColor Cyan",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -19935,7 +19935,7 @@
       "caller_symbol": "Create-WorkspaceBaseline",
       "callee_target": "Write-Host",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Write-Host \" CREATE WORKSPACE BASELINE (v1.1.0)\" -ForegroundColor Cyan",
+      "supplied_arguments": "Write-Host \" CREATE WORKSPACE BASELINE (10.0.0)\" -ForegroundColor Cyan",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -23035,7 +23035,7 @@
       "caller_symbol": "Flush-LcmLegacyLogs",
       "callee_target": "Write-Host",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Write-Host \" LCM MAJOR RELEASE RETENTION & PRUNING ENGINE (v6.0.0)\" -ForegroundColor Cyan",
+      "supplied_arguments": "Write-Host \" LCM MAJOR RELEASE RETENTION & PRUNING ENGINE (10.0.0)\" -ForegroundColor Cyan",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -33855,7 +33855,7 @@
       "caller_symbol": "Invoke-LCMOnboardBatch",
       "callee_target": "Write-Host",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Write-Host \"  [1] Onboard into LCM v5.0.1\" -ForegroundColor Green",
+      "supplied_arguments": "Write-Host \"  [1] Onboard into LCM 10.0.0\" -ForegroundColor Green",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -33955,7 +33955,7 @@
       "caller_symbol": "Invoke-LCMOnboardBatch",
       "callee_target": "Set-RepoDisposition",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Set-RepoDisposition -RepositoryName $repo.RepositoryName -State 'governed' -Reason 'Onboarded into LCM v5.0.1' -WorkspaceRoot $workspaceRoot",
+      "supplied_arguments": "Set-RepoDisposition -RepositoryName $repo.RepositoryName -State 'governed' -Reason 'Onboarded into LCM 10.0.0' -WorkspaceRoot $workspaceRoot",
       "source_classification": "production",
       "resolution": "resolved"
     },
@@ -39305,7 +39305,7 @@
       "caller_symbol": "Invoke-ReasoningAnalysis",
       "callee_target": "Write-Host",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Write-Host \" INVOKE REASONING ANALYSIS (Invoke-ReasoningAnalysis v1.0.0)\" -ForegroundColor Cyan",
+      "supplied_arguments": "Write-Host \" INVOKE REASONING ANALYSIS (Invoke-ReasoningAnalysis 10.0.0)\" -ForegroundColor Cyan",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -65725,7 +65725,7 @@
       "caller_symbol": "Start-RemoteBridge",
       "callee_target": "Invoke-RestMethod",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Invoke-RestMethod -Uri \"https://qrenco.de/$targetUrl\" -Headers @{ \"User-Agent\" = \"curl/7.68.0\" } -Method Get -TimeoutSec 5",
+      "supplied_arguments": "Invoke-RestMethod -Uri \"https://qrenco.de/$targetUrl\" -Headers @{ \"User-Agent\" = \"curl/10.0.0\" } -Method Get -TimeoutSec 5",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -68685,7 +68685,7 @@
       "caller_symbol": "Sync-LcmModuleVersions",
       "callee_target": "Write-Host",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Write-Host \"  -TargetBaseline   : Target baseline version string (default: 7.5.0)\"",
+      "supplied_arguments": "Write-Host \"  -TargetBaseline   : Target baseline version string (default: 10.0.0)\"",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -68755,7 +68755,7 @@
       "caller_symbol": "Sync-LcmModuleVersions",
       "callee_target": "Write-Host",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Write-Host \" LCM MODULE & DOCUMENTATION VERSION SYNCHRONIZATION (v6.0.0)\" -ForegroundColor Cyan",
+      "supplied_arguments": "Write-Host \" LCM MODULE & DOCUMENTATION VERSION SYNCHRONIZATION (10.0.0)\" -ForegroundColor Cyan",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -69195,7 +69195,7 @@
       "caller_symbol": "Sync-LCMResearchSnapshot",
       "callee_target": "Write-Host",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Write-Host @\"\r\n\r\n=== Sync-LCMResearchSnapshot v1.0.0 Help ===\r\n\r\nSYNOPSIS:\r\n    Mirrors core LCM subsystems and root governance files to Google Drive, appending '.txt'\r\n    so that cloud tools and LLMs can inspect them natively.\r\n\r\nSYNTAX:\r\n    Sync-LCMResearchSnapshot.ps1 [[-SourceRoot] <string>] [[-TargetRoot] <string>] [-IncludeRootFiles] [-Detailed] [-Help]\r\n\r\nPARAMETERS:\r\n    -SourceRoot <string>\r\n        The source repository root. Default: \"D:\\Git_Repositories\"\r\n    -TargetRoot <string>\r\n        The destination directory. Default: \"D:\\GDrive\\LCM\"\r\n    -IncludeRootFiles\r\n        Includes top-level root markdown and text files (AGENTS.md, GEMINI.md, etc.). Default: `$true\r\n    -Detailed (-ShowAll)\r\n        Emits verbose logging for each individual file mirrored.\r\n    -Help (-h, -?)\r\n        Displays this help message.\r\n\r\nEXAMPLES:\r\n    pwsh -File tools/Sync-LCMResearchSnapshot.ps1\r\n    pwsh -File tools/Sync-LCMResearchSnapshot.ps1 -Detailed\r\n    pwsh -File tools/Sync-LCMResearchSnapshot.ps1 -TargetRoot \"D:\\GDrive\\LCM_Backup\"\r\n\r\n\"@",
+      "supplied_arguments": "Write-Host @\"\r\n\r\n=== Sync-LCMResearchSnapshot 10.0.0 Help ===\r\n\r\nSYNOPSIS:\r\n    Mirrors core LCM subsystems and root governance files to Google Drive, appending '.txt'\r\n    so that cloud tools and LLMs can inspect them natively.\r\n\r\nSYNTAX:\r\n    Sync-LCMResearchSnapshot.ps1 [[-SourceRoot] <string>] [[-TargetRoot] <string>] [-IncludeRootFiles] [-Detailed] [-Help]\r\n\r\nPARAMETERS:\r\n    -SourceRoot <string>\r\n        The source repository root. Default: \"D:\\Git_Repositories\"\r\n    -TargetRoot <string>\r\n        The destination directory. Default: \"D:\\GDrive\\LCM\"\r\n    -IncludeRootFiles\r\n        Includes top-level root markdown and text files (AGENTS.md, GEMINI.md, etc.). Default: `$true\r\n    -Detailed (-ShowAll)\r\n        Emits verbose logging for each individual file mirrored.\r\n    -Help (-h, -?)\r\n        Displays this help message.\r\n\r\nEXAMPLES:\r\n    pwsh -File tools/Sync-LCMResearchSnapshot.ps1\r\n    pwsh -File tools/Sync-LCMResearchSnapshot.ps1 -Detailed\r\n    pwsh -File tools/Sync-LCMResearchSnapshot.ps1 -TargetRoot \"D:\\GDrive\\LCM_Backup\"\r\n\r\n\"@",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -70715,7 +70715,7 @@
       "caller_symbol": "Test-LCMRuleHealth",
       "callee_target": "Write-Host",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Write-Host \" TEST LCM RULE HEALTH (Test-LCMRuleHealth v1.3.0)\" -ForegroundColor Cyan",
+      "supplied_arguments": "Write-Host \" TEST LCM RULE HEALTH (Test-LCMRuleHealth 10.0.0)\" -ForegroundColor Cyan",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -75085,7 +75085,7 @@
       "caller_symbol": "Validate-CopilotProfile",
       "callee_target": "Write-Host",
       "invocation_type": "powershell-command",
-      "supplied_arguments": "Write-Host 'version: 4.1.0'",
+      "supplied_arguments": "Write-Host 'version: 10.0.0'",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },
@@ -76535,7 +76535,7 @@
       "caller_symbol": "Invoke-ElevatedTest",
       "callee_target": "Pester",
       "invocation_type": "module-import",
-      "supplied_arguments": "Import-Module Pester -MinimumVersion 5.0.0 -Force -ErrorAction SilentlyContinue",
+      "supplied_arguments": "Import-Module Pester -MinimumVersion 10.0.0 -Force -ErrorAction SilentlyContinue",
       "source_classification": "production",
       "resolution": "external-or-unresolved"
     },

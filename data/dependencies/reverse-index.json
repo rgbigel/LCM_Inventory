@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "10.0.0",
   "generated_at": "2026-10-07T15:09:47+02:00",
   "forward_generated_at": "2026-10-07T15:09:43+02:00",
   "reverse_entries": [
@@ -6415,7 +6415,7 @@
           "caller_symbol": "Invoke-LCMOnboardBatch",
           "callee_target": "Set-RepoDisposition",
           "invocation_type": "powershell-command",
-          "supplied_arguments": "Set-RepoDisposition -RepositoryName $repo.RepositoryName -State 'governed' -Reason 'Onboarded into LCM v5.0.1' -WorkspaceRoot $workspaceRoot",
+          "supplied_arguments": "Set-RepoDisposition -RepositoryName $repo.RepositoryName -State 'governed' -Reason 'Onboarded into LCM 10.0.0' -WorkspaceRoot $workspaceRoot",
           "source_classification": "production",
           "resolution": "resolved"
         },
