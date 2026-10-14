@@ -991,6 +991,13 @@ if (-not [string]::IsNullOrWhiteSpace($CRP)) {
         if ($matchedP.PSObject.Properties['affected_repos'] -and $matchedP.affected_repos) {
           $otherCandidates += @($matchedP.affected_repos)
         }
+        if ($baselineDescriptor -and -not [string]::IsNullOrWhiteSpace($baselineDescriptor.RulesBaselineRepositoryPath)) {
+          $rulesAuthorityPath = [System.IO.Path]::GetFullPath($baselineDescriptor.RulesBaselineRepositoryPath).TrimEnd('\')
+          $workspaceRootPath = [System.IO.Path]::GetFullPath($workspaceRoot).TrimEnd('\')
+          if ((Split-Path -Parent $rulesAuthorityPath).Equals($workspaceRootPath, [System.StringComparison]::OrdinalIgnoreCase)) {
+            $otherCandidates += (Split-Path -Leaf $rulesAuthorityPath)
+          }
+        }
         $otherCandidates = @($otherCandidates | Select-Object -Unique | Where-Object { $_ -and $_ -ne $repoName })
 
         foreach ($otherRepo in $otherCandidates) {

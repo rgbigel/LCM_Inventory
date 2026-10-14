@@ -44,13 +44,19 @@ Describe 'BCompare review lifecycle contracts' {
     $reviewScript | Should -Not -Match ([regex]::Escape('Get-BCompareFileSha256'))
   }
 
+  It 'adds dirty canonical-rule authority to the affected repository review tabs' {
+    $reviewScript | Should -Match ([regex]::Escape('$baselineDescriptor.RulesBaselineRepositoryPath'))
+    $reviewScript | Should -Match ([regex]::Escape('$otherCandidates += (Split-Path -Leaf $rulesAuthorityPath)'))
+    $reviewScript | Should -Match ([regex]::Escape('Opening additional tab for affected repository with physical changes'))
+  }
+
   It 'classifies standard transient paths as non-committable and stages only reviewed manifest paths' {
     $reviewScript | Should -Match 'function Test-StandardBcrExcludedPath'
     $reviewScript | Should -Match 'scratch\|logs\|work\|data'
     $submitScript | Should -Match 'function Test-StandardBcrExcludedPath'
     $submitScript | Should -Match ([regex]::Escape('git -C $targetRepoPath diff --cached --quiet'))
     $submitScript | Should -Match ([regex]::Escape('git -C $targetRepoPath add -- $completed.RelativePath'))
-    $submitScript | Should -Match ([regex]::Escape('git -C $targetRepoPath add -- $relativePath'))
+    $submitScript | Should -Match ([regex]::Escape('git -C $targetRepoPath add -f -- $relativePath'))
     $submitScript | Should -Not -Match ([regex]::Escape('git -C $targetRepoPath add -A'))
   }
 

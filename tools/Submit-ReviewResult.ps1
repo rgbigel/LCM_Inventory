@@ -51,6 +51,18 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
+function Test-StandardBcrExcludedPath {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$RelativePath
+    )
+
+    $normalizedPath = $RelativePath.Replace('/', '\').TrimStart('\')
+    $lcmDirectory = [regex]::Escape('.' + 'lcm')
+    return $normalizedPath -match "^(?i)(?:\.git|\.venv|venv|\.env|__pycache__|scratch|logs|work|data|node_modules|bin|obj)(?:\\|$)|(?:^|\\)$lcmDirectory\\(?:logs|scratch|archive|tools\\links)(?:\\|$)|(?i)\.(?:pyc|pyo|inventory|log|tmp|bak|swp|lock)$"
+}
+
 function Get-StagedDiffSha256 {
     [CmdletBinding()]
     param(
@@ -61,18 +73,6 @@ function Get-StagedDiffSha256 {
     $diff = git -C $Path diff --cached --binary
     if ($LASTEXITCODE -ne 0) {
         throw "Unable to read the staged Git diff for '$Path'."
-    }
-
-    function Test-StandardBcrExcludedPath {
-        [CmdletBinding()]
-        param(
-            [Parameter(Mandatory = $true)]
-            [string]$RelativePath
-        )
-
-        $normalizedPath = $RelativePath.Replace('/', '\').TrimStart('\')
-        $lcmDirectory = [regex]::Escape('.' + 'lcm')
-        return $normalizedPath -match "^(?i)(?:\.git|\.venv|venv|\.env|__pycache__|scratch|logs|work|data|node_modules|bin|obj)(?:\\|$)|(?:^|\\)$lcmDirectory\\(?:logs|scratch|archive|tools\\links)(?:\\|$)|(?i)\.(?:pyc|pyo|inventory|log|tmp|bak|swp|lock)$"
     }
 
     $bytes = [System.Text.Encoding]::UTF8.GetBytes(($diff -join "`n"))
