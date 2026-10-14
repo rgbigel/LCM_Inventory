@@ -41,6 +41,31 @@ Describe 'Control Hub rendered-artifact safety' {
     $template | Should -Not -Match 'onclick="dispatchStandardAction\(''proceed'', \[\$\{p\.id\}\], ''''\)"'
   }
 
+  It 'orders row action groups and keeps proposal documents discoverable' {
+    $template = Get-Content -LiteralPath $script:templatePath -Raw -Encoding UTF8
+    $renderer = Get-Content -LiteralPath $script:rendererPath -Raw -Encoding UTF8
+
+    $lifecycleIndex = $template.IndexOf('<div class="show-dropdown-title">Lifecycle</div>')
+    $cohortIndex = $template.IndexOf('<div class="show-dropdown-title">Cohort Head / Member Management</div>')
+    $documentsIndex = $template.IndexOf('<div class="show-dropdown-title">Documents (#${p.id})</div>')
+    $flowIndex = $template.IndexOf('<div class="show-dropdown-title">Flow Switches</div>')
+
+    $lifecycleIndex | Should -BeGreaterThan -1
+    $cohortIndex | Should -BeGreaterThan $lifecycleIndex
+    $documentsIndex | Should -BeGreaterThan $cohortIndex
+    $flowIndex | Should -BeGreaterThan $documentsIndex
+    $template | Should -Match 'openOriginalProposalInEditor\(\$\{p\.id\}\)'
+    $template | Should -Match 'function showReviewReceipt'
+    $template | Should -Match 'function getOriginalProposalDocumentKey'
+    $template | Should -Match 'function renderMermaidPreviews'
+    $template | Should -Match 'openTargetActionModal\(''reinstate''\)'
+    $template | Should -Match 'id="targetActionChanges"'
+    $template | Should -Match '-Action reinstate -TargetExpression'
+    $template | Should -Match '-Changes "\$\{safeChanges\}"'
+    $renderer | Should -Match 'RAW_REVIEW_RECEIPTS'
+    $renderer | Should -Match 'LCM_Inventory\\data\\reviews'
+  }
+
   It 'renders a token-free artifact and never serves the source template as the Hub' {
     & $script:rendererPath -NoLaunch
     $artifactPath = Join-Path $script:repositoryRoot 'data\artifacts\CM_CONTROL_HUB.html'

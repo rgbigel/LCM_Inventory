@@ -1268,6 +1268,10 @@
           Successor CRP ID
           <input id="targetActionSuccessorId" type="number" min="1" step="1" style="width:100%; margin-top:6px; padding:6px; border:1px solid var(--line); border-radius:4px;">
         </label>
+        <label id="targetActionChangesLabel" style="display:none;">
+          Concrete correction requests
+          <textarea id="targetActionChanges" rows="4" style="width:100%; margin-top:6px; padding:6px; border:1px solid var(--line); border-radius:4px;" placeholder="Leave empty to return the CRP to Suggested for replanning."></textarea>
+        </label>
         <label style="display:block; margin-top:10px;">
           <span id="targetActionReasonLabel">Reason</span>
           <textarea id="targetActionReason" rows="3" style="width:100%; margin-top:6px; padding:6px; border:1px solid var(--line); border-radius:4px;"></textarea>
@@ -1458,6 +1462,7 @@
     // Application State
     let proposalsData = (typeof RAW_PROPOSALS !== "undefined" && RAW_PROPOSALS) ? RAW_PROPOSALS : { proposals: [] };
     let docsCache = (typeof RAW_DOCS_CACHE !== "undefined" && RAW_DOCS_CACHE) ? RAW_DOCS_CACHE : {};
+    let reviewReceipts = (typeof RAW_REVIEW_RECEIPTS !== "undefined" && Array.isArray(RAW_REVIEW_RECEIPTS)) ? RAW_REVIEW_RECEIPTS : [];
     let activeLog = (typeof RAW_ACTIVE_LOG !== "undefined" && RAW_ACTIVE_LOG) ? RAW_ACTIVE_LOG : "";
 
     let selectedIds = new Set();
@@ -1831,7 +1836,7 @@
       if (target.kind === "CRP" && !validateCurrentProposalTargets([target.item.id])) return;
       const expression = target.kind === "COH" ? target.item.id : String(target.item.id);
       const targetLabel = getTargetActionLabel(target);
-      if (["force", "immediately", "retire", "supersede"].includes(action)) { openTargetActionModal(action); return; }
+      if (["force", "immediately", "retire", "supersede", "reinstate"].includes(action)) { openTargetActionModal(action); return; }
       const cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action ${action} -TargetExpression "${expression}"`;
       if (target.kind === "COH" && ["do", "proceed", "verify", "bcr", "complete"].includes(action)) {
         setActionResult(`Cohort gate synchronization is running for ${targetLabel}. The result will list synchronized, already-aligned (no-op), or stopped members; BCR cannot begin if any member stops.`, "");
@@ -1862,14 +1867,17 @@
         force: "-Force remains an exception only to interactive Gate 2 visual-review confirmation. It does not waive lifecycle, syntax, readiness, or push checks.",
         immediately: "-Immediately is a distinct emergency quality-check deferral. It requires a documented reason and uses the selected CRP only.",
         retire: "Retire changes this CRP to withdrawn and records a required retirement reason.",
-        supersede: "Supersede records the selected CRP as superseded and stores the relationship on both it and its active successor."
+        supersede: "Supersede records the selected CRP as superseded and stores the relationship on both it and its active successor.",
+        reinstate: "Reinstate preserves prior delivery evidence. Leave concrete correction requests empty to return this CRP to Suggested; provide them to resume implementation, verification, and exact-identity BCR."
       };
       $("targetActionModalTitle").innerText = `${action.toUpperCase()}: ${tag}`;
       $("targetActionModalDescription").innerText = descriptions[action];
       $("targetActionSuccessorLabel").style.display = action === "supersede" ? "block" : "none";
+      $("targetActionChangesLabel").style.display = action === "reinstate" ? "block" : "none";
       $("targetActionSuccessorId").value = "";
+      $("targetActionChanges").value = "";
       $("targetActionReason").value = "";
-      $("targetActionReasonLabel").innerText = action === "force" ? "Optional review note" : "Documented reason";
+      $("targetActionReasonLabel").innerText = action === "force" ? "Optional review note" : action === "reinstate" ? "Revision note" : "Documented reason";
       openModal("targetActionModal");
     }
 
@@ -1879,6 +1887,7 @@
       const action = pendingTargetAction;
       const reason = $("targetActionReason").value.trim();
       const successor = $("targetActionSuccessorId").value.trim();
+      const changes = $("targetActionChanges").value.trim();
       if (["immediately", "retire"].includes(action) && !reason) { alert(`${action} requires a documented reason.`); return; }
       if (action === "supersede" && (!/^\d+$/.test(successor) || Number(successor) === Number(target.item.id))) { alert("Supersede requires a distinct numeric successor CRP ID."); return; }
       closeModal("targetActionModal");
@@ -1889,6 +1898,10 @@
       if (action === "force") command = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action bcr -TargetExpression "${id}" -Force${safeReason ? ` -Details "${safeReason}"` : ""}`;
       else if (action === "immediately") command = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action proceed -TargetExpression "${id}" -Immediately -Details "${safeReason}"`;
       else if (action === "retire") command = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action retire -TargetExpression "${id}" -Details "${safeReason}"`;
+      else if (action === "reinstate") {
+        const safeChanges = changes.replace(/"/g, "'");
+        command = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action reinstate -TargetExpression "${id}"${safeChanges ? ` -Changes "${safeChanges}"` : ""}${safeReason ? ` -Details "${safeReason}"` : ""}`;
+      }
       else command = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action supersede -TargetExpression "${id}" -SuccessorId ${successor}${safeReason ? ` -Details "${safeReason}"` : ""}`;
       executeDaemonCommand(command, `Applying ${action.toUpperCase()} to CRP-${id}...`, command);
     }
@@ -2459,6 +2472,22 @@
                   : ""}
                 <button class="show-dropdown-item" onclick="dispatchTargetAction('hold')"><span class="btn-icon">⏸️</span> Hold ITEM</button>
                 <div style="border-top: 1px solid var(--line); margin: 4px 0;"></div>
+                <div class="show-dropdown-title">Cohort Head / Member Management</div>
+                <button class="show-dropdown-item" onclick="manageCrpCohort('create', ${p.id})"><span class="btn-icon">➕</span> Create Head Cohort</button>
+                <button class="show-dropdown-item" onclick="manageCrpCohort('add', ${p.id})"><span class="btn-icon">↪</span> Add as Cohort Member</button>
+                <button class="show-dropdown-item" onclick="manageCrpCohort('remove', ${p.id})"><span class="btn-icon">⊖</span> Remove Cohort Member</button>
+                ${getProposalCohorts(p.id).map(cohort => `<button class="show-dropdown-item" onclick="dispatchCohortAction('${esc(cohort.id)}', 'bcr')"><span class="btn-icon">🔍</span> BCR ${esc(cohort.id)}</button><button class="show-dropdown-item" onclick="dispatchCohortAction('${esc(cohort.id)}', 'hold')"><span class="btn-icon">⏸️</span> Hold ${esc(cohort.id)}</button><button class="show-dropdown-item" onclick="dispatchCohortAction('${esc(cohort.id)}', 'reopen')"><span class="btn-icon">↩️</span> Reopen ${esc(cohort.id)}</button><button class="show-dropdown-item" onclick="manageCohortState('${esc(cohort.id)}', 'close')"><span class="btn-icon">✕</span> Close ${esc(cohort.id)}</button>`).join("")}
+                <div style="border-top: 1px solid var(--line); margin: 4px 0;"></div>
+                <div class="show-dropdown-title">Documents (#${p.id})</div>
+                <button class="show-dropdown-item" onclick="openOriginalProposalInEditor(${p.id})"><span class="btn-icon">📝</span> Edit Original CRP</button>
+                <button class="show-dropdown-item" onclick="showRepoDocs('${esc(p.origin_repo || "")}')"><span class="btn-icon">📁</span> Show Repo Docs</button>
+                <button class="show-dropdown-item" onclick="showProposalSpec(${p.id})"><span class="btn-icon">📄</span> Show Specification</button>
+                <button class="show-dropdown-item" onclick="showProposalPlan(${p.id})"><span class="btn-icon">📋</span> Show Plan</button>
+                <button class="show-dropdown-item" onclick="showProposalWalkthrough(${p.id})"><span class="btn-icon">🚶</span> Show Walkthrough</button>
+                <button class="show-dropdown-item" onclick="showProposalDiff(${p.id})"><span class="btn-icon">🔍</span> Show Diff / BC Review</button>
+                <button class="show-dropdown-item" onclick="showReviewReceipt(${p.id})"><span class="btn-icon">🧾</span> Show Review Receipt</button>
+                <button class="show-dropdown-item" onclick="showStateHistory(${p.id})"><span class="btn-icon">📜</span> Show State History</button>
+                <div style="border-top: 1px solid var(--line); margin: 4px 0;"></div>
                 <div class="show-dropdown-title">Flow Switches</div>
                 <button class="show-dropdown-item" onclick="toggleActiveProposalDoit()"><span class="btn-icon">⚡</span> Toggle Flow Gate (-DOIT)</button>
                 <button class="show-dropdown-item" onclick="toggleActiveProposalMinimalTests()"><span class="btn-icon">🧪</span> Toggle Minimal Tests</button>
@@ -2471,24 +2500,9 @@
                 <button class="show-dropdown-item" onclick="openTargetActionModal('immediately')"><span class="btn-icon">⚠️</span> Immediately (quality deferral)</button>
                 <div style="border-top: 1px solid var(--line); margin: 4px 0;"></div>
                 <div class="show-dropdown-title">Terminal Disposition</div>
+                ${["completed", "pushed"].includes(getLifecycleState(p)) ? `<button class="show-dropdown-item" onclick="openTargetActionModal('reinstate')"><span class="btn-icon">↻</span> Reinstate Revision</button>` : ""}
                 <button class="show-dropdown-item" onclick="openTargetActionModal('retire')"><span class="btn-icon">🗄️</span> Retire</button>
                 <button class="show-dropdown-item" onclick="openTargetActionModal('supersede')"><span class="btn-icon">⇄</span> Supersede…</button>
-                <div style="border-top: 1px solid var(--line); margin: 4px 0;"></div>
-                <div class="show-dropdown-title">Cohort Head / Member Management</div>
-                <button class="show-dropdown-item" onclick="manageCrpCohort('create', ${p.id})"><span class="btn-icon">➕</span> Create Head Cohort</button>
-                <button class="show-dropdown-item" onclick="manageCrpCohort('add', ${p.id})"><span class="btn-icon">↪</span> Add as Cohort Member</button>
-                <button class="show-dropdown-item" onclick="manageCrpCohort('remove', ${p.id})"><span class="btn-icon">⊖</span> Remove Cohort Member</button>
-                ${getProposalCohorts(p.id).map(cohort => `<button class="show-dropdown-item" onclick="dispatchCohortAction('${esc(cohort.id)}', 'bcr')"><span class="btn-icon">🔍</span> BCR ${esc(cohort.id)}</button><button class="show-dropdown-item" onclick="dispatchCohortAction('${esc(cohort.id)}', 'hold')"><span class="btn-icon">⏸️</span> Hold ${esc(cohort.id)}</button><button class="show-dropdown-item" onclick="dispatchCohortAction('${esc(cohort.id)}', 'reopen')"><span class="btn-icon">↩️</span> Reopen ${esc(cohort.id)}</button><button class="show-dropdown-item" onclick="manageCohortState('${esc(cohort.id)}', 'close')"><span class="btn-icon">✕</span> Close ${esc(cohort.id)}</button>`).join("")}
-                <div style="border-top: 1px solid var(--line); margin: 4px 0;"></div>
-                <div class="show-dropdown-title">Documents (#${p.id})</div>
-                <button class="show-dropdown-item" onclick="showProposalSpec(${p.id})"><span class="btn-icon">📄</span> Show Specification</button>
-                <button class="show-dropdown-item" onclick="showProposalPlan(${p.id})"><span class="btn-icon">📋</span> Show Plan</button>
-                <button class="show-dropdown-item" onclick="showProposalWalkthrough(${p.id})"><span class="btn-icon">🚶</span> Show Walkthrough</button>
-                <button class="show-dropdown-item" onclick="showProposalDiff(${p.id})"><span class="btn-icon">🔍</span> Show Diff / BC Review</button>
-                <button class="show-dropdown-item" onclick="showReviewReceipt(${p.id})"><span class="btn-icon">🧾</span> Show Review Receipt</button>
-                <button class="show-dropdown-item" onclick="showStateHistory(${p.id})"><span class="btn-icon">📜</span> Show State History</button>
-                <button class="show-dropdown-item" onclick="openProposalInNotepad(${p.id})"><span class="btn-icon">📝</span> Edit in Notepad++</button>
-                <button class="show-dropdown-item" onclick="showRepoDocs('${esc(p.origin_repo || "")}')"><span class="btn-icon">📁</span> Show Repo Docs</button>
               </div>
             </td>
           </tr>
@@ -3338,6 +3352,77 @@
     // -------------------------------------------------------------------------
     // "Show" Actions Handlers
     // -------------------------------------------------------------------------
+    function getProposalDocumentKeys(proposal) {
+      if (!proposal) return [];
+      const tag = proposal.crp_id || proposal.cr_id || `CRP-${proposal.id}`;
+      const bundleDir = (proposal.bundle_dir || "").replace(/\\/g, "/").toLowerCase();
+      return Object.keys(docsCache).filter(key => {
+        const normalizedKey = key.replace(/\\/g, "/").toLowerCase();
+        return (bundleDir && normalizedKey.includes(bundleDir)) ||
+          normalizedKey.includes(`/proposals/${tag.toLowerCase()}`) ||
+          normalizedKey.includes(`crp-${proposal.id}`) ||
+          normalizedKey.includes(`bug-${proposal.id}`);
+      });
+    }
+
+    function getOriginalProposalDocumentKey(proposal) {
+      const tag = proposal?.crp_id || proposal?.cr_id || `CRP-${proposal?.id}`;
+      const keys = getProposalDocumentKeys(proposal);
+      const originalFileName = `${tag}.md`.toLowerCase();
+      return keys.find(key => key.toLowerCase().endsWith(`/${originalFileName}`)) ||
+        keys.find(key => !/(specification|implementation_plan|walkthrough)\.md$/i.test(key)) ||
+        null;
+    }
+
+    function hasVisualDocumentContent(content) {
+      return /```mermaid\b/i.test(content || "") || /!\[[^\]]*\]\([^)]+\)/.test(content || "");
+    }
+
+    function renderVisualDocumentContent(content) {
+      const escaped = esc(content || "");
+      const mermaidBlocks = [];
+      const withPlaceholders = escaped.replace(/```mermaid\s*\n([\s\S]*?)```/gi, (_, source) => {
+        const index = mermaidBlocks.push(source) - 1;
+        return `@@MERMAID_BLOCK_${index}@@`;
+      });
+      const preview = withPlaceholders
+        .replace(/!\[([^\]]*)\]\(([^)\s]+)\)/g, '<figure><img src="$2" alt="$1" style="max-width:100%;height:auto;"><figcaption>$1</figcaption></figure>')
+        .replace(/\r?\n/g, '<br>');
+      return preview.replace(/@@MERMAID_BLOCK_(\d+)@@/g, (_, index) => `<div class="mermaid">${mermaidBlocks[Number(index)]}</div>`);
+    }
+
+    async function renderMermaidPreviews(container) {
+      const nodes = container.querySelectorAll(".mermaid");
+      if (nodes.length === 0) return;
+      try {
+        const module = await import("https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs");
+        module.default.initialize({ startOnLoad: false, securityLevel: "strict" });
+        await module.default.run({ nodes });
+      } catch (error) {
+        nodes.forEach(node => {
+          node.classList.add("mermaid-source-fallback");
+          node.textContent = `Mermaid preview unavailable; source retained:\n${node.textContent}`;
+        });
+        console.warn("Unable to render Mermaid preview.", error);
+      }
+    }
+
+    function showDocumentModal(title, content, id, docKey) {
+      const body = $("docModalBody");
+      const preview = hasVisualDocumentContent(content);
+      $("docModalTitle").innerText = preview ? `🖼️ Preview: ${title}` : title;
+      body.style.whiteSpace = preview ? "normal" : "pre-wrap";
+      if (preview) {
+        body.innerHTML = renderVisualDocumentContent(content);
+        renderMermaidPreviews(body);
+      } else {
+        body.innerText = content;
+      }
+      $("btnEditNotepad").onclick = () => openProposalDocInNotepad(id, docKey);
+      $("btnEditNotepad").style.display = docKey ? "inline-flex" : "none";
+      openModal("docModal");
+    }
+
     function showProposalSpec(id) {
       const p = (proposalsData.proposals || []).find(x => x.id === id);
       const tag = p?.crp_id || p?.cr_id || ("#" + id);
@@ -3346,11 +3431,7 @@
       const finalKey = specKey || fallbackKey;
       const content = finalKey ? docsCache[finalKey] : `No compiled markdown specification file found in cache for ${tag}.`;
 
-      $("docModalTitle").innerText = `📄 Specification: ${tag} — ${p?.title || ""}`;
-      $("docModalBody").innerText = content;
-      $("btnEditNotepad").onclick = () => openProposalDocInNotepad(id, finalKey);
-      $("btnEditNotepad").style.display = "inline-flex";
-      openModal("docModal");
+      showDocumentModal(`📄 Specification: ${tag} — ${p?.title || ""}`, content, id, finalKey);
     }
 
     function showProposalPlan(id) {
@@ -3359,11 +3440,7 @@
       const planKey = Object.keys(docsCache).find(k => (k.includes(`plans/`) || k.includes(`Proposals/`)) && (k.includes(`${id}`) || k.includes(tag)) && k.toLowerCase().includes("plan") && !k.toLowerCase().includes("walkthrough") && !k.toLowerCase().includes("specification"));
       const content = planKey ? docsCache[planKey] : `No compiled plan file found in cache for ${tag}.`;
 
-      $("docModalTitle").innerText = `📋 Plan: ${tag} — ${p?.title || ""}`;
-      $("docModalBody").innerText = content;
-      $("btnEditNotepad").onclick = () => openProposalDocInNotepad(id, planKey);
-      $("btnEditNotepad").style.display = "inline-flex";
-      openModal("docModal");
+      showDocumentModal(`📋 Plan: ${tag} — ${p?.title || ""}`, content, id, planKey);
     }
 
     function showProposalWalkthrough(id) {
@@ -3372,19 +3449,18 @@
       const wtKey = Object.keys(docsCache).find(k => (k.includes(`plans/`) || k.includes(`Proposals/`)) && (k.includes(`${id}`) || k.includes(tag)) && k.toLowerCase().includes("walkthrough"));
       const content = wtKey ? docsCache[wtKey] : `No compiled walkthrough file found in cache for ${tag}.`;
 
-      $("docModalTitle").innerText = `🚶 Walkthrough: ${tag} — ${p?.title || ""}`;
-      $("docModalBody").innerText = content;
-      $("btnEditNotepad").onclick = () => openProposalDocInNotepad(id, wtKey);
-      $("btnEditNotepad").style.display = "inline-flex";
-      openModal("docModal");
+      showDocumentModal(`🚶 Walkthrough: ${tag} — ${p?.title || ""}`, content, id, wtKey);
     }
 
     function openProposalDocInNotepad(id, docKey) {
-      const filePath = docKey ? docKey : `LCM_Inventory/data/proposals/plans/Proposal-${String(id).padStart(3, '0')}_Plan.md`;
+      if (!docKey) {
+        showToast(`No editable proposal source is available for #${id}.`);
+        return;
+      }
       fetch(DAEMON_URL + "/open_editor", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ filePath })
+        body: JSON.stringify({ filePath: docKey })
       });
     }
 
@@ -3397,12 +3473,31 @@
     }
 
     function showReviewReceipt(id) {
-      const receiptPath = `LCM_Inventory/data/reviews/crp-${id}-review.json`;
-      fetch(DAEMON_URL + "/open_editor", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ filePath: receiptPath })
+      const proposal = (proposalsData.proposals || []).find(x => x.id === id);
+      const tag = proposal?.crp_id || proposal?.cr_id || `CRP-${id}`;
+      const declaredPaths = [
+        proposal?.bcr_review_receipt,
+        proposal?.bcr_resolution_receipt
+      ].filter(Boolean).map(path => path.replace(/\\/g, "/").toLowerCase());
+      const commitSha = (proposal?.commit_sha || "").toLowerCase();
+      const receipts = reviewReceipts.filter(receipt => {
+        const path = (receipt.path || "").toLowerCase();
+        const content = receipt.content || "";
+        return declaredPaths.some(declared => path.endsWith(declared.split("/").pop())) ||
+          content.includes(tag) ||
+          (commitSha && content.toLowerCase().includes(commitSha));
       });
+      if (receipts.length === 0) {
+        showDocumentModal(
+          `🧾 Review Receipts: ${tag}`,
+          `No retained review receipt was found for ${tag}.\n\nThe lifecycle ledger and state history remain the available evidence. Historical receipt material may have been removed by the documented cleanup.`,
+          id,
+          null
+        );
+        return;
+      }
+      const content = receipts.map(receipt => `--- ${receipt.path} ---\n${receipt.content}`).join("\n\n");
+      showDocumentModal(`🧾 Review Receipts: ${tag}`, content, id, receipts[0].path);
     }
 
     function showStateHistory(id) {
@@ -3418,27 +3513,21 @@
       openModal("docModal");
     }
 
-    function openProposalInNotepad(id) {
+    function openOriginalProposalInEditor(id) {
       const p = (proposalsData.proposals || []).find(x => x.id === id);
-      const tag = p?.crp_id || p?.cr_id || ("#" + id);
-      const planKey = Object.keys(docsCache).find(k => k.includes(`plans/`) && (k.includes(`${id}`) || k.includes(tag)));
-      const filePath = planKey ? planKey : `LCM_Inventory/data/proposals/plans/crp-${id}-plan.md`;
-
-      fetch(DAEMON_URL + "/open_editor", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ filePath })
-      });
+      const originalKey = getOriginalProposalDocumentKey(p);
+      if (!originalKey) {
+        showToast(`No original CRP source is retained for #${id}; Specification.md is not used as a substitute.`);
+        return;
+      }
+      openProposalDocInNotepad(id, originalKey);
     }
 
     function showRepoDocs(repoName) {
       const docKey = Object.keys(docsCache).find(k => k.startsWith(repoName + "/Architecture.md") || k.startsWith(repoName + "/README.md"));
       const content = docKey ? docsCache[docKey] : `No compiled Architecture.md found for repository: ${repoName}`;
 
-      $("docModalTitle").innerText = `📁 Repository Docs: ${repoName}`;
-      $("docModalBody").innerText = content;
-      $("btnEditNotepad").style.display = "none";
-      openModal("docModal");
+      showDocumentModal(`📁 Repository Docs: ${repoName}`, content, null, docKey);
     }
 
     function showActivityLogs() {

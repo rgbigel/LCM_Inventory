@@ -305,8 +305,8 @@ Describe 'Proposal lifecycle authority' {
       in_progress = @('edit', 'verify', 'hold', 'reset', 'withdraw', 'supersede')
       verified = @('bcr', 'reopen', 'hold', 'supersede')
       in_review = @('complete', 'commit', 'reject', 'reopen', 'hold')
-      completed = @('push', 'hold')
-      pushed = @('view')
+      completed = @('push', 'hold', 'reinstate')
+      pushed = @('view', 'reinstate')
       held = @('reopen', 'edit', 'withdraw')
       withdrawn = @('view', 'supersede')
       rejected = @('view', 'supersede', 'create-linked-bug')
@@ -376,6 +376,42 @@ Describe 'Proposal lifecycle authority' {
 
       $resumed.state | Should -Be 'suggested'
       $resumed.state_history[-1].from_state | Should -Be 'held'
+    }
+  }
+
+  It 'reinstates delivered proposals into the correct revision path' {
+    InModuleScope ProposalManager {
+      $script:testProposalStore = [PSCustomObject]@{
+        proposals = @(
+          [PSCustomObject]@{
+            id = 9004
+            state = 'completed'
+            progress_state = 'completed'
+            disposition = 'completed'
+            state_history = @([PSCustomObject]@{ state = 'completed'; timestamp = '2026-10-13 10:00:00' })
+          },
+          [PSCustomObject]@{
+            id = 9005
+            state = 'pushed'
+            progress_state = 'pushed'
+            disposition = 'published'
+            state_history = @([PSCustomObject]@{ state = 'pushed'; timestamp = '2026-10-13 10:00:00' })
+          }
+        )
+      }
+      Mock Get-ProposalStore { $script:testProposalStore }
+      Mock Set-ProposalStore {}
+
+      $withoutChanges = @(Invoke-ProposalBatchAction -Action reinstate -TargetExpression '9004' -Details 'Reassess prior delivery.')[0]
+      $withoutChanges.state | Should -Be 'suggested'
+      $withoutChanges.progress_state | Should -Be 'undecided'
+      $withoutChanges.state_history[-1].concrete_change_requests | Should -BeFalse
+
+      $withChanges = @(Invoke-ProposalBatchAction -Action reinstate -TargetExpression '9005' -Changes 'Correct the action ordering.' -Details 'Operator supplied corrections.')[0]
+      $withChanges.state | Should -Be 'in_progress'
+      $withChanges.progress_state | Should -Be 'in_progress'
+      $withChanges.state_history[-1].concrete_change_requests | Should -BeTrue
+      $withChanges.state_history[-1].changes | Should -Be 'Correct the action ordering.'
     }
   }
 

@@ -349,6 +349,21 @@ if (Test-Path -LiteralPath $proposalPlansDir) {
         $docsCache[$relativePlanPath] = Get-Content -LiteralPath $proposalPlanFile.FullName -Raw -Encoding UTF8
     }
 }
+
+$reviewReceipts = @()
+$reviewReceiptsDir = Join-Path $workspaceRoot "LCM_Inventory\data\reviews"
+if (Test-Path -LiteralPath $reviewReceiptsDir) {
+    foreach ($reviewReceiptFile in Get-ChildItem -LiteralPath $reviewReceiptsDir -Filter "*.json" -File) {
+        try {
+            $reviewReceipts += [ordered]@{
+                path    = $reviewReceiptFile.FullName.Substring($workspaceRoot.Length).TrimStart('\').Replace('\', '/')
+                content = Get-Content -LiteralPath $reviewReceiptFile.FullName -Raw -Encoding UTF8
+            }
+        } catch {
+            throw "Unable to read review receipt '$($reviewReceiptFile.FullName)': $($_.Exception.Message)"
+        }
+    }
+}
 Write-TimingLog "Gathered $($docsCache.Count) total documents into cache."
 
 # Compile Document Metadata Catalog
@@ -431,6 +446,7 @@ $injectedBlock = @"
     const RAW_ACTIVE_LOG = $($activeLogRaw | ConvertTo-Json);
     const RAW_HISTORY_LOG = $($historyLogRaw | ConvertTo-Json);
     const RAW_DOCS_CACHE = $($docsCache | ConvertTo-Json -Depth 3);
+    const RAW_REVIEW_RECEIPTS = $($reviewReceipts | ConvertTo-Json -Depth 3);
     const RAW_COMPILED_CATALOG = $($compiledCatalog | ConvertTo-Json -Depth 3);
 "@
 

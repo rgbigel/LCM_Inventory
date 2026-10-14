@@ -1,5 +1,18 @@
 # CRP-261 Walkthrough
 
+## Revision 2 Reopen
+
+- 2026-10-14: Explicitly reopened from `completed` to `in_progress` to correct
+  ShowCM action ordering, push/publication ledger visibility, original-source
+  editing, receipt/history access, Mermaid-capable document preview, and
+  terminal-CRP reinstatement.
+- ShowCM now displays `Reinstate Revision` only for `completed` and `pushed`
+  CRPs. Its modal separates an optional revision note from concrete correction
+  requests: blank requests return the CRP to `suggested`; nonblank requests
+  return it to `in_progress` for focused verification and exact-identity BCR.
+- Focused lifecycle and Control Hub validation passed; Gate 2 BCR acceptance
+  remains pending.
+
 ## Delivered Lifecycle Authority
 
 The proposal lifecycle now has one authoritative internal field:

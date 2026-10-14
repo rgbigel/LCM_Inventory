@@ -294,8 +294,8 @@ function Get-LcmProposalLifecycleActions {
         in_progress = @('edit', 'verify', 'hold', 'reset', 'withdraw', 'supersede')
         verified = @('bcr', 'reopen', 'hold', 'supersede')
         in_review = @('complete', 'commit', 'reject', 'reopen', 'hold')
-        completed = @('push', 'hold')
-        pushed = @('view')
+        completed = @('push', 'hold', 'reinstate')
+        pushed = @('view', 'reinstate')
         held = @('reopen', 'edit', 'withdraw')
         withdrawn = @('view', 'supersede')
         rejected = @('view', 'supersede', 'create-linked-bug')
@@ -447,6 +447,72 @@ function Move-LcmProposalLifecycleState {
     if (-not $SkipPersist) {
         Set-ProposalStore -Store $store
     }
+    return $proposal
+}
+
+function Start-LcmProposalReinstatement {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [int]$Id,
+
+        [string]$Changes = '',
+
+        [string]$Details = ''
+    )
+
+    $store = Get-ProposalStore
+    $proposal = @($store.proposals | Where-Object { $_.id -eq $Id })[0]
+    if ($null -eq $proposal) { throw "Proposal #$Id was not found." }
+
+    $fromState = [string]$proposal.state
+    if ($fromState -notin @('completed', 'pushed')) {
+        throw "Proposal #$Id can be reinstated only from completed or pushed; found '$fromState'."
+    }
+
+    $hasConcreteChanges = -not [string]::IsNullOrWhiteSpace($Changes)
+    $targetState = if ($hasConcreteChanges) { 'in_progress' } else { 'suggested' }
+    $timestamp = (Get-Date).ToString('yyyy-MM-dd HH:mm:ss')
+    $revision = 1
+    foreach ($event in @($proposal.state_history)) {
+        if ($event.PSObject.Properties['revision']) {
+            $parsedRevision = 0
+            if ([int]::TryParse([string]$event.revision, [ref]$parsedRevision)) {
+                $revision = [Math]::Max($revision, $parsedRevision + 1)
+            }
+        }
+    }
+
+    $legacyProgressState = if ($targetState -eq 'in_progress') { 'in_progress' } else { 'undecided' }
+    $proposal.state = $targetState
+    $proposal | Add-Member -NotePropertyName 'progress_state' -NotePropertyValue $legacyProgressState -Force
+    $proposal | Add-Member -NotePropertyName 'disposition' -NotePropertyValue $null -Force
+    $proposal | Add-Member -NotePropertyName 'state_reason' -NotePropertyValue $(if ($hasConcreteChanges) {
+        'Reinstated with concrete correction requests; implementation, verification, and exact-identity BCR are required.'
+    } else {
+        'Reinstated without concrete correction requests; awaiting revised proposal intent and plan approval.'
+    }) -Force
+    $proposal | Add-Member -NotePropertyName 'reinstatement_revision' -NotePropertyValue $revision -Force
+    $proposal | Add-Member -NotePropertyName 'reinstatement_changes' -NotePropertyValue $Changes -Force
+    if (-not $proposal.PSObject.Properties['dates'] -or $null -eq $proposal.dates) {
+        $proposal | Add-Member -NotePropertyName 'dates' -NotePropertyValue ([PSCustomObject]@{}) -Force
+    }
+    $proposal.dates | Add-Member -NotePropertyName $targetState -NotePropertyValue $timestamp -Force
+    if (-not $proposal.PSObject.Properties['state_history']) {
+        $proposal | Add-Member -NotePropertyName 'state_history' -NotePropertyValue @() -Force
+    }
+    $proposal.state_history = @($proposal.state_history) + [PSCustomObject]@{
+        from_state = $fromState
+        state = $targetState
+        timestamp = $timestamp
+        user = $env:USERNAME
+        note = if ($Details) { $Details } elseif ($hasConcreteChanges) { 'Reinstated with concrete correction requests.' } else { 'Reinstated for revised proposal intent.' }
+        revision = $revision
+        reinstatement = $true
+        concrete_change_requests = $hasConcreteChanges
+        changes = $Changes
+    }
+    Set-ProposalStore -Store $store
     return $proposal
 }
 
@@ -1570,13 +1636,15 @@ function Invoke-ProposalBatchAction {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
-        [ValidateSet('do', 'delete', 'defer', 'deferred', 'complete', 'completed', 'suggest', 'suggested', 'reject', 'rejected', 'approve', 'approved', 'bug', 'push', 'pushed', 'hold', 'held', 'resume', 'continue', 'withdraw', 'supersede', 'reopen', 'reset')]
+        [ValidateSet('do', 'delete', 'defer', 'deferred', 'complete', 'completed', 'suggest', 'suggested', 'reject', 'rejected', 'approve', 'approved', 'bug', 'push', 'pushed', 'hold', 'held', 'resume', 'continue', 'withdraw', 'supersede', 'reopen', 'reinstate', 'reset')]
         [string]$Action,
 
         [Parameter(Mandatory = $true)]
         [string]$TargetExpression,
 
-        [string]$Details = ''
+        [string]$Details = '',
+
+        [string]$Changes = ''
     )
 
     $targetIds = @(Resolve-ProposalIdExpression -Expression $TargetExpression)
@@ -1603,6 +1671,7 @@ function Invoke-ProposalBatchAction {
         { $_ -in @('push', 'pushed') } { 'pushed' }
         'withdraw' { 'withdrawn' }
         'supersede' { 'superseded' }
+        'reinstate' { $null }
     }
 
     if ($TargetExpression.Trim().ToLowerInvariant() -eq 'all') {
@@ -1612,7 +1681,9 @@ function Invoke-ProposalBatchAction {
                 $currentState = [string]$proposal.state
                 if ($currentState -eq 'approved') { $currentState = 'in_progress' }
                 $targetState = $mappedState
-                if ($Action -in @('resume', 'continue', 'reopen') -and $currentState -eq 'held') {
+                if ($Action -eq 'reinstate' -and $currentState -in @('completed', 'pushed')) {
+                    $proposal.id
+                } elseif ($Action -in @('resume', 'continue', 'reopen') -and $currentState -eq 'held') {
                     $targetState = Get-LcmProposalResumeState -Proposal $proposal
                 }
                 if (-not [string]::IsNullOrWhiteSpace($targetState) -and
@@ -1635,12 +1706,18 @@ function Invoke-ProposalBatchAction {
             $validationFailures += "Proposal #$id was not found."
             continue
         }
-        if ($Action -in @('resume', 'continue', 'reopen') -and $proposal.state -eq 'held') {
-            $targetState = Get-LcmProposalResumeState -Proposal $proposal
-        }
         $currentState = [string]$proposal.state
         if ($currentState -eq 'approved') {
             $currentState = 'in_progress'
+        }
+        if ($Action -eq 'reinstate') {
+            if ($currentState -notin @('completed', 'pushed')) {
+                $validationFailures += "Proposal #$id can be reinstated only from completed or pushed; found '$currentState'."
+            }
+            continue
+        }
+        if ($Action -in @('resume', 'continue', 'reopen') -and $proposal.state -eq 'held') {
+            $targetState = Get-LcmProposalResumeState -Proposal $proposal
         }
         if ([string]::IsNullOrWhiteSpace($targetState) -or
             -not (Test-LcmProposalLifecycleTransition -FromState $currentState -ToState $targetState)) {
@@ -1657,6 +1734,10 @@ function Invoke-ProposalBatchAction {
         $store = Get-ProposalStore
         $proposal = @($store.proposals | Where-Object { $_.id -eq $id })[0]
         if ($null -eq $proposal) { throw "Proposal #$Id was not found." }
+        if ($Action -eq 'reinstate') {
+            $updated += Start-LcmProposalReinstatement -Id $id -Changes $Changes -Details $Details
+            continue
+        }
         if ($Action -in @('resume', 'continue', 'reopen') -and $proposal.state -eq 'held') {
             $targetState = Get-LcmProposalResumeState -Proposal $proposal
             if ([string]::IsNullOrWhiteSpace($targetState)) {
@@ -3257,7 +3338,7 @@ Set-Alias -Name Purge-Bundle -Value Remove-LcmProposalBundle
 Set-Alias -Name Get-Doc -Value Get-LcmProposalDocument
 
 Export-ModuleMember -Function Get-ProposalStorePath, Get-ProposalStore, Set-ProposalStore, `
-    Get-WorkspaceProposals, New-WorkspaceProposal, Get-LcmProposalLifecycleActions, Test-LcmProposalLifecycleTransition, Move-LcmProposalLifecycleState, Set-LcmProposalBugIdentity, Enable-LcmImmediateBugRecovery, Get-LcmProposalLifecycleAudit, Set-WorkspaceProposalState, Set-WorkspaceProposalProgress, `
+    Get-WorkspaceProposals, New-WorkspaceProposal, Get-LcmProposalLifecycleActions, Test-LcmProposalLifecycleTransition, Move-LcmProposalLifecycleState, Start-LcmProposalReinstatement, Set-LcmProposalBugIdentity, Enable-LcmImmediateBugRecovery, Get-LcmProposalLifecycleAudit, Set-WorkspaceProposalState, Set-WorkspaceProposalProgress, `
     Set-WorkspaceProposalPriority, Save-ProposalPlan, Save-ProposalWalkthrough, `
     Resolve-ProposalIdExpression, Get-LcmReviewCohortResolution, Save-LcmReviewCohortReceipt, Get-LcmReviewCohortCompletionPlan, Complete-LcmReviewCohortAcceptance, Set-LcmReviewCohort, Test-LcmProposalVerificationPrecondition, Sync-LcmCohortGateState, Invoke-LcmCohortLifecycleAction, Set-LcmProposalSupersession, Set-LcmProposalRetirement, Invoke-ProposalBatchAction, `
     Set-ReviewGranularity, Get-ReviewGranularity, Set-LCMMode, Get-LCMMode, Set-TestingMode, Get-TestingMode, `

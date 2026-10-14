@@ -19,6 +19,31 @@ a valid action. Completion can also infer repository scope instead of proving ex
 Implement one authoritative internal lifecycle state, explicit external display status, auditable
 transition actions, exact-CRP review/commit/push identity, and atomic proposal creation.
 
+## Revision 2: ShowCM Correction Scope
+
+This proposal was explicitly reopened after published behavior diverged from the
+operator-facing Control Hub contract. The correction must:
+
+1. Order ACTIONS groups as Lifecycle, Cohort, Documents, then the remaining
+   groups in their existing relative order.
+2. Treat verified remote push evidence as the authoritative `pushed` /
+   Published lifecycle outcome in the ledger consumed by ShowCM.
+3. Make Documents/Edit open the original proposal source, not a guessed plan
+   path or only a derived specification.
+4. Order Documents actions as Edit, Show Repo Docs, then Specification, Plan,
+   Walkthrough, Diff, Review Receipt, and State History.
+5. Make document inspection use preview mode when a document contains Mermaid
+   or graphical Markdown content, retaining the source as a safe fallback.
+6. Locate available review receipts from ledger references and the retained
+   receipt catalog; when cleanup removed a receipt, disclose that absence and
+   retain the ledger/history evidence rather than failing silently.
+7. Add the governed `reinstate` path for delivered CRPs. ShowCM must expose
+   `Reinstate Revision` only for `completed` and `pushed` records, retain an
+   optional revision note, and collect concrete correction requests separately.
+   No named corrections return the CRP to `suggested`; named corrections return
+   it to `in_progress`, then require focused verification and an
+   exact-identity BCR.
+
 ## Recovery Documentation Amendment
 
 The active lifecycle record is the flat `state`/`state_reason` pair. The

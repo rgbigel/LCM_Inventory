@@ -11,7 +11,7 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $false, Position = 0, HelpMessage = 'Action to perform on proposals or governance settings')]
-    [ValidateSet('do', 'delete', 'defer', 'deferred', 'complete', 'completed', 'suggest', 'suggested', 'granularity', 'mode', 'testing-mode', 'testing', 'minimal-tests', 'doit-mode', 'list', 'progress', 'state', 'reject', 'rejected', 'approve', 'approved', 'bug', 'push', 'pushed', 'verify', 'bcr', 'cohort', 'priority', 'commit', 'committed', 'proceed', 'regression', 'regressions', 'check-regressions', 'generate-regression', 'workon', 'work-on', 'app', 'new-app', 'apps', 'list-apps', 'sync-apps', 'catalog', 'split-docs', 'splitdocs', 'doc', 'docs', 'show-doc', 'purge-bundle', 'hold', 'held', 'resume', 'continue', 'withdraw', 'retire', 'supersede', 'reopen', 'reset', 'analyze', 'implement', 'operating-mode', 'analysis-mode', 'trip-breaker', 'circuit-breaker', 'reset-breaker')]
+    [ValidateSet('do', 'delete', 'defer', 'deferred', 'complete', 'completed', 'suggest', 'suggested', 'granularity', 'mode', 'testing-mode', 'testing', 'minimal-tests', 'doit-mode', 'list', 'progress', 'state', 'reject', 'rejected', 'approve', 'approved', 'bug', 'push', 'pushed', 'verify', 'bcr', 'cohort', 'priority', 'commit', 'committed', 'proceed', 'regression', 'regressions', 'check-regressions', 'generate-regression', 'workon', 'work-on', 'app', 'new-app', 'apps', 'list-apps', 'sync-apps', 'catalog', 'split-docs', 'splitdocs', 'doc', 'docs', 'show-doc', 'purge-bundle', 'hold', 'held', 'resume', 'continue', 'withdraw', 'retire', 'supersede', 'reopen', 'reinstate', 'reset', 'analyze', 'implement', 'operating-mode', 'analysis-mode', 'trip-breaker', 'circuit-breaker', 'reset-breaker')]
     [string]$Action = 'list',
 
     [Parameter(Mandatory = $false, Position = 1, HelpMessage = 'Target proposal expression (e.g. all, #1, 105, 100-105)')]
@@ -19,6 +19,9 @@ param(
 
     [Parameter(Mandatory = $false, HelpMessage = 'Additional details or notes for proposal transition')]
     [string]$Details = '',
+
+    [Parameter(Mandatory = $false, HelpMessage = 'Concrete correction requests for reinstate; when omitted, reinstate returns the CRP to suggested')]
+    [string]$Changes = '',
 
     [Parameter(Mandatory = $false, HelpMessage = 'Target plan state to set (bug, suggested, approved, deferred, rejected, completed, pushed, held)')]
     [ValidateSet('bug', 'suggested', 'approved', 'deferred', 'deleted', 'completed', 'completed [minimal-tests]', 'rejected', 'pushed', 'processed', 'held')]
@@ -709,7 +712,7 @@ switch -Regex ($Action) {
         if ([string]::IsNullOrWhiteSpace($TargetExpression)) {
             throw "TargetExpression (e.g. '1-3', 'all', '1,2') is required for action '$Action'."
         }
-        $updated = @(Invoke-ProposalBatchAction -Action $Action -TargetExpression $TargetExpression -Details $Details)
+        $updated = @(Invoke-ProposalBatchAction -Action $Action -TargetExpression $TargetExpression -Details $Details -Changes $Changes)
         if ($updated.Count -eq 0) {
             throw "Action '$Action' resolved no current proposal targets for expression '$TargetExpression'; the result cannot be formatted."
         }
