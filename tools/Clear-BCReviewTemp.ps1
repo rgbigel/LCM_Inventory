@@ -152,8 +152,13 @@ elseif ($hasOlderThan) {
 
 $activeBaselineJunction = Join-Path $scratchReviewDir "ACTIVE_BASELINE"
 $activeLiveJunction = Join-Path $scratchReviewDir "ACTIVE_LIVE"
+$bcRunning = @(Get-CimInstance Win32_Process -Filter "Name = 'BCompare.exe'" -ErrorAction SilentlyContinue).Count -gt 0
 
 if ($toDelete.Count -gt 0) {
+    if ($bcRunning) {
+        Write-Warning "Beyond Compare is active. No review directories or staging manifests were removed; close the review before cleanup."
+        $toDelete = @()
+    }
     $deletedCount = 0
     foreach ($target in $toDelete) {
         if ($PSCmdlet.ShouldProcess($target.FullName, "Delete BC_Review temp directory")) {
@@ -196,26 +201,6 @@ if ($toDelete.Count -gt 0) {
 
     # Refresh directory list after deletion
     $sessionEntries = @($sessionEntries | Where-Object { Test-Path $_.DirectoryObject.FullName })
-}
-
-# Clean stale review staging manifests if requested
-$reviewsDir = Join-Path $workspaceRoot "LCM_Inventory\data\reviews"
-if (Test-Path -LiteralPath $reviewsDir) {
-    $stagedManifests = @(Get-ChildItem -Path $reviewsDir -Filter "staged_review_*.json" -ErrorAction SilentlyContinue)
-    foreach ($sm in $stagedManifests) {
-        if ($All) {
-            Remove-Item -LiteralPath $sm.FullName -Force -ErrorAction SilentlyContinue
-        } else {
-            # If target review root in manifest no longer exists, remove orphan manifest
-            try {
-                $mJson = Get-Content -LiteralPath $sm.FullName -Raw | ConvertFrom-Json
-                if ($mJson.TempReviewRoot -and -not (Test-Path -LiteralPath $mJson.TempReviewRoot)) {
-                    Remove-Item -LiteralPath $sm.FullName -Force -ErrorAction SilentlyContinue
-                    Write-Host "Removed orphan review staging manifest: $($sm.Name)" -ForegroundColor DarkCyan
-                }
-            } catch {}
-        }
-    }
 }
 
 # ==============================================================================

@@ -10,6 +10,26 @@ Date: 2026-10-13
 
 ---
 
+## 1.1 Control Hub Daemon Availability
+
+The CM Control Hub dispatches privileged local actions through the loopback
+`LcmDesktopDaemon.ps1` REST service on port `9876`. A static
+`file:///.../CM_CONTROL_HUB.html` page can detect an unavailable daemon but,
+by browser security design, cannot start a Windows Scheduled Task itself.
+
+The registered `LCM_DesktopDaemon_<user>` task is therefore the availability
+owner. It starts at interactive logon, retries failed daemon executions, and
+uses a one-minute repeating watchdog trigger with `IgnoreNew` task concurrency:
+a healthy daemon is not duplicated, while an exited daemon is restarted without
+depending on a particular browser page or launcher route.
+
+The watchdog provides eventual, client-independent recovery. The intended
+interactive improvement remains a trusted launcher/bridge that detects a failed
+daemon action, starts the task, waits for `/ping`, and retries that one action
+once. Browser JavaScript must never attempt to start the task directly.
+
+---
+
 ## 1. System Overview & End-User Perspective
 
 **`LCM_Inventory`** serves as the central operational hub and single source of truth for the entire Lifecycle Model (LCM) multi-repository ecosystem. It governs configuration tracking, change request proposal (CRP) state progression, multi-repository review gating via Beyond Compare 5, drift auditing, and multi-repo remote push orchestration.

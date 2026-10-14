@@ -22,6 +22,35 @@ Describe 'Proposal lifecycle authority' {
     Test-LcmProposalLifecycleTransition -FromState suggested -ToState pushed | Should -BeFalse
   }
 
+  It 'persists cross-repository BCR obligations in the dedicated ledger and blocks primary completion until resolved' {
+    InModuleScope ProposalManager {
+      $script:testProposalStore = [PSCustomObject]@{
+        proposals = @(
+          [PSCustomObject]@{
+            id = 9099
+            crp_id = 'BUG-9099'
+            origin_repo = 'LCM_Inventory'
+            state = 'in_review'
+            bcr_disposition = 'Completed'
+          }
+        )
+      }
+      Mock Get-ProposalStore { $script:testProposalStore }
+      Mock Set-ProposalStore {}
+
+      $obligation = Register-LcmCrossRepositoryReviewObligation -Id 9099 -Repository 'LCM_AI' -Reason 'Dirty canonical rules.'
+      $obligation.status | Should -Be 'open'
+      $script:testProposalStore.review_obligation_ledger.entries.Count | Should -Be 1
+      $script:testProposalStore.review_obligation_ledger.entries[0].proposal_id | Should -Be 9099
+      @(Get-LcmProposalReviewObligations -Proposal $script:testProposalStore.proposals[0] -UnresolvedOnly).Count | Should -Be 1
+      { Move-LcmProposalLifecycleState -Id 9099 -State completed } |
+        Should -Throw '*cannot complete while cross-repository BCR obligation(s) remain unresolved: LCM_AI*'
+
+      Complete-LcmCrossRepositoryReviewObligation -Id 9099 -Repository 'LCM_AI' -ReviewReceiptPath 'D:\evidence\LCM_AI-review.json' -CommitSha 'abc1234' | Out-Null
+      (Move-LcmProposalLifecycleState -Id 9099 -State completed).state | Should -Be 'completed'
+    }
+  }
+
   It 'routes an invoked COH complete action to the BCR cohort completion path' {
     $actionScript = Join-Path $PSScriptRoot '..\tools\Invoke-ProposalAction.ps1'
 

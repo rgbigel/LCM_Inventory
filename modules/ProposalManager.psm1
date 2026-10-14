@@ -329,6 +329,136 @@ function Test-LcmProposalLifecycleTransition {
     return $ToState -in @($allowed[$FromState])
 }
 
+function Get-LcmProposalReviewObligations {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [psobject]$Proposal,
+
+        [switch]$UnresolvedOnly
+    )
+
+    $store = Get-ProposalStore
+    if (-not $store.PSObject.Properties['review_obligation_ledger'] -or
+        $null -eq $store.review_obligation_ledger -or
+        -not $store.review_obligation_ledger.PSObject.Properties['entries']) {
+        return @()
+    }
+
+    $obligations = @($store.review_obligation_ledger.entries | Where-Object {
+        [int]$_.proposal_id -eq [int]$Proposal.id
+    })
+    if ($UnresolvedOnly) {
+        $obligations = @($obligations | Where-Object { [string]$_.status -ne 'completed' })
+    }
+    return $obligations
+}
+
+function Register-LcmCrossRepositoryReviewObligation {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [int]$Id,
+
+        [Parameter(Mandatory = $true)]
+        [ValidatePattern('^[A-Za-z0-9_.-]+$')]
+        [string]$Repository,
+
+        [string]$Reason = 'Durable cross-repository source changes were discovered during BCR preparation.'
+    )
+
+    $store = Get-ProposalStore
+    $proposal = @($store.proposals | Where-Object { $_.id -eq $Id })[0]
+    if ($null -eq $proposal) { throw "Proposal #$Id was not found." }
+
+    $originRepository = if ($proposal.PSObject.Properties['origin_repo'] -and $proposal.origin_repo) {
+        [string]$proposal.origin_repo
+    } else {
+        'LCM_Inventory'
+    }
+    if ($Repository.Equals($originRepository, [System.StringComparison]::OrdinalIgnoreCase)) {
+        return $null
+    }
+
+    if (-not $store.PSObject.Properties['review_obligation_ledger'] -or $null -eq $store.review_obligation_ledger) {
+        $store | Add-Member -NotePropertyName 'review_obligation_ledger' -NotePropertyValue ([PSCustomObject]@{
+            version = 1
+            entries = @()
+        }) -Force
+    }
+    if (-not $store.review_obligation_ledger.PSObject.Properties['entries'] -or $null -eq $store.review_obligation_ledger.entries) {
+        $store.review_obligation_ledger | Add-Member -NotePropertyName 'entries' -NotePropertyValue @() -Force
+    }
+    $existing = @($store.review_obligation_ledger.entries | Where-Object {
+        [int]$_.proposal_id -eq $Id -and
+        ([string]$_.repository).Equals($Repository, [System.StringComparison]::OrdinalIgnoreCase) -and
+        [string]$_.reason -eq $Reason
+    }) | Select-Object -First 1
+    if ($existing) {
+        return $existing
+    }
+
+    $identity = if ($proposal.PSObject.Properties['crp_id'] -and $proposal.crp_id) {
+        [string]$proposal.crp_id
+    } elseif ($proposal.PSObject.Properties['cr_id'] -and $proposal.cr_id) {
+        [string]$proposal.cr_id
+    } else {
+        "CRP-$Id"
+    }
+    $obligation = [PSCustomObject]@{
+        id            = "${identity}::${Repository}"
+        proposal_id   = $Id
+        repository    = $Repository
+        status        = 'open'
+        discovered_at = (Get-Date).ToString('yyyy-MM-dd HH:mm:ss')
+        reason        = $Reason
+        bcr_identity  = $identity
+    }
+    $store.review_obligation_ledger.entries = @($store.review_obligation_ledger.entries) + $obligation
+    Set-ProposalStore -Store $store
+    return $obligation
+}
+
+function Complete-LcmCrossRepositoryReviewObligation {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [int]$Id,
+
+        [Parameter(Mandatory = $true)]
+        [ValidatePattern('^[A-Za-z0-9_.-]+$')]
+        [string]$Repository,
+
+        [Parameter(Mandatory = $true)]
+        [string]$ReviewReceiptPath,
+
+        [string]$CommitSha = ''
+    )
+
+    $store = Get-ProposalStore
+    $proposal = @($store.proposals | Where-Object { $_.id -eq $Id })[0]
+    if ($null -eq $proposal) { throw "Proposal #$Id was not found." }
+    $obligations = @($store.review_obligation_ledger.entries | Where-Object {
+        [int]$_.proposal_id -eq $Id -and
+        [string]$_.status -ne 'completed' -and
+        ([string]$_.repository).Equals($Repository, [System.StringComparison]::OrdinalIgnoreCase)
+    })
+    $obligation = if ($obligations.Count -gt 0) { $obligations[0] } else { $null }
+    if ($null -eq $obligation) {
+        throw "Proposal #$Id has no unresolved cross-repository BCR obligation for '$Repository'."
+    }
+
+    $obligation.status = 'completed'
+    $obligation | Add-Member -NotePropertyName 'completed_at' -NotePropertyValue (Get-Date).ToString('yyyy-MM-dd HH:mm:ss') -Force
+    $obligation | Add-Member -NotePropertyName 'review_receipt' -NotePropertyValue $ReviewReceiptPath -Force
+    $obligation | Add-Member -NotePropertyName 'commit_sha' -NotePropertyValue $CommitSha -Force
+    if ($proposal.PSObject.Properties['status_note'] -and [string]$proposal.status_note -like 'Review pending: cross-repository BCR obligation*') {
+        $proposal.PSObject.Properties.Remove('status_note')
+    }
+    Set-ProposalStore -Store $store
+    return $obligation
+}
+
 function Get-LcmProposalResumeState {
     [CmdletBinding()]
     param(
@@ -386,6 +516,11 @@ function Move-LcmProposalLifecycleState {
         throw "Invalid lifecycle transition for proposal #$($Id): $fromState -> $State"
     }
     if ($State -eq 'completed') {
+        $unresolvedObligations = @(Get-LcmProposalReviewObligations -Proposal $proposal -UnresolvedOnly)
+        if ($unresolvedObligations.Count -gt 0) {
+            $repositories = @($unresolvedObligations | ForEach-Object { $_.repository } | Sort-Object -Unique)
+            throw "Proposal #$Id cannot complete while cross-repository BCR obligation(s) remain unresolved: $($repositories -join ', ')."
+        }
         $hasDisposition = $proposal.PSObject.Properties['bcr_disposition'] -and
             -not [string]::IsNullOrWhiteSpace([string]$proposal.bcr_disposition)
         $hasAuthorizedBypass = $proposal.PSObject.Properties['bcr_bypass_authorized'] -and
@@ -3338,7 +3473,7 @@ Set-Alias -Name Purge-Bundle -Value Remove-LcmProposalBundle
 Set-Alias -Name Get-Doc -Value Get-LcmProposalDocument
 
 Export-ModuleMember -Function Get-ProposalStorePath, Get-ProposalStore, Set-ProposalStore, `
-    Get-WorkspaceProposals, New-WorkspaceProposal, Get-LcmProposalLifecycleActions, Test-LcmProposalLifecycleTransition, Move-LcmProposalLifecycleState, Start-LcmProposalReinstatement, Set-LcmProposalBugIdentity, Enable-LcmImmediateBugRecovery, Get-LcmProposalLifecycleAudit, Set-WorkspaceProposalState, Set-WorkspaceProposalProgress, `
+    Get-WorkspaceProposals, New-WorkspaceProposal, Get-LcmProposalLifecycleActions, Test-LcmProposalLifecycleTransition, Get-LcmProposalReviewObligations, Register-LcmCrossRepositoryReviewObligation, Complete-LcmCrossRepositoryReviewObligation, Move-LcmProposalLifecycleState, Start-LcmProposalReinstatement, Set-LcmProposalBugIdentity, Enable-LcmImmediateBugRecovery, Get-LcmProposalLifecycleAudit, Set-WorkspaceProposalState, Set-WorkspaceProposalProgress, `
     Set-WorkspaceProposalPriority, Save-ProposalPlan, Save-ProposalWalkthrough, `
     Resolve-ProposalIdExpression, Get-LcmReviewCohortResolution, Save-LcmReviewCohortReceipt, Get-LcmReviewCohortCompletionPlan, Complete-LcmReviewCohortAcceptance, Set-LcmReviewCohort, Test-LcmProposalVerificationPrecondition, Sync-LcmCohortGateState, Invoke-LcmCohortLifecycleAction, Set-LcmProposalSupersession, Set-LcmProposalRetirement, Invoke-ProposalBatchAction, `
     Set-ReviewGranularity, Get-ReviewGranularity, Set-LCMMode, Get-LCMMode, Set-TestingMode, Get-TestingMode, `

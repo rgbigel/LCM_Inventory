@@ -174,14 +174,15 @@ if ($Install) {
   Set-ItemProperty -Path $runKeyPath -Name $runKeyName -Value $commandLine -Force | Out-Null
   Write-Host "  -> Configured HKCU Run Key: $runKeyName" -ForegroundColor Green
 
-  # 2. Configure Scheduled Task with Auto-Restart (Max 3 attempts, 1 min interval)
+  # 2. Configure Scheduled Task with restart-on-failure and a bounded availability watchdog.
   try {
     $action = New-ScheduledTaskAction -Execute "pwsh.exe" -Argument "-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File `"$daemonScript`" -Port $Port"
-    $trigger = New-ScheduledTaskTrigger -AtLogOn -User $env:USERNAME
+    $logonTrigger = New-ScheduledTaskTrigger -AtLogOn -User $env:USERNAME
+    $watchdogTrigger = New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval (New-TimeSpan -Minutes 1) -RepetitionDuration (New-TimeSpan -Days 3650)
     $principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive -RunLevel Limited
-    $settings = New-ScheduledTaskSettingsSet -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1) -ExecutionTimeLimit (New-TimeSpan -Days 365) -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
-    Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $trigger -Principal $principal -Settings $settings -Force | Out-Null
-    Write-Host "  -> Configured Scheduled Task with Auto-Restart (Max 3 restarts): $taskName" -ForegroundColor Green
+    $settings = New-ScheduledTaskSettingsSet -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1) -ExecutionTimeLimit (New-TimeSpan -Days 365) -MultipleInstances IgnoreNew -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
+    Register-ScheduledTask -TaskName $taskName -Action $action -Trigger @($logonTrigger, $watchdogTrigger) -Principal $principal -Settings $settings -Force | Out-Null
+    Write-Host "  -> Configured task restart and one-minute availability watchdog: $taskName" -ForegroundColor Green
   } catch {
     Write-Host "  -> Note: Scheduled task auto-restart registration skipped ($($_.Exception.Message))" -ForegroundColor Gray
   }
@@ -194,8 +195,7 @@ if ($Install) {
   Write-Host " LCM DESKTOP DAEMON REGISTERED SUCCESSFULLY" -ForegroundColor Green
   Write-Host " Port         : $Port" -ForegroundColor White
   Write-Host " Auto-Start   : Active at User Logon" -ForegroundColor White
-  Write-Host " Auto-Restart : Enabled (Max 3 times, 1-min interval)" -ForegroundColor White
+  Write-Host " Auto-Restart : Enabled (3 retries plus one-minute availability watchdog)" -ForegroundColor White
   Write-Host " Script       : $daemonScript" -ForegroundColor White
   Write-Host "==========================================================================" -ForegroundColor Green
 }
-

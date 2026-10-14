@@ -7,16 +7,18 @@ Describe 'BCompare review lifecycle contracts' {
     $completeCohortScriptPath = Join-Path $repositoryRoot 'tools\Complete-ReviewCohort.ps1'
     $gateScriptPath = Join-Path $repositoryRoot 'tools\Test-ReviewCommitGate.ps1'
     $clearScriptPath = Join-Path $repositoryRoot 'tools\Clear-BCReviewSession.ps1'
+    $clearTempScriptPath = Join-Path $repositoryRoot 'tools\Clear-BCReviewTemp.ps1'
     $reviewScript = Get-Content -LiteralPath $reviewScriptPath -Raw -Encoding UTF8
     $dispatcherScript = Get-Content -LiteralPath $dispatcherScriptPath -Raw -Encoding UTF8
     $submitScript = Get-Content -LiteralPath $submitScriptPath -Raw -Encoding UTF8
     $completeCohortScript = Get-Content -LiteralPath $completeCohortScriptPath -Raw -Encoding UTF8
     $gateScript = Get-Content -LiteralPath $gateScriptPath -Raw -Encoding UTF8
     $clearScript = Get-Content -LiteralPath $clearScriptPath -Raw -Encoding UTF8
+    $clearTempScript = Get-Content -LiteralPath $clearTempScriptPath -Raw -Encoding UTF8
   }
 
   It 'parses all review lifecycle scripts' {
-    foreach ($scriptPath in @($reviewScriptPath, $dispatcherScriptPath, $submitScriptPath, $completeCohortScriptPath, $gateScriptPath, $clearScriptPath)) {
+    foreach ($scriptPath in @($reviewScriptPath, $dispatcherScriptPath, $submitScriptPath, $completeCohortScriptPath, $gateScriptPath, $clearScriptPath, $clearTempScriptPath)) {
       $tokens = $null
       $parseErrors = $null
       [System.Management.Automation.Language.Parser]::ParseFile($scriptPath, [ref]$tokens, [ref]$parseErrors) | Out-Null
@@ -48,6 +50,35 @@ Describe 'BCompare review lifecycle contracts' {
     $reviewScript | Should -Match ([regex]::Escape('$baselineDescriptor.RulesBaselineRepositoryPath'))
     $reviewScript | Should -Match ([regex]::Escape('$otherCandidates += (Split-Path -Leaf $rulesAuthorityPath)'))
     $reviewScript | Should -Match ([regex]::Escape('Opening additional tab for affected repository with physical changes'))
+  }
+
+  It 'registers durable cross-repository changes as lifecycle BCR obligations before launch' {
+    $reviewScript | Should -Match ([regex]::Escape('function Register-DiscoveredCrossRepositoryReviewObligations'))
+    $reviewScript | Should -Match ([regex]::Escape('Register-LcmCrossRepositoryReviewObligation -Id $proposal.id -Repository $candidate'))
+    $reviewScript | Should -Match ([regex]::Escape('Register-DiscoveredCrossRepositoryReviewObligations -WorkspaceRoot $workspaceRoot'))
+    $submitScript | Should -Match ([regex]::Escape('Complete-LcmCrossRepositoryReviewObligation -Id $matchingProposals[0].id'))
+    $submitScript | Should -Match ([regex]::Escape('Primary proposal remains'))
+  }
+
+  It 'recreates the on-disk lifecycle BCR session metadata through the normal BCR action' {
+    $reviewScript | Should -Match ([regex]::Escape('(Join-Path $tempReviewRoot ".lcm_review.json")'))
+    $reviewScript | Should -Match ([regex]::Escape('(Join-Path $reviewStagingDir ".lcm_review.json")'))
+    $reviewScript | Should -Match ([regex]::Escape("Lifecycle BCR session metadata was not materialized on disk"))
+    $actionScript = Get-Content -LiteralPath (Join-Path $repositoryRoot 'tools\Invoke-ProposalAction.ps1') -Raw -Encoding UTF8
+    $actionScript | Should -Match ([regex]::Escape('ReviewObligationId'))
+    $actionScript | Should -Match ([regex]::Escape('Invoke-BeyondCompareReview.ps1'))
+  }
+
+  It 'isolates an artificial obligation BCR session from its primary review identity' {
+    $reviewScript | Should -Match ([regex]::Escape("[string]`$ReviewIdentity = ''"))
+    $reviewScript | Should -Match ([regex]::Escape('$reviewIdentity = if ([string]::IsNullOrWhiteSpace($ReviewIdentity)) { $CRP } else { $ReviewIdentity }'))
+    $reviewScript | Should -Match ([regex]::Escape('$sessionName = "${reviewIdentity}_Review"'))
+    $actionScript = Get-Content -LiteralPath (Join-Path $repositoryRoot 'tools\Invoke-ProposalAction.ps1') -Raw -Encoding UTF8
+    $actionScript | Should -Match ([regex]::Escape('$isolatedReviewIdentity = "${identity}_$($obligation.repository)"'))
+    $actionScript | Should -Match ([regex]::Escape('-ReviewIdentity $isolatedReviewIdentity'))
+    $clearScript | Should -Match ([regex]::Escape('[string]$ReviewIdentity = '''))
+    $clearScript | Should -Match ([regex]::Escape('$sessionName = "${cleanupIdentity}_Review"'))
+    $clearScript | Should -Match ([regex]::Escape('TDirCompareSession[@Value=''$sessionName'']'))
   }
 
   It 'classifies standard transient paths as non-committable and stages only reviewed manifest paths' {
@@ -82,10 +113,20 @@ Describe 'BCompare review lifecycle contracts' {
 
   It 'derives post-commit cleanup from BCR review metadata' {
     $submitScript | Should -Match ([regex]::Escape('".lcm_review.json"'))
-    $submitScript | Should -Match ([regex]::Escape('$crpReviewDirToPurge = Join-Path $scratchBcReviewDir $meta.CRP'))
+    $submitScript | Should -Match ([regex]::Escape('$reviewIdentity = if (-not [string]::IsNullOrWhiteSpace($meta.ReviewIdentity)) { $meta.ReviewIdentity } else { $meta.CRP }'))
+    $submitScript | Should -Match ([regex]::Escape('$crpReviewDirToPurge = Join-Path $scratchBcReviewDir $reviewIdentity'))
     $submitScript | Should -Match ([regex]::Escape('Where-Object { $_.LinkType -eq ''Junction'' }'))
     $submitScript | Should -Match ([regex]::Escape('[System.IO.Directory]::Delete($jn.FullName, $false)'))
     $submitScript | Should -Match ([regex]::Escape('Remove-Item -LiteralPath $crpReviewDirToPurge -Recurse -Force -ErrorAction SilentlyContinue'))
+  }
+
+  It 'preserves active named sessions and their exact isolated scratch bridges' {
+    $clearScript | Should -Match ([regex]::Escape('if ($bcRunning)'))
+    $clearScript | Should -Match ([regex]::Escape('Preserving exact review identity ''$cleanupIdentity'''))
+    $submitScript | Should -Match ([regex]::Escape('Do not remove session definitions or scratch bridges while BCompare owns them.'))
+    $submitScript | Should -Match ([regex]::Escape('if (-not $bcRunning -and (Test-Path -LiteralPath $cleanerScript))'))
+    $clearTempScript | Should -Match ([regex]::Escape('if ($bcRunning)'))
+    $clearTempScript | Should -Match ([regex]::Escape('No review directories or staging manifests were removed'))
   }
 
   It 'keeps the baseline-directory fallback when CRP metadata is unavailable' {
@@ -121,7 +162,7 @@ Describe 'BCompare review lifecycle contracts' {
 
   It 'invokes Clear-BCReviewSession post-commit to purge dynamic Beyond Compare sessions' {
     $submitScript | Should -Match ([regex]::Escape('Clear-BCReviewSession.ps1'))
-    $submitScript | Should -Match ([regex]::Escape('& $cleanerScript -CRP $targetCRP -RepositoryName $repoName -WorkspaceRoot $workspaceRoot'))
+    $submitScript | Should -Match ([regex]::Escape('& $cleanerScript -CRP $targetCRP -ReviewIdentity $targetReviewIdentity -RepositoryName $repoName -WorkspaceRoot $workspaceRoot'))
     $submitScript | Should -Match ([regex]::Escape('[CLEANED] Removed dynamic BC session(s)'))
   }
 

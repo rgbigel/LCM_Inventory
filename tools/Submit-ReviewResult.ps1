@@ -143,76 +143,17 @@ if (-not [string]::IsNullOrWhiteSpace($RepositoryPath)) {
 $repoName = Split-Path $targetRepoPath -Leaf
 $reviewsDir = Join-Path $workspaceRoot "LCM_Inventory\data\reviews"
 if (-not (Test-Path -LiteralPath $reviewsDir)) { New-Item -ItemType Directory -Path $reviewsDir -Force | Out-Null }
-$stagedManifestFile = Join-Path $reviewsDir "staged_review_${repoName}.json"
-
-$stagedManifest = $null
-if (Test-Path -LiteralPath $stagedManifestFile) {
-    try {
-        $stagedManifest = Get-Content -LiteralPath $stagedManifestFile -Raw -Encoding UTF8 | ConvertFrom-Json
-    } catch {}
-}
-
-if (-not $stagedManifest) {
-    # Dynamically discover active review scratchpad in LCM_Inventory/scratch/BC_Review
-    $reviewBase = Join-Path $workspaceRoot "LCM_Inventory\scratch\BC_Review"
-    if (Test-Path -LiteralPath $reviewBase) {
-        $candidateDirs = @(Get-ChildItem -LiteralPath $reviewBase -Directory | Where-Object { $_.Name -notlike 'ACTIVE_*' } | Sort-Object LastWriteTime -Descending)
-        foreach ($cd in $candidateDirs) {
-            $metaFile = Join-Path $cd.FullName ".lcm_review.json"
-            if (Test-Path -LiteralPath $metaFile) {
-                try {
-                    $meta = Get-Content -LiteralPath $metaFile -Raw -Encoding UTF8 | ConvertFrom-Json
-                    if ($meta.RepositoryName -eq $repoName) {
-                        $baseDirs = @(Get-ChildItem -LiteralPath $cd.FullName -Directory | Where-Object { $_.Name -like "Baseline_${repoName}_*" })
-                        if ($baseDirs.Count -gt 0) {
-                            $activeReviewRoot = $baseDirs[0].FullName
-                            $bcrScript = Join-Path $workspaceRoot "LCM_Inventory\tools\Invoke-BeyondCompareReview.ps1"
-                            if (Test-Path -LiteralPath $bcrScript) {
-                                & pwsh -NoProfile -ExecutionPolicy Bypass -Command "& {
-                                    . `"$bcrScript`"
-                                    Audit-BeyondCompareReviewStaging -TempReviewRoot `"$activeReviewRoot`" -RepoPath `"$targetRepoPath`" -RepoName `"$repoName`" -CommitSha `"$($meta.BaseCommit)`" -CRP `"$CRP`"
-                                }" | Out-Null
-                                if (Test-Path -LiteralPath $stagedManifestFile) {
-                                    $stagedManifest = Get-Content -LiteralPath $stagedManifestFile -Raw -Encoding UTF8 | ConvertFrom-Json
-                                    break
-                                }
-                            }
-                        }
-                    }
-                } catch {}
-            }
-        }
-    }
-}
-
 if ([string]::IsNullOrWhiteSpace($Result)) {
     $Result = "Completed"
 }
 
 if ($Result -eq "Rejected") {
-    if (Test-Path -LiteralPath $stagedManifestFile) { Remove-Item -LiteralPath $stagedManifestFile -Force }
-    Write-Host "Review rejected. Staging manifest purged." -ForegroundColor Gray
+    Write-Host "Review rejected." -ForegroundColor Gray
     return
 }
 
-# A completion is valid only for the current repository and its current BCR baseline.
-if (-not $stagedManifest) {
-    throw "No current review staging manifest exists for '$repoName'. Open and complete its BCompare review before submitting completion."
-}
-
 $resolvedTargetPath = (Resolve-Path -LiteralPath $targetRepoPath).Path
-$manifestPath = if ($stagedManifest.RepositoryPath) { (Resolve-Path -LiteralPath $stagedManifest.RepositoryPath -ErrorAction SilentlyContinue).Path } else { $null }
-if ($stagedManifest.RepositoryName -ne $repoName -or -not $manifestPath -or $manifestPath -ne $resolvedTargetPath) {
-    throw "Review staging manifest does not match repository '$repoName'. Completion was not performed."
-}
-if (-not $stagedManifest.PSObject.Properties['CRP'] -or $stagedManifest.CRP -ne $CRP) {
-    throw "Review staging manifest does not match exact proposal '$CRP'. Completion was not performed."
-}
-
 $currentHead = (git -C $targetRepoPath rev-parse HEAD).Trim()
-if ([string]::IsNullOrWhiteSpace($stagedManifest.BaselineCommit) -or -not $currentHead.StartsWith([string]$stagedManifest.BaselineCommit, [System.StringComparison]::OrdinalIgnoreCase)) {
-    throw "Review staging manifest baseline does not match current HEAD for '$repoName'. Completion was not performed."
-}
 
 $proposalModulePath = Join-Path $workspaceRoot 'LCM_Inventory\modules\ProposalManager.psm1'
 Import-Module $proposalModulePath -Force
@@ -225,7 +166,10 @@ $matchingProposals = @($propStore.proposals | Where-Object {
 if ($matchingProposals.Count -ne 1) {
     throw "Review result for $CRP must resolve to exactly one proposal; found $($matchingProposals.Count)."
 }
-if ($matchingProposals[0].state -ne 'in_review') {
+$crossRepositoryObligation = @(Get-LcmProposalReviewObligations -Proposal $matchingProposals[0] -UnresolvedOnly | Where-Object {
+    ([string]$_.repository).Equals($repoName, [System.StringComparison]::OrdinalIgnoreCase)
+}) | Select-Object -First 1
+if ($matchingProposals[0].state -ne 'in_review' -and $null -eq $crossRepositoryObligation) {
     throw "Review result for $CRP requires lifecycle state 'in_review'; found '$($matchingProposals[0].state)'."
 }
 
@@ -243,86 +187,23 @@ if ($existingStagedPaths.Count -gt 0) {
     Write-Host "Continuing reviewed manifest with $($existingStagedPaths.Count) existing staged path(s) in '$repoName'." -ForegroundColor DarkYellow
 }
 
-$manifestUncopied = @($stagedManifest.Uncopied)
-$manifestExcluded = @(
-    if ($stagedManifest.PSObject.Properties['Excluded']) {
-        @($stagedManifest.Excluded)
-    }
-)
-$manifestCompleted = @(
-    if ($stagedManifest.PSObject.Properties['Completed']) {
-        @($stagedManifest.Completed)
-    }
-)
-$manifestDeletions = @(
-    if ($stagedManifest.PSObject.Properties['Deletions']) {
-        @($stagedManifest.Deletions)
-    }
-)
-$manifestRenames = @(
-    if ($stagedManifest.PSObject.Properties['Renames']) {
-        @($stagedManifest.Renames)
-    }
-)
-$excludedPaths = @($manifestExcluded | ForEach-Object {
-    if ($_.PSObject.Properties['RelativePath']) { [string]$_.RelativePath } else { [string]$_ }
-})
-$durableUnreviewed = @($manifestUncopied | Where-Object {
-    $candidatePath = if ($_.PSObject.Properties['RelativePath']) { [string]$_.RelativePath } else { [string]$_ }
-    -not (Test-StandardBcrExcludedPath -RelativePath $candidatePath)
-})
-if ($durableUnreviewed.Count -gt 0 -and -not $IncludeUnreviewed) {
-    $paths = @($durableUnreviewed | ForEach-Object {
-        if ($_.PSObject.Properties['RelativePath']) { [string]$_.RelativePath } else { [string]$_ }
-    })
-    throw "Review staging manifest contains durable unreviewed paths. Re-run with -IncludeUnreviewed only after explicit review: $($paths -join ', ')"
+$rhsPaths = @(
+    git -C $targetRepoPath diff --name-only
+    git -C $targetRepoPath ls-files --others --exclude-standard
+) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Sort-Object -Unique
+$committablePaths = @($rhsPaths | Where-Object { -not (Test-StandardBcrExcludedPath -RelativePath $_) })
+if ($committablePaths.Count -eq 0) {
+    throw "The accepted review for '$repoName' has no committable RHS worktree changes."
 }
-if ($manifestCompleted.Count -eq 0 -and $manifestDeletions.Count -eq 0 -and $manifestRenames.Count -eq 0 -and $durableUnreviewed.Count -eq 0) {
-    throw "Review staging manifest contains no approved actions."
-}
-
-$excludedPaths += @($manifestUncopied | ForEach-Object {
-    $candidatePath = if ($_.PSObject.Properties['RelativePath']) { [string]$_.RelativePath } else { [string]$_ }
-    if (Test-StandardBcrExcludedPath -RelativePath $candidatePath) { $candidatePath }
-})
-$excludedPaths = @($excludedPaths | Sort-Object -Unique)
-if ($excludedPaths.Count -gt 0) {
-    Write-Host "Excluded non-committable paths: $($excludedPaths -join ', ')" -ForegroundColor DarkGray
-}
-
-foreach ($completed in $manifestCompleted) {
-    if (Test-StandardBcrExcludedPath -RelativePath $completed.RelativePath) {
-        throw "Review manifest attempted to stage standard excluded path '$($completed.RelativePath)'. Relaunch BCR."
-    }
-    git -C $targetRepoPath add -- $completed.RelativePath
-    if ($LASTEXITCODE -ne 0) { throw "Unable to stage reviewed path '$($completed.RelativePath)'." }
-}
-foreach ($deletion in $manifestDeletions) {
-    if (Test-StandardBcrExcludedPath -RelativePath $deletion.RelativePath) {
-        throw "Review manifest attempted to stage standard excluded path '$($deletion.RelativePath)'. Relaunch BCR."
-    }
-    git -C $targetRepoPath rm -- $deletion.RelativePath
-    if ($LASTEXITCODE -ne 0) { throw "Unable to stage reviewed deletion '$($deletion.RelativePath)'." }
-}
-foreach ($rename in $manifestRenames) {
-    if ((Test-StandardBcrExcludedPath -RelativePath $rename.OldRelativePath) -or
-        (Test-StandardBcrExcludedPath -RelativePath $rename.NewRelativePath)) {
-        throw "Review manifest attempted to stage standard excluded rename '$($rename.OldRelativePath)' -> '$($rename.NewRelativePath)'. Relaunch BCR."
-    }
-    git -C $targetRepoPath mv -- $rename.OldRelativePath $rename.NewRelativePath
-    if ($LASTEXITCODE -ne 0) { throw "Unable to stage reviewed rename '$($rename.OldRelativePath)'." }
-}
-foreach ($unreviewed in $durableUnreviewed) {
-    $relativePath = if ($unreviewed.PSObject.Properties['RelativePath']) { [string]$unreviewed.RelativePath } else { [string]$unreviewed }
-    git -C $targetRepoPath add -f -- $relativePath
-    if ($LASTEXITCODE -ne 0) { throw "Unable to stage explicitly included path '$relativePath'." }
+foreach ($relativePath in $committablePaths) {
+    git -C $targetRepoPath add -A -- $relativePath
+    if ($LASTEXITCODE -ne 0) { throw "Unable to stage reviewed RHS path '$relativePath'." }
 }
 
 $stagedPaths = @(git -C $targetRepoPath diff --cached --name-only)
 $ruleChangePaths = @(Get-RuleChangePaths -Paths $stagedPaths)
 if ($ruleChangePaths.Count -gt 0) {
-    $reviewCrp = if ($stagedManifest -and $stagedManifest.PSObject.Properties['CRP']) { [string]$stagedManifest.CRP } else { '' }
-    Assert-AdminModeForRuleChange -Paths $ruleChangePaths -CRP $reviewCrp -WorkspaceRoot $workspaceRoot
+    Assert-AdminModeForRuleChange -Paths $ruleChangePaths -CRP $CRP -WorkspaceRoot $workspaceRoot
 }
 
 $commitCreated = $false
@@ -386,97 +267,32 @@ if ($LASTEXITCODE -ne 0) {
     throw "The accepted review for '$repoName' has no live working-tree changes to commit."
 }
 
-# Cleanup staging manifest and temp baseline tree
-if ($commitCreated -and (Test-Path -LiteralPath $stagedManifestFile)) { Remove-Item -LiteralPath $stagedManifestFile -Force -ErrorAction SilentlyContinue }
-if ($commitCreated -and $stagedManifest -and $stagedManifest.TempReviewRoot) {
-    $scratchBcReviewDir = Join-Path $workspaceRoot "LCM_Inventory\scratch\BC_Review"
-
-    # Resolve the CRP identifier from the BCR session metadata before purging the baseline dir.
-    # .lcm_review.json is written by BCR into the TempReviewRoot on every BCR invocation.
-    $crpReviewDirToPurge = $null
-    $lcmReviewMeta = Join-Path $stagedManifest.TempReviewRoot ".lcm_review.json"
-    if (Test-Path -LiteralPath $lcmReviewMeta) {
-        try {
-            $meta = Get-Content -LiteralPath $lcmReviewMeta -Raw -Encoding UTF8 | ConvertFrom-Json
-            if ($meta -and -not [string]::IsNullOrWhiteSpace($meta.CRP)) {
-                $crpReviewDirToPurge = Join-Path $scratchBcReviewDir $meta.CRP
-            }
-        } catch {}
-    }
-
-    # Remove root-level ACTIVE_BASELINE convenience junction if it still points to this baseline.
-    $activeBaselineJunction = Join-Path $scratchBcReviewDir "ACTIVE_BASELINE"
-    if (Test-Path -LiteralPath $activeBaselineJunction) {
-        try {
-            $jItem = Get-Item -LiteralPath $activeBaselineJunction -Force -ErrorAction SilentlyContinue
-            if ($jItem -and $jItem.Target -eq $stagedManifest.TempReviewRoot) {
-                [System.IO.Directory]::Delete($activeBaselineJunction, $false)
-            }
-        } catch {}
-    }
-
-    # Call Clear-BCReviewSession tool to clean dynamic BCSessions.xml entries (CRP-203)
-    $cleanerScript = Join-Path $PSScriptRoot "Clear-BCReviewSession.ps1"
-    if (Test-Path -LiteralPath $cleanerScript) {
-        try {
-            $targetCRP = if ($meta -and -not [string]::IsNullOrWhiteSpace($meta.CRP)) { $meta.CRP } else { $null }
-            if ($targetCRP) {
-                $cleanResult = & $cleanerScript -CRP $targetCRP -RepositoryName $repoName -WorkspaceRoot $workspaceRoot
-                if ($cleanResult -and $cleanResult.SessionsRemoved.Count -gt 0) {
-                    Write-Host ("  [CLEANED] Removed dynamic BC session(s): {0}" -f ($cleanResult.SessionsRemoved -join ', ')) -ForegroundColor DarkGray
-                }
-            }
-        } catch {
-            Write-Verbose "Could not clear dynamic BC review session via Clear-BCReviewSession: $($_.Exception.Message)"
-        }
-    }
-
-    # Purge the CRP review directory post-commit only when Beyond Compare is NOT running.
-    # If BCompare is actively open, defer purge to prevent 'Fast refresh / Path not found' errors.
-    $bcRunning = @(Get-CimInstance Win32_Process -Filter "Name = 'BCompare.exe'" -ErrorAction SilentlyContinue).Count -gt 0
-    if ($bcRunning) {
-        Write-Host "  [PRESERVED] Beyond Compare session is active; preserving review scratchpad to prevent fast-refresh error." -ForegroundColor DarkGray
-    } else {
-        if ($crpReviewDirToPurge -and (Test-Path -LiteralPath $crpReviewDirToPurge)) {
-            try {
-                # Delete all junction nodes within the CRP dir before recursive removal
-                $junctions = @(Get-ChildItem -LiteralPath $crpReviewDirToPurge -Directory -Force -Recurse -ErrorAction SilentlyContinue |
-                    Where-Object { $_.LinkType -eq 'Junction' })
-                foreach ($jn in $junctions) {
-                    try { [System.IO.Directory]::Delete($jn.FullName, $false) } catch {}
-                }
-                Remove-Item -LiteralPath $crpReviewDirToPurge -Recurse -Force -ErrorAction SilentlyContinue
-                Write-Host "  [PURGED] BC review scratch directory: $crpReviewDirToPurge" -ForegroundColor DarkGray
-            } catch {
-                Write-Verbose "Could not fully purge CRP review directory '$crpReviewDirToPurge': $($_.Exception.Message)"
-            }
-        } elseif (Test-Path -LiteralPath $stagedManifest.TempReviewRoot) {
-            # Fallback: CRP not resolvable — purge baseline dir only
-            Remove-Item -LiteralPath $stagedManifest.TempReviewRoot -Recurse -Force -ErrorAction SilentlyContinue
-        }
-    }
-}
-
 # ------------------------------------------------------------------------------
 # Auto-Synchronize Proposals Ledger (RULE-LCM-002: Dual-State Alignment)
 # ------------------------------------------------------------------------------
 try {
     if ($commitCreated -and -not $SkipLifecycleSynchronization) {
-        $propStore = Get-ProposalStore
-        $reviewedProposal = @($propStore.proposals | Where-Object { $_.id -eq $matchingProposals[0].id })[0]
-        $reviewedProposal | Add-Member -NotePropertyName 'bcr_disposition' -NotePropertyValue $Result -Force
-        $reviewedProposal | Add-Member -NotePropertyName 'bcr_disposition_at' -NotePropertyValue (Get-Date).ToString('yyyy-MM-dd HH:mm:ss') -Force
-        $reviewedProposal | Add-Member -NotePropertyName 'bcr_disposition_notes' -NotePropertyValue $Notes -Force
-        Set-ProposalStore -Store $propStore
-        $proposal = Move-LcmProposalLifecycleState -Id $matchingProposals[0].id -State 'completed' -Details "Review completed and committed ($newCommitSha)."
-        if ($MinimalTests) {
+        if ($crossRepositoryObligation) {
+            $completedObligation = Complete-LcmCrossRepositoryReviewObligation -Id $matchingProposals[0].id `
+                -Repository $repoName -ReviewReceiptPath $finalReviewFile -CommitSha $newCommitSha
+            Write-Host "Resolved cross-repository BCR obligation '$($completedObligation.id)'. Primary proposal remains in '$($matchingProposals[0].state)'." -ForegroundColor Green
+        } else {
             $propStore = Get-ProposalStore
-            $proposal = @($propStore.proposals | Where-Object { $_.id -eq $proposal.id })[0]
-            $proposal | Add-Member -NotePropertyName 'test_scope' -NotePropertyValue 'minimal' -Force
-            $proposal | Add-Member -NotePropertyName 'minimal_tests' -NotePropertyValue $true -Force
+            $reviewedProposal = @($propStore.proposals | Where-Object { $_.id -eq $matchingProposals[0].id })[0]
+            $reviewedProposal | Add-Member -NotePropertyName 'bcr_disposition' -NotePropertyValue $Result -Force
+            $reviewedProposal | Add-Member -NotePropertyName 'bcr_disposition_at' -NotePropertyValue (Get-Date).ToString('yyyy-MM-dd HH:mm:ss') -Force
+            $reviewedProposal | Add-Member -NotePropertyName 'bcr_disposition_notes' -NotePropertyValue $Notes -Force
             Set-ProposalStore -Store $propStore
+            $proposal = Move-LcmProposalLifecycleState -Id $matchingProposals[0].id -State 'completed' -Details "Review completed and committed ($newCommitSha)."
+            if ($MinimalTests) {
+                $propStore = Get-ProposalStore
+                $proposal = @($propStore.proposals | Where-Object { $_.id -eq $proposal.id })[0]
+                $proposal | Add-Member -NotePropertyName 'test_scope' -NotePropertyValue 'minimal' -Force
+                $proposal | Add-Member -NotePropertyName 'minimal_tests' -NotePropertyValue $true -Force
+                Set-ProposalStore -Store $propStore
+            }
+            Write-Host "Auto-synchronized proposals ledger to 'completed'." -ForegroundColor Green
         }
-        Write-Host "Auto-synchronized proposals ledger to 'completed'." -ForegroundColor Green
     }
 } catch {
     throw "Review result was committed, but the CRP lifecycle ledger could not be updated: $($_.Exception.Message)"

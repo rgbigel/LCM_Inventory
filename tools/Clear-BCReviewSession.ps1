@@ -18,13 +18,17 @@ param(
     [Parameter(Mandatory = $false, HelpMessage = 'Target repository name')]
     [string]$RepositoryName = '',
 
+    [Parameter(Mandatory = $false, HelpMessage = 'Exact isolated review identity (for example BUG-276_LCM_AI); defaults to CRP')]
+    [ValidatePattern('^[A-Za-z0-9_.-]+$')]
+    [string]$ReviewIdentity = '',
+
     [Parameter(Mandatory = $false, HelpMessage = 'Workspace root path')]
     [string]$WorkspaceRoot = 'D:\Git_Repositories',
 
     [Parameter(Mandatory = $false, HelpMessage = 'Preview cleanup operations without deleting')]
     [switch]$DryRun,
 
-    [Parameter(Mandatory = $false, HelpMessage = 'Force removal even if Beyond Compare process is currently running')]
+    [Parameter(Mandatory = $false, HelpMessage = 'Force cleanup only after Beyond Compare is closed')]
     [switch]$Force,
 
     [Alias('h', '?')]
@@ -48,7 +52,7 @@ if ($Help) {
     Write-Host "  -CRP            : Target CRP or BUG identifier (e.g. CRP-203, BUG-245)"
     Write-Host "  -RepositoryName : Target repository name"
     Write-Host "  -DryRun         : Preview cleanup operations without deleting"
-    Write-Host "  -Force          : Force removal even if Beyond Compare is running"
+    Write-Host "  -Force          : Request cleanup after Beyond Compare is closed"
     Write-Host "  -Help (-h, -?)  : Displays this help screen"
     Write-Host "==========================================================================" -ForegroundColor Cyan
     return
@@ -61,6 +65,8 @@ $cleanCRP = $CRP.Trim().ToUpperInvariant()
 if ($cleanCRP -notmatch '^(CRP|BUG)-\d+') {
     throw "Invalid proposal identifier '$CRP'. Expected format: CRP-### or BUG-###."
 }
+$cleanupIdentity = if ([string]::IsNullOrWhiteSpace($ReviewIdentity)) { $cleanCRP } else { $ReviewIdentity.Trim() }
+$sessionName = "${cleanupIdentity}_Review"
 
 if (-not (Test-Path -LiteralPath $WorkspaceRoot)) {
     $WorkspaceRoot = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
@@ -68,17 +74,23 @@ if (-not (Test-Path -LiteralPath $WorkspaceRoot)) {
 
 $sessionsRemoved = [System.Collections.Generic.List[string]]::new()
 $foldersPurged = [System.Collections.Generic.List[string]]::new()
+$bcRunning = @(Get-CimInstance Win32_Process -Filter "Name = 'BCompare.exe'" -ErrorAction SilentlyContinue).Count -gt 0
+
+if ($bcRunning) {
+    Write-Verbose "Beyond Compare is active. Preserving exact review identity '$cleanupIdentity' and its session bridge."
+}
 
 # ------------------------------------------------------------------------------
 # 2. Beyond Compare BCSessions.xml Cleanup
 # ------------------------------------------------------------------------------
 $bcSessionsPath = Join-Path $env:APPDATA 'Scooter Software\Beyond Compare 5\BCSessions.xml'
+if (-not $bcRunning) {
 if (Test-Path -LiteralPath $bcSessionsPath) {
     try {
         $xml = [xml](Get-Content -LiteralPath $bcSessionsPath -Raw -Encoding UTF8)
         $rootNode = $xml.SelectSingleNode('/BCSessions')
         if ($rootNode) {
-            $matchingNodes = @($rootNode.SelectNodes("TDirCompareSession[starts-with(@Value, '$cleanCRP') or starts-with(@Value, '$CRP')]"))
+            $matchingNodes = @($rootNode.SelectNodes("TDirCompareSession[@Value='$sessionName']"))
             foreach ($node in $matchingNodes) {
                 $sessionVal = $node.GetAttribute('Value')
                 $sessionsRemoved.Add($sessionVal)
@@ -97,6 +109,7 @@ if (Test-Path -LiteralPath $bcSessionsPath) {
         Write-Warning "Could not update BCSessions.xml: $($_.Exception.Message)"
     }
 }
+}
 
 # ------------------------------------------------------------------------------
 # 3. Scratchpad Review Cache Cleanup
@@ -104,11 +117,10 @@ if (Test-Path -LiteralPath $bcSessionsPath) {
 $scratchBcReviewDir = Join-Path $WorkspaceRoot 'LCM_Inventory\scratch\BC_Review'
 if (Test-Path -LiteralPath $scratchBcReviewDir) {
     $candidates = @(Get-ChildItem -LiteralPath $scratchBcReviewDir -Directory -ErrorAction SilentlyContinue |
-        Where-Object { $_.Name -eq $cleanCRP -or $_.Name -like "${cleanCRP}_*" })
+        Where-Object { $_.Name -eq $cleanupIdentity })
 
-    $bcRunning = @(Get-CimInstance Win32_Process -Filter "Name = 'BCompare.exe'" -ErrorAction SilentlyContinue).Count -gt 0
-    if ($bcRunning -and -not $Force) {
-        Write-Verbose "Beyond Compare is actively running. Preserving scratchpad folders to avoid fast-refresh errors."
+    if ($bcRunning) {
+        Write-Verbose "Beyond Compare is actively running. Preserving scratchpad folders and named session to avoid fast-refresh errors."
     } else {
         foreach ($candidate in $candidates) {
             $foldersPurged.Add($candidate.FullName)
@@ -132,6 +144,7 @@ if (Test-Path -LiteralPath $scratchBcReviewDir) {
 # ------------------------------------------------------------------------------
 $result = [PSCustomObject]@{
     CRP             = $cleanCRP
+    ReviewIdentity  = $cleanupIdentity
     RepositoryName  = $RepositoryName
     SessionsRemoved = @($sessionsRemoved)
     FoldersPurged   = @($foldersPurged)

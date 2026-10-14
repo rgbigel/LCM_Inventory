@@ -41,3 +41,29 @@ LCM_AI rule change outside the review evidence for the active repository.
 3. Require the changed repository to be surfaced in its own exact BCR at the
    next BCR opportunity, with the relationship recorded in the originating
    proposal or review receipt.
+
+## 4. Revision 2: Lifecycle-Owned Cross-Repository BCR Obligations
+
+1. BCR discovery shall persist each durable changed repository outside the
+   primary repository as an open entry in the dedicated
+   `review_obligation_ledger`, linked to the originating proposal.
+2. ShowCM shall render every unresolved ledger entry as a normal synthetic
+   cohort/Work Queue item named `COH-<proposal-id>` with the originating BUG
+   as its head. It shall appear immediately after that head in the active
+   sort order, participate in the standard cohort filter (including All
+   Cohorts), retain its BCR reason on the cohort row, and use the existing
+   normal cohort BCR action; it shall not add a special "Open exact BCR"
+   action.
+3. The primary proposal's `Review pending` state shall visibly name its
+   outstanding repository obligations and provide their discovery reason.
+4. Invoking the normal BCR action for an obligation shall recreate missing
+   on-disk lifecycle review session metadata before opening Beyond Compare. Its
+   isolated review identity shall be `<originating-identity>_<repository>`
+   (for example, `BUG-276_LCM_AI`), retaining the ledger association
+   `BUG-276::LCM_AI` without overwriting the primary session.
+5. Completing that exact repository BCR shall attach its receipt and commit
+   evidence to the obligation without completing the primary proposal.
+6. A primary proposal cannot transition to `completed` while an unresolved
+   cross-repository BCR obligation remains.
+7. Cleanup shall use the exact isolated identity as its boundary and shall not
+   remove a named BCompare session or scratch bridge while BCompare is active.

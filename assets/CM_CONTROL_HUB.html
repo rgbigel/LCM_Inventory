@@ -408,7 +408,7 @@
       cursor: pointer;
     }
     .wand-btn:hover { background: var(--blue-soft); border-color: var(--blue); }
-    .dropdown-caret { font-size: 12px; color: var(--muted); }
+    .dropdown-caret { font-size: 16px; line-height: 1; color: var(--muted); margin-left: 2px; }
 
     .show-dropdown-menu {
       display: none;
@@ -457,7 +457,10 @@
     .selected-item-lifecycle { min-height: 38px; padding: 7px 14px; border-bottom: 1px solid var(--line); background: var(--surface); display: flex; align-items: center; gap: 10px; }
     .selected-item-lifecycle-label { color: var(--muted); font: 10px var(--mono); font-weight: 700; text-transform: uppercase; white-space: nowrap; }
     .selected-item-lifecycle-empty { color: var(--muted); font-size: 12px; }
-    .action-result-zone { min-height: 30px; padding: 6px 12px; margin-bottom: 10px; border: 1px solid var(--line); border-radius: 5px; background: var(--surface-soft); color: var(--muted); font: 11px var(--mono); }
+    .action-result-zone { min-height: 30px; padding: 6px 8px 6px 12px; margin-bottom: 10px; border: 1px solid var(--line); border-radius: 5px; background: var(--surface-soft); color: var(--muted); font: 11px var(--mono); display: flex; align-items: flex-start; gap: 8px; }
+    .action-result-zone.is-dismissed { display: none; }
+    .action-result-text { flex: 1; }
+    .action-result-close { flex: 0 0 auto; border: 0; background: transparent; color: currentColor; cursor: pointer; font: 16px/1 var(--sans); padding: 0 3px; }
     .action-result-zone.success { border-color: var(--green); background: var(--green-soft); color: var(--green); }
     .action-result-zone.error { border-color: var(--red); background: var(--red-soft); color: var(--red); }
     .template-safety-notice { margin: 12px; padding: 12px; border: 2px solid var(--red); border-radius: 6px; background: var(--red-soft); color: var(--red); font: 600 13px var(--sans); }
@@ -1045,7 +1048,10 @@
         </div>
         <button class="reset-button" onclick="resetFilters()"><span class="btn-icon">↺</span> Reset Filters</button>
       </section>
-      <div class="action-result-zone" id="actionResultZone" role="status">Status / Action Result: Ready. Select an ITEM, then use ACTIONS.</div>
+      <div class="action-result-zone" id="actionResultZone" role="status">
+        <span class="action-result-text" id="actionResultText">Status / Action Result: Ready. Select an ITEM, then use ACTIONS.</span>
+        <button class="action-result-close" type="button" onclick="dismissActionResult()" aria-label="Hide action result" title="Hide message output">×</button>
+      </div>
 
       <!-- Status Rail (5 Focused Lifecycle States) -->
       <nav class="status-rail" aria-label="Visible proposal statuses">
@@ -1159,7 +1165,7 @@
                   </select>
                 </div>
               </th>
-              <th class="evidence-column">Execution Evidence</th>
+              <th class="evidence-column" title="Execution Evidence">Evidence</th>
               <th style="width: 75px; text-align: center;" title="Target Actions Menu">ACTIONS</th>
             </tr>
           </thead>
@@ -1693,13 +1699,58 @@
       );
     }
 
+    function getProposalWorkQueueCohorts(proposalId) {
+      const id = Number(proposalId);
+      return [
+        ...getProposalCohorts(id),
+        ...getObligationWorkQueueCohorts().filter(cohort => Number(cohort.prime_proposal_id) === id)
+      ];
+    }
+
+    function getProposalDisplayTitle(proposal) {
+      return String(proposal?.title || "").replace(/^\s*\[BUG\]\s*/i, "");
+    }
+
+    function getUnresolvedReviewObligations(proposal) {
+      return ((proposalsData.review_obligation_ledger || {}).entries || []).filter(obligation =>
+        Number(obligation.proposal_id) === Number(proposal?.id) &&
+        String(obligation.status || "open").toLowerCase() !== "completed"
+      );
+    }
+
+    function getObligationWorkQueueCohorts() {
+      return ((proposalsData.review_obligation_ledger || {}).entries || [])
+        .map(obligation => {
+          const proposal = (proposalsData.proposals || []).find(item => Number(item.id) === Number(obligation.proposal_id));
+          if (!proposal) return null;
+          const resolved = String(obligation.status || "open").toLowerCase() === "completed";
+          return {
+            id: `COH-${proposal.id}`,
+            state: resolved ? "approved" : "open",
+            synthetic: true,
+            resolved,
+            obligation_id: obligation.id,
+            proposal_ids: [Number(proposal.id)],
+            prime_proposal_id: Number(proposal.id),
+            head_identity: proposal.crp_id || proposal.cr_id || `CRP-${proposal.id}`,
+            repositories: [obligation.repository],
+            reason: obligation.reason || "Outstanding cross-repository BCR obligation."
+          };
+        })
+        .filter(Boolean);
+    }
+
+    function getWorkQueueCohorts() {
+      return [...(proposalsData.review_cohorts || []), ...getObligationWorkQueueCohorts()];
+    }
+
     function populateItemTargets() {
       const select = $("itemTargetSelect");
       if (!select) return;
       const selected = activeItemTarget || select.value;
       // ITEM targets intentionally use the complete ledger, never queue filters.
       const crps = [...(proposalsData.proposals || [])].sort((a, b) => Number(b.id) - Number(a.id));
-      const cohorts = [...(proposalsData.review_cohorts || [])].sort((a, b) => String(a.id).localeCompare(String(b.id)));
+      const cohorts = [...getWorkQueueCohorts()].sort((a, b) => String(a.id).localeCompare(String(b.id)));
       select.innerHTML = '<option value="">Select CRP or COH</option>' +
         '<optgroup label="CRP targets">' + crps.map(p => `<option value="CRP:${Number(p.id)}">${esc(p.crp_id || p.cr_id || `CRP-${p.id}`)} — ${esc(p.title || "")}</option>`).join("") + '</optgroup>' +
         '<optgroup label="COH targets">' + cohorts.map(c => {
@@ -1756,8 +1807,8 @@
         const item = (proposalsData.proposals || []).find(p => String(p.id) === rawId);
         return item ? { kind, item } : null;
       }
-      if (kind === "COH" && /^COH-\d+$/.test(rawId || "")) {
-        const item = (proposalsData.review_cohorts || []).find(c => String(c.id) === rawId);
+      if (kind === "COH" && /^(?:COH-\d+|(?:CRP|BUG)-\d+_[A-Za-z0-9_.-]+)$/.test(rawId || "")) {
+        const item = getWorkQueueCohorts().find(c => String(c.id) === rawId);
         return item ? { kind, item } : null;
       }
       return null;
@@ -1785,7 +1836,7 @@
     }
 
     function validateCurrentCohortTarget(cohortId) {
-      const isCurrent = (proposalsData.review_cohorts || []).some(cohort => String(cohort.id) === String(cohortId));
+      const isCurrent = getWorkQueueCohorts().some(cohort => String(cohort.id) === String(cohortId));
       if (!isCurrent) {
         setActionResult(`Cohort target ${cohortId} is not in the current ledger. Refresh the Hub and select a current COH; no daemon command was sent.`, "error");
       }
@@ -1803,8 +1854,13 @@
     function setActionResult(message, kind = "") {
       const zone = $("actionResultZone");
       if (!zone) return;
+      const text = $("actionResultText");
       zone.className = `action-result-zone ${kind}`.trim();
-      zone.innerText = `Status / Action Result: ${message}`;
+      text.innerText = `Status / Action Result: ${message}`;
+    }
+
+    function dismissActionResult() {
+      $("actionResultZone").classList.add("is-dismissed");
     }
 
     function confirmWorkspaceMaintenance() {
@@ -1837,7 +1893,12 @@
       const expression = target.kind === "COH" ? target.item.id : String(target.item.id);
       const targetLabel = getTargetActionLabel(target);
       if (["force", "immediately", "retire", "supersede", "reinstate"].includes(action)) { openTargetActionModal(action); return; }
-      const cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action ${action} -TargetExpression "${expression}"`;
+      const obligationSwitch = target.kind === "COH" && target.item.synthetic
+        ? ` -ReviewObligationId "${target.item.obligation_id}"`
+        : "";
+      const cmd = target.kind === "COH" && target.item.synthetic && action === "complete"
+        ? `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Submit-ReviewResult.ps1 -RepositoryPath "${target.item.repositories[0]}" -CRP "${target.item.head_identity}" -Result Complete -IncludeUnreviewed -Notes "Operator accepted ${target.item.id}"`
+        : `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action ${action} -TargetExpression "${expression}"${obligationSwitch}`;
       if (target.kind === "COH" && ["do", "proceed", "verify", "bcr", "complete"].includes(action)) {
         setActionResult(`Cohort gate synchronization is running for ${targetLabel}. The result will list synchronized, already-aligned (no-op), or stopped members; BCR cannot begin if any member stops.`, "");
       }
@@ -2027,6 +2088,12 @@
       dispatchTargetAction(action);
     }
 
+    function selectCohortAndOpenActions(event, cohortId) {
+      event.stopPropagation();
+      selectItemTarget(`COH:${cohortId}`);
+      toggleShowDropdown(event, `cohort-${cohortId}`);
+    }
+
     function manageCohortState(cohortId, action) {
       if (!validateCurrentCohortTarget(cohortId)) return;
       selectItemTarget(`COH:${cohortId}`);
@@ -2043,7 +2110,7 @@
       if (!select) return;
 
       const selected = select.value;
-      const cohorts = [...(proposalsData.review_cohorts || [])].sort((a, b) =>
+      const cohorts = getWorkQueueCohorts().sort((a, b) =>
         String(a.id || "").localeCompare(String(b.id || ""))
       );
       select.innerHTML = '<option value="">All Proposals</option>' +
@@ -2233,7 +2300,7 @@
       const idStr = String(p.id);
       const crpTag = (p.crp_id || p.cr_id || "").toLowerCase();
       const evidence = (p.evidence_summary || p.verification_status || p.bcr_status || "").toLowerCase();
-      const cohortIds = getProposalCohorts(p.id).map(cohort => String(cohort.id || "").toLowerCase()).filter(Boolean);
+      const cohortIds = getProposalWorkQueueCohorts(p.id).map(cohort => String(cohort.id || "").toLowerCase()).filter(Boolean);
       const cohortText = cohortIds.join(" ");
 
       // Rail filter check
@@ -2405,15 +2472,18 @@
       const filtered = getFilteredProposals();
       const sorted = sortProposals(filtered);
       const container = $("proposalRows");
-
-      $("matchCounter").innerText = `${sorted.length} result${sorted.length === 1 ? "" : "s"} / CRP ID order`;
+      const displayedObligations = getObligationWorkQueueCohorts().filter(cohort =>
+        sorted.some(proposal => Number(proposal.id) === Number(cohort.prime_proposal_id))
+      );
+      const workQueueCount = sorted.length + displayedObligations.length;
+      $("matchCounter").innerText = `${workQueueCount} result${workQueueCount === 1 ? "" : "s"} / CRP ID order`;
 
       if (sorted.length === 0) {
         container.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 24px; color: var(--muted);">No matching proposals found for current filters.</td></tr>`;
         return;
       }
 
-      container.innerHTML = sorted.map(p => {
+      const proposalRows = sorted.map(p => {
         const isChecked = selectedIds.has(p.id);
         const visStatus = getVisibleStatus(p);
         const crpTag = p.crp_id || p.cr_id || ("CR-" + p.id);
@@ -2421,22 +2491,24 @@
         const progressNote = p.progress_state || "undecided";
         const evidence = p.evidence_summary || p.verification_status || (p.bcr_status ? "BCR: " + p.bcr_status : "Baseline recorded");
         const planStateDetail = getDetailedPlanState(p);
+        const statusNote = getUnresolvedReviewObligations(p).length ? "" : (p.status_note || "");
 
         return `
           <tr id="row-${p.id}" onclick="selectItemTarget('CRP:${p.id}')" style="cursor: pointer;">
             <td>
               <span class="proposal-id">${crpTag}</span>
-              <span class="proposal-title">${esc(p.title)}</span>
+              <span class="proposal-title">${esc(getProposalDisplayTitle(p))}</span>
               <span class="repo-sub">${esc(p.origin_repo || "LCM_Inventory")}</span>
             </td>
             <td class="cohort-cell">
-              ${getProposalCohorts(p.id).length
-                ? getProposalCohorts(p.id).map(cohort => {
-                    const memberIds = (cohort.proposal_ids || []).map(Number);
-                    const headId = Number(cohort.prime_proposal_id || memberIds[0] || 0);
-                    const role = Number(p.id) === headId ? "HEAD" : "MEMBER";
-                    return `<span class="cohort-badge" title="${esc(cohort.id || "COH")} head / prime: #${headId}; ${memberIds.length} member${memberIds.length === 1 ? "" : "s"} including head">${esc(cohort.id || "COH")} · ${role}</span>`;
-                  }).join("")
+              ${getProposalWorkQueueCohorts(p.id).length
+                ? getProposalWorkQueueCohorts(p.id).map(cohort => {
+                  const memberIds = (cohort.proposal_ids || []).map(Number);
+                  const headId = Number(cohort.prime_proposal_id || memberIds[0] || 0);
+                  const role = Number(p.id) === headId ? "HEAD" : "MEMBER";
+                  const tooltip = `${cohort.id || "COH"} head / prime: #${headId}; ${memberIds.length} member${memberIds.length === 1 ? "" : "s"} including head`;
+                  return `<span class="cohort-badge" title="${esc(tooltip)}">${esc(cohort.id || "COH")} · ${role}</span>`;
+                }).join("")
                 : '<span class="cohort-empty" title="No declared cohort membership">—</span>'}
             </td>
             <td>
@@ -2447,7 +2519,7 @@
             </td>
             <td>
               <span style="font-size: 11.5px; color: var(--ink);">${esc(progressNote)}</span>
-              <span class="repo-sub">${esc(p.status_note || "")}</span>
+              <span class="repo-sub">${esc(statusNote)}</span>
             </td>
             <td style="text-align: center;">
               <span class="prio-badge" id="prio-badge-${p.id}" onclick="openPrioEditor(event, ${p.id}, ${prio})" title="Click to change priority">${prio}</span>
@@ -2465,8 +2537,8 @@
                 <div class="show-dropdown-title">Lifecycle</div>
                 <button class="show-dropdown-item" onclick="dispatchTargetAction('proceed')"><span class="btn-icon">⚡</span> Proceed ITEM</button>
                 <button class="show-dropdown-item" onclick="dispatchTargetAction('do')"><span class="btn-icon">▶️</span> Do ITEM (-DOIT)</button>
-                <button class="show-dropdown-item" onclick="dispatchTargetAction('bcr')"><span class="btn-icon">🔍</span> Open Review for ITEM (BC5)</button>
-                <button class="show-dropdown-item" onclick="dispatchStandardAction('reviewed', [getActiveItemTarget()?.item?.id], '')"><span class="btn-icon">✅</span> Accept Review (CRP ITEM only)</button>
+                <button class="show-dropdown-item" onclick="dispatchTargetAction('bcr')"><span class="btn-icon">🔍</span> Open Review</button>
+                <button class="show-dropdown-item" onclick="dispatchStandardAction('reviewed', [getActiveItemTarget()?.item?.id], '')"><span class="btn-icon">✅</span> ACCEPTED: Item</button>
                 ${getLifecycleState(p) === "held"
                   ? `<button class="show-dropdown-item" onclick="dispatchTargetAction('reopen')"><span class="btn-icon">↩️</span> ReOpen ITEM</button>`
                   : ""}
@@ -2477,6 +2549,7 @@
                 <button class="show-dropdown-item" onclick="manageCrpCohort('add', ${p.id})"><span class="btn-icon">↪</span> Add as Cohort Member</button>
                 <button class="show-dropdown-item" onclick="manageCrpCohort('remove', ${p.id})"><span class="btn-icon">⊖</span> Remove Cohort Member</button>
                 ${getProposalCohorts(p.id).map(cohort => `<button class="show-dropdown-item" onclick="dispatchCohortAction('${esc(cohort.id)}', 'bcr')"><span class="btn-icon">🔍</span> BCR ${esc(cohort.id)}</button><button class="show-dropdown-item" onclick="dispatchCohortAction('${esc(cohort.id)}', 'hold')"><span class="btn-icon">⏸️</span> Hold ${esc(cohort.id)}</button><button class="show-dropdown-item" onclick="dispatchCohortAction('${esc(cohort.id)}', 'reopen')"><span class="btn-icon">↩️</span> Reopen ${esc(cohort.id)}</button><button class="show-dropdown-item" onclick="manageCohortState('${esc(cohort.id)}', 'close')"><span class="btn-icon">✕</span> Close ${esc(cohort.id)}</button>`).join("")}
+                ${getObligationWorkQueueCohorts().filter(cohort => Number(cohort.prime_proposal_id) === Number(p.id) && !cohort.resolved).map(cohort => `<button class="show-dropdown-item" onclick="dispatchCohortAction('${esc(cohort.id)}', 'bcr')"><span class="btn-icon">🔍</span> Open BCR ${esc(cohort.id)}</button>`).join("")}
                 <div style="border-top: 1px solid var(--line); margin: 4px 0;"></div>
                 <div class="show-dropdown-title">Documents (#${p.id})</div>
                 <button class="show-dropdown-item" onclick="openOriginalProposalInEditor(${p.id})"><span class="btn-icon">📝</span> Edit Original CRP</button>
@@ -2506,8 +2579,31 @@
               </div>
             </td>
           </tr>
-        `;
+        ` + getObligationWorkQueueCohorts()
+          .filter(cohort => Number(cohort.prime_proposal_id) === Number(p.id))
+          .map(cohort => `<tr class="obligation-work-queue-row" onclick="selectItemTarget('COH:${esc(cohort.id)}')" style="cursor: pointer;">
+            <td><span class="proposal-id">${esc(cohort.id)}</span> <span class="proposal-title">${esc(cohort.repositories[0])}</span></td>
+            <td class="cohort-cell"><span class="cohort-badge" title="Cross-repository BCR review required">${esc(cohort.id)} · MEMBER</span></td>
+            <td><span class="state-badge state-${cohort.resolved ? "active" : "in_review"}">${cohort.resolved ? "APPROVED" : "IN REVIEW"}</span></td>
+            <td><span style="font-weight: 600; font-size: 11.5px; color: var(--ink);">${cohort.resolved ? "Approved" : `Review pending — ${esc(cohort.repositories[0])} BCR`}</span></td>
+            <td><span class="repo-sub">${cohort.resolved ? "In progress" : "Cross-repository BCR review required."}</span></td>
+            <td style="text-align: center;"><span class="prio-badge" title="Inherited from ${esc(cohort.head_identity)}">${normalizePriority(p.priority)}</span></td>
+            <td class="evidence-cell" title="Cross-repository review ledger"><span class="repo-sub">Ledger obligation ${esc(cohort.obligation_id)}</span></td>
+            <td class="action-cell">
+              <button class="mini-action wand-btn" onclick="selectCohortAndOpenActions(event, '${esc(cohort.id)}')" title="Select this cohort and open ACTIONS"><span aria-hidden="true">🧙</span><span class="dropdown-caret">▾</span></button>
+              <div class="show-dropdown-menu" id="dropdown-cohort-${esc(cohort.id)}">
+                <div class="show-dropdown-title">ACTIONS: ${esc(cohort.id)}</div>
+                <div class="show-dropdown-title">Lifecycle</div>
+                <button class="show-dropdown-item" onclick="dispatchCohortAction('${esc(cohort.id)}', 'proceed')"><span class="btn-icon">⚡</span> Proceed ITEM</button>
+                <button class="show-dropdown-item" onclick="dispatchCohortAction('${esc(cohort.id)}', 'do')"><span class="btn-icon">▶️</span> Do ITEM (-DOIT)</button>
+                <button class="show-dropdown-item" onclick="dispatchCohortAction('${esc(cohort.id)}', 'bcr')"><span class="btn-icon">🔍</span> Open Review</button>
+                <button class="show-dropdown-item" onclick="dispatchCohortAction('${esc(cohort.id)}', 'complete')"><span class="btn-icon">✅</span> ACCEPTED: COH</button>
+                <button class="show-dropdown-item" onclick="dispatchCohortAction('${esc(cohort.id)}', 'hold')"><span class="btn-icon">⏸️</span> Hold ITEM</button>
+              </div>
+            </td>
+          </tr>`).join("");
       }).join("");
+      container.innerHTML = proposalRows;
 
       // Synchronize selectAllCheckbox state
       const selectAll = $("selectAllCheckbox");
@@ -3596,6 +3692,17 @@ REST DAEMON BRIDGE:
       const el = $(id);
       if (el) el.classList.remove("open");
     }
+
+    function showToast(message, kind = "") {
+      setActionResult(message, kind);
+    }
+
+    document.addEventListener("keydown", event => {
+      if (event.key !== "Escape") return;
+      document.querySelectorAll(".modal.open").forEach(modal => modal.classList.remove("open"));
+    });
+
+    window.addEventListener("load", renderTable);
   </script>
 </body>
 </html>

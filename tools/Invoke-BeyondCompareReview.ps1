@@ -16,6 +16,10 @@ param(
   [ValidatePattern('^(CRP|BUG)-\d+$')]
   [string]$CRP = '',
 
+  [Parameter(Mandatory = $false, HelpMessage = 'Isolated on-disk review identity; defaults to the exact CRP or BUG identity')]
+  [ValidatePattern('^[A-Za-z0-9_.-]+$')]
+  [string]$ReviewIdentity = '',
+
   [Parameter(Mandatory = $false, HelpMessage = 'Wait synchronously for the Beyond Compare review session to close before evaluating staging')]
   [switch]$Wait,
 
@@ -67,6 +71,8 @@ $bcompareWindowToolsPath = Join-Path (Split-Path $PSScriptRoot -Parent) 'modules
 Import-Module -Name $bcompareWindowToolsPath -Force
 $bcompareBaselinePath = Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\BCompareBaseline.psm1'
 Import-Module -Name $bcompareBaselinePath -Force
+$proposalManagerPath = Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\ProposalManager.psm1'
+Import-Module -Name $proposalManagerPath -Force
 
 $scriptVersion = "10.0.0"
 $scriptName = "Invoke-BeyondCompareReview"
@@ -87,7 +93,7 @@ if ($Help) {
   Write-Host "  BCR -CRP <CRP-ID> [-RepositoryName <repo>] [-BaseCommit <commit>]"
   Write-Host ""
   Write-Host "REVIEW PROTOCOL:" -ForegroundColor Yellow
-  Write-Host "  1. Left pane is the read-only baseline; never copy files into it."
+  Write-Host "  1. Left pane is operator-owned reference content. LCM does not write to it or use it as lifecycle evidence."
   Write-Host "  2. Review or edit the live right pane. Right-pane edits are accepted changes."
   Write-Host "  3. Close the review and issue COMPLETE to record acceptance and commit the reviewed live worktree."
   Write-Host "==========================================================================" -ForegroundColor Cyan
@@ -120,6 +126,7 @@ function Get-ActiveCRP {
             ($_.PSObject.Properties['origin_repo'] -and ($_.origin_repo -in @('Git_Repositories', 'Root', 'LCM', 'LCM / Git_Repositories') -or $_.origin_repo -like '*Git_Repositories*')) -or
             ($_.PSObject.Properties['repo'] -and ($_.repo -in @('Git_Repositories', 'Root', 'LCM') -or $_.repo -like '*Git_Repositories*'))
           }
+
           else {
             ($_.PSObject.Properties['origin_repo'] -and $_.origin_repo -eq $TargetRepoName) -or
             ($_.PSObject.Properties['repo'] -and $_.repo -eq $TargetRepoName) -or
@@ -192,6 +199,60 @@ function Get-ActiveCRP {
   return ''
 }
 
+function Register-DiscoveredCrossRepositoryReviewObligations {
+  [CmdletBinding()]
+  param(
+    [Parameter(Mandatory = $true)]
+    [string]$WorkspaceRoot,
+
+    [Parameter(Mandatory = $true)]
+    [string]$RepositoryName,
+
+    [Parameter(Mandatory = $true)]
+    [string]$CRP,
+
+    [psobject]$BaselineDescriptor
+  )
+
+  $store = Get-ProposalStore
+  $proposal = @($store.proposals | Where-Object {
+    $proposalCrpId = if ($_.PSObject.Properties['crp_id']) { [string]$_.crp_id } else { '' }
+    $proposalCrId = if ($_.PSObject.Properties['cr_id']) { [string]$_.cr_id } else { '' }
+    $proposalCrpId -eq $CRP -or $proposalCrId -eq $CRP -or "CRP-$($_.id)" -eq $CRP
+  }) | Select-Object -First 1
+  if ($null -eq $proposal) { return @() }
+
+  $candidates = @()
+  if ($proposal.PSObject.Properties['impacted_repos'] -and $proposal.impacted_repos) {
+    $candidates += @($proposal.impacted_repos)
+  }
+  if ($proposal.PSObject.Properties['affected_repos'] -and $proposal.affected_repos) {
+    $candidates += @($proposal.affected_repos)
+  }
+  if ($BaselineDescriptor -and -not [string]::IsNullOrWhiteSpace($BaselineDescriptor.RulesBaselineRepositoryPath)) {
+    $authorityPath = [System.IO.Path]::GetFullPath($BaselineDescriptor.RulesBaselineRepositoryPath).TrimEnd('\')
+    if ((Split-Path -Parent $authorityPath).Equals([System.IO.Path]::GetFullPath($WorkspaceRoot).TrimEnd('\'), [System.StringComparison]::OrdinalIgnoreCase)) {
+      $candidates += (Split-Path -Leaf $authorityPath)
+    }
+  }
+
+  $registered = @()
+  foreach ($candidate in @($candidates | Select-Object -Unique | Where-Object { $_ -and $_ -ne $RepositoryName })) {
+    $candidatePath = Join-Path $WorkspaceRoot $candidate
+    if (-not (Test-Path -LiteralPath (Join-Path $candidatePath '.git'))) { continue }
+    $changedPaths = @(git -C $candidatePath status --porcelain 2>$null | ForEach-Object {
+      if ($_.Length -gt 3) { $_.Substring(3).Trim() }
+    } | Where-Object {
+      $_ -and $_ -notmatch '^(scratch|logs|work|data)(\\|/|$)' -and $_ -notmatch '(^|[\\/])(__pycache__|\.venv|venv)([\\/]|$)'
+    })
+    if ($changedPaths.Count -gt 0) {
+      $registered += Register-LcmCrossRepositoryReviewObligation -Id $proposal.id -Repository $candidate `
+        -Reason "Durable changes discovered during $CRP BCR preparation: $($changedPaths -join ', ')."
+    }
+  }
+  return @($registered | Where-Object { $null -ne $_ })
+}
+
 function Update-BCReviewSession {
   [CmdletBinding()]
   param(
@@ -249,6 +310,11 @@ function Update-BCReviewSession {
       $null = $specs.AppendChild($right)
     }
     $right.SetAttribute('Value', $RightPath)
+
+    # The LHS is operator-owned. Remove inherited pane locks so Beyond Compare
+    # permits the operator's manual baseline maintenance.
+    @($sessionNode.SelectNodes('.//*[contains(translate(name(), "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz"), "readonly")]')) |
+      ForEach-Object { $null = $_.ParentNode.RemoveChild($_) }
 
     # Filters
     if ($FilterMask) {
@@ -344,208 +410,22 @@ function Test-StandardBcrExcludedPath {
   return $normalizedPath -match '^(?i)(?:\.git|\.venv|venv|\.env|__pycache__|scratch|logs|work|data|node_modules|bin|obj)(?:\\|$)|(?:^|\\)\.lcm\\(?:logs|scratch|archive|tools\\links)(?:\\|$)|(?i)\.(?:pyc|pyo|inventory|log|tmp|bak|swp|lock)$'
 }
 
-function Audit-BeyondCompareReviewStaging {
+function Get-BeyondCompareReviewAcceptanceContext {
   [CmdletBinding()]
   param(
     [Parameter(Mandatory = $true)]
-    [string]$TempReviewRoot,
-
-    [Parameter(Mandatory = $true)]
-    [string]$RepoPath,
-
-    [Parameter(Mandatory = $true)]
     [string]$RepoName,
-
-    [Parameter(Mandatory = $true)]
-    [string]$CommitSha,
 
     [Parameter(Mandatory = $true)]
     [ValidatePattern('^(CRP|BUG)-\d+$')]
     [string]$CRP
   )
 
-  $reviewsDir = "D:\Git_Repositories\LCM_Inventory\data\reviews"
-  if (-not (Test-Path $reviewsDir)) { New-Item -ItemType Directory -Path $reviewsDir -Force | Out-Null }
-
-  $baselineManifestPath = Join-Path $TempReviewRoot ".lcm_baseline_manifest.json"
-  $baselineManifest = @{}
-  if (Test-Path -LiteralPath $baselineManifestPath) {
-    try {
-      $json = Get-Content -LiteralPath $baselineManifestPath -Raw -Encoding UTF8 | ConvertFrom-Json
-      if ($json) {
-        foreach ($prop in $json.PSObject.Properties) {
-          $baselineManifest[$prop.Name] = [string]$prop.Value
-        }
-      }
-    }
-    catch {}
-  }
-
-  # Scan Left files
-  $leftFiles = @(Get-ChildItem -LiteralPath $TempReviewRoot -Recurse -File | Where-Object {
-      $_.Name -ne '.lcm_review.json' -and $_.Name -ne '.lcm_baseline_manifest.json' -and $_.Name -ne 'archive.tar'
-    })
-
-  $completedFiles = [System.Collections.Generic.List[PSCustomObject]]::new()
-  $renameFiles = [System.Collections.Generic.List[PSCustomObject]]::new()
-  $deleteFiles = [System.Collections.Generic.List[PSCustomObject]]::new()
-  $rejectedEmpty = [System.Collections.Generic.List[PSCustomObject]]::new()
-
-  foreach ($lf in $leftFiles) {
-    $rel = $lf.FullName.Substring($TempReviewRoot.Length).TrimStart('\')
-
-    $rfPath = Join-Path $RepoPath $rel
-    $leftContent = [System.IO.File]::ReadAllText($lf.FullName, [System.Text.Encoding]::UTF8)
-
-    if ([string]::IsNullOrWhiteSpace($leftContent)) {
-      $rejectedEmpty.Add([PSCustomObject]@{ RelativePath = $rel; FullPath = $lf.FullName; Reason = "Empty content" })
-      continue
-    }
-
-    $lines = @($leftContent.Trim().Split("`n") | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne "" })
-        
-    # Check Delete
-    if ($lines.Count -eq 1 -and ($lines[0] -match '^(?i)(?:#|//|;|--)?\s*delete\s*$')) {
-      $deleteFiles.Add([PSCustomObject]@{
-          RelativePath = $rel
-          LivePath     = $rfPath
-          Directive    = "DELETE"
-        })
-      continue
-    }
-
-    # Check Rename
-    if ($lines.Count -eq 1 -and ($lines[0] -match '^(?i)(?:#|//|;|--)?\s*rename\s+(?:to\s+)?([^\s\r\n]+)\s*$')) {
-      $rawTarget = $Matches[1]
-      $sourceExt = [System.IO.Path]::GetExtension($rel)
-      $targetExt = [System.IO.Path]::GetExtension($rawTarget)
-      $targetName = if ([string]::IsNullOrWhiteSpace($targetExt) -and -not [string]::IsNullOrWhiteSpace($sourceExt)) {
-        $rawTarget + $sourceExt
-      }
-      else {
-        $rawTarget
-      }
-      $targetRel = if ($rel -match '^(.*\\)[^\\]+$') { $Matches[1] + $targetName } else { $targetName }
-      $targetLivePath = Join-Path $RepoPath $targetRel
-
-      $renameFiles.Add([PSCustomObject]@{
-          OldRelativePath = $rel
-          OldLivePath     = $rfPath
-          NewRelativePath = $targetRel
-          NewLivePath     = $targetLivePath
-          Directive       = "RENAME"
-        })
-      continue
-    }
-
-    $leftHash = Get-FileSha256 -FilePath $lf.FullName
-    $rightHash = if (Test-Path -LiteralPath $rfPath) { Get-FileSha256 -FilePath $rfPath } else { $null }
-    $baselineHash = if ($baselineManifest.ContainsKey($rel)) { $baselineManifest[$rel] } else { $null }
-
-    if ($leftHash -and $rightHash -and $leftHash -eq $rightHash) {
-      if ($leftHash -ne $baselineHash) {
-        $completedFiles.Add([PSCustomObject]@{
-            RelativePath = $rel
-            LivePath     = $rfPath
-            Hash         = $leftHash
-          Status       = "COMPLETED"
-          })
-      }
-    }
-  }
-
-  $uncopiedFiles = [System.Collections.Generic.List[PSCustomObject]]::new()
-  $excludedFiles = [System.Collections.Generic.List[PSCustomObject]]::new()
-  $gitStatus = @(git -C $RepoPath status --porcelain 2>$null)
-  foreach ($statusLine in $gitStatus) {
-    if ($statusLine.Length -ge 4) {
-      $statusCode = $statusLine.Substring(0, 2).Trim()
-      $filePath = $statusLine.Substring(3).Trim().Trim('"')
-      $normPath = $filePath.Replace('/', '\')
-
-      $alreadyStaged = ($completedFiles | Where-Object { $_.RelativePath -eq $normPath }) -or
-                       ($deleteFiles | Where-Object { $_.RelativePath -eq $normPath }) -or
-                       ($renameFiles | Where-Object { $_.OldRelativePath -eq $normPath })
-      if (Test-StandardBcrExcludedPath -RelativePath $normPath) {
-        $excludedFiles.Add([PSCustomObject]@{
-          RelativePath = $normPath
-          LivePath     = Join-Path $RepoPath $normPath
-          Status       = $statusCode
-          Reason       = 'Standard BCR exclusion'
-        })
-      }
-      elseif (-not $alreadyStaged) {
-        $uncopiedFiles.Add([PSCustomObject]@{
-          RelativePath = $normPath
-          LivePath     = Join-Path $RepoPath $normPath
-          Status       = $statusCode
-        })
-      }
-    }
-  }
-
-  $stagingManifest = [ordered]@{
-    ReviewIdentity = $CRP
-    ReviewType     = 'Lifecycle'
+  return [PSCustomObject]@{
     RepositoryName = $RepoName
-    RepositoryPath = $RepoPath
-    BaselineCommit = $CommitSha
-    TempReviewRoot = $TempReviewRoot
-    Timestamp      = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
-    Completed      = $completedFiles
-    Renames        = $renameFiles
-    Deletions      = $deleteFiles
-    Uncopied       = $uncopiedFiles
-    Excluded       = $excludedFiles
-    RejectedEmpty  = $rejectedEmpty
+    CRP = $CRP
+    LhsInspected = $false
   }
-
-  $stagingManifest['CRP'] = $CRP
-  $manifestFile = Join-Path $reviewsDir "staged_review_${RepoName}.json"
-  $stagingManifest | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath $manifestFile -Encoding UTF8
-
-  Write-Host ""
-  Write-Host "==========================================================================" -ForegroundColor Cyan
-  Write-Host " BEYOND COMPARE INTERACTIVE REVIEW STAGING EVALUATION" -ForegroundColor Cyan
-  Write-Host "==========================================================================" -ForegroundColor Cyan
-  Write-Host " Review Identity : $CRP (Lifecycle)"
-  Write-Host " Repository      : $RepoName"
-  Write-Host " Baseline Commit : $CommitSha"
-  Write-Host " Staging Record  : $manifestFile" -ForegroundColor DarkCyan
-  Write-Host "--------------------------------------------------------------------------"
-
-  if ($completedFiles.Count -gt 0) {
-    Write-Host " [STAGED FOR COMPLETION] ($($completedFiles.Count) files):" -ForegroundColor Green
-    foreach ($cf in $completedFiles) { Write-Host "   + $($cf.RelativePath)" -ForegroundColor Green }
-  }
-
-  if ($renameFiles.Count -gt 0) {
-    Write-Host " [RENAMES REQUESTED] ($($renameFiles.Count) files):" -ForegroundColor Yellow
-    foreach ($rf in $renameFiles) { Write-Host "   -> $($rf.OldRelativePath) => $($rf.NewRelativePath)" -ForegroundColor Yellow }
-  }
-
-  if ($deleteFiles.Count -gt 0) {
-    Write-Host " [MARKED FOR DELETION] ($($deleteFiles.Count) files):" -ForegroundColor Red
-    foreach ($df in $deleteFiles) { Write-Host "   x $($df.RelativePath)" -ForegroundColor Red }
-  }
-
-  if ($rejectedEmpty.Count -gt 0) {
-    Write-Host " [REJECTED - EMPTY] ($($rejectedEmpty.Count) files):" -ForegroundColor Magenta
-    foreach ($re in $rejectedEmpty) { Write-Host "   ! $($re.RelativePath) (0 bytes)" -ForegroundColor Magenta }
-  }
-
-  if ($excludedFiles.Count -gt 0) {
-    Write-Host " [EXCLUDED - NON-COMMITTABLE] ($($excludedFiles.Count) files):" -ForegroundColor DarkGray
-    foreach ($excluded in $excludedFiles) { Write-Host "   - $($excluded.RelativePath) ($($excluded.Reason))" -ForegroundColor DarkGray }
-  }
-
-  Write-Host "==========================================================================" -ForegroundColor Cyan
-  Write-Host " Awaiting Operator Command:" -ForegroundColor Yellow
-  Write-Host "   - 'COMPLETE'      -> Records acceptance and commits the reviewed live worktree."
-  Write-Host "   - 'REJECT'        -> Records rejection; zero changes committed."
-  Write-Host "==========================================================================" -ForegroundColor Cyan
-
-  return $stagingManifest
 }
 
 if ($MyInvocation.InvocationName -eq '.') {
@@ -655,7 +535,7 @@ if (-not (Test-Path -LiteralPath $scratchReviewDir)) {
   $null = New-Item -ItemType Directory -Path $scratchReviewDir -Force
 }
 
-$reviewIdentity = $CRP
+$reviewIdentity = if ([string]::IsNullOrWhiteSpace($ReviewIdentity)) { $CRP } else { $ReviewIdentity }
 $reviewStagingDir = Join-Path $scratchReviewDir $reviewIdentity
 if (-not (Test-Path -LiteralPath $reviewStagingDir)) {
   $null = New-Item -ItemType Directory -Path $reviewStagingDir -Force
@@ -818,7 +698,7 @@ if (Test-Path -LiteralPath $junctionLiveRoot) {
 New-Item -ItemType Junction -Path $junctionBaseline -Target $tempReviewRoot | Out-Null
 New-Item -ItemType Junction -Path $junctionLiveRoot -Target $repoPath | Out-Null
 
-$sessionName = "${CRP}_Review"
+$sessionName = "${reviewIdentity}_Review"
 
 # Update BCSessions.xml for both the dedicated CRP session and legacy LCM_Review.
 # The right-pane bridge retains the CRP-specific display name while targeting the live repository.
@@ -850,6 +730,13 @@ $sessionMeta = [ordered]@{
 $sessionMeta['CRP'] = $CRP
 $sessionMeta | ConvertTo-Json -Depth 3 | Set-Content -LiteralPath (Join-Path $tempReviewRoot ".lcm_review.json") -Encoding utf8
 $sessionMeta | ConvertTo-Json -Depth 3 | Set-Content -LiteralPath (Join-Path $reviewStagingDir ".lcm_review.json") -Encoding utf8
+$sessionFiles = @(
+  (Join-Path $tempReviewRoot ".lcm_review.json"),
+  (Join-Path $reviewStagingDir ".lcm_review.json")
+)
+if (@($sessionFiles | Where-Object { -not (Test-Path -LiteralPath $_) }).Count -gt 0) {
+  throw "Lifecycle BCR session metadata was not materialized on disk for '$reviewIdentity'."
+}
 
 # Freeze baseline metadata timestamps to commit date so NTFS does not stamp baseline root with 'now'
 $metaCommitTime = if ($commitSha -ne 'unborn') {
@@ -884,10 +771,17 @@ else {
   "Live $repoName"
 }
 
-$null = Audit-BeyondCompareReviewStaging -TempReviewRoot $tempReviewRoot -RepoPath $repoPath -RepoName $repoName -CommitSha $commitSha -CRP $CRP
+$null = Get-BeyondCompareReviewAcceptanceContext -RepoName $repoName -CRP $CRP
+
+if (-not [string]::IsNullOrWhiteSpace($CRP)) {
+  $newObligations = @(Register-DiscoveredCrossRepositoryReviewObligations -WorkspaceRoot $workspaceRoot -RepositoryName $repoName -CRP $CRP -BaselineDescriptor $baselineDescriptor)
+  foreach ($obligation in $newObligations) {
+    Write-Host "Lifecycle BCR obligation active for $($obligation.repository): $($obligation.id)" -ForegroundColor Yellow
+  }
+}
 
 if ($NoLaunch) {
-  Write-Host "Prepared $reviewType review staging without launching Beyond Compare." -ForegroundColor DarkGray
+  Write-Host "Prepared lifecycle review staging without launching Beyond Compare." -ForegroundColor DarkGray
   return
 }
 else {
@@ -1011,7 +905,7 @@ if (-not [string]::IsNullOrWhiteSpace($CRP)) {
               })
               if ($runningOther.Count -eq 0) {
                 Write-Host "Opening additional tab for affected repository with physical changes: $otherRepo" -ForegroundColor Cyan
-                $otherScratchDir = Join-Path $scratchReviewDir "${CRP}_${otherRepo}"
+                $otherScratchDir = Join-Path $scratchReviewDir "${reviewIdentity}_${otherRepo}"
                 if (-not (Test-Path -LiteralPath $otherScratchDir)) {
                   New-Item -ItemType Directory -Path $otherScratchDir -Force | Out-Null
                 }
@@ -1058,5 +952,5 @@ if (-not [string]::IsNullOrWhiteSpace($CRP)) {
 
 if ($Wait) {
   Write-Host "Waiting for Beyond Compare review session to close..." -ForegroundColor DarkGray
-  Audit-BeyondCompareReviewStaging -TempReviewRoot $tempReviewRoot -RepoPath $repoPath -RepoName $repoName -CommitSha $commitSha -CRP $CRP
+  Get-BeyondCompareReviewAcceptanceContext -RepoName $repoName -CRP $CRP
 }

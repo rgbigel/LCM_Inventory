@@ -66,6 +66,36 @@ Describe 'Control Hub rendered-artifact safety' {
     $renderer | Should -Match 'LCM_Inventory\\data\\reviews'
   }
 
+  It 'renders unresolved cross-repository BCR obligations as normal filtered cohorts beside their head' {
+    $template = Get-Content -LiteralPath $script:templatePath -Raw -Encoding UTF8
+
+    $template | Should -Match 'function getUnresolvedReviewObligations'
+    $template | Should -Match 'function getObligationWorkQueueCohorts'
+    $template | Should -Match 'id: `COH-\$\{proposal\.id\}`'
+    $template | Should -Match 'head_identity: proposal\.crp_id'
+    $template | Should -Match 'function getProposalDisplayTitle'
+    $template | Should -Match 'replace\(/\^\\s\*\\\[BUG\\\]\\s\*/i, ""\)'
+    $template | Should -Match 'getProposalWorkQueueCohorts\(p\.id\)'
+    $template | Should -Match 'getWorkQueueCohorts\(\)\.sort'
+    $template | Should -Match 'ReviewObligationId'
+    $template | Should -Match 'function getProposalWorkQueueCohorts'
+    $template | Should -Match 'proposal-title">\$\{esc\(cohort\.repositories\[0\]\)\}'
+    $template | Should -Match 'container\.innerHTML = proposalRows;'
+    $template | Should -Match 'Review pending —'
+    $template | Should -Not -Match 'role = cohort\.synthetic \? "OBLIGATION"'
+    $template | Should -Not -Match 'function openExactRepositoryBcr'
+  }
+
+  It 'clears the BUG-276 obligation warning after the LCM_AI review resolves' {
+    $ledgerPath = Join-Path $script:repositoryRoot 'data\proposals\proposals.json'
+    $ledger = Get-Content -LiteralPath $ledgerPath -Raw -Encoding UTF8 | ConvertFrom-Json
+    $bug = @($ledger.proposals | Where-Object { $_.id -eq 276 })[0]
+
+    $bug.state | Should -Be 'in_review'
+    $bug.status_note | Should -BeNullOrEmpty
+    @($ledger.review_obligation_ledger.entries | Where-Object { $_.proposal_id -eq 276 -and $_.status -ne 'completed' }).Count | Should -Be 0
+  }
+
   It 'renders a token-free artifact and never serves the source template as the Hub' {
     & $script:rendererPath -NoLaunch
     $artifactPath = Join-Path $script:repositoryRoot 'data\artifacts\CM_CONTROL_HUB.html'

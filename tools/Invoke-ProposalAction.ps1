@@ -93,6 +93,9 @@ param(
     [Parameter(Mandatory = $false, HelpMessage = 'Include unreviewed live paths during cohort completion')]
     [switch]$IncludeUnreviewed,
 
+    [Parameter(Mandatory = $false, HelpMessage = 'Persisted cross-repository review-obligation ledger entry to satisfy through the normal BCR action')]
+    [string]$ReviewObligationId = '',
+
     [Alias('h', '?')]
     [switch]$Help
 )
@@ -402,6 +405,24 @@ switch -Regex ($Action) {
         break
     }
     '^bcr$' {
+        if (-not [string]::IsNullOrWhiteSpace($ReviewObligationId)) {
+            $store = Get-ProposalStore
+            $obligation = @($store.review_obligation_ledger.entries | Where-Object {
+                [string]$_.id -eq $ReviewObligationId -and [string]$_.status -ne 'completed'
+            }) | Select-Object -First 1
+            if ($null -eq $obligation) {
+                throw "No open review-obligation ledger entry matches '$ReviewObligationId'."
+            }
+            $proposal = @($store.proposals | Where-Object { [int]$_.id -eq [int]$obligation.proposal_id })[0]
+            if ($null -eq $proposal) {
+                throw "Review-obligation ledger entry '$ReviewObligationId' references a missing proposal."
+            }
+            $identity = if ($proposal.crp_id) { [string]$proposal.crp_id } elseif ($proposal.cr_id) { [string]$proposal.cr_id } else { "CRP-$($proposal.id)" }
+            $isolatedReviewIdentity = "${identity}_$($obligation.repository)"
+            & (Join-Path $PSScriptRoot 'Invoke-BeyondCompareReview.ps1') -RepositoryName $obligation.repository -CRP $identity -ReviewIdentity $isolatedReviewIdentity -BaseCommit $BaseCommit
+            Write-Host "Opened normal BCR for review-obligation ledger entry '$ReviewObligationId' as '$isolatedReviewIdentity'." -ForegroundColor Cyan
+            break
+        }
         $resolution = Get-LcmReviewCohortResolution -Scope $TargetExpression -BaseCommit $BaseCommit
         $synchronization = $null
         if (-not [string]::IsNullOrWhiteSpace($resolution.DeclaredCohortId)) {
