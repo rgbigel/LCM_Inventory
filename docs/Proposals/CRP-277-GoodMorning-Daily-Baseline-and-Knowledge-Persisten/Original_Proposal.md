@@ -1,13 +1,15 @@
 # Original Proposal: CRP-277
 
-**Title:** GoodMorning Daily Macrium Baseline and BCR Preparation  
+**Title:** Macrium Reflect-Backed BCR Review Workflow  
 **Origin repository:** LCM_Inventory  
 **Priority:** 5  
 **Status at intake:** Suggested
 
 ## Intake Text
 
-Prepare today's Macrium `D:` backup as the writable Beyond Compare LHS
-baseline, open the operator-owned `_LCM` review profile, and report the
-selected drive letter and restore-point identity. GoodNIGHT Save All receipt
-and recovery requirements were split to CRP-278.
+Re-implement the complete BCR review workflow around today's Macrium Reflect
+`D:` backup as the writable `F:` Beyond Compare LHS baseline. Validate the
+operator-owned `_LCM` profile, resolve the exact CRP or cohort review scope,
+launch or reuse the corresponding BCR review, and retain RHS-only acceptance
+and completion controls. GoodMorning and GoodNIGHT recovery behavior are not
+part of this CRP.

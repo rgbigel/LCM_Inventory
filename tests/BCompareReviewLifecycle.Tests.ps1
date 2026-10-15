@@ -108,6 +108,9 @@ Describe 'BCompare review lifecycle contracts' {
   It 'opens the configured Beyond Compare named session without replaying command-line switches' {
     $reviewScript | Should -Match ([regex]::Escape('$bcArgString = "/solo `"$sessionName`""'))
     $reviewScript | Should -Match ([regex]::Escape("Start-Process -FilePath `$BeyondComparePath -ArgumentList @('/solo', `$sessionName)"))
+    $reviewScript | Should -Match ([regex]::Escape('command = "& `"$BeyondComparePath`" /solo `"$otherSession`""'))
+    $reviewScript | Should -Match ([regex]::Escape('-ArgumentList "/solo `"$otherSession`""'))
+    $reviewScript | Should -Match ([regex]::Escape("Start-Process -FilePath `$BeyondComparePath -ArgumentList @('/solo', `$otherSession)"))
     $reviewScript | Should -Not -Match ([regex]::Escape('/title1=`"$title1`" /title2=`"$title2`" /filters='))
   }
 

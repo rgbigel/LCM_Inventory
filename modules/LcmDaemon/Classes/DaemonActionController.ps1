@@ -337,8 +337,10 @@ class DaemonActionController {
 
     # Primary: Active IDE (VS Code / Antigravity IDE)
     $ideCandidates = @(
-      "D:\Tools\Microsoft VS Code\bin\code.cmd",
       "D:\Tools\Microsoft VS Code\Code.exe",
+      (Join-Path $env:LOCALAPPDATA "Programs\Microsoft VS Code\Code.exe"),
+      (Join-Path $env:LOCALAPPDATA "Programs\Microsoft VS Code Insiders\Code - Insiders.exe"),
+      "D:\Tools\Microsoft VS Code\bin\code.cmd",
       (Join-Path $env:LOCALAPPDATA "Programs\Microsoft VS Code\bin\code.cmd"),
       (Join-Path $env:LOCALAPPDATA "Programs\Microsoft VS Code Insiders\bin\code-insiders.cmd")
     )
@@ -353,7 +355,11 @@ class DaemonActionController {
     if ($ideCmd) {
       $this.Env.Log("Opening in IDE: $fullPath (Line: $($req.Line))", 'ACTION')
       $lineArg = if ($req.Line -gt 0) { "-g `"$fullPath`":$($req.Line)" } else { "-g `"$fullPath`"" }
-      Start-Process -FilePath $ideCmd -ArgumentList $lineArg
+      if ([System.IO.Path]::GetExtension($ideCmd).Equals('.cmd', [System.StringComparison]::OrdinalIgnoreCase)) {
+        Start-Process -FilePath $env:ComSpec -ArgumentList "/c `"`"$ideCmd`" $lineArg`"" -WindowStyle Hidden
+      } else {
+        Start-Process -FilePath $ideCmd -ArgumentList $lineArg
+      }
       return @{ status = "OPENED"; filePath = $fullPath; editor = "VS Code (IDE)" }
     }
 
@@ -980,4 +986,3 @@ function Send-DaemonJsonResponse {
     try { $Response.Close() } catch {}
   }
 }
-

@@ -5,7 +5,7 @@
   Module: tools/Invoke-MacriumDailyBcrBaseline.ps1
   Purpose: Finds today's completed Macrium image, optionally starts the configured
   definition when today's image is absent, clears only known F:-I: image mounts,
-  mounts D: as F: with the required GUI options, and opens the operator-owned
+  mounts D: within F:-I: with the required GUI options, and opens the operator-owned
   _LCM Beyond Compare profile.
   Path: LCM_Inventory/tools/Invoke-MacriumDailyBcrBaseline.ps1
   Authors: Rolf, LCM_AI Engine
@@ -23,9 +23,6 @@ param(
   [ValidateNotNullOrEmpty()]
   [string]$ExpectedVolumeLabel = 'D4P3-WDB850-D',
 
-  [ValidateSet('F', 'G', 'H', 'I', IgnoreCase = $true)]
-  [string]$MountDriveLetter = 'F',
-
   [ValidateRange(1, 240)]
   [int]$PollSeconds = 60,
 
@@ -35,6 +32,10 @@ param(
   [string]$ReviewScope = '',
 
   [switch]$StartBackupIfMissing,
+
+  [switch]$ForceNewBackup,
+
+  [switch]$ReuseMountedBaseline,
 
   [switch]$NoLaunchReview,
 
@@ -104,12 +105,17 @@ function Write-WorkerReceipt {
 }
 
 function Get-CompletedTodayImage {
+  param(
+    [datetime]$NotBefore = [datetime]::MinValue
+  )
+
   $reportDirectory = 'C:\ProgramData\Macrium\Reflect'
   if (-not (Test-Path -LiteralPath $reportDirectory)) {
     throw "Macrium report directory was not found: $reportDirectory"
   }
   if (-not (Test-Path -LiteralPath $BackupDirectory)) {
-    throw "Macrium backup directory was not found: $BackupDirectory"
+    Write-BaselineLog -Level WARN -Message "Macrium backup directory is unavailable: $BackupDirectory"
+    return $null
   }
 
   $today = (Get-Date).Date
@@ -117,6 +123,9 @@ function Get-CompletedTodayImage {
     Where-Object { $_.LastWriteTime.Date -eq $today } |
     Sort-Object LastWriteTime -Descending)
   foreach ($report in $reports) {
+    if ($report.LastWriteTime -lt $NotBefore) {
+      continue
+    }
     $content = Get-Content -LiteralPath $report.FullName -Raw
     if ($content -notmatch [regex]::Escape($BackupDefinitionPath)) {
       continue
@@ -141,6 +150,70 @@ function Get-CompletedTodayImage {
   return $null
 }
 
+function Get-AutomaticBackupStartReceiptPath {
+  $directory = Join-Path $inventoryRoot 'data\artifacts'
+  return Join-Path $directory 'macrium-automatic-backup-start.json'
+}
+
+function Test-AutomaticBackupAlreadyStartedToday {
+  $receiptPath = Get-AutomaticBackupStartReceiptPath
+  if (-not (Test-Path -LiteralPath $receiptPath)) {
+    return $false
+  }
+  try {
+    $receipt = Get-Content -LiteralPath $receiptPath -Raw -Encoding utf8 | ConvertFrom-Json
+    return [string]$receipt.requested_date -eq (Get-Date).ToString('yyyy-MM-dd') -and
+      [string]$receipt.backup_definition_path -eq $BackupDefinitionPath
+  } catch {
+    throw "Automatic Macrium backup-start receipt is unreadable: $receiptPath. Correct or remove it before retrying."
+  }
+}
+
+function Save-AutomaticBackupStartReceipt {
+  $receiptPath = Get-AutomaticBackupStartReceiptPath
+  $directory = Split-Path $receiptPath -Parent
+  if (-not (Test-Path -LiteralPath $directory)) {
+    New-Item -ItemType Directory -Path $directory -Force | Out-Null
+  }
+  [ordered]@{
+    requested_at = (Get-Date).ToString('o')
+    requested_date = (Get-Date).ToString('yyyy-MM-dd')
+    backup_definition_path = $BackupDefinitionPath
+    backup_directory = $BackupDirectory
+  } | ConvertTo-Json | Set-Content -LiteralPath $receiptPath -Encoding utf8
+}
+
+function Start-MacriumBackupAndWait {
+  param(
+    [switch]$Automatic
+  )
+
+  if ($Automatic -and (Test-AutomaticBackupAlreadyStartedToday)) {
+    throw "An automatic Macrium backup was already requested today. Automatic baseline creation is limited to once per local calendar day; use -ForceNewBackup for an explicit additional baseline."
+  }
+  if (-not $PSCmdlet.ShouldProcess($BackupDefinitionPath, 'Start the configured Macrium backup definition')) {
+    Write-BaselineLog -Level INFO -Message 'WhatIf: would start the configured Macrium backup definition and wait for today''s completed Macrium report.'
+    return $null
+  }
+
+  $requestedAt = Get-Date
+  Write-BaselineLog -Level INFO -Message "Starting configured Macrium definition '$BackupDefinitionPath'."
+  Start-Process -FilePath $reflectPath -ArgumentList @('-e', $BackupDefinitionPath) | Out-Null
+  if ($Automatic) {
+    Save-AutomaticBackupStartReceipt
+  }
+
+  $deadline = $requestedAt.AddMinutes($TimeoutMinutes)
+  do {
+    Start-Sleep -Seconds $PollSeconds
+    $completedImage = Get-CompletedTodayImage -NotBefore $requestedAt
+  } while ($null -eq $completedImage -and (Get-Date) -lt $deadline)
+  if ($null -eq $completedImage) {
+    throw "No completed Macrium backup for today was found within $TimeoutMinutes minute(s) of the request."
+  }
+  return $completedImage
+}
+
 function Resolve-BaselineReviewScope {
   if (-not [string]::IsNullOrWhiteSpace($ReviewScope)) {
     return $ReviewScope
@@ -158,6 +231,25 @@ function Resolve-BaselineReviewScope {
     return 'BCR-BASELINE-DUMMY'
   }
   return $activeProposals[0].crp_id
+}
+
+function Find-MountedMacriumBaseline {
+  foreach ($letter in @('F', 'G', 'H', 'I')) {
+    $disk = Get-CimInstance Win32_LogicalDisk -Filter "DeviceID='$letter`:'" -ErrorAction SilentlyContinue
+    if ($null -eq $disk -or $disk.DriveType -ne 3 -or $disk.VolumeName -ne $ExpectedVolumeLabel) {
+      continue
+    }
+    $workspacePath = "$letter`:\Git_Repositories"
+    if (-not (Test-Path -LiteralPath $workspacePath -PathType Container)) {
+      throw "Mounted ${letter}: has the expected label but does not contain the expected Git_Repositories root."
+    }
+    return [pscustomobject]@{
+      DriveLetter = $letter
+      MountedDrive = "$letter`:"
+      WorkspacePath = $workspacePath
+    }
+  }
+  return $null
 }
 
 function Close-MountedImageReview {
@@ -189,6 +281,10 @@ function Close-MountedImageReview {
 }
 
 function Test-LcmBcrProfile {
+  param(
+    [ValidateSet('F', 'G', 'H', 'I')]
+    [string]$MountedDriveLetter
+  )
   $sessionRegistryPath = Join-Path $env:APPDATA 'Scooter Software\Beyond Compare 5\BCSessions.xml'
   if (-not (Test-Path -LiteralPath $sessionRegistryPath -PathType Leaf)) {
     throw "Beyond Compare session registry was not found: $sessionRegistryPath"
@@ -200,7 +296,7 @@ function Test-LcmBcrProfile {
     throw 'The required _LCM Beyond Compare profile was not found.'
   }
 
-  $expectedLeftPath = "$MountDriveLetter`:\Git_Repositories"
+  $expectedLeftPath = "$MountedDriveLetter`:\Git_Repositories"
   $leftPath = $session.SelectSingleNode('./Specs/Left').GetAttribute('Value')
   $rightPath = $session.SelectSingleNode('./Specs/Right').GetAttribute('Value')
   $contentComparison = $session.SelectSingleNode('./Rules/UseContentComparison').GetAttribute('Value')
@@ -266,8 +362,9 @@ public static class LcmMacriumMouse
   )
   foreach ($letter in $mountedDrives) {
     & $reflectPath $letter '-u'
-    if ($LASTEXITCODE -ne 0) {
-      throw "Macrium detach failed for ${letter}: with exit code $LASTEXITCODE."
+    $detachExitCode = if (Test-Path variable:global:LASTEXITCODE) { $global:LASTEXITCODE } else { 0 }
+    if ($detachExitCode -ne 0) {
+      throw "Macrium detach failed for ${letter}: with exit code $detachExitCode."
     }
     $deadline = (Get-Date).AddSeconds(30)
     do {
@@ -277,10 +374,6 @@ public static class LcmMacriumMouse
     if ($null -ne $disk) {
       throw "Macrium did not detach ${letter}: within 30 seconds."
     }
-  }
-
-  if (Get-CimInstance Win32_LogicalDisk -Filter "DeviceID='$MountDriveLetter`:'" -ErrorAction SilentlyContinue) {
-    throw "The requested mount letter ${MountDriveLetter}: is assigned after cleanup."
   }
 
   $existingReflectBinIds = @(Get-Process -Name 'ReflectBin' -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Id)
@@ -325,18 +418,6 @@ public static class LcmMacriumMouse
   [LcmMacriumMouse]::mouse_event(0x0004, 0, 0, 0, [UIntPtr]::Zero)
   Start-Sleep -Milliseconds 250
 
-  $expectedDriveName = "$MountDriveLetter`:"
-  $assignedDrive = $dialog.FindFirst(
-    [System.Windows.Automation.TreeScope]::Descendants,
-    (New-Object System.Windows.Automation.PropertyCondition(
-      [System.Windows.Automation.AutomationElement]::NameProperty,
-      $expectedDriveName
-    ))
-  )
-  if ($null -eq $assignedDrive) {
-    throw "Macrium did not propose the required ${MountDriveLetter}: assignment. No alternate letter was accepted."
-  }
-
   foreach ($optionName in @(
     'Enable access to restricted folders',
     'Make writable. Note: Changes are temporary and will be discarded.'
@@ -379,29 +460,50 @@ public static class LcmMacriumMouse
   $deadline = (Get-Date).AddSeconds(30)
   do {
     Start-Sleep -Milliseconds 250
-    $mounted = Get-CimInstance Win32_LogicalDisk -Filter "DeviceID='$MountDriveLetter`:'" -ErrorAction SilentlyContinue
-  } while ($null -eq $mounted -and (Get-Date) -lt $deadline)
-  if ($null -eq $mounted) {
-    throw "Macrium accepted the mount dialog, but ${MountDriveLetter}: did not appear within 30 seconds."
+    $mountedBaseline = Find-MountedMacriumBaseline
+  } while ($null -eq $mountedBaseline -and (Get-Date) -lt $deadline)
+  if ($null -eq $mountedBaseline) {
+    throw "Macrium accepted the mount dialog, but no matching '$ExpectedVolumeLabel' volume appeared in the F:-I: range within 30 seconds."
   }
-  if ($mounted.VolumeName -ne $ExpectedVolumeLabel) {
-    throw "Mounted ${MountDriveLetter}: label '$($mounted.VolumeName)' does not match '$ExpectedVolumeLabel'."
-  }
-  $workspacePath = "$MountDriveLetter`:\Git_Repositories"
-  if (-not (Test-Path -LiteralPath $workspacePath -PathType Container)) {
-    throw "Mounted ${MountDriveLetter}: does not contain the expected Git_Repositories root."
-  }
-  Write-WorkerReceipt -Succeeded $true -Message 'Macrium baseline mounted.' -ImagePath $ImagePath -MountedDrive "$MountDriveLetter`:"
+  Write-WorkerReceipt -Succeeded $true -Message 'Macrium baseline mounted.' -ImagePath $ImagePath -MountedDrive $mountedBaseline.MountedDrive
 }
 
 if ($Help) {
-  Write-Host 'Invoke-MacriumDailyBcrBaseline.ps1 [-StartBackupIfMissing] [-ReviewScope <CRP|BUG>] [-NoLaunchReview] [-WhatIf]'
-  Write-Host '  Prepares today''s Macrium D: image at F: and opens the unchanged _LCM profile.'
+  Write-Host 'Invoke-MacriumDailyBcrBaseline.ps1 [-StartBackupIfMissing] [-ForceNewBackup] [-ReuseMountedBaseline] [-ReviewScope <CRP|BUG>] [-NoLaunchReview] [-WhatIf]'
+  Write-Host '  Prepares or explicitly replaces today''s Macrium D: image in F:-I:, or reuses the label-matched mounted baseline for BCR.'
   return
 }
 
 if (-not (Test-Path -LiteralPath $reflectPath -PathType Leaf)) {
   throw "Macrium Reflect executable was not found: $reflectPath"
+}
+
+if ($ReuseMountedBaseline) {
+  if ($ForceNewBackup -or $StartBackupIfMissing) {
+    throw '-ReuseMountedBaseline cannot be combined with backup creation options.'
+  }
+  $mountedBaseline = Find-MountedMacriumBaseline
+  if ($null -eq $mountedBaseline) {
+    throw "No writable '$ExpectedVolumeLabel' Macrium baseline is mounted in F:-I:. Run GoodMorning baseline preparation or explicitly invoke the baseline tool before BCR."
+  }
+  $profileContract = if ($NoLaunchReview) { $null } else { Test-LcmBcrProfile -MountedDriveLetter $mountedBaseline.DriveLetter }
+  if (-not $NoLaunchReview) {
+    if ([string]::IsNullOrWhiteSpace($bcomparePath)) {
+      throw 'Beyond Compare 5 executable was not found.'
+    }
+    Start-Process -FilePath $bcomparePath -ArgumentList @('/solo', '_LCM') | Out-Null
+  }
+  Write-BaselineLog -Level INFO -Message "Reused writable $($mountedBaseline.MountedDrive) Macrium baseline for '$((Resolve-BaselineReviewScope))' without remounting or replacing operator progress."
+  [pscustomobject]@{
+    ImagePath = ''
+    CompletionTime = $null
+    MountedDrive = $mountedBaseline.MountedDrive
+    ReviewScope = Resolve-BaselineReviewScope
+    Profile = $profileContract
+    Launched = (-not $NoLaunchReview)
+    ReusedMountedBaseline = $true
+  }
+  return
 }
 
 if ($ElevatedWorker) {
@@ -415,37 +517,29 @@ if ($ElevatedWorker) {
   }
 }
 
-$completedImage = Get-CompletedTodayImage
-if ($null -eq $completedImage) {
+$completedImage = if ($ForceNewBackup) { $null } else { Get-CompletedTodayImage }
+if ($ForceNewBackup) {
+  $completedImage = Start-MacriumBackupAndWait
+} elseif ($null -eq $completedImage) {
   if (-not $StartBackupIfMissing) {
     throw 'No completed backup for today was found. Re-run with -StartBackupIfMissing to start the configured Macrium definition and poll for completion.'
   }
-  if (-not $PSCmdlet.ShouldProcess($BackupDefinitionPath, 'Start the configured Macrium backup definition')) {
-    Write-BaselineLog -Level INFO -Message 'WhatIf: would start the configured backup definition and wait for today''s completed Macrium report.'
-    return
-  }
-  Write-BaselineLog -Level INFO -Message "Starting configured Macrium definition '$BackupDefinitionPath'."
-  Start-Process -FilePath $reflectPath -ArgumentList @('-e', $BackupDefinitionPath) | Out-Null
-  $deadline = (Get-Date).AddMinutes($TimeoutMinutes)
-  do {
-    Start-Sleep -Seconds $PollSeconds
-    $completedImage = Get-CompletedTodayImage
-  } while ($null -eq $completedImage -and (Get-Date) -lt $deadline)
-  if ($null -eq $completedImage) {
-    throw "No completed Macrium backup for today was found within $TimeoutMinutes minute(s)."
-  }
+  $completedImage = Start-MacriumBackupAndWait -Automatic
+}
+if ($null -eq $completedImage) {
+  return
 }
 
 $reviewIdentity = Resolve-BaselineReviewScope
 if (-not $PSCmdlet.ShouldProcess(
-    "$($completedImage.ImagePath) -> ${MountDriveLetter}:",
+    "$($completedImage.ImagePath) -> Macrium-selected F:-I: drive",
     'Close _LCM, detach matching F:-I: image mounts, and mount the current Macrium baseline'
   )) {
-  Write-BaselineLog -Level INFO -Message "WhatIf: would mount '$($completedImage.ImagePath)' at ${MountDriveLetter}: and launch _LCM for '$reviewIdentity'."
+  Write-BaselineLog -Level INFO -Message "WhatIf: would mount '$($completedImage.ImagePath)' at a Macrium-selected F:-I: drive and launch _LCM for '$reviewIdentity'."
   [pscustomobject]@{
     ImagePath = $completedImage.ImagePath
     CompletionTime = $completedImage.CompletionTime
-    PlannedMountDrive = "$MountDriveLetter`:"
+    PlannedMountDrive = 'Macrium-selected (F:-I:)'
     ReviewScope = $reviewIdentity
     Launched = $false
   }
@@ -469,8 +563,6 @@ try {
     $BackupDirectory,
     '-ExpectedVolumeLabel',
     $ExpectedVolumeLabel,
-    '-MountDriveLetter',
-    $MountDriveLetter,
     '-ReceiptPath',
     $receiptPath,
     '-ImagePath',
@@ -495,7 +587,7 @@ if (-not $NoLaunchReview) {
   if ([string]::IsNullOrWhiteSpace($bcomparePath)) {
     throw 'Beyond Compare 5 executable was not found.'
   }
-  $profileContract = Test-LcmBcrProfile
+  $profileContract = Test-LcmBcrProfile -MountedDriveLetter $receipt.MountedDrive.TrimEnd(':')
   Start-Process -FilePath $bcomparePath -ArgumentList @('/solo', '_LCM') | Out-Null
   $deadline = (Get-Date).AddSeconds(15)
   do {
@@ -510,11 +602,11 @@ if (-not $NoLaunchReview) {
   }
 }
 
-Write-BaselineLog -Level INFO -Message "Mounted '$($completedImage.ImagePath)' at ${MountDriveLetter}:; selected RHS review scope '$reviewIdentity' without rewriting the _LCM profile."
+Write-BaselineLog -Level INFO -Message "Mounted '$($completedImage.ImagePath)' at $($receipt.MountedDrive); selected RHS review scope '$reviewIdentity' without rewriting the _LCM profile."
 [pscustomobject]@{
   ImagePath = $completedImage.ImagePath
   CompletionTime = $completedImage.CompletionTime
-  MountedDrive = "$MountDriveLetter`:"
+  MountedDrive = $receipt.MountedDrive
   ReviewScope = $reviewIdentity
   Profile = if ($NoLaunchReview) { $null } else { $profileContract }
   Launched = (-not $NoLaunchReview)

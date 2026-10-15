@@ -922,14 +922,14 @@ if (-not [string]::IsNullOrWhiteSpace($CRP)) {
                 Start-Sleep -Milliseconds 400
                 if ($daemonOnline) {
                   $otherPayload = @{
-                    command = "& `"$BeyondComparePath`" $otherSession"
+                    command = "& `"$BeyondComparePath`" /solo `"$otherSession`""
                     windowStyle = "Hidden"
                   } | ConvertTo-Json
                   $null = Invoke-RestMethod -Uri "http://127.0.0.1:$daemonPort/execute" -Method Post -Body $otherPayload -ContentType "application/json" -TimeoutSec 5
                 } elseif ($dispatcherPath) {
-                  & pwsh -File $dispatcherPath -FilePath $BeyondComparePath -ArgumentList "`"$otherSession`"" | Out-Null
+                  & pwsh -File $dispatcherPath -FilePath $BeyondComparePath -ArgumentList "/solo `"$otherSession`"" | Out-Null
                 } else {
-                  Start-Process -FilePath $BeyondComparePath -ArgumentList @($otherSession)
+                  Start-Process -FilePath $BeyondComparePath -ArgumentList @('/solo', $otherSession)
                 }
               } else {
                 Write-Host "Additional tab for '$otherRepo' is already open in Beyond Compare." -ForegroundColor Green

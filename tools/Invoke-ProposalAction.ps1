@@ -419,8 +419,8 @@ switch -Regex ($Action) {
             }
             $identity = if ($proposal.crp_id) { [string]$proposal.crp_id } elseif ($proposal.cr_id) { [string]$proposal.cr_id } else { "CRP-$($proposal.id)" }
             $isolatedReviewIdentity = "${identity}_$($obligation.repository)"
-            & (Join-Path $PSScriptRoot 'Invoke-BeyondCompareReview.ps1') -RepositoryName $obligation.repository -CRP $identity -ReviewIdentity $isolatedReviewIdentity -BaseCommit $BaseCommit
-            Write-Host "Opened normal BCR for review-obligation ledger entry '$ReviewObligationId' as '$isolatedReviewIdentity'." -ForegroundColor Cyan
+            & (Join-Path $PSScriptRoot 'Invoke-MacriumBcrReview.ps1') -RepositoryName $obligation.repository -CRP $identity -BaseCommit $BaseCommit
+            Write-Host "Opened the canonical Macrium BCR review for obligation '$ReviewObligationId'." -ForegroundColor Cyan
             break
         }
         $resolution = Get-LcmReviewCohortResolution -Scope $TargetExpression -BaseCommit $BaseCommit
@@ -464,12 +464,12 @@ switch -Regex ($Action) {
                     BaseCommit = $BaseCommit
                 }
                 if (-not $launchReview) { $reviewArgs.NoLaunch = $true }
-                & (Join-Path $PSScriptRoot 'Invoke-BeyondCompareReview.ps1') @reviewArgs
+                & (Join-Path $PSScriptRoot 'Invoke-MacriumBcrReview.ps1') @reviewArgs
             }
         }
 
         foreach ($member in $alreadyInReview) {
-            & (Join-Path $PSScriptRoot 'Invoke-BeyondCompareReview.ps1') -RepositoryName $member.Repository -CRP $member.Identity -BaseCommit $BaseCommit
+            & (Join-Path $PSScriptRoot 'Invoke-MacriumBcrReview.ps1') -RepositoryName $member.Repository -CRP $member.Identity -BaseCommit $BaseCommit
         }
 
         $store = Get-ProposalStore
@@ -733,7 +733,17 @@ switch -Regex ($Action) {
         if ([string]::IsNullOrWhiteSpace($TargetExpression)) {
             throw "TargetExpression (e.g. '1-3', 'all', '1,2') is required for action '$Action'."
         }
-        $updated = @(Invoke-ProposalBatchAction -Action $Action -TargetExpression $TargetExpression -Details $Details -Changes $Changes)
+        try {
+            $updated = @(Invoke-ProposalBatchAction -Action $Action -TargetExpression $TargetExpression -Details $Details -Changes $Changes)
+        } catch {
+            $reportJson = $_.Exception.Data['LcmLifecycleFailureReport']
+            if (-not [string]::IsNullOrWhiteSpace([string]$reportJson)) {
+                $report = $reportJson | ConvertFrom-Json
+                $renderedReport = (Format-LcmLifecycleFailureReport -Report $report) -join [Environment]::NewLine
+                throw [System.InvalidOperationException]::new($renderedReport, $_.Exception)
+            }
+            throw
+        }
         if ($updated.Count -eq 0) {
             throw "Action '$Action' resolved no current proposal targets for expression '$TargetExpression'; the result cannot be formatted."
         }

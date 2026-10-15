@@ -227,7 +227,10 @@ if ($PrepareBcrBaseline) {
     if (-not (Test-Path -LiteralPath $baselineTool)) {
         throw "Daily BCR baseline tool was not found: $baselineTool"
     }
-    if ($WhatIfPreference) {
+    $automaticMorning = $Auto -and -not $Force -and $gap -ge $GapHours
+    if ($Auto -and -not $Force -and -not $automaticMorning) {
+        Write-Host ("Macrium baseline preparation deferred (gap {0:N1} h < {1} h); the writable baseline is not replaced automatically during the workday." -f $gap, $GapHours)
+    } elseif ($WhatIfPreference) {
         & $baselineTool -StartBackupIfMissing -ReviewScope $ReviewScope -WhatIf
     } else {
         & $baselineTool -StartBackupIfMissing -ReviewScope $ReviewScope

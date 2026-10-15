@@ -771,91 +771,6 @@
     ]
   },
   {
-    "Name": "Show-LcmControl.ps1",
-    "ShortName": "ShowCM",
-    "Aliases": null,
-    "Role": "GUI",
-    "Audience": "User",
-    "Admin": false,
-    "NoExit": false,
-    "Group": "LCM",
-    "Domain": "LCM",
-    "Type": "PowerShell",
-    "Category": "Configuration Management",
-    "Description": "Unified LCM Control Hub dashboard and proposal lifecycle manager.",
-    "Example": "ShowCM",
-    "RelativePath": "LCM_Inventory\\tools\\Show-LcmControl.ps1",
-    "Parameters": [
-      {
-        "Name": "ReviewMode",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Open in pending visual review mode"
-      },
-      {
-        "Name": "DatesMode",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Open in CRP Lifecycle Dates modal mode"
-      },
-      {
-        "Name": "Repo",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Filter by repository or subsystem"
-      },
-      {
-        "Name": "State",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Filter by plan state (bug, suggested, approved, completed, deferred, etc.)"
-      },
-      {
-        "Name": "Id",
-        "Type": "Object[]",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Optional array of Proposal IDs to filter (e.g. 1, 28, 44, 164)"
-      },
-      {
-        "Name": "StateEvent",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Filter by state change event presence (created, in_progress, completed, pushed, deferred)"
-      },
-      {
-        "Name": "CliMode",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Output proposal dates table directly to terminal without launching desktop browser"
-      },
-      {
-        "Name": "Detail",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Displays detailed individual state transition timeline in terminal CLI mode"
-      },
-      {
-        "Name": "TimerOn",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Display verbose execution timing telemetry milestones"
-      }
-    ],
-    "Dependencies": [
-      "LcmDesktopDaemon.ps1",
-      "Invoke-InteractiveDesktop.ps1"
-    ]
-  },
-  {
     "Name": "Show-SuperController.ps1",
     "ShortName": "SuperController",
     "Aliases": null,
@@ -1108,6 +1023,144 @@
     ]
   },
   {
+    "Name": "Show-LcmControl.ps1",
+    "ShortName": "ShowCM",
+    "Aliases": null,
+    "Role": "GUI",
+    "Audience": "User",
+    "Admin": false,
+    "NoExit": false,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Configuration Management",
+    "Description": "Unified LCM Control Hub dashboard and proposal lifecycle manager.",
+    "Example": "ShowCM",
+    "RelativePath": "LCM_Inventory\\tools\\Show-LcmControl.ps1",
+    "Parameters": [
+      {
+        "Name": "ReviewMode",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Open in pending visual review mode"
+      },
+      {
+        "Name": "DatesMode",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Open in CRP Lifecycle Dates modal mode"
+      },
+      {
+        "Name": "Repo",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Filter by repository or subsystem"
+      },
+      {
+        "Name": "State",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Filter by authoritative lifecycle state (suggested, in_progress, verified, in_review, completed, pushed, held, withdrawn, rejected, superseded)"
+      },
+      {
+        "Name": "Id",
+        "Type": "Object[]",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Optional array of Proposal IDs to filter (e.g. 1, 28, 44, 164)"
+      },
+      {
+        "Name": "StateEvent",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Filter by state change event presence (created, in_progress, completed, pushed, deferred)"
+      },
+      {
+        "Name": "CliMode",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Output proposal dates table directly to terminal without launching desktop browser"
+      },
+      {
+        "Name": "Detail",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Displays detailed individual state transition timeline in terminal CLI mode"
+      },
+      {
+        "Name": "Lifecycle",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Open the lifecycle ledger in terminal detail mode"
+      },
+      {
+        "Name": "TimerOn",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Display verbose execution timing telemetry milestones"
+      }
+    ],
+    "Dependencies": [
+      "LcmDesktopDaemon.ps1",
+      "Invoke-InteractiveDesktop.ps1"
+    ]
+  },
+  {
+    "Name": "Show-CmdFolderAnalysis.ps1",
+    "ShortName": "ShowCmdAnalysis",
+    "Aliases": null,
+    "Role": "GUI",
+    "Audience": "User",
+    "Admin": true,
+    "NoExit": false,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Tool Analysis",
+    "Description": "Interactive HTML viewer analyzing all legacy batch scripts and modern PowerShell tool equivalents.",
+    "Example": "ShowCmdAnalysis",
+    "RelativePath": "LCM_Inventory\\tools\\Show-CmdFolderAnalysis.ps1",
+    "Parameters": [
+      {
+        "Name": "Path",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\OneDrive\\cmd",
+        "Description": "Target directory to analyze (default: D:\\OneDrive\\cmd). Supports D:\\@cmd, D:\\OneDrive\\cmd\\@Repair, etc."
+      }
+    ],
+    "Dependencies": [
+      "Split-TextFile.ps1",
+      "List-Device-Name-and-Path.ps1",
+      "ProfileRecoveryToolkit.ps1",
+      "ProfileModify.ps1",
+      "ShortPromptPS.ps1",
+      "ShowPathPS.ps1",
+      "AddToPath.cmd",
+      "RenameTestFolders.ps1",
+      "SafeCopy.ps1",
+      "Git_Restore_HubToLocal_All.ps1",
+      "DiskInfo.cmd",
+      "InfoOnDisks.cmd",
+      "SaveClipboard_TEST.ps1",
+      "SaveClipboard.ps1",
+      "Test_SaveClipboard.ps1",
+      "tempTest_SaveClipboard.ps1",
+      "DoShell.cmd",
+      "Invoke-InteractiveDesktop.ps1",
+      "git.exe"
+    ]
+  },
+  {
     "Name": "Show-HaInventory.ps1",
     "ShortName": "ShowHaInventory",
     "Aliases": null,
@@ -1139,6 +1192,100 @@
       }
     ],
     "Dependencies": "Show-HaInventoryApp.ps1"
+  },
+  {
+    "Name": "Show-ToolsExplorer.ps1",
+    "ShortName": "ToolsExplorer",
+    "Aliases": "ToolExplorer",
+    "Role": "GUI",
+    "Audience": "User",
+    "Admin": false,
+    "NoExit": false,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Tool Discovery",
+    "Description": "Opens the modern interactive LCM Tool Explorer dashboard in the browser or terminal.",
+    "Example": "ToolsExplorer",
+    "RelativePath": "LCM_Inventory\\tools\\Show-ToolsExplorer.ps1",
+    "Parameters": [
+      {
+        "Name": "Audience",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "User",
+        "Description": "Pre-filter by audience category: 'User' (daily operations), 'Dev' (internal plumbing), or 'All'. Defaults to 'User'."
+      },
+      {
+        "Name": "Group",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "All",
+        "Description": "Pre-filter by group or subsystem name (e.g. 'HaSSD06', 'SystemConfiguration', 'LCM_Inventory', 'LCM'). Defaults to 'All'."
+      },
+      {
+        "Name": "Subsystem",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "All",
+        "Description": "Direct pre-filter for specific subsystem (e.g. 'HaSSD06', 'LCM_AI', 'LCM_Inventory'). Defaults to 'All'."
+      },
+      {
+        "Name": "HaSSD06",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Quick switch to filter directly to Home Assistant HaSSD06 Subsystem tools (Aliases: -Ha, -HomeAssistant)."
+      },
+      {
+        "Name": "Role",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "All",
+        "Description": "Pre-filter by functional role (e.g. 'QualityGate', 'ReviewGate', 'Elevation', 'DesktopGUI'). Defaults to 'All'."
+      },
+      {
+        "Name": "Tool",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "All",
+        "Description": "Pre-select a specific tool name to highlight on startup. Defaults to 'All'."
+      },
+      {
+        "Name": "Env",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "All",
+        "Description": "Pre-filter by tool environment ('PS1', 'CMD', 'PY', 'REG', 'LNK', 'All'). Defaults to 'All'."
+      },
+      {
+        "Name": "Filter",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Initial search keyword to apply on dashboard startup. Defaults to ''."
+      },
+      {
+        "Name": "Lifecycle",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Pre-filters the catalog for proposal lifecycle, review, and push tooling."
+      },
+      {
+        "Name": "NoBrowser",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Suppresses launching the web browser and outputs the tool catalog directly as formatted text in the terminal (Aliases: -Cli, -Text, -Console)."
+      }
+    ],
+    "Dependencies": [
+      "LcmWorkspaceContext.psm1",
+      "Invoke-LcmProtocol.ps1",
+      "LcmToolCatalog.psm1",
+      "Invoke-InteractiveDesktop.ps1"
+    ]
   },
   {
     "Name": "Restore-SystemSettings.ps1",
@@ -1189,7 +1336,7 @@
     "Role": "ReviewGate",
     "Audience": "User",
     "Admin": false,
-    "NoExit": true,
+    "NoExit": false,
     "Group": "LCM_Inventory",
     "Domain": "LCM_Inventory",
     "Type": "PowerShell",
@@ -1224,7 +1371,14 @@
         "Type": "String",
         "Mandatory": false,
         "Default": "",
-        "Description": "CRP or Change Request identifier (e.g. CRP-2026-005, CR-2026-034)"
+        "Description": "Exact CRP or BUG identifier (e.g. CRP-257)"
+      },
+      {
+        "Name": "ReviewIdentity",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Isolated on-disk review identity; defaults to the exact CRP or BUG identity"
       },
       {
         "Name": "Wait",
@@ -1244,12 +1398,67 @@
     "Dependencies": [
       "BCompareWindowTools.psm1",
       "BCompareBaseline.psm1",
+      "ProposalManager.psm1",
       "Invoke-InteractiveDesktop.ps1",
       "bcompare",
       "BCompare",
       "BCOMPARE",
       "BCompare.exe"
     ]
+  },
+  {
+    "Name": "Show-Actions.ps1",
+    "ShortName": "ShowActions",
+    "Aliases": null,
+    "Role": "Telemetry",
+    "Audience": "User",
+    "Admin": false,
+    "NoExit": false,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Audit Logs",
+    "Description": "Fast lightweight terminal reader displaying recent operational actions and tool execution step summaries.",
+    "Example": "ShowActions",
+    "RelativePath": "LCM_Inventory\\tools\\Show-Actions.ps1",
+    "Parameters": [
+      {
+        "Name": "Count",
+        "Type": "Int32",
+        "Mandatory": false,
+        "Default": "5",
+        "Description": "Number of recent actions to display (Default: 5)."
+      },
+      {
+        "Name": "Subsystem",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Filters action log stream by specific subsystem (e.g. 'HaSSD06')."
+      },
+      {
+        "Name": "Detailed",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Displays all raw log lines for the action instead of the compact step summary."
+      },
+      {
+        "Name": "ToolName",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Filter by a specific tool name (e.g. 'Show-ToolIndex', 'Update-ToolCatalog', 'Export-LCMRules')."
+      },
+      {
+        "Name": "Open",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Opens the latest action log in Notepad on Session 1 interactive desktop."
+      }
+    ],
+    "Dependencies": "Invoke-InteractiveDesktop.ps1"
   },
   {
     "Name": "Search-Everything.ps1",
@@ -1459,52 +1668,6 @@
     "Dependencies": "LcmDesktopDaemon.ps1"
   },
   {
-    "Name": "Show-CmdFolderAnalysis.ps1",
-    "ShortName": "ShowCmdAnalysis",
-    "Aliases": null,
-    "Role": "GUI",
-    "Audience": "Developer",
-    "Admin": true,
-    "NoExit": false,
-    "Group": "LCM_Inventory",
-    "Domain": "LCM_Inventory",
-    "Type": "PowerShell",
-    "Category": "Tool Analysis",
-    "Description": "Interactive HTML viewer analyzing all legacy batch scripts and modern PowerShell tool equivalents.",
-    "Example": "ShowCmdAnalysis",
-    "RelativePath": "LCM_Inventory\\tools\\Show-CmdFolderAnalysis.ps1",
-    "Parameters": [
-      {
-        "Name": "Path",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "D:\\OneDrive\\cmd",
-        "Description": "Target directory to analyze (default: D:\\OneDrive\\cmd). Supports D:\\@cmd, D:\\OneDrive\\cmd\\@Repair, etc."
-      }
-    ],
-    "Dependencies": [
-      "Split-TextFile.ps1",
-      "List-Device-Name-and-Path.ps1",
-      "ProfileRecoveryToolkit.ps1",
-      "ProfileModify.ps1",
-      "ShortPromptPS.ps1",
-      "ShowPathPS.ps1",
-      "AddToPath.cmd",
-      "RenameTestFolders.ps1",
-      "SafeCopy.ps1",
-      "Git_Restore_HubToLocal_All.ps1",
-      "DiskInfo.cmd",
-      "InfoOnDisks.cmd",
-      "SaveClipboard_TEST.ps1",
-      "SaveClipboard.ps1",
-      "Test_SaveClipboard.ps1",
-      "tempTest_SaveClipboard.ps1",
-      "DoShell.cmd",
-      "Invoke-InteractiveDesktop.ps1",
-      "git.exe"
-    ]
-  },
-  {
     "Name": "Show-ToolIndex.ps1",
     "ShortName": "ShowToolIndex",
     "Aliases": null,
@@ -1606,147 +1769,6 @@
       }
     ],
     "Dependencies": "Show-Tools.ps1"
-  },
-  {
-    "Name": "Show-ToolsExplorer.ps1",
-    "ShortName": "ToolsExplorer",
-    "Aliases": "ToolExplorer",
-    "Role": "GUI",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": false,
-    "Group": "LCM_Inventory",
-    "Domain": "LCM_Inventory",
-    "Type": "PowerShell",
-    "Category": "Tool Discovery",
-    "Description": "Opens the modern interactive LCM Tool Explorer dashboard in the browser or terminal.",
-    "Example": "ToolsExplorer",
-    "RelativePath": "LCM_Inventory\\tools\\Show-ToolsExplorer.ps1",
-    "Parameters": [
-      {
-        "Name": "Audience",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "User",
-        "Description": "Pre-filter by audience category: 'User' (daily operations), 'Dev' (internal plumbing), or 'All'. Defaults to 'User'."
-      },
-      {
-        "Name": "Group",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "All",
-        "Description": "Pre-filter by group or subsystem name (e.g. 'HaSSD06', 'SystemConfiguration', 'LCM_Inventory', 'LCM'). Defaults to 'All'."
-      },
-      {
-        "Name": "Subsystem",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "All",
-        "Description": "Direct pre-filter for specific subsystem (e.g. 'HaSSD06', 'LCM_AI', 'LCM_Inventory'). Defaults to 'All'."
-      },
-      {
-        "Name": "HaSSD06",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Quick switch to filter directly to Home Assistant HaSSD06 Subsystem tools (Aliases: -Ha, -HomeAssistant)."
-      },
-      {
-        "Name": "Role",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "All",
-        "Description": "Pre-filter by functional role (e.g. 'QualityGate', 'ReviewGate', 'Elevation', 'DesktopGUI'). Defaults to 'All'."
-      },
-      {
-        "Name": "Tool",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "All",
-        "Description": "Pre-select a specific tool name to highlight on startup. Defaults to 'All'."
-      },
-      {
-        "Name": "Env",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "All",
-        "Description": "Pre-filter by tool environment ('PS1', 'CMD', 'PY', 'REG', 'LNK', 'All'). Defaults to 'All'."
-      },
-      {
-        "Name": "Filter",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Initial search keyword to apply on dashboard startup. Defaults to ''."
-      },
-      {
-        "Name": "NoBrowser",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Suppresses launching the web browser and outputs the tool catalog directly as formatted text in the terminal (Aliases: -Cli, -Text, -Console)."
-      }
-    ],
-    "Dependencies": [
-      "LcmWorkspaceContext.psm1",
-      "Invoke-LcmProtocol.ps1",
-      "LcmToolCatalog.psm1",
-      "Invoke-InteractiveDesktop.ps1"
-    ]
-  },
-  {
-    "Name": "Show-Actions.ps1",
-    "ShortName": "ShowActions",
-    "Aliases": null,
-    "Role": "Telemetry",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": false,
-    "Group": "LCM_Inventory",
-    "Domain": "LCM_Inventory",
-    "Type": "PowerShell",
-    "Category": "Audit Logs",
-    "Description": "Fast lightweight terminal reader displaying recent operational actions and tool execution step summaries.",
-    "Example": "ShowActions",
-    "RelativePath": "LCM_Inventory\\tools\\Show-Actions.ps1",
-    "Parameters": [
-      {
-        "Name": "Count",
-        "Type": "Int32",
-        "Mandatory": false,
-        "Default": "5",
-        "Description": "Number of recent actions to display (Default: 5)."
-      },
-      {
-        "Name": "Subsystem",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Filters action log stream by specific subsystem (e.g. 'HaSSD06')."
-      },
-      {
-        "Name": "Detailed",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Displays all raw log lines for the action instead of the compact step summary."
-      },
-      {
-        "Name": "ToolName",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Filter by a specific tool name (e.g. 'Show-ToolIndex', 'Update-ToolCatalog', 'Export-LCMRules')."
-      },
-      {
-        "Name": "Open",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Opens the latest action log in Notepad on Session 1 interactive desktop."
-      }
-    ],
-    "Dependencies": "Invoke-InteractiveDesktop.ps1"
   },
   {
     "Name": "Advance-Governance.ps1",
@@ -1944,6 +1966,46 @@
     "Dependencies": null
   },
   {
+    "Name": "Invoke-BcrDispatcher.ps1",
+    "ShortName": "BcrDispatcher",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Invoke-BcrDispatcher execution tool.",
+    "Example": "BcrDispatcher",
+    "RelativePath": "LCM_Inventory\\tools\\Invoke-BcrDispatcher.ps1",
+    "Parameters": [
+      {
+        "Name": "Scope",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Optional CRP/BUG identity, repository, or declared cohort"
+      },
+      {
+        "Name": "BaseCommit",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "HEAD",
+        "Description": "Optional baseline commit"
+      },
+      {
+        "Name": "Preview",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Resolve and display the BCR cohort without launching review"
+      }
+    ],
+    "Dependencies": "Invoke-ProposalAction.ps1"
+  },
+  {
     "Name": "build_offline_docs.py",
     "ShortName": "buildofflinedocs",
     "Aliases": null,
@@ -2039,6 +2101,13 @@
         "Description": "Target repository name"
       },
       {
+        "Name": "ReviewIdentity",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Exact isolated review identity (for example BUG-276_LCM_AI); defaults to CRP"
+      },
+      {
         "Name": "WorkspaceRoot",
         "Type": "String",
         "Mandatory": false,
@@ -2057,7 +2126,7 @@
         "Type": "SwitchParameter",
         "Mandatory": false,
         "Default": "",
-        "Description": "Force removal even if Beyond Compare process is currently running"
+        "Description": "Force cleanup only after Beyond Compare is closed"
       }
     ],
     "Dependencies": [
@@ -2110,7 +2179,7 @@
         "Description": "Suppress automatically opening Windows File Explorer"
       }
     ],
-    "Dependencies": null
+    "Dependencies": "BCompare.exe"
   },
   {
     "Name": "Invoke-CompactBCompareReview.ps1",
@@ -2170,6 +2239,49 @@
       "BCompare",
       "bcompare",
       "BCompare.exe"
+    ]
+  },
+  {
+    "Name": "Complete-ReviewCohort.ps1",
+    "ShortName": "CompleteReviewCohort",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Complete-ReviewCohort execution tool.",
+    "Example": "CompleteReviewCohort",
+    "RelativePath": "LCM_Inventory\\tools\\Complete-ReviewCohort.ps1",
+    "Parameters": [
+      {
+        "Name": "CohortId",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "Notes",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "IncludeUnreviewed",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      }
+    ],
+    "Dependencies": [
+      "ProposalManager.psm1",
+      "Submit-ReviewResult.ps1"
     ]
   },
   {
@@ -3230,6 +3342,53 @@
     "Dependencies": "Invoke-InteractiveDesktop.ps1"
   },
   {
+    "Name": "Invoke-LearnedAdviceReview.ps1",
+    "ShortName": "LearnedAdviceReview",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Invoke-LearnedAdviceReview execution tool.",
+    "Example": "LearnedAdviceReview",
+    "RelativePath": "LCM_Inventory\\tools\\Invoke-LearnedAdviceReview.ps1",
+    "Parameters": [
+      {
+        "Name": "Accept",
+        "Type": "Int32[]",
+        "Mandatory": false,
+        "Default": "@()",
+        "Description": "Candidate numbers (as listed) to accept."
+      },
+      {
+        "Name": "Promote",
+        "Type": "Int32[]",
+        "Mandatory": false,
+        "Default": "@()",
+        "Description": "Candidate numbers to accept and tag for promotion into the rules."
+      },
+      {
+        "Name": "Reject",
+        "Type": "Int32[]",
+        "Mandatory": false,
+        "Default": "@()",
+        "Description": "Candidate numbers to delete."
+      },
+      {
+        "Name": "Check",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Only report; exit 1 if candidates are pending."
+      }
+    ],
+    "Dependencies": "LcmWorkspaceContext.psm1"
+  },
+  {
     "Name": "Invoke-Level1AnalysisRefinement.ps1",
     "ShortName": "Level1AnalysisRefinement",
     "Aliases": null,
@@ -3462,6 +3621,13 @@
         "Description": "Additional details or notes for proposal transition"
       },
       {
+        "Name": "Changes",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Concrete correction requests for reinstate; when omitted, reinstate returns the CRP to suggested"
+      },
+      {
         "Name": "State",
         "Type": "String",
         "Mandatory": false,
@@ -3525,6 +3691,13 @@
         "Description": "Set LCM testing mode: active (syntax/unit) or paused (deferred deep testing)"
       },
       {
+        "Name": "SwitchState",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Set a selected proposal switch to active or paused"
+      },
+      {
         "Name": "MinimalTests",
         "Type": "SwitchParameter",
         "Mandatory": false,
@@ -3536,17 +3709,70 @@
         "Type": "SwitchParameter",
         "Mandatory": false,
         "Default": "",
-        "Description": "Force execution overriding lifecycle safety gates"
+        "Description": "Authorized exception to interactive visual-review confirmation only; does not waive lifecycle or preflight checks"
       },
       {
         "Name": "Immediately",
         "Type": "SwitchParameter",
         "Mandatory": false,
         "Default": "",
-        "Description": "Authorized Gate 2 visual review bypass exception per RULE-REV-002"
+        "Description": "Emergency quality-check deferral; a single CRP target is reclassified as BUG, while a multi-target cohort requires a BUG; requires -Details and ends at BCR"
+      },
+      {
+        "Name": "Preview",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Resolve and report the BCR cohort without launching review or changing lifecycle state"
+      },
+      {
+        "Name": "BaseCommit",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "HEAD",
+        "Description": "Baseline commit used for BCR cohort review"
+      },
+      {
+        "Name": "CohortAction",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Cohort action: create, add, remove, hold, reopen, or close"
+      },
+      {
+        "Name": "CohortId",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Declared cohort ID (COH-<prime proposal ID>)"
+      },
+      {
+        "Name": "SuccessorId",
+        "Type": "Int32",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Successor proposal ID required by the supersede action"
+      },
+      {
+        "Name": "IncludeUnreviewed",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Include unreviewed live paths during cohort completion"
+      },
+      {
+        "Name": "ReviewObligationId",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Persisted cross-repository review-obligation ledger entry to satisfy through the normal BCR action"
       }
     ],
-    "Dependencies": "Invoke-BeyondCompareReview.ps1"
+    "Dependencies": [
+      "Invoke-BeyondCompareReview.ps1",
+      "Complete-ReviewCohort.ps1",
+      "Submit-ReviewResult.ps1"
+    ]
   },
   {
     "Name": "Publish-WorkspaceProposalBundles.ps1",
@@ -3649,25 +3875,67 @@
     "RelativePath": "LCM_Inventory\\tools\\Invoke-ReasoningAnalysis.ps1",
     "Parameters": [
       {
+        "Name": "TranscriptPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Optional offline fallback: path to an exported JSON or JSONL transcript file. During normal chat use, the active IDE host supplies its session transcript automatically."
+      },
+      {
+        "Name": "From",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Case-insensitive quoted text that identifies the start event. Matching multiple events stops with an explicit ambiguity error; use -ListMatches to inspect candidates."
+      },
+      {
+        "Name": "Until",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Optional case-insensitive quoted text that identifies the inclusive final event."
+      },
+      {
+        "Name": "ListMatches",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Lists matching event metadata and does not generate a report."
+      },
+      {
         "Name": "Offset",
         "Type": "Int32",
         "Mandatory": false,
+        "Default": "",
+        "Description": "Legacy user-message offset. Zero is the newest user message in the supplied transcript."
+      },
+      {
+        "Name": "Context",
+        "Type": "Int32",
+        "Mandatory": false,
         "Default": "0",
-        "Description": "Relative chat turn offset to analyze (e.g. 0, -1, -2)"
+        "Description": ""
+      },
+      {
+        "Name": "Include",
+        "Type": "String[]",
+        "Mandatory": false,
+        "Default": "@('All')",
+        "Description": ""
       },
       {
         "Name": "OutputPath",
         "Type": "String",
         "Mandatory": false,
         "Default": "",
-        "Description": "Custom output path for the report"
+        "Description": ""
       },
       {
         "Name": "View",
         "Type": "SwitchParameter",
         "Mandatory": false,
         "Default": "",
-        "Description": "Open generated report in default viewer"
+        "Description": ""
       }
     ],
     "Dependencies": null
@@ -3866,6 +4134,46 @@
       }
     ],
     "Dependencies": null
+  },
+  {
+    "Name": "Save-AllSessionMemory.ps1",
+    "ShortName": "SaveAllSessionMemory",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Save-AllSessionMemory execution tool.",
+    "Example": "SaveAllSessionMemory",
+    "RelativePath": "LCM_Inventory\\tools\\Save-AllSessionMemory.ps1",
+    "Parameters": [
+      {
+        "Name": "Learn",
+        "Type": "String[]",
+        "Mandatory": false,
+        "Default": "@()",
+        "Description": "New lines for LEARNED_ADVICE.md; they enter as candidates (/learn) and need a review."
+      },
+      {
+        "Name": "Author",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "AI",
+        "Description": ""
+      },
+      {
+        "Name": "DryRun",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Report what would be written, change nothing."
+      }
+    ],
+    "Dependencies": "LcmWorkspaceContext.psm1"
   },
   {
     "Name": "Save-LCMRules.ps1",
@@ -4429,7 +4737,7 @@
         "Type": "SwitchParameter",
         "Mandatory": false,
         "Default": "",
-        "Description": "Include all changes, including uncopied files, without interactive confirmation"
+        "Description": "Legacy compatibility switch; accepted reviews commit the live working tree"
       },
       {
         "Name": "MinimalTests",
@@ -4443,15 +4751,33 @@
         "Type": "SwitchParameter",
         "Mandatory": false,
         "Default": "",
-        "Description": "Force review commit and bypass safety checks"
+        "Description": "Authorized exception to interactive visual-review confirmation only; does not waive lifecycle or preflight checks"
+      },
+      {
+        "Name": "CRP",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Exact CRP or BUG identifier (e.g. CRP-257)"
+      },
+      {
+        "Name": "SkipLifecycleSynchronization",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Commits and records review evidence without independently changing the proposal lifecycle; reserved for atomic cohort completion"
+      },
+      {
+        "Name": "IncludeUnreviewed",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Explicitly include durable unreviewed paths disclosed by the current BCR staging manifest"
       }
     ],
     "Dependencies": [
       "AdminMode.psm1",
-      "Invoke-BeyondCompareReview.ps1",
-      "Clear-BCReviewSession.ps1",
-      "BCompare",
-      "BCompare.exe"
+      "ProposalManager.psm1"
     ]
   },
   {
@@ -4554,8 +4880,8 @@
         "Name": "TargetMajor",
         "Type": "Int32",
         "Mandatory": false,
-        "Default": "7",
-        "Description": "Target major release number to enforce (e.g. 7)"
+        "Default": "10",
+        "Description": "Target major release number to enforce (e.g. 10)"
       },
       {
         "Name": "TargetBaseline",
@@ -4584,6 +4910,13 @@
         "Mandatory": false,
         "Default": "D:\\Git_Repositories",
         "Description": "Root workspace directory containing repository manifests"
+      },
+      {
+        "Name": "FullBaseline",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Normalize all LCM-owned semantic versions to TargetBaseline and metadata dates to the release date."
       }
     ],
     "Dependencies": null
@@ -5138,6 +5471,49 @@
     "Dependencies": null
   },
   {
+    "Name": "Invoke-WorkspaceGoodMorning.ps1",
+    "ShortName": "WorkspaceGoodMorning",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Invoke-WorkspaceGoodMorning execution tool.",
+    "Example": "WorkspaceGoodMorning",
+    "RelativePath": "LCM_Inventory\\tools\\Invoke-WorkspaceGoodMorning.ps1",
+    "Parameters": [
+      {
+        "Name": "Auto",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Session-start mode: silent (one line) when the gap is below -GapHours."
+      },
+      {
+        "Name": "GapHours",
+        "Type": "Double",
+        "Mandatory": false,
+        "Default": "7",
+        "Description": "Gap that implies a good morning. Default 7."
+      },
+      {
+        "Name": "Force",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Run the full check regardless of the gap."
+      }
+    ],
+    "Dependencies": [
+      "LcmWorkspaceContext.psm1",
+      "Test-Guardrail.ps1"
+    ]
+  },
+  {
     "Name": "Invoke-WorkspaceGoodNight.ps1",
     "ShortName": "WorkspaceGoodNight",
     "Aliases": null,
@@ -5161,11 +5537,32 @@
         "Description": "Commit and audit reason for the end-of-day push"
       },
       {
-        "Name": "NoPush",
+        "Name": "Push",
         "Type": "SwitchParameter",
         "Mandatory": false,
         "Default": "",
-        "Description": "Skip remote git push (local save, log archival, and exports only)"
+        "Description": "Publish (git push) all repos after committing. Default: off; Good Night ends at Committed."
+      },
+      {
+        "Name": "NoCommit",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Skip the commit step (save all, archival and exports only)"
+      },
+      {
+        "Name": "Learn",
+        "Type": "String[]",
+        "Mandatory": false,
+        "Default": "@()",
+        "Description": "Learned-advice candidates to add to LEARNED_ADVICE.md"
+      },
+      {
+        "Name": "Author",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "AI",
+        "Description": "Name of the AI writing the candidates"
       },
       {
         "Name": "SkipGemini",
@@ -5184,9 +5581,11 @@
     ],
     "Dependencies": [
       "LcmWorkspaceContext.psm1",
+      "Save-AllSessionMemory.ps1",
       "Archive-LcmDaemonLogs.ps1",
       "Update-Gemini.ps1",
       "Show-LcmControl.ps1",
+      "Test-Guardrail.ps1",
       "Invoke-WorkspacePush.ps1"
     ]
   },
@@ -5305,10 +5704,13 @@
     ],
     "Dependencies": [
       "WorkspacePushEligibility.psm1",
+      "Invoke-LearnedAdviceReview.ps1",
+      "ProposalManager.psm1",
       "Update-Gemini.ps1",
       "Update-ToolCatalog.ps1",
       "Invoke-WorkspaceMaintenance.ps1",
-      "Clear-BCReviewTemp.ps1"
+      "Clear-BCReviewTemp.ps1",
+      "Module: (Join-Path $workspaceRoot 'LCM_Inventory\\modules\\ProposalManager.psm1')"
     ]
   },
   {

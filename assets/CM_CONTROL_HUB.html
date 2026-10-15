@@ -1719,7 +1719,16 @@
     }
 
     function getObligationWorkQueueCohorts() {
-      return ((proposalsData.review_obligation_ledger || {}).entries || [])
+      const obligations = ((proposalsData.review_obligation_ledger || {}).entries || []);
+      const uniqueObligations = new Map();
+      obligations.forEach(obligation => {
+        const key = `${Number(obligation.proposal_id)}::${String(obligation.repository || "").toLowerCase()}`;
+        const existing = uniqueObligations.get(key);
+        if (!existing || String(existing.status || "open").toLowerCase() === "completed") {
+          uniqueObligations.set(key, obligation);
+        }
+      });
+      return [...uniqueObligations.values()]
         .map(obligation => {
           const proposal = (proposalsData.proposals || []).find(item => Number(item.id) === Number(obligation.proposal_id));
           if (!proposal) return null;
@@ -1912,7 +1921,7 @@
       const tag = (proposalsData.proposals || []).find(proposal => Number(proposal.id) === Number(id))?.crp_id || `CRP-${id}`;
       const previousLabel = previousTarget ? getTargetActionLabel(previousTarget) : "no ITEM";
       setActionResult(`ITEM explicitly switched from ${previousLabel} to ${tag}. Row actions now target ${tag}; select a COH ITEM to act on its full membership.`, "");
-      toggleShowDropdown(event, id);
+      deferShowDropdownToggle(id);
     }
 
     let pendingTargetAction = "";
@@ -2091,7 +2100,7 @@
     function selectCohortAndOpenActions(event, cohortId) {
       event.stopPropagation();
       selectItemTarget(`COH:${cohortId}`);
-      toggleShowDropdown(event, `cohort-${cohortId}`);
+      deferShowDropdownToggle(`cohort-${cohortId}`);
     }
 
     function manageCohortState(cohortId, action) {
@@ -2536,7 +2545,9 @@
                 <div class="show-dropdown-title">This wizard explicitly selects ${crpTag}. Select a COH in ITEM to act on all cohort members.</div>
                 <div class="show-dropdown-title">Lifecycle</div>
                 <button class="show-dropdown-item" onclick="dispatchTargetAction('proceed')"><span class="btn-icon">⚡</span> Proceed ITEM</button>
-                <button class="show-dropdown-item" onclick="dispatchTargetAction('do')"><span class="btn-icon">▶️</span> Do ITEM (-DOIT)</button>
+                ${getLifecycleState(p) === "suggested"
+                  ? `<button class="show-dropdown-item" onclick="dispatchTargetAction('do')"><span class="btn-icon">▶️</span> ${isDoit ? "Do ITEM (Doit)" : "Do ITEM"}</button>`
+                  : ""}
                 <button class="show-dropdown-item" onclick="dispatchTargetAction('bcr')"><span class="btn-icon">🔍</span> Open Review</button>
                 <button class="show-dropdown-item" onclick="dispatchStandardAction('reviewed', [getActiveItemTarget()?.item?.id], '')"><span class="btn-icon">✅</span> ACCEPTED: Item</button>
                 ${getLifecycleState(p) === "held"
@@ -2595,7 +2606,6 @@
                 <div class="show-dropdown-title">ACTIONS: ${esc(cohort.id)}</div>
                 <div class="show-dropdown-title">Lifecycle</div>
                 <button class="show-dropdown-item" onclick="dispatchCohortAction('${esc(cohort.id)}', 'proceed')"><span class="btn-icon">⚡</span> Proceed ITEM</button>
-                <button class="show-dropdown-item" onclick="dispatchCohortAction('${esc(cohort.id)}', 'do')"><span class="btn-icon">▶️</span> Do ITEM (-DOIT)</button>
                 <button class="show-dropdown-item" onclick="dispatchCohortAction('${esc(cohort.id)}', 'bcr')"><span class="btn-icon">🔍</span> Open Review</button>
                 <button class="show-dropdown-item" onclick="dispatchCohortAction('${esc(cohort.id)}', 'complete')"><span class="btn-icon">✅</span> ACCEPTED: COH</button>
                 <button class="show-dropdown-item" onclick="dispatchCohortAction('${esc(cohort.id)}', 'hold')"><span class="btn-icon">⏸️</span> Hold ITEM</button>
@@ -2719,7 +2729,16 @@
 
     function toggleShowDropdown(event, id) {
       event.stopPropagation();
+      toggleShowDropdownById(id);
+    }
+
+    function deferShowDropdownToggle(id) {
+      requestAnimationFrame(() => toggleShowDropdownById(id));
+    }
+
+    function toggleShowDropdownById(id) {
       const menu = $("dropdown-" + id);
+      if (!menu) return;
       const isAlreadyOpen = menu.classList.contains("active");
       document.querySelectorAll(".show-dropdown-menu").forEach(el => el.classList.remove("active"));
       if (!isAlreadyOpen) {

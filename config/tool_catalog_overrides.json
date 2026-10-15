@@ -1,20 +1,15 @@
 ﻿{
-  "LCM_Inventory\\tools\\Show-Actions.ps1": {
-    "Audience": "Developer"
+  "Invoke-BeyondCompareReview.ps1": {
+    "NoExit": false
   },
-  "Show-Actions.ps1": {
-    "Audience": "Developer"
+  "LCM_Inventory\\tools\\Show-LcmControl.ps1": {
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Subsystem": "LCM_Inventory"
   },
-  "LCM_Inventory\\tools\\Show-CmdFolderAnalysis.ps1": {
-    "Audience": "Developer"
-  },
-  "Show-CmdFolderAnalysis.ps1": {
-    "Audience": "Developer"
-  },
-  "LCM_Inventory\\tools\\Show-ToolsExplorer.ps1": {
-    "Audience": "Developer"
-  },
-  "Show-ToolsExplorer.ps1": {
-    "Audience": "Developer"
+  "Show-LcmControl.ps1": {
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Subsystem": "LCM_Inventory"
   }
 }

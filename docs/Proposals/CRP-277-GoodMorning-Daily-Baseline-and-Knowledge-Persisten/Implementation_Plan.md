@@ -1,45 +1,51 @@
-# Implementation Plan: CRP-277 - GoodMorning Daily Baseline and Knowledge Persistence Routine
+# Implementation Plan: CRP-277 - Macrium Reflect-Backed BCR Review Workflow
 
 ## 1. Executive Summary & Problem Context
-GoodMorning needs a repeatable daily preparation path for the Macrium-backed
-Beyond Compare LHS baseline. GoodNIGHT receipt/recovery work is separated into
-CRP-278.
+The review process needs a reproducible writable baseline and an exact BCR
+execution path. Macrium Reflect provides the baseline; Beyond Compare provides
+the governed review. This CRP re-implements that complete review workflow.
 
 ## 2. Proposed Changes
-### Component 1: Daily Macrium Baseline Provisioning
+### Component 1: Macrium Reflect Review Baseline
 
-- Extend, rather than replace, the existing read-only
-  `Invoke-WorkspaceGoodMorning.ps1` session recovery report with an explicit
-  `-PrepareBcrBaseline` opt-in.
 - Discover eligible restore points from Macrium's same-day completion reports.
   Do not use an older fallback automatically.
 - If no completed restore point is found today, start the configured Macrium
   definition and visibly poll until Macrium records completion or the bounded
-  timeout expires.
+  timeout expires. Persist one automatic-start receipt per local calendar day;
+  a missing backup directory is an availability result that follows this same
+  recovery path. Permit an additional same-day backup only through the explicit
+  `-ForceNewBackup` operator override.
+- Route lifecycle BCR through a mounted-baseline reuse mode. It finds the
+  expected volume label in the bounded `F:`-`I:` range and validates `_LCM`
+  against that assigned letter, but never detaches, remounts, or replaces the writable
+  baseline that records operator review progress.
 - Gracefully close only the named `_LCM` comparison before cleaning matching
   image mounts in the bounded `F:`-`I:` range.
 - Elevate the detach and Browse Image mount operations. Mount only the `D:`
-  image partition, require the configured `F:` assignment rather than silently
-  accepting an alternate, enable restricted-folder access and writable mode,
-  then validate the expected label and `Git_Repositories` root.
-- Validate the existing `_LCM` profile's exact roots, content comparison,
-  changed-only directory handling, `.git\hooks` inclusion, and writable-LHS
-  contract before launch. Do not rewrite its filters or settings.
-- Resolve an active CRP/BUG as the explicit RHS review scope and record it in
-  the execution receipt. When none exists, record `BCR-BASELINE-DUMMY` without
-  creating lifecycle evidence.
+  image partition, accept only a Macrium-selected letter in `F:`-`I:`, enable
+  restricted-folder access and writable mode, then validate the expected label
+  and `Git_Repositories` root.
 
-### Component 2: Beyond Compare Readiness
+### Component 2: Complete BCR Review Execution
 
 - Verify the operator-managed two-way profile binds the mounted
   `Git_Repositories` root to `D:\Git_Repositories`.
 - Verify that the profile's saved filters and writable-LHS configuration are
   present without rewriting the profile.
-- Preserve the RHS-only lifecycle acceptance rule.
+- Resolve the exact CRP, BUG, or declared cohort before BCR; synchronize
+  cohort members through their required review gate before opening the
+  comparison.
+- Reuse an existing exact review window instead of creating duplicate tabs and
+  open required cross-repository BCR tabs as separate obligations.
+- Record the BCR scope, review disposition, and cross-repository obligations.
+  Preserve RHS-only acceptance, staging, commit, and completion behavior.
 
 ## 3. Verification Plan
-- Test today-only backup selection, no-older-fallback behavior, cancellation,
-  and timeout reporting with mocked Macrium discovery.
-- Test mount-root, drive-letter, and BC-profile validation failures.
+- Test same-day selection, no-older-fallback behavior, bounded polling,
+  label-matched mount-root validation within `F:`-`I:`, and `_LCM` profile
+  validation.
+- Test exact-identity BCR resolution, cohort synchronization, session reuse,
+  and cross-repository obligation discovery.
 - Run focused Pester tests, PowerShell AST parsing, and readiness quality
   gates.

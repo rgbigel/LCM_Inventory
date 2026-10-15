@@ -30,6 +30,21 @@ once. Browser JavaScript must never attempt to start the task directly.
 
 ---
 
+## 1.2 Original Proposal Intake Records
+
+Each proposal bundle retains its operator-authored intake in
+`Original_Proposal.md`. This record is distinct from `Specification.md`,
+`Implementation_Plan.md`, and `Walkthrough.md`: it preserves the original
+proposal wording, while those lifecycle documents capture subsequently approved
+requirements, implementation, and verification. ShowCM's **Edit Original CRP**
+action resolves this file only; it must not substitute a lifecycle document.
+
+For historical proposals whose original intake was not retained, restoration
+must be explicitly identified and limited to the authoritative ledger intake
+fields. A reconstructed record is not evidence of wording that was not retained.
+
+---
+
 ## 1. System Overview & End-User Perspective
 
 **`LCM_Inventory`** serves as the central operational hub and single source of truth for the entire Lifecycle Model (LCM) multi-repository ecosystem. It governs configuration tracking, change request proposal (CRP) state progression, multi-repository review gating via Beyond Compare 5, drift auditing, and multi-repo remote push orchestration.

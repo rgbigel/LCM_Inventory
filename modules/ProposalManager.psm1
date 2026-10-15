@@ -329,6 +329,129 @@ function Test-LcmProposalLifecycleTransition {
     return $ToState -in @($allowed[$FromState])
 }
 
+function New-LcmLifecycleFailureReport {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Action,
+
+        [Parameter(Mandatory = $true)]
+        [string]$TargetExpression,
+
+        [Parameter(Mandatory = $true)]
+        [psobject[]]$Failures
+    )
+
+    $routes = [System.Collections.Generic.List[psobject]]::new()
+    foreach ($failure in $Failures) {
+        switch ([string]$failure.conflict_type) {
+            'invalid transition' {
+                $routes.Add([PSCustomObject]@{
+                    rank = 1
+                    required_user_action = 'Choose a lifecycle action valid for the current state.'
+                    affected_identities = @($failure.identity)
+                    effect = 'Changes lifecycle status only after an explicit valid action.'
+                })
+            }
+            'incomplete evidence' {
+                $routes.Add([PSCustomObject]@{
+                    rank = 1
+                    required_user_action = 'Supply or run the missing verification evidence, then retry the requested action.'
+                    affected_identities = @($failure.identity)
+                    effect = 'Adds verification evidence; does not accept review evidence.'
+                })
+            }
+            'unresolved review obligation' {
+                $routes.Add([PSCustomObject]@{
+                    rank = 1
+                    required_user_action = 'Review and resolve the listed cross-repository obligation.'
+                    affected_identities = @($failure.identity)
+                    effect = 'Records review evidence before a later completion action.'
+                })
+            }
+            'target-resolution failure' {
+                $routes.Add([PSCustomObject]@{
+                    rank = 1
+                    required_user_action = 'Refresh the lifecycle ledger and select an existing CRP or cohort identity.'
+                    affected_identities = @($failure.identity)
+                    effect = 'Changes neither lifecycle state nor review evidence.'
+                })
+            }
+        }
+    }
+
+    $deduplicatedRoutes = @(
+        $routes | Group-Object required_user_action | ForEach-Object {
+            $first = $_.Group[0]
+            $first | Add-Member -NotePropertyName 'affected_identities' -NotePropertyValue @(
+                $_.Group | ForEach-Object { $_.affected_identities } | Select-Object -Unique
+            ) -Force
+            $first
+        } | Select-Object -First 3
+    )
+
+    return [PSCustomObject]@{
+        report_type = 'lifecycle-status-failure'
+        generated_at = (Get-Date).ToString('o')
+        requested_action = $Action
+        target_expression = $TargetExpression
+        direct_failures = @($Failures)
+        escape_routes = $deduplicatedRoutes
+    }
+}
+
+function Format-LcmLifecycleFailureReport {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [psobject]$Report
+    )
+
+    $lines = [System.Collections.Generic.List[string]]::new()
+    $lines.Add('LIFECYCLE STATUS FAILURE REPORT')
+    $lines.Add(("Request: {0} {1}" -f $Report.requested_action.ToUpperInvariant(), $Report.target_expression))
+    foreach ($failure in @($Report.direct_failures)) {
+        $lines.Add(("- {0}: {1}" -f $failure.identity, $failure.reason))
+        $lines.Add(("  Current: {0}; requested: {1}; conflict: {2}" -f $failure.current_state, $failure.requested_state, $failure.conflict_type))
+        $lines.Add(("  Source: {0} ({1})" -f $failure.source.path, $failure.source.symbol))
+        if (@($failure.governing_references).Count -gt 0) {
+            $lines.Add(("  Governing reference: {0}" -f ((@($failure.governing_references) -join '; '))))
+        }
+    }
+    if (@($Report.escape_routes).Count -gt 0) {
+        $lines.Add('Compliant escape routes (not executed):')
+        foreach ($route in @($Report.escape_routes)) {
+            $lines.Add(("  {0}. {1} Affected: {2}. Effect: {3}" -f $route.rank, $route.required_user_action, ($route.affected_identities -join ', '), $route.effect))
+        }
+    } else {
+        $lines.Add('No compliant escape route was identified. Inspect the listed source and evidence.')
+    }
+    return @($lines)
+}
+
+function New-LcmLifecycleFailureException {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [psobject]$Report,
+
+        [string]$Message = ''
+    )
+
+    $summary = @($Report.direct_failures | ForEach-Object {
+        "{0}: {1}" -f $_.identity, $_.reason
+    }) -join ' '
+    $exception = [System.InvalidOperationException]::new(
+        $(if ([string]::IsNullOrWhiteSpace($Message)) {
+            "Lifecycle action '$($Report.requested_action)' was not applied to '$($Report.target_expression)'. $summary"
+        } else {
+            $Message
+        })
+    )
+    $exception.Data['LcmLifecycleFailureReport'] = $Report | ConvertTo-Json -Depth 8 -Compress
+    return $exception
+}
+
 function Get-LcmProposalReviewObligations {
     [CmdletBinding()]
     param(
@@ -389,12 +512,39 @@ function Register-LcmCrossRepositoryReviewObligation {
     if (-not $store.review_obligation_ledger.PSObject.Properties['entries'] -or $null -eq $store.review_obligation_ledger.entries) {
         $store.review_obligation_ledger | Add-Member -NotePropertyName 'entries' -NotePropertyValue @() -Force
     }
-    $existing = @($store.review_obligation_ledger.entries | Where-Object {
+    $existingObligations = @($store.review_obligation_ledger.entries | Where-Object {
         [int]$_.proposal_id -eq $Id -and
         ([string]$_.repository).Equals($Repository, [System.StringComparison]::OrdinalIgnoreCase) -and
-        [string]$_.reason -eq $Reason
-    }) | Select-Object -First 1
+        [string]$_.status -ne 'completed'
+    })
+    $existing = @($existingObligations | Select-Object -First 1)
     if ($existing) {
+        $observedReasons = @(
+            foreach ($existingObligation in $existingObligations) {
+                if ($existingObligation.PSObject.Properties['observed_reasons'] -and $null -ne $existingObligation.observed_reasons) {
+                    @($existingObligation.observed_reasons)
+                } elseif (-not [string]::IsNullOrWhiteSpace([string]$existingObligation.reason)) {
+                    @([string]$existingObligation.reason)
+                }
+            }
+            if (-not [string]::IsNullOrWhiteSpace($Reason)) {
+                $Reason
+            }
+        ) | Select-Object -Unique
+        $existing | Add-Member -NotePropertyName 'observed_reasons' -NotePropertyValue @($observedReasons) -Force
+        $existing | Add-Member -NotePropertyName 'last_observed_at' -NotePropertyValue (Get-Date).ToString('yyyy-MM-dd HH:mm:ss') -Force
+        if ($existingObligations.Count -gt 1) {
+            $store.review_obligation_ledger.entries = @(
+                $store.review_obligation_ledger.entries | Where-Object {
+                    -not (
+                        [int]$_.proposal_id -eq $Id -and
+                        ([string]$_.repository).Equals($Repository, [System.StringComparison]::OrdinalIgnoreCase) -and
+                        [string]$_.status -ne 'completed'
+                    )
+                }
+            ) + $existing
+        }
+        Set-ProposalStore -Store $store
         return $existing
     }
 
@@ -412,6 +562,7 @@ function Register-LcmCrossRepositoryReviewObligation {
         status        = 'open'
         discovered_at = (Get-Date).ToString('yyyy-MM-dd HH:mm:ss')
         reason        = $Reason
+        observed_reasons = @($Reason)
         bcr_identity  = $identity
     }
     $store.review_obligation_ledger.entries = @($store.review_obligation_ledger.entries) + $obligation
@@ -1737,13 +1888,13 @@ function Set-LcmProposalSupersession {
         throw "Successor proposal #$SuccessorId is not active."
     }
 
-    $updated = Move-LcmProposalLifecycleState -Id $Id -State superseded -Details $Details
+    $updated = Move-LcmProposalLifecycleState -Id $Id -State superseded -Details $Details -Store $store -SkipPersist
     $timestamp = (Get-Date).ToString('yyyy-MM-dd HH:mm:ss')
     $updated | Add-Member -NotePropertyName 'superseded_by_id' -NotePropertyValue $SuccessorId -Force
     $updated | Add-Member -NotePropertyName 'superseded_at' -NotePropertyValue $timestamp -Force
     $successor | Add-Member -NotePropertyName 'supersedes_id' -NotePropertyValue $Id -Force
     $successor | Add-Member -NotePropertyName 'supersedes_at' -NotePropertyValue $timestamp -Force
-    Set-ProposalStore -Store (Get-ProposalStore)
+    Set-ProposalStore -Store $store
     return $updated
 }
 
@@ -1833,21 +1984,53 @@ function Invoke-ProposalBatchAction {
     }
 
     $validationFailures = @()
+    $failureRecords = @()
     foreach ($id in $targetIds) {
         $targetState = $mappedState
         $store = Get-ProposalStore
         $proposal = @($store.proposals | Where-Object { $_.id -eq $id })[0]
         if ($null -eq $proposal) {
             $validationFailures += "Proposal #$id was not found."
+            $failureRecords += [PSCustomObject]@{
+                identity = "CRP-$id"
+                current_state = 'unresolved'
+                requested_state = $targetState
+                reason = "The requested proposal ID is not present in the lifecycle ledger."
+                conflict_type = 'target-resolution failure'
+                source = [PSCustomObject]@{ repository = 'LCM_Inventory'; path = 'modules\ProposalManager.psm1'; symbol = 'Invoke-ProposalBatchAction' }
+                governing_references = @('ProposalReviewFlowPolicy.md: lifecycle target selection')
+            }
             continue
         }
         $currentState = [string]$proposal.state
         if ($currentState -eq 'approved') {
             $currentState = 'in_progress'
         }
+        if ($Action -eq 'do' -and $currentState -ne 'suggested') {
+            $validationFailures += "Proposal #$id cannot run action 'do' from '$currentState'; Do is available only from suggested."
+            $failureRecords += [PSCustomObject]@{
+                identity = if ($proposal.PSObject.Properties['crp_id'] -and $proposal.crp_id) { [string]$proposal.crp_id } else { "CRP-$id" }
+                current_state = $currentState
+                requested_state = 'in_progress'
+                reason = "Do is an activation action and is unavailable after this proposal has passed the suggested state."
+                conflict_type = 'invalid transition'
+                source = [PSCustomObject]@{ repository = 'LCM_Inventory'; path = 'modules\ProposalManager.psm1'; symbol = 'Invoke-ProposalBatchAction' }
+                governing_references = @('RULE-LCM-014', 'ProposalReviewFlowPolicy.md: lifecycle action table')
+            }
+            continue
+        }
         if ($Action -eq 'reinstate') {
             if ($currentState -notin @('completed', 'pushed')) {
                 $validationFailures += "Proposal #$id can be reinstated only from completed or pushed; found '$currentState'."
+                $failureRecords += [PSCustomObject]@{
+                    identity = if ($proposal.PSObject.Properties['crp_id'] -and $proposal.crp_id) { [string]$proposal.crp_id } else { "CRP-$id" }
+                    current_state = $currentState
+                    requested_state = 'suggested or in_progress'
+                    reason = 'Reinstatement preserves delivery evidence and is available only after completion or publication.'
+                    conflict_type = 'invalid transition'
+                    source = [PSCustomObject]@{ repository = 'LCM_Inventory'; path = 'modules\ProposalManager.psm1'; symbol = 'Invoke-ProposalBatchAction' }
+                    governing_references = @('RULE-LCM-014', 'ProposalReviewFlowPolicy.md: lifecycle action table')
+                }
             }
             continue
         }
@@ -1857,10 +2040,21 @@ function Invoke-ProposalBatchAction {
         if ([string]::IsNullOrWhiteSpace($targetState) -or
             -not (Test-LcmProposalLifecycleTransition -FromState $currentState -ToState $targetState)) {
             $validationFailures += "Proposal #$id cannot transition from '$currentState' for action '$Action'."
+            $failureRecords += [PSCustomObject]@{
+                identity = if ($proposal.PSObject.Properties['crp_id'] -and $proposal.crp_id) { [string]$proposal.crp_id } else { "CRP-$id" }
+                current_state = $currentState
+                requested_state = $targetState
+                reason = "The requested action is not a valid lifecycle transition from the current state."
+                conflict_type = 'invalid transition'
+                source = [PSCustomObject]@{ repository = 'LCM_Inventory'; path = 'modules\ProposalManager.psm1'; symbol = 'Invoke-ProposalBatchAction' }
+                governing_references = @('RULE-LCM-014', 'ProposalReviewFlowPolicy.md: lifecycle action table')
+            }
         }
     }
     if ($validationFailures.Count -gt 0) {
-        throw ("Lifecycle action '$Action' was not applied because the target set is ineligible: " + ($validationFailures -join ' '))
+        $report = New-LcmLifecycleFailureReport -Action $Action -TargetExpression $TargetExpression -Failures $failureRecords
+        $message = "Lifecycle action '$Action' was not applied because the target set is ineligible: " + ($validationFailures -join ' ')
+        throw (New-LcmLifecycleFailureException -Report $report -Message $message)
     }
 
     $updated = @()
@@ -3475,7 +3669,7 @@ Set-Alias -Name Get-Doc -Value Get-LcmProposalDocument
 Export-ModuleMember -Function Get-ProposalStorePath, Get-ProposalStore, Set-ProposalStore, `
     Get-WorkspaceProposals, New-WorkspaceProposal, Get-LcmProposalLifecycleActions, Test-LcmProposalLifecycleTransition, Get-LcmProposalReviewObligations, Register-LcmCrossRepositoryReviewObligation, Complete-LcmCrossRepositoryReviewObligation, Move-LcmProposalLifecycleState, Start-LcmProposalReinstatement, Set-LcmProposalBugIdentity, Enable-LcmImmediateBugRecovery, Get-LcmProposalLifecycleAudit, Set-WorkspaceProposalState, Set-WorkspaceProposalProgress, `
     Set-WorkspaceProposalPriority, Save-ProposalPlan, Save-ProposalWalkthrough, `
-    Resolve-ProposalIdExpression, Get-LcmReviewCohortResolution, Save-LcmReviewCohortReceipt, Get-LcmReviewCohortCompletionPlan, Complete-LcmReviewCohortAcceptance, Set-LcmReviewCohort, Test-LcmProposalVerificationPrecondition, Sync-LcmCohortGateState, Invoke-LcmCohortLifecycleAction, Set-LcmProposalSupersession, Set-LcmProposalRetirement, Invoke-ProposalBatchAction, `
+    Resolve-ProposalIdExpression, Get-LcmReviewCohortResolution, Save-LcmReviewCohortReceipt, Get-LcmReviewCohortCompletionPlan, Complete-LcmReviewCohortAcceptance, Set-LcmReviewCohort, Test-LcmProposalVerificationPrecondition, Sync-LcmCohortGateState, Invoke-LcmCohortLifecycleAction, Set-LcmProposalSupersession, Set-LcmProposalRetirement, Invoke-ProposalBatchAction, New-LcmLifecycleFailureReport, Format-LcmLifecycleFailureReport, New-LcmLifecycleFailureException, `
     Set-ReviewGranularity, Get-ReviewGranularity, Set-LCMMode, Get-LCMMode, Set-TestingMode, Get-TestingMode, `
     Get-ActiveAppContext, Set-ActiveAppContext, Get-LcmApps, Sync-LcmAppCatalog, New-LcmApp, Split-LcmAppDocs, Format-LcmAppsTable, `
     Get-LcmProposalDocument, Remove-LcmProposalBundle, `

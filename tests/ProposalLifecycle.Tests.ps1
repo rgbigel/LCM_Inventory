@@ -22,6 +22,64 @@ Describe 'Proposal lifecycle authority' {
     Test-LcmProposalLifecycleTransition -FromState suggested -ToState pushed | Should -BeFalse
   }
 
+  It 'creates direct, non-mutating lifecycle failure diagnostics with bounded routes' {
+    InModuleScope ProposalManager {
+      $failures = @(
+        [PSCustomObject]@{
+          identity = 'CRP-279'
+          current_state = 'in_review'
+          requested_state = 'in_progress'
+          reason = 'Do is unavailable at the review gate.'
+          conflict_type = 'invalid transition'
+          source = [PSCustomObject]@{ repository = 'LCM_Inventory'; path = 'modules\ProposalManager.psm1'; symbol = 'Invoke-ProposalBatchAction' }
+          governing_references = @('RULE-LCM-014')
+        }
+      )
+
+      $report = New-LcmLifecycleFailureReport -Action do -TargetExpression '279' -Failures $failures
+      $rendered = @(Format-LcmLifecycleFailureReport -Report $report)
+
+      $report.report_type | Should -Be 'lifecycle-status-failure'
+      @($report.direct_failures).Count | Should -Be 1
+      $report.direct_failures[0].identity | Should -Be 'CRP-279'
+      $report.direct_failures[0].source.symbol | Should -Be 'Invoke-ProposalBatchAction'
+      @($report.escape_routes).Count | Should -BeLessOrEqual 3
+      $rendered -join "`n" | Should -Match 'LIFECYCLE STATUS FAILURE REPORT'
+      $rendered -join "`n" | Should -Match 'RULE-LCM-014'
+    }
+  }
+
+  It 'attaches a direct lifecycle failure report without changing proposal state' {
+    InModuleScope ProposalManager {
+      $script:testProposalStore = [PSCustomObject]@{
+        proposals = @(
+          [PSCustomObject]@{
+            id = 9019
+            crp_id = 'CRP-9019'
+            state = 'in_review'
+            progress_state = 'verification'
+            disposition = $null
+          }
+        )
+      }
+      Mock Get-ProposalStore { $script:testProposalStore }
+      Mock Set-ProposalStore {}
+
+      try {
+        Invoke-ProposalBatchAction -Action do -TargetExpression '9019'
+        throw 'Expected lifecycle action failure was not raised.'
+      } catch {
+        $report = $_.Exception.Data['LcmLifecycleFailureReport'] | ConvertFrom-Json
+        $report.requested_action | Should -Be 'do'
+        $report.target_expression | Should -Be '9019'
+        @($report.direct_failures).Count | Should -Be 1
+        $report.direct_failures[0].identity | Should -Be 'CRP-9019'
+        $report.direct_failures[0].conflict_type | Should -Be 'invalid transition'
+      }
+      $script:testProposalStore.proposals[0].state | Should -Be 'in_review'
+    }
+  }
+
   It 'persists cross-repository BCR obligations in the dedicated ledger and blocks primary completion until resolved' {
     InModuleScope ProposalManager {
       $script:testProposalStore = [PSCustomObject]@{
@@ -42,6 +100,11 @@ Describe 'Proposal lifecycle authority' {
       $obligation.status | Should -Be 'open'
       $script:testProposalStore.review_obligation_ledger.entries.Count | Should -Be 1
       $script:testProposalStore.review_obligation_ledger.entries[0].proposal_id | Should -Be 9099
+      $sameObligation = Register-LcmCrossRepositoryReviewObligation -Id 9099 -Repository 'LCM_AI' -Reason 'Additional dirty source was observed.'
+      $sameObligation.id | Should -Be $obligation.id
+      $script:testProposalStore.review_obligation_ledger.entries.Count | Should -Be 1
+      @($sameObligation.observed_reasons) | Should -Contain 'Dirty canonical rules.'
+      @($sameObligation.observed_reasons) | Should -Contain 'Additional dirty source was observed.'
       @(Get-LcmProposalReviewObligations -Proposal $script:testProposalStore.proposals[0] -UnresolvedOnly).Count | Should -Be 1
       { Move-LcmProposalLifecycleState -Id 9099 -State completed } |
         Should -Throw '*cannot complete while cross-repository BCR obligation(s) remain unresolved: LCM_AI*'
@@ -493,6 +556,27 @@ Describe 'Proposal lifecycle authority' {
       $updated[0].id | Should -Be 9003
       $script:testProposalStore.proposals[0].state | Should -Be 'in_progress'
       $script:testProposalStore.proposals[1].state | Should -Be 'in_progress'
+    }
+  }
+
+  It 'rejects Do for an in-review proposal without regressing its state' {
+    InModuleScope ProposalManager {
+      $script:testProposalStore = [PSCustomObject]@{
+        proposals = @(
+          [PSCustomObject]@{
+            id = 9006
+            state = 'in_review'
+            progress_state = 'verification'
+            disposition = $null
+          }
+        )
+      }
+      Mock Get-ProposalStore { $script:testProposalStore }
+      Mock Set-ProposalStore {}
+
+      { Invoke-ProposalBatchAction -Action do -TargetExpression '9006' } |
+        Should -Throw "*Proposal #9006 cannot run action 'do' from 'in_review'*"
+      $script:testProposalStore.proposals[0].state | Should -Be 'in_review'
     }
   }
 

@@ -2,7 +2,7 @@
 
 `yaml
 CRP-ID: CRP-277
-Title: GoodMorning Daily Baseline and Knowledge Persistence Routine
+Title: Macrium Reflect-Backed BCR Review Workflow
 Scope: LCM_Inventory
 Baseline-Version: 10.0.0
 Author: rgbig
@@ -17,51 +17,57 @@ App-ID: None
 ---
 
 ## 1. Executive Summary & Intent
-Define the explicit GoodMorning preparation that waits for and mounts today's
-Macrium `D:` backup as the writable Beyond Compare LHS baseline, validates the
-operator-owned review profile, and reports the selected baseline without
-changing lifecycle rules. GoodNIGHT receipt/recovery requirements are in
-CRP-278.
+Re-implement the complete governed review workflow around a writable Macrium
+Reflect image baseline. The workflow selects today's eligible `D:` backup,
+mounts it in Macrium's chosen `F:`-`I:` slot, validates the operator-owned `_LCM` Beyond Compare profile,
+and launches the exact CRP or cohort BCR review against
+`D:\Git_Repositories`. It provides review preparation and BCR execution, not
+GoodMorning or GoodNIGHT session-recovery behavior.
 
 ## 2. Technical Requirements & Invariants
-- The operator is responsible for ensuring that an incremental or differential
-  backup for the `D:` source volume is available before work starts each day.
-- GoodMorning selects the newest usable restore point completed on the current
-  local date. It mounts the backup at the configured LHS drive letter and
-  verifies the expected `Git_Repositories` root.
-- If today's eligible backup is unavailable, GoodMorning shows a visible
-  waiting state, polls at a documented interval, displays the most recent
-  eligible backup observed, supports cancellation, and ends according to a
-  documented timeout/escalation policy.
-- The routine must not silently use an older backup, create a backup, select a
-  different drive letter, replace an active mount, or fall back to a Git or
-  scratch baseline.
-- The mounted LHS remains operator-managed reference content. GoodMorning must
-  not inspect its contents as lifecycle evidence or infer review intent from
-  it.
-- The established Beyond Compare profile owns its filters, including the
-  explicit `.git/hooks` positive override. GoodMorning validates the profile
-  rather than rewriting its settings.
-- Lifecycle transitions and review acceptance semantics remain unchanged.
+- The workflow selects only a same-day completed Macrium backup for the `D:`
+  source volume. It never silently substitutes an older image, Git baseline,
+  scratch baseline, or a volume whose label does not match the configured
+  Macrium source.
+- Macrium Reflect supplies the writable review baseline. The selected image
+  mounts only its `D:` partition in the bounded `F:`-`I:` range, with
+  restricted-folder access and
+  writable mode enabled.
+- A BCR action finds the current writable baseline by its expected volume label
+  in `F:`-`I:` and reuses that mount with the `_LCM` profile; it
+  never remounts or replaces the baseline during the workday. This preserves
+  operator RHS-to-LHS copies as review-progress indicators.
+- Existing matching Macrium image mounts are detached only in the bounded
+  `F:`-`I:` range. Detach and Browse Image operations run through the elevated
+  interactive desktop path.
+- The mounted label-matched `X:\Git_Repositories` tree (`X` in `F:`-`I:`) is the BCR LHS; live
+  `D:\Git_Repositories` is the RHS. The LHS is reference content only and
+  cannot imply lifecycle acceptance, staging, completion, or operator intent.
+- The operator-owned `_LCM` Beyond Compare profile owns roots, content
+  comparison, changed-only handling, filters, and the `.git\hooks` inclusion.
+  The workflow validates it and never rewrites it.
+- BCR resolves the exact CRP, BUG, or declared cohort; synchronizes every
+  applicable cohort member before launch; records the BCR scope and review
+  disposition; and preserves the existing Gate-2 acceptance requirements.
+- GoodMorning and GoodNIGHT orchestration, recovery receipts, and session
+  persistence are outside this CRP.
 
 ## 3. Resolved Operational Decisions
 
-- Macrium Browse Image and per-drive detach run through an elevated interactive
-  worker. The worker selects only the image `D:` partition and enables
-  restricted-folder access and writable mode through the Browse Image dialog.
-- `F:` is the required baseline assignment. Before mounting, only matching
-  mounted-image volumes in the bounded `F:`-`I:` range are detached. An
-  alternate automatically proposed drive letter is an explicit failure, not a
-  silent substitute.
-- A Macrium same-day completion report is the authority for selecting the
-  image. If today's report is absent, the configured definition is started
-  once and the flow polls for a bounded period; an older image is never used.
-- The existing GoodMorning recovery report remains intact and read-only by
-  default. Baseline preparation is explicit through `-PrepareBcrBaseline`.
-- The resolved CRP/BUG is recorded as the explicit RHS review scope in the
-  baseline execution receipt. The operator-owned `_LCM` profile is never
-  rewritten to carry lifecycle data. When no active CRP/BUG is available, the
-  flow records the non-lifecycle `BCR-BASELINE-DUMMY` scope and creates no
-  acceptance or completion evidence.
-- GoodNIGHT Save All receipt and recovery enforcement are explicitly out of
-  scope for this CRP and are owned by CRP-278.
+- Macrium completion reports are the authority for image selection. When no
+  same-day image exists or the backup directory is unavailable, the configured
+  definition is started once and polled for a bounded period. Automatic
+  creation is limited to one request per local calendar day; the seven-hour
+  GoodMorning session-break rule does not make a second automatic backup
+  eligible. `-ForceNewBackup` is the explicit operator-only exception for an
+  additional same-day baseline.
+- The expected volume label is mandatory. The assigned drive letter is accepted
+  only when it is in the bounded `F:`-`I:` range and contains
+  `Git_Repositories`.
+- The baseline receipt identifies the mounted image, Macrium restore point,
+  and exact BCR review scope. It is not lifecycle acceptance evidence.
+- The BCR launcher reuses the exact per-CRP review window where it exists and
+  opens required cross-repository review tabs without duplicating sessions.
+- Review acceptance, staging, commit authorization, and completion remain
+  RHS-only governed actions after BCR; the Macrium image never authorizes
+  them.
