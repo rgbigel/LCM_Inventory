@@ -1,0 +1,16 @@
+[2026-10-15 20:31:11.317] [INFO] ==========================================================================
+[2026-10-15 20:31:11.326] [INFO]  INTERACTIVE DESKTOP TASK DISPATCHER (v10.0.0)
+[2026-10-15 20:31:11.328] [INFO]  User: rgbig | Host: D5P0-SSD980-Z | Audit Log: D:\Git_Repositories\LCM_Inventory\logs\Invoke-InteractiveDesktop-20261015_203111.log
+[2026-10-15 20:31:11.329] [INFO] ==========================================================================
+[2026-10-15 20:31:11.332] [ACTION] Dispatching task 'LCM_DesktopDispatch_957619882' to Interactive Desktop...
+[2026-10-15 20:31:11.334] [DEBUG]   Executable: D:\Tools\Zen Browser\zen.exe
+[2026-10-15 20:31:11.335] [DEBUG]   Arguments : "file:///D:/Git_Repositories/LCM_Inventory/data/artifacts/CM_CONTROL_HUB.html"
+[2026-10-15 20:31:11.438] [ACTION] Dispatched D:\Tools\Zen Browser\zen.exe directly on Interactive Desktop (Session 1).
+[2026-10-15 20:31:11.441] [INFO] 
+[2026-10-15 20:31:11.442] [SUMMARY] ==========================================================================
+[2026-10-15 20:31:11.443] [SUMMARY]  [SUMMARY] Invoke-InteractiveDesktop (v10.0.0)
+[2026-10-15 20:31:11.444] [SUMMARY]  Status     : COMPLETED
+[2026-10-15 20:31:11.445] [SUMMARY]  Dispatched : 1
+[2026-10-15 20:31:11.447] [SUMMARY]  Timestamp  : 2026-10-15 20:31:11.440
+[2026-10-15 20:31:11.448] [SUMMARY]  Log File   : D:\Git_Repositories\LCM_Inventory\logs\Invoke-InteractiveDesktop-20261015_203111.log
+[2026-10-15 20:31:11.450] [SUMMARY] ==========================================================================

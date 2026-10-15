@@ -486,7 +486,8 @@
       text-align: left;
       cursor: pointer;
     }
-    .show-dropdown-item:hover { background: var(--blue-soft); color: var(--blue); }
+    .show-dropdown-item:hover:not(:disabled) { background: var(--blue-soft); color: var(--blue); }
+    .show-dropdown-item:disabled { color: var(--muted); cursor: not-allowed; opacity: .6; }
     .show-dropdown-item .btn-icon { font-size: 16px; }
     .show-dropdown-section { padding: 5px 12px; margin-top: 3px; border-top: 1px solid var(--line); color: var(--muted); font: 700 10px var(--mono); text-transform: uppercase; }
     .lifecycle-strip { display: inline-flex; align-items: center; gap: 3px; max-width: 100%; overflow-x: auto; font: 10px var(--mono); }
@@ -2009,7 +2010,7 @@
       const tag = (proposalsData.proposals || []).find(proposal => Number(proposal.id) === Number(id))?.crp_id || `CRP-${id}`;
       const previousLabel = previousTarget ? getTargetActionLabel(previousTarget) : "no ITEM";
       setActionResult(`ITEM explicitly switched from ${previousLabel} to ${tag}. Row actions now target ${tag}; select a COH ITEM to act on its full membership.`, "");
-      deferShowDropdownToggle(id);
+      deferShowDropdown(id);
     }
 
     let pendingTargetAction = "";
@@ -2589,6 +2590,11 @@
         const evidence = p.evidence_summary || p.verification_status || (p.bcr_status ? "BCR: " + p.bcr_status : "Baseline recorded");
         const planStateDetail = getDetailedPlanState(p);
         const statusNote = getUnresolvedReviewObligations(p).length ? "" : (p.status_note || "");
+        const lifecycleState = getLifecycleState(p);
+        const lifecycleButton = (label, icon, enabled, onclick) => `
+          <button class="show-dropdown-item" ${enabled ? `onclick="${onclick}"` : 'disabled aria-disabled="true"'}>
+            <span class="btn-icon">${icon}</span> ${label}
+          </button>`;
 
         return `
           <tr id="row-${p.id}" onclick="selectItemTarget('CRP:${p.id}')" style="cursor: pointer;">
@@ -2630,18 +2636,13 @@
               </button>
               <div class="show-dropdown-menu" id="dropdown-${p.id}">
                 <div class="show-dropdown-title">ACTIONS: ITEM ${crpTag}</div>
-                <div class="show-dropdown-title">This wizard explicitly selects ${crpTag}. Select a COH in ITEM to act on all cohort members.</div>
                 <div class="show-dropdown-title">Lifecycle</div>
-                <button class="show-dropdown-item" onclick="dispatchTargetAction('proceed')"><span class="btn-icon">⚡</span> Proceed ITEM</button>
-                ${getLifecycleState(p) === "suggested"
-                  ? `<button class="show-dropdown-item" onclick="dispatchTargetAction('do')"><span class="btn-icon">▶️</span> Do ITEM</button>`
-                  : ""}
-                <button class="show-dropdown-item" onclick="dispatchTargetAction('bcr')"><span class="btn-icon">🔍</span> Open Review</button>
-                <button class="show-dropdown-item" onclick="dispatchStandardAction('reviewed', [getActiveItemTarget()?.item?.id], '')"><span class="btn-icon">✅</span> ACCEPTED: Item</button>
-                ${getLifecycleState(p) === "held"
-                  ? `<button class="show-dropdown-item" onclick="dispatchTargetAction('reopen')"><span class="btn-icon">↩️</span> ReOpen ITEM</button>`
-                  : ""}
-                <button class="show-dropdown-item" onclick="dispatchTargetAction('hold')"><span class="btn-icon">⏸️</span> Hold ITEM</button>
+                ${lifecycleButton("Do ITEM", "▶️", lifecycleState === "suggested", "dispatchTargetAction('do')")}
+                ${lifecycleButton("Proceed ITEM", "⚡", ["suggested", "in_progress"].includes(lifecycleState), "dispatchTargetAction('proceed')")}
+                ${lifecycleButton("Open Review", "🔍", lifecycleState === "verified", "dispatchTargetAction('bcr')")}
+                ${lifecycleButton("ACCEPTED: Item", "✅", lifecycleState === "in_review", "dispatchStandardAction('reviewed', [getActiveItemTarget()?.item?.id], '')")}
+                ${lifecycleButton("ReOpen ITEM", "↩️", lifecycleState === "held", "dispatchTargetAction('reopen')")}
+                ${lifecycleButton("Hold ITEM", "⏸️", !["completed", "pushed", "held"].includes(lifecycleState), "dispatchTargetAction('hold')")}
                 <div style="border-top: 1px solid var(--line); margin: 4px 0;"></div>
                 <div class="show-dropdown-title">Cohort Head / Member Management</div>
                 <button class="show-dropdown-item" onclick="manageCrpCohort('create', ${p.id})"><span class="btn-icon">➕</span> Create Head Cohort</button>
@@ -2659,7 +2660,6 @@
                 <button class="show-dropdown-item" onclick="showProposalDiff(${p.id})"><span class="btn-icon">🔍</span> Show Diff / BC Review</button>
                 <button class="show-dropdown-item" onclick="showReviewReceipt(${p.id})"><span class="btn-icon">🧾</span> Show Review Receipt</button>
                 <button class="show-dropdown-item" onclick="showStateHistory(${p.id})"><span class="btn-icon">📜</span> Show State History</button>
-                <button class="show-dropdown-item" onclick="toggleGranularity()"><span class="btn-icon">↔️</span> Toggle Review Granularity</button>
                 <div style="border-top: 1px solid var(--line); margin: 4px 0;"></div>
                 <div class="show-dropdown-title" style="color:var(--red);">FIX</div>
                 <button class="show-dropdown-item" onclick="openTargetActionModal('force')"><span class="btn-icon">🚨</span> Force (Gate 2 only)</button>
@@ -2814,8 +2814,8 @@
       toggleShowDropdownById(id);
     }
 
-    function deferShowDropdownToggle(id) {
-      requestAnimationFrame(() => toggleShowDropdownById(id));
+    function deferShowDropdown(id) {
+      requestAnimationFrame(() => showDropdownById(id));
     }
 
     function toggleShowDropdownById(id) {
@@ -2826,6 +2826,13 @@
       if (!isAlreadyOpen) {
         menu.classList.add("active");
       }
+    }
+
+    function showDropdownById(id) {
+      const menu = $("dropdown-" + id);
+      if (!menu) return;
+      document.querySelectorAll(".show-dropdown-menu").forEach(el => el.classList.remove("active"));
+      menu.classList.add("active");
     }
 
     // -------------------------------------------------------------------------

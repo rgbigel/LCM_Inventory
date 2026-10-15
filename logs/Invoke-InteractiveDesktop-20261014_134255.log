@@ -1,0 +1,16 @@
+[2026-10-14 13:42:55.431] [INFO] ==========================================================================
+[2026-10-14 13:42:55.443] [INFO]  INTERACTIVE DESKTOP TASK DISPATCHER (v10.0.0)
+[2026-10-14 13:42:55.445] [INFO]  User: rgbig | Host: D5P0-SSD980-Z | Audit Log: D:\Git_Repositories\LCM_Inventory\logs\Invoke-InteractiveDesktop-20261014_134255.log
+[2026-10-14 13:42:55.446] [INFO] ==========================================================================
+[2026-10-14 13:42:55.450] [ACTION] Dispatching task 'LCM_DesktopDispatch_1419657836' to Interactive Desktop...
+[2026-10-14 13:42:55.452] [DEBUG]   Executable: D:\Tools\Beyond Compare 5\BCompare.exe
+[2026-10-14 13:42:55.453] [DEBUG]   Arguments : /solo "CRP-274_Review"
+[2026-10-14 13:42:55.552] [ACTION] Dispatched D:\Tools\Beyond Compare 5\BCompare.exe directly on Interactive Desktop (Session 1).
+[2026-10-14 13:42:55.555] [INFO] 
+[2026-10-14 13:42:55.557] [SUMMARY] ==========================================================================
+[2026-10-14 13:42:55.558] [SUMMARY]  [SUMMARY] Invoke-InteractiveDesktop (v10.0.0)
+[2026-10-14 13:42:55.561] [SUMMARY]  Status     : COMPLETED
+[2026-10-14 13:42:55.563] [SUMMARY]  Dispatched : 1
+[2026-10-14 13:42:55.564] [SUMMARY]  Timestamp  : 2026-10-14 13:42:55.555
+[2026-10-14 13:42:55.565] [SUMMARY]  Log File   : D:\Git_Repositories\LCM_Inventory\logs\Invoke-InteractiveDesktop-20261014_134255.log
+[2026-10-14 13:42:55.566] [SUMMARY] ==========================================================================

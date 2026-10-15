@@ -1,0 +1,16 @@
+[2026-10-15 17:51:50.920] [INFO] ==========================================================================
+[2026-10-15 17:51:50.928] [INFO]  INTERACTIVE DESKTOP TASK DISPATCHER (v10.0.0)
+[2026-10-15 17:51:50.929] [INFO]  User: rgbig | Host: D5P0-SSD980-Z | Audit Log: D:\Git_Repositories\LCM_Inventory\logs\Invoke-InteractiveDesktop-20261015_175150.log
+[2026-10-15 17:51:50.930] [INFO] ==========================================================================
+[2026-10-15 17:51:50.933] [ACTION] Dispatching task 'LCM_DesktopDispatch_166753197' to Interactive Desktop...
+[2026-10-15 17:51:50.934] [DEBUG]   Executable: D:\Tools\Zen Browser\zen.exe
+[2026-10-15 17:51:50.935] [DEBUG]   Arguments : "http://127.0.0.1:9876/hub"
+[2026-10-15 17:51:51.046] [ACTION] Dispatched D:\Tools\Zen Browser\zen.exe directly on Interactive Desktop (Session 1).
+[2026-10-15 17:51:51.048] [INFO] 
+[2026-10-15 17:51:51.049] [SUMMARY] ==========================================================================
+[2026-10-15 17:51:51.049] [SUMMARY]  [SUMMARY] Invoke-InteractiveDesktop (v10.0.0)
+[2026-10-15 17:51:51.050] [SUMMARY]  Status     : COMPLETED
+[2026-10-15 17:51:51.051] [SUMMARY]  Dispatched : 1
+[2026-10-15 17:51:51.052] [SUMMARY]  Timestamp  : 2026-10-15 17:51:51.048
+[2026-10-15 17:51:51.054] [SUMMARY]  Log File   : D:\Git_Repositories\LCM_Inventory\logs\Invoke-InteractiveDesktop-20261015_175150.log
+[2026-10-15 17:51:51.055] [SUMMARY] ==========================================================================
