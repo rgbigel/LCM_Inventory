@@ -1,0 +1,44 @@
+# Change Request Proposal: CRP-278
+
+`yaml
+CRP-ID: CRP-278
+Title: GoodNIGHT Save-All Receipt and GoodMorning Recovery Gate
+Scope: LCM_Inventory
+Baseline-Version: 10.0.0
+Author: rgbig
+Date: 2026-10-15 16:26:46
+Status: Suggested
+Plan-State: suggested
+Progress-State: undecided
+Priority: High
+App-ID: None
+`
+
+---
+
+## 1. Executive Summary & Intent
+Provide durable evidence that GoodNIGHT completed IDE Save All and require
+GoodMorning to surface actionable recovery guidance when the evidence is absent
+or incomplete.
+
+## 2. Technical Requirements & Invariants
+
+- A GoodNIGHT receipt is written only after the operator acknowledges IDE Save
+  All completion.
+- The receipt records its completion time and enough session identity to avoid
+  confusing an old receipt with the current working session.
+- GoodMorning reads the receipt without changing it.
+- When the receipt is absent, stale, or incomplete, GoodMorning reports a
+  blocking, actionable reminder before it reports the session ready.
+- The new receipt must not replace `ACTIVE_CONTEXT.md`, `LEARNED_ADVICE.md`,
+  or the existing Save-All session-memory behavior.
+- The implementation must preserve the read-only default behavior of
+  `Invoke-WorkspaceGoodMorning.ps1`.
+
+## 3. Verification Requirements
+
+- Test receipt creation only after an explicit Save All acknowledgement.
+- Test missing, stale, and malformed receipt handling.
+- Test that GoodMorning reports the recovery reminder and does not silently
+  treat missing receipt data as success.
+- Run focused PowerShell AST validation and the repository readiness gate.

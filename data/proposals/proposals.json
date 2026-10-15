@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-10-13T20:24:54+02:00",
+  "updated_at": "2026-10-15T16:32:21+02:00",
   "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 274,
+  "last_proposal_id": 278,
   "proposals": [
     {
       "id": 261,
@@ -12089,7 +12089,7 @@
         "LCM_Inventory"
       ],
       "created_at": "2026-10-12T15:53:46.9539828+02:00",
-      "updated_at": "2026-10-12T19:07:12.3362901+02:00",
+      "updated_at": "2026-10-15T16:32:21+02:00",
       "closed_at": "2026-10-12T19:07:12.3362901+02:00"
     },
     {
@@ -12144,7 +12144,7 @@
       ],
       "state": "closed",
       "closed_at": "2026-10-13 18:53:28",
-      "updated_at": "2026-10-13 18:53:28",
+      "updated_at": "2026-10-15T16:32:21+02:00",
       "completion_audit": {
         "disposition": "Completed",
         "timestamp": "2026-10-13 18:53:28",
@@ -12201,7 +12201,7 @@
           ]
         }
       ],
-      "updated_at": "2026-10-13T19:27:26.5917329+02:00",
+      "updated_at": "2026-10-15T16:32:21+02:00",
       "closed_at": "2026-10-13T19:27:26.5917329+02:00"
     },
     {
@@ -12240,7 +12240,7 @@
       ],
       "state": "closed",
       "closed_at": "2026-10-13 20:24:07",
-      "updated_at": "2026-10-13 20:24:07",
+      "updated_at": "2026-10-15T16:32:21+02:00",
       "completion_audit": {
         "disposition": "Completed",
         "timestamp": "2026-10-13 20:24:07",
@@ -12261,6 +12261,108 @@
         ],
         "note": "BCR Accepted, Commit - disk and Beyond Compare authoritative recovery"
       }
+    },
+    {
+      "id": 277,
+      "crp_id": "CRP-277",
+      "timestamp": "2026-10-15 14:31:18",
+      "title": "GoodMorning Daily Macrium Baseline and BCR Preparation",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-277",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "in_review",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/CRP-277-GoodMorning-Daily-Baseline-and-Knowledge-Persisten",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig",
+      "details": "Prepare today's completed Macrium D: backup as the writable Beyond Compare LHS baseline, validate the operator-owned _LCM profile, and record the selected baseline. GoodNIGHT Save All receipt and recovery requirements were split to CRP-278.",
+      "priority": 5,
+      "plan_path": "docs/Proposals/CRP-277-GoodMorning-Daily-Baseline-and-Knowledge-Persisten/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-277-GoodMorning-Daily-Baseline-and-Knowledge-Persisten/Walkthrough.md",
+      "successor_crp": "CRP-278",
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-10-15 16:31:05",
+          "user": "rgbig",
+          "note": "Operator accepted the implemented daily Macrium/BCR baseline; proceeding to governed BCR review.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-10-15 16:31:20",
+          "user": "rgbig",
+          "note": "Focused AST validation, daily baseline and GoodMorning WhatIf runs, and workspace readiness gate completed. GoodMorning attention items are pre-existing stale context paths and intervening workspace activity.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-10-15 16:32:21",
+          "user": "rgbig",
+          "note": "Operator accepted the implemented daily Macrium/BCR baseline after verification. GoodNIGHT receipt and recovery requirements were split to CRP-278.",
+          "cohort_id": "",
+          "cohort_gate": "BCR",
+          "synchronization_outcome": "synchronized"
+        }
+      ],
+      "dates": {
+        "in_progress": "2026-10-15 16:31:05",
+        "verified": "2026-10-15 16:31:20",
+        "in_review": "2026-10-15 16:32:21"
+      },
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "progress_state": "verification",
+      "disposition": null,
+      "bcr_initiated_at": "2026-10-15 16:32:21",
+      "bcr_disposition": null,
+      "bcr_scope": "CRP-277"
+    },
+    {
+      "id": 278,
+      "crp_id": "CRP-278",
+      "timestamp": "2026-10-15 16:26:46",
+      "title": "GoodNIGHT Save-All Receipt and GoodMorning Recovery Gate",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-278",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "suggested",
+      "progress_state": "undecided",
+      "bundle_id": "CRP-278-GoodNIGHT-Save-All-Receipt-and-GoodMorning-Recover",
+      "bundle_dir": "docs/Proposals/CRP-278-GoodNIGHT-Save-All-Receipt-and-GoodMorning-Recover",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig",
+      "details": "Split from CRP-277: implement a durable GoodNIGHT IDE Save All receipt and a blocking GoodMorning recovery reminder when that receipt is absent or incomplete. The Macrium/Beyond Compare daily baseline remains in CRP-277.",
+      "priority": 5,
+      "disposition": null,
+      "flow_mode": "standard",
+      "always_proceed": false,
+      "plan_path": "docs/Proposals/CRP-278-GoodNIGHT-Save-All-Receipt-and-GoodMorning-Recover/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-278-GoodNIGHT-Save-All-Receipt-and-GoodMorning-Recover/Walkthrough.md"
     }
+
   ]
 }

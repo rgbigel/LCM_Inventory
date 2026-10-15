@@ -31,6 +31,9 @@ param(
     [Parameter(Mandatory = $false, HelpMessage = 'Explicitly include durable unreviewed paths disclosed by the current BCR staging manifest')]
     [switch]$IncludeUnreviewed,
 
+    [Parameter(Mandatory = $false, HelpMessage = 'Commit only the existing staged review manifest; do not stage other live worktree paths')]
+    [switch]$StagedOnly,
+
     [Alias('h', '?')]
     [switch]$Help
 )
@@ -88,13 +91,14 @@ if ($Help) {
     Write-Host "  Records an accepted Beyond Compare review and commits the reviewed live worktree."
     Write-Host ""
     Write-Host "USAGE:" -ForegroundColor Yellow
-    Write-Host "  pwsh LCM_Inventory/tools/Submit-ReviewResult.ps1 -CRP <CRP-ID> [[-RepositoryPath] <str>] [-Result <str>] [-Notes <str>] [-All] [-MinimalTests] [-Force] [-h]"
+    Write-Host "  pwsh LCM_Inventory/tools/Submit-ReviewResult.ps1 -CRP <CRP-ID> [[-RepositoryPath] <str>] [-Result <str>] [-Notes <str>] [-All] [-StagedOnly] [-MinimalTests] [-Force] [-h]"
     Write-Host ""
     Write-Host "PARAMETERS:" -ForegroundColor Yellow
     Write-Host "  -RepositoryPath  : Name or path of the repository"
     Write-Host "  -Result          : Review disposition (Completed, CompleteAll, CompleteWithEdits, Rejected, Deferred)"
     Write-Host "  -Notes           : Review notes or rationale"
     Write-Host "  -All             : Legacy compatibility switch; accepted reviews commit the live worktree"
+    Write-Host "  -StagedOnly      : Preserve the reviewed staged manifest; do not add other live worktree paths"
     Write-Host "  -MinimalTests    : Single-cycle minimal testing scope: fast syntax and AST validation only"
     Write-Host "  -Force           : Visual-review confirmation exception only; lifecycle and preflight rules still apply"
     Write-Host "  -CRP             : Exact CRP or BUG identifier required for completion"
@@ -187,17 +191,33 @@ if ($existingStagedPaths.Count -gt 0) {
     Write-Host "Continuing reviewed manifest with $($existingStagedPaths.Count) existing staged path(s) in '$repoName'." -ForegroundColor DarkYellow
 }
 
-$rhsPaths = @(
-    git -C $targetRepoPath diff --name-only
-    git -C $targetRepoPath ls-files --others --exclude-standard
-) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Sort-Object -Unique
-$committablePaths = @($rhsPaths | Where-Object { -not (Test-StandardBcrExcludedPath -RelativePath $_) })
-if ($committablePaths.Count -eq 0) {
-    throw "The accepted review for '$repoName' has no committable RHS worktree changes."
-}
-foreach ($relativePath in $committablePaths) {
-    git -C $targetRepoPath add -A -- $relativePath
-    if ($LASTEXITCODE -ne 0) { throw "Unable to stage reviewed RHS path '$relativePath'." }
+if ($StagedOnly) {
+    if ($existingStagedPaths.Count -eq 0) {
+        throw "Staged-only review completion for '$repoName' requires an existing staged review manifest."
+    }
+    $excludedStagedPaths = @(
+        $existingStagedPaths | Where-Object {
+            $_ -ne 'data/proposals/proposals.json' -and
+            (Test-StandardBcrExcludedPath -RelativePath $_)
+        }
+    )
+    if ($excludedStagedPaths.Count -gt 0) {
+        throw "Staged-only review manifest contains excluded path(s): $($excludedStagedPaths -join ', ')."
+    }
+    $actionsExecuted.Add("Preserved the existing staged review manifest with $($existingStagedPaths.Count) path(s).")
+} else {
+    $rhsPaths = @(
+        git -C $targetRepoPath diff --name-only
+        git -C $targetRepoPath ls-files --others --exclude-standard
+    ) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Sort-Object -Unique
+    $committablePaths = @($rhsPaths | Where-Object { -not (Test-StandardBcrExcludedPath -RelativePath $_) })
+    if ($committablePaths.Count -eq 0) {
+        throw "The accepted review for '$repoName' has no committable RHS worktree changes."
+    }
+    foreach ($relativePath in $committablePaths) {
+        git -C $targetRepoPath add -A -- $relativePath
+        if ($LASTEXITCODE -ne 0) { throw "Unable to stage reviewed RHS path '$relativePath'." }
+    }
 }
 
 $stagedPaths = @(git -C $targetRepoPath diff --cached --name-only)

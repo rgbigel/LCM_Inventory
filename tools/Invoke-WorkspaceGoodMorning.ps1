@@ -3,7 +3,9 @@
   GoodMorning: read-only start-of-session check (time gap, work in between, versions, context).
 .DESCRIPTION
   Module: tools/Invoke-WorkspaceGoodMorning.ps1
-  Purpose: Gives a fresh AI session facts instead of guesses. It changes nothing.
+  Purpose: Gives a fresh AI session facts instead of guesses. Its default path
+           changes nothing; the explicit -PrepareBcrBaseline option delegates
+           daily Macrium baseline preparation to a separate tool.
            1. Time gap: since the last activity (Save-All stamp or newest commit). With -Auto the
               check stays silent unless the gap exceeds -GapHours (default 7), which implies a good morning.
            2. Work in between: compares every repository with the Session Snapshot saved by
@@ -16,7 +18,7 @@
   Path: LCM_Inventory/tools/Invoke-WorkspaceGoodMorning.ps1
   Authors: Rolf, LCM_AI Engine
   Version: 10.0.0
-  Date: 2026-10-13
+  Date: 2026-10-15
   Rule: RULE-CTX-006
 .PARAMETER Auto
   Session-start mode: silent (one line) when the gap is below -GapHours.
@@ -24,15 +26,20 @@
   Gap that implies a good morning. Default 7.
 .PARAMETER Force
   Run the full check regardless of the gap.
+.PARAMETER PrepareBcrBaseline
+  After the existing GoodMorning report, prepare today's Macrium baseline and
+  open the operator-owned _LCM review profile.
 .NOTES
   Exit code 0 = nothing needing attention, 3 = attention items found (the AI must report them).
 #>
 
-[CmdletBinding()]
+[CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$Auto,
     [double]$GapHours = 7,
     [switch]$Force,
+    [switch]$PrepareBcrBaseline,
+    [string]$ReviewScope = '',
     [Alias('h', '?')]
     [switch]$Help
 )
@@ -41,7 +48,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 if ($Help) {
-    Write-Host 'Invoke-WorkspaceGoodMorning.ps1 [-Auto] [-GapHours <n>] [-Force] [-h]'
+    Write-Host 'Invoke-WorkspaceGoodMorning.ps1 [-Auto] [-GapHours <n>] [-Force] [-PrepareBcrBaseline] [-ReviewScope <CRP|BUG>] [-h]'
     Write-Host '  Read-only session-start check; exit code 3 when attention items exist.'
     return
 }
@@ -82,7 +89,7 @@ foreach ($r in $repos) {
 $lastActivity = @($savedAt, $lastCommit | Where-Object { $null -ne $_ } | Sort-Object -Descending)[0]
 $gap = if ($null -eq $lastActivity) { [double]::PositiveInfinity } else { ($now - $lastActivity).TotalHours }
 
-if ($Auto -and -not $Force -and $gap -lt $GapHours) {
+if ($Auto -and -not $Force -and -not $PrepareBcrBaseline -and $gap -lt $GapHours) {
     Write-Host ("GoodMorning not needed (gap {0:N1} h < {1} h)." -f $gap, $GapHours)
     return
 }
@@ -215,4 +222,15 @@ Write-Host '     name anything in them that is unclear, contradictory or stale (
 Write-Host '  2. Work in between and version findings, summarised for the operator.'
 Write-Host '  3. Where I will start (the last Next/open item) and what I will not touch.'
 Write-Host '==========================================================================' -ForegroundColor Cyan
+if ($PrepareBcrBaseline) {
+    $baselineTool = Join-Path $PSScriptRoot 'Invoke-MacriumDailyBcrBaseline.ps1'
+    if (-not (Test-Path -LiteralPath $baselineTool)) {
+        throw "Daily BCR baseline tool was not found: $baselineTool"
+    }
+    if ($WhatIfPreference) {
+        & $baselineTool -StartBackupIfMissing -ReviewScope $ReviewScope -WhatIf
+    } else {
+        & $baselineTool -StartBackupIfMissing -ReviewScope $ReviewScope
+    }
+}
 if ($attention.Count -gt 0) { exit 3 }
