@@ -58,6 +58,34 @@ Describe 'BCompare review lifecycle contracts' {
     $reviewScript | Should -Match ([regex]::Escape('Register-DiscoveredCrossRepositoryReviewObligations -WorkspaceRoot $workspaceRoot'))
     $submitScript | Should -Match ([regex]::Escape('Complete-LcmCrossRepositoryReviewObligation -Id $matchingProposals[0].id'))
     $submitScript | Should -Match ([regex]::Escape('Primary proposal remains'))
+    $submitScript | Should -Match ([regex]::Escape('no commit or lifecycle state was changed'))
+  }
+
+  It 'separates review acceptance from lifecycle completion in the Control Hub' {
+    $controlHubPath = Join-Path $repositoryRoot 'assets\CM_CONTROL_HUB.html'
+    $controlHub = Get-Content -LiteralPath $controlHubPath -Raw -Encoding UTF8
+
+    $controlHub | Should -Match ([regex]::Escape('case "reviewed": {'))
+    $controlHub | Should -Match ([regex]::Escape('case "complete":'))
+    $controlHub | Should -Match ([regex]::Escape('Invoke-ProposalAction.ps1 -Action complete'))
+    $controlHub | Should -Match ([regex]::Escape('await refreshHubData();'))
+    $controlHub | Should -Match ([regex]::Escape('function formatDaemonError(rawError)'))
+    $controlHub | Should -Match ([regex]::Escape('LIFECYCLE STATUS FAILURE REPORT'))
+    $controlHub | Should -Match ([regex]::Escape('message = message.slice(reportStart);'))
+  }
+
+  It 'prioritizes a blocking synthetic 1 - REVIEW before its parent 2 - REVIEW' {
+    $controlHubPath = Join-Path $repositoryRoot 'assets\CM_CONTROL_HUB.html'
+    $controlHub = Get-Content -LiteralPath $controlHubPath -Raw -Encoding UTF8
+    $actionScript = Get-Content -LiteralPath (Join-Path $repositoryRoot 'tools\Invoke-ProposalAction.ps1') -Raw -Encoding UTF8
+
+    $controlHub | Should -Match ([regex]::Escape('function getBlockingReviewCohort(proposal)'))
+    $controlHub | Should -Match ([regex]::Escape('1 - REVIEW / ${c.repositories[0]}'))
+    $controlHub | Should -Match ([regex]::Escape('Continuation priority selected ${blockingCohort.id} — 1 - REVIEW'))
+    $controlHub | Should -Match ([regex]::Escape('const effectiveAction = target.kind === "COH" && target.item.synthetic && ["do", "proceed"].includes(action)'))
+    $controlHub | Should -Match ([regex]::Escape('Starting blocking 1 - REVIEW for ${targetLabel} before its parent 2 - REVIEW can complete.'))
+    $actionScript | Should -Match ([regex]::Escape('Continuation priority: COH-$($proposal.id) — 1 - REVIEW'))
+    $actionScript | Should -Match ([regex]::Escape('-ReviewObligationId $openObligation.id'))
   }
 
   It 'recreates the on-disk lifecycle BCR session metadata through the normal BCR action' {

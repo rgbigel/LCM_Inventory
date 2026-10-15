@@ -173,8 +173,15 @@ if ($matchingProposals.Count -ne 1) {
 $crossRepositoryObligation = @(Get-LcmProposalReviewObligations -Proposal $matchingProposals[0] -UnresolvedOnly | Where-Object {
     ([string]$_.repository).Equals($repoName, [System.StringComparison]::OrdinalIgnoreCase)
 }) | Select-Object -First 1
+$unresolvedCrossRepositoryObligations = @(Get-LcmProposalReviewObligations -Proposal $matchingProposals[0] -UnresolvedOnly)
 if ($matchingProposals[0].state -ne 'in_review' -and $null -eq $crossRepositoryObligation) {
     throw "Review result for $CRP requires lifecycle state 'in_review'; found '$($matchingProposals[0].state)'."
+}
+if ($null -eq $crossRepositoryObligation -and $unresolvedCrossRepositoryObligations.Count -gt 0) {
+    $blockingComponents = @($unresolvedCrossRepositoryObligations | ForEach-Object {
+        "COH-$($matchingProposals[0].id) — 1 - REVIEW ($($_.repository))"
+    } | Sort-Object -Unique)
+    throw "Review result for $CRP cannot be recorded in '$repoName' while blocking 1 - REVIEW component(s) remain: $($blockingComponents -join ', '). Review and accept those component(s) first; no commit or lifecycle state was changed."
 }
 
 # ------------------------------------------------------------------------------

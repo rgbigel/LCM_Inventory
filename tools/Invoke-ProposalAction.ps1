@@ -57,7 +57,7 @@ param(
     [ValidateSet('active', 'paused')]
     [string]$TestingMode,
 
-    [Parameter(Mandatory = $false, HelpMessage = 'Set a selected proposal switch to active or paused')]
+    [Parameter(Mandatory = $false, HelpMessage = 'Set a workspace switch to active or paused')]
     [ValidateSet('active', 'paused')]
     [string]$SwitchState,
 
@@ -127,7 +127,7 @@ if ($Help) {
     Write-Host "  -Preview          : Resolve and report a BCR cohort without launching review"
     Write-Host "  -Confirm          : Confirm broadened BCR scope or cross-repository cohort membership"
     Write-Host "  -Mode             : Governance mode: active or paused"
-    Write-Host "  -SwitchState      : Proposal switch state for minimal-tests or doit-mode: active or paused"
+    Write-Host "  -SwitchState      : Workspace switch state for minimal-tests or doit-mode: active or paused"
     Write-Host "  -Help (-h, -?)    : Displays this help screen"
     Write-Host "==========================================================================" -ForegroundColor Cyan
     return
@@ -316,53 +316,33 @@ switch -Regex ($Action) {
         break
     }
     '^minimal-tests$' {
-        if ([string]::IsNullOrWhiteSpace($TargetExpression)) {
-            throw "TargetExpression is required for action 'minimal-tests'."
-        }
         if ([string]::IsNullOrWhiteSpace($SwitchState)) {
             throw "-SwitchState (active or paused) is required for action 'minimal-tests'."
         }
-        $enabled = $SwitchState -eq 'active'
-        $targetIds = @(Resolve-ProposalIdExpression -Expression $TargetExpression)
-        $store = Get-ProposalStore
-        $updated = @()
-        foreach ($id in $targetIds) {
-            $proposal = $store.proposals | Where-Object { $_.id -eq $id } | Select-Object -First 1
-            if ($null -eq $proposal) { throw "Proposal #$id was not found." }
-            $proposal | Add-Member -NotePropertyName 'minimal_tests' -NotePropertyValue $enabled -Force
-            $proposal | Add-Member -NotePropertyName 'test_scope' -NotePropertyValue $(if ($enabled) { 'minimal' } else { 'full' }) -Force
-            $updated += $proposal
+        if (-not [string]::IsNullOrWhiteSpace($TargetExpression)) {
+            throw "minimal-tests is a workspace switch; do not provide -TargetExpression."
         }
+        $enabled = $SwitchState -eq 'active'
+        $store = Get-ProposalStore
+        $store | Add-Member -NotePropertyName 'minimal_tests' -NotePropertyValue $enabled -Force
+        $store | Add-Member -NotePropertyName 'test_scope' -NotePropertyValue $(if ($enabled) { 'minimal' } else { 'full' }) -Force
         Set-ProposalStore -Store $store
-        Write-Host "`nUpdated Proposal(s) Minimal Tests switch:" -ForegroundColor Cyan
-        Format-ProposalsTable -Proposals $updated
+        Write-Host "`nUpdated workspace Minimal Tests switch: $($SwitchState.ToUpperInvariant())" -ForegroundColor Cyan
         break
     }
     '^doit-mode$' {
-        if ([string]::IsNullOrWhiteSpace($TargetExpression)) {
-            throw "TargetExpression is required for action 'doit-mode'."
-        }
         if ([string]::IsNullOrWhiteSpace($SwitchState)) {
             throw "-SwitchState (active or paused) is required for action 'doit-mode'."
         }
-        $enabled = $SwitchState -eq 'active'
-        $targetIds = @(Resolve-ProposalIdExpression -Expression $TargetExpression)
-        $store = Get-ProposalStore
-        $updated = @()
-        foreach ($id in $targetIds) {
-            $proposal = $store.proposals | Where-Object { $_.id -eq $id } | Select-Object -First 1
-            if ($null -eq $proposal) { throw "Proposal #$id was not found." }
-            $isBug = ($proposal.crp_id -like 'BUG-*') -or ($proposal.cr_id -like 'BUG-*')
-            if ($isBug -and -not $enabled) {
-                throw "Proposal #$id is a BUG report and must retain -DOIT mode."
-            }
-            $proposal | Add-Member -NotePropertyName 'flow_mode' -NotePropertyValue $(if ($enabled) { 'doit' } else { 'standard' }) -Force
-            $proposal | Add-Member -NotePropertyName 'always_proceed' -NotePropertyValue $enabled -Force
-            $updated += $proposal
+        if (-not [string]::IsNullOrWhiteSpace($TargetExpression)) {
+            throw "doit-mode is a workspace switch; do not provide -TargetExpression."
         }
+        $enabled = $SwitchState -eq 'active'
+        $store = Get-ProposalStore
+        $store | Add-Member -NotePropertyName 'flow_mode' -NotePropertyValue $(if ($enabled) { 'doit' } else { 'standard' }) -Force
+        $store | Add-Member -NotePropertyName 'always_proceed' -NotePropertyValue $enabled -Force
         Set-ProposalStore -Store $store
-        Write-Host "`nUpdated Proposal(s) -DOIT switch:" -ForegroundColor Cyan
-        Format-ProposalsTable -Proposals $updated
+        Write-Host "`nUpdated workspace -DOIT switch: $($SwitchState.ToUpperInvariant())" -ForegroundColor Cyan
         break
     }
     '^cohort$' {
@@ -732,6 +712,33 @@ switch -Regex ($Action) {
     default {
         if ([string]::IsNullOrWhiteSpace($TargetExpression)) {
             throw "TargetExpression (e.g. '1-3', 'all', '1,2') is required for action '$Action'."
+        }
+        if ($Action -in @('do', 'proceed')) {
+            $targetIds = @(Resolve-ProposalIdExpression -Expression $TargetExpression)
+            if ($targetIds.Count -eq 1) {
+                $store = Get-ProposalStore
+                $proposal = @($store.proposals | Where-Object { [int]$_.id -eq [int]$targetIds[0] })[0]
+                $openObligation = if ($null -eq $proposal -or [string]$proposal.state -ne 'in_review') {
+                    $null
+                } else {
+                    @(Get-LcmProposalReviewObligations -Proposal $proposal -UnresolvedOnly) | Select-Object -First 1
+                }
+                if ($null -ne $openObligation) {
+                    $identity = if ($proposal.crp_id) { [string]$proposal.crp_id } elseif ($proposal.cr_id) { [string]$proposal.cr_id } else { "CRP-$($proposal.id)" }
+                    Write-Host "Continuation priority: COH-$($proposal.id) — 1 - REVIEW ($($openObligation.repository)) must run before $identity — 2 - REVIEW can complete." -ForegroundColor Cyan
+                    & $PSCommandPath -Action bcr -TargetExpression $TargetExpression -ReviewObligationId $openObligation.id -BaseCommit $BaseCommit -Details $Details
+                    return
+                }
+                $globalFlowMode = if ($store.PSObject.Properties['flow_mode']) { [string]$store.flow_mode } else { 'standard' }
+                $globalAlwaysProceed = if ($store.PSObject.Properties['always_proceed']) { $store.always_proceed -eq $true } else { $false }
+                $doitEnabled = $globalFlowMode -eq 'doit' -or $globalAlwaysProceed
+                if ($null -ne $proposal -and [string]$proposal.state -eq 'verified' -and $doitEnabled) {
+                    $identity = if ($proposal.crp_id) { [string]$proposal.crp_id } elseif ($proposal.cr_id) { [string]$proposal.cr_id } else { "CRP-$($proposal.id)" }
+                    Write-Host "DOIT continuation: $identity is verified; opening 2 - REVIEW through the required BCR action." -ForegroundColor Cyan
+                    & $PSCommandPath -Action bcr -TargetExpression $TargetExpression -BaseCommit $BaseCommit -Details $Details
+                    return
+                }
+            }
         }
         try {
             $updated = @(Invoke-ProposalBatchAction -Action $Action -TargetExpression $TargetExpression -Details $Details -Changes $Changes)

@@ -36,6 +36,10 @@ dependencies as independent failures.
   dependency, not as another failed target.
 - Preserve atomicity: a failed multi-target operation must report every
   directly failing target and must not report a success-shaped partial result.
+- Before recording a primary-repository review result, reject the request when
+  an unresolved cross-repository BCR obligation exists for another repository.
+  The refusal must identify the blocking repository and guarantee that neither
+  a commit nor lifecycle state changed.
 
 ### 2.2 Per-Target Failure Record
 
@@ -75,12 +79,28 @@ identify the unavailable evidence, and must not infer a cause.
 
 - Return a structured report object for callers and a concise readable
   rendering for interactive use.
+- Provide the named operator test surface **`ShowFailureDiagnostic`**,
+  implemented by `tools/Show-LcmFailureDiagnostic.ps1` and its generated
+  `Cmd/ShowFailureDiagnostic.cmd` launcher. It accepts an action and exact
+  target expression, for example
+  `ShowFailureDiagnostic -Action do -TargetExpression CRP-279`. With no
+  arguments, it runs that same non-mutating CRP-279 diagnostic demonstration.
+- The test surface must reject an action that is currently valid for any
+  selected target before calling the lifecycle dispatcher. It may invoke the
+  shared lifecycle validator only after proving the requested action is
+  invalid for every target; it must then render the validator's real
+  structured failure report and make no lifecycle mutation.
+- Catalog synchronization must retain `ShowFailureDiagnostic` as the
+  operator-facing short name.
 - Persist a durable receipt only when the existing lifecycle evidence model
   provides an applicable receipt location; the receipt must be separate from
   accepted-review and commit authorization evidence.
 - Do not emit raw exception stacks as the operator-facing report. Preserve
   structured diagnostic evidence for troubleshooting without concealing the
   original failure.
+- The Control Hub refreshes displayed ledger data after both successful and
+  failed daemon actions, and removes terminal escape sequences before showing
+  an operator-facing error.
 
 ### 2.5 Compatibility and Governance
 
@@ -106,3 +126,6 @@ identify the unavailable evidence, and must not infer a cause.
 - Existing Pester lifecycle tests remain valid, with focused tests for the
   report's direct-target filtering, provenance, conflict classification, and
   route limit.
+- `ShowFailureDiagnostic -Action do -TargetExpression CRP-279` produces the
+  authoritative formatted report when `do` is invalid and leaves CRP-279's
+  persisted lifecycle state unchanged.

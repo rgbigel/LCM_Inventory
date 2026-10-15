@@ -70,7 +70,7 @@ All tools in `tools/` conform to `RULE-PS-008` (Headers), `RULE-PS-009` (Logging
 | **`Invoke-WorkspacePush.ps1`** | Multi-repo lockstep Git push engine with Gemini export and proposal state transition. | `-Reason <string>`, `-Repositories <string[]>`, `-DryRun`, `-Help` |
 | **`Invoke-WorkspaceAudit.ps1`** | CLI runner for multi-repo audit scan and drift assessment. | `-Help` |
 | **`Test-LCMRuleHealth.ps1`** | Validates NTFS junction integrity and rule header parity across all repositories. | `-Fix`, `-Help` |
-| **`Show-LcmControl.ps1`** | Canonical CM Control Hub renderer and launcher. The first functional release provides refresh, proposal/document viewing, log viewing, and Beyond Compare review launch. | `-ReviewMode`, `-DatesMode`, `-Repo <string>`, `-State <string>`, `-Id <int>`, `-CliMode`, `-NoLaunch`, `-TimerOn` |
+| **`Show-LcmControl.ps1`** | Canonical CM Control Hub renderer and launcher. The first functional release provides refresh, proposal/document viewing, log viewing, and Beyond Compare review launch. An ordinary launch never creates a background daemon session. | `-ReviewMode`, `-DatesMode`, `-Repo <string>`, `-State <string>`, `-Id <int>`, `-CliMode`, `-NoLaunch`, `-StartDaemon`, `-TimerOn` |
 | **`Show-LcmActiveLauncher.ps1`** | LCM Tool Explorer displaying all 192 workspace tools with category filtering and execution routing. | `-Help` |
 | **`Show-WorkspaceReadiness.ps1`** | Workspace readiness rollup viewer displaying test suite passing status and review receipts. | `-Help` |
 | **`Invoke-Level1AnalysisRefinement.ps1`** | Generates the next immutable Level 1 evidence run from an approved `CON-001-L01` definition and retained baseline; an existing run is never overwritten. | `-DefinitionPath <string>`, `-OutputPath <string>`, `-RunId <string>`, `-Help` |
@@ -175,6 +175,85 @@ the main visual review surface. Review is not required for generated artifacts,
 scratch content, data, logs, or routine test output; an unfiltered BCR peek and
 helpful advisory are allowed. Managed lifecycle hooks remain applicable to
 governed lifecycle transitions.
+
+#### Lifecycle State, Gate, Action, and Switch Contract
+
+`modules/ProposalManager.psm1` is the lifecycle authority. The Control Hub
+projects its persisted state; it does not infer or change a transition. The
+two review checkpoints deliberately use matching labels: **`1 - REVIEW`** is
+the plan/activation decision and **`2 - REVIEW`** is the BCR/operator decision.
+
+```mermaid
+stateDiagram-v2
+  [*] --> suggested: create / propose
+  suggested --> in_progress: do / proceed\n1 - REVIEW accepted
+  in_progress --> verified: verify
+  verified --> in_review: bcr\n2 - REVIEW opened
+  in_review --> completed: complete\n2 - REVIEW accepted
+  completed --> pushed: push
+
+  suggested --> held: hold
+  in_progress --> held: hold
+  verified --> held: hold
+  in_review --> held: hold
+  completed --> held: hold
+  held --> suggested: reopen
+  held --> in_progress: reopen
+  held --> verified: reopen
+  held --> in_review: reopen
+  held --> completed: reopen
+  in_review --> rejected: reject
+  suggested --> withdrawn: withdraw
+  in_progress --> withdrawn: withdraw
+  withdrawn --> superseded: supersede
+  rejected --> superseded: supersede
+```
+
+| Persisted state | Hub label | External action(s) | Internal transition checks |
+|---|---|---|---|
+| `suggested` | `1 - REVIEW` | `do` / `proceed`, `hold`, `withdraw`, `supersede` | Gate 1 permits only an explicit transition to `in_progress`. |
+| `in_progress` | In Progress | `verify`, `hold`, `reset`, `withdraw`, `supersede` | Verification evidence must exist before `verified`. |
+| `verified` | Verified | `bcr`, `reopen`, `hold`, `supersede` | BCR resolves the exact CRP/COH and records the review identity. |
+| `in_review` | `2 - REVIEW` | `complete`, `commit`, `reject`, `reopen`, `hold` | Completion requires a BCR disposition and no blocking `COH-<parent> — 1 - REVIEW (<repository>)` component. |
+| `completed` | Completed | `push`, `hold`, `reinstate` | Commit/review gate evidence remains authoritative before publication. |
+| `pushed` | Published | `view`, `reinstate` | Terminal publication state; no forward transition exists. |
+| `held`, `withdrawn`, `rejected`, `superseded` | Held / terminal disposition | State-specific `reopen`, `view`, `withdraw`, or `supersede` | The transition matrix rejects every omitted edge. |
+
+In the Work Queue, **Status** owns the review/disposition indicator and its
+color: both Gate 1 and Gate 2 review work display **`REVIEW`** with the review
+badge. **Plan State** identifies only the numbered lifecycle gate:
+**`1 - REVIEW`** or **`2 - REVIEW`**. It must not repeat a BCR mechanism,
+“pending” wording, or any review disposition.
+
+An open cross-repository review is projected as a synthetic `COH-<parent-id>`
+work item. It is presented as **`COH-<parent-id> — 1 - REVIEW
+(<repository>)`** and has priority over its parent’s `2 - REVIEW`. A `do` or
+`proceed` request for that parent redirects to the synthetic `COH` and opens
+its required BCR; it never changes the parent state or accepts review evidence.
+After the `COH` review is accepted, **Complete** returns to the parent.
+
+If no lower-priority blocking `COH` exists, a `do`/`DOIT` request at
+`2 - REVIEW` returns a decision report rather than regressing status: choose
+**Complete** after BCR disposition is confirmed, or choose **Reopen** only for
+further implementation. `DOIT` never selects either decision automatically.
+For a selected CRP at `Verified`, `DOIT` routes `do` / `proceed` to the required
+`bcr` action, opening `2 - REVIEW` without changing or accepting its disposition.
+
+The following switches are **checks only**. They are intentionally absent from
+the diagram because none changes a state by itself.
+
+| Internal check/switch | Effect | Gate boundary |
+|---|---|---|
+| Workspace `flow_mode = doit` / `always_proceed = true` | Continues eligible planned work automatically. | May cross Gate 1; never accepts or bypasses Gate 2. |
+| `MinimalTests` / testing mode | Selects the permitted validation depth and records that scope. | Does not waive verification, BCR, or disposition checks. |
+| `Force` | Limits an authorized visual-review confirmation exception. | Does not waive lifecycle transitions, evidence, or unresolved-obligation checks. |
+| `bcr_disposition` | Records the operator review result. | Required before `in_review → completed`, unless an authorized BCR bypass is recorded. |
+| Cross-repository obligation ledger | Tracks review required in another repository. | Blocks `in_review → completed` until every obligation is completed. |
+
+ShowCM renders all switches as individual colored **Workspace** buttons beside
+**Work Queue**, never as lifecycle-menu actions. Governance, Testing, Review
+Granularity, Analysis Mode, Flow (`DOIT`), and test depth are global settings;
+neither a CRP nor a COH owns a switch.
 
 #### Unresolved Design Questions
 

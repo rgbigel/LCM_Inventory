@@ -22,6 +22,122 @@ Describe 'Proposal lifecycle authority' {
     Test-LcmProposalLifecycleTransition -FromState suggested -ToState pushed | Should -BeFalse
   }
 
+  It 'enforces the complete action matrix for every lifecycle state' {
+    $expectedActions = @{
+      suggested = @('edit', 'do', 'hold', 'withdraw', 'supersede')
+      in_progress = @('edit', 'verify', 'hold', 'reset', 'withdraw', 'supersede')
+      verified = @('bcr', 'reopen', 'hold', 'supersede')
+      in_review = @('complete', 'commit', 'reject', 'reopen', 'hold')
+      completed = @('push', 'hold', 'reinstate')
+      pushed = @('view', 'reinstate')
+      held = @('reopen', 'edit', 'withdraw')
+      withdrawn = @('view', 'supersede')
+      rejected = @('view', 'supersede', 'create-linked-bug')
+      superseded = @('view')
+    }
+
+    foreach ($state in $expectedActions.Keys) {
+      @(Get-LcmProposalLifecycleActions -State $state) | Should -BeExactly $expectedActions[$state]
+    }
+  }
+
+  It 'enforces every allowed and disallowed lifecycle transition' {
+    $expectedTransitions = @{
+      suggested = @('in_progress', 'held', 'withdrawn', 'superseded')
+      in_progress = @('suggested', 'verified', 'held', 'withdrawn', 'superseded')
+      verified = @('in_progress', 'in_review', 'held', 'superseded')
+      in_review = @('in_progress', 'completed', 'held', 'rejected')
+      completed = @('pushed', 'held')
+      pushed = @()
+      held = @('suggested', 'in_progress', 'verified', 'in_review', 'completed', 'withdrawn')
+      withdrawn = @('superseded')
+      rejected = @('superseded')
+      superseded = @()
+    }
+
+    foreach ($fromState in $expectedTransitions.Keys) {
+      foreach ($toState in $expectedTransitions.Keys) {
+        (Test-LcmProposalLifecycleTransition -FromState $fromState -ToState $toState) |
+          Should -Be ($toState -in $expectedTransitions[$fromState])
+      }
+    }
+  }
+
+  It 'documents and renders both numbered review gates without visualizing switches as states' {
+    $repositoryRoot = Split-Path $PSScriptRoot -Parent
+    $controlHub = Get-Content -LiteralPath (Join-Path $repositoryRoot 'assets\CM_CONTROL_HUB.html') -Raw -Encoding UTF8
+    $implementation = Get-Content -LiteralPath (Join-Path $repositoryRoot 'docs\Implementation.md') -Raw -Encoding UTF8
+
+    $controlHub | Should -Match ([regex]::Escape('{ key: "suggested", label: "1 - REVIEW" }'))
+    $controlHub | Should -Match ([regex]::Escape('{ key: "in_review", label: "2 - REVIEW" }'))
+    $controlHub | Should -Match ([regex]::Escape('return "1 - REVIEW";'))
+    $controlHub | Should -Match ([regex]::Escape('return "2 - REVIEW";'))
+    $implementation | Should -Match '```mermaid'
+    $implementation | Should -Match ([regex]::Escape('1 - REVIEW accepted'))
+    $implementation | Should -Match ([regex]::Escape('2 - REVIEW opened'))
+    $implementation | Should -Match ([regex]::Escape('May cross Gate 1; never accepts or bypasses Gate 2.'))
+  }
+
+  It 'does not let the DOIT switch bypass 2 - REVIEW' {
+    InModuleScope ProposalManager {
+      $script:testProposalStore = [PSCustomObject]@{
+        proposals = @(
+          [PSCustomObject]@{
+            id = 9021
+            crp_id = 'CRP-9021'
+            state = 'in_review'
+            flow_mode = 'doit'
+            always_proceed = $true
+            progress_state = 'verification'
+            disposition = $null
+          }
+        )
+      }
+      Mock Get-ProposalStore { $script:testProposalStore }
+      Mock Set-ProposalStore {}
+
+      { Invoke-ProposalBatchAction -Action do -TargetExpression '9021' } |
+        Should -Throw '*Do is available only from suggested.*'
+      $script:testProposalStore.proposals[0].state | Should -Be 'in_review'
+    }
+  }
+
+  It 'routes a verified DOIT proposal to BCR instead of regressing it to implementation' {
+    $repositoryRoot = Split-Path $PSScriptRoot -Parent
+    $actionScript = Get-Content -LiteralPath (Join-Path $repositoryRoot 'tools\Invoke-ProposalAction.ps1') -Raw -Encoding UTF8
+
+    $actionScript | Should -Match 'doit-mode is a workspace switch; do not provide -TargetExpression'
+    $actionScript | Should -Match 'minimal-tests is a workspace switch; do not provide -TargetExpression'
+    $actionScript | Should -Match '\$globalFlowMode -eq ''doit'' -or \$globalAlwaysProceed'
+    $actionScript | Should -Match '\[string\]\$proposal\.state -eq ''verified'' -and \$doitEnabled'
+    $actionScript | Should -Match 'DOIT continuation: \$identity is verified; opening 2 - REVIEW through the required BCR action'
+    $actionScript | Should -Match '& \$PSCommandPath -Action bcr -TargetExpression \$TargetExpression -BaseCommit \$BaseCommit -Details \$Details'
+  }
+
+  It 'reports the explicit Complete-or-Reopen decision at 2 - REVIEW' {
+    InModuleScope ProposalManager {
+      $failure = [PSCustomObject]@{
+        identity = 'CRP-9022'
+        current_state = 'in_review'
+        requested_state = 'in_progress'
+        reason = 'Do is an activation action and is unavailable after this proposal has passed the suggested state.'
+        conflict_type = 'invalid transition'
+        source = [PSCustomObject]@{ repository = 'LCM_Inventory'; path = 'modules\ProposalManager.psm1'; symbol = 'Invoke-ProposalBatchAction' }
+        governing_references = @('RULE-LCM-014')
+      }
+
+      $report = New-LcmLifecycleFailureReport -Action do -TargetExpression '9022' -Failures @($failure)
+      $rendered = (Format-LcmLifecycleFailureReport -Report $report) -join "`n"
+
+      @($report.escape_routes).Count | Should -Be 2
+      $report.escape_routes[0].rank | Should -Be 1
+      $report.escape_routes[1].rank | Should -Be 2
+      $rendered | Should -Match 'Decision required: choose Complete'
+      $rendered | Should -Match 'Choose Reopen only'
+      $rendered | Should -Match '2 - REVIEW'
+    }
+  }
+
   It 'creates direct, non-mutating lifecycle failure diagnostics with bounded routes' {
     InModuleScope ProposalManager {
       $failures = @(
@@ -107,7 +223,7 @@ Describe 'Proposal lifecycle authority' {
       @($sameObligation.observed_reasons) | Should -Contain 'Additional dirty source was observed.'
       @(Get-LcmProposalReviewObligations -Proposal $script:testProposalStore.proposals[0] -UnresolvedOnly).Count | Should -Be 1
       { Move-LcmProposalLifecycleState -Id 9099 -State completed } |
-        Should -Throw '*cannot complete while cross-repository BCR obligation(s) remain unresolved: LCM_AI*'
+        Should -Throw '*cannot complete while blocking 1 - REVIEW component(s) remain: COH-9099 — 1 - REVIEW (LCM_AI)*'
 
       Complete-LcmCrossRepositoryReviewObligation -Id 9099 -Repository 'LCM_AI' -ReviewReceiptPath 'D:\evidence\LCM_AI-review.json' -CommitSha 'abc1234' | Out-Null
       (Move-LcmProposalLifecycleState -Id 9099 -State completed).state | Should -Be 'completed'

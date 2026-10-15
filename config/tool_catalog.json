@@ -1102,6 +1102,13 @@
         "Description": "Open the lifecycle ledger in terminal detail mode"
       },
       {
+        "Name": "StartDaemon",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Explicitly start the desktop daemon when it is offline"
+      },
+      {
         "Name": "TimerOn",
         "Type": "SwitchParameter",
         "Mandatory": false,
@@ -3501,6 +3508,214 @@
     "Dependencies": null
   },
   {
+    "Name": "Invoke-MacriumBcrReview.ps1",
+    "ShortName": "MacriumBcrReview",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Invoke-MacriumBcrReview execution tool.",
+    "Example": "MacriumBcrReview",
+    "RelativePath": "LCM_Inventory\\tools\\Invoke-MacriumBcrReview.ps1",
+    "Parameters": [
+      {
+        "Name": "CRP",
+        "Type": "String",
+        "Mandatory": true,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "RepositoryName",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "LCM_Inventory",
+        "Description": ""
+      },
+      {
+        "Name": "BaseCommit",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "HEAD",
+        "Description": ""
+      }
+    ],
+    "Dependencies": [
+      "ProposalManager.psm1",
+      "Invoke-MacriumDailyBcrBaseline.ps1"
+    ]
+  },
+  {
+    "Name": "Invoke-MacriumDailyBcrBaseline.ps1",
+    "ShortName": "MacriumDailyBcrBaseline",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Invoke-MacriumDailyBcrBaseline execution tool.",
+    "Example": "MacriumDailyBcrBaseline",
+    "RelativePath": "LCM_Inventory\\tools\\Invoke-MacriumDailyBcrBaseline.ps1",
+    "Parameters": [
+      {
+        "Name": "BackupDefinitionPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\OneDrive\\Documents\\Reflect\\@B_D4P3+4-WDB850-AD.xml",
+        "Description": ""
+      },
+      {
+        "Name": "BackupDirectory",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "B:\\Backups\\D4P3+4-WDB850-AD",
+        "Description": ""
+      },
+      {
+        "Name": "ExpectedVolumeLabel",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D4P3-WDB850-D",
+        "Description": ""
+      },
+      {
+        "Name": "PollSeconds",
+        "Type": "Int32",
+        "Mandatory": false,
+        "Default": "60",
+        "Description": ""
+      },
+      {
+        "Name": "TimeoutMinutes",
+        "Type": "Int32",
+        "Mandatory": false,
+        "Default": "240",
+        "Description": ""
+      },
+      {
+        "Name": "ReviewScope",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "StartBackupIfMissing",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "ForceNewBackup",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "ReuseMountedBaseline",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "NoLaunchReview",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "ElevatedWorker",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "ReceiptPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "ImagePath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      }
+    ],
+    "Dependencies": [
+      "bcompare",
+      "BCompare.exe",
+      "BCompare"
+    ]
+  },
+  {
+    "Name": "Invoke-MacriumImageDetachProbe.ps1",
+    "ShortName": "MacriumImageDetachProbe",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Invoke-MacriumImageDetachProbe execution tool.",
+    "Example": "MacriumImageDetachProbe",
+    "RelativePath": "LCM_Inventory\\tools\\Invoke-MacriumImageDetachProbe.ps1",
+    "Parameters": [
+      {
+        "Name": "DriveLetter",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "F",
+        "Description": "Mounted image drive letter to inspect or detach. Allowed values are F through I because all other drive letters are reserved. Defaults to F."
+      },
+      {
+        "Name": "ExpectedVolumeLabel",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D4P3-WDB850-D",
+        "Description": "Required label of the mounted Macrium image. Defaults to D4P3-WDB850-D."
+      },
+      {
+        "Name": "BCompareSessionName",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "_LCM",
+        "Description": "Saved Beyond Compare profile that compares the mounted image. Its active Folder Compare window is closed before detach when -Execute is supplied."
+      },
+      {
+        "Name": "Execute",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Allows the documented Reflect.exe detach command to be invoked."
+      }
+    ],
+    "Dependencies": [
+      "BCompare",
+      "Bcompare",
+      "bcompare"
+    ]
+  },
+  {
     "Name": "Make-Admin.ps1",
     "ShortName": "MakeAdmin",
     "Aliases": null,
@@ -3695,7 +3910,7 @@
         "Type": "String",
         "Mandatory": false,
         "Default": "",
-        "Description": "Set a selected proposal switch to active or paused"
+        "Description": "Set a workspace switch to active or paused"
       },
       {
         "Name": "MinimalTests",
@@ -3769,7 +3984,7 @@
       }
     ],
     "Dependencies": [
-      "Invoke-BeyondCompareReview.ps1",
+      "Invoke-MacriumBcrReview.ps1",
       "Complete-ReviewCohort.ps1",
       "Submit-ReviewResult.ps1"
     ]
@@ -4378,6 +4593,39 @@
     "Dependencies": "WorkspaceQualityGates.psm1"
   },
   {
+    "Name": "Show-LcmFailureDiagnostic.ps1",
+    "ShortName": "ShowFailureDiagnostic",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Show-LcmFailureDiagnostic execution tool.",
+    "Example": "ShowFailureDiagnostic -Action do -TargetExpression CRP-279",
+    "RelativePath": "LCM_Inventory\\tools\\Show-LcmFailureDiagnostic.ps1",
+    "Parameters": [
+      {
+        "Name": "Action",
+        "Type": "String",
+        "Mandatory": true,
+        "Default": "",
+        "Description": "Lifecycle action to diagnose. It must be invalid for every target."
+      },
+      {
+        "Name": "TargetExpression",
+        "Type": "String",
+        "Mandatory": true,
+        "Default": "",
+        "Description": "Exact CRP or BUG target expression to diagnose."
+      }
+    ],
+    "Dependencies": "ProposalManager.psm1"
+  },
+  {
     "Name": "Show-LcmActiveLauncher.ps1",
     "ShortName": "ShowLcmActiveLauncher",
     "Aliases": null,
@@ -4773,6 +5021,13 @@
         "Mandatory": false,
         "Default": "",
         "Description": "Explicitly include durable unreviewed paths disclosed by the current BCR staging manifest"
+      },
+      {
+        "Name": "StagedOnly",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Commit only the existing staged review manifest; do not stage other live worktree paths"
       }
     ],
     "Dependencies": [
@@ -5506,11 +5761,26 @@
         "Mandatory": false,
         "Default": "",
         "Description": "Run the full check regardless of the gap."
+      },
+      {
+        "Name": "PrepareBcrBaseline",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "After the existing GoodMorning report, prepare today's Macrium baseline and open the operator-owned _LCM review profile."
+      },
+      {
+        "Name": "ReviewScope",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
       }
     ],
     "Dependencies": [
       "LcmWorkspaceContext.psm1",
-      "Test-Guardrail.ps1"
+      "Test-Guardrail.ps1",
+      "Invoke-MacriumDailyBcrBaseline.ps1"
     ]
   },
   {

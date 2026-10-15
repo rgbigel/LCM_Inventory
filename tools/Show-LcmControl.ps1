@@ -34,6 +34,9 @@ param(
     [Parameter(Mandatory = $false, HelpMessage = 'Render HTML data cache without launching desktop browser')]
     [switch]$NoLaunch,
 
+    [Parameter(Mandatory = $false, HelpMessage = 'Explicitly start the desktop daemon when it is offline')]
+    [switch]$StartDaemon,
+
     [Parameter(Mandatory = $false, HelpMessage = 'Display verbose execution timing telemetry milestones')]
     [Alias('Timer', 'Timing', 'timer-ON')]
     [switch]$TimerOn,
@@ -53,7 +56,7 @@ param(
     Path: tools/Show-LcmControl.ps1
     Authors: Rolf, LCM_AI Engine
     Version: 10.0.0
-    Date: 2026-10-13
+    Date: 2026-10-15
 .PARAMETER ReviewMode
     Opens the Control Hub filtered directly to pending visual reviews requiring Beyond Compare action.
 .PARAMETER DatesMode
@@ -72,6 +75,9 @@ param(
     Displays detailed individual state transition timeline and user notes in CLI mode.
 .PARAMETER NoLaunch
     Renders HTML artifacts without launching the desktop browser.
+.PARAMETER StartDaemon
+    Explicitly starts the desktop daemon if it is offline. Ordinary ShowCM launch
+    never creates a background daemon session.
 .PARAMETER TimerOn
     Display verbose execution timing milestones (Aliases: -Timer, -Timing, -timer-ON). Defaults to false.
 .PARAMETER Help
@@ -128,7 +134,7 @@ if ($Help) {
     Write-Host "  lifecycle actions through Invoke-ProposalAction.ps1."
     Write-Host ""
     Write-Host "USAGE:" -ForegroundColor Yellow
-    Write-Host "  pwsh tools/Show-LcmControl.ps1 [-Lifecycle] [-Dates] [-ReviewMode] [-Repo <repo>] [-State <state>] [-Id <CRP-ID>] [-Cli] [-h]"
+    Write-Host "  pwsh tools/Show-LcmControl.ps1 [-Lifecycle] [-Dates] [-ReviewMode] [-Repo <repo>] [-State <state>] [-Id <CRP-ID>] [-Cli] [-StartDaemon] [-h]"
     Write-Host ""
     Write-Host "MODES:" -ForegroundColor Yellow
     Write-Host "  (default)          : Opens full CM Control Hub on interactive desktop"
@@ -136,6 +142,7 @@ if ($Help) {
     Write-Host "  -ReviewMode        : Opens Control Hub filtered to pending Beyond Compare reviews"
     Write-Host "  -Cli / -NoBrowser  : Outputs proposal dates table directly to terminal"
     Write-Host "  -Lifecycle         : Outputs authoritative lifecycle state and transition history in terminal"
+    Write-Host "  -StartDaemon       : Explicitly starts the desktop daemon when it is offline"
     Write-Host ""
     Write-Host "ALIASES & SHORT-NAMES:" -ForegroundColor Yellow
     Write-Host "  ShowLcmControl.cmd : Canonical launcher"
@@ -512,10 +519,10 @@ if (-not $NoLaunch) {
         if ($ping -and $ping.status -eq "ONLINE") { $daemonOnline = $true }
     } catch {}
 
-    if (-not $daemonOnline) {
+    if (-not $daemonOnline -and $StartDaemon) {
         $daemonScript = Join-Path $workspaceRoot "LCM_Inventory\tools\LcmDesktopDaemon.ps1"
         if (Test-Path -LiteralPath $daemonScript) {
-            Write-Host "  -> Port 9876 Daemon offline. Reviving daemon in background..." -ForegroundColor Yellow
+            Write-Host "  -> Port 9876 Daemon offline. Starting explicitly requested daemon in background..." -ForegroundColor Yellow
             Start-Process -FilePath "pwsh.exe" -ArgumentList "-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File `"$daemonScript`" -Background" -WindowStyle Hidden
             for ($i = 0; $i -lt 15; $i++) {
                 Start-Sleep -Milliseconds 200
@@ -525,6 +532,8 @@ if (-not $NoLaunch) {
                 } catch {}
             }
         }
+    } elseif (-not $daemonOnline) {
+        Write-Host "  -> Port 9876 Daemon offline. Not starting a background session; opening local artifact fallback." -ForegroundColor Yellow
     }
 
     if ($daemonOnline) {

@@ -284,6 +284,46 @@
       background: var(--surface-soft);
     }
     .panel-heading h1, .panel-heading h2, .panel-heading h3 { margin: 0; font-size: 14px; font-weight: 700; }
+    .workspace-switches {
+      display: flex;
+      flex: 1;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 5px;
+      margin-left: 18px;
+    }
+    .workspace-switch-label {
+      color: var(--muted);
+      font: 700 9px var(--mono);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+    .workspace-switch-divider {
+      height: 22px;
+      border-left: 1px solid var(--line);
+      margin: 0 3px;
+    }
+    .workspace-switch-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      min-height: 28px;
+      padding: 4px 8px;
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      background: var(--surface-soft);
+      color: var(--ink);
+      cursor: pointer;
+      font: 700 10px var(--mono);
+    }
+    .workspace-switch-button:hover:not(:disabled) { filter: brightness(.97); }
+    .workspace-switch-button:disabled { cursor: not-allowed; opacity: .55; }
+    .workspace-switch-button.switch-on { background: #ecfdf5; border-color: #10b981; color: #047857; }
+    .workspace-switch-button.switch-off { background: #fef2f2; border-color: #ef4444; color: #b91c1c; }
+    .workspace-switch-button.switch-active { background: #fef3c7; border-color: #f59e0b; color: #b45309; }
+    .workspace-switch-button.switch-idle { background: #f8fafc; border-color: #cbd5e1; color: #64748b; }
+    .workspace-switch-button.switch-analysis { background: #f5f3ff; border-color: #8b5cf6; color: #6d28d9; }
     .panel-kicker { color: var(--muted); font: 11px var(--mono); text-transform: uppercase; }
 
     .proposal-table-container {
@@ -1085,6 +1125,27 @@
           <span class="panel-kicker">Proposal Index</span>
           <h1 id="tableHeading">Work Queue</h1>
         </div>
+        <div class="workspace-switches" id="workspaceSwitches" aria-label="Visible lifecycle switches">
+          <span class="workspace-switch-label">Workspace</span>
+          <button class="workspace-switch-button" id="btnGlobalLcm" onclick="toggleLcmMode()" title="Workspace governance mode">
+            <span class="switch-led" id="ledLcmMode"></span> Governance <strong id="switchValLcm">ON</strong>
+          </button>
+          <button class="workspace-switch-button" id="btnGlobalTesting" onclick="toggleTestingMode()" title="Workspace testing mode">
+            <span class="switch-led" id="ledTestingMode"></span> Testing <strong id="switchValTesting">ON</strong>
+          </button>
+          <button class="workspace-switch-button" id="btnGlobalGranularity" onclick="toggleGranularity()" title="Workspace BCR granularity">
+            <span class="switch-led" id="ledGranularity"></span> Review <strong id="switchValGranularity">-Coarse</strong>
+          </button>
+          <button class="workspace-switch-button" id="btnGlobalAnalysis" onclick="toggleAnalysisMode()" title="Workspace operating mode">
+            <span class="switch-led" id="ledAnalysisMode"></span> Mode <strong id="switchValAnalysisMode">IMPLEMENT</strong>
+          </button>
+          <button class="workspace-switch-button switch-idle" id="btnGlobalDoit" onclick="toggleGlobalDoit()" title="Workspace flow switch; never bypasses 2 - REVIEW">
+            <span class="switch-led" id="ledDoit"></span> Flow <strong id="switchValDoit">DO</strong>
+          </button>
+          <button class="workspace-switch-button switch-idle" id="btnGlobalMinimalTests" onclick="toggleGlobalMinimalTests()" title="Workspace test-depth switch">
+            <span class="switch-led" id="ledMinimalTests"></span> Tests <strong id="switchValMinimalTests">Standard DAG</strong>
+          </button>
+        </div>
         <span class="panel-kicker" id="matchCounter">0 results / CRP ID order</span>
       </div>
       <div class="selected-item-lifecycle" id="selectedItemLifecycle">
@@ -1517,14 +1578,15 @@
     function getSelectedItemLifecycleMarkup(p) {
       const state = getLifecycleState(p);
       const stages = [
-        { key: "suggested", label: "Suggested" },
+        { key: "suggested", label: "1 - REVIEW" },
         { key: "in_progress", label: "In Progress" },
         { key: "verified", label: "Verified" },
+        { key: "in_review", label: "2 - REVIEW" },
         { key: "completed", label: "Completed" },
         { key: "pushed", label: "Published" }
       ];
-      const activeIndex = state === "in_review" ? 2 : stages.findIndex(stage => stage.key === state);
-      const labels = ["do", "verify", "BCR", "push"];
+      const activeIndex = stages.findIndex(stage => stage.key === state);
+      const labels = ["do", "verify", "BCR", "complete", "push"];
       return `<div class="lifecycle-strip" title="Lifecycle actions are available through ACTIONS only">${stages.map((stage, index) => {
         const className = index < activeIndex ? "done" : index === activeIndex ? "current" : "";
         const node = `<span class="lifecycle-node ${className}">${stage.label}</span>`;
@@ -1542,15 +1604,16 @@
         return;
       }
       if (target.kind === "CRP") {
-        const tag = target.item.crp_id || target.item.cr_id || `CRP-${target.item.id}`;
-        container.innerHTML = `<span class="selected-item-lifecycle-label">${esc(tag)}</span>${getSelectedItemLifecycleMarkup(target.item)}`;
+        container.innerHTML = getSelectedItemLifecycleMarkup(target.item);
         return;
       }
       const cohort = target.item;
       const members = (cohort.proposal_ids || []).map(Number).map(id => (proposalsData.proposals || []).find(p => Number(p.id) === id)).filter(Boolean);
-      const representative = members.find(p => getLifecycleState(p) === "in_review") || members[0];
+      const representative = cohort.synthetic
+        ? { state: cohort.resolved ? "completed" : "suggested" }
+        : members.find(p => getLifecycleState(p) === "in_review") || members[0];
       const status = representative ? getSelectedItemLifecycleMarkup(representative) : '<span class="selected-item-lifecycle-empty">No cohort members are available.</span>';
-      container.innerHTML = `<span class="selected-item-lifecycle-label">${esc(cohort.id)} lifecycle</span>${status}`;
+      container.innerHTML = status;
     }
 
     function isBugProposal(p) {
@@ -1580,11 +1643,11 @@
         return "Tests failed";
       }
       if (state === "in_review") {
-        return "Review pending";
+        return "2 - REVIEW";
       }
       if (state === "verified") {
         if (testStatus === "in_progress" || testStatus === "running") return "Tests running";
-        return "Verified";
+        return "Verified: ready for 2 - REVIEW";
       }
       if (state === "completed") {
         return "Committed / Ready to Push";
@@ -1598,7 +1661,7 @@
         return "In Progress";
       }
       if (state === "suggested") {
-        return "Suggested";
+        return "1 - REVIEW";
       }
       return state ? state.charAt(0).toUpperCase() + state.slice(1) : "Suggested";
     }
@@ -1615,6 +1678,7 @@
       populateItemTargets();
       calculateStatusCounts();
       renderTable();
+      updateInternalSwitchesDisplay(null);
       renderSelectedItemLifecycle();
       updateDaemonStatus();
 
@@ -1729,15 +1793,15 @@
         }
       });
       return [...uniqueObligations.values()]
+        .filter(obligation => String(obligation.status || "open").toLowerCase() !== "completed")
         .map(obligation => {
           const proposal = (proposalsData.proposals || []).find(item => Number(item.id) === Number(obligation.proposal_id));
           if (!proposal) return null;
-          const resolved = String(obligation.status || "open").toLowerCase() === "completed";
           return {
             id: `COH-${proposal.id}`,
-            state: resolved ? "approved" : "open",
+            state: "open",
             synthetic: true,
-            resolved,
+            resolved: false,
             obligation_id: obligation.id,
             proposal_ids: [Number(proposal.id)],
             prime_proposal_id: Number(proposal.id),
@@ -1753,6 +1817,12 @@
       return [...(proposalsData.review_cohorts || []), ...getObligationWorkQueueCohorts()];
     }
 
+    function getBlockingReviewCohort(proposal) {
+      return getObligationWorkQueueCohorts().find(cohort =>
+        Number(cohort.prime_proposal_id) === Number(proposal?.id) && !cohort.resolved
+      ) || null;
+    }
+
     function populateItemTargets() {
       const select = $("itemTargetSelect");
       if (!select) return;
@@ -1765,7 +1835,10 @@
         '<optgroup label="COH targets">' + cohorts.map(c => {
           const members = (c.proposal_ids || []).map(Number);
           const head = Number(c.prime_proposal_id || members[0] || 0);
-          return `<option value="COH:${esc(c.id)}">${esc(c.id)} — HEAD #${head} · ${members.length} member${members.length === 1 ? "" : "s"} (${esc(String(c.state || "open").toUpperCase())})</option>`;
+          const status = c.synthetic && !c.resolved
+            ? `1 - REVIEW / ${c.repositories[0]}`
+            : String(c.state || "open").toUpperCase();
+          return `<option value="COH:${esc(c.id)}">${esc(c.id)} — HEAD #${head} · ${members.length} member${members.length === 1 ? "" : "s"} (${esc(status)})</option>`;
         }).join("") + '</optgroup>';
       if ([...select.options].some(option => option.value === selected)) select.value = selected;
     }
@@ -1899,19 +1972,34 @@
       }
       if (target.kind === "COH" && !validateCurrentCohortTarget(target.item.id)) return;
       if (target.kind === "CRP" && !validateCurrentProposalTargets([target.item.id])) return;
+      if (target.kind === "CRP" && ["do", "proceed"].includes(action) && getLifecycleState(target.item) === "in_review") {
+        const blockingCohort = getBlockingReviewCohort(target.item);
+        if (blockingCohort) {
+          selectItemTarget(`COH:${blockingCohort.id}`);
+          setActionResult(`Continuation priority selected ${blockingCohort.id} — 1 - REVIEW (${blockingCohort.repositories[0]}) before ${target.item.crp_id || target.item.cr_id || `CRP-${target.item.id}`} — 2 - REVIEW.`, "");
+          dispatchTargetAction(action);
+          return;
+        }
+      }
       const expression = target.kind === "COH" ? target.item.id : String(target.item.id);
       const targetLabel = getTargetActionLabel(target);
+      const effectiveAction = target.kind === "COH" && target.item.synthetic && ["do", "proceed"].includes(action)
+        ? "bcr"
+        : action;
       if (["force", "immediately", "retire", "supersede", "reinstate"].includes(action)) { openTargetActionModal(action); return; }
       const obligationSwitch = target.kind === "COH" && target.item.synthetic
         ? ` -ReviewObligationId "${target.item.obligation_id}"`
         : "";
       const cmd = target.kind === "COH" && target.item.synthetic && action === "complete"
         ? `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Submit-ReviewResult.ps1 -RepositoryPath "${target.item.repositories[0]}" -CRP "${target.item.head_identity}" -Result Complete -IncludeUnreviewed -Notes "Operator accepted ${target.item.id}"`
-        : `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action ${action} -TargetExpression "${expression}"${obligationSwitch}`;
+        : `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action ${effectiveAction} -TargetExpression "${expression}"${obligationSwitch}`;
       if (target.kind === "COH" && ["do", "proceed", "verify", "bcr", "complete"].includes(action)) {
-        setActionResult(`Cohort gate synchronization is running for ${targetLabel}. The result will list synchronized, already-aligned (no-op), or stopped members; BCR cannot begin if any member stops.`, "");
+        const continuation = target.item.synthetic && ["do", "proceed"].includes(action)
+          ? `Starting blocking 1 - REVIEW for ${targetLabel} before its parent 2 - REVIEW can complete.`
+          : `Cohort gate synchronization is running for ${targetLabel}. The result will list synchronized, already-aligned (no-op), or stopped members; BCR cannot begin if any member stops.`;
+        setActionResult(continuation, "");
       }
-      executeDaemonCommand(cmd, `Applying ${action.toUpperCase()} to ${targetLabel}...`, `Target ITEM: ${targetLabel}\n${cmd}`);
+      executeDaemonCommand(cmd, `Applying ${effectiveAction.toUpperCase()} to ${targetLabel}...`, `Target ITEM: ${targetLabel}\n${cmd}`);
     }
 
     function selectTargetAndOpenActions(event, id) {
@@ -2546,7 +2634,7 @@
                 <div class="show-dropdown-title">Lifecycle</div>
                 <button class="show-dropdown-item" onclick="dispatchTargetAction('proceed')"><span class="btn-icon">⚡</span> Proceed ITEM</button>
                 ${getLifecycleState(p) === "suggested"
-                  ? `<button class="show-dropdown-item" onclick="dispatchTargetAction('do')"><span class="btn-icon">▶️</span> ${isDoit ? "Do ITEM (Doit)" : "Do ITEM"}</button>`
+                  ? `<button class="show-dropdown-item" onclick="dispatchTargetAction('do')"><span class="btn-icon">▶️</span> Do ITEM</button>`
                   : ""}
                 <button class="show-dropdown-item" onclick="dispatchTargetAction('bcr')"><span class="btn-icon">🔍</span> Open Review</button>
                 <button class="show-dropdown-item" onclick="dispatchStandardAction('reviewed', [getActiveItemTarget()?.item?.id], '')"><span class="btn-icon">✅</span> ACCEPTED: Item</button>
@@ -2571,12 +2659,6 @@
                 <button class="show-dropdown-item" onclick="showProposalDiff(${p.id})"><span class="btn-icon">🔍</span> Show Diff / BC Review</button>
                 <button class="show-dropdown-item" onclick="showReviewReceipt(${p.id})"><span class="btn-icon">🧾</span> Show Review Receipt</button>
                 <button class="show-dropdown-item" onclick="showStateHistory(${p.id})"><span class="btn-icon">📜</span> Show State History</button>
-                <div style="border-top: 1px solid var(--line); margin: 4px 0;"></div>
-                <div class="show-dropdown-title">Flow Switches</div>
-                <button class="show-dropdown-item" onclick="toggleActiveProposalDoit()"><span class="btn-icon">⚡</span> Toggle Flow Gate (-DOIT)</button>
-                <button class="show-dropdown-item" onclick="toggleActiveProposalMinimalTests()"><span class="btn-icon">🧪</span> Toggle Minimal Tests</button>
-                <button class="show-dropdown-item" onclick="toggleLcmMode()"><span class="btn-icon">⚙️</span> Toggle LCM Mode</button>
-                <button class="show-dropdown-item" onclick="toggleTestingMode()"><span class="btn-icon">🧪</span> Toggle Testing Mode</button>
                 <button class="show-dropdown-item" onclick="toggleGranularity()"><span class="btn-icon">↔️</span> Toggle Review Granularity</button>
                 <div style="border-top: 1px solid var(--line); margin: 4px 0;"></div>
                 <div class="show-dropdown-title" style="color:var(--red);">FIX</div>
@@ -2594,10 +2676,10 @@
           .filter(cohort => Number(cohort.prime_proposal_id) === Number(p.id))
           .map(cohort => `<tr class="obligation-work-queue-row" onclick="selectItemTarget('COH:${esc(cohort.id)}')" style="cursor: pointer;">
             <td><span class="proposal-id">${esc(cohort.id)}</span> <span class="proposal-title">${esc(cohort.repositories[0])}</span></td>
-            <td class="cohort-cell"><span class="cohort-badge" title="Cross-repository BCR review required">${esc(cohort.id)} · MEMBER</span></td>
-            <td><span class="state-badge state-${cohort.resolved ? "active" : "in_review"}">${cohort.resolved ? "APPROVED" : "IN REVIEW"}</span></td>
-            <td><span style="font-weight: 600; font-size: 11.5px; color: var(--ink);">${cohort.resolved ? "Approved" : `Review pending — ${esc(cohort.repositories[0])} BCR`}</span></td>
-            <td><span class="repo-sub">${cohort.resolved ? "In progress" : "Cross-repository BCR review required."}</span></td>
+            <td class="cohort-cell"><span class="cohort-badge" title="Cross-repository review required">${esc(cohort.id)} · MEMBER</span></td>
+            <td><span class="state-badge state-review">REVIEW</span></td>
+            <td><span style="font-weight: 600; font-size: 11.5px; color: var(--ink);">1 - REVIEW</span></td>
+            <td><span class="repo-sub">Cross-repository review required.</span></td>
             <td style="text-align: center;"><span class="prio-badge" title="Inherited from ${esc(cohort.head_identity)}">${normalizePriority(p.priority)}</span></td>
             <td class="evidence-cell" title="Cross-repository review ledger"><span class="repo-sub">Ledger obligation ${esc(cohort.obligation_id)}</span></td>
             <td class="action-cell">
@@ -2773,16 +2855,19 @@
       const isLcmOn = (lcmMode === "active");
       if ($("switchValLcm")) $("switchValLcm").innerText = isLcmOn ? "ON" : "OFF";
       if ($("ledLcmMode")) $("ledLcmMode").className = isLcmOn ? "switch-led switch-led-on" : "switch-led switch-led-off";
+      if ($("btnGlobalLcm")) $("btnGlobalLcm").className = `workspace-switch-button ${isLcmOn ? "switch-on" : "switch-off"}`;
 
       const testingMode = (proposalsData.testing_mode || "active").toLowerCase();
       const isTestingOn = (testingMode === "active");
       if ($("switchValTesting")) $("switchValTesting").innerText = isTestingOn ? "ON" : "OFF";
       if ($("ledTestingMode")) $("ledTestingMode").className = isTestingOn ? "switch-led switch-led-on" : "switch-led switch-led-off";
+      if ($("btnGlobalTesting")) $("btnGlobalTesting").className = `workspace-switch-button ${isTestingOn ? "switch-on" : "switch-off"}`;
 
       const gran = (proposalsData.review_granularity || "coarse").toLowerCase();
       const isTight = (gran === "tight");
       if ($("switchValGranularity")) $("switchValGranularity").innerText = isTight ? "-Tight" : "-Coarse";
       if ($("ledGranularity")) $("ledGranularity").className = isTight ? "switch-led switch-led-tight" : "switch-led switch-led-coarse";
+      if ($("btnGlobalGranularity")) $("btnGlobalGranularity").className = `workspace-switch-button ${isTight ? "switch-active" : "switch-idle"}`;
 
       const sess = proposalsData.session_state || {};
       const opMode = (sess.operating_mode || "GOVERNED_IMPLEMENTATION").toUpperCase();
@@ -2799,28 +2884,18 @@
           if ($("ledAnalysisMode")) $("ledAnalysisMode").className = "switch-led switch-led-on";
         }
       }
+      if ($("btnGlobalAnalysis")) {
+        $("btnGlobalAnalysis").className = `workspace-switch-button ${opMode === "GOVERNED_IMPLEMENTATION" ? "switch-on" : "switch-analysis"}`;
+      }
 
       const p = activeProposal || null;
-      let isDoit = false;
-      let isMinTests = false;
+      const isDoit = proposalsData.flow_mode === "doit" || proposalsData.always_proceed === true;
+      const isMinTests = Boolean(proposalsData.minimal_tests || proposalsData.test_scope === "minimal");
       let isBypass = false;
       let isImmediately = false;
       let isHeld = false;
 
-      const itemTagEl = $("switchesActiveItemLabel");
-      if (itemTagEl) {
-        if (p) {
-          const tag = p.crp_id || p.cr_id || ("#" + p.id);
-          itemTagEl.innerText = `[${tag}]`;
-        } else {
-          itemTagEl.innerText = "[None]";
-        }
-      }
-
       if (p) {
-        const isBug = isBugProposal(p);
-        isDoit = isBug || (p.flow_mode === "doit" || p.always_proceed || p.action === "do");
-        isMinTests = Boolean(p.minimal_tests || p.test_depth === "minimal" || p.test_scope === "minimal" || (p.state && p.state.includes("minimal-tests")));
         isBypass = Boolean(p.force_commit || p.bypass_review);
         isImmediately = p.quality_checks_deferred === true;
         isHeld = getLifecycleState(p) === "held";
@@ -2830,9 +2905,15 @@
         $("ledDoit").className = isDoit ? "switch-led switch-led-active" : "switch-led switch-led-idle";
         $("switchValDoit").innerText = isDoit ? "DOIT" : "DO";
       }
+      if ($("btnGlobalDoit")) {
+        $("btnGlobalDoit").className = `workspace-switch-button ${isDoit ? "switch-active" : "switch-idle"}`;
+      }
       if ($("ledMinimalTests")) {
         $("ledMinimalTests").className = isMinTests ? "switch-led switch-led-active" : "switch-led switch-led-idle";
         $("switchValMinimalTests").innerText = isMinTests ? "Fast Single DAG" : "Standard DAG";
+      }
+      if ($("btnGlobalMinimalTests")) {
+        $("btnGlobalMinimalTests").className = `workspace-switch-button ${isMinTests ? "switch-active" : "switch-idle"}`;
       }
       if ($("ledForce")) {
         $("ledForce").className = isBypass ? "switch-led switch-led-off" : "switch-led switch-led-idle";
@@ -2884,37 +2965,20 @@
       return target && target.kind === "CRP" ? target.item : null;
     }
 
-    function toggleActiveProposalDoit() {
-      const p = getActiveInspectedProposal();
-      if (!p) {
-        alert("Please select a proposal first.");
-        return;
-      }
-      const isBug = isBugProposal(p);
-      if (isBug) {
-        alert("Proposal is a BUG report: -DOIT mode is mandatory per RULE-LCM-008.");
-        return;
-      }
-      const current = Boolean(p.flow_mode === "doit" || p.always_proceed || p.action === "do");
+    function toggleGlobalDoit() {
+      const current = proposalsData.flow_mode === "doit" || proposalsData.always_proceed === true;
       const target = !current;
-      const id = p.id;
       const targetDisplay = target ? "Continuous Flow (-DOIT Active)" : "Standard Gating";
-      const cmd = `pwsh -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action doit-mode -TargetExpression "${id}" -SwitchState ${target ? "active" : "paused"}`;
-      executeDaemonCommand(cmd, `Updating -DOIT Switch on #${id} to ${targetDisplay}...`, cmd);
+      const cmd = `pwsh -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action doit-mode -SwitchState ${target ? "active" : "paused"}`;
+      executeDaemonCommand(cmd, `Updating workspace -DOIT Switch to ${targetDisplay}...`, cmd);
     }
 
-    function toggleActiveProposalMinimalTests() {
-      const p = getActiveInspectedProposal();
-      if (!p) {
-        alert("Please select a proposal first.");
-        return;
-      }
-      const current = Boolean(p.minimal_tests || p.test_depth === "minimal" || p.test_scope === "minimal" || (p.state && p.state.includes("minimal-tests")));
+    function toggleGlobalMinimalTests() {
+      const current = Boolean(proposalsData.minimal_tests || proposalsData.test_scope === "minimal");
       const target = !current;
-      const id = p.id;
       const targetDisplay = target ? "Minimal Tests DAG (Fast)" : "Standard Test DAG";
-      const cmd = `pwsh -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action minimal-tests -TargetExpression "${id}" -SwitchState ${target ? "active" : "paused"}`;
-      executeDaemonCommand(cmd, `Updating -MinimalTests Switch on #${id} to ${targetDisplay}...`, cmd);
+      const cmd = `pwsh -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action minimal-tests -SwitchState ${target ? "active" : "paused"}`;
+      executeDaemonCommand(cmd, `Updating workspace -MinimalTests Switch to ${targetDisplay}...`, cmd);
     }
 
     function toggleLcmMode() {
@@ -3176,6 +3240,18 @@
         return;
       }
       if (!validateCurrentProposalTargets(ids)) return;
+      if (["do", "proceed"].includes(action) && ids.length === 1) {
+        const parent = (proposalsData.proposals || []).find(p => Number(p.id) === Number(ids[0]));
+        const blockingCohort = parent && getLifecycleState(parent) === "in_review"
+          ? getBlockingReviewCohort(parent)
+          : null;
+        if (blockingCohort) {
+          selectItemTarget(`COH:${blockingCohort.id}`);
+          setActionResult(`Continuation priority selected ${blockingCohort.id} — 1 - REVIEW (${blockingCohort.repositories[0]}) before ${parent.crp_id || parent.cr_id || `CRP-${parent.id}`} — 2 - REVIEW.`, "");
+          dispatchTargetAction(action);
+          return;
+        }
+      }
       const idStr = ids.join(",");
       const sw = overrideSwitch ? " " + overrideSwitch : "";
       let cmd = "";
@@ -3211,14 +3287,16 @@
         case "bcr":
           cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action bcr -TargetExpression "${idStr}"${ids.length > 1 ? " -Confirm" : ""}${sw}`;
           break;
-        case "reviewed":
-        case "complete": {
+        case "reviewed": {
           const p = (proposalsData.proposals || []).find(x => x.id === ids[0]);
           const repo = p?.origin_repo || "LCM_Inventory";
           const crpTag = p?.crp_id || p?.cr_id || ("CRP-" + ids[0]);
           cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Submit-ReviewResult.ps1 -RepositoryPath ${repo} -CRP ${crpTag} -Result Completed${sw}`;
           break;
         }
+        case "complete":
+          cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action complete -TargetExpression "${idStr}"${sw}`;
+          break;
         case "commit":
           cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action commit -TargetExpression "${idStr}"${sw}`;
           break;
@@ -3327,7 +3405,9 @@
         currentActiveAbortController = null;
         if (data.error || data.status === "ERROR" || (data.exitCode !== undefined && data.exitCode !== 0)) {
           hideBusyIndicator();
-          const errMsg = data.error || data.stderr || (data.stdout ? data.stdout : "Command exited with code " + data.exitCode);
+          const rawError = data.error || data.stderr || (data.stdout ? data.stdout : "Command exited with code " + data.exitCode);
+          const errMsg = formatDaemonError(rawError);
+          await refreshHubData();
           setActionResult(errMsg, "error");
           alert("Execution error:\n" + errMsg);
           return;
@@ -3354,6 +3434,19 @@
         setActionResult("Daemon connection failed: " + err.message, "error");
         alert("Failed to connect to REST Daemon on Port 9876: " + err.message);
       }
+    }
+
+    function formatDaemonError(rawError) {
+      let message = String(rawError)
+        .replace(/(?:\\u001b|\\x1b|[\u001b\u009b\uFFFD])\[[0-?]*[ -/]*[@-~]/gi, "")
+        .replace(/\[(?:\d{1,4}(?:;\d{0,4})*)m/gi, "")
+        .replace(/\r\n/g, "\n")
+        .trim();
+      const reportStart = message.indexOf("LIFECYCLE STATUS FAILURE REPORT");
+      if (reportStart >= 0) {
+        message = message.slice(reportStart);
+      }
+      return message;
     }
 
     // -------------------------------------------------------------------------
@@ -3687,7 +3780,7 @@ TARGETED ACTIONS:
    - The ACTIONS button on a row sets that CRP as ITEM.
 
 2. ACTIONS:
-   - Lifecycle, documents, cohort membership, Flow Switches, FIX, retirement, and supersession act only on ITEM.
+   - Lifecycle, documents, cohort membership, FIX, retirement, and supersession act only on ITEM.
    - Cohort lifecycle requests are validated for every member before any member changes.
 
 3. FIX:

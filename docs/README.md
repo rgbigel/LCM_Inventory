@@ -6,7 +6,7 @@ Path: LCM_Inventory/docs/README.md
 Authors: Rolf, LCM_AI Engine  
 Version: 10.0.0  
 Status: Authoritative Reference  
-Updated: 2026-10-15 09:39:06  
+Updated: 2026-10-15 21:16:13  
 
 ---
 
@@ -118,6 +118,9 @@ TestWorkspaceReadiness
 | **LoadFixes** | [LoadFixes.ps1](file:///LCM_Inventory/tools/LoadFixes.ps1) | Utility | LCM_Inventory | PowerShell | Utility | LoadFixes execution tool. | LoadFixes |
 | **LoadMethods** | [LoadMethods.ps1](file:///LCM_Inventory/tools/LoadMethods.ps1) | Utility | LCM_Inventory | PowerShell | Utility | LoadMethods execution tool. | LoadMethods |
 | **LoadRules** | [LoadRules.ps1](file:///LCM_Inventory/tools/LoadRules.ps1) | Utility | LCM_Inventory | PowerShell | Utility | LoadRules execution tool. | LoadRules |
+| **MacriumBcrReview** | [Invoke-MacriumBcrReview.ps1](file:///LCM_Inventory/tools/Invoke-MacriumBcrReview.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-MacriumBcrReview execution tool. | MacriumBcrReview |
+| **MacriumDailyBcrBaseline** | [Invoke-MacriumDailyBcrBaseline.ps1](file:///LCM_Inventory/tools/Invoke-MacriumDailyBcrBaseline.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-MacriumDailyBcrBaseline execution tool. | MacriumDailyBcrBaseline |
+| **MacriumImageDetachProbe** | [Invoke-MacriumImageDetachProbe.ps1](file:///LCM_Inventory/tools/Invoke-MacriumImageDetachProbe.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-MacriumImageDetachProbe execution tool. | MacriumImageDetachProbe |
 | **MakeAdmin** | [Make-Admin.ps1](file:///LCM_Inventory/tools/Make-Admin.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Make-Admin execution tool. | MakeAdmin |
 | **mcphareadonly** | [mcp_ha_readonly.py](file:///HaSSD06/mcp_ha_readonly.py) | Utility | HaSSD06 | Python | Utility | mcp_ha_readonly execution tool. | mcphareadonly |
 | **PrivilegedTool** | [Invoke-PrivilegedTool.ps1](file:///LCM_Inventory/tools/Invoke-PrivilegedTool.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-PrivilegedTool execution tool. | PrivilegedTool |
@@ -137,6 +140,7 @@ TestWorkspaceReadiness
 | **SetGitRoot** | [Set-GitRoot.ps1](file:///LCM_Inventory/tools/Set-GitRoot.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Set-GitRoot execution tool. | SetGitRoot |
 | **SetLcmActionProgress** | [Set-LcmActionProgress.ps1](file:///LCM_Inventory/tools/Set-LcmActionProgress.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Set-LcmActionProgress execution tool. | SetLcmActionProgress |
 | **SetRealRepoTestPlan** | [Set-RealRepoTestPlan.ps1](file:///LCM_Inventory/tools/Set-RealRepoTestPlan.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Set-RealRepoTestPlan execution tool. | SetRealRepoTestPlan |
+| **ShowFailureDiagnostic** | [Show-LcmFailureDiagnostic.ps1](file:///LCM_Inventory/tools/Show-LcmFailureDiagnostic.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Show-LcmFailureDiagnostic execution tool. | ShowFailureDiagnostic |
 | **ShowHaInventoryApp** | [Show-HaInventoryApp.ps1](file:///HaSSD06_Inventory/tools/Show-HaInventoryApp.ps1) | Utility | HaSSD06 | PowerShell | Utility | Show-HaInventoryApp execution tool. | ShowHaInventoryApp |
 | **ShowLcmActiveLauncher** | [Show-LcmActiveLauncher.ps1](file:///LCM_Inventory/tools/Show-LcmActiveLauncher.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Show-LcmActiveLauncher execution tool. | ShowLcmActiveLauncher |
 | **ShowLcmAnalysisViewer** | [Show-LcmAnalysisViewer.ps1](file:///LCM_Inventory/tools/Show-LcmAnalysisViewer.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Show-LcmAnalysisViewer execution tool. | ShowLcmAnalysisViewer |

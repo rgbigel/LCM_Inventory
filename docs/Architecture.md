@@ -23,10 +23,12 @@ uses a one-minute repeating watchdog trigger with `IgnoreNew` task concurrency:
 a healthy daemon is not duplicated, while an exited daemon is restarted without
 depending on a particular browser page or launcher route.
 
-The watchdog provides eventual, client-independent recovery. The intended
-interactive improvement remains a trusted launcher/bridge that detects a failed
-daemon action, starts the task, waits for `/ping`, and retries that one action
-once. Browser JavaScript must never attempt to start the task directly.
+The watchdog provides eventual, client-independent recovery. A trusted launcher
+may start the task only after the operator explicitly requests it (for example,
+`Show-LcmControl.ps1 -StartDaemon`). A normal ShowCM launch must not create a
+background daemon session: when the daemon is offline, it opens the rendered
+local artifact instead. Browser JavaScript must never attempt to start the task
+directly.
 
 ---
 

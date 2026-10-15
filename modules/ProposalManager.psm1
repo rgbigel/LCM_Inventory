@@ -346,12 +346,27 @@ function New-LcmLifecycleFailureReport {
     foreach ($failure in $Failures) {
         switch ([string]$failure.conflict_type) {
             'invalid transition' {
-                $routes.Add([PSCustomObject]@{
-                    rank = 1
-                    required_user_action = 'Choose a lifecycle action valid for the current state.'
-                    affected_identities = @($failure.identity)
-                    effect = 'Changes lifecycle status only after an explicit valid action.'
-                })
+                if ($Action -eq 'do' -and [string]$failure.current_state -eq 'in_review') {
+                    $routes.Add([PSCustomObject]@{
+                        rank = 1
+                        required_user_action = 'Decision required: choose Complete after resolving every blocking 1 - REVIEW component and confirming the 2 - REVIEW disposition.'
+                        affected_identities = @($failure.identity)
+                        effect = 'Moves the accepted proposal from 2 - REVIEW to completed; it does not create another review commit.'
+                    })
+                    $routes.Add([PSCustomObject]@{
+                        rank = 2
+                        required_user_action = 'Choose Reopen only when further implementation is required.'
+                        affected_identities = @($failure.identity)
+                        effect = 'Returns the proposal to implementation and requires verification plus a new 2 - REVIEW.'
+                    })
+                } else {
+                    $routes.Add([PSCustomObject]@{
+                        rank = 1
+                        required_user_action = 'Choose a lifecycle action valid for the current state.'
+                        affected_identities = @($failure.identity)
+                        effect = 'Changes lifecycle status only after an explicit valid action.'
+                    })
+                }
             }
             'incomplete evidence' {
                 $routes.Add([PSCustomObject]@{
@@ -364,7 +379,7 @@ function New-LcmLifecycleFailureReport {
             'unresolved review obligation' {
                 $routes.Add([PSCustomObject]@{
                     rank = 1
-                    required_user_action = 'Review and resolve the listed cross-repository obligation.'
+                    required_user_action = 'Review and resolve the listed blocking 1 - REVIEW component.'
                     affected_identities = @($failure.identity)
                     effect = 'Records review evidence before a later completion action.'
                 })
@@ -387,7 +402,7 @@ function New-LcmLifecycleFailureReport {
                 $_.Group | ForEach-Object { $_.affected_identities } | Select-Object -Unique
             ) -Force
             $first
-        } | Select-Object -First 3
+        } | Sort-Object rank | Select-Object -First 3
     )
 
     return [PSCustomObject]@{
@@ -669,8 +684,10 @@ function Move-LcmProposalLifecycleState {
     if ($State -eq 'completed') {
         $unresolvedObligations = @(Get-LcmProposalReviewObligations -Proposal $proposal -UnresolvedOnly)
         if ($unresolvedObligations.Count -gt 0) {
-            $repositories = @($unresolvedObligations | ForEach-Object { $_.repository } | Sort-Object -Unique)
-            throw "Proposal #$Id cannot complete while cross-repository BCR obligation(s) remain unresolved: $($repositories -join ', ')."
+            $blockingComponents = @($unresolvedObligations | ForEach-Object {
+                "COH-$Id — 1 - REVIEW ($($_.repository))"
+            } | Sort-Object -Unique)
+            throw "Proposal #$Id cannot complete while blocking 1 - REVIEW component(s) remain: $($blockingComponents -join ', ')."
         }
         $hasDisposition = $proposal.PSObject.Properties['bcr_disposition'] -and
             -not [string]::IsNullOrWhiteSpace([string]$proposal.bcr_disposition)

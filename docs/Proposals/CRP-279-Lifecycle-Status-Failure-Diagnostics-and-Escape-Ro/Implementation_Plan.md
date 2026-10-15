@@ -38,6 +38,16 @@ diagnostic contract without changing lifecycle decisions.
 - Add durable receipts only if an existing, non-commit-authorization evidence
   location is approved by the lifecycle model.
 
+### Component 5: Named Operator Test Surface
+
+- Add `tools/Show-LcmFailureDiagnostic.ps1` with the durable catalog short
+  name `ShowFailureDiagnostic`.
+- Require an invalid action for every requested target before invoking the
+  shared lifecycle validator, preventing this diagnostic surface from applying
+  a lifecycle transition.
+- Render `Format-LcmLifecycleFailureReport` from the validator's attached
+  report object and add a focused non-mutation test.
+
 ## 3. Implemented Scope
 
 - Added shared report construction, rendering, and report-backed exception
@@ -49,6 +59,16 @@ diagnostic contract without changing lifecycle decisions.
 - Rendered the report as the CLI error payload so the existing Control Hub
   daemon error surface presents the concise operator-facing diagnostic.
 - Added focused direct-target, provenance, route-cap, and non-mutation tests.
+- Added a review-submission preflight that blocks the primary repository
+  before staging, committing, or mutating the lifecycle when another
+  repository's BCR obligation remains open.
+- Separated Control Hub `Reviewed` (accepted-review recording) from
+  `Complete` (lifecycle transition), refreshed ledger data after daemon
+  failures, and removed ANSI terminal sequences from displayed errors.
+- Added `Show-LcmFailureDiagnostic.ps1` and generated
+  `ShowFailureDiagnostic.cmd`. The tool only exercises invalid lifecycle
+  actions and renders the same structured report produced by the production
+  lifecycle validator.
 
 ## 4. Verification Plan
 

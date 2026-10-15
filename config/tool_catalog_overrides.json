@@ -11,5 +11,9 @@
     "Group": "LCM_Inventory",
     "Domain": "LCM_Inventory",
     "Subsystem": "LCM_Inventory"
+  },
+  "Show-LcmFailureDiagnostic.ps1": {
+    "ShortName": "ShowFailureDiagnostic",
+    "Example": "ShowFailureDiagnostic -Action do -TargetExpression CRP-279"
   }
 }
