@@ -218,7 +218,7 @@ if ($StagedOnly) {
         git -C $targetRepoPath ls-files --others --exclude-standard
     ) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Sort-Object -Unique
     $committablePaths = @($rhsPaths | Where-Object { -not (Test-StandardBcrExcludedPath -RelativePath $_) })
-    if ($committablePaths.Count -eq 0) {
+    if ($committablePaths.Count -eq 0 -and $null -eq $crossRepositoryObligation) {
         throw "The accepted review for '$repoName' has no committable RHS worktree changes."
     }
     foreach ($relativePath in $committablePaths) {
@@ -228,12 +228,17 @@ if ($StagedOnly) {
 }
 
 $stagedPaths = @(git -C $targetRepoPath diff --cached --name-only)
-$ruleChangePaths = @(Get-RuleChangePaths -Paths $stagedPaths)
+$ruleChangePaths = @(
+    if ($stagedPaths.Count -gt 0) {
+        Get-RuleChangePaths -Paths $stagedPaths
+    }
+)
 if ($ruleChangePaths.Count -gt 0) {
     Assert-AdminModeForRuleChange -Paths $ruleChangePaths -CRP $CRP -WorkspaceRoot $workspaceRoot
 }
 
 $commitCreated = $false
+$reviewAccepted = $false
 git -C $targetRepoPath diff --cached --quiet
 if ($LASTEXITCODE -ne 0) {
     $commitMsg = if (-not [string]::IsNullOrWhiteSpace($Notes)) { $Notes } else { "feat(review): review completion by $env:USERNAME" }
@@ -258,6 +263,7 @@ if ($LASTEXITCODE -ne 0) {
     Remove-Item -LiteralPath $authorizationFile -Force -ErrorAction Stop
     $newCommitSha = (git -C $targetRepoPath rev-parse --short HEAD).Trim()
     $commitCreated = $true
+    $reviewAccepted = $true
 
     # Save Permanent Review Record
     $timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
@@ -291,14 +297,43 @@ if ($LASTEXITCODE -ne 0) {
     Write-Host " Receipt    : $finalReviewFile" -ForegroundColor Cyan
     Write-Host "==========================================================================" -ForegroundColor Cyan
 } else {
-    throw "The accepted review for '$repoName' has no live working-tree changes to commit."
+    if ($null -eq $crossRepositoryObligation) {
+        throw "The accepted review for '$repoName' has no live working-tree changes to commit."
+    }
+
+    $newCommitSha = $currentHead
+    $reviewAccepted = $true
+    $actionsExecuted.Add("Accepted the cross-repository BCR obligation without a new commit; reviewed content is already at $newCommitSha.")
+    $timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+    $testScopeVal = if ($MinimalTests) { "minimal" } else { "full" }
+    $reviewRecord = [ordered]@{
+        RepositoryName  = $repoName
+        RepositoryPath  = $targetRepoPath
+        CommitSha       = $newCommitSha
+        ReviewResult    = $Result
+        Reviewer        = $env:USERNAME
+        Timestamp       = $timestamp
+        Message         = $Notes
+        ActionsExecuted = $actionsExecuted
+        TestScope       = $testScopeVal
+    }
+    $timeTag = (Get-Date).ToString('yyyyMMdd_HHmmss')
+    $finalReviewFile = Join-Path $reviewsDir "review_${repoName}_${timeTag}.json"
+    $reviewRecord | ConvertTo-Json -Depth 3 | Set-Content -LiteralPath $finalReviewFile -Encoding UTF8
+
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    Write-Host " REVIEW ACCEPTED WITHOUT NEW COMMIT ($($newCommitSha.Substring(0, 7)))" -ForegroundColor Green
+    Write-Host " Repository : $repoName"
+    Write-Host " Reason     : Reviewed content is already committed; no duplicate commit was created."
+    Write-Host " Receipt    : $finalReviewFile" -ForegroundColor Cyan
+    Write-Host "==========================================================================" -ForegroundColor Cyan
 }
 
 # ------------------------------------------------------------------------------
 # Auto-Synchronize Proposals Ledger (RULE-LCM-002: Dual-State Alignment)
 # ------------------------------------------------------------------------------
 try {
-    if ($commitCreated -and -not $SkipLifecycleSynchronization) {
+    if ($reviewAccepted -and -not $SkipLifecycleSynchronization) {
         if ($crossRepositoryObligation) {
             $completedObligation = Complete-LcmCrossRepositoryReviewObligation -Id $matchingProposals[0].id `
                 -Repository $repoName -ReviewReceiptPath $finalReviewFile -CommitSha $newCommitSha

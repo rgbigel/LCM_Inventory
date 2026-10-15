@@ -61,6 +61,15 @@ Describe 'BCompare review lifecycle contracts' {
     $submitScript | Should -Match ([regex]::Escape('no commit or lifecycle state was changed'))
   }
 
+  It 'accepts a reviewed cross-repository obligation without a duplicate commit' {
+    $submitScript | Should -Match ([regex]::Escape('$committablePaths.Count -eq 0 -and $null -eq $crossRepositoryObligation'))
+    $submitScript | Should -Match ([regex]::Escape('Accepted the cross-repository BCR obligation without a new commit'))
+    $submitScript | Should -Match ([regex]::Escape('REVIEW ACCEPTED WITHOUT NEW COMMIT'))
+    $submitScript | Should -Match ([regex]::Escape('if ($stagedPaths.Count -gt 0)'))
+    $submitScript | Should -Match ([regex]::Escape('if ($reviewAccepted -and -not $SkipLifecycleSynchronization)'))
+    $submitScript | Should -Match ([regex]::Escape('The accepted review for ''$repoName'' has no live working-tree changes to commit.'))
+  }
+
   It 'separates review acceptance from lifecycle completion in the Control Hub' {
     $controlHubPath = Join-Path $repositoryRoot 'assets\CM_CONTROL_HUB.html'
     $controlHub = Get-Content -LiteralPath $controlHubPath -Raw -Encoding UTF8
