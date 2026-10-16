@@ -399,7 +399,7 @@ switch -Regex ($Action) {
             }
             $identity = if ($proposal.crp_id) { [string]$proposal.crp_id } elseif ($proposal.cr_id) { [string]$proposal.cr_id } else { "CRP-$($proposal.id)" }
             $isolatedReviewIdentity = "${identity}_$($obligation.repository)"
-            & (Join-Path $PSScriptRoot 'Invoke-MacriumBcrReview.ps1') -RepositoryName $obligation.repository -CRP $identity -BaseCommit $BaseCommit
+            & (Join-Path $PSScriptRoot 'Invoke-MacriumBcrReview.ps1') -RepositoryName $obligation.repository -CRP $identity -BaseCommit $BaseCommit -LifecycleManaged
             Write-Host "Opened the canonical Macrium BCR review for obligation '$ReviewObligationId'." -ForegroundColor Cyan
             break
         }
@@ -442,6 +442,7 @@ switch -Regex ($Action) {
                     RepositoryName = $member.Repository
                     CRP = $member.Identity
                     BaseCommit = $BaseCommit
+                    LifecycleManaged = $true
                 }
                 if (-not $launchReview) { $reviewArgs.NoLaunch = $true }
                 & (Join-Path $PSScriptRoot 'Invoke-MacriumBcrReview.ps1') @reviewArgs
@@ -449,7 +450,7 @@ switch -Regex ($Action) {
         }
 
         foreach ($member in $alreadyInReview) {
-            & (Join-Path $PSScriptRoot 'Invoke-MacriumBcrReview.ps1') -RepositoryName $member.Repository -CRP $member.Identity -BaseCommit $BaseCommit
+            & (Join-Path $PSScriptRoot 'Invoke-MacriumBcrReview.ps1') -RepositoryName $member.Repository -CRP $member.Identity -BaseCommit $BaseCommit -LifecycleManaged
         }
 
         $store = Get-ProposalStore

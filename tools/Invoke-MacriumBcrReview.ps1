@@ -21,6 +21,9 @@ param(
   [Parameter(Mandatory = $false)]
   [switch]$NoLaunch,
 
+  [Parameter(Mandatory = $false)]
+  [switch]$LifecycleManaged,
+
   [Alias('h', '?')]
   [switch]$Help
 )
@@ -47,6 +50,9 @@ $proposal = @($store.proposals | Where-Object {
 }) | Select-Object -First 1
 if ($null -eq $proposal) {
   throw "No lifecycle proposal matches '$CRP'."
+}
+if (-not $LifecycleManaged -and [string]$proposal.state -notin @('verified', 'in_review')) {
+  throw "Direct BCR review for $CRP requires lifecycle state 'verified' or 'in_review'; found '$($proposal.state)'."
 }
 
 $repositoryPath = Join-Path $workspaceRoot $RepositoryName
@@ -110,8 +116,17 @@ $baselineImage = if (-not [string]::IsNullOrWhiteSpace([string]$baseline.ImagePa
   ReviewIdentity = $CRP
   ReviewType = 'Lifecycle'
   CRP = $CRP
+  ReusedExistingReviewWindow = $baseline.ReusedExistingReviewWindow -eq $true
   SessionStartedAt = (Get-Date).ToString('o')
 } | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath $metadataPath -Encoding UTF8
+
+if (-not $LifecycleManaged -and -not $NoLaunch -and [string]$proposal.state -eq 'verified') {
+  $reviewedProposal = Move-LcmProposalLifecycleState -Id $proposal.id -State 'in_review' `
+    -Details "Macrium BCR review opened for $CRP."
+  $reviewedProposal | Add-Member -NotePropertyName 'bcr_initiated_at' -NotePropertyValue (Get-Date).ToString('yyyy-MM-dd HH:mm:ss') -Force
+  $reviewedProposal | Add-Member -NotePropertyName 'bcr_disposition' -NotePropertyValue $null -Force
+  $reviewedProposal | Add-Member -NotePropertyName 'bcr_scope' -NotePropertyValue $CRP -Force
+}
 
 [PSCustomObject]@{
   CRP = $CRP
@@ -123,4 +138,5 @@ $baselineImage = if (-not [string]::IsNullOrWhiteSpace([string]$baseline.ImagePa
   Profile = '_LCM'
   ReviewMetadataPath = $metadataPath
   Launched = $baseline.Launched
+  ReusedExistingReviewWindow = $baseline.ReusedExistingReviewWindow -eq $true
 }

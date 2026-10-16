@@ -819,6 +819,53 @@ function Start-LcmProposalReinstatement {
     return $proposal
 }
 
+function Restore-LcmProposalReviewState {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [int]$Id,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [string]$Details
+    )
+
+    $store = Get-ProposalStore
+    $proposal = @($store.proposals | Where-Object { $_.id -eq $Id })[0]
+    if ($null -eq $proposal) { throw "Proposal #$Id was not found." }
+    if ([string]$proposal.state -ne 'completed') {
+        throw "Proposal #$Id can be restored to review only from completed; found '$($proposal.state)'."
+    }
+
+    $timestamp = (Get-Date).ToString('yyyy-MM-dd HH:mm:ss')
+    $proposal.state = 'in_review'
+    $proposal | Add-Member -NotePropertyName 'progress_state' -NotePropertyValue 'verification' -Force
+    $proposal | Add-Member -NotePropertyName 'disposition' -NotePropertyValue $null -Force
+    $proposal | Add-Member -NotePropertyName 'state_reason' -NotePropertyValue 'Prior completion was premature; awaiting the already-open review acceptance.' -Force
+    $proposal | Add-Member -NotePropertyName 'bcr_disposition' -NotePropertyValue $null -Force
+    $proposal | Add-Member -NotePropertyName 'bcr_disposition_at' -NotePropertyValue $null -Force
+    $proposal | Add-Member -NotePropertyName 'review_state_repair' -NotePropertyValue ([PSCustomObject]@{
+        timestamp = $timestamp
+        reason = $Details
+        from_state = 'completed'
+        restored_state = 'in_review'
+    }) -Force
+    if (-not $proposal.PSObject.Properties['dates'] -or $null -eq $proposal.dates) {
+        $proposal | Add-Member -NotePropertyName 'dates' -NotePropertyValue ([PSCustomObject]@{}) -Force
+    }
+    $proposal.dates | Add-Member -NotePropertyName 'in_review' -NotePropertyValue $timestamp -Force
+    $proposal.state_history = @($proposal.state_history) + [PSCustomObject]@{
+        from_state = 'completed'
+        state = 'in_review'
+        timestamp = $timestamp
+        user = $env:USERNAME
+        note = $Details
+        repair = 'premature-completion'
+    }
+    Set-ProposalStore -Store $store
+    return $proposal
+}
+
 function Set-LcmProposalBugIdentity {
     [CmdletBinding()]
     param(
@@ -3684,7 +3731,7 @@ Set-Alias -Name Purge-Bundle -Value Remove-LcmProposalBundle
 Set-Alias -Name Get-Doc -Value Get-LcmProposalDocument
 
 Export-ModuleMember -Function Get-ProposalStorePath, Get-ProposalStore, Set-ProposalStore, `
-    Get-WorkspaceProposals, New-WorkspaceProposal, Get-LcmProposalLifecycleActions, Test-LcmProposalLifecycleTransition, Get-LcmProposalReviewObligations, Register-LcmCrossRepositoryReviewObligation, Complete-LcmCrossRepositoryReviewObligation, Move-LcmProposalLifecycleState, Start-LcmProposalReinstatement, Set-LcmProposalBugIdentity, Enable-LcmImmediateBugRecovery, Get-LcmProposalLifecycleAudit, Set-WorkspaceProposalState, Set-WorkspaceProposalProgress, `
+    Get-WorkspaceProposals, New-WorkspaceProposal, Get-LcmProposalLifecycleActions, Test-LcmProposalLifecycleTransition, Get-LcmProposalReviewObligations, Register-LcmCrossRepositoryReviewObligation, Complete-LcmCrossRepositoryReviewObligation, Move-LcmProposalLifecycleState, Start-LcmProposalReinstatement, Restore-LcmProposalReviewState, Set-LcmProposalBugIdentity, Enable-LcmImmediateBugRecovery, Get-LcmProposalLifecycleAudit, Set-WorkspaceProposalState, Set-WorkspaceProposalProgress, `
     Set-WorkspaceProposalPriority, Save-ProposalPlan, Save-ProposalWalkthrough, `
     Resolve-ProposalIdExpression, Get-LcmReviewCohortResolution, Save-LcmReviewCohortReceipt, Get-LcmReviewCohortCompletionPlan, Complete-LcmReviewCohortAcceptance, Set-LcmReviewCohort, Test-LcmProposalVerificationPrecondition, Sync-LcmCohortGateState, Invoke-LcmCohortLifecycleAction, Set-LcmProposalSupersession, Set-LcmProposalRetirement, Invoke-ProposalBatchAction, New-LcmLifecycleFailureReport, Format-LcmLifecycleFailureReport, New-LcmLifecycleFailureException, `
     Set-ReviewGranularity, Get-ReviewGranularity, Set-LCMMode, Get-LCMMode, Set-TestingMode, Get-TestingMode, `

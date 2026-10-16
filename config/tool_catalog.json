@@ -1023,6 +1023,39 @@
     ]
   },
   {
+    "Name": "Test-MacriumCurrentBaseline.ps1",
+    "ShortName": "TestMacriumBaseline",
+    "Aliases": null,
+    "Role": "Diagnostics",
+    "Audience": "User",
+    "Admin": false,
+    "NoExit": false,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Macrium BCR Baseline",
+    "Description": "Read-only plausibility and snapshot-evidence check for the current F:-I: Macrium BCR baseline.",
+    "Example": "TestMacriumBaseline",
+    "RelativePath": "LCM_Inventory\\tools\\Test-MacriumCurrentBaseline.ps1",
+    "Parameters": [
+      {
+        "Name": "DriveLetter",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "ExpectedVolumeLabel",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D4P3-WDB850-D",
+        "Description": ""
+      }
+    ],
+    "Dependencies": null
+  },
+  {
     "Name": "Show-LcmControl.ps1",
     "ShortName": "ShowCM",
     "Aliases": null,
@@ -1335,6 +1368,100 @@
       "WorkspaceQualityGates.psm1",
       "Update-ToolCatalog.ps1"
     ]
+  },
+  {
+    "Name": "Dismount-MacriumCurrentBaseline.ps1",
+    "ShortName": "DismountMacriumBaseline",
+    "Aliases": null,
+    "Role": "Recovery",
+    "Audience": "User",
+    "Admin": false,
+    "NoExit": false,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Macrium BCR Baseline",
+    "Description": "Explicitly detaches only the label-matched F:-I: Macrium BCR baseline after confirmation.",
+    "Example": "DismountMacriumBaseline",
+    "RelativePath": "LCM_Inventory\\tools\\Dismount-MacriumCurrentBaseline.ps1",
+    "Parameters": [
+      {
+        "Name": "DriveLetter",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "ExpectedVolumeLabel",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D4P3-WDB850-D",
+        "Description": ""
+      },
+      {
+        "Name": "DetachTimeoutSeconds",
+        "Type": "Int32",
+        "Mandatory": false,
+        "Default": "120",
+        "Description": ""
+      },
+      {
+        "Name": "ConfirmDetach",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "Mount-MacriumLatestBaseline.ps1",
+    "ShortName": "MountMacriumBaseline",
+    "Aliases": null,
+    "Role": "Recovery",
+    "Audience": "User",
+    "Admin": false,
+    "NoExit": false,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Macrium BCR Baseline",
+    "Description": "Explicitly mounts the latest completed same-day Macrium image through the canonical baseline workflow.",
+    "Example": "MountMacriumBaseline",
+    "RelativePath": "LCM_Inventory\\tools\\Mount-MacriumLatestBaseline.ps1",
+    "Parameters": [
+      {
+        "Name": "ConfirmMount",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "ReviewScope",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "MountTimeoutSeconds",
+        "Type": "Int32",
+        "Mandatory": false,
+        "Default": "120",
+        "Description": ""
+      },
+      {
+        "Name": "NoLaunchReview",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      }
+    ],
+    "Dependencies": "Invoke-MacriumDailyBcrBaseline.ps1"
   },
   {
     "Name": "Invoke-BeyondCompareReview.ps1",
@@ -3557,7 +3684,7 @@
     "Role": "Utility",
     "Audience": "Developer",
     "Admin": false,
-    "NoExit": true,
+    "NoExit": false,
     "Group": "LCM_Inventory",
     "Domain": "LCM_Inventory",
     "Type": "PowerShell",
@@ -3599,6 +3726,13 @@
         "Type": "Int32",
         "Mandatory": false,
         "Default": "240",
+        "Description": ""
+      },
+      {
+        "Name": "MountTimeoutSeconds",
+        "Type": "Int32",
+        "Mandatory": false,
+        "Default": "120",
         "Description": ""
       },
       {
@@ -3662,57 +3796,6 @@
       "bcompare",
       "BCompare.exe",
       "BCompare"
-    ]
-  },
-  {
-    "Name": "Invoke-MacriumImageDetachProbe.ps1",
-    "ShortName": "MacriumImageDetachProbe",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "LCM_Inventory",
-    "Domain": "LCM_Inventory",
-    "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "Invoke-MacriumImageDetachProbe execution tool.",
-    "Example": "MacriumImageDetachProbe",
-    "RelativePath": "LCM_Inventory\\tools\\Invoke-MacriumImageDetachProbe.ps1",
-    "Parameters": [
-      {
-        "Name": "DriveLetter",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "F",
-        "Description": "Mounted image drive letter to inspect or detach. Allowed values are F through I because all other drive letters are reserved. Defaults to F."
-      },
-      {
-        "Name": "ExpectedVolumeLabel",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "D4P3-WDB850-D",
-        "Description": "Required label of the mounted Macrium image. Defaults to D4P3-WDB850-D."
-      },
-      {
-        "Name": "BCompareSessionName",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "_LCM",
-        "Description": "Saved Beyond Compare profile that compares the mounted image. Its active Folder Compare window is closed before detach when -Execute is supplied."
-      },
-      {
-        "Name": "Execute",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Allows the documented Reflect.exe detach command to be invoked."
-      }
-    ],
-    "Dependencies": [
-      "BCompare",
-      "Bcompare",
-      "bcompare"
     ]
   },
   {
@@ -4611,15 +4694,15 @@
       {
         "Name": "Action",
         "Type": "String",
-        "Mandatory": true,
-        "Default": "",
+        "Mandatory": false,
+        "Default": "do",
         "Description": "Lifecycle action to diagnose. It must be invalid for every target."
       },
       {
         "Name": "TargetExpression",
         "Type": "String",
-        "Mandatory": true,
-        "Default": "",
+        "Mandatory": false,
+        "Default": "CRP-279",
         "Description": "Exact CRP or BUG target expression to diagnose."
       }
     ],

@@ -2,6 +2,9 @@
   "Invoke-BeyondCompareReview.ps1": {
     "NoExit": false
   },
+  "Invoke-MacriumDailyBcrBaseline.ps1": {
+    "NoExit": false
+  },
   "LCM_Inventory\\tools\\Show-LcmControl.ps1": {
     "Group": "LCM_Inventory",
     "Domain": "LCM_Inventory",
@@ -15,5 +18,29 @@
   "Show-LcmFailureDiagnostic.ps1": {
     "ShortName": "ShowFailureDiagnostic",
     "Example": "ShowFailureDiagnostic -Action do -TargetExpression CRP-279"
+  },
+  "Test-MacriumCurrentBaseline.ps1": {
+    "ShortName": "TestMacriumBaseline",
+    "NoExit": false,
+    "Audience": "User",
+    "Role": "Diagnostics",
+    "Category": "Macrium BCR Baseline",
+    "Description": "Read-only plausibility and snapshot-evidence check for the current F:-I: Macrium BCR baseline."
+  },
+  "Dismount-MacriumCurrentBaseline.ps1": {
+    "ShortName": "DismountMacriumBaseline",
+    "NoExit": false,
+    "Audience": "User",
+    "Role": "Recovery",
+    "Category": "Macrium BCR Baseline",
+    "Description": "Explicitly detaches only the label-matched F:-I: Macrium BCR baseline after confirmation."
+  },
+  "Mount-MacriumLatestBaseline.ps1": {
+    "ShortName": "MountMacriumBaseline",
+    "NoExit": false,
+    "Audience": "User",
+    "Role": "Recovery",
+    "Category": "Macrium BCR Baseline",
+    "Description": "Explicitly mounts the latest completed same-day Macrium image through the canonical baseline workflow."
   }
 }

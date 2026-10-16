@@ -6,7 +6,7 @@ Path: LCM_Inventory/docs/README.md
 Authors: Rolf, LCM_AI Engine  
 Version: 10.0.0  
 Status: Authoritative Reference  
-Updated: 2026-10-15 21:16:13  
+Updated: 2026-10-16 18:21:10  
 
 ---
 
@@ -35,6 +35,7 @@ TestWorkspaceReadiness
 | **GetSystemPortInventory** | [Get-SystemPortInventory.ps1](file:///LCM_Inventory/tools/Get-SystemPortInventory.ps1) | Diagnostics | LCM_Inventory | PowerShell | Network Diagnostics | Scans and audits all active local listening TCP/UDP ports and verifies port 9876 availability. | GetSystemPortInventory |
 | **ShowDaemon** | [Show-LcmDaemon.ps1](file:///LCM_Inventory/tools/Show-LcmDaemon.ps1) | Diagnostics | LCM_Inventory | PowerShell | Desktop Bridge | Displays live telemetry, runtime status, and log tailing for the LCM Desktop REST Bridge Daemon. | ShowDaemon |
 | **ShowLastLog** | [Show-LastLog.ps1](file:///LCM_Inventory/tools/Show-LastLog.ps1) | Diagnostics | LCM_Inventory | PowerShell | Log Diagnostics | Displays the most recently updated audit log in the workspace with live tail and level filtering. | ShowLastLog |
+| **TestMacriumBaseline** | [Test-MacriumCurrentBaseline.ps1](file:///LCM_Inventory/tools/Test-MacriumCurrentBaseline.ps1) | Diagnostics | LCM_Inventory | PowerShell | Macrium BCR Baseline | Read-only plausibility and snapshot-evidence check for the current F:-I: Macrium BCR baseline. | TestMacriumBaseline |
 | **ShowCM** | [Show-LcmControl.ps1](file:///LCM_Inventory/tools/Show-LcmControl.ps1) | GUI | LCM_Inventory | PowerShell | Configuration Management | Unified LCM Control Hub dashboard and proposal lifecycle manager. | ShowCM |
 | **ShowCmdAnalysis** | [Show-CmdFolderAnalysis.ps1](file:///LCM_Inventory/tools/Show-CmdFolderAnalysis.ps1) | GUI | LCM_Inventory | PowerShell | Tool Analysis | Interactive HTML viewer analyzing all legacy batch scripts and modern PowerShell tool equivalents. | ShowCmdAnalysis |
 | **ShowHaInventory** | [Show-HaInventory.ps1](file:///LCM_Inventory/tools/Show-HaInventory.ps1) | GUI | LCM_Inventory | PowerShell | Subsystem GUI | Generates and launches the authoritative Home Assistant HaSSD06 Subsystem Viewer dashboard. | ShowHaInventory |
@@ -44,6 +45,8 @@ TestWorkspaceReadiness
 | **ManageSupervisionTask** | [Manage-SupervisionTask.ps1](file:///LCM_Supervision/tools/Manage-SupervisionTask.ps1) | Management | LCM_Supervision | PowerShell | Supervision & Health | CM Task Controller to Start, Stop, Pause, Resume, Add, Delete, and Run supervision tasks. | ManageSupervisionTask |
 | **HaUpdateGate** | [Invoke-HaUpdateGate.ps1](file:///HaSSD06_Inventory/tools/Invoke-HaUpdateGate.ps1) | QualityGate | HaSSD06 | PowerShell | Subsystem Update Gate | 5-stage update runner (RULE-SUB-006): changelog review, CRP extraction, backup & execution. | HaUpdateGate |
 | **TestWorkspaceReadiness** | [Test-WorkspaceReadiness.ps1](file:///LCM_Inventory/tools/Test-WorkspaceReadiness.ps1) | QualityGate | LCM_Inventory | PowerShell | Quality Gate | Executes the 5-stage automated LCM readiness quality gate across all repositories. | TestWorkspaceReadiness |
+| **DismountMacriumBaseline** | [Dismount-MacriumCurrentBaseline.ps1](file:///LCM_Inventory/tools/Dismount-MacriumCurrentBaseline.ps1) | Recovery | LCM_Inventory | PowerShell | Macrium BCR Baseline | Explicitly detaches only the label-matched F:-I: Macrium BCR baseline after confirmation. | DismountMacriumBaseline |
+| **MountMacriumBaseline** | [Mount-MacriumLatestBaseline.ps1](file:///LCM_Inventory/tools/Mount-MacriumLatestBaseline.ps1) | Recovery | LCM_Inventory | PowerShell | Macrium BCR Baseline | Explicitly mounts the latest completed same-day Macrium image through the canonical baseline workflow. | MountMacriumBaseline |
 | **BeyondCompareReview** | [Invoke-BeyondCompareReview.ps1](file:///LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1) | ReviewGate | LCM_Inventory | PowerShell | Proposal Review | Launches 3-way Beyond Compare 5 session on Session 1 interactive desktop for staged proposals. | BeyondCompareReview |
 | **ShowActions** | [Show-Actions.ps1](file:///LCM_Inventory/tools/Show-Actions.ps1) | Telemetry | LCM_Inventory | PowerShell | Audit Logs | Fast lightweight terminal reader displaying recent operational actions and tool execution step summaries. | ShowActions |
 | **UpdateHaInventory** | [Update-HaInventory.ps1](file:///HaSSD06_Inventory/tools/Update-HaInventory.ps1) | Telemetry | HaSSD06 | PowerShell | Subsystem Telemetry | Pulls live WebSocket registry & REST data to reconcile all entities, devices, & integrations. | UpdateHaInventory |
@@ -120,7 +123,6 @@ TestWorkspaceReadiness
 | **LoadRules** | [LoadRules.ps1](file:///LCM_Inventory/tools/LoadRules.ps1) | Utility | LCM_Inventory | PowerShell | Utility | LoadRules execution tool. | LoadRules |
 | **MacriumBcrReview** | [Invoke-MacriumBcrReview.ps1](file:///LCM_Inventory/tools/Invoke-MacriumBcrReview.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-MacriumBcrReview execution tool. | MacriumBcrReview |
 | **MacriumDailyBcrBaseline** | [Invoke-MacriumDailyBcrBaseline.ps1](file:///LCM_Inventory/tools/Invoke-MacriumDailyBcrBaseline.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-MacriumDailyBcrBaseline execution tool. | MacriumDailyBcrBaseline |
-| **MacriumImageDetachProbe** | [Invoke-MacriumImageDetachProbe.ps1](file:///LCM_Inventory/tools/Invoke-MacriumImageDetachProbe.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-MacriumImageDetachProbe execution tool. | MacriumImageDetachProbe |
 | **MakeAdmin** | [Make-Admin.ps1](file:///LCM_Inventory/tools/Make-Admin.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Make-Admin execution tool. | MakeAdmin |
 | **mcphareadonly** | [mcp_ha_readonly.py](file:///HaSSD06/mcp_ha_readonly.py) | Utility | HaSSD06 | Python | Utility | mcp_ha_readonly execution tool. | mcphareadonly |
 | **PrivilegedTool** | [Invoke-PrivilegedTool.ps1](file:///LCM_Inventory/tools/Invoke-PrivilegedTool.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-PrivilegedTool execution tool. | PrivilegedTool |

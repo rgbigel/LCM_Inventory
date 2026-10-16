@@ -66,8 +66,19 @@ GoodMorning or GoodNIGHT session-recovery behavior.
   `Git_Repositories`.
 - The baseline receipt identifies the mounted image, Macrium restore point,
   and exact BCR review scope. It is not lifecycle acceptance evidence.
-- The BCR launcher reuses the exact per-CRP review window where it exists and
-  opens required cross-repository review tabs without duplicating sessions.
+- The receipt also records confirmed F:-I: detach/reappearance and snapshot
+  corroboration. A GoodNight or session timestamp alone does not prove the
+  mounted image is current; it corroborates the daily image only after a
+  confirmed detach followed by reappearance.
+- The BCR launcher reuses one existing stable `_LCM` Folder Compare window when
+  the writable baseline is unchanged. It launches `_LCM` only when no matching
+  window is open and refuses ambiguous duplicate windows. The exact CRP, BUG,
+  or COH identity remains in per-review metadata; the `_LCM` window title is
+  not rewritten.
 - Review acceptance, staging, commit authorization, and completion remain
   RHS-only governed actions after BCR; the Macrium image never authorizes
   them.
+- Starting a governed review establishes `in_review`; an expressed Acceptance
+  creates the ordinary commit authorization and the successful commit completes
+  that review. A documented premature-completion repair restores only the
+  affected CRP to `in_review` and preserves its prior history.

@@ -22,6 +22,16 @@ Describe 'Proposal lifecycle authority' {
     Test-LcmProposalLifecycleTransition -FromState suggested -ToState pushed | Should -BeFalse
   }
 
+  It 'exports an audited repair for premature completion only' {
+    $repair = Get-Command Restore-LcmProposalReviewState -Module ProposalManager
+    $repair | Should -Not -BeNullOrEmpty
+
+    $moduleSource = Get-Content -LiteralPath $modulePath -Raw -Encoding UTF8
+    $moduleSource | Should -Match ([regex]::Escape("Proposal #`$Id can be restored to review only from completed"))
+    $moduleSource | Should -Match ([regex]::Escape("repair = 'premature-completion'"))
+    $moduleSource | Should -Match ([regex]::Escape("state = 'in_review'"))
+  }
+
   It 'enforces the complete action matrix for every lifecycle state' {
     $expectedActions = @{
       suggested = @('edit', 'do', 'hold', 'withdraw', 'supersede')

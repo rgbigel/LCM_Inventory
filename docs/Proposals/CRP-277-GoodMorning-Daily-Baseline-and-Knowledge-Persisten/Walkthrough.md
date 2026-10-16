@@ -18,7 +18,9 @@ Reflect-backed BCR review workflow.
   display, and `.git\hooks` inclusion untouched.
 - `Invoke-MacriumDailyBcrBaseline.ps1` prepares and verifies the writable
   Macrium baseline. The BCR action then resolves the exact review identity,
-  reuses the existing exact review session when available, and opens required
-  cross-repository review tabs.
+  reuses exactly one existing `_LCM` Folder Compare window when available,
+  opens `_LCM` only when absent, and refuses ambiguous duplicate windows. The
+  stable window title is unchanged; each review identity is recorded in its
+  metadata receipt before required cross-repository review tabs open.
 - BCR review remains distinct from acceptance: only RHS review evidence can
   later authorize staging, completion, and commit actions.
