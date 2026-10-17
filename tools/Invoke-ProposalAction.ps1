@@ -458,13 +458,15 @@ switch -Regex ($Action) {
             $id = $member.Id
             $p = Move-LcmProposalLifecycleState -Id $id -State 'in_review' -Details $Details -Store $store -SkipPersist `
                 -CohortId $resolution.DeclaredCohortId -Gate BCR -SynchronizationOutcome synchronized
-            $reviewedProposal = @($store.proposals | Where-Object { $_.id -eq $id })[0]
+            $updated += $p
+        }
+        foreach ($member in @($reviewReady) + @($alreadyInReview)) {
+            $reviewedProposal = @($store.proposals | Where-Object { $_.id -eq $member.Id })[0]
             $reviewedProposal | Add-Member -NotePropertyName 'bcr_initiated_at' -NotePropertyValue (Get-Date).ToString('yyyy-MM-dd HH:mm:ss') -Force
             $reviewedProposal | Add-Member -NotePropertyName 'bcr_disposition' -NotePropertyValue $null -Force
             $reviewedProposal | Add-Member -NotePropertyName 'bcr_scope' -NotePropertyValue $(if ($resolution.DeclaredCohortId) { $resolution.DeclaredCohortId } else { $member.Identity }) -Force
-            $updated += $p
         }
-        if ($reviewReady.Count -gt 0) {
+        if (($reviewReady.Count + $alreadyInReview.Count) -gt 0) {
             Set-ProposalStore -Store $store
         }
 

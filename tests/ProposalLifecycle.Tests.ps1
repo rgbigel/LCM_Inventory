@@ -248,6 +248,14 @@ Describe 'Proposal lifecycle authority' {
     } | Should -Throw '*No declared review cohort, proposal, or repository matches*'
   }
 
+  It 'normalizes every open cohort member to the declared BCR scope when reopening review' {
+    $actionScript = Join-Path $PSScriptRoot '..\tools\Invoke-ProposalAction.ps1'
+    $source = Get-Content -LiteralPath $actionScript -Raw -Encoding UTF8
+
+    $source | Should -Match ([regex]::Escape('foreach ($member in @($reviewReady) + @($alreadyInReview))'))
+    $source | Should -Match ([regex]::Escape("'bcr_scope' -NotePropertyValue $(if ($resolution.DeclaredCohortId) { $resolution.DeclaredCohortId } else { $member.Identity })"))
+  }
+
   It 'classifies a computed BCR cohort without advancing lifecycle state' {
     InModuleScope ProposalManager {
       $script:testProposalStore = [PSCustomObject]@{
@@ -1044,6 +1052,25 @@ Describe 'Proposal lifecycle authority' {
       @($result.SynchronizedMemberIds).Count | Should -Be 0
       @($result.NoOpMemberIds) | Should -Be @(9307, 9308)
       $script:testProposalStore.review_cohorts[0].gate_history[-1].no_op_member_ids | Should -Be @(9307, 9308)
+    }
+  }
+
+  It 'allows an already-open BCR cohort to be reviewed again without regressing its members' {
+    InModuleScope ProposalManager {
+      $script:testProposalStore = [PSCustomObject]@{
+        review_cohorts = @([PSCustomObject]@{ id = 'COH-9309'; state = 'open'; proposal_ids = @(9309, 9310) })
+        proposals = @(
+          [PSCustomObject]@{ id = 9309; state = 'in_review'; progress_state = 'verification'; disposition = $null },
+          [PSCustomObject]@{ id = 9310; state = 'in_review'; progress_state = 'verification'; disposition = $null }
+        )
+      }
+      Mock Get-ProposalStore { $script:testProposalStore }
+      Mock Set-ProposalStore {}
+
+      $result = Sync-LcmCohortGateState -CohortId 'COH-9309' -Gate BCR
+
+      @($result.NoOpMemberIds) | Should -Be @(9309, 9310)
+      $script:testProposalStore.proposals.state | Should -Be @('in_review', 'in_review')
     }
   }
 }

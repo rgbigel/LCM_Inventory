@@ -43,3 +43,6 @@ When an acceptance cannot proceed because an open cohort member has not reached 
 
 ## 8. Open Cohort Member Visibility
 Every declared member of an open cohort must remain visible regardless of individual state. A completed, failed, held, or rejected member must display its current state and outcome until the cohort is explicitly resolved, closed, or its membership changes.
+
+## 9. Cohort Acceptance Atomicity
+An open cohort must not allow an individual member acceptance to complete or commit that member independently. Cohort acceptance must resolve all members together and create at most one repository commit per participating repository. A member with no separate remaining worktree delta must be completed through the cohort's shared commit and receipt, not fail with a “no committable RHS worktree changes” error.

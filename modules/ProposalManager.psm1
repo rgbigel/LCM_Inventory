@@ -1903,7 +1903,7 @@ function Sync-LcmCohortGateState {
             continue
         }
         $currentState = if ([string]$proposal.state -eq 'approved') { 'in_progress' } else { [string]$proposal.state }
-        if ($currentState -eq $requiredState) {
+        if ($currentState -eq $requiredState -or ($Gate -eq 'BCR' -and $currentState -eq 'in_review')) {
             $plans += [PSCustomObject]@{ Proposal = $proposal; TargetState = $requiredState; Outcome = 'no_op' }
             continue
         }

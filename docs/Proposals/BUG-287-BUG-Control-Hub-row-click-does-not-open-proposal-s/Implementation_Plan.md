@@ -38,6 +38,11 @@ BUG-287 captures the Control Hub document-navigation defect for review; implemen
 - Display each member's state, gate status, and blocking/completion outcome.
 - Verify that individually completed, blocked, and in-review members remain visible until explicit cohort resolution, closure, or membership change.
 
+### Component 7: Complete cohorts atomically
+- Disable or redirect individual acceptance for a member of an open cohort to the cohort acceptance path.
+- Stage and commit one reviewed worktree manifest per repository for the entire cohort.
+- Complete members with no individual remaining delta from the shared cohort receipt rather than attempting a second commit.
+
 ## 3. Verification Plan
 - Add focused Control Hub tests for specification-first navigation and fallback behavior.
 - Verify the clicked identity and the opened document path match.
