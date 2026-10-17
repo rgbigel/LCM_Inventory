@@ -6,8 +6,8 @@
 #          batch operations, review granularity ('coarse' | 'tight'), repo review queue inspection,
 #          and persistent ledger storage in LCM_Inventory.
 # Authors: Rolf, LCM_AI Engine
-# Version: 10.0.0
-# Date: 2026-10-13
+# Version: 10.0.1
+# Date: 2026-10-17
 # =====================================================================
 
 Set-StrictMode -Version Latest
@@ -210,7 +210,7 @@ function New-WorkspaceProposal {
 CRP-ID: $canonicalId
 Title: $Title
 Scope: $OriginRepo
-Baseline-Version: 10.0.0
+Baseline-Version: 10.0.1
 Author: $Author
 Date: $timestamp
 Status: Suggested
@@ -225,7 +225,19 @@ App-ID: $appDisplay
 ## 1. Executive Summary & Intent
 $Details
 
-## 2. Technical Requirements & Invariants
+## 2. Gate 0 Contract
+### Target State
+Define the observable completed state this proposal will achieve.
+
+### Invariants and Exit Criteria
+Define the evidence that proves the target state while preserving applicable governance safeguards.
+
+### Explicit Non-Goals
+Define work intentionally excluded from this proposal. When this is ordinary,
+evidently scoped work, the default Non-Goal applies: Cause no havoc; ask rather
+than invent or infer, and avoid unnecessary complexity.
+
+## 3. Technical Requirements & Invariants
 - Invariant 1: Must conform to LCM governance standards.
 
 "@
@@ -241,11 +253,14 @@ $Details
 ## 1. Executive Summary & Problem Context
 $Details
 
-## 2. Proposed Changes
+## 2. Gate 0 Traceability
+- Map each implementation component and verification activity to the accepted Gate 0 target-state clause.
+
+## 3. Proposed Changes
 ### Component 1: Initial Implementation
 - Scaffolding baseline implementation for $Title.
 
-## 3. Verification Plan
+## 4. Verification Plan
 - Automated Pester tests and readiness quality gates.
 
 "@

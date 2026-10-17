@@ -4,24 +4,16 @@ Module: LCM_Inventory/docs/README.md
 Purpose: Authoritative index of all Lifecycle Model (LCM) and Subsystem tools with Role, ShortName, and User vs Developer classification.  
 Path: LCM_Inventory/docs/README.md  
 Authors: Rolf, LCM_AI Engine  
-Version: 10.0.0  
+Version: 10.0.1  
 Status: Authoritative Reference  
 Updated: 2026-10-17 20:24:18  
 
 ---
 
-## Quick Execution
-All short-name commands are in `LCM_Inventory/Cmd/` (included in System `%PATH%`).
-Run tools from anywhere in the terminal:
+## Workspace Readiness
+`TestWorkspaceReadiness` is the required workspace quality gate, not an example
+command. Run it from any terminal before a governed handoff:
 ```cmd
-:: Launch interactive Tool Explorer dashboard
-ShowTools
-
-:: Run system invariants enforcement
-KillLogitech
-SetMouseFlicker
-
-:: Run workspace readiness gate
 TestWorkspaceReadiness
 ```
 
@@ -175,4 +167,3 @@ TestWorkspaceReadiness
 | **WorkspaceGoodNight** | [Invoke-WorkspaceGoodNight.ps1](file:///LCM_Inventory/tools/Invoke-WorkspaceGoodNight.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-WorkspaceGoodNight execution tool. | WorkspaceGoodNight |
 | **WorkspaceMaintenance** | [Invoke-WorkspaceMaintenance.ps1](file:///LCM_Inventory/tools/Invoke-WorkspaceMaintenance.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-WorkspaceMaintenance execution tool. | WorkspaceMaintenance |
 | **WorkspacePush** | [Invoke-WorkspacePush.ps1](file:///LCM_Inventory/tools/Invoke-WorkspacePush.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-WorkspacePush execution tool. | WorkspacePush |
-

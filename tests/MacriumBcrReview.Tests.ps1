@@ -1,3 +1,15 @@
+<#
+.SYNOPSIS
+    Tests the Macrium-backed lifecycle BCR review contract.
+.DESCRIPTION
+    Module: MacriumBcrReview.Tests
+    Purpose: Verifies the governed Macrium BCR wrapper, baseline reuse, and lifecycle routing contracts.
+    Path: LCM_Inventory/tests/MacriumBcrReview.Tests.ps1
+    Authors: Rolf, LCM_AI Engine
+    Version: 10.0.1
+    Date: 2026-10-17
+#>
+
 Describe 'Macrium-backed lifecycle BCR review' {
   BeforeAll {
     $repositoryRoot = Split-Path $PSScriptRoot -Parent
@@ -86,6 +98,9 @@ Describe 'Macrium-backed lifecycle BCR review' {
     $reviewScript | Should -Match ([regex]::Escape('[switch]$LifecycleManaged'))
     $reviewScript | Should -Match ([regex]::Escape('Direct BCR review for $CRP requires lifecycle state ''verified'' or ''in_review'''))
     $reviewScript | Should -Match ([regex]::Escape('Move-LcmProposalLifecycleState -Id $proposal.id -State ''in_review'''))
+    $reviewScript | Should -Match ([regex]::Escape('Macrium BCR review reused for $CRP.'))
+    $reviewScript | Should -Match ([regex]::Escape('-Store $store -SkipPersist'))
+    $reviewScript | Should -Match ([regex]::Escape("Set-ProposalStore -Store $store"))
     $reviewScript | Should -Match ([regex]::Escape('ReusedExistingReviewWindow = $baseline.ReusedExistingReviewWindow -eq $true'))
     $reviewScript | Should -Match ([regex]::Escape('$existingMetadata = if (Test-Path -LiteralPath $metadataPath)'))
     $reviewScript | Should -Match ([regex]::Escape('$baselineImage = if (-not [string]::IsNullOrWhiteSpace([string]$baseline.ImagePath))'))

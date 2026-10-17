@@ -4,6 +4,13 @@
 .DESCRIPTION
     Prepares the F: Macrium image baseline, validates the operator-owned _LCM
     profile, records exact lifecycle review metadata, and opens _LCM.
+
+    Module: Invoke-MacriumBcrReview
+    Purpose: Opens or reuses the governed Macrium BCR window and records the exact lifecycle review state.
+    Path: LCM_Inventory/tools/Invoke-MacriumBcrReview.ps1
+    Authors: Rolf, LCM_AI Engine
+    Version: 10.0.1
+    Date: 2026-10-17
 #>
 
 [CmdletBinding()]
@@ -121,11 +128,13 @@ $baselineImage = if (-not [string]::IsNullOrWhiteSpace([string]$baseline.ImagePa
 } | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath $metadataPath -Encoding UTF8
 
 if (-not $LifecycleManaged -and -not $NoLaunch -and [string]$proposal.state -eq 'verified') {
+  $store = Get-ProposalStore
   $reviewedProposal = Move-LcmProposalLifecycleState -Id $proposal.id -State 'in_review' `
-    -Details "Macrium BCR review opened for $CRP."
+    -Details "Macrium BCR review reused for $CRP." -Store $store -SkipPersist
   $reviewedProposal | Add-Member -NotePropertyName 'bcr_initiated_at' -NotePropertyValue (Get-Date).ToString('yyyy-MM-dd HH:mm:ss') -Force
   $reviewedProposal | Add-Member -NotePropertyName 'bcr_disposition' -NotePropertyValue $null -Force
   $reviewedProposal | Add-Member -NotePropertyName 'bcr_scope' -NotePropertyValue $CRP -Force
+  Set-ProposalStore -Store $store
 }
 
 [PSCustomObject]@{

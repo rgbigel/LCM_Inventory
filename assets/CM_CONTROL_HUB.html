@@ -1,6 +1,6 @@
 <!--
   Template: CM_CONTROL_HUB.html
-  Version: 10.0.0
+  Version: 10.0.1
   Date: 2026-10-13
 -->
 <!DOCTYPE html>
@@ -1979,12 +1979,21 @@
       return `${target.item.id} / all members [${memberIds.join(", ")}]`;
     }
 
-    function setActionResult(message, kind = "") {
+    function setActionResult(message, kind = "", action = "STATUS") {
       const zone = $("actionResultZone");
       if (!zone) return;
       const text = $("actionResultText");
       zone.className = `action-result-zone ${kind}`.trim();
-      text.innerText = `Status / Action Result: ${message}`;
+      text.innerText = `Status: ${String(action || "STATUS").toUpperCase()} — ${message}`;
+    }
+
+    function getCommandActionLabel(commandStr, userTitle = "") {
+      const command = String(commandStr || "");
+      if (/Submit-ReviewResult\.ps1/i.test(command) || /\baccepted\b/i.test(userTitle)) return "ACCEPT";
+      const actionMatch = command.match(/-Action\s+([a-z-]+)/i);
+      if (actionMatch) return actionMatch[1];
+      if (/Show-LcmControl\.ps1/i.test(command)) return "RENDER";
+      return "COMMAND";
     }
 
     function dismissActionResult() {
@@ -3326,6 +3335,20 @@
         return;
       }
 
+      if (action === "reviewed") {
+        const proposal = (proposalsData.proposals || []).find(p => Number(p.id) === Number(ids[0]));
+        const obligations = proposal ? getUnresolvedReviewObligations(proposal) : [];
+        if (obligations.length > 0) {
+          const repositories = obligations.map(obligation => obligation.repository).filter(Boolean).join(", ");
+          setActionResult(
+            `${proposal.crp_id || proposal.cr_id || `CRP-${proposal.id}`} cannot be accepted until the required review is completed for ${repositories}. Select that 1 - REVIEW work-queue item; no commit was attempted.`,
+            "error",
+            "ACCEPT"
+          );
+          return;
+        }
+      }
+
       switch (action) {
         case "do":
           cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action do -TargetExpression "${idStr}"${sw}`;
@@ -3433,8 +3456,9 @@
     }
 
     async function executeDaemonCommand(commandStr, userTitle, userDetails, onSuccess = null) {
+      const actionLabel = getCommandActionLabel(commandStr, userTitle);
       if (!IS_RENDERED_CONTROL_HUB) {
-        setActionResult("Developer template is not executable; no daemon command was sent.", "error");
+        setActionResult("Developer template is not executable; no daemon command was sent.", "error", actionLabel);
         return;
       }
       if (isCommandExecuting) {
@@ -3443,7 +3467,7 @@
       }
       isCommandExecuting = true;
       currentActiveAbortController = new AbortController();
-      setActionResult(userTitle || "Command dispatched.", "");
+      setActionResult(userTitle || "Command dispatched.", "", actionLabel);
       showBusyIndicator(userTitle || "Executing daemon command...", userDetails || commandStr);
       try {
         const res = await fetch(DAEMON_URL + "/execute", {
@@ -3460,7 +3484,7 @@
           const rawError = data.error || data.stderr || (data.stdout ? data.stdout : "Command exited with code " + data.exitCode);
           const errMsg = formatDaemonError(rawError);
           await refreshHubData();
-          setActionResult(errMsg, "error");
+          setActionResult(errMsg, "error", actionLabel);
           alert("Execution error:\n" + errMsg);
           return;
         }
@@ -3471,7 +3495,7 @@
           if (onSuccess) {
             onSuccess();
           } else {
-            setActionResult(data.stdout || `${userTitle || "Command"} completed successfully.`, "success");
+            setActionResult(data.stdout || `${userTitle || "Command"} completed successfully.`, "success", actionLabel);
           }
         }, 600);
       } catch (err) {
@@ -3479,11 +3503,11 @@
         currentActiveAbortController = null;
         hideBusyIndicator();
         if (err.name === "AbortError") {
-          setActionResult("Command aborted by operator.", "error");
+          setActionResult("Command aborted by operator.", "error", actionLabel);
           console.log("[LCM HUB] Request aborted cleanly.");
           return;
         }
-        setActionResult("Daemon connection failed: " + err.message, "error");
+        setActionResult("Daemon connection failed: " + err.message, "error", actionLabel);
         alert("Failed to connect to REST Daemon on Port 9876: " + err.message);
       }
     }

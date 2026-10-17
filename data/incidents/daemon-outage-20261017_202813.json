@@ -1,0 +1,14 @@
+{
+  "source": "Show-LcmControl investigation",
+  "bug_id": "BUG-286",
+  "detected_at": "2026-10-17T20:28:13+02:00",
+  "daemon_port": 9876,
+  "recovery_state": "recovered",
+  "recovery_error": "",
+  "action": "start-daemon-once",
+  "evidence": {
+    "initial_ping": "connection refused",
+    "recovery_command": "Register-LcmDesktopDaemon.ps1 -Start",
+    "verified_endpoint": "http://127.0.0.1:9876/ping"
+  }
+}
