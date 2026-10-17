@@ -110,15 +110,6 @@ $toolCatalog = @(
         Command     = 'pwsh -NoProfile -File "D:\Git_Repositories\LCM_Inventory\tools\Show-WorkspaceInventoryApp.ps1"'
     },
     [ordered]@{
-        Name        = "Invoke-BeyondCompareReview.ps1"
-        Category    = "Review Flow"
-        Domain      = "LCM_Inventory"
-        ScriptPath  = "D:\Git_Repositories\LCM_Inventory\tools\Invoke-BeyondCompareReview.ps1"
-        Description = "Launches Beyond Compare 5 on desktop to visually review repository changes against the baseline commit with automatic exclusion filters."
-        Risk        = "Zero (Visual Gate)"
-        Command     = 'pwsh -NoProfile -NoExit -Command "& \"D:\Git_Repositories\Invoke-BeyondCompareReview.ps1\" -RepositoryName HaSSD06"'
-    },
-    [ordered]@{
         Name        = "Test-LCMRuleHealth.ps1"
         Category    = "Governance Health"
         Domain      = "LCM_Inventory"

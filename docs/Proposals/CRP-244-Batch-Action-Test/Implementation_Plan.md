@@ -1,11 +1,13 @@
-# Implementation Plan: CRP-244 - Batch Action Test
+# Implementation Plan: CRP-244
 
-## 1. Executive Summary & Problem Context
+## Superseded Plan
 
+No implementation is authorized for CRP-244. The original branch-and-rollback
+idea is superseded by [CRP-251](../CRP-251-Sandboxed-Prototyping-Mode/Implementation_Plan.md),
+which must establish a disposable isolation boundary before prototype work can
+begin.
 
-## 2. Proposed Changes
-### Component 1: Initial Implementation
-- Scaffolding baseline implementation for Batch Action Test.
-
-## 3. Verification Plan
-- Automated Pester tests and readiness quality gates.
+The retained design input is that an unfinalized analysis may need a practical
+WHAT-IF experiment. CRP-251 preserves that capability without allowing a trial
+to alter the governed workspace or to acquire authority through its own branch
+history.

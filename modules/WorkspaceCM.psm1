@@ -461,19 +461,6 @@ function New-WorkspaceBaseline {
     return $outPath
 }
 
-function Invoke-BeyondCompareReview {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory = $true, Position = 0)]
-        [string]$RepositoryName,
-        [string]$BaseCommit,
-        [string]$BeyondComparePath = 'D:\Tools\Beyond Compare 5\BCompare.exe'
-    )
-
-    $toolScript = Join-Path (Get-WorkspaceRoot) "LCM_Inventory\tools\Invoke-BeyondCompareReview.ps1"
-    & $toolScript -RepositoryName $RepositoryName -BaseCommit $BaseCommit -BeyondComparePath $BeyondComparePath
-}
-
 function Set-RepoDisposition {
     [CmdletBinding()]
     param(
@@ -542,6 +529,5 @@ function Get-UngovernedRepositories {
     return $ungoverned
 }
 
-Export-ModuleMember -Function Get-WorkspaceRoot, Write-CMLog, Get-WorkspaceAIState, Get-RepoCMState, Update-WorkspaceInventory, Test-WorkspaceDrift, New-WorkspaceBaseline, Invoke-BeyondCompareReview, Set-RepoDisposition, Get-UngovernedRepositories
-
+Export-ModuleMember -Function Get-WorkspaceRoot, Write-CMLog, Get-WorkspaceAIState, Get-RepoCMState, Update-WorkspaceInventory, Test-WorkspaceDrift, New-WorkspaceBaseline, Set-RepoDisposition, Get-UngovernedRepositories
 

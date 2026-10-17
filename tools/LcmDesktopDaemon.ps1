@@ -124,7 +124,9 @@ if ($Status) {
     return $res
   } catch {
     Write-Host "[OFFLINE] No daemon responding on port $Port" -ForegroundColor Red
-    if (Test-Path $manifestPath) { Remove-Item $manifestPath -Force }
+    if (Test-Path -LiteralPath $manifestPath) {
+      Remove-Item -LiteralPath $manifestPath -Force -ErrorAction SilentlyContinue
+    }
     return $null
   }
 }
@@ -137,7 +139,9 @@ if ($Stop) {
   } catch {
     Write-Host "[INFO] Daemon was not running on port $Port" -ForegroundColor Gray
   }
-  if (Test-Path $manifestPath) { Remove-Item $manifestPath -Force }
+  if (Test-Path -LiteralPath $manifestPath) {
+    Remove-Item -LiteralPath $manifestPath -Force -ErrorAction SilentlyContinue
+  }
   return
 }
 
@@ -194,6 +198,95 @@ if (-not (Test-Path -LiteralPath $classesDir)) {
 . (Join-Path $classesDir 'DaemonDto.ps1')
 . (Join-Path $classesDir 'DaemonEnvironment.ps1')
 . (Join-Path $classesDir 'DaemonActionController.ps1')
+
+if ($null -eq ('LcmControlHubRefreshBroker' -as [type])) {
+  Add-Type -TypeDefinition @'
+using System;
+using System.Collections.Concurrent;
+using System.IO;
+using System.Net;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+
+public static class LcmControlHubRefreshBroker
+{
+  private sealed class Subscriber
+  {
+    public readonly HttpListenerResponse Response;
+    public readonly ManualResetEventSlim Closed = new ManualResetEventSlim(false);
+    public readonly object SyncRoot = new object();
+
+    public Subscriber(HttpListenerResponse response)
+    {
+      Response = response;
+    }
+  }
+
+  private static readonly ConcurrentDictionary<Guid, Subscriber> Subscribers =
+    new ConcurrentDictionary<Guid, Subscriber>();
+
+  public static void Subscribe(HttpListenerResponse response)
+  {
+    var id = Guid.NewGuid();
+    var subscriber = new Subscriber(response);
+    Subscribers[id] = subscriber;
+    response.StatusCode = 200;
+    response.ContentType = "text/event-stream";
+    response.SendChunked = true;
+    response.Headers["Cache-Control"] = "no-cache";
+    response.Headers["Connection"] = "keep-alive";
+    response.Headers["Access-Control-Allow-Origin"] = "*";
+
+    Task.Run(() =>
+    {
+      try
+      {
+        Write(subscriber, "event: connected\ndata: ready\n\n");
+        subscriber.Closed.Wait();
+      }
+      catch
+      {
+      }
+      finally
+      {
+        Subscriber removed;
+        Subscribers.TryRemove(id, out removed);
+        try { response.Close(); } catch { }
+      }
+    });
+  }
+
+  public static int Publish(string payload)
+  {
+    var delivered = 0;
+    foreach (var item in Subscribers)
+    {
+      try
+      {
+        Write(item.Value, "event: refresh\ndata: " + payload + "\n\n");
+        delivered++;
+      }
+      catch
+      {
+        item.Value.Closed.Set();
+      }
+    }
+    return delivered;
+  }
+
+  private static void Write(Subscriber subscriber, string message)
+  {
+    lock (subscriber.SyncRoot)
+    {
+      var bytes = Encoding.UTF8.GetBytes(message);
+      subscriber.Response.OutputStream.Write(bytes, 0, bytes.Length);
+      subscriber.Response.OutputStream.Flush();
+    }
+  }
+}
+'@
+}
 
 $logDir = Join-Path $workspaceRoot 'LCM_Inventory\data\logs\lcm-internal'
 if (-not (Test-Path -Path $logDir)) { New-Item -Path $logDir -ItemType Directory -Force | Out-Null }
@@ -277,6 +370,20 @@ try {
       # Route: GET /ping or /status
       if ($httpMethod -eq 'GET' -and ($reqPath -in @('/ping', '/status', '/', '/api/ping', '/api/status'))) {
         Send-DaemonJsonResponse -Response $response -Data ($controller.GetStatus())
+        continue
+      }
+
+      # Route: GET /hub-events (completion-triggered Control Hub refresh stream)
+      if ($httpMethod -eq 'GET' -and ($reqPath -in @('/hub-events', '/api/hub-events'))) {
+        [LcmControlHubRefreshBroker]::Subscribe($response)
+        continue
+      }
+
+      # Route: POST /hub-refresh (publish a lifecycle completion display refresh)
+      if ($httpMethod -eq 'POST' -and ($reqPath -in @('/hub-refresh', '/api/hub-refresh'))) {
+        $payload = if ($bodyStr) { $bodyStr } else { '{"event":"refresh"}' }
+        $delivered = [LcmControlHubRefreshBroker]::Publish($payload)
+        Send-DaemonJsonResponse -Response $response -Data @{ status = 'OK'; delivered = $delivered }
         continue
       }
 
@@ -679,4 +786,3 @@ try {
   if (Test-Path $manifestPath) { Remove-Item $manifestPath -Force -ErrorAction SilentlyContinue }
   $envObj.Log("LCM Desktop Daemon stopped.", 'INFO')
 }
-

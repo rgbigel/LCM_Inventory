@@ -18,7 +18,6 @@
       "LCM_Inventory/config/tool_catalog.json",
       "LCM_Inventory/tools/Invoke-LcmPathMigration.ps1",
       "LCM_Inventory/tools/Set-GitRoot.ps1",
-      "LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1",
       "LCM_Inventory/tools/Test-Guardrail.ps1"
     ]
   }

@@ -66,18 +66,18 @@ All tools in `tools/` conform to `RULE-PS-008` (Headers), `RULE-PS-009` (Logging
 
 | Tool Script | Role & Function | Key Parameters |
 |:---|:---|:---|
-| **`Invoke-BeyondCompareReview.ps1`** | Visual review gate for pre-commit diff inspection in Beyond Compare 5. | `-Repository <string>`, `-ForceInProcess`, `-Help` |
+| **`Invoke-MacriumBcrReview.ps1`** | Visual review gate using the writable Macrium baseline and Beyond Compare 5 `_LCM` profile. | `-CRP <string>`, `-RepositoryName <string>`, `-BaseCommit <string>`, `-NoLaunch` |
 | **`Invoke-WorkspacePush.ps1`** | Multi-repo lockstep Git push engine with Gemini export and proposal state transition. | `-Reason <string>`, `-Repositories <string[]>`, `-DryRun`, `-Help` |
 | **`Invoke-WorkspaceAudit.ps1`** | CLI runner for multi-repo audit scan and drift assessment. | `-Help` |
 | **`Test-LCMRuleHealth.ps1`** | Validates NTFS junction integrity and rule header parity across all repositories. | `-Fix`, `-Help` |
-| **`Show-LcmControl.ps1`** | Canonical CM Control Hub renderer and launcher. The first functional release provides refresh, proposal/document viewing, log viewing, and Beyond Compare review launch. An ordinary launch never creates a background daemon session. | `-ReviewMode`, `-DatesMode`, `-Repo <string>`, `-State <string>`, `-Id <int>`, `-CliMode`, `-NoLaunch`, `-StartDaemon`, `-TimerOn` |
+| **`Show-LcmControl.ps1`** | Canonical CM Control Hub renderer and launcher. The first functional release provides refresh, proposal/document viewing, log viewing, and Macrium BCR review launch. An ordinary launch never creates a background daemon session. | `-ReviewMode`, `-DatesMode`, `-Repo <string>`, `-State <string>`, `-Id <int>`, `-CliMode`, `-NoLaunch`, `-StartDaemon`, `-TimerOn` |
 | **`Show-LcmActiveLauncher.ps1`** | LCM Tool Explorer displaying all 192 workspace tools with category filtering and execution routing. | `-Help` |
 | **`Show-WorkspaceReadiness.ps1`** | Workspace readiness rollup viewer displaying test suite passing status and review receipts. | `-Help` |
 | **`Invoke-Level1AnalysisRefinement.ps1`** | Generates the next immutable Level 1 evidence run from an approved `CON-001-L01` definition and retained baseline; an existing run is never overwritten. | `-DefinitionPath <string>`, `-OutputPath <string>`, `-RunId <string>`, `-Help` |
 | **`Show-LcmAnalysisViewer.ps1`** | Renders the latest retained CON analysis evidence by default as an interactive, sortable, filterable LCM Analysis Viewer dashboard. | `-ReportPath <string>`, `-OutputPath <string>`, `-NoLaunch`, `-Help` |
 | **`Complete-ToolDocumentation.ps1`** | Runs CRP-121’s data-first dependency passes: forward `WIUD` call evidence, then reverse `WUD` caller evidence. | `-Pass1`, `-Pass2`, `-All`, `-VerifyOnly`, `-Help` |
 | **`Submit-ReviewResult.ps1`** | Programmatic acceptance hook recording review receipts into `data/reviews/`. | `-Repository <string>`, `-ReceiptPath <string>`, `-Help` |
-| **`Test-ReviewCommitGate.ps1`** | Git pre-commit validator for the current BCompare-approved baseline and staged diff. | `-RepositoryPath <string>` |
+| **`Test-ReviewCommitGate.ps1`** | Git pre-commit validator for the current Macrium BCR-approved baseline and staged diff. | `-RepositoryPath <string>` |
 
 ---
 
@@ -87,12 +87,12 @@ All tools in `tools/` conform to `RULE-PS-008` (Headers), `RULE-PS-009` (Logging
 proposal ledger, document cache, and activity logs. The template follows the
 Implementation 0 prototype: a compact control surface, visible state rail, and a
 complete change index. Its browser release is intentionally read-only except for
-launching the existing Beyond Compare review tool:
+launching the existing Macrium BCR review tool:
 
 - enabled: refresh, proposal/document inspection, activity-log viewing, and review launch;
 - disabled: proposal state changes, cleanup, commits, and pushes;
 - enforced: the browser's daemon command bridge accepts only
-  `Invoke-BeyondCompareReview.ps1`.
+  `Invoke-MacriumBcrReview.ps1`.
 
 This keeps the dashboard useful without providing a path to mutate
 `data/proposals/proposals.json` or Git state.

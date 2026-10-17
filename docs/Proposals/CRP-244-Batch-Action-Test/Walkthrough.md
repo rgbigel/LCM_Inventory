@@ -1,7 +1,12 @@
-# Walkthrough: CRP-244 - Batch Action Test
+# Walkthrough: CRP-244
 
-## 1. Executive Summary
-Implementation and verification records for CRP-244.
+## Lifecycle Outcome
 
-## 2. Verification Evidence
-- Pending implementation execution.
+CRP-244 was superseded without implementation by
+[CRP-251](../CRP-251-Sandboxed-Prototyping-Mode/Specification.md). The
+supersession preserves the original WHAT-IF goal while replacing the
+insufficient trial-branch/rollback mechanism with an isolated sandbox and
+explicit promotion boundary.
+
+No implementation or verification evidence exists for CRP-244 because no
+implementation was started.

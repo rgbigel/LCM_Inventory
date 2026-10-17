@@ -34,7 +34,7 @@ param(
     [Parameter(Mandatory = $false, HelpMessage = 'Render HTML data cache without launching desktop browser')]
     [switch]$NoLaunch,
 
-    [Parameter(Mandatory = $false, HelpMessage = 'Explicitly start the desktop daemon when it is offline')]
+    [Parameter(Mandatory = $false, HelpMessage = 'Compatibility switch; interactive launches automatically recover the desktop daemon when it is offline')]
     [switch]$StartDaemon,
 
     [Parameter(Mandatory = $false, HelpMessage = 'Display verbose execution timing telemetry milestones')]
@@ -76,8 +76,8 @@ param(
 .PARAMETER NoLaunch
     Renders HTML artifacts without launching the desktop browser.
 .PARAMETER StartDaemon
-    Explicitly starts the desktop daemon if it is offline. Ordinary ShowCM launch
-    never creates a background daemon session.
+    Compatibility switch. Interactive ShowCM launches automatically record and
+    make one bounded recovery attempt when the desktop daemon is offline.
 .PARAMETER TimerOn
     Display verbose execution timing milestones (Aliases: -Timer, -Timing, -timer-ON). Defaults to false.
 .PARAMETER Help
@@ -142,7 +142,7 @@ if ($Help) {
     Write-Host "  -ReviewMode        : Opens Control Hub filtered to pending Beyond Compare reviews"
     Write-Host "  -Cli / -NoBrowser  : Outputs proposal dates table directly to terminal"
     Write-Host "  -Lifecycle         : Outputs authoritative lifecycle state and transition history in terminal"
-    Write-Host "  -StartDaemon       : Explicitly starts the desktop daemon when it is offline"
+    Write-Host "  Offline recovery   : Interactive launches record and make one bounded daemon restart attempt"
     Write-Host ""
     Write-Host "ALIASES & SHORT-NAMES:" -ForegroundColor Yellow
     Write-Host "  ShowLcmControl.cmd : Canonical launcher"
@@ -175,6 +175,49 @@ function Write-TimingLog {
     if ($TimerOn) {
         Write-Host "  [+$($script:stopwatch.ElapsedMilliseconds)ms] $Message" -ForegroundColor DarkGray
     }
+}
+
+function Test-LcmDesktopDaemonOnline {
+    param([Parameter(Mandatory = $true)][int]$DaemonPort)
+
+    try {
+        $ping = Invoke-RestMethod -Uri "http://127.0.0.1:$DaemonPort/ping" -TimeoutSec 1 -ErrorAction Stop
+        return ($ping -and $ping.status -eq 'ONLINE')
+    } catch {
+        return $false
+    }
+}
+
+function Write-LcmDaemonOutageIncident {
+    param(
+        [Parameter(Mandatory = $true)][int]$DaemonPort,
+        [Parameter(Mandatory = $true)][string]$RecoveryState,
+        [string]$RecoveryError = '',
+        [string]$ExistingPath = ''
+    )
+
+    $incidentsDir = Join-Path $workspaceRoot 'LCM_Inventory\data\incidents'
+    if (-not (Test-Path -LiteralPath $incidentsDir)) {
+        New-Item -ItemType Directory -Path $incidentsDir -Force | Out-Null
+    }
+
+    $incidentPath = if ($ExistingPath) {
+        $ExistingPath
+    } else {
+        Join-Path $incidentsDir ("daemon-outage-{0}.json" -f (Get-Date -Format 'yyyyMMdd_HHmmss_fff'))
+    }
+
+    $incident = [ordered]@{
+        source         = $scriptName
+        bug_id         = 'BUG-286'
+        detected_at    = (Get-Date).ToString('o')
+        daemon_port    = $DaemonPort
+        recovery_state = $RecoveryState
+        recovery_error = $RecoveryError
+        action         = 'start-daemon-once'
+    }
+    $incident | ConvertTo-Json -Depth 3 | Set-Content -LiteralPath $incidentPath -Encoding UTF8
+    return $incidentPath
 }
 
 $proposalsFile = Join-Path $workspaceRoot "LCM_Inventory\data\proposals\proposals.json"
@@ -513,27 +556,38 @@ if (-not $NoLaunch) {
     Write-Host "==========================================================================" -ForegroundColor Cyan
 
     $daemonPort = if ($env:LCM_DAEMON_PORT -match '^\d+$') { [int]$env:LCM_DAEMON_PORT } else { 9876 }
-    $daemonOnline = $false
-    try {
-        $ping = Invoke-RestMethod -Uri "http://127.0.0.1:$daemonPort/ping" -TimeoutSec 1 -ErrorAction Stop
-        if ($ping -and $ping.status -eq "ONLINE") { $daemonOnline = $true }
-    } catch {}
-
-    if (-not $daemonOnline -and $StartDaemon) {
+    $daemonOnline = Test-LcmDesktopDaemonOnline -DaemonPort $daemonPort
+    $outageIncidentPath = ''
+    if (-not $daemonOnline) {
         $daemonScript = Join-Path $workspaceRoot "LCM_Inventory\tools\LcmDesktopDaemon.ps1"
+        $outageIncidentPath = Write-LcmDaemonOutageIncident -DaemonPort $daemonPort -RecoveryState 'detected'
+        $recoveryError = ''
         if (Test-Path -LiteralPath $daemonScript) {
-            Write-Host "  -> Port 9876 Daemon offline. Starting explicitly requested daemon in background..." -ForegroundColor Yellow
-            Start-Process -FilePath "pwsh.exe" -ArgumentList "-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File `"$daemonScript`" -Background" -WindowStyle Hidden
+            Write-Host "  -> Port $daemonPort daemon offline. Incident recorded; starting one bounded recovery attempt..." -ForegroundColor Yellow
+            try {
+                Start-Process -FilePath "pwsh.exe" -ArgumentList "-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File `"$daemonScript`" -Background" -WindowStyle Hidden -ErrorAction Stop
+            } catch {
+                $recoveryError = $_.Exception.Message
+                Write-Host "  -> Port $daemonPort recovery start failed: $recoveryError" -ForegroundColor Red
+            }
             for ($i = 0; $i -lt 15; $i++) {
                 Start-Sleep -Milliseconds 200
-                try {
-                    $ping = Invoke-RestMethod -Uri "http://127.0.0.1:$daemonPort/ping" -TimeoutSec 1 -ErrorAction SilentlyContinue
-                    if ($ping -and $ping.status -eq "ONLINE") { $daemonOnline = $true; break }
-                } catch {}
+                if (Test-LcmDesktopDaemonOnline -DaemonPort $daemonPort) {
+                    $daemonOnline = $true
+                    break
+                }
             }
+        } else {
+            $recoveryError = "Daemon launcher not found: $daemonScript"
+            Write-Host "  -> Port $daemonPort recovery cannot start: $recoveryError" -ForegroundColor Red
         }
-    } elseif (-not $daemonOnline) {
-        Write-Host "  -> Port 9876 Daemon offline. Not starting a background session; opening local artifact fallback." -ForegroundColor Yellow
+        $recoveryState = if ($daemonOnline) { 'recovered' } else { 'recovery_failed' }
+        $outageIncidentPath = Write-LcmDaemonOutageIncident -DaemonPort $daemonPort -RecoveryState $recoveryState -RecoveryError $recoveryError -ExistingPath $outageIncidentPath
+        if ($daemonOnline) {
+            Write-Host "  -> Port $daemonPort daemon recovery verified. Incident receipt: $outageIncidentPath" -ForegroundColor Green
+        } else {
+            Write-Host "  -> Port $daemonPort daemon recovery failed. Incident receipt: $outageIncidentPath" -ForegroundColor Red
+        }
     }
 
     if ($daemonOnline) {
@@ -542,7 +596,7 @@ if (-not $NoLaunch) {
     } else {
         $hubUri = [System.Uri]::new($renderedHtmlPath).AbsoluteUri
         $launchTarget = if ($DatesMode) { "$hubUri#dates" } else { $hubUri }
-        Write-Host "  -> Port 9876 Daemon offline. Launching via local file fallback..." -ForegroundColor Yellow
+        Write-Host "  -> Port $daemonPort daemon offline. Launching local fallback; consult incident receipt: $outageIncidentPath" -ForegroundColor Yellow
     }
 
     # --------------------------------------------------------------------------

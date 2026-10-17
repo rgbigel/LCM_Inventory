@@ -45,7 +45,7 @@ $reviewsDirectory = Join-Path $workspaceRoot 'LCM_Inventory\data\reviews'
 $authorizationPath = Join-Path $reviewsDirectory "pending_commit_${repositoryName}.json"
 
 if (-not (Test-Path -LiteralPath $authorizationPath)) {
-  throw "REVIEW GATE BLOCKED: No current review authorization exists for '$repositoryName'. Run Invoke-BeyondCompareReview.ps1, obtain an accepted disposition, then use Submit-ReviewResult.ps1."
+  throw "REVIEW GATE BLOCKED: No current review authorization exists for '$repositoryName'. Run Invoke-MacriumBcrReview.ps1, obtain an accepted disposition, then use Submit-ReviewResult.ps1."
 }
 
 try {

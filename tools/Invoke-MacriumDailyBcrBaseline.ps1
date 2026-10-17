@@ -99,6 +99,7 @@ function Write-WorkerReceipt {
   if ([string]::IsNullOrWhiteSpace($ReceiptPath)) {
     return
   }
+
   [pscustomobject]@{
     Succeeded = $Succeeded
     Message = $Message
@@ -107,6 +108,42 @@ function Write-WorkerReceipt {
     MountEvidence = $MountEvidence
     Timestamp = (Get-Date).ToString('o')
   } | ConvertTo-Json | Set-Content -LiteralPath $ReceiptPath -Encoding utf8
+}
+
+function Set-LcmReviewWindowTitle {
+  param(
+    [Parameter(Mandatory = $true)]
+    [System.Diagnostics.Process]$Window,
+
+    [Parameter(Mandatory = $true)]
+    [string]$Scope
+  )
+
+  if (-not ('LcmBcrWindowTitle' -as [type])) {
+    Add-Type -TypeDefinition @'
+using System;
+using System.Runtime.InteropServices;
+
+public static class LcmBcrWindowTitle
+{
+    [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+    public static extern bool SetWindowText(IntPtr hWnd, string lpString);
+}
+'@
+  }
+
+  $baseTitle = $Window.MainWindowTitle -replace '\s+\[(?:CRP|BUG|COH)-[^\]]+\]$', ''
+  $title = '{0} [{1}]' -f $baseTitle, $Scope
+  if (-not [LcmBcrWindowTitle]::SetWindowText($Window.MainWindowHandle, $title)) {
+    throw "Could not set the Beyond Compare review title for PID $($Window.Id)."
+  }
+
+  Start-Sleep -Milliseconds 250
+  $Window.Refresh()
+  if ($Window.MainWindowTitle -ne $title) {
+    throw "Beyond Compare did not retain the review title. Expected '$title'; actual '$($Window.MainWindowTitle)'."
+  }
+  return $title
 }
 
 function Get-CompletedTodayImage {
@@ -559,6 +596,8 @@ if ($ReuseMountedBaseline) {
       }
       $launchedReviewWindow = $true
     }
+    $reviewTitle = Set-LcmReviewWindowTitle -Window $reviewWindows[0] -Scope (Resolve-BaselineReviewScope)
+    Write-BaselineLog -Level INFO -Message "Set Beyond Compare review title to '$reviewTitle'."
   }
   $windowDisposition = if ($reusedReviewWindow) { 'reused the existing _LCM review window' } elseif ($launchedReviewWindow) { 'opened one _LCM review window' } else { 'did not launch a review window' }
   Write-BaselineLog -Level INFO -Message "Reused writable $($mountedBaseline.MountedDrive) Macrium baseline for '$((Resolve-BaselineReviewScope))' without remounting or replacing operator progress; $windowDisposition."
@@ -668,6 +707,8 @@ if (-not $NoLaunchReview) {
   if ($reviewWindows.Count -eq 0) {
     throw 'Beyond Compare did not expose the expected _LCM Folder Compare window.'
   }
+  $reviewTitle = Set-LcmReviewWindowTitle -Window $reviewWindows[0] -Scope $reviewIdentity
+  Write-BaselineLog -Level INFO -Message "Set Beyond Compare review title to '$reviewTitle'."
 }
 
 $mountEvidence = $receipt.MountEvidence

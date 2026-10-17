@@ -92,8 +92,8 @@ backup concept); `LS` = **LCM_Shared** (shared modules); and `LSP` =
 # Check workspace for configuration drift (dirty repos, outdated LCM, broken junctions)
 .\tools\Test-WorkspaceDrift.ps1
 
-# Launch isolated Beyond Compare 5 visual comparison against baseline
-.\tools\Invoke-BeyondCompareReview.ps1 -RepositoryName "BootEntryManager"
+# Launch the Macrium BCR review against the mounted baseline
+.\tools\Invoke-MacriumBcrReview.ps1 -CRP "CRP-123" -RepositoryName "BootEntryManager"
 
 # Record formal review outcome (Accepted, AcceptedWithEdits, Rejected, Deferred)
 .\tools\Submit-ReviewResult.ps1 -RepositoryPath "BootEntryManager"
@@ -145,4 +145,4 @@ The operational governance and lifecycle methodology of the platform are codifie
 * `docs/` - Human-readable documentation, policies, methodology anchors, and generated dashboards (`LCM_METHODOLOGY_AND_MEMORY_ANCHOR.md`, `CM_POLICIES.md`, `INVENTORY_DASHBOARD.md`).
 * `logs/` - CM activity ledger (`cm_activity.log`) and historical audit records.
 * `modules/` - Reusable PowerShell CM modules (`WorkspaceCM.psm1`, `ChangeRequestManager.psm1`).
-* `tools/` - Standalone executable PowerShell CLI tools (`Invoke-WorkspacePush.ps1`, `Invoke-BeyondCompareReview.ps1`, `Submit-ReviewResult.ps1`, etc.).
+* `tools/` - Standalone executable PowerShell CLI tools (`Invoke-WorkspacePush.ps1`, `Invoke-MacriumBcrReview.ps1`, `Submit-ReviewResult.ps1`, etc.).

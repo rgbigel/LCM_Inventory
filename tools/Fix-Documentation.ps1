@@ -16,7 +16,7 @@ param(
     [Parameter(Mandatory = $false, HelpMessage = 'Optional path for the reconciliation manifest')]
     [string]$OutputPath,
 
-    [Parameter(Mandatory = $false, HelpMessage = 'Open Beyond Compare after an applied documentation update')]
+    [Parameter(Mandatory = $false, HelpMessage = 'Open the Macrium BCR review after an applied documentation update')]
     [switch]$OpenReview,
 
     [Parameter(Mandatory = $false, HelpMessage = 'Emit selected scopes and proposed changes')]
@@ -292,9 +292,9 @@ $receiptPath = Join-Path $logRoot "FixDocumentation_receipt_$timeTag.json"
 
 Write-Host "Applied documentation updates: $($changedPaths.Count). Receipt: $receiptPath" -ForegroundColor Green
 $changedRepos = @($changedPaths | ForEach-Object { Split-Path (Split-Path $_ -Parent) -Parent | Split-Path -Leaf } | Select-Object -Unique)
-Write-Host "BCompare review is required before local commit for: $($changedRepos -join ', ')" -ForegroundColor Yellow
+Write-Host "Macrium BCR review is required before local commit for: $($changedRepos -join ', ')" -ForegroundColor Yellow
 if ($OpenReview -and $changedPaths.Count -gt 0) {
-    $reviewTool = Join-Path $WorkspaceRoot 'LCM_Inventory\tools\Invoke-BeyondCompareReview.ps1'
+    $reviewTool = Join-Path $WorkspaceRoot 'LCM_Inventory\tools\Invoke-MacriumBcrReview.ps1'
     foreach ($repository in $changedRepos) {
         & $reviewTool -RepositoryName $repository -BaseCommit HEAD -CRP $CrpScope
     }

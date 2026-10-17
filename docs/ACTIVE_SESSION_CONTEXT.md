@@ -11,8 +11,8 @@
 
 * **Tooling Authority Root:** `D:\Tools\`
 * **Visual Differential Review:** Beyond Compare 5 at `D:\Tools\Beyond Compare 5\BCompare.exe`
-  * Wrapper: `Invoke-BeyondCompareReview.ps1 <RepoName>`
-  * Features: Compares against `HEAD` baseline in `$TEMP\BC_Review\`, resolves absolute paths, uses `/it` interactive session delegation to launch visible desktop GUI window.
+  * Wrapper: `Invoke-MacriumBcrReview.ps1 -CRP <CRP|BUG> -RepositoryName <RepoName>`
+  * Features: Uses the writable Macrium baseline and opens the operator-owned `_LCM` profile against the actual live Git root.
 * **Fast File Search & Content Indexing:** `Everything.exe` & `es.exe` (Version 1.5.0.1418b (x64)+)
   * Current Path: `D:\Tools\Everything 1.5a\Everything.exe` (Transitioning to `D:\Tools\Everything\Everything.exe`)
   * Index Database: `A:\EverythingIndex\Everything.db`
@@ -27,7 +27,7 @@
 
 * **IDE Tool Execution Policy:** Configured as `always-proceed` across all `.vscode/settings.json`.
 * **RULE-EFF-004 Policy:** The AI agent directly executes code changes and quality gates autonomously without prompting the user with IDE action modals.
-* **Review Policy (RR Method):** All changes in governed repositories require visual diff inspection in Beyond Compare 5 (`Invoke-BeyondCompareReview.ps1`) followed by formal review recording via `RR.ps1` (`Submit-ReviewResult.ps1`) before git commit and push.
+* **Review Policy (RR Method):** All changes in governed repositories require Macrium BCR visual inspection (`Invoke-MacriumBcrReview.ps1`) followed by formal review recording via `RR.ps1` (`Submit-ReviewResult.ps1`) before git commit and push.
 
 ---
 

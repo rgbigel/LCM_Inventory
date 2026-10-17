@@ -1,23 +1,25 @@
-# Change Request Proposal: CRP-244
+# CRP-244: WHAT-IF Analysis Sub-Path Protocol and Trial Implementation Branching
 
-`yaml
-CRP-ID: CRP-244
-Title: Batch Action Test
-Scope: TestRepo
-Baseline-Version: 10.0.0
-Author: rgbig
-Date: 2026-10-13 21:28:44
-Status: Suggested
-Plan-State: suggested
-Progress-State: undecided
-Priority: High
-App-ID: None
-`
+| Metadata Field | Value |
+|---|---|
+| **Proposal ID** | `CRP-244` |
+| **Lifecycle State** | `SUPERSEDED` |
+| **Successor** | [CRP-251: Sandboxed Prototyping Mode](../CRP-251-Sandboxed-Prototyping-Mode/Specification.md) |
+| **Origin Repository** | `LCM_Inventory` |
+| **Date** | 2026-10-13 |
 
----
+## Supersession Decision
 
-## 1. Executive Summary & Intent
+CRP-244 identified a valid goal: permit safe WHAT-IF investigation and trial
+implementation when an analysis needs evidence beyond inspection alone. Its
+original design relied on an isolated trial branch with rollback checkpoints.
 
+[CRP-251](../CRP-251-Sandboxed-Prototyping-Mode/Specification.md) replaces
+that mechanism with a stronger boundary: a disposable, non-production
+environment that is isolated from live repositories, host registry state,
+credentials, publishing, and destructive tools. Promotion is explicit and
+creates a normal governed CRP; a sandbox result cannot become authoritative by
+branch state or rollback alone.
 
-## 2. Technical Requirements & Invariants
-- Invariant 1: Must conform to LCM governance standards.
+No implementation began under CRP-244. Its goal and historical intake remain
+preserved by this record and the proposal ledger.

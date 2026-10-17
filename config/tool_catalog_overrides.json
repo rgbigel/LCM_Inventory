@@ -1,7 +1,4 @@
 ﻿{
-  "Invoke-BeyondCompareReview.ps1": {
-    "NoExit": false
-  },
   "Invoke-MacriumDailyBcrBaseline.ps1": {
     "NoExit": false
   },

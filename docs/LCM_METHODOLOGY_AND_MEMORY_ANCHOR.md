@@ -65,12 +65,11 @@ Audit logs in LCM are not disposable console output; they constitute the **Confi
 ### 4.1 Strict Conceptual Separation
 A critical failure mode identified in platform evolution was the conflation of the Beyond Compare visual review filter with Git's `.gitignore`:
 * **Git Ignore (`.gitignore`)**: Controls repository object storage and remote synchronization boundaries.
-* **Beyond Compare Review Gate (`Invoke-BeyondCompareReview.ps1`)**: An interactive human inspection interface designed to present code changes cleanly without visual clutter.
+* **Macrium BCR Review Gate (`Invoke-MacriumBcrReview.ps1`)**: An interactive human inspection flow using the writable Macrium baseline and the Beyond Compare 5 `_LCM` profile.
 
 ### 4.2 The BCR Inclusion Rule
-* `Invoke-BeyondCompareReview.ps1` must never apply blanket exclusions to code directories (such as `.lcm`).
-* The root review filter `$keepDirs` must explicitly retain `.lcm`.
-* Only non-code transient directories (`LCM_Inventory\data\logs\lcm\`, `LCM_Inventory\scratch\`, `LCM_Inventory\data\archives\`, `LCM_Inventory\Cmd\`) may be filtered from the visual display. All modified modules, assets, tools, commands, and governance specifications must be offered for human review.
+* The Macrium BCR flow reviews the actual live Git root; it does not create a scratch live-directory bridge.
+* The `_LCM` profile must present all modified durable source and documentation content for operator review.
 
 ---
 
@@ -161,8 +160,7 @@ Any new table, viewer, or dashboard created in LCM must satisfy:
 |:---|:---|:---|
 | **DOX Invariant** | [`AGENTS.md`](file:///D:/Git_Repositories/AGENTS.md), [`CM_POLICIES.md`](file:///D:/Git_Repositories/LCM_Inventory/docs/CM_POLICIES.md) | `LCM_Inventory/tools/Sync-GeminiInbox.ps1` |
 | **Ledger Invariant** | `LCM_METHODOLOGY_AND_MEMORY_ANCHOR.md` | `.gitignore`, `logs/cm_activity.log`, `data/reviews/` |
-| **Review Gate Separation** | [`ProposalReviewFlowPolicy.md`](file:///D:/Git_Repositories/LCM_Inventory/.agents/rules/ProposalReviewFlowPolicy.md) | `LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1` |
+| **Review Gate Separation** | [`ProposalReviewFlowPolicy.md`](file:///D:/Git_Repositories/LCM_Inventory/.agents/rules/ProposalReviewFlowPolicy.md) | `LCM_Inventory/tools/Invoke-MacriumBcrReview.ps1` |
 | **Approach 1 Governance** | `LCM_METHODOLOGY_AND_MEMORY_ANCHOR.md` | `LCM_Inventory/.agents/`, root `.gitignore` |
 | **Snapshot Push Pipeline** | [`ReviewCommitGovernancePolicy.md`](file:///D:/Git_Repositories/LCM_Inventory/.agents/rules/ReviewCommitGovernancePolicy.md) | `LCM_Inventory/tools/Invoke-WorkspacePush.ps1` |
 | **Port 9876 REST Bridge** | `CRP-2026-021`, `CM_POLICIES.md` | `LCM_Inventory/tools/LcmDesktopDaemon.ps1` |
-

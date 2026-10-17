@@ -6,7 +6,7 @@ Path: LCM_Inventory/docs/README.md
 Authors: Rolf, LCM_AI Engine  
 Version: 10.0.0  
 Status: Authoritative Reference  
-Updated: 2026-10-16 18:21:10  
+Updated: 2026-10-17 20:24:18  
 
 ---
 
@@ -47,7 +47,7 @@ TestWorkspaceReadiness
 | **TestWorkspaceReadiness** | [Test-WorkspaceReadiness.ps1](file:///LCM_Inventory/tools/Test-WorkspaceReadiness.ps1) | QualityGate | LCM_Inventory | PowerShell | Quality Gate | Executes the 5-stage automated LCM readiness quality gate across all repositories. | TestWorkspaceReadiness |
 | **DismountMacriumBaseline** | [Dismount-MacriumCurrentBaseline.ps1](file:///LCM_Inventory/tools/Dismount-MacriumCurrentBaseline.ps1) | Recovery | LCM_Inventory | PowerShell | Macrium BCR Baseline | Explicitly detaches only the label-matched F:-I: Macrium BCR baseline after confirmation. | DismountMacriumBaseline |
 | **MountMacriumBaseline** | [Mount-MacriumLatestBaseline.ps1](file:///LCM_Inventory/tools/Mount-MacriumLatestBaseline.ps1) | Recovery | LCM_Inventory | PowerShell | Macrium BCR Baseline | Explicitly mounts the latest completed same-day Macrium image through the canonical baseline workflow. | MountMacriumBaseline |
-| **BeyondCompareReview** | [Invoke-BeyondCompareReview.ps1](file:///LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1) | ReviewGate | LCM_Inventory | PowerShell | Proposal Review | Launches 3-way Beyond Compare 5 session on Session 1 interactive desktop for staged proposals. | BeyondCompareReview |
+| **BCR** | [Invoke-MacriumBcrReview.ps1](file:///LCM_Inventory/tools/Invoke-MacriumBcrReview.ps1) | ReviewGate | LCM_Inventory | PowerShell | Proposal Review | Opens the exact CRP/BUG Macrium BCR review using the writable baseline and the _LCM Beyond Compare profile. | BCR |
 | **ShowActions** | [Show-Actions.ps1](file:///LCM_Inventory/tools/Show-Actions.ps1) | Telemetry | LCM_Inventory | PowerShell | Audit Logs | Fast lightweight terminal reader displaying recent operational actions and tool execution step summaries. | ShowActions |
 | **UpdateHaInventory** | [Update-HaInventory.ps1](file:///HaSSD06_Inventory/tools/Update-HaInventory.ps1) | Telemetry | HaSSD06 | PowerShell | Subsystem Telemetry | Pulls live WebSocket registry & REST data to reconcile all entities, devices, & integrations. | UpdateHaInventory |
 | **SearchEverything** | [Search-Everything.ps1](file:///LCM_Inventory/tools/Search-Everything.ps1) | Utility | LCM_Inventory | PowerShell | File Search | CLI search interface utilizing Voidtools Everything command line utility (es.exe). | SearchEverything |
@@ -73,7 +73,6 @@ TestWorkspaceReadiness
 | **buildofflinedocs** | [build_offline_docs.py](file:///LCM_Inventory/tools/build_offline_docs.py) | Utility | LCM_Inventory | Python | Utility | build_offline_docs execution tool. | buildofflinedocs |
 | **CallerIntentReconciliation** | [Invoke-CallerIntentReconciliation.ps1](file:///LCM_Inventory/tools/Invoke-CallerIntentReconciliation.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-CallerIntentReconciliation execution tool. | CallerIntentReconciliation |
 | **checkspecific** | [check_specific.py](file:///HaSSD06/check_specific.py) | Utility | HaSSD06 | Python | Utility | check_specific execution tool. | checkspecific |
-| **ClearBCReviewSession** | [Clear-BCReviewSession.ps1](file:///LCM_Inventory/tools/Clear-BCReviewSession.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Clear-BCReviewSession execution tool. | ClearBCReviewSession |
 | **ClearBCReviewTemp** | [Clear-BCReviewTemp.ps1](file:///LCM_Inventory/tools/Clear-BCReviewTemp.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Clear-BCReviewTemp execution tool. | ClearBCReviewTemp |
 | **CompactBCompareReview** | [Invoke-CompactBCompareReview.ps1](file:///LCM_Inventory/tools/Invoke-CompactBCompareReview.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-CompactBCompareReview execution tool. | CompactBCompareReview |
 | **comparetuyaintegrations** | [compare_tuya_integrations.py](file:///HaSSD06/compare_tuya_integrations.py) | Utility | HaSSD06 | Python | Utility | compare_tuya_integrations execution tool. | comparetuyaintegrations |
@@ -121,7 +120,6 @@ TestWorkspaceReadiness
 | **LoadFixes** | [LoadFixes.ps1](file:///LCM_Inventory/tools/LoadFixes.ps1) | Utility | LCM_Inventory | PowerShell | Utility | LoadFixes execution tool. | LoadFixes |
 | **LoadMethods** | [LoadMethods.ps1](file:///LCM_Inventory/tools/LoadMethods.ps1) | Utility | LCM_Inventory | PowerShell | Utility | LoadMethods execution tool. | LoadMethods |
 | **LoadRules** | [LoadRules.ps1](file:///LCM_Inventory/tools/LoadRules.ps1) | Utility | LCM_Inventory | PowerShell | Utility | LoadRules execution tool. | LoadRules |
-| **MacriumBcrReview** | [Invoke-MacriumBcrReview.ps1](file:///LCM_Inventory/tools/Invoke-MacriumBcrReview.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-MacriumBcrReview execution tool. | MacriumBcrReview |
 | **MacriumDailyBcrBaseline** | [Invoke-MacriumDailyBcrBaseline.ps1](file:///LCM_Inventory/tools/Invoke-MacriumDailyBcrBaseline.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-MacriumDailyBcrBaseline execution tool. | MacriumDailyBcrBaseline |
 | **MakeAdmin** | [Make-Admin.ps1](file:///LCM_Inventory/tools/Make-Admin.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Make-Admin execution tool. | MakeAdmin |
 | **mcphareadonly** | [mcp_ha_readonly.py](file:///HaSSD06/mcp_ha_readonly.py) | Utility | HaSSD06 | Python | Utility | mcp_ha_readonly execution tool. | mcphareadonly |

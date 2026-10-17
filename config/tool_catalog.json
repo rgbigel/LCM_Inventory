@@ -1464,9 +1464,9 @@
     "Dependencies": "Invoke-MacriumDailyBcrBaseline.ps1"
   },
   {
-    "Name": "Invoke-BeyondCompareReview.ps1",
-    "ShortName": "BeyondCompareReview",
-    "Aliases": "BCR",
+    "Name": "Invoke-MacriumBcrReview.ps1",
+    "ShortName": "BCR",
+    "Aliases": "MacriumBcrReview",
     "Role": "ReviewGate",
     "Audience": "User",
     "Admin": false,
@@ -1475,69 +1475,42 @@
     "Domain": "LCM_Inventory",
     "Type": "PowerShell",
     "Category": "Proposal Review",
-    "Description": "Launches 3-way Beyond Compare 5 session on Session 1 interactive desktop for staged proposals.",
-    "Example": "BeyondCompareReview",
-    "RelativePath": "LCM_Inventory\\tools\\Invoke-BeyondCompareReview.ps1",
+    "Description": "Opens the exact CRP/BUG Macrium BCR review using the writable baseline and the _LCM Beyond Compare profile.",
+    "Example": "BCR -CRP CRP-284 -RepositoryName LCM_Inventory",
+    "RelativePath": "LCM_Inventory\\tools\\Invoke-MacriumBcrReview.ps1",
     "Parameters": [
+      {
+        "Name": "CRP",
+        "Type": "String",
+        "Mandatory": true,
+        "Default": "",
+        "Description": ""
+      },
       {
         "Name": "RepositoryName",
         "Type": "String",
         "Mandatory": false,
-        "Default": "",
-        "Description": "Name or path of the repository to review"
+        "Default": "LCM_Inventory",
+        "Description": ""
       },
       {
         "Name": "BaseCommit",
         "Type": "String",
         "Mandatory": false,
-        "Default": "",
-        "Description": "Base Git commit or reference to compare against (e.g., HEAD~1, root, SHA, tag)"
+        "Default": "HEAD",
+        "Description": ""
       },
       {
-        "Name": "Exclusions",
-        "Type": "String[]",
-        "Mandatory": false,
-        "Default": "@()",
-        "Description": "Additional directory or file exclusions to filter from review display"
-      },
-      {
-        "Name": "CRP",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Exact CRP or BUG identifier (e.g. CRP-257)"
-      },
-      {
-        "Name": "ReviewIdentity",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Isolated on-disk review identity; defaults to the exact CRP or BUG identity"
-      },
-      {
-        "Name": "Wait",
+        "Name": "LifecycleManaged",
         "Type": "SwitchParameter",
         "Mandatory": false,
         "Default": "",
-        "Description": "Wait synchronously for the Beyond Compare review session to close before evaluating staging"
-      },
-      {
-        "Name": "ForceRebuild",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Force re-extraction and rebuild of baseline cache even if existing cached tree matches commit SHA"
+        "Description": ""
       }
     ],
     "Dependencies": [
-      "BCompareWindowTools.psm1",
-      "BCompareBaseline.psm1",
       "ProposalManager.psm1",
-      "Invoke-InteractiveDesktop.ps1",
-      "bcompare",
-      "BCompare",
-      "BCOMPARE",
-      "BCompare.exe"
+      "Invoke-MacriumDailyBcrBaseline.ps1"
     ]
   },
   {
@@ -1761,7 +1734,7 @@
         "Type": "SwitchParameter",
         "Mandatory": false,
         "Default": "",
-        "Description": "Installs user startup hooks for automatic launch at user logon."
+        "Description": "Installs the user scheduled task for automatic launch at user logon."
       },
       {
         "Name": "Uninstall",
@@ -2205,70 +2178,6 @@
     "Dependencies": "BCompare"
   },
   {
-    "Name": "Clear-BCReviewSession.ps1",
-    "ShortName": "ClearBCReviewSession",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "LCM_Inventory",
-    "Domain": "LCM_Inventory",
-    "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "Clear-BCReviewSession execution tool.",
-    "Example": "ClearBCReviewSession",
-    "RelativePath": "LCM_Inventory\\tools\\Clear-BCReviewSession.ps1",
-    "Parameters": [
-      {
-        "Name": "CRP",
-        "Type": "String",
-        "Mandatory": true,
-        "Default": "",
-        "Description": "Target CRP or BUG identifier (e.g. CRP-203, BUG-245)"
-      },
-      {
-        "Name": "RepositoryName",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Target repository name"
-      },
-      {
-        "Name": "ReviewIdentity",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Exact isolated review identity (for example BUG-276_LCM_AI); defaults to CRP"
-      },
-      {
-        "Name": "WorkspaceRoot",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "D:\\Git_Repositories",
-        "Description": "Workspace root path"
-      },
-      {
-        "Name": "DryRun",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Preview cleanup operations without deleting"
-      },
-      {
-        "Name": "Force",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Force cleanup only after Beyond Compare is closed"
-      }
-    ],
-    "Dependencies": [
-      "BCompare",
-      "BCompare.exe"
-    ]
-  },
-  {
     "Name": "Clear-BCReviewTemp.ps1",
     "ShortName": "ClearBCReviewTemp",
     "Aliases": null,
@@ -2283,36 +2192,7 @@
     "Description": "Clear-BCReviewTemp execution tool.",
     "Example": "ClearBCReviewTemp",
     "RelativePath": "LCM_Inventory\\tools\\Clear-BCReviewTemp.ps1",
-    "Parameters": [
-      {
-        "Name": "All",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Purge all review folders (Explorer is skipped in -All mode)"
-      },
-      {
-        "Name": "Purge",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Purge older review folders, keeping only the single newest one"
-      },
-      {
-        "Name": "OlderThanHours",
-        "Type": "Int32",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Purge review folders older than the specified number of hours"
-      },
-      {
-        "Name": "NoExplorer",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Suppress automatically opening Windows File Explorer"
-      }
-    ],
+    "Parameters": [],
     "Dependencies": "BCompare.exe"
   },
   {
@@ -2813,7 +2693,7 @@
         "Type": "SwitchParameter",
         "Mandatory": false,
         "Default": "",
-        "Description": "Open Beyond Compare after an applied documentation update"
+        "Description": "Open the Macrium BCR review after an applied documentation update"
       },
       {
         "Name": "Trace",
@@ -2823,10 +2703,7 @@
         "Description": "Emit selected scopes and proposed changes"
       }
     ],
-    "Dependencies": [
-      "Invoke-BeyondCompareReview.ps1",
-      "BCompare"
-    ]
+    "Dependencies": "Invoke-MacriumBcrReview.ps1"
   },
   {
     "Name": "Format-LcmMarkdownDiagrams.ps1",
@@ -3633,49 +3510,6 @@
     "RelativePath": "LCM_Inventory\\tools\\LoadRules.ps1",
     "Parameters": [],
     "Dependencies": null
-  },
-  {
-    "Name": "Invoke-MacriumBcrReview.ps1",
-    "ShortName": "MacriumBcrReview",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "LCM_Inventory",
-    "Domain": "LCM_Inventory",
-    "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "Invoke-MacriumBcrReview execution tool.",
-    "Example": "MacriumBcrReview",
-    "RelativePath": "LCM_Inventory\\tools\\Invoke-MacriumBcrReview.ps1",
-    "Parameters": [
-      {
-        "Name": "CRP",
-        "Type": "String",
-        "Mandatory": true,
-        "Default": "",
-        "Description": ""
-      },
-      {
-        "Name": "RepositoryName",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "LCM_Inventory",
-        "Description": ""
-      },
-      {
-        "Name": "BaseCommit",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "HEAD",
-        "Description": ""
-      }
-    ],
-    "Dependencies": [
-      "ProposalManager.psm1",
-      "Invoke-MacriumDailyBcrBaseline.ps1"
-    ]
   },
   {
     "Name": "Invoke-MacriumDailyBcrBaseline.ps1",
@@ -4731,7 +4565,6 @@
       "Invoke-HaUpdateGate.ps1",
       "Invoke-WorkspaceAudit.ps1",
       "Show-WorkspaceInventoryApp.ps1",
-      "Invoke-BeyondCompareReview.ps1",
       "Test-LCMRuleHealth.ps1"
     ]
   },
@@ -5719,7 +5552,7 @@
       "Show-ToolIndex.ps1",
       "Show-Actions.ps1",
       "Show-CmdFolderAnalysis.ps1",
-      "Invoke-BeyondCompareReview.ps1",
+      "Invoke-MacriumBcrReview.ps1",
       "Invoke-AsusDebloater.ps1",
       "Show-HaInventory.ps1",
       "ShowHaInventory.ps1",

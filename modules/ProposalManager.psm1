@@ -78,6 +78,41 @@ function Set-ProposalStore {
     $Store | ConvertTo-Json -Depth 5 | Set-Content -Path $path -Encoding UTF8
 }
 
+function Update-LcmControlHubAfterCompletion {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [int[]]$ProposalId
+    )
+
+    $inventoryRoot = Split-Path -Path $PSScriptRoot -Parent
+    $rendererPath = Join-Path $inventoryRoot 'tools\Show-LcmControl.ps1'
+    if (-not (Test-Path -LiteralPath $rendererPath -PathType Leaf)) {
+        throw "ShowCM renderer was not found: $rendererPath"
+    }
+
+    & $rendererPath -NoLaunch | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+        throw "ShowCM renderer failed after completing proposal(s): $($ProposalId -join ', ')"
+    }
+
+    $payload = @{
+        event        = 'proposal-completed'
+        proposal_ids = @($ProposalId)
+        timestamp    = (Get-Date).ToString('o')
+    } | ConvertTo-Json -Compress
+
+    try {
+        $notification = Invoke-RestMethod -Uri 'http://127.0.0.1:9876/hub-refresh' -Method Post `
+            -ContentType 'application/json' -Body $payload -TimeoutSec 2 -ErrorAction Stop
+        if ([string]$notification.status -ne 'OK') {
+            throw "Daemon returned status '$($notification.status)'."
+        }
+    } catch {
+        Write-Warning "ShowCM was re-rendered for completed proposal(s) $($ProposalId -join ', '), but the daemon refresh notification was unavailable: $($_.Exception.Message)"
+    }
+}
+
 function Get-WorkspaceProposals {
     [CmdletBinding()]
     param(
@@ -749,6 +784,9 @@ function Move-LcmProposalLifecycleState {
     }
     if (-not $SkipPersist) {
         Set-ProposalStore -Store $store
+        if ($State -eq 'completed') {
+            Update-LcmControlHubAfterCompletion -ProposalId $Id
+        }
     }
     return $proposal
 }
@@ -1557,6 +1595,9 @@ function Complete-LcmReviewCohortAcceptance {
         note = $Details
     }) -Force
     Set-ProposalStore -Store $store
+    if ($updated.Count -gt 0) {
+        Update-LcmControlHubAfterCompletion -ProposalId @($updated | ForEach-Object { [int]$_.id })
+    }
     return @($updated)
 }
 
@@ -1807,6 +1848,9 @@ function Invoke-LcmCohortLifecycleAction {
     }
     $cohort | Add-Member -NotePropertyName 'updated_at' -NotePropertyValue (Get-Date).ToString('o') -Force
     Set-ProposalStore -Store $store
+    if ($Action -eq 'complete' -and $updated.Count -gt 0) {
+        Update-LcmControlHubAfterCompletion -ProposalId @($updated | ForEach-Object { [int]$_.id })
+    }
     return @($updated)
 }
 
@@ -2122,9 +2166,11 @@ function Invoke-ProposalBatchAction {
     }
 
     $updated = @()
+    $completionBatch = $mappedState -eq 'completed' -and $targetIds.Count -gt 1
+    $completionStore = if ($completionBatch) { Get-ProposalStore } else { $null }
     foreach ($id in $targetIds) {
         $targetState = $mappedState
-        $store = Get-ProposalStore
+        $store = if ($completionBatch) { $completionStore } else { Get-ProposalStore }
         $proposal = @($store.proposals | Where-Object { $_.id -eq $id })[0]
         if ($null -eq $proposal) { throw "Proposal #$Id was not found." }
         if ($Action -eq 'reinstate') {
@@ -2138,7 +2184,16 @@ function Invoke-ProposalBatchAction {
             }
         }
 
-        $res = Move-LcmProposalLifecycleState -Id $id -State $targetState -Details $Details
+        $moveArgs = @{
+            Id = $id
+            State = $targetState
+            Details = $Details
+            Store = $store
+        }
+        if ($completionBatch) {
+            $moveArgs.SkipPersist = $true
+        }
+        $res = Move-LcmProposalLifecycleState @moveArgs
         if ($Action -in @('do', 'approve', 'approved', 'bug')) {
             $store = Get-ProposalStore
             $proposal = @($store.proposals | Where-Object { $_.id -eq $id })[0]
@@ -2148,6 +2203,10 @@ function Invoke-ProposalBatchAction {
             $res = $proposal
         }
         $updated += $res
+    }
+    if ($completionBatch -and $updated.Count -gt 0) {
+        Set-ProposalStore -Store $completionStore
+        Update-LcmControlHubAfterCompletion -ProposalId @($updated | ForEach-Object { [int]$_.id })
     }
 
     return $updated

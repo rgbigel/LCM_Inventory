@@ -22,7 +22,7 @@ Date: 2026-10-13
 ## 2. Normative Invariants & CM Governance Rules
 
 ### REQ-WINV-001: Review Gate Enforcement (`RULE-REV-001`)
-- No automated tool or AI assistant `MAY` commit changes to Git repositories without explicit operator visual review via Beyond Compare 5 (`Invoke-BeyondCompareReview.ps1`).
+- No automated tool or AI assistant `MAY` commit changes to Git repositories without explicit operator visual review through the Macrium BCR flow (`Invoke-MacriumBcrReview.ps1` and the Beyond Compare 5 `_LCM` profile).
 - Direct invocation of `git commit` outside the review runner is strictly prohibited during interactive development.
 
 ### REQ-WINV-002: Audit Receipt Generation & Persistence (`RULE-REV-003`)

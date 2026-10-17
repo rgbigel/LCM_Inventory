@@ -1539,6 +1539,9 @@
     let activeSort = "id-desc"; // Highest CRP first by default (e.g. 211 at top)
     let pendingOverrideAction = null;
     let pendingHoldTargets = [];
+    let proposalRevision = "";
+    let proposalRefreshInFlight = false;
+    let hubRefreshEventSource = null;
 
     // Helper functions
     const $ = id => document.getElementById(id);
@@ -1682,6 +1685,8 @@
       updateInternalSwitchesDisplay(null);
       renderSelectedItemLifecycle();
       updateDaemonStatus();
+      proposalRevision = getProposalRevision(proposalsData);
+      connectHubRefreshEvents();
 
       // Close dropdowns on outside click
       document.addEventListener("click", (e) => {
@@ -1699,9 +1704,8 @@
           refreshHubData();
         }
       });
-
       // Top action buttons
-      $("btnRefresh").addEventListener("click", refreshHubData);
+      $("btnRefresh").addEventListener("click", () => refreshHubData(true));
       $("btnActivityLogs").addEventListener("click", showActivityLogs);
       $("btnDatesLedger").addEventListener("click", showDatesModal);
       $("btnHelp").addEventListener("click", showHelpModal);
@@ -1723,27 +1727,68 @@
       }
     }
 
-    async function refreshHubData() {
+    function connectHubRefreshEvents() {
+      if (!IS_RENDERED_CONTROL_HUB || hubRefreshEventSource) return;
+      hubRefreshEventSource = new EventSource(DAEMON_URL + "/hub-events");
+      hubRefreshEventSource.addEventListener("refresh", () => {
+        window.location.reload();
+      });
+      hubRefreshEventSource.onerror = () => {
+        updateDaemonStatus();
+      };
+    }
+
+    function getProposalRevision(data) {
+      const proposals = Array.isArray(data?.proposals) ? data.proposals : [];
+      const stateFingerprint = proposals.map(p => {
+        const history = Array.isArray(p.state_history) ? p.state_history : [];
+        const latest = history[history.length - 1] || {};
+        return [
+          p.id,
+          p.state,
+          p.progress_state,
+          p.disposition,
+          p.priority,
+          latest.timestamp,
+          latest.state
+        ].join(":");
+      }).join("|");
+      return `${data?.updated_at || ""}:${stateFingerprint}`;
+    }
+
+    async function refreshHubData(forceRender = false) {
+      if (proposalRefreshInFlight) return;
+      proposalRefreshInFlight = true;
+      let dataChanged = false;
       try {
         const res = await fetch(DAEMON_URL + "/proposals", { cache: "no-store" });
         if (res.ok) {
           const fresh = await res.json();
           if (fresh && fresh.proposals) {
-            proposalsData = fresh;
-            populateScopeFilter();
-            populateCohortFilter();
-            populateItemTargets();
-            reconcileActiveItemTarget();
+            const freshRevision = getProposalRevision(fresh);
+            if (freshRevision !== proposalRevision) {
+              proposalsData = fresh;
+              proposalRevision = freshRevision;
+              dataChanged = true;
+              populateScopeFilter();
+              populateCohortFilter();
+              populateItemTargets();
+              reconcileActiveItemTarget();
+            }
           }
         }
       } catch (err) {
         console.warn("Could not query daemon for live proposals, using cache:", err);
+      } finally {
+        proposalRefreshInFlight = false;
       }
-      calculateStatusCounts();
-      renderTable();
-      renderSelectionPanel();
-      renderReviewCohortPreview();
-      renderSelectedItemLifecycle();
+      if (forceRender || dataChanged) {
+        calculateStatusCounts();
+        renderTable();
+        renderSelectionPanel();
+        renderReviewCohortPreview();
+        renderSelectedItemLifecycle();
+      }
       updateDaemonStatus();
     }
 

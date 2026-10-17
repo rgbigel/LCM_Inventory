@@ -18,17 +18,27 @@ The CM Control Hub dispatches privileged local actions through the loopback
 by browser security design, cannot start a Windows Scheduled Task itself.
 
 The registered `LCM_DesktopDaemon_<user>` task is therefore the availability
-owner. It starts at interactive logon, retries failed daemon executions, and
-uses a one-minute repeating watchdog trigger with `IgnoreNew` task concurrency:
-a healthy daemon is not duplicated, while an exited daemon is restarted without
-depending on a particular browser page or launcher route.
+owner. It starts at interactive logon and uses bounded Task Scheduler
+restart-on-failure recovery. It is the single automatic startup owner: the
+legacy HKCU Run launcher and a repeating watchdog are intentionally absent, so
+a healthy daemon is not probed or duplicated by recurring PowerShell launches.
 
-The watchdog provides eventual, client-independent recovery. A trusted launcher
+The task provides client-independent recovery without recurring process
+creation. A trusted launcher
 may start the task only after the operator explicitly requests it (for example,
 `Show-LcmControl.ps1 -StartDaemon`). A normal ShowCM launch must not create a
 background daemon session: when the daemon is offline, it opens the rendered
 local artifact instead. Browser JavaScript must never attempt to start the task
 directly.
+
+When a proposal reaches `completed`, the lifecycle authority re-renders the
+Control Hub and sends a completion event to the daemon. Every connected
+rendered Control Hub listens to the daemon's `/hub-events` stream and reloads
+the backend-rendered page only when that completion event arrives. The open
+display therefore reflects completion without client-side ledger reconstruction,
+a manual browser refresh, a second hub launch, or timer-based polling. Batch
+and cohort completion persist their complete group before rendering and
+publishing one event.
 
 ---
 
@@ -62,7 +72,7 @@ graph TB
         CM_HUB["CM Control Hub<br/>Show-CmControlHub.ps1"]
         TOOL_EXP["LCM Tool Explorer<br/>Show-LcmActiveLauncher.ps1"]
         READINESS_UI["Readiness Dashboard<br/>Show-WorkspaceReadiness.ps1"]
-        BC_GATE["Beyond Compare 5<br/>Invoke-BeyondCompareReview.ps1"]
+        BC_GATE["Macrium BCR<br/>Invoke-MacriumBcrReview.ps1"]
     end
 
     subgraph Control_Layer["Governance & Orchestration Engine"]
@@ -202,7 +212,7 @@ methodology source.
 
 ---
 
-## 3. Beyond Compare Review Gate Architecture
+## 3. Macrium BCR Review Gate Architecture
 
 Per `RULE-REV-001` - `008` ([`ReviewCommitGovernancePolicy.md`](file:///D:/Git_Repositories/.agents/rules/ReviewCommitGovernancePolicy.md)), direct un-reviewed commits are prohibited. The review gating pipeline isolates changes, performs side-by-side verification, and audits all approvals:
 
@@ -211,14 +221,14 @@ sequenceDiagram
     autonumber
     actor Operator as Operator
     participant Agent as Antigravity AI
-    participant BCR as Invoke-BeyondCompareReview.ps1
-    participant BC5 as Beyond Compare 5
+    participant BCR as Invoke-MacriumBcrReview.ps1
+    participant BC5 as Beyond Compare 5 _LCM profile
     participant Receipt as data/reviews/*.json
     participant Git as Git Multi-Repo Engine
 
-    Agent->>BCR: Invoke-BeyondCompareReview -Repository <Repo>
-    BCR->>BCR: Create isolated temp staging & resolve junction filters
-    BCR->>BC5: Launch BCompare.exe with Left (HEAD) vs Right (Working)
+    Agent->>BCR: Invoke-MacriumBcrReview -CRP <CRP> -RepositoryName <Repo>
+    BCR->>BCR: Prepare or reuse the writable Macrium baseline
+    BCR->>BC5: Open the _LCM profile against the live Git root
     Operator->>BC5: Inspect diffs, accept/reject files, close BC5
     BCR->>Receipt: Generate cryptographic review receipt (SHA256)
     BCR->>Git: Commit accepted changes with standard semantic message

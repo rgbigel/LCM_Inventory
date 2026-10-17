@@ -4,8 +4,8 @@
 .DESCRIPTION
   Module: Register-LcmDesktopDaemon
   Purpose: Manages the lifecycle of LcmDesktopDaemon:
-           1. -Install   : Configures automatic startup at user logon via HKCU Run registry
-                           and registers a self-healing User Scheduled Task (trigger: AtLogon).
+           1. -Install   : Registers a single user Scheduled Task that owns automatic
+                           startup at interactive logon and bounded restart-on-failure recovery.
            2. -Uninstall : Removes startup entries and scheduled task cleanly.
            3. -Status    : Checks registration health and queries live daemon status.
            4. -Start     : Starts the daemon in background immediately.
@@ -16,7 +16,7 @@
   Version: 10.0.0
   Date: 2026-10-13
 .PARAMETER Install
-  Installs user startup hooks for automatic launch at user logon.
+  Installs the user scheduled task for automatic launch at user logon.
 .PARAMETER Uninstall
   Removes user startup hooks and scheduled tasks.
 .PARAMETER Status
@@ -77,8 +77,8 @@ if ($Help -or (-not $Install -and -not $Uninstall -and -not $Status -and -not $S
   Write-Host "  pwsh tools/Register-LcmDesktopDaemon.ps1 [-Install] [-Uninstall] [-Status] [-Start] [-Stop] [-Port <int>] [-h]"
   Write-Host ""
   Write-Host "PARAMETERS:" -ForegroundColor Yellow
-  Write-Host "  -Install       : Configures auto-start at user logon."
-  Write-Host "  -Uninstall     : Removes auto-start hooks."
+  Write-Host "  -Install       : Configures the logon-owned daemon task."
+  Write-Host "  -Uninstall     : Removes the daemon task and obsolete startup entry."
   Write-Host "  -Status        : Displays registration and runtime status."
   Write-Host "  -Start         : Starts daemon in background now."
   Write-Host "  -Stop          : Stops running daemon."
@@ -104,9 +104,11 @@ if ($Status) {
   Write-Host " LCM DESKTOP DAEMON STATUS CHECK" -ForegroundColor Cyan
   Write-Host "==========================================================================" -ForegroundColor Cyan
 
-  # Check HKCU Run key
-  $runVal = (Get-ItemProperty -Path $runKeyPath -Name $runKeyName -ErrorAction SilentlyContinue).$runKeyName
-  Write-Host " HKCU Run Key       : $(if ($runVal) { "CONFIGURED ($runVal)" } else { "NOT CONFIGURED" })" -ForegroundColor $(if ($runVal) { 'Green' } else { 'Yellow' })
+  # Check legacy HKCU Run key
+  $runKeyProperties = Get-ItemProperty -Path $runKeyPath -ErrorAction SilentlyContinue
+  $runKeyProperty = if ($runKeyProperties) { $runKeyProperties.PSObject.Properties[$runKeyName] } else { $null }
+  $runVal = if ($runKeyProperty) { $runKeyProperty.Value } else { $null }
+  Write-Host " Legacy HKCU Run Key : $(if ($runVal) { "PRESENT - REMOVE ON INSTALL ($runVal)" } else { "ABSENT (expected)" })" -ForegroundColor $(if ($runVal) { 'Yellow' } else { 'Green' })
 
   # Check Scheduled Task
   $taskExists = $false
@@ -168,21 +170,20 @@ if ($Uninstall) {
 if ($Install) {
   Write-Host "Registering LCM Desktop Daemon for automatic logon startup..." -ForegroundColor Yellow
 
-  $commandLine = "pwsh.exe -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File `"$daemonScript`" -Port $Port"
+  # 1. Remove the legacy Run-key launcher so the scheduled task has one owner.
+  if (Test-Path -LiteralPath $runKeyPath) {
+    Remove-ItemProperty -Path $runKeyPath -Name $runKeyName -ErrorAction SilentlyContinue | Out-Null
+  }
+  Write-Host "  -> Removed legacy HKCU Run launcher (if present)." -ForegroundColor Green
 
-  # 1. Set HKCU Run Key
-  Set-ItemProperty -Path $runKeyPath -Name $runKeyName -Value $commandLine -Force | Out-Null
-  Write-Host "  -> Configured HKCU Run Key: $runKeyName" -ForegroundColor Green
-
-  # 2. Configure Scheduled Task with restart-on-failure and a bounded availability watchdog.
+  # 2. Configure one logon-owned daemon task with bounded restart-on-failure.
   try {
     $action = New-ScheduledTaskAction -Execute "pwsh.exe" -Argument "-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File `"$daemonScript`" -Port $Port"
     $logonTrigger = New-ScheduledTaskTrigger -AtLogOn -User $env:USERNAME
-    $watchdogTrigger = New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval (New-TimeSpan -Minutes 1) -RepetitionDuration (New-TimeSpan -Days 3650)
     $principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive -RunLevel Limited
     $settings = New-ScheduledTaskSettingsSet -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1) -ExecutionTimeLimit (New-TimeSpan -Days 365) -MultipleInstances IgnoreNew -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
-    Register-ScheduledTask -TaskName $taskName -Action $action -Trigger @($logonTrigger, $watchdogTrigger) -Principal $principal -Settings $settings -Force | Out-Null
-    Write-Host "  -> Configured task restart and one-minute availability watchdog: $taskName" -ForegroundColor Green
+    Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $logonTrigger -Principal $principal -Settings $settings -Force | Out-Null
+    Write-Host "  -> Configured single-owner logon task with bounded restart: $taskName" -ForegroundColor Green
   } catch {
     Write-Host "  -> Note: Scheduled task auto-restart registration skipped ($($_.Exception.Message))" -ForegroundColor Gray
   }
@@ -195,7 +196,7 @@ if ($Install) {
   Write-Host " LCM DESKTOP DAEMON REGISTERED SUCCESSFULLY" -ForegroundColor Green
   Write-Host " Port         : $Port" -ForegroundColor White
   Write-Host " Auto-Start   : Active at User Logon" -ForegroundColor White
-  Write-Host " Auto-Restart : Enabled (3 retries plus one-minute availability watchdog)" -ForegroundColor White
+  Write-Host " Auto-Restart : Enabled (3 bounded retries; no recurring watchdog launch)" -ForegroundColor White
   Write-Host " Script       : $daemonScript" -ForegroundColor White
   Write-Host "==========================================================================" -ForegroundColor Green
 }

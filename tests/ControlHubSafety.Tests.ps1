@@ -4,6 +4,7 @@ Describe 'Control Hub rendered-artifact safety' {
     $script:templatePath = Join-Path $script:repositoryRoot 'assets\CM_CONTROL_HUB.html'
     $script:rendererPath = Join-Path $script:repositoryRoot 'tools\Show-LcmControl.ps1'
     $script:daemonPath = Join-Path $script:repositoryRoot 'tools\LcmDesktopDaemon.ps1'
+    $script:proposalManagerPath = Join-Path $script:repositoryRoot 'modules\ProposalManager.psm1'
   }
 
   It 'disables daemon execution when the raw developer template is opened' {
@@ -15,13 +16,44 @@ Describe 'Control Hub rendered-artifact safety' {
     $template | Should -Match '(?s)async function executeDaemonCommand.*?if \(!IS_RENDERED_CONTROL_HUB\).*?return;.*?fetch\(DAEMON_URL \+ "/execute"'
   }
 
-  It 'requires an explicit request before reviving the desktop daemon' {
+  It 'records and automatically attempts one daemon recovery before local fallback' {
     $renderer = Get-Content -LiteralPath $script:rendererPath -Raw -Encoding UTF8
 
     $renderer | Should -Match '\[switch\]\$StartDaemon'
-    $renderer | Should -Match 'if \(-not \$daemonOnline -and \$StartDaemon\)'
-    $renderer | Should -Match 'Not starting a background session; opening local artifact fallback'
-    $renderer | Should -Not -Match 'if \(-not \$daemonOnline\) \{\s*\$daemonScript'
+    $renderer | Should -Match 'function Write-LcmDaemonOutageIncident'
+    $renderer | Should -Match "bug_id\s*=\s*'BUG-286'"
+    $renderer | Should -Match 'recovery_state\s*=\s*\$RecoveryState'
+    $renderer | Should -Match 'Write-LcmDaemonOutageIncident -DaemonPort \$daemonPort -RecoveryState ''detected'''
+    $renderer | Should -Match 'action\s*=\s*''start-daemon-once'''
+    $renderer | Should -Match 'for \(\$i = 0; \$i -lt 15; \$i\+\+\)'
+    $renderer | Should -Match 'Launching local fallback; consult incident receipt'
+  }
+
+  It 'refreshes visible Hub lifecycle data from a daemon completion event' {
+    $template = Get-Content -LiteralPath $script:templatePath -Raw -Encoding UTF8
+
+    $template | Should -Match 'function connectHubRefreshEvents\(\)'
+    $template | Should -Match 'new EventSource\(DAEMON_URL \+ "/hub-events"\)'
+    $template | Should -Match 'hubRefreshEventSource\.addEventListener\("refresh", \(\) => \{\s*window\.location\.reload\(\);'
+    $template | Should -Not -Match 'DAEMON_PROPOSAL_REFRESH_INTERVAL_MS'
+    $template | Should -Not -Match 'window\.setInterval'
+  }
+
+  It 'publishes a daemon display refresh from lifecycle completion' {
+    $daemon = Get-Content -LiteralPath $script:daemonPath -Raw -Encoding UTF8
+    $proposalManager = Get-Content -LiteralPath $script:proposalManagerPath -Raw -Encoding UTF8
+
+    $daemon | Should -Match 'class LcmControlHubRefreshBroker'
+    $daemon | Should -Match "GET /hub-events"
+    $daemon | Should -Match "POST /hub-refresh"
+    $daemon | Should -Match '\[LcmControlHubRefreshBroker\]::Publish'
+    $proposalManager | Should -Match 'function Update-LcmControlHubAfterCompletion'
+    $proposalManager | Should -Match "Invoke-RestMethod -Uri 'http://127\.0\.0\.1:9876/hub-refresh'"
+    $proposalManager | Should -Match 'if \(\$State -eq ''completed''\)'
+    $proposalManager | Should -Match 'Update-LcmControlHubAfterCompletion -ProposalId \$Id'
+    $proposalManager | Should -Match '\$completionBatch = \$mappedState -eq ''completed'' -and \$targetIds\.Count -gt 1'
+    $proposalManager | Should -Match 'Set-ProposalStore -Store \$completionStore'
+    $proposalManager | Should -Match 'Update-LcmControlHubAfterCompletion -ProposalId @\(\$updated'
   }
 
   It 'validates stale CRP and COH targets before command construction' {

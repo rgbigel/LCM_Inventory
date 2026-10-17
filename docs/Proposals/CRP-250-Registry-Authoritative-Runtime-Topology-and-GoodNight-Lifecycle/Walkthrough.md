@@ -16,5 +16,13 @@
   shared-read access.
 - GoodNight, SaveAll, and ArchiveLcmDaemonLogs use registry-backed launchers.
 
-The lifecycle remains in progress until every active runtime caller has been
-migrated and the GoodNight/GoodMorning contract is fully reviewed.
+The original lifecycle remained in progress while active runtime callers were
+being assessed. The remaining CMD and Set-GitRoot authority work is now owned
+by CRP-283.
+
+## Supersession
+
+CRP-250 is superseded by CRP-283 for the remaining machine-registry-only CMD
+launcher and Set-GitRoot authority migration. Its delivered resolver, core
+lifecycle adoption, retired `.lcm` topology cleanup, and GoodNight
+archive-before-publish behavior remain preserved historical outcomes.

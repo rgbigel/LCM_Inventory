@@ -513,14 +513,15 @@ $metadataOverrides = @{
     Category    = "Tool Analysis"
     Description = "Interactive HTML viewer analyzing all legacy batch scripts and modern PowerShell tool equivalents."
   }
-  "Invoke-BeyondCompareReview.ps1" = @{
-    ShortName   = "BeyondCompareReview"
-    Aliases     = @("BCR")
+  "Invoke-MacriumBcrReview.ps1" = @{
+    ShortName   = "BCR"
+    Aliases     = @("MacriumBcrReview")
     Audience    = "User"
     Role        = "ReviewGate"
+    NoExit      = $false
     Category    = "Proposal Review"
-    Description = "Launches 3-way Beyond Compare 5 session on Session 1 interactive desktop for staged proposals."
-    Example     = 'pwsh -File "LCM_Inventory\tools\Invoke-BeyondCompareReview.ps1"'
+    Description = "Opens the exact CRP/BUG Macrium BCR review using the writable baseline and the _LCM Beyond Compare profile."
+    Example     = 'BCR -CRP CRP-284 -RepositoryName LCM_Inventory'
   }
   "Invoke-AsusDebloater.ps1" = @{
     ShortName   = "AsusDebloater"
@@ -1343,5 +1344,3 @@ try {
   Write-ToolLog -Message " Log File  : $LogFile" -Level SUMMARY
   Write-ToolLog -Message "==========================================================================" -Level SUMMARY
 }
-
-

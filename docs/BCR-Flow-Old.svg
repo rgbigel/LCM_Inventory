@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="980" viewBox="0 0 1500 980" role="img" aria-labelledby="title description">
+  <title id="title">Retired Beyond Compare BCR flow</title>
+  <desc id="description">Function flow before removal of the Beyond Compare scratch staging system. Orange blocks identify code removed in the current Macrium BCR flow. Gray blocks collapse unchanged behavior.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#334155"/></marker>
+    <style>
+      .bg{fill:#f8fafc}.head{fill:#0f172a}.title{font:700 28px Arial,sans-serif;fill:#fff}.subtitle{font:16px Arial,sans-serif;fill:#cbd5e1}
+      .node{fill:#fff;stroke:#64748b;stroke-width:2;rx:10}.removed{fill:#fff7ed;stroke:#ea580c;stroke-width:3;rx:10}.retained{fill:#eff6ff;stroke:#2563eb;stroke-width:3;rx:10}.collapsed{fill:#f1f5f9;stroke:#94a3b8;stroke-width:2;stroke-dasharray:7 5;rx:10}
+      .label{font:700 17px Arial,sans-serif;fill:#0f172a}.text{font:14px Arial,sans-serif;fill:#334155}.small{font:13px Arial,sans-serif;fill:#475569}.orange{font:700 14px Arial,sans-serif;fill:#c2410c}.blue{font:700 14px Arial,sans-serif;fill:#1d4ed8}
+      .line{stroke:#334155;stroke-width:2.5;fill:none;marker-end:url(#arrow)}.dash{stroke:#64748b;stroke-width:2;fill:none;stroke-dasharray:7 5;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect class="bg" width="1500" height="980"/>
+  <rect class="head" width="1500" height="94"/>
+  <text class="title" x="42" y="42">OLD BCR FLOW - retired Git-export and junction staging</text>
+  <text class="subtitle" x="42" y="71">Source: deleted Invoke-BeyondCompareReview.ps1, BCompareBaseline.psm1, and Clear-BCReviewSession.ps1</text>
+  <rect x="1130" y="20" width="320" height="50" class="removed"/><text class="orange" x="1150" y="50">ORANGE = removed/replaced code</text>
+
+  <rect x="50" y="135" width="250" height="96" class="node"/>
+  <text class="label" x="75" y="169">Operator / Control Hub</text><text class="text" x="75" y="195">BCR request</text><text class="small" x="75" y="216">repo, CRP, base commit</text>
+
+  <rect x="375" y="120" width="330" height="126" class="collapsed"/>
+  <text class="label" x="400" y="153">Unchanged review preparation</text><text class="text" x="400" y="180">resolve repository and Git HEAD</text><text class="text" x="400" y="202">validate BCompare and filters</text><text class="small" x="400" y="225">cross-repository obligation checks</text>
+  <path class="line" d="M300 183 L375 183"/>
+
+  <rect x="790" y="115" width="315" height="138" class="removed"/>
+  <text class="orange" x="815" y="146">REMOVED: BCompareBaseline.psm1</text><text class="label" x="815" y="174">Get-BCompareBaselineDescriptor</text><text class="text" x="815" y="199">Export-BCompareBaseline</text><text class="small" x="815" y="222">Git commit copied to scratch staging</text>
+  <path class="line" d="M705 183 L790 183"/>
+
+  <rect x="1175" y="106" width="275" height="156" class="removed"/>
+  <text class="orange" x="1200" y="137">REMOVED: staging tree</text><text class="text" x="1200" y="165">scratch\BC_Review\&lt;CRP&gt;</text><text class="small" x="1200" y="188">or erroneous BC_Review_Temp</text><text class="text" x="1200" y="216">Baseline_&lt;repo&gt;_...</text><text class="small" x="1200" y="240">baseline manifest + metadata</text>
+  <path class="line" d="M1105 183 L1175 183"/>
+
+  <rect x="790" y="355" width="315" height="176" class="removed"/>
+  <text class="orange" x="815" y="386">REMOVED: live bridge creation</text><text class="text" x="815" y="414">New-Item -ItemType Junction</text><text class="text" x="815" y="440">Live_&lt;repo&gt; -&gt; live Git root</text><text class="text" x="815" y="466">ACTIVE_BASELINE -&gt; export</text><text class="text" x="815" y="492">ACTIVE_LIVE -&gt; live Git root</text><text class="small" x="815" y="516">and per-affected-repository bridges</text>
+  <path class="line" d="M1313 262 L1313 304 L947 304 L947 355"/>
+
+  <rect x="1175" y="375" width="275" height="136" class="removed"/>
+  <text class="orange" x="1200" y="405">REMOVED: session rewriting</text><text class="text" x="1200" y="432">Update-BCReviewSession</text><text class="small" x="1200" y="455">BCSessions.xml</text><text class="text" x="1200" y="480">LHS export / RHS junction</text>
+  <path class="line" d="M1105 443 L1175 443"/>
+
+  <rect x="790" y="625" width="315" height="112" class="removed"/>
+  <text class="orange" x="815" y="656">REMOVED: window dispatch</text><text class="text" x="815" y="684">daemon or desktop dispatcher</text><text class="text" x="815" y="709">BCompare.exe /solo named session</text>
+  <path class="line" d="M1313 511 L1313 570 L947 570 L947 625"/>
+
+  <rect x="1175" y="630" width="275" height="102" class="node"/>
+  <text class="label" x="1200" y="662">Operator review</text><text class="text" x="1200" y="689">Beyond Compare session</text><text class="small" x="1200" y="712">baseline export vs bridge</text>
+  <path class="line" d="M1105 681 L1175 681"/>
+
+  <rect x="375" y="770" width="330" height="120" class="collapsed"/>
+  <text class="label" x="400" y="802">Unchanged acceptance/commit block</text><text class="text" x="400" y="829">Submit-ReviewResult: stage RHS</text><text class="text" x="400" y="852">authorization, Git commit, receipt</text><text class="small" x="400" y="875">proposal lifecycle synchronization</text>
+  <path class="line" d="M1313 732 L1313 816 L705 816"/>
+
+  <rect x="790" y="770" width="315" height="120" class="removed"/>
+  <text class="orange" x="815" y="801">REMOVED legacy cleanup utility</text><text class="text" x="815" y="828">Clear-BCReviewSession.ps1</text><text class="small" x="815" y="851">remove named session; unlink junctions;</text><text class="small" x="815" y="873">delete retired scratch candidate</text>
+  <path class="dash" d="M705 830 L790 830"/>
+
+  <text class="small" x="50" y="945">Review focus: the deleted branch contained all Git-export staging, live-directory junctions, BCSessions.xml rewrites, and legacy scratch/session cleanup.</text>
+</svg>

@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="980" viewBox="0 0 1500 980" role="img" aria-labelledby="title description">
+  <title id="title">Current Macrium BCR flow</title>
+  <desc id="description">Function flow after removal of the Beyond Compare scratch staging system. Green blocks identify the active replacement flow. Gray blocks collapse unchanged behavior.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#334155"/></marker>
+    <style>
+      .bg{fill:#f8fafc}.head{fill:#0f172a}.title{font:700 28px Arial,sans-serif;fill:#fff}.subtitle{font:16px Arial,sans-serif;fill:#cbd5e1}
+      .node{fill:#fff;stroke:#64748b;stroke-width:2;rx:10}.active{fill:#ecfdf5;stroke:#059669;stroke-width:3;rx:10}.retained{fill:#eff6ff;stroke:#2563eb;stroke-width:3;rx:10}.collapsed{fill:#f1f5f9;stroke:#94a3b8;stroke-width:2;stroke-dasharray:7 5;rx:10}
+      .label{font:700 17px Arial,sans-serif;fill:#0f172a}.text{font:14px Arial,sans-serif;fill:#334155}.small{font:13px Arial,sans-serif;fill:#475569}.green{font:700 14px Arial,sans-serif;fill:#047857}.blue{font:700 14px Arial,sans-serif;fill:#1d4ed8}
+      .line{stroke:#334155;stroke-width:2.5;fill:none;marker-end:url(#arrow)}.dash{stroke:#64748b;stroke-width:2;fill:none;stroke-dasharray:7 5}
+    </style>
+  </defs>
+  <rect class="bg" width="1500" height="980"/>
+  <rect class="head" width="1500" height="94"/>
+  <text class="title" x="42" y="42">NEW BCR FLOW - Macrium baseline and actual live Git root</text>
+  <text class="subtitle" x="42" y="71">Source: Invoke-ProposalAction.ps1, Invoke-MacriumBcrReview.ps1, Invoke-MacriumDailyBcrBaseline.ps1, Submit-ReviewResult.ps1</text>
+  <rect x="1150" y="20" width="300" height="50" class="active"/><text class="green" x="1170" y="50">GREEN = active replacement code</text>
+
+  <rect x="50" y="135" width="270" height="102" class="node"/>
+  <text class="label" x="75" y="168">Operator / Control Hub</text><text class="text" x="75" y="195">BCR action for CRP/BUG</text><text class="small" x="75" y="218">cohort or obligation identity</text>
+
+  <rect x="390" y="120" width="340" height="132" class="retained"/>
+  <text class="blue" x="415" y="150">ACTIVE ENTRY: Invoke-ProposalAction</text><text class="text" x="415" y="178">resolve cohort / review obligations</text><text class="text" x="415" y="202">select repository and CRP identity</text><text class="small" x="415" y="226">move applicable members to in_review</text>
+  <path class="line" d="M320 186 L390 186"/>
+
+  <rect x="805" y="120" width="330" height="132" class="active"/>
+  <text class="green" x="830" y="150">Invoke-MacriumBcrReview</text><text class="text" x="830" y="178">validate proposal state and Git repo</text><text class="text" x="830" y="202">resolve requested base commit</text><text class="small" x="830" y="226">register changed LCM_AI obligation</text>
+  <path class="line" d="M730 186 L805 186"/>
+
+  <rect x="1190" y="108" width="260" height="156" class="active"/>
+  <text class="green" x="1215" y="139">Macrium baseline tool</text><text class="text" x="1215" y="166">Invoke-MacriumDailyBcrBaseline</text><text class="small" x="1215" y="190">find/reuse completed image</text><text class="small" x="1215" y="212">mount image at F:-I:</text><text class="small" x="1215" y="234">validate _LCM profile paths</text>
+  <path class="line" d="M1135 186 L1190 186"/>
+
+  <rect x="805" y="365" width="330" height="128" class="active"/>
+  <text class="green" x="830" y="396">Direct folder comparison</text><text class="text" x="830" y="424">BCompare.exe /solo _LCM</text><text class="text" x="830" y="448">LHS: mounted F:-I: Git_Repositories</text><text class="text" x="830" y="472">RHS: D:\Git_Repositories</text>
+  <path class="line" d="M1320 264 L1320 316 L970 316 L970 365"/>
+
+  <rect x="1190" y="375" width="260" height="108" class="node"/>
+  <text class="label" x="1215" y="407">Operator review</text><text class="text" x="1215" y="435">one _LCM Folder Compare</text><text class="small" x="1215" y="458">actual live Git root on RHS</text>
+  <path class="line" d="M1135 429 L1190 429"/>
+
+  <rect x="390" y="365" width="340" height="128" class="collapsed"/>
+  <text class="label" x="415" y="396">Retained lifecycle evidence</text><text class="text" x="415" y="424">write .lcm_review.json only</text><text class="small" x="415" y="448">scratch\BC_Review\&lt;CRP&gt;</text><text class="small" x="415" y="472">metadata; no baseline export or junction</text>
+  <path class="dash" d="M970 493 L970 535 L560 535 L560 493"/>
+
+  <rect x="390" y="625" width="340" height="128" class="collapsed"/>
+  <text class="label" x="415" y="657">Unchanged acceptance/commit block</text><text class="text" x="415" y="684">Submit-ReviewResult: stage RHS</text><text class="text" x="415" y="707">authorization, Git commit, receipt</text><text class="small" x="415" y="730">proposal lifecycle synchronization</text>
+  <path class="line" d="M1320 483 L1320 689 L730 689"/>
+
+  <rect x="805" y="625" width="330" height="128" class="active"/>
+  <text class="green" x="830" y="656">No obsolete cleanup branch</text><text class="text" x="830" y="684">no BCSessions.xml rewrite/removal</text><text class="text" x="830" y="707">no live junction unlink/delete</text><text class="small" x="830" y="730">no BC_Review_Temp generation</text>
+  <path class="dash" d="M730 689 L805 689"/>
+
+  <rect x="1190" y="625" width="260" height="128" class="retained"/>
+  <text class="blue" x="1215" y="656">Retained cleanup boundary</text><text class="text" x="1215" y="684">mounted baseline remains available</text><text class="small" x="1215" y="707">detach only through explicit</text><text class="small" x="1215" y="730">Macrium baseline workflow</text>
+  <path class="line" d="M1135 689 L1190 689"/>
+
+  <text class="small" x="50" y="945">Review focus: all removed staging code is replaced by a validated mounted baseline plus the existing _LCM profile; the live side is D:\Git_Repositories directly.</text>
+</svg>

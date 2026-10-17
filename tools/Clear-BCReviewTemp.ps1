@@ -1,3 +1,7 @@
+if ($env:LCM_DISABLE_BC_REVIEW -eq '1') {
+    Write-Host "BC_Review cleanup disabled via LCM_DISABLE_BC_REVIEW" -ForegroundColor Yellow
+    return
+}
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [Parameter(Mandatory = $false, HelpMessage = 'Purge all review folders (Explorer is skipped in -All mode)')]
