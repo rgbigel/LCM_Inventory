@@ -40,3 +40,6 @@ The head of an open cohort is its operational leader. A lifecycle action selecte
 Hub status/action output must remove ANSI terminal escape sequences and present a concise action summary before optional technical detail. A review result must identify its actual scope as either **Individual** or **Cohort**. A cohort result must list every declared member and each member's gate outcome; an individual result must never be labelled “BCR Cohort”.
 
 When an acceptance cannot proceed because an open cohort member has not reached `in_review`, the failure must identify that member and direct the operator to the currently visible cohort action, for example **Open Review COH-288**. It must not recommend an unavailable generic `Complete` action. **ACCEPTED: COH** must be the offered and enabled acceptance action only after every cohort member reaches `in_review`.
+
+## 8. Open Cohort Member Visibility
+Every declared member of an open cohort must remain visible regardless of individual state. A completed, failed, held, or rejected member must display its current state and outcome until the cohort is explicitly resolved, closed, or its membership changes.

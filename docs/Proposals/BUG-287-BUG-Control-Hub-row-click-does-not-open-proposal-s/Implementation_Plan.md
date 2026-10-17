@@ -33,6 +33,11 @@ BUG-287 captures the Control Hub document-navigation defect for review; implemen
 - Enable **ACCEPTED: COH** only when every declared member is `in_review`.
 - Implement this component atomically with Component 3: the `: <attempted action>` status text, header/row alignment, ANSI removal, and accurate scope rendering are one operator-facing repair and must be validated together.
 
+### Component 6: Preserve open cohort membership visibility
+- Render every declared member of an open cohort without filtering by individual proposal state.
+- Display each member's state, gate status, and blocking/completion outcome.
+- Verify that individually completed, blocked, and in-review members remain visible until explicit cohort resolution, closure, or membership change.
+
 ## 3. Verification Plan
 - Add focused Control Hub tests for specification-first navigation and fallback behavior.
 - Verify the clicked identity and the opened document path match.
