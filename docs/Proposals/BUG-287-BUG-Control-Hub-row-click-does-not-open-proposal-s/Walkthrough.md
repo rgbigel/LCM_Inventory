@@ -8,4 +8,5 @@ BUG-287 records the missing specification-first behavior for Control Hub CRP and
 - Reproduced at Gate 2 with BUG-286: its bundled `Specification.md` is compiled into the rendered Hub cache and `showProposalSpec(286)` can resolve it, but clicking the BUG row invokes only `selectItemTarget('CRP:286')`; it does not invoke `showProposalSpec(286)`.
 - Confirmed: `openOriginalProposalInEditor(...)` explicitly declines to use `Specification.md` as a fallback.
 - Reproduced: the in-page Refresh fetches `/proposals` and redraws proposal rows but does not replace `docsCache`; a Zen browser refresh reloads `/hub`, replacing the embedded `RAW_DOCS_CACHE`, which is why it then displayed BUG-286's specification.
+- Requirement recorded: a specification edited and saved through `Edit in Notepad++` must render the Hub artifact before completion is reported, but must not force a browser reload.
 - Lifecycle state: held during the operator-led LCM on-disk review. No implementation or tests have been executed.

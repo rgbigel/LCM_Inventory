@@ -27,3 +27,5 @@ When this held BUG is implemented, `Show Specification` must be the first action
 
 ## 4. Document Refresh Consistency
 The in-page Refresh action must refresh the compiled proposal-document cache, or explicitly report that document content remains stale. It must not appear equivalent to a browser refresh while updating only proposal rows.
+
+An operator save made through `Edit in Notepad++` must trigger the same backend Hub-artifact render as a managed document update. It must not force a browser reload; the operator retains control of that refresh.

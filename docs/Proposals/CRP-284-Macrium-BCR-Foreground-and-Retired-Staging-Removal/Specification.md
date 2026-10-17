@@ -55,7 +55,7 @@ rewinding it to an earlier repository state.
    explicit operator `DOIT`, `FIX`, or `IMMEDIATELY` expressions may request
    their corresponding non-default behavior.
 10. `FIX` and `IMMEDIATELY` MUST remain exact-identity, critical-case
-    mechanisms; neither may bypass Gate 2 review.
+    mechanisms; only `fix` may bypass Gate 2 review.
 11. A real behavioral or authoritative-documentation correction MUST advance
     its affected component version by patch while preserving major parity.
 12. Publish normal, change/re-entry, and emergency/switch code-traversal

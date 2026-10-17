@@ -13,6 +13,7 @@ BUG-287 captures the Control Hub document-navigation defect for review; implemen
 ### Component 2: Refresh document content consistently
 - Ensure the in-page Refresh updates the compiled document cache used by `Show Specification`, or clearly states that a browser reload is required.
 - Verify that an updated specification is visible after in-page Refresh without relying on a separate browser refresh.
+- On an `Edit in Notepad++` document save, render the backend Hub artifact before reporting the save outcome, without sending a browser reload event.
 
 ## 3. Verification Plan
 - Add focused Control Hub tests for specification-first navigation and fallback behavior.
