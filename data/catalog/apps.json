@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace App-Centric Architecture Catalog",
-  "updated_at": "2026-10-05T15:37:19+02:00",
+  "updated_at": "2026-10-18T18:43:33+02:00",
   "total_apps": 1,
   "apps": [
     {

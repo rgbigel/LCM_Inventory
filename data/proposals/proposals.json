@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-10-17T23:19:15+02:00",
-  "review_granularity": "coarse",
-  "lcm_mode": "paused",
-  "last_proposal_id": 289,
+  "updated_at": "2026-10-18T22:38:33+02:00",
+  "review_granularity": "tight",
+  "lcm_mode": "active",
+  "last_proposal_id": 297,
   "proposals": [
     {
       "id": 261,
@@ -11809,103 +11809,6 @@
       "disposition": "published"
     },
     {
-      "id": 271,
-      "crp_id": "CRP-271",
-      "timestamp": "2026-10-13 19:26:17",
-      "title": "LCM Beta 10.0.0 Pass 1 Publication - LCM_Backup",
-      "origin_repo": "LCM_Backup",
-      "cr_id": "CRP-271",
-      "app_id": null,
-      "primary_app": null,
-      "affected_apps": null,
-      "state": "completed",
-      "bundle_id": "unassigned",
-      "bundle_dir": "docs/Proposals/CRP-271-LCM-Beta-10-0-0-Pass-1-Publication-LCM-Backup",
-      "docs": {
-        "specification": "Specification.md",
-        "plan": "Implementation_Plan.md",
-        "walkthrough": "Walkthrough.md"
-      },
-      "commit_sha": null,
-      "github_url": null,
-      "author": "Copilot",
-      "details": "Repository-specific release record for the approved LCM Beta 10.0.0 Pass 1 alignment. Applies the validated 10.0.0 version and timestamp normalization to LCM_Backup.",
-      "priority": 5,
-      "plan_path": "docs/Proposals/CRP-271-LCM-Beta-10-0-0-Pass-1-Publication-LCM-Backup/Implementation_Plan.md",
-      "walkthrough_path": "docs/Proposals/CRP-271-LCM-Beta-10-0-0-Pass-1-Publication-LCM-Backup/Walkthrough.md",
-      "state_history": [
-        {
-          "from_state": "suggested",
-          "state": "in_progress",
-          "timestamp": "2026-10-13 19:26:44",
-          "user": "rgbig",
-          "note": "Beta 10 alignment completed.",
-          "cohort_id": "",
-          "cohort_gate": "",
-          "synchronization_outcome": ""
-        },
-        {
-          "from_state": "in_progress",
-          "state": "verified",
-          "timestamp": "2026-10-13 19:26:46",
-          "user": "rgbig",
-          "note": "Beta 10 release verification completed.",
-          "cohort_id": "",
-          "cohort_gate": "",
-          "synchronization_outcome": ""
-        },
-        {
-          "from_state": "verified",
-          "state": "in_review",
-          "timestamp": "2026-10-13 19:30:33",
-          "user": "rgbig",
-          "note": "Complete Beta 10.0.0 Pass 1 cross-repository BCR.",
-          "cohort_id": "COH-274",
-          "cohort_gate": "BCR",
-          "synchronization_outcome": "synchronized"
-        },
-        {
-          "from_state": "in_review",
-          "state": "completed",
-          "timestamp": "2026-10-13 20:24:07",
-          "user": "rgbig",
-          "note": "Cohort COH-274 accepted review completed.",
-          "cohort_id": "COH-274",
-          "cohort_gate": "Completion",
-          "synchronization_outcome": "synchronized"
-        }
-      ],
-      "dates": {
-        "in_progress": "2026-10-13 19:26:44",
-        "verified": "2026-10-13 19:26:46",
-        "in_review": "2026-10-13 19:30:33",
-        "completed": "2026-10-13 20:24:07"
-      },
-      "flow_mode": "doit",
-      "always_proceed": true,
-      "cohort_gate_last_outcome": "no_op",
-      "cohort_gate_last_gate": "BCR",
-      "bcr_initiated_at": "2026-10-13 19:30:33",
-      "bcr_scope": "COH-274",
-      "bcr_disposition": "Completed",
-      "bcr_disposition_at": "2026-10-13 20:24:07",
-      "bcr_disposition_notes": "BCR Accepted, Commit - disk and Beyond Compare authoritative recovery",
-      "bcr_resolution_receipt": "D:\\Git_Repositories\\LCM_Inventory\\scratch\\BC_Review\\COH-274\\cohort-resolution.json",
-      "bcr_review_receipt": "D:\\Git_Repositories\\LCM_Inventory\\data\\reviews\\review_LCM_Backup_20261013_193145.json",
-      "bcr_audit": [
-        {
-          "disposition": "Completed",
-          "timestamp": "2026-10-13 20:24:07",
-          "cohort_id": "COH-274",
-          "resolution_receipt": "D:\\Git_Repositories\\LCM_Inventory\\scratch\\BC_Review\\COH-274\\cohort-resolution.json",
-          "review_receipt": "D:\\Git_Repositories\\LCM_Inventory\\data\\reviews\\review_LCM_Backup_20261013_193145.json",
-          "note": "BCR Accepted, Commit - disk and Beyond Compare authoritative recovery"
-        }
-      ],
-      "progress_state": "completed",
-      "disposition": "completed"
-    },
-    {
       "id": 272,
       "crp_id": "CRP-272",
       "timestamp": "2026-10-13 19:26:17",
@@ -12239,7 +12142,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "in_progress",
+      "state": "completed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-275-Tool-Explorer-Filter-Pattern-Matching",
       "docs": {
@@ -12254,8 +12157,6 @@
       "priority": 5,
       "plan_path": "docs/Proposals/CRP-275-Tool-Explorer-Filter-Pattern-Matching/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-275-Tool-Explorer-Filter-Pattern-Matching/Walkthrough.md",
-      "progress_state": "in_progress",
-      "disposition": null,
       "state_history": [
         {
           "from_state": "suggested",
@@ -12266,13 +12167,67 @@
           "cohort_id": "",
           "cohort_gate": "",
           "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-10-18 22:23:23",
+          "user": "rgbig",
+          "note": "Operator accepted COH-275 completion after validated verification.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-10-18 22:23:31",
+          "user": "rgbig",
+          "note": "Operator accepted COH-275 for BCR and atomic completion.",
+          "cohort_id": "COH-275",
+          "cohort_gate": "BCR",
+          "synchronization_outcome": "synchronized"
+        },
+        {
+          "from_state": "in_review",
+          "state": "completed",
+          "timestamp": "2026-10-18 22:23:45",
+          "user": "rgbig",
+          "note": "Cohort COH-275 accepted review completed.",
+          "cohort_id": "COH-275",
+          "cohort_gate": "Completion",
+          "synchronization_outcome": "synchronized"
         }
       ],
       "dates": {
-        "in_progress": "2026-10-15 18:35:39"
+        "in_progress": "2026-10-15 18:35:39",
+        "verified": "2026-10-18 22:23:23",
+        "in_review": "2026-10-18 22:23:31",
+        "completed": "2026-10-18 22:23:45"
       },
       "flow_mode": "doit",
-      "always_proceed": true
+      "always_proceed": true,
+      "cohort_gate_last_outcome": "no_op",
+      "cohort_gate_last_gate": "BCR",
+      "bcr_initiated_at": "2026-10-18 22:23:31",
+      "bcr_scope": "COH-275",
+      "bcr_disposition": "Completed",
+      "bcr_disposition_at": "2026-10-18 22:23:45",
+      "bcr_disposition_notes": "Operator accepted COH-275 atomic completion after BCR.",
+      "bcr_resolution_receipt": "D:\\Git_Repositories\\LCM_Inventory\\scratch\\BC_Review\\COH-275\\cohort-resolution.json",
+      "bcr_review_receipt": "D:\\Git_Repositories\\LCM_Inventory\\data\\reviews\\review_LCM_Inventory_20261018_222345.json",
+      "bcr_audit": [
+        {
+          "disposition": "Completed",
+          "timestamp": "2026-10-18 22:23:45",
+          "cohort_id": "COH-275",
+          "resolution_receipt": "D:\\Git_Repositories\\LCM_Inventory\\scratch\\BC_Review\\COH-275\\cohort-resolution.json",
+          "review_receipt": "D:\\Git_Repositories\\LCM_Inventory\\data\\reviews\\review_LCM_Inventory_20261018_222345.json",
+          "note": "Operator accepted COH-275 atomic completion after BCR."
+        }
+      ],
+      "progress_state": "completed",
+      "disposition": "completed"
     },
     {
       "id": 276,
@@ -12623,7 +12578,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "in_progress",
+      "state": "completed",
       "bundle_id": "CRP-278-GoodNIGHT-Save-All-Receipt-and-GoodMorning-Recover",
       "bundle_dir": "docs/Proposals/CRP-278-GoodNIGHT-Save-All-Receipt-and-GoodMorning-Recover",
       "docs": {
@@ -12638,8 +12593,6 @@
       "priority": 5,
       "plan_path": "docs/Proposals/CRP-278-GoodNIGHT-Save-All-Receipt-and-GoodMorning-Recover/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-278-GoodNIGHT-Save-All-Receipt-and-GoodMorning-Recover/Walkthrough.md",
-      "progress_state": "in_progress",
-      "disposition": null,
       "state_history": [
         {
           "from_state": "suggested",
@@ -12650,13 +12603,53 @@
           "cohort_id": "",
           "cohort_gate": "",
           "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-10-18 20:15:04",
+          "user": "rgbig",
+          "note": "Implemented GoodNIGHT Save All receipt contract and GoodMorning recovery gate. GoodNightReceipt.Tests.ps1 passed 2/2; AST passed for module and both lifecycle tools; Test-WorkspaceReadiness.ps1 reported OK; live GoodMorning -Auto check returned exit 3 with the required missing-receipt recovery instruction.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-10-18 20:27:31",
+          "user": "rgbig",
+          "note": "Macrium BCR review reused for CRP-278.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_review",
+          "state": "completed",
+          "timestamp": "2026-10-18 20:29:29",
+          "user": "rgbig",
+          "note": "Review completed and committed (de142e7).",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "dates": {
-        "in_progress": "2026-10-15 19:46:42"
+        "in_progress": "2026-10-15 19:46:42",
+        "verified": "2026-10-18 20:15:04",
+        "in_review": "2026-10-18 20:27:31",
+        "completed": "2026-10-18 20:29:29"
       },
       "flow_mode": "doit",
-      "always_proceed": true
+      "always_proceed": true,
+      "bcr_initiated_at": "2026-10-18 20:27:31",
+      "bcr_scope": "CRP-278",
+      "bcr_disposition": "Complete",
+      "bcr_disposition_at": "2026-10-18 20:29:29",
+      "bcr_disposition_notes": "Operator accepted the CRP-278 visual BCR: no remaining differences were visible after copying reviewed D: content to the F: baseline.",
+      "progress_state": "completed",
+      "disposition": "completed"
     },
     {
       "id": 279,
@@ -12841,7 +12834,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "verified",
+      "state": "completed",
       "bundle_id": "CRP-282",
       "bundle_dir": "docs/Proposals/CRP-282-GOAL-FIRST-Mode-Governance-and-Documentation-Adapt",
       "docs": {
@@ -12928,16 +12921,34 @@
           "cohort_id": "",
           "cohort_gate": "",
           "synchronization_outcome": ""
+        },
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-10-18 17:58:36",
+          "user": "rgbig",
+          "note": "Macrium BCR review reused for CRP-282.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_review",
+          "state": "completed",
+          "timestamp": "2026-10-18 17:58:48",
+          "user": "rgbig",
+          "note": "Review completed and committed (8ff4c46).",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "dates": {
-        "in_review": "2026-10-17 22:55:39",
         "in_progress": "2026-10-17 23:19:15",
-        "verified": "2026-10-17 23:19:15"
+        "verified": "2026-10-17 23:19:15",
+        "in_review": "2026-10-18 17:58:36",
+        "completed": "2026-10-18 17:58:48"
       },
-      "bcr_initiated_at": "2026-10-17 22:55:39",
-      "bcr_disposition": null,
-      "bcr_scope": "CRP-282",
       "specification_acceptance": {
         "accepted_at": "2026-10-17T23:08:50.1311047+02:00",
         "accepted_by": "rgbig",
@@ -12945,8 +12956,13 @@
         "specification_path": "docs/Proposals/CRP-282-GOAL-FIRST-Mode-Governance-and-Documentation-Adapt/Specification.md",
         "scope": "Formal operator acceptance; Implementation_Plan.md and Walkthrough.md are supplementary information."
       },
-      "progress_state": "verification",
-      "disposition": null
+      "bcr_initiated_at": "2026-10-18 17:58:36",
+      "bcr_scope": "CRP-282",
+      "bcr_disposition": "Completed",
+      "bcr_disposition_at": "2026-10-18 17:58:48",
+      "bcr_disposition_notes": "",
+      "progress_state": "completed",
+      "disposition": "completed"
     },
     {
       "id": 283,
@@ -13235,7 +13251,7 @@
       "app_id": null,
       "primary_app": "LCM Control Hub",
       "affected_apps": "LCM Control Hub",
-      "state": "in_review",
+      "state": "completed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/BUG-287-BUG-Control-Hub-row-click-does-not-open-proposal-s",
       "docs": {
@@ -13378,15 +13394,66 @@
           "cohort_id": "",
           "cohort_gate": "",
           "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_review",
+          "state": "completed",
+          "timestamp": "2026-10-18 17:58:26",
+          "user": "rgbig",
+          "note": "Review completed and committed (fa1fb7e).",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "completed",
+          "state": "in_progress",
+          "timestamp": "2026-10-18 20:34:55",
+          "user": "rgbig",
+          "note": "Operator observed the unmet BUG-287 ordering requirement in the active Control Hub and directed it to proceed as a cohort with CRP-275.",
+          "revision": 2,
+          "reinstatement": true,
+          "concrete_change_requests": true,
+          "changes": "Move Show Specification to the first proposal-dropdown action before Lifecycle, as required by BUG-287 section 3; preserve explicit item targeting and document actions."
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-10-18 22:23:24",
+          "user": "rgbig",
+          "note": "Operator accepted COH-275 completion after validated verification.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-10-18 22:23:31",
+          "user": "rgbig",
+          "note": "Operator accepted COH-275 for BCR and atomic completion.",
+          "cohort_id": "COH-275",
+          "cohort_gate": "BCR",
+          "synchronization_outcome": "synchronized"
+        },
+        {
+          "from_state": "in_review",
+          "state": "completed",
+          "timestamp": "2026-10-18 22:23:45",
+          "user": "rgbig",
+          "note": "Cohort COH-275 accepted review completed.",
+          "cohort_id": "COH-275",
+          "cohort_gate": "Completion",
+          "synchronization_outcome": "synchronized"
         }
       ],
       "dates": {
         "suggested": "2026-10-17 20:50:29",
         "held": "2026-10-17 20:58:49",
-        "completed": "2026-10-17 22:24:13",
-        "in_progress": "2026-10-17 22:39:02",
-        "verified": "2026-10-17 22:41:09",
-        "in_review": "2026-10-17 22:47:25"
+        "in_progress": "2026-10-18 20:34:55",
+        "verified": "2026-10-18 22:23:24",
+        "in_review": "2026-10-18 22:23:31",
+        "completed": "2026-10-18 22:23:45"
       },
       "flow_mode": "doit",
       "always_proceed": true,
@@ -13399,30 +13466,30 @@
         "from_state": "completed",
         "restored_state": "in_review"
       },
+      "state_reason": "Reinstated with concrete correction requests; implementation, verification, and exact-identity BCR are required.",
+      "reinstatement_revision": 2,
+      "reinstatement_changes": "Move Show Specification to the first proposal-dropdown action before Lifecycle, as required by BUG-287 section 3; preserve explicit item targeting and document actions.",
       "cohort_gate_last_outcome": "no_op",
       "cohort_gate_last_gate": "BCR",
-      "bcr_disposition_at": "2026-10-17 22:24:12",
-      "bcr_disposition_notes": "Operator authorized atomic acceptance of restored COH-288. One reviewed LCM_Inventory commit records the shared BCR result and completes BUG-287 and BUG-288 together.",
-      "bcr_resolution_receipt": "D:\\Git_Repositories\\LCM_Inventory\\scratch\\BC_Review\\COH-288\\cohort-resolution.json",
-      "bcr_review_receipt": "D:\\Git_Repositories\\LCM_Inventory\\data\\reviews\\review_LCM_Inventory_20261017_222412.json",
+      "bcr_initiated_at": "2026-10-18 22:23:31",
+      "bcr_scope": "COH-275",
+      "bcr_disposition": "Completed",
+      "bcr_disposition_at": "2026-10-18 22:23:45",
+      "bcr_disposition_notes": "Operator accepted COH-275 atomic completion after BCR.",
+      "bcr_resolution_receipt": "D:\\Git_Repositories\\LCM_Inventory\\scratch\\BC_Review\\COH-275\\cohort-resolution.json",
+      "bcr_review_receipt": "D:\\Git_Repositories\\LCM_Inventory\\data\\reviews\\review_LCM_Inventory_20261018_222345.json",
       "bcr_audit": [
         {
           "disposition": "Completed",
-          "timestamp": "2026-10-17 22:24:12",
-          "cohort_id": "COH-288",
-          "resolution_receipt": "D:\\Git_Repositories\\LCM_Inventory\\scratch\\BC_Review\\COH-288\\cohort-resolution.json",
-          "review_receipt": "D:\\Git_Repositories\\LCM_Inventory\\data\\reviews\\review_LCM_Inventory_20261017_222412.json",
-          "note": "Operator authorized atomic acceptance of restored COH-288. One reviewed LCM_Inventory commit records the shared BCR result and completes BUG-287 and BUG-288 together."
+          "timestamp": "2026-10-18 22:23:45",
+          "cohort_id": "COH-275",
+          "resolution_receipt": "D:\\Git_Repositories\\LCM_Inventory\\scratch\\BC_Review\\COH-275\\cohort-resolution.json",
+          "review_receipt": "D:\\Git_Repositories\\LCM_Inventory\\data\\reviews\\review_LCM_Inventory_20261018_222345.json",
+          "note": "Operator accepted COH-275 atomic completion after BCR."
         }
       ],
-      "state_reason": "Reinstated with concrete correction requests; implementation, verification, and exact-identity BCR are required.",
-      "reinstatement_revision": 1,
-      "reinstatement_changes": "Implement the unfulfilled Notepad++ save contract: a proposal-document save must request a backend Hub render without forcing a browser reload, and the in-page refresh path must obtain the refreshed document cache. Reproduced with CRP-282 Implementation_Plan.md: saved source was correct while the open Hub modal retained the prior embedded plan.",
-      "progress_state": "verification",
-      "disposition": null,
-      "bcr_scope": "BUG-287",
-      "bcr_initiated_at": "2026-10-17 22:47:51",
-      "bcr_disposition": null
+      "progress_state": "completed",
+      "disposition": "completed"
     },
     {
       "id": 288,
@@ -13599,6 +13666,372 @@
       "always_proceed": true,
       "plan_path": "docs/Proposals/BUG-289-BUG-Control-Hub-governance-switch-does-not-reflect/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/BUG-289-BUG-Control-Hub-governance-switch-does-not-reflect/Walkthrough.md"
+    },
+    {
+      "id": 290,
+      "crp_id": "CRP-290",
+      "timestamp": "2026-10-18 18:34:18",
+      "title": "OneDriveMaintenance Repository Consolidation and Safe Client Maintenance Apps",
+      "origin_repo": "OneDriveMaintenance",
+      "cr_id": "CRP-290",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "completed",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/CRP-290-OneDriveMaintenance-Repository-Consolidation-and-S",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "Copilot",
+      "details": "Create a governed OneDriveMaintenance repository that consolidates valid legacy diagnostic intent into separate safe Apps for read-only diagnosis, explicitly authorized local settings/cache purging, and client relaunch. Retire unsafe, duplicate, or dead legacy entry points rather than migrating them.",
+      "priority": 5,
+      "plan_path": "docs/Proposals/CRP-290-OneDriveMaintenance-Repository-Consolidation-and-S/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-290-OneDriveMaintenance-Repository-Consolidation-and-S/Walkthrough.md",
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-10-18 19:17:23",
+          "user": "rgbig",
+          "note": "Operator accepted CRP-290 and directed DOIT; implementation already exists and will be revalidated before BCR.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-10-18 19:17:38",
+          "user": "rgbig",
+          "note": "OneDriveMaintenance AST and manifest validation passed; focused Pester suite passed 3/3.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-10-18 19:18:04",
+          "user": "rgbig",
+          "note": "CRP-290 initial-repository BCR after validation; compare live new repository against absent F: baseline scope.",
+          "cohort_id": "",
+          "cohort_gate": "BCR",
+          "synchronization_outcome": "synchronized"
+        },
+        {
+          "from_state": "in_review",
+          "state": "completed",
+          "timestamp": "2026-10-18 19:44:37",
+          "user": "rgbig",
+          "note": "Review completed and committed (54db4f7).",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "in_progress": "2026-10-18 19:17:23",
+        "verified": "2026-10-18 19:17:38",
+        "in_review": "2026-10-18 19:18:04",
+        "completed": "2026-10-18 19:44:37"
+      },
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "bcr_initiated_at": "2026-10-18 19:18:04",
+      "bcr_scope": "CRP-290",
+      "bcr_disposition": "Complete",
+      "bcr_disposition_at": "2026-10-18 19:44:37",
+      "bcr_disposition_notes": "Operator accepted the visual BCR review; focused OneDriveMaintenance safety tests passed 3/3 before the initial commit.",
+      "progress_state": "completed",
+      "disposition": "completed"
+    },
+    {
+      "id": 291,
+      "crp_id": "BUG-291",
+      "timestamp": "2026-10-18 18:34:53",
+      "title": "[BUG] Structural implementation can proceed without a proposal-first Gate 1 record",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "BUG-291",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "completed",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/BUG-291-BUG-Structural-implementation-can-proceed-without",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "Copilot",
+      "details": "Closed proposal-first Gate 1 control gap: official new-app requires explicit proposal identity with matching repository, eligible state, and specification bundle; no inferred or Force bypass. See document_summary and bundle.",
+      "priority": 5,
+      "plan_path": "docs/Proposals/BUG-291-BUG-Structural-implementation-can-proceed-without/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/BUG-291-BUG-Structural-implementation-can-proceed-without/Walkthrough.md",
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-10-18 18:35:55",
+          "user": "rgbig",
+          "note": "Operator explicitly directed the governance gap to be fixed as a separate BUG; proceeding with BUG-291 enforcement implementation.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-10-18 18:44:22",
+          "user": "rgbig",
+          "note": "BUG-291 proposal-first App-creation guard implemented; direct negative checks passed; PowerShell AST validation passed; ProposalManager.Tests.ps1 passed 21/21; Pester proposal artifacts removed.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-10-18 19:02:47",
+          "user": "rgbig",
+          "note": "Operator completed and ACCEPTED the visual BCR review; F: matches live D: across LCM repositories.",
+          "cohort_id": "",
+          "cohort_gate": "BCR",
+          "synchronization_outcome": "synchronized"
+        },
+        {
+          "from_state": "in_review",
+          "state": "completed",
+          "timestamp": "2026-10-18 19:02:57",
+          "user": "rgbig",
+          "note": "Review completed and committed (ea3e886).",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "in_progress": "2026-10-18 18:35:55",
+        "verified": "2026-10-18 18:44:22",
+        "in_review": "2026-10-18 19:02:47",
+        "completed": "2026-10-18 19:02:57"
+      },
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "bcr_initiated_at": "2026-10-18 19:02:47",
+      "bcr_scope": "BUG-291",
+      "bcr_disposition": "Complete",
+      "bcr_disposition_at": "2026-10-18 19:02:56",
+      "bcr_disposition_notes": "Operator ACCEPTED the visual BCR review of all LCM deltas; mounted F: baseline matches live D: for LCM repositories.",
+      "progress_state": "completed",
+      "disposition": "completed",
+      "document_summary": {
+        "intent": "Close the proposal-first Gate 1 control gap for official App scaffolding.",
+        "specification_requirements": [
+          "Require explicit proposal identity.",
+          "Require matching origin repository and specification bundle.",
+          "Reject suggested or missing proposal states.",
+          "Do not infer a proposal or allow a Force bypass."
+        ],
+        "implementation_remediation": [
+          "Added Assert-LcmProposalImplementationEligibility.",
+          "Required -ProposalId for Invoke-ProposalAction -Action new-app."
+        ],
+        "verification": {
+          "proposal_manager_tests": "21 passed, 0 failed",
+          "ast": "passed",
+          "bcr": "accepted",
+          "commit": "ea3e886"
+        },
+        "closure_control": "The proposal closes only after remediation evidence, accepted BCR, and commit. Future discrepancies require a new or linked proposal."
+      }
+    },
+    {
+      "id": 292,
+      "crp_id": "CRP-292",
+      "timestamp": "2026-10-18 22:38:33",
+      "title": "Standard Display Atom and Adoption Programme",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-292",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "suggested",
+      "progress_state": "undecided",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/CRP-292-Standard-Display-Atom-and-Adoption-Programme",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig",
+      "details": "Umbrella Goal: establish one reusable, governed Standard Display system across LCM web, native, and console presentation surfaces without copying ShowCM wholesale or advancing implementation.",
+      "priority": 5,
+      "disposition": null,
+      "flow_mode": "standard",
+      "always_proceed": false,
+      "plan_path": "docs/Proposals/CRP-292-Standard-Display-Atom-and-Adoption-Programme/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-292-Standard-Display-Atom-and-Adoption-Programme/Walkthrough.md"
+    },
+    {
+      "id": 293,
+      "crp_id": "CRP-293",
+      "timestamp": "2026-10-18 22:38:33",
+      "title": "ShowCM Typed Controller Reference Completion",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-293",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "suggested",
+      "progress_state": "undecided",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/CRP-293-ShowCM-Typed-Controller-Reference-Completion",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig",
+      "details": "First implementation path: make the completed CRP-266 architecture operational in ShowCM through typed controller contracts and reusable front-end action atoms. This is the required reference predecessor for later Standard Display migrations.",
+      "priority": 5,
+      "disposition": null,
+      "flow_mode": "standard",
+      "always_proceed": false,
+      "plan_path": "docs/Proposals/CRP-293-ShowCM-Typed-Controller-Reference-Completion/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-293-ShowCM-Typed-Controller-Reference-Completion/Walkthrough.md"
+    },
+    {
+      "id": 294,
+      "crp_id": "CRP-294",
+      "timestamp": "2026-10-18 22:38:33",
+      "title": "Read-Only Standard Display Shell and Evidence Migration",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-294",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "suggested",
+      "progress_state": "undecided",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/CRP-294-Read-Only-Standard-Display-Shell-and-Evidence-Migr",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig",
+      "details": "Adopt the Standard Display shell and read-only atoms for analysis, rules, readiness, and folder-analysis web displays after the ShowCM controller reference is accepted.",
+      "priority": 5,
+      "disposition": null,
+      "flow_mode": "standard",
+      "always_proceed": false,
+      "plan_path": "docs/Proposals/CRP-294-Read-Only-Standard-Display-Shell-and-Evidence-Migr/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-294-Read-Only-Standard-Display-Shell-and-Evidence-Migr/Walkthrough.md"
+    },
+    {
+      "id": 295,
+      "crp_id": "CRP-295",
+      "timestamp": "2026-10-18 22:38:33",
+      "title": "Interactive Table Standard Display Migration",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-295",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "suggested",
+      "progress_state": "undecided",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/CRP-295-Interactive-Table-Standard-Display-Migration",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig",
+      "details": "Adopt reusable table, filter, selection, modal, and async-action atoms for Tool Explorer, Workspace Inventory, and HA Inventory after the ShowCM controller reference is accepted.",
+      "priority": 5,
+      "disposition": null,
+      "flow_mode": "standard",
+      "always_proceed": false,
+      "plan_path": "docs/Proposals/CRP-295-Interactive-Table-Standard-Display-Migration/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-295-Interactive-Table-Standard-Display-Migration/Walkthrough.md"
+    },
+    {
+      "id": 296,
+      "crp_id": "CRP-296",
+      "timestamp": "2026-10-18 22:38:33",
+      "title": "Native Standard Display Dialog and Launcher Parity",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-296",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "suggested",
+      "progress_state": "undecided",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/CRP-296-Native-Standard-Display-Dialog-and-Launcher-Parity",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig",
+      "details": "Bring native WPF and WinForms Show surfaces into Standard Display dialog, DPI, desktop-dispatch, and single-instance parity without converting them to HTML.",
+      "priority": 5,
+      "disposition": null,
+      "flow_mode": "standard",
+      "always_proceed": false,
+      "plan_path": "docs/Proposals/CRP-296-Native-Standard-Display-Dialog-and-Launcher-Parity/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-296-Native-Standard-Display-Dialog-and-Launcher-Parity/Walkthrough.md"
+    },
+    {
+      "id": 297,
+      "crp_id": "CRP-297",
+      "timestamp": "2026-10-18 22:38:33",
+      "title": "Console and Launcher Standard Display Parity",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-297",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "suggested",
+      "progress_state": "undecided",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/CRP-297-Console-and-Launcher-Standard-Display-Parity",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig",
+      "details": "Bring console and launcher Show surfaces into structured ANSI, progress, deterministic dispatch, provenance, and window-hygiene parity without forcing dashboard conversion.",
+      "priority": 5,
+      "disposition": null,
+      "flow_mode": "standard",
+      "always_proceed": false,
+      "plan_path": "docs/Proposals/CRP-297-Console-and-Launcher-Standard-Display-Parity/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-297-Console-and-Launcher-Standard-Display-Parity/Walkthrough.md"
     }
   ],
   "testing_mode": "active",
@@ -13737,13 +14170,11 @@
       "proposal_ids": [
         274,
         270,
-        271,
         272,
         273
       ],
       "repositories": [
         "LCM_AI",
-        "LCM_Backup",
         "LCM_Shared",
         "LCM_Supervision",
         "LCM_Inventory"
@@ -13758,7 +14189,6 @@
           "no_op_member_ids": [
             274,
             270,
-            271,
             272,
             273
           ],
@@ -13774,14 +14204,12 @@
         "resolution_receipt": "D:\\Git_Repositories\\LCM_Inventory\\scratch\\BC_Review\\COH-274\\cohort-resolution.json",
         "review_receipts": {
           "LCM_Shared": "D:\\Git_Repositories\\LCM_Inventory\\data\\reviews\\review_LCM_Shared_20261013_202404.json",
-          "LCM_Backup": "D:\\Git_Repositories\\LCM_Inventory\\data\\reviews\\review_LCM_Backup_20261013_193145.json",
           "LCM_AI": "D:\\Git_Repositories\\LCM_Inventory\\data\\reviews\\review_LCM_AI_20261013_193143.json",
           "LCM_Inventory": "D:\\Git_Repositories\\LCM_Inventory\\data\\reviews\\review_LCM_Inventory_20261013_202400.json",
           "LCM_Supervision": "D:\\Git_Repositories\\LCM_Inventory\\data\\reviews\\review_LCM_Supervision_20261013_202407.json"
         },
         "member_ids": [
           270,
-          271,
           272,
           273,
           274
@@ -13840,86 +14268,154 @@
         ],
         "note": "Operator authorized atomic acceptance of restored COH-288. One reviewed LCM_Inventory commit records the shared BCR result and completes BUG-287 and BUG-288 together."
       }
+    },
+    {
+      "id": "COH-275",
+      "prime_proposal_id": 275,
+      "proposal_ids": [
+        275,
+        287
+      ],
+      "repositories": [
+        "LCM_Inventory"
+      ],
+      "created_at": "2026-10-18T20:35:05.3160291+02:00",
+      "gate_history": [
+        {
+          "gate": "BCR",
+          "required_state": "verified",
+          "timestamp": "2026-10-18T22:23:04.8162687+02:00",
+          "synchronized_member_ids": [],
+          "no_op_member_ids": [],
+          "stopped_members": [
+            "Proposal #275 cannot synchronize to verified: validated verification evidence is missing.",
+            "Proposal #287 cannot synchronize to verified: validated verification evidence is missing."
+          ]
+        },
+        {
+          "gate": "BCR",
+          "required_state": "verified",
+          "timestamp": "2026-10-18T22:23:29.0219278+02:00",
+          "synchronized_member_ids": [],
+          "no_op_member_ids": [
+            275,
+            287
+          ],
+          "stopped_members": []
+        }
+      ],
+      "state": "closed",
+      "closed_at": "2026-10-18 22:23:45",
+      "updated_at": "2026-10-18 22:23:45",
+      "completion_audit": {
+        "disposition": "Completed",
+        "timestamp": "2026-10-18 22:23:45",
+        "resolution_receipt": "D:\\Git_Repositories\\LCM_Inventory\\scratch\\BC_Review\\COH-275\\cohort-resolution.json",
+        "review_receipts": {
+          "LCM_Inventory": "D:\\Git_Repositories\\LCM_Inventory\\data\\reviews\\review_LCM_Inventory_20261018_222345.json"
+        },
+        "member_ids": [
+          275,
+          287
+        ],
+        "note": "Operator accepted COH-275 atomic completion after BCR."
+      }
     }
   ],
-  "review_obligation_ledger": {
-    "version": 1,
-    "entries": [
-      {
-        "id": "BUG-276::LCM_AI",
-        "repository": "LCM_AI",
-        "status": "completed",
-        "discovered_at": "2026-10-14 15:33:42",
-        "reason": "Durable changes discovered during BUG-276 BCR preparation: .agents/rules/ProposalReviewFlowPolicy.md, docs/Proposals/CR-2026-001.md, docs/Proposals/CR-2026-002.md, docs/Proposals/CR-2026-003.md, docs/Proposals/CR-2026-004.md, docs/Proposals/CR-2026-005.md, docs/Proposals/CR-2026-006.md, docs/Proposals/CR-2026-007.md, docs/Proposals/CR-2026-008.md, docs/Proposals/CR-2026-010.md.",
-        "bcr_identity": "BUG-276",
-        "proposal_id": 276,
-        "completed_at": "2026-10-14 21:24:14",
-        "review_receipt": "D:\\Git_Repositories\\LCM_Inventory\\data\\reviews\\review_LCM_AI_20261014_210932.json",
-        "commit_sha": "2a7895a"
-      },
-      {
-        "id": "CRP-277::LCM_AI",
-        "proposal_id": 277,
-        "repository": "LCM_AI",
-        "status": "completed",
-        "discovered_at": "2026-10-15 16:31:53",
-        "reason": "Durable changes discovered during CRP-277 BCR preparation: .agents/ACTIVE_SESSION.md.",
-        "bcr_identity": "CRP-277",
-        "observed_reasons": [
-          "Durable changes discovered during CRP-277 BCR preparation: .agents/ACTIVE_SESSION.md.",
-          "Durable changes discovered during CRP-277 BCR preparation: .agents/ACTIVE_SESSION.md, .agents/rules/ProposalReviewFlowPolicy.md.",
-          "Lifecycle repair consolidated the existing cross-repository review obligation.",
-          "Durable LCM_AI changes discovered during CRP-277 Macrium BCR preparation: .agents/ACTIVE_SESSION.md."
-        ],
-        "last_observed_at": "2026-10-15 19:34:19",
-        "completed_at": "2026-10-15 22:21:08",
-        "review_receipt": "D:\\Git_Repositories\\LCM_Inventory\\data\\reviews\\review_LCM_AI_20261015_222108.json",
-        "commit_sha": "b5effb8919198c0044c9bd47d9728f39620a78ec"
-      },
-      {
-        "id": "CRP-279::LCM_AI",
-        "proposal_id": 279,
-        "repository": "LCM_AI",
-        "status": "completed",
-        "discovered_at": "2026-10-15 18:54:54",
-        "reason": "Durable changes discovered during CRP-279 BCR preparation: .agents/ACTIVE_SESSION.md.",
-        "observed_reasons": [
-          "Durable changes discovered during CRP-279 BCR preparation: .agents/ACTIVE_SESSION.md."
-        ],
-        "bcr_identity": "CRP-279",
-        "completed_at": "2026-10-15 20:50:08",
-        "review_receipt": "D:\\Git_Repositories\\LCM_Inventory\\data\\reviews\\review_LCM_AI_20261015_205008.json",
-        "commit_sha": "b5effb8"
-      },
-      {
-        "id": "CRP-277::LCM_AI",
-        "proposal_id": 277,
-        "repository": "LCM_AI",
-        "status": "completed",
-        "discovered_at": "2026-10-16 18:25:07",
-        "reason": "Durable LCM_AI changes discovered during CRP-277 Macrium BCR preparation: .agents/ACTIVE_CONTEXT.md.",
-        "observed_reasons": [
-          "Durable LCM_AI changes discovered during CRP-277 Macrium BCR preparation: .agents/ACTIVE_CONTEXT.md."
-        ],
-        "bcr_identity": "CRP-277",
-        "completed_at": "2026-10-16 18:38:44",
-        "review_receipt": "D:\\Git_Repositories\\LCM_Inventory\\data\\reviews\\review_LCM_AI_20261016_183844.json",
-        "commit_sha": "943bd68"
-      },
-      {
-        "id": "CRP-282::LCM_AI",
-        "proposal_id": 282,
-        "repository": "LCM_AI",
-        "status": "open",
-        "discovered_at": "2026-10-17 22:55:39",
-        "reason": "Durable LCM_AI changes discovered during CRP-282 Macrium BCR preparation: .agents/rules/AnalysisGovernancePolicy.md, .agents/rules/DocumentationStandardsPolicy.md, .agents/rules/MethodEfficiencyPolicy.md, .agents/rules/ProposalReviewFlowPolicy.md, .agents/rules/ReviewCommitGovernancePolicy.md, .agents/rules/RuleAuthority.md, docs/LCM-Rules-Cross-Reference.md, .agents/rules/GoalFirstDesignPolicy.md.",
-        "observed_reasons": [
-          "Durable LCM_AI changes discovered during CRP-282 Macrium BCR preparation: .agents/rules/AnalysisGovernancePolicy.md, .agents/rules/DocumentationStandardsPolicy.md, .agents/rules/MethodEfficiencyPolicy.md, .agents/rules/ProposalReviewFlowPolicy.md, .agents/rules/ReviewCommitGovernancePolicy.md, .agents/rules/RuleAuthority.md, docs/LCM-Rules-Cross-Reference.md, .agents/rules/GoalFirstDesignPolicy.md."
-        ],
-        "bcr_identity": "CRP-282"
-      }
-    ]
-  },
+  "review_obligation_ledger": [
+    {
+      "version": 1,
+      "entries": [
+        {
+          "id": "BUG-276::LCM_AI",
+          "repository": "LCM_AI",
+          "status": "completed",
+          "discovered_at": "2026-10-14 15:33:42",
+          "reason": "Durable changes discovered during BUG-276 BCR preparation: .agents/rules/ProposalReviewFlowPolicy.md, docs/Proposals/CR-2026-001.md, docs/Proposals/CR-2026-002.md, docs/Proposals/CR-2026-003.md, docs/Proposals/CR-2026-004.md, docs/Proposals/CR-2026-005.md, docs/Proposals/CR-2026-006.md, docs/Proposals/CR-2026-007.md, docs/Proposals/CR-2026-008.md, docs/Proposals/CR-2026-010.md.",
+          "bcr_identity": "BUG-276",
+          "proposal_id": 276,
+          "completed_at": "2026-10-14 21:24:14",
+          "review_receipt": "D:\\Git_Repositories\\LCM_Inventory\\data\\reviews\\review_LCM_AI_20261014_210932.json",
+          "commit_sha": "2a7895a"
+        },
+        {
+          "id": "CRP-277::LCM_AI",
+          "proposal_id": 277,
+          "repository": "LCM_AI",
+          "status": "completed",
+          "discovered_at": "2026-10-15 16:31:53",
+          "reason": "Durable changes discovered during CRP-277 BCR preparation: .agents/ACTIVE_SESSION.md.",
+          "bcr_identity": "CRP-277",
+          "observed_reasons": [
+            "Durable changes discovered during CRP-277 BCR preparation: .agents/ACTIVE_SESSION.md.",
+            "Durable changes discovered during CRP-277 BCR preparation: .agents/ACTIVE_SESSION.md, .agents/rules/ProposalReviewFlowPolicy.md.",
+            "Lifecycle repair consolidated the existing cross-repository review obligation.",
+            "Durable LCM_AI changes discovered during CRP-277 Macrium BCR preparation: .agents/ACTIVE_SESSION.md."
+          ],
+          "last_observed_at": "2026-10-15 19:34:19",
+          "completed_at": "2026-10-15 22:21:08",
+          "review_receipt": "D:\\Git_Repositories\\LCM_Inventory\\data\\reviews\\review_LCM_AI_20261015_222108.json",
+          "commit_sha": "b5effb8919198c0044c9bd47d9728f39620a78ec"
+        },
+        {
+          "id": "CRP-279::LCM_AI",
+          "proposal_id": 279,
+          "repository": "LCM_AI",
+          "status": "completed",
+          "discovered_at": "2026-10-15 18:54:54",
+          "reason": "Durable changes discovered during CRP-279 BCR preparation: .agents/ACTIVE_SESSION.md.",
+          "observed_reasons": [
+            "Durable changes discovered during CRP-279 BCR preparation: .agents/ACTIVE_SESSION.md."
+          ],
+          "bcr_identity": "CRP-279",
+          "completed_at": "2026-10-15 20:50:08",
+          "review_receipt": "D:\\Git_Repositories\\LCM_Inventory\\data\\reviews\\review_LCM_AI_20261015_205008.json",
+          "commit_sha": "b5effb8"
+        },
+        {
+          "id": "CRP-277::LCM_AI",
+          "proposal_id": 277,
+          "repository": "LCM_AI",
+          "status": "completed",
+          "discovered_at": "2026-10-16 18:25:07",
+          "reason": "Durable LCM_AI changes discovered during CRP-277 Macrium BCR preparation: .agents/ACTIVE_CONTEXT.md.",
+          "observed_reasons": [
+            "Durable LCM_AI changes discovered during CRP-277 Macrium BCR preparation: .agents/ACTIVE_CONTEXT.md."
+          ],
+          "bcr_identity": "CRP-277",
+          "completed_at": "2026-10-16 18:38:44",
+          "review_receipt": "D:\\Git_Repositories\\LCM_Inventory\\data\\reviews\\review_LCM_AI_20261016_183844.json",
+          "commit_sha": "943bd68"
+        },
+        {
+          "id": "CRP-282::LCM_AI",
+          "proposal_id": 282,
+          "repository": "LCM_AI",
+          "status": "open",
+          "discovered_at": "2026-10-17 22:55:39",
+          "reason": "Durable LCM_AI changes discovered during CRP-282 Macrium BCR preparation: .agents/rules/AnalysisGovernancePolicy.md, .agents/rules/DocumentationStandardsPolicy.md, .agents/rules/MethodEfficiencyPolicy.md, .agents/rules/ProposalReviewFlowPolicy.md, .agents/rules/ReviewCommitGovernancePolicy.md, .agents/rules/RuleAuthority.md, docs/LCM-Rules-Cross-Reference.md, .agents/rules/GoalFirstDesignPolicy.md.",
+          "observed_reasons": [
+            "Durable LCM_AI changes discovered during CRP-282 Macrium BCR preparation: .agents/rules/AnalysisGovernancePolicy.md, .agents/rules/DocumentationStandardsPolicy.md, .agents/rules/MethodEfficiencyPolicy.md, .agents/rules/ProposalReviewFlowPolicy.md, .agents/rules/ReviewCommitGovernancePolicy.md, .agents/rules/RuleAuthority.md, docs/LCM-Rules-Cross-Reference.md, .agents/rules/GoalFirstDesignPolicy.md."
+          ],
+          "bcr_identity": "CRP-282"
+        },
+        {
+          "id": "BUG-287::LCM_AI",
+          "proposal_id": 287,
+          "repository": "LCM_AI",
+          "status": "open",
+          "discovered_at": "2026-10-18 17:56:55",
+          "reason": "Durable LCM_AI changes discovered during BUG-287 Macrium BCR preparation: .agents/ACTIVE_CONTEXT.md, docs/Architecture.md.",
+          "observed_reasons": [
+            "Durable LCM_AI changes discovered during BUG-287 Macrium BCR preparation: .agents/ACTIVE_CONTEXT.md, docs/Architecture.md."
+          ],
+          "bcr_identity": "BUG-287"
+        }
+      ]
+    }
+  ],
+  "minimal_tests": true,
+  "test_scope": "minimal",
   "flow_mode": "doit",
   "always_proceed": true
 }

@@ -83,6 +83,26 @@ function Get-StagedDiffSha256 {
     return [Convert]::ToHexString($hash).ToLowerInvariant()
 }
 
+function Get-ReviewAutomationAttribution {
+    [CmdletBinding()]
+    param()
+
+    if (
+        -not [string]::IsNullOrWhiteSpace($env:ANTIGRAVITY_AGENT) -or
+        -not [string]::IsNullOrWhiteSpace($env:ANTIGRAVITY_CONVERSATION_ID)
+    ) {
+        return [pscustomobject]@{
+            Runtime       = 'Antigravity'
+            CommitTrailer = 'Co-authored-by: Antigravity <antigravity@local>'
+        }
+    }
+
+    return [pscustomobject]@{
+        Runtime       = 'Copilot'
+        CommitTrailer = 'Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>'
+    }
+}
+
 if ($Help) {
     Write-Host "==========================================================================" -ForegroundColor Cyan
     Write-Host " SUBMIT REVIEW RESULT (Submit-ReviewResult)" -ForegroundColor Cyan
@@ -244,6 +264,7 @@ if ($ruleChangePaths.Count -gt 0) {
 
 $commitCreated = $false
 $reviewAccepted = $false
+$automationAttribution = Get-ReviewAutomationAttribution
 git -C $targetRepoPath diff --cached --quiet
 if ($LASTEXITCODE -ne 0) {
     $commitMsg = if (-not [string]::IsNullOrWhiteSpace($Notes)) { $Notes } else { "feat(review): review completion by $env:USERNAME" }
@@ -260,7 +281,7 @@ if ($LASTEXITCODE -ne 0) {
     }
     $authorization | ConvertTo-Json -Depth 3 | Set-Content -LiteralPath $authorizationFile -Encoding UTF8
 
-    git -C $targetRepoPath commit -m "$commitMsg" -m 'Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>'
+    git -C $targetRepoPath commit -m "$commitMsg" -m $automationAttribution.CommitTrailer
     if ($LASTEXITCODE -ne 0) {
         throw "Git commit failed for '$repoName'. The review authorization remains available only until its expiry."
     }
@@ -279,6 +300,7 @@ if ($LASTEXITCODE -ne 0) {
         CommitSha        = $newCommitSha
         ReviewResult     = $Result
         Reviewer         = $env:USERNAME
+        AutomationRuntime = $automationAttribution.Runtime
         Timestamp        = $timestamp
         Message          = $commitMsg
         ActionsExecuted  = $actionsExecuted
@@ -317,6 +339,7 @@ if ($LASTEXITCODE -ne 0) {
         CommitSha       = $newCommitSha
         ReviewResult    = $Result
         Reviewer        = $env:USERNAME
+        AutomationRuntime = $automationAttribution.Runtime
         Timestamp       = $timestamp
         Message         = $Notes
         ActionsExecuted = $actionsExecuted

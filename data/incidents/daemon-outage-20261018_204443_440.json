@@ -1,0 +1,9 @@
+{
+  "source": "Show-LcmControl",
+  "bug_id": "BUG-286",
+  "detected_at": "2026-10-18T20:44:51.1478589+02:00",
+  "daemon_port": 9876,
+  "recovery_state": "recovered",
+  "recovery_error": "",
+  "action": "start-daemon-once"
+}
