@@ -143,7 +143,7 @@ class DaemonActionController {
 
     if ($activated -and $refresh) {
       Start-Sleep -Milliseconds 120
-      $wsh.SendKeys("{F5}")
+      $wsh.SendKeys("^{F5}")
     }
     return @{ status = "ACTIVATED"; title = $title; success = [bool]$activated; refreshed = [bool]($activated -and $refresh) }
   }

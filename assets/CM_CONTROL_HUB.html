@@ -67,6 +67,7 @@
     }
 
     * { box-sizing: border-box; }
+    html { scrollbar-gutter: stable; }
     html, body {
       height: 100vh;
       margin: 0;
@@ -136,7 +137,7 @@
     main {
       flex: 1 1 auto;
       min-height: 0;
-      padding: 10px 24px 14px;
+      padding: 6px 20px 8px;
       max-width: 1920px;
       width: 100%;
       margin: 0 auto;
@@ -155,48 +156,49 @@
     .control-row {
       display: flex;
       align-items: center;
-      gap: 10px;
-      min-height: 44px;
-      padding: 6px 12px;
-      margin-bottom: 10px;
+      gap: 6px;
+      min-height: 0;
+      padding: 4px 8px;
+      margin-bottom: 6px;
       background: var(--surface);
       border: 1px solid var(--line);
       border-radius: 6px;
       flex-wrap: wrap;
     }
-    .control-group { display: flex; align-items: center; gap: 6px; padding-right: 10px; border-right: 1px solid var(--line); flex-shrink: 0; }
+    .control-group { display: flex; align-items: center; gap: 4px; padding-right: 6px; border-right: 1px solid var(--line); flex-shrink: 0; }
     .control-group:last-child { padding-right: 0; border-right: 0; }
-    .control-label { color: var(--muted); font: 11px var(--mono); text-transform: uppercase; }
+    .control-label { color: var(--muted); font: 10px var(--mono); text-transform: uppercase; }
     .control-select {
-      min-height: 28px;
-      padding: 0 8px;
+      min-height: 24px;
+      padding: 0 6px;
       border: 1px solid var(--line);
       border-radius: 4px;
       background: var(--surface-soft);
       color: var(--ink);
-      font-size: 12px;
+      font-size: 11px;
       outline: none;
     }
     .control-select:focus { border-color: var(--blue); }
+    #itemTargetSelect { width: 128px; }
 
     /* Advanced Query Filter Box */
     .filter-query-box {
       flex: 1 1 auto;
-      min-width: 320px;
+      min-width: 280px;
       position: relative;
       display: flex;
       align-items: center;
     }
     .filter-query-input {
       width: 100%;
-      height: 30px;
-      padding: 0 10px 0 28px;
+      height: 24px;
+      padding: 0 8px 0 24px;
       border: 1px solid var(--line-strong);
       border-radius: 4px;
       background: #ffffff;
       color: var(--ink);
       font-family: var(--mono);
-      font-size: 12px;
+      font-size: 11px;
       outline: none;
     }
     .filter-query-input:focus { border-color: var(--blue); box-shadow: 0 0 0 2px var(--blue-soft); }
@@ -211,17 +213,17 @@
       flex-shrink: 0;
       vertical-align: middle;
     }
-    .filter-query-icon { position: absolute; left: 8px; font-size: 16px; color: var(--muted); pointer-events: none; }
+    .filter-query-icon { position: absolute; left: 7px; font-size: 14px; color: var(--muted); pointer-events: none; }
 
     .reset-button {
       flex-shrink: 0;
-      min-height: 30px;
-      padding: 0 10px;
+      min-height: 24px;
+      padding: 0 7px;
       border: 1px solid #e8b9b4;
       border-radius: 4px;
       background: var(--surface);
       color: var(--red);
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 600;
     }
     .reset-button:hover { background: var(--red-soft); }
@@ -234,10 +236,10 @@
       display: grid;
       grid-template-columns: repeat(5, minmax(130px, 1fr));
       overflow-x: auto;
-      margin-bottom: 12px;
+      margin-bottom: 6px;
     }
     .rail-state {
-      padding: 8px 14px;
+      padding: 5px 10px;
       border-right: 1px solid var(--line);
       position: relative;
       cursor: pointer;
@@ -256,9 +258,9 @@
       height: 3px;
       background: var(--blue);
     }
-    .rail-name { display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: 700; }
-    .rail-count { font: 12px var(--mono); color: var(--muted); }
-    .rail-detail { display: block; margin-top: 2px; color: var(--muted); font-size: 11px; white-space: nowrap; }
+    .rail-name { display: flex; align-items: center; justify-content: space-between; font-size: 12px; font-weight: 700; }
+    .rail-count { font: 11px var(--mono); color: var(--muted); }
+    .rail-detail { display: block; margin-top: 1px; color: var(--muted); font-size: 10px; white-space: nowrap; }
 
     /* Middle Work Area (Scrollable Proposals Table with Sticky Header) */
     .workspace-panel {
@@ -270,12 +272,12 @@
       border: 1px solid var(--line);
       border-radius: 6px;
       overflow: hidden;
-      margin-bottom: 12px;
+      margin-bottom: 6px;
     }
     .panel-heading {
       flex: 0 0 auto;
-      min-height: 42px;
-      padding: 8px 14px;
+      min-height: 32px;
+      padding: 4px 10px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -283,15 +285,16 @@
       border-bottom: 1px solid var(--line);
       background: var(--surface-soft);
     }
-    .panel-heading h1, .panel-heading h2, .panel-heading h3 { margin: 0; font-size: 14px; font-weight: 700; }
+    .panel-heading > div:first-child { display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+    .panel-heading h1, .panel-heading h2, .panel-heading h3 { margin: 0; font-size: 13px; font-weight: 700; }
     .workspace-switches {
       display: flex;
       flex: 1;
       flex-wrap: wrap;
       justify-content: flex-end;
       align-items: center;
-      gap: 5px;
-      margin-left: 18px;
+      gap: 3px;
+      margin-left: 10px;
     }
     .workspace-switch-label {
       color: var(--muted);
@@ -308,8 +311,8 @@
       display: inline-flex;
       align-items: center;
       gap: 5px;
-      min-height: 28px;
-      padding: 4px 8px;
+      min-height: 24px;
+      padding: 3px 6px;
       border: 1px solid var(--line);
       border-radius: 5px;
       background: var(--surface-soft);
@@ -319,6 +322,18 @@
     }
     .workspace-switch-button:hover:not(:disabled) { filter: brightness(.97); }
     .workspace-switch-button:disabled { cursor: not-allowed; opacity: .55; }
+    .workspace-switch-button.switch-pending {
+      background: repeating-linear-gradient(-45deg, #e2e8f0, #e2e8f0 6px, #cbd5e1 6px, #cbd5e1 12px);
+      border-color: #64748b;
+      color: #334155;
+      cursor: wait;
+      opacity: 1;
+    }
+    .workspace-switch-button.switch-pending .switch-led {
+      background: #f59e0b;
+      box-shadow: 0 0 0 2px rgba(245, 158, 11, .25);
+      animation: pulse 0.8s infinite alternate;
+    }
     .workspace-switch-button.switch-on { background: #ecfdf5; border-color: #10b981; color: #047857; }
     .workspace-switch-button.switch-off { background: #fef2f2; border-color: #ef4444; color: #b91c1c; }
     .workspace-switch-button.switch-active { background: #fef3c7; border-color: #f59e0b; color: #b45309; }
@@ -333,9 +348,9 @@
       overflow-x: auto;
       position: relative;
     }
-    .proposal-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13px; text-align: left; }
+    .proposal-table { width: 100%; table-layout: fixed; border-collapse: separate; border-spacing: 0; font-size: 13px; text-align: left; }
     .proposal-table th {
-      padding: 8px 10px;
+      padding: 6px 7px;
       color: var(--muted);
       background: var(--surface-soft);
       border-bottom: 1px solid var(--line);
@@ -368,7 +383,7 @@
     .th-filter-select:focus { border-color: var(--blue); }
 
     .proposal-table td {
-      padding: 8px 10px;
+      padding: 6px 7px;
       border-bottom: 1px solid #e5eae7;
       vertical-align: middle;
     }
@@ -390,17 +405,9 @@
     .state-published { background: #e7f3ea; color: #2e6930; border: 1px solid #95c599; }
     .state-closed { background: var(--red-soft); color: var(--red); border: 1px solid var(--red); }
     .cohort-badge { display: inline-flex; align-items: center; margin: 3px 4px 0 0; padding: 1px 5px; border: 1px solid #7c3aed; border-radius: 3px; background: #f5f3ff; color: #6d28d9; font: 700 10px var(--mono); }
-    .cohort-column { width: 130px; min-width: 130px; }
-    .cohort-cell { max-width: 130px; }
+    .cohort-column { width: 110px; min-width: 110px; }
+    .cohort-cell { max-width: 110px; }
     .cohort-empty { color: var(--muted); font: 11px var(--mono); }
-    .evidence-column { width: 140px; min-width: 140px; }
-    .evidence-cell {
-      width: 140px;
-      max-width: 140px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
     .cohort-card { margin: 10px 0; padding: 9px; border: 1px solid #c4b5fd; border-radius: 6px; background: #faf5ff; font-size: 11.5px; }
     .cohort-card-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 7px; }
     .cohort-card-actions button { padding: 3px 7px; border: 1px solid #a78bfa; border-radius: 4px; background: #ffffff; color: #5b21b6; cursor: pointer; font: 700 10px var(--mono); }
@@ -434,7 +441,7 @@
     }
 
     /* SHOW Column & Magician Wand Button */
-    .action-cell { text-align: center; position: relative; width: 70px; }
+    .action-cell { text-align: left; position: relative; width: 100px; }
     .wand-btn {
       border: 1px solid var(--blue);
       padding: 5px 8px;
@@ -453,7 +460,7 @@
     .show-dropdown-menu {
       display: none;
       position: absolute;
-      right: 0;
+      right: 12px;
       top: 100%;
       z-index: 1000;
       min-width: 230px;
@@ -461,24 +468,26 @@
       border: 1px solid var(--line-strong);
       border-radius: 6px;
       box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-      padding: 6px 0;
+      max-height: min(65vh, 576px);
+      overflow-y: auto;
+      padding: 2px 0;
       text-align: left;
     }
-    .show-dropdown-menu.active { display: block; }
+    .show-dropdown-menu.active { display: block; position: fixed; }
     .show-dropdown-title {
-      padding: 4px 12px;
+      padding: 2px 9px;
       font: 10px var(--mono);
       color: var(--muted);
       text-transform: uppercase;
       border-bottom: 1px solid var(--line);
-      margin-bottom: 4px;
+      margin-bottom: 1px;
     }
     .show-dropdown-item {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 5px;
       width: 100%;
-      padding: 6px 14px;
+      padding: 2px 9px;
       border: 0;
       background: transparent;
       color: var(--ink);
@@ -488,17 +497,19 @@
     }
     .show-dropdown-item:hover:not(:disabled) { background: var(--blue-soft); color: var(--blue); }
     .show-dropdown-item:disabled { color: var(--muted); cursor: not-allowed; opacity: .6; }
-    .show-dropdown-item .btn-icon { font-size: 16px; }
-    .show-dropdown-section { padding: 5px 12px; margin-top: 3px; border-top: 1px solid var(--line); color: var(--muted); font: 700 10px var(--mono); text-transform: uppercase; }
+    .show-dropdown-item .btn-icon { font-size: 14px; }
+    .show-dropdown-menu.open-upward { top: auto; bottom: auto; }
+    .show-dropdown-section { padding: 2px 9px; margin-top: 1px; border-top: 1px solid var(--line); color: var(--muted); font: 700 10px var(--mono); text-transform: uppercase; }
+    .plan-state-text { white-space: pre-line; }
     .lifecycle-strip { display: inline-flex; align-items: center; gap: 3px; max-width: 100%; overflow-x: auto; font: 10px var(--mono); }
     .lifecycle-node { padding: 2px 5px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-soft); white-space: nowrap; }
     .lifecycle-node.current { border-color: var(--blue); color: var(--blue); background: var(--blue-soft); font-weight: 700; }
     .lifecycle-node.done { border-color: var(--green); color: var(--green); background: var(--green-soft); }
     .lifecycle-arrow { color: var(--muted); font-weight: 700; white-space: nowrap; }
-    .selected-item-lifecycle { min-height: 38px; padding: 7px 14px; border-bottom: 1px solid var(--line); background: var(--surface); display: flex; align-items: center; gap: 10px; }
+    .selected-item-lifecycle { min-height: 28px; padding: 4px 10px; border-bottom: 1px solid var(--line); background: var(--surface); display: flex; align-items: center; gap: 6px; }
     .selected-item-lifecycle-label { color: var(--muted); font: 10px var(--mono); font-weight: 700; text-transform: uppercase; white-space: nowrap; }
     .selected-item-lifecycle-empty { color: var(--muted); font-size: 12px; }
-    .action-result-zone { min-height: 30px; padding: 6px 8px 6px 12px; margin-bottom: 10px; border: 1px solid var(--line); border-radius: 5px; background: var(--surface-soft); color: var(--muted); font: 11px var(--mono); display: flex; align-items: flex-start; gap: 8px; }
+    .action-result-zone { min-height: 26px; padding: 4px 6px 4px 10px; margin-bottom: 6px; border: 1px solid var(--line); border-radius: 5px; background: var(--surface-soft); color: var(--muted); font: 10px var(--mono); display: flex; align-items: flex-start; gap: 6px; }
     .action-result-zone.is-dismissed { display: none; }
     .action-result-text { flex: 1; }
     .action-result-close { flex: 0 0 auto; border: 0; background: transparent; color: currentColor; cursor: pointer; font: 16px/1 var(--sans); padding: 0 3px; }
@@ -1059,11 +1070,11 @@
         <div class="control-group">
           <span class="control-label">Preset:</span>
           <select class="control-select" id="presetSelect" onchange="applyPresetFilter(this.value)">
-            <option value="open" selected>Open (All Active Work)</option>
+            <option value="all" selected>All Proposals</option>
+            <option value="open">Open (All Active Work)</option>
             <option value="inprogress">In Progress</option>
             <option value="review">Pending Review</option>
             <option value="complete">Ready to Push</option>
-            <option value="all">All Proposals</option>
           </select>
         </div>
         <div class="control-group">
@@ -1094,11 +1105,11 @@
         <button class="action-result-close" type="button" onclick="dismissActionResult()" aria-label="Hide action result" title="Hide message output">×</button>
       </div>
 
-      <!-- Status Rail (5 Focused Lifecycle States) -->
+      <!-- Status Rail (All Proposals + 4 Focused Lifecycle States) -->
       <nav class="status-rail" aria-label="Visible proposal statuses">
-        <div class="rail-state active" id="rail-open" onclick="filterByRail('open')" title="All active work in flight (not committed or published)">
-          <div class="rail-name">Open <span class="rail-count" id="count-open">0</span></div>
-          <span class="rail-detail">all active work</span>
+        <div class="rail-state active" id="rail-all" onclick="filterByRail('all')" title="All proposals without a lifecycle restriction">
+          <div class="rail-name">All <span class="rail-count" id="count-all">0</span></div>
+          <span class="rail-detail">all proposals</span>
         </div>
         <div class="rail-state" id="rail-inprogress" onclick="filterByRail('inprogress')" title="Proposals progressing from Scoped up to Committed">
           <div class="rail-name">In Progress <span class="rail-count" id="count-inprogress">0</span></div>
@@ -1126,28 +1137,28 @@
           <span class="panel-kicker">Proposal Index</span>
           <h1 id="tableHeading">Work Queue</h1>
         </div>
+        <span class="panel-kicker" id="matchCounter">0 results / CRP ID order</span>
         <div class="workspace-switches" id="workspaceSwitches" aria-label="Visible lifecycle switches">
           <span class="workspace-switch-label">Workspace</span>
-          <button class="workspace-switch-button" id="btnGlobalLcm" onclick="toggleLcmMode()" title="Workspace governance mode">
+          <button class="workspace-switch-button" id="btnGlobalLcm" onclick="invokeWorkspaceSwitchAtom('lcm')" title="Workspace governance mode">
             <span class="switch-led" id="ledLcmMode"></span> Governance <strong id="switchValLcm">ON</strong>
           </button>
-          <button class="workspace-switch-button" id="btnGlobalTesting" onclick="toggleTestingMode()" title="Workspace testing mode">
+          <button class="workspace-switch-button" id="btnGlobalTesting" onclick="invokeWorkspaceSwitchAtom('testing')" title="Workspace testing mode">
             <span class="switch-led" id="ledTestingMode"></span> Testing <strong id="switchValTesting">ON</strong>
           </button>
-          <button class="workspace-switch-button" id="btnGlobalGranularity" onclick="toggleGranularity()" title="Workspace BCR granularity">
+          <button class="workspace-switch-button" id="btnGlobalGranularity" onclick="invokeWorkspaceSwitchAtom('granularity')" title="Workspace BCR granularity">
             <span class="switch-led" id="ledGranularity"></span> Review <strong id="switchValGranularity">-Coarse</strong>
           </button>
-          <button class="workspace-switch-button" id="btnGlobalAnalysis" onclick="toggleAnalysisMode()" title="Workspace operating mode">
+          <button class="workspace-switch-button" id="btnGlobalAnalysis" onclick="invokeWorkspaceSwitchAtom('analysis')" title="Workspace operating mode">
             <span class="switch-led" id="ledAnalysisMode"></span> Mode <strong id="switchValAnalysisMode">IMPLEMENT</strong>
           </button>
-          <button class="workspace-switch-button switch-idle" id="btnGlobalDoit" onclick="toggleGlobalDoit()" title="Workspace flow switch; never bypasses 2 - REVIEW">
+          <button class="workspace-switch-button switch-idle" id="btnGlobalDoit" onclick="invokeWorkspaceSwitchAtom('doit')" title="Workspace flow switch; never bypasses 2 - REVIEW">
             <span class="switch-led" id="ledDoit"></span> Flow <strong id="switchValDoit">DO</strong>
           </button>
-          <button class="workspace-switch-button switch-idle" id="btnGlobalMinimalTests" onclick="toggleGlobalMinimalTests()" title="Workspace test-depth switch">
+          <button class="workspace-switch-button switch-idle" id="btnGlobalMinimalTests" onclick="invokeWorkspaceSwitchAtom('minimalTests')" title="Workspace test-depth switch">
             <span class="switch-led" id="ledMinimalTests"></span> Tests <strong id="switchValMinimalTests">Standard DAG</strong>
           </button>
         </div>
-        <span class="panel-kicker" id="matchCounter">0 results / CRP ID order</span>
       </div>
       <div class="selected-item-lifecycle" id="selectedItemLifecycle">
         <span class="selected-item-lifecycle-label">ITEM Lifecycle</span>
@@ -1155,30 +1166,37 @@
       </div>
       <div class="proposal-table-container">
         <table class="proposal-table">
+          <colgroup>
+            <col style="width: calc(100% - 575px);">
+            <col style="width: 110px;">
+            <col style="width: 90px;">
+            <col style="width: 120px;">
+            <col style="width: 120px;">
+            <col style="width: 65px;">
+            <col style="width: 100px;">
+          </colgroup>
           <thead>
             <tr>
-              <th style="min-width: 220px;">Proposal</th>
+              <th style="min-width: 200px;">Proposal</th>
               <th class="cohort-column">Cohort</th>
               <!-- Target-oriented proposal index filters -->
-              <th style="width: 110px;">
+              <th style="width: 90px;">
                 <div class="th-content">
                   <span>Disposition</span>
-                  <select class="th-filter-select" id="thStatusFilter" onchange="applyFilters()" title="Filter by Work Disposition">
+                  <select class="th-filter-select" id="thStatusFilter" onchange="applyColumnFilters()" title="Filter by Work Disposition">
                     <option value="">All</option>
                     <option value="open">Open</option>
                     <option value="active">Active</option>
                     <option value="review">Review</option>
                     <option value="complete">Complete</option>
                     <option value="published">Published</option>
-                    <option value="held">Held</option>
-                    <option value="cancelled">Cancelled</option>
                   </select>
                 </div>
               </th>
-              <th style="width: 155px;">
+              <th style="width: 120px;">
                 <div class="th-content">
                   <span>Plan State</span>
-                  <select class="th-filter-select" id="thPlanFilter" onchange="applyFilters()" title="Filter by Plan State">
+                  <select class="th-filter-select" id="thPlanFilter" onchange="applyColumnFilters()" title="Filter by Plan State">
                     <option value="">All</option>
                     <option value="approved">Approved</option>
                     <option value="suggested">Suggested</option>
@@ -1193,10 +1211,10 @@
                   </select>
                 </div>
               </th>
-              <th style="min-width: 160px;">
+              <th style="width: 120px;">
                 <div class="th-content">
                   <span>Status</span>
-                  <select class="th-filter-select" id="thProgressFilter" onchange="applyFilters()" title="Filter by Progress Status">
+                  <select class="th-filter-select" id="thProgressFilter" onchange="applyColumnFilters()" title="Filter by Progress Status">
                     <option value="">All</option>
                     <option value="undecided">Undecided</option>
                     <option value="in_progress">In Progress</option>
@@ -1211,7 +1229,7 @@
               <th style="width: 75px; text-align: center;">
                 <div class="th-content" style="justify-content: center;">
                   <span>Prio</span>
-                  <select class="th-filter-select" id="thPrioFilter" onchange="applyFilters()" title="Filter by Priority">
+                  <select class="th-filter-select" id="thPrioFilter" onchange="applyColumnFilters()" title="Filter by Priority">
                     <option value="">All</option>
                     <option value="10">10</option>
                     <option value="9">9</option>
@@ -1227,8 +1245,7 @@
                   </select>
                 </div>
               </th>
-              <th class="evidence-column" title="Execution Evidence">Evidence</th>
-              <th style="width: 75px; text-align: center;" title="Target Actions Menu">ACTIONS</th>
+              <th style="width: 100px; text-align: center;" title="Target Actions Menu">ACTIONS</th>
             </tr>
           </thead>
           <tbody id="proposalRows">
@@ -1535,7 +1552,7 @@
 
     let selectedIds = new Set();
     let activeItemTarget = "";
-    let activeRailFilter = "open";
+    let activeRailFilter = "all";
     let activeSort = "id-desc"; // Highest CRP first by default (e.g. 211 at top)
     let pendingOverrideAction = null;
     let pendingHoldTargets = [];
@@ -1654,7 +1671,7 @@
         return "Verified: ready for 2 - REVIEW";
       }
       if (state === "completed") {
-        return "Committed / Ready to Push";
+        return "Committed -\nReady to Push";
       }
       if (state === "pushed") {
         return "Pushed";
@@ -1809,10 +1826,14 @@
         Array.from(repos).sort().map(r => `<option value="${esc(r)}">${esc(r)}</option>`).join("");
     }
 
+    function isLiveReviewCohort(cohort) {
+      return ["open", "held"].includes(String(cohort?.state || "open").toLowerCase());
+    }
+
     function getProposalCohorts(proposalId) {
       const id = Number(proposalId);
       return (proposalsData.review_cohorts || []).filter(cohort =>
-        (cohort.proposal_ids || []).map(Number).includes(id)
+        isLiveReviewCohort(cohort) && (cohort.proposal_ids || []).map(Number).includes(id)
       );
     }
 
@@ -1873,7 +1894,10 @@
     }
 
     function getWorkQueueCohorts() {
-      return [...(proposalsData.review_cohorts || []), ...getObligationWorkQueueCohorts()];
+      return [
+        ...(proposalsData.review_cohorts || []).filter(isLiveReviewCohort),
+        ...getObligationWorkQueueCohorts()
+      ];
     }
 
     function getBlockingReviewCohort(proposal) {
@@ -2292,7 +2316,7 @@
     }
 
     function calculateStatusCounts() {
-      let openCount = 0;
+      const allCount = (proposalsData.proposals || []).length;
       let inprogressCount = 0;
       let reviewCount = 0;
       let completeCount = 0;
@@ -2301,13 +2325,6 @@
       (proposalsData.proposals || []).forEach(p => {
         const status = getLifecycleState(p);
         const vis = getVisibleStatus(p);
-
-        // Open: active lifecycle work only; held and completed work are outside OPEN.
-        const isClosed = ["held", "completed", "pushed", "published", "rejected", "deleted", "cancelled"].includes(status) ||
-                         ["complete", "published", "cancelled"].includes(vis);
-        if (!isClosed) {
-          openCount++;
-        }
 
         // In Progress: following scoped up to but excluding committed
         if (status !== "completed" && status !== "pushed" && status !== "published" && status !== "committed") {
@@ -2321,7 +2338,7 @@
         if (status === "pushed" || status === "published" || vis === "published") publishedCount++;
       });
 
-      if ($("count-open")) $("count-open").innerText = openCount;
+      if ($("count-all")) $("count-all").innerText = allCount;
       if ($("count-inprogress")) $("count-inprogress").innerText = inprogressCount;
       if ($("count-review")) $("count-review").innerText = reviewCount;
       if ($("count-complete")) $("count-complete").innerText = completeCount;
@@ -2378,9 +2395,11 @@
     }
 
     function filterByRail(status) {
-      if (activeRailFilter === status) {
-        activeRailFilter = null;
+      if (status === "all" || activeRailFilter === status) {
+        activeRailFilter = "all";
         document.querySelectorAll(".rail-state").forEach(el => el.classList.remove("active"));
+        const allRail = $("rail-all");
+        if (allRail) allRail.classList.add("active");
         if ($("presetSelect")) $("presetSelect").value = "all";
       } else {
         activeRailFilter = status;
@@ -2399,16 +2418,10 @@
     }
 
     function applyPresetFilter(preset) {
-      if (preset === "all") {
-        activeRailFilter = null;
-      } else {
-        activeRailFilter = preset;
-      }
+      activeRailFilter = preset;
       document.querySelectorAll(".rail-state").forEach(el => el.classList.remove("active"));
-      if (activeRailFilter) {
-        const el = $("rail-" + activeRailFilter);
-        if (el) el.classList.add("active");
-      }
+      const el = $("rail-" + activeRailFilter);
+      if (el) el.classList.add("active");
       applyFilters();
     }
 
@@ -2416,10 +2429,10 @@
       $("filterQueryInput").value = "";
       $("scopeSelect").value = "";
       if ($("cohortSelect")) $("cohortSelect").value = "";
-      if ($("presetSelect")) $("presetSelect").value = "open";
+      if ($("presetSelect")) $("presetSelect").value = "all";
       $("sortSelect").value = "id-desc";
       activeSort = "id-desc";
-      activeRailFilter = "open";
+      activeRailFilter = "all";
       
       // Reset column dropdowns
       if ($("thStatusFilter")) $("thStatusFilter").value = "";
@@ -2435,7 +2448,7 @@
       }
 
       document.querySelectorAll(".rail-state").forEach(el => el.classList.remove("active"));
-      const el = $("rail-open");
+      const el = $("rail-all");
       if (el) el.classList.add("active");
       renderTable();
       renderSelectionPanel();
@@ -2448,6 +2461,15 @@
     }
 
     function applyFilters() {
+      renderTable();
+    }
+
+    function applyColumnFilters() {
+      activeRailFilter = "all";
+      document.querySelectorAll(".rail-state").forEach(el => el.classList.remove("active"));
+      const allRail = $("rail-all");
+      if (allRail) allRail.classList.add("active");
+      if ($("presetSelect")) $("presetSelect").value = "all";
       renderTable();
     }
 
@@ -2644,7 +2666,7 @@
       $("matchCounter").innerText = `${workQueueCount} result${workQueueCount === 1 ? "" : "s"} / CRP ID order`;
 
       if (sorted.length === 0) {
-        container.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 24px; color: var(--muted);">No matching proposals found for current filters.</td></tr>`;
+        container.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 24px; color: var(--muted);">No matching proposals found for current filters.</td></tr>`;
         return;
       }
 
@@ -2664,7 +2686,7 @@
           </button>`;
 
         return `
-          <tr id="row-${p.id}" onclick="selectItemTarget('CRP:${p.id}')" style="cursor: pointer;">
+          <tr id="row-${p.id}" onclick="selectItemTarget('CRP:${p.id}')" style="cursor: pointer;" title="${esc(evidence)}">
             <td>
               <span class="proposal-id">${crpTag}</span>
               <span class="proposal-title">${esc(getProposalDisplayTitle(p))}</span>
@@ -2685,7 +2707,7 @@
               <span class="state-badge state-${visStatus}">${visStatus.toUpperCase()}</span>
             </td>
             <td>
-              <span style="font-weight: 600; font-size: 11.5px; color: var(--ink);">${esc(planStateDetail)}</span>
+              <span class="plan-state-text" style="font-weight: 600; font-size: 11.5px; color: var(--ink);">${esc(planStateDetail)}</span>
             </td>
             <td>
               <span style="font-size: 11.5px; color: var(--ink);">${esc(progressNote)}</span>
@@ -2694,16 +2716,13 @@
             <td style="text-align: center;">
               <span class="prio-badge" id="prio-badge-${p.id}" onclick="openPrioEditor(event, ${p.id}, ${prio})" title="Click to change priority">${prio}</span>
             </td>
-            <td class="evidence-cell" title="${esc(evidence)}">
-              <span class="repo-sub" style="color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${esc(evidence)}</span>
-            </td>
             <td class="action-cell">
               <button class="mini-action wand-btn" onclick="selectTargetAndOpenActions(event, ${p.id})" title="Explicitly switch ITEM to this CRP, then open its ACTIONS">
                 <span aria-hidden="true">🧙</span><span class="dropdown-caret">▾</span>
               </button>
               <div class="show-dropdown-menu" id="dropdown-${p.id}">
-                <div class="show-dropdown-title">ACTIONS: ITEM ${crpTag}</div>
-                <div class="show-dropdown-title">Lifecycle</div>
+                <div class="show-dropdown-title">${crpTag} Lifecycle Actions</div>
+                <button class="show-dropdown-item" onclick="showProposalSpec(${p.id})"><span class="btn-icon">📄</span> Show Specification</button>
                 ${lifecycleButton("Do ITEM", "▶️", lifecycleState === "suggested", "dispatchTargetAction('do')")}
                 ${lifecycleButton("Proceed ITEM", "⚡", ["suggested", "in_progress"].includes(lifecycleState), "dispatchTargetAction('proceed')")}
                 ${lifecycleButton("Open Review", "🔍", lifecycleState === "verified", "dispatchTargetAction('bcr')")}
@@ -2721,7 +2740,6 @@
                 <div class="show-dropdown-title">Documents (#${p.id})</div>
                 <button class="show-dropdown-item" onclick="openOriginalProposalInEditor(${p.id})"><span class="btn-icon">📝</span> Edit Original CRP</button>
                 <button class="show-dropdown-item" onclick="showRepoDocs('${esc(p.origin_repo || "")}')"><span class="btn-icon">📁</span> Show Repo Docs</button>
-                <button class="show-dropdown-item" onclick="showProposalSpec(${p.id})"><span class="btn-icon">📄</span> Show Specification</button>
                 <button class="show-dropdown-item" onclick="showProposalPlan(${p.id})"><span class="btn-icon">📋</span> Show Plan</button>
                 <button class="show-dropdown-item" onclick="showProposalWalkthrough(${p.id})"><span class="btn-icon">🚶</span> Show Walkthrough</button>
                 <button class="show-dropdown-item" onclick="showProposalDiff(${p.id})"><span class="btn-icon">🔍</span> Show Diff / BC Review</button>
@@ -2748,7 +2766,6 @@
             <td><span style="font-weight: 600; font-size: 11.5px; color: var(--ink);">1 - REVIEW</span></td>
             <td><span class="repo-sub">Cross-repository review required.</span></td>
             <td style="text-align: center;"><span class="prio-badge" title="Inherited from ${esc(cohort.head_identity)}">${normalizePriority(p.priority)}</span></td>
-            <td class="evidence-cell" title="Cross-repository review ledger"><span class="repo-sub">Ledger obligation ${esc(cohort.obligation_id)}</span></td>
             <td class="action-cell">
               <button class="mini-action wand-btn" onclick="selectCohortAndOpenActions(event, '${esc(cohort.id)}')" title="Select this cohort and open ACTIONS"><span aria-hidden="true">🧙</span><span class="dropdown-caret">▾</span></button>
               <div class="show-dropdown-menu" id="dropdown-cohort-${esc(cohort.id)}">
@@ -2882,24 +2899,76 @@
     }
 
     function deferShowDropdown(id) {
-      requestAnimationFrame(() => showDropdownById(id));
+      requestAnimationFrame(() => requestAnimationFrame(() => showDropdownById(id)));
     }
 
     function toggleShowDropdownById(id) {
       const menu = $("dropdown-" + id);
       if (!menu) return;
       const isAlreadyOpen = menu.classList.contains("active");
-      document.querySelectorAll(".show-dropdown-menu").forEach(el => el.classList.remove("active"));
+      document.querySelectorAll(".show-dropdown-menu").forEach(el => {
+        el.classList.remove("active", "open-upward");
+        el.style.maxHeight = "";
+        el.style.left = "";
+        el.style.right = "";
+        el.style.top = "";
+        el.style.bottom = "";
+        el.style.visibility = "";
+      });
       if (!isAlreadyOpen) {
         menu.classList.add("active");
+        requestAnimationFrame(() => positionDropdown(menu));
       }
+    }
+
+    function positionDropdown(menu) {
+      const trigger = menu.parentElement;
+      if (!trigger) return;
+
+      menu.classList.remove("open-upward");
+      menu.style.maxHeight = "";
+      menu.style.left = "-10000px";
+      menu.style.right = "auto";
+      menu.style.top = "0";
+      menu.style.bottom = "auto";
+      menu.style.visibility = "hidden";
+
+      const triggerBounds = trigger.getBoundingClientRect();
+      const clearance = 8;
+      const spaceAbove = Math.max(0, triggerBounds.top - clearance);
+      const spaceBelow = Math.max(0, window.innerHeight - triggerBounds.bottom - clearance);
+      const openUpward = spaceAbove > spaceBelow;
+      const availableHeight = openUpward ? spaceAbove : spaceBelow;
+      const menuHeight = Math.min(menu.scrollHeight, Math.max(120, Math.floor(availableHeight)));
+      const menuWidth = menu.getBoundingClientRect().width;
+      const wizardInset = 32;
+      const left = Math.max(
+        clearance,
+        Math.min(triggerBounds.right - menuWidth - wizardInset, window.innerWidth - menuWidth - clearance)
+      );
+      const top = openUpward ? triggerBounds.top - menuHeight : triggerBounds.bottom;
+
+      menu.classList.toggle("open-upward", openUpward);
+      menu.style.maxHeight = `${Math.max(120, Math.floor(availableHeight))}px`;
+      menu.style.left = `${Math.floor(left)}px`;
+      menu.style.top = `${Math.floor(top)}px`;
+      menu.style.visibility = "";
     }
 
     function showDropdownById(id) {
       const menu = $("dropdown-" + id);
       if (!menu) return;
-      document.querySelectorAll(".show-dropdown-menu").forEach(el => el.classList.remove("active"));
+      document.querySelectorAll(".show-dropdown-menu").forEach(el => {
+        el.classList.remove("active", "open-upward");
+        el.style.maxHeight = "";
+        el.style.left = "";
+        el.style.right = "";
+        el.style.top = "";
+        el.style.bottom = "";
+        el.style.visibility = "";
+      });
       menu.classList.add("active");
+      requestAnimationFrame(() => positionDropdown(menu));
     }
 
     // -------------------------------------------------------------------------
@@ -2929,19 +2998,31 @@
       const isLcmOn = (lcmMode === "active");
       if ($("switchValLcm")) $("switchValLcm").innerText = isLcmOn ? "ON" : "OFF";
       if ($("ledLcmMode")) $("ledLcmMode").className = isLcmOn ? "switch-led switch-led-on" : "switch-led switch-led-off";
-      if ($("btnGlobalLcm")) $("btnGlobalLcm").className = `workspace-switch-button ${isLcmOn ? "switch-on" : "switch-off"}`;
+      if ($("btnGlobalLcm")) {
+        $("btnGlobalLcm").className = `workspace-switch-button ${isLcmOn ? "switch-on" : "switch-off"}`;
+        $("btnGlobalLcm").classList.toggle("switch-pending", pendingWorkspaceSwitches.has("btnGlobalLcm"));
+        $("btnGlobalLcm").disabled = pendingWorkspaceSwitches.has("btnGlobalLcm");
+      }
 
       const testingMode = (proposalsData.testing_mode || "active").toLowerCase();
       const isTestingOn = (testingMode === "active");
       if ($("switchValTesting")) $("switchValTesting").innerText = isTestingOn ? "ON" : "OFF";
       if ($("ledTestingMode")) $("ledTestingMode").className = isTestingOn ? "switch-led switch-led-on" : "switch-led switch-led-off";
-      if ($("btnGlobalTesting")) $("btnGlobalTesting").className = `workspace-switch-button ${isTestingOn ? "switch-on" : "switch-off"}`;
+      if ($("btnGlobalTesting")) {
+        $("btnGlobalTesting").className = `workspace-switch-button ${isTestingOn ? "switch-on" : "switch-off"}`;
+        $("btnGlobalTesting").classList.toggle("switch-pending", pendingWorkspaceSwitches.has("btnGlobalTesting"));
+        $("btnGlobalTesting").disabled = pendingWorkspaceSwitches.has("btnGlobalTesting");
+      }
 
       const gran = (proposalsData.review_granularity || "coarse").toLowerCase();
       const isTight = (gran === "tight");
       if ($("switchValGranularity")) $("switchValGranularity").innerText = isTight ? "-Tight" : "-Coarse";
       if ($("ledGranularity")) $("ledGranularity").className = isTight ? "switch-led switch-led-tight" : "switch-led switch-led-coarse";
       if ($("btnGlobalGranularity")) $("btnGlobalGranularity").className = `workspace-switch-button ${isTight ? "switch-active" : "switch-idle"}`;
+      if ($("btnGlobalGranularity")) {
+        $("btnGlobalGranularity").classList.toggle("switch-pending", pendingWorkspaceSwitches.has("btnGlobalGranularity"));
+        $("btnGlobalGranularity").disabled = pendingWorkspaceSwitches.has("btnGlobalGranularity");
+      }
 
       const sess = proposalsData.session_state || {};
       const opMode = (sess.operating_mode || "GOVERNED_IMPLEMENTATION").toUpperCase();
@@ -2960,6 +3041,8 @@
       }
       if ($("btnGlobalAnalysis")) {
         $("btnGlobalAnalysis").className = `workspace-switch-button ${opMode === "GOVERNED_IMPLEMENTATION" ? "switch-on" : "switch-analysis"}`;
+        $("btnGlobalAnalysis").classList.toggle("switch-pending", pendingWorkspaceSwitches.has("btnGlobalAnalysis"));
+        $("btnGlobalAnalysis").disabled = pendingWorkspaceSwitches.has("btnGlobalAnalysis");
       }
 
       const p = activeProposal || null;
@@ -2981,6 +3064,8 @@
       }
       if ($("btnGlobalDoit")) {
         $("btnGlobalDoit").className = `workspace-switch-button ${isDoit ? "switch-active" : "switch-idle"}`;
+        $("btnGlobalDoit").classList.toggle("switch-pending", pendingWorkspaceSwitches.has("btnGlobalDoit"));
+        $("btnGlobalDoit").disabled = pendingWorkspaceSwitches.has("btnGlobalDoit");
       }
       if ($("ledMinimalTests")) {
         $("ledMinimalTests").className = isMinTests ? "switch-led switch-led-active" : "switch-led switch-led-idle";
@@ -2988,6 +3073,8 @@
       }
       if ($("btnGlobalMinimalTests")) {
         $("btnGlobalMinimalTests").className = `workspace-switch-button ${isMinTests ? "switch-active" : "switch-idle"}`;
+        $("btnGlobalMinimalTests").classList.toggle("switch-pending", pendingWorkspaceSwitches.has("btnGlobalMinimalTests"));
+        $("btnGlobalMinimalTests").disabled = pendingWorkspaceSwitches.has("btnGlobalMinimalTests");
       }
       if ($("ledForce")) {
         $("ledForce").className = isBypass ? "switch-led switch-led-off" : "switch-led switch-led-idle";
@@ -3039,59 +3126,139 @@
       return target && target.kind === "CRP" ? target.item : null;
     }
 
-    function toggleGlobalDoit() {
-      const current = proposalsData.flow_mode === "doit" || proposalsData.always_proceed === true;
-      const target = !current;
-      const targetDisplay = target ? "Continuous Flow (-DOIT Active)" : "Standard Gating";
-      const cmd = `pwsh -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action doit-mode -SwitchState ${target ? "active" : "paused"}`;
-      executeDaemonCommand(cmd, `Updating workspace -DOIT Switch to ${targetDisplay}...`, cmd);
-    }
-
-    function toggleGlobalMinimalTests() {
-      const current = Boolean(proposalsData.minimal_tests || proposalsData.test_scope === "minimal");
-      const target = !current;
-      const targetDisplay = target ? "Minimal Tests DAG (Fast)" : "Standard Test DAG";
-      const cmd = `pwsh -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action minimal-tests -SwitchState ${target ? "active" : "paused"}`;
-      executeDaemonCommand(cmd, `Updating workspace -MinimalTests Switch to ${targetDisplay}...`, cmd);
-    }
-
-    function toggleLcmMode() {
-      const current = (proposalsData.lcm_mode || "active").toLowerCase();
-      const target = (current === "active") ? "paused" : "active";
-      const targetDisplay = (target === "active") ? "LCM ON (Active)" : "LCM OFF (Suspended)";
-      const cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action mode -Mode ${target}`;
-      executeDaemonCommand(cmd, `Setting Governance Switch to ${targetDisplay}...`, cmd);
-    }
-
-    function toggleTestingMode() {
-      const current = (proposalsData.testing_mode || "active").toLowerCase();
-      const target = (current === "active") ? "paused" : "active";
-      const targetDisplay = (target === "active") ? "Testing ON" : "Testing OFF (Deferred Deep Cascades)";
-      const cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action testing-mode -TestingMode ${target}`;
-      executeDaemonCommand(cmd, `Setting Testing Switch to ${targetDisplay}...`, cmd);
-    }
-
-    function toggleGranularity() {
-      const current = (proposalsData.review_granularity || "coarse").toLowerCase();
-      const target = (current === "coarse") ? "tight" : "coarse";
-      const targetDisplay = (target === "tight") ? "-Tight (Review per proposal)" : "-Coarse (Combined batch review)";
-      const cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action granularity -Granularity ${target}`;
-      executeDaemonCommand(cmd, `Setting Review Granularity Switch to ${targetDisplay}...`, cmd);
-    }
-
-    function toggleAnalysisMode() {
-      const current = window.lcmOperatingMode || "GOVERNED_IMPLEMENTATION";
-      let targetAction = "analyze";
-      let targetDisplay = "READ_ONLY_ANALYSIS";
-      if (current === "READ_ONLY_ANALYSIS") {
-        targetAction = "implement";
-        targetDisplay = "GOVERNED_IMPLEMENTATION";
-      } else if (current === "CIRCUIT_BREAKER_HALT") {
-        targetAction = "reset-breaker";
-        targetDisplay = "READ_ONLY_ANALYSIS (Reset Breaker)";
+    const pendingWorkspaceSwitches = new Set();
+    const workspaceSwitchAtoms = Object.freeze({
+      lcm: {
+        buttonId: "btnGlobalLcm",
+        target: () => (String(proposalsData.lcm_mode || "active").toLowerCase() === "active") ? "paused" : "active",
+        display: target => target === "active" ? "LCM ON (Active)" : "LCM OFF (Suspended)",
+        command: target => `pwsh -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action mode -Mode ${target}`,
+        confirmed: (fresh, target) => String(fresh.lcm_mode || "").toLowerCase() === target
+      },
+      testing: {
+        buttonId: "btnGlobalTesting",
+        target: () => (String(proposalsData.testing_mode || "active").toLowerCase() === "active") ? "paused" : "active",
+        display: target => target === "active" ? "Testing ON" : "Testing OFF (Deferred Deep Cascades)",
+        command: target => `pwsh -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action testing-mode -TestingMode ${target}`,
+        confirmed: (fresh, target) => String(fresh.testing_mode || "").toLowerCase() === target
+      },
+      granularity: {
+        buttonId: "btnGlobalGranularity",
+        target: () => String(proposalsData.review_granularity || "coarse").toLowerCase() === "coarse" ? "tight" : "coarse",
+        display: target => target === "tight" ? "-Tight (Review per proposal)" : "-Coarse (Combined batch review)",
+        command: target => `pwsh -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action granularity -TargetExpression ${target}`,
+        confirmed: (fresh, target) => String(fresh.review_granularity || "").toLowerCase() === target
+      },
+      analysis: {
+        buttonId: "btnGlobalAnalysis",
+        target: () => {
+          const current = window.lcmOperatingMode || "GOVERNED_IMPLEMENTATION";
+          if (current === "READ_ONLY_ANALYSIS") {
+            return { action: "implement", mode: "GOVERNED_IMPLEMENTATION", display: "GOVERNED_IMPLEMENTATION" };
+          }
+          if (current === "CIRCUIT_BREAKER_HALT") {
+            return { action: "reset-breaker", mode: "READ_ONLY_ANALYSIS", display: "READ_ONLY_ANALYSIS (Reset Breaker)" };
+          }
+          return { action: "analyze", mode: "READ_ONLY_ANALYSIS", display: "READ_ONLY_ANALYSIS" };
+        },
+        display: target => target.display,
+        command: target => `pwsh -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action ${target.action}`,
+        confirmed: (fresh, target) => String(fresh.session_state?.operating_mode || "").toUpperCase() === target.mode
+      },
+      doit: {
+        buttonId: "btnGlobalDoit",
+        target: () => !(proposalsData.flow_mode === "doit" || proposalsData.always_proceed === true),
+        display: target => target ? "Continuous Flow (-DOIT Active)" : "Standard Gating",
+        command: target => `pwsh -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action doit-mode -SwitchState ${target ? "active" : "paused"}`,
+        confirmed: (fresh, target) => (fresh.flow_mode === "doit" || fresh.always_proceed === true) === target
+      },
+      minimalTests: {
+        buttonId: "btnGlobalMinimalTests",
+        target: () => !Boolean(proposalsData.minimal_tests || proposalsData.test_scope === "minimal"),
+        display: target => target ? "Minimal Tests DAG (Fast)" : "Standard Test DAG",
+        command: target => `pwsh -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action minimal-tests -SwitchState ${target ? "active" : "paused"}`,
+        confirmed: (fresh, target) => Boolean(fresh.minimal_tests || fresh.test_scope === "minimal") === target
       }
-      const cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action ${targetAction}`;
-      executeDaemonCommand(cmd, `Setting Analysis Governance Mode to ${targetDisplay}...`, cmd);
+    });
+
+    function invokeWorkspaceSwitchAtom(atomName) {
+      const atom = workspaceSwitchAtoms[atomName];
+      if (!atom) {
+        setActionResult(`Unknown workspace switch atom: ${atomName}.`, "error", "SWITCH");
+        return;
+      }
+      const target = atom.target();
+      dispatchWorkspaceSwitch(atom.buttonId, atom.command(target), atom.display(target), fresh => atom.confirmed(fresh, target));
+    }
+
+    async function getWorkspaceSwitchLedger() {
+      const response = await fetch(DAEMON_URL + "/proposals", { cache: "no-store" });
+      if (!response.ok) {
+        throw new Error(`Ledger refresh returned HTTP ${response.status}.`);
+      }
+      return await response.json();
+    }
+
+    async function dispatchWorkspaceSwitch(buttonId, command, targetDisplay, isConfirmed) {
+      if (pendingWorkspaceSwitches.has(buttonId)) return;
+      if (!IS_RENDERED_CONTROL_HUB) {
+        setActionResult("Developer template is not executable; no switch command was sent.", "error", "SWITCH");
+        return;
+      }
+
+      const button = $(buttonId);
+      pendingWorkspaceSwitches.add(buttonId);
+      if (button) {
+        button.disabled = true;
+        button.classList.add("switch-pending");
+        button.setAttribute("aria-busy", "true");
+        button.title = `Applying ${targetDisplay}...`;
+      }
+      setActionResult(`Applying ${targetDisplay}; waiting for ledger confirmation...`, "", "SWITCH");
+
+      try {
+        const response = await fetch(DAEMON_URL + "/execute", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ command, sync: false, noExit: false })
+        });
+        const data = await response.json();
+        if (!response.ok || data.error || data.status === "ERROR") {
+          const error = data.error || data.stderr || `Daemon returned HTTP ${response.status}.`;
+          setActionResult(formatDaemonError(error), "error", "SWITCH");
+          return;
+        }
+
+        const confirmationDeadline = Date.now() + 15000;
+        while (Date.now() < confirmationDeadline) {
+          await new Promise(resolve => setTimeout(resolve, 300));
+          if (isConfirmed(await getWorkspaceSwitchLedger())) {
+            await refreshHubData(true);
+            setActionResult(`${targetDisplay} confirmed by the refreshed ledger.`, "success", "SWITCH");
+            return;
+          }
+        }
+
+        setActionResult(`${targetDisplay} was dispatched but was not confirmed within 15 seconds. Use Refresh to verify the ledger state; no success was assumed.`, "error", "SWITCH");
+      } catch (error) {
+        setActionResult(`Daemon connection failed while applying ${targetDisplay}: ${error.message}`, "error", "SWITCH");
+      } finally {
+        pendingWorkspaceSwitches.delete(buttonId);
+        if (button) {
+          button.disabled = false;
+          button.classList.remove("switch-pending");
+          button.removeAttribute("aria-busy");
+          button.title = {
+            btnGlobalLcm: "Workspace governance mode",
+            btnGlobalTesting: "Workspace testing mode",
+            btnGlobalGranularity: "Workspace BCR granularity",
+            btnGlobalAnalysis: "Workspace operating mode",
+            btnGlobalDoit: "Workspace flow switch; never bypasses 2 - REVIEW",
+            btnGlobalMinimalTests: "Workspace test-depth switch"
+          }[buttonId] || "Workspace switch";
+        }
+        updateInternalSwitchesDisplay();
+      }
     }
 
     function updateTimelineDisplay(targetProposal) {
@@ -3508,7 +3675,7 @@
           if (onSuccess) {
             onSuccess();
           } else {
-            setActionResult(data.stdout || `${userTitle || "Command"} completed successfully.`, "success", actionLabel);
+            setActionResult(formatDaemonSuccess(data.stdout, actionLabel, userTitle), "success", actionLabel);
           }
         }, 600);
       } catch (err) {
@@ -3536,6 +3703,26 @@
         message = message.slice(reportStart);
       }
       return message;
+    }
+
+    function formatDaemonSuccess(rawOutput, actionLabel, userTitle) {
+      const message = String(rawOutput || "").replace(/\r\n/g, "\n").trim();
+      if (String(actionLabel).toUpperCase() !== "BCR") {
+        return message || `${userTitle || "Command"} completed successfully.`;
+      }
+
+      const readValue = label => {
+        const match = message.match(new RegExp(`^${label}\\s*:\\s*(.+)$`, "mi"));
+        return match ? match[1].trim() : "";
+      };
+      const baseCommit = readValue("BaseCommit");
+      const mountedDrive = readValue("MountedDrive");
+      const reused = /^true$/i.test(readValue("ReusedExistingReviewWindow"));
+      const launched = /^true$/i.test(readValue("Launched"));
+      const baseSummary = baseCommit ? ` at ${baseCommit.slice(0, 12)}` : "";
+      const driveSummary = mountedDrive ? `${mountedDrive} baseline` : "baseline";
+      const windowSummary = reused ? "existing _LCM window reused" : (launched ? "_LCM window opened" : "review window ready");
+      return `Review ready: ${driveSummary}${baseSummary}; ${windowSummary}.`;
     }
 
     // -------------------------------------------------------------------------

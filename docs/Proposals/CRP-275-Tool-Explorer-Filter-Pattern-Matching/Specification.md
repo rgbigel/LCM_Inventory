@@ -7,9 +7,9 @@ Scope: LCM_Inventory
 Baseline-Version: 10.0.0
 Author: Rolf
 Date: 2026-10-14 12:59:25
-Status: Suggested
-Plan-State: suggested
-Progress-State: undecided
+Status: In Progress
+Plan-State: in_progress
+Progress-State: in_progress
 Priority: High
 App-ID: None
 ```

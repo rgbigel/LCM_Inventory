@@ -428,6 +428,9 @@ try {
           try {
             $hubBytes = [System.IO.File]::ReadAllBytes($hubFile)
             $response.ContentType = "text/html; charset=utf-8"
+            $response.Headers["Cache-Control"] = "no-store, no-cache, must-revalidate"
+            $response.Headers["Pragma"] = "no-cache"
+            $response.Headers["Expires"] = "0"
             $response.ContentLength64 = $hubBytes.Length
             $response.OutputStream.Write($hubBytes, 0, $hubBytes.Length)
             $response.OutputStream.Close()

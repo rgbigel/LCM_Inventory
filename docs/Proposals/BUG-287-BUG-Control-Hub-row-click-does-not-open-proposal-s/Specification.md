@@ -10,7 +10,7 @@ Date: 2026-10-17 20:49:32
 Affected-Repos:
   - LCM_Inventory
 Severity: Medium
-Status: Held
+Status: In Progress
 Root-Cause: Proposal-row clicks select only the active item target. The available original-source action rejects Specification.md as a fallback, leaving the expected primary proposal document unopened.
 ```
 
@@ -19,8 +19,11 @@ Root-Cause: Proposal-row clicks select only the active item target. The availabl
 ## 1. Defect and Intent
 Clicking a CRP or BUG must open its `Specification.md`, including an item currently visible at Gate 2. Only when that bundle document is unavailable may the Hub fall back to editing the original CRP source.
 
-## 2. Review Hold
-This BUG is deliberately held while the operator reviews the current LCM status on disk. No UI behavior has been modified under BUG-287.
+## 2. Reinstatement
+
+BUG-287 was completed prematurely while the required `Show Specification`
+ordering remained unmet. It was reinstated with the concrete correction and is
+now a member of COH-275, whose prime proposal is CRP-275.
 
 ## 3. Low-Priority Menu Ordering Requirement
 When this held BUG is implemented, `Show Specification` must be the first action in the proposal drop-down. It is the normal first step before any lifecycle action such as `Proceed`, review opening, or completion.

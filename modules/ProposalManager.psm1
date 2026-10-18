@@ -17,6 +17,15 @@ function Get-ProposalStorePath {
     [CmdletBinding()]
     param()
 
+    if (-not [string]::IsNullOrWhiteSpace($env:LCM_PROPOSAL_STORE_PATH)) {
+        $overridePath = [System.IO.Path]::GetFullPath($env:LCM_PROPOSAL_STORE_PATH)
+        $overrideDirectory = Split-Path -Path $overridePath -Parent
+        if (-not (Test-Path -LiteralPath $overrideDirectory)) {
+            New-Item -ItemType Directory -Path $overrideDirectory -Force | Out-Null
+        }
+        return $overridePath
+    }
+
     $scriptRoot = $PSScriptRoot
     if ([string]::IsNullOrWhiteSpace($scriptRoot)) {
         $scriptRoot = (Get-Location).Path

@@ -20,6 +20,15 @@ function Get-LcmSessionStatePath {
     [string]$WorkspaceRoot = 'D:\Git_Repositories'
   )
 
+  if (-not [string]::IsNullOrWhiteSpace($env:LCM_ANALYSIS_STATE_PATH)) {
+    $overridePath = [System.IO.Path]::GetFullPath($env:LCM_ANALYSIS_STATE_PATH)
+    $overrideDirectory = Split-Path -Path $overridePath -Parent
+    if (-not (Test-Path -LiteralPath $overrideDirectory)) {
+      New-Item -ItemType Directory -Path $overrideDirectory -Force | Out-Null
+    }
+    return $overridePath
+  }
+
   return (Join-Path $WorkspaceRoot 'LCM_Inventory\data\session_state\active_session.json')
 }
 

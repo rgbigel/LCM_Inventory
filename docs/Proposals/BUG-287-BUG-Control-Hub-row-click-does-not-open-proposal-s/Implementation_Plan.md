@@ -1,7 +1,9 @@
 # Implementation Plan: BUG-287 - [BUG] Control Hub row click does not open proposal specification
 
 ## 1. Executive Summary & Problem Context
-BUG-287 captures the Control Hub document-navigation defect for review; implementation is held.
+BUG-287 captures the Control Hub document-navigation defect. The unmet
+specification-first ordering requirement was reinstated and is now implemented
+with CRP-275 under COH-275.
 
 ## 2. Proposed Changes
 ### Component 1: Specification-first row navigation

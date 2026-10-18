@@ -46,6 +46,9 @@ Describe 'Control Hub rendered-artifact safety' {
     $daemon | Should -Match 'class LcmControlHubRefreshBroker'
     $daemon | Should -Match "GET /hub-events"
     $daemon | Should -Match "POST /hub-refresh"
+    $daemon | Should -Match 'Cache-Control"\] = "no-store, no-cache, must-revalidate"'
+    $daemonActionController = Get-Content -LiteralPath (Join-Path $script:repositoryRoot 'modules\LcmDaemon\Classes\DaemonActionController.ps1') -Raw -Encoding UTF8
+    $daemonActionController | Should -Match '\$wsh\.SendKeys\("\^\{F5\}"\)'
     $daemon | Should -Match '\[LcmControlHubRefreshBroker\]::Publish'
     $proposalManager | Should -Match 'function Update-LcmControlHubAfterCompletion'
     $proposalManager | Should -Match "Invoke-RestMethod -Uri 'http://127\.0\.0\.1:9876/hub-refresh'"
@@ -75,7 +78,7 @@ Describe 'Control Hub rendered-artifact safety' {
     $template | Should -Match 'container\.innerHTML = getSelectedItemLifecycleMarkup\(target\.item\);'
     $template | Should -Match 'container\.innerHTML = status;'
     $template | Should -Match 'ITEM explicitly switched from'
-    $template | Should -Match 'ACTIONS: ITEM \$\{crpTag\}'
+    $template | Should -Match '\$\{crpTag\} Lifecycle Actions'
     $template | Should -Match 'lifecycleButton\("Do ITEM"'
     $template | Should -Not -Match 'Do ITEM \(Doit\)'
     $template | Should -Match 'dispatchTargetAction\(''do''\)'
@@ -90,13 +93,17 @@ Describe 'Control Hub rendered-artifact safety' {
     $template = Get-Content -LiteralPath $script:templatePath -Raw -Encoding UTF8
     $renderer = Get-Content -LiteralPath $script:rendererPath -Raw -Encoding UTF8
 
-    $lifecycleIndex = $template.IndexOf('<div class="show-dropdown-title">Lifecycle</div>')
+    $actionsIndex = $template.IndexOf('<div class="show-dropdown-title">${crpTag} Lifecycle Actions</div>')
+    $specificationIndex = $template.IndexOf('onclick="showProposalSpec(${p.id})"')
+    $doIndex = $template.IndexOf('${lifecycleButton("Do ITEM"')
     $cohortIndex = $template.IndexOf('<div class="show-dropdown-title">Cohort Head / Member Management</div>')
     $documentsIndex = $template.IndexOf('<div class="show-dropdown-title">Documents (#${p.id})</div>')
     $switchesIndex = $template.IndexOf('id="workspaceSwitches"')
 
-    $lifecycleIndex | Should -BeGreaterThan -1
-    $cohortIndex | Should -BeGreaterThan $lifecycleIndex
+    $actionsIndex | Should -BeGreaterThan -1
+    $specificationIndex | Should -BeGreaterThan $actionsIndex
+    $doIndex | Should -BeGreaterThan $specificationIndex
+    $cohortIndex | Should -BeGreaterThan $actionsIndex
     $documentsIndex | Should -BeGreaterThan $cohortIndex
     $switchesIndex | Should -BeGreaterThan -1
     $template | Should -Not -Match '<div class="show-dropdown-title">Flow Switches</div>'
@@ -108,6 +115,51 @@ Describe 'Control Hub rendered-artifact safety' {
     $template | Should -Match 'id="targetActionChanges"'
     $template | Should -Match '-Action reinstate -TargetExpression'
     $template | Should -Match '-Changes "\$\{safeChanges\}"'
+    $template | Should -Match 'requestAnimationFrame\(\(\) => requestAnimationFrame\(\(\) => showDropdownById\(id\)\)\)'
+    $template | Should -Match 'function formatDaemonSuccess'
+    $template | Should -Match 'Review ready: \$\{driveSummary\}\$\{baseSummary\}; \$\{windowSummary\}\.'
+    $template | Should -Match 'max-height: min\(65vh, 576px\)'
+    $template | Should -Match '\.show-dropdown-menu\.open-upward'
+    $template | Should -Match 'function positionDropdown\(menu\)'
+    $template | Should -Match 'const spaceBelow = Math\.max\(0, window\.innerHeight - triggerBounds\.bottom - clearance\)'
+    $template | Should -Match 'const openUpward = spaceAbove > spaceBelow'
+    $template | Should -Match '\.show-dropdown-menu\.active \{ display: block; position: fixed; \}'
+    $template | Should -Match 'const wizardInset = 32'
+    $template | Should -Match 'table-layout: fixed'
+    $template | Should -Match '<colgroup>'
+    $template | Should -Match 'scrollbar-gutter: stable'
+    $template | Should -Match 'id="rail-all"'
+    $template | Should -Match 'function applyColumnFilters\(\)'
+    $template | Should -Match 'activeRailFilter = "all"'
+    $template | Should -Match '\.proposal-table \{ width: 100%; table-layout: fixed;'
+    $template | Should -Match 'const workspaceSwitchAtoms = Object\.freeze\('
+    $template | Should -Match 'function invokeWorkspaceSwitchAtom\(atomName\)'
+    $template | Should -Match 'function dispatchWorkspaceSwitch\('
+    $template | Should -Match 'JSON\.stringify\(\{ command, sync: false, noExit: false \}\)'
+    $template | Should -Match 'confirmed by the refreshed ledger'
+    $template | Should -Match 'workspace-switch-button\.switch-pending'
+    $template | Should -Match 'const confirmationDeadline = Date\.now\(\) \+ 15000'
+    $template | Should -Match 'function getWorkspaceSwitchLedger\(\)'
+    $template | Should -Match 'btnGlobalGranularity'
+    $template | Should -Match 'btnGlobalAnalysis'
+    $template | Should -Match 'btnGlobalDoit'
+    $template | Should -Match 'btnGlobalMinimalTests'
+    $template | Should -Match 'onclick="invokeWorkspaceSwitchAtom\(''lcm''\)"'
+    $template | Should -Match 'onclick="invokeWorkspaceSwitchAtom\(''testing''\)"'
+    $template | Should -Match 'onclick="invokeWorkspaceSwitchAtom\(''granularity''\)"'
+    $template | Should -Match 'onclick="invokeWorkspaceSwitchAtom\(''analysis''\)"'
+    $template | Should -Match 'onclick="invokeWorkspaceSwitchAtom\(''doit''\)"'
+    $template | Should -Match 'onclick="invokeWorkspaceSwitchAtom\(''minimalTests''\)"'
+    $template | Should -Match '-Action granularity -TargetExpression \$\{target\}'
+    $template | Should -Match '-Action mode -Mode \$\{target\}'
+    $template | Should -Match '-Action testing-mode -TestingMode \$\{target\}'
+    $template | Should -Match '-Action doit-mode -SwitchState \$\{target \? "active" : "paused"\}'
+    $template | Should -Match '-Action minimal-tests -SwitchState \$\{target \? "active" : "paused"\}'
+    $template | Should -Match '\.control-row \{'
+    $template | Should -Match 'min-height: 24px'
+    $template | Should -Match '\.panel-heading > div:first-child'
+    $template | Should -Match 'Committed -\\nReady to Push'
+    $template | Should -Match '\.plan-state-text \{ white-space: pre-line; \}'
     $renderer | Should -Match 'RAW_REVIEW_RECEIPTS'
     $renderer | Should -Match 'LCM_Inventory\\data\\reviews'
   }
@@ -123,8 +175,8 @@ Describe 'Control Hub rendered-artifact safety' {
     $template | Should -Match 'id="btnGlobalAnalysis"'
     $template | Should -Match 'id="btnGlobalDoit"'
     $template | Should -Match 'id="btnGlobalMinimalTests"'
-    $template | Should -Match 'function toggleGlobalDoit'
-    $template | Should -Match 'function toggleGlobalMinimalTests'
+    $template | Should -Match 'workspaceSwitchAtoms'
+    $template | Should -Match 'invokeWorkspaceSwitchAtom\('
     $template | Should -Match 'renderTable\(\);\s*updateInternalSwitchesDisplay\(null\);'
     $template | Should -Match 'workspace-switch-button \$\{isLcmOn \? "switch-on" : "switch-off"\}'
     $template | Should -Not -Match 'workspace-switch-label">Selected ITEM'
@@ -138,6 +190,8 @@ Describe 'Control Hub rendered-artifact safety' {
   It 'renders unresolved cross-repository BCR obligations as normal filtered cohorts beside their head' {
     $template = Get-Content -LiteralPath $script:templatePath -Raw -Encoding UTF8
 
+    $template | Should -Match 'function isLiveReviewCohort'
+    $template | Should -Match '\["open", "held"\]\.includes'
     $template | Should -Match 'function getUnresolvedReviewObligations'
     $template | Should -Match 'function getReviewObligationEntries'
     $template | Should -Match 'return getReviewObligationEntries\(\)\.filter'
