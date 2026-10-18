@@ -4,8 +4,8 @@
 .DESCRIPTION
     Module: tools/Invoke-ProposalAction.ps1
     Authors: Rolf, LCM_AI Engine
-    Version: 10.0.0
-    Date: 2026-10-13
+    Version: 10.0.1
+    Date: 2026-10-18
 #>
 
 [CmdletBinding()]
@@ -16,6 +16,10 @@ param(
 
     [Parameter(Mandatory = $false, Position = 1, HelpMessage = 'Target proposal expression (e.g. all, #1, 105, 100-105)')]
     [string]$TargetExpression = '',
+
+    [Parameter(Mandatory = $false, HelpMessage = 'Explicit Gate-1-accepted proposal ID required for structural App creation')]
+    [ValidateRange(1, [int]::MaxValue)]
+    [int]$ProposalId,
 
     [Parameter(Mandatory = $false, HelpMessage = 'Additional details or notes for proposal transition')]
     [string]$Details = '',
@@ -661,8 +665,11 @@ switch -Regex ($Action) {
         if ([string]::IsNullOrWhiteSpace($TargetExpression)) {
             throw "TargetExpression (App Title, e.g. 'Realtime Log Streamer') is required for 'app'."
         }
+        if (-not $PSBoundParameters.ContainsKey('ProposalId')) {
+            throw "ProposalId is required for 'new-app'. Create and accept a matching proposal before structural implementation."
+        }
         $targetR = if ($TargetRepo) { $TargetRepo } else { 'LCM_AI' }
-        $res = New-LcmApp -Title $TargetExpression -Repo $targetR -Description $Details
+        $res = New-LcmApp -Title $TargetExpression -Repo $targetR -Description $Details -ProposalId $ProposalId
         break
     }
     '^(apps|list-apps)$' {

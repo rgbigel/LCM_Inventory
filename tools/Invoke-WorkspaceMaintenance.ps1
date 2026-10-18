@@ -4,11 +4,11 @@
 .DESCRIPTION
   Module: tools/Invoke-WorkspaceMaintenance.ps1
   Purpose: Enforces automated workspace hygiene, daemon log line truncation to a manageable tail (~100 lines),
-           purges aged transient logs, clears stale Beyond Compare scratch reviews, and prunes temporary junk files.
+           purges aged transient logs, and prunes temporary junk files without touching active BCR review scope.
            Designed to run standalone or as part of the pre-push pipeline in Invoke-WorkspacePush.ps1.
   Path: LCM_Inventory/tools/Invoke-WorkspaceMaintenance.ps1
   Authors: Rolf, LCM_AI Governance
-  Version: 10.0.1
+  Version: 10.0.2
   Date: 2026-10-18
   Rule: RULE-PS-001 - RULE-PS-014, RULE-LCM-014
 #>
@@ -24,10 +24,7 @@ param(
     [Parameter(Mandatory = $false, HelpMessage = 'Maximum age in days for transient script logs in LCM_Inventory/data/logs/lcm (default: 3)')]
     [int]$MaxScriptLogAgeDays = 3,
 
-    [Parameter(Mandatory = $false, HelpMessage = 'Maximum age in hours for Beyond Compare scratch review directories (default: 48)')]
-    [int]$ReviewOlderThanHours = 48,
-
-    [Parameter(Mandatory = $false, HelpMessage = 'Maintain daemon and transient logs only; do not clean BCR scratch or general temporary files')]
+    [Parameter(Mandatory = $false, HelpMessage = 'Maintain daemon and transient logs only; do not prune general temporary files')]
     [switch]$LogOnly,
 
     [Parameter(Mandatory = $false, HelpMessage = 'Execute cleanup in dry-run simulation mode without modifying or deleting files')]
@@ -46,7 +43,7 @@ if ($Help) {
     Write-Host "==========================================================================" -ForegroundColor Cyan
     Write-Host "SYNOPSIS:" -ForegroundColor Yellow
     Write-Host "  Cleans LcmDesktopDaemon-*.log files to a ~100-line tail, purges stale transient logs,"
-    Write-Host "  cleans BC review scratch, and prunes temporary workspace junk."
+    Write-Host "  and optionally prunes temporary workspace junk. BCR review scope is never cleaned."
     Write-Host ""
     Write-Host "USAGE:" -ForegroundColor Yellow
     Write-Host "  pwsh LCM_Inventory/tools/Invoke-WorkspaceMaintenance.ps1 [-TailLines <int>] [-MaxLogAgeDays <int>] [-MaxScriptLogAgeDays <int>] [-LogOnly] [-DryRun] [-h]"
@@ -55,8 +52,7 @@ if ($Help) {
     Write-Host "  -TailLines             : Number of lines to retain in daemon log files (default: 100)"
     Write-Host "  -MaxLogAgeDays         : Maximum age in days before deleting old daemon logs (default: 7)"
     Write-Host "  -MaxScriptLogAgeDays   : Maximum age in days for transient script logs (default: 3)"
-    Write-Host "  -ReviewOlderThanHours  : Maximum age in hours for BC scratch reviews (default: 48)"
-    Write-Host "  -LogOnly               : Maintain daemon and transient logs without touching BCR scratch or temporary files"
+    Write-Host "  -LogOnly               : Maintain daemon and transient logs without pruning temporary files"
     Write-Host "  -DryRun (-WhatIf)      : Simulate maintenance actions without mutating files"
     Write-Host "  -Help (-h, -?)         : Displays this help screen"
     Write-Host "==========================================================================" -ForegroundColor Cyan
@@ -85,8 +81,6 @@ $stats = [PSCustomObject]@{
     DaemonBytesFreed    = [int64]0
     ScriptLogsPurged    = 0
     ScriptBytesFreed    = [int64]0
-    ReviewDirsCleaned   = 0
-    ReviewBytesFreed    = [int64]0
     ScratchJunkPurged   = 0
     ScratchBytesFreed   = [int64]0
 }
@@ -94,7 +88,7 @@ $stats = [PSCustomObject]@{
 # ------------------------------------------------------------------------------
 # 1. Truncate & Purge LcmDesktopDaemon-*.log Files
 # ------------------------------------------------------------------------------
-Write-Host "`n[Step 1/4] Maintaining LCM Desktop Daemon Logs (Tail: $TailLines lines)..." -ForegroundColor Yellow
+Write-Host "`n[Step 1/3] Maintaining LCM Desktop Daemon Logs (Tail: $TailLines lines)..." -ForegroundColor Yellow
 
 $daemonDirs = @(
     (Join-Path $workspaceRoot "LCM_Inventory\data\logs\lcm"),
@@ -162,7 +156,7 @@ foreach ($dir in $daemonDirs) {
 # ------------------------------------------------------------------------------
 # 2. Purge Stale Transient Script Logs (LCM_Inventory/data/logs/lcm/*.log)
 # ------------------------------------------------------------------------------
-Write-Host "`n[Step 2/4] Purging Stale Script Logs in LCM_Inventory/data/logs/lcm (Older than $MaxScriptLogAgeDays days)..." -ForegroundColor Yellow
+Write-Host "`n[Step 2/3] Purging Stale Script Logs in LCM_Inventory/data/logs/lcm (Older than $MaxScriptLogAgeDays days)..." -ForegroundColor Yellow
 
 $lcmLogsDir = Join-Path $workspaceRoot "LCM_Inventory\data\logs\lcm"
 if (Test-Path -LiteralPath $lcmLogsDir) {
@@ -177,7 +171,8 @@ if (Test-Path -LiteralPath $lcmLogsDir) {
                 Remove-Item -LiteralPath $sl.FullName -Force -ErrorAction SilentlyContinue
             }
         }
-        Write-Host "  - Purged $($staleScriptLogs.Count) transient script logs ($([math]::Round($stats.ScriptBytesFreed / 1KB, 1)) KB freed)" -ForegroundColor Green
+        $scriptLogAction = if ($DryRun) { 'Would purge' } else { 'Purged' }
+        Write-Host "  - $scriptLogAction $($staleScriptLogs.Count) transient script logs ($([math]::Round($stats.ScriptBytesFreed / 1KB, 1)) KB eligible)" -ForegroundColor Green
     } else {
         Write-Host "  - No stale transient script logs found older than $MaxScriptLogAgeDays days." -ForegroundColor DarkGray
     }
@@ -197,27 +192,9 @@ if ($LogOnly) {
 }
 
 # ------------------------------------------------------------------------------
-# 3. Purge Stale Beyond Compare Scratch Reviews
+# 3. Prune Temporary Junk Files (*.tmp, *~, scratch temp)
 # ------------------------------------------------------------------------------
-Write-Host "`n[Step 3/4] Maintaining Beyond Compare Review Scratch (Older than $ReviewOlderThanHours hours)..." -ForegroundColor Yellow
-
-$bcCleanupScript = Join-Path $workspaceRoot "LCM_Inventory\tools\Clear-BCReviewTemp.ps1"
-if (Test-Path -LiteralPath $bcCleanupScript) {
-    try {
-        if (-not $DryRun) {
-            & pwsh -File $bcCleanupScript -OlderThanHours $ReviewOlderThanHours -NoExplorer
-        } else {
-            Write-Host "  - [DryRun] Clear-BCReviewTemp.ps1 -OlderThanHours $ReviewOlderThanHours would execute." -ForegroundColor DarkGray
-        }
-    } catch {
-        Write-Warning "Clear-BCReviewTemp encountered a warning: $_"
-    }
-}
-
-# ------------------------------------------------------------------------------
-# 4. Prune Temporary Junk Files (*.tmp, *~, scratch temp)
-# ------------------------------------------------------------------------------
-Write-Host "`n[Step 4/4] Pruning Temporary Workspace Junk (*.tmp, *~)..." -ForegroundColor Yellow
+Write-Host "`n[Step 3/3] Pruning Temporary Workspace Junk (*.tmp, *~)..." -ForegroundColor Yellow
 
 $scratchDir = Join-Path $workspaceRoot "LCM_Inventory\scratch"
 if (Test-Path -LiteralPath $scratchDir) {

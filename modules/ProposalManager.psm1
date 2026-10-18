@@ -6,8 +6,8 @@
 #          batch operations, review granularity ('coarse' | 'tight'), repo review queue inspection,
 #          and persistent ledger storage in LCM_Inventory.
 # Authors: Rolf, LCM_AI Engine
-# Version: 10.0.1
-# Date: 2026-10-17
+# Version: 10.0.2
+# Date: 2026-10-18
 # =====================================================================
 
 Set-StrictMode -Version Latest
@@ -2960,6 +2960,54 @@ function Sync-LcmAppCatalog {
     return [PSCustomObject]$catalogObj
 }
 
+function Assert-LcmProposalImplementationEligibility {
+    [CmdletBinding()]
+    param(
+        [int]$ProposalId = 0,
+
+        [Parameter(Mandatory = $true)]
+        [ValidatePattern('^[A-Za-z0-9_.-]+$')]
+        [string]$Repository,
+
+        [string]$WorkspaceRoot = 'D:\Git_Repositories'
+    )
+
+    $store = Get-ProposalStore
+    $proposal = @($store.proposals | Where-Object { [int]$_.id -eq $ProposalId } | Select-Object -First 1)
+    if ($proposal.Count -eq 0) {
+        throw "GOVERNANCE BLOCK: Repository '$Repository' requires an explicit originating proposal. Proposal #$ProposalId was not found. Create and accept the proposal before structural implementation."
+    }
+
+    $originRepository = [string]$proposal[0].origin_repo
+    if (-not $originRepository.Equals($Repository, [System.StringComparison]::OrdinalIgnoreCase)) {
+        throw "GOVERNANCE BLOCK: Proposal #$ProposalId originates from '$originRepository', not '$Repository'. Select the matching proposal before structural implementation."
+    }
+
+    $eligibleStates = @('in_progress', 'verified', 'in_review')
+    $proposalState = [string]$proposal[0].state
+    if ($proposalState -notin $eligibleStates) {
+        throw "GOVERNANCE BLOCK: Proposal #$ProposalId is '$proposalState'. Structural implementation requires Gate 1 acceptance and an eligible state: $($eligibleStates -join ', ')."
+    }
+
+    $bundlePath = if ($proposal[0].PSObject.Properties['bundle_dir'] -and $proposal[0].bundle_dir) {
+        [string]$proposal[0].bundle_dir
+    } elseif ($proposal[0].PSObject.Properties['plan_path'] -and $proposal[0].plan_path) {
+        Split-Path -Path ([string]$proposal[0].plan_path) -Parent
+    } else {
+        ''
+    }
+    if ([string]::IsNullOrWhiteSpace($bundlePath)) {
+        throw "GOVERNANCE BLOCK: Proposal #$ProposalId has no proposal bundle. Create its specification before structural implementation."
+    }
+
+    $specificationPath = Join-Path -Path (Join-Path -Path $WorkspaceRoot -ChildPath $Repository) -ChildPath (Join-Path -Path $bundlePath -ChildPath 'Specification.md')
+    if (-not (Test-Path -LiteralPath $specificationPath -PathType Leaf)) {
+        throw "GOVERNANCE BLOCK: Proposal #$ProposalId does not have a specification at '$specificationPath'. Create the bundle before structural implementation."
+    }
+
+    return $proposal[0]
+}
+
 function New-LcmApp {
     [CmdletBinding(SupportsShouldProcess = $true)]
     param(
@@ -2972,6 +3020,8 @@ function New-LcmApp {
         [Parameter(Mandatory = $false)]
         [string]$Description = '',
 
+        [int]$ProposalId = 0,
+
         [Parameter(Mandatory = $false)]
         [switch]$SplitDocs = $false,
 
@@ -2982,6 +3032,10 @@ function New-LcmApp {
     $targetRepoDir = Join-Path $WorkspaceRoot $Repo
     if (-not (Test-Path $targetRepoDir)) {
         throw "Target repository '$Repo' does not exist at: $targetRepoDir"
+    }
+
+    if ($ProposalId -gt 0) {
+        Assert-LcmProposalImplementationEligibility -ProposalId $ProposalId -Repository $Repo -WorkspaceRoot $WorkspaceRoot | Out-Null
     }
 
     # Find existing App IDs across the repo
@@ -3809,7 +3863,7 @@ Export-ModuleMember -Function Get-ProposalStorePath, Get-ProposalStore, Set-Prop
     Set-WorkspaceProposalPriority, Save-ProposalPlan, Save-ProposalWalkthrough, `
     Resolve-ProposalIdExpression, Get-LcmReviewCohortResolution, Save-LcmReviewCohortReceipt, Get-LcmReviewCohortCompletionPlan, Complete-LcmReviewCohortAcceptance, Set-LcmReviewCohort, Test-LcmProposalVerificationPrecondition, Sync-LcmCohortGateState, Invoke-LcmCohortLifecycleAction, Set-LcmProposalSupersession, Set-LcmProposalRetirement, Invoke-ProposalBatchAction, New-LcmLifecycleFailureReport, Format-LcmLifecycleFailureReport, New-LcmLifecycleFailureException, `
     Set-ReviewGranularity, Get-ReviewGranularity, Set-LCMMode, Get-LCMMode, Set-TestingMode, Get-TestingMode, `
-    Get-ActiveAppContext, Set-ActiveAppContext, Get-LcmApps, Sync-LcmAppCatalog, New-LcmApp, Split-LcmAppDocs, Format-LcmAppsTable, `
+    Get-ActiveAppContext, Set-ActiveAppContext, Get-LcmApps, Sync-LcmAppCatalog, Assert-LcmProposalImplementationEligibility, New-LcmApp, Split-LcmAppDocs, Format-LcmAppsTable, `
     Get-LcmProposalDocument, Remove-LcmProposalBundle, `
     Test-RegressionTrigger, Assert-RegressionSafety, Get-RegressionDAGOrder, New-ChildRegressionProposal, `
     Get-ReposUnderReview, Format-ProposalsTable, Format-ReposUnderReviewTable `

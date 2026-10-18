@@ -47,28 +47,28 @@ Describe 'ProposalManager Core Functions' {
             $ids2.Count | Should -Be 3
         }
 
-        It 'Updates state to "approved" and progress to "in_progress" on "do" action' {
+        It 'Updates state and progress to "in_progress" on "do" action' {
             $p = New-WorkspaceProposal -Title 'Batch Action Test' -OriginRepo 'TestRepo'
             $res = @(Invoke-ProposalBatchAction -Action 'do' -TargetExpression "$($p.id)")
             $res.Count | Should -Be 1
-            $res[0].state | Should -Be 'approved'
+            $res[0].state | Should -Be 'in_progress'
             $res[0].progress_state | Should -Be 'in_progress'
 
             $updated = @(Get-WorkspaceProposals -Id $p.id)
-            $updated[0].state | Should -Be 'approved'
+            $updated[0].state | Should -Be 'in_progress'
             $updated[0].progress_state | Should -Be 'in_progress'
         }
 
-        It 'Updates state to "deferred" on "defer" action' {
+        It 'Updates state to "held" on "defer" action' {
             $p = New-WorkspaceProposal -Title 'Defer Test' -OriginRepo 'TestRepo'
             $res = @(Invoke-ProposalBatchAction -Action 'defer' -TargetExpression "$($p.id)")
-            $res[0].state | Should -Be 'deferred'
+            $res[0].state | Should -Be 'held'
         }
 
-        It 'Updates state to "deleted" on "delete" action' {
+        It 'Updates state to "held" on "delete" action' {
             $p = New-WorkspaceProposal -Title 'Delete Test' -OriginRepo 'TestRepo'
             $res = @(Invoke-ProposalBatchAction -Action 'delete' -TargetExpression "$($p.id)")
-            $res[0].state | Should -Be 'deleted'
+            $res[0].state | Should -Be 'held'
         }
     }
 
@@ -167,7 +167,6 @@ Describe 'ProposalManager Core Functions' {
             Set-Content -Path (Join-Path $testDocsDir 'Architecture.md') -Value "# Test Architecture" -Encoding UTF8
             Set-Content -Path (Join-Path $testDocsDir 'Requirements.md') -Value "# Test Requirements" -Encoding UTF8
             Set-Content -Path (Join-Path $testDocsDir 'Implementation.md') -Value "# Test Implementation" -Encoding UTF8
-
             $app = New-LcmApp -Repo $testRepo -Title 'Telemetry Streamer' -WorkspaceRoot $TestDrive -SplitDocs
 
             $app | Should -Not -BeNullOrEmpty
@@ -306,4 +305,3 @@ Root implementation.
         }
     }
 }
-
