@@ -19,8 +19,8 @@
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
   Path: tools/LcmDesktopDaemon.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.0
-  Date: 2026-10-13
+  Version: 10.0.1
+  Date: 2026-10-18
 .PARAMETER Port
   The local TCP listening port (Default: 9876). Configurable via parameter or $env:LCM_DAEMON_PORT.
 .PARAMETER Status
@@ -70,7 +70,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$scriptVersion = "10.0.0"
+$scriptVersion = "10.0.1"
 $scriptName = "LcmDesktopDaemon"
 
 # Resolve configured port: Parameter > EnvVar > Default (9876)
@@ -329,6 +329,18 @@ $manifest = [PSCustomObject]@{
 }
 $manifest | ConvertTo-Json | Set-Content -LiteralPath $manifestPath -Encoding UTF8
 $envObj.Log("Listening on $prefix (SessionId: $($envObj.SessionId), PID: $($envObj.Pid))", 'ACTION')
+$proposalDocumentsRoot = Join-Path $workspaceRoot 'LCM_Inventory\docs\Proposals'
+$pendingProposalDocumentChanges = [System.Collections.Concurrent.ConcurrentQueue[string]]::new()
+$proposalDocumentWatcher = $null
+$proposalDocumentWatcherSubscription = $null
+if (Test-Path -LiteralPath $proposalDocumentsRoot) {
+  $proposalDocumentWatcher = [System.IO.FileSystemWatcher]::new($proposalDocumentsRoot, '*.md')
+  $proposalDocumentWatcher.IncludeSubdirectories = $true
+  $proposalDocumentWatcher.EnableRaisingEvents = $true
+  $proposalDocumentWatcherSubscription = Register-ObjectEvent -InputObject $proposalDocumentWatcher -EventName Changed -MessageData $pendingProposalDocumentChanges -Action {
+    [void]$event.MessageData.Enqueue($Event.SourceEventArgs.FullPath)
+  }
+}
 
 # ------------------------------------------------------------------------------
 # 5. Core Request Dispatch Loop (Strongly-Typed OOP Routing)
@@ -339,6 +351,16 @@ try {
   while ($isRunning -and $listener.IsListening) {
     try {
       $httpContext = $listener.GetContext()
+      $changedProposalDocument = $null
+      $queuedProposalDocument = $null
+      while ($pendingProposalDocumentChanges.TryDequeue([ref]$queuedProposalDocument)) {
+        $changedProposalDocument = $queuedProposalDocument
+      }
+      if ($changedProposalDocument) {
+        $renderer = Join-Path $workspaceRoot 'LCM_Inventory\tools\Show-LcmControl.ps1'
+        & pwsh -NoProfile -File $renderer -NoLaunch | Out-Null
+        $envObj.Log("Rendered Control Hub after proposal document save: $changedProposalDocument", 'ACTION')
+      }
       $request = $httpContext.Request
       $response = $httpContext.Response
       $rawUrl = $request.RawUrl
@@ -370,6 +392,18 @@ try {
       # Route: GET /ping or /status
       if ($httpMethod -eq 'GET' -and ($reqPath -in @('/ping', '/status', '/', '/api/ping', '/api/status'))) {
         Send-DaemonJsonResponse -Response $response -Data ($controller.GetStatus())
+        continue
+      }
+
+      if ($httpMethod -eq 'GET' -and ($reqPath -in @('/proposal-documents', '/api/proposal-documents'))) {
+        $documents = @{}
+        if (Test-Path -LiteralPath $proposalDocumentsRoot) {
+          Get-ChildItem -LiteralPath $proposalDocumentsRoot -Recurse -File -Filter '*.md' | ForEach-Object {
+            $key = $_.FullName.Substring($workspaceRoot.Length + 1).Replace('\', '/')
+            $documents[$key] = Get-Content -LiteralPath $_.FullName -Raw -Encoding UTF8
+          }
+        }
+        Send-DaemonJsonResponse -Response $response -Data @{ status = 'OK'; documents = $documents }
         continue
       }
 

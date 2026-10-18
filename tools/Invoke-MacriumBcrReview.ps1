@@ -83,18 +83,6 @@ if ($NoLaunch) {
 }
 $baseline = & $baselineTool @baselineArgs
 
-$lcmAiPath = Join-Path $workspaceRoot 'LCM_AI'
-if ((Test-Path -LiteralPath (Join-Path $lcmAiPath '.git')) -and
-    -not $RepositoryName.Equals('LCM_AI', [System.StringComparison]::OrdinalIgnoreCase)) {
-  $changedPaths = @(git -C $lcmAiPath status --porcelain 2>$null | ForEach-Object {
-    if ($_.Length -gt 3) { $_.Substring(3).Trim() }
-  } | Where-Object { $_ -and $_ -notmatch '^(scratch|logs|work|data)(\\|/|$)' })
-  if ($changedPaths.Count -gt 0) {
-    Register-LcmCrossRepositoryReviewObligation -Id $proposal.id -Repository 'LCM_AI' `
-      -Reason "Durable LCM_AI changes discovered during $CRP Macrium BCR preparation: $($changedPaths -join ', ')." | Out-Null
-  }
-}
-
 $metadataDirectory = Join-Path $inventoryRoot "scratch\BC_Review\$CRP"
 if (-not (Test-Path -LiteralPath $metadataDirectory)) {
   New-Item -ItemType Directory -Path $metadataDirectory -Force | Out-Null

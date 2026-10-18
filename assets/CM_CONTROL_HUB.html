@@ -1777,6 +1777,13 @@
             }
           }
         }
+        const docsResponse = await fetch(DAEMON_URL + "/proposal-documents", { cache: "no-store" });
+        if (docsResponse.ok) {
+          const docsPayload = await docsResponse.json();
+          if (docsPayload && docsPayload.documents) {
+            docsCache = docsPayload.documents;
+          }
+        }
       } catch (err) {
         console.warn("Could not query daemon for live proposals, using cache:", err);
       } finally {
@@ -3747,6 +3754,8 @@
         body: JSON.stringify({ filePath: docKey })
       });
     }
+
+    window.addEventListener("focus", () => refreshHubData(true));
 
     function showProposalDiff(id) {
       const p = (proposalsData.proposals || []).find(x => x.id === id);

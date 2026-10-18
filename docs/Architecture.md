@@ -4,9 +4,9 @@ Module: docs/Architecture.md
 Purpose: Authoritative architectural specification for LCM_Inventory, the central Configuration Management (CM), proposal ledger, and review-gating engine of the Lifecycle Model (LCM).  
 Path: D:/Git_Repositories/LCM_Inventory/docs/Architecture.md  
 Authors: Rolf, LCM_AI Engine  
-Version: 10.0.0
+Version: 10.0.1
 Status: Authoritative Architecture  
-Date: 2026-10-13
+Date: 2026-10-18
 
 ---
 
@@ -91,7 +91,7 @@ graph TB
 
     subgraph Governed_Space["Current Governed LCM Roots"]
         REPO_ROOT["Git_Repositories (Root)"]
-        REPO_SUBS["LCM_Backup and LCM_Supervision"]
+        REPO_SUBS["LCM_Supervision"]
         REPO_COMPS["LCM_AI, LCM_Inventory, and LCM_Shared"]
     end
 

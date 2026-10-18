@@ -4,8 +4,8 @@
 .DESCRIPTION
     Module: tools/Sync-LcmModuleVersions.ps1
     Authors: Rolf, LCM_AI Governance
-    Version: 10.0.0
-    Date: 2026-10-13
+    Version: 10.0.1
+    Date: 2026-10-18
     Rule: RULE-DOC-005, RULE-PS-001 - RULE-PS-014
 #>
 
@@ -92,7 +92,7 @@ function Get-LcmReleaseTextFiles {
         '.xml', '.html', '.js', '.ts', '.py', '.csproj', '.props', '.targets'
     )
     $componentDirectories = @(
-        'LCM_AI', 'LCM_Backup', 'LCM_Inventory', 'LCM_Shared', 'LCM_Supervision', 'LCM_Tools'
+        'LCM_AI', 'LCM_Inventory', 'LCM_Shared', 'LCM_Supervision', 'LCM_Tools'
     )
     $excludedDirectoryNames = @('.git', 'logs', 'scratch', 'node_modules', 'bin', 'obj')
     $excludedRelativePrefixes = @(

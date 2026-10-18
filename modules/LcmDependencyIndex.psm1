@@ -7,8 +7,8 @@
            WIUD call evidence and inverting accepted production edges into WUD data.
   Path: modules/LcmDependencyIndex.psm1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.0
-  Date: 2026-10-13
+  Version: 10.0.1
+  Date: 2026-10-18
 #>
 
 Set-StrictMode -Version Latest
@@ -27,8 +27,6 @@ function Get-LcmDependencySourceFiles {
     (Join-Path $WorkspaceRoot 'LCM_Inventory\tools'),
     (Join-Path $WorkspaceRoot 'LCM_AI\modules'),
     (Join-Path $WorkspaceRoot 'LCM_Inventory\modules'),
-    (Join-Path $WorkspaceRoot 'LCM_Backup\tools'),
-    (Join-Path $WorkspaceRoot 'LCM_Backup\modules'),
     (Join-Path $WorkspaceRoot 'LCM_Shared\tools'),
     (Join-Path $WorkspaceRoot 'LCM_Shared\modules'),
     (Join-Path $WorkspaceRoot 'LCM_Supervision\tools'),

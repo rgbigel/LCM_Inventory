@@ -6,8 +6,8 @@
   Purpose: Iterates across all governed and child repositories under D:\Git_Repositories, detects if a Git remote exists and if local branch is ahead of remote tracking branch, and executes git push with structured audit logging.
   Path: LCM_Inventory/tools/Invoke-WorkspacePush.ps1
   Authors: Rolf, LCM_AI Engine
-    Version: 10.0.0
-    Date: 2026-10-13
+    Version: 10.0.1
+    Date: 2026-10-18
 #>
 
 [CmdletBinding()]
@@ -146,6 +146,23 @@ $repositoryStates = @(
 Test-WorkspacePushCohort -PushPlan $pushPlan -RepositoryStates $repositoryStates | Out-Null
 Test-WorkspaceProposalBundlesInHead -PushPlan $pushPlan -RepositoryStates $repositoryStates | Out-Null
 Write-Host "  -> Lockstep preflight passed for: $($pushPlan.RequiredRepositories -join ', ')" -ForegroundColor Green
+
+# ------------------------------------------------------------------------------
+# 0b. Bounded log maintenance after eligibility preflight and before publication.
+# ------------------------------------------------------------------------------
+$maintenanceScript = Join-Path $workspaceRoot 'LCM_Inventory\tools\Invoke-WorkspaceMaintenance.ps1'
+if (-not (Test-Path -LiteralPath $maintenanceScript)) {
+    throw "PUSH cannot continue because log maintenance was not found: $maintenanceScript"
+}
+Write-Host "`n[Pre-Push Pipeline] Maintaining active daemon and transient logs..." -ForegroundColor Yellow
+$maintenanceArgs = @('-NoProfile', '-File', $maintenanceScript, '-LogOnly')
+if ($DryRun) {
+    $maintenanceArgs += '-DryRun'
+}
+& pwsh @maintenanceArgs
+if ($LASTEXITCODE -ne 0) {
+    throw "PUSH cannot continue because log maintenance failed with exit code $LASTEXITCODE."
+}
 
 # ------------------------------------------------------------------------------
 # 1. Synchronize Gemini AI & Knowledge Base Mirror (RULE-LCM-013)

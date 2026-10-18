@@ -8,8 +8,8 @@
            Designed to run standalone or as part of the pre-push pipeline in Invoke-WorkspacePush.ps1.
   Path: LCM_Inventory/tools/Invoke-WorkspaceMaintenance.ps1
   Authors: Rolf, LCM_AI Governance
-  Version: 10.0.0
-  Date: 2026-10-13
+  Version: 10.0.1
+  Date: 2026-10-18
   Rule: RULE-PS-001 - RULE-PS-014, RULE-LCM-014
 #>
 
@@ -26,6 +26,9 @@ param(
 
     [Parameter(Mandatory = $false, HelpMessage = 'Maximum age in hours for Beyond Compare scratch review directories (default: 48)')]
     [int]$ReviewOlderThanHours = 48,
+
+    [Parameter(Mandatory = $false, HelpMessage = 'Maintain daemon and transient logs only; do not clean BCR scratch or general temporary files')]
+    [switch]$LogOnly,
 
     [Parameter(Mandatory = $false, HelpMessage = 'Execute cleanup in dry-run simulation mode without modifying or deleting files')]
     [switch]$DryRun,
@@ -46,13 +49,14 @@ if ($Help) {
     Write-Host "  cleans BC review scratch, and prunes temporary workspace junk."
     Write-Host ""
     Write-Host "USAGE:" -ForegroundColor Yellow
-    Write-Host "  pwsh LCM_Inventory/tools/Invoke-WorkspaceMaintenance.ps1 [-TailLines <int>] [-MaxLogAgeDays <int>] [-MaxScriptLogAgeDays <int>] [-DryRun] [-h]"
+    Write-Host "  pwsh LCM_Inventory/tools/Invoke-WorkspaceMaintenance.ps1 [-TailLines <int>] [-MaxLogAgeDays <int>] [-MaxScriptLogAgeDays <int>] [-LogOnly] [-DryRun] [-h]"
     Write-Host ""
     Write-Host "PARAMETERS:" -ForegroundColor Yellow
     Write-Host "  -TailLines             : Number of lines to retain in daemon log files (default: 100)"
     Write-Host "  -MaxLogAgeDays         : Maximum age in days before deleting old daemon logs (default: 7)"
     Write-Host "  -MaxScriptLogAgeDays   : Maximum age in days for transient script logs (default: 3)"
     Write-Host "  -ReviewOlderThanHours  : Maximum age in hours for BC scratch reviews (default: 48)"
+    Write-Host "  -LogOnly               : Maintain daemon and transient logs without touching BCR scratch or temporary files"
     Write-Host "  -DryRun (-WhatIf)      : Simulate maintenance actions without mutating files"
     Write-Host "  -Help (-h, -?)         : Displays this help screen"
     Write-Host "==========================================================================" -ForegroundColor Cyan
@@ -70,6 +74,7 @@ Write-Host "====================================================================
 Write-Host " Tail Lines Target : $TailLines lines"
 Write-Host " Daemon Log Max Age: $MaxLogAgeDays days"
 Write-Host " Script Log Max Age: $MaxScriptLogAgeDays days"
+Write-Host " Log Only          : $LogOnly"
 Write-Host " Mode              : $(if ($DryRun) { 'SIMULATION (DryRun)' } else { 'APPLY (Mutating)' })"
 Write-Host " Timestamp         : $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
 Write-Host "==========================================================================" -ForegroundColor Cyan
@@ -92,6 +97,8 @@ $stats = [PSCustomObject]@{
 Write-Host "`n[Step 1/4] Maintaining LCM Desktop Daemon Logs (Tail: $TailLines lines)..." -ForegroundColor Yellow
 
 $daemonDirs = @(
+    (Join-Path $workspaceRoot "LCM_Inventory\data\logs\lcm"),
+    (Join-Path $workspaceRoot "LCM_Inventory\data\logs\lcm-internal"),
     (Join-Path $workspaceRoot "LCM_Inventory\tools\logs")
 )
 
@@ -174,6 +181,19 @@ if (Test-Path -LiteralPath $lcmLogsDir) {
     } else {
         Write-Host "  - No stale transient script logs found older than $MaxScriptLogAgeDays days." -ForegroundColor DarkGray
     }
+}
+
+if ($LogOnly) {
+    $totalFreedKb = [math]::Round(($stats.DaemonBytesFreed + $stats.ScriptBytesFreed) / 1KB, 1)
+    Write-Host "`n==========================================================================" -ForegroundColor Cyan
+    Write-Host " LOG-ONLY MAINTENANCE SUMMARY" -ForegroundColor Cyan
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    Write-Host " Daemon Logs Truncated : $($stats.DaemonLogsTrimmed)"
+    Write-Host " Daemon Logs Purged    : $($stats.DaemonLogsPurged)"
+    Write-Host " Script Logs Purged    : $($stats.ScriptLogsPurged)"
+    Write-Host " Total Storage Freed   : $totalFreedKb KB ($([math]::Round($totalFreedKb / 1024, 2)) MB)" -ForegroundColor Green
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    return $stats
 }
 
 # ------------------------------------------------------------------------------

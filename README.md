@@ -4,8 +4,8 @@ Module: LCM_Inventory
 Purpose: Authoritative Configuration Management (CM), multi-repository state tracking, LCM version lifecycle management, commit/push audit logging, and centralized Change Request (CR) management across `D:\Git_Repositories\`.  
 Path: D:\Git_Repositories\LCM_Inventory\README.md  
 Authors: Rolf, LCM_AI Engine  
-Version: 10.0.0
-Date: 2026-10-13
+Version: 10.0.1
+Date: 2026-10-18
 
 ---
 
@@ -30,27 +30,23 @@ graph TB
         direction TB
         WI["LCM_Inventory (CM Engine)"]
         WAI["LCM_AI (LCM Design Workshop)"]
-        LB["LCM_Backup (Backup Subsystem)"]
         LS["LCM_Shared (Shared Modules)"]
         LSP["LCM_Supervision (Supervision Subsystem)"]
     end
 
     WAI -->|"Governance baseline"| WI
     WI -->|"Audits, Baselines & Drift Detection"| WAI
-    WI -->|"Audits, Baselines & Drift Detection"| LB
     WI -->|"Audits, Baselines & Drift Detection"| LS
     WI -->|"Audits, Baselines & Drift Detection"| LSP
     WI -->|"Indexes Change Requests"| WAI
-    WI -->|"Indexes Change Requests"| LB
     WI -->|"Indexes Change Requests"| LS
     WI -->|"Indexes Change Requests"| LSP
 
 ```
 
 **Diagram key:** `WI` = **LCM_Inventory** (Configuration Management engine);
-`WAI` = **LCM_AI** (LCM design workshop); `LB` = **LCM_Backup** (dormant
-backup concept); `LS` = **LCM_Shared** (shared modules); and `LSP` =
-**LCM_Supervision** (supervision subsystem).
+`WAI` = **LCM_AI** (LCM design workshop); `LS` = **LCM_Shared** (shared
+modules); and `LSP` = **LCM_Supervision** (supervision subsystem).
 
 ---
 
