@@ -9,7 +9,7 @@
     Purpose: Opens or reuses the governed Macrium BCR window and records the exact lifecycle review state.
     Path: LCM_Inventory/tools/Invoke-MacriumBcrReview.ps1
     Authors: Rolf, LCM_AI Engine
-    Version: 10.0.1
+    Version: 10.0.2
     Date: 2026-10-17
 #>
 
@@ -67,9 +67,14 @@ if (-not (Test-Path -LiteralPath (Join-Path $repositoryPath '.git'))) {
   throw "Repository '$RepositoryName' is not available for BCR review."
 }
 
-$commit = (git -C $repositoryPath rev-parse --verify $BaseCommit 2>$null).Trim()
+$commitOutput = @(git -C $repositoryPath rev-parse --verify $BaseCommit 2>$null)
+$commit = if ($commitOutput.Count -gt 0) { [string]$commitOutput[0] } else { '' }
 if ([string]::IsNullOrWhiteSpace($commit)) {
-  throw "Base commit '$BaseCommit' cannot be resolved in '$RepositoryName'."
+  if ($BaseCommit -ne 'HEAD') {
+    throw "Base commit '$BaseCommit' cannot be resolved in '$RepositoryName'."
+  }
+  $commit = 'INITIAL_UNCOMMITTED'
+  Write-Host "Repository '$RepositoryName' has no HEAD commit; opening initial-repository BCR against the absent baseline scope." -ForegroundColor Yellow
 }
 
 $baselineTool = Join-Path $PSScriptRoot 'Invoke-MacriumDailyBcrBaseline.ps1'

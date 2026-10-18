@@ -76,7 +76,7 @@ Describe 'Control Hub rendered-artifact safety' {
     $template | Should -Match 'container\.innerHTML = status;'
     $template | Should -Match 'ITEM explicitly switched from'
     $template | Should -Match 'ACTIONS: ITEM \$\{crpTag\}'
-    $template | Should -Match 'Do ITEM</button>'
+    $template | Should -Match 'lifecycleButton\("Do ITEM"'
     $template | Should -Not -Match 'Do ITEM \(Doit\)'
     $template | Should -Match 'dispatchTargetAction\(''do''\)'
     $template | Should -Match 'dispatchTargetAction\(''proceed''\)'
@@ -139,6 +139,8 @@ Describe 'Control Hub rendered-artifact safety' {
     $template = Get-Content -LiteralPath $script:templatePath -Raw -Encoding UTF8
 
     $template | Should -Match 'function getUnresolvedReviewObligations'
+    $template | Should -Match 'function getReviewObligationEntries'
+    $template | Should -Match 'return getReviewObligationEntries\(\)\.filter'
     $template | Should -Match 'function getObligationWorkQueueCohorts'
     $template | Should -Match 'filter\(obligation => String\(obligation\.status \|\| "open"\)\.toLowerCase\(\) !== "completed"\)'
     $template | Should -Match 'id: `COH-\$\{proposal\.id\}`'
@@ -163,9 +165,12 @@ Describe 'Control Hub rendered-artifact safety' {
     $ledger = Get-Content -LiteralPath $ledgerPath -Raw -Encoding UTF8 | ConvertFrom-Json
     $bug = @($ledger.proposals | Where-Object { $_.id -eq 276 })[0]
 
-    $bug.state | Should -Be 'in_review'
+    $bug.state | Should -Be 'completed'
     $bug.status_note | Should -BeNullOrEmpty
     @($ledger.review_obligation_ledger.entries | Where-Object { $_.proposal_id -eq 276 -and $_.status -ne 'completed' }).Count | Should -Be 0
+    $template = Get-Content -LiteralPath $script:templatePath -Raw -Encoding UTF8
+    $template | Should -Match 'const obligationLedger = proposalsData\.review_obligation_ledger \|\| \{\};'
+    $template | Should -Match 'Array\.isArray\(normalizedLedger\.entries\)'
   }
 
   It 'renders a token-free artifact and never serves the source template as the Hub' {

@@ -47,8 +47,8 @@ param(
              through the exact-CRP review gate.
     Path: tools/Submit-ReviewResult.ps1
     Authors: Rolf, LCM_AI Engine
-    Version: 10.0.0
-    Date: 2026-10-13
+    Version: 10.0.1
+    Date: 2026-10-18
 #>
 
 Set-StrictMode -Version Latest
@@ -157,7 +157,12 @@ if ($Result -eq "Rejected") {
 }
 
 $resolvedTargetPath = (Resolve-Path -LiteralPath $targetRepoPath).Path
-$currentHead = (git -C $targetRepoPath rev-parse HEAD).Trim()
+$headOutput = @(git -C $targetRepoPath rev-parse --verify --quiet HEAD 2>$null)
+$currentHead = if ($LASTEXITCODE -eq 0) {
+    ($headOutput -join '').Trim()
+} else {
+    'INITIAL_UNCOMMITTED'
+}
 
 $proposalModulePath = Join-Path $workspaceRoot 'LCM_Inventory\modules\ProposalManager.psm1'
 Import-Module $proposalModulePath -Force
@@ -255,7 +260,7 @@ if ($LASTEXITCODE -ne 0) {
     }
     $authorization | ConvertTo-Json -Depth 3 | Set-Content -LiteralPath $authorizationFile -Encoding UTF8
 
-    git -C $targetRepoPath commit -m "$commitMsg"
+    git -C $targetRepoPath commit -m "$commitMsg" -m 'Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>'
     if ($LASTEXITCODE -ne 0) {
         throw "Git commit failed for '$repoName'. The review authorization remains available only until its expiry."
     }

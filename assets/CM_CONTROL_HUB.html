@@ -1828,15 +1828,21 @@
       return String(proposal?.title || "").replace(/^\s*\[BUG\]\s*/i, "");
     }
 
+    function getReviewObligationEntries() {
+      const obligationLedger = proposalsData.review_obligation_ledger || {};
+      const normalizedLedger = Array.isArray(obligationLedger) ? (obligationLedger[0] || {}) : obligationLedger;
+      return Array.isArray(normalizedLedger.entries) ? normalizedLedger.entries : [];
+    }
+
     function getUnresolvedReviewObligations(proposal) {
-      return ((proposalsData.review_obligation_ledger || {}).entries || []).filter(obligation =>
+      return getReviewObligationEntries().filter(obligation =>
         Number(obligation.proposal_id) === Number(proposal?.id) &&
         String(obligation.status || "open").toLowerCase() !== "completed"
       );
     }
 
     function getObligationWorkQueueCohorts() {
-      const obligations = ((proposalsData.review_obligation_ledger || {}).entries || []);
+      const obligations = getReviewObligationEntries();
       const uniqueObligations = new Map();
       obligations.forEach(obligation => {
         const key = `${Number(obligation.proposal_id)}::${String(obligation.repository || "").toLowerCase()}`;

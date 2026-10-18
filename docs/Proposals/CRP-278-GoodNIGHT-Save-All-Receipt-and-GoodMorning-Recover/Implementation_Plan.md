@@ -8,21 +8,23 @@ a durable Save All receipt and an actionable GoodMorning recovery gate.
 
 ### Component 1: Receipt Contract
 
-- Define a durable, repository-scoped receipt location and schema.
-- Make GoodNIGHT write the receipt after, not before, explicit Save All
-  acknowledgement.
-- Include timestamp, completion state, and session identity.
+- Delivered `GoodNightReceipt.psm1` as the durable, testable receipt
+  contract.
+- GoodNight writes the repository-scoped receipt only after
+  `-SaveAllConfirmed` and a successful session-memory snapshot.
+- The receipt includes the required timestamp, completion state, workspace,
+  confirmation, session, and snapshot identities.
 
 ### Component 2: GoodMorning Recovery Gate
 
-- Read and validate the receipt as part of the existing GoodMorning report.
-- Display a clear remediation message when the receipt is missing, stale, or
-  incomplete.
-- Preserve GoodMorning's existing report and `-Auto` behavior unless an
-  actionable receipt failure requires attention.
+- GoodMorning reads and validates the receipt before its `-Auto` early return.
+- Missing, malformed, incomplete, mismatched, and stale receipts produce a
+  clear recovery instruction.
+- The default GoodMorning path remains read-only. A valid receipt preserves
+  the existing quiet `-Auto` behavior for short gaps.
 
 ## 3. Verification Plan
 
-- Add focused tests for the receipt state machine and GoodMorning reporting.
-- AST-validate each changed PowerShell file.
-- Run the workspace readiness gate.
+- Focused receipt state-machine tests pass.
+- PowerShell AST validation passes for the module and both lifecycle tools.
+- The workspace readiness gate reports `OK`.

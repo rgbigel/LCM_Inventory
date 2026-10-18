@@ -13,8 +13,8 @@
            7. Logs structured [GOOD_NIGHT] audit receipt to cm_activity.log.
   Path: LCM_Inventory/tools/Invoke-WorkspaceGoodNight.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.0
-  Date: 2026-10-13
+  Version: 10.0.1
+  Date: 2026-10-18
   Rule: RULE-PS-001 - RULE-PS-021, RULE-LCM-014, RULE-REV-001
 #>
 
@@ -40,6 +40,9 @@ param(
 
     [Parameter(Mandatory = $false, HelpMessage = 'Simulate the end-of-day sequence without modifying remotes or files')]
     [switch]$DryRun,
+
+    [Parameter(Mandatory = $false, HelpMessage = 'Confirms that IDE Save All was completed; required to write the durable GoodNIGHT receipt')]
+    [switch]$SaveAllConfirmed,
 
     [Alias('h', '?')]
     [switch]$Help
@@ -86,6 +89,8 @@ if ($Help) {
 # ------------------------------------------------------------------------------
 $contextModule = Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\LcmWorkspaceContext.psm1'
 Import-Module -Name $contextModule -Force
+$receiptModule = Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\GoodNightReceipt.psm1'
+Import-Module -Name $receiptModule -Force
 $gitRoot = Get-LcmMachineGitRoot
 $lcmInventory = Join-Path $gitRoot 'LCM_Inventory'
 $toolsDir = Join-Path $lcmInventory 'tools'
@@ -150,6 +155,19 @@ if (-not (Test-Path -LiteralPath $saveScript)) { throw "Save-AllSessionMemory.ps
 $saveParams = @{ Learn = $Learn; Author = $Author }
 if ($DryRun) { $saveParams['DryRun'] = $true }
 & $saveScript @saveParams
+if ($SaveAllConfirmed -and -not $DryRun) {
+    $contextPath = Join-Path $gitRoot 'LCM_AI\.agents\ACTIVE_CONTEXT.md'
+    $contextText = Get-Content -LiteralPath $contextPath -Raw -Encoding UTF8
+    if ($contextText -notmatch '(?m)^Saved: (\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})') {
+        throw "Save All completed but the session snapshot timestamp is unavailable in $contextPath."
+    }
+    $receiptPath = Get-GoodNightSaveAllReceiptPath -WorkspaceRoot $gitRoot
+    $receipt = New-GoodNightSaveAllReceipt -ReceiptPath $receiptPath -ContextSnapshotSavedAt ([datetime]::Parse($Matches[1])) `
+        -WorkspaceRoot $gitRoot -ConfirmedBy $env:USERNAME -SessionIdentity "$env:COMPUTERNAME\$env:USERNAME"
+    Write-Host "  [OK] GoodNIGHT Save All receipt recorded: $receiptPath ($($receipt.completed_at))." -ForegroundColor Green
+} elseif (-not $DryRun) {
+    Write-Warning 'IDE Save All was not explicitly confirmed; no GoodNIGHT receipt was written. The next GoodMorning check will require recovery acknowledgement.'
+}
 
 # ------------------------------------------------------------------------------
 # 3. Daemon Log Archive
