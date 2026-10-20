@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-10-18T22:38:33+02:00",
+  "updated_at": "2026-10-20T20:56:10+02:00",
   "review_granularity": "tight",
   "lcm_mode": "active",
-  "last_proposal_id": 297,
+  "last_proposal_id": 300,
   "proposals": [
     {
       "id": 261,
@@ -22,7 +22,6 @@
       },
       "author": "rgbig",
       "details": "Normalizes internal and external proposal statuses, actionability, atomic creation, and exact lifecycle transitions.",
-      "priority": 9,
       "dates": {
         "created": "2026-10-13 16:28:31",
         "suggested": "2026-10-13 16:28:31",
@@ -113,7 +112,8 @@
       "bcr_disposition_at": "2026-10-14 14:57:42",
       "bcr_disposition_notes": "Operator accepted the refreshed exact CRP-261 Beyond Compare review.",
       "progress_state": "completed",
-      "disposition": "completed"
+      "disposition": "completed",
+      "priority": 0
     },
     {
       "id": 260,
@@ -131,7 +131,6 @@
       },
       "author": "rgbig",
       "details": "Held proposal for realistic cohort conflict analysis and push-gate receipts.",
-      "priority": 7,
       "dates": {
         "created": "2026-10-13 16:08:40",
         "held": "2026-10-13 16:08:40",
@@ -195,7 +194,8 @@
       "minimal_tests": true,
       "test_scope": "minimal",
       "progress_state": "completed",
-      "disposition": "completed"
+      "disposition": "completed",
+      "priority": 0
     },
     {
       "id": 259,
@@ -213,7 +213,6 @@
       },
       "author": "rgbig",
       "details": "DOIT redesign of the LCM Control Hub around explicit CRP/cohort targets, Flow Switches, grouped actions, cohort membership proposals, FIX actions, and terminal CRP disposition.",
-      "priority": 10,
       "dates": {
         "created": "2026-10-13 15:52:22",
         "in_progress": "2026-10-13 14:00:27",
@@ -298,7 +297,8 @@
         }
       ],
       "progress_state": "completed",
-      "disposition": "completed"
+      "disposition": "completed",
+      "priority": 0
     },
     {
       "id": 258,
@@ -364,7 +364,6 @@
       "details": "Replaces static reasoning reports with explicit transcript evidence, quote-based selection, repaired command wrappers, active-host-only automatic transcript provider with temporary file lifecycle cleanup, and offline fallback retention.",
       "plan_path": "docs/Proposals/CRP-257-Evidence-Based-Reasoning-Analysis/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-257-Evidence-Based-Reasoning-Analysis/Walkthrough.md",
-      "priority": 10,
       "dates": {
         "created": "2026-10-13 14:18:32",
         "in_progress": "2026-10-13 14:18:32",
@@ -425,7 +424,8 @@
       "progress_state": "pushed",
       "disposition": "published",
       "commit_sha": "52fd362e957e75883881b1d024928ccbfd7224ce",
-      "github_url": "https://github.com/rgbigel/Workspace_Inventory/commit/52fd362e957e75883881b1d024928ccbfd7224ce"
+      "github_url": "https://github.com/rgbigel/Workspace_Inventory/commit/52fd362e957e75883881b1d024928ccbfd7224ce",
+      "priority": 0
     },
     {
       "id": 254,
@@ -684,7 +684,6 @@
       "walkthrough_path": "docs/Proposals/CRP-249-Canonical-LCM-Tool-Migration-and-Environment-Reconciliation/Walkthrough.md",
       "flow_mode": "doit",
       "always_proceed": true,
-      "priority": 1,
       "dates": {
         "created": "2026-10-13 15:00:00",
         "suggested": "2026-10-13 15:00:00",
@@ -732,7 +731,8 @@
       "progress_state": "pushed",
       "disposition": "published",
       "commit_sha": "8181d4ebba947baafebdc117625e31780e70f617",
-      "github_url": "https://github.com/rgbigel/Workspace_Inventory/commit/8181d4ebba947baafebdc117625e31780e70f617"
+      "github_url": "https://github.com/rgbigel/Workspace_Inventory/commit/8181d4ebba947baafebdc117625e31780e70f617",
+      "priority": 0
     },
     {
       "id": 248,
@@ -801,7 +801,6 @@
       "walkthrough_path": "docs/Proposals/CRP-247-Caller-Intent-Reconciliation-and-Step-2-Viewer/Walkthrough.md",
       "flow_mode": "doit",
       "always_proceed": true,
-      "priority": 4,
       "dates": {
         "created": "2026-10-13 17:52:12",
         "suggested": "2026-10-13 17:52:12",
@@ -866,7 +865,8 @@
       "bcr_bypass_authorized_by": "rgbig",
       "bcr_bypass_reason": "Operator explicitly accepted CRP-247 and directed ACCEPTED -> COMPLETE; historical walkthrough records the visual-review checkpoint waiver.",
       "progress_state": "completed",
-      "disposition": "completed"
+      "disposition": "completed",
+      "priority": 0
     },
     {
       "id": 1,
@@ -914,9 +914,9 @@
           "note": "Pushed to remote repository"
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-001",
-      "cr_id": "CRP-001"
+      "cr_id": "CRP-001",
+      "priority": 0
     },
     {
       "id": 2,
@@ -964,9 +964,9 @@
           "note": "Pushed to remote repository"
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-002",
-      "cr_id": "CRP-002"
+      "cr_id": "CRP-002",
+      "priority": 0
     },
     {
       "id": 3,
@@ -1014,9 +1014,9 @@
           "note": "Pushed to remote repository"
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-003",
-      "cr_id": "CRP-003"
+      "cr_id": "CRP-003",
+      "priority": 0
     },
     {
       "id": 4,
@@ -1064,9 +1064,9 @@
           "note": "Pushed to remote repository"
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-004",
-      "cr_id": "CRP-004"
+      "cr_id": "CRP-004",
+      "priority": 0
     },
     {
       "id": 5,
@@ -1114,9 +1114,9 @@
           "note": "Pushed to remote repository"
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-005",
-      "cr_id": "CRP-005"
+      "cr_id": "CRP-005",
+      "priority": 0
     },
     {
       "id": 6,
@@ -1164,9 +1164,9 @@
           "note": "Pushed to remote repository"
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-006",
-      "cr_id": "CRP-006"
+      "cr_id": "CRP-006",
+      "priority": 0
     },
     {
       "id": 7,
@@ -1214,9 +1214,9 @@
           "note": "Pushed to remote repository"
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-007",
-      "cr_id": "CRP-007"
+      "cr_id": "CRP-007",
+      "priority": 0
     },
     {
       "id": 8,
@@ -1264,9 +1264,9 @@
           "note": "Pushed to remote repository"
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-008",
-      "cr_id": "CRP-008"
+      "cr_id": "CRP-008",
+      "priority": 0
     },
     {
       "id": 9,
@@ -1314,9 +1314,9 @@
           "note": "Pushed to remote repository"
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-009",
-      "cr_id": "CRP-009"
+      "cr_id": "CRP-009",
+      "priority": 0
     },
     {
       "id": 10,
@@ -1364,9 +1364,9 @@
           "note": "Pushed to remote tracking branch"
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-010",
-      "cr_id": "CRP-010"
+      "cr_id": "CRP-010",
+      "priority": 0
     },
     {
       "id": 11,
@@ -1414,9 +1414,9 @@
           "note": "Pushed to remote tracking branch"
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-011",
-      "cr_id": "CRP-011"
+      "cr_id": "CRP-011",
+      "priority": 0
     },
     {
       "id": 12,
@@ -1464,9 +1464,9 @@
           "note": "Pushed to remote tracking branch"
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-012",
-      "cr_id": "CRP-012"
+      "cr_id": "CRP-012",
+      "priority": 0
     },
     {
       "id": 13,
@@ -1514,9 +1514,9 @@
           "note": "Pushed to remote tracking branch"
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-013",
-      "cr_id": "CRP-013"
+      "cr_id": "CRP-013",
+      "priority": 0
     },
     {
       "id": 14,
@@ -1564,9 +1564,9 @@
           "note": "Pushed to remote tracking branch"
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-014",
-      "cr_id": "CRP-014"
+      "cr_id": "CRP-014",
+      "priority": 0
     },
     {
       "id": 15,
@@ -1614,9 +1614,9 @@
           "note": "Pushed to remote tracking branch"
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-015",
-      "cr_id": "CRP-015"
+      "cr_id": "CRP-015",
+      "priority": 0
     },
     {
       "id": 16,
@@ -1664,9 +1664,9 @@
           "note": "Pushed to remote tracking branch"
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-016",
-      "cr_id": "CRP-016"
+      "cr_id": "CRP-016",
+      "priority": 0
     },
     {
       "id": 17,
@@ -1714,9 +1714,9 @@
           "note": "Pushed to remote tracking branch"
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-017",
-      "cr_id": "CRP-017"
+      "cr_id": "CRP-017",
+      "priority": 0
     },
     {
       "id": 18,
@@ -1764,9 +1764,9 @@
           "note": "Pushed to remote tracking branch"
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-018",
-      "cr_id": "CRP-018"
+      "cr_id": "CRP-018",
+      "priority": 0
     },
     {
       "id": 19,
@@ -1814,9 +1814,9 @@
           "note": "Pushed to remote tracking branch"
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-019",
-      "cr_id": "CRP-019"
+      "cr_id": "CRP-019",
+      "priority": 0
     },
     {
       "id": 20,
@@ -1864,9 +1864,9 @@
           "note": "Pushed to remote tracking branch"
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-020",
-      "cr_id": "CRP-020"
+      "cr_id": "CRP-020",
+      "priority": 0
     },
     {
       "id": 21,
@@ -1914,9 +1914,9 @@
           "note": "Pushed to remote tracking branch"
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-021",
-      "cr_id": "CRP-021"
+      "cr_id": "CRP-021",
+      "priority": 0
     },
     {
       "id": 22,
@@ -1964,9 +1964,9 @@
           "note": "Pushed to remote tracking branch"
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-022",
-      "cr_id": "CRP-022"
+      "cr_id": "CRP-022",
+      "priority": 0
     },
     {
       "id": 23,
@@ -2014,9 +2014,9 @@
           "note": "Pushed to remote tracking branch"
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-023",
-      "cr_id": "CRP-023"
+      "cr_id": "CRP-023",
+      "priority": 0
     },
     {
       "id": 24,
@@ -2064,9 +2064,9 @@
           "note": "Pushed to remote tracking branch"
         }
       ],
-      "priority": 8,
       "crp_id": "BUG-024",
-      "cr_id": "BUG-024"
+      "cr_id": "BUG-024",
+      "priority": 0
     },
     {
       "id": 25,
@@ -2131,10 +2131,10 @@
           "note": "Pushed to remote (Git_Repositories, AuthorizeMasterUser, BackgroundModifier, BGMSAMVInv, BootEntryManager, HaSSD06, HaSSD06_Inventory, LCM_Shared, VolumeInventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-025",
       "cr_id": "CRP-025",
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 26,
@@ -2182,9 +2182,9 @@
           "note": "Pushed to remote tracking branch"
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-026",
-      "cr_id": "CRP-026"
+      "cr_id": "CRP-026",
+      "priority": 0
     },
     {
       "id": 27,
@@ -2232,9 +2232,9 @@
           "note": "Pushed to remote tracking branch"
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-027",
-      "cr_id": "CRP-027"
+      "cr_id": "CRP-027",
+      "priority": 0
     },
     {
       "id": 28,
@@ -2280,9 +2280,9 @@
         }
       ],
       "pushed_at": "2026-10-13 15:53:01",
-      "priority": 5,
       "crp_id": "CRP-028",
-      "cr_id": "CRP-028"
+      "cr_id": "CRP-028",
+      "priority": 0
     },
     {
       "id": 29,
@@ -2328,9 +2328,9 @@
         }
       ],
       "pushed_at": "2026-10-13 15:53:01",
-      "priority": 5,
       "crp_id": "CRP-029",
-      "cr_id": "CRP-029"
+      "cr_id": "CRP-029",
+      "priority": 0
     },
     {
       "id": 30,
@@ -2376,9 +2376,9 @@
         }
       ],
       "pushed_at": "2026-10-13 15:53:01",
-      "priority": 5,
       "crp_id": "CRP-030",
-      "cr_id": "CRP-030"
+      "cr_id": "CRP-030",
+      "priority": 0
     },
     {
       "id": 31,
@@ -2424,9 +2424,9 @@
         }
       ],
       "pushed_at": "2026-10-13 15:53:01",
-      "priority": 5,
       "crp_id": "CRP-031",
-      "cr_id": "CRP-031"
+      "cr_id": "CRP-031",
+      "priority": 0
     },
     {
       "id": 32,
@@ -2472,9 +2472,9 @@
         }
       ],
       "pushed_at": "2026-10-13 15:53:01",
-      "priority": 5,
       "crp_id": "CRP-032",
-      "cr_id": "CRP-032"
+      "cr_id": "CRP-032",
+      "priority": 0
     },
     {
       "id": 33,
@@ -2520,9 +2520,9 @@
         }
       ],
       "pushed_at": "2026-10-13 15:53:01",
-      "priority": 5,
       "crp_id": "CRP-033",
-      "cr_id": "CRP-033"
+      "cr_id": "CRP-033",
+      "priority": 0
     },
     {
       "id": 34,
@@ -2568,9 +2568,9 @@
         }
       ],
       "pushed_at": "2026-10-13 15:53:01",
-      "priority": 5,
       "crp_id": "CRP-034",
-      "cr_id": "CRP-034"
+      "cr_id": "CRP-034",
+      "priority": 0
     },
     {
       "id": 35,
@@ -2624,9 +2624,9 @@
         }
       ],
       "pushed_at": "2026-10-13 15:53:01",
-      "priority": 5,
       "crp_id": "CRP-035",
-      "cr_id": "CRP-035"
+      "cr_id": "CRP-035",
+      "priority": 0
     },
     {
       "id": 36,
@@ -2680,9 +2680,9 @@
         }
       ],
       "pushed_at": "2026-10-13 15:53:01",
-      "priority": 5,
       "crp_id": "CRP-036",
-      "cr_id": "CRP-036"
+      "cr_id": "CRP-036",
+      "priority": 0
     },
     {
       "id": 37,
@@ -2736,9 +2736,9 @@
         }
       ],
       "pushed_at": "2026-10-13 15:53:01",
-      "priority": 8,
       "crp_id": "BUG-037",
-      "cr_id": "BUG-037"
+      "cr_id": "BUG-037",
+      "priority": 0
     },
     {
       "id": 38,
@@ -2792,9 +2792,9 @@
         }
       ],
       "pushed_at": "2026-10-13 15:53:01",
-      "priority": 8,
       "crp_id": "BUG-038",
-      "cr_id": "BUG-038"
+      "cr_id": "BUG-038",
+      "priority": 0
     },
     {
       "id": 39,
@@ -2848,9 +2848,9 @@
         }
       ],
       "pushed_at": "2026-10-13 15:53:01",
-      "priority": 5,
       "crp_id": "CRP-039",
-      "cr_id": "CRP-039"
+      "cr_id": "CRP-039",
+      "priority": 0
     },
     {
       "id": 40,
@@ -2904,9 +2904,9 @@
         }
       ],
       "pushed_at": "2026-10-13 15:53:01",
-      "priority": 5,
       "crp_id": "CRP-040",
-      "cr_id": "CRP-040"
+      "cr_id": "CRP-040",
+      "priority": 0
     },
     {
       "id": 41,
@@ -2960,9 +2960,9 @@
         }
       ],
       "pushed_at": "2026-10-13 15:53:01",
-      "priority": 5,
       "crp_id": "CRP-041",
-      "cr_id": "CRP-041"
+      "cr_id": "CRP-041",
+      "priority": 0
     },
     {
       "id": 42,
@@ -3016,9 +3016,9 @@
         }
       ],
       "pushed_at": "2026-10-13 15:53:01",
-      "priority": 5,
       "crp_id": "CRP-042",
-      "cr_id": "CRP-042"
+      "cr_id": "CRP-042",
+      "priority": 0
     },
     {
       "id": 43,
@@ -3072,9 +3072,9 @@
         }
       ],
       "pushed_at": "2026-10-13 15:53:01",
-      "priority": 5,
       "crp_id": "CRP-043",
-      "cr_id": "CRP-043"
+      "cr_id": "CRP-043",
+      "priority": 0
     },
     {
       "id": 44,
@@ -3128,9 +3128,9 @@
         }
       ],
       "pushed_at": "2026-10-13 15:53:01",
-      "priority": 5,
       "crp_id": "CRP-044",
-      "cr_id": "CRP-044"
+      "cr_id": "CRP-044",
+      "priority": 0
     },
     {
       "id": 45,
@@ -3170,10 +3170,10 @@
           "note": "Formally archived and retired. All crash recovery deliverables deployed in baselines 10.0.0-v7.4.1."
         }
       ],
-      "priority": 8,
       "crp_id": "BUG-045",
       "cr_id": "BUG-045",
-      "pushed_at": "2026-10-13 13:42:00"
+      "pushed_at": "2026-10-13 13:42:00",
+      "priority": 0
     },
     {
       "id": 46,
@@ -3213,10 +3213,10 @@
           "note": "Pushed to remote (Git_Repositories, AuthorizeMasterUser, BackgroundModifier, BGMSAMVInv, BootEntryManager, HaSSD06, HaSSD06_Inventory, LCM_Shared, VolumeInventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-046",
       "cr_id": "CRP-046",
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 47,
@@ -3248,10 +3248,10 @@
           "note": "Superseded / obsolete conceptual proposal rejected per operator directive."
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-047",
       "cr_id": "CRP-047",
-      "progress_state": "rejected"
+      "progress_state": "rejected",
+      "priority": 0
     },
     {
       "id": 48,
@@ -3283,11 +3283,11 @@
           "note": "Pushed to remote (Git_Repositories, LCM_AI, LCM_Inventory)"
         }
       ],
-      "priority": 8,
       "crp_id": "CRP-048",
       "cr_id": "CRP-048",
       "progress_state": "pushed",
-      "pushed_at": "2026-10-13 22:06:33"
+      "pushed_at": "2026-10-13 22:06:33",
+      "priority": 0
     },
     {
       "id": 49,
@@ -3319,10 +3319,10 @@
           "note": "Superseded / obsolete conceptual proposal rejected per operator directive."
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-049",
       "cr_id": "CRP-049",
-      "progress_state": "rejected"
+      "progress_state": "rejected",
+      "priority": 0
     },
     {
       "id": 50,
@@ -3354,10 +3354,10 @@
           "note": "Superseded / obsolete conceptual proposal rejected per operator directive."
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-050",
       "cr_id": "CRP-050",
-      "progress_state": "rejected"
+      "progress_state": "rejected",
+      "priority": 0
     },
     {
       "id": 51,
@@ -3389,10 +3389,10 @@
           "note": "Superseded / obsolete conceptual proposal rejected per operator directive."
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-051",
       "cr_id": "CRP-051",
-      "progress_state": "rejected"
+      "progress_state": "rejected",
+      "priority": 0
     },
     {
       "id": 52,
@@ -3424,10 +3424,10 @@
           "note": "Superseded / obsolete conceptual proposal rejected per operator directive."
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-052",
       "cr_id": "CRP-052",
-      "progress_state": "rejected"
+      "progress_state": "rejected",
+      "priority": 0
     },
     {
       "id": 53,
@@ -3459,10 +3459,10 @@
           "note": "Superseded / obsolete conceptual proposal rejected per operator directive."
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-053",
       "cr_id": "CRP-053",
-      "progress_state": "rejected"
+      "progress_state": "rejected",
+      "priority": 0
     },
     {
       "id": 54,
@@ -3509,10 +3509,10 @@
           "note": "Pushed to remote (Git_Repositories, LCM_AI, LCM_Inventory)"
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-054",
       "cr_id": "CRP-054",
-      "pushed_at": "2026-10-13 22:38:53"
+      "pushed_at": "2026-10-13 22:38:53",
+      "priority": 0
     },
     {
       "id": 55,
@@ -3552,10 +3552,10 @@
           "note": "Rule codified and synchronized across LCM repository."
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-055",
       "cr_id": "CRP-055",
-      "pushed_at": "2026-10-13 14:10:00"
+      "pushed_at": "2026-10-13 14:10:00",
+      "priority": 0
     },
     {
       "id": 56,
@@ -3610,10 +3610,10 @@
           "note": "Superseded / obsolete conceptual proposal rejected per operator directive."
         }
       ],
-      "priority": 8,
       "crp_id": "CRP-056",
       "cr_id": "CRP-056",
-      "progress_state": "rejected"
+      "progress_state": "rejected",
+      "priority": 0
     },
     {
       "id": 57,
@@ -3661,10 +3661,10 @@
           "note": "Pushed to remote (Git_Repositories, AuthorizeMasterUser, BackgroundModifier, BGMSAMVInv, BootEntryManager, HaSSD06, HaSSD06_Inventory, LCM_Shared, VolumeInventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "priority": 8,
       "crp_id": "CRP-057",
       "cr_id": "CRP-057",
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 58,
@@ -3737,9 +3737,9 @@
         }
       ],
       "pushed_at": "2026-10-13 22:20:19",
-      "priority": 8,
       "crp_id": "CRP-058",
-      "cr_id": "CRP-058"
+      "cr_id": "CRP-058",
+      "priority": 0
     },
     {
       "id": 59,
@@ -3789,10 +3789,10 @@
           "note": "Pushed to remote (Git_Repositories, AuthorizeMasterUser, BackgroundModifier, BGMSAMVInv, BootEntryManager, HaSSD06, HaSSD06_Inventory, LCM_Shared, VolumeInventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "priority": 8,
       "crp_id": "CRP-059",
       "cr_id": "CRP-059",
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 60,
@@ -3856,9 +3856,9 @@
         "timestamp": "2026-10-13 10:57:15"
       },
       "pushed_at": "2026-10-13 22:20:19",
-      "priority": 8,
       "crp_id": "CRP-060",
-      "cr_id": "CRP-060"
+      "cr_id": "CRP-060",
+      "priority": 0
     },
     {
       "id": 61,
@@ -3913,9 +3913,9 @@
         "timestamp": "2026-10-13 11:23:02"
       },
       "pushed_at": "2026-10-13 22:20:19",
-      "priority": 8,
       "crp_id": "CRP-061",
-      "cr_id": "CRP-061"
+      "cr_id": "CRP-061",
+      "priority": 0
     },
     {
       "id": 62,
@@ -3929,10 +3929,10 @@
       "details": "Source: Gemini Inbox (Analysis-01_CRP-001-Corpus-Structural-Extraction-And-Invariants.md) | Time: 2026-10-13 17:15:51 | Criticality: MEDIUM\n\n# Change Request Proposal: Analysis #01 â€“ Corpus-Structural-Extraction-And-Invariants\r\n\r\n## Metadata\r\n- **Proposal ID:** CRP-001\r\n- **Target Analysis:** Analysis #01\r\n- **Status:** OPEN\r\n- **Staging Location:** D:\\GDrive\\LCM_ConvergenceProposals\\\r\n- **Author:** Automated LCM Generator\r\n\r\n## Purpose\r\nExecute structured indexing, semantic parsing, and invariant rule extraction across the 43-document corpus.\r\n\r\n## Proposed Changes\r\n- Index all 43 corpus artifacts and categorize by functional subsystem.\n- Extract core architectural rules and isolate conflicting or deprecated guidance.\n- Standardize extracted rules into a single canonical LCM schema.\n- Stage normalized rule sets as baseline inputs for downstream IDE LCM convergence.\n\r\n\r\n## Verification\r\n- Validate schema compliance under IDE workspace rules.\r\n- Confirm local synchronization via canonical D:\\GDrive mount.\r\n\r\n",
       "plan_path": "LCM_Inventory/data/proposals/plans/Proposal-062_CR-PROP-62_Plan.md",
       "walkthrough_path": "LCM_Inventory/data/proposals/plans/Proposal-062_CR-PROP-62_Walkthrough.md",
-      "priority": 5,
       "crp_id": "CRP-062",
       "cr_id": "CRP-062",
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 63,
@@ -3946,10 +3946,10 @@
       "details": "Source: Gemini Inbox (Analysis-01_CRP-001-Persistence-Architecture-And-Staging-Boundary.md) | Time: 2026-10-13 17:15:51 | Criticality: MEDIUM\n\n# Change Request Proposal: Analysis #01 â€“ Persistence-Architecture-And-Staging-Boundary\r\n\r\n## Metadata\r\n- **Proposal ID:** CRP-001\r\n- **Target Analysis:** Analysis #01\r\n- **Status:** OPEN\r\n- **Staging Location:** D:\\GDrive\\LCM_ConvergenceProposals\\\r\n- **Author:** Automated LCM Generator\r\n\r\n## Purpose\r\nFormalize the deterministic staging pipeline bridging conversational Gemini analysis with IDE-based change management via dedicated pre-review staging.\r\n\r\n## Proposed Changes\r\n- Establish D:\\GDrive\\LCM_ConvergenceProposals\\ as the dedicated pre-review staging directory.\n- Set default lifecycle status to OPEN for all newly drafted analytical proposals.\n- Define promotion path: Staging (OPEN) -> IDE/LCM Intake (D:\\GDrive\\LCM\\INBOX\\) -> Archive (D:\\GDrive\\LCM\\INBOX\\archive).\n- Enforce separation of local execution utilities (D:\\OneDrive\\cmd\\) from target data repositories.\n\r\n\r\n## Verification\r\n- Validate schema compliance under IDE workspace rules.\r\n- Confirm local synchronization via canonical D:\\GDrive mount.\r\n\r\n",
       "plan_path": "LCM_Inventory/data/proposals/plans/Proposal-063_CR-PROP-63_Plan.md",
       "walkthrough_path": "LCM_Inventory/data/proposals/plans/Proposal-063_CR-PROP-63_Walkthrough.md",
-      "priority": 5,
       "crp_id": "CRP-063",
       "cr_id": "CRP-063",
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 64,
@@ -3963,10 +3963,10 @@
       "details": "Source: Gemini Inbox (Analysis-01_CRP-004-Consolidated-Alignment-And-Governance.md) | Time: 2026-10-13 17:15:51 | Criticality: MEDIUM\n\n# Change Request Proposal: Analysis #01-ff â€“ Consolidated-Alignment-And-Governance\r\n\r\n## Metadata\r\n- **Proposal ID:** CRP-004\r\n- **Target Analysis:** Analysis #01-ff\r\n- **Status:** OPEN\r\n- **Staging Location:** D:\\GDrive\\LCM_ConvergenceProposals\\\r\n- **Author:** Automated LCM Generator\r\n\r\n## Purpose\r\nConsolidate Analysis #1 through #ff, enforcing invariant operational rules, strict path compliance under D:\\GDrive, and automated lifecycle management.\r\n\r\n## Proposed Changes\r\n- Enforce global timestamp and minimal output behavior.\n- Standardize all LCM pre-review staging strictly to D:\\GDrive\\LCM_ConvergenceProposals without unauthorized subpaths.\n- Provide a single reusable script adhering to PowerShell header governance.\n\r\n\r\n## Verification\r\n- Validate schema compliance under IDE workspace rules.\r\n- Confirm local synchronization via canonical D:\\GDrive mount.\r\n\r\n",
       "plan_path": "LCM_Inventory/data/proposals/plans/Proposal-064_CR-PROP-64_Plan.md",
       "walkthrough_path": "LCM_Inventory/data/proposals/plans/Proposal-064_CR-PROP-64_Walkthrough.md",
-      "priority": 5,
       "crp_id": "CRP-064",
       "cr_id": "CRP-064",
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 65,
@@ -3980,10 +3980,10 @@
       "details": "Source: Gemini Inbox (Analysis-02_CRP-002-Command-Elimination-And-Runtime-Rule-Alignment.md) | Time: 2026-10-13 17:15:51 | Criticality: MEDIUM\n\n# Change Request Proposal: Analysis #02 â€“ Command-Elimination-And-Runtime-Rule-Alignment\r\n\r\n## Metadata\r\n- **Proposal ID:** CRP-002\r\n- **Target Analysis:** Analysis #02\r\n- **Status:** OPEN\r\n- **Staging Location:** D:\\GDrive\\LCM_ConvergenceProposals\\\r\n- **Author:** Automated LCM Generator\r\n\r\n## Purpose\r\nPermanently eliminate manual conversational triggers (@IRA, @TRH) and enforce native ISO timestamp prefixing and deterministic output rules.\r\n\r\n## Proposed Changes\r\n- Deprecate manual prompt triggers @IRA and @TRH.\n- Enforce standard response header format: YYYYMMDD_HHMM Current Activity: <context> natively.\n- Align .agents/rules/Workspace-Rules.md to mandate zero conversational padding and strict technical density.\n- Ensure PowerShell 7 governance compliance (strict headers, versioning, explicit types) across all generation utilities.\n\r\n\r\n## Verification\r\n- Validate schema compliance under IDE workspace rules.\r\n- Confirm local synchronization via canonical D:\\GDrive mount.\r\n\r\n",
       "plan_path": "LCM_Inventory/data/proposals/plans/Proposal-065_CR-PROP-65_Plan.md",
       "walkthrough_path": "LCM_Inventory/data/proposals/plans/Proposal-065_CR-PROP-65_Walkthrough.md",
-      "priority": 5,
       "crp_id": "CRP-065",
       "cr_id": "CRP-065",
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 66,
@@ -3996,11 +3996,11 @@
       "details": "Source: Gemini Inbox (Analysis-02_CRP-002-Corpus-Pattern-Synthesis-And-Rule-Convergence.md) | Time: 2026-10-13 17:15:51 | Criticality: MEDIUM\n\n# Change Request Proposal: Analysis #02 â€“ Corpus-Pattern-Synthesis-And-Rule-Convergence\r\n\r\n## Metadata\r\n- **Proposal ID:** CRP-002\r\n- **Target Analysis:** Analysis #02\r\n- **Status:** OPEN\r\n- **Staging Location:** D:\\GDrive\\LCM_ConvergenceProposals\\\r\n- **Author:** Automated LCM Generator\r\n\r\n## Purpose\r\nSynthesize extracted corpus patterns into streamlined system directives and eliminate obsolete manual triggers.\r\n\r\n## Proposed Changes\r\n- Consolidate repetitive patterns identified across the 43 texts into singular directives.\n- Deprecate legacy operational flags (@IRA, @TRH) documented in historical files.\n- Draft workspace rule updates targeting .agents/rules/Workspace-Rules.md.\n- Enforce automated, non-conversational timestamp prefixing across all future agent interactions.\n\r\n\r\n## Verification\r\n- Validate schema compliance under IDE workspace rules.\r\n- Confirm local synchronization via canonical D:\\GDrive mount.\r\n\r\n",
       "plan_path": "LCM_Inventory/data/proposals/plans/Proposal-066_CR-PROP-66_Plan.md",
       "walkthrough_path": "LCM_Inventory/data/proposals/plans/Proposal-066_CR-PROP-66_Walkthrough.md",
-      "priority": 5,
       "progress_state": "pushed",
       "crp_id": "CRP-066",
       "cr_id": "CRP-066",
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 67,
@@ -4046,11 +4046,11 @@
       ],
       "plan_path": "LCM_Inventory/docs/Proposals/BUG-067-LCM-10.0.0-LCD-Browser-Table-Port-9876-Channel-Compliance.md",
       "walkthrough_path": "LCM_Inventory/data/proposals/plans/Proposal-067_CR-PROP-67_Walkthrough.md",
-      "priority": 8,
       "progress_state": "pushed",
       "crp_id": "BUG-067",
       "cr_id": "BUG-067",
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "description": "CM Control Hub template script block escaping fix, global Escape modal dismissal, and alignment with Display Standard.",
@@ -4081,10 +4081,10 @@
       "state": "pushed",
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 22:33:38",
-      "priority": 8,
       "crp_id": "CRP-068",
       "cr_id": "CRP-068",
-      "timestamp": "2026-10-13 20:55:30"
+      "timestamp": "2026-10-13 20:55:30",
+      "priority": 0
     },
     {
       "description": "Modal exit ergonomics via Escape key across Tool Explorer subdisplays.",
@@ -4115,10 +4115,10 @@
       "state": "pushed",
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 22:33:38",
-      "priority": 5,
       "crp_id": "CRP-069",
       "cr_id": "CRP-069",
-      "timestamp": "2026-10-13 20:55:30"
+      "timestamp": "2026-10-13 20:55:30",
+      "priority": 0
     },
     {
       "description": "Direct code editing in active VS Code IDE instead of Notepad++.",
@@ -4149,10 +4149,10 @@
       "state": "pushed",
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 22:33:38",
-      "priority": 5,
       "crp_id": "BUG-070",
       "cr_id": "BUG-070",
-      "timestamp": "2026-10-13 20:55:30"
+      "timestamp": "2026-10-13 20:55:30",
+      "priority": 0
     },
     {
       "description": "Tool renaming persistence via tool_catalog_overrides.json and immediate .cmd trampoline regeneration in LCM_Inventory/Cmd.",
@@ -4183,10 +4183,10 @@
       "state": "pushed",
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 22:33:38",
-      "priority": 8,
       "crp_id": "BUG-071",
       "cr_id": "BUG-071",
-      "timestamp": "2026-10-13 20:55:30"
+      "timestamp": "2026-10-13 20:55:30",
+      "priority": 0
     },
     {
       "description": "Automatic elevation interlock for SystemPrivilege PsExec tools.",
@@ -4217,10 +4217,10 @@
       "state": "pushed",
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 22:33:38",
-      "priority": 8,
       "crp_id": "BUG-072",
       "cr_id": "BUG-072",
-      "timestamp": "2026-10-13 20:55:30"
+      "timestamp": "2026-10-13 20:55:30",
+      "priority": 0
     },
     {
       "description": "Resolved path errors for Set-MouseFlickerInvariants, forwarded self-elevation arguments, and surfaced script dependencies.",
@@ -4251,10 +4251,10 @@
       "state": "pushed",
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 22:33:38",
-      "priority": 8,
       "crp_id": "BUG-073",
       "cr_id": "BUG-073",
-      "timestamp": "2026-10-13 20:55:30"
+      "timestamp": "2026-10-13 20:55:30",
+      "priority": 0
     },
     {
       "description": "Correct log file detection and cleanup across all LCM log roots.",
@@ -4285,10 +4285,10 @@
       "state": "pushed",
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 22:33:38",
-      "priority": 5,
       "crp_id": "BUG-074",
       "cr_id": "BUG-074",
-      "timestamp": "2026-10-13 20:55:30"
+      "timestamp": "2026-10-13 20:55:30",
+      "priority": 0
     },
     {
       "description": "Convergence of ShowToolIndex into ShowTools and enforcing browser table displays for GUI role tools unless -NoBrowser is specified.",
@@ -4319,10 +4319,10 @@
       "state": "pushed",
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 22:33:38",
-      "priority": 8,
       "crp_id": "BUG-075",
       "cr_id": "BUG-075",
-      "timestamp": "2026-10-13 20:55:30"
+      "timestamp": "2026-10-13 20:55:30",
+      "priority": 0
     },
     {
       "id": 76,
@@ -4370,9 +4370,9 @@
         }
       ],
       "pushed_at": "2026-10-13 22:33:38",
-      "priority": 8,
       "crp_id": "CRP-076",
-      "cr_id": "CRP-076"
+      "cr_id": "CRP-076",
+      "priority": 0
     },
     {
       "id": 77,
@@ -4420,10 +4420,10 @@
           "note": "Pushed to remote (Git_Repositories, BGMSAMVInv, HaSSD06, HaSSD06_Inventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "priority": 8,
       "crp_id": "CRP-077",
       "cr_id": "CRP-077",
-      "pushed_at": "2026-10-13 19:42:05"
+      "pushed_at": "2026-10-13 19:42:05",
+      "priority": 0
     },
     {
       "id": 78,
@@ -4463,11 +4463,11 @@
           "note": "Pushed to remote (Git_Repositories, BGMSAMVInv, HaSSD06, HaSSD06_Inventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "priority": 8,
       "progress_state": "pushed",
       "crp_id": "CRP-078",
       "cr_id": "CRP-078",
-      "pushed_at": "2026-10-13 19:42:05"
+      "pushed_at": "2026-10-13 19:42:05",
+      "priority": 0
     },
     {
       "id": 79,
@@ -4513,10 +4513,10 @@
           "note": "Pushed to remote (Git_Repositories, AuthorizeMasterUser, BackgroundModifier, BGMSAMVInv, BootEntryManager, HaSSD06, HaSSD06_Inventory, LCM_Shared, VolumeInventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "priority": 8,
       "progress_state": "pushed",
       "crp_id": "CRP-079",
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 80,
@@ -4529,7 +4529,6 @@
       "state": "pushed",
       "progress_state": "pushed",
       "author": "Rolf",
-      "priority": 5,
       "details": "Revive and redesign BackgroundModifier modernization using a dynamic Rainmeter telemetry skin architecture, resolving previous development bottlenecks: 1) Replace brittle GDI+ bitmap wallpaper baking and cache-busting with live desktop widget overlay, 2) Dynamically generate multi-drive meter configurations from state.json (supporting 13+ drives), 3) Implement lightweight event-driven Rainmeter refresh signaling, 4) Ensure DPI scaling and icon-safe screen positioning. (Re-instated as CRP-080 with verified final state 'pushed' from historical #08 / CR-2026-019).",
       "plan_path": "LCM_Inventory/data/proposals/plans/Proposal-008_CR-2026-019_Plan.md",
       "walkthrough_path": "LCM_Inventory/data/proposals/plans/Proposal-008_CR-2026-019_Walkthrough.md",
@@ -4579,7 +4578,8 @@
         "final_state": "pushed",
         "final_progress": "pushed",
         "title": "Modernize BackgroundModifier Architecture via Dynamic Rainmeter Skin Engine"
-      }
+      },
+      "priority": 0
     },
     {
       "id": 81,
@@ -4592,7 +4592,6 @@
       "state": "pushed",
       "progress_state": "pushed",
       "author": "rgbig",
-      "priority": 5,
       "details": "Comprehensive design and implementation of the LCM Installation Path: payload extraction from LCM workspace (excluding subsystems), analogous subsystem install contract, configurable target root directory structure, Setup packaging agent, interactive Pre-Installation Check Tool with unified completion log, separate Onboarding function, and post-installation UX verification tool. (Re-instated as CRP-081 with verified final state 'pushed' from historical #12 / CR-2026-023).",
       "plan_path": "LCM_Inventory/data/proposals/plans/Proposal-012_CR-2026-023_Plan.md",
       "walkthrough_path": "LCM_Inventory/data/proposals/plans/Proposal-012_CR-2026-023_Walkthrough.md",
@@ -4642,7 +4641,8 @@
         "final_state": "pushed",
         "final_progress": "pushed",
         "title": "Design and Implement LCM Universal Installation Path, Packaging Agent, Preflight Engine, and UX Verification Suite"
-      }
+      },
+      "priority": 0
     },
     {
       "id": 82,
@@ -4655,7 +4655,6 @@
       "state": "pushed",
       "progress_state": "pushed",
       "author": "rgbig",
-      "priority": 5,
       "details": "Extend Pre-Installation Check Tool and Setup Engine to support modular, user-controlled tool selection (Everything search, AI orchestration variants, Beyond Compare 5, local database backends, REST daemon) with manifest serialization and conditional post-install verification. (Re-instated as CRP-082 with verified final state 'pushed' from historical #13 / CR-2026-024).",
       "plan_path": "LCM_Inventory/data/proposals/plans/Proposal-013_CR-2026-024_Plan.md",
       "walkthrough_path": "LCM_Inventory/data/proposals/plans/Proposal-013_CR-2026-024_Walkthrough.md",
@@ -4705,7 +4704,8 @@
         "final_state": "pushed",
         "final_progress": "pushed",
         "title": "Enhance Pre-Installation Check with Modular Tool Selection & Conditional Deployment Engine"
-      }
+      },
+      "priority": 0
     },
     {
       "id": 83,
@@ -4718,7 +4718,6 @@
       "state": "pushed",
       "progress_state": "pushed",
       "author": "rgbig",
-      "priority": 5,
       "details": "Author full normative tripartite documentation suite (docs/Architecture.md, docs/Requirements.md, docs/Implementation.md) and 7-phase runbook (install/Installation.md) in Installation_LCD, establishing complete design specifications for IDE review before code implementation. (Re-instated as CRP-083 with verified final state 'pushed' from historical #16 / CR-2026-027).",
       "plan_path": "LCM_Inventory/data/proposals/plans/Proposal-016_CR-2026-027_Plan.md",
       "walkthrough_path": "LCM_Inventory/data/proposals/plans/Proposal-016_CR-2026-027_Walkthrough.md",
@@ -4768,7 +4767,8 @@
         "final_state": "pushed",
         "final_progress": "pushed",
         "title": "Design and Author Comprehensive Tripartite Specifications and Normative Runbook for Installation_LCD"
-      }
+      },
+      "priority": 0
     },
     {
       "id": 84,
@@ -4781,7 +4781,6 @@
       "state": "pushed",
       "progress_state": "pushed",
       "author": "rgbig",
-      "priority": 5,
       "details": "When reporting errors or unwanted behavior via back channel/prompt, default to generating lightweight BUG report (superficial root cause, criticality assessment, stop) rather than initiating full-blown CRP processing until explicitly commanded. (Re-instated as CRP-084 with verified final state 'pushed' from historical #18 / CR-2026-029).",
       "plan_path": "LCM_Inventory/data/proposals/plans/Proposal-018_CR-2026-029_Plan.md",
       "walkthrough_path": "LCM_Inventory/data/proposals/plans/Proposal-018_CR-2026-029_Walkthrough.md",
@@ -4831,7 +4830,8 @@
         "final_state": "pushed",
         "final_progress": "pushed",
         "title": "Default to Lightweight BUG Report on Error/Unwanted Behavior Feedback"
-      }
+      },
+      "priority": 0
     },
     {
       "id": 85,
@@ -4844,7 +4844,6 @@
       "state": "pushed",
       "progress_state": "pushed",
       "author": "rgbig",
-      "priority": 5,
       "details": "Establish mandatory Scope and Version-Explicit naming convention for Change Request Proposals (CRP-YYYY-NNN-[Scope]-[Version]-[Slug].md) and mandatory header metadata to isolate affected repository boundaries and version ranges. (Re-instated as CRP-085 with verified final state 'pushed' from historical #23 / CR-2026-034).",
       "plan_path": "LCM_Inventory/data/proposals/plans/Proposal-023_CR-2026-034_Plan.md",
       "walkthrough_path": "LCM_Inventory/data/proposals/plans/Proposal-023_CR-2026-034_Walkthrough.md",
@@ -4894,7 +4893,8 @@
         "final_state": "pushed",
         "final_progress": "pushed",
         "title": "Scope and Version-Explicit Naming Standard for Change Request Proposals (CRPs)"
-      }
+      },
+      "priority": 0
     },
     {
       "id": 86,
@@ -4907,7 +4907,6 @@
       "state": "pushed",
       "progress_state": "pushed",
       "author": "rgbig",
-      "priority": 5,
       "details": "Interactive row actions (Open, Onboard, Un-Git, Rename, Delete), .lcd platform and non-Git directory visibility, filter tabs, and LCM_Inventory data versioning exemption in RULE-REV-007. (Re-instated as CRP-086 with verified final state 'pushed' from historical #26 / CR-2026-037).",
       "plan_path": "LCM_Inventory/data/proposals/plans/Proposal-026_CR-2026-037_Plan.md",
       "walkthrough_path": "LCM_Inventory/data/proposals/plans/Proposal-026_CR-2026-037_Walkthrough.md",
@@ -4957,7 +4956,8 @@
         "final_state": "pushed",
         "final_progress": "pushed",
         "title": "Workspace Inventory Viewer Interactive Actions Suite, Non-Git Visibility, and Data Versioning Exemption"
-      }
+      },
+      "priority": 0
     },
     {
       "id": 87,
@@ -4970,7 +4970,6 @@
       "state": "pushed",
       "progress_state": "pushed",
       "author": "rgbig",
-      "priority": 5,
       "details": "Fix strict mode uninitialized variable error when generating HTML viewer print atom. (Re-instated as CRP-087 with verified final state 'pushed' from historical #27 / CR-2026-038).",
       "plan_path": "LCM_Inventory/data/proposals/plans/Proposal-027_CR-2026-038_Plan.md",
       "walkthrough_path": "LCM_Inventory/data/proposals/plans/Proposal-027_CR-2026-038_Walkthrough.md",
@@ -5020,7 +5019,8 @@
         "final_state": "pushed",
         "final_progress": "pushed",
         "title": "Unescaped $timestamp Variable Interpolation in Show-HaInventoryApp.ps1"
-      }
+      },
+      "priority": 0
     },
     {
       "id": 88,
@@ -5033,7 +5033,6 @@
       "state": "pushed",
       "progress_state": "pushed",
       "author": "rgbig",
-      "priority": 5,
       "details": "Software update for Spook custom integration via HACS. (Re-instated as CRP-088 with verified final state 'pushed' from historical #28 / CR-2026-039).",
       "plan_path": "LCM_Inventory/docs/Proposals/CRP-088-HaSSD06-10.0.0-Spook-Homie-Integration-Update.md",
       "walkthrough_path": "",
@@ -5083,7 +5082,8 @@
         "final_state": "pushed",
         "final_progress": "pushed",
         "title": "Spook ðŸ‘» Your Homie Custom Integration Update (10.0.0 -> 10.0.0)"
-      }
+      },
+      "priority": 0
     },
     {
       "id": 89,
@@ -5096,7 +5096,6 @@
       "state": "pushed",
       "progress_state": "pushed",
       "author": "rgbig",
-      "priority": 5,
       "details": "Transition Shelly BLU gateway from beta firmware to production stable 2.0.0. (Re-instated as CRP-089 with verified final state 'pushed' from historical #29 / CR-2026-040).",
       "plan_path": "LCM_Inventory/docs/Proposals/CRP-089-HaSSD06-10.0.0-Shelly-Blu-Gateway-Firmware-Stabilization.md",
       "walkthrough_path": "",
@@ -5146,7 +5145,8 @@
         "final_state": "pushed",
         "final_progress": "pushed",
         "title": "Shelly BLU Gateway Firmware Stabilization (10.0.0-beta1 -> 10.0.0 Stable)"
-      }
+      },
+      "priority": 0
     },
     {
       "id": 90,
@@ -5159,7 +5159,6 @@
       "state": "pushed",
       "progress_state": "pushed",
       "author": "rgbig",
-      "priority": 5,
       "details": "Resolve deprecated cleanup and firmware update button entities before HA Core 2026.11.0. (Re-instated as CRP-090 with verified final state 'pushed' from historical #30 / CR-2026-041).",
       "plan_path": "LCM_Inventory/docs/Proposals/CRP-090-HaSSD06-10.0.0-FritzBox-Deprecated-Button-Entities-Removal.md",
       "walkthrough_path": "",
@@ -5209,7 +5208,8 @@
         "final_state": "pushed",
         "final_progress": "pushed",
         "title": "FRITZ!Box Deprecated Button Entities Cleanup (Breaks in HA 10.0.0)"
-      }
+      },
+      "priority": 0
     },
     {
       "id": 91,
@@ -5222,7 +5222,6 @@
       "state": "pushed",
       "progress_state": "pushed",
       "author": "rgbig",
-      "priority": 5,
       "details": "Append default(0) and int(0) filter to eliminate invalid sensor state validation errors. (Re-instated as CRP-091 with verified final state 'pushed' from historical #31 / CR-2026-042).",
       "plan_path": "LCM_Inventory/docs/Proposals/CRP-091-HaSSD06-10.0.0-Active-Notification-Count-Template-Filter-Fix.md",
       "walkthrough_path": "",
@@ -5272,7 +5271,8 @@
         "final_state": "pushed",
         "final_progress": "pushed",
         "title": "Active Notification Count Template Sensor Default Value Fix"
-      }
+      },
+      "priority": 0
     },
     {
       "id": 92,
@@ -5285,7 +5285,6 @@
       "state": "pushed",
       "progress_state": "pushed",
       "author": "rgbig",
-      "priority": 5,
       "details": "Upstream DNS timeout during high-concurrency HTTP/2 push events in aioamazondevices. (Re-instated as CRP-092 with verified final state 'pushed' from historical #32 / CR-2026-043).",
       "plan_path": "LCM_Inventory/docs/Proposals/BUG-092-HaSSD06-10.0.0-Alexa-Devices-DNS-Timeout-During-HTTP2-Push.md",
       "walkthrough_path": "",
@@ -5335,7 +5334,8 @@
         "final_state": "pushed",
         "final_progress": "pushed",
         "title": "Alexa Devices HTTP/2 Push DNS Resolution Timeout (ClientConnectorDNSError)"
-      }
+      },
+      "priority": 0
     },
     {
       "id": 93,
@@ -5348,7 +5348,6 @@
       "state": "pushed",
       "progress_state": "pushed",
       "author": "rgbig",
-      "priority": 5,
       "details": "Upstream schema mismatch in tuya-device-handlers for smart plug product 9zynrkxe5tys0rja. (Re-instated as CRP-093 with verified final state 'pushed' from historical #33 / CR-2026-044).",
       "plan_path": "LCM_Inventory/docs/Proposals/BUG-093-HaSSD06-10.0.0-Tuya-Device-Handlers-Relay-Status-Enum-Mismatch.md",
       "walkthrough_path": "",
@@ -5398,7 +5397,8 @@
         "final_state": "pushed",
         "final_progress": "pushed",
         "title": "Tuya Device Handlers Invalid Enum Value for Datapoint relay_status"
-      }
+      },
+      "priority": 0
     },
     {
       "id": 94,
@@ -5411,7 +5411,6 @@
       "state": "pushed",
       "progress_state": "pushed",
       "author": "rgbig",
-      "priority": 5,
       "details": "Hardware product IDs keym9qkuywghyrvs and keyjup78v54myhan unlisted in tuya_local config. (Re-instated as CRP-094 with verified final state 'pushed' from historical #34 / CR-2026-045).",
       "plan_path": "LCM_Inventory/docs/Proposals/BUG-094-HaSSD06-10.0.0-Tuya-Local-Unregistered-Product-ID-SmartPlug.md",
       "walkthrough_path": "",
@@ -5461,7 +5460,8 @@
         "final_state": "pushed",
         "final_progress": "pushed",
         "title": "Tuya Local Unregistered Product IDs in Smart Plug Device Profiles"
-      }
+      },
+      "priority": 0
     },
     {
       "id": 95,
@@ -5474,7 +5474,6 @@
       "state": "pushed",
       "progress_state": "pushed",
       "author": "rgbig",
-      "priority": 5,
       "details": "Hash-based deduplication, archival of redundant scratch snapshots/baselines, refactoring of LCM_Inventory/tools/links, and deletion of legacy .lcd junction. (Re-instated as CRP-095 with verified final state 'pushed' from historical #35 / CR-2026-046).",
       "plan_path": "LCM_Inventory/data/proposals/plans/Proposal-035_CR-2026-046_Plan.md",
       "walkthrough_path": "LCM_Inventory/data/proposals/plans/Proposal-035_CR-2026-046_Walkthrough.md",
@@ -5530,7 +5529,8 @@
         "final_state": "pushed",
         "final_progress": "pushed",
         "title": "Workspace Artifact Deduplication, Archive Consolidation & .lcd Junction Removal"
-      }
+      },
+      "priority": 0
     },
     {
       "id": 96,
@@ -5543,7 +5543,6 @@
       "state": "pushed",
       "progress_state": "pushed",
       "author": "rgbig",
-      "priority": 5,
       "details": "Deactivate onboard bcm43438-bt adapter in Home Assistant to eliminate dual-scanner packet jitter, consolidating all BLE devices to shellyblugwg3. (Re-instated as CRP-096 with verified final state 'pushed' from historical #36 / CR-2026-047).",
       "plan_path": "LCM_Inventory/data/proposals/plans/Proposal-036_CR-2026-047_Plan.md",
       "walkthrough_path": "LCM_Inventory/data/proposals/plans/Proposal-036_CR-2026-047_Walkthrough.md",
@@ -5599,7 +5598,8 @@
         "final_state": "pushed",
         "final_progress": "pushed",
         "title": "Disable Raspberry Pi Onboard Bluetooth Adapter & Consolidate BLE to Shelly Gateway"
-      }
+      },
+      "priority": 0
     },
     {
       "id": 97,
@@ -5612,7 +5612,6 @@
       "state": "pushed",
       "progress_state": "pushed",
       "author": "Rolf",
-      "priority": 8,
       "details": "Restores all 25 @00- to @21- customization tools in Tool Explorer, preserving numerical prefixes in filenames while providing clean chat trampolines. (Re-instated as CRP-097 with verified final state 'pushed' from historical #37 / BUG-2026-006).",
       "plan_path": "LCM_Inventory/docs/Proposals/BUG-097-LCM-10.0.0-Tool-Explorer-AtPrefix-Filter-Exclusion.md",
       "walkthrough_path": "",
@@ -5668,7 +5667,8 @@
         "final_state": "pushed",
         "final_progress": "pushed",
         "title": "Tool Explorer '@nn-' Prefix Tool Disappearance on Filter Reset"
-      }
+      },
+      "priority": 0
     },
     {
       "id": 98,
@@ -5681,7 +5681,6 @@
       "state": "pushed",
       "progress_state": "pushed",
       "author": "Rolf",
-      "priority": 8,
       "details": "Suppresses excessive duplicate Windows notification toasts generated when accessing project standards documentation. (Re-instated as CRP-098 with verified final state 'pushed' from historical #38 / BUG-2026-007).",
       "plan_path": "LCM_Inventory/docs/Proposals/BUG-098-LCM_AI-10.0.0-Windows-Notification-Spam-Suppression.md",
       "walkthrough_path": "",
@@ -5737,7 +5736,8 @@
         "final_state": "pushed",
         "final_progress": "pushed",
         "title": "Excessive Repetitive Windows Notifications during Project Rule Access"
-      }
+      },
+      "priority": 0
     },
     {
       "id": 99,
@@ -5750,7 +5750,6 @@
       "state": "pushed",
       "progress_state": "pushed",
       "author": "Rolf",
-      "priority": 5,
       "details": "Repairs asset path fallback candidate arrays, implements non-blocking draggable help modal, and expands catalog to 176 tools. (Re-instated as CRP-099 with verified final state 'pushed' from historical #39 / CRP-2026-015).",
       "plan_path": "LCM_Inventory/docs/Proposals/CRP-099-LCM-10.0.0-Tool-Explorer-Asset-Path-Resolution-and-Multi-Tab-Launch-Repair.md",
       "walkthrough_path": "",
@@ -5806,7 +5805,8 @@
         "final_state": "pushed",
         "final_progress": "pushed",
         "title": "Tool Explorer Asset Path Resolution, Draggable Help Modal, and Catalog Sync"
-      }
+      },
+      "priority": 0
     },
     {
       "id": 100,
@@ -5819,7 +5819,6 @@
       "state": "pushed",
       "progress_state": "pushed",
       "author": "Rolf",
-      "priority": 5,
       "details": "Prevents BLE multi-hub collisions across 51 dynamic Bluetooth entities, scheduling twice-daily supervision and logging telemetry. (Re-instated as CRP-100 with verified final state 'pushed' from historical #40 / CRP-2026-016).",
       "plan_path": "LCM_Inventory/docs/Proposals/CRP-100-HaSSD06-10.0.0-BLE-Selective-Single-Receiver-Routing.md",
       "walkthrough_path": "",
@@ -5875,7 +5874,8 @@
         "final_state": "pushed",
         "final_progress": "pushed",
         "title": "Prevent BLE Packet Collisions via Selective Single-Receiver Ingestion"
-      }
+      },
+      "priority": 0
     },
     {
       "id": 101,
@@ -5888,7 +5888,6 @@
       "state": "pushed",
       "progress_state": "pushed",
       "author": "Rolf",
-      "priority": 5,
       "details": "Standardizes high-contrast light and dark theme color tokens across all 4 LCM dashboards with persistent scrollbars. (Re-instated as CRP-101 with verified final state 'pushed' from historical #41 / CRP-2026-017).",
       "plan_path": "LCM_Inventory/docs/Proposals/CRP-101-LCM-10.0.0-Universal-Theme-and-High-Contrast-Design-System.md",
       "walkthrough_path": "",
@@ -5944,7 +5943,8 @@
         "final_state": "pushed",
         "final_progress": "pushed",
         "title": "Universal Light/Dark Theme Standardization & High-Contrast Design Hardening"
-      }
+      },
+      "priority": 0
     },
     {
       "id": 102,
@@ -5957,7 +5957,6 @@
       "state": "pushed",
       "progress_state": "pushed",
       "author": "Rolf",
-      "priority": 5,
       "details": "Adds Windows-style top-right Back navigation, fixes completed metric card filter, and implements batch review action suite. (Re-instated as CRP-102 with verified final state 'pushed' from historical #42 / CRP-2026-018).",
       "plan_path": "LCM_Inventory/docs/Proposals/CRP-102-LCM-10.0.0-CM-Control-Hub-Navigation-Filter-and-Action-Engine.md",
       "walkthrough_path": "",
@@ -6013,7 +6012,8 @@
         "final_state": "pushed",
         "final_progress": "pushed",
         "title": "CM Control Hub Navigation Hardening, Filter Reconciliation, and Action Engine"
-      }
+      },
+      "priority": 0
     },
     {
       "id": 103,
@@ -6026,7 +6026,6 @@
       "state": "pushed",
       "progress_state": "pushed",
       "author": "Rolf",
-      "priority": 8,
       "details": "Universal table display standard (bidirectional column sort, header dropdown filters, sticky headers, visible scrollbars). Document table viewer extracted to CRP-130.",
       "plan_path": "LCM_Inventory/docs/Proposals/CRP-103-LCM-10.0.0-Standardized-Interactive-Document-Table-Viewer.md",
       "walkthrough_path": "",
@@ -6101,7 +6100,8 @@
         "final_progress": "pushed",
         "title": "Universal LCM Table UI/UX Standard & Standardized Interactive Document Viewer"
       },
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 104,
@@ -6114,7 +6114,6 @@
       "state": "pushed",
       "progress_state": "pushed",
       "author": "Rolf",
-      "priority": 5,
       "details": "Enforces review-gated git commits, repository boundary isolation, UTF-8 formatting, and privilege delegation via PreToolUse/PostToolUse hooks. (Re-instated as CRP-104 with verified final state 'pushed' from historical #44 / CRP-2026-020).",
       "plan_path": "LCM_Inventory/docs/Proposals/CRP-104-LCM_AI-10.0.0-LCM-Deterministic-Hook-Engine.md",
       "walkthrough_path": "",
@@ -6170,7 +6169,8 @@
         "final_state": "pushed",
         "final_progress": "pushed",
         "title": "LCM Deterministic Hook Engine & Zero-Trust Tool Execution Boundary"
-      }
+      },
+      "priority": 0
     },
     {
       "id": 105,
@@ -6182,7 +6182,6 @@
       "bundle_id": "CRP-105",
       "state": "pushed",
       "author": "Rolf, LCM_AI",
-      "priority": 5,
       "details": "Author and codify universal UI/UX standard for interactive browser tables across LCM tools. (Re-instated as active OPEN proposal from specification CRP-2026-048). (Re-instated as CRP-105 with verified final state 'deferred' from specification CRP-2026-048).",
       "plan_path": "LCM_Inventory/change_requests/LCM_Inventory/CRP-105-LCM-UI-Template-Standardization.md",
       "walkthrough_path": "",
@@ -6239,7 +6238,8 @@
         "final_progress": "deferred"
       },
       "progress_state": "pushed",
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 106,
@@ -6251,7 +6251,6 @@
       "bundle_id": "CRP-106",
       "state": "pushed",
       "author": "Rolf, LCM_AI",
-      "priority": 5,
       "details": "Consolidate tool dispatch mechanisms, eliminate path fragmentation, and standardize headless logging. (Re-instated as active OPEN proposal from specification CRP-2026-049). (Re-instated as CRP-106 with verified state 'suggested' from specification CRP-2026-049).",
       "plan_path": "LCM_Inventory/docs/Proposals/CRP-106-LCM-10.0.0-Tool-Architecture-Consolidation.md",
       "walkthrough_path": "",
@@ -6295,7 +6294,8 @@
         "final_progress": "undecided"
       },
       "progress_state": "pushed",
-      "pushed_at": "2026-10-13 19:42:05"
+      "pushed_at": "2026-10-13 19:42:05",
+      "priority": 0
     },
     {
       "id": 107,
@@ -6308,7 +6308,6 @@
       "state": "pushed",
       "progress_state": "pushed",
       "author": "Rolf, LCM_AI",
-      "priority": 8,
       "details": "Enforce automatic privilege awareness before tool execution: resolve catalog metadata (Admin: true), verify runtime shell elevation, and route un-elevated admin calls through Session 1 desktop daemon or gsudo bridge.",
       "plan_path": "LCM_Inventory/docs/Proposals/CRP-107-LCM-10.0.0-Automated-Privilege-Aware-Tool-Execution-And-Elevation-Interception.md",
       "walkthrough_path": "",
@@ -6357,7 +6356,8 @@
           "note": "Formally retired and superseded by CRP-125. Core RULE-ELEV-006 codified in ElevationPolicy.md; operational tool discovery and catalog alignment consolidated in CRP-125."
         }
       ],
-      "pushed_at": "2026-10-13 19:42:05"
+      "pushed_at": "2026-10-13 19:42:05",
+      "priority": 0
     },
     {
       "id": 108,
@@ -6369,7 +6369,6 @@
       "bundle_id": "BUNDLE-STD-DISPLAY-10.0.0",
       "state": "pushed",
       "author": "Rolf, LCM_AI",
-      "priority": 8,
       "details": "Column-header dropdown filtering standard (excluding long text) and Reset All Filters controls. Multi-page print extracted to CRP-128; editor dispatch extracted to CRP-129.",
       "plan_path": "LCM_Inventory/docs/Proposals/CRP-108-LCM-10.0.0-Universal-Table-Standard-Display-Enhancements.md",
       "walkthrough_path": "",
@@ -6406,7 +6405,8 @@
         }
       ],
       "progress_state": "pushed",
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 109,
@@ -6418,7 +6418,6 @@
       "bundle_id": "CRP-109",
       "state": "pushed",
       "author": "Rolf, LCM_AI",
-      "priority": 8,
       "details": "Codifies mandatory Mermaid diagrams (minimum 8pt text) for software layers, topologies, and workflows across .md/.cm docs. Provides FormatDiagrams user command across Git_root, Repo, Folder, and Document scopes with pre-commit hook integration.",
       "plan_path": "LCM_Inventory/docs/Proposals/CRP-109-LCM-10.0.0-Mermaid-Diagram-Standard-And-Conversion-Engine.md",
       "walkthrough_path": "",
@@ -6449,7 +6448,8 @@
         }
       ],
       "progress_state": "pushed",
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 110,
@@ -6462,7 +6462,6 @@
       "state": "pushed",
       "progress_state": "pushed",
       "author": "Rolf, LCM_AI",
-      "priority": 8,
       "details": "Establishes a hybrid progress indicator system for single and batch actions (PROCEED, ACCEPT, do #n-#m) across Chat markdown cards, native PowerShell Write-Progress in CLI, and dynamic pulsating row-level badges with docked console streams in web dashboards.",
       "plan_path": "LCM_Inventory/docs/Proposals/CRP-110-LCM-10.0.0-Universal-Multi-Channel-Progress-Indicator-Engine.md",
       "walkthrough_path": "",
@@ -6492,7 +6491,8 @@
           "note": "Pushed to remote (Git_Repositories, BGMSAMVInv, HaSSD06, HaSSD06_Inventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "pushed_at": "2026-10-13 19:42:05"
+      "pushed_at": "2026-10-13 19:42:05",
+      "priority": 0
     },
     {
       "id": 111,
@@ -6505,7 +6505,6 @@
       "state": "pushed",
       "progress_state": "pushed",
       "author": "Rolf, LCM_AI",
-      "priority": 5,
       "details": "Enables soft-break and line-folding for lengthy text within Mermaid diagram boxes and enforces responsive word-break wrapping for long strings across table columns to eliminate layout blowout.",
       "plan_path": "LCM_Inventory/docs/Proposals/BUG-111-LCM-10.0.0-Mermaid-Box-And-Table-Column-Line-Folding.md",
       "walkthrough_path": "",
@@ -6542,7 +6541,8 @@
           "note": "Pushed to remote (Git_Repositories, AuthorizeMasterUser, BackgroundModifier, BGMSAMVInv, BootEntryManager, HaSSD06, HaSSD06_Inventory, LCM_Shared, VolumeInventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 112,
@@ -6555,7 +6555,6 @@
       "state": "pushed",
       "progress_state": "pushed",
       "author": "Rolf, LCM_AI",
-      "priority": 8,
       "details": "Remediates argument resolution failure when %Git_Root% is undefined in CMD wrappers (e.g. ShowCrpDates.cmd), adding dynamic relative anchor fallback (%~dp0..\\..) and D:\\Git_Repositories default.",
       "plan_path": "LCM_Inventory/docs/Proposals/BUG-112-LCM-10.0.0-Unresolved-GitRoot-In-Cmd-Launchers.md",
       "walkthrough_path": "",
@@ -6585,7 +6584,8 @@
           "note": "Pushed to remote (Git_Repositories, AuthorizeMasterUser, BackgroundModifier, BGMSAMVInv, BootEntryManager, HaSSD06, HaSSD06_Inventory, LCM_Shared, VolumeInventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 113,
@@ -6598,7 +6598,6 @@
       "state": "pushed",
       "progress_state": "pushed",
       "author": "Rolf, LCM_AI",
-      "priority": 8,
       "details": "Ensures setting Git_Root (and system-level environment variables) is strictly elevated to ADMIN context, broadcasts environment change, and warns operator that running processes (Antigravity IDE, terminals, Explorer) must be restarted to take effect.",
       "plan_path": "LCM_Inventory/docs/Proposals/BUG-113-LCM-10.0.0-Admin-Elevation-And-Restart-Notice-For-System-Environment-Variables.md",
       "walkthrough_path": "",
@@ -6628,7 +6627,8 @@
           "note": "Pushed to remote (Git_Repositories, AuthorizeMasterUser, BackgroundModifier, BGMSAMVInv, BootEntryManager, HaSSD06, HaSSD06_Inventory, LCM_Shared, VolumeInventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 114,
@@ -6641,7 +6641,6 @@
       "state": "pushed",
       "progress_state": "pushed",
       "author": "Rolf, LCM_AI",
-      "priority": 3,
       "details": "Removes the obsolete hardcoded HaSSD06 filter button from the Tool Explorer interface and consolidates subsystem filtering exclusively into the dynamic Group/Subsystem column dropdown selectors.",
       "plan_path": "LCM_Inventory/docs/Proposals/CRP-114-LCM-10.0.0-Remove-HaSSD06-Filter-Button-From-Tool-Explorer.md",
       "walkthrough_path": "",
@@ -6671,7 +6670,8 @@
           "note": "Pushed to remote (Git_Repositories, AuthorizeMasterUser, BackgroundModifier, BGMSAMVInv, BootEntryManager, HaSSD06, HaSSD06_Inventory, LCM_Shared, VolumeInventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 115,
@@ -6684,7 +6684,6 @@
       "state": "pushed",
       "progress_state": "pushed",
       "author": "Rolf, LCM_AI",
-      "priority": 8,
       "details": "Enforces universal F5 key event handler across all Show-* web displays to trigger live dashboard data reload, and purges legacy on-screen Refresh buttons from header and toolbar controls.",
       "plan_path": "LCM_Inventory/docs/Proposals/CRP-115-LCM-10.0.0-Universal-F5-Keyboard-Refresh-And-Button-Removal.md",
       "walkthrough_path": "",
@@ -6739,7 +6738,8 @@
           "note": "Pushed to remote (Git_Repositories, AuthorizeMasterUser, BackgroundModifier, BGMSAMVInv, BootEntryManager, HaSSD06, HaSSD06_Inventory, LCM_Shared, VolumeInventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 116,
@@ -6752,7 +6752,6 @@
       "state": "pushed",
       "progress_state": "pushed",
       "author": "Rolf, LCM_AI",
-      "priority": 8,
       "details": "Adds selective short-name deletion to Tool Explorer with Last-Alias Protection invariant. In 'Mode: Source Files (Dev)', displays all associated short names inline beneath long filenames with individual 'âœ•' delete buttons (or 'ðŸ”’' when sole remaining). Also integrates 'Delete short name only' option in the Rename modal.",
       "plan_path": "LCM_Inventory/docs/Proposals/CRP-116-LCM-10.0.0-Selective-Short-Name-Deletion-With-Last-Alias-Protection.md",
       "walkthrough_path": "",
@@ -6789,7 +6788,8 @@
           "note": "Pushed to remote (Git_Repositories, BGMSAMVInv, HaSSD06, HaSSD06_Inventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "pushed_at": "2026-10-13 19:42:05"
+      "pushed_at": "2026-10-13 19:42:05",
+      "priority": 0
     },
     {
       "id": 117,
@@ -6802,7 +6802,6 @@
       "state": "pushed",
       "progress_state": "pushed",
       "author": "Rolf, LCM_AI",
-      "priority": 5,
       "details": "Consolidates tool metadata management into a single authoritative tool_catalog.json file. Deprecates the hardcoded $metadataOverrides dictionary in Update-ToolCatalog.ps1, retires tool_catalog_overrides.json, and eliminates on-the-fly daemon regex parsing of 191 .cmd trampoline files.",
       "plan_path": "LCM_Inventory/docs/Proposals/CRP-117-LCM-10.0.0-Single-Authoritative-Tool-Catalog-Architecture.md",
       "walkthrough_path": "",
@@ -6839,7 +6838,8 @@
           "note": "Pushed to remote (Git_Repositories, LCM_AI, LCM_Inventory)"
         }
       ],
-      "pushed_at": "2026-10-13 20:07:12"
+      "pushed_at": "2026-10-13 20:07:12",
+      "priority": 0
     },
     {
       "id": 118,
@@ -6851,7 +6851,6 @@
       "bundle_id": "CRP-118",
       "state": "pushed",
       "author": "Rolf, LCM_AI",
-      "priority": 8,
       "details": "Closes the execution intent gap for RULE-ELEV-006 by providing a standardized CLI and agent dispatcher (Invoke-PrivilegedTool.ps1) and aligning trampoline .cmd elevation logic. Ensures admin-required tools are automatically intercepted and routed to the Session 1 daemon bridge without blocking or degrading in un-elevated shells.",
       "plan_path": "LCM_Inventory/docs/Proposals/CRP-118-LCM-10.0.0-Automated-Privilege-Aware-CLI-Interception-Engine.md",
       "walkthrough_path": "",
@@ -6896,7 +6895,8 @@
         }
       ],
       "progress_state": "pushed",
-      "pushed_at": "2026-10-13 21:29:59"
+      "pushed_at": "2026-10-13 21:29:59",
+      "priority": 0
     },
     {
       "id": 119,
@@ -6909,7 +6909,6 @@
       "state": "pushed",
       "progress_state": "pushed",
       "author": "Rolf, LCM_AI",
-      "priority": 8,
       "details": "Establishes a single canonical identifier in the form CRP-nnn (or BUG-nnn for defects), where nnn is strictly the proposal's unique monotonic integer ID. Retires the annual CRP-2026-yyy dual-numbering system and aligns filenames, ledger IDs, and tooling under a unified 1:1 scheme.",
       "plan_path": "LCM_Inventory/docs/Proposals/CRP-119-LCM-10.0.0-Universal-Monotonic-Identifier-Scheme.md",
       "walkthrough_path": "",
@@ -6946,7 +6945,8 @@
           "note": "Pushed to remote (Git_Repositories, BGMSAMVInv, HaSSD06, HaSSD06_Inventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "pushed_at": "2026-10-13 19:42:05"
+      "pushed_at": "2026-10-13 19:42:05",
+      "priority": 0
     },
     {
       "id": 120,
@@ -6959,7 +6959,6 @@
       "state": "pushed",
       "progress_state": "pushed",
       "author": "rgbig",
-      "priority": 8,
       "details": "Read action in Show-Rules lacks standard display controls (e.g. Light Mode toggle, Print button). Ctrl+P inside the reader causes the browser to freeze/hang upon printout completion.",
       "plan_path": "LCM_Inventory/docs/Proposals/BUG-120-LCM-10.0.0-Show-Rules-Read-View-Display-Options-And-Print-Hang.md",
       "walkthrough_path": "",
@@ -6996,7 +6995,8 @@
           "note": "Pushed to remote (Git_Repositories, BGMSAMVInv, HaSSD06, HaSSD06_Inventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "pushed_at": "2026-10-13 19:42:05"
+      "pushed_at": "2026-10-13 19:42:05",
+      "priority": 0
     },
     {
       "id": 121,
@@ -7008,7 +7008,6 @@
       "bundle_id": "CRP-121",
       "state": "pushed",
       "author": "Rolf, LCM_AI",
-      "priority": 5,
       "details": "Completed after accepted CRP-121 review receipt review_LCM_Inventory_20261005_170931.json and implementation commit 08d3662.",
       "plan_path": "LCM_Inventory/docs/Proposals/CRP-121-LCM-10.0.0-Automated-Tool-Dependency-Documentation-Engine.md",
       "walkthrough_path": "",
@@ -7049,7 +7048,8 @@
         "LCM_Inventory"
       ],
       "cm_scope_note": "CRP-121 implementation is owned by LCM_Inventory; the reviewed authority-rule and root-index corrections are affected-repository cohort members.",
-      "pushed_at": "2026-10-13 17:39:04"
+      "pushed_at": "2026-10-13 17:39:04",
+      "priority": 0
     },
     {
       "id": 122,
@@ -7061,7 +7061,6 @@
       "bundle_id": "CRP-122",
       "state": "rejected",
       "author": "Rolf, LCM_AI",
-      "priority": 5,
       "details": "Establishes a formal AST-powered intent signature probing engine (Test-LcmIntentSignatures.ps1) to audit the living codebase against proposal functional deltas, identifying Fully Integrated, Partially Overwritten/Regressed, or Never Reached modifications during crash recovery.",
       "plan_path": "LCM_Inventory/docs/Proposals/CRP-122-LCM-10.0.0-AST-Intent-Signature-Audit-Engine.md",
       "walkthrough_path": "",
@@ -7077,7 +7076,8 @@
           "note": "Registered per operator directive in OPEN state for execution at a later time (Phase C)."
         }
       ],
-      "progress_state": "rejected"
+      "progress_state": "rejected",
+      "priority": 0
     },
     {
       "id": 123,
@@ -7090,7 +7090,6 @@
       "state": "pushed",
       "progress_state": "pushed",
       "author": "rgbig",
-      "priority": 8,
       "details": "When Invoke-BeyondCompareReview.ps1 opens a second review session for .agents junctions, the left baseline pane loads an empty or unlinked directory instead of the committed baseline from Git_Repositories (LCM_Inventory/.agents).",
       "plan_path": "LCM_Inventory/docs/Proposals/BUG-123-LCM_Inventory-10.0.0-BCR-Junction-Left-Baseline-Resolution.md",
       "walkthrough_path": "",
@@ -7127,7 +7126,8 @@
           "note": "Pushed to remote (Git_Repositories, AuthorizeMasterUser, BackgroundModifier, BGMSAMVInv, BootEntryManager, HaSSD06, HaSSD06_Inventory, LCM_Shared, VolumeInventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 124,
@@ -7140,7 +7140,6 @@
       "state": "pushed",
       "progress_state": "pushed",
       "author": "rgbig",
-      "priority": 3,
       "details": "Invoke-BeyondCompareReview.ps1 primary review session only excluded -.agents\\rules\\ instead of -.agents\\, causing .agents junction directories to redundantly appear in the primary comparison window alongside the secondary comparison session.",
       "plan_path": "LCM_Inventory/docs/Proposals/BUG-124-LCM_Inventory-10.0.0-BCR-Junction-Exclusion-Filter-Defect.md",
       "walkthrough_path": "",
@@ -7177,7 +7176,8 @@
           "note": "Pushed to remote (Git_Repositories, AuthorizeMasterUser, BackgroundModifier, BGMSAMVInv, BootEntryManager, HaSSD06, HaSSD06_Inventory, LCM_Shared, VolumeInventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 125,
@@ -7190,7 +7190,6 @@
       "state": "pushed",
       "progress_state": "pushed",
       "author": "Rolf, LCM_AI",
-      "priority": 5,
       "details": "Expands Update-ToolCatalog.ps1 heuristic scanner depth to 250 lines with deep keyword detection, aligns tool_catalog.json for Set-GitRoot, Repair-VolumeAcl, and companion administrative utilities, recompiles .cmd trampolines with UAC elevation preambles, and formally retires CRP-107.",
       "plan_path": "LCM_Inventory/docs/Proposals/CRP-125-LCM-10.0.0-Comprehensive-Admin-Tool-Discovery-And-Catalog-Elevation-Alignment.md",
       "walkthrough_path": "",
@@ -7227,7 +7226,8 @@
           "note": "Pushed to remote (Git_Repositories, LCM_AI, LCM_Inventory)"
         }
       ],
-      "pushed_at": "2026-10-13 20:33:07"
+      "pushed_at": "2026-10-13 20:33:07",
+      "priority": 0
     },
     {
       "id": 126,
@@ -7240,7 +7240,6 @@
       "state": "pushed",
       "progress_state": "pushed",
       "author": "Rolf, LCM_AI",
-      "priority": 10,
       "details": "Show-CmControlHub.ps1 suffered from an indefinite execution hang when invoked under Windows PowerShell 5.1 due to ConvertTo-Json -Depth 6 recursion lock over the large nested docsCache dictionary, combined with the lack of an automatic pwsh.exe runtime enforcement guard.",
       "plan_path": "LCM_Inventory/docs/Proposals/BUG-126-LCM_Inventory-10.0.0-Show-CmControlHub-PS51-Serialization-Hang.md",
       "walkthrough_path": "",
@@ -7271,7 +7270,8 @@
         }
       ],
       "pushed_at": "2026-10-13 14:10:00",
-      "regression_needed": false
+      "regression_needed": false,
+      "priority": 0
     },
     {
       "id": 127,
@@ -7318,11 +7318,11 @@
           "note": "Pushed to remote (Git_Repositories, LCM_AI, LCM_Inventory)"
         }
       ],
-      "priority": 8,
       "crp_id": "BUG-127",
       "cr_id": "BUG-127",
       "pushed_at": "2026-10-13 22:38:53",
-      "regression_needed": false
+      "regression_needed": false,
+      "priority": 0
     },
     {
       "id": 128,
@@ -7362,11 +7362,11 @@
           "note": "Pushed to remote (Git_Repositories, AuthorizeMasterUser, BackgroundModifier, BGMSAMVInv, BootEntryManager, HaSSD06, HaSSD06_Inventory, LCM_Shared, VolumeInventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-128",
       "cr_id": "CRP-128",
       "regression_needed": false,
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 129,
@@ -7406,11 +7406,11 @@
           "note": "Pushed to remote (Git_Repositories, AuthorizeMasterUser, BackgroundModifier, BGMSAMVInv, BootEntryManager, HaSSD06, HaSSD06_Inventory, LCM_Shared, VolumeInventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-129",
       "cr_id": "CRP-129",
       "regression_needed": false,
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 130,
@@ -7450,11 +7450,11 @@
           "note": "Pushed to remote (Git_Repositories, AuthorizeMasterUser, BackgroundModifier, BGMSAMVInv, BootEntryManager, HaSSD06, HaSSD06_Inventory, LCM_Shared, VolumeInventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-130",
       "cr_id": "CRP-130",
       "regression_needed": false,
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 131,
@@ -7501,11 +7501,11 @@
           "note": "Pushed to remote (Git_Repositories, LCM_AI, LCM_Inventory)"
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-131",
       "cr_id": "CRP-131",
       "pushed_at": "2026-10-13 22:38:53",
-      "regression_needed": true
+      "regression_needed": true,
+      "priority": 0
     },
     {
       "id": 132,
@@ -7545,11 +7545,11 @@
           "note": "Pushed to remote (Git_Repositories, AuthorizeMasterUser, BackgroundModifier, BGMSAMVInv, BootEntryManager, HaSSD06, HaSSD06_Inventory, LCM_Shared, VolumeInventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "priority": 8,
       "crp_id": "CRP-132",
       "cr_id": "CRP-132",
       "regression_needed": true,
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 133,
@@ -7603,11 +7603,11 @@
           "note": "Pushed to remote (Git_Repositories, HaSSD06, HaSSD06_Inventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "priority": 8,
       "crp_id": "BUG-133",
       "cr_id": "BUG-133",
       "regression_needed": true,
-      "pushed_at": "2026-10-13 18:33:01"
+      "pushed_at": "2026-10-13 18:33:01",
+      "priority": 0
     },
     {
       "id": 134,
@@ -7661,11 +7661,11 @@
           "note": "Pushed to remote (Git_Repositories, HaSSD06, HaSSD06_Inventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-134",
       "cr_id": "CRP-134",
       "regression_needed": true,
-      "pushed_at": "2026-10-13 18:33:01"
+      "pushed_at": "2026-10-13 18:33:01",
+      "priority": 0
     },
     {
       "id": 135,
@@ -7717,12 +7717,12 @@
           "note": "Committed and pushed to LCM_Inventory origin/main."
         }
       ],
-      "priority": 8,
       "crp_id": "CRP-135",
       "cr_id": "CRP-135",
       "max_regression_depth": 2,
       "regression_needed": true,
-      "pushed_at": "2026-10-13 18:24:56"
+      "pushed_at": "2026-10-13 18:24:56",
+      "priority": 0
     },
     {
       "id": 136,
@@ -7775,11 +7775,11 @@
           "note": "Pushed to remote (Git_Repositories, AuthorizeMasterUser, BackgroundModifier, BGMSAMVInv, BootEntryManager, HaSSD06, HaSSD06_Inventory, LCM_Shared, VolumeInventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "priority": 8,
       "crp_id": "BUG-136",
       "cr_id": "BUG-136",
       "regression_needed": true,
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 137,
@@ -7832,11 +7832,11 @@
           "note": "Pushed to remote (Git_Repositories, AuthorizeMasterUser, BackgroundModifier, BGMSAMVInv, BootEntryManager, HaSSD06, HaSSD06_Inventory, LCM_Shared, VolumeInventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "priority": 8,
       "crp_id": "BUG-137",
       "cr_id": "BUG-137",
       "regression_needed": true,
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 138,
@@ -7889,11 +7889,11 @@
           "note": "Pushed to remote (Git_Repositories, AuthorizeMasterUser, BackgroundModifier, BGMSAMVInv, BootEntryManager, HaSSD06, HaSSD06_Inventory, LCM_Shared, VolumeInventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-138",
       "cr_id": "CRP-138",
       "regression_needed": true,
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 139,
@@ -7946,11 +7946,11 @@
           "note": "Pushed to remote (Git_Repositories, AuthorizeMasterUser, BackgroundModifier, BGMSAMVInv, BootEntryManager, HaSSD06, HaSSD06_Inventory, LCM_Shared, VolumeInventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "priority": 8,
       "crp_id": "BUG-139",
       "cr_id": "BUG-139",
       "regression_needed": false,
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 140,
@@ -7998,11 +7998,11 @@
           "note": "Pushed to remote (Git_Repositories, AuthorizeMasterUser, BackgroundModifier, BGMSAMVInv, BootEntryManager, HaSSD06, HaSSD06_Inventory, LCM_Shared, VolumeInventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-140",
       "cr_id": "CRP-140",
       "regression_needed": false,
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 141,
@@ -8042,11 +8042,11 @@
           "note": "Pushed to remote (Git_Repositories, AuthorizeMasterUser, BackgroundModifier, BGMSAMVInv, BootEntryManager, HaSSD06, HaSSD06_Inventory, LCM_Shared, VolumeInventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "priority": 8,
       "crp_id": "BUG-141",
       "cr_id": "BUG-141",
       "regression_needed": false,
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 142,
@@ -8086,11 +8086,11 @@
           "note": "Pushed to remote (Git_Repositories, AuthorizeMasterUser, BackgroundModifier, BGMSAMVInv, BootEntryManager, HaSSD06, HaSSD06_Inventory, LCM_Shared, VolumeInventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "priority": 8,
       "crp_id": "CRP-142",
       "cr_id": "CRP-142",
       "regression_needed": false,
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 143,
@@ -8130,11 +8130,11 @@
           "note": "Pushed to remote (Git_Repositories, AuthorizeMasterUser, BackgroundModifier, BGMSAMVInv, BootEntryManager, HaSSD06, HaSSD06_Inventory, LCM_Shared, VolumeInventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "priority": 8,
       "crp_id": "CRP-143",
       "cr_id": "CRP-143",
       "regression_needed": false,
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 144,
@@ -8174,11 +8174,11 @@
           "note": "Pushed to remote (Git_Repositories, AuthorizeMasterUser, BackgroundModifier, BGMSAMVInv, BootEntryManager, HaSSD06, HaSSD06_Inventory, LCM_Shared, VolumeInventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "priority": 8,
       "crp_id": "CRP-144",
       "cr_id": "CRP-144",
       "regression_needed": false,
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 145,
@@ -8218,11 +8218,11 @@
           "note": "Pushed to remote (Git_Repositories, AuthorizeMasterUser, BackgroundModifier, BGMSAMVInv, BootEntryManager, HaSSD06, HaSSD06_Inventory, LCM_Shared, VolumeInventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "priority": 8,
       "crp_id": "CRP-145",
       "cr_id": "CRP-145",
       "regression_needed": false,
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 146,
@@ -8262,11 +8262,11 @@
           "note": "Pushed to remote (Git_Repositories, AuthorizeMasterUser, BackgroundModifier, BGMSAMVInv, BootEntryManager, HaSSD06, HaSSD06_Inventory, LCM_Shared, VolumeInventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "priority": 8,
       "crp_id": "CRP-146",
       "cr_id": "CRP-146",
       "regression_needed": false,
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 147,
@@ -8303,12 +8303,12 @@
           "note": "Transitioned to pushed. Core safety interlocks, update gates, and safe operations delivered; central registry non-mutation enforced per RULE-SUB-007."
         }
       ],
-      "priority": 8,
       "crp_id": "CRP-147",
       "cr_id": "CRP-147",
       "regression_needed": false,
       "progress_state": "pushed",
-      "pushed_at": "2026-10-13 18:10:53"
+      "pushed_at": "2026-10-13 18:10:53",
+      "priority": 0
     },
     {
       "id": 148,
@@ -8348,11 +8348,11 @@
           "note": "Pushed to remote (Git_Repositories, AuthorizeMasterUser, BackgroundModifier, BGMSAMVInv, BootEntryManager, HaSSD06, HaSSD06_Inventory, LCM_Shared, VolumeInventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "priority": 8,
       "crp_id": "BUG-148",
       "cr_id": "BUG-148",
       "regression_needed": false,
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 149,
@@ -8392,11 +8392,11 @@
           "note": "Pushed to remote (Git_Repositories, AuthorizeMasterUser, BackgroundModifier, BGMSAMVInv, BootEntryManager, HaSSD06, HaSSD06_Inventory, LCM_Shared, VolumeInventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "priority": 8,
       "crp_id": "BUG-149",
       "cr_id": "BUG-149",
       "regression_needed": false,
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 150,
@@ -8436,11 +8436,11 @@
           "note": "Pushed to remote (Git_Repositories, AuthorizeMasterUser, BackgroundModifier, BGMSAMVInv, BootEntryManager, HaSSD06, HaSSD06_Inventory, LCM_Shared, VolumeInventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "priority": 8,
       "crp_id": "CRP-150",
       "cr_id": "CRP-150",
       "regression_needed": false,
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 151,
@@ -8494,11 +8494,11 @@
           "note": "Pushed to remote (Git_Repositories, AuthorizeMasterUser, BackgroundModifier, BGMSAMVInv, BootEntryManager, HaSSD06, HaSSD06_Inventory, LCM_Shared, VolumeInventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "priority": 0,
       "crp_id": "CRP-151",
       "cr_id": "CRP-151",
       "regression_needed": false,
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 152,
@@ -8552,11 +8552,11 @@
           "note": "Pushed to remote (Git_Repositories, AuthorizeMasterUser, BackgroundModifier, BGMSAMVInv, BootEntryManager, HaSSD06, HaSSD06_Inventory, LCM_Shared, VolumeInventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "priority": 0,
       "crp_id": "CRP-152",
       "cr_id": "CRP-152",
       "regression_needed": false,
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 153,
@@ -8596,11 +8596,11 @@
           "note": "Pushed to remote (Git_Repositories, AuthorizeMasterUser, BackgroundModifier, BGMSAMVInv, BootEntryManager, HaSSD06, HaSSD06_Inventory, LCM_Shared, VolumeInventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "priority": 8,
       "crp_id": "BUG-153",
       "cr_id": "BUG-153",
       "regression_needed": false,
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 154,
@@ -8640,11 +8640,11 @@
           "note": "Pushed to remote (Git_Repositories, AuthorizeMasterUser, BackgroundModifier, BGMSAMVInv, BootEntryManager, HaSSD06, HaSSD06_Inventory, LCM_Shared, VolumeInventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "priority": 8,
       "crp_id": "BUG-154",
       "cr_id": "BUG-154",
       "regression_needed": false,
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 155,
@@ -8684,11 +8684,11 @@
           "note": "Pushed to remote (Git_Repositories, AuthorizeMasterUser, BackgroundModifier, BGMSAMVInv, BootEntryManager, HaSSD06, HaSSD06_Inventory, LCM_Shared, VolumeInventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "priority": 5,
       "crp_id": "BUG-155",
       "cr_id": "BUG-155",
       "regression_needed": false,
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 156,
@@ -8728,11 +8728,11 @@
           "note": "Pushed to remote (Git_Repositories, AuthorizeMasterUser, BackgroundModifier, BGMSAMVInv, BootEntryManager, HaSSD06, HaSSD06_Inventory, LCM_Shared, VolumeInventory, LCM_AI, LCM_Inventory, LCM_Supervision)"
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-156",
       "cr_id": "CRP-156",
       "regression_needed": false,
-      "pushed_at": "2026-10-13 18:05:33"
+      "pushed_at": "2026-10-13 18:05:33",
+      "priority": 0
     },
     {
       "id": 157,
@@ -8772,12 +8772,12 @@
           "note": "Committed and pushed to LCM_Inventory origin/main."
         }
       ],
-      "priority": 8,
       "crp_id": "BUG-157",
       "cr_id": "BUG-157",
       "regression_needed": false,
       "progress_state": "pushed",
-      "pushed_at": "2026-10-13 20:17:00"
+      "pushed_at": "2026-10-13 20:17:00",
+      "priority": 0
     },
     {
       "id": 158,
@@ -8824,12 +8824,12 @@
           "note": "Operator directive: accept 158. Audit receipts recorded."
         }
       ],
-      "priority": 5,
       "crp_id": "CRP-158",
       "cr_id": "CRP-158",
       "regression_needed": false,
       "progress_state": "pushed",
-      "pushed_at": "2026-10-13 20:49:00"
+      "pushed_at": "2026-10-13 20:49:00",
+      "priority": 0
     },
     {
       "id": 159,
@@ -8875,12 +8875,12 @@
           "note": "Pushed to remote (Git_Repositories, LCM_AI, LCM_Inventory)"
         }
       ],
-      "priority": 8,
       "type": "BUG",
       "crp_id": "BUG-159",
       "cr_id": "BUG-159",
       "progress_state": "pushed",
-      "pushed_at": "2026-10-13 22:06:33"
+      "pushed_at": "2026-10-13 22:06:33",
+      "priority": 0
     },
     {
       "id": 160,
@@ -8926,12 +8926,12 @@
           "note": "Pushed to remote (Git_Repositories, LCM_AI, LCM_Inventory)"
         }
       ],
-      "priority": 5,
       "type": "CRP",
       "crp_id": "CRP-160",
       "cr_id": "CRP-160",
       "progress_state": "pushed",
-      "pushed_at": "2026-10-13 22:06:33"
+      "pushed_at": "2026-10-13 22:06:33",
+      "priority": 0
     },
     {
       "id": 161,
@@ -8977,12 +8977,12 @@
           "note": "Pushed to remote (Git_Repositories, LCM_AI, LCM_Inventory)"
         }
       ],
-      "priority": 8,
       "type": "CRP",
       "crp_id": "CRP-161",
       "cr_id": "CRP-161",
       "progress_state": "pushed",
-      "pushed_at": "2026-10-13 22:06:33"
+      "pushed_at": "2026-10-13 22:06:33",
+      "priority": 0
     },
     {
       "id": 162,
@@ -9034,12 +9034,12 @@
           "note": "Pushed to remote (Git_Repositories, LCM_AI, LCM_Inventory)"
         }
       ],
-      "priority": 8,
       "type": "CRP",
       "crp_id": "CRP-162",
       "cr_id": "CRP-162",
       "progress_state": "pushed",
-      "pushed_at": "2026-10-13 22:06:33"
+      "pushed_at": "2026-10-13 22:06:33",
+      "priority": 0
     },
     {
       "id": 163,
@@ -9077,12 +9077,12 @@
           "note": "Pushed to remote (Git_Repositories, LCM_AI, LCM_Inventory)"
         }
       ],
-      "priority": 8,
       "type": "CRP",
       "crp_id": "CRP-163",
       "cr_id": "CRP-163",
       "progress_state": "pushed",
-      "pushed_at": "2026-10-13 22:06:33"
+      "pushed_at": "2026-10-13 22:06:33",
+      "priority": 0
     },
     {
       "id": 164,
@@ -9120,12 +9120,12 @@
           "note": "Pushed to remote (Git_Repositories, LCM_AI, LCM_Inventory)"
         }
       ],
-      "priority": 8,
       "type": "CRP",
       "crp_id": "CRP-164",
       "cr_id": "CRP-164",
       "progress_state": "pushed",
-      "pushed_at": "2026-10-13 02:40:46"
+      "pushed_at": "2026-10-13 02:40:46",
+      "priority": 0
     },
     {
       "id": 169,
@@ -9177,12 +9177,12 @@
           "note": "Pushed to remote (Git_Repositories, LCM_AI, LCM_Inventory)"
         }
       ],
-      "priority": 8,
       "type": "CRP",
       "crp_id": "CRP-169",
       "cr_id": "CRP-169",
       "progress_state": "pushed",
-      "pushed_at": "2026-10-13 22:06:33"
+      "pushed_at": "2026-10-13 22:06:33",
+      "priority": 0
     },
     {
       "id": 170,
@@ -9234,12 +9234,12 @@
           "note": "Pushed to remote (Git_Repositories, LCM_AI, LCM_Inventory)"
         }
       ],
-      "priority": 8,
       "type": "CRP",
       "crp_id": "CRP-170",
       "cr_id": "CRP-170",
       "progress_state": "pushed",
-      "pushed_at": "2026-10-13 22:06:33"
+      "pushed_at": "2026-10-13 22:06:33",
+      "priority": 0
     },
     {
       "id": 171,
@@ -9278,12 +9278,12 @@
           "note": "Pushed to remote (Git_Repositories, LCM_AI, LCM_Inventory)"
         }
       ],
-      "priority": 5,
       "type": "CRP",
       "crp_id": "CRP-171",
       "cr_id": "CRP-171",
       "progress_state": "pushed",
-      "pushed_at": "2026-10-13 20:45:50"
+      "pushed_at": "2026-10-13 20:45:50",
+      "priority": 0
     },
     {
       "id": 172,
@@ -9330,13 +9330,13 @@
           "note": "Pushed to remote (Git_Repositories, LCM_AI, LCM_Inventory)"
         }
       ],
-      "priority": 8,
       "type": "BUG",
       "bug_id": "BUG-172",
       "crp_id": "BUG-172",
       "cr_id": "BUG-172",
       "progress_state": "pushed",
-      "pushed_at": "2026-10-13 20:45:50"
+      "pushed_at": "2026-10-13 20:45:50",
+      "priority": 0
     },
     {
       "id": 173,
@@ -9389,12 +9389,12 @@
           "note": "Pushed to remote (Git_Repositories, LCM_AI, LCM_Inventory)"
         }
       ],
-      "priority": 8,
       "type": "CRP",
       "crp_id": "CRP-173",
       "cr_id": "CRP-173",
       "progress_state": "pushed",
-      "pushed_at": "2026-10-13 20:45:50"
+      "pushed_at": "2026-10-13 20:45:50",
+      "priority": 0
     },
     {
       "id": 174,
@@ -9446,12 +9446,12 @@
           "note": "Pushed to remote (Git_Repositories, LCM_AI, LCM_Inventory)"
         }
       ],
-      "priority": 8,
       "type": "CRP",
       "crp_id": "CRP-174",
       "cr_id": "CRP-174",
       "progress_state": "pushed",
-      "pushed_at": "2026-10-13 20:45:50"
+      "pushed_at": "2026-10-13 20:45:50",
+      "priority": 0
     },
     {
       "id": "175",
@@ -9496,12 +9496,12 @@
           "note": "Pushed to remote (Git_Repositories, LCM_AI, LCM_Inventory)"
         }
       ],
-      "priority": 5,
       "type": "CRP",
       "crp_id": "CRP-175",
       "cr_id": "CRP-175",
       "progress_state": "pushed",
-      "pushed_at": "2026-10-13 19:11:58"
+      "pushed_at": "2026-10-13 19:11:58",
+      "priority": 0
     },
     {
       "id": 176,
@@ -9546,12 +9546,12 @@
           "note": "Pushed to remote (Git_Repositories, LCM_AI, LCM_Inventory)"
         }
       ],
-      "priority": 5,
       "type": "CRP",
       "crp_id": "CRP-176",
       "cr_id": "CRP-176",
       "progress_state": "pushed",
-      "pushed_at": "2026-10-13 01:56:04"
+      "pushed_at": "2026-10-13 01:56:04",
+      "priority": 0
     },
     {
       "id": 177,
@@ -9596,12 +9596,12 @@
           "note": "Pushed to remote (Git_Repositories, LCM_AI, LCM_Inventory)"
         }
       ],
-      "priority": 5,
       "type": "CRP",
       "crp_id": "CRP-177",
       "cr_id": "CRP-177",
       "progress_state": "pushed",
-      "pushed_at": "2026-10-13 01:56:04"
+      "pushed_at": "2026-10-13 01:56:04",
+      "priority": 0
     },
     {
       "id": 178,
@@ -9646,12 +9646,12 @@
           "note": "Pushed to remote (Git_Repositories, LCM_AI, LCM_Inventory)"
         }
       ],
-      "priority": 8,
       "type": "BUG",
       "crp_id": "BUG-178",
       "cr_id": "BUG-178",
       "progress_state": "pushed",
-      "pushed_at": "2026-10-13 01:56:04"
+      "pushed_at": "2026-10-13 01:56:04",
+      "priority": 0
     },
     {
       "id": 179,
@@ -9696,12 +9696,12 @@
           "note": "Pushed to remote (Git_Repositories, LCM_AI, LCM_Inventory)"
         }
       ],
-      "priority": 8,
       "type": "BUG",
       "crp_id": "BUG-179",
       "cr_id": "BUG-179",
       "progress_state": "pushed",
-      "pushed_at": "2026-10-13 01:56:04"
+      "pushed_at": "2026-10-13 01:56:04",
+      "priority": 0
     },
     {
       "id": 180,
@@ -9746,12 +9746,12 @@
           "note": "Pushed to remote (Git_Repositories, LCM_AI, LCM_Inventory)"
         }
       ],
-      "priority": 8,
       "type": "CRP",
       "crp_id": "CRP-180",
       "cr_id": "CRP-180",
       "progress_state": "pushed",
-      "pushed_at": "2026-10-13 01:56:04"
+      "pushed_at": "2026-10-13 01:56:04",
+      "priority": 0
     },
     {
       "id": 181,
@@ -9796,12 +9796,12 @@
           "note": "Pushed to remote (Git_Repositories, LCM_AI, LCM_Inventory)"
         }
       ],
-      "priority": 8,
       "type": "BUG",
       "crp_id": "BUG-181",
       "cr_id": "BUG-181",
       "progress_state": "pushed",
-      "pushed_at": "2026-10-13 01:56:04"
+      "pushed_at": "2026-10-13 01:56:04",
+      "priority": 0
     },
     {
       "id": 182,
@@ -9846,12 +9846,12 @@
           "note": "Pushed to remote (Git_Repositories, LCM_AI)"
         }
       ],
-      "priority": 8,
       "type": "CRP",
       "crp_id": "CRP-182",
       "cr_id": "CRP-182",
       "progress_state": "pushed",
-      "pushed_at": "2026-10-13 21:13:05"
+      "pushed_at": "2026-10-13 21:13:05",
+      "priority": 0
     },
     {
       "id": 183,
@@ -9895,12 +9895,12 @@
           "note": "Pushed to remote (Git_Repositories, LCM_AI)"
         }
       ],
-      "priority": 5,
       "type": "BUG",
       "crp_id": "BUG-183",
       "cr_id": "BUG-183",
       "progress_state": "pushed",
-      "pushed_at": "2026-10-13 21:22:17"
+      "pushed_at": "2026-10-13 21:22:17",
+      "priority": 0
     },
     {
       "id": 184,
@@ -9945,12 +9945,12 @@
           "note": "Pushed to remote (Git_Repositories, LCM_AI)"
         }
       ],
-      "priority": 5,
       "type": "CRP",
       "crp_id": "CRP-184",
       "cr_id": "CRP-184",
       "progress_state": "pushed",
-      "pushed_at": "2026-10-13 21:22:17"
+      "pushed_at": "2026-10-13 21:22:17",
+      "priority": 0
     },
     {
       "id": 185,
@@ -9995,12 +9995,12 @@
           "note": "Pushed to remote (Git_Repositories, LCM_AI)"
         }
       ],
-      "priority": 8,
       "type": "BUG",
       "crp_id": "BUG-185",
       "cr_id": "BUG-185",
       "progress_state": "pushed",
-      "pushed_at": "2026-10-13 21:22:17"
+      "pushed_at": "2026-10-13 21:22:17",
+      "priority": 0
     },
     {
       "id": 186,
@@ -10038,12 +10038,12 @@
           "note": "Pushed to remote (Git_Repositories, LCM_AI)"
         }
       ],
-      "priority": 5,
       "type": "CRP",
       "crp_id": "CRP-186",
       "cr_id": "CRP-186",
       "progress_state": "pushed",
-      "pushed_at": "2026-10-13 21:22:17"
+      "pushed_at": "2026-10-13 21:22:17",
+      "priority": 0
     },
     {
       "id": 187,
@@ -10082,12 +10082,12 @@
           "note": "Pushed to remote (Git_Repositories, LCM_AI, LCM_Inventory)"
         }
       ],
-      "priority": 8,
       "type": "CRP",
       "crp_id": "CRP-187",
       "cr_id": "CRP-187",
       "progress_state": "pushed",
-      "pushed_at": "2026-10-13 18:05:46"
+      "pushed_at": "2026-10-13 18:05:46",
+      "priority": 0
     },
     {
       "id": 188,
@@ -10126,13 +10126,13 @@
           "note": "Pushed to remote (Git_Repositories, LCM_AI, LCM_Inventory)"
         }
       ],
-      "priority": 3,
       "severity": "High",
       "type": "CRP",
       "crp_id": "CRP-188",
       "cr_id": "CRP-188",
       "progress_state": "pushed",
-      "pushed_at": "2026-10-13 18:05:46"
+      "pushed_at": "2026-10-13 18:05:46",
+      "priority": 0
     },
     {
       "id": 189,
@@ -10165,7 +10165,7 @@
       "walkthrough_path": "docs/Proposals/BUG-189-LCM-Lifecycle-Command-Migration-and-Lockstep-Push/Walkthrough.md",
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 18:05:46",
-      "priority": 5
+      "priority": 0
     },
     {
       "id": 190,
@@ -10193,7 +10193,7 @@
       "plan_path": "docs/Proposals/CRP-190-Antigravity-Temporary-Tool-Guardrails-and-Prefligh/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-190-Antigravity-Temporary-Tool-Guardrails-and-Prefligh/Walkthrough.md",
       "pushed_at": "2026-10-13 19:42:33",
-      "priority": 5
+      "priority": 0
     },
     {
       "id": 197,
@@ -10221,7 +10221,7 @@
       "plan_path": "docs/Proposals/CRP-197-Delivery-and-Verification-Follow-Through-for-CRPs-190-195/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-197-Delivery-and-Verification-Follow-Through-for-CRPs-190-195/Walkthrough.md",
       "pushed_at": "2026-10-13 21:29:52",
-      "priority": 5
+      "priority": 0
     },
     {
       "id": 196,
@@ -10249,7 +10249,7 @@
       "plan_path": "docs/Proposals/CRP-196-LCM-Control-Hub-Lifecycle-and-Action-Model-Redesign/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-196-LCM-Control-Hub-Lifecycle-and-Action-Model-Redesign/Walkthrough.md",
       "pushed_at": "2026-10-13 21:29:52",
-      "priority": 5
+      "priority": 0
     },
     {
       "id": 195,
@@ -10280,7 +10280,7 @@
       "plan_path": "docs/Proposals/BUG-195-Close-Stale-Beyond-Compare-Review-Windows/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/BUG-195-Close-Stale-Beyond-Compare-Review-Windows/Walkthrough.md",
       "pushed_at": "2026-10-13 18:05:46",
-      "priority": 5
+      "priority": 0
     },
     {
       "id": 165,
@@ -10308,7 +10308,7 @@
       "plan_path": "docs/Proposals/CRP-165-Beyond-Compare-Replacement-Session-Hygiene/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-165-Beyond-Compare-Replacement-Session-Hygiene/Walkthrough.md",
       "pushed_at": "2026-10-13 18:05:46",
-      "priority": 5
+      "priority": 0
     },
     {
       "id": 194,
@@ -10339,7 +10339,7 @@
       "plan_path": "docs/Proposals/BUG-194-PUSH-Omitted-Repository-Filter-Normalization/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/BUG-194-PUSH-Omitted-Repository-Filter-Normalization/Walkthrough.md",
       "pushed_at": "2026-10-13 18:05:46",
-      "priority": 5
+      "priority": 0
     },
     {
       "id": 193,
@@ -10370,7 +10370,7 @@
       "walkthrough_path": "docs/Proposals/BUG-193-PUSH-Proposal-ID-HashSet-Enumeration-Failure/Walkthrough.md",
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 18:05:46",
-      "priority": 5
+      "priority": 0
     },
     {
       "id": 192,
@@ -10384,7 +10384,6 @@
       "affected_apps": null,
       "state": "pushed",
       "progress_state": "pushed",
-      "priority": 3,
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-192-Compact-Inclusion-Scoped-Beyond-Compare-Review",
       "docs": {
@@ -10396,7 +10395,8 @@
       "details": "Approved preliminary design record: retain the opt-in compact BCR goal with hierarchy-preserving, collision-safe inclusion trees and deterministic session behavior.",
       "plan_path": "docs/Proposals/CRP-192-Compact-Inclusion-Scoped-Beyond-Compare-Review/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-192-Compact-Inclusion-Scoped-Beyond-Compare-Review/Walkthrough.md",
-      "pushed_at": "2026-10-13 19:42:33"
+      "pushed_at": "2026-10-13 19:42:33",
+      "priority": 0
     },
     {
       "id": 191,
@@ -10424,7 +10424,7 @@
       "plan_path": "docs/Proposals/CRP-191-Workspace-Repository-Index-Enrollment-Filter-and-S/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-191-Workspace-Repository-Index-Enrollment-Filter-and-S/Walkthrough.md",
       "pushed_at": "2026-10-13 19:42:33",
-      "priority": 5
+      "priority": 0
     },
     {
       "id": 198,
@@ -10452,7 +10452,7 @@
       "plan_path": "docs/Proposals/CRP-198-RollingCalendar-New-Repository-Integration/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-198-RollingCalendar-New-Repository-Integration/Walkthrough.md",
       "pushed_at": "2026-10-13 13:17:01",
-      "priority": 5
+      "priority": 0
     },
     {
       "id": 199,
@@ -10473,7 +10473,7 @@
       "author": "rgbig",
       "details": "Remove redundant _CRP-nnn suffix from Live junction name (CRP already in parent dir). Add post-commit purge of entire BC_Review\\CRP-nnn\\ dir in Submit-ReviewResult. Fix stale-junction cleanup pattern in BCR.",
       "pushed_at": "2026-10-13 21:29:52",
-      "priority": 5
+      "priority": 0
     },
     {
       "id": 200,
@@ -10494,7 +10494,7 @@
       "author": "rgbig",
       "details": "Audit-BeyondCompareReviewStaging accessed Count on a scalar string when a baseline file contained one meaningful line under StrictMode.",
       "pushed_at": "2026-10-13 21:29:52",
-      "priority": 5
+      "priority": 0
     },
     {
       "id": 201,
@@ -10507,7 +10507,6 @@
       "primary_app": null,
       "affected_apps": [],
       "state": "completed",
-      "priority": 8,
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-201-Methodology-Documentation-Reconciliation-for-Review-and-Release-Closure",
       "commit_sha": null,
@@ -10515,7 +10514,8 @@
       "author": "rgbig",
       "details": "Methodology documentation reconciliation active",
       "progress_state": "completed",
-      "disposition": "completed"
+      "disposition": "completed",
+      "priority": 0
     },
     {
       "id": 202,
@@ -10529,14 +10529,14 @@
       "affected_apps": [],
       "state": "pushed",
       "progress_state": "pushed",
-      "priority": 8,
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/BUG-202-BCompare-Command-Line-Reference-Launch",
       "commit_sha": null,
       "github_url": null,
       "author": "rgbig",
       "details": "Launch the saved BCompare session name instead of replaying the folder-comparison command line through the interactive desktop bridge.",
-      "pushed_at": "2026-10-13 21:29:52"
+      "pushed_at": "2026-10-13 21:29:52",
+      "priority": 0
     },
     {
       "id": 203,
@@ -10549,7 +10549,6 @@
       "primary_app": null,
       "affected_apps": [],
       "state": "completed",
-      "priority": 3,
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-203-Post-Commit-BCR-Proposal-Session-Cleanup",
       "commit_sha": "333e8bd",
@@ -10561,7 +10560,8 @@
       "progress_state": "completed",
       "hold_reason": null,
       "disposition": "completed",
-      "dates": {}
+      "dates": {},
+      "priority": 0
     },
     {
       "id": 204,
@@ -10595,14 +10595,14 @@
       "affected_apps": [],
       "state": "pushed",
       "progress_state": "pushed",
-      "priority": 10,
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/BUG-205-Control-Hub-Numeric-Priority-Filter-Crash",
       "commit_sha": null,
       "github_url": null,
       "author": "rgbig",
       "details": "Normalize numeric and legacy letter priority values before Control Hub filtering, sorting, and rendering to prevent JavaScript toUpperCase failures.",
-      "pushed_at": "2026-10-13 21:29:52"
+      "pushed_at": "2026-10-13 21:29:52",
+      "priority": 0
     },
     {
       "id": 206,
@@ -10616,14 +10616,14 @@
       "affected_apps": [],
       "state": "pushed",
       "progress_state": "pushed",
-      "priority": 6,
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-206-On-Demand-Documentation-Reconciliation",
       "commit_sha": null,
       "github_url": null,
       "author": "rgbig",
       "details": "Provide FixDocumentation <crp-scope> as a dry-run-capable, scoped, review-gated documentation reconciliation flow.",
-      "pushed_at": "2026-10-13 21:29:52"
+      "pushed_at": "2026-10-13 21:29:52",
+      "priority": 0
     },
     {
       "id": 207,
@@ -10637,14 +10637,14 @@
       "affected_apps": [],
       "state": "pushed",
       "progress_state": "pushed",
-      "priority": 9,
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/BUG-207-Stale-Review-Completion-Receipt",
       "commit_sha": null,
       "github_url": null,
       "author": "rgbig",
       "details": "Prevent Submit-ReviewResult from producing a completed receipt or purging stale review scratch when no matching current review staging manifest exists.",
-      "pushed_at": "2026-10-13 21:29:52"
+      "pushed_at": "2026-10-13 21:29:52",
+      "priority": 0
     },
     {
       "id": 208,
@@ -10658,14 +10658,14 @@
       "affected_apps": [],
       "state": "pushed",
       "progress_state": "pushed",
-      "priority": 10,
       "bundle_id": "CRP-208",
       "bundle_dir": "docs/Proposals/CRP-208-LCM-Repository-Naming-Migration",
       "commit_sha": null,
       "github_url": null,
       "author": "rgbig",
       "details": "Safely rename LCM_AI, LCM_Inventory, LCM_Supervision, and LCM_Shared to their LCM identities and update all live references across the governed cohort.",
-      "pushed_at": "2026-10-13 21:29:52"
+      "pushed_at": "2026-10-13 21:29:52",
+      "priority": 0
     },
     {
       "id": 209,
@@ -10679,14 +10679,14 @@
       "affected_apps": [],
       "state": "pushed",
       "progress_state": "pushed",
-      "priority": 8,
       "bundle_id": "CRP-209",
       "bundle_dir": "docs/Proposals/CRP-209-Unified-Workspace-UI-Standards-and-Display-Architecture",
       "commit_sha": null,
       "github_url": null,
       "author": "rgbig",
       "details": "Comprehensive proposal and rule specification unifying HTML table dashboards, CSS design tokens, WPF modals, WinForms system tray, headless print-to-PDF, and desktop dispatch across all workspace repositories.",
-      "pushed_at": "2026-10-13 21:29:52"
+      "pushed_at": "2026-10-13 21:29:52",
+      "priority": 0
     },
     {
       "id": 210,
@@ -10700,14 +10700,14 @@
       "affected_apps": [],
       "state": "pushed",
       "progress_state": "pushed",
-      "priority": 8,
       "bundle_id": "CRP-210",
       "bundle_dir": "docs/Proposals/CRP-210-Minimal-Tests-Switch-and-Single-Cycle-State-Modifier",
       "commit_sha": null,
       "github_url": null,
       "author": "rgbig",
       "details": "Standardized single-cycle Minimal Tests switch restricting test readiness to fast-tier AST/syntax checks, skipping heavy cascades with automatic ephemeral reset and explicit state representation.",
-      "pushed_at": "2026-10-13 21:29:52"
+      "pushed_at": "2026-10-13 21:29:52",
+      "priority": 0
     },
     {
       "id": 211,
@@ -10721,14 +10721,14 @@
       "affected_apps": [],
       "state": "pushed",
       "progress_state": "pushed",
-      "priority": 3,
       "bundle_id": "CRP-211",
       "bundle_dir": "docs/Proposals/CRP-211-RollingCalendar-Locale-Parameter-and-German-Default",
       "commit_sha": null,
       "github_url": null,
       "author": "rgbig",
       "details": "Configurable locale formatting with German de-DE default, dynamic day/month localization, and tool version display compliance.",
-      "pushed_at": "2026-10-13 21:29:52"
+      "pushed_at": "2026-10-13 21:29:52",
+      "priority": 0
     },
     {
       "id": 212,
@@ -10742,14 +10742,14 @@
       "affected_apps": [],
       "state": "pushed",
       "progress_state": "pushed",
-      "priority": 8,
       "bundle_id": "CRP-212",
       "bundle_dir": "docs/Proposals/CRP-212-JSON-Primary-Governance-Inventory-and-ShowTools-Nomenclature",
       "commit_sha": null,
       "github_url": null,
       "author": "rgbig",
       "details": "Establish JSON structured data in LCM_Inventory as the authoritative primary source of truth for LCM tracking policies and junction mappings; render .md presentations in Show-type displays; reinstate ShowTools as canonical primary command with ToolsExplorer degraded to alias; formally ratify .agents/ACTIVE_SESSION.md as tracked living history; and codify deferral handling for bulk lifecycle-action triggers.",
-      "pushed_at": "2026-10-13 21:29:52"
+      "pushed_at": "2026-10-13 21:29:52",
+      "priority": 0
     },
     {
       "id": 213,
@@ -10783,14 +10783,14 @@
       "affected_apps": [],
       "state": "completed",
       "progress_state": "completed",
-      "priority": 8,
       "bundle_id": "CRP-214",
       "bundle_dir": "docs/Proposals/CRP-214-User-Reported-BUG-Intake-Protocol-and-Inactive-Suggested-State-Gating",
       "commit_sha": null,
       "github_url": null,
       "author": "rgbig",
       "details": "Codify rule that user-reported bugs initialize strictly in state suggested (unlike automated runtime test failures); analysis and document generation are suppressed while suggested; urgency keywords DO/DOIT activate execution, while FIX triggers emergency bypass.",
-      "disposition": "completed"
+      "disposition": "completed",
+      "priority": 0
     },
     {
       "id": 215,
@@ -10879,7 +10879,6 @@
       "primary_app": "App: 1",
       "affected_apps": [],
       "state": "completed",
-      "priority": 5,
       "bundle_id": "CRP-217",
       "bundle_dir": "docs/Proposals/CRP-217-Control-Hub-Column-Header-Disambiguation-and-Compact-Dropdown-Layout",
       "commit_sha": null,
@@ -10889,7 +10888,8 @@
       "progress_state": "completed",
       "flow_mode": "doit",
       "always_proceed": true,
-      "disposition": "completed"
+      "disposition": "completed",
+      "priority": 0
     },
     {
       "id": 218,
@@ -10925,7 +10925,6 @@
       "primary_app": null,
       "affected_apps": [],
       "state": "completed",
-      "priority": 8,
       "bundle_id": "CRP-219",
       "bundle_dir": "docs/Proposals/CRP-219-Prohibition-of-Initial-Held-and-Deferred-States-on-New-Proposals",
       "commit_sha": null,
@@ -10935,7 +10934,8 @@
       "progress_state": "completed",
       "flow_mode": "doit",
       "always_proceed": true,
-      "disposition": "completed"
+      "disposition": "completed",
+      "priority": 0
     },
     {
       "id": 220,
@@ -10948,7 +10948,6 @@
       "primary_app": "App: 1",
       "affected_apps": [],
       "state": "completed",
-      "priority": 7,
       "bundle_id": "CRP-220",
       "bundle_dir": "docs/Proposals/CRP-220-Control-Hub-Execution-Ledger-Progress-Milestones-and-Labels",
       "docs": {
@@ -10965,7 +10964,8 @@
       "progress_state": "completed",
       "flow_mode": "doit",
       "always_proceed": true,
-      "disposition": "completed"
+      "disposition": "completed",
+      "priority": 0
     },
     {
       "id": 221,
@@ -10995,7 +10995,7 @@
       "walkthrough_path": "docs/Proposals/CRP-221-Distinguish-Cancelled-vs-Rejected-in-ProposalRevie/Walkthrough.md",
       "progress_state": "completed",
       "disposition": "completed",
-      "priority": 5
+      "priority": 0
     },
     {
       "id": 243,
@@ -11022,7 +11022,7 @@
       "plan_path": "docs/Proposals/CRP-243-Integration-of-Read-Only-Analysis-Protocol-Impleme/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-243-Integration-of-Read-Only-Analysis-Protocol-Impleme/Walkthrough.md",
       "progress_state": "completed",
-      "priority": 5
+      "priority": 0
     },
     {
       "id": 244,
@@ -11094,7 +11094,7 @@
       "plan_path": "docs/Proposals/BUG-245-BCR-Foreground-Console-Window-Hygiene-and-Prematur/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/BUG-245-BCR-Foreground-Console-Window-Hygiene-and-Prematur/Walkthrough.md",
       "progress_state": "completed",
-      "priority": 5
+      "priority": 0
     },
     {
       "id": 246,
@@ -11123,7 +11123,7 @@
       "flow_mode": "doit",
       "always_proceed": true,
       "progress_state": "completed",
-      "priority": 5
+      "priority": 0
     },
     {
       "id": 256,
@@ -11193,7 +11193,6 @@
       "github_url": null,
       "author": "rgbig",
       "details": "CRP-261 Gate 2 completion created commit 10a894b before failing to synchronize the ledger when the proposal omitted cr_id and had not entered in_review. The fix safely matches optional identity fields and requires in_review before any commit.",
-      "priority": 5,
       "plan_path": "docs/Proposals/BUG-262-BUG-Prevent-post-commit-lifecycle-synchronization/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/BUG-262-BUG-Prevent-post-commit-lifecycle-synchronization/Walkthrough.md",
       "state_history": [
@@ -11235,7 +11234,8 @@
       "flow_mode": "doit",
       "always_proceed": true,
       "progress_state": "completed",
-      "disposition": "completed"
+      "disposition": "completed",
+      "priority": 0
     },
     {
       "id": 263,
@@ -11311,7 +11311,6 @@
       "github_url": null,
       "author": "rgbig & Antigravity",
       "details": "Codifies RULE-PS-022 and no-posix-backslash-escapes prohibiting POSIX-style backslash escaping in PowerShell, updates rule matrices, and fixes Antigravity transcript extractor.",
-      "priority": 1,
       "plan_path": "docs/Proposals/BUG-264-Prohibition-Of-POSIX-Backslash-Escaping-In-PowerShell/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/BUG-264-Prohibition-Of-POSIX-Backslash-Escaping-In-PowerShell/Walkthrough.md",
       "state_history": [
@@ -11353,7 +11352,8 @@
       "flow_mode": "doit",
       "always_proceed": true,
       "progress_state": "completed",
-      "disposition": "completed"
+      "disposition": "completed",
+      "priority": 0
     },
     {
       "id": 265,
@@ -11377,7 +11377,6 @@
       "github_url": null,
       "author": "rgbig",
       "details": "Provide rich contextual feedback in ShowCM (Control Hub) for actions, buttons, and errors. Implement a dedicated message area displaying substantive diagnostic and execution information beyond basic OK/NOK/Error badges.",
-      "priority": 5,
       "plan_path": "docs/Proposals/CRP-265-Control-Hub-Rich-Action-Feedback/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-265-Control-Hub-Rich-Action-Feedback/Walkthrough.md",
       "flow_mode": "doit",
@@ -11444,7 +11443,8 @@
         }
       ],
       "progress_state": "completed",
-      "disposition": "completed"
+      "disposition": "completed",
+      "priority": 0
     },
     {
       "id": 266,
@@ -11471,7 +11471,6 @@
       "github_url": null,
       "author": "rgbig",
       "details": "Establish APP-001 Display Model Controller and APP-002 Status Control, a mandatory typed Standard Display Interface for LCM_Inventory, and the Control Hub as the reference migration.",
-      "priority": 4,
       "plan_path": "docs/Proposals/CRP-266-Standard-Display-Model-Controller-Architecture/Implementation.md",
       "walkthrough_path": null,
       "state_history": [
@@ -11538,7 +11537,8 @@
         }
       ],
       "progress_state": "completed",
-      "disposition": "completed"
+      "disposition": "completed",
+      "priority": 0
     },
     {
       "id": 267,
@@ -11639,7 +11639,6 @@
       "github_url": null,
       "author": "Copilot",
       "details": "Publish the validated LCM Beta 10.0.0 Pass 1 baseline across LCM_AI, LCM_Backup, LCM_Inventory, LCM_Shared, LCM_Supervision, and LCM_Tools. Scope: normalize LCM-owned semantic versions to 10.0.0; preserve module changelog entries; apply timestamp formats defined by rules; repair root/inventory readiness-path drift. Evidence: zero synchronizer drift, LcmDaemon import 10.0.0, lifecycle tests 57/57, and Test-WorkspaceReadiness exit 0.",
-      "priority": 5,
       "plan_path": "docs/Proposals/CRP-269-LCM-Beta-10-0-0-Pass-1-Publication/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-269-LCM-Beta-10-0-0-Pass-1-Publication/Walkthrough.md",
       "state_history": [
@@ -11698,7 +11697,8 @@
       "bcr_disposition": null,
       "bcr_scope": "COH-269",
       "progress_state": "deferred",
-      "disposition": "rejected"
+      "disposition": "rejected",
+      "priority": 0
     },
     {
       "id": 270,
@@ -11722,7 +11722,6 @@
       "github_url": null,
       "author": "Copilot",
       "details": "Repository-specific release record for the approved LCM Beta 10.0.0 Pass 1 alignment. Applies the validated 10.0.0 version and timestamp normalization to LCM_AI.",
-      "priority": 5,
       "plan_path": "docs/Proposals/CRP-270-LCM-Beta-10-0-0-Pass-1-Publication-LCM-AI/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-270-LCM-Beta-10-0-0-Pass-1-Publication-LCM-AI/Walkthrough.md",
       "state_history": [
@@ -11806,7 +11805,8 @@
         }
       ],
       "progress_state": "pushed",
-      "disposition": "published"
+      "disposition": "published",
+      "priority": 0
     },
     {
       "id": 272,
@@ -11830,7 +11830,6 @@
       "github_url": null,
       "author": "Copilot",
       "details": "Repository-specific release record for the approved LCM Beta 10.0.0 Pass 1 alignment. Applies the validated 10.0.0 version and timestamp normalization to LCM_Shared.",
-      "priority": 5,
       "plan_path": "docs/Proposals/CRP-272-LCM-Beta-10-0-0-Pass-1-Publication-LCM-Shared/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-272-LCM-Beta-10-0-0-Pass-1-Publication-LCM-Shared/Walkthrough.md",
       "state_history": [
@@ -11914,7 +11913,8 @@
         }
       ],
       "progress_state": "pushed",
-      "disposition": "published"
+      "disposition": "published",
+      "priority": 0
     },
     {
       "id": 273,
@@ -11938,7 +11938,6 @@
       "github_url": null,
       "author": "Copilot",
       "details": "Repository-specific release record for the approved LCM Beta 10.0.0 Pass 1 alignment. Applies the validated 10.0.0 version and timestamp normalization to LCM_Supervision.",
-      "priority": 5,
       "plan_path": "docs/Proposals/CRP-273-LCM-Beta-10-0-0-Pass-1-Publication-LCM-Supervision/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-273-LCM-Beta-10-0-0-Pass-1-Publication-LCM-Supervision/Walkthrough.md",
       "state_history": [
@@ -12022,7 +12021,8 @@
         }
       ],
       "progress_state": "pushed",
-      "disposition": "published"
+      "disposition": "published",
+      "priority": 0
     },
     {
       "id": 274,
@@ -12046,7 +12046,6 @@
       "github_url": null,
       "author": "Copilot",
       "details": "Replacement prime for the complete cross-repository LCM Beta 10.0.0 Pass 1 release after CRP-269 narrow review was invalidated. Includes all validated LCM repositories.",
-      "priority": 5,
       "plan_path": "docs/Proposals/CRP-274-LCM-Beta-10-0-0-Pass-1-Publication-LCM-Inventory-R/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-274-LCM-Beta-10-0-0-Pass-1-Publication-LCM-Inventory-R/Walkthrough.md",
       "state_history": [
@@ -12130,7 +12129,8 @@
         }
       ],
       "progress_state": "pushed",
-      "disposition": "published"
+      "disposition": "published",
+      "priority": 0
     },
     {
       "id": 275,
@@ -12154,7 +12154,6 @@
       "github_url": null,
       "author": "Rolf",
       "details": "Extend Tool Explorer field filters with simple case-insensitive wildcard matching: * matches zero or more characters, ? matches exactly one character, and $ anchors a pattern at the end of a value. Examples: Group:LCM*, Group:*abc, and Group:LCM$.",
-      "priority": 5,
       "plan_path": "docs/Proposals/CRP-275-Tool-Explorer-Filter-Pattern-Matching/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-275-Tool-Explorer-Filter-Pattern-Matching/Walkthrough.md",
       "state_history": [
@@ -12227,7 +12226,8 @@
         }
       ],
       "progress_state": "completed",
-      "disposition": "completed"
+      "disposition": "completed",
+      "priority": 0
     },
     {
       "id": 276,
@@ -12349,12 +12349,12 @@
       "reinstatement_changes": "Register cross-repository durable source changes as explicit review obligations linked to BUG-276; show each obligation in ShowCM and provide lifecycle actions that open and complete the exact repository BCR/receipt before BUG-276 can complete.",
       "bcr_initiated_at": "2026-10-14 15:34:56",
       "bcr_scope": "BUG-276",
-      "priority": 10,
       "bcr_disposition": "Completed",
       "bcr_disposition_at": "2026-10-14 22:17:27",
       "bcr_disposition_notes": "",
       "progress_state": "completed",
-      "disposition": "completed"
+      "disposition": "completed",
+      "priority": 0
     },
     {
       "id": 277,
@@ -12378,7 +12378,6 @@
       "github_url": null,
       "author": "rgbig",
       "details": "Prepare today's completed Macrium D: backup as the writable Beyond Compare LHS baseline, validate the operator-owned _LCM profile, and record the selected baseline. GoodNIGHT Save All receipt and recovery requirements were split to CRP-278.",
-      "priority": 5,
       "plan_path": "docs/Proposals/CRP-277-GoodMorning-Daily-Baseline-and-Knowledge-Persisten/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-277-GoodMorning-Daily-Baseline-and-Knowledge-Persisten/Walkthrough.md",
       "successor_crp": "CRP-278",
@@ -12566,7 +12565,8 @@
       "bcr_disposition_at": "2026-10-16 18:52:12",
       "bcr_disposition_notes": "BCR accepted 2026-10-16: lifecycle review-state correction and Macrium baseline tooling updates.",
       "progress_state": "pushed",
-      "disposition": "published"
+      "disposition": "published",
+      "priority": 0
     },
     {
       "id": 278,
@@ -12590,7 +12590,6 @@
       "github_url": null,
       "author": "rgbig",
       "details": "Split from CRP-277: implement a durable GoodNIGHT IDE Save All receipt and a blocking GoodMorning recovery reminder when that receipt is absent or incomplete. The Macrium/Beyond Compare daily baseline remains in CRP-277.",
-      "priority": 5,
       "plan_path": "docs/Proposals/CRP-278-GoodNIGHT-Save-All-Receipt-and-GoodMorning-Recover/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-278-GoodNIGHT-Save-All-Receipt-and-GoodMorning-Recover/Walkthrough.md",
       "state_history": [
@@ -12649,7 +12648,8 @@
       "bcr_disposition_at": "2026-10-18 20:29:29",
       "bcr_disposition_notes": "Operator accepted the CRP-278 visual BCR: no remaining differences were visible after copying reviewed D: content to the F: baseline.",
       "progress_state": "completed",
-      "disposition": "completed"
+      "disposition": "completed",
+      "priority": 0
     },
     {
       "id": 279,
@@ -12673,7 +12673,6 @@
       "github_url": null,
       "author": "rgbig",
       "details": "Generate an evidence-backed report whenever a requested BUG, CRP, or cohort lifecycle status change fails. Report only directly failing targets, explain causes and discrepancies with repository/code/rule/documentation provenance, and present no more than three actionable escape routes.",
-      "priority": 5,
       "plan_path": "docs/Proposals/CRP-279-Lifecycle-Status-Failure-Diagnostics-and-Escape-Ro/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-279-Lifecycle-Status-Failure-Diagnostics-and-Escape-Ro/Walkthrough.md",
       "state_history": [
@@ -12762,7 +12761,8 @@
       "bcr_disposition_at": "2026-10-15 22:10:05",
       "bcr_disposition_notes": "",
       "progress_state": "completed",
-      "disposition": "completed"
+      "disposition": "completed",
+      "priority": 0
     },
     {
       "id": 280,
@@ -12846,7 +12846,6 @@
       "github_url": null,
       "author": "rgbig",
       "details": "Define and propagate GOAL-FIRST MODE so CRPs, BUGs, and corrections begin from documented goals, treat discrepancies as design inputs, and reserve terminal stops for real execution impossibility.",
-      "priority": 5,
       "flow_mode": "standard",
       "always_proceed": false,
       "plan_path": "docs/Proposals/CRP-282-GOAL-FIRST-Mode-Governance-and-Documentation-Adapt/Implementation_Plan.md",
@@ -12962,7 +12961,8 @@
       "bcr_disposition_at": "2026-10-18 17:58:48",
       "bcr_disposition_notes": "",
       "progress_state": "completed",
-      "disposition": "completed"
+      "disposition": "completed",
+      "priority": 0
     },
     {
       "id": 283,
@@ -13018,7 +13018,6 @@
       "github_url": null,
       "author": "rgbig",
       "details": "Preserve the reviewed current D: state as the forward-only baseline; restore visible Macrium BCR catalog/foreground behavior; retire unapproved legacy staging controls; and codify operator-authorized switches, patch versioning, and lifecycle traceability.",
-      "priority": 5,
       "plan_path": "docs/Proposals/CRP-284-Macrium-BCR-Foreground-and-Retired-Staging-Removal/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-284-Macrium-BCR-Foreground-and-Retired-Staging-Removal/Walkthrough.md",
       "supersedes_id": 285,
@@ -13079,7 +13078,8 @@
       "bcr_disposition_at": "2026-10-17 21:32:58",
       "bcr_disposition_notes": "",
       "progress_state": "completed",
-      "disposition": "completed"
+      "disposition": "completed",
+      "priority": 0
     },
     {
       "id": 285,
@@ -13150,7 +13150,6 @@
       "github_url": null,
       "author": "rgbig",
       "details": "When the Control Hub daemon listener on port 9876 is unavailable, the condition must be durably recorded and a bounded automatic recovery attempt must be made before the Hub falls back to cached/local data. The operator must see the recovery outcome. This BUG also corrects the daemon status diagnostic failure when the legacy Run-key value is absent.",
-      "priority": 5,
       "flow_mode": "doit",
       "always_proceed": true,
       "plan_path": "docs/Proposals/BUG-286-BUG-Control-Hub-daemon-outage-capture-and-automati/Implementation_Plan.md",
@@ -13239,7 +13238,8 @@
       "bcr_disposition_at": "2026-10-17 21:15:38",
       "bcr_disposition_notes": "",
       "progress_state": "completed",
-      "disposition": "completed"
+      "disposition": "completed",
+      "priority": 0
     },
     {
       "id": 287,
@@ -13457,7 +13457,6 @@
       },
       "flow_mode": "doit",
       "always_proceed": true,
-      "priority": 3,
       "resume_state": "in_progress",
       "hold_reason": null,
       "review_state_repair": {
@@ -13489,7 +13488,8 @@
         }
       ],
       "progress_state": "completed",
-      "disposition": "completed"
+      "disposition": "completed",
+      "priority": 0
     },
     {
       "id": 288,
@@ -13513,7 +13513,6 @@
       "github_url": null,
       "author": "rgbig",
       "details": "Setting the priority of held BUG-287 through Invoke-ProposalAction -Action priority -Priority L unexpectedly changed its lifecycle state from held to in_progress. Priority changes must not advance a held proposal lifecycle state. Recorded for operator review; implementation is held.",
-      "priority": 5,
       "flow_mode": "doit",
       "always_proceed": true,
       "plan_path": "docs/Proposals/BUG-288-BUG-Priority-action-advances-held-proposal-lifecyc/Implementation_Plan.md",
@@ -13635,7 +13634,8 @@
         }
       ],
       "progress_state": "completed",
-      "disposition": "completed"
+      "disposition": "completed",
+      "priority": 0
     },
     {
       "id": 289,
@@ -13689,7 +13689,6 @@
       "github_url": null,
       "author": "Copilot",
       "details": "Create a governed OneDriveMaintenance repository that consolidates valid legacy diagnostic intent into separate safe Apps for read-only diagnosis, explicitly authorized local settings/cache purging, and client relaunch. Retire unsafe, duplicate, or dead legacy entry points rather than migrating them.",
-      "priority": 5,
       "plan_path": "docs/Proposals/CRP-290-OneDriveMaintenance-Repository-Consolidation-and-S/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-290-OneDriveMaintenance-Repository-Consolidation-and-S/Walkthrough.md",
       "state_history": [
@@ -13748,7 +13747,8 @@
       "bcr_disposition_at": "2026-10-18 19:44:37",
       "bcr_disposition_notes": "Operator accepted the visual BCR review; focused OneDriveMaintenance safety tests passed 3/3 before the initial commit.",
       "progress_state": "completed",
-      "disposition": "completed"
+      "disposition": "completed",
+      "priority": 0
     },
     {
       "id": 291,
@@ -13772,7 +13772,6 @@
       "github_url": null,
       "author": "Copilot",
       "details": "Closed proposal-first Gate 1 control gap: official new-app requires explicit proposal identity with matching repository, eligible state, and specification bundle; no inferred or Force bypass. See document_summary and bundle.",
-      "priority": 5,
       "plan_path": "docs/Proposals/BUG-291-BUG-Structural-implementation-can-proceed-without/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/BUG-291-BUG-Structural-implementation-can-proceed-without/Walkthrough.md",
       "state_history": [
@@ -13851,7 +13850,8 @@
           "commit": "ea3e886"
         },
         "closure_control": "The proposal closes only after remediation evidence, accepted BCR, and commit. Future discrepancies require a new or linked proposal."
-      }
+      },
+      "priority": 0
     },
     {
       "id": 292,
@@ -14032,6 +14032,189 @@
       "always_proceed": false,
       "plan_path": "docs/Proposals/CRP-297-Console-and-Launcher-Standard-Display-Parity/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-297-Console-and-Launcher-Standard-Display-Parity/Walkthrough.md"
+    },
+    {
+      "id": 298,
+      "crp_id": "CRP-298",
+      "timestamp": "2026-10-20 19:08:00",
+      "title": "Formalize LCM Repository and App Onboarding Modes",
+      "origin_repo": "LCM_AI",
+      "cr_id": "CRP-298",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "in_review",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/CRP-298-Formalize-LCM-Repository-and-App-Onboarding-Modes",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig",
+      "details": "Formally define LCM onboarding and distinguish three onboarding capabilities:\n1. Onboarding entirely new repositories that originate outside the workspace and are not yet governed by LCM.\n2. Updating existing governed repositories so they conform to the current LCM structure (\"LCM Shape\") without treating them as ungoverned repositories.\n3. Onboarding new Apps into LCM_Tools, where the app source and documentation are physically maintained in LCM_Tools and the app is governed within the LCM_Tools collection scope, while LCM_Inventory remains the central administrative inventory and command-trampoline owner.\n\nThe CRP must define the purpose, eligibility, scope boundaries, expected outcomes, and completion criteria for each capability, including how each path relates to existing governance and repository structures. Keep the three paths distinct; do not implement or assume a single onboarding workflow before the specification is accepted.",
+      "priority": 5,
+      "plan_path": "docs/Proposals/CRP-298-Formalize-LCM-Repository-and-App-Onboarding-Modes/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-298-Formalize-LCM-Repository-and-App-Onboarding-Modes/Walkthrough.md",
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-10-20 20:52:00",
+          "user": "rgbig",
+          "note": "Operator-authorized DOIT for all reviewed and accepted LCM workspace changes, including LCM_Tools onboarding, the CRP-300 administrative record, GoodMorning/GoodNight receipt-check removal, and all other current changed LCM repository paths. No code-level tests are required; no push is authorized.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-10-20 20:54:48",
+          "user": "rgbig",
+          "note": "Operator accepted all current LCM changes in the full-workspace BCR and authorized DOIT; no code-level tests are required for these reviewed administrative changes.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-10-20 20:54:54",
+          "user": "rgbig",
+          "note": "Operator confirmed full-workspace BCR successful and accepted on 2026-10-20; recording exact CRP-298 review scope for RR.",
+          "cohort_id": "",
+          "cohort_gate": "BCR",
+          "synchronization_outcome": "synchronized"
+        }
+      ],
+      "dates": {
+        "in_progress": "2026-10-20 20:52:00",
+        "verified": "2026-10-20 20:54:48",
+        "in_review": "2026-10-20 20:54:54"
+      },
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "progress_state": "verification",
+      "disposition": null,
+      "bcr_initiated_at": "2026-10-20 20:54:54",
+      "bcr_disposition": null,
+      "bcr_scope": "CRP-298"
+    },
+    {
+      "id": 299,
+      "crp_id": "BUG-299",
+      "timestamp": "2026-10-20 20:14:33",
+      "title": "[BUG] Macrium Browse Image dialog detection times out while the dialog is visible",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "BUG-299",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "suggested",
+      "progress_state": "undecided",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/BUG-299-BUG-Macrium-Browse-Image-dialog-detection-times-ou",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig",
+      "details": "Observed during the 2026-10-20 BCR baseline mount attempt: the elevated Macrium worker threw \"Macrium Browse Image dialog did not become ready within 30 seconds\" even though the Browse Image dialog was visibly displayed. The actual cause is unconfirmed. The reported possibilities are an insufficient readiness timeout and UI Automation detection that depends on a fixed dialog location/position. Intake only: no implementation or root-cause conclusion is authorized by this registration.",
+      "priority": 5,
+      "disposition": null,
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "plan_path": "docs/Proposals/BUG-299-BUG-Macrium-Browse-Image-dialog-detection-times-ou/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/BUG-299-BUG-Macrium-Browse-Image-dialog-detection-times-ou/Walkthrough.md"
+    },
+    {
+      "id": 300,
+      "crp_id": "CRP-300",
+      "timestamp": "2026-10-20 20:40:53",
+      "title": "[CRP] Commit current LCM 10.0.0 version alignment in non-LCM repositories",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-300",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "completed",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/CRP-300-CRP-Commit-current-LCM-10-0-0-version-alignment-in",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig",
+      "details": "Complete and commit the already-reviewed current-version metadata alignment in exactly five repositories: AuthorizeMasterUser, BackgroundModifier, BGMSAMVInv, BootEntryManager, and VolumeInventory. The changes update only current item-version declarations below 10.0.0 to 10.0.0; historical changelog entries and terminal BUGs remain unchanged. No functional code changes are in scope. The operator accepted the full-workspace Beyond Compare review on 2026-10-20. This CRP establishes the formal review/commit scope and per-repository receipts; it does not authorize push.",
+      "priority": 5,
+      "plan_path": "docs/Proposals/CRP-300-CRP-Commit-current-LCM-10-0-0-version-alignment-in/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-300-CRP-Commit-current-LCM-10-0-0-version-alignment-in/Walkthrough.md",
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-10-20 20:41:51",
+          "user": "rgbig",
+          "note": "DOIT authorized by operator for the exact five-repository current-version metadata commit scope. No push.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-10-20 20:42:53",
+          "user": "rgbig",
+          "note": "All five repository readiness gates passed; accepted full-workspace BCR remains the review disposition.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-10-20 20:55:05",
+          "user": "rgbig",
+          "note": "Operator confirmed all LCM changes, including CRP-300, reviewed and accepted; no code-level tests required.",
+          "cohort_id": "",
+          "cohort_gate": "BCR",
+          "synchronization_outcome": "synchronized"
+        },
+        {
+          "from_state": "in_review",
+          "state": "completed",
+          "timestamp": "2026-10-20 20:55:44",
+          "user": "rgbig",
+          "note": "Review completed and committed (1c11bb6).",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "in_progress": "2026-10-20 20:41:51",
+        "verified": "2026-10-20 20:42:53",
+        "in_review": "2026-10-20 20:55:05",
+        "completed": "2026-10-20 20:55:44"
+      },
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "bcr_initiated_at": "2026-10-20 20:55:05",
+      "bcr_scope": "CRP-300",
+      "bcr_disposition": "Completed",
+      "bcr_disposition_at": "2026-10-20 20:55:44",
+      "bcr_disposition_notes": "chore(lcm): finalize reviewed administrative and workspace catalog updates",
+      "progress_state": "completed",
+      "disposition": "completed"
     }
   ],
   "testing_mode": "active",
@@ -14322,98 +14505,201 @@
       }
     }
   ],
-  "review_obligation_ledger": [
-    {
-      "version": 1,
-      "entries": [
-        {
-          "id": "BUG-276::LCM_AI",
-          "repository": "LCM_AI",
-          "status": "completed",
-          "discovered_at": "2026-10-14 15:33:42",
-          "reason": "Durable changes discovered during BUG-276 BCR preparation: .agents/rules/ProposalReviewFlowPolicy.md, docs/Proposals/CR-2026-001.md, docs/Proposals/CR-2026-002.md, docs/Proposals/CR-2026-003.md, docs/Proposals/CR-2026-004.md, docs/Proposals/CR-2026-005.md, docs/Proposals/CR-2026-006.md, docs/Proposals/CR-2026-007.md, docs/Proposals/CR-2026-008.md, docs/Proposals/CR-2026-010.md.",
-          "bcr_identity": "BUG-276",
-          "proposal_id": 276,
-          "completed_at": "2026-10-14 21:24:14",
-          "review_receipt": "D:\\Git_Repositories\\LCM_Inventory\\data\\reviews\\review_LCM_AI_20261014_210932.json",
-          "commit_sha": "2a7895a"
-        },
-        {
-          "id": "CRP-277::LCM_AI",
-          "proposal_id": 277,
-          "repository": "LCM_AI",
-          "status": "completed",
-          "discovered_at": "2026-10-15 16:31:53",
-          "reason": "Durable changes discovered during CRP-277 BCR preparation: .agents/ACTIVE_SESSION.md.",
-          "bcr_identity": "CRP-277",
-          "observed_reasons": [
-            "Durable changes discovered during CRP-277 BCR preparation: .agents/ACTIVE_SESSION.md.",
-            "Durable changes discovered during CRP-277 BCR preparation: .agents/ACTIVE_SESSION.md, .agents/rules/ProposalReviewFlowPolicy.md.",
-            "Lifecycle repair consolidated the existing cross-repository review obligation.",
-            "Durable LCM_AI changes discovered during CRP-277 Macrium BCR preparation: .agents/ACTIVE_SESSION.md."
-          ],
-          "last_observed_at": "2026-10-15 19:34:19",
-          "completed_at": "2026-10-15 22:21:08",
-          "review_receipt": "D:\\Git_Repositories\\LCM_Inventory\\data\\reviews\\review_LCM_AI_20261015_222108.json",
-          "commit_sha": "b5effb8919198c0044c9bd47d9728f39620a78ec"
-        },
-        {
-          "id": "CRP-279::LCM_AI",
-          "proposal_id": 279,
-          "repository": "LCM_AI",
-          "status": "completed",
-          "discovered_at": "2026-10-15 18:54:54",
-          "reason": "Durable changes discovered during CRP-279 BCR preparation: .agents/ACTIVE_SESSION.md.",
-          "observed_reasons": [
-            "Durable changes discovered during CRP-279 BCR preparation: .agents/ACTIVE_SESSION.md."
-          ],
-          "bcr_identity": "CRP-279",
-          "completed_at": "2026-10-15 20:50:08",
-          "review_receipt": "D:\\Git_Repositories\\LCM_Inventory\\data\\reviews\\review_LCM_AI_20261015_205008.json",
-          "commit_sha": "b5effb8"
-        },
-        {
-          "id": "CRP-277::LCM_AI",
-          "proposal_id": 277,
-          "repository": "LCM_AI",
-          "status": "completed",
-          "discovered_at": "2026-10-16 18:25:07",
-          "reason": "Durable LCM_AI changes discovered during CRP-277 Macrium BCR preparation: .agents/ACTIVE_CONTEXT.md.",
-          "observed_reasons": [
-            "Durable LCM_AI changes discovered during CRP-277 Macrium BCR preparation: .agents/ACTIVE_CONTEXT.md."
-          ],
-          "bcr_identity": "CRP-277",
-          "completed_at": "2026-10-16 18:38:44",
-          "review_receipt": "D:\\Git_Repositories\\LCM_Inventory\\data\\reviews\\review_LCM_AI_20261016_183844.json",
-          "commit_sha": "943bd68"
-        },
-        {
-          "id": "CRP-282::LCM_AI",
-          "proposal_id": 282,
-          "repository": "LCM_AI",
-          "status": "open",
-          "discovered_at": "2026-10-17 22:55:39",
-          "reason": "Durable LCM_AI changes discovered during CRP-282 Macrium BCR preparation: .agents/rules/AnalysisGovernancePolicy.md, .agents/rules/DocumentationStandardsPolicy.md, .agents/rules/MethodEfficiencyPolicy.md, .agents/rules/ProposalReviewFlowPolicy.md, .agents/rules/ReviewCommitGovernancePolicy.md, .agents/rules/RuleAuthority.md, docs/LCM-Rules-Cross-Reference.md, .agents/rules/GoalFirstDesignPolicy.md.",
-          "observed_reasons": [
-            "Durable LCM_AI changes discovered during CRP-282 Macrium BCR preparation: .agents/rules/AnalysisGovernancePolicy.md, .agents/rules/DocumentationStandardsPolicy.md, .agents/rules/MethodEfficiencyPolicy.md, .agents/rules/ProposalReviewFlowPolicy.md, .agents/rules/ReviewCommitGovernancePolicy.md, .agents/rules/RuleAuthority.md, docs/LCM-Rules-Cross-Reference.md, .agents/rules/GoalFirstDesignPolicy.md."
-          ],
-          "bcr_identity": "CRP-282"
-        },
-        {
-          "id": "BUG-287::LCM_AI",
-          "proposal_id": 287,
-          "repository": "LCM_AI",
-          "status": "open",
-          "discovered_at": "2026-10-18 17:56:55",
-          "reason": "Durable LCM_AI changes discovered during BUG-287 Macrium BCR preparation: .agents/ACTIVE_CONTEXT.md, docs/Architecture.md.",
-          "observed_reasons": [
-            "Durable LCM_AI changes discovered during BUG-287 Macrium BCR preparation: .agents/ACTIVE_CONTEXT.md, docs/Architecture.md."
-          ],
-          "bcr_identity": "BUG-287"
-        }
-      ]
-    }
-  ],
+  "review_obligation_ledger": {
+    "version": 1,
+    "entries": [
+      {
+        "id": "BUG-276::LCM_AI",
+        "repository": "LCM_AI",
+        "status": "completed",
+        "discovered_at": "2026-10-14 15:33:42",
+        "reason": "Durable changes discovered during BUG-276 BCR preparation: .agents/rules/ProposalReviewFlowPolicy.md, docs/Proposals/CR-2026-001.md, docs/Proposals/CR-2026-002.md, docs/Proposals/CR-2026-003.md, docs/Proposals/CR-2026-004.md, docs/Proposals/CR-2026-005.md, docs/Proposals/CR-2026-006.md, docs/Proposals/CR-2026-007.md, docs/Proposals/CR-2026-008.md, docs/Proposals/CR-2026-010.md.",
+        "bcr_identity": "BUG-276",
+        "proposal_id": 276,
+        "completed_at": "2026-10-14 21:24:14",
+        "review_receipt": "D:\\Git_Repositories\\LCM_Inventory\\data\\reviews\\review_LCM_AI_20261014_210932.json",
+        "commit_sha": "2a7895a"
+      },
+      {
+        "id": "CRP-277::LCM_AI",
+        "proposal_id": 277,
+        "repository": "LCM_AI",
+        "status": "completed",
+        "discovered_at": "2026-10-15 16:31:53",
+        "reason": "Durable changes discovered during CRP-277 BCR preparation: .agents/ACTIVE_SESSION.md.",
+        "bcr_identity": "CRP-277",
+        "observed_reasons": [
+          "Durable changes discovered during CRP-277 BCR preparation: .agents/ACTIVE_SESSION.md.",
+          "Durable changes discovered during CRP-277 BCR preparation: .agents/ACTIVE_SESSION.md, .agents/rules/ProposalReviewFlowPolicy.md.",
+          "Lifecycle repair consolidated the existing cross-repository review obligation.",
+          "Durable LCM_AI changes discovered during CRP-277 Macrium BCR preparation: .agents/ACTIVE_SESSION.md."
+        ],
+        "last_observed_at": "2026-10-15 19:34:19",
+        "completed_at": "2026-10-15 22:21:08",
+        "review_receipt": "D:\\Git_Repositories\\LCM_Inventory\\data\\reviews\\review_LCM_AI_20261015_222108.json",
+        "commit_sha": "b5effb8919198c0044c9bd47d9728f39620a78ec"
+      },
+      {
+        "id": "CRP-279::LCM_AI",
+        "proposal_id": 279,
+        "repository": "LCM_AI",
+        "status": "completed",
+        "discovered_at": "2026-10-15 18:54:54",
+        "reason": "Durable changes discovered during CRP-279 BCR preparation: .agents/ACTIVE_SESSION.md.",
+        "observed_reasons": [
+          "Durable changes discovered during CRP-279 BCR preparation: .agents/ACTIVE_SESSION.md."
+        ],
+        "bcr_identity": "CRP-279",
+        "completed_at": "2026-10-15 20:50:08",
+        "review_receipt": "D:\\Git_Repositories\\LCM_Inventory\\data\\reviews\\review_LCM_AI_20261015_205008.json",
+        "commit_sha": "b5effb8"
+      },
+      {
+        "id": "CRP-277::LCM_AI",
+        "proposal_id": 277,
+        "repository": "LCM_AI",
+        "status": "completed",
+        "discovered_at": "2026-10-16 18:25:07",
+        "reason": "Durable LCM_AI changes discovered during CRP-277 Macrium BCR preparation: .agents/ACTIVE_CONTEXT.md.",
+        "observed_reasons": [
+          "Durable LCM_AI changes discovered during CRP-277 Macrium BCR preparation: .agents/ACTIVE_CONTEXT.md."
+        ],
+        "bcr_identity": "CRP-277",
+        "completed_at": "2026-10-16 18:38:44",
+        "review_receipt": "D:\\Git_Repositories\\LCM_Inventory\\data\\reviews\\review_LCM_AI_20261016_183844.json",
+        "commit_sha": "943bd68"
+      },
+      {
+        "id": "CRP-282::LCM_AI",
+        "proposal_id": 282,
+        "repository": "LCM_AI",
+        "status": "open",
+        "discovered_at": "2026-10-17 22:55:39",
+        "reason": "Durable LCM_AI changes discovered during CRP-282 Macrium BCR preparation: .agents/rules/AnalysisGovernancePolicy.md, .agents/rules/DocumentationStandardsPolicy.md, .agents/rules/MethodEfficiencyPolicy.md, .agents/rules/ProposalReviewFlowPolicy.md, .agents/rules/ReviewCommitGovernancePolicy.md, .agents/rules/RuleAuthority.md, docs/LCM-Rules-Cross-Reference.md, .agents/rules/GoalFirstDesignPolicy.md.",
+        "observed_reasons": [
+          "Durable LCM_AI changes discovered during CRP-282 Macrium BCR preparation: .agents/rules/AnalysisGovernancePolicy.md, .agents/rules/DocumentationStandardsPolicy.md, .agents/rules/MethodEfficiencyPolicy.md, .agents/rules/ProposalReviewFlowPolicy.md, .agents/rules/ReviewCommitGovernancePolicy.md, .agents/rules/RuleAuthority.md, docs/LCM-Rules-Cross-Reference.md, .agents/rules/GoalFirstDesignPolicy.md."
+        ],
+        "bcr_identity": "CRP-282"
+      },
+      {
+        "id": "BUG-287::LCM_AI",
+        "proposal_id": 287,
+        "repository": "LCM_AI",
+        "status": "open",
+        "discovered_at": "2026-10-18 17:56:55",
+        "reason": "Durable LCM_AI changes discovered during BUG-287 Macrium BCR preparation: .agents/ACTIVE_CONTEXT.md, docs/Architecture.md.",
+        "observed_reasons": [
+          "Durable LCM_AI changes discovered during BUG-287 Macrium BCR preparation: .agents/ACTIVE_CONTEXT.md, docs/Architecture.md."
+        ],
+        "bcr_identity": "BUG-287"
+      },
+      {
+        "id": "CRP-300::AuthorizeMasterUser",
+        "proposal_id": 300,
+        "repository": "AuthorizeMasterUser",
+        "status": "completed",
+        "discovered_at": "2026-10-20 20:43:57",
+        "reason": "CRP-300: current-version-only 10.0.0 alignment; readiness passed; included in the operator-accepted full-workspace BCR on 2026-10-20. No functional change or push.",
+        "observed_reasons": [
+          "CRP-300: current-version-only 10.0.0 alignment; readiness passed; included in the operator-accepted full-workspace BCR on 2026-10-20. No functional change or push."
+        ],
+        "bcr_identity": "CRP-300",
+        "completed_at": "2026-10-20 20:44:35",
+        "review_receipt": "D:\\Git_Repositories\\LCM_Inventory\\data\\reviews\\review_AuthorizeMasterUser_20261020_204435.json",
+        "commit_sha": "04c3b42"
+      },
+      {
+        "id": "CRP-300::BackgroundModifier",
+        "proposal_id": 300,
+        "repository": "BackgroundModifier",
+        "status": "completed",
+        "discovered_at": "2026-10-20 20:43:57",
+        "reason": "CRP-300: current-version-only 10.0.0 alignment; readiness passed; included in the operator-accepted full-workspace BCR on 2026-10-20. No functional change or push.",
+        "observed_reasons": [
+          "CRP-300: current-version-only 10.0.0 alignment; readiness passed; included in the operator-accepted full-workspace BCR on 2026-10-20. No functional change or push."
+        ],
+        "bcr_identity": "CRP-300",
+        "completed_at": "2026-10-20 20:44:47",
+        "review_receipt": "D:\\Git_Repositories\\LCM_Inventory\\data\\reviews\\review_BackgroundModifier_20261020_204447.json",
+        "commit_sha": "9199a96"
+      },
+      {
+        "id": "CRP-300::BGMSAMVInv",
+        "proposal_id": 300,
+        "repository": "BGMSAMVInv",
+        "status": "completed",
+        "discovered_at": "2026-10-20 20:43:57",
+        "reason": "CRP-300: current-version-only 10.0.0 alignment; readiness passed; included in the operator-accepted full-workspace BCR on 2026-10-20. No functional change or push.",
+        "observed_reasons": [
+          "CRP-300: current-version-only 10.0.0 alignment; readiness passed; included in the operator-accepted full-workspace BCR on 2026-10-20. No functional change or push."
+        ],
+        "bcr_identity": "CRP-300",
+        "completed_at": "2026-10-20 20:44:50",
+        "review_receipt": "D:\\Git_Repositories\\LCM_Inventory\\data\\reviews\\review_BGMSAMVInv_20261020_204450.json",
+        "commit_sha": "8ae2d85"
+      },
+      {
+        "id": "CRP-300::BootEntryManager",
+        "proposal_id": 300,
+        "repository": "BootEntryManager",
+        "status": "completed",
+        "discovered_at": "2026-10-20 20:43:58",
+        "reason": "CRP-300: current-version-only 10.0.0 alignment; readiness passed; included in the operator-accepted full-workspace BCR on 2026-10-20. No functional change or push.",
+        "observed_reasons": [
+          "CRP-300: current-version-only 10.0.0 alignment; readiness passed; included in the operator-accepted full-workspace BCR on 2026-10-20. No functional change or push."
+        ],
+        "bcr_identity": "CRP-300",
+        "completed_at": "2026-10-20 20:44:55",
+        "review_receipt": "D:\\Git_Repositories\\LCM_Inventory\\data\\reviews\\review_BootEntryManager_20261020_204455.json",
+        "commit_sha": "2f2504d"
+      },
+      {
+        "id": "CRP-300::VolumeInventory",
+        "proposal_id": 300,
+        "repository": "VolumeInventory",
+        "status": "completed",
+        "discovered_at": "2026-10-20 20:43:58",
+        "reason": "CRP-300: current-version-only 10.0.0 alignment; readiness passed; included in the operator-accepted full-workspace BCR on 2026-10-20. No functional change or push.",
+        "observed_reasons": [
+          "CRP-300: current-version-only 10.0.0 alignment; readiness passed; included in the operator-accepted full-workspace BCR on 2026-10-20. No functional change or push."
+        ],
+        "bcr_identity": "CRP-300",
+        "completed_at": "2026-10-20 20:45:01",
+        "review_receipt": "D:\\Git_Repositories\\LCM_Inventory\\data\\reviews\\review_VolumeInventory_20261020_204501.json",
+        "commit_sha": "377071e"
+      },
+      {
+        "id": "CRP-298::Git_Repositories",
+        "proposal_id": 298,
+        "repository": "Git_Repositories",
+        "status": "completed",
+        "discovered_at": "2026-10-20 20:52:01",
+        "reason": "Operator directed DOIT for all current LCM changes and confirmed full-workspace BCR successful and accepted on 2026-10-20; no code-level tests requested.",
+        "observed_reasons": [
+          "Operator directed DOIT for all current LCM changes and confirmed full-workspace BCR successful and accepted on 2026-10-20; no code-level tests requested."
+        ],
+        "bcr_identity": "CRP-298",
+        "completed_at": "2026-10-20 20:55:31",
+        "review_receipt": "D:\\Git_Repositories\\LCM_Inventory\\data\\reviews\\review_Git_Repositories_20261020_205531.json",
+        "commit_sha": "9948cb9"
+      },
+      {
+        "id": "CRP-298::LCM_Inventory",
+        "proposal_id": 298,
+        "repository": "LCM_Inventory",
+        "status": "completed",
+        "discovered_at": "2026-10-20 20:52:01",
+        "reason": "Operator directed DOIT for all current LCM changes and confirmed full-workspace BCR successful and accepted on 2026-10-20; no code-level tests requested.",
+        "observed_reasons": [
+          "Operator directed DOIT for all current LCM changes and confirmed full-workspace BCR successful and accepted on 2026-10-20; no code-level tests requested."
+        ],
+        "bcr_identity": "CRP-298",
+        "completed_at": "2026-10-20 20:56:10",
+        "review_receipt": "D:\\Git_Repositories\\LCM_Inventory\\data\\reviews\\review_LCM_Inventory_20261020_205610.json",
+        "commit_sha": "1c11bb603d15e27ee124395c39be08143726d87a"
+      }
+    ]
+  },
   "minimal_tests": true,
   "test_scope": "minimal",
   "flow_mode": "doit",
