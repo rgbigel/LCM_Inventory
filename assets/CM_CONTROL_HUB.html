@@ -2414,6 +2414,7 @@
           }
         }
       }
+      applyOpenWorkPresetSort(status);
       applyFilters();
     }
 
@@ -2422,7 +2423,14 @@
       document.querySelectorAll(".rail-state").forEach(el => el.classList.remove("active"));
       const el = $("rail-" + activeRailFilter);
       if (el) el.classList.add("active");
+      applyOpenWorkPresetSort(preset);
       applyFilters();
+    }
+
+    function applyOpenWorkPresetSort(preset) {
+      if (preset !== "open") return;
+      activeSort = "prio-desc";
+      if ($("sortSelect")) $("sortSelect").value = activeSort;
     }
 
     function resetFilters() {
@@ -2492,6 +2500,7 @@
 
       // Rail filter check
       if (activeRailFilter === "open") {
+        if (prio === 0) return false;
         const isClosed = ["held", "completed", "pushed", "rejected", "deleted", "cancelled"].includes(state) ||
                          ["complete", "published", "cancelled"].includes(vis);
         if (isClosed) return false;
@@ -2655,6 +2664,15 @@
       });
     }
 
+    function getActiveSortLabel() {
+      return {
+        "id-desc": "CRP ID highest first",
+        "id-asc": "CRP ID lowest first",
+        "prio-desc": "Priority high \u2192 low",
+        "prio-asc": "Priority low \u2192 high"
+      }[activeSort] || "CRP ID highest first";
+    }
+
     function renderTable() {
       const filtered = getFilteredProposals();
       const sorted = sortProposals(filtered);
@@ -2663,7 +2681,7 @@
         sorted.some(proposal => Number(proposal.id) === Number(cohort.prime_proposal_id))
       );
       const workQueueCount = sorted.length + displayedObligations.length;
-      $("matchCounter").innerText = `${workQueueCount} result${workQueueCount === 1 ? "" : "s"} / CRP ID order`;
+      $("matchCounter").innerText = `${workQueueCount} result${workQueueCount === 1 ? "" : "s"} / ${getActiveSortLabel()}`;
 
       if (sorted.length === 0) {
         container.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 24px; color: var(--muted);">No matching proposals found for current filters.</td></tr>`;

@@ -12,7 +12,7 @@
   Path: D:\Git_Repositories\LCM_Inventory\tools\Update-ToolCatalog.ps1
   Authors: Rolf, LCM_AI Engine
   Version: 10.0.0
-  Date: 2026-10-13
+  Date: 2026-10-20
 .PARAMETER Silent
   Suppresses non-error terminal output (useful in automated pipelines).
 .PARAMETER ShowAll
@@ -141,6 +141,26 @@ $readmePath = Join-Path $docsDir 'README.md'
 # 2. Authoritative Metadata Dictionary with Role, Audience, and Short-Names
 # ------------------------------------------------------------------------------
 $metadataOverrides = @{
+  "LCM_Tools\tools\Set-GitFileTimes.ps1" = @{
+    ShortName   = "SetGitFileTimes"
+    Group       = "LCM_Tools"
+    Domain      = "LCM_Tools"
+    Audience    = "Developer"
+    Role        = "Utility"
+    NoExit      = $false
+    Category    = "Git Utilities"
+    Description = "Sets tracked file modification times to each file's latest Git commit author timestamp."
+  }
+  "LCM_Tools\tools\Sync-LCMResearchSnapshot.ps1" = @{
+    ShortName   = "SyncLCMResearchSnapshot"
+    Group       = "LCM_Tools"
+    Domain      = "LCM_Tools"
+    Audience    = "Developer"
+    Role        = "Utility"
+    NoExit      = $false
+    Category    = "Research Snapshot"
+    Description = "Mirrors selected LCM workspace research and governance files to a configured snapshot destination."
+  }
   # System Invariants & Hardware Stability
   "Kill-LogitechUpdate.ps1" = @{
     ShortName   = "KillLogitech"
@@ -843,6 +863,7 @@ function Get-LcmToolDependencies {
 $scanDefinitions = @(
   @{ Group = "LCM_Inventory"; Domain = "LCM_Inventory"; Path = "LCM_Inventory\tools";             Filter = "*.ps1" },
   @{ Group = "LCM_Inventory"; Domain = "LCM_Inventory"; Path = "LCM_Inventory\tools";             Filter = "*.py" },
+  @{ Group = "LCM_Tools";     Domain = "LCM_Tools";     Path = "LCM_Tools\tools";                  Filter = "*.ps1" },
   @{ Group = "SystemConfiguration"; Domain = "SystemConfiguration"; Path = "SystemConfiguration\Source";            Filter = "@*" },
   @{ Group = "SystemConfiguration"; Domain = "SystemConfiguration"; Path = "SystemConfiguration\Source";            Filter = "$*" },
   @{ Group = "SystemConfiguration"; Domain = "SystemConfiguration"; Path = "SystemConfiguration\Source";            Filter = "*.ps1" },

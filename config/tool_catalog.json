@@ -4334,6 +4334,46 @@
     "Dependencies": "Export-LCMRules.ps1"
   },
   {
+    "Name": "Set-GitFileTimes.ps1",
+    "ShortName": "SetGitFileTimes",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": false,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Git Utilities",
+    "Description": "Sets tracked file modification times to each file's latest Git commit author timestamp.",
+    "Example": "SetGitFileTimes",
+    "RelativePath": "LCM_Tools\\tools\\Set-GitFileTimes.ps1",
+    "Parameters": [
+      {
+        "Name": "RepositoryPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": ".",
+        "Description": "Git repository root; defaults to the current directory"
+      },
+      {
+        "Name": "LogDirectory",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Audit log directory; defaults to LCM_Inventory/data/logs/lcm"
+      },
+      {
+        "Name": "Detailed",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Show progress for each tracked file"
+      }
+    ],
+    "Dependencies": null
+  },
+  {
     "Name": "Set-GitRoot.ps1",
     "ShortName": "SetGitRoot",
     "Aliases": null,
@@ -5099,14 +5139,14 @@
     "Role": "Utility",
     "Audience": "Developer",
     "Admin": false,
-    "NoExit": true,
-    "Group": "LCM_Inventory",
-    "Domain": "LCM_Inventory",
+    "NoExit": false,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
     "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "Sync-LCMResearchSnapshot execution tool.",
+    "Category": "Research Snapshot",
+    "Description": "Mirrors selected LCM workspace research and governance files to a configured snapshot destination.",
     "Example": "SyncLCMResearchSnapshot",
-    "RelativePath": "LCM_Inventory\\tools\\Sync-LCMResearchSnapshot.ps1",
+    "RelativePath": "LCM_Tools\\tools\\Sync-LCMResearchSnapshot.ps1",
     "Parameters": [
       {
         "Name": "SourceRoot",
@@ -5134,7 +5174,7 @@
         "Type": "SwitchParameter",
         "Mandatory": false,
         "Default": "",
-        "Description": "Force overwrite and re-mirror of all destination files"
+        "Description": "Force overwrite and re-mirror all destination files"
       },
       {
         "Name": "Detailed",

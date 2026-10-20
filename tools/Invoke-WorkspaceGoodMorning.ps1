@@ -55,8 +55,6 @@ if ($Help) {
 
 $contextModule = Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\LcmWorkspaceContext.psm1'
 Import-Module -Name $contextModule -Force
-$receiptModule = Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\GoodNightReceipt.psm1'
-Import-Module -Name $receiptModule -Force
 $gitRoot = Get-LcmMachineGitRoot
 $agentsDir = Join-Path $gitRoot 'LCM_AI\.agents'
 $contextFile = Join-Path $agentsDir 'ACTIVE_CONTEXT.md'
@@ -90,13 +88,8 @@ foreach ($r in $repos) {
 }
 $lastActivity = @($savedAt, $lastCommit | Where-Object { $null -ne $_ } | Sort-Object -Descending)[0]
 $gap = if ($null -eq $lastActivity) { [double]::PositiveInfinity } else { ($now - $lastActivity).TotalHours }
-$receiptState = Get-GoodNightSaveAllReceiptState -ReceiptPath (Get-GoodNightSaveAllReceiptPath -WorkspaceRoot $gitRoot) `
-    -ContextSnapshotSavedAt $(if ($savedAt) { $savedAt } else { [datetime]::MinValue }) -WorkspaceRoot $gitRoot
-if ($receiptState.State -ne 'valid') {
-    $attention.Add("GoodNIGHT recovery required: $($receiptState.Message) Use IDE Save All, then run Invoke-WorkspaceGoodNight.ps1 -SaveAllConfirmed before treating the session as ready.")
-}
 
-if ($Auto -and -not $Force -and -not $PrepareBcrBaseline -and $gap -lt $GapHours -and $receiptState.State -eq 'valid') {
+if ($Auto -and -not $Force -and -not $PrepareBcrBaseline -and $gap -lt $GapHours) {
     Write-Host ("GoodMorning not needed (gap {0:N1} h < {1} h)." -f $gap, $GapHours)
     return
 }

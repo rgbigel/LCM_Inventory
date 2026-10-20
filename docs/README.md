@@ -129,6 +129,7 @@ TestWorkspaceReadiness
 | **SaveLCMRules** | [Save-LCMRules.ps1](file:///LCM_Inventory/tools/Save-LCMRules.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Save-LCMRules execution tool. | SaveLCMRules |
 | **scancommunityissues** | [scan_community_issues.py](file:///HaSSD06/scan_community_issues.py) | Utility | HaSSD06 | Python | Utility | scan_community_issues execution tool. | scancommunityissues |
 | **searchsyssensors** | [search_sys_sensors.py](file:///HaSSD06/search_sys_sensors.py) | Utility | HaSSD06 | Python | Utility | search_sys_sensors execution tool. | searchsyssensors |
+| **SetGitFileTimes** | [Set-GitFileTimes.ps1](file:///LCM_Tools/tools/Set-GitFileTimes.ps1) | Utility | LCM_Tools | PowerShell | Git Utilities | Sets tracked file modification times to each file's latest Git commit author timestamp. | SetGitFileTimes |
 | **SetGitRoot** | [Set-GitRoot.ps1](file:///LCM_Inventory/tools/Set-GitRoot.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Set-GitRoot execution tool. | SetGitRoot |
 | **SetLcmActionProgress** | [Set-LcmActionProgress.ps1](file:///LCM_Inventory/tools/Set-LcmActionProgress.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Set-LcmActionProgress execution tool. | SetLcmActionProgress |
 | **SetRealRepoTestPlan** | [Set-RealRepoTestPlan.ps1](file:///LCM_Inventory/tools/Set-RealRepoTestPlan.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Set-RealRepoTestPlan execution tool. | SetRealRepoTestPlan |
@@ -147,7 +148,7 @@ TestWorkspaceReadiness
 | **SyncGeminiInbox** | [Sync-GeminiInbox.ps1](file:///LCM_Inventory/tools/Sync-GeminiInbox.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Sync-GeminiInbox execution tool. | SyncGeminiInbox |
 | **SyncLcmAppCatalog** | [Sync-LcmAppCatalog.ps1](file:///LCM_Inventory/tools/Sync-LcmAppCatalog.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Sync-LcmAppCatalog execution tool. | SyncLcmAppCatalog |
 | **SyncLcmModuleVersions** | [Sync-LcmModuleVersions.ps1](file:///LCM_Inventory/tools/Sync-LcmModuleVersions.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Sync-LcmModuleVersions execution tool. | SyncLcmModuleVersions |
-| **SyncLCMResearchSnapshot** | [Sync-LCMResearchSnapshot.ps1](file:///LCM_Inventory/tools/Sync-LCMResearchSnapshot.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Sync-LCMResearchSnapshot execution tool. | SyncLCMResearchSnapshot |
+| **SyncLCMResearchSnapshot** | [Sync-LCMResearchSnapshot.ps1](file:///LCM_Tools/tools/Sync-LCMResearchSnapshot.ps1) | Utility | LCM_Tools | PowerShell | Research Snapshot | Mirrors selected LCM workspace research and governance files to a configured snapshot destination. | SyncLCMResearchSnapshot |
 | **SyncToolSymlinks** | [Sync-ToolSymlinks.ps1](file:///LCM_Inventory/tools/Sync-ToolSymlinks.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Sync-ToolSymlinks execution tool. | SyncToolSymlinks |
 | **TestExternalTools** | [Test-ExternalTools.ps1](file:///LCM_Inventory/tools/Test-ExternalTools.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Test-ExternalTools execution tool. | TestExternalTools |
 | **TestGuardrail** | [Test-Guardrail.ps1](file:///LCM_Inventory/tools/Test-Guardrail.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Test-Guardrail execution tool. | TestGuardrail |
