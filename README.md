@@ -78,6 +78,10 @@ modules); and `LSP` = **LCM_Supervision** (supervision subsystem).
 
 ## 3. CLI Tools & Common Workflows
 
+For timestamped session error catalogs combining active-host evidence,
+read-only lifecycle diagnostics, and recent action logs, see
+[Session Failure Mode Analysis](docs/FailureModeAnalysis.md) (`AnalyzeFailures`).
+
 ```powershell
 # Run a full workspace audit and regenerate the inventory dashboard
 .\tools\Invoke-WorkspaceAudit.ps1

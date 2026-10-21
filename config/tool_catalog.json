@@ -814,6 +814,81 @@
     ]
   },
   {
+    "Name": "Invoke-FailureModeAnalysis.ps1",
+    "ShortName": "AnalyzeFailures",
+    "Aliases": null,
+    "Role": "Diagnostics",
+    "Audience": "User",
+    "Admin": false,
+    "NoExit": false,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Session Failure Analysis",
+    "Description": "Timestamped active-host session error catalog with read-only lifecycle diagnostics and recent workspace actions.",
+    "Example": "AnalyzeFailures -Number 303",
+    "RelativePath": "LCM_Inventory\\tools\\Invoke-FailureModeAnalysis.ps1",
+    "Parameters": [
+      {
+        "Name": "Number",
+        "Type": "Int32",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Bare item number whose latest explicit conversation reference is the start anchor."
+      },
+      {
+        "Name": "From",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Literal user-input text. The latest matching message is the start anchor."
+      },
+      {
+        "Name": "Action",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "do",
+        "Description": ""
+      },
+      {
+        "Name": "TranscriptPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Offline JSON/JSONL transcript, including native Copilot events or normalized events."
+      },
+      {
+        "Name": "TaskLogDirectory",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Optional explicit Antigravity task-log directory for offline analysis."
+      },
+      {
+        "Name": "OutputDirectory",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Report directory; defaults to the original catalog's directory."
+      },
+      {
+        "Name": "ActionCount",
+        "Type": "Int32",
+        "Mandatory": false,
+        "Default": "5",
+        "Description": ""
+      }
+    ],
+    "Dependencies": [
+      "FailureModeAnalysis.psm1",
+      "ProposalManager.psm1",
+      "Show-LcmFailureDiagnostic.ps1",
+      "Show-Actions.ps1",
+      "Module: (Join-Path $inventoryRoot 'modules\\FailureModeAnalysis.psm1')",
+      "Module: (Join-Path $inventoryRoot 'modules\\ProposalManager.psm1')"
+    ]
+  },
+  {
     "Name": "Get-SystemPortInventory.ps1",
     "ShortName": "GetSystemPortInventory",
     "Aliases": null,

@@ -6,7 +6,7 @@ Path: LCM_Inventory/docs/README.md
 Authors: Rolf, LCM_AI Engine  
 Version: 10.0.1  
 Status: Authoritative Reference  
-Updated: 2026-10-17 20:24:18  
+Updated: 2026-10-21 18:59:26  
 
 ---
 
@@ -24,6 +24,7 @@ TestWorkspaceReadiness
 | Short Name | Source Tool | Role | Group | Type | Category | Description | Command |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | **ShowHaAuthDialog** | [Show-HaAuthDialog.ps1](file:///HaSSD06/tools/subsystem/Show-HaAuthDialog.ps1) | Auth | HaSSD06 | PowerShell | JIT Authentication | WPF desktop dialog for secure ephemeral credentials with password reveal (RULE-SUB-003). | ShowHaAuthDialog |
+| **AnalyzeFailures** | [Invoke-FailureModeAnalysis.ps1](file:///LCM_Inventory/tools/Invoke-FailureModeAnalysis.ps1) | Diagnostics | LCM_Inventory | PowerShell | Session Failure Analysis | Timestamped active-host session error catalog with read-only lifecycle diagnostics and recent workspace actions. | AnalyzeFailures |
 | **GetSystemPortInventory** | [Get-SystemPortInventory.ps1](file:///LCM_Inventory/tools/Get-SystemPortInventory.ps1) | Diagnostics | LCM_Inventory | PowerShell | Network Diagnostics | Scans and audits all active local listening TCP/UDP ports and verifies port 9876 availability. | GetSystemPortInventory |
 | **ShowDaemon** | [Show-LcmDaemon.ps1](file:///LCM_Inventory/tools/Show-LcmDaemon.ps1) | Diagnostics | LCM_Inventory | PowerShell | Desktop Bridge | Displays live telemetry, runtime status, and log tailing for the LCM Desktop REST Bridge Daemon. | ShowDaemon |
 | **ShowLastLog** | [Show-LastLog.ps1](file:///LCM_Inventory/tools/Show-LastLog.ps1) | Diagnostics | LCM_Inventory | PowerShell | Log Diagnostics | Displays the most recently updated audit log in the workspace with live tail and level filtering. | ShowLastLog |

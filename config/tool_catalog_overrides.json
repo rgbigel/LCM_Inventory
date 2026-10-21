@@ -1,4 +1,4 @@
-﻿{
+{
   "Invoke-MacriumDailyBcrBaseline.ps1": {
     "NoExit": false
   },
@@ -15,6 +15,15 @@
   "Show-LcmFailureDiagnostic.ps1": {
     "ShortName": "ShowFailureDiagnostic",
     "Example": "ShowFailureDiagnostic -Action do -TargetExpression CRP-279"
+  },
+  "Invoke-FailureModeAnalysis.ps1": {
+    "ShortName": "AnalyzeFailures",
+    "Example": "AnalyzeFailures -Number 303",
+    "NoExit": false,
+    "Audience": "User",
+    "Role": "Diagnostics",
+    "Category": "Session Failure Analysis",
+    "Description": "Timestamped active-host session error catalog with read-only lifecycle diagnostics and recent workspace actions."
   },
   "Test-MacriumCurrentBaseline.ps1": {
     "ShortName": "TestMacriumBaseline",
