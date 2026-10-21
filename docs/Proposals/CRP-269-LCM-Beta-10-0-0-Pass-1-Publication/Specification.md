@@ -1,6 +1,6 @@
-# Change Request Proposal: CRP-269
+﻿# Change Request Proposal: CRP-269
 
-`yaml
+```yaml
 CRP-ID: CRP-269
 Title: LCM Beta 10.0.0 Pass 1 Publication
 Scope: LCM_Inventory
@@ -12,7 +12,7 @@ Plan-State: suggested
 Progress-State: undecided
 Priority: High
 App-ID: None
-`
+```
 
 ---
 

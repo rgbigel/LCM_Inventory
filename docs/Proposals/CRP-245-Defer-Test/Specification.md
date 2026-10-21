@@ -1,6 +1,6 @@
-# Change Request Proposal: CRP-245
+﻿# Change Request Proposal: CRP-245
 
-`yaml
+```yaml
 CRP-ID: CRP-245
 Title: Defer Test
 Scope: TestRepo
@@ -12,7 +12,7 @@ Plan-State: suggested
 Progress-State: undecided
 Priority: High
 App-ID: None
-`
+```
 
 ---
 

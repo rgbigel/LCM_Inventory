@@ -212,10 +212,12 @@ function New-WorkspaceProposal {
     $specPath = Join-Path $bundleFullPath 'Specification.md'
     if (-not (Test-Path $specPath)) {
         $appDisplay = if ($AppId) { $AppId } else { "None" }
+        # In an expandable here-string the backtick is the escape character; the markdown fence must come from a variable (BUG-302).
+        $fence = '```'
         $specContent = @"
 # Change Request Proposal: $canonicalId
 
-```yaml
+${fence}yaml
 CRP-ID: $canonicalId
 Title: $Title
 Scope: $OriginRepo
@@ -227,7 +229,7 @@ Plan-State: suggested
 Progress-State: undecided
 Priority: High
 App-ID: $appDisplay
-```
+${fence}
 
 ---
 

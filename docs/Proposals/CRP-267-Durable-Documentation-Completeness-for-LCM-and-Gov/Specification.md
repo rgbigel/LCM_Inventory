@@ -1,6 +1,6 @@
-# Change Request Proposal: CRP-267
+﻿# Change Request Proposal: CRP-267
 
-`yaml
+```yaml
 CRP-ID: CRP-267
 Title: Durable Documentation Completeness for LCM and Governed Repositories
 Scope: LCM_Inventory
@@ -12,7 +12,7 @@ Plan-State: suggested
 Progress-State: undecided
 Priority: High
 App-ID: None
-`
+```
 
 ---
 

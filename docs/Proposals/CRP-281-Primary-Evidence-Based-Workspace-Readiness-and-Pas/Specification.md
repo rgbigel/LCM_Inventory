@@ -1,6 +1,6 @@
-# Change Request Proposal: CRP-281
+﻿# Change Request Proposal: CRP-281
 
-`yaml
+```yaml
 CRP-ID: CRP-281
 Title: Primary Evidence-Based Workspace Readiness and Passive Legacy Checks
 Scope: LCM_Inventory
@@ -12,7 +12,7 @@ Plan-State: suggested
 Progress-State: undecided
 Priority: High
 App-ID: None
-`
+```
 
 ---
 

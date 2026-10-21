@@ -1,6 +1,6 @@
-# Change Request Proposal: CRP-246
+﻿# Change Request Proposal: CRP-246
 
-`yaml
+```yaml
 CRP-ID: CRP-246
 Title: Delete Test
 Scope: TestRepo
@@ -12,7 +12,7 @@ Plan-State: suggested
 Progress-State: undecided
 Priority: High
 App-ID: None
-`
+```
 
 ---
 

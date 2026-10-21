@@ -1,6 +1,6 @@
-# Change Request Proposal: BUG-276
+﻿# Change Request Proposal: BUG-276
 
-`yaml
+```yaml
 CRP-ID: BUG-276
 Title: [BUG] Review completion cannot resolve BCR exclusions
 Scope: LCM_Inventory
@@ -12,7 +12,7 @@ Plan-State: suggested
 Progress-State: undecided
 Priority: High
 App-ID: None
-`
+```
 
 ---
 

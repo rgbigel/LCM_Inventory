@@ -1,6 +1,6 @@
-# Change Request Proposal: CRP-283
+﻿# Change Request Proposal: CRP-283
 
-`yaml
+```yaml
 CRP-ID: CRP-283
 Title: Machine-Registry-Only CMD Launcher Authority
 Scope: LCM_Inventory
@@ -12,7 +12,7 @@ Plan-State: suggested
 Progress-State: undecided
 Priority: High
 App-ID: None
-`
+```
 
 ---
 

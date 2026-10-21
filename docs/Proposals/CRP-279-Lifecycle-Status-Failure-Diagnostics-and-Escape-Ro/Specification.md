@@ -1,6 +1,6 @@
-# Change Request Proposal: CRP-279
+﻿# Change Request Proposal: CRP-279
 
-`yaml
+```yaml
 CRP-ID: CRP-279
 Title: Lifecycle Status Failure Diagnostics and Escape Routes
 Scope: LCM_Inventory
@@ -12,7 +12,7 @@ Plan-State: suggested
 Progress-State: undecided
 Priority: High
 App-ID: None
-`
+```
 
 ---
 

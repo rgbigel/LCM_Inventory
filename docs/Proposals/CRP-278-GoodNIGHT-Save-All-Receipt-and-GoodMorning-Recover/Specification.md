@@ -1,6 +1,6 @@
-# Change Request Proposal: CRP-278
+﻿# Change Request Proposal: CRP-278
 
-`yaml
+```yaml
 CRP-ID: CRP-278
 Title: GoodNIGHT Save-All Receipt and GoodMorning Recovery Gate
 Scope: LCM_Inventory
@@ -12,7 +12,7 @@ Plan-State: verified
 Progress-State: verification
 Priority: High
 App-ID: None
-`
+```
 
 ---
 

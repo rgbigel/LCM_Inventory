@@ -18,7 +18,7 @@
   Path: LCM_Inventory/tools/Invoke-WorkspaceGoodMorning.ps1
   Authors: Rolf, LCM_AI Engine
   Version: 10.0.1
-  Date: 2026-10-18
+  Date: 2026-10-21
   Rule: RULE-CTX-006
 .PARAMETER Auto
   Session-start mode: silent (one line) when the gap is below -GapHours.
@@ -113,6 +113,8 @@ foreach ($r in $repos) {
     $head = (git -C $r.Path rev-parse --short HEAD 2>$null)
     if (-not $head) { $head = 'none' }
     $skipCtx = @('--', '.', ':(exclude).agents/ACTIVE_CONTEXT.md')
+    # LCM_Inventory data/ and logs/ change by nature of GoodNight; they are not work in between.
+    if ($r.Name -eq 'LCM_Inventory') { $skipCtx += @(':(exclude)data', ':(exclude)logs') }
     $dirty = @(git -C $r.Path status --short @skipCtx 2>$null).Count
     $behind = (git -C $r.Path rev-list --count 'HEAD..@{u}' 2>$null)
     if ($LASTEXITCODE -ne 0) { $behind = 0 }

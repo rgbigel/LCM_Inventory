@@ -1,6 +1,6 @@
-# Change Request Proposal: CRP-243
+﻿# Change Request Proposal: CRP-243
 
-`yaml
+```yaml
 CRP-ID: CRP-243
 Title: Test Feature Proposal
 Scope: TestRepo
@@ -12,7 +12,7 @@ Plan-State: suggested
 Progress-State: undecided
 Priority: High
 App-ID: None
-`
+```
 
 ---
 
