@@ -112,4 +112,14 @@ Describe 'Macrium-backed lifecycle BCR review' {
     $actionScript | Should -Match ([regex]::Escape("Invoke-MacriumBcrReview.ps1"))
     $actionScript | Should -Not -Match ([regex]::Escape("Invoke-BeyondCompareReview.ps1"))
   }
+
+  It 'binds Macrium dialog and detach deadlines to MountTimeoutSeconds and expands Beyond Compare launch window detection (BUG-299)' {
+    $baselineScript = Get-Content -LiteralPath (Join-Path $repositoryRoot 'tools\Invoke-MacriumDailyBcrBaseline.ps1') -Raw -Encoding UTF8
+
+    $baselineScript | Should -Not -Match 'did not become ready within 30 seconds'
+    $baselineScript | Should -Not -Match 'did not detach \$\{letter\}: within 30 seconds'
+    $baselineScript | Should -Match ([regex]::Escape('$deadline = (Get-Date).AddSeconds($MountTimeoutSeconds)'))
+    $baselineScript | Should -Match ([regex]::Escape('candidateProcessIds'))
+    $baselineScript | Should -Match ([regex]::Escape('$deadline = (Get-Date).AddSeconds(60)'))
+  }
 }

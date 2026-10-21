@@ -9,8 +9,8 @@
     Purpose: Opens or reuses the governed Macrium BCR window and records the exact lifecycle review state.
     Path: LCM_Inventory/tools/Invoke-MacriumBcrReview.ps1
     Authors: Rolf, LCM_AI Engine
-    Version: 10.0.2
-    Date: 2026-10-17
+    Version: 10.0.3
+    Date: 2026-10-21
 #>
 
 [CmdletBinding()]
@@ -30,6 +30,9 @@ param(
 
   [Parameter(Mandatory = $false)]
   [switch]$LifecycleManaged,
+
+  [Parameter(Mandatory = $false)]
+  [int]$MountTimeoutSeconds = 120,
 
   [Alias('h', '?')]
   [switch]$Help
@@ -82,6 +85,7 @@ $baselineArgs = @{
   ReviewScope = $CRP
   Confirm = $false
   ReuseMountedBaseline = $true
+  MountTimeoutSeconds = $MountTimeoutSeconds
 }
 if ($NoLaunch) {
   $baselineArgs.NoLaunchReview = $true

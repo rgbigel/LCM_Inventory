@@ -9,8 +9,8 @@
   _LCM Beyond Compare profile.
   Path: LCM_Inventory/tools/Invoke-MacriumDailyBcrBaseline.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.0
-  Date: 2026-10-15
+  Version: 10.0.1
+  Date: 2026-10-21
 #>
 [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'High')]
 param(
@@ -449,26 +449,31 @@ public static class LcmMacriumMouse
     if ($detachExitCode -ne 0) {
       throw "Macrium detach failed for ${letter}: with exit code $detachExitCode."
     }
-    $deadline = (Get-Date).AddSeconds(30)
+    $deadline = (Get-Date).AddSeconds($MountTimeoutSeconds)
     do {
       Start-Sleep -Milliseconds 250
       $disk = Get-CimInstance Win32_LogicalDisk -Filter "DeviceID='$letter`:'" -ErrorAction SilentlyContinue
     } while ($null -ne $disk -and (Get-Date) -lt $deadline)
     if ($null -ne $disk) {
-      throw "Macrium did not detach ${letter}: within 30 seconds."
+      throw "Macrium did not detach ${letter}: within $MountTimeoutSeconds seconds."
     }
     $detachedDrives.Add("$letter`:")
   }
 
   $existingReflectBinIds = @(Get-Process -Name 'ReflectBin' -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Id)
   Start-Process -FilePath $reflectPath -ArgumentList @('-b', $ImagePath) | Out-Null
-  $deadline = (Get-Date).AddSeconds(30)
+  $deadline = (Get-Date).AddSeconds($MountTimeoutSeconds)
   $dialog = $null
   while ((Get-Date) -lt $deadline -and $null -eq $dialog) {
     $newReflectBinIds = @(Get-Process -Name 'ReflectBin' -ErrorAction SilentlyContinue |
       Where-Object { $_.Id -notin $existingReflectBinIds } |
       Select-Object -ExpandProperty Id)
-    foreach ($processId in $newReflectBinIds) {
+    $candidateProcessIds = if ($newReflectBinIds.Count -gt 0) {
+      $newReflectBinIds
+    } else {
+      @(Get-Process -Name 'ReflectBin' -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Id)
+    }
+    foreach ($processId in $candidateProcessIds) {
       $root = [System.Windows.Automation.AutomationElement]::RootElement
       $condition = New-Object System.Windows.Automation.PropertyCondition(
         [System.Windows.Automation.AutomationElement]::ProcessIdProperty,
@@ -493,7 +498,7 @@ public static class LcmMacriumMouse
     Start-Sleep -Milliseconds 250
   }
   if ($null -eq $dialog) {
-    throw 'Macrium Browse Image dialog did not become ready within 30 seconds.'
+    throw "Macrium Browse Image dialog did not become ready within $MountTimeoutSeconds seconds."
   }
 
   $bounds = $dialog.Current.BoundingRectangle
@@ -586,13 +591,13 @@ if ($ReuseMountedBaseline) {
       $reusedReviewWindow = $true
     } else {
       Start-Process -FilePath $bcomparePath -ArgumentList @('/solo', '_LCM') | Out-Null
-      $deadline = (Get-Date).AddSeconds(15)
+      $deadline = (Get-Date).AddSeconds(60)
       do {
         Start-Sleep -Milliseconds 250
         $reviewWindows = @(Get-LcmReviewWindows)
       } while ($reviewWindows.Count -eq 0 -and (Get-Date) -lt $deadline)
       if ($reviewWindows.Count -ne 1) {
-        throw 'Beyond Compare did not expose exactly one _LCM Folder Compare window.'
+        throw 'Beyond Compare did not expose exactly one _LCM Folder Compare window within 60 seconds.'
       }
       $launchedReviewWindow = $true
     }
@@ -696,7 +701,7 @@ if (-not $NoLaunchReview) {
   }
   $profileContract = Test-LcmBcrProfile -MountedDriveLetter $receipt.MountedDrive.TrimEnd(':')
   Start-Process -FilePath $bcomparePath -ArgumentList @('/solo', '_LCM') | Out-Null
-  $deadline = (Get-Date).AddSeconds(15)
+  $deadline = (Get-Date).AddSeconds(60)
   do {
     Start-Sleep -Milliseconds 250
     $reviewWindows = @(Get-Process -Name 'BCompare' -ErrorAction SilentlyContinue | Where-Object {
@@ -705,7 +710,7 @@ if (-not $NoLaunchReview) {
     })
   } while ($reviewWindows.Count -eq 0 -and (Get-Date) -lt $deadline)
   if ($reviewWindows.Count -eq 0) {
-    throw 'Beyond Compare did not expose the expected _LCM Folder Compare window.'
+    throw 'Beyond Compare did not expose the expected _LCM Folder Compare window within 60 seconds.'
   }
   $reviewTitle = Set-LcmReviewWindowTitle -Window $reviewWindows[0] -Scope $reviewIdentity
   Write-BaselineLog -Level INFO -Message "Set Beyond Compare review title to '$reviewTitle'."
