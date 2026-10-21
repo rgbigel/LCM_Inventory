@@ -103,7 +103,7 @@ $readinessRows = @()
 # Workspace-level requisite check: external tools, Machine PATH and Everything content-index settings
 $externalToolsCheck = Join-Path $PSScriptRoot 'Test-ExternalTools.ps1'
 if (Test-Path -LiteralPath $externalToolsCheck) {
-    Write-Host " [>] External tools and Everything index (docs\Requisites)..." -ForegroundColor Yellow
+    Write-Host " [>] External tools and Everything index (LCM_AI\docs\Requisites)..." -ForegroundColor Yellow
     & pwsh -NoProfile -File $externalToolsCheck | Out-Host
 }
 

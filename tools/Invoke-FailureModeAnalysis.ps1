@@ -7,7 +7,7 @@
            session, without applying lifecycle actions or altering the source catalog.
   Path: LCM_Inventory/tools/Invoke-FailureModeAnalysis.ps1
   Authors: Rolf, Copilot
-  Version: 10.0.0
+  Version: 10.0.1
   Date: 2026-10-21
 .PARAMETER Number
   Bare item number whose latest explicit conversation reference is the start anchor.
@@ -19,6 +19,8 @@
   Report directory; defaults to the original catalog's directory.
 .PARAMETER TaskLogDirectory
   Optional explicit Antigravity task-log directory for offline analysis.
+.PARAMETER OperationalLogPaths
+  Optional exact log paths for diagnostic-text corroboration, not causal attribution.
 .EXAMPLE
   AnalyzeFailures -Number 300
 .EXAMPLE
@@ -37,6 +39,7 @@ param(
   [string]$Action = 'do',
   [string]$TranscriptPath,
   [string]$TaskLogDirectory,
+  [string[]]$OperationalLogPaths = @(),
   [string]$OutputDirectory,
   [ValidateRange(1, 100)]
   [int]$ActionCount = 5,
@@ -45,13 +48,14 @@ param(
 )
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
-$scriptVersion = '10.0.0'
+$scriptVersion = '10.0.1'
 if ($Help) {
   Write-Host "Invoke-FailureModeAnalysis.ps1 v$scriptVersion"
   Write-Host 'AnalyzeFailures [-Number <n> | -From <literal user input>] [-Action do]'
   Write-Host '  No selector: use the last explicit item reference in the active host session.'
   Write-Host '  Offline: -TranscriptPath <JSON/JSONL> [-TaskLogDirectory <path>]'
   Write-Host '  Reports: [-OutputDirectory <directory>] [-ActionCount <1..100>]'
+  Write-Host '  Corroboration: [-OperationalLogPaths <exact log paths>]; matches do not prove causation.'
   Write-Host '  Missing requested anchors stop; valid lifecycle actions are never executed.'
   return
 }
@@ -88,7 +92,7 @@ try {
     } else {
       $homePath = if ($env:ANTIGRAVITY_HOME) { $env:ANTIGRAVITY_HOME } else { Join-Path $env:USERPROFILE '.gemini\antigravity-ide' }
       if (-not $TaskLogDirectory) { $TaskLogDirectory = Join-Path $homePath "brain\$sessionId\.system_generated\tasks" }
-      $limitations.Add('Antigravity provider timestamps may be export times, not original event times; native task logs supply additional error evidence.')
+      $limitations.Add('Antigravity export timestamps are omitted because their runtime provenance is unavailable. Its exporter may omit call IDs, result bodies and status; chronological context is not causal linkage.')
     }
   }
   $events = @(Read-FailureTranscript -Path $TranscriptPath)
@@ -103,7 +107,7 @@ try {
         $evidence += [pscustomobject]@{
           Role = 'tool'; Type = 'task_log'; Failed = $false
           Text = Get-Content -LiteralPath $file.FullName -Raw -Encoding UTF8
-          Source = $file.FullName; Timestamp = $file.LastWriteTime.ToString('o')
+          Source = $file.FullName; Timestamp = ''
         }
       }
       $limitations.Add('Task logs are scoped to the selected session, not necessarily the quoted-message boundary; filesystem times are not execution timestamps.')
@@ -112,15 +116,21 @@ try {
     }
   }
   $limitations.Add('Only available tool-result evidence is classified; user/assistant claims and commands alone do not prove a failure. Missing tool bodies limit coverage, especially IDE-buffer symptoms.')
-  $findings = @(Find-FailureEvidence -Events $evidence)
+  $limitations.Add('Source/diff/quoted diagnostics are excluded. Unlinked diagnostic text is unresolved, not a confirmed error. Optional exact operational-log text matches are corroboration only, never a reconstructed backtrace or execution identity.')
+  $availableLogs = @(foreach ($logPath in $OperationalLogPaths) {
+    if (Test-Path -LiteralPath $logPath -PathType Leaf) { (Get-Item -LiteralPath $logPath).FullName }
+    else { $limitations.Add("Optional operational log is unavailable: $logPath") }
+  })
+  $findings = @(Find-FailureEvidence -Events $evidence -OperationalLogPaths $availableLogs)
+  $confirmedCount = @($findings | Where-Object Disposition -EQ 'Confirmed runtime failure').Count
   $lifecycle = @(Get-FailureLifecycleSection -Number $selection.Number -Store (Get-ProposalStore) -Action $Action -DiagnosticPath (Join-Path $PSScriptRoot 'Show-LcmFailureDiagnostic.ps1'))
   $actions = @(& (Join-Path $PSScriptRoot 'Show-Actions.ps1') -Count $ActionCount 6>&1 | ForEach-Object { [string]$_ })
   $source = if ($temporaryPath -and $TranscriptPath -eq $temporaryPath) { "$hostName session $sessionId via $providerPath" } else { $TranscriptPath }
   $markdown = New-FailureMarkdown -Selection $selection -Findings $findings -HostName $hostName -SessionId $sessionId -Source $source -Lifecycle $lifecycle -Actions $actions -Limitations $limitations.ToArray() -GeneratedAt $generatedAt
   if (-not $OutputDirectory) { $OutputDirectory = Join-Path $workspaceRoot 'LCM_AI\docs\Optimizations' }
   $path = Write-FailureMarkdown -Directory $OutputDirectory -GeneratedAt $generatedAt -Markdown $markdown
-  Write-Host "Invoke-FailureModeAnalysis.ps1 v$scriptVersion : $($findings.Count) finding(s). Report: $path"
-  [pscustomobject]@{ ReportPath = $path; Version = $scriptVersion; Findings = $findings.Count; Number = $selection.Number }
+  Write-Host "Invoke-FailureModeAnalysis.ps1 v$scriptVersion : $confirmedCount confirmed finding(s). Report: $path"
+  [pscustomobject]@{ ReportPath = $path; Version = $scriptVersion; Findings = $confirmedCount; Unresolved = @($findings | Where-Object Disposition -EQ 'Unresolved evidence').Count; Number = $selection.Number }
 } finally {
   if ($temporaryPath -and (Test-Path -LiteralPath $temporaryPath)) { Remove-Item -LiteralPath $temporaryPath -Force }
 }

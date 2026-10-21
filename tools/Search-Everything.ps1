@@ -148,14 +148,17 @@ $finalQuery = $searchTerms -join ' '
 
 # ------------------------------------------------------------------------------
 # 1. Primary Transport: es.exe CLI (RULE-EFF-007). Resolved via PATH, then the
-#    Requisites manifest (docs\Requisites\external-tools.json) under Machine Git_Root.
+#    Requisites manifest (LCM_AI\docs\Requisites\external-tools.json) under Machine Git_Root.
 # ------------------------------------------------------------------------------
 $esBin = $null
 $esCmd = Get-Command -Name 'es.exe' -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1
 if ($esCmd) { $esBin = $esCmd.Source }
 if (-not $esBin) {
   $gitRoot = [Environment]::GetEnvironmentVariable('Git_Root', 'Machine')
-  $manifest = if ($gitRoot) { Join-Path $gitRoot 'docs\Requisites\external-tools.json' } else { '' }
+  $manifest = if ($gitRoot) {
+    $primaryManifest = Join-Path $gitRoot 'LCM_AI\docs\Requisites\external-tools.json'
+    if (Test-Path -LiteralPath $primaryManifest) { $primaryManifest } else { Join-Path $gitRoot 'docs\Requisites\external-tools.json' }
+  } else { '' }
   if ($manifest -and (Test-Path -LiteralPath $manifest)) {
     $tool = @((Get-Content -LiteralPath $manifest -Raw | ConvertFrom-Json).tools) | Where-Object { $_.name -eq 'Everything' } | Select-Object -First 1
     if ($tool -and (Test-Path -LiteralPath (Join-Path $tool.dir 'es.exe'))) { $esBin = Join-Path $tool.dir 'es.exe' }

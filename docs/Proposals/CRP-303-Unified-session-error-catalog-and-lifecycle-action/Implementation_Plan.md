@@ -36,3 +36,17 @@ Reconstruct an evidence-based, active-host-specific failure-mode report from the
   shape, CRLF/UTF-8 encoding, no overwrite, and report path existence.
 - Validate catalog/trampoline integration without running unrelated suites.
 - Stop at the review checkpoint; do not commit or publish automatically.
+
+## 5. Correction Revision Under Existing CRP-303
+
+1. Reinstate the completed item through the canonical lifecycle action.
+2. Retain physical JSONL lines, call/turn/parent IDs, arguments and tool titles.
+   Preserve the global exporters; disclose the Antigravity metadata gaps.
+3. Add line-aware `Invoke-Investigator`: reject diff/source/fenced text, require
+   failure status, separate unresolved diagnostics, retain bounded runtime
+   context, and optionally corroborate exact text in supplied operational logs.
+4. Render successful/failed/unknown execution flow with explicit call linkage
+   and separately labeled conversation context; omit synthetic error times.
+5. Extend focused regressions and test the actual reported diff read-only.
+   Update usage/catalog metadata and revision evidence, verify, then launch
+   exact-item review for 303. No commit or push.

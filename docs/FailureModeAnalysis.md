@@ -2,7 +2,7 @@
 
 Module: Invoke-FailureModeAnalysis
 Authors: Rolf, Copilot
-Version: 10.0.0
+Version: 10.0.1
 Date: 2026-10-21
 
 ## Usage
@@ -31,6 +31,8 @@ treated as item references. A missing requested anchor stops before writing.
 Offline analysis accepts `-TranscriptPath` with normalized JSON/JSONL events
 or native Copilot events. Antigravity task logs can be supplied explicitly
 through `-TaskLogDirectory`. Use `-h` for all options.
+Optional `-OperationalLogPaths` accepts exact operational log filenames for
+literal diagnostic-text corroboration. Missing optional logs are disclosed.
 
 ## Report
 
@@ -46,6 +48,40 @@ symptom categories and unclassified tool failures are reported with citations
 and investigation suggestions. Pattern matches do not prove historical root
 causes. Commands or user discussions alone are not classified as tool errors.
 
+The read-only `Invoke-Investigator` stage establishes execution failure before
+applying the historical categories. An explicit failed tool result or terminal
+nonzero exit status establishes failure. Raw diagnostic text without that status
+is placed in **Unresolved evidence**, outside the confirmed-error count.
+Git diff hunks, source records, fenced code, and copied diagnostics from known
+successful results are not confirmed errors.
+
+Each finding identifies the native event and physical JSONL line, or the exact
+task-log line, and includes bounded numbered output context. Output line numbers
+are distinct from physical JSONL lines. Runtime stack/location excerpts are
+shown only when recorded nearby; neighboring dependency-index records are not
+backtraces. Duplicate diagnostic text within one result, and repeated identical
+completion records for one call ID, are collapsed; independent calls remain
+separate.
+
+Native event timestamps may be shown as recorded event times. Filesystem
+modification times and normalized exporter times are never error timestamps.
+Generation time remains in the report and its filename.
+
+The execution-flow section includes successful and unknown tool starts as well
+as failed executions. It preserves arguments, call/turn/parent IDs, source
+citations, the preceding user request and assistant statement, and a recorded
+tool argument description (or tool title) when available. Missing stated purpose
+is explicit. A completion is
+linked only by call ID; a shared turn is labeled separately from chronological
+context. Preceding conversation is not proof of why a command ran. No hidden
+reasoning, authorization, appropriateness, or causal connection is inferred.
+
+Complementary logs are inspected only when their exact paths are supplied;
+there is no cross-session or whole-workspace log hunt. At most three exact-text
+matches per log and diagnostic are reported with physical line numbers. Text
+matches are marked **execution identity unverified**, not promoted to causes.
+No match means no corroboration established, not that no related log exists.
+
 The lifecycle section reuses
 [Show-LcmFailureDiagnostic.ps1](../tools/Show-LcmFailureDiagnostic.ps1).
 Action `do` is the default; `-Action` chooses another supported action.
@@ -58,7 +94,9 @@ These are recent workspace logs, not necessarily related to the conversation.
 are report results, not failures; genuine provider, malformed-input, and I/O
 errors stop explicitly.
 
-Antigravity export times may not be original event times. Its task logs belong
+Antigravity export times are omitted. Its current exporter may omit call IDs,
+result bodies and execution status; these cannot be reconstructed reliably
+from chronological proximity. Its task logs belong
 to the selected session but cannot necessarily be bounded by the selected
 message. Missing bodies and IDE-buffer visibility limit detection. These
 limitations are included in the report.

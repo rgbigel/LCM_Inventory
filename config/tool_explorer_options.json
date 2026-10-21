@@ -5,6 +5,7 @@
     "LCM_AI",
     "LCM_Inventory",
     "LCM_Supervision",
+    "LCM_Tools",
     "SystemConfiguration"
   ],
   "Roles": [
@@ -15,6 +16,7 @@
     "Invariants",
     "Management",
     "QualityGate",
+    "Recovery",
     "ReviewGate",
     "Telemetry",
     "Utility"
@@ -24,12 +26,15 @@
     "Configuration Management",
     "Desktop Bridge",
     "File Search",
+    "Git Utilities",
     "JIT Authentication",
     "Log Diagnostics",
+    "Macrium BCR Baseline",
     "Navigation",
     "Network Diagnostics",
     "Proposal Review",
     "Quality Gate",
+    "Research Snapshot",
     "Subsystem GUI",
     "Subsystem Telemetry",
     "Subsystem Update Gate",

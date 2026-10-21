@@ -208,8 +208,11 @@ try {
       }
     }
 
-    # External tools declared in docs\Requisites\external-tools.json (appended, never ahead of the LCM Cmd path)
-    $reqFile = Join-Path $workspaceRoot 'docs\Requisites\external-tools.json'
+    # External tools declared in LCM_AI\docs\Requisites\external-tools.json (appended, never ahead of the LCM Cmd path)
+    $reqFile = Join-Path $workspaceRoot 'LCM_AI\docs\Requisites\external-tools.json'
+    if (-not (Test-Path -LiteralPath $reqFile)) {
+      $reqFile = Join-Path $workspaceRoot 'docs\Requisites\external-tools.json'
+    }
     if (Test-Path -LiteralPath $reqFile) {
       $req = Get-Content -LiteralPath $reqFile -Raw | ConvertFrom-Json
       foreach ($tool in @($req.tools)) {

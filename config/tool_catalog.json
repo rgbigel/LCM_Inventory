@@ -865,6 +865,13 @@
         "Description": "Optional explicit Antigravity task-log directory for offline analysis."
       },
       {
+        "Name": "OperationalLogPaths",
+        "Type": "String[]",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Optional exact log paths for diagnostic-text corroboration, not causal attribution."
+      },
+      {
         "Name": "OutputDirectory",
         "Type": "String",
         "Mandatory": false,

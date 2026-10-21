@@ -7,8 +7,8 @@ Scope: LCM_Inventory
 Baseline-Version: 10.0.1
 Author: Rolf, Copilot
 Date: 2026-10-21 18:28:34
-Status: In Review
-Plan-State: in_review
+Status: Revision Verified
+Plan-State: verified
 Progress-State: verification
 Priority: High
 App-ID: None
@@ -100,3 +100,24 @@ governance issues, commit, or push. Preserve unrelated in-progress changes.
   [ProposalManager.psm1](../../../modules/ProposalManager.psm1).
 - Keep any shared extraction narrowly scoped; do not introduce a competing
   lifecycle authority or a second host-transcript storage format.
+
+## 4. Operator-Requested Correction (2026-10-21)
+
+The original revision was accepted and committed as `3da5e62`. The operator
+requested these corrections under the same verified identity, CRP-303; the
+canonical `reinstate` transition preserves that acceptance history.
+
+- Exclude source/diff/quoted strings from confirmed runtime errors. Unlinked
+  diagnostic text is unresolved evidence, not part of the confirmed count.
+- Add a deterministic, read-only investigator with exact physical source
+  lines, numbered bounded context, recorded runtime locations, execution IDs,
+  arguments and status. Do not invent backtraces from adjacent records.
+- Remove filesystem/export timestamps from error attribution. Retain the
+  generation timestamp and genuinely recorded native event times.
+- Show successful, failed and unknown execution flow; distinguish recorded tool
+  purpose, preceding conversational context, explicit call links and shared
+  turns. Neither success nor purpose establishes authorization.
+- Optionally inspect exact supplied operational logs for literal diagnostic-text
+  corroboration, with line numbers and explicitly unverified execution identity.
+- Verify the supplied `task-602.log` diff yields zero findings, preserve both
+  host paths and read-only analysis, and stop at review without committing.

@@ -117,7 +117,7 @@ Describe 'Session failure mode analysis' {
     $selection = Select-FailureEvidence -Events $events -From 'again'
     $text = New-FailureMarkdown -Selection $selection -Findings @() -HostName Offline -SessionId fixture -Source fixture -Lifecycle @('valid') -Actions @('none') -Limitations @('limited') -GeneratedAt ([DateTimeOffset]'2026-10-21T19:20:30+02:00')
     $text | Should -Match 'Generator: Invoke-FailureModeAnalysis.ps1'
-    $text | Should -Match 'Version: 10.0.0'
+    $text | Should -Match 'Version: 10.0.1'
     $text | Should -Match '## Summary'
     $text | Should -Match '2026-10-21 19:20:30 \+02:00'
     $text | Should -Match 'Anchor: Literal user input: again'
@@ -210,7 +210,9 @@ Describe 'Session failure mode analysis' {
       $report | Should -Match 'Host: Antigravity'
       $report | Should -Match 'Permission or elevation boundary'
       $report | Should -Match 'task-1.log'
-      $report | Should -Match 'export times'
+      $report | Should -Match 'export timestamps are omitted'
+      $result.Findings | Should -Be 0
+      $result.Unresolved | Should -Be 1
     } finally {
       foreach ($name in $names) { [Environment]::SetEnvironmentVariable($name, $saved[$name]) }
     }
@@ -224,5 +226,122 @@ Describe 'Session failure mode analysis' {
     $text = @(Get-FailureLifecycleSection -Number $proposal.id -Store $store -Action do -DiagnosticPath $diagnostic)
     ($text -join ' ') | Should -Match 'LIFECYCLE STATUS FAILURE REPORT'
     (Get-FileHash $path).Hash | Should -Be $before
+  }
+
+  It 'excludes the supplied dependency-index diff rather than inventing Dispatch errors' {
+    $text = @'
+commit 73ae48c
+diff --git a/data/dependencies/forward-index.json b/data/dependencies/forward-index.json
+@@ -48270,8 +48270,8 @@
+-      "caller_file": "D:\\Git_Repositories\\LCM_Inventory\\tools\\Invoke-LcmProtocol.ps1",
+-      "caller_line": 142,
+-      "supplied_arguments": "Write-ToolLog -Message \"Dispatch error: $_\" -Level ERROR",
++      "caller_file": "D:\\Git_Repositories\\LCM_Inventory\\tools\\Invoke-MacriumBcrReview.ps1",
++      "caller_line": 87,
++      "supplied_arguments": "Test-Path -LiteralPath (Join-Path $lcmAiPath '.git')",
+'@
+    $event = [pscustomobject]@{Role='tool';Type='task_log';Failed=$false;Text=$text;Source='task-602.log';Timestamp=''}
+    @(Find-FailureEvidence @($event)).Count | Should -Be 0
+  }
+
+  It 'reports raw diagnostics as unresolved and gives an exact line and numbered context' {
+    $event = [pscustomobject]@{
+      Role='tool';Type='task_log';Failed=$false;Source='task-7.log';Timestamp=''
+      Text="starting`n[ERROR] Access is denied.`nat Invoke-Test, D:\repo\test.ps1: line 42`nfinished"
+    }
+    $finding = @(Find-FailureEvidence @($event))[0]
+    $finding.Disposition | Should -Be 'Unresolved evidence'
+    $finding.Source | Should -Be 'task-7.log:2'
+    ($finding.Context -join "`n") | Should -Match '2: \[ERROR\] Access is denied'
+    ($finding.Locations -join "`n") | Should -Match 'test.ps1: line 42'
+    $finding.Timestamp | Should -BeNullOrEmpty
+  }
+
+  It 'confirms nonzero task exits without promoting quoted or source strings' {
+    $event = [pscustomobject]@{
+      Role='tool';Type='task_log';Failed=$false;Source='task-8.log';Timestamp=''
+      Text="[ERROR] Access is denied.`nProcess exited with code 1"
+    }
+    $finding = @(Find-FailureEvidence @($event))[0]
+    $finding.Disposition | Should -Be 'Confirmed runtime failure'
+    $finding.ExitStatus | Should -Be '1'
+    $event.Text = "[ERROR] Access is denied.`nProcess exited with code 0"
+    @(Find-FailureEvidence @($event)).Count | Should -Be 0
+    $event.Text = '```text' + "`nProcess exited with code 1`n" + '```'
+    @(Find-FailureEvidence @($event)).Count | Should -Be 0
+    $event.Text = "diff --git a/log b/log`nProcess exited with code 1"
+    @(Find-FailureEvidence @($event)).Count | Should -Be 0
+    $event.Text = 'Write-ToolLog -Message "Dispatch error: $_" -Level ERROR'
+    @(Find-FailureEvidence @($event)).Count | Should -Be 0
+  }
+
+  It 'deduplicates repeated evidence from one execution but preserves independent calls' {
+    $one = [pscustomobject]@{Role='tool';Type='tool.execution_complete';CallId='one';Failed=$true;Source='e1';Timestamp='';Text="[ERROR] Access is denied.`n[ERROR] Access is denied."}
+    $two = [pscustomobject]@{Role='tool';Type='tool.execution_complete';CallId='two';Failed=$true;Source='e2';Timestamp='';Text=$one.Text}
+    @(Find-FailureEvidence @($one,$one,$two)).Count | Should -Be 2
+  }
+
+  It 'uses exact operational-log text only as unverified corroboration' {
+    $path = Join-Path $TestDrive 'operation.log'
+    @('unrelated', '[ERROR] The actual runtime diagnostic is sufficiently specific.') | Set-Content $path
+    $event = [pscustomobject]@{Role='tool';Type='tool_result';Failed=$true;Source='result';Timestamp='';Text='[ERROR] The actual runtime diagnostic is sufficiently specific.'}
+    $finding = @(Find-FailureEvidence @($event) -OperationalLogPaths @($path))[0]
+    $finding.Related.Count | Should -Be 1
+    $finding.Related[0] | Should -Match 'operation.log:2:'
+    $finding.Related[0] | Should -Match 'execution identity unverified'
+  }
+
+  It 'retains successful executions, physical JSONL lines, explicit IDs and stated tool purpose' {
+    $path = Join-Path $TestDrive 'flow.jsonl'
+    @(
+      '{"id":"u","type":"user.message","data":{"content":"Inspect repository status","turnId":"turn-1"}}'
+      ''
+      '{"id":"a","type":"assistant.message","data":{"content":"I will inspect the working tree."}}'
+      '{"id":"s","parentId":"a","type":"tool.execution_start","data":{"toolCallId":"call-1","turnId":"turn-1","toolName":"powershell","toolTitle":"Check status","arguments":{"command":"git status"}}}'
+      '{"id":"c","timestamp":"2026-10-21T20:00:00+02:00","type":"tool.execution_complete","data":{"toolCallId":"call-1","success":true,"result":{"content":"clean\n<shellId: 1 completed with exit code 0>"}}}'
+    ) | Set-Content $path
+    $parsed = @(Read-FailureTranscript $path)
+    $flow = @(Get-FailureExecutionFlow $parsed)
+    $flow.Count | Should -Be 1
+    $flow[0].Source | Should -Match 'flow.jsonl:4'
+    $flow[0].Request | Should -Match 'Inspect repository status'
+    $flow[0].Purpose | Should -Match 'Check status'
+    $flow[0].AssistantContext | Should -Match 'not proof of purpose'
+    $flow[0].Relationship | Should -Match 'Same recorded turn ID'
+    $flow[0].Outcome | Should -Match 'Command exit code: 0'
+    $flow[0].ParentId | Should -Be 'a'
+    $flow[0].Arguments.command | Should -Be 'git status'
+    @(Find-FailureEvidence $parsed).Count | Should -Be 0
+    $parsed[2].Arguments | Add-Member -NotePropertyName description -NotePropertyValue 'Inspect working tree for the requested status check'
+    @(Get-FailureExecutionFlow $parsed)[0].Purpose | Should -Match 'Inspect working tree.*tool argument description'
+  }
+
+  It 'does not invent normalized provider timestamps, purpose, or linkage by proximity' {
+    $path = Join-Path $TestDrive 'unlinked.jsonl'
+    @(
+      '{"role":"user","content":"Check something"}'
+      '{"role":"tool","type":"tool_call","tool_name":"powershell","timestamp":"2026-10-21T20:00:00+02:00","arguments":{"command":"git status"}}'
+      '{"role":"tool","type":"tool_result","content":"Tool execution completed."}'
+    ) | Set-Content $path
+    $parsed = @(Read-FailureTranscript $path)
+    $parsed[1].Timestamp | Should -BeNullOrEmpty
+    $flow = @(Get-FailureExecutionFlow $parsed)
+    $flow[0].Purpose | Should -Be 'No explicit purpose recorded.'
+    $flow[0].Outcome | Should -Match 'Unknown'
+    $flow[0].Relationship | Should -Match 'context only'
+  }
+
+  It 'renders confirmed and unresolved evidence separately without filesystem error times' {
+    $inputEvents = @(
+      [pscustomobject]@{Role='tool';Type='task_log';Failed=$true;Text='[ERROR] Denied runtime operation';Source='task-1.log';Timestamp=''}
+      [pscustomobject]@{Role='tool';Type='task_log';Failed=$false;Text='[ERROR] Uncertain raw diagnostic';Source='task-2.log';Timestamp=''}
+    )
+    $selection = Select-FailureEvidence -Events $events -From 'again'
+    $text = New-FailureMarkdown -Selection $selection -Findings @(Find-FailureEvidence $inputEvents) -HostName Offline -SessionId fixture -Source fixture -Lifecycle @() -Actions @() -Limitations @() -GeneratedAt ([DateTimeOffset]::Now)
+    $text | Should -Match 'Confirmed runtime failure findings: 1'
+    $text | Should -Match 'Unresolved evidence \(not counted as confirmed errors\): 1'
+    $text | Should -Match 'Source: task-1.log:1'
+    $text | Should -Not -Match '; time:|Recorded native event time'
+    $text | Should -Match '## Execution flow and recorded purpose'
   }
 }

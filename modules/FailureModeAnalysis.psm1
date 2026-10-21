@@ -5,7 +5,7 @@
   Module: FailureModeAnalysis
   Path: LCM_Inventory/modules/FailureModeAnalysis.psm1
   Authors: Rolf, Copilot
-  Version: 10.0.0
+  Version: 10.0.1
   Date: 2026-10-21
 #>
 Set-StrictMode -Version Latest
@@ -26,8 +26,14 @@ function Read-FailureTranscript {
   $raw = Get-Content -LiteralPath $Path -Raw -Encoding UTF8
   if ([string]::IsNullOrWhiteSpace($raw)) { throw "Transcript is empty: $Path" }
   if ([IO.Path]::GetExtension($Path) -ieq '.jsonl') {
+    $sourceLines = [Collections.Generic.List[int]]::new()
+    $lineNumber = 0
     $items = @(foreach ($line in ($raw -split '\r?\n')) {
-      if (-not [string]::IsNullOrWhiteSpace($line)) { $line | ConvertFrom-Json -ErrorAction Stop }
+      $lineNumber++
+      if (-not [string]::IsNullOrWhiteSpace($line)) {
+        $sourceLines.Add($lineNumber)
+        $line | ConvertFrom-Json -ErrorAction Stop
+      }
     })
   } else {
     $document = $raw | ConvertFrom-Json -ErrorAction Stop
@@ -40,11 +46,12 @@ function Read-FailureTranscript {
     $index++
     $type = [string](Get-FailureProperty $item 'type')
     $data = Get-FailureProperty $item 'data' $item
-    $callId = [string](Get-FailureProperty $data 'toolCallId')
+    $callId = [string](Get-FailureProperty $data 'toolCallId' (Get-FailureProperty $item 'tool_call_id'))
     if ($type -eq 'tool.execution_start' -and $callId) {
-      $toolNames[$callId] = [string](Get-FailureProperty $data 'toolName')
+      $toolNames[$callId] = $data
     }
-    $toolName = if ($callId -and $toolNames.ContainsKey($callId)) { $toolNames[$callId] } else { [string](Get-FailureProperty $item 'tool_name') }
+    $start = if ($callId -and $toolNames.ContainsKey($callId)) { $toolNames[$callId] } else { $data }
+    $toolName = [string](Get-FailureProperty $start 'toolName' (Get-FailureProperty $item 'tool_name'))
     $role = [string](Get-FailureProperty $item 'role')
     if ($type -eq 'user.message') { $role = 'user' }
     if ($type -eq 'assistant.message') { $role = 'assistant' }
@@ -57,6 +64,7 @@ function Read-FailureTranscript {
       if ($null -ne $errorValue) { $content += "`n" + ($errorValue | ConvertTo-Json -Depth 20 -Compress) }
     }
     $failed = (Get-FailureProperty $data 'success' $null) -eq $false
+    $failed = $failed -or $null -ne (Get-FailureProperty $data 'error' $null)
     $failed = $failed -or (Get-FailureProperty $data 'isError' $false) -eq $true
     $resultValue = Get-FailureProperty $data 'result' $null
     $failed = $failed -or (Get-FailureProperty $resultValue 'isError' $false) -eq $true
@@ -66,14 +74,19 @@ function Read-FailureTranscript {
     [pscustomobject]@{
       Index = $index
       Id = [string](Get-FailureProperty $item 'id' "event-$index")
-      Timestamp = $timeText
+      Timestamp = if ($type -like 'tool.*' -or $type -in @('user.message', 'assistant.message')) { $timeText } else { '' }
       Role = $role
       Type = $type
       Tool = $toolName
       Text = $content
       Failed = $failed
       KnownSuccess = (Get-FailureProperty $data 'success' $null) -eq $true
-      Source = "$Path (event $index)"
+      CallId = $callId
+      TurnId = [string](Get-FailureProperty $start 'turnId')
+      ParentId = [string](Get-FailureProperty $item 'parentId')
+      Arguments = Get-FailureProperty $start 'arguments' $null
+      ToolTitle = [string](Get-FailureProperty $start 'toolTitle')
+      Source = if ([IO.Path]::GetExtension($Path) -ieq '.jsonl') { "${Path}:$($sourceLines[$index - 1]) (event $index)" } else { "$Path (event $index)" }
     }
   }
 }
@@ -136,37 +149,157 @@ function Get-FailurePatterns {
   )
 }
 
-function Find-FailureEvidence {
+function Get-FailureTerminalExit {
   [CmdletBinding()]
-  param([AllowEmptyCollection()][object[]]$Events)
-  $patterns = @(Get-FailurePatterns)
-  foreach ($event in $Events) {
-    if ($event.Role -ne 'tool' -or $event.Type -notmatch 'result|complete|error|task_log') { continue }
-    $text = $event.Text -replace '\x1b\[[0-9;]*m', ''
-    if ((Get-FailureProperty $event 'KnownSuccess' $false) -and -not $event.Failed) {
-      if ((Get-FailureProperty $event 'Tool') -notmatch '(?i)(?:^|[._])(?:powershell|bash|shell|run_shell)$') { continue }
-      $exits = @([regex]::Matches($text, '(?im)^<shellId:[^\r\n]*completed with exit code (?<code>-?\d+)>\s*$|^Process exited with code (?<code>-?\d+)\s*$'))
-      if (-not $exits.Count -or [int]$exits[-1].Groups['code'].Value -eq 0) { continue }
+  param([object]$Event, [string[]]$Lines)
+  if ($null -eq $Lines) { $Lines = @(($Event.Text -replace '\x1b\[[0-9;]*m', '') -split '\r?\n') }
+  $last = $Lines.Count - 1
+  while ($last -ge 0 -and [string]::IsNullOrWhiteSpace($Lines[$last])) { $last-- }
+  $inFence = $false
+  $inDiff = $false
+  for ($i = 0; $i -le $last; $i++) {
+    if ($Lines[$i] -match '^diff --git |^@@ .* @@|^commit [a-f0-9]{7,40}$') { $inDiff = $true }
+    if ($Lines[$i] -match '^\s*`{3,}') { $inFence = -not $inFence }
+  }
+  if ($last -ge 0 -and -not $inFence -and (-not $inDiff -or $Event.Type -eq 'tool.execution_complete') -and
+    $Lines[$last] -match '^<shellId:.*completed with exit code (?<code>-?\d+)>\s*$|^Process exited with code (?<code>-?\d+)\s*$') {
+    [pscustomobject]@{ Code = [int]$Matches.code; Line = $last + 1 }
+  }
+}
+
+function Invoke-Investigator {
+  [CmdletBinding()]
+  param([object]$Event, [string[]]$OperationalLogPaths = @())
+  $lines = @(($Event.Text -replace '\x1b\[[0-9;]*m', '') -split '\r?\n')
+  $inDiff = $false
+  $inFence = $false
+  $candidates = [Collections.Generic.List[object]]::new()
+  $excluded = 0
+  $terminalExit = Get-FailureTerminalExit -Event $Event -Lines $lines
+  $exitCode = if ($null -ne $terminalExit) { $terminalExit.Code } else { $null }
+  $exitLine = if ($null -ne $terminalExit) { $terminalExit.Line } else { 0 }
+  for ($i = 0; $i -lt $lines.Count; $i++) {
+    $line = $lines[$i]
+    if ($line -match '^diff --git |^@@ .* @@|^commit [a-f0-9]{7,40}$') { $inDiff = $true }
+    if ($line -match '^\s*`{3,}') { $inFence = -not $inFence; continue }
+    if ($i + 1 -eq $exitLine) { continue }
+    $quoted = $inDiff -or $inFence -or $line -match '^\s*(?:[+-]\s*|"(?:supplied_arguments|content|command|Pattern|pattern)"\s*:|#|//)'
+    $runtime = $line -match '^\s*(?:\d{4}-\d{2}-\d{2}[T ][\d:.Z+-]+\s+)?(?:\[ERROR\]|[A-Za-z.]*Exception\s*:|Error\s*:|FullyQualifiedErrorId\s*:|Status\s*:\s*FAILED\b)'
+    $symptom = $line -match '(?i)not recognized|cannot be retrieved because it has not been set|access (?:is )?denied|cannot access the file|SharingViolation|LCMLCMLCM|stale buffer|stacked (?:review )?diff'
+    if ($quoted) {
+      if ($runtime -or $symptom -or $line -match '(?i)error:') { $excluded++ }
+      continue
     }
-    $failureMarker = '(?im)\[ERROR\]|Status\s*:\s*FAILED|(?:exit(?:ed with)?(?: code|code)?[:\s]+|exit code )(-?[1-9]\d*)\b|Exception:|FullyQualifiedErrorId|Error:'
-    if (-not $event.Failed -and $text -notmatch $failureMarker) { continue }
-    $matched = $false
-    foreach ($pattern in $patterns) {
-      $hits = @([regex]::Matches($text, "(?im)^.*(?:$($pattern.Pattern)).*$"))
-      foreach ($hit in $hits) {
-        $matched = $true
-        [pscustomobject]@{
-          Category = $pattern.Name; Evidence = $hit.Value.Trim(); Source = $event.Source
-          Timestamp = $event.Timestamp; Advice = $pattern.Advice
-        }
+    if ($runtime -or ($Event.Failed -and $symptom)) {
+      $candidates.Add([pscustomobject]@{ Line = $i + 1; Text = $line.Trim(); Runtime = $runtime })
+    }
+  }
+  $knownSuccess = Get-FailureProperty $Event 'KnownSuccess' $false
+  $shell = (Get-FailureProperty $Event 'Tool') -match '(?i)(?:^|[._])(?:powershell|bash|shell|run_shell)$'
+  $confirmed = $Event.Failed -or (($shell -or $Event.Type -eq 'task_log') -and $null -ne $exitCode -and $exitCode -ne 0)
+  if ($null -ne $exitCode -and $exitCode -eq 0 -and -not $Event.Failed) { $candidates.Clear() }
+  if ($knownSuccess -and -not $Event.Failed -and -not ($shell -and $null -ne $exitCode -and $exitCode -ne 0)) {
+    $candidates.Clear()
+  }
+  if (-not $candidates.Count -and $confirmed) {
+    $candidates.Add([pscustomobject]@{ Line = $exitLine; Text = 'Execution reported failure; no trustworthy runtime diagnostic was recovered.'; Runtime = $false })
+  }
+  $seen = @{}
+  foreach ($candidate in $candidates) {
+    if ($seen.ContainsKey($candidate.Text)) { continue }
+    $seen[$candidate.Text] = $true
+    $isConfirmed = $confirmed
+    $context = @()
+    if ($candidate.Line -gt 0) {
+      $first = [Math]::Max(0, $candidate.Line - 3)
+      $last = [Math]::Min($lines.Count - 1, $candidate.Line + 5)
+      $context = @(for ($j = $first; $j -le $last; $j++) { '{0}: {1}' -f ($j + 1), $lines[$j] })
+    }
+    $source = $Event.Source
+    if ($Event.Type -eq 'task_log' -and $candidate.Line -gt 0) { $source = "$($Event.Source):$($candidate.Line)" }
+    elseif ($candidate.Line -gt 0) { $source += "; output line $($candidate.Line)" }
+    $locations = @($context | Where-Object { $_ -match '(?i)\.ps(?:1|m1):\s*\d+|^\d+:\s*(?:at .+, .+: line \d+|ScriptStackTrace\s*:)' })
+    $related = @()
+    # Exact diagnostic text is corroboration, not proof of the same execution.
+    if ($isConfirmed -and $candidate.Text.Length -ge 24) {
+      foreach ($path in $OperationalLogPaths) {
+        $matches = @(Select-String -LiteralPath $path -SimpleMatch $candidate.Text | Select-Object -First 3)
+        foreach ($hit in $matches) { $related += "$($hit.Path):$($hit.LineNumber): $($hit.Line) [exact-text match; execution identity unverified]" }
       }
     }
-    if (-not $matched) {
-      $lines = @($text -split '\r?\n' | Where-Object { $_ -match $failureMarker })
-      $excerpt = if ($lines.Count) { $lines[0] } elseif ($text) { $text } else { 'Tool reported failure without an error body.' }
-      [pscustomobject]@{
-        Category = 'Unclassified tool failure'; Evidence = $excerpt; Source = $event.Source
-        Timestamp = $event.Timestamp; Advice = 'Inspect the cited tool result; no catalog root cause is established.'
+    [pscustomobject]@{
+      Disposition = if ($isConfirmed) { 'Confirmed runtime failure' } else { 'Unresolved evidence' }
+      Evidence = $candidate.Text; Source = $source; Context = $context; Locations = $locations
+      Timestamp = [string](Get-FailureProperty $Event 'Timestamp')
+      Related = $related; Excluded = $excluded
+      Command = Get-FailureProperty $Event 'Arguments' $null
+      CallId = Get-FailureProperty $Event 'CallId'
+      ExitStatus = if ($null -ne $exitCode) { [string]$exitCode } else { 'not recorded' }
+    }
+  }
+}
+
+function Get-FailureExecutionFlow {
+  [CmdletBinding()]
+  param([AllowEmptyCollection()][object[]]$Events)
+  $request = $null
+  $purpose = $null
+  $calls = @{}
+  foreach ($event in $Events) {
+    if ($event.Role -eq 'user') { $request = $event; $purpose = $null; continue }
+    if ($event.Role -eq 'assistant' -and $event.Text) { $purpose = $event; continue }
+    if ($event.Role -ne 'tool') { continue }
+    $callId = [string](Get-FailureProperty $event 'CallId')
+    if ($event.Type -match 'execution_start|tool_call') {
+      $arguments = Get-FailureProperty $event 'Arguments' $null
+      $description = [string](Get-FailureProperty $arguments 'description')
+      $entry = [pscustomobject]@{
+        Source = $event.Source; Tool = Get-FailureProperty $event 'Tool'; CallId = $callId
+        ParentId = Get-FailureProperty $event 'ParentId'; TurnId = Get-FailureProperty $event 'TurnId'
+        Arguments = $arguments
+        Request = if ($request) { "$($request.Text) [source: $($request.Source)]" } else { 'Unavailable in selected scope.' }
+        Purpose = if ($description) { "$description [tool argument description; source: $($event.Source)]" } elseif (Get-FailureProperty $event 'ToolTitle') { "$(Get-FailureProperty $event 'ToolTitle') [tool title; source: $($event.Source)]" } else { 'No explicit purpose recorded.' }
+        AssistantContext = if ($purpose) { "$($purpose.Text) [source: $($purpose.Source); preceding statement, not proof of purpose]" } else { 'No preceding assistant statement in selected scope.' }
+        Relationship = 'Preceding conversation context only; request-to-execution causation and authorization are not established.'
+        Outcome = 'Unknown: no explicitly linked completion record.'
+      }
+      if ($request -and $entry.TurnId -and $entry.TurnId -eq (Get-FailureProperty $request 'TurnId')) {
+        $entry.Relationship = 'Same recorded turn ID as user request; not proof of authorization or appropriateness.'
+      }
+      if ($callId) { $calls[$callId] = $entry }
+      $entry
+    } elseif ($callId -and $calls.ContainsKey($callId) -and $event.Type -match 'complete|result') {
+      $terminalExit = if ($calls[$callId].Tool -match '(?i)(?:^|[._])(?:powershell|bash|shell|run_shell)$') { Get-FailureTerminalExit -Event $event } else { $null }
+      $calls[$callId].Outcome = if ($event.Failed) { "Failed; completion: $($event.Source)" } elseif (Get-FailureProperty $event 'KnownSuccess' $false) {
+        if ($null -ne $terminalExit) {
+          "Command exit code: $($terminalExit.Code); completion explicitly linked by call ID: $($event.Source)"
+        } else { "Tool transport succeeded; runtime outcome not recorded. Completion explicitly linked by call ID: $($event.Source)" }
+      } else { "Completion linked by call ID; runtime status unavailable. Source: $($event.Source)" }
+    }
+  }
+}
+
+function Find-FailureEvidence {
+  [CmdletBinding()]
+  param([AllowEmptyCollection()][object[]]$Events, [string[]]$OperationalLogPaths = @())
+  $patterns = @(Get-FailurePatterns)
+  $seenExecutions = @{}
+  foreach ($event in $Events) {
+    if ($event.Role -ne 'tool' -or $event.Type -notmatch 'result|complete|error|task_log') { continue }
+    $callId = [string](Get-FailureProperty $event 'CallId')
+    $identity = if ($callId) { "$callId`n$($event.Type)`n$($event.Text)" } else { '' }
+    if ($identity -and $seenExecutions.ContainsKey($identity)) { continue }
+    if ($identity) { $seenExecutions[$identity] = $true }
+    foreach ($investigation in @(Invoke-Investigator -Event $event -OperationalLogPaths $OperationalLogPaths)) {
+      $matched = $false
+      foreach ($pattern in $patterns) {
+        if ($investigation.Evidence -match $pattern.Pattern) {
+          $matched = $true
+          $investigation | Select-Object *, @{n='Category';e={$pattern.Name}}, @{n='Advice';e={$pattern.Advice}}
+        }
+      }
+      if (-not $matched) {
+        $investigation | Select-Object *, @{n='Category';e={'Unclassified tool failure'}}, @{n='Advice';e={'Inspect the cited runtime evidence; no catalog root cause is established.'}}
       }
     }
   }
@@ -206,11 +339,12 @@ function New-FailureMarkdown {
   $lines = [Collections.Generic.List[string]]::new()
   foreach ($line in @(
     '# Catalog of Execution Errors & Failure Modes', '',
-    'Generator: Invoke-FailureModeAnalysis.ps1', 'Version: 10.0.0',
+    'Generator: Invoke-FailureModeAnalysis.ps1', 'Version: 10.0.1',
     "Generated: $($GeneratedAt.ToString('yyyy-MM-dd HH:mm:ss zzz'))",
     "Host: $HostName", "Session: $SessionId", "Source: $Source", '',
     '## Summary', '',
-    "- Observed failure findings: $($Findings.Count).",
+    "- Confirmed runtime failure findings: $(@($Findings | Where-Object Disposition -EQ 'Confirmed runtime failure').Count).",
+    "- Unresolved evidence (not counted as confirmed errors): $(@($Findings | Where-Object Disposition -EQ 'Unresolved evidence').Count).",
     "- Selected transcript events: $($Selection.Events.Count).",
     "- Item number: $($Selection.Number) (0 means unavailable).",
     "- Anchor matches: $($Selection.Matches); the latest match is selected when repeated.",
@@ -222,21 +356,55 @@ function New-FailureMarkdown {
   $lines.Add("Anchor: $($Selection.Anchor)")
   if ($Selection.Events.Count) {
     $first = $Selection.Events[0]; $last = $Selection.Events[-1]
-    $lines.Add("From event $($first.Index) / $($first.Id) ($($first.Timestamp)) through event $($last.Index) / $($last.Id) ($($last.Timestamp)).")
+    $lines.Add("From event $($first.Index) / $($first.Id) through event $($last.Index) / $($last.Id).")
   }
   $lines.Add('')
   $lines.Add('## Observed failures')
   $lines.Add('')
   $lines.Add('Pattern matches are symptoms. Historical root causes are hypotheses, not verified explanations for this run.')
-  if (-not $Findings.Count) { $lines.Add('No matching tool failures were found in the available evidence; this is not proof of error-free execution.') }
-  foreach ($finding in $Findings) {
+  if (-not @($Findings | Where-Object Disposition -EQ 'Confirmed runtime failure').Count) { $lines.Add('No confirmed tool failures were found in the available evidence; this is not proof of error-free execution.') }
+  foreach ($finding in @($Findings | Where-Object Disposition -EQ 'Confirmed runtime failure')) {
     $lines.Add('')
     $lines.Add("### $($finding.Category)")
-    $lines.Add("Source: $($finding.Source); time: $($finding.Timestamp)")
+    $lines.Add("Source: $($finding.Source)")
+    if ($finding.Timestamp) { $lines.Add("Recorded native event time (not filesystem time): $($finding.Timestamp)") }
+    $lines.Add("Call ID: $($finding.CallId); exit status: $($finding.ExitStatus)")
+    if ($null -ne $finding.Command) { $lines.Add("Arguments: $($finding.Command | ConvertTo-Json -Depth 20 -Compress)") }
     $lines.Add('````text')
     $lines.Add(($finding.Evidence -replace '`', "'"))
     $lines.Add('````')
+    $lines.Add('Numbered output context (nearby text is not a backtrace):')
+    $lines.Add('````text')
+    $lines.Add((($finding.Context -join "`r`n") -replace '`', "'"))
+    $lines.Add('````')
+    $lines.Add("Runtime location/stack excerpts: $(if ($finding.Locations.Count) { $finding.Locations -join '; ' } else { 'Not available in cited context.' })")
+    $lines.Add("Complementary logs: $(if ($finding.Related.Count) { $finding.Related -join '; ' } else { 'No exact diagnostic-text corroboration in supplied logs; no causal correlation established.' })")
     $lines.Add("Investigation / countermeasure: $($finding.Advice)")
+  }
+  $lines.Add('')
+  $lines.Add('## Unresolved evidence (not confirmed errors)')
+  foreach ($finding in @($Findings | Where-Object Disposition -EQ 'Unresolved evidence')) {
+    $lines.Add("- $($finding.Source): $($finding.Evidence) [No failing execution status; inspect source before attributing a failure.]")
+    $lines.Add('````text')
+    $lines.Add((($finding.Context -join "`r`n") -replace '`', "'"))
+    $lines.Add('````')
+  }
+  $lines.Add('')
+  $lines.Add('## Execution flow and recorded purpose')
+  $lines.Add('Includes successful and unknown executions. Success does not establish appropriateness; purpose does not establish authorization. No hidden reasoning is inferred.')
+  $flow = @(Get-FailureExecutionFlow -Events $Selection.Events)
+  if (-not $flow.Count) { $lines.Add('No tool-start metadata available in selected scope.') }
+  foreach ($entry in $flow) {
+    $lines.Add('')
+    $lines.Add("### Tool: $($entry.Tool)")
+    $lines.Add("Source: $($entry.Source)")
+    $lines.Add("Call ID: $($entry.CallId); turn ID: $($entry.TurnId); parent event ID: $($entry.ParentId)")
+    $lines.Add("Link strength: $($entry.Relationship)")
+    $lines.Add("Outcome: $($entry.Outcome)")
+    $lines.Add('````text')
+    $details = "User request/context: $($entry.Request)`r`nRecorded stated purpose: $($entry.Purpose)`r`nAssistant context: $($entry.AssistantContext)`r`nArguments: $($entry.Arguments | ConvertTo-Json -Depth 20 -Compress)"
+    $lines.Add(($details -replace '`', "'"))
+    $lines.Add('````')
   }
   $lines.Add('')
   $lines.Add('## Catalog category coverage')
@@ -269,4 +437,4 @@ function Write-FailureMarkdown {
   return $path
 }
 
-Export-ModuleMember -Function Read-FailureTranscript, Select-FailureEvidence, Find-FailureEvidence, Get-FailureLifecycleSection, New-FailureMarkdown, Write-FailureMarkdown
+Export-ModuleMember -Function Read-FailureTranscript, Select-FailureEvidence, Invoke-Investigator, Get-FailureExecutionFlow, Find-FailureEvidence, Get-FailureLifecycleSection, New-FailureMarkdown, Write-FailureMarkdown

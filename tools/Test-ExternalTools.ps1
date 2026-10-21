@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-  Verifies the external tools and Everything content-index settings declared in docs\Requisites\external-tools.json.
+  Verifies the external tools and Everything content-index settings declared in LCM_AI\docs\Requisites\external-tools.json.
 .DESCRIPTION
   Reads Git_Root from the Machine environment (registry) only, loads the Requisites manifest and checks:
     1. every tool's probe executable exists in its install directory,
@@ -11,7 +11,8 @@
 .EXAMPLE
   pwsh LCM_Inventory/tools/Test-ExternalTools.ps1
 .NOTES
-  Version: 10.0.0
+  Version: 10.0.1
+  Date: 2026-10-21
 #>
 [CmdletBinding()]
 param(
@@ -24,13 +25,16 @@ $ErrorActionPreference = 'Stop'
 
 if ($Help) {
   Write-Host 'Usage: Test-ExternalTools.ps1 [-h]'
-  Write-Host 'Checks external tools, Machine PATH entries, es.exe and Everything.ini content-index settings from docs\Requisites\external-tools.json.'
+  Write-Host 'Checks external tools, Machine PATH entries, es.exe and Everything.ini content-index settings from LCM_AI\docs\Requisites\external-tools.json.'
   return
 }
 
 $gitRoot = [Environment]::GetEnvironmentVariable('Git_Root', 'Machine')
 if ([string]::IsNullOrWhiteSpace($gitRoot)) { throw 'Machine environment value Git_Root is not set. Run SetGitRoot (elevated).' }
-$manifestFile = Join-Path $gitRoot 'docs\Requisites\external-tools.json'
+$manifestFile = Join-Path $gitRoot 'LCM_AI\docs\Requisites\external-tools.json'
+if (-not (Test-Path -LiteralPath $manifestFile)) {
+  $manifestFile = Join-Path $gitRoot 'docs\Requisites\external-tools.json'
+}
 if (-not (Test-Path -LiteralPath $manifestFile)) { throw "Requisites manifest not found: $manifestFile" }
 $req = Get-Content -LiteralPath $manifestFile -Raw | ConvertFrom-Json
 
