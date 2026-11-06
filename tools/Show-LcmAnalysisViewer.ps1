@@ -7,8 +7,8 @@
            and sortable LCM-standard HTML viewer, and optionally opens it.
   Path: tools/Show-LcmAnalysisViewer.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.0
-  Date: 2026-10-13
+  Version: 10.0.1
+  Date: 2026-10-21
 #>
 
 [CmdletBinding()]
@@ -36,7 +36,9 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$scriptVersion = '10.0.0'
+Import-Module -Name (Join-Path $PSScriptRoot '..\modules\LcmDisplayVersion.psm1') -Force
+$scriptVersion = Get-LcmDisplaySourceVersion -Path $PSCommandPath
+$provenance = Get-LcmDisplayProvenance -ScriptPath $PSCommandPath -TemplatePath $PSCommandPath
 $scriptName = 'Show-LcmAnalysisViewer'
 
 if ($Help) {
@@ -311,7 +313,7 @@ $html = @"
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>$title</title>
+  <title>$title $($provenance.Label)</title>
   <style>
     :root {
       --ink: #172127;
@@ -402,7 +404,9 @@ $html = @"
   </style>
 </head>
 <body>
+  <aside role="status">Retained analysis evidence snapshot. Reloading this view never reruns analysis.</aside>
   <header class="topbar">
+    <span>$($provenance.Label)</span>
     <div class="brand"><strong>LCM ANALYSIS VIEWER</strong><span>LEVEL 1 / FUNCTIONAL DOCUMENTATION TRACEABILITY</span></div>
     <div class="header-meta">Generated: $generatedAt</div>
     <div class="header-actions">
@@ -557,6 +561,8 @@ $html = @"
       localStorage.setItem('lcm_theme', theme); initTheme();
     });
     document.getElementById('refresh-button').addEventListener('click', () => location.reload());
+    document.getElementById('refresh-button').title = 'Reload this retained evidence snapshot; do not rerun analysis.';
+    document.getElementById('refresh-button').textContent = 'Reload snapshot';
     document.getElementById('reset-button').addEventListener('click', () => {
       document.getElementById('query').value = '';
       state.metricFilters = {};
@@ -599,12 +605,8 @@ Write-AnalysisLog -Message "Rendered $($elements.Count) functional elements to $
 Write-Host "Rendered LCM Analysis Viewer dashboard: $OutputPath" -ForegroundColor Green
 
 if (-not $NoLaunch) {
-  $workspaceRoot = Split-Path $repositoryRoot -Parent
-  $dispatcher = Join-Path $workspaceRoot 'LCM_Tools\Invoke-InteractiveDesktop.ps1'
-  if (Test-Path -LiteralPath $dispatcher -PathType Leaf) {
-    & pwsh -NoProfile -File $dispatcher -FilePath 'explorer.exe' -ArgumentList ('"' + $OutputPath + '"') | Out-Null
-  } else {
-    Start-Process -FilePath $OutputPath
-  }
+  Import-Module -Name (Join-Path $repositoryRoot 'modules\LcmStandardDisplay.psm1') -Force
+  $snapshotId = Publish-LcmEvidenceSnapshot -Path $OutputPath
+  Open-LcmStandardDisplay -DisplayId snapshot -SnapshotId $snapshotId
   Write-AnalysisLog -Message "Launched HTML dashboard: $OutputPath." -Level INFO
 }

@@ -1,3 +1,14 @@
+<#
+.SYNOPSIS
+  Verifies session failure analysis and evidence preservation.
+.NOTES
+  Module: FailureModeAnalysis.Tests
+  Purpose: Covers evidence selection, classification, serialization and analyzer integration.
+  Path: LCM_Inventory/tests/FailureModeAnalysis.Tests.ps1
+  Authors: Rolf, Copilot
+  Version: 10.0.1
+  Date: 2026-10-21
+#>
 Describe 'Session failure mode analysis' {
   BeforeAll {
     $root = Split-Path $PSScriptRoot -Parent
@@ -124,13 +135,61 @@ Describe 'Session failure mode analysis' {
     $text | Should -Not -Match '(?<!\r)\n'
   }
 
+  It 'serializes complete event text, arguments, source identity and execution flow without rewriting strings' {
+    $toolArguments = [pscustomobject]@{
+      command = "git diff --cached`n@@ -1 +1 @@`n+literal \n characters"
+      nested = [pscustomobject]@{ patch = "diff --git a/a b/a`n+actual patch" }
+    }
+    $inputEvents = @(
+      [pscustomobject]@{Index=1;Id='u1';Role='user';Type='message';Text="inspect CRP-304`nsecond line";Timestamp='2026-10-21T20:00:00+02:00';Failed=$false;Source='events.jsonl:1 (event 1)';Arguments=$null;KnownSuccess=$false}
+      [pscustomobject]@{Index=2;Id='t1';Role='tool';Type='tool.execution_start';Text='';Timestamp='';Failed=$false;Source='events.jsonl:2 (event 2)';Arguments=$toolArguments;KnownSuccess=$false;Tool='powershell';CallId='call-1';TurnId='turn-1';ParentId='a1';ToolTitle='Inspect diff'}
+    )
+    $selection = Select-FailureEvidence -Events $inputEvents -Number 304
+    $structured = New-FailureStructuredEvidence -Selection $selection -Findings @() -HostName Offline -SessionId fixture -Source 'events.jsonl' -Lifecycle @('read-only') -Actions @() -Limitations @() -GeneratedAt ([DateTimeOffset]'2026-10-21T20:00:00+02:00')
+    $roundTrip = $structured | ConvertTo-Json -Depth 100 | ConvertFrom-Json
+    $roundTrip.Events[1].Arguments.command | Should -Be $toolArguments.command
+    $roundTrip.Events[1].Arguments.nested.patch | Should -Be $toolArguments.nested.patch
+    $roundTrip.Events[1].Source | Should -Be 'events.jsonl:2 (event 2)'
+    $roundTrip.ExecutionFlow[0].Arguments.command | Should -Be $toolArguments.command
+    $roundTrip.Events[0].Text | Should -Be "inspect CRP-304`nsecond line"
+    $roundTrip.Producer | Should -Be 'Invoke-FailureModeAnalysis.ps1'
+    $roundTrip.ProducerVersion | Should -Be '10.0.1'
+  }
+
+  It 'writes a Markdown and JSON sibling pair without a BOM or evidence loss' {
+    $selection = Select-FailureEvidence -Events $events -From 'again'
+    $arguments = [pscustomobject]@{diff = "diff --git a/file b/file`n+full patch"}
+    $selection.Events += [pscustomobject]@{
+      Index=5;Id='tool';Role='tool';Type='tool.execution_start';Text='';Timestamp='';Failed=$false
+      KnownSuccess=$false;Tool='shell';CallId='call-5';TurnId='';ParentId='';Source='fixture:5';Arguments=$arguments;ToolTitle=''
+    }
+    $evidence = New-FailureStructuredEvidence -Selection $selection -Findings @() -HostName Offline -SessionId fixture -Source fixture -Lifecycle @() -Actions @() -Limitations @() -GeneratedAt ([DateTimeOffset]'2026-10-21T20:00:00+02:00')
+    $reports = Write-FailureReportPair -Directory $TestDrive -GeneratedAt ([DateTimeOffset]'2026-10-21T20:00:00+02:00') -Markdown 'report' -Evidence $evidence
+    [IO.Path]::GetFileNameWithoutExtension($reports.MarkdownPath) | Should -Be ([IO.Path]::GetFileNameWithoutExtension($reports.JsonPath))
+    $bytes = [IO.File]::ReadAllBytes($reports.JsonPath)
+    ($bytes[0] -eq 0xEF -and $bytes[1] -eq 0xBB -and $bytes[2] -eq 0xBF) | Should -BeFalse
+    $written = Get-Content -LiteralPath $reports.JsonPath -Raw | ConvertFrom-Json
+    $written.Events[-1].Arguments.diff | Should -Be "diff --git a/file b/file`n+full patch"
+  }
+
   It 'does not create a report when a requested anchor is absent' {
     $path = Join-Path $TestDrive 'absent.jsonl'
     '{"role":"user","content":"unrelated request"}' | Set-Content $path
     $outDir = Join-Path $TestDrive 'missing-anchor-output'
     New-Item $outDir -ItemType Directory | Out-Null
-    { & $tool -TranscriptPath $path -From 'not present' -OutputDirectory $outDir } | Should -Throw '*anchor was not found*'
+    { & $tool -TranscriptPath $path -From 'not present' -OutputDirectory $outDir -NoLaunch -SnapshotRoot (Join-Path $outDir 'snapshots') } | Should -Throw '*anchor was not found*'
     @(Get-ChildItem $outDir).Count | Should -Be 0
+  }
+
+  It 'rejects a custom snapshot root before analysis or report writes when launch is requested' {
+    $path = Join-Path $TestDrive 'custom-root.jsonl'
+    '{"role":"user","content":"inspect custom snapshot behavior"}' | Set-Content -LiteralPath $path
+    $outDir = Join-Path $TestDrive 'custom-root-output'
+    New-Item -Path $outDir -ItemType Directory | Out-Null
+    $customRoot = Join-Path $TestDrive 'custom-root-snapshots'
+    { & $tool -TranscriptPath $path -From 'inspect custom snapshot behavior' -OutputDirectory $outDir -SnapshotRoot $customRoot } | Should -Throw '*requires -NoLaunch*'
+    @(Get-ChildItem -LiteralPath $outDir).Count | Should -Be 0
+    Test-Path -LiteralPath $customRoot | Should -BeFalse
   }
 
   It 'runs offline without lifecycle changes and never overwrites a same-second report' {
@@ -142,9 +201,9 @@ Describe 'Session failure mode analysis' {
     $outDir = Join-Path $TestDrive 'reports'
     New-Item $outDir -ItemType Directory | Out-Null
     $before = (Get-FileHash (Join-Path $root 'data\proposals\proposals.json')).Hash
-    $one = & $tool -TranscriptPath $path -From 'inspect this failure' -OutputDirectory $outDir
+    $one = & $tool -TranscriptPath $path -From 'inspect this failure' -OutputDirectory $outDir -NoLaunch -SnapshotRoot (Join-Path $outDir 'snapshots')
     $hash = (Get-FileHash $one.ReportPath).Hash
-    $two = & $tool -TranscriptPath $path -From 'inspect this failure' -OutputDirectory $outDir
+    $two = & $tool -TranscriptPath $path -From 'inspect this failure' -OutputDirectory $outDir -NoLaunch -SnapshotRoot (Join-Path $outDir 'snapshots')
     $one.ReportPath | Should -Not -Be $two.ReportPath
     (Get-FileHash $one.ReportPath).Hash | Should -Be $hash
     (Get-FileHash (Join-Path $root 'data\proposals\proposals.json')).Hash | Should -Be $before
@@ -178,7 +237,7 @@ Describe 'Session failure mode analysis' {
         '{"id":"t","timestamp":"now","type":"tool.execution_complete","data":{"success":false,"toolCallId":"call","result":{"content":"Access is denied."}}}'
       ) | Set-Content (Join-Path $session 'events.jsonl')
       $beforeTemps = @(Get-ChildItem ([IO.Path]::GetTempPath()) -Filter 'FailureModeAnalysis-*.jsonl' | Select-Object -ExpandProperty FullName)
-      $result = & $tool -From 'check provider evidence' -OutputDirectory $TestDrive
+      $result = & $tool -From 'check provider evidence' -OutputDirectory $TestDrive -NoLaunch -SnapshotRoot (Join-Path $TestDrive 'copilot-snapshots')
       $report = Get-Content $result.ReportPath -Raw
       $report | Should -Match 'Host: Copilot'
       $report | Should -Match 'Permission or elevation boundary'
@@ -205,7 +264,7 @@ Describe 'Session failure mode analysis' {
       & 'D:\Tools\Python314\python.exe' -c "import sqlite3,sys; c=sqlite3.connect(sys.argv[1]); c.execute('CREATE TABLE steps (idx INTEGER, step_type INTEGER, status INTEGER, step_payload BLOB)'); c.execute('INSERT INTO steps VALUES (1,14,0,?)',(b'check antigravity provider evidence',)); c.commit(); c.close()" $db
       if ($LASTEXITCODE -ne 0) { throw 'Could not create the Antigravity provider fixture.' }
       '[ERROR] Access is denied.' | Set-Content (Join-Path $tasks 'task-1.log')
-      $result = & $tool -From 'antigravity provider evidence' -OutputDirectory $TestDrive
+      $result = & $tool -From 'antigravity provider evidence' -OutputDirectory $TestDrive -NoLaunch -SnapshotRoot (Join-Path $TestDrive 'antigravity-snapshots')
       $report = Get-Content $result.ReportPath -Raw
       $report | Should -Match 'Host: Antigravity'
       $report | Should -Match 'Permission or elevation boundary'

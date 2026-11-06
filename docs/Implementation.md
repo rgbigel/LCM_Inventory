@@ -183,6 +183,20 @@ projects its persisted state; it does not infer or change a transition. The
 two review checkpoints deliberately use matching labels: **`1 - REVIEW`** is
 the plan/activation decision and **`2 - REVIEW`** is the BCR/operator decision.
 
+`Set-ProposalStore` also projects changed lifecycle states into the owning
+bundle's `Specification.md` YAML header using `ProposalSpecificationState.psm1`.
+Only `Status`, `Plan-State`, and `Progress-State` are replaced; the contract
+body and unrelated metadata remain unchanged. Deferred batch transitions are
+mirrored when the batch is persisted. New suggested bundles initialize their
+own headers, and legacy records without bundles remain supported. Unchanged
+states do not trigger historical-document reconciliation.
+
+All affected headers are validated before writes. The ledger is staged beside
+its destination and replaced only after specification writes succeed. A failed
+write leaves the previous ledger intact and restores written specifications;
+rollback errors are reported explicitly. This is failure recovery, not a
+cross-file crash-atomic transaction.
+
 ```mermaid
 stateDiagram-v2
   [*] --> suggested: create / propose

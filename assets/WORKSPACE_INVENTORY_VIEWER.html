@@ -1,9 +1,16 @@
+<!--
+  Template: WORKSPACE_INVENTORY_VIEWER.html
+  Version: 10.0.1
+  Date: 2026-10-21
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LCM Workspace Inventory Explorer V10.0.0</title>
+    <meta name="lcm-display-id" content="inventory">
+    <script src="/assets/lcm-display-freshness.js" defer></script>
+    <title>LCM Workspace Inventory Explorer {{DISPLAY_VERSION}}</title>
     <style>
         :root {
             --bg-primary: #0d1117;
@@ -229,7 +236,7 @@
         <header>
             <div class="header-title">
                 <div>
-                    <h1>🛠️ LCM Workspace Inventory Explorer <span style="font-size: 0.6em; color: var(--text-muted); vertical-align: middle;">V10.0.0</span></h1>
+                    <h1>🛠️ LCM Workspace Inventory Explorer <span style="font-size: 0.6em; color: var(--text-muted); vertical-align: middle;">{{DISPLAY_VERSION}}</span></h1>
                     <div class="header-meta">
                         <span>Workspace Root: <strong>D:\Git_Repositories</strong></span>
                         <span>•</span>
@@ -238,7 +245,7 @@
                 </div>
             </div>
             <div class="header-actions">
-                <button class="btn btn-back-nav" onclick="window.history.length > 1 ? window.history.back() : window.location.href='../../LCM_Inventory/tools/scratch/User_Tools_Explorer_LCM.html'" title="Return to LCM Tool Explorer (Windows-style Back)">
+                <button class="btn btn-back-nav" onclick="window.history.length > 1 ? window.history.back() : window.location.href='/tools'" title="Return to LCM Tool Explorer (Windows-style Back)">
                     <span>⬅️</span> <span>Back</span>
                 </button>
                 <button class="btn" id="btn-theme-toggle" onclick="toggleThemeLocal()" title="Switch Light/Dark display modes">
@@ -307,9 +314,11 @@
 
     <div class="toast" id="toast">✓ Action Dispatched</div>
 
+    <script id="lcm-display-data" type="application/json">{"inventory":{"repositories":[]},"docs":{},"__lcm_unrendered_template__":true}</script>
     <script>
-        /*__INJECTED_INVENTORY_DATA__*/
-
+        const inventoryPayload = JSON.parse(document.getElementById("lcm-display-data").textContent);
+        let INVENTORY_DATA = inventoryPayload.inventory || {};
+        let DOCS_CACHE = inventoryPayload.docs || {};
         const DAEMON_PORT = 9876;
         let activeCategory = 'ALL';
 
@@ -496,7 +505,7 @@
 
         async function unGitRepo(repoName, path) {
             if (!confirm(`⚠️ Are you sure you want to UN-GIT '${repoName}'?\nThis will permanently remove '${path}\\.git' and convert it to a plain folder.`)) return;
-            const cmd = `Remove-Item -LiteralPath '${path}\\.git' -Recurse -Force; pwsh -File LCM_Inventory/tools/Invoke-WorkspaceAudit.ps1`;
+            const cmd = `Remove-Item -LiteralPath '${path}\\.git' -Recurse -Force`;
             try {
                 await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
                     method: "POST",
@@ -504,7 +513,7 @@
                     body: JSON.stringify({ command: cmd, elevated: false, noExit: false })
                 });
                 showToast("🚫 Un-Git executed for: " + repoName);
-                setTimeout(refreshAudit, 1500);
+                if (window.LcmDisplay) await window.LcmDisplay.refresh();
             } catch(e) {
                 alert("Failed to un-git: " + e.message);
             }
@@ -515,7 +524,7 @@
             if (!newName || newName === oldName) return;
             const parentDir = oldPath.substring(0, oldPath.lastIndexOf('\\\\'));
             const newPath = parentDir + '\\\\' + newName;
-            const cmd = `Rename-Item -LiteralPath '${oldPath}' -NewName '${newName}'; pwsh -File LCM_Inventory/tools/Invoke-WorkspaceAudit.ps1`;
+            const cmd = `Rename-Item -LiteralPath '${oldPath}' -NewName '${newName}'`;
             try {
                 await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
                     method: "POST",
@@ -523,7 +532,7 @@
                     body: JSON.stringify({ command: cmd, elevated: false, noExit: false })
                 });
                 showToast(`✏️ Renamed '${oldName}' to '${newName}'`);
-                setTimeout(refreshAudit, 1500);
+                if (window.LcmDisplay) await window.LcmDisplay.refresh();
             } catch(e) {
                 alert("Failed to rename: " + e.message);
             }
@@ -531,7 +540,7 @@
 
         async function deleteRepo(repoName, path) {
             if (!confirm(`🚨 CRITICAL: Are you sure you want to DELETE '${repoName}'?\nTarget Path: ${path}\nThis action cannot be undone.`)) return;
-            const cmd = `Remove-Item -LiteralPath '${path}' -Recurse -Force; pwsh -File LCM_Inventory/tools/Invoke-WorkspaceAudit.ps1`;
+            const cmd = `Remove-Item -LiteralPath '${path}' -Recurse -Force`;
             try {
                 await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
                     method: "POST",
@@ -539,7 +548,7 @@
                     body: JSON.stringify({ command: cmd, elevated: false, noExit: false })
                 });
                 showToast(`🗑️ Deleted '${repoName}'`);
-                setTimeout(refreshAudit, 1500);
+                if (window.LcmDisplay) await window.LcmDisplay.refresh();
             } catch(e) {
                 alert("Failed to delete: " + e.message);
             }
@@ -551,22 +560,15 @@
         }
 
         async function refreshAudit() {
-            showToast("🔄 Running Workspace Audit...");
-            const cmd = `pwsh -File LCM_Inventory/tools/Invoke-WorkspaceAudit.ps1; pwsh -File LCM_Inventory/tools/Show-WorkspaceInventoryApp.ps1 -NoLaunch`;
-            try {
-                await fetch(`http://127.0.0.1:${DAEMON_PORT}/execute`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ command: cmd, elevated: false, noExit: false })
-                });
-                setTimeout(() => location.reload(), 2000);
-            } catch(e) {
-                location.reload();
+            if (!window.LcmDisplay || typeof window.LcmDisplay.refresh !== "function") {
+                showToast("Display refresh is unavailable; the current snapshot is retained.");
+                return;
             }
+            return window.LcmDisplay.refresh();
         }
 
         function openControlHub() {
-            window.open('file:///D:/Git_Repositories/LCM_Inventory/scratch/CM_CONTROL_HUB.html', '_blank');
+            window.open('/hub', '_blank');
         }
 
         // Universal Document Table Implementation
@@ -628,6 +630,30 @@
             document.getElementById("docsModal").style.display = "flex";
             renderDocTable();
         }
+
+        window.LcmDisplayApply = async function(html) {
+            const parsedDocument = new DOMParser().parseFromString(html, "text/html");
+            const payloadNode = parsedDocument.querySelector('script#lcm-display-data[type="application/json"]');
+            if (!payloadNode) throw new Error("Published inventory page has no JSON display payload.");
+            const payload = JSON.parse(payloadNode.textContent);
+            if (!payload.inventory || !Array.isArray(payload.inventory.repositories)) {
+                throw new Error("Published inventory payload is malformed.");
+            }
+            INVENTORY_DATA = payload.inventory;
+            DOCS_CACHE = payload.docs || {};
+            updateMetrics();
+            renderTable();
+        };
+
+        window.LcmDisplayCaptureState = function() {
+            return { category: activeCategory };
+        };
+
+        window.LcmDisplayRestoreState = function(state) {
+            if (state && ["ALL", "governed", "standard-git", "non-git"].includes(state.category)) {
+                setCategoryFilter(state.category);
+            }
+        };
 
         function closeDocsModal() {
             document.getElementById("docsModal").style.display = "none";
@@ -823,5 +849,3 @@
     </div>
 </body>
 </html>
-
-

@@ -55,8 +55,8 @@ param(
              Absorbs and consolidates Show-CmControlHub and Show-CrpDates into a single canonical tool.
     Path: tools/Show-LcmControl.ps1
     Authors: Rolf, LCM_AI Engine
-    Version: 10.0.0
-    Date: 2026-10-15
+    Version: 10.0.1
+    Date: 2026-10-21
 .PARAMETER ReviewMode
     Opens the Control Hub filtered directly to pending visual reviews requiring Beyond Compare action.
 .PARAMETER DatesMode
@@ -74,10 +74,10 @@ param(
 .PARAMETER Detail
     Displays detailed individual state transition timeline and user notes in CLI mode.
 .PARAMETER NoLaunch
-    Renders HTML artifacts without launching the desktop browser.
+    Renders HTML artifacts without opening a Standard Display.
 .PARAMETER StartDaemon
-    Compatibility switch. Interactive ShowCM launches automatically record and
-    make one bounded recovery attempt when the desktop daemon is offline.
+    Compatibility switch. Interactive launches use the shared HTTP launcher,
+    which performs bounded daemon recovery and never opens a local-file fallback.
 .PARAMETER TimerOn
     Display verbose execution timing milestones (Aliases: -Timer, -Timing, -timer-ON). Defaults to false.
 .PARAMETER Help
@@ -118,7 +118,8 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
     }
 }
 
-$scriptVersion = "10.0.0"
+Import-Module -Name (Join-Path $PSScriptRoot '..\modules\LcmDisplayVersion.psm1') -Force
+$scriptVersion = Get-LcmDisplaySourceVersion -Path $PSCommandPath
 $scriptName = "Show-LcmControl"
 
 # ------------------------------------------------------------------------------
@@ -138,11 +139,11 @@ if ($Help) {
     Write-Host ""
     Write-Host "MODES:" -ForegroundColor Yellow
     Write-Host "  (default)          : Opens full CM Control Hub on interactive desktop"
-    Write-Host "  -Dates / -DatesMode: Opens Control Hub with CRP Dates modal active"
+    Write-Host "  -Dates / -DatesMode: Opens the read-only Dates Standard Display (/dates)"
     Write-Host "  -ReviewMode        : Opens Control Hub filtered to pending Beyond Compare reviews"
     Write-Host "  -Cli / -NoBrowser  : Outputs proposal dates table directly to terminal"
     Write-Host "  -Lifecycle         : Outputs authoritative lifecycle state and transition history in terminal"
-    Write-Host "  Offline recovery   : Interactive launches record and make one bounded daemon restart attempt"
+    Write-Host "  Offline recovery   : Shared HTTP launcher attempts bounded daemon recovery; no local-file fallback"
     Write-Host ""
     Write-Host "ALIASES & SHORT-NAMES:" -ForegroundColor Yellow
     Write-Host "  ShowLcmControl.cmd : Canonical launcher"
@@ -175,49 +176,6 @@ function Write-TimingLog {
     if ($TimerOn) {
         Write-Host "  [+$($script:stopwatch.ElapsedMilliseconds)ms] $Message" -ForegroundColor DarkGray
     }
-}
-
-function Test-LcmDesktopDaemonOnline {
-    param([Parameter(Mandatory = $true)][int]$DaemonPort)
-
-    try {
-        $ping = Invoke-RestMethod -Uri "http://127.0.0.1:$DaemonPort/ping" -TimeoutSec 1 -ErrorAction Stop
-        return ($ping -and $ping.status -eq 'ONLINE')
-    } catch {
-        return $false
-    }
-}
-
-function Write-LcmDaemonOutageIncident {
-    param(
-        [Parameter(Mandatory = $true)][int]$DaemonPort,
-        [Parameter(Mandatory = $true)][string]$RecoveryState,
-        [string]$RecoveryError = '',
-        [string]$ExistingPath = ''
-    )
-
-    $incidentsDir = Join-Path $workspaceRoot 'LCM_Inventory\data\incidents'
-    if (-not (Test-Path -LiteralPath $incidentsDir)) {
-        New-Item -ItemType Directory -Path $incidentsDir -Force | Out-Null
-    }
-
-    $incidentPath = if ($ExistingPath) {
-        $ExistingPath
-    } else {
-        Join-Path $incidentsDir ("daemon-outage-{0}.json" -f (Get-Date -Format 'yyyyMMdd_HHmmss_fff'))
-    }
-
-    $incident = [ordered]@{
-        source         = $scriptName
-        bug_id         = 'BUG-286'
-        detected_at    = (Get-Date).ToString('o')
-        daemon_port    = $DaemonPort
-        recovery_state = $RecoveryState
-        recovery_error = $RecoveryError
-        action         = 'start-daemon-once'
-    }
-    $incident | ConvertTo-Json -Depth 3 | Set-Content -LiteralPath $incidentPath -Encoding UTF8
-    return $incidentPath
 }
 
 $proposalsFile = Join-Path $workspaceRoot "LCM_Inventory\data\proposals\proposals.json"
@@ -473,45 +431,32 @@ if (Test-Path -LiteralPath $sessionFile) {
 $compiledTimestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
 $hubVersionSubtitle = "Tool: Show-LcmControl v$scriptVersion | LCM Baseline: $lcmBaseline | Compiled: $compiledTimestamp"
 
-# Load Table Atom engine if present
-$atomJsCandidates = @(
-    (Join-Path $workspaceRoot 'LCM_Inventory\assets\lcm-table-print-atom.js'),
-    (Join-Path $workspaceRoot 'tools\assets\lcm-table-print-atom.js')
-)
-$atomJsPath = $null
-foreach ($cand in $atomJsCandidates) {
-    if (Test-Path -LiteralPath $cand) {
-        $atomJsPath = $cand
-        break
-    }
-}
-$atomJsContent = if ($atomJsPath) { Get-Content -LiteralPath $atomJsPath -Raw -Encoding UTF8 } else { "" }
 $appsCatalogFile = Join-Path $workspaceRoot "LCM_Inventory\data\catalog\apps.json"
 $appsCatalogRaw = if (Test-Path -LiteralPath $appsCatalogFile) { Get-Content -LiteralPath $appsCatalogFile -Raw -Encoding UTF8 } else { '{"total_apps":0,"apps":[]}' }
 
 Write-TimingLog "Serializing documents and compiling JSON injection blocks..."
-$injectedBlock = @"
-    const RAW_PROPOSALS = $proposalsRaw;
-    const RAW_APPS_CATALOG = $appsCatalogRaw;
-    const RAW_ACTIVE_LOG = $($activeLogRaw | ConvertTo-Json);
-    const RAW_HISTORY_LOG = $($historyLogRaw | ConvertTo-Json);
-    const RAW_DOCS_CACHE = $($docsCache | ConvertTo-Json -Depth 3);
-    const RAW_REVIEW_RECEIPTS = $($reviewReceipts | ConvertTo-Json -Depth 3);
-    const RAW_COMPILED_CATALOG = $($compiledCatalog | ConvertTo-Json -Depth 3);
-"@
+$displayPayload = [ordered]@{
+    proposals      = $proposalsRaw | ConvertFrom-Json
+    appsCatalog    = $appsCatalogRaw | ConvertFrom-Json
+    activeLog      = $activeLogRaw
+    historyLog     = $historyLogRaw
+    docs           = $docsCache
+    reviewReceipts = @($reviewReceipts)
+    compiledCatalog = $compiledCatalog
+} | ConvertTo-Json -Depth 16 -Compress
+$displayPayload = $displayPayload.Replace('<', '\u003c')
 
 $htmlContent = Get-Content -LiteralPath $htmlTemplateFile -Raw -Encoding UTF8
-$standardDisplayCssUri = ([System.Uri](Join-Path $workspaceRoot "LCM_Inventory\assets\StandardTableDisplay.css")).AbsoluteUri
-$htmlContent = $htmlContent.Replace('href="/assets/standard-table-display.css"', "href=`"$standardDisplayCssUri`"")
-$htmlContent = $htmlContent.Replace('/*__INJECTED_ATOM_PLACEHOLDER__*/', $atomJsContent)
-$htmlContent = $htmlContent.Replace('/*__INJECTED_DATA_PLACEHOLDER__*/', $injectedBlock)
+$htmlContent = $htmlContent.Replace('{"__lcm_unrendered_template__":true}', $displayPayload)
+$htmlContent = $htmlContent.Replace('{"proposals":{"proposals":[]},"__lcm_unrendered_template__":true}', $displayPayload)
+$displayId = if ($DatesMode) { 'dates' } else { 'hub' }
+$htmlContent = $htmlContent.Replace('content="hub"', "content=`"$displayId`"")
+$htmlContent = $htmlContent.Replace('href="../../assets/StandardTableDisplay.css"', 'href="/assets/StandardTableDisplay.css"')
 
 # Dynamic Version Token Substitutions per RULE-DSP-016 (Dual Significance: Tool + Template)
-$templateVersion = "10.0.0"
-if ($htmlContent -match '(?i)Version\s*:\s*v?([0-9.]+)') {
-    $templateVersion = $Matches[1]
-}
-$dualVersion = "LCM-Show: v$scriptVersion Template: v$templateVersion"
+$provenance = Get-LcmDisplayProvenance -ScriptPath $PSCommandPath -TemplatePath $htmlTemplateFile
+$templateVersion = $provenance.TemplateVersion.TrimStart('v')
+$dualVersion = $provenance.Label
 $htmlContent = $htmlContent.Replace('v{{HUB_VERSION}}', $dualVersion)
 $htmlContent = $htmlContent.Replace('{{HUB_VERSION}}', $dualVersion)
 $htmlContent = $htmlContent.Replace('{{SHOW_VERSION}}', "v$scriptVersion")
@@ -527,10 +472,6 @@ if ($unresolvedTemplateTokens.Count -gt 0) {
     throw ("Control Hub rendering failed: unresolved template token(s) remain in the generated artifact: {0}" -f ($unresolvedTemplateTokens -join ', '))
 }
 
-$scratchDir = Join-Path $workspaceRoot "LCM_Inventory\scratch"
-if (-not (Test-Path -LiteralPath $scratchDir)) {
-    New-Item -ItemType Directory -Path $scratchDir -Force | Out-Null
-}
 $artifactsDir = Join-Path $workspaceRoot "LCM_Inventory\data\artifacts"
 if (-not (Test-Path -LiteralPath $artifactsDir)) {
     New-Item -ItemType Directory -Path $artifactsDir -Force | Out-Null
@@ -540,7 +481,6 @@ $renderedHtmlLeaf = if ($DatesMode) { "CM_CRP_DATES.html" } else { "CM_CONTROL_H
 $renderedHtmlPath = Join-Path $artifactsDir $renderedHtmlLeaf
 Write-TimingLog "Writing CM_CONTROL_HUB.html to disk..."
 Set-Content -LiteralPath $renderedHtmlPath -Value $htmlContent -Encoding UTF8
-Set-Content -LiteralPath (Join-Path $scratchDir $renderedHtmlLeaf) -Value $htmlContent -Encoding UTF8
 Write-TimingLog "CM_CONTROL_HUB.html written ($([Math]::Round($htmlContent.Length / 1KB, 1)) KB)."
 
 Write-Host "==========================================================================" -ForegroundColor Cyan
@@ -553,122 +493,20 @@ Write-Host " Ledger    : $proposalsFile"
 # 3. Single Window Interactive Desktop Dispatch
 # ------------------------------------------------------------------------------
 if (-not $NoLaunch) {
-    Write-Host "==========================================================================" -ForegroundColor Cyan
-
-    $daemonPort = if ($env:LCM_DAEMON_PORT -match '^\d+$') { [int]$env:LCM_DAEMON_PORT } else { 9876 }
-    $daemonOnline = Test-LcmDesktopDaemonOnline -DaemonPort $daemonPort
-    $outageIncidentPath = ''
-    if (-not $daemonOnline) {
-        $daemonScript = Join-Path $workspaceRoot "LCM_Inventory\tools\LcmDesktopDaemon.ps1"
-        $outageIncidentPath = Write-LcmDaemonOutageIncident -DaemonPort $daemonPort -RecoveryState 'detected'
-        $recoveryError = ''
-        if (Test-Path -LiteralPath $daemonScript) {
-            Write-Host "  -> Port $daemonPort daemon offline. Incident recorded; starting one bounded recovery attempt..." -ForegroundColor Yellow
-            try {
-                Start-Process -FilePath "pwsh.exe" -ArgumentList "-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File `"$daemonScript`" -Background" -WindowStyle Hidden -ErrorAction Stop
-            } catch {
-                $recoveryError = $_.Exception.Message
-                Write-Host "  -> Port $daemonPort recovery start failed: $recoveryError" -ForegroundColor Red
-            }
-            for ($i = 0; $i -lt 15; $i++) {
-                Start-Sleep -Milliseconds 200
-                if (Test-LcmDesktopDaemonOnline -DaemonPort $daemonPort) {
-                    $daemonOnline = $true
-                    break
-                }
-            }
-        } else {
-            $recoveryError = "Daemon launcher not found: $daemonScript"
-            Write-Host "  -> Port $daemonPort recovery cannot start: $recoveryError" -ForegroundColor Red
-        }
-        $recoveryState = if ($daemonOnline) { 'recovered' } else { 'recovery_failed' }
-        $outageIncidentPath = Write-LcmDaemonOutageIncident -DaemonPort $daemonPort -RecoveryState $recoveryState -RecoveryError $recoveryError -ExistingPath $outageIncidentPath
-        if ($daemonOnline) {
-            Write-Host "  -> Port $daemonPort daemon recovery verified. Incident receipt: $outageIncidentPath" -ForegroundColor Green
-        } else {
-            Write-Host "  -> Port $daemonPort daemon recovery failed. Incident receipt: $outageIncidentPath" -ForegroundColor Red
-        }
+    $standardDisplayModule = Join-Path $workspaceRoot 'LCM_Inventory\modules\LcmStandardDisplay.psm1'
+    if (-not (Test-Path -LiteralPath $standardDisplayModule -PathType Leaf)) {
+        throw "Standard Display launcher module is missing: $standardDisplayModule"
     }
-
-    if ($daemonOnline) {
-        $launchTarget = if ($DatesMode) { "http://127.0.0.1:$daemonPort/hub#dates" } else { "http://127.0.0.1:$daemonPort/hub" }
-        Write-Host "  -> Port 9876 REST Daemon online. Launching via HTTP bridge (no sandbox)..." -ForegroundColor Green
-    } else {
-        $hubUri = [System.Uri]::new($renderedHtmlPath).AbsoluteUri
-        $launchTarget = if ($DatesMode) { "$hubUri#dates" } else { $hubUri }
-        Write-Host "  -> Port $daemonPort daemon offline. Launching local fallback; consult incident receipt: $outageIncidentPath" -ForegroundColor Yellow
+    Import-Module -Name $standardDisplayModule -Force
+    $displayId = if ($DatesMode) { 'dates' } else { 'hub' }
+    $displayParameters = @{
+        ReviewMode = [string]$ReviewMode.IsPresent
+        Repo = $Repo
+        State = $State
+        Id = @($Id) -join ','
+        StateEvent = $StateEvent
     }
-
-    # --------------------------------------------------------------------------
-    # Dynamic User Default Browser Discovery (Windows Registry UserChoice)
-    # --------------------------------------------------------------------------
-    $browserPath = $null
-    $browserName = "unknown"
-    try {
-        $progId = (Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice" -ErrorAction Stop).ProgId
-        $cmd = (Get-ItemProperty -Path "Registry::HKEY_CLASSES_ROOT\$progId\shell\open\command" -ErrorAction Stop).'(Default)'
-        if ($cmd -match '"([^"]+\.exe)"') { $browserPath = $Matches[1] }
-        elseif ($cmd -match '^\s*([^\s]+\.exe)') { $browserPath = $Matches[1] }
-        if ($browserPath) {
-            $browserName = [System.IO.Path]::GetFileNameWithoutExtension($browserPath).ToLowerInvariant()
-        }
-    } catch {}
-
-    # Secondary fallback to known paths if registry query produced nothing
-    if (-not $browserPath -or -not (Test-Path -LiteralPath $browserPath)) {
-        $zenPath = "D:\Tools\Zen Browser\zen.exe"
-        if (Test-Path -LiteralPath $zenPath) {
-            $browserPath = $zenPath
-            $browserName = "zen"
-        } else {
-            $firefoxCandidates = @(
-                "C:\Program Files\Mozilla Firefox\firefox.exe",
-                "C:\Program Files (x86)\Mozilla Firefox\firefox.exe"
-            )
-            foreach ($cand in $firefoxCandidates) {
-                if (Test-Path -LiteralPath $cand) { $browserPath = $cand; $browserName = "firefox"; break }
-            }
-        }
-    }
-
-    $dispatcher = Join-Path $workspaceRoot "LCM_Inventory\tools\Invoke-InteractiveDesktop.ps1"
-    
-    # --------------------------------------------------------------------------
-    # Check for Existing Active Hub Window to Avoid Duplicate Windows (RULE-DSP-008.5)
-    # --------------------------------------------------------------------------
-    $reused = $false
-    if ($daemonOnline) {
-        try {
-            $fg = Invoke-RestMethod -Uri "http://127.0.0.1:$daemonPort/foreground" -Method Post -Body (@{ title = "LCM Control Hub" } | ConvertTo-Json) -ContentType "application/json" -TimeoutSec 1 -ErrorAction SilentlyContinue
-            if ($fg -and $fg.success) {
-                Write-Host "  -> Existing LCM Control Hub window activated and focused on desktop (no duplicate window opened)." -ForegroundColor Green
-                $reused = $true
-            }
-        } catch {}
-    }
-
-    if (-not $reused) {
-        Write-TimingLog "Browser detected: $browserName ($browserPath). Dispatching single Control Hub window..."
-        if ($browserPath -and (Test-Path -LiteralPath $browserPath)) {
-            Write-Host "  -> Launching authoritative LCM Control Hub window ($browserName)..." -ForegroundColor Green
-            if (Test-Path -LiteralPath $dispatcher) {
-                Write-TimingLog "Dispatching Hub: $launchTarget..."
-                & $dispatcher -FilePath $browserPath -ArgumentList "`"$launchTarget`""
-                Write-TimingLog "Hub window dispatched."
-            } else {
-                Start-Process -FilePath $browserPath -ArgumentList "`"$launchTarget`""
-            }
-        } else {
-            Write-Host "  -> Dispatching Control Hub via default browser handler..." -ForegroundColor Cyan
-            if (Test-Path -LiteralPath $dispatcher) {
-                Write-TimingLog "Dispatching Target: $launchTarget..."
-                & $dispatcher -FilePath $launchTarget
-                Write-TimingLog "Target dispatched."
-            } else {
-                Start-Process -FilePath $launchTarget
-            }
-        }
-    }
+    Open-LcmStandardDisplay -DisplayId $displayId -Parameters $displayParameters
     Write-TimingLog "All dispatches completed. Total execution time: $($script:stopwatch.ElapsedMilliseconds)ms"
 } else {
     Write-TimingLog "Browser launch suppressed via -NoLaunch. Total execution time: $($script:stopwatch.ElapsedMilliseconds)ms"

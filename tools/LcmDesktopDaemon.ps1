@@ -20,7 +20,7 @@
   Path: tools/LcmDesktopDaemon.ps1
   Authors: Rolf, LCM_AI Engine
   Version: 10.0.1
-  Date: 2026-10-18
+  Date: 2026-10-21
 .PARAMETER Port
   The local TCP listening port (Default: 9876). Configurable via parameter or $env:LCM_DAEMON_PORT.
 .PARAMETER Status
@@ -298,6 +298,7 @@ if ([string]::IsNullOrWhiteSpace($LogFile)) {
 # Instantiate strongly typed environment state and controller
 $envObj = [DaemonEnvironment]::new($workspaceRoot, $Port, $scriptVersion, $LogFile)
 $controller = [DaemonActionController]::new($envObj)
+Import-Module -Name (Join-Path $lcdRoot 'modules\LcmDisplayHttp.psm1') -Force
 
 # Run automated log retention maintenance
 $controller.PerformLogMaintenance($MaxLogAgeDays)
@@ -330,17 +331,8 @@ $manifest = [PSCustomObject]@{
 $manifest | ConvertTo-Json | Set-Content -LiteralPath $manifestPath -Encoding UTF8
 $envObj.Log("Listening on $prefix (SessionId: $($envObj.SessionId), PID: $($envObj.Pid))", 'ACTION')
 $proposalDocumentsRoot = Join-Path $workspaceRoot 'LCM_Inventory\docs\Proposals'
-$pendingProposalDocumentChanges = [System.Collections.Concurrent.ConcurrentQueue[string]]::new()
 $proposalDocumentWatcher = $null
 $proposalDocumentWatcherSubscription = $null
-if (Test-Path -LiteralPath $proposalDocumentsRoot) {
-  $proposalDocumentWatcher = [System.IO.FileSystemWatcher]::new($proposalDocumentsRoot, '*.md')
-  $proposalDocumentWatcher.IncludeSubdirectories = $true
-  $proposalDocumentWatcher.EnableRaisingEvents = $true
-  $proposalDocumentWatcherSubscription = Register-ObjectEvent -InputObject $proposalDocumentWatcher -EventName Changed -MessageData $pendingProposalDocumentChanges -Action {
-    [void]$event.MessageData.Enqueue($Event.SourceEventArgs.FullPath)
-  }
-}
 
 # ------------------------------------------------------------------------------
 # 5. Core Request Dispatch Loop (Strongly-Typed OOP Routing)
@@ -351,16 +343,6 @@ try {
   while ($isRunning -and $listener.IsListening) {
     try {
       $httpContext = $listener.GetContext()
-      $changedProposalDocument = $null
-      $queuedProposalDocument = $null
-      while ($pendingProposalDocumentChanges.TryDequeue([ref]$queuedProposalDocument)) {
-        $changedProposalDocument = $queuedProposalDocument
-      }
-      if ($changedProposalDocument) {
-        $renderer = Join-Path $workspaceRoot 'LCM_Inventory\tools\Show-LcmControl.ps1'
-        & pwsh -NoProfile -File $renderer -NoLaunch | Out-Null
-        $envObj.Log("Rendered Control Hub after proposal document save: $changedProposalDocument", 'ACTION')
-      }
       $request = $httpContext.Request
       $response = $httpContext.Response
       $rawUrl = $request.RawUrl
@@ -369,6 +351,10 @@ try {
         $reqPath = $reqPath.TrimEnd('/')
       }
       $httpMethod = $request.HttpMethod
+
+      if (Invoke-LcmDisplayHttpRequest -Request $request -Response $response -WorkspaceRoot $workspaceRoot) {
+        continue
+      }
 
       $envObj.Log("$httpMethod $rawUrl from $($request.RemoteEndPoint)", 'DEBUG')
 
@@ -391,7 +377,9 @@ try {
 
       # Route: GET /ping or /status
       if ($httpMethod -eq 'GET' -and ($reqPath -in @('/ping', '/status', '/', '/api/ping', '/api/status'))) {
-        Send-DaemonJsonResponse -Response $response -Data ($controller.GetStatus())
+        $daemonStatus = $controller.GetStatus()
+        $daemonStatus['standardDisplays'] = 1
+        Send-DaemonJsonResponse -Response $response -Data $daemonStatus
         continue
       }
 
@@ -419,68 +407,6 @@ try {
         $delivered = [LcmControlHubRefreshBroker]::Publish($payload)
         Send-DaemonJsonResponse -Response $response -Data @{ status = 'OK'; delivered = $delivered }
         continue
-      }
-
-      # Route: GET /hub or /control or /control_hub (LCM Control Hub over Port 9876 Daemon)
-      if ($httpMethod -eq 'GET' -and ($reqPath -in @('/hub', '/control', '/control_hub', '/cm_control_hub.html'))) {
-        $hubFile = Join-Path $envObj.WorkspaceRoot 'LCM_Inventory\data\artifacts\CM_CONTROL_HUB.html'
-        if (Test-Path -LiteralPath $hubFile) {
-          try {
-            $hubBytes = [System.IO.File]::ReadAllBytes($hubFile)
-            $response.ContentType = "text/html; charset=utf-8"
-            $response.Headers["Cache-Control"] = "no-store, no-cache, must-revalidate"
-            $response.Headers["Pragma"] = "no-cache"
-            $response.Headers["Expires"] = "0"
-            $response.ContentLength64 = $hubBytes.Length
-            $response.OutputStream.Write($hubBytes, 0, $hubBytes.Length)
-            $response.OutputStream.Close()
-          } catch {
-            try { $response.Close() } catch {}
-          }
-          continue
-        }
-        Send-DaemonJsonResponse -Response $response -Data @{ error = 'The generated Control Hub artifact is unavailable. Run Show-LcmControl.ps1 to render it; the source template is not served.' } -StatusCode 503
-        continue
-      }
-
-      # Route: GET /dates or /cm_crp_dates or /cm_crp_dates.html
-      if ($httpMethod -eq 'GET' -and ($reqPath -in @('/dates', '/cm_crp_dates', '/cm_crp_dates.html'))) {
-        $datesFile = Join-Path $envObj.WorkspaceRoot 'LCM_Inventory\data\artifacts\CM_CRP_DATES.html'
-        if (-not (Test-Path -LiteralPath $datesFile)) {
-          $datesFile = Join-Path $envObj.WorkspaceRoot 'LCM_Inventory\assets\CM_CRP_DATES_READONLY.html'
-        }
-        if (Test-Path -LiteralPath $datesFile) {
-          try {
-            $datesBytes = [System.IO.File]::ReadAllBytes($datesFile)
-            $response.ContentType = "text/html; charset=utf-8"
-            $response.ContentLength64 = $datesBytes.Length
-            $response.OutputStream.Write($datesBytes, 0, $datesBytes.Length)
-            $response.OutputStream.Close()
-          } catch {
-            try { $response.Close() } catch {}
-          }
-          continue
-        }
-      }
-
-      # Route: GET /assets/* (Static Assets for Control Hub)
-      if ($httpMethod -eq 'GET' -and ($reqPath -like '/assets/*')) {
-        $assetLeaf = Split-Path $reqPath -Leaf
-        $assetFile = Join-Path $envObj.WorkspaceRoot "LCM_Inventory\assets\$assetLeaf"
-        if (Test-Path -LiteralPath $assetFile) {
-          try {
-            $assetBytes = [System.IO.File]::ReadAllBytes($assetFile)
-            if ($assetLeaf.EndsWith('.css')) { $response.ContentType = "text/css; charset=utf-8" }
-            elseif ($assetLeaf.EndsWith('.js')) { $response.ContentType = "application/javascript; charset=utf-8" }
-            else { $response.ContentType = "application/octet-stream" }
-            $response.ContentLength64 = $assetBytes.Length
-            $response.OutputStream.Write($assetBytes, 0, $assetBytes.Length)
-            $response.OutputStream.Close()
-          } catch {
-            try { $response.Close() } catch {}
-          }
-          continue
-        }
       }
 
       # Route: GET /proposals (LCM Standard Display Dynamic Re-Query per CRP-115 & CRP-108)
@@ -818,6 +744,7 @@ try {
     }
   }
 } finally {
+  Stop-LcmDisplayHttp
   $listener.Stop()
   $listener.Close()
   if (Test-Path $manifestPath) { Remove-Item $manifestPath -Force -ErrorAction SilentlyContinue }

@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-10-20T20:56:10+02:00",
-  "review_granularity": "tight",
+  "updated_at": "2026-11-06T18:20:46+01:00",
+  "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 300,
+  "last_proposal_id": 307,
   "proposals": [
     {
       "id": 261,
@@ -12,7 +12,7 @@
       "timestamp": "2026-10-13 16:28:31",
       "title": "Proposal Lifecycle Status and Action Model",
       "origin_repo": "LCM_Inventory",
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "CRP-261",
       "bundle_dir": "docs/Proposals/CRP-261-Proposal-Lifecycle-Status-And-Action-Model",
       "docs": {
@@ -111,9 +111,10 @@
       "bcr_disposition": "Complete",
       "bcr_disposition_at": "2026-10-14 14:57:42",
       "bcr_disposition_notes": "Operator accepted the refreshed exact CRP-261 Beyond Compare review.",
-      "progress_state": "completed",
+      "progress_state": "pushed",
       "disposition": "completed",
-      "priority": 0
+      "priority": 0,
+      "pushed_at": "2026-11-06 10:44:45"
     },
     {
       "id": 260,
@@ -121,7 +122,7 @@
       "timestamp": "2026-10-13 16:08:40",
       "title": "Cohort Conflict Analysis and Push Gate",
       "origin_repo": "LCM_Inventory",
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "CRP-260",
       "bundle_dir": "docs/Proposals/CRP-260-Cohort-Conflict-Analysis-And-Push-Gate",
       "docs": {
@@ -193,9 +194,10 @@
       "always_proceed": false,
       "minimal_tests": true,
       "test_scope": "minimal",
-      "progress_state": "completed",
+      "progress_state": "pushed",
       "disposition": "completed",
-      "priority": 0
+      "priority": 0,
+      "pushed_at": "2026-11-06 10:44:45"
     },
     {
       "id": 259,
@@ -203,7 +205,7 @@
       "timestamp": "2026-10-13 15:52:22",
       "title": "Exact CRP Review and Scope Amendments",
       "origin_repo": "LCM_Inventory",
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "CRP-259",
       "bundle_dir": "docs/Proposals/CRP-259-Exact-CRP-Review-And-Scope-Amendments",
       "docs": {
@@ -296,9 +298,10 @@
           "note": "BCR Accepted, Commit"
         }
       ],
-      "progress_state": "completed",
+      "progress_state": "pushed",
       "disposition": "completed",
-      "priority": 0
+      "priority": 0,
+      "pushed_at": "2026-11-06 10:44:45"
     },
     {
       "id": 258,
@@ -785,7 +788,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "CRP-247",
       "bundle_dir": "docs/Proposals/CRP-247-Caller-Intent-Reconciliation-and-Step-2-Viewer",
       "docs": {
@@ -864,9 +867,10 @@
       "bcr_bypass_authorized_at": "2026-10-16 21:17:30",
       "bcr_bypass_authorized_by": "rgbig",
       "bcr_bypass_reason": "Operator explicitly accepted CRP-247 and directed ACCEPTED -> COMPLETE; historical walkthrough records the visual-review checkpoint waiver.",
-      "progress_state": "completed",
+      "progress_state": "pushed",
       "disposition": "completed",
-      "priority": 0
+      "priority": 0,
+      "pushed_at": "2026-11-06 10:44:45"
     },
     {
       "id": 1,
@@ -10506,16 +10510,17 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": [],
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-201-Methodology-Documentation-Reconciliation-for-Review-and-Release-Closure",
       "commit_sha": null,
       "github_url": null,
       "author": "rgbig",
       "details": "Methodology documentation reconciliation active",
-      "progress_state": "completed",
+      "progress_state": "pushed",
       "disposition": "completed",
-      "priority": 0
+      "priority": 0,
+      "pushed_at": "2026-11-06 10:44:45"
     },
     {
       "id": 202,
@@ -10548,7 +10553,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": [],
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-203-Post-Commit-BCR-Proposal-Session-Cleanup",
       "commit_sha": "333e8bd",
@@ -10557,11 +10562,12 @@
       "details": "Post-commit BCR proposal session cleanup",
       "flow_mode": "standard",
       "always_proceed": false,
-      "progress_state": "completed",
+      "progress_state": "pushed",
       "hold_reason": null,
       "disposition": "completed",
       "dates": {},
-      "priority": 0
+      "priority": 0,
+      "pushed_at": "2026-11-06 10:44:45"
     },
     {
       "id": 204,
@@ -10781,16 +10787,17 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": [],
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
+      "progress_state": "pushed",
       "bundle_id": "CRP-214",
       "bundle_dir": "docs/Proposals/CRP-214-User-Reported-BUG-Intake-Protocol-and-Inactive-Suggested-State-Gating",
       "commit_sha": null,
       "github_url": null,
       "author": "rgbig",
       "details": "Codify rule that user-reported bugs initialize strictly in state suggested (unlike automated runtime test failures); analysis and document generation are suppressed while suggested; urgency keywords DO/DOIT activate execution, while FIX triggers emergency bypass.",
-      "disposition": "completed",
-      "priority": 0
+      "disposition": "published",
+      "priority": 0,
+      "pushed_at": "2026-11-06 10:21:10"
     },
     {
       "id": 215,
@@ -10878,18 +10885,19 @@
       "app_id": "App: 1",
       "primary_app": "App: 1",
       "affected_apps": [],
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "CRP-217",
       "bundle_dir": "docs/Proposals/CRP-217-Control-Hub-Column-Header-Disambiguation-and-Compact-Dropdown-Layout",
       "commit_sha": null,
       "github_url": null,
       "author": "rgbig",
       "details": "Resolve duplicate STATUS column headers by renaming the first occurrence to Disposition; reposition row dropdown action buttons to a second line for compact column width.",
-      "progress_state": "completed",
+      "progress_state": "pushed",
       "flow_mode": "doit",
       "always_proceed": true,
-      "disposition": "completed",
-      "priority": 0
+      "disposition": "published",
+      "priority": 0,
+      "pushed_at": "2026-11-06 10:21:10"
     },
     {
       "id": 218,
@@ -10924,18 +10932,19 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": [],
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "CRP-219",
       "bundle_dir": "docs/Proposals/CRP-219-Prohibition-of-Initial-Held-and-Deferred-States-on-New-Proposals",
       "commit_sha": null,
       "github_url": null,
       "author": "rgbig",
       "details": "Codify rule that proposals (BUG or CRP) must never initialize in held or deferred states; these terminal or paused states can only be reached through explicit post-creation lifecycle actions.",
-      "progress_state": "completed",
+      "progress_state": "pushed",
       "flow_mode": "doit",
       "always_proceed": true,
-      "disposition": "completed",
-      "priority": 0
+      "disposition": "published",
+      "priority": 0,
+      "pushed_at": "2026-11-06 10:21:10"
     },
     {
       "id": 220,
@@ -10947,7 +10956,7 @@
       "app_id": "App: 1",
       "primary_app": "App: 1",
       "affected_apps": [],
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "CRP-220",
       "bundle_dir": "docs/Proposals/CRP-220-Control-Hub-Execution-Ledger-Progress-Milestones-and-Labels",
       "docs": {
@@ -10961,11 +10970,12 @@
       "details": "Synchronize Execution Ledger milestone indicators with active proposal progress (preventing Active items from showing as Suggested), render interstitial action transition labels between lifecycle steps (suggested -> start -> scoped, etc.), and establish a new authoritative state-action-transition matrix / diagram inserted into LCM governance documentation.",
       "plan_path": "docs/Proposals/CRP-220-Control-Hub-Execution-Ledger-Progress-Milestones-and-Labels/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-220-Control-Hub-Execution-Ledger-Progress-Milestones-and-Labels/Walkthrough.md",
-      "progress_state": "completed",
+      "progress_state": "pushed",
       "flow_mode": "doit",
       "always_proceed": true,
       "disposition": "completed",
-      "priority": 0
+      "priority": 0,
+      "pushed_at": "2026-11-06 10:44:45"
     },
     {
       "id": 221,
@@ -10977,7 +10987,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "flow_mode": "doit",
       "always_proceed": true,
       "bundle_id": "unassigned",
@@ -10993,9 +11003,10 @@
       "details": "Codify distinction between Cancelled (administrative withdrawal at Gate 1 without code reverts) and Rejected (implementation rejection at Gate 2 with active rollback to pre-CRP baseline) in RULE-LCM-002/007, preserve historical file timestamps on review scratchpads (BCompareBaseline/CompactBCompareReview), and enforce single-tab idempotency in BCR.",
       "plan_path": "docs/Proposals/CRP-221-Distinguish-Cancelled-vs-Rejected-in-ProposalRevie/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-221-Distinguish-Cancelled-vs-Rejected-in-ProposalRevie/Walkthrough.md",
-      "progress_state": "completed",
+      "progress_state": "pushed",
       "disposition": "completed",
-      "priority": 0
+      "priority": 0,
+      "pushed_at": "2026-11-06 10:44:45"
     },
     {
       "id": 243,
@@ -11007,7 +11018,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-243-Integration-of-Read-Only-Analysis-Protocol-Impleme",
       "docs": {
@@ -11021,8 +11032,9 @@
       "details": "Establishes a formal, model-first analysis lifecycle across all workspace AI interactions (specifically Antigravity IDE and Gemini sessions). This proposal introduces strict modal separation between READ-ONLY ANALYSIS and GOVERNED IMPLEMENTATION, enforced via intent wake words (ANALYZE / IMPLEMENT), verifiable provenance tagging, and explicit human-in-the-loop decision gates. Surfaces runtime state transparency variables (LCM_OperatingMode, LCM_ActiveGate, LCM_SearchRadius, LCM_SettledFacts, LCM_OpenHypotheses, LCM_CircuitBreaker) to LCM Control Hub.",
       "plan_path": "docs/Proposals/CRP-243-Integration-of-Read-Only-Analysis-Protocol-Impleme/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-243-Integration-of-Read-Only-Analysis-Protocol-Impleme/Walkthrough.md",
-      "progress_state": "completed",
-      "priority": 0
+      "progress_state": "pushed",
+      "priority": 0,
+      "pushed_at": "2026-11-06 10:44:45"
     },
     {
       "id": 244,
@@ -11079,7 +11091,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/BUG-245-BCR-Foreground-Console-Window-Hygiene-and-Prematur",
       "docs": {
@@ -11093,8 +11105,9 @@
       "details": "Addresses two Beyond Compare Review (BCR) runtime defects: (1) A visible PowerShell console window pops up in the foreground when BCR is dispatched via the daemon and is left lingering/unclosed; (2) Premature purging of the BC review scratchpad (scratch\\BC_Review\\CRP-nnn) during Submit-ReviewResult causes Beyond Compare fast-refresh errors (path not found) while BC sessions are still open or other repos in the multi-repo CRP are being reviewed.",
       "plan_path": "docs/Proposals/BUG-245-BCR-Foreground-Console-Window-Hygiene-and-Prematur/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/BUG-245-BCR-Foreground-Console-Window-Hygiene-and-Prematur/Walkthrough.md",
-      "progress_state": "completed",
-      "priority": 0
+      "progress_state": "pushed",
+      "priority": 0,
+      "pushed_at": "2026-11-06 10:44:45"
     },
     {
       "id": 246,
@@ -11106,7 +11119,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-246-Consolidate-Rules-in-LCM_AI-and-Migrate-Root-lcm-to-LCM_Inventory",
       "docs": {
@@ -11122,8 +11135,9 @@
       "walkthrough_path": "docs/Proposals/CRP-246-Consolidate-Rules-in-LCM_AI-and-Migrate-Root-lcm-to-LCM_Inventory/Walkthrough.md",
       "flow_mode": "doit",
       "always_proceed": true,
-      "progress_state": "completed",
-      "priority": 0
+      "progress_state": "pushed",
+      "priority": 0,
+      "pushed_at": "2026-11-06 10:21:10"
     },
     {
       "id": 256,
@@ -11181,7 +11195,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/BUG-262-BUG-Prevent-post-commit-lifecycle-synchronization",
       "docs": {
@@ -11233,9 +11247,10 @@
       },
       "flow_mode": "doit",
       "always_proceed": true,
-      "progress_state": "completed",
+      "progress_state": "pushed",
       "disposition": "completed",
-      "priority": 0
+      "priority": 0,
+      "pushed_at": "2026-11-06 10:44:45"
     },
     {
       "id": 263,
@@ -11299,7 +11314,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/BUG-264-Prohibition-Of-POSIX-Backslash-Escaping-In-PowerShell",
       "docs": {
@@ -11351,9 +11366,10 @@
       },
       "flow_mode": "doit",
       "always_proceed": true,
-      "progress_state": "completed",
+      "progress_state": "pushed",
       "disposition": "completed",
-      "priority": 0
+      "priority": 0,
+      "pushed_at": "2026-11-06 10:44:45"
     },
     {
       "id": 265,
@@ -11365,7 +11381,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "CRP-265",
       "bundle_dir": "docs/Proposals/CRP-265-Control-Hub-Rich-Action-Feedback",
       "docs": {
@@ -11442,9 +11458,10 @@
           "note": "BCR Accepted, Commit"
         }
       ],
-      "progress_state": "completed",
+      "progress_state": "pushed",
       "disposition": "completed",
-      "priority": 0
+      "priority": 0,
+      "pushed_at": "2026-11-06 10:44:45"
     },
     {
       "id": 266,
@@ -11459,7 +11476,7 @@
         "APP-001",
         "APP-002"
       ],
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "CRP-266",
       "bundle_dir": "docs/Proposals/CRP-266-Standard-Display-Model-Controller-Architecture",
       "docs": {
@@ -11536,9 +11553,10 @@
           "note": "BCR Accepted, Commit"
         }
       ],
-      "progress_state": "completed",
+      "progress_state": "pushed",
       "disposition": "completed",
-      "priority": 0
+      "priority": 0,
+      "pushed_at": "2026-11-06 10:44:45"
     },
     {
       "id": 267,
@@ -12142,7 +12160,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-275-Tool-Explorer-Filter-Pattern-Matching",
       "docs": {
@@ -12225,9 +12243,10 @@
           "note": "Operator accepted COH-275 atomic completion after BCR."
         }
       ],
-      "progress_state": "completed",
+      "progress_state": "pushed",
       "disposition": "completed",
-      "priority": 0
+      "priority": 0,
+      "pushed_at": "2026-11-06 10:44:45"
     },
     {
       "id": 276,
@@ -12239,7 +12258,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/BUG-276-BUG-Review-completion-cannot-resolve-BCR-exclusion",
       "docs": {
@@ -12352,9 +12371,10 @@
       "bcr_disposition": "Completed",
       "bcr_disposition_at": "2026-10-14 22:17:27",
       "bcr_disposition_notes": "",
-      "progress_state": "completed",
+      "progress_state": "pushed",
       "disposition": "completed",
-      "priority": 0
+      "priority": 0,
+      "pushed_at": "2026-11-06 10:44:45"
     },
     {
       "id": 277,
@@ -12578,7 +12598,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "CRP-278-GoodNIGHT-Save-All-Receipt-and-GoodMorning-Recover",
       "bundle_dir": "docs/Proposals/CRP-278-GoodNIGHT-Save-All-Receipt-and-GoodMorning-Recover",
       "docs": {
@@ -12647,9 +12667,10 @@
       "bcr_disposition": "Complete",
       "bcr_disposition_at": "2026-10-18 20:29:29",
       "bcr_disposition_notes": "Operator accepted the CRP-278 visual BCR: no remaining differences were visible after copying reviewed D: content to the F: baseline.",
-      "progress_state": "completed",
+      "progress_state": "pushed",
       "disposition": "completed",
-      "priority": 0
+      "priority": 0,
+      "pushed_at": "2026-11-06 10:44:45"
     },
     {
       "id": 279,
@@ -12661,7 +12682,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-279-Lifecycle-Status-Failure-Diagnostics-and-Escape-Ro",
       "docs": {
@@ -12760,9 +12781,10 @@
       "bcr_disposition": "Completed",
       "bcr_disposition_at": "2026-10-15 22:10:05",
       "bcr_disposition_notes": "",
-      "progress_state": "completed",
+      "progress_state": "pushed",
       "disposition": "completed",
-      "priority": 0
+      "priority": 0,
+      "pushed_at": "2026-11-06 10:44:45"
     },
     {
       "id": 280,
@@ -12834,7 +12856,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "in_progress",
       "bundle_id": "CRP-282",
       "bundle_dir": "docs/Proposals/CRP-282-GOAL-FIRST-Mode-Governance-and-Documentation-Adapt",
       "docs": {
@@ -12940,13 +12962,35 @@
           "cohort_id": "",
           "cohort_gate": "",
           "synchronization_outcome": ""
+        },
+        {
+          "from_state": "completed",
+          "state": "suggested",
+          "timestamp": "2026-10-21 22:17:58",
+          "user": "rgbig",
+          "note": "Cohort not fully processed",
+          "revision": 1,
+          "reinstatement": true,
+          "concrete_change_requests": false,
+          "changes": ""
+        },
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-10-21 22:18:25",
+          "user": "rgbig",
+          "note": "",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "dates": {
-        "in_progress": "2026-10-17 23:19:15",
         "verified": "2026-10-17 23:19:15",
         "in_review": "2026-10-18 17:58:36",
-        "completed": "2026-10-18 17:58:48"
+        "completed": "2026-10-18 17:58:48",
+        "suggested": "2026-10-21 22:17:58",
+        "in_progress": "2026-10-21 22:18:25"
       },
       "specification_acceptance": {
         "accepted_at": "2026-10-17T23:08:50.1311047+02:00",
@@ -12960,9 +13004,12 @@
       "bcr_disposition": "Completed",
       "bcr_disposition_at": "2026-10-18 17:58:48",
       "bcr_disposition_notes": "",
-      "progress_state": "completed",
-      "disposition": "completed",
-      "priority": 0
+      "priority": 0,
+      "state_reason": "Reinstated without concrete correction requests; awaiting revised proposal intent and plan approval.",
+      "reinstatement_revision": 1,
+      "reinstatement_changes": "",
+      "progress_state": "in_progress",
+      "disposition": null
     },
     {
       "id": 283,
@@ -13006,7 +13053,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-284-Macrium-BCR-Foreground-and-Retired-Staging-Removal",
       "docs": {
@@ -13077,9 +13124,10 @@
       "bcr_disposition": "Completed",
       "bcr_disposition_at": "2026-10-17 21:32:58",
       "bcr_disposition_notes": "",
-      "progress_state": "completed",
+      "progress_state": "pushed",
       "disposition": "completed",
-      "priority": 0
+      "priority": 0,
+      "pushed_at": "2026-11-06 10:44:45"
     },
     {
       "id": 285,
@@ -13138,7 +13186,7 @@
       "app_id": null,
       "primary_app": "LCM Control Hub",
       "affected_apps": "LCM Control Hub",
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/BUG-286-BUG-Control-Hub-daemon-outage-capture-and-automati",
       "docs": {
@@ -13237,9 +13285,10 @@
       "bcr_disposition": "Completed",
       "bcr_disposition_at": "2026-10-17 21:15:38",
       "bcr_disposition_notes": "",
-      "progress_state": "completed",
+      "progress_state": "pushed",
       "disposition": "completed",
-      "priority": 0
+      "priority": 0,
+      "pushed_at": "2026-11-06 10:44:45"
     },
     {
       "id": 287,
@@ -13251,7 +13300,7 @@
       "app_id": null,
       "primary_app": "LCM Control Hub",
       "affected_apps": "LCM Control Hub",
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/BUG-287-BUG-Control-Hub-row-click-does-not-open-proposal-s",
       "docs": {
@@ -13487,9 +13536,10 @@
           "note": "Operator accepted COH-275 atomic completion after BCR."
         }
       ],
-      "progress_state": "completed",
+      "progress_state": "pushed",
       "disposition": "completed",
-      "priority": 0
+      "priority": 0,
+      "pushed_at": "2026-11-06 10:44:45"
     },
     {
       "id": 288,
@@ -13501,7 +13551,7 @@
       "app_id": null,
       "primary_app": "LCM Control Hub",
       "affected_apps": "LCM Control Hub",
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/BUG-288-BUG-Priority-action-advances-held-proposal-lifecyc",
       "docs": {
@@ -13633,9 +13683,10 @@
           "note": "Operator authorized atomic acceptance of restored COH-288. One reviewed LCM_Inventory commit records the shared BCR result and completes BUG-287 and BUG-288 together."
         }
       ],
-      "progress_state": "completed",
+      "progress_state": "pushed",
       "disposition": "completed",
-      "priority": 0
+      "priority": 0,
+      "pushed_at": "2026-11-06 10:44:45"
     },
     {
       "id": 289,
@@ -13677,7 +13728,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-290-OneDriveMaintenance-Repository-Consolidation-and-S",
       "docs": {
@@ -13731,13 +13782,24 @@
           "cohort_id": "",
           "cohort_gate": "",
           "synchronization_outcome": ""
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-06 10:18:17",
+          "user": "rgbig",
+          "note": "OneDriveMaintenance pushed to remote origin/main",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "dates": {
         "in_progress": "2026-10-18 19:17:23",
         "verified": "2026-10-18 19:17:38",
         "in_review": "2026-10-18 19:18:04",
-        "completed": "2026-10-18 19:44:37"
+        "completed": "2026-10-18 19:44:37",
+        "pushed": "2026-11-06 10:18:17"
       },
       "flow_mode": "doit",
       "always_proceed": true,
@@ -13746,9 +13808,9 @@
       "bcr_disposition": "Complete",
       "bcr_disposition_at": "2026-10-18 19:44:37",
       "bcr_disposition_notes": "Operator accepted the visual BCR review; focused OneDriveMaintenance safety tests passed 3/3 before the initial commit.",
-      "progress_state": "completed",
-      "disposition": "completed",
-      "priority": 0
+      "priority": 0,
+      "progress_state": "pushed",
+      "disposition": "published"
     },
     {
       "id": 291,
@@ -13760,7 +13822,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/BUG-291-BUG-Structural-implementation-can-proceed-without",
       "docs": {
@@ -13829,7 +13891,7 @@
       "bcr_disposition": "Complete",
       "bcr_disposition_at": "2026-10-18 19:02:56",
       "bcr_disposition_notes": "Operator ACCEPTED the visual BCR review of all LCM deltas; mounted F: baseline matches live D: for LCM repositories.",
-      "progress_state": "completed",
+      "progress_state": "pushed",
       "disposition": "completed",
       "document_summary": {
         "intent": "Close the proposal-first Gate 1 control gap for official App scaffolding.",
@@ -13851,7 +13913,8 @@
         },
         "closure_control": "The proposal closes only after remediation evidence, accepted BCR, and commit. Future discrepancies require a new or linked proposal."
       },
-      "priority": 0
+      "priority": 0,
+      "pushed_at": "2026-11-06 10:44:45"
     },
     {
       "id": 292,
@@ -14113,8 +14176,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "suggested",
-      "progress_state": "undecided",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/BUG-299-BUG-Macrium-Browse-Image-dialog-detection-times-ou",
       "docs": {
@@ -14127,11 +14189,64 @@
       "author": "rgbig",
       "details": "Observed during the 2026-10-20 BCR baseline mount attempt: the elevated Macrium worker threw \"Macrium Browse Image dialog did not become ready within 30 seconds\" even though the Browse Image dialog was visibly displayed. The actual cause is unconfirmed. The reported possibilities are an insufficient readiness timeout and UI Automation detection that depends on a fixed dialog location/position. Intake only: no implementation or root-cause conclusion is authorized by this registration.",
       "priority": 5,
-      "disposition": null,
+      "plan_path": "docs/Proposals/BUG-299-BUG-Macrium-Browse-Image-dialog-detection-times-ou/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/BUG-299-BUG-Macrium-Browse-Image-dialog-detection-times-ou/Walkthrough.md",
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-10-21 13:39:57",
+          "user": "rgbig",
+          "note": "",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-10-21 13:43:57",
+          "user": "rgbig",
+          "note": "",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-10-21 13:44:04",
+          "user": "rgbig",
+          "note": "DOIT operator directive Fix-299",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_review",
+          "state": "completed",
+          "timestamp": "2026-10-21 13:44:14",
+          "user": "rgbig",
+          "note": "Review completed and committed (8417d22).",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "in_progress": "2026-10-21 13:39:57",
+        "verified": "2026-10-21 13:43:57",
+        "in_review": "2026-10-21 13:44:04",
+        "completed": "2026-10-21 13:44:14"
+      },
       "flow_mode": "doit",
       "always_proceed": true,
-      "plan_path": "docs/Proposals/BUG-299-BUG-Macrium-Browse-Image-dialog-detection-times-ou/Implementation_Plan.md",
-      "walkthrough_path": "docs/Proposals/BUG-299-BUG-Macrium-Browse-Image-dialog-detection-times-ou/Walkthrough.md"
+      "bcr_disposition": "Completed",
+      "bcr_disposition_at": "2026-10-21 13:44:14",
+      "bcr_disposition_notes": "DOIT Fix-299: bind dialog and detach deadlines to MountTimeoutSeconds, fallback to existing ReflectBin PIDs, and expand BC window detection to 60s",
+      "progress_state": "pushed",
+      "disposition": "completed",
+      "pushed_at": "2026-11-06 10:44:45"
     },
     {
       "id": 300,
@@ -14143,7 +14258,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-300-CRP-Commit-current-LCM-10-0-0-version-alignment-in",
       "docs": {
@@ -14213,8 +14328,569 @@
       "bcr_disposition": "Completed",
       "bcr_disposition_at": "2026-10-20 20:55:44",
       "bcr_disposition_notes": "chore(lcm): finalize reviewed administrative and workspace catalog updates",
-      "progress_state": "completed",
-      "disposition": "completed"
+      "progress_state": "pushed",
+      "disposition": "completed",
+      "pushed_at": "2026-11-06 10:44:45"
+    },
+    {
+      "id": 301,
+      "crp_id": "CRP-301",
+      "timestamp": "2026-10-21 13:01:30",
+      "title": "Relocate docs content into LCM_AI docs: correct folder references, shift versions to 10.0.0, update LCM_* references",
+      "origin_repo": "LCM_AI",
+      "cr_id": "CRP-301",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "pushed",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/CRP-301-Relocate-docs-content-into-LCM-AI-docs-correct-fol",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig",
+      "details": "Operator-requested; see Specification.md",
+      "priority": 5,
+      "plan_path": "docs/Proposals/CRP-301-Relocate-docs-content-into-LCM-AI-docs-correct-fol/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-301-Relocate-docs-content-into-LCM-AI-docs-correct-fol/Walkthrough.md",
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-10-21 13:47:06",
+          "user": "rgbig",
+          "note": "",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-10-21 13:52:11",
+          "user": "rgbig",
+          "note": "",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-10-21 14:09:12",
+          "user": "rgbig",
+          "note": "Beyond Compare review open on Session 1",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_review",
+          "state": "completed",
+          "timestamp": "2026-10-21 22:13:19",
+          "user": "rgbig",
+          "note": "Review completed and committed (638ed39).",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "in_progress": "2026-10-21 13:47:06",
+        "verified": "2026-10-21 13:52:11",
+        "in_review": "2026-10-21 14:09:12",
+        "completed": "2026-10-21 22:13:19"
+      },
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "bcr_disposition": "Completed",
+      "bcr_disposition_at": "2026-10-21 22:13:18",
+      "bcr_disposition_notes": "",
+      "progress_state": "pushed",
+      "disposition": "completed",
+      "pushed_at": "2026-11-06 10:44:45"
+    },
+    {
+      "id": 302,
+      "crp_id": "BUG-302",
+      "timestamp": "2026-10-21 13:10:44",
+      "title": "[BUG] New-WorkspaceProposal damages the yaml code fences of generated Specification.md",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "BUG-302",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "pushed",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/BUG-302-BUG-New-WorkspaceProposal-damages-the-yaml-code-fe",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig",
+      "details": "Backtick escape in expandable here-string; see Specification.md",
+      "priority": 5,
+      "plan_path": "docs/Proposals/BUG-302-BUG-New-WorkspaceProposal-damages-the-yaml-code-fe/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/BUG-302-BUG-New-WorkspaceProposal-damages-the-yaml-code-fe/Walkthrough.md",
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-10-21 13:27:05",
+          "user": "rgbig",
+          "note": "",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-10-21 13:27:10",
+          "user": "rgbig",
+          "note": "",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-10-21 13:30:01",
+          "user": "rgbig",
+          "note": "Operator instructed commit 302",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_review",
+          "state": "completed",
+          "timestamp": "2026-10-21 13:30:14",
+          "user": "rgbig",
+          "note": "Review completed and committed (1403b62).",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "in_progress": "2026-10-21 13:27:05",
+        "verified": "2026-10-21 13:27:10",
+        "in_review": "2026-10-21 13:30:01",
+        "completed": "2026-10-21 13:30:14"
+      },
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "bcr_disposition": "Completed",
+      "bcr_disposition_at": "2026-10-21 13:30:13",
+      "bcr_disposition_notes": "Accepted fix for backtick escape in ProposalManager.psm1 and repair of 18 damaged specifications",
+      "progress_state": "pushed",
+      "disposition": "completed",
+      "pushed_at": "2026-11-06 10:44:45"
+    },
+    {
+      "id": 303,
+      "crp_id": "CRP-303",
+      "timestamp": "2026-10-21 18:28:34",
+      "title": "Unified session error catalog and lifecycle action diagnostics",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-303",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "pushed",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/CRP-303-Unified-session-error-catalog-and-lifecycle-action",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "Rolf, Copilot",
+      "details": "Reconstruct an evidence-based, active-host-specific failure-mode report from the historical catalog. Accept a bare item number or quoted conversation anchor, default to the last referenced item, combine read-only lifecycle diagnostics and Show-Actions output, and write a timestamped sibling report identifying generator name/version and including a Summary. Preserve original catalog and all lifecycle state.",
+      "priority": 5,
+      "plan_path": "docs/Proposals/CRP-303-Unified-session-error-catalog-and-lifecycle-action/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-303-Unified-session-error-catalog-and-lifecycle-action/Walkthrough.md",
+      "specification_acceptance": {
+        "accepted_by": "Rolf",
+        "accepted_at": "2026-10-21T18:55:16.6344375+02:00",
+        "specification_path": "docs/Proposals/CRP-303-Unified-session-error-catalog-and-lifecycle-action/Specification.md",
+        "scope": "Option 1: accept Specification and do 303; generator name/version and Summary required."
+      },
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-10-21 18:55:17",
+          "user": "rgbig",
+          "note": "Operator accepted Specification and selected option 1 at 2026-10-21 18:54:34; implement to review checkpoint.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-10-21 19:02:59",
+          "user": "rgbig",
+          "note": "19 focused Pester tests passed; AST and launcher checks passed; live analysis preserved original catalog and proposal ledger.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-10-21 19:04:11",
+          "user": "rgbig",
+          "note": "Implementation verified: 19 focused tests, both host fixtures, AST/launcher checks, and live report non-mutation. Await operator visual review; do not commit.",
+          "cohort_id": "",
+          "cohort_gate": "BCR",
+          "synchronization_outcome": "synchronized"
+        },
+        {
+          "from_state": "in_review",
+          "state": "completed",
+          "timestamp": "2026-10-21 19:25:47",
+          "user": "rgbig",
+          "note": "Review completed and committed (3da5e62).",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "completed",
+          "state": "in_progress",
+          "timestamp": "2026-10-21 20:37:16",
+          "user": "rgbig",
+          "note": "Operator requested implementation under existing 303 on 2026-10-21 20:35:43; preserve prior acceptance history.",
+          "revision": 1,
+          "reinstatement": true,
+          "concrete_change_requests": true,
+          "changes": "Correct false positives from source/diff output; add read-only investigator with exact lines/context and evidence-backed operational correlation; omit synthetic error timestamps; include successful execution flow, user request, stated purpose and explicit linkage without inferring authorization."
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-10-21 20:48:44",
+          "user": "rgbig",
+          "note": "CRP-303 correction v10.0.1 verified: 27 focused Pester tests pass; actual task-602 diff yields zero findings; AST, CRLF/UTF-8, catalog parameter and launcher checks pass; live report 20261021-204822 includes execution flow; original catalog and ledger unchanged by analysis. Prior acceptance not reused for revision.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-10-21 20:49:05",
+          "user": "rgbig",
+          "note": "Exact CRP-303 investigator and execution-flow correction v10.0.1; 27 focused tests and pre-review validation passed. Revision awaits operator review; no commit or push.",
+          "cohort_id": "",
+          "cohort_gate": "BCR",
+          "synchronization_outcome": "synchronized"
+        },
+        {
+          "from_state": "in_review",
+          "state": "completed",
+          "timestamp": "2026-10-21 21:20:03",
+          "user": "rgbig",
+          "note": "Review completed and committed (7e77039).",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "in_progress": "2026-10-21 20:37:16",
+        "verified": "2026-10-21 20:48:44",
+        "in_review": "2026-10-21 20:49:05",
+        "completed": "2026-10-21 21:20:03"
+      },
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "state_reason": "Reinstated with concrete correction requests; implementation, verification, and exact-identity BCR are required.",
+      "reinstatement_revision": 1,
+      "reinstatement_changes": "Correct false positives from source/diff output; add read-only investigator with exact lines/context and evidence-backed operational correlation; omit synthetic error timestamps; include successful execution flow, user request, stated purpose and explicit linkage without inferring authorization.",
+      "bcr_initiated_at": "2026-10-21 20:49:05",
+      "bcr_scope": "CRP-303",
+      "bcr_disposition": "Completed",
+      "bcr_disposition_at": "2026-10-21 21:20:03",
+      "bcr_disposition_notes": "",
+      "progress_state": "pushed",
+      "disposition": "completed",
+      "pushed_at": "2026-11-06 10:44:45"
+    },
+    {
+      "id": 304,
+      "crp_id": "CRP-304",
+      "timestamp": "2026-10-21 21:55:00",
+      "title": "Atomized failure analysis report viewer",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-304",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "verified",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/CRP-304-Atomized-failure-analysis-report-viewer",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "Rolf, Copilot",
+      "details": "Operator selected automatic readable HTML with retained Markdown and -NoLaunch, explicitly requested a dedicated ShowFailureAnalysis tool and atomized sources. Preserve CRP-303 evidence semantics; use small separated report, rendering and interaction components.",
+      "priority": 5,
+      "plan_path": "docs/Proposals/CRP-304-Atomized-failure-analysis-report-viewer/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-304-Atomized-failure-analysis-report-viewer/Walkthrough.md",
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-10-21 22:03:56",
+          "user": "rgbig",
+          "note": "Operator accepted Specifications including exclusive port 9876 delivery and requested DOIT 304,305 on 2026-10-21 22:03:44 +02:00; implement in order with atomized sources and stop at exact review gate.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-10-21 23:11:08",
+          "user": "rgbig",
+          "note": "Implemented accepted HTTP-only Standard Display and atomized failure viewer contracts.71 focused Pester and18 Node tests passed;changed PS AST/encoding/whitespace and canonical workspace readiness passed. Live all five views Current on9876;ShowTools create/edit/rename/delete and presentation reload preserve filters;ShowCM,Rules,Dates,Inventory and retained viewer verified;no file fallback. Gate2 review pending;no implementation commit/push.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "in_progress": "2026-10-21 22:03:56",
+        "verified": "2026-10-21 23:11:08"
+      },
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "specification_acceptance": {
+        "accepted_by": "Rolf",
+        "accepted_at": "2026-10-21T22:03:44.786+02:00",
+        "specification_path": "docs/Proposals/CRP-304-Atomized-failure-analysis-report-viewer/Specification.md",
+        "scope": "DOIT 304,305; atomized viewer first, coordinated freshness contract; exclusive port 9876 delivery with no local-file fallback."
+      },
+      "progress_state": "verification",
+      "disposition": null
+    },
+    {
+      "id": 305,
+      "crp_id": "CRP-305",
+      "timestamp": "2026-10-21 21:55:00",
+      "title": "Coordinated standard display freshness contract",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-305",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "verified",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/CRP-305-Coordinated-standard-display-freshness-contract",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "Rolf, Copilot",
+      "details": "Operator selected Option B: shared freshness contract for coordinated display synchronization. Cover relevant data and presentation inputs, completion-aware publication, open-view reconciliation, visible stale/error states and snapshot preservation, reusing existing daemon notification infrastructure.",
+      "priority": 5,
+      "plan_path": "docs/Proposals/CRP-305-Coordinated-standard-display-freshness-contract/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-305-Coordinated-standard-display-freshness-contract/Walkthrough.md",
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-10-21 22:03:56",
+          "user": "rgbig",
+          "note": "Operator accepted Specifications including exclusive port 9876 delivery and requested DOIT 304,305 on 2026-10-21 22:03:44 +02:00; implement in order with atomized sources and stop at exact review gate.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-10-21 23:11:08",
+          "user": "rgbig",
+          "note": "Implemented accepted HTTP-only Standard Display and atomized failure viewer contracts.71 focused Pester and18 Node tests passed;changed PS AST/encoding/whitespace and canonical workspace readiness passed. Live all five views Current on9876;ShowTools create/edit/rename/delete and presentation reload preserve filters;ShowCM,Rules,Dates,Inventory and retained viewer verified;no file fallback. Gate2 review pending;no implementation commit/push.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "in_progress": "2026-10-21 22:03:56",
+        "verified": "2026-10-21 23:11:08"
+      },
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "specification_acceptance": {
+        "accepted_by": "Rolf",
+        "accepted_at": "2026-10-21T22:03:44.786+02:00",
+        "specification_path": "docs/Proposals/CRP-305-Coordinated-standard-display-freshness-contract/Specification.md",
+        "scope": "DOIT 304,305; atomized viewer first, coordinated freshness contract; exclusive port 9876 delivery with no local-file fallback."
+      },
+      "progress_state": "verification",
+      "disposition": null
+    },
+    {
+      "id": 306,
+      "crp_id": "CRP-306",
+      "timestamp": "2026-11-06 10:30:13",
+      "title": "Normalize Legacy Workspace Tool and Launcher Naming to LCM_ Prefix",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-306",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "verified",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/CRP-306-Normalize-Legacy-Workspace-Tool-and-Launcher-Namin",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig",
+      "details": "Rename core tools (Invoke-WorkspacePush to Invoke-LCM_Push.ps1, Invoke-WorkspaceMaintenance to Invoke-LCM_Maintenance.ps1, Invoke-WorkspaceGoodMorning to Invoke-LCM_GoodMorning.ps1, Invoke-WorkspaceGoodNight to Invoke-LCM_GoodNight.ps1, Show-WorkspaceReadiness to Show-LCM_Readiness.ps1, etc.), modules (WorkspacePushEligibility to LCM_PushEligibility, WorkspaceCM to LCM_CM), and CMD wrappers to use the explicit LCM_ prefix, updating all internal catalog entries, macros, and callers.",
+      "priority": 5,
+      "flow_mode": "standard",
+      "always_proceed": false,
+      "plan_path": "docs/Proposals/CRP-306-Normalize-Legacy-Workspace-Tool-and-Launcher-Namin/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-306-Normalize-Legacy-Workspace-Tool-and-Launcher-Namin/Walkthrough.md",
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-11-06 10:31:47",
+          "user": "rgbig",
+          "note": "Operator accepted CRP-306 Specification at Gate 1",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-11-06 10:45:35",
+          "user": "rgbig",
+          "note": "All 29 items renamed to LCM_ prefix, AST passed 21/21 files, Pester passed 6/6 tests, tool catalog regenerated.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "in_progress": "2026-11-06 10:31:47",
+        "verified": "2026-11-06 10:45:35"
+      },
+      "progress_state": "verification",
+      "disposition": null
+    },
+    {
+      "id": 307,
+      "timestamp": "2026-11-06 16:51:55",
+      "title": "Macrium BCR baseline drive candidate validation and registry timestamp tracking",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": null,
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "in_review",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/CRP-307-Macrium-BCR-baseline-drive-candidate-validation-an",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig",
+      "details": "Configure drive candidate list parameter, track MRM/ActM timestamps in registry, and validate newest log freshness against backup",
+      "priority": 5,
+      "plan_path": "docs/Proposals/CRP-307-Macrium-BCR-baseline-drive-candidate-validation-an/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-307-Macrium-BCR-baseline-drive-candidate-validation-an/Walkthrough.md",
+      "original_crp_id": "CRP-307",
+      "crp_id": "BUG-307",
+      "bug_reclassified_at": "2026-11-06 16:52:07",
+      "bug_reclassification_reason": "Macrium BCR baseline drive candidate validation and registry timestamp tracking",
+      "identity_history": [
+        {
+          "from_identity": "CRP-307",
+          "identity": "BUG-307",
+          "timestamp": "2026-11-06 16:52:07",
+          "user": "rgbig",
+          "reason": "Macrium BCR baseline drive candidate validation and registry timestamp tracking"
+        }
+      ],
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-11-06 17:29:35",
+          "user": "rgbig",
+          "note": "",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-11-06 17:41:17",
+          "user": "rgbig",
+          "note": "",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-11-06 17:54:28",
+          "user": "rgbig",
+          "note": "",
+          "cohort_id": "",
+          "cohort_gate": "BCR",
+          "synchronization_outcome": "synchronized"
+        }
+      ],
+      "dates": {
+        "in_progress": "2026-11-06 17:29:35",
+        "verified": "2026-11-06 17:41:17",
+        "in_review": "2026-11-06 17:54:28"
+      },
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "progress_state": "verification",
+      "disposition": null,
+      "bcr_initiated_at": "2026-11-06 18:20:46",
+      "bcr_disposition": null,
+      "bcr_scope": "BUG-307"
     }
   ],
   "testing_mode": "active",
@@ -14573,13 +15249,16 @@
         "id": "CRP-282::LCM_AI",
         "proposal_id": 282,
         "repository": "LCM_AI",
-        "status": "open",
+        "status": "completed",
         "discovered_at": "2026-10-17 22:55:39",
         "reason": "Durable LCM_AI changes discovered during CRP-282 Macrium BCR preparation: .agents/rules/AnalysisGovernancePolicy.md, .agents/rules/DocumentationStandardsPolicy.md, .agents/rules/MethodEfficiencyPolicy.md, .agents/rules/ProposalReviewFlowPolicy.md, .agents/rules/ReviewCommitGovernancePolicy.md, .agents/rules/RuleAuthority.md, docs/LCM-Rules-Cross-Reference.md, .agents/rules/GoalFirstDesignPolicy.md.",
         "observed_reasons": [
           "Durable LCM_AI changes discovered during CRP-282 Macrium BCR preparation: .agents/rules/AnalysisGovernancePolicy.md, .agents/rules/DocumentationStandardsPolicy.md, .agents/rules/MethodEfficiencyPolicy.md, .agents/rules/ProposalReviewFlowPolicy.md, .agents/rules/ReviewCommitGovernancePolicy.md, .agents/rules/RuleAuthority.md, docs/LCM-Rules-Cross-Reference.md, .agents/rules/GoalFirstDesignPolicy.md."
         ],
-        "bcr_identity": "CRP-282"
+        "bcr_identity": "CRP-282",
+        "completed_at": "2026-10-21 23:26:18",
+        "review_receipt": "D:\\Git_Repositories\\LCM_Inventory\\data\\reviews\\review_LCM_AI_20261021_232618.json",
+        "commit_sha": "ec4eebf"
       },
       {
         "id": "BUG-287::LCM_AI",
@@ -14697,6 +15376,30 @@
         "completed_at": "2026-10-20 20:56:10",
         "review_receipt": "D:\\Git_Repositories\\LCM_Inventory\\data\\reviews\\review_LCM_Inventory_20261020_205610.json",
         "commit_sha": "1c11bb603d15e27ee124395c39be08143726d87a"
+      },
+      {
+        "id": "CRP-304::LCM_AI",
+        "proposal_id": 304,
+        "repository": "LCM_AI",
+        "status": "open",
+        "discovered_at": "2026-10-21 22:29:53",
+        "reason": "RULE-LCM-021: canonical AnalyzeFailures and ShowFailureAnalysis macro entries synchronized with dedicated viewer registration and HTTP-only delivery.",
+        "observed_reasons": [
+          "RULE-LCM-021: canonical AnalyzeFailures and ShowFailureAnalysis macro entries synchronized with dedicated viewer registration and HTTP-only delivery."
+        ],
+        "bcr_identity": "CRP-304"
+      },
+      {
+        "id": "CRP-305::LCM_AI",
+        "proposal_id": 305,
+        "repository": "LCM_AI",
+        "status": "open",
+        "discovered_at": "2026-10-21 22:29:53",
+        "reason": "RULE-LCM-021: canonical ToolExplorer macro records exclusive port-9876 Standard Display delivery and prohibits local-file fallback.",
+        "observed_reasons": [
+          "RULE-LCM-021: canonical ToolExplorer macro records exclusive port-9876 Standard Display delivery and prohibits local-file fallback."
+        ],
+        "bcr_identity": "CRP-305"
       }
     ]
   },

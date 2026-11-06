@@ -1,14 +1,16 @@
 <!--
   Template: CM_CONTROL_HUB.html
   Version: 10.0.1
-  Date: 2026-10-13
+  Date: 2026-10-21
 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="lcm-display-id" content="hub">
   <title>LCM Control Hub Developer Template - Render Required</title>
+  <script src="/assets/lcm-display-freshness.js" defer></script>
   <script>
     (function() {
       function showLcmErrorBanner(msg, src, line, col, err) {
@@ -40,9 +42,6 @@
       });
     })();
   </script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --ink: #172127;
@@ -1476,14 +1475,15 @@
   </div>
 
   <!-- Global Injected Data -->
-  <script>/*__INJECTED_ATOM_PLACEHOLDER__*/</script>
-  <script>/*__INJECTED_DATA_PLACEHOLDER__*/</script>
+  <script src="/assets/lcm-table-print-atom.js"></script>
+  <script id="lcm-display-data" type="application/json">{"__lcm_unrendered_template__":true}</script>
 
   <script>
     "use strict";
 
     const DAEMON_URL = "http://127.0.0.1:9876";
-    const IS_RENDERED_CONTROL_HUB = typeof RAW_PROPOSALS !== "undefined" && RAW_PROPOSALS !== null;
+    const displayPayload = JSON.parse(document.getElementById("lcm-display-data").textContent);
+    const IS_RENDERED_CONTROL_HUB = !!displayPayload.proposals;
 
     // -------------------------------------------------------------------------
     // Session Lifetime & Conflict Prevention Engine
@@ -1545,20 +1545,18 @@
     broadcastSessionLaunch();
 
     // Application State
-    let proposalsData = (typeof RAW_PROPOSALS !== "undefined" && RAW_PROPOSALS) ? RAW_PROPOSALS : { proposals: [] };
-    let docsCache = (typeof RAW_DOCS_CACHE !== "undefined" && RAW_DOCS_CACHE) ? RAW_DOCS_CACHE : {};
-    let reviewReceipts = (typeof RAW_REVIEW_RECEIPTS !== "undefined" && Array.isArray(RAW_REVIEW_RECEIPTS)) ? RAW_REVIEW_RECEIPTS : [];
-    let activeLog = (typeof RAW_ACTIVE_LOG !== "undefined" && RAW_ACTIVE_LOG) ? RAW_ACTIVE_LOG : "";
+    let proposalsData = displayPayload.proposals || { proposals: [] };
+    let docsCache = displayPayload.docs || {};
+    let reviewReceipts = Array.isArray(displayPayload.reviewReceipts) ? displayPayload.reviewReceipts : [];
+    let activeLog = displayPayload.activeLog || "";
 
     let selectedIds = new Set();
     let activeItemTarget = "";
     let activeRailFilter = "all";
+    let launchFilters = { state: "", event: "", ids: [] };
     let activeSort = "id-desc"; // Highest CRP first by default (e.g. 211 at top)
     let pendingOverrideAction = null;
     let pendingHoldTargets = [];
-    let proposalRevision = "";
-    let proposalRefreshInFlight = false;
-    let hubRefreshEventSource = null;
 
     // Helper functions
     const $ = id => document.getElementById(id);
@@ -1697,13 +1695,27 @@
       populateScopeFilter();
       populateCohortFilter();
       populateItemTargets();
+      const launchParams = new URLSearchParams(window.location.search);
+      const requestedRepo = launchParams.get("Repo");
+      if (requestedRepo && [...$("scopeSelect").options].some(option => option.value === requestedRepo)) {
+        $("scopeSelect").value = requestedRepo;
+      }
+      launchFilters = readLaunchFilters(launchParams);
+      if (launchParams.get("ReviewMode") === "True" || launchParams.get("ReviewMode") === "true") {
+        activeRailFilter = "review";
+      }
+      const requestedIds = launchFilters.ids;
+      const proposalIds = new Map((proposalsData.proposals || []).map(proposal => [String(proposal.id), proposal.id]));
+      selectedIds = new Set(requestedIds.filter(id => proposalIds.has(id)).map(id => proposalIds.get(id)));
+      if (requestedIds.length > 0 && proposalIds.has(requestedIds[0])) {
+        activeItemTarget = `CRP:${proposalIds.get(requestedIds[0])}`;
+        $("itemTargetSelect").value = activeItemTarget;
+      }
       calculateStatusCounts();
       renderTable();
       updateInternalSwitchesDisplay(null);
       renderSelectedItemLifecycle();
       updateDaemonStatus();
-      proposalRevision = getProposalRevision(proposalsData);
-      connectHubRefreshEvents();
 
       // Close dropdowns on outside click
       document.addEventListener("click", (e) => {
@@ -1712,17 +1724,8 @@
         }
       });
 
-      // Window Focus & Visibility: Auto-refresh data when activated
-      window.addEventListener("focus", () => {
-        refreshHubData();
-      });
-      document.addEventListener("visibilitychange", () => {
-        if (!document.hidden) {
-          refreshHubData();
-        }
-      });
       // Top action buttons
-      $("btnRefresh").addEventListener("click", () => refreshHubData(true));
+      $("btnRefresh").addEventListener("click", () => refreshHubData());
       $("btnActivityLogs").addEventListener("click", showActivityLogs);
       $("btnDatesLedger").addEventListener("click", showDatesModal);
       $("btnHelp").addEventListener("click", showHelpModal);
@@ -1744,86 +1747,24 @@
       }
     }
 
-    function connectHubRefreshEvents() {
-      if (!IS_RENDERED_CONTROL_HUB || hubRefreshEventSource) return;
-      hubRefreshEventSource = new EventSource(DAEMON_URL + "/hub-events");
-      hubRefreshEventSource.addEventListener("refresh", () => {
-        window.location.reload();
-      });
-      hubRefreshEventSource.onerror = () => {
-        updateDaemonStatus();
-      };
-    }
-
-    function getProposalRevision(data) {
-      const proposals = Array.isArray(data?.proposals) ? data.proposals : [];
-      const stateFingerprint = proposals.map(p => {
-        const history = Array.isArray(p.state_history) ? p.state_history : [];
-        const latest = history[history.length - 1] || {};
-        return [
-          p.id,
-          p.state,
-          p.progress_state,
-          p.disposition,
-          p.priority,
-          latest.timestamp,
-          latest.state
-        ].join(":");
-      }).join("|");
-      return `${data?.updated_at || ""}:${stateFingerprint}`;
-    }
-
-    async function refreshHubData(forceRender = false) {
-      if (proposalRefreshInFlight) return;
-      proposalRefreshInFlight = true;
-      let dataChanged = false;
-      try {
-        const res = await fetch(DAEMON_URL + "/proposals", { cache: "no-store" });
-        if (res.ok) {
-          const fresh = await res.json();
-          if (fresh && fresh.proposals) {
-            const freshRevision = getProposalRevision(fresh);
-            if (freshRevision !== proposalRevision) {
-              proposalsData = fresh;
-              proposalRevision = freshRevision;
-              dataChanged = true;
-              populateScopeFilter();
-              populateCohortFilter();
-              populateItemTargets();
-              reconcileActiveItemTarget();
-            }
-          }
-        }
-        const docsResponse = await fetch(DAEMON_URL + "/proposal-documents", { cache: "no-store" });
-        if (docsResponse.ok) {
-          const docsPayload = await docsResponse.json();
-          if (docsPayload && docsPayload.documents) {
-            docsCache = docsPayload.documents;
-          }
-        }
-      } catch (err) {
-        console.warn("Could not query daemon for live proposals, using cache:", err);
-      } finally {
-        proposalRefreshInFlight = false;
+    async function refreshHubData() {
+      if (!window.LcmDisplay || typeof window.LcmDisplay.refresh !== "function") {
+        setActionResult("Display refresh is unavailable; the current published snapshot is retained.", "error");
+        return;
       }
-      if (forceRender || dataChanged) {
-        calculateStatusCounts();
-        renderTable();
-        renderSelectionPanel();
-        renderReviewCohortPreview();
-        renderSelectedItemLifecycle();
-      }
-      updateDaemonStatus();
+      return window.LcmDisplay.refresh();
     }
 
     function populateScopeFilter() {
       const select = $("scopeSelect");
+      const previous = select.value;
       const repos = new Set();
       (proposalsData.proposals || []).forEach(p => {
         if (p.origin_repo) repos.add(p.origin_repo);
       });
       select.innerHTML = '<option value="">All Repositories</option>' +
         Array.from(repos).sort().map(r => `<option value="${esc(r)}">${esc(r)}</option>`).join("");
+      if (repos.has(previous)) select.value = previous;
     }
 
     function isLiveReviewCohort(cohort) {
@@ -2280,7 +2221,7 @@
     function selectCohortAndOpenActions(event, cohortId) {
       event.stopPropagation();
       selectItemTarget(`COH:${cohortId}`);
-      deferShowDropdownToggle(`cohort-${cohortId}`);
+      deferShowDropdown(`cohort-${cohortId}`);
     }
 
     function manageCohortState(cohortId, action) {
@@ -2395,6 +2336,7 @@
     }
 
     function filterByRail(status) {
+      launchFilters.state = "";
       if (status === "all" || activeRailFilter === status) {
         activeRailFilter = "all";
         document.querySelectorAll(".rail-state").forEach(el => el.classList.remove("active"));
@@ -2419,6 +2361,7 @@
     }
 
     function applyPresetFilter(preset) {
+      launchFilters.state = "";
       activeRailFilter = preset;
       document.querySelectorAll(".rail-state").forEach(el => el.classList.remove("active"));
       const el = $("rail-" + activeRailFilter);
@@ -2434,6 +2377,7 @@
     }
 
     function resetFilters() {
+      launchFilters = { state: "", event: "", ids: [] };
       $("filterQueryInput").value = "";
       $("scopeSelect").value = "";
       if ($("cohortSelect")) $("cohortSelect").value = "";
@@ -2473,6 +2417,7 @@
     }
 
     function applyColumnFilters() {
+      launchFilters.state = "";
       activeRailFilter = "all";
       document.querySelectorAll(".rail-state").forEach(el => el.classList.remove("active"));
       const allRail = $("rail-all");
@@ -2484,7 +2429,30 @@
     // -------------------------------------------------------------------------
     // Advanced Query & Column Filtering Engine
     // -------------------------------------------------------------------------
+    function readLaunchFilters(params) {
+      return {
+        state: (params.get("State") || "").trim().toLowerCase(),
+        event: (params.get("StateEvent") || "").trim().toLowerCase(),
+        ids: (params.get("Id") || "").split(",").map(value => value.trim().replace(/^(?:CRP|BUG)-?/i, ""))
+          .filter(value => /^\d+$/.test(value)).map(value => String(Number(value)))
+      };
+    }
+
+    function proposalMatchesLaunchFilters(p) {
+      if (launchFilters.state && String(p.state || "").toLowerCase() !== launchFilters.state) return false;
+      if (launchFilters.ids.length && !launchFilters.ids.includes(String(p.id))) return false;
+      if (launchFilters.event) {
+        const event = launchFilters.event;
+        const recorded = p.dates?.[event];
+        const value = recorded && recorded !== "-" && recorded !== "—"
+          ? recorded : (event === "created" ? p.timestamp : event === "pushed" ? p.pushed_at : "");
+        if (!value || value === "-" || value === "—") return false;
+      }
+      return true;
+    }
+
     function evaluateProposalMatch(p, tokens, scopeVal, cohortVal, thStatus, thPlan, thProg, thPrio) {
+      if (!proposalMatchesLaunchFilters(p)) return false;
       const state = String(p.state || "").toLowerCase();
       const prog = String(p.progress_state || "").toLowerCase();
       const vis = getVisibleStatus(p);
@@ -3251,7 +3219,7 @@
         while (Date.now() < confirmationDeadline) {
           await new Promise(resolve => setTimeout(resolve, 300));
           if (isConfirmed(await getWorkspaceSwitchLedger())) {
-            await refreshHubData(true);
+            await refreshHubData();
             setActionResult(`${targetDisplay} confirmed by the refreshed ledger.`, "success", "SWITCH");
             return;
           }
@@ -3888,25 +3856,21 @@
         return `@@MERMAID_BLOCK_${index}@@`;
       });
       const preview = withPlaceholders
-        .replace(/!\[([^\]]*)\]\(([^)\s]+)\)/g, '<figure><img src="$2" alt="$1" style="max-width:100%;height:auto;"><figcaption>$1</figcaption></figure>')
+        .replace(/!\[([^\]]*)\]\(([^)\s]+)\)/g, (_, alt, source) =>
+          /^\/assets\/[A-Za-z0-9._-]+$/.test(source)
+            ? `<figure><img src="${source}" alt="${esc(alt)}" style="max-width:100%;height:auto;"><figcaption>${esc(alt)}</figcaption></figure>`
+            : esc(alt))
         .replace(/\r?\n/g, '<br>');
       return preview.replace(/@@MERMAID_BLOCK_(\d+)@@/g, (_, index) => `<div class="mermaid">${mermaidBlocks[Number(index)]}</div>`);
     }
 
-    async function renderMermaidPreviews(container) {
+    function renderMermaidPreviews(container) {
       const nodes = container.querySelectorAll(".mermaid");
       if (nodes.length === 0) return;
-      try {
-        const module = await import("https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs");
-        module.default.initialize({ startOnLoad: false, securityLevel: "strict" });
-        await module.default.run({ nodes });
-      } catch (error) {
-        nodes.forEach(node => {
-          node.classList.add("mermaid-source-fallback");
-          node.textContent = `Mermaid preview unavailable; source retained:\n${node.textContent}`;
-        });
-        console.warn("Unable to render Mermaid preview.", error);
-      }
+      nodes.forEach(node => {
+        node.classList.add("mermaid-source-fallback");
+        node.textContent = `Mermaid source preview:\n${node.textContent}`;
+      });
     }
 
     function showDocumentModal(title, content, id, docKey) {
@@ -3965,8 +3929,6 @@
         body: JSON.stringify({ filePath: docKey })
       });
     }
-
-    window.addEventListener("focus", () => refreshHubData(true));
 
     function showProposalDiff(id) {
       const p = (proposalsData.proposals || []).find(x => x.id === id);
@@ -4111,6 +4073,80 @@ REST DAEMON BRIDGE:
     });
 
     window.addEventListener("load", renderTable);
+
+    window.LcmDisplayApply = async function(html) {
+      const parsedDocument = new DOMParser().parseFromString(html, "text/html");
+      const payloadNode = parsedDocument.querySelector('script#lcm-display-data[type="application/json"]');
+      if (!payloadNode) throw new Error("Published Control Hub page has no JSON display payload.");
+      const payload = JSON.parse(payloadNode.textContent);
+      if (!payload.proposals || !Array.isArray(payload.proposals.proposals)) {
+        throw new Error("Published Control Hub payload is malformed.");
+      }
+      const previousScope = $("scopeSelect")?.value || "";
+      proposalsData = payload.proposals;
+      docsCache = payload.docs || {};
+      reviewReceipts = Array.isArray(payload.reviewReceipts) ? payload.reviewReceipts : [];
+      activeLog = payload.activeLog || "";
+      const availableIds = new Map(proposalsData.proposals.map(proposal => [String(proposal.id), proposal.id]));
+      selectedIds = new Set([...selectedIds]
+        .filter(id => availableIds.has(String(id)))
+        .map(id => availableIds.get(String(id))));
+      populateScopeFilter();
+      if ([...$("scopeSelect").options].some(option => option.value === previousScope)) $("scopeSelect").value = previousScope;
+      populateCohortFilter();
+      populateItemTargets();
+      reconcileActiveItemTarget();
+      calculateStatusCounts();
+      renderTable();
+      renderSelectionPanel();
+      renderReviewCohortPreview();
+      renderSelectedItemLifecycle();
+      renderDatesTable();
+    };
+
+    window.LcmDisplayCaptureState = function() {
+      return {
+        selectedIds: [...selectedIds],
+        activeItemTarget,
+        activeRailFilter,
+        launchFilters: { ...launchFilters, ids: [...launchFilters.ids] },
+        scope: $("scopeSelect").value,
+        activeSort
+      };
+    };
+
+    window.LcmDisplayRestoreState = function(state) {
+      if (!state || typeof state !== "object") return;
+      const availableIds = new Map((proposalsData.proposals || []).map(proposal => [String(proposal.id), proposal.id]));
+      if (Array.isArray(state.selectedIds)) {
+        selectedIds = new Set(state.selectedIds
+          .filter(id => availableIds.has(String(id)))
+          .map(id => availableIds.get(String(id))));
+      }
+      if (typeof state.activeItemTarget === "string") activeItemTarget = state.activeItemTarget;
+      if (state.launchFilters && Array.isArray(state.launchFilters.ids)) {
+        launchFilters = {
+          state: String(state.launchFilters.state || ""),
+          event: String(state.launchFilters.event || ""),
+          ids: state.launchFilters.ids.map(String)
+        };
+      }
+      if (typeof state.scope === "string") $("scopeSelect").value = state.scope;
+      if (["all", "open", "inprogress", "review", "complete", "published", "held"].includes(state.activeRailFilter)) {
+        activeRailFilter = state.activeRailFilter;
+      }
+      if (["id-desc", "id-asc", "prio-desc", "prio-asc", "updated-desc", "updated-asc"].includes(state.activeSort)) {
+        activeSort = state.activeSort;
+      }
+      populateItemTargets();
+      reconcileActiveItemTarget();
+      if ($("sortSelect")) $("sortSelect").value = activeSort;
+      calculateStatusCounts();
+      renderTable();
+      renderSelectionPanel();
+      renderReviewCohortPreview();
+      renderSelectedItemLifecycle();
+    };
   </script>
 </body>
 </html>

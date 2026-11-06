@@ -11,8 +11,8 @@
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
   Path: LCM_Inventory/tools/Show-Rules.ps1
   Authors: Rolf, LCM_AI Governance
-  Version: 10.0.0
-  Date: 2026-10-13
+  Version: 10.0.1
+  Date: 2026-10-21
 .PARAMETER Domain
   Pre-filter by governance domain (e.g. 'Proposal & Review Flow', 'PowerShell Standards', 'Security', 'All'). Defaults to 'All'.
 .PARAMETER Filter
@@ -50,7 +50,9 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$scriptVersion = '10.0.0'
+Import-Module -Name (Join-Path $PSScriptRoot '..\modules\LcmDisplayVersion.psm1') -Force
+$scriptVersion = Get-LcmDisplaySourceVersion -Path $PSCommandPath
+$provenance = Get-LcmDisplayProvenance -ScriptPath $PSCommandPath -TemplatePath $PSCommandPath
 $scriptName = 'Show-Rules'
 
 # ------------------------------------------------------------------------------
@@ -132,7 +134,7 @@ if (Test-Path -LiteralPath $agentsMdPath) {
   foreach ($line in $agentsLines) {
     $trimmed = $line.Trim()
     if ($trimmed.StartsWith('| **[')) {
-      $parts = @($trimmed.Split('|') | Where-Object { $_ -ne $null })
+      $parts = @($trimmed.Split('|') | Where-Object { $null -ne $_ })
       if ($parts.Count -ge 6) {
         $filePart = $parts[1].Trim()
         $idPart = $parts[2].Trim()
@@ -254,19 +256,12 @@ if ($NoBrowser) {
 # ------------------------------------------------------------------------------
 # 4. Generate Interactive HTML Dashboard
 # ------------------------------------------------------------------------------
-$scratchDir = Join-Path $lcmRoot 'scratch'
-if (-not (Test-Path -LiteralPath $scratchDir)) {
-  New-Item -ItemType Directory -Path $scratchDir -Force | Out-Null
+$artifactsDir = Join-Path $lcmRoot 'data\artifacts'
+if (-not (Test-Path -LiteralPath $artifactsDir)) {
+  New-Item -ItemType Directory -Path $artifactsDir -Force | Out-Null
 }
 
-$assetsDir = Join-Path $lcmRoot 'assets'
-$cssPath = Join-Path $assetsDir 'lcm-dashboard-theme.css'
-$printAtomPath = Join-Path $assetsDir 'lcm-table-print-atom.js'
-
-$themeCssContent = if (Test-Path -LiteralPath $cssPath) { Get-Content -LiteralPath $cssPath -Raw -Encoding UTF8 } else { "" }
-$printAtomContent = if (Test-Path -LiteralPath $printAtomPath) { Get-Content -LiteralPath $printAtomPath -Raw -Encoding UTF8 } else { "" }
-
-$rulesJson = $ruleEntries | ConvertTo-Json -Depth 5 -Compress
+$rulesJson = ([ordered]@{ rules = @($ruleEntries.ToArray()) } | ConvertTo-Json -Depth 6 -Compress).Replace('<', '\u003c')
 
 $htmlTemplate = @'
 <!DOCTYPE html>
@@ -274,11 +269,12 @@ $htmlTemplate = @'
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LCM Rules Explorer - Authoritative Governance Policies</title>
+  <meta name="lcm-display-id" content="rules">
+  <title>LCM Rules Explorer - Authoritative Governance Policies {{DISPLAY_VERSION}}</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📜</text></svg>">
+  <link rel="stylesheet" href="/assets/StandardTableDisplay.css">
+  <script src="/assets/lcm-display-freshness.js" defer></script>
   <style>
-/*__THEME_CSS__*/
-
     :root {
       --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
       --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
@@ -1132,7 +1128,7 @@ $htmlTemplate = @'
     <div class="brand">
       <div class="brand-icon">📜</div>
       <div class="brand-titles">
-        <h1>LCM Authoritative Rules Explorer</h1>
+        <h1>LCM Authoritative Rules Explorer <small>{{DISPLAY_VERSION}}</small></h1>
         <div class="subtitle">Canonical Hub: D:\Git_Repositories\.agents\rules\ | Single Source of Truth</div>
       </div>
     </div>
@@ -1272,19 +1268,24 @@ $htmlTemplate = @'
     </div>
   </div>
 
-  <script>
-/*__PRINT_ATOM_JS__*/
-  </script>
+  <script src="/assets/lcm-table-print-atom.js"></script>
+  <script id="lcm-display-data" type="application/json">/*__RULES_JSON__*/</script>
 
   <script>
-    const RULES_DATA = /*__RULES_JSON__*/;
+    let RULES_DATA = JSON.parse(document.getElementById('lcm-display-data').textContent).rules;
     const DAEMON_URL = 'http://127.0.0.1:9876';
 
-    let initialDomain = /*__INITIAL_DOMAIN__*/;
-    let initialFilter = /*__INITIAL_FILTER__*/;
+    const displayQuery = new URLSearchParams(window.location.search);
+    let initialDomain = displayQuery.has('Domain')
+      ? displayQuery.get('Domain').slice(0, 200)
+      : /*__INITIAL_DOMAIN__*/;
+    let initialFilter = displayQuery.has('Filter')
+      ? displayQuery.get('Filter').slice(0, 300)
+      : /*__INITIAL_FILTER__*/;
     let currentSortField = 'Name';
     let currentSortAsc = true;
     let activeModalRule = null;
+    let initialDropdownStateApplied = false;
 
     // Initialize Theme
     function initTheme() {
@@ -1348,23 +1349,23 @@ $htmlTemplate = @'
       const scopes = [...new Set(RULES_DATA.map(r => r.Scope))].filter(Boolean).sort();
 
       const ruleSel = document.getElementById('filter-rule');
-      rules.forEach(x => { ruleSel.add(new Option(x, x)); });
-
       const idSel = document.getElementById('filter-id');
-      ids.forEach(x => { idSel.add(new Option(x, x)); });
-
       const domainSel = document.getElementById('filter-domain');
-      domains.forEach(x => { domainSel.add(new Option(x, x)); });
-
       const scopeSel = document.getElementById('filter-scope');
-      scopes.forEach(x => { scopeSel.add(new Option(x, x)); });
+      [[ruleSel, rules], [idSel, ids], [domainSel, domains], [scopeSel, scopes]].forEach(([select, values]) => {
+        const selected = select.value;
+        select.replaceChildren(new Option('All', 'All'));
+        values.forEach(value => select.add(new Option(value, value)));
+        select.value = values.includes(selected) ? selected : 'All';
+      });
 
-      if (initialDomain && initialDomain !== 'All') {
+      if (!initialDropdownStateApplied && initialDomain && initialDomain !== 'All' && domains.includes(initialDomain)) {
         domainSel.value = initialDomain;
       }
-      if (initialFilter) {
+      if (!initialDropdownStateApplied && initialFilter) {
         document.getElementById('searchInput').value = initialFilter;
       }
+      initialDropdownStateApplied = true;
     }
 
     // Action Results Banner management
@@ -1672,16 +1673,11 @@ $htmlTemplate = @'
 
     // Refresh rules from disk via daemon re-query
     async function refreshRules() {
-      showActionResults('🔄 Refreshing Rules', '<span>Re-indexing authoritative rules from disk...</span>', '');
-      try {
-        await fetch(DAEMON_URL + '/execute', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ command: 'pwsh -File LCM_Inventory/tools/Show-Rules.ps1 -NoLaunch', elevated: false, noExit: false }),
-          signal: AbortSignal.timeout(2000)
-        });
-      } catch (e) {}
-      setTimeout(() => { window.location.reload(); }, 600);
+      if (!window.LcmDisplay || typeof window.LcmDisplay.refresh !== 'function') {
+        showActionResults('Refresh unavailable', '<span>The current rules snapshot is retained.</span>', '');
+        return;
+      }
+      return window.LcmDisplay.refresh();
     }
 
     // Keyboard navigation
@@ -1755,6 +1751,31 @@ $htmlTemplate = @'
     }
 
     applyFilters();
+
+    window.LcmDisplayApply = async function(html) {
+      const parsedDocument = new DOMParser().parseFromString(html, 'text/html');
+      const payloadNode = parsedDocument.querySelector('script#lcm-display-data[type="application/json"]');
+      if (!payloadNode) throw new Error('Published rules page has no JSON display payload.');
+      const payload = JSON.parse(payloadNode.textContent);
+      if (!payload || !Array.isArray(payload.rules)) throw new Error('Published rules payload is malformed.');
+      const modalName = activeModalRule?.Name;
+      RULES_DATA = payload.rules;
+      populateDropdowns();
+      applyFilters();
+      if (modalName && RULES_DATA.some(rule => rule.Name === modalName)) openRuleModalByName(modalName);
+    };
+
+    window.LcmDisplayCaptureState = function() {
+      return { sortField: currentSortField, sortAsc: currentSortAsc, modalRule: activeModalRule?.Name || null };
+    };
+
+    window.LcmDisplayRestoreState = function(state) {
+      if (!state || typeof state !== 'object') return;
+      if (typeof state.sortField === 'string') currentSortField = state.sortField;
+      if (typeof state.sortAsc === 'boolean') currentSortAsc = state.sortAsc;
+      applyFilters();
+      if (state.modalRule && RULES_DATA.some(rule => rule.Name === state.modalRule)) openRuleModalByName(state.modalRule);
+    };
   </script>
 </body>
 </html>
@@ -1763,13 +1784,12 @@ $htmlTemplate = @'
 $safeDomainJson = $Domain | ConvertTo-Json -Compress
 $safeFilterJson = $Filter | ConvertTo-Json -Compress
 
-$htmlContent = $htmlTemplate.Replace('/*__THEME_CSS__*/', $themeCssContent)
-$htmlContent = $htmlContent.Replace('/*__PRINT_ATOM_JS__*/', $printAtomContent)
+$htmlContent = $htmlTemplate.Replace('{{DISPLAY_VERSION}}', $provenance.Label)
 $htmlContent = $htmlContent.Replace('/*__RULES_JSON__*/', $rulesJson)
 $htmlContent = $htmlContent.Replace('/*__INITIAL_DOMAIN__*/', $safeDomainJson)
 $htmlContent = $htmlContent.Replace('/*__INITIAL_FILTER__*/', $safeFilterJson)
 
-$renderedHtmlPath = Join-Path $scratchDir "SHOW_RULES.html"
+$renderedHtmlPath = Join-Path $artifactsDir 'SHOW_RULES.html'
 [System.IO.File]::WriteAllText($renderedHtmlPath, $htmlContent, [System.Text.UTF8Encoding]::new($false))
 
 Write-ToolLog -Message "Interactive HTML dashboard rendered: $renderedHtmlPath" -Level ACTION
@@ -1778,45 +1798,14 @@ Write-ToolLog -Message "Interactive HTML dashboard rendered: $renderedHtmlPath" 
 # 5. Dispatch to Session 1 Interactive Desktop
 # ------------------------------------------------------------------------------
 if (-not $NoLaunch) {
-  $fileUri = [System.Uri]::new($renderedHtmlPath).AbsoluteUri
-  
-  # Dynamic User Default Browser Discovery (Windows Registry UserChoice)
-  $browserPath = $null
-  $browserName = "unknown"
-  try {
-    $progId = (Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice" -ErrorAction Stop).ProgId
-    $cmd = (Get-ItemProperty -Path "Registry::HKEY_CLASSES_ROOT\$progId\shell\open\command" -ErrorAction Stop).'(Default)'
-    if ($cmd -match '"([^"]+\.exe)"') { $browserPath = $Matches[1] }
-    elseif ($cmd -match '^\s*([^\s]+\.exe)') { $browserPath = $Matches[1] }
-    if ($browserPath) {
-      $browserName = [System.IO.Path]::GetFileNameWithoutExtension($browserPath).ToLowerInvariant()
-    }
-  } catch {}
-
-  if (-not $browserPath -or -not (Test-Path -LiteralPath $browserPath)) {
-    $zenPath = "D:\Tools\Zen Browser\zen.exe"
-    if (Test-Path -LiteralPath $zenPath) {
-      $browserPath = $zenPath
-      $browserName = "zen"
-    }
+  $standardDisplayModule = Join-Path $lcmRoot 'modules\LcmStandardDisplay.psm1'
+  if (-not (Test-Path -LiteralPath $standardDisplayModule -PathType Leaf)) {
+    throw "Standard Display launcher module is missing: $standardDisplayModule"
   }
-
-  $dispatcher = Join-Path $lcmRoot 'tools\internal\Invoke-InteractiveDesktop.ps1'
-
-  if ($browserPath -and (Test-Path -LiteralPath $browserPath)) {
-    $tabArg = if ($browserName -in @('zen', 'firefox')) { "--new-tab `"$fileUri`"" } else { "`"$fileUri`"" }
-    Write-ToolLog -Message "Launching Rules Explorer in $browserName tab: $fileUri" -Level ACTION
-    if (Test-Path -LiteralPath $dispatcher) {
-      & $dispatcher -FilePath $browserPath -ArgumentList $tabArg
-    } else {
-      Start-Process -FilePath $browserPath -ArgumentList $tabArg
-    }
-  } else {
-    if (Test-Path -LiteralPath $dispatcher) {
-      & pwsh -NoProfile -ExecutionPolicy Bypass -File $dispatcher -FilePath "explorer.exe" -ArgumentList "`"$fileUri`"" | Out-Null
-    } else {
-      Start-Process "explorer.exe" -ArgumentList "`"$fileUri`""
-    }
+  Import-Module -Name $standardDisplayModule -Force
+  Open-LcmStandardDisplay -DisplayId rules -Parameters @{
+    Domain = $Domain
+    Filter = $Filter
   }
 
   Write-Host "==========================================================================" -ForegroundColor Cyan
@@ -1824,7 +1813,7 @@ if (-not $NoLaunch) {
   Write-Host "==========================================================================" -ForegroundColor Cyan
   Write-Host " Dashboard: $renderedHtmlPath"
   Write-Host " Rules Hub: $rulesHubDir (Total: $($ruleEntries.Count))"
-  Write-Host " Status   : Launched on interactive desktop" -ForegroundColor Green
+  Write-Host " Status   : Launched through port 9876 HTTP Standard Display" -ForegroundColor Green
   Write-Host "==========================================================================" -ForegroundColor Cyan
 } else {
   Write-Host "==========================================================================" -ForegroundColor Cyan

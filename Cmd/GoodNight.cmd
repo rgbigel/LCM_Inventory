@@ -6,10 +6,11 @@ if not defined GitRoot (
   echo ERROR: Machine Git_Root registry value is unavailable.
   exit /b 1
 )
-if not exist "%GitRoot%\LCM_Inventory\tools\Invoke-WorkspaceGoodNight.ps1" (
+if not exist "%GitRoot%\LCM_Inventory\tools\Invoke-LCM_GoodNight.ps1" (
   echo ERROR: GoodNight tool was not found beneath machine Git_Root: %GitRoot%
   exit /b 1
 )
-pwsh.exe -NoProfile -ExecutionPolicy Bypass -File "%GitRoot%\LCM_Inventory\tools\Invoke-WorkspaceGoodNight.ps1" %*
+pwsh.exe -NoProfile -ExecutionPolicy Bypass -File "%GitRoot%\LCM_Inventory\tools\Invoke-LCM_GoodNight.ps1" %*
 set "ExitCode=%ERRORLEVEL%"
 endlocal & exit /b %ExitCode%
+

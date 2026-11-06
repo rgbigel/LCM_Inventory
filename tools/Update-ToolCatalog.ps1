@@ -11,8 +11,8 @@
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
   Path: D:\Git_Repositories\LCM_Inventory\tools\Update-ToolCatalog.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.0
-  Date: 2026-10-20
+  Version: 10.0.1
+  Date: 2026-10-21
 .PARAMETER Silent
   Suppresses non-error terminal output (useful in automated pipelines).
 .PARAMETER ShowAll
@@ -41,7 +41,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$scriptVersion = "10.0.0"
+$scriptVersion = "10.0.1"
 $scriptName = "Update-ToolCatalog"
 
 # ------------------------------------------------------------------------------
@@ -141,16 +141,6 @@ $readmePath = Join-Path $docsDir 'README.md'
 # 2. Authoritative Metadata Dictionary with Role, Audience, and Short-Names
 # ------------------------------------------------------------------------------
 $metadataOverrides = @{
-  "LCM_Tools\tools\Set-GitFileTimes.ps1" = @{
-    ShortName   = "SetGitFileTimes"
-    Group       = "LCM_Tools"
-    Domain      = "LCM_Tools"
-    Audience    = "Developer"
-    Role        = "Utility"
-    NoExit      = $false
-    Category    = "Git Utilities"
-    Description = "Sets tracked file modification times to each file's latest Git commit author timestamp."
-  }
   "LCM_Tools\tools\Sync-LCMResearchSnapshot.ps1" = @{
     ShortName   = "SyncLCMResearchSnapshot"
     Group       = "LCM_Tools"
@@ -591,13 +581,14 @@ $metadataOverrides = @{
     Description = "WPF desktop dialog for secure ephemeral credentials with password reveal (RULE-SUB-003)."
     Example     = 'pwsh -File "HaSSD06\tools\subsystem\Show-HaAuthDialog.ps1"'
   }
-  "Test-WorkspaceReadiness.ps1" = @{
-    ShortName   = "TestWorkspaceReadiness"
+  "Test-LCM_Readiness.ps1" = @{
+    ShortName   = "TestLCM_Readiness"
+    Aliases     = @("TestWorkspaceReadiness")
     Audience    = "User"
     Role        = "QualityGate"
     Category    = "Quality Gate"
     Description = "Executes the 5-stage automated LCM readiness quality gate across all repositories."
-    Example     = 'pwsh -File "LCM_Inventory\tools\Test-WorkspaceReadiness.ps1"'
+    Example     = 'pwsh -File "LCM_Inventory\tools\Test-LCM_Readiness.ps1"'
   }
   "Get-ChkdskBootLog.ps1" = @{
     ShortName   = "GetChkdskBootLog"
@@ -860,27 +851,8 @@ function Get-LcmToolDependencies {
 # ------------------------------------------------------------------------------
 # 4. Scan Locations
 # ------------------------------------------------------------------------------
-$scanDefinitions = @(
-  @{ Group = "LCM_Inventory"; Domain = "LCM_Inventory"; Path = "LCM_Inventory\tools";             Filter = "*.ps1" },
-  @{ Group = "LCM_Inventory"; Domain = "LCM_Inventory"; Path = "LCM_Inventory\tools";             Filter = "*.py" },
-  @{ Group = "LCM_Tools";     Domain = "LCM_Tools";     Path = "LCM_Tools\tools";                  Filter = "*.ps1" },
-  @{ Group = "SystemConfiguration"; Domain = "SystemConfiguration"; Path = "SystemConfiguration\Source";            Filter = "@*" },
-  @{ Group = "SystemConfiguration"; Domain = "SystemConfiguration"; Path = "SystemConfiguration\Source";            Filter = "$*" },
-  @{ Group = "SystemConfiguration"; Domain = "SystemConfiguration"; Path = "SystemConfiguration\Source";            Filter = "*.ps1" },
-  @{ Group = "SystemConfiguration"; Domain = "SystemConfiguration"; Path = "SystemConfiguration\Source";            Filter = "*.cmd" },
-  @{ Group = "SystemConfiguration"; Domain = "SystemConfiguration"; Path = "SystemConfiguration\Source\Invariants"; Filter = "*.ps1" },
-  @{ Group = "SystemConfiguration"; Domain = "SystemConfiguration"; Path = "SystemConfiguration\Source\Customizations"; Filter = "@*" },
-  @{ Group = "SystemConfiguration"; Domain = "SystemConfiguration"; Path = "SystemConfiguration\Source\Customizations"; Filter = "*.ps1" },
-  @{ Group = "SystemConfiguration"; Domain = "SystemConfiguration"; Path = "SystemConfiguration\Source\Repair";     Filter = "*.ps1" },
-  @{ Group = "SystemConfiguration"; Domain = "SystemConfiguration"; Path = "SystemConfiguration\Source\Repair";     Filter = "*.cmd" },
-  @{ Group = "HaSSD06";             Domain = "HaSSD06";             Path = "HaSSD06\tools";                         Filter = "*.ps1" },
-  @{ Group = "HaSSD06";             Domain = "HaSSD06";             Path = "HaSSD06\tools";                         Filter = "*.py" },
-  @{ Group = "HaSSD06";             Domain = "HaSSD06";             Path = "HaSSD06\tools\subsystem";               Filter = "*.ps1" },
-  @{ Group = "HaSSD06";             Domain = "HaSSD06_Inventory";   Path = "HaSSD06_Inventory\tools";               Filter = "*.ps1" },
-  @{ Group = "HaSSD06";             Domain = "HaSSD06_Inventory";   Path = "HaSSD06_Inventory\tools";               Filter = "*.py" },
-  @{ Group = "HaSSD06";             Domain = "HaSSD06";             Path = "HaSSD06";                               Filter = "*.py" },
-  @{ Group = "LCM_Supervision"; Domain = "LCM_Supervision"; Path = "LCM_Supervision\tools";     Filter = "*.ps1" }
-)
+Import-Module -Name (Join-Path $inventoryRoot 'modules\LcmToolScanLocations.psm1')
+$scanDefinitions = @(Get-LcmToolScanLocations)
 
 $toolsList = [System.Collections.Generic.List[PSCustomObject]]::new()
 $processedPaths = [System.Collections.Generic.HashSet[string]]::new()
@@ -1131,7 +1103,7 @@ try {
       if ($meta.ContainsKey('NoExit')) {
         $noExitRequired = [bool]$meta.NoExit
       } else {
-        if ($baseStem -in @('Show-ToolsExplorer', 'ToolsExplorer', 'Show-Tools', 'ShowTools', 'Show-ToolIndex', 'Show-HaInventory', 'ShowHaInventory', 'Show-HaInventoryApp', 'Build-HaInventoryViewer', 'Update-ToolCatalog', 'Sync-ToolSymlinks', 'Show-WorkspaceInventoryApp', 'Update-HaInventory') -or
+        if ($baseStem -in @('Show-ToolsExplorer', 'ToolsExplorer', 'Show-Tools', 'ShowTools', 'Show-ToolIndex', 'Show-HaInventory', 'ShowHaInventory', 'Show-HaInventoryApp', 'Build-HaInventoryViewer', 'Update-ToolCatalog', 'Sync-ToolSymlinks', 'Show-WorkspaceInventoryApp', 'Show-LCM_InventoryApp', 'Update-HaInventory') -or
             $roleVal -in @('DesktopGUI', 'SubsystemGUI', 'GUI') -or
             ($roleVal -in @('QualityGate', 'InventoryTelemetry', 'SubsystemTelemetry', 'ReviewCommit') -and -not $adminRequired -and $audVal -eq 'Developer')) {
           $noExitRequired = $false
@@ -1292,25 +1264,17 @@ try {
   [void]$sb.AppendLine("Purpose: Authoritative index of all Lifecycle Model (LCM) and Subsystem tools with Role, ShortName, and User vs Developer classification.  ")
   [void]$sb.AppendLine("Path: LCM_Inventory/docs/README.md  ")
   [void]$sb.AppendLine("Authors: Rolf, LCM_AI Engine  ")
-  [void]$sb.AppendLine("Version: 10.0.0  ")
+  [void]$sb.AppendLine("Version: $scriptVersion  ")
   [void]$sb.AppendLine("Status: Authoritative Reference  ")
   $now = (Get-Date).ToString('yyyy-MM-dd HH:mm:ss')
   [void]$sb.AppendLine("Updated: $now  ")
   [void]$sb.AppendLine('')
   [void]$sb.AppendLine('---')
   [void]$sb.AppendLine('')
-  [void]$sb.AppendLine('## Quick Execution')
-  [void]$sb.AppendLine('All short-name commands are in `LCM_Inventory/Cmd/` (included in System `%PATH%`).')
-  [void]$sb.AppendLine('Run tools from anywhere in the terminal:')
+  [void]$sb.AppendLine('## Workspace Readiness')
+  [void]$sb.AppendLine('`TestWorkspaceReadiness` is the required workspace quality gate, not an example')
+  [void]$sb.AppendLine('command. Run it from any terminal before a governed handoff:')
   [void]$sb.AppendLine('```cmd')
-  [void]$sb.AppendLine(':: Launch interactive Tool Explorer dashboard')
-  [void]$sb.AppendLine('ShowTools')
-  [void]$sb.AppendLine('')
-  [void]$sb.AppendLine(':: Run system invariants enforcement')
-  [void]$sb.AppendLine('KillLogitech')
-  [void]$sb.AppendLine('SetMouseFlicker')
-  [void]$sb.AppendLine('')
-  [void]$sb.AppendLine(':: Run workspace readiness gate')
   [void]$sb.AppendLine('TestWorkspaceReadiness')
   [void]$sb.AppendLine('```')
   [void]$sb.AppendLine('')
@@ -1352,6 +1316,7 @@ try {
 } catch {
   $execStatus = "FAILED"
   Write-ToolLog -Message "Catalog generation error: $_" -Level ERROR
+  throw
 } finally {
   $now = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss.fff")
   Write-ToolLog -Message "" -Level INFO

@@ -15,7 +15,25 @@
 (function(window, document) {
     'use strict';
 
-    const baselineData = window.__LCM_TOOLS_DATA__ || [];
+    const dataElement = document.getElementById('lcm-display-data');
+    let initialPayload = {};
+    try {
+        initialPayload = dataElement ? JSON.parse(dataElement.textContent) : {};
+    } catch (error) {
+        console.error('Invalid tool catalog display payload.', error);
+    }
+    let baselineData = Array.isArray(initialPayload.tools) ? initialPayload.tools : [];
+    const requestedDisplayParams = new URLSearchParams(window.location.search);
+    window.__LCM_CONFIG__ = Object.assign({}, initialPayload.config || {});
+    ['Audience', 'Group', 'Subsystem', 'Role', 'Tool', 'Env', 'Filter'].forEach(key => {
+        if (requestedDisplayParams.has(key)) {
+            window.__LCM_CONFIG__[key] = requestedDisplayParams.get(key).slice(0, 300);
+        }
+    });
+    if (requestedDisplayParams.has('Subsystem') && !requestedDisplayParams.has('Group')) {
+        window.__LCM_CONFIG__.Group = window.__LCM_CONFIG__.Subsystem;
+    }
+    window.__LCM_OPTIONS__ = initialPayload.options || {};
     let toolsData = JSON.parse(JSON.stringify(baselineData));
     let activeRunningTool = null;
     let activeModalTool = null;
@@ -507,15 +525,12 @@
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ filePath: tool.RelativePath || ('tools/' + tool.Name), line: 1 })
-        }).then(r => r.json()).then(data => {
-            if (data.error) {
-                // Fallback to IDE protocol
-                window.location.href = 'vscode://file/D:/Git_Repositories/' + (tool.RelativePath || ('tools/' + tool.Name));
-            } else {
-                showToast('✓ Opened in ' + (data.editor || 'IDE'));
-            }
-        }).catch(err => {
-            window.location.href = 'vscode://file/D:/Git_Repositories/' + (tool.RelativePath || ('tools/' + tool.Name));
+        }).then(async response => {
+            const data = await response.json();
+            if (!response.ok || data.error) throw new Error(data.error || `HTTP ${response.status}`);
+            showToast('✓ Opened in ' + (data.editor || 'IDE'));
+        }).catch(error => {
+            showToast('Editor dispatch failed: ' + error.message);
         });
     }
 
@@ -770,7 +785,7 @@
                 relativePath: activeRenameTool.RelativePath,
                 aliases: modalAliases
             })
-        }).then(r => r.json()).then(data => {
+        }).then(r => r.json()).then(async data => {
             if (data.error) {
                 alert('Rename failed: ' + data.error);
             } else {
@@ -778,7 +793,7 @@
                 activeRenameTool.Aliases = modalAliases;
                 showToast('✓ Renamed to ' + newShort + ' (' + newSrc + ')');
                 closeRenameModal();
-                setTimeout(() => { window.location.reload(); }, 600);
+                if (window.LcmDisplay) await window.LcmDisplay.refresh();
             }
         }).catch(err => {
             alert('Connection to REST daemon (Port 9876) failed: ' + err.message);
@@ -872,12 +887,12 @@
                 toolName: tool.Name,
                 relativePath: tool.RelativePath
             })
-        }).then(r => r.json()).then(data => {
+        }).then(r => r.json()).then(async data => {
             if (data.error) {
                 alert('Archive failed: ' + data.error);
             } else {
                 showToast('✓ Archived to ' + data.archiveTarget);
-                setTimeout(() => { window.location.reload(); }, 600);
+                if (window.LcmDisplay) await window.LcmDisplay.refresh();
             }
         }).catch(err => {
             alert('Daemon request failed: ' + err.message);
@@ -2500,16 +2515,12 @@
     function exportOverrides() { showToast('Direct daemon sync active. Overrides exported automatically.'); }
 
     async function refreshToolCatalog() {
-        showToast('🔄 Refreshing tool catalog from disk...');
-        try {
-            await fetch(`${DAEMON_URL}/execute`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ command: 'pwsh -File LCM_Inventory/tools/Show-Tools.ps1 -NoLaunch', elevated: false, noExit: false }),
-                signal: AbortSignal.timeout(2000)
-            });
-        } catch (e) {}
-        setTimeout(() => { window.location.reload(); }, 600);
+        if (!window.LcmDisplay || typeof window.LcmDisplay.refresh !== 'function') {
+            showToast('Display refresh is unavailable; the current snapshot is retained.');
+            return;
+        }
+        showToast('🔄 Requesting a published tool catalog revision...');
+        return window.LcmDisplay.refresh();
     }
 
     function closeAllModals() {
@@ -2750,7 +2761,7 @@
         if (window.history.length > 1) {
             window.history.back();
         } else {
-            window.location.href = 'SHOW_LCM.html';
+            window.location.href = '/inventory';
         }
     }
 
@@ -2836,6 +2847,29 @@
             let currentNoExit = sessionStorage.getItem('lcm_tools_noexit') || 'All';
             if (currentNoExit && currentNoExit !== 'All' && document.getElementById('noexit-select')) document.getElementById('noexit-select').value = currentNoExit;
         }
+
+        const queryOverrides = [
+            ['Audience', 'audience-select', value => value === 'Dev' ? 'Developer' : value],
+            ['Group', 'group-select'],
+            ['Subsystem', 'group-select'],
+            ['Role', 'role-select'],
+            ['Tool', 'tool-select'],
+            ['Env', 'env-select'],
+            ['Filter', 'search-input']
+        ];
+        queryOverrides.forEach(([queryKey, elementId, normalize]) => {
+            if (!requestedDisplayParams.has(queryKey)) return;
+            const value = requestedDisplayParams.get(queryKey).slice(0, 300);
+            const normalized = normalize ? normalize(value) : value;
+            const element = document.getElementById(elementId);
+            if (element) element.value = normalized;
+            if (queryKey === 'Audience') currentAudience = normalized;
+            else if (queryKey === 'Group' || queryKey === 'Subsystem') currentGroup = normalized;
+            else if (queryKey === 'Role') currentRole = normalized;
+            else if (queryKey === 'Tool') currentTool = normalized;
+            else if (queryKey === 'Env') currentEnv = normalized;
+            else if (queryKey === 'Filter') searchFilter = normalized;
+        });
 
         // Initialize Print Preview Atom
         if (window.LcmTablePrintAtom) {
@@ -2950,6 +2984,50 @@
         clearSingleParam: clearSingleParam,
         clearAllParamsForTool: clearAllParamsForTool,
         toggleTheme: toggleTheme
+    };
+
+    window.LcmDisplayApply = async function(html) {
+        const parsedDocument = new DOMParser().parseFromString(html, 'text/html');
+        const payloadNode = parsedDocument.querySelector('script#lcm-display-data[type="application/json"]');
+        if (!payloadNode) throw new Error('Published tools page has no JSON display payload.');
+        const payload = JSON.parse(payloadNode.textContent);
+        if (!Array.isArray(payload.tools)) throw new Error('Published tools payload is malformed.');
+
+        baselineData = payload.tools;
+        toolsData = JSON.parse(JSON.stringify(baselineData));
+        window.__LCM_CONFIG__ = payload.config || {};
+        window.__LCM_OPTIONS__ = payload.options || {};
+        applyOverridesFromStorage();
+        toolsData.forEach(tool => {
+            const extMatch = tool.Name.match(/\.([a-zA-Z0-9]+)$/);
+            tool.Env = extMatch ? extMatch[1].toUpperCase() : 'FILE';
+            if (!tool.ShortName) tool.ShortName = tool.Name.replace(/\.[^/.]+$/, '');
+        });
+        applyFilters();
+    };
+
+    window.LcmDisplayCaptureState = function() {
+        return {
+            sourceMode: isSourceMode,
+            sortField,
+            sortAsc,
+            audience: currentAudience,
+            group: currentGroup
+        };
+    };
+
+    window.LcmDisplayRestoreState = function(state) {
+        if (!state || typeof state !== 'object') return;
+        if (typeof state.sourceMode === 'boolean') isSourceMode = state.sourceMode;
+        if (typeof state.sortField === 'string') sortField = state.sortField;
+        if (typeof state.sortAsc === 'boolean') sortAsc = state.sortAsc;
+        if (typeof state.audience === 'string') currentAudience = state.audience;
+        if (typeof state.group === 'string') currentGroup = state.group;
+        sessionStorage.setItem('lcm_tools_sourcemode', String(isSourceMode));
+        sessionStorage.setItem('lcm_tools_sort_field', sortField);
+        sessionStorage.setItem('lcm_tools_sort_asc', String(sortAsc));
+        updateViewModeUI();
+        applyFilters();
     };
 
     // Auto-init on DOMContentLoaded

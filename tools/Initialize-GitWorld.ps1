@@ -74,7 +74,7 @@ if ($Help) {
 # 1. Resolve Canonical Rules Hub from Git Root
 # ------------------------------------------------------------------------------
 if ([string]::IsNullOrWhiteSpace($CanonicalRulesHub)) {
-    $contextModule = Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\LcmWorkspaceContext.psm1'
+    $contextModule = Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\LCM_Context.psm1'
     if (Test-Path -LiteralPath $contextModule) {
         Import-Module -Name $contextModule -Force
         $gitRoot = Get-LcmMachineGitRoot

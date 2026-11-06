@@ -39,7 +39,7 @@ if ($Help) {
     return
 }
 
-$contextModule = Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\LcmWorkspaceContext.psm1'
+$contextModule = Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\LCM_Context.psm1'
 Import-Module -Name $contextModule -Force
 $gitRoot = Get-LcmMachineGitRoot
 $agentsDir = Join-Path $gitRoot 'LCM_AI\.agents'

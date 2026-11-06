@@ -9,8 +9,8 @@
     Purpose: Opens or reuses the governed Macrium BCR window and records the exact lifecycle review state.
     Path: LCM_Inventory/tools/Invoke-MacriumBcrReview.ps1
     Authors: Rolf, LCM_AI Engine
-    Version: 10.0.3
-    Date: 2026-10-21
+    Version: 10.0.4
+    Date: 2026-11-06
 #>
 
 [CmdletBinding()]
@@ -32,6 +32,12 @@ param(
   [switch]$LifecycleManaged,
 
   [Parameter(Mandatory = $false)]
+  [switch]$NewBaseline,
+
+  [Parameter(Mandatory = $false)]
+  [object]$CandidateDrives = @('F', 'G', 'H', 'I'),
+
+  [Parameter(Mandatory = $false)]
   [int]$MountTimeoutSeconds = 120,
 
   [Alias('h', '?')]
@@ -42,8 +48,8 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 if ($Help) {
-  Write-Host 'Invoke-MacriumBcrReview.ps1 -CRP <CRP|BUG> [-RepositoryName <repo>] [-BaseCommit <commit>] [-NoLaunch]'
-  Write-Host 'Prepares the writable F: Macrium baseline and opens only the _LCM BCR profile.'
+  Write-Host 'Invoke-MacriumBcrReview.ps1 -CRP <CRP|BUG> [-RepositoryName <repo>] [-BaseCommit <commit>] [-NewBaseline] [-NoLaunch]'
+  Write-Host 'Prepares or reuses the writable F: Macrium baseline and opens only the _LCM BCR profile.'
   return
 }
 
@@ -84,7 +90,8 @@ $baselineTool = Join-Path $PSScriptRoot 'Invoke-MacriumDailyBcrBaseline.ps1'
 $baselineArgs = @{
   ReviewScope = $CRP
   Confirm = $false
-  ReuseMountedBaseline = $true
+  NewBaseline = $NewBaseline
+  CandidateDrives = $CandidateDrives
   MountTimeoutSeconds = $MountTimeoutSeconds
 }
 if ($NoLaunch) {

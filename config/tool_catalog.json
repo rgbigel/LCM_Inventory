@@ -868,7 +868,7 @@
         "Name": "OperationalLogPaths",
         "Type": "String[]",
         "Mandatory": false,
-        "Default": "",
+        "Default": "@()",
         "Description": "Optional exact log paths for diagnostic-text corroboration, not causal attribution."
       },
       {
@@ -877,6 +877,13 @@
         "Mandatory": false,
         "Default": "",
         "Description": "Report directory; defaults to the original catalog's directory."
+      },
+      {
+        "Name": "SnapshotRoot",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Optional retained snapshot directory; defaults to data\\artifacts\\failure-analysis."
       },
       {
         "Name": "ActionCount",
@@ -891,6 +898,7 @@
       "ProposalManager.psm1",
       "Show-LcmFailureDiagnostic.ps1",
       "Show-Actions.ps1",
+      "Show-FailureAnalysis.ps1",
       "Module: (Join-Path $inventoryRoot 'modules\\FailureModeAnalysis.psm1')",
       "Module: (Join-Path $inventoryRoot 'modules\\ProposalManager.psm1')"
     ]
@@ -1030,6 +1038,52 @@
       }
     ],
     "Dependencies": "LcmDesktopDaemon.ps1"
+  },
+  {
+    "Name": "Show-FailureAnalysis.ps1",
+    "ShortName": "ShowFailureAnalysis",
+    "Aliases": null,
+    "Role": "Diagnostics",
+    "Audience": "User",
+    "Admin": false,
+    "NoExit": false,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Session Failure Analysis",
+    "Description": "Opens a retained failure-analysis snapshot through the local LCM daemon without rerunning analysis.",
+    "Example": "ShowFailureAnalysis -ReportPath 'D:\\reports\\Catalog-of-Errors-and-Failure-Modes-20261021-220000.md'",
+    "RelativePath": "LCM_Inventory\\tools\\Show-FailureAnalysis.ps1",
+    "Parameters": [
+      {
+        "Name": "ReportPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Exact retained Markdown or structured JSON report to display."
+      },
+      {
+        "Name": "SnapshotRoot",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Optional snapshot root; defaults to data\\artifacts\\failure-analysis."
+      },
+      {
+        "Name": "ShowAll",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Emits each structured audit record to the host. Detailed is an alias."
+      }
+    ],
+    "Dependencies": [
+      "LcmDisplayVersion.psm1",
+      "FailureAnalysisHtml.psm1",
+      "LcmStandardDisplay.psm1",
+      "Module: (Join-Path $inventoryRoot 'modules\\LcmDisplayVersion.psm1')",
+      "Module: (Join-Path $inventoryRoot 'modules\\FailureAnalysisHtml.psm1')"
+    ]
   },
   {
     "Name": "Show-LastLog.ps1",
@@ -1221,7 +1275,7 @@
         "Type": "SwitchParameter",
         "Mandatory": false,
         "Default": "",
-        "Description": "Explicitly start the desktop daemon when it is offline"
+        "Description": "Compatibility switch; interactive launches automatically recover the desktop daemon when it is offline"
       },
       {
         "Name": "TimerOn",
@@ -1232,8 +1286,8 @@
       }
     ],
     "Dependencies": [
-      "LcmDesktopDaemon.ps1",
-      "Invoke-InteractiveDesktop.ps1"
+      "LcmStandardDisplay.psm1",
+      "Module: (Join-Path $PSScriptRoot '..\\modules\\LcmDisplayVersion.psm1')"
     ]
   },
   {
@@ -1403,10 +1457,11 @@
       }
     ],
     "Dependencies": [
-      "LcmWorkspaceContext.psm1",
+      "LCM_Context.psm1",
       "Invoke-LcmProtocol.ps1",
       "LcmToolCatalog.psm1",
-      "Invoke-InteractiveDesktop.ps1"
+      "LcmStandardDisplay.psm1",
+      "Module: (Join-Path $PSScriptRoot '..\\modules\\LcmDisplayVersion.psm1')"
     ]
   },
   {
@@ -1431,9 +1486,9 @@
     ]
   },
   {
-    "Name": "Test-WorkspaceReadiness.ps1",
-    "ShortName": "TestWorkspaceReadiness",
-    "Aliases": null,
+    "Name": "Test-LCM_Readiness.ps1",
+    "ShortName": "TestLCM_Readiness",
+    "Aliases": "TestWorkspaceReadiness",
     "Role": "QualityGate",
     "Audience": "User",
     "Admin": false,
@@ -1443,8 +1498,8 @@
     "Type": "PowerShell",
     "Category": "Quality Gate",
     "Description": "Executes the 5-stage automated LCM readiness quality gate across all repositories.",
-    "Example": "TestWorkspaceReadiness",
-    "RelativePath": "LCM_Inventory\\tools\\Test-WorkspaceReadiness.ps1",
+    "Example": "TestLCM_Readiness",
+    "RelativePath": "LCM_Inventory\\tools\\Test-LCM_Readiness.ps1",
     "Parameters": [],
     "Dependencies": [
       "WorkspaceQualityGates.psm1",
@@ -1587,6 +1642,20 @@
         "Type": "SwitchParameter",
         "Mandatory": false,
         "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "NewBaseline",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "MountTimeoutSeconds",
+        "Type": "Int32",
+        "Mandatory": false,
+        "Default": "120",
         "Description": ""
       }
     ],
@@ -1792,7 +1861,9 @@
       "DaemonDto.ps1",
       "DaemonEnvironment.ps1",
       "DaemonActionController.ps1",
-      "Remove-LcmShortName.ps1"
+      "LcmDisplayHttp.psm1",
+      "Remove-LcmShortName.ps1",
+      "Module: (Join-Path $lcdRoot 'modules\\LcmDisplayHttp.psm1')"
     ]
   },
   {
@@ -1958,6 +2029,50 @@
       }
     ],
     "Dependencies": "Show-Tools.ps1"
+  },
+  {
+    "Name": "Invoke-LcmDisplayRender.ps1",
+    "ShortName": "RenderLcmDisplay",
+    "Aliases": null,
+    "Role": "Internal",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": false,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Internal Display Infrastructure",
+    "Description": "Internal allowlisted renderer for verified Standard Display publication; not a user-facing display launcher.",
+    "Example": "RenderLcmDisplay",
+    "RelativePath": "LCM_Inventory\\tools\\Invoke-LcmDisplayRender.ps1",
+    "Parameters": [
+      {
+        "Name": "DisplayId",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "LogPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "ShowAll",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      }
+    ],
+    "Dependencies": [
+      "LcmDisplayDependencies.psm1",
+      "Update-ToolCatalog.ps1",
+      "Module: (Join-Path $root 'modules\\LcmDisplayDependencies.psm1')"
+    ]
   },
   {
     "Name": "Advance-Governance.ps1",
@@ -2435,6 +2550,39 @@
     "Dependencies": "LcmDependencyIndex.psm1"
   },
   {
+    "Name": "Create-LCM_Baseline.ps1",
+    "ShortName": "CreateLCMBaseline",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Create-LCM_Baseline execution tool.",
+    "Example": "CreateLCMBaseline",
+    "RelativePath": "LCM_Inventory\\tools\\Create-LCM_Baseline.ps1",
+    "Parameters": [
+      {
+        "Name": "BaselineId",
+        "Type": "String",
+        "Mandatory": true,
+        "Default": "",
+        "Description": "Unique baseline identifier (e.g. BASELINE-10.0.0-20260815)"
+      },
+      {
+        "Name": "Description",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Description of baseline release"
+      }
+    ],
+    "Dependencies": null
+  },
+  {
     "Name": "Create-LcmTool.ps1",
     "ShortName": "CreateTool",
     "Aliases": null,
@@ -2526,39 +2674,6 @@
       "Test-NetworkAdapter.ps1",
       "Update-ToolCatalog.ps1"
     ]
-  },
-  {
-    "Name": "Create-WorkspaceBaseline.ps1",
-    "ShortName": "CreateWorkspaceBaseline",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "LCM_Inventory",
-    "Domain": "LCM_Inventory",
-    "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "Create-WorkspaceBaseline execution tool.",
-    "Example": "CreateWorkspaceBaseline",
-    "RelativePath": "LCM_Inventory\\tools\\Create-WorkspaceBaseline.ps1",
-    "Parameters": [
-      {
-        "Name": "BaselineId",
-        "Type": "String",
-        "Mandatory": true,
-        "Default": "",
-        "Description": "Unique baseline identifier (e.g. BASELINE-10.0.0-20260815)"
-      },
-      {
-        "Name": "Description",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Description of baseline release"
-      }
-    ],
-    "Dependencies": null
   },
   {
     "Name": "Disable-WakeDevices.ps1",
@@ -2910,6 +3025,53 @@
     "Dependencies": null
   },
   {
+    "Name": "Get-LCM_Repositories.ps1",
+    "ShortName": "GetLCMRepositories",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Get-LCM_Repositories execution tool.",
+    "Example": "GetLCMRepositories",
+    "RelativePath": "LCM_Inventory\\tools\\Get-LCM_Repositories.ps1",
+    "Parameters": [
+      {
+        "Name": "WorkspaceParent",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\Git_Repositories",
+        "Description": "Parent directory containing workspace repositories."
+      },
+      {
+        "Name": "ActiveRepository",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\Git_Repositories\\LCM_AI",
+        "Description": "Path to currently active repository to optionally exclude."
+      },
+      {
+        "Name": "IncludeActiveRepository",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Include active repository in discovery results."
+      },
+      {
+        "Name": "AsJson",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Output discovered repositories as JSON."
+      }
+    ],
+    "Dependencies": null
+  },
+  {
     "Name": "Get-LcmTablePrintAtom.ps1",
     "ShortName": "GetLcmTablePrintAtom",
     "Aliases": null,
@@ -3097,53 +3259,6 @@
     "Dependencies": "ProposalManager.psm1"
   },
   {
-    "Name": "Get-WorkspaceRepositories.ps1",
-    "ShortName": "GetWorkspaceRepositories",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "LCM_Inventory",
-    "Domain": "LCM_Inventory",
-    "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "Get-WorkspaceRepositories execution tool.",
-    "Example": "GetWorkspaceRepositories",
-    "RelativePath": "LCM_Inventory\\tools\\Get-WorkspaceRepositories.ps1",
-    "Parameters": [
-      {
-        "Name": "WorkspaceParent",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "D:\\Git_Repositories",
-        "Description": "Parent directory containing workspace repositories."
-      },
-      {
-        "Name": "ActiveRepository",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "D:\\Git_Repositories\\LCM_AI",
-        "Description": "Path to currently active repository to optionally exclude."
-      },
-      {
-        "Name": "IncludeActiveRepository",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Include active repository in discovery results."
-      },
-      {
-        "Name": "AsJson",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Output discovered repositories as JSON."
-      }
-    ],
-    "Dependencies": null
-  },
-  {
     "Name": "Initialize-AdminMode.ps1",
     "ShortName": "InitializeAdminMode",
     "Aliases": null,
@@ -3213,7 +3328,7 @@
         "Description": "Simulate actions without modifying files or junctions"
       }
     ],
-    "Dependencies": "LcmWorkspaceContext.psm1"
+    "Dependencies": "LCM_Context.psm1"
   },
   {
     "Name": "Initialize-RealRepoMethodInstance.ps1",
@@ -3329,6 +3444,24 @@
     ]
   },
   {
+    "Name": "Invoke-LCM_Audit.ps1",
+    "ShortName": "LCMAudit",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Invoke-LCM_Audit execution tool.",
+    "Example": "LCMAudit",
+    "RelativePath": "LCM_Inventory\\tools\\Invoke-LCM_Audit.ps1",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
     "Name": "Invoke-LcmGiantReview.ps1",
     "ShortName": "LcmGiantReview",
     "Aliases": null,
@@ -3367,6 +3500,194 @@
       }
     ],
     "Dependencies": "BCompare.exe"
+  },
+  {
+    "Name": "Invoke-LCM_GoodMorning.ps1",
+    "ShortName": "LCMGoodMorning",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Invoke-LCM_GoodMorning execution tool.",
+    "Example": "LCMGoodMorning",
+    "RelativePath": "LCM_Inventory\\tools\\Invoke-LCM_GoodMorning.ps1",
+    "Parameters": [
+      {
+        "Name": "Auto",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Session-start mode: silent (one line) when the gap is below -GapHours."
+      },
+      {
+        "Name": "GapHours",
+        "Type": "Double",
+        "Mandatory": false,
+        "Default": "7",
+        "Description": "Gap that implies a good morning. Default 7."
+      },
+      {
+        "Name": "Force",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Run the full check regardless of the gap."
+      },
+      {
+        "Name": "PrepareBcrBaseline",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "After the existing GoodMorning report, prepare today's Macrium baseline and open the operator-owned _LCM review profile."
+      },
+      {
+        "Name": "ReviewScope",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      }
+    ],
+    "Dependencies": [
+      "LCM_Context.psm1",
+      "Test-Guardrail.ps1",
+      "Invoke-MacriumDailyBcrBaseline.ps1"
+    ]
+  },
+  {
+    "Name": "Invoke-LCM_GoodNight.ps1",
+    "ShortName": "LCMGoodNight",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Invoke-LCM_GoodNight execution tool.",
+    "Example": "LCMGoodNight",
+    "RelativePath": "LCM_Inventory\\tools\\Invoke-LCM_GoodNight.ps1",
+    "Parameters": [
+      {
+        "Name": "Reason",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "chore(workspace): save all and good night - end of day synchronization",
+        "Description": "Commit and audit reason for the end-of-day push"
+      },
+      {
+        "Name": "Push",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Publish (git push) all repos after committing. Default: off; Good Night ends at Committed."
+      },
+      {
+        "Name": "NoCommit",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Skip the commit step (save all, archival and exports only)"
+      },
+      {
+        "Name": "Learn",
+        "Type": "String[]",
+        "Mandatory": false,
+        "Default": "@()",
+        "Description": "Learned-advice candidates to add to LEARNED_ADVICE.md"
+      },
+      {
+        "Name": "Author",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "AI",
+        "Description": "Name of the AI writing the candidates"
+      },
+      {
+        "Name": "SkipGemini",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Skip Gemini and knowledge base export synchronization"
+      },
+      {
+        "Name": "DryRun",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Simulate the end-of-day sequence without modifying remotes or files"
+      }
+    ],
+    "Dependencies": [
+      "LCM_Context.psm1",
+      "Save-AllSessionMemory.ps1",
+      "Archive-LcmDaemonLogs.ps1",
+      "Update-Gemini.ps1",
+      "Show-LcmControl.ps1",
+      "Test-Guardrail.ps1",
+      "Invoke-LCM_Push.ps1"
+    ]
+  },
+  {
+    "Name": "Invoke-LCM_Maintenance.ps1",
+    "ShortName": "LCMMaintenance",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Invoke-LCM_Maintenance execution tool.",
+    "Example": "LCMMaintenance",
+    "RelativePath": "LCM_Inventory\\tools\\Invoke-LCM_Maintenance.ps1",
+    "Parameters": [
+      {
+        "Name": "TailLines",
+        "Type": "Int32",
+        "Mandatory": false,
+        "Default": "100",
+        "Description": "Maximum lines to retain in active LcmDesktopDaemon-*.log files (default: 100)"
+      },
+      {
+        "Name": "MaxLogAgeDays",
+        "Type": "Int32",
+        "Mandatory": false,
+        "Default": "7",
+        "Description": "Maximum age in days for retaining daemon log files before deletion (default: 7)"
+      },
+      {
+        "Name": "MaxScriptLogAgeDays",
+        "Type": "Int32",
+        "Mandatory": false,
+        "Default": "3",
+        "Description": "Maximum age in days for transient script logs in LCM_Inventory/data/logs/lcm (default: 3)"
+      },
+      {
+        "Name": "LogOnly",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Maintain daemon and transient logs only; do not prune general temporary files"
+      },
+      {
+        "Name": "DryRun",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Execute cleanup in dry-run simulation mode without modifying or deleting files"
+      }
+    ],
+    "Dependencies": null
   },
   {
     "Name": "Invoke-LcmPathMigration.ps1",
@@ -3435,6 +3756,76 @@
     "Dependencies": "Invoke-InteractiveDesktop.ps1"
   },
   {
+    "Name": "Invoke-LCM_Push.ps1",
+    "ShortName": "LCMPush",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Invoke-LCM_Push execution tool.",
+    "Example": "LCMPush",
+    "RelativePath": "LCM_Inventory\\tools\\Invoke-LCM_Push.ps1",
+    "Parameters": [
+      {
+        "Name": "Reason",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "feat(cm): sync completed workspace proposals and governance updates",
+        "Description": "Commit reason and audit message for the push operation"
+      },
+      {
+        "Name": "Repositories",
+        "Type": "String[]",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Specific repositories to push (defaults to all ahead repositories)"
+      },
+      {
+        "Name": "ProposalIds",
+        "Type": "Object[]",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Specific proposal IDs to transition to pushed state"
+      },
+      {
+        "Name": "SkipGemini",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Skip the pre-push Gemini export and knowledge base mirror pipeline"
+      },
+      {
+        "Name": "Force",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Force git push even if validation warnings exist"
+      },
+      {
+        "Name": "DryRun",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Simulate the push operation and show actions without modifying remotes"
+      }
+    ],
+    "Dependencies": [
+      "LCM_PushEligibility.psm1",
+      "Invoke-LearnedAdviceReview.ps1",
+      "ProposalManager.psm1",
+      "Invoke-LCM_Maintenance.ps1",
+      "Update-Gemini.ps1",
+      "Update-ToolCatalog.ps1",
+      "Clear-BCReviewTemp.ps1",
+      "Module: (Join-Path $workspaceRoot 'LCM_Inventory\\modules\\ProposalManager.psm1')"
+    ]
+  },
+  {
     "Name": "Invoke-LearnedAdviceReview.ps1",
     "ShortName": "LearnedAdviceReview",
     "Aliases": null,
@@ -3479,7 +3870,7 @@
         "Description": "Only report; exit 1 if candidates are pending."
       }
     ],
-    "Dependencies": "LcmWorkspaceContext.psm1"
+    "Dependencies": "LCM_Context.psm1"
   },
   {
     "Name": "Invoke-Level1AnalysisRefinement.ps1",
@@ -3673,7 +4064,7 @@
         "Description": ""
       },
       {
-        "Name": "ReuseMountedBaseline",
+        "Name": "NewBaseline",
         "Type": "SwitchParameter",
         "Mandatory": false,
         "Default": "",
@@ -3826,6 +4217,13 @@
         "Mandatory": false,
         "Default": "",
         "Description": "Target proposal expression (e.g. all, #1, 105, 100-105)"
+      },
+      {
+        "Name": "ProposalId",
+        "Type": "Int32",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Explicit Gate-1-accepted proposal ID required for structural App creation"
       },
       {
         "Name": "Details",
@@ -3989,8 +4387,8 @@
     ]
   },
   {
-    "Name": "Publish-WorkspaceProposalBundles.ps1",
-    "ShortName": "PublishWorkspaceProposalBundles",
+    "Name": "Publish-LCM_ProposalBundles.ps1",
+    "ShortName": "PublishLCMProposalBundles",
     "Aliases": null,
     "Role": "Utility",
     "Audience": "Developer",
@@ -4000,9 +4398,9 @@
     "Domain": "LCM_Inventory",
     "Type": "PowerShell",
     "Category": "Utility",
-    "Description": "Publish-WorkspaceProposalBundles execution tool.",
-    "Example": "PublishWorkspaceProposalBundles",
-    "RelativePath": "LCM_Inventory\\tools\\Publish-WorkspaceProposalBundles.ps1",
+    "Description": "Publish-LCM_ProposalBundles execution tool.",
+    "Example": "PublishLCMProposalBundles",
+    "RelativePath": "LCM_Inventory\\tools\\Publish-LCM_ProposalBundles.ps1",
     "Parameters": [
       {
         "Name": "WorkspaceRoot",
@@ -4387,7 +4785,7 @@
         "Description": "Report what would be written, change nothing."
       }
     ],
-    "Dependencies": "LcmWorkspaceContext.psm1"
+    "Dependencies": "LCM_Context.psm1"
   },
   {
     "Name": "Save-LCMRules.ps1",
@@ -4414,46 +4812,6 @@
       }
     ],
     "Dependencies": "Export-LCMRules.ps1"
-  },
-  {
-    "Name": "Set-GitFileTimes.ps1",
-    "ShortName": "SetGitFileTimes",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": false,
-    "Group": "LCM_Tools",
-    "Domain": "LCM_Tools",
-    "Type": "PowerShell",
-    "Category": "Git Utilities",
-    "Description": "Sets tracked file modification times to each file's latest Git commit author timestamp.",
-    "Example": "SetGitFileTimes",
-    "RelativePath": "LCM_Tools\\tools\\Set-GitFileTimes.ps1",
-    "Parameters": [
-      {
-        "Name": "RepositoryPath",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": ".",
-        "Description": "Git repository root; defaults to the current directory"
-      },
-      {
-        "Name": "LogDirectory",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Audit log directory; defaults to LCM_Inventory/data/logs/lcm"
-      },
-      {
-        "Name": "Detailed",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Show progress for each tracked file"
-      }
-    ],
-    "Dependencies": null
   },
   {
     "Name": "Set-GitRoot.ps1",
@@ -4685,8 +5043,8 @@
       "Show-HaInventoryApp.ps1",
       "Show-HaInventoryGrid.ps1",
       "Invoke-HaUpdateGate.ps1",
-      "Invoke-WorkspaceAudit.ps1",
-      "Show-WorkspaceInventoryApp.ps1",
+      "Invoke-LCM_Audit.ps1",
+      "Show-LCM_InventoryApp.ps1",
       "Test-LCMRuleHealth.ps1"
     ]
   },
@@ -4735,7 +5093,85 @@
         "Description": "VS Code URI scheme used by source-location links."
       }
     ],
-    "Dependencies": "Invoke-InteractiveDesktop.ps1"
+    "Dependencies": [
+      "LcmStandardDisplay.psm1",
+      "Module: (Join-Path $PSScriptRoot '..\\modules\\LcmDisplayVersion.psm1')",
+      "Module: (Join-Path $repositoryRoot 'modules\\LcmStandardDisplay.psm1')"
+    ]
+  },
+  {
+    "Name": "Show-LCM_InventoryApp.ps1",
+    "ShortName": "ShowLCMInventoryApp",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": false,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Show-LCM_InventoryApp execution tool.",
+    "Example": "ShowLCMInventoryApp",
+    "RelativePath": "LCM_Inventory\\tools\\Show-LCM_InventoryApp.ps1",
+    "Parameters": [],
+    "Dependencies": [
+      "LcmStandardDisplay.psm1",
+      "Module: (Join-Path $PSScriptRoot '..\\modules\\LcmDisplayVersion.psm1')"
+    ]
+  },
+  {
+    "Name": "Show-LCM_Readiness.ps1",
+    "ShortName": "ShowLCMReadiness",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Show-LCM_Readiness execution tool.",
+    "Example": "ShowLCMReadiness",
+    "RelativePath": "LCM_Inventory\\tools\\Show-LCM_Readiness.ps1",
+    "Parameters": [
+      {
+        "Name": "Repository",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Optional filter to inspect a single repository (Aliases: -Repo, -TargetRepository)."
+      },
+      {
+        "Name": "WorkspaceRoot",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\Git_Repositories",
+        "Description": "The root workspace directory containing repositories to inspect (Defaults to 'D:\\Git_Repositories')."
+      },
+      {
+        "Name": "Html",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Generates and opens the interactive HTML Quality Gate Readiness matrix dashboard."
+      },
+      {
+        "Name": "RunMissing",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Automatically runs Test-RepoReadiness.ps1 for any repository that has the test harness but lacks an up-to-date receipt."
+      }
+    ],
+    "Dependencies": [
+      "Test-ExternalTools.ps1",
+      "Test-RepoReadiness.ps1",
+      "Everything",
+      "Module: (Join-Path $PSScriptRoot '..\\modules\\LcmDisplayVersion.psm1')",
+      "Module: (Join-Path $PSScriptRoot '..\\modules\\LcmStandardDisplay.psm1')"
+    ]
   },
   {
     "Name": "Show-Repos.ps1",
@@ -4815,76 +5251,9 @@
         "Description": "Suppresses launching the web browser and outputs the rules catalog directly as formatted text in the terminal (Aliases: -Cli, -Text, -Console)."
       }
     ],
-    "Dependencies": "Invoke-InteractiveDesktop.ps1"
-  },
-  {
-    "Name": "Show-WorkspaceInventoryApp.ps1",
-    "ShortName": "ShowWorkspaceInventoryApp",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": false,
-    "Group": "LCM_Inventory",
-    "Domain": "LCM_Inventory",
-    "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "Show-WorkspaceInventoryApp execution tool.",
-    "Example": "ShowWorkspaceInventoryApp",
-    "RelativePath": "LCM_Inventory\\tools\\Show-WorkspaceInventoryApp.ps1",
-    "Parameters": [],
-    "Dependencies": "Invoke-InteractiveDesktop.ps1"
-  },
-  {
-    "Name": "Show-WorkspaceReadiness.ps1",
-    "ShortName": "ShowWorkspaceReadiness",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "LCM_Inventory",
-    "Domain": "LCM_Inventory",
-    "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "Show-WorkspaceReadiness execution tool.",
-    "Example": "ShowWorkspaceReadiness",
-    "RelativePath": "LCM_Inventory\\tools\\Show-WorkspaceReadiness.ps1",
-    "Parameters": [
-      {
-        "Name": "Repository",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Optional filter to inspect a single repository (Aliases: -Repo, -TargetRepository)."
-      },
-      {
-        "Name": "WorkspaceRoot",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "D:\\Git_Repositories",
-        "Description": "The root workspace directory containing repositories to inspect (Defaults to 'D:\\Git_Repositories')."
-      },
-      {
-        "Name": "Html",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Generates and opens the interactive HTML Quality Gate Readiness matrix dashboard."
-      },
-      {
-        "Name": "RunMissing",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Automatically runs Test-RepoReadiness.ps1 for any repository that has the test harness but lacks an up-to-date receipt."
-      }
-    ],
     "Dependencies": [
-      "Test-ExternalTools.ps1",
-      "Test-RepoReadiness.ps1",
-      "Invoke-InteractiveDesktop.ps1",
-      "Everything"
+      "LcmStandardDisplay.psm1",
+      "Module: (Join-Path $PSScriptRoot '..\\modules\\LcmDisplayVersion.psm1')"
     ]
   },
   {
@@ -5070,7 +5439,8 @@
     ],
     "Dependencies": [
       "AdminMode.psm1",
-      "ProposalManager.psm1"
+      "ProposalManager.psm1",
+      "Module: (Join-Path $PSScriptRoot '..\\modules\\LcmPackageVersion.psm1')"
     ]
   },
   {
@@ -5215,60 +5585,6 @@
     "Dependencies": null
   },
   {
-    "Name": "Sync-LCMResearchSnapshot.ps1",
-    "ShortName": "SyncLCMResearchSnapshot",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": false,
-    "Group": "LCM_Tools",
-    "Domain": "LCM_Tools",
-    "Type": "PowerShell",
-    "Category": "Research Snapshot",
-    "Description": "Mirrors selected LCM workspace research and governance files to a configured snapshot destination.",
-    "Example": "SyncLCMResearchSnapshot",
-    "RelativePath": "LCM_Tools\\tools\\Sync-LCMResearchSnapshot.ps1",
-    "Parameters": [
-      {
-        "Name": "SourceRoot",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "D:\\Git_Repositories",
-        "Description": "Root workspace directory containing source repositories"
-      },
-      {
-        "Name": "TargetRoot",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "D:\\GDrive\\LCM",
-        "Description": "Destination root directory on Google Drive or mirror destination"
-      },
-      {
-        "Name": "IncludeRootFiles",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "$true",
-        "Description": "Include top-level root markdown and text files (AGENTS.md, etc.)"
-      },
-      {
-        "Name": "Force",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Force overwrite and re-mirror all destination files"
-      },
-      {
-        "Name": "Detailed",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Display verbose logging for each individual file mirrored"
-      }
-    ],
-    "Dependencies": null
-  },
-  {
     "Name": "Sync-ToolSymlinks.ps1",
     "ShortName": "SyncToolSymlinks",
     "Aliases": null,
@@ -5395,6 +5711,24 @@
     "Dependencies": null
   },
   {
+    "Name": "Test-LCM_Drift.ps1",
+    "ShortName": "TestLCMDrift",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Test-LCM_Drift execution tool.",
+    "Example": "TestLCMDrift",
+    "RelativePath": "LCM_Inventory\\tools\\Test-LCM_Drift.ps1",
+    "Parameters": [],
+    "Dependencies": "LCM_CM.psm1"
+  },
+  {
     "Name": "Test-LCMRuleHealth.ps1",
     "ShortName": "TestLCMRuleHealth",
     "Aliases": null,
@@ -5505,25 +5839,7 @@
         "Description": ""
       }
     ],
-    "Dependencies": null
-  },
-  {
-    "Name": "Test-WorkspaceDrift.ps1",
-    "ShortName": "TestWorkspaceDrift",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "LCM_Inventory",
-    "Domain": "LCM_Inventory",
-    "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "Test-WorkspaceDrift execution tool.",
-    "Example": "TestWorkspaceDrift",
-    "RelativePath": "LCM_Inventory\\tools\\Test-WorkspaceDrift.ps1",
-    "Parameters": [],
-    "Dependencies": "WorkspaceCM.psm1"
+    "Dependencies": "Module: (Join-Path $PSScriptRoot '..\\modules\\LcmPackageVersion.psm1')"
   },
   {
     "Name": "Update-Gemini.ps1",
@@ -5648,6 +5964,7 @@
       }
     ],
     "Dependencies": [
+      "Sync-LCMResearchSnapshot.ps1",
       "Kill-LogitechUpdate.ps1",
       "Set-MouseFlickerInvariants.ps1",
       "Restore-SystemSettings.ps1",
@@ -5681,7 +5998,7 @@
       "Invoke-HaUpdateGate.ps1",
       "Update-HaInventory.ps1",
       "Show-HaAuthDialog.ps1",
-      "Test-WorkspaceReadiness.ps1",
+      "Test-LCM_Readiness.ps1",
       "Get-ChkdskBootLog.ps1",
       "Get-SystemPortInventory.ps1",
       "Search-Everything.ps1",
@@ -5691,6 +6008,7 @@
       "Create-LcmTool.ps1",
       "Show-LcmControl.ps1",
       "Show-SuperController.ps1",
+      "LcmToolScanLocations.psm1",
       "Test-RepoReadiness.ps1",
       "Everything",
       "es.exe",
@@ -5698,7 +6016,8 @@
       "BCompare.exe",
       "Everything.exe",
       "PsExec",
-      "BCompare"
+      "BCompare",
+      "Module: (Join-Path $inventoryRoot 'modules\\LcmToolScanLocations.psm1')"
     ]
   },
   {
@@ -5744,282 +6063,6 @@
       }
     ],
     "Dependencies": null
-  },
-  {
-    "Name": "Invoke-WorkspaceAudit.ps1",
-    "ShortName": "WorkspaceAudit",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "LCM_Inventory",
-    "Domain": "LCM_Inventory",
-    "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "Invoke-WorkspaceAudit execution tool.",
-    "Example": "WorkspaceAudit",
-    "RelativePath": "LCM_Inventory\\tools\\Invoke-WorkspaceAudit.ps1",
-    "Parameters": [],
-    "Dependencies": null
-  },
-  {
-    "Name": "Invoke-WorkspaceGoodMorning.ps1",
-    "ShortName": "WorkspaceGoodMorning",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "LCM_Inventory",
-    "Domain": "LCM_Inventory",
-    "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "Invoke-WorkspaceGoodMorning execution tool.",
-    "Example": "WorkspaceGoodMorning",
-    "RelativePath": "LCM_Inventory\\tools\\Invoke-WorkspaceGoodMorning.ps1",
-    "Parameters": [
-      {
-        "Name": "Auto",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Session-start mode: silent (one line) when the gap is below -GapHours."
-      },
-      {
-        "Name": "GapHours",
-        "Type": "Double",
-        "Mandatory": false,
-        "Default": "7",
-        "Description": "Gap that implies a good morning. Default 7."
-      },
-      {
-        "Name": "Force",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Run the full check regardless of the gap."
-      },
-      {
-        "Name": "PrepareBcrBaseline",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "After the existing GoodMorning report, prepare today's Macrium baseline and open the operator-owned _LCM review profile."
-      },
-      {
-        "Name": "ReviewScope",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": ""
-      }
-    ],
-    "Dependencies": [
-      "LcmWorkspaceContext.psm1",
-      "Test-Guardrail.ps1",
-      "Invoke-MacriumDailyBcrBaseline.ps1"
-    ]
-  },
-  {
-    "Name": "Invoke-WorkspaceGoodNight.ps1",
-    "ShortName": "WorkspaceGoodNight",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "LCM_Inventory",
-    "Domain": "LCM_Inventory",
-    "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "Invoke-WorkspaceGoodNight execution tool.",
-    "Example": "WorkspaceGoodNight",
-    "RelativePath": "LCM_Inventory\\tools\\Invoke-WorkspaceGoodNight.ps1",
-    "Parameters": [
-      {
-        "Name": "Reason",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "chore(workspace): save all and good night - end of day synchronization",
-        "Description": "Commit and audit reason for the end-of-day push"
-      },
-      {
-        "Name": "Push",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Publish (git push) all repos after committing. Default: off; Good Night ends at Committed."
-      },
-      {
-        "Name": "NoCommit",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Skip the commit step (save all, archival and exports only)"
-      },
-      {
-        "Name": "Learn",
-        "Type": "String[]",
-        "Mandatory": false,
-        "Default": "@()",
-        "Description": "Learned-advice candidates to add to LEARNED_ADVICE.md"
-      },
-      {
-        "Name": "Author",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "AI",
-        "Description": "Name of the AI writing the candidates"
-      },
-      {
-        "Name": "SkipGemini",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Skip Gemini and knowledge base export synchronization"
-      },
-      {
-        "Name": "DryRun",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Simulate the end-of-day sequence without modifying remotes or files"
-      }
-    ],
-    "Dependencies": [
-      "LcmWorkspaceContext.psm1",
-      "Save-AllSessionMemory.ps1",
-      "Archive-LcmDaemonLogs.ps1",
-      "Update-Gemini.ps1",
-      "Show-LcmControl.ps1",
-      "Test-Guardrail.ps1",
-      "Invoke-WorkspacePush.ps1"
-    ]
-  },
-  {
-    "Name": "Invoke-WorkspaceMaintenance.ps1",
-    "ShortName": "WorkspaceMaintenance",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "LCM_Inventory",
-    "Domain": "LCM_Inventory",
-    "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "Invoke-WorkspaceMaintenance execution tool.",
-    "Example": "WorkspaceMaintenance",
-    "RelativePath": "LCM_Inventory\\tools\\Invoke-WorkspaceMaintenance.ps1",
-    "Parameters": [
-      {
-        "Name": "TailLines",
-        "Type": "Int32",
-        "Mandatory": false,
-        "Default": "100",
-        "Description": "Maximum lines to retain in active LcmDesktopDaemon-*.log files (default: 100)"
-      },
-      {
-        "Name": "MaxLogAgeDays",
-        "Type": "Int32",
-        "Mandatory": false,
-        "Default": "7",
-        "Description": "Maximum age in days for retaining daemon log files before deletion (default: 7)"
-      },
-      {
-        "Name": "MaxScriptLogAgeDays",
-        "Type": "Int32",
-        "Mandatory": false,
-        "Default": "3",
-        "Description": "Maximum age in days for transient script logs in LCM_Inventory/data/logs/lcm (default: 3)"
-      },
-      {
-        "Name": "ReviewOlderThanHours",
-        "Type": "Int32",
-        "Mandatory": false,
-        "Default": "48",
-        "Description": "Maximum age in hours for Beyond Compare scratch review directories (default: 48)"
-      },
-      {
-        "Name": "DryRun",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Execute cleanup in dry-run simulation mode without modifying or deleting files"
-      }
-    ],
-    "Dependencies": "Clear-BCReviewTemp.ps1"
-  },
-  {
-    "Name": "Invoke-WorkspacePush.ps1",
-    "ShortName": "WorkspacePush",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "LCM_Inventory",
-    "Domain": "LCM_Inventory",
-    "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "Invoke-WorkspacePush execution tool.",
-    "Example": "WorkspacePush",
-    "RelativePath": "LCM_Inventory\\tools\\Invoke-WorkspacePush.ps1",
-    "Parameters": [
-      {
-        "Name": "Reason",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "feat(cm): sync completed workspace proposals and governance updates",
-        "Description": "Commit reason and audit message for the push operation"
-      },
-      {
-        "Name": "Repositories",
-        "Type": "String[]",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Specific repositories to push (defaults to all ahead repositories)"
-      },
-      {
-        "Name": "ProposalIds",
-        "Type": "Object[]",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Specific proposal IDs to transition to pushed state"
-      },
-      {
-        "Name": "SkipGemini",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Skip the pre-push Gemini export and knowledge base mirror pipeline"
-      },
-      {
-        "Name": "Force",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Force git push even if validation warnings exist"
-      },
-      {
-        "Name": "DryRun",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Simulate the push operation and show actions without modifying remotes"
-      }
-    ],
-    "Dependencies": [
-      "WorkspacePushEligibility.psm1",
-      "Invoke-LearnedAdviceReview.ps1",
-      "ProposalManager.psm1",
-      "Update-Gemini.ps1",
-      "Update-ToolCatalog.ps1",
-      "Invoke-WorkspaceMaintenance.ps1",
-      "Clear-BCReviewTemp.ps1",
-      "Module: (Join-Path $workspaceRoot 'LCM_Inventory\\modules\\ProposalManager.psm1')"
-    ]
   },
   {
     "Name": "Manage-SupervisionTask.ps1",
@@ -6138,6 +6181,60 @@
     "Example": "ShowSupervision",
     "RelativePath": "LCM_Supervision\\tools\\Show-Supervision.ps1",
     "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "Sync-LCMResearchSnapshot.ps1",
+    "ShortName": "SyncLCMResearchSnapshot",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": false,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Research Snapshot",
+    "Description": "Mirrors selected LCM workspace research and governance files to a configured snapshot destination.",
+    "Example": "SyncLCMResearchSnapshot",
+    "RelativePath": "LCM_Tools\\tools\\Sync-LCMResearchSnapshot.ps1",
+    "Parameters": [
+      {
+        "Name": "SourceRoot",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\Git_Repositories",
+        "Description": "Root workspace directory containing source repositories"
+      },
+      {
+        "Name": "TargetRoot",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\GDrive\\LCM",
+        "Description": "Destination root directory on Google Drive or mirror destination"
+      },
+      {
+        "Name": "IncludeRootFiles",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "$true",
+        "Description": "Include top-level root markdown and text files (AGENTS.md, etc.)"
+      },
+      {
+        "Name": "Force",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Force overwrite and re-mirror all destination files"
+      },
+      {
+        "Name": "Detailed",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Display verbose logging for each individual file mirrored"
+      }
+    ],
     "Dependencies": null
   }
 ]

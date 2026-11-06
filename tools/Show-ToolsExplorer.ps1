@@ -18,8 +18,8 @@
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
   Path: LCM_Inventory/tools/Show-ToolsExplorer.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.0
-  Date: 2026-10-13
+  Version: 10.0.1
+  Date: 2026-10-21
 .PARAMETER Audience
   Pre-filter by audience category: 'User' (daily operations), 'Dev' (internal plumbing), or 'All'. Defaults to 'User'.
 .PARAMETER Group
@@ -105,7 +105,8 @@ if ($Lifecycle) {
   if ($Audience -eq 'User') { $Audience = 'All' }
 }
 
-$scriptVersion = "10.0.0"
+Import-Module -Name (Join-Path $PSScriptRoot '..\modules\LcmDisplayVersion.psm1') -Force
+$scriptVersion = Get-LcmDisplaySourceVersion -Path $PSCommandPath
 $scriptName = "Show-ToolsExplorer"
 
 # ------------------------------------------------------------------------------
@@ -157,7 +158,7 @@ $inventoryRoot = Split-Path $PSScriptRoot -Parent
 $modulesDir = Join-Path $inventoryRoot 'modules'
 $toolsDir = $PSScriptRoot
 
-$contextModule = Join-Path $modulesDir 'LcmWorkspaceContext.psm1'
+$contextModule = Join-Path $modulesDir 'LCM_Context.psm1'
 if (Test-Path -LiteralPath $contextModule) {
   try {
     Import-Module -Name $contextModule -Force
@@ -225,16 +226,6 @@ Import-Module -Name $modulePath -Force
 $catalogData = Get-LcmToolCatalogData -ToolsDir $toolsDir
 $catalog = $catalogData.Catalog
 
-# Dynamic Global Baseline Version Extraction
-$globalBaseline = '10.0.0'
-$reqDoc = Join-Path $workspaceRoot 'LCM_AI\docs\Requirements.md'
-if (Test-Path $reqDoc) {
-  $match = Select-String -Path $reqDoc -Pattern '^Version:\s*(\S+)' | Select-Object -First 1
-  if ($match -and $match.Matches.Groups.Count -gt 1) {
-    $globalBaseline = $match.Matches.Groups[1].Value
-  }
-}
-
 # Compile-Time Sequence Ordering & Static Index Assignment per CRP-182:
 # Exclude the Tool Explorer dashboard runner itself from the catalog display
 $catalog = @($catalog | Where-Object {
@@ -286,7 +277,7 @@ $generatedHtmlPath = Build-LcmToolIndexHtml `
   -Env $Env `
   -Filter $Filter `
   -Subsystem $targetSubsystem `
-  -Version $(if ($globalBaseline.StartsWith('v', [System.StringComparison]::OrdinalIgnoreCase)) { $globalBaseline } else { "v$globalBaseline" })
+  -Version $scriptVersion
 
 Write-ToolLog -Message "Interactive HTML dashboard generated: $generatedHtmlPath" -Level ACTION
 
@@ -294,47 +285,20 @@ Write-ToolLog -Message "Interactive HTML dashboard generated: $generatedHtmlPath
 # 6. Launch Browser on Interactive Desktop unless -NoLaunch
 # ------------------------------------------------------------------------------
 if (-not $NoLaunch) {
-  $fileUri = [System.Uri]::new($generatedHtmlPath).AbsoluteUri
-  
-  # Dynamic User Default Browser Discovery (Windows Registry UserChoice)
-  $browserPath = $null
-  $browserName = "unknown"
-  try {
-    $progId = (Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice" -ErrorAction Stop).ProgId
-    $cmd = (Get-ItemProperty -Path "Registry::HKEY_CLASSES_ROOT\$progId\shell\open\command" -ErrorAction Stop).'(Default)'
-    if ($cmd -match '"([^"]+\.exe)"') { $browserPath = $Matches[1] }
-    elseif ($cmd -match '^\s*([^\s]+\.exe)') { $browserPath = $Matches[1] }
-    if ($browserPath) {
-      $browserName = [System.IO.Path]::GetFileNameWithoutExtension($browserPath).ToLowerInvariant()
-    }
-  } catch {}
-
-  if (-not $browserPath -or -not (Test-Path -LiteralPath $browserPath)) {
-    $zenPath = "D:\Tools\Zen Browser\zen.exe"
-    if (Test-Path -LiteralPath $zenPath) {
-      $browserPath = $zenPath
-      $browserName = "zen"
-    }
+  $standardDisplayModule = Join-Path $inventoryRoot 'modules\LcmStandardDisplay.psm1'
+  if (-not (Test-Path -LiteralPath $standardDisplayModule -PathType Leaf)) {
+    throw "Standard Display launcher module is missing: $standardDisplayModule"
   }
-
-  $dispatcher = Join-Path $toolsDir 'Invoke-InteractiveDesktop.ps1'
-
-  if ($browserPath -and (Test-Path -LiteralPath $browserPath)) {
-    $windowArg = "--new-window `"$fileUri`""
-    Write-ToolLog -Message "Launching Tool Explorer in $browserName window: $fileUri" -Level ACTION
-    if (Test-Path -LiteralPath $dispatcher) {
-      & $dispatcher -FilePath $browserPath -ArgumentList $windowArg
-    } else {
-      Start-Process -FilePath $browserPath -ArgumentList $windowArg
-    }
-  } else {
-    if (Test-Path -LiteralPath $dispatcher) {
-      & pwsh -NoProfile -ExecutionPolicy Bypass -File $dispatcher -FilePath "explorer.exe" -ArgumentList "`"$fileUri`"" | Out-Null
-      Write-ToolLog -Message "Launched default browser on Interactive Desktop: $fileUri" -Level ACTION
-    } else {
-      Start-Process "explorer.exe" -ArgumentList "`"$fileUri`""
-    }
+  Import-Module -Name $standardDisplayModule -Force
+  Open-LcmStandardDisplay -DisplayId tools -Parameters @{
+    Audience = $Audience
+    Group = $Group
+    Role = $Role
+    Tool = $Tool
+    Env = $Env
+    Filter = $Filter
   }
+  Write-ToolLog -Message 'Launched Tool Explorer through the port 9876 HTTP Standard Display.' -Level ACTION
 }
 
 Write-ToolLog -Message "$scriptName completed successfully." -Level INFO

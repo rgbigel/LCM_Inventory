@@ -42,7 +42,7 @@ if ($Help) {
     return
 }
 
-$contextModule = Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\LcmWorkspaceContext.psm1'
+$contextModule = Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\LCM_Context.psm1'
 Import-Module -Name $contextModule -Force
 $file = Join-Path (Get-LcmMachineGitRoot) 'LCM_AI\.agents\LEARNED_ADVICE.md'
 $lines = [System.Collections.Generic.List[string]]::new()

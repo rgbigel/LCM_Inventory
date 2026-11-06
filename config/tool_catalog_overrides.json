@@ -25,6 +25,23 @@
     "Category": "Session Failure Analysis",
     "Description": "Timestamped active-host session error catalog with read-only lifecycle diagnostics and recent workspace actions."
   },
+  "Show-FailureAnalysis.ps1": {
+    "ShortName": "ShowFailureAnalysis",
+    "Example": "ShowFailureAnalysis -ReportPath 'D:\\reports\\Catalog-of-Errors-and-Failure-Modes-20261021-220000.md'",
+    "NoExit": false,
+    "Audience": "User",
+    "Role": "Diagnostics",
+    "Category": "Session Failure Analysis",
+    "Description": "Opens a retained failure-analysis snapshot through the local LCM daemon without rerunning analysis."
+  },
+  "Invoke-LcmDisplayRender.ps1": {
+    "ShortName": "RenderLcmDisplay",
+    "Audience": "Developer",
+    "Role": "Internal",
+    "Category": "Internal Display Infrastructure",
+    "NoExit": false,
+    "Description": "Internal allowlisted renderer for verified Standard Display publication; not a user-facing display launcher."
+  },
   "Test-MacriumCurrentBaseline.ps1": {
     "ShortName": "TestMacriumBaseline",
     "NoExit": false,

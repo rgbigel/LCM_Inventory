@@ -1,3 +1,17 @@
+<#
+.SYNOPSIS
+  Verifies Control Hub lifecycle and Standard Display safety invariants.
+.DESCRIPTION
+  Focused Pester coverage for rendered Hub behavior, shared HTTP delivery, and lifecycle actions.
+.NOTES
+  Module: ControlHubSafety.Tests
+  Purpose: Protect Control Hub and Standard Display integration invariants.
+  Path: tests/ControlHubSafety.Tests.ps1
+  Authors: Rolf, Copilot
+  Version: 10.0.1
+  Date: 2026-10-21
+#>
+
 Describe 'Control Hub rendered-artifact safety' {
   BeforeAll {
     $script:repositoryRoot = Split-Path $PSScriptRoot -Parent
@@ -11,30 +25,28 @@ Describe 'Control Hub rendered-artifact safety' {
     $template = Get-Content -LiteralPath $script:templatePath -Raw -Encoding UTF8
 
     $template | Should -Match 'Developer template detected'
-    $template | Should -Match 'const IS_RENDERED_CONTROL_HUB = typeof RAW_PROPOSALS'
+    $template | Should -Match 'const IS_RENDERED_CONTROL_HUB = !!displayPayload\.proposals'
     $template | Should -Match 'Developer template is not executable; no daemon command was sent'
     $template | Should -Match '(?s)async function executeDaemonCommand.*?if \(!IS_RENDERED_CONTROL_HUB\).*?return;.*?fetch\(DAEMON_URL \+ "/execute"'
   }
 
-  It 'records and automatically attempts one daemon recovery before local fallback' {
+  It 'launches Control Hub only through the shared HTTP Standard Display' {
     $renderer = Get-Content -LiteralPath $script:rendererPath -Raw -Encoding UTF8
 
     $renderer | Should -Match '\[switch\]\$StartDaemon'
-    $renderer | Should -Match 'function Write-LcmDaemonOutageIncident'
-    $renderer | Should -Match "bug_id\s*=\s*'BUG-286'"
-    $renderer | Should -Match 'recovery_state\s*=\s*\$RecoveryState'
-    $renderer | Should -Match 'Write-LcmDaemonOutageIncident -DaemonPort \$daemonPort -RecoveryState ''detected'''
-    $renderer | Should -Match 'action\s*=\s*''start-daemon-once'''
-    $renderer | Should -Match 'for \(\$i = 0; \$i -lt 15; \$i\+\+\)'
-    $renderer | Should -Match 'Launching local fallback; consult incident receipt'
+    $renderer | Should -Match "modules\\LcmStandardDisplay\.psm1"
+    $renderer | Should -Match 'Open-LcmStandardDisplay -DisplayId \$displayId -Parameters \$displayParameters'
+    $renderer | Should -Not -Match 'local fallback|AbsoluteUri|Start-Process -FilePath \$browserPath'
   }
 
-  It 'refreshes visible Hub lifecycle data from a daemon completion event' {
+  It 'reconciles Hub data through the shared display client without a competing SSE reload' {
     $template = Get-Content -LiteralPath $script:templatePath -Raw -Encoding UTF8
 
-    $template | Should -Match 'function connectHubRefreshEvents\(\)'
-    $template | Should -Match 'new EventSource\(DAEMON_URL \+ "/hub-events"\)'
-    $template | Should -Match 'hubRefreshEventSource\.addEventListener\("refresh", \(\) => \{\s*window\.location\.reload\(\);'
+    $template | Should -Match 'async function refreshHubData\(\)'
+    $template | Should -Match 'return window\.LcmDisplay\.refresh\(\);'
+    $template | Should -Match 'window\.LcmDisplayApply = async function\(html\)'
+    $template | Should -Not -Match 'new EventSource|/hub-events|hubRefreshEventSource'
+    $template | Should -Not -Match 'fetch\(DAEMON_URL \+ "/proposal-documents"'
     $template | Should -Not -Match 'DAEMON_PROPOSAL_REFRESH_INTERVAL_MS'
     $template | Should -Not -Match 'window\.setInterval'
   }
@@ -42,11 +54,12 @@ Describe 'Control Hub rendered-artifact safety' {
   It 'publishes a daemon display refresh from lifecycle completion' {
     $daemon = Get-Content -LiteralPath $script:daemonPath -Raw -Encoding UTF8
     $proposalManager = Get-Content -LiteralPath $script:proposalManagerPath -Raw -Encoding UTF8
+    $httpModule = Get-Content -LiteralPath (Join-Path $script:repositoryRoot 'modules\LcmDisplayHttp.psm1') -Raw -Encoding UTF8
 
     $daemon | Should -Match 'class LcmControlHubRefreshBroker'
     $daemon | Should -Match "GET /hub-events"
     $daemon | Should -Match "POST /hub-refresh"
-    $daemon | Should -Match 'Cache-Control"\] = "no-store, no-cache, must-revalidate"'
+    $httpModule | Should -Match "Headers\['Cache-Control'\]\s*=\s*'no-store, no-cache, must-revalidate'"
     $daemonActionController = Get-Content -LiteralPath (Join-Path $script:repositoryRoot 'modules\LcmDaemon\Classes\DaemonActionController.ps1') -Raw -Encoding UTF8
     $daemonActionController | Should -Match '\$wsh\.SendKeys\("\^\{F5\}"\)'
     $daemon | Should -Match '\[LcmControlHubRefreshBroker\]::Publish'
@@ -168,7 +181,7 @@ Describe 'Control Hub rendered-artifact safety' {
     $template | Should -Not -Match 'innerText = `\$\{workQueueCount\} result\$\{workQueueCount === 1 \? "" : "s"\} / CRP ID order`'
     $template | Should -Match 'Committed -\\nReady to Push'
     $template | Should -Match '\.plan-state-text \{ white-space: pre-line; \}'
-    $renderer | Should -Match 'RAW_REVIEW_RECEIPTS'
+    $renderer | Should -Match 'reviewReceipts\s*=\s*@\(\$reviewReceipts\)'
     $renderer | Should -Match 'LCM_Inventory\\data\\reviews'
   }
 
@@ -239,11 +252,23 @@ Describe 'Control Hub rendered-artifact safety' {
     & $script:rendererPath -NoLaunch
     $artifactPath = Join-Path $script:repositoryRoot 'data\artifacts\CM_CONTROL_HUB.html'
     $artifact = Get-Content -LiteralPath $artifactPath -Raw -Encoding UTF8
-    $daemon = Get-Content -LiteralPath $script:daemonPath -Raw -Encoding UTF8
+    $httpModule = Get-Content -LiteralPath (Join-Path $script:repositoryRoot 'modules\LcmDisplayHttp.psm1') -Raw -Encoding UTF8
+    $coordinator = Get-Content -LiteralPath (Join-Path $script:repositoryRoot 'modules\LcmDisplayCoordinator.psm1') -Raw -Encoding UTF8
+    $dependencies = Get-Content -LiteralPath (Join-Path $script:repositoryRoot 'modules\LcmDisplayDependencies.psm1') -Raw -Encoding UTF8
+    $payloadMatch = [regex]::Match($artifact, '(?is)<script\b(?=[^>]*\bid="lcm-display-data")(?=[^>]*\btype="application/json")[^>]*>(?<payload>.*?)</script>')
+    $payloadText = $payloadMatch.Groups['payload'].Value
+    $payload = $payloadText | ConvertFrom-Json -ErrorAction Stop
 
     $artifact | Should -Not -Match '\{\{[^}]+\}\}'
-    $artifact | Should -Match 'const RAW_PROPOSALS ='
-    $daemon | Should -Not -Match "LCM_Inventory\\assets\\CM_CONTROL_HUB\.html"
-    $daemon | Should -Match 'generated Control Hub artifact is unavailable'
+    $artifact | Should -Match '<script id="lcm-display-data" type="application/json">'
+    $artifact | Should -Match '<meta name="lcm-display-id" content="hub">'
+    $payloadMatch.Success | Should -BeTrue
+    $payloadText.Contains('\u003chead>') | Should -BeTrue
+    $payloadText | Should -Not -Match '<head>'
+    @($payload.docs.PSObject.Properties | Where-Object { $_.Value -like '*Open Review COH-<head>*' }).Count | Should -BeGreaterThan 0
+    $httpModule | Should -Match "'/hub'='hub'"
+    $httpModule | Should -Match 'Get-LcmDisplayPayload -Html \$html'
+    $coordinator | Should -Match 'Rendered display has no structured data payload'
+    $dependencies | Should -Match 'Artifact = Join-Path \$root ''data\\artifacts\\CM_CONTROL_HUB\.html'''
   }
 }

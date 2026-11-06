@@ -19,7 +19,7 @@
     "LCM_Tools/Invoke-LcmRepositoryNamingMigration.ps1",
     "LCM_Tools/Sync-LCMResearchSnapshot.ps1",
     "LCM_Inventory/tools/Flush-LcmLegacyLogs.ps1",
-    "LCM_Inventory/modules/WorkspaceCM.psm1",
+    "LCM_Inventory/modules/LCM_CM.psm1",
     "LCM_Inventory/config/tool_catalog.json",
     "LCM_Inventory/config/lcm-path-map.json",
     "LCM_Inventory/tools/Invoke-LcmPathMigration.ps1",

@@ -21,6 +21,10 @@
   Optional explicit Antigravity task-log directory for offline analysis.
 .PARAMETER OperationalLogPaths
   Optional exact log paths for diagnostic-text corroboration, not causal attribution.
+.PARAMETER NoLaunch
+  Retains the HTML snapshot but does not open the daemon-served viewer.
+.PARAMETER SnapshotRoot
+  Optional retained snapshot directory; defaults to data\artifacts\failure-analysis.
 .EXAMPLE
   AnalyzeFailures -Number 300
 .EXAMPLE
@@ -41,8 +45,10 @@ param(
   [string]$TaskLogDirectory,
   [string[]]$OperationalLogPaths = @(),
   [string]$OutputDirectory,
+  [string]$SnapshotRoot,
   [ValidateRange(1, 100)]
   [int]$ActionCount = 5,
+  [switch]$NoLaunch,
   [Alias('h', '?')]
   [switch]$Help
 )
@@ -55,13 +61,24 @@ if ($Help) {
   Write-Host '  No selector: use the last explicit item reference in the active host session.'
   Write-Host '  Offline: -TranscriptPath <JSON/JSONL> [-TaskLogDirectory <path>]'
   Write-Host '  Reports: [-OutputDirectory <directory>] [-ActionCount <1..100>]'
+  Write-Host '  Viewer: [-NoLaunch] [-SnapshotRoot <directory>]'
   Write-Host '  Corroboration: [-OperationalLogPaths <exact log paths>]; matches do not prove causation.'
   Write-Host '  Missing requested anchors stop; valid lifecycle actions are never executed.'
   return
 }
 $inventoryRoot = Split-Path $PSScriptRoot -Parent
 $workspaceRoot = Split-Path $inventoryRoot -Parent
+$canonicalSnapshotRoot = Join-Path $inventoryRoot 'data\artifacts\failure-analysis'
+if ($SnapshotRoot) {
+  $requestedRoot = [IO.Path]::GetFullPath($SnapshotRoot)
+  $canonicalRoot = [IO.Path]::GetFullPath($canonicalSnapshotRoot)
+  if (-not $NoLaunch -and -not [string]::Equals($requestedRoot, $canonicalRoot, [StringComparison]::OrdinalIgnoreCase)) {
+    throw 'A custom SnapshotRoot requires -NoLaunch; the daemon only serves snapshots under the canonical data\artifacts\failure-analysis directory.'
+  }
+}
 Import-Module -Name (Join-Path $inventoryRoot 'modules\FailureModeAnalysis.psm1') -Force
+$producer = Get-FailureAnalysisProducer
+$scriptVersion = $producer.Version
 Import-Module -Name (Join-Path $inventoryRoot 'modules\ProposalManager.psm1') -Force
 $generatedAt = [DateTimeOffset]::Now
 $temporaryPath = $null
@@ -128,9 +145,26 @@ try {
   $source = if ($temporaryPath -and $TranscriptPath -eq $temporaryPath) { "$hostName session $sessionId via $providerPath" } else { $TranscriptPath }
   $markdown = New-FailureMarkdown -Selection $selection -Findings $findings -HostName $hostName -SessionId $sessionId -Source $source -Lifecycle $lifecycle -Actions $actions -Limitations $limitations.ToArray() -GeneratedAt $generatedAt
   if (-not $OutputDirectory) { $OutputDirectory = Join-Path $workspaceRoot 'LCM_AI\docs\Optimizations' }
-  $path = Write-FailureMarkdown -Directory $OutputDirectory -GeneratedAt $generatedAt -Markdown $markdown
-  Write-Host "Invoke-FailureModeAnalysis.ps1 v$scriptVersion : $confirmedCount confirmed finding(s). Report: $path"
-  [pscustomobject]@{ ReportPath = $path; Version = $scriptVersion; Findings = $confirmedCount; Unresolved = @($findings | Where-Object Disposition -EQ 'Unresolved evidence').Count; Number = $selection.Number }
+  $structured = New-FailureStructuredEvidence -Selection $selection -Findings $findings -HostName $hostName -SessionId $sessionId -Source $source -Lifecycle $lifecycle -Actions $actions -Limitations $limitations.ToArray() -GeneratedAt $generatedAt
+  $reports = Write-FailureReportPair -Directory $OutputDirectory -GeneratedAt $generatedAt -Markdown $markdown -Evidence $structured
+  $viewerResult = $null
+  try {
+    $viewerArguments = @{ ReportPath = $reports.MarkdownPath; NoLaunch = $NoLaunch }
+    if ($SnapshotRoot) { $viewerArguments.SnapshotRoot = $SnapshotRoot }
+    $viewerResult = & (Join-Path $PSScriptRoot 'Show-FailureAnalysis.ps1') @viewerArguments
+  } catch {
+    Write-Warning "Report files were retained, but the HTML viewer could not be prepared or opened: $($_.Exception.Message)"
+  }
+  Write-Host "Invoke-FailureModeAnalysis.ps1 v$scriptVersion : $confirmedCount confirmed finding(s). Markdown: $($reports.MarkdownPath); JSON: $($reports.JsonPath)"
+  [pscustomobject]@{
+    ReportPath = $reports.MarkdownPath
+    JsonPath = $reports.JsonPath
+    SnapshotId = if ($viewerResult) { $viewerResult.SnapshotId } else { $null }
+    Version = $scriptVersion
+    Findings = $confirmedCount
+    Unresolved = @($findings | Where-Object Disposition -EQ 'Unresolved evidence').Count
+    Number = $selection.Number
+  }
 } finally {
   if ($temporaryPath -and (Test-Path -LiteralPath $temporaryPath)) { Remove-Item -LiteralPath $temporaryPath -Force }
 }

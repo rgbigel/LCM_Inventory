@@ -1,17 +1,22 @@
 <#
 .SYNOPSIS
-  LCM Tool Catalog & Viewer Generation Module (10.0.0)
+  LCM Tool Catalog & Viewer Generation Module
 .DESCRIPTION
   Provides modular services for loading tool catalogs, measuring metric summaries,
   formatting terminal text output, and compiling the self-contained HTML Tool Explorer dashboard.
   Conforms to RULE-PS-001 (StrictMode), RULE-PS-002 (Approved Verbs), and RULE-PS-008.
 .NOTES
+  Module: LcmToolCatalog
+  Purpose: Loads the governed tool catalog and generates the HTTP-backed Tool Explorer.
   Path: tools/modules/LcmToolCatalog.psm1
-  Version: 10.0.0
+  Authors: Rolf, Copilot
+  Version: 10.0.1
+  Date: 2026-10-21
 #>
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+Import-Module -Name (Join-Path $PSScriptRoot 'LcmDisplayVersion.psm1') -Force
 
 function Get-LcmToolCatalogData {
   [CmdletBinding()]
@@ -176,32 +181,26 @@ function Build-LcmToolIndexHtml {
     [string]$Env = 'All',
     [string]$Filter = '',
     [string]$Subsystem = 'LCM',
-    [string]$Version = '10.0.0'
+    [ValidatePattern('^v?\d+\.\d+\.\d+$')]
+    [string]$Version
   )
 
+  $provenance = Get-LcmDisplayProvenance -ScriptPath (Join-Path $ToolsDir 'Show-ToolsExplorer.ps1') -TemplatePath $PSCommandPath
+  if ($Version -and "v$($Version.TrimStart('v'))" -ne $provenance.ToolVersion) {
+    throw "Tool Explorer version '$Version' disagrees with constructing-script metadata '$($provenance.ToolVersion)'."
+  }
+  $displayVersion = $provenance.Label
   $metrics = Measure-LcmToolCatalogMetrics -Catalog $Catalog
   $timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
   $computerName = $env:COMPUTERNAME
 
   $inventoryRoot = Join-Path $WorkspaceRoot 'LCM_Inventory'
-  $assetsDir = Join-Path $inventoryRoot 'assets'
-  if (-not (Test-Path -LiteralPath $assetsDir)) {
-    $assetsDir = Join-Path $ToolsDir 'assets'
-  }
 
-  $stdCssPath = Join-Path $assetsDir 'StandardTableDisplay.css'
-  $toolCssPath = Join-Path $assetsDir 'LCMToolCatalog.css'
-  $printAtomPath = Join-Path $assetsDir 'lcm-table-print-atom.js'
-  $tableEnginePath = Join-Path $assetsDir 'lcm-table-engine.js'
-  $jsAppPath = Join-Path $assetsDir 'lcm-tool-explorer.js'
-
-  $stdCssUri = if (Test-Path $stdCssPath) { [System.Uri]::new($stdCssPath).AbsoluteUri } else { "" }
-  $toolCssUri = if (Test-Path $toolCssPath) { [System.Uri]::new($toolCssPath).AbsoluteUri } else { "" }
-  $stdCssContent = if (Test-Path $stdCssPath) { Get-Content -LiteralPath $stdCssPath -Raw -Encoding UTF8 } else { "" }
-  $toolCssContent = if (Test-Path $toolCssPath) { Get-Content -LiteralPath $toolCssPath -Raw -Encoding UTF8 } else { "" }
-  $printAtomContent = if (Test-Path $printAtomPath) { Get-Content -LiteralPath $printAtomPath -Raw -Encoding UTF8 } else { "" }
-  $tableEngineContent = if (Test-Path $tableEnginePath) { Get-Content -LiteralPath $tableEnginePath -Raw -Encoding UTF8 } else { "" }
-  $jsAppContent = if (Test-Path $jsAppPath) { Get-Content -LiteralPath $jsAppPath -Raw -Encoding UTF8 } else { "" }
+  $stdCssUri = '/assets/StandardTableDisplay.css'
+  $toolCssUri = '/assets/LCMToolCatalog.css'
+  $printAtomUri = '/assets/lcm-table-print-atom.js'
+  $tableEngineUri = '/assets/lcm-table-engine.js'
+  $jsAppUri = '/assets/lcm-tool-explorer.js'
 
   # Compile authoritative dropdown options from catalog and persist to LCM_Inventory/config/tool_explorer_options.json
   $optionsPath = Join-Path $inventoryRoot 'config\tool_explorer_options.json'
@@ -229,8 +228,16 @@ function Build-LcmToolIndexHtml {
     Env       = $Env
     Filter    = $Filter
     Subsystem = $Subsystem
-    Version   = $Version
+    Version   = $displayVersion
+    ToolVersion = $provenance.ToolVersion
+    TemplateVersion = $provenance.TemplateVersion
   } | ConvertTo-Json -Compress
+  $displayPayload = [PSCustomObject]@{
+    tools = $RawJson | ConvertFrom-Json
+    config = $configJson | ConvertFrom-Json
+    options = $optionsJson | ConvertFrom-Json
+  } | ConvertTo-Json -Depth 12 -Compress
+  $displayPayload = $displayPayload.Replace('<', '\u003c')
 
   $html = @"
 <!DOCTYPE html>
@@ -238,18 +245,11 @@ function Build-LcmToolIndexHtml {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LCM Tool Explorer $Version</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <title>LCM Tool Explorer $displayVersion</title>
     <link rel="stylesheet" href="$stdCssUri">
     <link rel="stylesheet" href="$toolCssUri">
-    <style id="standard-table-display-style">
-$stdCssContent
-    </style>
-    <style id="lcm-tool-catalog-style">
-$toolCssContent
-    </style>
+    <meta name="lcm-display-id" content="tools">
+    <script src="/assets/lcm-display-freshness.js" defer></script>
     <style id="dynamic-print-style"></style>
 </head>
 <body>
@@ -260,7 +260,7 @@ $toolCssContent
         <!-- Main Top Bar -->
         <header>
             <div class="header-title">
-                <h1>🛠️ LCM Tool Explorer <span style="font-size: 0.6em; color: var(--text-muted); vertical-align: middle;">$Version</span></h1>
+                <h1>🛠️ LCM Tool Explorer <span style="font-size: 0.6em; color: var(--text-muted); vertical-align: middle;">$displayVersion</span></h1>
                 <div class="header-meta">
                     <span>Generated:</span>
                     <span class="timestamp-badge">$timestamp</span>
@@ -828,29 +828,19 @@ $toolCssContent
     <!-- Toast Notification -->
     <div class="toast" id="toast">✓ Action completed!</div>
 
-    <script>
-        window.__LCM_TOOLS_DATA__ = $RawJson;
-        window.__LCM_CONFIG__ = $configJson;
-        window.__LCM_OPTIONS__ = $optionsJson;
-    </script>
-    <script>
-$printAtomContent
-    </script>
-    <script>
-$tableEngineContent
-    </script>
-    <script>
-$jsAppContent
-    </script>
+    <script type="application/json" id="lcm-display-data">$displayPayload</script>
+    <script src="$printAtomUri"></script>
+    <script src="$tableEngineUri"></script>
+    <script src="$jsAppUri"></script>
 </body>
 </html>
 "@
 
-  # Standardize strictly on a single authoritative output file: SHOW_TOOLS.html in OS temp
-  $scratchDir = Join-Path ([System.IO.Path]::GetTempPath()) 'lcm'
-  if (-not (Test-Path -LiteralPath $scratchDir)) { New-Item -ItemType Directory -Force -Path $scratchDir | Out-Null }
-  $htmlPath = Join-Path $scratchDir 'SHOW_TOOLS.html'
-  Set-Content -Path $htmlPath -Value $html -Encoding UTF8
+  # Persist the generated revision inside this repository; browsers use only the daemon route.
+  $artifactsDir = Join-Path $inventoryRoot 'data\artifacts'
+  if (-not (Test-Path -LiteralPath $artifactsDir)) { New-Item -ItemType Directory -Force -Path $artifactsDir | Out-Null }
+  $htmlPath = Join-Path $artifactsDir 'SHOW_TOOLS.html'
+  [System.IO.File]::WriteAllText($htmlPath, $html, [System.Text.UTF8Encoding]::new($false))
 
   # Purge all obsolete / legacy alias HTML files
   $obsoleteNames = @(
@@ -859,7 +849,7 @@ $jsAppContent
     'Dev_Tools_Explorer_LCM.html',
     'Tools_Explorer_LCM.html'
   )
-  foreach ($dir in @($scratchDir)) {
+  foreach ($dir in @($artifactsDir)) {
     if (Test-Path -LiteralPath $dir) {
       foreach ($obs in $obsoleteNames) {
         $p = Join-Path $dir $obs

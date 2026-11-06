@@ -23,9 +23,10 @@ data/artifacts/
 data/readiness/
 data/reviews/
 data/staging/
-data/logs/lcm/
-data/logs/lcm-internal/*.log
-data/logs/lcm-internal/actions.jsonl
+data/logs/
+logs/*.log
+!logs/cm_activity.log
+logs/*.jsonl
 
 # VS Code local workspace state
 .vscode/*

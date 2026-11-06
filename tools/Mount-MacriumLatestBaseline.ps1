@@ -7,14 +7,17 @@
   image, it fails and reports that fact.
   Path: LCM_Inventory/tools/Mount-MacriumLatestBaseline.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.0
-  Date: 2026-10-16
+  Version: 10.0.1
+  Date: 2026-11-06
 #>
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
   [switch]$ConfirmMount,
 
   [string]$ReviewScope = '',
+
+  [Parameter(Mandatory = $false)]
+  [object]$CandidateDrives = @('F', 'G', 'H', 'I'),
 
   [ValidateRange(30, 600)]
   [int]$MountTimeoutSeconds = 120,
@@ -42,4 +45,4 @@ if (-not (Test-Path -LiteralPath $baselineTool -PathType Leaf)) {
   throw "Canonical Macrium baseline tool was not found: $baselineTool"
 }
 
-& $baselineTool -ReviewScope $ReviewScope -MountTimeoutSeconds $MountTimeoutSeconds -NoLaunchReview:$NoLaunchReview -WhatIf:$WhatIfPreference
+& $baselineTool -NewBaseline -CandidateDrives $CandidateDrives -ReviewScope $ReviewScope -MountTimeoutSeconds $MountTimeoutSeconds -NoLaunchReview:$NoLaunchReview -WhatIf:$WhatIfPreference -Confirm:$false

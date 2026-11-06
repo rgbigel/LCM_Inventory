@@ -3,6 +3,7 @@
   Evidence selection and Markdown rendering for session failure analysis.
 .NOTES
   Module: FailureModeAnalysis
+  Purpose: Selects, classifies and serializes retained session failure evidence.
   Path: LCM_Inventory/modules/FailureModeAnalysis.psm1
   Authors: Rolf, Copilot
   Version: 10.0.1
@@ -18,6 +19,15 @@ function Get-FailureProperty {
     return $Value.$Name
   }
   return $Default
+}
+
+function Get-FailureAnalysisProducer {
+  [CmdletBinding()]
+  param()
+  [pscustomobject][ordered]@{
+    Name = 'Invoke-FailureModeAnalysis.ps1'
+    Version = '10.0.1'
+  }
 }
 
 function Read-FailureTranscript {
@@ -336,10 +346,11 @@ function New-FailureMarkdown {
     [string]$SessionId, [string]$Source, [string[]]$Lifecycle, [string[]]$Actions,
     [string[]]$Limitations, [DateTimeOffset]$GeneratedAt
   )
+  $producer = Get-FailureAnalysisProducer
   $lines = [Collections.Generic.List[string]]::new()
   foreach ($line in @(
     '# Catalog of Execution Errors & Failure Modes', '',
-    'Generator: Invoke-FailureModeAnalysis.ps1', 'Version: 10.0.1',
+    "Generator: $($producer.Name)", "Version: $($producer.Version)",
     "Generated: $($GeneratedAt.ToString('yyyy-MM-dd HH:mm:ss zzz'))",
     "Host: $HostName", "Session: $SessionId", "Source: $Source", '',
     '## Summary', '',
@@ -422,6 +433,106 @@ function New-FailureMarkdown {
   return ((($lines -join "`r`n") + "`r`n") -replace '\r?\n', "`r`n")
 }
 
+function New-FailureStructuredEvidence {
+  [CmdletBinding()]
+  param(
+    [object]$Selection, [AllowEmptyCollection()][object[]]$Findings, [string]$HostName,
+    [string]$SessionId, [string]$Source, [string[]]$Lifecycle, [string[]]$Actions,
+    [string[]]$Limitations, [DateTimeOffset]$GeneratedAt
+  )
+  $producer = Get-FailureAnalysisProducer
+  $events = @(foreach ($event in $Selection.Events) {
+    [ordered]@{
+      Index = Get-FailureProperty $event 'Index' 0
+      Id = Get-FailureProperty $event 'Id'
+      Timestamp = Get-FailureProperty $event 'Timestamp'
+      Role = Get-FailureProperty $event 'Role'
+      Type = Get-FailureProperty $event 'Type'
+      Tool = Get-FailureProperty $event 'Tool'
+      Text = Get-FailureProperty $event 'Text'
+      Failed = Get-FailureProperty $event 'Failed' $false
+      KnownSuccess = Get-FailureProperty $event 'KnownSuccess' $false
+      CallId = Get-FailureProperty $event 'CallId'
+      TurnId = Get-FailureProperty $event 'TurnId'
+      ParentId = Get-FailureProperty $event 'ParentId'
+      Arguments = Get-FailureProperty $event 'Arguments' $null
+      ToolTitle = Get-FailureProperty $event 'ToolTitle'
+      Source = Get-FailureProperty $event 'Source'
+    }
+  })
+  $confirmed = @($Findings | Where-Object Disposition -EQ 'Confirmed runtime failure').Count
+  $unresolved = @($Findings | Where-Object Disposition -EQ 'Unresolved evidence').Count
+  [pscustomobject][ordered]@{
+    Schema = 'LCM.FailureAnalysis'
+    SchemaVersion = 1
+    Producer = $producer.Name
+    ProducerVersion = $producer.Version
+    GeneratedAt = $GeneratedAt.ToString('o')
+    Host = $HostName
+    SessionId = $SessionId
+    Source = $Source
+    Summary = [ordered]@{
+      Confirmed = $confirmed
+      Unresolved = $unresolved
+      EventCount = $events.Count
+      Number = $Selection.Number
+      AnchorMatches = $Selection.Matches
+    }
+    Selection = [ordered]@{
+      Anchor = $Selection.Anchor
+      Number = $Selection.Number
+      Matches = $Selection.Matches
+    }
+    Events = $events
+    Findings = @($Findings)
+    ExecutionFlow = @(Get-FailureExecutionFlow -Events $Selection.Events)
+    Lifecycle = @($Lifecycle)
+    Actions = @($Actions)
+    Limitations = @($Limitations)
+  }
+}
+
+function Write-FailureReportPair {
+  [CmdletBinding()]
+  param(
+    [string]$Directory, [DateTimeOffset]$GeneratedAt, [string]$Markdown,
+    [object]$Evidence
+  )
+  if (-not (Test-Path -LiteralPath $Directory -PathType Container)) {
+    throw "Report directory does not exist: $Directory"
+  }
+  $stem = "Catalog-of-Errors-and-Failure-Modes-$($GeneratedAt.ToString('yyyyMMdd-HHmmss'))"
+  $markdownPath = Join-Path $Directory "$stem.md"
+  $jsonPath = Join-Path $Directory "$stem.json"
+  $baseStem = $stem
+  while ((Test-Path -LiteralPath $markdownPath) -or (Test-Path -LiteralPath $jsonPath)) {
+    $stem = "$baseStem-$([guid]::NewGuid().ToString('N'))"
+    $markdownPath = Join-Path $Directory "$stem.md"
+    $jsonPath = Join-Path $Directory "$stem.json"
+  }
+  $json = $Evidence | ConvertTo-Json -Depth 100
+  $created = [Collections.Generic.List[string]]::new()
+  try {
+    foreach ($item in @(
+      [pscustomobject]@{ Path = $markdownPath; Content = $Markdown }
+      [pscustomobject]@{ Path = $jsonPath; Content = $json }
+    )) {
+      $stream = [IO.File]::Open($item.Path, [IO.FileMode]::CreateNew, [IO.FileAccess]::Write)
+      try {
+        $bytes = [Text.UTF8Encoding]::new($false).GetBytes($item.Content)
+        $stream.Write($bytes, 0, $bytes.Length)
+      } finally { $stream.Dispose() }
+      $created.Add($item.Path)
+    }
+  } catch {
+    foreach ($path in $created) {
+      if (Test-Path -LiteralPath $path -PathType Leaf) { Remove-Item -LiteralPath $path -Force }
+    }
+    throw
+  }
+  [pscustomobject]@{ MarkdownPath = $markdownPath; JsonPath = $jsonPath }
+}
+
 function Write-FailureMarkdown {
   [CmdletBinding()]
   param([string]$Directory, [DateTimeOffset]$GeneratedAt, [string]$Markdown)
@@ -437,4 +548,4 @@ function Write-FailureMarkdown {
   return $path
 }
 
-Export-ModuleMember -Function Read-FailureTranscript, Select-FailureEvidence, Invoke-Investigator, Get-FailureExecutionFlow, Find-FailureEvidence, Get-FailureLifecycleSection, New-FailureMarkdown, Write-FailureMarkdown
+Export-ModuleMember -Function Get-FailureAnalysisProducer, Read-FailureTranscript, Select-FailureEvidence, Invoke-Investigator, Get-FailureExecutionFlow, Find-FailureEvidence, Get-FailureLifecycleSection, New-FailureMarkdown, New-FailureStructuredEvidence, Write-FailureMarkdown, Write-FailureReportPair

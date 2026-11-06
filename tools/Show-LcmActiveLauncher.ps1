@@ -92,22 +92,22 @@ $toolCatalog = @(
         Command     = 'pwsh -NoProfile -NoExit -File "D:\Git_Repositories\HaSSD06_Inventory\tools\Test-RepoReadiness.ps1"'
     },
     [ordered]@{
-        Name        = "Invoke-WorkspaceAudit.ps1"
+        Name        = "Invoke-LCM_Audit.ps1"
         Category    = "Workspace Parent CM"
         Domain      = "LCM_Inventory"
-        ScriptPath  = "D:\Git_Repositories\LCM_Inventory\tools\Invoke-WorkspaceAudit.ps1"
+        ScriptPath  = "D:\Git_Repositories\LCM_Inventory\tools\Invoke-LCM_Audit.ps1"
         Description = "Audits all 35+ repositories under D:\Git_Repositories, detects drift, evaluates LCM 10.0.0 alignment, and refreshes the master workspace dashboard."
         Risk        = "Low (Telemetry Audit)"
-        Command     = 'pwsh -NoProfile -NoExit -File "D:\Git_Repositories\LCM_Inventory\tools\Invoke-WorkspaceAudit.ps1"'
+        Command     = 'pwsh -NoProfile -NoExit -File "D:\Git_Repositories\LCM_Inventory\tools\Invoke-LCM_Audit.ps1"'
     },
     [ordered]@{
-        Name        = "Show-WorkspaceInventoryApp.ps1"
+        Name        = "Show-LCM_InventoryApp.ps1"
         Category    = "Workspace GUI"
         Domain      = "LCM_Inventory"
-        ScriptPath  = "D:\Git_Repositories\LCM_Inventory\tools\Show-WorkspaceInventoryApp.ps1"
+        ScriptPath  = "D:\Git_Repositories\LCM_Inventory\tools\Show-LCM_InventoryApp.ps1"
         Description = "Generates and opens the dark-mode interactive HTML browser dashboard displaying the 35+ repository master ledger and governance rule matrix."
         Risk        = "Zero (Viewer)"
-        Command     = 'pwsh -NoProfile -File "D:\Git_Repositories\LCM_Inventory\tools\Show-WorkspaceInventoryApp.ps1"'
+        Command     = 'pwsh -NoProfile -File "D:\Git_Repositories\LCM_Inventory\tools\Show-LCM_InventoryApp.ps1"'
     },
     [ordered]@{
         Name        = "Test-LCMRuleHealth.ps1"

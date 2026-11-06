@@ -41,6 +41,10 @@ if (-not (Test-Path -LiteralPath $workspaceRoot)) {
 
 $resolvedRepositoryPath = (Resolve-Path -LiteralPath $RepositoryPath).Path
 $repositoryName = Split-Path $resolvedRepositoryPath -Leaf
+if ($repositoryName -eq 'LCM_AI') {
+  Import-Module -Name (Join-Path $PSScriptRoot '..\modules\LcmPackageVersion.psm1') -Force
+  Assert-LcmPackageVersion -RepositoryPath $resolvedRepositoryPath | Out-Null
+}
 $reviewsDirectory = Join-Path $workspaceRoot 'LCM_Inventory\data\reviews'
 $authorizationPath = Join-Path $reviewsDirectory "pending_commit_${repositoryName}.json"
 

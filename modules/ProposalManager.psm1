@@ -7,11 +7,12 @@
 #          and persistent ledger storage in LCM_Inventory.
 # Authors: Rolf, LCM_AI Engine
 # Version: 10.0.2
-# Date: 2026-10-18
+# Date: 2026-10-21
 # =====================================================================
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+Import-Module -Name (Join-Path $PSScriptRoot 'ProposalSpecificationState.psm1')
 
 function Get-ProposalStorePath {
     [CmdletBinding()]
@@ -32,7 +33,7 @@ function Get-ProposalStorePath {
     }
 
     $item = Get-Item $scriptRoot
-    while ($item -ne $null -and $item.Name -ne 'LCM_Inventory' -and $item.Name -ne 'Git_Repositories') {
+    while ($null -ne $item -and $item.Name -ne 'LCM_Inventory' -and $item.Name -ne 'Git_Repositories') {
         $item = $item.Parent
     }
 
@@ -84,7 +85,28 @@ function Set-ProposalStore {
 
     $path = Get-ProposalStorePath
     $Store.updated_at = (Get-Date).ToString('yyyy-MM-ddTHH:mm:sszzz')
-    $Store | ConvertTo-Json -Depth 5 | Set-Content -Path $path -Encoding UTF8
+    $edits = @(Get-LcmSpecificationStateEdits -Store $Store -StorePath $path)
+    $json = $Store | ConvertTo-Json -Depth 5
+    $written = [Collections.Generic.List[object]]::new()
+    $temporaryPath = "$path.$([guid]::NewGuid().ToString('N')).tmp"
+    try {
+        $json | Set-Content -LiteralPath $temporaryPath -Encoding UTF8
+        foreach ($edit in $edits) {
+            $written.Add($edit)
+            [IO.File]::WriteAllText($edit.Path, $edit.Content, [Text.UTF8Encoding]::new($false))
+        }
+        [IO.File]::Move($temporaryPath, $path, $true)
+    } catch {
+        $failure = $_
+        foreach ($edit in $written) {
+            try { [IO.File]::WriteAllBytes($edit.Path, $edit.Original) } catch {
+                Write-Error "Specification rollback failed for '$($edit.Path)': $($_.Exception.Message)" -ErrorAction Continue
+            }
+        }
+        throw $failure
+    } finally {
+        if ([IO.File]::Exists($temporaryPath)) { [IO.File]::Delete($temporaryPath) }
+    }
 }
 
 function Update-LcmControlHubAfterCompletion {
@@ -2612,11 +2634,11 @@ function Set-ActiveAppContext {
         }
     }
 
-    $appId = if ($appNum -ne $null) { "App: $appNum" } else { $trimmed }
+    $appId = if ($null -ne $appNum) { "App: $appNum" } else { $trimmed }
 
     # If title wasn't passed in context string, look up in catalog or tripartite docs
     $targetRepo = if ($Repo) { $Repo } else { 'LCM_AI' }
-    if ([string]::IsNullOrWhiteSpace($appTitle) -and $appNum -ne $null) {
+    if ([string]::IsNullOrWhiteSpace($appTitle) -and $null -ne $appNum) {
         $catalog = @(Get-LcmApps -Repo $targetRepo -WorkspaceRoot $WorkspaceRoot)
         $found = @($catalog | Where-Object { $_.number -eq $appNum })
         if ($found.Count -gt 0) {
@@ -2742,7 +2764,7 @@ function Get-LcmApps {
                 $num = [int]$sd.Name
             }
 
-            if ($num -ne $null) {
+            if ($null -ne $num) {
                 $subArch = Join-Path $sd.FullName 'Architecture.md'
                 $subReq  = Join-Path $sd.FullName 'Requirements.md'
                 $subImpl = Join-Path $sd.FullName 'Implementation.md'
@@ -2886,7 +2908,7 @@ function Get-LcmApps {
                             constituents = @()
                         }
                     }
-                } elseif ($currentAppNum -ne $null -and $line -match '(?i)Constituent Manifest') {
+                } elseif ($null -ne $currentAppNum -and $line -match '(?i)Constituent Manifest') {
                     $inManifest = $true
                 } elseif ($inManifest -and $line -match '^\|\s*([^\|]+)\|\s*([^\|]+)\|\s*([^\|]+)\|\s*([^\|]+)\|') {
                     $cPath = $Matches[1].Trim()
@@ -3248,7 +3270,7 @@ function Split-LcmAppDocs {
 
         foreach ($line in $lines) {
             if ($line -match '(?i)^#{2,3}\s+App:\s*(\d+)(?:\s*-\s*(.+))?$') {
-                if ($currNum -ne $null) {
+                if ($null -ne $currNum) {
                     $sections[$currNum] = @{
                         Number = $currNum
                         Title  = $currTitle
@@ -3258,14 +3280,14 @@ function Split-LcmAppDocs {
                 $currNum = [int]$Matches[1]
                 $currTitle = if ($Matches.Count -ge 3 -and $Matches[2]) { $Matches[2].Trim() } else { "App $currNum" }
                 $currLines = @()
-            } elseif ($currNum -eq $null) {
+            } elseif ($null -eq $currNum) {
                 $preamble += $line
             } else {
                 $currLines += $line
             }
         }
 
-        if ($currNum -ne $null) {
+        if ($null -ne $currNum) {
             $sections[$currNum] = @{
                 Number = $currNum
                 Title  = $currTitle

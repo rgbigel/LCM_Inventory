@@ -253,6 +253,10 @@ if ($StagedOnly) {
 }
 
 $stagedPaths = @(git -C $targetRepoPath diff --cached --name-only)
+if ($repoName -eq 'LCM_AI') {
+    Import-Module -Name (Join-Path $PSScriptRoot '..\modules\LcmPackageVersion.psm1') -Force
+    Assert-LcmPackageVersion -RepositoryPath $targetRepoPath | Out-Null
+}
 $ruleChangePaths = @(
     if ($stagedPaths.Count -gt 0) {
         Get-RuleChangePaths -Paths $stagedPaths
