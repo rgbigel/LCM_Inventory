@@ -23,14 +23,20 @@ function Get-LcmDependencySourceFiles {
   $sourceRoots = @(
     (Join-Path $WorkspaceRoot 'LCM_Inventory\modules'),
     (Join-Path $WorkspaceRoot 'LCM_Inventory\tools'),
+    (Join-Path $WorkspaceRoot 'LCM_Inventory\Cmd'),
+    (Join-Path $WorkspaceRoot 'LCM_Inventory\assets'),
     (Join-Path $WorkspaceRoot 'LCM_Inventory\.githooks'),
-    (Join-Path $WorkspaceRoot 'LCM_Inventory\tools'),
     (Join-Path $WorkspaceRoot 'LCM_AI\modules'),
-    (Join-Path $WorkspaceRoot 'LCM_Inventory\modules'),
-    (Join-Path $WorkspaceRoot 'LCM_Shared\tools'),
+    (Join-Path $WorkspaceRoot 'LCM_AI\tools'),
+    (Join-Path $WorkspaceRoot 'LCM_AI\.agents'),
     (Join-Path $WorkspaceRoot 'LCM_Shared\modules'),
+    (Join-Path $WorkspaceRoot 'LCM_Shared\tools'),
+    (Join-Path $WorkspaceRoot 'LCM_Supervision\modules'),
     (Join-Path $WorkspaceRoot 'LCM_Supervision\tools'),
-    (Join-Path $WorkspaceRoot 'LCM_Supervision\modules')
+    (Join-Path $WorkspaceRoot 'LCM_Supervision\tasks'),
+    (Join-Path $WorkspaceRoot 'LCM_Supervision\assets'),
+    (Join-Path $WorkspaceRoot 'LCM_Tools\modules'),
+    (Join-Path $WorkspaceRoot 'LCM_Tools\tools')
   )
 
   return @($sourceRoots | Where-Object { Test-Path -LiteralPath $_ -PathType Container } |
