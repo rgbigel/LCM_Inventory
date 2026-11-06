@@ -248,6 +248,10 @@ class DaemonActionController {
     $this.Env.Log("Dispatching execution: $cmdToRun (Elevated: $($req.Elevated), NoExit: $($req.NoExit), Cwd: $wsRoot)", 'ACTION')
     $noExitFlag = if ($req.NoExit) { "-NoExit " } else { "" }
 
+    if (-not $req.NoExit -and $cmdToRun -notmatch '(?i)(?:^|;|\s)exit(?:\s*;\s*|\s*$)') {
+      $cmdToRun = "$cmdToRun; exit"
+    }
+
     $windowStyle = if (-not [string]::IsNullOrWhiteSpace($req.WindowStyle)) {
       $req.WindowStyle
     } elseif ($req.NoExit -or $req.Elevated) {
@@ -272,9 +276,9 @@ class DaemonActionController {
     $encodedCmd = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($cmdToRun))
 
     if ($req.Elevated) {
-      Start-Process -FilePath "pwsh.exe" -ArgumentList "-ExecutionPolicy Bypass $noExitFlag-EncodedCommand $encodedCmd" -WorkingDirectory $wsRoot -Verb RunAs -WindowStyle $windowStyle
+      Start-Process -FilePath "pwsh.exe" -ArgumentList "-NoProfile -ExecutionPolicy Bypass $noExitFlag-EncodedCommand $encodedCmd" -WorkingDirectory $wsRoot -Verb RunAs -WindowStyle $windowStyle
     } else {
-      Start-Process -FilePath "pwsh.exe" -ArgumentList "-ExecutionPolicy Bypass $noExitFlag-EncodedCommand $encodedCmd" -WorkingDirectory $wsRoot -WindowStyle $windowStyle
+      Start-Process -FilePath "pwsh.exe" -ArgumentList "-NoProfile -ExecutionPolicy Bypass $noExitFlag-EncodedCommand $encodedCmd" -WorkingDirectory $wsRoot -WindowStyle $windowStyle
     }
     return @{ status = "DISPATCHED"; command = $cmdToRun; elevated = $req.Elevated; noExit = $req.NoExit; windowStyle = $windowStyle }
   }
