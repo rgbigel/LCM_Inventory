@@ -49,7 +49,7 @@ if ($Help) {
   return
 }
 
-$modulePath = Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\LcmWorkspaceContext.psm1'
+$modulePath = Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\LCM_Context.psm1'
 Import-Module -Name $modulePath -Force
 $gitRoot = Get-LcmMachineGitRoot
 $inventoryRoot = Join-Path $gitRoot 'LCM_Inventory'
