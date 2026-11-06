@@ -88,8 +88,11 @@ if ($Help) {
 $inventoryRoot = Split-Path $PSScriptRoot -Parent
 $workspaceRoot = Split-Path $inventoryRoot -Parent
 $copilotRoot = Join-Path $workspaceRoot '.copilot'
-$qualityGateModulePath = Join-Path $PSScriptRoot 'QualityGates\WorkspaceQualityGates.psm1'
-Import-Module $qualityGateModulePath -Force
+$qualityGateModulePath = Join-Path $PSScriptRoot 'QualityGates\LCM_QualityGates.psm1'
+if (-not (Test-Path -LiteralPath $qualityGateModulePath)) {
+  $qualityGateModulePath = Join-Path $PSScriptRoot 'QualityGates\WorkspaceQualityGates.psm1'
+}
+Import-Module -Name $qualityGateModulePath -Force
 
 if (-not $LogPath) {
   $LogPath = Join-Path $copilotRoot 'Logs\Workspace.log'

@@ -45,7 +45,7 @@ function hubContext() {
   vm.runInContext(helpers, context);
   for (const name of ['populateScopeFilter', 'populateCohortFilter', 'populateItemTargets',
     'reconcileActiveItemTarget', 'calculateStatusCounts', 'renderTable', 'renderSelectionPanel',
-    'renderReviewCohortPreview', 'renderSelectedItemLifecycle', 'renderDatesTable']) context[name] = () => {};
+    'renderReviewCohortPreview', 'renderSelectedItemLifecycle', 'renderDatesTable']) context[name] = () => { };
   vm.runInContext(hub.slice(hub.indexOf('    window.LcmDisplayApply ='), hub.lastIndexOf('  </script>')), context);
   return context;
 }
@@ -96,7 +96,7 @@ function datesContext() {
   element('lcm-display-data').textContent = JSON.stringify({ proposals: { proposals: [] } });
   const context = vm.createContext({
     window: {}, location: { search: '?ReviewMode=true' }, URLSearchParams,
-    document: { getElementById: element, addEventListener: () => {} },
+    document: { getElementById: element, addEventListener: () => { } },
     DOMParser: class { parseFromString(html) { return { querySelector: () => ({ textContent: html }) }; } }
   });
   vm.runInContext(dates.match(/<script>\s*("use strict";[\s\S]*?)<\/script>/)[1], context);
@@ -145,13 +145,15 @@ test('Dates publication and restore retain repo, state, event, IDs and review mo
   assert.equal(JSON.stringify(context.window.LcmDisplayCaptureState()), JSON.stringify(saved));
 });
 test('Inventory registers adapters at script evaluation before any documentation modal opens', async () => {
-  const html = fs.readFileSync(path.join(assets, 'WORKSPACE_INVENTORY_VIEWER.html'), 'utf8');
+  const html = fs.readFileSync(path.join(assets, 'LCM_INVENTORY_VIEWER.html'), 'utf8');
   const elements = new Map();
   const listeners = [];
   function element(key) {
     if (!elements.has(key)) {
-      const node = { value: '', innerText: '', style: {}, children: [],
-        classList: { add() {}, remove() {} }, appendChild(child) { this.children.push(child); } };
+      const node = {
+        value: '', innerText: '', style: {}, children: [],
+        classList: { add() { }, remove() { } }, appendChild(child) { this.children.push(child); }
+      };
       Object.defineProperty(node, 'innerHTML', { set(value) { this.html = value; this.children = []; }, get() { return this.html; } });
       elements.set(key, node);
     }
@@ -159,9 +161,11 @@ test('Inventory registers adapters at script evaluation before any documentation
   }
   element('lcm-display-data').textContent = JSON.stringify({ inventory: { repositories: [] }, docs: {} });
   const context = vm.createContext({
-    window: { addEventListener() {} },
-    document: { getElementById: element, createElement: () => ({}), querySelectorAll: () => [],
-      addEventListener: (event, callback) => listeners.push([event, callback]) },
+    window: { addEventListener() { } },
+    document: {
+      getElementById: element, createElement: () => ({}), querySelectorAll: () => [],
+      addEventListener: (event, callback) => listeners.push([event, callback])
+    },
     DOMParser: class { parseFromString(text) { return { querySelector: () => ({ textContent: text }) }; } }
   });
   const source = html.match(/<script>\s*(const inventoryPayload[\s\S]*?)<\/script>/)[1];
@@ -174,10 +178,12 @@ test('Inventory registers adapters at script evaluation before any documentation
   element('filterInput').value = 'Fixture';
   const snapshot = context.window.LcmDisplayCaptureState();
   await context.window.LcmDisplayApply(JSON.stringify({
-    inventory: { repositories: [
-      { RepositoryName: 'Fixture', LCMStatus: 'governed', GitStatus: 'Git', Path: 'D:\\Fixture' },
-      { RepositoryName: 'Other', LCMStatus: 'governed', GitStatus: 'Git', Path: 'D:\\Other' }
-    ] }, docs: { 'Fixture/README.md': 'Published documentation' }
+    inventory: {
+      repositories: [
+        { RepositoryName: 'Fixture', LCMStatus: 'governed', GitStatus: 'Git', Path: 'D:\\Fixture' },
+        { RepositoryName: 'Other', LCMStatus: 'governed', GitStatus: 'Git', Path: 'D:\\Other' }
+      ]
+    }, docs: { 'Fixture/README.md': 'Published documentation' }
   }));
   assert.equal(element('valTotal').innerText, 2);
   assert.equal(element('inventoryTableBody').children.length, 1);

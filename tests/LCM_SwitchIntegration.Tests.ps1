@@ -1,4 +1,4 @@
-Describe 'Workspace switch action integration' {
+Describe 'LCM switch action integration' {
   BeforeAll {
     $script:actionPath = Join-Path $PSScriptRoot '..\tools\Invoke-ProposalAction.ps1'
     $script:proposalStorePath = Join-Path $TestDrive 'proposals.json'

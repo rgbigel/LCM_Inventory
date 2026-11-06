@@ -144,8 +144,9 @@ function Update-LcmControlHubAfterCompletion {
     }
 }
 
-function Get-WorkspaceProposals {
+function Get-LCM_Proposals {
     [CmdletBinding()]
+    [Alias('Get-WorkspaceProposals')]
     param(
         [int[]]$Id,
         [string]$State,
@@ -177,8 +178,9 @@ function Get-WorkspaceProposals {
     return @($items | Sort-Object id)
 }
 
-function New-WorkspaceProposal {
+function New-LCM_Proposal {
     [CmdletBinding()]
+    [Alias('New-WorkspaceProposal')]
     param(
         [Parameter(Mandatory = $true)]
         [string]$Title,
@@ -205,7 +207,6 @@ function New-WorkspaceProposal {
     $prefix = if ($isBug) { 'BUG' } else { 'CRP' }
     $canonicalId = "{0}-{1:D3}" -f $prefix, $newId
     $cleanCrId = if ($CrId) { $CrId } else { $canonicalId }
-    $safeCrId = $cleanCrId -replace '[^a-zA-Z0-9_-]', '_'
 
     # Active App Context Inheritance per RULE-LCM-019
     $activeCtx = Get-ActiveAppContext
@@ -863,10 +864,10 @@ function Start-LcmProposalReinstatement {
     $targetState = if ($hasConcreteChanges) { 'in_progress' } else { 'suggested' }
     $timestamp = (Get-Date).ToString('yyyy-MM-dd HH:mm:ss')
     $revision = 1
-    foreach ($event in @($proposal.state_history)) {
-        if ($event.PSObject.Properties['revision']) {
+    foreach ($historyEvent in @($proposal.state_history)) {
+        if ($historyEvent.PSObject.Properties['revision']) {
             $parsedRevision = 0
-            if ([int]::TryParse([string]$event.revision, [ref]$parsedRevision)) {
+            if ([int]::TryParse([string]$historyEvent.revision, [ref]$parsedRevision)) {
                 $revision = [Math]::Max($revision, $parsedRevision + 1)
             }
         }
@@ -1095,8 +1096,9 @@ function Get-LcmProposalLifecycleAudit {
     return @($findings)
 }
 
-function Set-WorkspaceProposalState {
+function Set-LCM_ProposalState {
     [CmdletBinding()]
+    [Alias('Set-WorkspaceProposalState')]
     param(
         [Parameter(Mandatory = $true)]
         [int]$Id,
@@ -1124,8 +1126,9 @@ function Set-WorkspaceProposalState {
     return Move-LcmProposalLifecycleState -Id $Id -State $lifecycleState -Details $Details
 }
 
-function Set-WorkspaceProposalProgress {
+function Set-LCM_ProposalProgress {
     [CmdletBinding()]
+    [Alias('Set-WorkspaceProposalProgress')]
     param(
         [Parameter(Mandatory = $true)]
         [int]$Id,
@@ -1152,8 +1155,9 @@ function Set-WorkspaceProposalProgress {
     return Move-LcmProposalLifecycleState -Id $Id -State $lifecycleState -Details $Details
 }
 
-function Set-WorkspaceProposalPriority {
+function Set-LCM_ProposalPriority {
     [CmdletBinding()]
+    [Alias('Set-WorkspaceProposalPriority')]
     param(
         [Parameter(Mandatory = $true)]
         [int]$Id,
@@ -2476,7 +2480,7 @@ function Get-LcmProposalDocument {
 }
 
 function Remove-LcmProposalBundle {
-    [CmdletBinding(SupportsShouldProcess = $true)]
+    [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true, Position = 0)]
         [int]$Id,
@@ -2525,11 +2529,9 @@ function Remove-LcmProposalBundle {
     if ($proposal.PSObject.Properties['bundle_dir'] -and $proposal.bundle_dir) {
         $localBundleDir = Join-Path $repoDir $proposal.bundle_dir
         if (Test-Path $localBundleDir) {
-            if ($PSCmdlet.ShouldProcess($localBundleDir, "Purge pushed proposal bundle from working tree")) {
-                Remove-Item -Path $localBundleDir -Recurse -Force | Out-Null
-                $purged = $true
-                Write-Host ("  [+] Purged local working tree bundle: {0}" -f $proposal.bundle_dir) -ForegroundColor Green
-            }
+            Remove-Item -Path $localBundleDir -Recurse -Force | Out-Null
+            $purged = $true
+            Write-Host ("  [+] Purged local working tree bundle: {0}" -f $proposal.bundle_dir) -ForegroundColor Green
         }
     }
 
@@ -3042,7 +3044,7 @@ function Assert-LcmProposalImplementationEligibility {
 }
 
 function New-LcmApp {
-    [CmdletBinding(SupportsShouldProcess = $true)]
+    [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true, Position = 0)]
         [string]$Title,
@@ -3093,13 +3095,12 @@ function New-LcmApp {
         $folderName = "App#$newNum-$cleanModName"
         $appTargetDir = Join-Path $docsDir $folderName
 
-        if ($PSCmdlet.ShouldProcess($appTargetDir, "Scaffold directory-separated tripartite documents for '$fullTitle'")) {
-            if (-not (Test-Path $appTargetDir)) {
-                New-Item -ItemType Directory -Path $appTargetDir -Force | Out-Null
-            }
+        if (-not (Test-Path $appTargetDir)) {
+            New-Item -ItemType Directory -Path $appTargetDir -Force | Out-Null
+        }
 
-            # 1. Architecture.md
-            $archSnippet = @"
+        # 1. Architecture.md
+        $archSnippet = @"
 # $fullTitle Architecture
 
 ## 1. Architectural Concept & End-User Perspective
@@ -3109,10 +3110,10 @@ $Description
 <!-- Add Mermaid topology or functional diagram -->
 
 "@
-            Set-Content -Path (Join-Path $appTargetDir 'Architecture.md') -Value $archSnippet.Trim() -Encoding UTF8
+        Set-Content -Path (Join-Path $appTargetDir 'Architecture.md') -Value $archSnippet.Trim() -Encoding UTF8
 
-            # 2. Requirements.md
-            $reqSnippet = @"
+        # 2. Requirements.md
+        $reqSnippet = @"
 # $fullTitle Requirements
 
 ## 1. Technical Invariants & Prerequisites
@@ -3122,10 +3123,10 @@ $Description
 - Boundary 1: Clean degradation and zero-state recovery.
 
 "@
-            Set-Content -Path (Join-Path $appTargetDir 'Requirements.md') -Value $reqSnippet.Trim() -Encoding UTF8
+        Set-Content -Path (Join-Path $appTargetDir 'Requirements.md') -Value $reqSnippet.Trim() -Encoding UTF8
 
-            # 3. Implementation.md
-            $implSnippet = @"
+        # 3. Implementation.md
+        $implSnippet = @"
 # $fullTitle Implementation
 
 ## 1. Constituent Manifest Table
@@ -3137,20 +3138,18 @@ $Description
 - Cmdlet / API contracts defined in `data/catalog/contracts.json`.
 
 "@
-            Set-Content -Path (Join-Path $appTargetDir 'Implementation.md') -Value $implSnippet.Trim() -Encoding UTF8
+        Set-Content -Path (Join-Path $appTargetDir 'Implementation.md') -Value $implSnippet.Trim() -Encoding UTF8
 
-            Write-Host ("Successfully scaffolded {0} in docs/{1}/ and set as active context." -f $fullTitle, $folderName) -ForegroundColor Green
-        }
+        Write-Host ("Successfully scaffolded {0} in docs/{1}/ and set as active context." -f $fullTitle, $folderName) -ForegroundColor Green
     } else {
         # Flat in-document scaffolding (default)
         $archFile = Join-Path $docsDir 'Architecture.md'
         $reqFile  = Join-Path $docsDir 'Requirements.md'
         $implFile = Join-Path $docsDir 'Implementation.md'
 
-        if ($PSCmdlet.ShouldProcess("$Repo/docs/", "Scaffold in-document section for '$fullTitle'")) {
-            # Scaffold in Architecture.md
-            if (Test-Path $archFile) {
-                $archSnippet = @"
+        # Scaffold in Architecture.md
+        if (Test-Path $archFile) {
+            $archSnippet = @"
 
 
 ---
@@ -3164,12 +3163,12 @@ $Description
 <!-- Add Mermaid topology or functional diagram -->
 
 "@
-                Add-Content -Path $archFile -Value $archSnippet -Encoding UTF8
-            }
+            Add-Content -Path $archFile -Value $archSnippet -Encoding UTF8
+        }
 
-            # Scaffold in Requirements.md
-            if (Test-Path $reqFile) {
-                $reqSnippet = @"
+        # Scaffold in Requirements.md
+        if (Test-Path $reqFile) {
+            $reqSnippet = @"
 
 
 ---
@@ -3183,12 +3182,12 @@ $Description
 - Boundary 1: Clean degradation and zero-state recovery.
 
 "@
-                Add-Content -Path $reqFile -Value $reqSnippet -Encoding UTF8
-            }
+            Add-Content -Path $reqFile -Value $reqSnippet -Encoding UTF8
+        }
 
-            # Scaffold in Implementation.md
-            if (Test-Path $implFile) {
-                $implSnippet = @"
+        # Scaffold in Implementation.md
+        if (Test-Path $implFile) {
+            $implSnippet = @"
 
 
 ---
@@ -3204,11 +3203,10 @@ $Description
 - Cmdlet / API contracts defined in `data/catalog/contracts.json`.
 
 "@
-                Add-Content -Path $implFile -Value $implSnippet -Encoding UTF8
-            }
-
-            Write-Host ("Successfully scaffolded {0} across {1}/docs/ and set as active context." -f $fullTitle, $Repo) -ForegroundColor Green
+            Add-Content -Path $implFile -Value $implSnippet -Encoding UTF8
         }
+
+        Write-Host ("Successfully scaffolded {0} across {1}/docs/ and set as active context." -f $fullTitle, $Repo) -ForegroundColor Green
     }
 
     # Set active context to newly minted App
@@ -3230,7 +3228,7 @@ $Description
 }
 
 function Split-LcmAppDocs {
-    [CmdletBinding(SupportsShouldProcess = $true)]
+    [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true, Position = 0)]
         [string]$Repo,
@@ -3336,61 +3334,56 @@ function Split-LcmAppDocs {
 
         $fullAppTitle = "App: $num - $title"
 
-        if ($PSCmdlet.ShouldProcess($appTargetDir, "Extract $fullAppTitle tripartite docs")) {
-            if (-not (Test-Path $appTargetDir)) {
-                New-Item -ItemType Directory -Path $appTargetDir -Force | Out-Null
-            }
+        if (-not (Test-Path $appTargetDir)) {
+            New-Item -ItemType Directory -Path $appTargetDir -Force | Out-Null
+        }
 
-            # 1. Architecture.md
-            $archBody = if ($archSplit.Sections.ContainsKey($num)) { $archSplit.Sections[$num].Body } else { "### 1. Architectural Concept`n$title capability slice." }
-            $archDocContent = @"
+        # 1. Architecture.md
+        $archBody = if ($archSplit.Sections.ContainsKey($num)) { $archSplit.Sections[$num].Body } else { "### 1. Architectural Concept`n$title capability slice." }
+        $archDocContent = @"
 # $fullAppTitle Architecture
 
 $archBody
 
 "@
-            Set-Content -Path (Join-Path $appTargetDir 'Architecture.md') -Value $archDocContent.Trim() -Encoding UTF8
+        Set-Content -Path (Join-Path $appTargetDir 'Architecture.md') -Value $archDocContent.Trim() -Encoding UTF8
 
-            # 2. Requirements.md
-            $reqBody = if ($reqSplit.Sections.ContainsKey($num)) { $reqSplit.Sections[$num].Body } else { "### 1. Technical Invariants`n- Invariant: Conforms to LCM governance standards." }
-            $reqDocContent = @"
+        # 2. Requirements.md
+        $reqBody = if ($reqSplit.Sections.ContainsKey($num)) { $reqSplit.Sections[$num].Body } else { "### 1. Technical Invariants`n- Invariant: Conforms to LCM governance standards." }
+        $reqDocContent = @"
 # $fullAppTitle Requirements
 
 $reqBody
 
 "@
-            Set-Content -Path (Join-Path $appTargetDir 'Requirements.md') -Value $reqDocContent.Trim() -Encoding UTF8
+        Set-Content -Path (Join-Path $appTargetDir 'Requirements.md') -Value $reqDocContent.Trim() -Encoding UTF8
 
-            # 3. Implementation.md
-            $implBody = if ($implSplit.Sections.ContainsKey($num)) { $implSplit.Sections[$num].Body } else { "### 1. Constituent Manifest Table`n| Relative Path | Role / Layer | Primary Cmdlets / Entrypoints | Test Suite |`n|:---|:---|:---|:---|`n| modules/$cleanSlug.psm1 | Core Logic | Get-$cleanSlug | tests/$cleanSlug.Tests.ps1 |" }
-            $implDocContent = @"
+        # 3. Implementation.md
+        $implBody = if ($implSplit.Sections.ContainsKey($num)) { $implSplit.Sections[$num].Body } else { "### 1. Constituent Manifest Table`n| Relative Path | Role / Layer | Primary Cmdlets / Entrypoints | Test Suite |`n|:---|:---|:---|:---|`n| modules/$cleanSlug.psm1 | Core Logic | Get-$cleanSlug | tests/$cleanSlug.Tests.ps1 |" }
+        $implDocContent = @"
 # $fullAppTitle Implementation
 
 $implBody
 
 "@
-            Set-Content -Path (Join-Path $appTargetDir 'Implementation.md') -Value $implDocContent.Trim() -Encoding UTF8
+        Set-Content -Path (Join-Path $appTargetDir 'Implementation.md') -Value $implDocContent.Trim() -Encoding UTF8
 
-            $migrated += [PSCustomObject]@{
-                Number    = $num
-                Title     = $title
-                Directory = "docs/$folderName"
-            }
-            Write-Host ("  [+] Migrated {0} -> docs/{1}/" -f $fullAppTitle, $folderName) -ForegroundColor Green
-        } else {
-            Write-Host ("  [WhatIf] Would migrate {0} -> docs/{1}/" -f $fullAppTitle, $folderName) -ForegroundColor Yellow
+        $migrated += [PSCustomObject]@{
+            Number    = $num
+            Title     = $title
+            Directory = "docs/$folderName"
         }
+        Write-Host ("  [+] Migrated {0} -> docs/{1}/" -f $fullAppTitle, $folderName) -ForegroundColor Green
     }
 
     # 4. Clean up root Architecture.md, Requirements.md, Implementation.md
-    if ($PSCmdlet.ShouldProcess("$Repo/docs/", "Clean up root tripartite documents and add App index")) {
-        # Build App Index table for root Architecture.md
-        $indexRows = @()
-        foreach ($m in $migrated) {
-            $indexRows += "| App: $($m.Number) | $($m.Title) | [``$($m.Directory)/``](file:///$($m.Directory)) | [Arch](file:///$($m.Directory)/Architecture.md) · [Req](file:///$($m.Directory)/Requirements.md) · [Impl](file:///$($m.Directory)/Implementation.md) |"
-        }
+    # Build App Index table for root Architecture.md
+    $indexRows = @()
+    foreach ($m in $migrated) {
+        $indexRows += "| App: $($m.Number) | $($m.Title) | [``$($m.Directory)/``](file:///$($m.Directory)) | [Arch](file:///$($m.Directory)/Architecture.md) · [Req](file:///$($m.Directory)/Requirements.md) · [Impl](file:///$($m.Directory)/Implementation.md) |"
+    }
 
-        $appIndexSection = @"
+    $appIndexSection = @"
 
 
 ---
@@ -3403,21 +3396,20 @@ The following modular App slices are documented in dedicated subdirectories per 
 $($indexRows -join "`r`n")
 "@
 
-        # Write clean root files
-        $cleanArch = ($archSplit.Preamble.TrimEnd() -replace '(?s)\n---\s*$', '') + $appIndexSection
-        Set-Content -Path $archPath -Value $cleanArch.Trim() -Encoding UTF8
+    # Write clean root files
+    $cleanArch = ($archSplit.Preamble.TrimEnd() -replace '(?s)\n---\s*$', '') + $appIndexSection
+    Set-Content -Path $archPath -Value $cleanArch.Trim() -Encoding UTF8
 
-        $cleanReq = $reqSplit.Preamble.TrimEnd() -replace '(?s)\n---\s*$', ''
-        Set-Content -Path $reqPath -Value $cleanReq.Trim() -Encoding UTF8
+    $cleanReq = $reqSplit.Preamble.TrimEnd() -replace '(?s)\n---\s*$', ''
+    Set-Content -Path $reqPath -Value $cleanReq.Trim() -Encoding UTF8
 
-        $cleanImpl = $implSplit.Preamble.TrimEnd() -replace '(?s)\n---\s*$', ''
-        Set-Content -Path $implPath -Value $cleanImpl.Trim() -Encoding UTF8
+    $cleanImpl = $implSplit.Preamble.TrimEnd() -replace '(?s)\n---\s*$', ''
+    Set-Content -Path $implPath -Value $cleanImpl.Trim() -Encoding UTF8
 
-        # 5. Re-synchronize App catalog
-        Sync-LcmAppCatalog -Repo $Repo -WorkspaceRoot $WorkspaceRoot | Out-Null
-        Write-Host "`n[SUCCESS] SplitDocs completed for repository '$Repo'." -ForegroundColor Green
-        Format-LcmAppsTable -WorkspaceRoot $WorkspaceRoot
-    }
+    # 5. Re-synchronize App catalog
+    Sync-LcmAppCatalog -Repo $Repo -WorkspaceRoot $WorkspaceRoot | Out-Null
+    Write-Host "`n[SUCCESS] SplitDocs completed for repository '$Repo'." -ForegroundColor Green
+    Format-LcmAppsTable -WorkspaceRoot $WorkspaceRoot
 
     return $migrated
 }
@@ -3892,12 +3884,12 @@ Set-Alias -Name Purge-Bundle -Value Remove-LcmProposalBundle
 Set-Alias -Name Get-Doc -Value Get-LcmProposalDocument
 
 Export-ModuleMember -Function Get-ProposalStorePath, Get-ProposalStore, Set-ProposalStore, `
-    Get-WorkspaceProposals, New-WorkspaceProposal, Get-LcmProposalLifecycleActions, Test-LcmProposalLifecycleTransition, Get-LcmProposalReviewObligations, Register-LcmCrossRepositoryReviewObligation, Complete-LcmCrossRepositoryReviewObligation, Move-LcmProposalLifecycleState, Start-LcmProposalReinstatement, Restore-LcmProposalReviewState, Set-LcmProposalBugIdentity, Enable-LcmImmediateBugRecovery, Get-LcmProposalLifecycleAudit, Set-WorkspaceProposalState, Set-WorkspaceProposalProgress, `
-    Set-WorkspaceProposalPriority, Save-ProposalPlan, Save-ProposalWalkthrough, `
+    Get-LCM_Proposals, Get-WorkspaceProposals, New-LCM_Proposal, New-WorkspaceProposal, Get-LcmProposalLifecycleActions, Test-LcmProposalLifecycleTransition, Get-LcmProposalReviewObligations, Register-LcmCrossRepositoryReviewObligation, Complete-LcmCrossRepositoryReviewObligation, Move-LcmProposalLifecycleState, Start-LcmProposalReinstatement, Restore-LcmProposalReviewState, Set-LcmProposalBugIdentity, Enable-LcmImmediateBugRecovery, Get-LcmProposalLifecycleAudit, Set-LCM_ProposalState, Set-WorkspaceProposalState, Set-LCM_ProposalProgress, Set-WorkspaceProposalProgress, `
+    Set-LCM_ProposalPriority, Set-WorkspaceProposalPriority, Save-ProposalPlan, Save-ProposalWalkthrough, `
     Resolve-ProposalIdExpression, Get-LcmReviewCohortResolution, Save-LcmReviewCohortReceipt, Get-LcmReviewCohortCompletionPlan, Complete-LcmReviewCohortAcceptance, Set-LcmReviewCohort, Test-LcmProposalVerificationPrecondition, Sync-LcmCohortGateState, Invoke-LcmCohortLifecycleAction, Set-LcmProposalSupersession, Set-LcmProposalRetirement, Invoke-ProposalBatchAction, New-LcmLifecycleFailureReport, Format-LcmLifecycleFailureReport, New-LcmLifecycleFailureException, `
     Set-ReviewGranularity, Get-ReviewGranularity, Set-LCMMode, Get-LCMMode, Set-TestingMode, Get-TestingMode, `
     Get-ActiveAppContext, Set-ActiveAppContext, Get-LcmApps, Sync-LcmAppCatalog, Assert-LcmProposalImplementationEligibility, New-LcmApp, Split-LcmAppDocs, Format-LcmAppsTable, `
     Get-LcmProposalDocument, Remove-LcmProposalBundle, `
     Test-RegressionTrigger, Assert-RegressionSafety, Get-RegressionDAGOrder, New-ChildRegressionProposal, `
     Get-ReposUnderReview, Format-ProposalsTable, Format-ReposUnderReviewTable `
-    -Alias Parse-ProposalIdExpression, Workon, Apps, App, SplitDocs, Purge-LcmPushedProposalBundle, Purge-Bundle, Get-Doc
+    -Alias Parse-ProposalIdExpression, Workon, Apps, App, SplitDocs, Purge-LcmPushedProposalBundle, Purge-Bundle, Get-Doc, Get-WorkspaceProposals, New-WorkspaceProposal, Set-WorkspaceProposalState, Set-WorkspaceProposalProgress, Set-WorkspaceProposalPriority

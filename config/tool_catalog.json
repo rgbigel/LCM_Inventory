@@ -103,8 +103,8 @@
       "scan_community_issues.py",
       "compare_tuya_integrations.py",
       "search_sys_sensors.py",
-      "Invoke-WorkspaceAudit.ps1",
-      "Show-WorkspaceInventoryApp.ps1",
+      "Invoke-LCM_Audit.ps1",
+      "Show-LCM_InventoryApp.ps1",
       "build_offline_docs.py",
       "Show-LcmActiveLauncher.ps1",
       "Show-HaInventoryApp.ps1"
@@ -712,8 +712,8 @@
       "compare_tuya_integrations.py",
       "search_sys_sensors.py",
       "extract_ha_central_registry.py",
-      "Invoke-WorkspaceAudit.ps1",
-      "Show-WorkspaceInventoryApp.ps1",
+      "Invoke-LCM_Audit.ps1",
+      "Show-LCM_InventoryApp.ps1",
       "build_offline_docs.py",
       "Show-LcmActiveLauncher.ps1",
       "Invoke-InteractiveDesktop.ps1"
@@ -1502,7 +1502,7 @@
     "RelativePath": "LCM_Inventory\\tools\\Test-LCM_Readiness.ps1",
     "Parameters": [],
     "Dependencies": [
-      "WorkspaceQualityGates.psm1",
+      "LCM_QualityGates.psm1",
       "Update-ToolCatalog.ps1"
     ]
   },
@@ -2140,7 +2140,6 @@
         "Description": "Custom path to the real-repository test plan file"
       }
     ],
-    "Dependencies": "WorkspaceQualityGates.psm1"
   },
   {
     "Name": "APPLY.ps1",
@@ -3176,7 +3175,7 @@
       }
     ],
     "Dependencies": [
-      "WorkspaceQualityGates.psm1",
+      "LCM_QualityGates.psm1",
       "Get-RealRepoTargetProfile.ps1"
     ]
   },
@@ -3204,7 +3203,6 @@
         "Description": "Output the profile in JSON format."
       }
     ],
-    "Dependencies": "WorkspaceQualityGates.psm1"
   },
   {
     "Name": "Get-RealRepoTestPlan.ps1",
@@ -3375,7 +3373,6 @@
         "Description": "Output initialization result as JSON."
       }
     ],
-    "Dependencies": "WorkspaceQualityGates.psm1"
   },
   {
     "Name": "Invoke-InteractiveDesktop.ps1",
@@ -4465,7 +4462,7 @@
       }
     ],
     "Dependencies": [
-      "WorkspaceQualityGates.psm1",
+      "LCM_QualityGates.psm1",
       "Get-RealRepoTargetProfile.ps1",
       "Get-RealRepoActionPlan.ps1"
     ]
@@ -4987,7 +4984,6 @@
         "Description": "Output updated test plan in JSON format."
       }
     ],
-    "Dependencies": "WorkspaceQualityGates.psm1"
   },
   {
     "Name": "Show-LcmFailureDiagnostic.ps1",
@@ -5813,7 +5809,6 @@
         "Description": "Output cleanup scan report in JSON format."
       }
     ],
-    "Dependencies": "WorkspaceQualityGates.psm1"
   },
   {
     "Name": "Test-ReviewCommitGate.ps1",

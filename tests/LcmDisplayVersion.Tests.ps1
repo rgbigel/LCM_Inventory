@@ -34,10 +34,10 @@ Describe 'Standard Display version metadata' {
       @('Show-LcmControl.ps1','assets\CM_CONTROL_HUB.html'),
       @('Show-LcmControl.ps1','assets\CM_CRP_DATES_READONLY.html'),
       @('Show-Rules.ps1','tools\Show-Rules.ps1'),
-      @('Show-WorkspaceInventoryApp.ps1','assets\WORKSPACE_INVENTORY_VIEWER.html'),
+      @('Show-LCM_InventoryApp.ps1','assets\LCM_INVENTORY_VIEWER.html'),
       @('Show-FailureAnalysis.ps1','modules\FailureAnalysisHtml.psm1'),
       @('Show-LcmAnalysisViewer.ps1','tools\Show-LcmAnalysisViewer.ps1'),
-      @('Show-WorkspaceReadiness.ps1','tools\Show-WorkspaceReadiness.ps1')
+      @('Show-LCM_Readiness.ps1','tools\Show-LCM_Readiness.ps1')
     )
     foreach ($pair in $pairs) {
       $provenance = Get-LcmDisplayProvenance -ScriptPath (Join-Path $root "tools\$($pair[0])") -TemplatePath (Join-Path $root $pair[1])
@@ -62,8 +62,8 @@ Describe 'Standard Display version metadata' {
   It 'renders readiness provenance without executing readiness tests' {
     $workspace = Join-Path $TestDrive 'readiness'
     $null = New-Item -ItemType Directory -Path (Join-Path $workspace 'LCM_AI\.git') -Force
-    & (Join-Path $root 'tools\Show-WorkspaceReadiness.ps1') -WorkspaceRoot $workspace -Repository LCM_AI -Html -NoLaunch | Out-Null
-    $output = Join-Path $workspace 'LCM_Inventory\data\artifacts\WORKSPACE_READINESS.html'
+    & (Join-Path $root 'tools\Show-LCM_Readiness.ps1') -WorkspaceRoot $workspace -Repository LCM_AI -Html -NoLaunch | Out-Null
+    $output = Join-Path $workspace 'LCM_Inventory\data\artifacts\LCM_READINESS.html'
     [IO.File]::ReadAllText($output) | Should -Match '<span class="badge badge-info">LCM-Show: v10.0.1 Template: v10.0.1</span>'
   }
 }

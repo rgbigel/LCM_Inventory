@@ -11,6 +11,38 @@
   Authors: Rolf, LCM_AI Engine
   Version: 10.0.4
   Date: 2026-11-06
+.PARAMETER BackupDefinitionPath
+  Path to the Macrium Reflect XML backup definition file to monitor or execute.
+.PARAMETER BackupDirectory
+  Directory containing the completed Macrium .mrimgx backup images.
+.PARAMETER ExpectedVolumeLabel
+  Expected volume label for the mounted baseline partition (default: D4P3-WDB850-D).
+.PARAMETER CandidateDrives
+  List or delimited string of acceptable drive letters for mounting (length >= 1).
+.PARAMETER PollSeconds
+  Polling interval in seconds when awaiting Macrium backup completion.
+.PARAMETER TimeoutMinutes
+  Maximum wait time in minutes before timing out an in-progress Macrium backup.
+.PARAMETER MountTimeoutSeconds
+  Timeout in seconds for drive mount dialog interaction and volume appearance.
+.PARAMETER ReviewScope
+  Active CRP or BUG identifier to associate with the Beyond Compare window title.
+.PARAMETER StartBackupIfMissing
+  Automatically initiates the configured backup definition if today's image is not found.
+.PARAMETER ForceNewBackup
+  Forces execution of a fresh Macrium backup definition regardless of same-day images.
+.PARAMETER NewBaseline
+  Forces unmounting existing baselines and mounting a new Macrium image (fast-path is default).
+.PARAMETER NoLaunchReview
+  Mounts the baseline image and sets registry telemetry without opening Beyond Compare.
+.PARAMETER ElevatedWorker
+  Internal switch executed under administrative elevation to perform drive mounting.
+.PARAMETER ReceiptPath
+  Temporary JSON receipt path used by the elevated worker process.
+.PARAMETER ImagePath
+  Explicit path to the .mrimgx image to mount when executing as the elevated worker.
+.PARAMETER Help
+  Displays comprehensive usage instructions, parameter references, and copy-paste examples.
 #>
 [CmdletBinding()]
 param(
@@ -285,7 +317,7 @@ function Set-LcmRegistryValue {
     [string]$PropertyType = 'String'
   )
   if ($WhatIfPreference) {
-    Write-BaselineLog -Level INFO -Message "WhatIf: would set registry $KeyPath\$Name = '$Value'"
+    Write-BaselineLog -Level INFO -Message "WhatIf: would set registry $KeyPath$Name = '$Value'"
     return
   }
   try {
@@ -293,7 +325,7 @@ function Set-LcmRegistryValue {
       New-Item -Path $KeyPath -Force | Out-Null
     }
     Set-ItemProperty -Path $KeyPath -Name $Name -Value $Value -Type $PropertyType -Force | Out-Null
-    Write-BaselineLog -Level INFO -Message "Registry updated: $KeyPath\$Name = '$Value'"
+    Write-BaselineLog -Level INFO -Message "Registry updated: $KeyPath$Name = '$Value'"
   } catch {
     Write-BaselineLog -Level WARN -Message "Failed to write registry $KeyPath\${Name}: $($_.Exception.Message)"
   }
@@ -457,7 +489,7 @@ function Test-LcmBcrProfile {
     [ValidateSet('F', 'G', 'H', 'I')]
     [string]$MountedDriveLetter
   )
-  $sessionRegistryPath = Join-Path $env:APPDATA 'Scooter Software\Beyond Compare 5\BCSessions.xml'
+  $sessionRegistryPath = Join-Path ${env}:APPDATA 'Scooter Software\Beyond Compare 5\BCSessions.xml'
   if (-not (Test-Path -LiteralPath $sessionRegistryPath -PathType Leaf)) {
     throw "Beyond Compare session registry was not found: $sessionRegistryPath"
   }
@@ -658,8 +690,29 @@ public static class LcmMacriumMouse
 }
 
 if ($Help) {
-  Write-Host 'Invoke-MacriumDailyBcrBaseline.ps1 [-StartBackupIfMissing] [-ForceNewBackup] [-NewBaseline] [-CandidateDrives <list>] [-ReviewScope <CRP|BUG>] [-NoLaunchReview] [-WhatIf]'
-  Write-Host '  Prepares today''s Macrium baseline for BCR, tracks metadata in registry, and validates drive candidates.'
+  Write-Host "==========================================================================" -ForegroundColor Cyan
+  Write-Host " MACRIUM DAILY BCR BASELINE MOUNT & VALIDATOR ENGINE" -ForegroundColor Cyan
+  Write-Host "==========================================================================" -ForegroundColor Cyan
+  Write-Host "SYNOPSIS:" -ForegroundColor Yellow
+  Write-Host "  Prepares today's Macrium Reflect backup as the writable Beyond Compare baseline,"
+  Write-Host "  validates candidate drive labels, tracks host registry telemetry, and opens _LCM."
+  Write-Host ""
+  Write-Host "USAGE:" -ForegroundColor Yellow
+  Write-Host "  pwsh tools/Invoke-MacriumDailyBcrBaseline.ps1 [-CandidateDrives <list>] [-NewBaseline] [-ForceNewBackup] [-StartBackupIfMissing] [-ReviewScope <CRP|BUG>] [-NoLaunchReview] [-h]"
+  Write-Host ""
+  Write-Host "PARAMETERS:" -ForegroundColor Yellow
+  Write-Host "  -CandidateDrives <list>   : List/delimited string of drive letters to check (Default: F;G;H;I)."
+  Write-Host "  -NewBaseline              : Forces unmounting and preparing a fresh mount (Fast-path is default)."
+  Write-Host "  -ForceNewBackup           : Forces starting a new Macrium backup even if one exists today."
+  Write-Host "  -StartBackupIfMissing     : Automatically starts backup if no completed report exists today."
+  Write-Host "  -ExpectedVolumeLabel <str>: Expected volume label on candidate drives (Default: D4P3-WDB850-D)."
+  Write-Host "  -BackupDefinitionPath <str>: Path to Macrium XML backup definition."
+  Write-Host "  -BackupDirectory <str>    : Path to backup storage folder containing .mrimgx files."
+  Write-Host "  -ReviewScope <CRP|BUG>    : Proposal identifier to stamp into Beyond Compare title."
+  Write-Host "  -NoLaunchReview           : Mounts baseline and records registry without opening Beyond Compare."
+  Write-Host "  -MountTimeoutSeconds <int>: Timeout in seconds for drive mount operations (Default: 120)."
+  Write-Host "  -h, -Help, -?             : Displays this parameter reference."
+  Write-Host "==========================================================================" -ForegroundColor Cyan
   return
 }
 
@@ -815,7 +868,7 @@ if ($WhatIfPreference) {
 }
 
 Close-MountedImageReview
-$receiptPath = Join-Path $env:TEMP ('{0}-{1}.json' -f $toolName, [guid]::NewGuid().ToString('N'))
+$receiptPath = Join-Path ${env}:TEMP ('{0}-{1}.json' -f $toolName, [guid]::NewGuid().ToString('N'))
 try {
   $pwshPath = (Get-Command pwsh -ErrorAction Stop).Source
   $arguments = @(

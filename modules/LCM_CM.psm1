@@ -12,8 +12,9 @@
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-function Get-WorkspaceRoot {
+function Get-LCM_Root {
     [CmdletBinding()]
+    [Alias('Get-WorkspaceRoot')]
     param()
     
     $scriptRoot = $PSScriptRoot
@@ -73,10 +74,11 @@ function Write-CMLog {
     Add-Content -Path $logFile -Value $entry -Encoding UTF8
 }
 
-function Get-WorkspaceAIState {
+function Get-LCM_AIState {
     [CmdletBinding()]
+    [Alias('Get-WorkspaceAIState')]
     param(
-        [string]$WorkspacePath = (Join-Path (Get-WorkspaceRoot) 'LCM_AI')
+        [string]$WorkspacePath = (Join-Path (Get-LCM_Root) 'LCM_AI')
     )
     
     if (-not (Test-Path $WorkspacePath)) {
@@ -273,10 +275,11 @@ function Get-RepoCMState {
     }
 }
 
-function Update-WorkspaceInventory {
+function Update-LCM_Inventory {
     [CmdletBinding()]
+    [Alias('Update-WorkspaceInventory')]
     param(
-        [string]$WorkspaceRoot = (Get-WorkspaceRoot)
+        [string]$WorkspaceRoot = (Get-LCM_Root)
     )
     
     Write-Host "Scanning workspace repositories under $WorkspaceRoot..." -ForegroundColor Cyan
@@ -393,10 +396,11 @@ function Update-WorkspaceInventory {
     return $results
 }
 
-function Test-WorkspaceDrift {
+function Test-LCM_Drift {
     [CmdletBinding()]
+    [Alias('Test-WorkspaceDrift')]
     param(
-        [string]$WorkspaceRoot = (Get-WorkspaceRoot)
+        [string]$WorkspaceRoot = (Get-LCM_Root)
     )
     
     $invPath = Join-Path $WorkspaceRoot 'LCM_Inventory\data\inventory.json'
@@ -427,12 +431,13 @@ function Test-WorkspaceDrift {
     }
 }
 
-function New-WorkspaceBaseline {
+function New-LCM_Baseline {
     [CmdletBinding()]
+    [Alias('New-WorkspaceBaseline')]
     param(
         [Parameter(Mandatory=$true)] [string]$BaselineId,
         [string]$Description = "Baseline snapshot $BaselineId",
-        [string]$WorkspaceRoot = (Get-WorkspaceRoot)
+        [string]$WorkspaceRoot = (Get-LCM_Root)
     )
     
     $inv = Update-WorkspaceInventory -WorkspaceRoot $WorkspaceRoot
@@ -529,5 +534,5 @@ function Get-UngovernedRepositories {
     return $ungoverned
 }
 
-Export-ModuleMember -Function Get-WorkspaceRoot, Write-CMLog, Get-WorkspaceAIState, Get-RepoCMState, Update-WorkspaceInventory, Test-WorkspaceDrift, New-WorkspaceBaseline, Set-RepoDisposition, Get-UngovernedRepositories
+Export-ModuleMember -Function Get-LCM_Root, Get-WorkspaceRoot, Write-CMLog, Get-LCM_AIState, Get-WorkspaceAIState, Get-RepoCMState, Update-LCM_Inventory, Update-WorkspaceInventory, Test-LCM_Drift, Test-WorkspaceDrift, New-LCM_Baseline, New-WorkspaceBaseline, Set-RepoDisposition, Get-UngovernedRepositories -Alias Get-WorkspaceRoot, Get-WorkspaceAIState, Update-WorkspaceInventory, Test-WorkspaceDrift, New-WorkspaceBaseline
 

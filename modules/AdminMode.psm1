@@ -12,7 +12,7 @@ $ErrorActionPreference = 'Stop'
 
 $script:AdministratorsSid = 'S-1-5-32-544'
 
-function Get-AdminModeWorkspaceRoot {
+function Get-AdminMode-LCM_Root {
   [CmdletBinding()]
   param(
     [string]$WorkspaceRoot = 'D:\Git_Repositories'
@@ -27,7 +27,7 @@ function Get-AdminModeStatePath {
     [string]$WorkspaceRoot = 'D:\Git_Repositories'
   )
 
-  return Join-Path (Get-AdminModeWorkspaceRoot -WorkspaceRoot $WorkspaceRoot) 'LCM_Inventory\data\adminmode.json'
+  return Join-Path (Get-AdminMode-LCM_Root -WorkspaceRoot $WorkspaceRoot) 'LCM_Inventory\data\adminmode.json'
 }
 
 function Get-AdminModeActor {
@@ -64,7 +64,7 @@ function Write-AdminModeAudit {
   )
 
   $actor = Get-AdminModeActor
-  $root = Get-AdminModeWorkspaceRoot -WorkspaceRoot $WorkspaceRoot
+  $root = Get-AdminMode-LCM_Root -WorkspaceRoot $WorkspaceRoot
   $logDirectory = Join-Path $root 'LCM_Inventory\logs'
   $null = New-Item -ItemType Directory -Path $logDirectory -Force
   $timestamp = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
@@ -93,7 +93,7 @@ function Initialize-AdminMode {
     [string]$WorkspaceRoot = 'D:\Git_Repositories'
   )
 
-  $root = Get-AdminModeWorkspaceRoot -WorkspaceRoot $WorkspaceRoot
+  $root = Get-AdminMode-LCM_Root -WorkspaceRoot $WorkspaceRoot
   $actor = Get-AdminModeActor
   $state = [ordered]@{
     schema_version = '1.0'
@@ -120,7 +120,7 @@ function Set-AdminMode {
     [string]$WorkspaceRoot = 'D:\Git_Repositories'
   )
 
-  $root = Get-AdminModeWorkspaceRoot -WorkspaceRoot $WorkspaceRoot
+  $root = Get-AdminMode-LCM_Root -WorkspaceRoot $WorkspaceRoot
   $actor = Get-AdminModeActor
   if (-not $actor.IsAdministrator) {
     Write-AdminModeAudit -Action 'ADMINMODE_DENIED' -Details ('Requested enabled={0}; state unchanged.' -f $Enabled) -WorkspaceRoot $root
@@ -172,7 +172,7 @@ function Assert-AdminModeForRuleChange {
     return
   }
 
-  $root = Get-AdminModeWorkspaceRoot -WorkspaceRoot $WorkspaceRoot
+  $root = Get-AdminMode-LCM_Root -WorkspaceRoot $WorkspaceRoot
   $actor = Get-AdminModeActor
   $state = Get-AdminModeState -WorkspaceRoot $root
   $isEnabledForActor = $null -ne $state -and

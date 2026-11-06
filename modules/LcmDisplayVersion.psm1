@@ -15,9 +15,9 @@ function Get-LcmDisplaySourceVersion {
   $text = [IO.File]::ReadAllText($Path)
   $header = [regex]::Match($text, '(?:<#|<!--)(?<header>(?:(?!(?:#>|-->)).)*?^\s*Version:[^\r\n]*(?:(?!(?:#>|-->)).)*?)(?:#>|-->)', 'Singleline,Multiline')
   if (-not $header.Success) { throw "Missing source metadata header: $Path" }
-  $matches = [regex]::Matches($header.Groups['header'].Value, '(?m)^\s*Version:\s*v?(\d+\.\d+\.\d+)\s*\r?$')
-  if ($matches.Count -ne 1) { throw "Expected one semantic Version field in source metadata: $Path" }
-  $matches[0].Groups[1].Value
+  $semverMatches = [regex]::Matches($header.Groups['header'].Value, '(?m)^\s*Version:\s*v?(\d+\.\d+\.\d+)\s*\r?$')
+  if ($semverMatches.Count -ne 1) { throw "Expected one semantic Version field in source metadata: $Path" }
+  $semverMatches[0].Groups[1].Value
 }
 
 function Get-LcmDisplayProvenance {

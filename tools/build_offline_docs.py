@@ -471,12 +471,12 @@ def main():
 
     lcm_docs = [
         {
-            "src": r"D:\Git_Repositories\Workspace_AI\README.md",
-            "filename": "01_Workspace_AI_README.html",
-            "title": "Workspace_AI Core Framework Overview",
+            "src": r"D:\Git_Repositories\LCM_AI\README.md",
+            "filename": "01_LCM_AI_README.html",
+            "title": "LCM_AI Core Framework Overview",
             "description": "Baseline specification, architectural principles, and lifecycle operational overview.",
             "category": "Core Framework",
-            "source": "Workspace_AI/README.md"
+            "source": "LCM_AI/README.md"
         },
         {
             "src": r"D:\Git_Repositories\AGENTS.md",
@@ -487,36 +487,36 @@ def main():
             "source": "AGENTS.md"
         },
         {
-            "src": r"D:\Git_Repositories\Workspace_AI\docs\Architecture.md",
+            "src": r"D:\Git_Repositories\LCM_AI\docs\Architecture.md",
             "filename": "03_LCM_Architecture_Specification.html",
             "title": "LCM Core Architecture Specification",
             "description": "Tripartite specification defining rule hubs, junction reparse points, and commit gating.",
             "category": "Core Architecture",
-            "source": "Workspace_AI/docs/Architecture.md"
+            "source": "LCM_AI/docs/Architecture.md"
         },
         {
-            "src": r"D:\Git_Repositories\Workspace_AI\docs\Requirements.md",
+            "src": r"D:\Git_Repositories\LCM_AI\docs\Requirements.md",
             "filename": "04_LCM_Requirements_Specification.html",
             "title": "LCM Governance Requirements (REQ-LCM-001 - 010)",
             "description": "Authoritative functional, security, and reproducibility requirements for all repositories.",
             "category": "Requirements Spec",
-            "source": "Workspace_AI/docs/Requirements.md"
+            "source": "LCM_AI/docs/Requirements.md"
         },
         {
-            "src": r"D:\Git_Repositories\Workspace_AI\docs\Implementation.md",
+            "src": r"D:\Git_Repositories\LCM_AI\docs\Implementation.md",
             "filename": "05_LCM_Implementation_Specification.html",
             "title": "LCM Implementation Specification & Tool Manifest",
             "description": "Internal mechanics, PowerShell modules, quality gates, and automated verification harness.",
             "category": "Implementation Spec",
-            "source": "Workspace_AI/docs/Implementation.md"
+            "source": "LCM_AI/docs/Implementation.md"
         },
         {
-            "src": r"D:\Git_Repositories\Workspace_AI\docs\LCM-Rules-Cross-Reference.md",
+            "src": r"D:\Git_Repositories\LCM_AI\docs\LCM-Rules-Cross-Reference.md",
             "filename": "06_LCM_Rules_Cross_Reference.html",
             "title": "LCM Canonical Rules Cross-Reference Matrix",
             "description": "Full matrix of all 15 governance rules, invariant descriptions, and enforcement scripts.",
             "category": "Rule Authority",
-            "source": "Workspace_AI/docs/LCM-Rules-Cross-Reference.md"
+            "source": "LCM_AI/docs/LCM-Rules-Cross-Reference.md"
         }
     ]
 

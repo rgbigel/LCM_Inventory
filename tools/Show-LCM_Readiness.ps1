@@ -70,7 +70,6 @@ $ErrorActionPreference = 'Stop'
 Import-Module -Name (Join-Path $PSScriptRoot '..\modules\LcmDisplayVersion.psm1') -Force
 $scriptVersion = Get-LcmDisplaySourceVersion -Path $PSCommandPath
 $provenance = Get-LcmDisplayProvenance -ScriptPath $PSCommandPath -TemplatePath $PSCommandPath
-$scriptName = "Show-LCM_Readiness"
 
 if ($Help) {
     Write-Host "==========================================================================" -ForegroundColor Cyan
@@ -261,7 +260,7 @@ if ($Html) {
     if (-not (Test-Path -LiteralPath $scratchDir)) {
         New-Item -Path $scratchDir -ItemType Directory -Force | Out-Null
     }
-    $htmlPath = Join-Path $artifactsDir 'WORKSPACE_READINESS.html'
+    $htmlPath = Join-Path $artifactsDir 'LCM_READINESS.html'
     
     $genTimestamp = $now.ToString('yyyy-MM-dd HH:mm:ss')
     $embeddedRowsJson = ($readinessRows | ConvertTo-Json -Depth 6)
@@ -679,7 +678,7 @@ if ($Html) {
 
     $htmlContent = $htmlContent.Replace('<body>', '<body><aside role="status">Retained readiness snapshot. Receipt ages describe collected evidence, not current workspace readiness. Reloading does not run tests.</aside>')
     $htmlContent | Set-Content -LiteralPath $htmlPath -Encoding UTF8
-    $htmlContent | Set-Content -LiteralPath (Join-Path $scratchDir 'WORKSPACE_READINESS.html') -Encoding UTF8
+    $htmlContent | Set-Content -LiteralPath (Join-Path $scratchDir 'LCM_READINESS.html') -Encoding UTF8
     Write-Host "Generated HTML Readiness Dashboard: $htmlPath" -ForegroundColor Green
 
     if (-not $NoLaunch) {

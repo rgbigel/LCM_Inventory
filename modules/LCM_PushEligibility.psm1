@@ -14,8 +14,9 @@
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-function ConvertTo-WorkspacePushRepositoryName {
+function ConvertTo-LCM_PushRepositoryName {
   [CmdletBinding()]
+  [Alias('ConvertTo-WorkspacePushRepositoryName')]
   param(
     [Parameter(Mandatory = $true)]
     [string]$RepositoryName
@@ -31,8 +32,9 @@ function ConvertTo-WorkspacePushRepositoryName {
   }
 }
 
-function Resolve-WorkspaceProposalBundlePath {
+function Resolve-LCM_ProposalBundlePath {
   [CmdletBinding()]
+  [Alias('Resolve-WorkspaceProposalBundlePath')]
   param(
     [Parameter(Mandatory = $true)]
     [psobject]$Proposal,
@@ -59,8 +61,9 @@ function Resolve-WorkspaceProposalBundlePath {
   return ''
 }
 
-function Resolve-WorkspacePushPlan {
+function Resolve-LCM_PushPlan {
   [CmdletBinding()]
+  [Alias('Resolve-WorkspacePushPlan')]
   param(
     [Parameter(Mandatory = $true)]
     [object[]]$Proposals,
@@ -182,8 +185,9 @@ function Resolve-WorkspacePushPlan {
   }
 }
 
-function Test-WorkspacePushCohort {
+function Test-LCM_PushCohort {
   [CmdletBinding()]
+  [Alias('Test-WorkspacePushCohort')]
   param(
     [Parameter(Mandatory = $true)]
     [psobject]$PushPlan,
@@ -218,8 +222,9 @@ function Test-WorkspacePushCohort {
   return $true
 }
 
-function Test-WorkspaceProposalBundlesInHead {
+function Test-LCM_ProposalBundlesInHead {
   [CmdletBinding()]
+  [Alias('Test-WorkspaceProposalBundlesInHead')]
   param(
     [Parameter(Mandatory = $true)]
     [psobject]$PushPlan,
@@ -253,4 +258,4 @@ function Test-WorkspaceProposalBundlesInHead {
   return $true
 }
 
-Export-ModuleMember -Function Resolve-WorkspacePushPlan, Test-WorkspacePushCohort, Test-WorkspaceProposalBundlesInHead
+Export-ModuleMember -Function Resolve-LCM_PushPlan, Resolve-WorkspacePushPlan, Test-LCM_PushCohort, Test-WorkspacePushCohort, Test-LCM_ProposalBundlesInHead, Test-WorkspaceProposalBundlesInHead -Alias Resolve-WorkspacePushPlan, Test-WorkspacePushCohort, Test-WorkspaceProposalBundlesInHead

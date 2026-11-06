@@ -36,7 +36,6 @@ $ErrorActionPreference = 'Stop'
 
 Import-Module -Name (Join-Path $PSScriptRoot '..\modules\LcmDisplayVersion.psm1') -Force
 $scriptVersion = Get-LcmDisplaySourceVersion -Path $PSCommandPath
-$scriptName = "Show-LCM_InventoryApp"
 
 if ($Help) {
   Write-Host "==========================================================================" -ForegroundColor Cyan
@@ -54,15 +53,15 @@ if ($Help) {
 $repoRoot = Split-Path $PSScriptRoot -Parent
 $workspaceRoot = Split-Path $repoRoot -Parent
 $invPath = Join-Path $repoRoot 'data\inventory.json'
-$templatePath = Join-Path $repoRoot 'assets\WORKSPACE_INVENTORY_VIEWER.html'
+$templatePath = Join-Path $repoRoot 'assets\LCM_INVENTORY_VIEWER.html'
 if (-not (Test-Path -LiteralPath $templatePath)) {
-  $templatePath = Join-Path $repoRoot 'docs\WORKSPACE_INVENTORY_VIEWER.html'
+  $templatePath = Join-Path $repoRoot 'assets\WORKSPACE_INVENTORY_VIEWER.html'
 }
 $artifactsDir = Join-Path $repoRoot 'data\artifacts'
 if (-not (Test-Path $artifactsDir)) {
   New-Item -Path $artifactsDir -ItemType Directory -Force | Out-Null
 }
-$renderedHtmlPath = Join-Path $artifactsDir 'WORKSPACE_INVENTORY_VIEWER.html'
+$renderedHtmlPath = Join-Path $artifactsDir 'LCM_INVENTORY_VIEWER.html'
 
 if (-not (Test-Path -LiteralPath $invPath)) {
   throw "Workspace inventory file not found: $invPath"

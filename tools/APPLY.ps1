@@ -52,8 +52,9 @@ Changelog:
 - 2026-10-13: Replaced loader stub with native fix descriptor validation for Gemini/Continue migration.
 #>
 
-function Resolve-WorkspaceRoot {
+function Resolve-LCM_Root {
   [CmdletBinding()]
+  [Alias('Resolve-WorkspaceRoot')]
   param(
     [Parameter(Mandatory=$true)]
     [string]$MethodsRoot
@@ -267,7 +268,7 @@ function Write-FixLog {
   return $logPath
 }
 
-$workspaceRoot = Resolve-WorkspaceRoot -MethodsRoot $PSScriptRoot
+$workspaceRoot = Resolve-LCM_Root -MethodsRoot $PSScriptRoot
 $copilotRoot = Join-Path $workspaceRoot '.copilot'
 $loadFixesPath = Join-Path $PSScriptRoot 'LoadFixes.ps1'
 

@@ -1,8 +1,17 @@
-if ($env:LCM_DISABLE_BC_REVIEW -eq '1') {
-    Write-Host "BC_Review cleanup disabled via LCM_DISABLE_BC_REVIEW" -ForegroundColor Yellow
-    return
-}
-[CmdletBinding(SupportsShouldProcess = $true)]
+<#
+.SYNOPSIS
+    Inspects and cleans up Beyond Compare temp review directories in BC_Review scratch.
+.DESCRIPTION
+    Module: tools/Clear-BCReviewTemp.ps1
+    Purpose: User command and automated lifecycle hook to inspect and clean up Beyond Compare temp review directories in BC_Review scratch.
+             Safely preserves and unlinks Approach A directory junctions (ACTIVE_BASELINE and ACTIVE_LIVE) per RULE-PS-018.
+    Path: tools/Clear-BCReviewTemp.ps1
+    Authors: Rolf, LCM_AI Engine
+    Version: 10.0.0
+    Date: 2026-10-13
+#>
+
+[CmdletBinding()]
 param(
     [Parameter(Mandatory = $false, HelpMessage = 'Purge all review folders (Explorer is skipped in -All mode)')]
     [Alias('a')]
@@ -23,21 +32,13 @@ param(
     [switch]$Help
 )
 
-<#
-.SYNOPSIS
-    Inspects and cleans up Beyond Compare temp review directories in BC_Review scratch.
-.DESCRIPTION
-    Module: tools/Clear-BCReviewTemp.ps1
-    Purpose: User command and automated lifecycle hook to inspect and clean up Beyond Compare temp review directories in BC_Review scratch.
-             Safely preserves and unlinks Approach A directory junctions (ACTIVE_BASELINE and ACTIVE_LIVE) per RULE-PS-018.
-    Path: tools/Clear-BCReviewTemp.ps1
-    Authors: Rolf, LCM_AI Engine
-    Version: 10.0.0
-    Date: 2026-10-13
-#>
-
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+
+if ($env:LCM_DISABLE_BC_REVIEW -eq '1') {
+    Write-Host "BC_Review cleanup disabled via LCM_DISABLE_BC_REVIEW" -ForegroundColor Yellow
+    return
+}
 
 if ($Help) {
     Write-Host "==========================================================================" -ForegroundColor Cyan
@@ -165,42 +166,46 @@ if ($toDelete.Count -gt 0) {
     }
     $deletedCount = 0
     foreach ($target in $toDelete) {
-        if ($PSCmdlet.ShouldProcess($target.FullName, "Delete BC_Review temp directory")) {
-            try {
-                # If ACTIVE_BASELINE currently points to this target, safely unlink junction first
-                if (Test-Path -LiteralPath $activeBaselineJunction) {
+        try {
+            # If ACTIVE_BASELINE or ACTIVE_LIVE currently points to this target, safely unlink junction first
+            foreach ($jPath in @($activeBaselineJunction, $activeLiveJunction)) {
+                if (Test-Path -LiteralPath $jPath) {
                     try {
-                        $jItem = Get-Item -LiteralPath $activeBaselineJunction -Force -ErrorAction SilentlyContinue
+                        $jItem = Get-Item -LiteralPath $jPath -Force -ErrorAction SilentlyContinue
                         if ($jItem -and $jItem.Target -eq $target.FullName) {
-                            [System.IO.Directory]::Delete($activeBaselineJunction, $false)
-                            Write-Host "Safely unlinked junction ACTIVE_BASELINE (target being deleted)" -ForegroundColor DarkCyan
+                            [System.IO.Directory]::Delete($jPath, $false)
+                            Write-Host "Safely unlinked junction $($jItem.Name) (target being deleted)" -ForegroundColor DarkCyan
                         }
                     } catch {}
                 }
-
-                # Safely unlink any nested directory junctions before deleting directory tree (RULE-PS-018)
-                $nestedJunctions = @(Get-ChildItem -Path $target.FullName -Directory -Recurse -Force -ErrorAction SilentlyContinue | Where-Object { $_.LinkType -eq 'Junction' })
-                foreach ($nj in $nestedJunctions) {
-                    try { [System.IO.Directory]::Delete($nj.FullName, $false) } catch {}
-                }
-
-                Remove-Item -LiteralPath $target.FullName -Recurse -Force
-                Write-Host "Deleted: $($target.Name)" -ForegroundColor Green
-                $deletedCount++
             }
-            catch {
-                Write-Warning "Failed to delete $($target.FullName): $_"
+
+            # Safely unlink any nested directory junctions before deleting directory tree (RULE-PS-018)
+            $nestedJunctions = @(Get-ChildItem -Path $target.FullName -Directory -Recurse -Force -ErrorAction SilentlyContinue | Where-Object { $_.LinkType -eq 'Junction' })
+            foreach ($nj in $nestedJunctions) {
+                try { [System.IO.Directory]::Delete($nj.FullName, $false) } catch {}
             }
+
+            Remove-Item -LiteralPath $target.FullName -Recurse -Force
+            Write-Host "Deleted: $($target.Name)" -ForegroundColor Green
+            $deletedCount++
+        }
+        catch {
+            Write-Warning "Failed to delete $($target.FullName): $_"
         }
     }
     Write-Host "`nCleanup Complete. Removed $deletedCount folder(s)." -ForegroundColor Green
 
-    # If -All was chosen, also safely unlink ACTIVE_BASELINE if still present
-    if ($All -and (Test-Path -LiteralPath $activeBaselineJunction)) {
-        try {
-            [System.IO.Directory]::Delete($activeBaselineJunction, $false)
-            Write-Host "Safely unlinked junction ACTIVE_BASELINE" -ForegroundColor DarkCyan
-        } catch {}
+    # If -All was chosen, also safely unlink ACTIVE_BASELINE and ACTIVE_LIVE if still present
+    if ($All) {
+        foreach ($jPath in @($activeBaselineJunction, $activeLiveJunction)) {
+            if (Test-Path -LiteralPath $jPath) {
+                try {
+                    [System.IO.Directory]::Delete($jPath, $false)
+                    Write-Host "Safely unlinked junction $(Split-Path $jPath -Leaf)" -ForegroundColor DarkCyan
+                } catch {}
+            }
+        }
     }
 
     # Refresh directory list after deletion

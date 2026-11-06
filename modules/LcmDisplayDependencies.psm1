@@ -37,9 +37,9 @@ function Get-LcmDisplayDefinitions {
       Presentation = @('tools\Show-Rules.ps1')
     }
     inventory = @{
-      Renderer = 'Show-WorkspaceInventoryApp.ps1'; Artifact = Join-Path $root 'data\artifacts\WORKSPACE_INVENTORY_VIEWER.html'
+      Renderer = 'Show-LCM_InventoryApp.ps1'; Artifact = Join-Path $root 'data\artifacts\LCM_INVENTORY_VIEWER.html'
       Data = @('data\inventory.json')
-      Presentation = @('tools\Show-WorkspaceInventoryApp.ps1', 'assets\WORKSPACE_INVENTORY_VIEWER.html')
+      Presentation = @('tools\Show-LCM_InventoryApp.ps1', 'assets\LCM_INVENTORY_VIEWER.html')
     }
     hub = @{
       Renderer = 'Show-LcmControl.ps1'; Artifact = Join-Path $root 'data\artifacts\CM_CONTROL_HUB.html'

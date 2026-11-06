@@ -193,14 +193,14 @@ function Get-LcmTextDependencyEdges {
   $lineNumber = 0
   foreach ($line in Get-Content -LiteralPath $SourceFile.FullName -Encoding utf8) {
     $lineNumber++
-    $matches = @()
+    $regexMatches = @()
     if ($SourceFile.Extension -in @('.cmd', '.bat')) {
-      $matches += [regex]::Matches($line, '(?i)(?:call\s+)?([A-Za-z0-9_.-]+\.ps1|[A-Za-z0-9_.-]+\.cmd)')
+      $regexMatches += [regex]::Matches($line, '(?i)(?:call\s+)?([A-Za-z0-9_.-]+\.ps1|[A-Za-z0-9_.-]+\.cmd)')
     } else {
-      $matches += [regex]::Matches($line, '(?i)(?:data-(?:action|command)|href)\s*=\s*["'']([^"''#]+)')
-      $matches += [regex]::Matches($line, '(?i)127\.0\.0\.1:9876/([A-Za-z0-9_./-]+)')
+      $regexMatches += [regex]::Matches($line, '(?i)(?:data-(?:action|command)|href)\s*=\s*["'']([^"''#]+)')
+      $regexMatches += [regex]::Matches($line, '(?i)127\.0\.0\.1:9876/([A-Za-z0-9_./-]+)')
     }
-    foreach ($match in $matches) {
+    foreach ($match in $regexMatches) {
       $target = if ($match.Groups.Count -gt 1) { $match.Groups[1].Value } else { $match.Value }
       if ([string]::IsNullOrWhiteSpace($target)) { continue }
       $name = [System.IO.Path]::GetFileNameWithoutExtension($target)
