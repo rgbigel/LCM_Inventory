@@ -103,8 +103,8 @@
       "scan_community_issues.py",
       "compare_tuya_integrations.py",
       "search_sys_sensors.py",
-      "Invoke-LCM_Audit.ps1",
-      "Show-LCM_InventoryApp.ps1",
+      "Invoke-WorkspaceAudit.ps1",
+      "Show-WorkspaceInventoryApp.ps1",
       "build_offline_docs.py",
       "Show-LcmActiveLauncher.ps1",
       "Show-HaInventoryApp.ps1"
@@ -575,6 +575,58 @@
     "Dependencies": null
   },
   {
+    "Name": "Test-RepoReadiness.ps1",
+    "ShortName": "LCMSupervisionTestRepoReadiness",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "HaSSD06",
+    "Domain": "HaSSD06",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Test-RepoReadiness execution tool.",
+    "Example": "TestRepoReadiness",
+    "RelativePath": "LCM_Supervision\\tools\\Test-RepoReadiness.ps1",
+    "Parameters": [
+      {
+        "Name": "MinimalTests",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Runs fast structural, governance, and static analysis gates without triggering extended test suites"
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "Test-RepoReadiness.ps1",
+    "ShortName": "LCMToolsTestRepoReadiness",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "HaSSD06",
+    "Domain": "HaSSD06",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Test-RepoReadiness execution tool.",
+    "Example": "TestRepoReadiness",
+    "RelativePath": "LCM_Tools\\tools\\Test-RepoReadiness.ps1",
+    "Parameters": [
+      {
+        "Name": "MinimalTests",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Runs fast structural, governance, and static analysis gates without triggering extended test suites"
+      }
+    ],
+    "Dependencies": "Sync-LCMResearchSnapshot.ps1"
+  },
+  {
     "Name": "mcp_ha_readonly.py",
     "ShortName": "mcphareadonly",
     "Aliases": null,
@@ -712,11 +764,41 @@
       "compare_tuya_integrations.py",
       "search_sys_sensors.py",
       "extract_ha_central_registry.py",
-      "Invoke-LCM_Audit.ps1",
-      "Show-LCM_InventoryApp.ps1",
+      "Invoke-WorkspaceAudit.ps1",
+      "Show-WorkspaceInventoryApp.ps1",
       "build_offline_docs.py",
       "Show-LcmActiveLauncher.ps1",
       "Invoke-InteractiveDesktop.ps1"
+    ]
+  },
+  {
+    "Name": "Test-RepoReadiness.ps1",
+    "ShortName": "TestHaRepoReady",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "HaSSD06",
+    "Domain": "HaSSD06",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Test-RepoReadiness execution tool.",
+    "Example": "TestRepoReadiness",
+    "RelativePath": "HaSSD06\\tools\\Test-RepoReadiness.ps1",
+    "Parameters": [
+      {
+        "Name": "MinimalTests",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Single-cycle minimal testing scope: fast syntax and AST validation only"
+      }
+    ],
+    "Dependencies": [
+      "RepoQualityGates.psm1",
+      "Update-ToolCatalog.ps1",
+      "Module: (Resolve-Path $modulePath)"
     ]
   },
   {
@@ -754,20 +836,21 @@
     "Category": "Utility",
     "Description": "Test-RepoReadiness execution tool.",
     "Example": "TestRepoReadiness",
-    "RelativePath": "HaSSD06\\tools\\Test-RepoReadiness.ps1",
+    "RelativePath": "LCM_Inventory\\tools\\Test-RepoReadiness.ps1",
     "Parameters": [
       {
         "Name": "MinimalTests",
         "Type": "SwitchParameter",
         "Mandatory": false,
         "Default": "",
-        "Description": "Single-cycle minimal testing scope: fast syntax and AST validation only"
+        "Description": "Runs fast structural, governance, and static analysis gates without triggering extended test suites"
       }
     ],
     "Dependencies": [
-      "RepoQualityGates.psm1",
-      "Update-ToolCatalog.ps1",
-      "Module: (Resolve-Path $modulePath)"
+      "LCM_CM.psm1",
+      "ProposalManager.psm1",
+      "Test-Guardrail.ps1",
+      "Test-LCMIncrementalGovernance.ps1"
     ]
   },
   {
@@ -1502,7 +1585,7 @@
     "RelativePath": "LCM_Inventory\\tools\\Test-LCM_Readiness.ps1",
     "Parameters": [],
     "Dependencies": [
-      "LCM_QualityGates.psm1",
+      "WorkspaceQualityGates.psm1",
       "Update-ToolCatalog.ps1"
     ]
   },
@@ -1584,6 +1667,13 @@
         "Description": ""
       },
       {
+        "Name": "CandidateDrives",
+        "Type": "Object",
+        "Mandatory": false,
+        "Default": "@('F', 'G', 'H', 'I')",
+        "Description": ""
+      },
+      {
         "Name": "MountTimeoutSeconds",
         "Type": "Int32",
         "Mandatory": false,
@@ -1649,6 +1739,13 @@
         "Type": "SwitchParameter",
         "Mandatory": false,
         "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "CandidateDrives",
+        "Type": "Object",
+        "Mandatory": false,
+        "Default": "@('F', 'G', 'H', 'I')",
         "Description": ""
       },
       {
@@ -2140,6 +2237,10 @@
         "Description": "Custom path to the real-repository test plan file"
       }
     ],
+    "Dependencies": [
+      "LCM_QualityGates.psm1",
+      "WorkspaceQualityGates.psm1"
+    ]
   },
   {
     "Name": "APPLY.ps1",
@@ -2205,7 +2306,7 @@
         "Description": "Report archive actions without writing files."
       }
     ],
-    "Dependencies": "LcmWorkspaceContext.psm1"
+    "Dependencies": "LCM_Context.psm1"
   },
   {
     "Name": "AuthorizeMasterUser.ps1",
@@ -2388,7 +2489,36 @@
     "Description": "Clear-BCReviewTemp execution tool.",
     "Example": "ClearBCReviewTemp",
     "RelativePath": "LCM_Inventory\\tools\\Clear-BCReviewTemp.ps1",
-    "Parameters": [],
+    "Parameters": [
+      {
+        "Name": "All",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Purge all review folders (Explorer is skipped in -All mode)"
+      },
+      {
+        "Name": "Purge",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Purge older review folders, keeping only the single newest one"
+      },
+      {
+        "Name": "OlderThanHours",
+        "Type": "Int32",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Purge review folders older than the specified number of hours"
+      },
+      {
+        "Name": "NoExplorer",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Suppress automatically opening Windows File Explorer"
+      }
+    ],
     "Dependencies": "BCompare.exe"
   },
   {
@@ -3175,7 +3305,7 @@
       }
     ],
     "Dependencies": [
-      "LCM_QualityGates.psm1",
+      "WorkspaceQualityGates.psm1",
       "Get-RealRepoTargetProfile.ps1"
     ]
   },
@@ -3203,6 +3333,7 @@
         "Description": "Output the profile in JSON format."
       }
     ],
+    "Dependencies": "WorkspaceQualityGates.psm1"
   },
   {
     "Name": "Get-RealRepoTestPlan.ps1",
@@ -3373,6 +3504,7 @@
         "Description": "Output initialization result as JSON."
       }
     ],
+    "Dependencies": "WorkspaceQualityGates.psm1"
   },
   {
     "Name": "Invoke-InteractiveDesktop.ps1",
@@ -4002,98 +4134,105 @@
         "Type": "String",
         "Mandatory": false,
         "Default": "D:\\OneDrive\\Documents\\Reflect\\@B_D4P3+4-WDB850-AD.xml",
-        "Description": ""
+        "Description": "Path to the Macrium Reflect XML backup definition file to monitor or execute."
       },
       {
         "Name": "BackupDirectory",
         "Type": "String",
         "Mandatory": false,
         "Default": "B:\\Backups\\D4P3+4-WDB850-AD",
-        "Description": ""
+        "Description": "Directory containing the completed Macrium .mrimgx backup images."
       },
       {
         "Name": "ExpectedVolumeLabel",
         "Type": "String",
         "Mandatory": false,
         "Default": "D4P3-WDB850-D",
-        "Description": ""
+        "Description": "Expected volume label for the mounted baseline partition (default: D4P3-WDB850-D)."
+      },
+      {
+        "Name": "CandidateDrives",
+        "Type": "Object",
+        "Mandatory": false,
+        "Default": "@('F', 'G', 'H', 'I')",
+        "Description": "List or delimited string of acceptable drive letters (length >= 1)"
       },
       {
         "Name": "PollSeconds",
         "Type": "Int32",
         "Mandatory": false,
         "Default": "60",
-        "Description": ""
+        "Description": "Polling interval in seconds when awaiting Macrium backup completion."
       },
       {
         "Name": "TimeoutMinutes",
         "Type": "Int32",
         "Mandatory": false,
         "Default": "240",
-        "Description": ""
+        "Description": "Maximum wait time in minutes before timing out an in-progress Macrium backup."
       },
       {
         "Name": "MountTimeoutSeconds",
         "Type": "Int32",
         "Mandatory": false,
         "Default": "120",
-        "Description": ""
+        "Description": "Timeout in seconds for drive mount dialog interaction and volume appearance."
       },
       {
         "Name": "ReviewScope",
         "Type": "String",
         "Mandatory": false,
         "Default": "",
-        "Description": ""
+        "Description": "Active CRP or BUG identifier to associate with the Beyond Compare window title."
       },
       {
         "Name": "StartBackupIfMissing",
         "Type": "SwitchParameter",
         "Mandatory": false,
         "Default": "",
-        "Description": ""
+        "Description": "Automatically initiates the configured backup definition if today's image is not found."
       },
       {
         "Name": "ForceNewBackup",
         "Type": "SwitchParameter",
         "Mandatory": false,
         "Default": "",
-        "Description": ""
+        "Description": "Forces execution of a fresh Macrium backup definition regardless of same-day images."
       },
       {
         "Name": "NewBaseline",
         "Type": "SwitchParameter",
         "Mandatory": false,
         "Default": "",
-        "Description": ""
+        "Description": "Forces unmounting existing baselines and mounting a new Macrium image (fast-path is default)."
       },
       {
         "Name": "NoLaunchReview",
         "Type": "SwitchParameter",
         "Mandatory": false,
         "Default": "",
-        "Description": ""
+        "Description": "Mounts the baseline image and sets registry telemetry without opening Beyond Compare."
       },
       {
         "Name": "ElevatedWorker",
         "Type": "SwitchParameter",
         "Mandatory": false,
         "Default": "",
-        "Description": ""
+        "Description": "Internal switch executed under administrative elevation to perform drive mounting."
       },
       {
         "Name": "ReceiptPath",
         "Type": "String",
         "Mandatory": false,
         "Default": "",
-        "Description": ""
+        "Description": "Temporary JSON receipt path used by the elevated worker process."
       },
       {
         "Name": "ImagePath",
         "Type": "String",
         "Mandatory": false,
         "Default": "",
-        "Description": ""
+        "Description": "Explicit path to the .mrimgx image to mount when executing as the elevated worker."
       }
     ],
     "Dependencies": [
@@ -4462,7 +4601,7 @@
       }
     ],
     "Dependencies": [
-      "LCM_QualityGates.psm1",
+      "WorkspaceQualityGates.psm1",
       "Get-RealRepoTargetProfile.ps1",
       "Get-RealRepoActionPlan.ps1"
     ]
@@ -4984,6 +5123,7 @@
         "Description": "Output updated test plan in JSON format."
       }
     ],
+    "Dependencies": "WorkspaceQualityGates.psm1"
   },
   {
     "Name": "Show-LcmFailureDiagnostic.ps1",
@@ -5725,6 +5865,53 @@
     "Dependencies": "LCM_CM.psm1"
   },
   {
+    "Name": "Test-LCMIncrementalGovernance.ps1",
+    "ShortName": "TestLCMIncrementalGovernance",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Test-LCMIncrementalGovernance execution tool.",
+    "Example": "TestLCMIncrementalGovernance",
+    "RelativePath": "LCM_Inventory\\tools\\Test-LCMIncrementalGovernance.ps1",
+    "Parameters": [
+      {
+        "Name": "Path",
+        "Type": "String[]",
+        "Mandatory": false,
+        "Default": "@()",
+        "Description": "Explicit file or directory path(s) to audit."
+      },
+      {
+        "Name": "RepositoryPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Target repository path. Audits active Git changes in this repository."
+      },
+      {
+        "Name": "Staged",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Audits only Git staged files (git diff --cached --name-only)."
+      },
+      {
+        "Name": "ThrowOnViolation",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Throws an exception if any governance violation is detected, blocking commit/verification gates."
+      }
+    ],
+    "Dependencies": "Module: PSScriptAnalyzer"
+  },
+  {
     "Name": "Test-LCMRuleHealth.ps1",
     "ShortName": "TestLCMRuleHealth",
     "Aliases": null,
@@ -5809,6 +5996,7 @@
         "Description": "Output cleanup scan report in JSON format."
       }
     ],
+    "Dependencies": "WorkspaceQualityGates.psm1"
   },
   {
     "Name": "Test-ReviewCommitGate.ps1",

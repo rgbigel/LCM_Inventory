@@ -6,7 +6,7 @@ Path: LCM_Inventory/docs/README.md
 Authors: Rolf, LCM_AI Engine  
 Version: 10.0.1  
 Status: Authoritative Reference  
-Updated: 2026-11-06 14:51:24  
+Updated: 2026-11-07 14:26:35  
 
 ---
 
@@ -114,6 +114,8 @@ TestWorkspaceReadiness
 | **LcmPathMigration** | [Invoke-LcmPathMigration.ps1](file:///LCM_Inventory/tools/Invoke-LcmPathMigration.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-LcmPathMigration execution tool. | LcmPathMigration |
 | **LcmProtocol** | [Invoke-LcmProtocol.ps1](file:///LCM_Inventory/tools/Invoke-LcmProtocol.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-LcmProtocol execution tool. | LcmProtocol |
 | **LCMPush** | [Invoke-LCM_Push.ps1](file:///LCM_Inventory/tools/Invoke-LCM_Push.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-LCM_Push execution tool. | LCMPush |
+| **LCMSupervisionTestRepoReadiness** | [Test-RepoReadiness.ps1](file:///LCM_Supervision/tools/Test-RepoReadiness.ps1) | Utility | HaSSD06 | PowerShell | Utility | Test-RepoReadiness execution tool. | LCMSupervisionTestRepoReadiness |
+| **LCMToolsTestRepoReadiness** | [Test-RepoReadiness.ps1](file:///LCM_Tools/tools/Test-RepoReadiness.ps1) | Utility | HaSSD06 | PowerShell | Utility | Test-RepoReadiness execution tool. | LCMToolsTestRepoReadiness |
 | **LearnedAdviceReview** | [Invoke-LearnedAdviceReview.ps1](file:///LCM_Inventory/tools/Invoke-LearnedAdviceReview.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-LearnedAdviceReview execution tool. | LearnedAdviceReview |
 | **Level1AnalysisRefinement** | [Invoke-Level1AnalysisRefinement.ps1](file:///LCM_Inventory/tools/Invoke-Level1AnalysisRefinement.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-Level1AnalysisRefinement execution tool. | Level1AnalysisRefinement |
 | **LoadAtoms** | [LoadAtoms.ps1](file:///LCM_Inventory/tools/LoadAtoms.ps1) | Utility | LCM_Inventory | PowerShell | Utility | LoadAtoms execution tool. | LoadAtoms |
@@ -159,11 +161,13 @@ TestWorkspaceReadiness
 | **SyncToolSymlinks** | [Sync-ToolSymlinks.ps1](file:///LCM_Inventory/tools/Sync-ToolSymlinks.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Sync-ToolSymlinks execution tool. | SyncToolSymlinks |
 | **TestExternalTools** | [Test-ExternalTools.ps1](file:///LCM_Inventory/tools/Test-ExternalTools.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Test-ExternalTools execution tool. | TestExternalTools |
 | **TestGuardrail** | [Test-Guardrail.ps1](file:///LCM_Inventory/tools/Test-Guardrail.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Test-Guardrail execution tool. | TestGuardrail |
+| **TestHaRepoReady** | [Test-RepoReadiness.ps1](file:///HaSSD06/tools/Test-RepoReadiness.ps1) | Utility | HaSSD06 | PowerShell | Utility | Test-RepoReadiness execution tool. | TestHaRepoReady |
 | **TestHaRepoReady** | [Test-RepoReadiness.ps1](file:///HaSSD06_Inventory/tools/Test-RepoReadiness.ps1) | Utility | HaSSD06 | PowerShell | Utility | Test-RepoReadiness execution tool. | TestHaRepoReady |
 | **TestLCMDrift** | [Test-LCM_Drift.ps1](file:///LCM_Inventory/tools/Test-LCM_Drift.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Test-LCM_Drift execution tool. | TestLCMDrift |
+| **TestLCMIncrementalGovernance** | [Test-LCMIncrementalGovernance.ps1](file:///LCM_Inventory/tools/Test-LCMIncrementalGovernance.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Test-LCMIncrementalGovernance execution tool. | TestLCMIncrementalGovernance |
 | **TestLCMRuleHealth** | [Test-LCMRuleHealth.ps1](file:///LCM_Inventory/tools/Test-LCMRuleHealth.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Test-LCMRuleHealth execution tool. | TestLCMRuleHealth |
 | **TestRealRepoProposalCleanup** | [Test-RealRepoProposalCleanup.ps1](file:///LCM_Inventory/tools/Test-RealRepoProposalCleanup.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Test-RealRepoProposalCleanup execution tool. | TestRealRepoProposalCleanup |
-| **TestRepoReadiness** | [Test-RepoReadiness.ps1](file:///HaSSD06/tools/Test-RepoReadiness.ps1) | Utility | HaSSD06 | PowerShell | Utility | Test-RepoReadiness execution tool. | TestRepoReadiness |
+| **TestRepoReadiness** | [Test-RepoReadiness.ps1](file:///LCM_Inventory/tools/Test-RepoReadiness.ps1) | Utility | HaSSD06 | PowerShell | Utility | Test-RepoReadiness execution tool. | TestRepoReadiness |
 | **TestReviewCommitGate** | [Test-ReviewCommitGate.ps1](file:///LCM_Inventory/tools/Test-ReviewCommitGate.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Test-ReviewCommitGate execution tool. | TestReviewCommitGate |
 | **UpdateGemini** | [Update-Gemini.ps1](file:///LCM_Inventory/tools/Update-Gemini.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Update-Gemini execution tool. | UpdateGemini |
 | **UpdateProposal** | [Update-Proposal.ps1](file:///LCM_Inventory/tools/Update-Proposal.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Update-Proposal execution tool. | UpdateProposal |
