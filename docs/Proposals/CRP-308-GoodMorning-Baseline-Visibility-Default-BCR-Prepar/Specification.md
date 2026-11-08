@@ -6,10 +6,10 @@ Title: GoodMorning Baseline Visibility, Default BCR Preparation, and Macrium Aut
 Scope: LCM_Inventory
 Baseline-Version: 10.0.1
 Author: rgbig
-Date: 2026-11-07 14:23:11
-Status: Suggested
-Plan-State: suggested
-Progress-State: undecided
+Date: 2026-11-08 12:48:00
+Status: In Progress
+Plan-State: in_progress
+Progress-State: in_progress
 Priority: High
 App-ID: None
 ```
@@ -26,7 +26,7 @@ Enhance the LCM GoodMorning startup sequence to provide complete visibility into
 ### Target State
 1. **Unconditional Baseline Telemetry**: Regardless of parameter settings, `Invoke-LCM_GoodMorning.ps1` always renders a `[BASELINE]` section in its summary report displaying:
    - The registered backup timestamp (`MRMTimeStamp`) and drive (`MRMdrive`) from `HKLM:\SOFTWARE\LCM\MacriumBaseline` / `HKLM:\SOFTWARE\LCM`.
-   - Physical mount determination: whether the drive indicated in the registry (or candidate drives F:-I:) is currently mounted with expected volume label `D4P3-WDB850-D`.
+   - Physical mount determination: whether the drive indicated in the registry (or candidate drives per the dynamic CandidateDrives contract) is currently mounted with expected volume label `D4P3-WDB850-D`.
    - The exact snapshot date/time and GoodNight observation status of the mounted baseline (from `ACTIVE_CONTEXT.md` on the mounted drive).
 2. **Default BCR Baseline Preparation**: The default of parameter `$PrepareBcrBaseline` in `Invoke-LCM_GoodMorning.ps1` is changed to `$true` (with an explicit `-NoBaseline` / `-SkipBaseline` switch or `$false` override available).
 3. **Decomposition into Reusable Macrium Atoms**: The responsibilities of `Invoke-MacriumDailyBcrBaseline.ps1` are decomposed into modular, reusable PowerShell atoms in `LCM_Inventory/modules/LcmMacriumAtoms.psm1`:

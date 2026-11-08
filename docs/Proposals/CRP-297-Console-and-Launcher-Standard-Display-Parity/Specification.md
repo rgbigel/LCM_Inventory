@@ -6,10 +6,10 @@ Title: Console and Launcher Standard Display Parity
 Scope: Console, diagnostic, and launcher Show surfaces
 Baseline-Version: 10.0.1
 Author: rgbig
-Date: 2026-10-18
-Status: Suggested
-Plan-State: suggested
-Progress-State: undecided
+Date: 2026-11-08 14:59:30
+Status: Superseded
+Plan-State: superseded
+Progress-State: deferred
 Priority: Medium
 Dependency: CRP-293 accepted reference; CRP-292 Accepted Common Goal
 ```

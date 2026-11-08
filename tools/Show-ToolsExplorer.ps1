@@ -19,7 +19,7 @@
   Path: LCM_Inventory/tools/Show-ToolsExplorer.ps1
   Authors: Rolf, LCM_AI Engine
   Version: 10.0.1
-  Date: 2026-10-21
+  Date: 2026-11-08 15:07:36
 .PARAMETER Audience
   Pre-filter by audience category: 'User' (daily operations), 'Dev' (internal plumbing), or 'All'. Defaults to 'User'.
 .PARAMETER Group
@@ -88,6 +88,9 @@ param(
   [switch]$NoBrowser,
 
   [switch]$NoLaunch,
+
+  [Parameter(HelpMessage = 'Opens the dashboard inside an Antigravity IDE editor/side pane')]
+  [switch]$Pane,
 
   [string]$LogFile = "",
 
@@ -290,7 +293,7 @@ if (-not $NoLaunch) {
     throw "Standard Display launcher module is missing: $standardDisplayModule"
   }
   Import-Module -Name $standardDisplayModule -Force
-  Open-LcmStandardDisplay -DisplayId tools -Parameters @{
+  Open-LcmStandardDisplay -DisplayId tools -Pane:$Pane -Parameters @{
     Audience = $Audience
     Group = $Group
     Role = $Role

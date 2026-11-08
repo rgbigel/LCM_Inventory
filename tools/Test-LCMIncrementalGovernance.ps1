@@ -11,10 +11,11 @@
            Audits Markdown (*.md) files against RULE-DOC-002 (DOX Headers) and link integrity.
            Audits JSON (*.json) files against JSON-RULES (Syntax, UTF-8 no BOM, CRLF).
            Audits ALL sources against RULE-DOC-009 (Zero Comment Destruction).
+           Audits ALL sources against universal-header-modification-timestamp-invariant and single-commit-version-increment-invariant.
   Path: LCM_Inventory/tools/Test-LCMIncrementalGovernance.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.1.0
-  Date: 2026-11-06
+  Version: 10.1.1
+  Date: 2026-11-08 15:41:00
 .PARAMETER Path
   Explicit file or directory path(s) to audit.
 .PARAMETER RepositoryPath
@@ -144,6 +145,19 @@ function Test-PowerShellFileGovernance {
 
   $violations = [System.Collections.Generic.List[PSCustomObject]]::new()
   $rawContent = Get-Content -LiteralPath $FilePath -Raw -Encoding UTF8
+
+  # Preload sibling class definitions if auditing an OOP module class file per RULE-PS-021
+  if ($FilePath -like '*\modules\*\Classes\*' -or $FilePath -like '*/modules/*/Classes/*') {
+    $classDir = [System.IO.Path]::GetDirectoryName($FilePath)
+    $siblingClasses = @('DaemonDto.ps1', 'DaemonEnvironment.ps1', 'LcmTokenVault.ps1', 'LcmSecurityGateway.ps1', 'DaemonActionController.ps1')
+    foreach ($sc in $siblingClasses) {
+      $scPath = Join-Path $classDir $sc
+      if (Test-Path -LiteralPath $scPath) {
+        try { . $scPath } catch {}
+      }
+    }
+  }
+
   $errors = $null
   $tokens = $null
   $ast = [System.Management.Automation.Language.Parser]::ParseInput($rawContent, [ref]$tokens, [ref]$errors)
@@ -304,8 +318,8 @@ function Test-MarkdownFileGovernance {
   $violations = [System.Collections.Generic.List[PSCustomObject]]::new()
   $content = Get-Content -LiteralPath $FilePath -Raw -Encoding UTF8
 
-  # Skip proposals and walkthrough notes from strict root tripartite rule
-  $isProposalDoc = $FilePath -match '[\\/]docs[\\/]Proposals[\\/]'
+  # Skip proposals, walkthrough notes, and transient session files from strict root tripartite rule
+  $isProposalDoc = $FilePath -match '[\\/]docs[\\/]Proposals[\\/]' -or $FilePath -match '[\\/]\.agents[\\/]ACTIVE_'
 
   if (-not $isProposalDoc) {
     # RULE-DOC-002: DOX Header validation
@@ -446,6 +460,104 @@ function Test-CommentPreservationGovernance {
   return @($violations)
 }
 
+function Test-HeaderTimestampAndVersionGovernance {
+  [CmdletBinding()]
+  param(
+    [Parameter(Mandatory = $true)]
+    [string]$FilePath,
+
+    [Parameter(Mandatory = $false)]
+    [switch]$Staged
+  )
+
+  $violations = [System.Collections.Generic.List[PSCustomObject]]::new()
+  $ext = [System.IO.Path]::GetExtension($FilePath).ToLowerInvariant()
+
+  if ($ext -notin @('.ps1', '.psm1', '.py', '.cmd', '.bat', '.json', '.md', '.go', '.js')) {
+    return @($violations)
+  }
+
+  # Skip transient session files or git internal logs
+  if ($FilePath -match '[\\/]\.agents[\\/]ACTIVE_' -or $FilePath -match '[\\/]logs[\\/]') {
+    return @($violations)
+  }
+
+  $fileDir = Split-Path $FilePath -Parent
+  $gitRoot = git -C $fileDir rev-parse --show-toplevel 2>$null
+  if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($gitRoot)) {
+    return @($violations)
+  }
+
+  $diffArgs = @('diff', '-U0', '--', $FilePath)
+  if ($Staged) {
+    $diffArgs = @('diff', '--cached', '-U0', '--', $FilePath)
+  }
+
+  $diffOutput = @(git -C $gitRoot @diffArgs 2>$null)
+  if ($diffOutput.Count -eq 0) {
+    return @($violations)
+  }
+
+  $hasBodyModifications = $false
+  $dateModifiedInDiff = $false
+  $versionAddedCount = 0
+
+  foreach ($line in $diffOutput) {
+    if ($line -match '^---' -or $line -match '^\+\+\+' -or $line -match '^@@') {
+      continue
+    }
+
+    # Match header Date update: +Date: ..., +"date": ...
+    if ($line -match '^\+\s*(?:#|//|<!--)?\s*(?:Date|LastModified|"date"|meta\.date)\s*[:=]') {
+      $dateModifiedInDiff = $true
+      continue
+    }
+
+    # Match header Version addition: +Version: ..., +"version": ...
+    if ($line -match '^\+\s*(?:#|//|<!--)?\s*(?:Version|"version"|meta\.version)\s*[:=]') {
+      $versionAddedCount++
+      continue
+    }
+
+    # Any other added or removed line represents substantive modification
+    if ($line.StartsWith('+') -or $line.StartsWith('-')) {
+      $hasBodyModifications = $true
+    }
+  }
+
+  # universal-header-modification-timestamp-invariant:
+  # If file content was changed, verify that the header Date was also refreshed
+  if ($hasBodyModifications) {
+    $content = Get-Content -LiteralPath $FilePath -Raw -Encoding UTF8 -ErrorAction SilentlyContinue
+    if ($null -ne $content) {
+      $hasHeaderDate = ($content -match '(?im)^\s*(?:#|//|<!--)?\s*(?:Date|LastModified|"date")\s*[:=]')
+      if ($hasHeaderDate -and -not $dateModifiedInDiff) {
+        $violations.Add([pscustomobject]@{
+          RuleId  = 'universal-header-modification-timestamp-invariant'
+          File    = $FilePath
+          Line    = 1
+          Column  = 1
+          Message = "File content was modified, but header Date was not updated to current timestamp per universal-header-modification-timestamp-invariant."
+        })
+      }
+    }
+  }
+
+  # single-commit-version-increment-invariant:
+  # Version must only be incremented once per commit cycle
+  if ($versionAddedCount -gt 1) {
+    $violations.Add([pscustomobject]@{
+      RuleId  = 'single-commit-version-increment-invariant'
+      File    = $FilePath
+      Line    = 1
+      Column  = 1
+      Message = "Multiple version increment lines added ($versionAddedCount detected in active diff). Version must be incremented only ONCE per commit cycle per single-commit-version-increment-invariant."
+    })
+  }
+
+  return @($violations)
+}
+
 # Resolve candidate files to audit
 $targetFiles = [System.Collections.Generic.List[string]]::new()
 
@@ -520,6 +632,10 @@ foreach ($file in $targetFiles) {
   # RULE-DOC-009: Verify comment preservation against git baseline
   $commentRes = @(Test-CommentPreservationGovernance -FilePath $file -Staged:$Staged)
   foreach ($v in $commentRes) { $allViolations.Add($v) }
+
+  # Universal Header Modification Timestamp & Single-Commit Version Increment Gates
+  $timestampRes = @(Test-HeaderTimestampAndVersionGovernance -FilePath $file -Staged:$Staged)
+  foreach ($v in $timestampRes) { $allViolations.Add($v) }
 }
 
 $isClean = ($allViolations.Count -eq 0)

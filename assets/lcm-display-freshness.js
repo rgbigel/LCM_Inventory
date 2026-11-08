@@ -1,9 +1,12 @@
 /**
- * Standard Display revision delivery, port 9876 only.
- * Authors: Rolf, Copilot. Version: 10.0.1. Date: 2026-10-21.
+ * Standard Display revision delivery, port 9876 and IDE webview hosting.
+ * Authors: Rolf, Copilot. Version: 10.0.2. Date: 2026-11-08 15:07:36.
  */
 (function () {
   'use strict';
+  const apiBase = (location.protocol === 'http:' && (location.hostname === '127.0.0.1' || location.hostname === 'localhost') && location.port === '9876')
+    ? ''
+    : 'http://127.0.0.1:9876';
   const displayId = document.querySelector('meta[name="lcm-display-id"]')?.content;
   if (!displayId) return; // Historical evidence viewers do not reconcile live data.
   const allowed = ['tools', 'rules', 'inventory', 'hub', 'dates'];
@@ -48,9 +51,10 @@
     window.scrollTo(state.x || 0, state.y || 0);
   }
   async function query(path, method = 'GET') {
-    const response = await fetch(path, { method, cache: 'no-store', signal: AbortSignal.timeout(10000) });
+    const url = path.startsWith('http') ? path : apiBase + path;
+    const response = await fetch(url, { method, cache: 'no-store', signal: AbortSignal.timeout(10000) });
     if (!response.ok) {
-      const error = new Error('HTTP ' + response.status + ' from ' + path + ': ' + await response.text());
+      const error = new Error('HTTP ' + response.status + ' from ' + url + ': ' + await response.text());
       error.status = response.status;
       throw error;
     }
@@ -61,9 +65,11 @@
     if (busy || stopped) return;
     busy = true;
     try {
-      if (location.protocol !== 'http:' || location.hostname !== '127.0.0.1' || location.port !== '9876') {
+      const isLoopback = location.protocol === 'http:' && (location.hostname === '127.0.0.1' || location.hostname === 'localhost') && location.port === '9876';
+      const isWebview = location.protocol === 'vscode-webview:';
+      if (!isLoopback && !isWebview) {
         stopped = true;
-        throw new Error('Invalid delivery path. Open this Standard Display through http://127.0.0.1:9876 only.');
+        throw new Error('Invalid delivery path. Open this Standard Display through http://127.0.0.1:9876 or inside Antigravity IDE only.');
       }
       const refresh = requested;
       requested = false;

@@ -31,7 +31,7 @@ Purpose: Validate native LCM_AI governance readiness and log separation without 
 Path: tools/Advance-Governance.ps1
 Authors: LCM_AI Engine
 Version: 10.0.0
-Date: 2026-10-13
+Date: 2026-11-08 15:02:28
 Caller Contract: Called from VS Code tasks or terminal; validates native governance inputs and reports status.
 Changelog:
 - 2026-10-13: Added -h / -Help CLI parameter per RULE-PS-010.
@@ -89,9 +89,6 @@ $inventoryRoot = Split-Path $PSScriptRoot -Parent
 $workspaceRoot = Split-Path $inventoryRoot -Parent
 $copilotRoot = Join-Path $workspaceRoot '.copilot'
 $qualityGateModulePath = Join-Path $PSScriptRoot 'QualityGates\LCM_QualityGates.psm1'
-if (-not (Test-Path -LiteralPath $qualityGateModulePath)) {
-  $qualityGateModulePath = Join-Path $PSScriptRoot 'QualityGates\WorkspaceQualityGates.psm1'
-}
 Import-Module -Name $qualityGateModulePath -Force
 
 if (-not $LogPath) {

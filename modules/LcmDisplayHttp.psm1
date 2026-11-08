@@ -7,7 +7,7 @@
   Path: modules/LcmDisplayHttp.psm1
   Authors: Rolf, Copilot
   Version: 10.0.1
-  Date: 2026-10-21
+  Date: 2026-11-08 15:07:36
 #>
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
@@ -20,11 +20,19 @@ function Send-LcmDisplayResponse {
   $Response.ContentType = $ContentType
   $Response.Headers['Cache-Control'] = 'no-store, no-cache, must-revalidate'
   $Response.Headers['X-Content-Type-Options'] = 'nosniff'
+  $Response.Headers['Access-Control-Allow-Origin'] = '*'
+  $Response.Headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
+  $Response.Headers['Access-Control-Allow-Headers'] = 'Content-Type, Access-Control-Allow-Private-Network, X-Requested-With, X-LCM-Display-Revision'
+  $Response.Headers['Access-Control-Allow-Private-Network'] = 'true'
   if ($ContentType -like 'text/html*') {
-    $Response.Headers['Content-Security-Policy'] = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self'; font-src 'self'; img-src 'self' data:; frame-src 'self'; object-src 'none'; base-uri 'self'"
+    $Response.Headers['Content-Security-Policy'] = "default-src 'self' vscode-webview:; script-src 'self' 'unsafe-inline' vscode-webview:; style-src 'self' 'unsafe-inline' vscode-webview:; connect-src 'self' http://127.0.0.1:* http://localhost:* vscode-webview:; font-src 'self' data: vscode-webview:; img-src 'self' data: vscode-webview:; frame-src 'self' vscode-webview:; frame-ancestors 'self' vscode-webview:; object-src 'none'; base-uri 'self'"
   }
-  $Response.ContentLength64 = $Bytes.Length
-  $Response.OutputStream.Write($Bytes, 0, $Bytes.Length)
+  if ($null -eq $Bytes) {
+    $Response.ContentLength64 = 0
+  } else {
+    $Response.ContentLength64 = $Bytes.Length
+    $Response.OutputStream.Write($Bytes, 0, $Bytes.Length)
+  }
   $Response.Close()
 }
 
@@ -40,6 +48,10 @@ function Invoke-LcmDisplayHttpRequest {
   $bytes = $null; $contentType = 'application/json; charset=utf-8'; $code = 200
   try {
     if ($Request.LocalEndPoint.Port -ne 9876) { throw 'Standard Displays require port 9876.' }
+    if ($method -eq 'OPTIONS') {
+      Send-LcmDisplayResponse -Response $Response -Bytes $null -ContentType $contentType -StatusCode 204
+      return $true
+    }
     if ($method -eq 'GET' -and $path -match '^/assets/(?<name>[a-z0-9_.-]+)$') {
       $name = $Matches.name
       $allowed = @('standard-table-display.css','standardtabledisplay.css','lcmtoolcatalog.css','lcm-tool-explorer.js','lcm-table-engine.js','lcm-table-print-atom.js','lcm-display-freshness.js','failure-analysis.css','failure-analysis.js')
@@ -99,4 +111,4 @@ function Stop-LcmDisplayHttp {
   Stop-LcmDisplayPublication
 }
 
-Export-ModuleMember -Function Invoke-LcmDisplayHttpRequest, Stop-LcmDisplayHttp
+Export-ModuleMember -Function Invoke-LcmDisplayHttpRequest, Send-LcmDisplayResponse, Stop-LcmDisplayHttp

@@ -11,7 +11,7 @@
   Path: tools/modules/LcmToolCatalog.psm1
   Authors: Rolf, Copilot
   Version: 10.0.1
-  Date: 2026-10-21
+  Date: 2026-11-08 15:30:00
 #>
 
 Set-StrictMode -Version Latest
@@ -823,6 +823,24 @@ function Build-LcmToolIndexHtml {
                 <span style="font-size: 11px; color: var(--text-muted);">Tip: Drag this dialog by the header to position it anywhere while inspecting the table. Press Esc to exit.</span>
             </div>
         </div>
+    </div>
+
+    <!-- Execution Feedback Drawer (CRP-309 WP4) -->
+    <div class="execution-feedback-drawer collapsed" id="executionFeedbackDrawer">
+        <div class="execution-feedback-header" onclick="window.LcmTools.toggleExecutionDrawer(event)">
+            <span class="drawer-title">⚡ Execution Output</span>
+            <div class="drawer-badges">
+                <span id="drawerExitBadge" class="drawer-badge badge-neutral">Ready</span>
+                <span id="drawerTargetBadge" class="drawer-target"></span>
+                <span id="drawerDurationBadge" class="drawer-duration"></span>
+            </div>
+            <div class="drawer-actions" onclick="event.stopPropagation()">
+                <button class="drawer-btn" onclick="window.LcmTools.copyDrawerOutput()" title="Copy output to clipboard">📋 Copy</button>
+                <button class="drawer-btn" onclick="window.LcmTools.clearDrawerOutput()" title="Clear terminal output">🧹 Clear</button>
+                <button class="drawer-btn" id="drawerToggleBtn" onclick="window.LcmTools.toggleExecutionDrawer(event)">▲ Expand</button>
+            </div>
+        </div>
+        <pre class="execution-feedback-body" id="executionFeedbackBody">Ready. Executed actions, tests, and tool commands stream output here.</pre>
     </div>
 
     <!-- Toast Notification -->

@@ -1,9 +1,19 @@
 # Implementation Plan: CRP-308
 
-Module: CRP-308
-Path: docs/Proposals/CRP-308-GoodMorning-Baseline-Visibility-Default-BCR-Prepar/Implementation_Plan.md
-Authors: Rolf, LCM_AI Engine
-Date: 2026-11-07
+```yaml
+CRP-ID: CRP-308
+Document: Implementation_Plan
+Title: GoodMorning Baseline Visibility, Default BCR Preparation, and Macrium Automation Atoms
+Scope: LCM_Inventory
+Baseline-Version: 10.0.1
+Author: rgbig
+Date: 2026-11-08 12:48:00
+Status: Suggested
+Plan-State: suggested
+Progress-State: undecided
+Priority: High
+App-ID: None
+```
 
 ---
 

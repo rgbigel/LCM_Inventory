@@ -24,6 +24,7 @@ data/readiness/
 data/reviews/
 data/staging/
 data/logs/
+data/tokens/
 logs/*.log
 !logs/cm_activity.log
 logs/*.jsonl

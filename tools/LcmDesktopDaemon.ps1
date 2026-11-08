@@ -20,7 +20,9 @@
   Path: tools/LcmDesktopDaemon.ps1
   Authors: Rolf, LCM_AI Engine
   Version: 10.0.1
-  Date: 2026-10-21
+  Date: 2026-11-08 15:39:00
+.NOTES
+  Dependencies: tools/modules/LcmDaemonCore.psm1
 .PARAMETER Port
   The local TCP listening port (Default: 9876). Configurable via parameter or $env:LCM_DAEMON_PORT.
 .PARAMETER Status
@@ -45,8 +47,6 @@
   pwsh tools/LcmDesktopDaemon.ps1 -Status
 .EXAMPLE
   pwsh tools/LcmDesktopDaemon.ps1 -Stop
-.DEPENDENCIES
-  tools/modules/LcmDaemonCore.psm1
 #>
 
 [CmdletBinding()]
@@ -84,7 +84,6 @@ if ($Port -le 0) {
 
 $workspaceRoot = 'D:\Git_Repositories'
 $lcdRoot = Join-Path $workspaceRoot 'LCM_Inventory'
-$toolsDir = Join-Path $lcdRoot 'tools'
 $manifestPath = Join-Path $env:TEMP 'lcm_desktop_daemon.json'
 
 # ------------------------------------------------------------------------------
@@ -170,7 +169,7 @@ if ($Background) {
     $psi.Arguments = "-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File `"$scriptPath`" -Port $Port"
     $psi.UseShellExecute = $true
     $psi.WindowStyle = [System.Diagnostics.ProcessWindowStyle]::Hidden
-    $proc = [System.Diagnostics.Process]::Start($psi)
+    $null = [System.Diagnostics.Process]::Start($psi)
     Start-Sleep -Milliseconds 1200
   } finally {
     Unregister-ScheduledTask -TaskName $taskName -Confirm:$false -ErrorAction SilentlyContinue | Out-Null
@@ -196,6 +195,8 @@ if (-not (Test-Path -LiteralPath $classesDir)) {
 }
 
 . (Join-Path $classesDir 'DaemonDto.ps1')
+. (Join-Path $classesDir 'LcmTokenVault.ps1')
+. (Join-Path $classesDir 'LcmSecurityGateway.ps1')
 . (Join-Path $classesDir 'DaemonEnvironment.ps1')
 . (Join-Path $classesDir 'DaemonActionController.ps1')
 
@@ -330,9 +331,6 @@ $manifest = [PSCustomObject]@{
 }
 $manifest | ConvertTo-Json | Set-Content -LiteralPath $manifestPath -Encoding UTF8
 $envObj.Log("Listening on $prefix (SessionId: $($envObj.SessionId), PID: $($envObj.Pid))", 'ACTION')
-$proposalDocumentsRoot = Join-Path $workspaceRoot 'LCM_Inventory\docs\Proposals'
-$proposalDocumentWatcher = $null
-$proposalDocumentWatcherSubscription = $null
 
 # ------------------------------------------------------------------------------
 # 5. Core Request Dispatch Loop (Strongly-Typed OOP Routing)
@@ -535,6 +533,34 @@ try {
         $title = if ($bodyJson -and $bodyJson.PSObject.Properties['title']) { [string]$bodyJson.title } else { "" }
         $data = $controller.ForegroundWindow($title)
         Send-DaemonJsonResponse -Response $response -Data $data
+        continue
+      }
+
+      # Route: POST /api/action, /action, /do, /api/do (Universal Command Gateway per CRP-309)
+      if ($httpMethod -eq 'POST' -and ($reqPath -in @('/action', '/api/action', '/do', '/api/do'))) {
+        $intent = [DaemonActionIntent]::FromJson($bodyJson)
+        $data = $controller.ExecuteActionIntent($intent)
+        Send-DaemonJsonResponse -Response $response -Data $data
+        continue
+      }
+
+      # Route: POST /api/tools/run (Typed Controller Run per CRP-309 Clause 3)
+      if ($httpMethod -eq 'POST' -and ($reqPath -in @('/tools/run', '/api/tools/run'))) {
+        $intent = [DaemonActionIntent]::FromJson($bodyJson)
+        if ([string]::IsNullOrWhiteSpace($intent.Target) -and $bodyJson.PSObject.Properties['tool']) {
+          $intent.Target = [string]$bodyJson.tool
+        }
+        $data = $controller.ExecuteActionIntent($intent)
+        Send-DaemonJsonResponse -Response $response -Data $data
+        continue
+      }
+
+      # Route: POST /api/token (JIT Ephemeral Token Issuance per CRP-309 Clause 6)
+      if ($httpMethod -eq 'POST' -and ($reqPath -in @('/token', '/api/token'))) {
+        $target = if ($bodyJson -and $bodyJson.PSObject.Properties['target']) { [string]$bodyJson.target } else { "GenericAction" }
+        $caller = if ($bodyJson -and $bodyJson.PSObject.Properties['caller']) { [string]$bodyJson.caller } else { "CLI" }
+        $token = [LcmTokenVault]::IssueToken($target, $caller, $workspaceRoot)
+        Send-DaemonJsonResponse -Response $response -Data @{ token = $token; target = $target; ttlSeconds = [LcmTokenVault]::TtlSeconds }
         continue
       }
 

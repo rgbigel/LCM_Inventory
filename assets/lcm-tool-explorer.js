@@ -1,5 +1,6 @@
 /**
- * LCM Tool Explorer Client Application (10.0.0)
+ * LCM Tool Explorer Client Application (10.0.1)
+ * Date: 2026-11-08 15:30:00
  * Modern dashboard controller supporting:
  * - Switched Short-Names default column with source-file toggle mode
  * - Unified 8-mode action dropdown (Run, Help, Run with parms, Code editor, Rename, Archive, Delete, Cleanup)
@@ -10,6 +11,7 @@
  * - Internal Audience visibility toggle
  * - AST dependency visualization
  * - Multi-tab sessionStorage isolation & broadcast sync
+ * - Unified Action Intent & Execution Feedback Drawer (CRP-309 WP4)
  */
 
 (function(window, document) {
@@ -1596,31 +1598,170 @@
         }
     }
 
+    function toggleExecutionDrawer(e) {
+        if (e && e.stopPropagation) e.stopPropagation();
+        const drawer = document.getElementById('executionFeedbackDrawer');
+        const btn = document.getElementById('drawerToggleBtn');
+        if (!drawer) return;
+        const isCollapsed = drawer.classList.contains('collapsed');
+        if (isCollapsed) {
+            drawer.classList.remove('collapsed');
+            drawer.classList.add('expanded');
+            if (btn) btn.innerText = '▼ Collapse';
+        } else {
+            drawer.classList.remove('expanded');
+            drawer.classList.add('collapsed');
+            if (btn) btn.innerText = '▲ Expand';
+        }
+    }
+
+    function showExecutionFeedback(target, exitCode, durationMs, stdout, stderr, isRunning = false) {
+        const drawer = document.getElementById('executionFeedbackDrawer');
+        const body = document.getElementById('executionFeedbackBody');
+        const exitBadge = document.getElementById('drawerExitBadge');
+        const targetBadge = document.getElementById('drawerTargetBadge');
+        const durationBadge = document.getElementById('drawerDurationBadge');
+        const btn = document.getElementById('drawerToggleBtn');
+        if (!drawer || !body) return;
+
+        if (targetBadge) targetBadge.innerText = target ? `[${target}]` : '';
+        if (durationBadge) durationBadge.innerText = durationMs ? `${durationMs} ms` : '';
+
+        if (isRunning) {
+            if (exitBadge) {
+                exitBadge.className = 'drawer-badge badge-running';
+                exitBadge.innerText = '⏳ Running...';
+            }
+            body.innerText = `Dispatching execution for ${target}...`;
+            return;
+        }
+
+        const isSuccess = (exitCode === 0);
+        if (exitBadge) {
+            if (exitCode !== undefined && exitCode !== null) {
+                exitBadge.className = `drawer-badge ${isSuccess ? 'badge-success' : 'badge-error'}`;
+                exitBadge.innerText = isSuccess ? '🟢 Exit 0' : `🔴 Exit ${exitCode}`;
+            } else {
+                exitBadge.className = 'drawer-badge badge-neutral';
+                exitBadge.innerText = 'Completed';
+            }
+        }
+
+        let text = '';
+        if (stdout) text += stdout;
+        if (stderr) {
+            if (text) text += '\n--- STDERR ---\n';
+            text += stderr;
+        }
+        if (!text) {
+            text = isSuccess ? '(Command exited with code 0 and produced no stdout output)' : '(Command failed with no output)';
+        }
+        body.innerText = text;
+
+        if (!isSuccess || (stderr && String(stderr).trim().length > 0)) {
+            drawer.classList.remove('collapsed');
+            drawer.classList.add('expanded');
+            if (btn) btn.innerText = '▼ Collapse';
+        }
+    }
+
+    function copyDrawerOutput() {
+        const body = document.getElementById('executionFeedbackBody');
+        if (body && body.innerText) {
+            navigator.clipboard.writeText(body.innerText).then(() => {
+                showToast('📋 Terminal output copied!');
+            }).catch(() => {});
+        }
+    }
+
+    function clearDrawerOutput() {
+        const body = document.getElementById('executionFeedbackBody');
+        const exitBadge = document.getElementById('drawerExitBadge');
+        const targetBadge = document.getElementById('drawerTargetBadge');
+        const durationBadge = document.getElementById('drawerDurationBadge');
+        if (body) body.innerText = 'Ready. Executed actions, tests, and tool commands stream output here.';
+        if (exitBadge) {
+            exitBadge.className = 'drawer-badge badge-neutral';
+            exitBadge.innerText = 'Ready';
+        }
+        if (targetBadge) targetBadge.innerText = '';
+        if (durationBadge) durationBadge.innerText = '';
+    }
+
+    function getCollectedParamsDict(tool) {
+        const params = (tool && tool.Parameters) ? tool.Parameters : [];
+        const dict = {};
+        params.forEach(p => {
+            const input = document.getElementById('param-input-' + p.Name);
+            if (!input) return;
+            const isSwitch = p.Type.toLowerCase().includes('switch') || p.Type.toLowerCase().includes('bool');
+            if (isSwitch) {
+                if (input.checked) dict[p.Name] = true;
+            } else {
+                const val = input.value.trim();
+                if (val) dict[p.Name] = val;
+            }
+        });
+        return dict;
+    }
+
+    function getSavedParamsDict(tool) {
+        const params = (tool && tool.Parameters) ? tool.Parameters : [];
+        const dict = {};
+        params.forEach(p => {
+            const storageKey = getParamStorageKey(tool.Name, p.Name);
+            const savedVal = localStorage.getItem(storageKey);
+            if (savedVal !== null && savedVal !== undefined && savedVal !== '') {
+                const isSwitch = p.Type.toLowerCase().includes('switch') || p.Type.toLowerCase().includes('bool');
+                if (isSwitch) {
+                    if (savedVal === 'true' || savedVal === '1' || savedVal === true) dict[p.Name] = true;
+                } else {
+                    let val = String(savedVal).trim();
+                    if (val.startsWith('-' + p.Name)) {
+                        val = val.substring(p.Name.length + 1).trim();
+                    }
+                    if (val.startsWith('"') && val.endsWith('"')) {
+                        val = val.slice(1, -1);
+                    }
+                    if (val) dict[p.Name] = val;
+                }
+            }
+        });
+        return dict;
+    }
+
     function executeConfiguredTool() {
         if (!activeRunningTool) return;
-        const finalCmd = document.getElementById('run-cmd-input').value.trim();
+        const targetName = activeRunningTool.ShortName || activeRunningTool.Name;
+        const paramsDict = getCollectedParamsDict(activeRunningTool);
         
-        showToast('⚡ Dispatching ' + (activeRunningTool.ShortName || activeRunningTool.Name) + '...');
-        fetch(DAEMON_URL + '/execute', {
+        showToast('⚡ Dispatching ' + targetName + '...');
+        showExecutionFeedback(targetName, null, 0, '', '', true);
+        fetch(DAEMON_URL + '/api/action', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                command: finalCmd,
-                elevated: Boolean(activeRunningTool.Admin),
-                noExit: isToolNoExit(activeRunningTool)
+                action: 'DO',
+                target: targetName,
+                parameters: paramsDict,
+                caller: 'WebUI',
+                options: {
+                    sync: true,
+                    noExit: isToolNoExit(activeRunningTool)
+                }
             })
         }).then(r => r.json()).then(data => {
-            if (data.error) {
-                alert('Execution failed: ' + data.error);
+            const durMs = data.durationMs || 0;
+            const exitCd = data.exitCode !== undefined ? data.exitCode : (data.status === 'ERROR' ? 1 : 0);
+            showExecutionFeedback(targetName, exitCd, durMs, data.stdout, data.stderr || data.error);
+            if (data.error || (data.exitCode !== undefined && data.exitCode !== 0)) {
+                showToast('⚠️ Execution failed (' + (data.exitCode !== undefined ? 'Exit ' + data.exitCode : data.error) + ')');
             } else {
-                showToast('✓ Dispatched: ' + (activeRunningTool.ShortName || activeRunningTool.Name));
+                showToast('✓ Dispatched: ' + targetName);
             }
         }).catch(err => {
-            const uri = 'lcm://run?tool=' + encodeURIComponent(activeRunningTool.Name) + 
-                        '&elevated=' + (activeRunningTool.Admin ? 'true' : 'false') +
-                        '&noexit=' + (isToolNoExit(activeRunningTool) ? 'true' : 'false') +
-                        '&customCmd=' + encodeURIComponent(finalCmd);
-            dispatchLcmProtocol(uri);
+            showExecutionFeedback(targetName, -1, 0, '', 'Daemon connection failed: ' + err.message);
+            showToast('⚠️ Connection error to Daemon on Port 9876');
         });
 
         closeRunModal();
@@ -1765,28 +1906,36 @@
     function runTool(idx) {
         const tool = toolsData[idx];
         if (!tool) return;
-        const cmd = buildToolCommandWithSavedParams(tool);
+        const targetName = tool.ShortName || tool.Name;
+        const savedParams = getSavedParamsDict(tool);
         
-        showToast('⚡ Launching ' + (isSourceMode ? tool.Name : (tool.ShortName || tool.Name)) + '...');
-        fetch(DAEMON_URL + '/execute', {
+        showToast('⚡ Launching ' + (isSourceMode ? tool.Name : targetName) + '...');
+        showExecutionFeedback(targetName, null, 0, '', '', true);
+        fetch(DAEMON_URL + '/api/action', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                command: cmd,
-                elevated: Boolean(tool.Admin),
-                noExit: isToolNoExit(tool)
+                action: 'DO',
+                target: targetName,
+                parameters: savedParams,
+                caller: 'WebUI',
+                options: {
+                    sync: true,
+                    noExit: isToolNoExit(tool)
+                }
             })
         }).then(r => r.json()).then(data => {
-            if (data.error) {
-                alert('Launch failed: ' + data.error);
+            const durMs = data.durationMs || 0;
+            const exitCd = data.exitCode !== undefined ? data.exitCode : (data.status === 'ERROR' ? 1 : 0);
+            showExecutionFeedback(targetName, exitCd, durMs, data.stdout, data.stderr || data.error);
+            if (data.error || (data.exitCode !== undefined && data.exitCode !== 0)) {
+                showToast('⚠️ Launch failed (' + (data.exitCode !== undefined ? 'Exit ' + data.exitCode : data.error) + ')');
             } else {
-                showToast('✓ Launched ' + (isSourceMode ? tool.Name : (tool.ShortName || tool.Name)));
+                showToast('✓ Completed: ' + (isSourceMode ? tool.Name : targetName));
             }
         }).catch(err => {
-            const uri = 'lcm://run?tool=' + encodeURIComponent(tool.Name) + 
-                        '&elevated=' + (tool.Admin ? 'true' : 'false') +
-                        '&noexit=' + (isToolNoExit(tool) ? 'true' : 'false');
-            dispatchLcmProtocol(uri);
+            showExecutionFeedback(targetName, -1, 0, '', 'Daemon connection failed: ' + err.message);
+            showToast('⚠️ Connection error to Daemon on Port 9876');
         });
     }
 
@@ -2983,7 +3132,11 @@
         showParamHelp: showParamHelp,
         clearSingleParam: clearSingleParam,
         clearAllParamsForTool: clearAllParamsForTool,
-        toggleTheme: toggleTheme
+        toggleTheme: toggleTheme,
+        toggleExecutionDrawer: toggleExecutionDrawer,
+        showExecutionFeedback: showExecutionFeedback,
+        copyDrawerOutput: copyDrawerOutput,
+        clearDrawerOutput: clearDrawerOutput
     };
 
     window.LcmDisplayApply = async function(html) {

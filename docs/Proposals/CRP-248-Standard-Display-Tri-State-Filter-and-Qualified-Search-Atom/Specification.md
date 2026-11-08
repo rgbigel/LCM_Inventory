@@ -1,14 +1,20 @@
 # CRP-248: Standard Display Tri-State Filter and Qualified Search Atom
 
-| Metadata Field | Value |
-|---|---|
-| **Proposal ID** | `CRP-248` |
-| **Lifecycle State** | `SUGGESTED` |
-| **Origin Repository** | `LCM_Inventory` |
-| **Target Scope** | Reusable Standard Display atom and future `Show-*` adoption |
-| **Author** | rgbig |
-| **Date** | 2026-10-13 |
-| **Flow Mode** | Normal review cycle |
+```yaml
+CRP-ID: CRP-248
+Title: Standard Display Tri-State Filter and Qualified Search Atom
+Scope: Reusable Standard Display atom and future Show-* adoption
+Baseline-Version: 10.0.0
+Author: rgbig
+Date: 2026-11-08 15:00:18
+Status: Superseded
+Plan-State: superseded
+Progress-State: deferred
+Priority: High
+App-ID: APP-001
+```
+
+---
 
 ## 1. Problem Statement
 

@@ -103,8 +103,8 @@
       "scan_community_issues.py",
       "compare_tuya_integrations.py",
       "search_sys_sensors.py",
-      "Invoke-WorkspaceAudit.ps1",
-      "Show-WorkspaceInventoryApp.ps1",
+      "Invoke-LCM_Audit.ps1",
+      "Show-LCM_InventoryApp.ps1",
       "build_offline_docs.py",
       "Show-LcmActiveLauncher.ps1",
       "Show-HaInventoryApp.ps1"
@@ -764,8 +764,8 @@
       "compare_tuya_integrations.py",
       "search_sys_sensors.py",
       "extract_ha_central_registry.py",
-      "Invoke-WorkspaceAudit.ps1",
-      "Show-WorkspaceInventoryApp.ps1",
+      "Invoke-LCM_Audit.ps1",
+      "Show-LCM_InventoryApp.ps1",
       "build_offline_docs.py",
       "Show-LcmActiveLauncher.ps1",
       "Invoke-InteractiveDesktop.ps1"
@@ -1354,6 +1354,13 @@
         "Description": "Open the lifecycle ledger in terminal detail mode"
       },
       {
+        "Name": "Pane",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Opens the Control Hub inside an Antigravity IDE editor/side pane"
+      },
+      {
         "Name": "StartDaemon",
         "Type": "SwitchParameter",
         "Mandatory": false,
@@ -1537,6 +1544,13 @@
         "Mandatory": false,
         "Default": "",
         "Description": "Suppresses launching the web browser and outputs the tool catalog directly as formatted text in the terminal (Aliases: -Cli, -Text, -Console)."
+      },
+      {
+        "Name": "Pane",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Opens the dashboard inside an Antigravity IDE editor/side pane"
       }
     ],
     "Dependencies": [
@@ -1585,7 +1599,7 @@
     "RelativePath": "LCM_Inventory\\tools\\Test-LCM_Readiness.ps1",
     "Parameters": [],
     "Dependencies": [
-      "WorkspaceQualityGates.psm1",
+      "LCM_QualityGates.psm1",
       "Update-ToolCatalog.ps1"
     ]
   },
@@ -2237,10 +2251,7 @@
         "Description": "Custom path to the real-repository test plan file"
       }
     ],
-    "Dependencies": [
-      "LCM_QualityGates.psm1",
-      "WorkspaceQualityGates.psm1"
-    ]
+    "Dependencies": "LCM_QualityGates.psm1"
   },
   {
     "Name": "APPLY.ps1",
@@ -3305,7 +3316,7 @@
       }
     ],
     "Dependencies": [
-      "WorkspaceQualityGates.psm1",
+      "LCM_QualityGates.psm1",
       "Get-RealRepoTargetProfile.ps1"
     ]
   },
@@ -3333,7 +3344,7 @@
         "Description": "Output the profile in JSON format."
       }
     ],
-    "Dependencies": "WorkspaceQualityGates.psm1"
+    "Dependencies": "LCM_QualityGates.psm1"
   },
   {
     "Name": "Get-RealRepoTestPlan.ps1",
@@ -3504,7 +3515,7 @@
         "Description": "Output initialization result as JSON."
       }
     ],
-    "Dependencies": "WorkspaceQualityGates.psm1"
+    "Dependencies": "LCM_QualityGates.psm1"
   },
   {
     "Name": "Invoke-InteractiveDesktop.ps1",
@@ -3558,6 +3569,13 @@
         "Description": "Dispatch process with elevated Administrator privileges"
       },
       {
+        "Name": "Pane",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Opens displays inside an Antigravity IDE editor/side pane"
+      },
+      {
         "Name": "ShowAll",
         "Type": "SwitchParameter",
         "Mandatory": false,
@@ -3571,6 +3589,88 @@
       "bcompare.exe",
       "bcompare"
     ]
+  },
+  {
+    "Name": "Invoke-LcmAction.ps1",
+    "ShortName": "LcmAction",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Invoke-LcmAction execution tool.",
+    "Example": "LcmAction",
+    "RelativePath": "LCM_Inventory\\tools\\Invoke-LcmAction.ps1",
+    "Parameters": [
+      {
+        "Name": "Action",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "do",
+        "Description": "Action to perform (e.g. do, status, start, stop, token)"
+      },
+      {
+        "Name": "Target",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Target tool name or action intent (e.g. RestoreSettings, MacriumDailyBaseline)"
+      },
+      {
+        "Name": "InputObject",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Raw JSON string or file path containing the Interface Object"
+      },
+      {
+        "Name": "Caller",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "CLI",
+        "Description": "Caller identity for audit telemetry"
+      },
+      {
+        "Name": "Token",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Optional JIT ephemeral token for Tier 3 mutations"
+      },
+      {
+        "Name": "Async",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Force asynchronous execution without waiting for completion"
+      },
+      {
+        "Name": "NoExit",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Keep console open after execution in interactive mode"
+      },
+      {
+        "Name": "Elevated",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Explicitly request elevated execution"
+      },
+      {
+        "Name": "RemainingArgs",
+        "Type": "String[]",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      }
+    ],
+    "Dependencies": "Register-LcmDesktopDaemon.ps1"
   },
   {
     "Name": "Invoke-LCM_Audit.ps1",
@@ -4601,7 +4701,7 @@
       }
     ],
     "Dependencies": [
-      "WorkspaceQualityGates.psm1",
+      "LCM_QualityGates.psm1",
       "Get-RealRepoTargetProfile.ps1",
       "Get-RealRepoActionPlan.ps1"
     ]
@@ -5123,7 +5223,7 @@
         "Description": "Output updated test plan in JSON format."
       }
     ],
-    "Dependencies": "WorkspaceQualityGates.psm1"
+    "Dependencies": "LCM_QualityGates.psm1"
   },
   {
     "Name": "Show-LcmFailureDiagnostic.ps1",
@@ -5996,7 +6096,7 @@
         "Description": "Output cleanup scan report in JSON format."
       }
     ],
-    "Dependencies": "WorkspaceQualityGates.psm1"
+    "Dependencies": "LCM_QualityGates.psm1"
   },
   {
     "Name": "Test-ReviewCommitGate.ps1",

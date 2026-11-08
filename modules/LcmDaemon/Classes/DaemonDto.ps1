@@ -3,8 +3,8 @@ Module: LcmDaemon/Classes/DaemonDto.ps1
 Purpose: Strongly-typed data transfer objects (DTOs) for LCM Desktop Daemon REST Bridge.
 Path: LCM_Inventory/modules/LcmDaemon/Classes/DaemonDto.ps1
 Authors: Rolf, LCM_AI Engine
-Version: 10.0.0
-Date: 2026-10-13
+Version: 10.0.1
+Date: 2026-11-08 15:17:24
 #>
 
 Set-StrictMode -Version Latest
@@ -232,6 +232,44 @@ class DaemonActionLogRequest {
     if ($json.PSObject.Properties['details'] -and $json.details) { $dto.Details = [string]$json.details }
     if ($json.PSObject.Properties['command'] -and $json.command) { $dto.Command = [string]$json.command }
     if ($json.PSObject.Properties['user'] -and $json.user) { $dto.User = [string]$json.user }
+    return $dto
+  }
+}
+
+class DaemonActionIntent {
+  [string]$Action = "DO"
+  [string]$Target = ""
+  [string]$Caller = "CLI"
+  [hashtable]$Context = @{}
+  [hashtable]$Parameters = @{}
+  [hashtable]$Options = @{}
+  [string]$Token = ""
+
+  static [DaemonActionIntent] FromJson([psobject]$json) {
+    $dto = [DaemonActionIntent]::new()
+    if ($null -eq $json) { return $dto }
+    if ($json.PSObject.Properties['action'] -and $json.action) { $dto.Action = [string]$json.action }
+    if ($json.PSObject.Properties['target'] -and $json.target) { $dto.Target = [string]$json.target }
+    if ($json.PSObject.Properties['caller'] -and $json.caller) { $dto.Caller = [string]$json.caller }
+    if ($json.PSObject.Properties['token'] -and $json.token) { $dto.Token = [string]$json.token }
+    if ($json.PSObject.Properties['context'] -and $null -ne $json.context) {
+      $dto.Context = [hashtable]@{}
+      foreach ($prop in $json.context.PSObject.Properties) {
+        $dto.Context[$prop.Name] = $prop.Value
+      }
+    }
+    if ($json.PSObject.Properties['parameters'] -and $null -ne $json.parameters) {
+      $dto.Parameters = [hashtable]@{}
+      foreach ($prop in $json.parameters.PSObject.Properties) {
+        $dto.Parameters[$prop.Name] = $prop.Value
+      }
+    }
+    if ($json.PSObject.Properties['options'] -and $null -ne $json.options) {
+      $dto.Options = [hashtable]@{}
+      foreach ($prop in $json.options.PSObject.Properties) {
+        $dto.Options[$prop.Name] = $prop.Value
+      }
+    }
     return $dto
   }
 }

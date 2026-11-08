@@ -10,14 +10,16 @@
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
   Path: D:\Git_Repositories\LCM_Tools\Invoke-InteractiveDesktop.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.0
-  Date: 2026-10-13
+  Version: 10.0.1
+  Date: 2026-11-08 15:07:36
 .PARAMETER FilePath
   The executable or script to launch on the interactive desktop.
 .PARAMETER ArgumentList
   Command-line arguments to pass to the executable.
 .PARAMETER Command
   A raw command line string to execute via cmd.exe or pwsh.exe.
+.PARAMETER Pane
+  Opens displays inside an Antigravity IDE editor/side pane instead of external browser window.
 .PARAMETER ShowAll
   Displays detailed task creation, dispatch, and cleanup logs.
 .PARAMETER LogFile
@@ -49,6 +51,9 @@ param(
   [Parameter(HelpMessage = 'Dispatch process with elevated Administrator privileges')]
   [switch]$Elevated,
 
+  [Parameter(HelpMessage = 'Opens displays inside an Antigravity IDE editor/side pane')]
+  [switch]$Pane,
+
   [Parameter(HelpMessage = 'Display verbose task creation, dispatch, and cleanup logs')]
   [switch]$ShowAll,
 
@@ -63,7 +68,7 @@ begin {
   Set-StrictMode -Version Latest
   $ErrorActionPreference = 'Stop'
 
-  $scriptVersion = "10.0.0"
+  $scriptVersion = "10.0.1"
   $scriptName = "Invoke-InteractiveDesktop"
 
   # ------------------------------------------------------------------------------
@@ -180,21 +185,12 @@ process {
   Write-ToolLog -Message "  Executable: $targetExe" -Level DEBUG
   Write-ToolLog -Message "  Arguments : $targetArgs" -Level DEBUG
 
-  # If already running directly on the interactive user desktop (Session > 0), launch directly without REST loopback or scheduled task
-  $currentSessionId = [System.Diagnostics.Process]::GetCurrentProcess().SessionId
-  if ($currentSessionId -ne 0 -and -not $Elevated) {
-    if (-not [string]::IsNullOrWhiteSpace($targetArgs)) {
-      Start-Process -FilePath $targetExe -ArgumentList $targetArgs
-    } else {
-      Start-Process -FilePath $targetExe
-    }
-    Write-ToolLog -Message "Dispatched $targetExe directly on Interactive Desktop (Session $currentSessionId)." -Level ACTION
-    $script:DispatchedCount++
-    return
-  }
-
   # ----------------------------------------------------------------------------
   # High-Speed Route A: Direct REST Daemon Dispatch (Sub-5ms, Port 9876)
+  # Architectural Evolution (CRP-309):
+  # 1. Retired premature direct-launch when SessionId > 0; all dispatches route through Port 9876.
+  # 2. Retired Route B Task Scheduler fallback per Authoritative Gateway Invariant.
+  # 3. Port 9876 daemon runs with Highest runlevel, providing universal back channel and security checks.
   # ----------------------------------------------------------------------------
   $daemonPort = if ($env:LCM_DAEMON_PORT -match '^\d+$') { [int]$env:LCM_DAEMON_PORT } else { 9876 }
   $daemonDispatched = $false
@@ -235,6 +231,7 @@ process {
           args       = $argsToSend
           foreground = $true
           title      = $titleHint
+          pane       = [bool]$Pane
         } | ConvertTo-Json -Compress
 
         $res = Invoke-RestMethod -Uri "http://127.0.0.1:$daemonPort/open" -Method Post -Body $body -ContentType "application/json" -TimeoutSec 2 -ErrorAction Stop
@@ -273,46 +270,9 @@ process {
     }
   }
 
-  if ($daemonDispatched) {
-    return
-  }
-
-  # ----------------------------------------------------------------------------
-  # Route B: Task Scheduler Fallback (Session 1 Ephemeral Task)
-  # ----------------------------------------------------------------------------
-  Write-ToolLog -Message "[FALLBACK-TRIGGERED] LCM Desktop Daemon is OFFLINE (Port $daemonPort). Activating Route B (Scheduled Task dispatch: $taskName)." -Level WARN
-
-  if (-not (Get-Variable -Name 'script:FallbackWarned' -Scope Script -ErrorAction SilentlyContinue) -or -not $script:FallbackWarned) {
-    Write-Host ""
-    Write-Host "⚠️  ==========================================================================" -ForegroundColor Yellow
-    Write-Host "⚠️  [ROUTE-B FALLBACK ENGAGED] LCM Desktop Daemon is offline on port $daemonPort." -ForegroundColor Yellow
-    Write-Host "⚠️  Dispatched via Task Scheduler (schtasks.exe). To restore <5ms REST speed:" -ForegroundColor Yellow
-    Write-Host "⚠️  Run: pwsh tools/Register-LcmDesktopDaemon.ps1 -Install" -ForegroundColor Yellow
-    Write-Host "⚠️  ==========================================================================" -ForegroundColor Yellow
-    Write-Host ""
-    $script:FallbackWarned = $true
-  }
-
-  try {
-    $action = if ([string]::IsNullOrWhiteSpace($targetArgs)) {
-      New-ScheduledTaskAction -Execute $targetExe
-    } else {
-      New-ScheduledTaskAction -Execute $targetExe -Argument $targetArgs
-    }
-
-    $runLevel = if ($Elevated) { 'Highest' } else { 'Limited' }
-    $principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive -RunLevel $runLevel
-    Register-ScheduledTask -TaskName $taskName -Action $action -Principal $principal -Force | Out-Null
-    Start-ScheduledTask -TaskName $taskName
-    Start-Sleep -Milliseconds 600
-    $script:DispatchedCount++
-    Write-ToolLog -Message "Task '$taskName' successfully started on Session 1." -Level ACTION
-  } catch {
+  if (-not $daemonDispatched) {
     $script:ExecStatus = "FAILED"
-    Write-ToolLog -Message "Failed to dispatch interactive task '$taskName': $_" -Level ERROR
-  } finally {
-    Unregister-ScheduledTask -TaskName $taskName -Confirm:$false -ErrorAction SilentlyContinue | Out-Null
-    Write-ToolLog -Message "Cleaned up ephemeral task definition '$taskName'." -Level DEBUG
+    throw "LCM Desktop Daemon (Port $daemonPort) is offline. Per Authoritative Gateway Invariant (CRP-309), secondary fallbacks are retired. Run 'pwsh tools/Register-LcmDesktopDaemon.ps1 -Start' to restore service."
   }
 }
 

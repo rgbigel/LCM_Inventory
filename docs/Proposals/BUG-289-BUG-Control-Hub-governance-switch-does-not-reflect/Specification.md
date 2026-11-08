@@ -4,9 +4,14 @@
 Bug-ID: BUG-289
 Title: [BUG] Control Hub governance switch does not reflect or apply backend state
 Scope: LCM_Inventory
+Baseline-Version: 10.0.0
 Author: rgbig
-Date: 2026-10-17 22:32:48
-Status: Suggested
+Date: 2026-11-08 15:00:18
+Status: Superseded
+Plan-State: superseded
+Progress-State: deferred
+Priority: High
+App-ID: APP-001
 ```
 
 ---

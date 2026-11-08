@@ -50,7 +50,8 @@ Module: Test-RealRepoProposalCleanup.ps1
 Purpose: Report target-local proposal files that are void because they are accepted and implemented.
 Path: tools/Test-RealRepoProposalCleanup.ps1
 Authors: LCM_AI Engine
-Version: 10.0.0
+Version: 10.0.1
+Date: 2026-11-08 15:02:28
 Caller Contract: Performs a read-only scan of the selected target repository's method proposal queue; does not delete, stage, or commit files.
 Changelog:
 - 2026-10-13: Added target-local proposal cleanup candidate scanner.
@@ -64,7 +65,7 @@ $workspaceRoot = Split-Path $PSScriptRoot -Parent
 $copilotRoot = Join-Path $workspaceRoot '.copilot'
 $planPath = Join-Path $copilotRoot 'History\Logs\RealRepoTestPlan.json'
 $stabilizationPath = Join-Path $copilotRoot 'History\Logs\Stabilization.json'
-$qualityGateModulePath = Join-Path $PSScriptRoot 'QualityGates\WorkspaceQualityGates.psm1'
+$qualityGateModulePath = Join-Path $PSScriptRoot 'QualityGates\LCM_QualityGates.psm1'
 
 Import-Module $qualityGateModulePath -Force
 

@@ -6,10 +6,10 @@ Title: Read-Only Standard Display Shell and Evidence Migration
 Scope: Show-LcmAnalysisViewer, Show-Rules, Show-WorkspaceReadiness, Show-CmdFolderAnalysis
 Baseline-Version: 10.0.1
 Author: rgbig
-Date: 2026-10-18
-Status: Suggested
-Plan-State: suggested
-Progress-State: undecided
+Date: 2026-11-08 14:59:30
+Status: Superseded
+Plan-State: superseded
+Progress-State: deferred
 Priority: High
 Dependency: CRP-293 accepted reference; CRP-292 Accepted Common Goal
 ```

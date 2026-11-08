@@ -6,10 +6,10 @@ Title: ShowCM Typed Controller Reference Completion
 Scope: LCM_Inventory ShowCM, daemon controller, and public contracts
 Baseline-Version: 10.0.1
 Author: rgbig
-Date: 2026-10-18
-Status: Suggested
-Plan-State: suggested
-Progress-State: undecided
+Date: 2026-11-08 14:59:30
+Status: Superseded
+Plan-State: superseded
+Progress-State: deferred
 Priority: High
 App-ID: APP-001
 Dependency: CRP-266 completed architecture; CRP-292 Accepted Common Goal

@@ -10,7 +10,27 @@
     Path: LCM_Inventory/tools/Invoke-MacriumBcrReview.ps1
     Authors: Rolf, LCM_AI Engine
     Version: 10.0.4
-    Date: 2026-11-06
+    Date: 2026-11-08 15:48:00
+.PARAMETER CRP
+    Identifier of the CRP or BUG proposal under review (e.g. CRP-309).
+.PARAMETER RepositoryName
+    Target repository containing the review changes (Default: LCM_Inventory).
+.PARAMETER BaseCommit
+    Base commit to compare against (Default: HEAD).
+.PARAMETER NoLaunch
+    Mounts baseline and records metadata without launching Beyond Compare.
+.PARAMETER LifecycleManaged
+    Indicates the invocation is dispatched through proposal lifecycle gating.
+.PARAMETER NewBaseline
+    Forces unmounting and remounting a fresh Macrium baseline image.
+.PARAMETER CandidateDrives
+    Acceptable drive letters for mounting baseline partition (Default: F, G, H, I).
+.PARAMETER MountTimeoutSeconds
+    Timeout in seconds for drive mount operations (Default: 120).
+.PARAMETER Help
+    Displays this parameter documentation and usage syntax.
+.EXAMPLE
+    pwsh tools/Invoke-MacriumBcrReview.ps1 -CRP CRP-309
 #>
 
 [CmdletBinding()]
@@ -89,7 +109,6 @@ if ([string]::IsNullOrWhiteSpace($commit)) {
 $baselineTool = Join-Path $PSScriptRoot 'Invoke-MacriumDailyBcrBaseline.ps1'
 $baselineArgs = @{
   ReviewScope = $CRP
-  Confirm = $false
   NewBaseline = $NewBaseline
   CandidateDrives = $CandidateDrives
   MountTimeoutSeconds = $MountTimeoutSeconds

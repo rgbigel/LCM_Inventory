@@ -3,8 +3,8 @@ Module: LcmDaemon/Classes/DaemonActionController.ps1
 Purpose: Object-Oriented controller routing and executing daemon REST operations.
 Path: LCM_Inventory/modules/LcmDaemon/Classes/DaemonActionController.ps1
 Authors: Rolf, LCM_AI Engine
-Version: 10.0.0
-Date: 2026-10-13
+Version: 10.0.1
+Date: 2026-11-08 15:26:00
 #>
 
 Set-StrictMode -Version Latest
@@ -189,9 +189,13 @@ class DaemonActionController {
       }
     }
 
-    # Synchronous Execution with stdout/stderr capture (BUG-159)
-    if ($req.Sync -and -not $req.Elevated) {
-      $this.Env.Log("Executing synchronous command: $cmdToRun in $wsRoot", 'ACTION')
+    # Synchronous Execution with universal stdout/stderr capture (CRP-309 Clause 2)
+    if ($req.Sync) {
+      if ($cmdToRun -notmatch '(?i)(?:^|;|\s)exit(?:\s*;\s*|\s*$)') {
+        $cmdToRun = "$cmdToRun; exit `$LASTEXITCODE"
+      }
+      $sw = [System.Diagnostics.Stopwatch]::StartNew()
+      $this.Env.Log("Executing synchronous command: $cmdToRun in $wsRoot (Elevated: $($req.Elevated))", 'ACTION')
       $encodedCmd = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($cmdToRun))
       $pinfo = [System.Diagnostics.ProcessStartInfo]::new()
       $pinfo.FileName = "pwsh.exe"
@@ -211,7 +215,7 @@ class DaemonActionController {
 
       $timeoutMs = if ($req.TimeoutMs -gt 0) {
         $req.TimeoutMs
-      } elseif ($cmdToRun -match '(?i)push|gemini|export|maintenance') {
+      } elseif ($cmdToRun -match '(?i)push|gemini|export|maintenance|macrium') {
         300000
       } else {
         60000
@@ -219,25 +223,31 @@ class DaemonActionController {
 
       try {
         $hasExited = $proc.WaitForExit($timeoutMs)
+        $sw.Stop()
         if ($hasExited) {
           [void][System.Threading.Tasks.Task]::WaitAll(@($stdoutTask, $stderrTask), 5000)
           $exitCode = $proc.ExitCode
           $status = if ($exitCode -eq 0) { "COMPLETED" } else { "ERROR" }
           return @{
-            status   = $status
-            exitCode = $exitCode
-            stdout   = $stdoutTask.Result
-            stderr   = $stderrTask.Result
-            command  = $cmdToRun
+            status     = $status
+            exitCode   = $exitCode
+            stdout     = $stdoutTask.Result
+            stderr     = $stderrTask.Result
+            durationMs = $sw.ElapsedMilliseconds
+            command    = $cmdToRun
+            elevated   = [bool]$req.Elevated
           }
         } else {
           $this.Env.Log("Command timed out after ${timeoutMs}ms: $cmdToRun", 'WARN')
+          try { $proc.Kill($true) } catch {}
           return @{
-            status   = "TIMEOUT"
-            exitCode = -1
-            stdout   = if ($stdoutTask.IsCompleted) { $stdoutTask.Result } else { "" }
-            stderr   = "Command execution timed out after $([math]::Round($timeoutMs / 1000))s"
-            command  = $cmdToRun
+            status     = "TIMEOUT"
+            exitCode   = -1
+            stdout     = if ($stdoutTask.IsCompleted) { $stdoutTask.Result } else { "" }
+            stderr     = "Command execution timed out after $([math]::Round($timeoutMs / 1000))s"
+            durationMs = $sw.ElapsedMilliseconds
+            command    = $cmdToRun
+            elevated   = [bool]$req.Elevated
           }
         }
       } finally {
@@ -281,6 +291,128 @@ class DaemonActionController {
       Start-Process -FilePath "pwsh.exe" -ArgumentList "-NoProfile -ExecutionPolicy Bypass $noExitFlag-EncodedCommand $encodedCmd" -WorkingDirectory $wsRoot -WindowStyle $windowStyle
     }
     return @{ status = "DISPATCHED"; command = $cmdToRun; elevated = $req.Elevated; noExit = $req.NoExit; windowStyle = $windowStyle }
+  }
+
+  [hashtable] ExecuteActionIntent([DaemonActionIntent]$intent) {
+    if ([string]::IsNullOrWhiteSpace($intent.Target)) {
+      throw [System.ArgumentException]::new("Missing 'target' in action intent payload.")
+    }
+
+    $wsRoot = $this.Env.WorkspaceRoot
+
+    # 1. Authorize against Security Gateway (CRP-309 Clause 10)
+    $auth = [LcmSecurityGateway]::Authorize($intent, $wsRoot)
+    if (-not $auth.Authorized) {
+      [LcmSecurityGateway]::LogAudit($auth, 403, 0, $wsRoot)
+      return @{
+        status     = "DENIED"
+        exitCode   = 403
+        stdout     = ""
+        stderr     = $auth.Reason
+        durationMs = 0
+        target     = $intent.Target
+        authorized = $false
+      }
+    }
+
+    # 2. Resolve target tool from catalog or direct script
+    $targetName = $intent.Target.Trim()
+    $scriptToRun = ""
+    $isElevated = ($auth.Tier -eq 3)
+
+    # Check if target matches tool_catalog.json entry
+    $catalogPath = [System.IO.Path]::Combine($wsRoot, "LCM_Inventory\config\tool_catalog.json")
+    if (Test-Path -LiteralPath $catalogPath) {
+      try {
+        $rawCat = [System.IO.File]::ReadAllText($catalogPath, [System.Text.Encoding]::UTF8)
+        $catalog = $rawCat | ConvertFrom-Json
+        $toolsList = if ($catalog -is [System.Collections.IEnumerable] -and $catalog -isnot [PSCustomObject]) { $catalog } elseif ($catalog.PSObject.Properties['tools']) { $catalog.tools } else { @($catalog) }
+        $normTarget = $targetName -replace '^(?:tools/|tools\\)?', '' -replace '\.ps1$', ''
+        $matched = @($toolsList | Where-Object {
+          $_.Name -eq $targetName -or
+          $_.ShortName -eq $targetName -or
+          $_.Name -eq "$normTarget.ps1" -or
+          $_.ShortName -eq ($normTarget -replace '[^A-Za-z0-9]', '')
+        })[0]
+        if ($null -ne $matched) {
+          if ($matched.RelativePath) {
+            $absScript = [System.IO.Path]::Combine($wsRoot, $matched.RelativePath)
+            $scriptToRun = "& `"$absScript`""
+          } elseif ($matched.Command) {
+            $scriptToRun = $matched.Command
+          }
+          if ($matched.Admin -or $matched.Elevated) { $isElevated = $true }
+        }
+      } catch {}
+    }
+
+    if ([string]::IsNullOrWhiteSpace($scriptToRun)) {
+      if ($targetName.EndsWith('.ps1') -or $targetName.EndsWith('.cmd')) {
+        $candidate = [System.IO.Path]::Combine($wsRoot, $targetName)
+        if (Test-Path -LiteralPath $candidate) {
+          $scriptToRun = "& `"$candidate`""
+        } else {
+          $candidateTool = [System.IO.Path]::Combine($wsRoot, "LCM_Inventory\tools", $targetName)
+          if (Test-Path -LiteralPath $candidateTool) {
+            $scriptToRun = "& `"$candidateTool`""
+          } else {
+            $scriptToRun = $targetName
+          }
+        }
+      } else {
+        $candidatePs1 = [System.IO.Path]::Combine($wsRoot, "LCM_Inventory\tools", "$targetName.ps1")
+        if (Test-Path -LiteralPath $candidatePs1) {
+          $scriptToRun = "& `"$candidatePs1`""
+        } else {
+          $candidateCmd = [System.IO.Path]::Combine($wsRoot, "LCM_Inventory\Cmd", "$targetName.cmd")
+          if (Test-Path -LiteralPath $candidateCmd) {
+            $scriptToRun = "& `"$candidateCmd`""
+          } else {
+            $scriptToRun = $targetName
+          }
+        }
+      }
+    }
+
+    # 3. Assemble parameters from Intent DTO
+    $argParts = @()
+    if ($null -ne $intent.Parameters) {
+      foreach ($key in $intent.Parameters.Keys) {
+        $val = $intent.Parameters[$key]
+        if ($val -is [bool]) {
+          if ($val) { $argParts += "-$key" }
+        } elseif ($null -ne $val -and -not [string]::IsNullOrWhiteSpace("$val")) {
+          $argParts += "-$key `"$val`""
+        }
+      }
+    }
+    $argsCombined = $argParts -join ' '
+
+    # 4. Construct command string
+    $fullCmd = if (-not [string]::IsNullOrWhiteSpace($argsCombined)) {
+      "$scriptToRun $argsCombined"
+    } else {
+      $scriptToRun
+    }
+
+    $execReq = [DaemonExecuteRequest]::new()
+    $execReq.Command = $fullCmd
+    $execReq.Elevated = $isElevated
+    $execReq.Sync = if ($intent.Options.ContainsKey('sync')) { [bool]$intent.Options['sync'] } else { $true }
+    $execReq.NoExit = if ($intent.Options.ContainsKey('noExit')) { [bool]$intent.Options['noExit'] } else { $false }
+    if ($intent.Options.ContainsKey('timeoutMs')) {
+      $execReq.TimeoutMs = [int]$intent.Options['timeoutMs']
+    }
+
+    # 5. Dispatch command
+    $res = $this.ExecuteCommand($execReq)
+
+    # 6. Record Audit Log Receipt
+    $exitCode = if ($res.ContainsKey('exitCode')) { [int]$res.exitCode } else { 0 }
+    $durMs = if ($res.ContainsKey('durationMs')) { [int]$res.durationMs } else { 0 }
+    [LcmSecurityGateway]::LogAudit($auth, $exitCode, $durMs, $wsRoot)
+
+    return $res
   }
 
   [hashtable] OpenEditor([DaemonEditRequest]$req) {

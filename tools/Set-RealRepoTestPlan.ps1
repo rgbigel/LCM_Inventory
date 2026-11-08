@@ -23,7 +23,7 @@
 .PARAMETER Help
   Displays this synopsis and usage screen.
 #>
-[CmdletBinding(SupportsShouldProcess=$true)]
+[CmdletBinding()]
 param(
   [Parameter(Mandatory = $false, HelpMessage = 'Path to candidate target repository.')]
   [string]$RepositoryPath,
@@ -71,7 +71,8 @@ Module: Set-RealRepoTestPlan.ps1
 Purpose: Update the LCM_AI real-repository test plan without enabling writes.
 Path: tools/Set-RealRepoTestPlan.ps1
 Authors: LCM_AI Engine
-Version: 10.0.0
+Version: 10.0.1
+Date: 2026-11-08 15:05:30
 Caller Contract: Called only for LCM_AI governance preparation; refuses write enablement and validates policy after updating the local plan file.
 Changelog:
 - 2026-10-13: Blocked LCM_AI-local dry-run enablement; target repos must own dry-run state through Docs/Methods.
@@ -84,7 +85,7 @@ $workspaceRoot = Split-Path $PSScriptRoot -Parent
 $copilotRoot = Join-Path $workspaceRoot '.copilot'
 $planPath = Join-Path $copilotRoot 'History\Logs\RealRepoTestPlan.json'
 $stabilizationPath = Join-Path $copilotRoot 'History\Logs\Stabilization.json'
-$qualityGateModulePath = Join-Path $PSScriptRoot 'QualityGates\WorkspaceQualityGates.psm1'
+$qualityGateModulePath = Join-Path $PSScriptRoot 'QualityGates\LCM_QualityGates.psm1'
 
 Import-Module $qualityGateModulePath -Force
 
@@ -188,9 +189,7 @@ if ($plan.write_allowed -ne $false -or $plan.dry_run.write_allowed -ne $false) {
 }
 
 $json = $plan | ConvertTo-Json -Depth 10
-if ($PSCmdlet.ShouldProcess($planPath, 'Update LCM_AI real-repository test plan')) {
-  Set-Content -Path $planPath -Value $json -Encoding utf8
-}
+Set-Content -Path $planPath -Value $json -Encoding utf8
 
 $result = Assert-RealRepoTestPlan -WorkspaceRoot $workspaceRoot -RealRepoTestPlanPath $planPath -StabilizationPath $stabilizationPath
 

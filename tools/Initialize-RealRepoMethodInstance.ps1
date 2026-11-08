@@ -57,7 +57,8 @@ Module: Initialize-RealRepoMethodInstance.ps1
 Purpose: Create a target-local Docs/Methods method instance for a selected real repository.
 Path: tools/Initialize-RealRepoMethodInstance.ps1
 Authors: LCM_AI Engine
-Version: 10.0.0
+Version: 10.0.1
+Date: 2026-11-08 15:05:30
 Caller Contract: Called only after explicit operator approval; writes method scaffolding inside the target repository and never stages or commits target changes.
 Changelog:
 - 2026-10-13: Added target-local method instance bootstrap command.
@@ -72,7 +73,7 @@ $workspaceRoot = Split-Path $inventoryRoot -Parent
 $copilotRoot = Join-Path $workspaceRoot '.copilot'
 $planPath = Join-Path $copilotRoot 'History\Logs\RealRepoTestPlan.json'
 $stabilizationPath = Join-Path $copilotRoot 'History\Logs\Stabilization.json'
-$qualityGateModulePath = Join-Path $PSScriptRoot 'QualityGates\WorkspaceQualityGates.psm1'
+$qualityGateModulePath = Join-Path $PSScriptRoot 'QualityGates\LCM_QualityGates.psm1'
 
 Import-Module $qualityGateModulePath -Force
 
@@ -126,7 +127,7 @@ function Set-MethodFile {
 }
 
 $planValidation = Assert-RealRepoTestPlan -WorkspaceRoot $inventoryRoot -RealRepoTestPlanPath $planPath -StabilizationPath $stabilizationPath
-$plan = Get-Content -Raw -Path $planPath | ConvertFrom-Json
+$null = Get-Content -Raw -Path $planPath | ConvertFrom-Json
 
 if (-not $RepositoryPath) {
   $RepositoryPath = [string]$planValidation.SelectedRepository

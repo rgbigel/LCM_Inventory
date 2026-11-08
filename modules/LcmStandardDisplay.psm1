@@ -7,7 +7,7 @@
   Path: modules/LcmStandardDisplay.psm1
   Authors: Rolf, Copilot
   Version: 10.0.1
-  Date: 2026-10-21
+  Date: 2026-11-08 15:07:36
 #>
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
@@ -18,7 +18,8 @@ function Open-LcmStandardDisplay {
     [Parameter(Mandatory)][ValidateSet('tools','rules','inventory','hub','dates','failure-analysis','snapshot')][string]$DisplayId,
     [ValidatePattern('^[a-f0-9]{32}$')][string]$SnapshotId,
     [hashtable]$Parameters = @{},
-    [ValidateRange(1,300)][int]$TimeoutSeconds = 120
+    [ValidateRange(1,300)][int]$TimeoutSeconds = 120,
+    [switch]$Pane
   )
   $origin = 'http://127.0.0.1:9876'
   $root = Split-Path $PSScriptRoot -Parent
@@ -67,7 +68,7 @@ function Open-LcmStandardDisplay {
   if ($page.StatusCode -ne 200 -or $page.Headers['Content-Type'] -notmatch 'text/html') { throw "Standard Display is unavailable: $url" }
   $dispatcher = Join-Path $root 'tools\Invoke-InteractiveDesktop.ps1'
   if (-not (Test-Path -LiteralPath $dispatcher -PathType Leaf)) { throw "Interactive desktop dispatcher not found: $dispatcher" }
-  & $dispatcher -FilePath $url
+  & $dispatcher -FilePath $url -Pane:$Pane
   Write-Host "[ACTION] Standard Display: $url"
 }
 

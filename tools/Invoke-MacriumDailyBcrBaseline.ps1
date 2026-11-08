@@ -4,13 +4,20 @@
 .DESCRIPTION
   Module: tools/Invoke-MacriumDailyBcrBaseline.ps1
   Purpose: Finds today's completed Macrium image, optionally starts the configured
-  definition when today's image is absent, clears only known F:-I: image mounts,
-  mounts D: within F:-I: with the required GUI options, and opens the operator-owned
+  definition when today's image is absent, verifies and unmounts only known baseline candidates,
+  mounts D: within candidate drive letters with the required GUI options, and opens the operator-owned
   _LCM Beyond Compare profile. Reuses an existing mounted baseline by default unless -NewBaseline is set.
+  Implementation Choices (CRP-307 / CRP-308): Uses dynamic CandidateDrives evaluation instead of hardcoded
+  drive ranges; persists baseline telemetry in registry (MRMdrive, MRMTimeStamp, actMdrive, ActMTimeStamp);
+  reuses existing healthy baseline to eliminate redundant unmount/remount cycles.
   Path: LCM_Inventory/tools/Invoke-MacriumDailyBcrBaseline.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.4
-  Date: 2026-11-06
+  Version: 10.0.5
+  Date: 2026-11-08 15:45:00
+.NOTES
+  Caveats: Drive mounting requires administrative elevation (delegated to elevated worker via Invoke-ElevatedTest.ps1
+  or Port 9876 daemon); Macrium Reflect UI automation requires Session 1 interactive desktop access. Mount operations
+  time out after MountTimeoutSeconds (default: 120s).
 .PARAMETER BackupDefinitionPath
   Path to the Macrium Reflect XML backup definition file to monitor or execute.
 .PARAMETER BackupDirectory
@@ -489,7 +496,7 @@ function Test-LcmBcrProfile {
     [ValidateSet('F', 'G', 'H', 'I')]
     [string]$MountedDriveLetter
   )
-  $sessionRegistryPath = Join-Path ${env}:APPDATA 'Scooter Software\Beyond Compare 5\BCSessions.xml'
+  $sessionRegistryPath = Join-Path $env:APPDATA 'Scooter Software\Beyond Compare 5\BCSessions.xml'
   if (-not (Test-Path -LiteralPath $sessionRegistryPath -PathType Leaf)) {
     throw "Beyond Compare session registry was not found: $sessionRegistryPath"
   }
@@ -868,7 +875,7 @@ if ($WhatIfPreference) {
 }
 
 Close-MountedImageReview
-$receiptPath = Join-Path ${env}:TEMP ('{0}-{1}.json' -f $toolName, [guid]::NewGuid().ToString('N'))
+$receiptPath = Join-Path $env:TEMP ('{0}-{1}.json' -f $toolName, [guid]::NewGuid().ToString('N'))
 try {
   $pwshPath = (Get-Command pwsh -ErrorAction Stop).Source
   $arguments = @(

@@ -28,7 +28,8 @@ Module: Test-LCM_Readiness.ps1
 Purpose: Run native LCM_AI self-readiness checks before real-repository testing.
 Path: tools/Test-LCM_Readiness.ps1
 Authors: LCM_AI Engine
-Version: 10.0.0
+Version: 10.0.1
+Date: 2026-11-08 15:02:28
 Caller Contract: Called manually before enabling real-repository tests; validates current native governance pipeline.
 Changelog:
 - 2026-10-13: Decoupled ignored-repositories validation to root container settings.json.
@@ -47,7 +48,7 @@ $inventoryRoot = Split-Path $PSScriptRoot -Parent
 $workspaceRoot = Split-Path $inventoryRoot -Parent
 Set-Location $inventoryRoot
 
-$qualityGateModulePath = Join-Path $PSScriptRoot 'QualityGates\WorkspaceQualityGates.psm1'
+$qualityGateModulePath = Join-Path $PSScriptRoot 'QualityGates\LCM_QualityGates.psm1'
 Import-Module $qualityGateModulePath -Force
 
 Get-Content -Raw (Join-Path $workspaceRoot '.vscode\settings.json') | ConvertFrom-Json | Out-Null
@@ -67,7 +68,7 @@ $scriptFiles = @(
   '.\tools/Initialize-RealRepoMethodInstance.ps1',
   '.\tools/Test-RealRepoProposalCleanup.ps1',
   '.\tools/Invoke-RealRepoDryRun.ps1',
-  '.\tools/QualityGates\WorkspaceQualityGates.psm1',
+  '.\tools/QualityGates\LCM_QualityGates.psm1',
   '.\tools/Update-Proposal.ps1'
 )
 

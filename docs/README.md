@@ -6,7 +6,7 @@ Path: LCM_Inventory/docs/README.md
 Authors: Rolf, LCM_AI Engine  
 Version: 10.0.1  
 Status: Authoritative Reference  
-Updated: 2026-11-07 14:26:35  
+Updated: 2026-11-08 15:20:50  
 
 ---
 
@@ -106,6 +106,7 @@ TestWorkspaceReadiness
 | **InitializeGitWorld** | [Initialize-GitWorld.ps1](file:///LCM_Inventory/tools/Initialize-GitWorld.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Initialize-GitWorld execution tool. | InitializeGitWorld |
 | **InitializeRealRepoMethodInstance** | [Initialize-RealRepoMethodInstance.ps1](file:///LCM_Inventory/tools/Initialize-RealRepoMethodInstance.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Initialize-RealRepoMethodInstance execution tool. | InitializeRealRepoMethodInstance |
 | **InteractiveDesktop** | [Invoke-InteractiveDesktop.ps1](file:///LCM_Inventory/tools/Invoke-InteractiveDesktop.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-InteractiveDesktop execution tool. | InteractiveDesktop |
+| **LcmAction** | [Invoke-LcmAction.ps1](file:///LCM_Inventory/tools/Invoke-LcmAction.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-LcmAction execution tool. | LcmAction |
 | **LCMAudit** | [Invoke-LCM_Audit.ps1](file:///LCM_Inventory/tools/Invoke-LCM_Audit.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-LCM_Audit execution tool. | LCMAudit |
 | **LcmGiantReview** | [Invoke-LcmGiantReview.ps1](file:///LCM_Inventory/tools/Invoke-LcmGiantReview.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-LcmGiantReview execution tool. | LcmGiantReview |
 | **LCMGoodMorning** | [Invoke-LCM_GoodMorning.ps1](file:///LCM_Inventory/tools/Invoke-LCM_GoodMorning.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-LCM_GoodMorning execution tool. | LCMGoodMorning |

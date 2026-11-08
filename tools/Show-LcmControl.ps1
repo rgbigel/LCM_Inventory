@@ -34,6 +34,9 @@ param(
     [Parameter(Mandatory = $false, HelpMessage = 'Render HTML data cache without launching desktop browser')]
     [switch]$NoLaunch,
 
+    [Parameter(Mandatory = $false, HelpMessage = 'Opens the Control Hub inside an Antigravity IDE editor/side pane')]
+    [switch]$Pane,
+
     [Parameter(Mandatory = $false, HelpMessage = 'Compatibility switch; interactive launches automatically recover the desktop daemon when it is offline')]
     [switch]$StartDaemon,
 
@@ -56,7 +59,7 @@ param(
     Path: tools/Show-LcmControl.ps1
     Authors: Rolf, LCM_AI Engine
     Version: 10.0.1
-    Date: 2026-10-21
+    Date: 2026-11-08 15:07:36
 .PARAMETER ReviewMode
     Opens the Control Hub filtered directly to pending visual reviews requiring Beyond Compare action.
 .PARAMETER DatesMode
@@ -120,7 +123,6 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
 
 Import-Module -Name (Join-Path $PSScriptRoot '..\modules\LcmDisplayVersion.psm1') -Force
 $scriptVersion = Get-LcmDisplaySourceVersion -Path $PSCommandPath
-$scriptName = "Show-LcmControl"
 
 # ------------------------------------------------------------------------------
 # 0. Help Handler (-h / -Help / -?) per RULE-PS-010
@@ -429,7 +431,6 @@ if (Test-Path -LiteralPath $sessionFile) {
 }
 
 $compiledTimestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
-$hubVersionSubtitle = "Tool: Show-LcmControl v$scriptVersion | LCM Baseline: $lcmBaseline | Compiled: $compiledTimestamp"
 
 $appsCatalogFile = Join-Path $workspaceRoot "LCM_Inventory\data\catalog\apps.json"
 $appsCatalogRaw = if (Test-Path -LiteralPath $appsCatalogFile) { Get-Content -LiteralPath $appsCatalogFile -Raw -Encoding UTF8 } else { '{"total_apps":0,"apps":[]}' }
@@ -506,7 +507,7 @@ if (-not $NoLaunch) {
         Id = @($Id) -join ','
         StateEvent = $StateEvent
     }
-    Open-LcmStandardDisplay -DisplayId $displayId -Parameters $displayParameters
+    Open-LcmStandardDisplay -DisplayId $displayId -Pane:$Pane -Parameters $displayParameters
     Write-TimingLog "All dispatches completed. Total execution time: $($script:stopwatch.ElapsedMilliseconds)ms"
 } else {
     Write-TimingLog "Browser launch suppressed via -NoLaunch. Total execution time: $($script:stopwatch.ElapsedMilliseconds)ms"

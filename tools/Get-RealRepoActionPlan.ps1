@@ -7,6 +7,12 @@
 
 .PARAMETER Help
   Displays this synopsis and usage screen.
+
+.DESCRIPTION
+  Module: tools/Get-RealRepoActionPlan.ps1
+  Authors: LCM_AI Engine
+  Version: 10.0.1
+  Date: 2026-11-08 15:05:30
 #>
 [CmdletBinding()]
 param(
@@ -49,14 +55,14 @@ $workspaceRoot = Split-Path $inventoryRoot -Parent
 $copilotRoot = Join-Path $workspaceRoot '.copilot'
 $planPath = Join-Path $copilotRoot 'History\Logs\RealRepoTestPlan.json'
 $stabilizationPath = Join-Path $copilotRoot 'History\Logs\Stabilization.json'
-$qualityGateModulePath = Join-Path $PSScriptRoot 'QualityGates\WorkspaceQualityGates.psm1'
+$qualityGateModulePath = Join-Path $PSScriptRoot 'QualityGates\LCM_QualityGates.psm1'
 $targetProfilePath = Join-Path $PSScriptRoot 'Get-RealRepoTargetProfile.ps1'
 
 Import-Module $qualityGateModulePath -Force
 
 $planValidation = Assert-RealRepoTestPlan -WorkspaceRoot $inventoryRoot -RealRepoTestPlanPath $planPath -StabilizationPath $stabilizationPath
 $plan = Get-Content -Raw -Path $planPath | ConvertFrom-Json
-$targetProfile = & $targetProfilePath
+$null = & $targetProfilePath
 $phasePreview = @($plan.action_preview.phases | ForEach-Object {
   $phase = $_
   [pscustomobject]@{

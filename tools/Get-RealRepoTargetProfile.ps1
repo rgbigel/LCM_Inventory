@@ -35,7 +35,8 @@ Module: Get-RealRepoTargetProfile.ps1
 Purpose: Build a read-only profile of the selected real-repository dry-run target.
 Path: tools/Get-RealRepoTargetProfile.ps1
 Authors: LCM_AI Engine
-Version: 10.0.0
+Version: 10.0.1
+Date: 2026-11-08 15:02:28
 Caller Contract: Called only after LCM_AI dry-run policy validation; reads target path, git status, and adapter surface presence without writing to the target.
 Changelog:
 - 2026-10-13: Handled selected repositories without a resolvable HEAD without noisy Git stderr.
@@ -48,7 +49,7 @@ $workspaceRoot = Split-Path $inventoryRoot -Parent
 $copilotRoot = Join-Path $workspaceRoot '.copilot'
 $planPath = Join-Path $copilotRoot 'History\Logs\RealRepoTestPlan.json'
 $stabilizationPath = Join-Path $copilotRoot 'History\Logs\Stabilization.json'
-$qualityGateModulePath = Join-Path $PSScriptRoot 'QualityGates\WorkspaceQualityGates.psm1'
+$qualityGateModulePath = Join-Path $PSScriptRoot 'QualityGates\LCM_QualityGates.psm1'
 
 Import-Module $qualityGateModulePath -Force
 

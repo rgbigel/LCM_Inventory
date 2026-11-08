@@ -13,8 +13,8 @@
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
   Path: tools/Register-LcmDesktopDaemon.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.0
-  Date: 2026-10-13
+  Version: 10.0.1
+  Date: 2026-11-08 15:07:36
 .PARAMETER Install
   Installs the user scheduled task for automatic launch at user logon.
 .PARAMETER Uninstall
@@ -60,8 +60,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$scriptVersion = "10.0.0"
-$scriptName = "Register-LcmDesktopDaemon"
+$scriptVersion = "10.0.1"
 
 # ------------------------------------------------------------------------------
 # 0. Help Handler (-h / -Help / -?) per RULE-PS-010
@@ -180,7 +179,7 @@ if ($Install) {
   try {
     $action = New-ScheduledTaskAction -Execute "pwsh.exe" -Argument "-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File `"$daemonScript`" -Port $Port"
     $logonTrigger = New-ScheduledTaskTrigger -AtLogOn -User $env:USERNAME
-    $principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive -RunLevel Limited
+    $principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive -RunLevel Highest
     $settings = New-ScheduledTaskSettingsSet -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1) -ExecutionTimeLimit (New-TimeSpan -Days 365) -MultipleInstances IgnoreNew -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
     Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $logonTrigger -Principal $principal -Settings $settings -Force | Out-Null
     Write-Host "  -> Configured single-owner logon task with bounded restart: $taskName" -ForegroundColor Green
