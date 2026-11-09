@@ -31,6 +31,7 @@ LCM_Inventory/
 │   ├── Architecture.md         # End-user & topology architecture spec
 │   ├── Requirements.md         # Normative technical & invariant requirements spec
 │   ├── Implementation.md       # Code catalog, schemas & exported cmdlets spec
+│   ├── Implementation of Security in LCM.md # Atomic elevation & privilege architecture
 │   ├── INVENTORY_DASHBOARD.md  # Live audit markdown dashboard
 │   ├── CHANGE_REQUEST_INDEX.md # Historical proposal reference table
 │   ├── CM_POLICIES.md          # CM governance policy summary

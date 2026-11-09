@@ -9,8 +9,8 @@
     Purpose: Opens or reuses the governed Macrium BCR window and records the exact lifecycle review state.
     Path: LCM_Inventory/tools/Invoke-MacriumBcrReview.ps1
     Authors: Rolf, LCM_AI Engine
-    Version: 10.0.4
-    Date: 2026-11-08 15:48:00
+    Version: 10.0.5
+    Date: 2026-11-08 16:48:00
 .PARAMETER CRP
     Identifier of the CRP or BUG proposal under review (e.g. CRP-309).
 .PARAMETER RepositoryName
@@ -112,6 +112,7 @@ $baselineArgs = @{
   NewBaseline = $NewBaseline
   CandidateDrives = $CandidateDrives
   MountTimeoutSeconds = $MountTimeoutSeconds
+  Confirm = $false
 }
 if ($NoLaunch) {
   $baselineArgs.NoLaunchReview = $true

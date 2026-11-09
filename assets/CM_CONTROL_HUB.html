@@ -1,7 +1,7 @@
 <!--
   Template: CM_CONTROL_HUB.html
-  Version: 10.0.1
-  Date: 2026-11-08 15:30:00
+  Version: 10.0.2
+  Date: 2026-11-09 19:05:00
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -1104,6 +1104,7 @@
           <span class="control-label" id="itemActionLabel">ACTIONS:</span>
           <select class="control-select" id="itemActionSelect" onchange="dispatchSelectedItemMenuAction(this.value); this.value='';" disabled title="Lifecycle actions always apply to the explicit ITEM">
             <option value="">Select ITEM first</option>
+            <option value="show_spec">📄 Show Specification</option>
             <option value="do">Do / Start ITEM</option>
             <option value="proceed">Proceed ITEM</option>
             <option value="verify">Verify ITEM</option>
@@ -1973,8 +1974,19 @@
 
     function dispatchSelectedItemMenuAction(action) {
       if (!action) return;
-      if (!getActiveItemTarget()) {
+      const target = getActiveItemTarget();
+      if (!target) {
         setActionResult("Select an explicit CRP or COH ITEM before choosing an action; no daemon command was sent.", "error");
+        return;
+      }
+      if (action === "show_spec" || action === "spec") {
+        if (target.kind === "CRP") {
+          showProposalSpec(Number(target.item.id));
+        } else if (target.kind === "COH") {
+          showProposalSpec(Number(target.item.prime_proposal_id || target.item.id));
+        } else {
+          showToast("Specification view is only available for proposals.");
+        }
         return;
       }
       dispatchTargetAction(action);
@@ -2073,6 +2085,16 @@
         reconcileActiveItemTarget();
         return;
       }
+      if (action === "show_spec" || action === "spec") {
+        if (target.kind === "CRP") {
+          showProposalSpec(Number(target.item.id));
+        } else if (target.kind === "COH") {
+          showProposalSpec(Number(target.item.prime_proposal_id || target.item.id));
+        } else {
+          showToast("Specification view is only available for proposals.");
+        }
+        return;
+      }
       if (!IS_RENDERED_CONTROL_HUB) {
         setActionResult("Developer template is not executable; no daemon command was sent.", "error");
         return;
@@ -2097,8 +2119,10 @@
       const obligationSwitch = target.kind === "COH" && target.item.synthetic
         ? ` -ReviewObligationId "${target.item.obligation_id}"`
         : "";
+      const headId = (target.item && target.item.head_identity) || (target.item && target.item.crp_id) || (target.item && target.item.cr_id) || `CRP-${target.item?.prime_proposal_id || target.item?.id || ""}`;
+      const repoPath = (target.item && target.item.repositories && target.item.repositories[0]) || "LCM_Inventory";
       const cmd = target.kind === "COH" && target.item.synthetic && action === "complete"
-        ? `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Submit-ReviewResult.ps1 -RepositoryPath "${target.item.repositories[0]}" -CRP "${target.item.head_identity}" -Result Complete -IncludeUnreviewed -Notes "Operator accepted ${target.item.id}"`
+        ? `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Submit-ReviewResult.ps1 -RepositoryPath "${repoPath}" -CRP "${headId}" -Result Complete -IncludeUnreviewed -Notes "Operator accepted ${target.item.id}"`
         : `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action ${effectiveAction} -TargetExpression "${expression}"${obligationSwitch}`;
       if (target.kind === "COH" && ["do", "proceed", "verify", "bcr", "complete"].includes(action)) {
         const continuation = target.item.synthetic && ["do", "proceed"].includes(action)
@@ -2798,6 +2822,7 @@
                 ${getObligationWorkQueueCohorts().filter(cohort => Number(cohort.prime_proposal_id) === Number(p.id) && !cohort.resolved).map(cohort => `<button class="show-dropdown-item" onclick="dispatchCohortAction('${esc(cohort.id)}', 'bcr')"><span class="btn-icon">🔍</span> Open BCR ${esc(cohort.id)}</button>`).join("")}
                 <div style="border-top: 1px solid var(--line); margin: 4px 0;"></div>
                 <div class="show-dropdown-title">Documents (#${p.id})</div>
+                <button class="show-dropdown-item" onclick="showProposalSpec(${p.id})"><span class="btn-icon">📄</span> Show Specification</button>
                 <button class="show-dropdown-item" onclick="openOriginalProposalInEditor(${p.id})"><span class="btn-icon">📝</span> Edit Original CRP</button>
                 <button class="show-dropdown-item" onclick="showRepoDocs('${esc(p.origin_repo || "")}')"><span class="btn-icon">📁</span> Show Repo Docs</button>
                 <button class="show-dropdown-item" onclick="showProposalPlan(${p.id})"><span class="btn-icon">📋</span> Show Plan</button>
@@ -2831,6 +2856,7 @@
               <div class="show-dropdown-menu" id="dropdown-cohort-${esc(cohort.id)}">
                 <div class="show-dropdown-title">ACTIONS: ${esc(cohort.id)}</div>
                 <div class="show-dropdown-title">Lifecycle</div>
+                <button class="show-dropdown-item" onclick="showProposalSpec(${Number(cohort.prime_proposal_id || p.id)})"><span class="btn-icon">📄</span> Show Specification</button>
                 <button class="show-dropdown-item" onclick="dispatchCohortAction('${esc(cohort.id)}', 'proceed')"><span class="btn-icon">⚡</span> Proceed ITEM</button>
                 <button class="show-dropdown-item" onclick="dispatchCohortAction('${esc(cohort.id)}', 'bcr')"><span class="btn-icon">🔍</span> Open Review</button>
                 <button class="show-dropdown-item" onclick="dispatchCohortAction('${esc(cohort.id)}', 'complete')"><span class="btn-icon">✅</span> ACCEPTED: COH</button>
@@ -3277,10 +3303,16 @@
       setActionResult(`Applying ${targetDisplay}; waiting for ledger confirmation...`, "", "SWITCH");
 
       try {
-        const response = await fetch(DAEMON_URL + "/execute", {
+        const response = await fetch(DAEMON_URL + "/api/action", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ command, sync: false, noExit: false })
+          body: JSON.stringify({
+            action: "DO",
+            target: command,
+            command: command,
+            options: { sync: false, noExit: false },
+            caller: "ControlHub"
+          })
         });
         const data = await response.json();
         if (!response.ok || data.error || data.status === "ERROR") {
@@ -3392,6 +3424,7 @@
             </div>
             <select class="item-action-select" onchange="handleSingleItemAction(${p.id}, this.value); this.value='';">
               <option value="">Actions...</option>
+              <option value="show_spec">📄 Show Specification</option>
               <option value="do">▶️ Do / Start</option>
               <option value="proceed">⚡ Proceed</option>
               <option value="bcr">🔍 Open Review</option>
@@ -3505,6 +3538,10 @@
     function handleSingleItemAction(id, action) {
       if (!action) return;
       selectItemTarget(`CRP:${id}`);
+      if (action === "show_spec" || action === "spec") {
+        showProposalSpec(Number(id));
+        return;
+      }
       if (action === "hold") {
         dispatchTargetAction("hold");
         return;
@@ -3559,7 +3596,7 @@
 
       if (["reviewed", "complete"].includes(action)) {
         const requiresBcr = ids.some(id => {
-          const proposal = (proposalsData.proposals || []).find(p => p.id === id);
+          const proposal = (proposalsData.proposals || []).find(p => Number(p.id) === Number(id));
           return proposal && getLifecycleState(proposal) !== "in_review";
         });
         if (requiresBcr) {
@@ -3603,10 +3640,10 @@
           cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action bcr -TargetExpression "${idStr}"${ids.length > 1 ? " -Confirm" : ""}${sw}`;
           break;
         case "reviewed": {
-          const p = (proposalsData.proposals || []).find(x => x.id === ids[0]);
+          const p = (proposalsData.proposals || []).find(x => Number(x.id) === Number(ids[0]));
           const repo = p?.origin_repo || "LCM_Inventory";
           const crpTag = p?.crp_id || p?.cr_id || ("CRP-" + ids[0]);
-          cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Submit-ReviewResult.ps1 -RepositoryPath ${repo} -CRP ${crpTag} -Result Completed${sw}`;
+          cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Submit-ReviewResult.ps1 -RepositoryPath "${repo}" -CRP "${crpTag}" -Result Completed${sw}`;
           break;
         }
         case "complete":
@@ -3802,10 +3839,16 @@
       showBusyIndicator(userTitle || "Executing daemon command...", userDetails || commandStr);
       showExecutionFeedback(actionLabel || userTitle, null, 0, "", "", true);
       try {
-        const res = await fetch(DAEMON_URL + "/execute", {
+        const res = await fetch(DAEMON_URL + "/api/action", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ command: commandStr, sync: true }),
+          body: JSON.stringify({
+            action: "DO",
+            target: commandStr,
+            command: commandStr,
+            options: { sync: true },
+            caller: "ControlHub"
+          }),
           signal: currentActiveAbortController.signal
         });
         const data = await res.json();

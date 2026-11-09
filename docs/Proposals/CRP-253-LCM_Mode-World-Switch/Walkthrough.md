@@ -19,3 +19,9 @@
 4. **Git Root Invariant Maintained**:
    - `D:\Git_Repositories` was completely untouched and remains 100% operational as-is.
    - All further linkage into Git Root is deferred to the future operational switch.
+
+---
+
+## 5. Status & Design Update (2026-11-09)
+- **Status**: Postponed (`HELD`), actively retained in the proposal registry.
+- **Operator Direction**: The proposal will incorporate an exposed/configurable `Git_Root` variable pointing to sandbox copies, integrating the operator's existing scripts that switch internal junctions to sandbox targets.

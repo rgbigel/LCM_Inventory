@@ -3,8 +3,8 @@ Module: LcmDaemon/Classes/DaemonActionController.ps1
 Purpose: Object-Oriented controller routing and executing daemon REST operations.
 Path: LCM_Inventory/modules/LcmDaemon/Classes/DaemonActionController.ps1
 Authors: Rolf, LCM_AI Engine
-Version: 10.0.1
-Date: 2026-11-08 15:26:00
+Version: 10.0.2
+Date: 2026-11-09 19:05:00
 #>
 
 Set-StrictMode -Version Latest
@@ -165,8 +165,8 @@ class DaemonActionController {
       return $this.OpenTarget($openReq)
     }
 
-    # If the command references relative paths, resolve with workspace root and convert to direct invocation
-    if ($cmd -match '(?i)^pwsh(?:\.exe)?\s+-File\s+"?([^"\s]+)"?(.*)$') {
+    # If the command references relative paths or pwsh wrapper, resolve with workspace root and convert to direct invocation
+    if ($cmd -match '(?i)^pwsh(?:\.exe)?\s+(?:.*?\s+)?-File\s+"?([^"\s]+)"?(.*)$') {
       $scriptPath = $Matches[1]
       $extraArgs = $Matches[2]
       if (-not [System.IO.Path]::IsPathRooted($scriptPath)) {
@@ -283,11 +283,27 @@ class DaemonActionController {
       return @{ status = "DISPATCHED"; command = $cmdToRun; directExe = $directExe; elevated = $false; noExit = $false; windowStyle = $windowStyle }
     }
 
-    $encodedCmd = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($cmdToRun))
-
     if ($req.Elevated) {
-      Start-Process -FilePath "pwsh.exe" -ArgumentList "-NoProfile -ExecutionPolicy Bypass $noExitFlag-EncodedCommand $encodedCmd" -WorkingDirectory $wsRoot -Verb RunAs -WindowStyle $windowStyle
+      # Prohibition of Opaque UAC Prompts (RULE-ELEV-005): Never use -EncodedCommand with -Verb RunAs.
+      # Elevated dispatch requires transparent named script paths so the operator can inspect target and arguments.
+      if ($cmdToRun -match '^&\s*"([^"]+\.ps1)"(?:\s+(.*))?$') {
+        $elevScript = $Matches[1]
+        $elevArgs = if ($Matches.Count -gt 2 -and $Matches[2]) { $Matches[2] } else { "" }
+        $argStr = "-NoProfile -ExecutionPolicy Bypass $noExitFlag-File `"$elevScript`" $elevArgs".Trim()
+        $this.Env.Log("Dispatching transparent elevated script: $argStr", 'ACTION')
+        Start-Process -FilePath "pwsh.exe" -ArgumentList $argStr -WorkingDirectory $wsRoot -Verb RunAs -WindowStyle $windowStyle
+      } else {
+        $this.Env.Log("Elevated dispatch rejected: command '$cmdToRun' is not a transparent .ps1 invocation (RULE-ELEV-005)", 'WARN')
+        return @{
+          status   = "DENIED"
+          exitCode = 403
+          command  = $cmdToRun
+          stderr   = "Elevated execution requires a transparent script path (RULE-ELEV-005); opaque encoded commands are prohibited."
+          elevated = $true
+        }
+      }
     } else {
+      $encodedCmd = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($cmdToRun))
       Start-Process -FilePath "pwsh.exe" -ArgumentList "-NoProfile -ExecutionPolicy Bypass $noExitFlag-EncodedCommand $encodedCmd" -WorkingDirectory $wsRoot -WindowStyle $windowStyle
     }
     return @{ status = "DISPATCHED"; command = $cmdToRun; elevated = $req.Elevated; noExit = $req.NoExit; windowStyle = $windowStyle }
@@ -315,84 +331,165 @@ class DaemonActionController {
       }
     }
 
-    # 2. Resolve target tool from catalog or direct script
+    # Dedicated atomic registry handler (RULE-ELEV-007)
     $targetName = $intent.Target.Trim()
+    if ($targetName -eq 'Set-LcmRegistryValue') {
+      $keyPath = if ($intent.Parameters.ContainsKey('KeyPath')) { [string]$intent.Parameters['KeyPath'] } else { '' }
+      $name = if ($intent.Parameters.ContainsKey('Name')) { [string]$intent.Parameters['Name'] } else { '' }
+      $val = if ($intent.Parameters.ContainsKey('Value')) { [string]$intent.Parameters['Value'] } else { '' }
+      $pType = if ($intent.Parameters.ContainsKey('PropertyType') -and $intent.Parameters['PropertyType']) { [string]$intent.Parameters['PropertyType'] } else { 'String' }
+
+      $isLegitimate = $keyPath -match '^(?i)HKLM:\\SOFTWARE\\LCM(?:\\[^\\]+)*$' -or
+                      $keyPath -match '^(?i)HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment$'
+      if (-not $isLegitimate) {
+        $this.Env.Log("Registry write rejected: '$keyPath' is outside legitimate LCM namespaces (RULE-ELEV-007)", 'WARN')
+        return @{
+          status     = "DENIED"
+          exitCode   = 403
+          stdout     = ""
+          stderr     = "Registry write rejected: '$keyPath' is outside legitimate LCM namespaces (RULE-ELEV-007)."
+          durationMs = 0
+          target     = $targetName
+          authorized = $false
+        }
+      }
+
+      $daemonElevated = [System.Security.Principal.WindowsPrincipal]::new([System.Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([System.Security.Principal.WindowsBuiltInRole]::Administrator)
+      if ($daemonElevated) {
+        try {
+          if (-not (Test-Path -LiteralPath $keyPath)) { New-Item -Path $keyPath -Force | Out-Null }
+          Set-ItemProperty -Path $keyPath -Name $name -Value $val -Type $pType -Force | Out-Null
+          $this.Env.Log("Registry updated directly via elevated daemon: $keyPath\$name = '$val'", 'ACTION')
+          return @{
+            status     = "COMPLETED"
+            exitCode   = 0
+            stdout     = "Registry updated: $keyPath\$name = '$val'"
+            stderr     = ""
+            durationMs = 0
+            target     = $targetName
+            authorized = $true
+          }
+        } catch {
+          $this.Env.Log("Failed direct registry write: $($_.Exception.Message)", 'WARN')
+          return @{
+            status     = "ERROR"
+            exitCode   = 1
+            stdout     = ""
+            stderr     = $_.Exception.Message
+            durationMs = 0
+            target     = $targetName
+            authorized = $true
+          }
+        }
+      } else {
+        $this.Env.Log("Atomic registry write rejected: Port 9876 daemon is running un-elevated (RULE-ELEV-005)", 'WARN')
+        return @{
+          status     = "ERROR"
+          exitCode   = 403
+          stdout     = ""
+          stderr     = "Atomic registry write requires elevated daemon context. Port 9876 daemon is running un-elevated."
+          durationMs = 0
+          target     = $targetName
+          authorized = $true
+        }
+      }
+    }
+
+    # 2. Resolve target tool from catalog or direct script
     $scriptToRun = ""
     $isElevated = ($auth.Tier -eq 3)
+    if ($intent.Options.ContainsKey('elevated') -and $intent.Options['elevated']) {
+      $isElevated = $true
+    }
+
+    $rawCmdProvided = -not [string]::IsNullOrWhiteSpace($intent.Command)
+    $hasExplicitParams = ($null -ne $intent.Parameters -and $intent.Parameters.Count -gt 0)
 
     # Check if target matches tool_catalog.json entry
     $catalogPath = [System.IO.Path]::Combine($wsRoot, "LCM_Inventory\config\tool_catalog.json")
+    $matchedCatalogTool = $null
     if (Test-Path -LiteralPath $catalogPath) {
       try {
         $rawCat = [System.IO.File]::ReadAllText($catalogPath, [System.Text.Encoding]::UTF8)
         $catalog = $rawCat | ConvertFrom-Json
         $toolsList = if ($catalog -is [System.Collections.IEnumerable] -and $catalog -isnot [PSCustomObject]) { $catalog } elseif ($catalog.PSObject.Properties['tools']) { $catalog.tools } else { @($catalog) }
         $normTarget = $targetName -replace '^(?:tools/|tools\\)?', '' -replace '\.ps1$', ''
-        $matched = @($toolsList | Where-Object {
+        $matchedCatalogTool = @($toolsList | Where-Object {
           $_.Name -eq $targetName -or
           $_.ShortName -eq $targetName -or
           $_.Name -eq "$normTarget.ps1" -or
-          $_.ShortName -eq ($normTarget -replace '[^A-Za-z0-9]', '')
+          $_.ShortName -eq ($normTarget -replace '[^A-Za-z0-9]', '') -or
+          ($_.RelativePath -and ($targetName -like "*$($_.RelativePath)*" -or $targetName -like "*$($_.Name)*"))
         })[0]
-        if ($null -ne $matched) {
-          if ($matched.RelativePath) {
-            $absScript = [System.IO.Path]::Combine($wsRoot, $matched.RelativePath)
-            $scriptToRun = "& `"$absScript`""
-          } elseif ($matched.Command) {
-            $scriptToRun = $matched.Command
-          }
-          if ($matched.Admin -or $matched.Elevated) { $isElevated = $true }
+        if ($null -ne $matchedCatalogTool -and ($matchedCatalogTool.Admin -or $matchedCatalogTool.Elevated)) {
+          $isElevated = $true
         }
       } catch {}
     }
 
-    if ([string]::IsNullOrWhiteSpace($scriptToRun)) {
-      if ($targetName.EndsWith('.ps1') -or $targetName.EndsWith('.cmd')) {
-        $candidate = [System.IO.Path]::Combine($wsRoot, $targetName)
-        if (Test-Path -LiteralPath $candidate) {
-          $scriptToRun = "& `"$candidate`""
-        } else {
-          $candidateTool = [System.IO.Path]::Combine($wsRoot, "LCM_Inventory\tools", $targetName)
-          if (Test-Path -LiteralPath $candidateTool) {
-            $scriptToRun = "& `"$candidateTool`""
-          } else {
-            $scriptToRun = $targetName
-          }
-        }
-      } else {
-        $candidatePs1 = [System.IO.Path]::Combine($wsRoot, "LCM_Inventory\tools", "$targetName.ps1")
-        if (Test-Path -LiteralPath $candidatePs1) {
-          $scriptToRun = "& `"$candidatePs1`""
-        } else {
-          $candidateCmd = [System.IO.Path]::Combine($wsRoot, "LCM_Inventory\Cmd", "$targetName.cmd")
-          if (Test-Path -LiteralPath $candidateCmd) {
-            $scriptToRun = "& `"$candidateCmd`""
-          } else {
-            $scriptToRun = $targetName
-          }
-        }
-      }
-    }
-
-    # 3. Assemble parameters from Intent DTO
-    $argParts = @()
-    if ($null -ne $intent.Parameters) {
-      foreach ($key in $intent.Parameters.Keys) {
-        $val = $intent.Parameters[$key]
-        if ($val -is [bool]) {
-          if ($val) { $argParts += "-$key" }
-        } elseif ($null -ne $val -and -not [string]::IsNullOrWhiteSpace("$val")) {
-          $argParts += "-$key `"$val`""
-        }
-      }
-    }
-    $argsCombined = $argParts -join ' '
-
-    # 4. Construct command string
-    $fullCmd = if (-not [string]::IsNullOrWhiteSpace($argsCombined)) {
-      "$scriptToRun $argsCombined"
+    # If raw command was provided or target carries trailing CLI arguments without structured params, preserve arguments
+    if ($rawCmdProvided -and -not $hasExplicitParams) {
+      $fullCmd = $intent.Command.Trim()
+    } elseif (-not $hasExplicitParams -and $targetName -match '\s+-[A-Za-z]') {
+      $fullCmd = $targetName.Trim()
     } else {
-      $scriptToRun
+      if ($null -ne $matchedCatalogTool) {
+        if ($matchedCatalogTool.RelativePath) {
+          $absScript = [System.IO.Path]::Combine($wsRoot, $matchedCatalogTool.RelativePath)
+          $scriptToRun = "& `"$absScript`""
+        } elseif ($matchedCatalogTool.Command) {
+          $scriptToRun = $matchedCatalogTool.Command
+        }
+      }
+
+      if ([string]::IsNullOrWhiteSpace($scriptToRun)) {
+        if ($targetName.EndsWith('.ps1') -or $targetName.EndsWith('.cmd')) {
+          $candidate = [System.IO.Path]::Combine($wsRoot, $targetName)
+          if (Test-Path -LiteralPath $candidate) {
+            $scriptToRun = "& `"$candidate`""
+          } else {
+            $candidateTool = [System.IO.Path]::Combine($wsRoot, "LCM_Inventory\tools", $targetName)
+            if (Test-Path -LiteralPath $candidateTool) {
+              $scriptToRun = "& `"$candidateTool`""
+            } else {
+              $scriptToRun = $targetName
+            }
+          }
+        } else {
+          $candidatePs1 = [System.IO.Path]::Combine($wsRoot, "LCM_Inventory\tools", "$targetName.ps1")
+          if (Test-Path -LiteralPath $candidatePs1) {
+            $scriptToRun = "& `"$candidatePs1`""
+          } else {
+            $candidateCmd = [System.IO.Path]::Combine($wsRoot, "LCM_Inventory\Cmd", "$targetName.cmd")
+            if (Test-Path -LiteralPath $candidateCmd) {
+              $scriptToRun = "& `"$candidateCmd`""
+            } else {
+              $scriptToRun = $targetName
+            }
+          }
+        }
+      }
+
+      # 3. Assemble parameters from Intent DTO
+      $argParts = @()
+      if ($null -ne $intent.Parameters) {
+        foreach ($key in $intent.Parameters.Keys) {
+          $val = $intent.Parameters[$key]
+          if ($val -is [bool]) {
+            if ($val) { $argParts += "-$key" }
+          } elseif ($null -ne $val -and -not [string]::IsNullOrWhiteSpace("$val")) {
+            $argParts += "-$key `"$val`""
+          }
+        }
+      }
+      $argsCombined = $argParts -join ' '
+
+      # 4. Construct command string
+      $fullCmd = if (-not [string]::IsNullOrWhiteSpace($argsCombined)) {
+        "$scriptToRun $argsCombined"
+      } else {
+        $scriptToRun
+      }
     }
 
     $execReq = [DaemonExecuteRequest]::new()
@@ -471,32 +568,105 @@ class DaemonActionController {
       }
     }
 
-    # Primary: Active IDE (VS Code / Antigravity IDE)
-    $ideCandidates = @(
-      "D:\Tools\Microsoft VS Code\Code.exe",
-      (Join-Path $env:LOCALAPPDATA "Programs\Microsoft VS Code\Code.exe"),
-      (Join-Path $env:LOCALAPPDATA "Programs\Microsoft VS Code Insiders\Code - Insiders.exe"),
+    # Primary: Context-Aware IDE Selection (Stay inside whichever IDE entered the request)
+    $antigravityCmd = @(
+      "D:\Tools\Antigravity IDE\bin\antigravity-ide.cmd",
+      "D:\Tools\Antigravity IDE\Antigravity IDE.exe"
+    ) | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
+
+    $vscodeCmd = @(
       "D:\Tools\Microsoft VS Code\bin\code.cmd",
+      "D:\Tools\Microsoft VS Code\Code.exe",
       (Join-Path $env:LOCALAPPDATA "Programs\Microsoft VS Code\bin\code.cmd"),
-      (Join-Path $env:LOCALAPPDATA "Programs\Microsoft VS Code Insiders\bin\code-insiders.cmd")
-    )
-    $ideCmd = $null
-    foreach ($cand in $ideCandidates) {
-      if (Test-Path -LiteralPath $cand) {
-        $ideCmd = $cand
-        break
+      (Join-Path $env:LOCALAPPDATA "Programs\Microsoft VS Code\Code.exe"),
+      (Join-Path $env:LOCALAPPDATA "Programs\Microsoft VS Code Insiders\bin\code-insiders.cmd"),
+      (Join-Path $env:LOCALAPPDATA "Programs\Microsoft VS Code Insiders\Code - Insiders.exe")
+    ) | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
+
+    $targetIde = $null
+    $editorName = "IDE"
+
+    # 1. Explicit caller preference passed in request
+    if ($editorPref -match '^(?i)(?:antigravity|agy|anti)') {
+      $targetIde = $antigravityCmd
+      $editorName = "Antigravity IDE"
+    } elseif ($editorPref -match '^(?i)(?:vscode|code)') {
+      $targetIde = $vscodeCmd
+      $editorName = "VS Code"
+    } elseif ($editorPref -and (Test-Path -LiteralPath $editorPref)) {
+      $targetIde = $editorPref
+      $editorName = [System.IO.Path]::GetFileNameWithoutExtension($editorPref)
+    }
+
+    # 2. Dynamic environment detection: stay inside whichever IDE is currently active/running
+    if (-not $targetIde) {
+      $antigravityRunning = @(Get-Process -Name 'Antigravity IDE' -ErrorAction SilentlyContinue | Where-Object { $_.MainWindowHandle -ne 0 -or $_.MainWindowTitle }).Count -gt 0
+      $vscodeRunning = @(Get-Process -Name 'Code' -ErrorAction SilentlyContinue | Where-Object { $_.MainWindowHandle -ne 0 -or $_.MainWindowTitle }).Count -gt 0
+
+      if ($antigravityRunning -and -not $vscodeRunning) {
+        $targetIde = $antigravityCmd
+        $editorName = "Antigravity IDE"
+      } elseif ($vscodeRunning -and -not $antigravityRunning) {
+        $targetIde = $vscodeCmd
+        $editorName = "VS Code"
+      } elseif ($antigravityRunning -and $vscodeRunning) {
+        # Both IDEs are running: inspect foreground window process
+        $fgProcName = ""
+        try {
+          $fgType = 'LcmFgDetect' -as [type]
+          if (-not $fgType) {
+            Add-Type -TypeDefinition @'
+using System;
+using System.Runtime.InteropServices;
+public static class LcmFgDetect {
+    [DllImport("user32.dll")]
+    public static extern IntPtr GetForegroundWindow();
+    [DllImport("user32.dll")]
+    public static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint processId);
+}
+'@
+            $fgType = 'LcmFgDetect' -as [type]
+          }
+          if ($fgType) {
+            $fgHwnd = $fgType.GetMethod('GetForegroundWindow').Invoke($null, $null)
+            $params = [object[]]@($fgHwnd, [uint32]0)
+            [void]$fgType.GetMethod('GetWindowThreadProcessId').Invoke($null, $params)
+            $fgPid = [uint32]$params[1]
+            if ($fgPid -gt 0) {
+              $fgProc = Get-Process -Id $fgPid -ErrorAction SilentlyContinue
+              if ($fgProc) { $fgProcName = $fgProc.ProcessName }
+            }
+          }
+        } catch {}
+
+        if ($fgProcName -like "*Code*") {
+          $targetIde = $vscodeCmd
+          $editorName = "VS Code"
+        } else {
+          $targetIde = $antigravityCmd
+          $editorName = "Antigravity IDE"
+        }
+      } else {
+        # Neither IDE is currently running: fallback to whichever is installed
+        if ($antigravityCmd) {
+          $targetIde = $antigravityCmd
+          $editorName = "Antigravity IDE"
+        } elseif ($vscodeCmd) {
+          $targetIde = $vscodeCmd
+          $editorName = "VS Code"
+        }
       }
     }
 
-    if ($ideCmd) {
-      $this.Env.Log("Opening in IDE: $fullPath (Line: $($req.Line))", 'ACTION')
+    if ($targetIde) {
+      $this.Env.Log("Opening in ${editorName}: $fullPath (Line: $($req.Line))", 'ACTION')
       $lineArg = if ($req.Line -gt 0) { "-g `"$fullPath`":$($req.Line)" } else { "-g `"$fullPath`"" }
-      if ([System.IO.Path]::GetExtension($ideCmd).Equals('.cmd', [System.StringComparison]::OrdinalIgnoreCase)) {
-        Start-Process -FilePath $env:ComSpec -ArgumentList "/c `"`"$ideCmd`" $lineArg`"" -WindowStyle Hidden
+      if ([System.IO.Path]::GetExtension($targetIde).Equals('.cmd', [System.StringComparison]::OrdinalIgnoreCase)) {
+        Start-Process -FilePath $env:ComSpec -ArgumentList "/c `"`"$targetIde`" $lineArg`"" -WindowStyle Hidden
       } else {
-        Start-Process -FilePath $ideCmd -ArgumentList $lineArg
+        Start-Process -FilePath $targetIde -ArgumentList $lineArg
       }
-      return @{ status = "OPENED"; filePath = $fullPath; editor = "VS Code (IDE)" }
+      return @{ status = "OPENED"; filePath = $fullPath; editor = $editorName }
     }
 
     if ($nppExe) {

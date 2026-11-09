@@ -11,7 +11,7 @@
   Path: tools/modules/LcmToolCatalog.psm1
   Authors: Rolf, Copilot
   Version: 10.0.1
-  Date: 2026-11-08 15:30:00
+  Date: 2026-11-09 18:43:00
 #>
 
 Set-StrictMode -Version Latest
@@ -276,6 +276,9 @@ function Build-LcmToolIndexHtml {
             <div class="header-actions">
                 <button class="btn-export" id="btn-theme-toggle" onclick="window.LcmTools.toggleTheme()" title="Toggle Light/Dark Theme" style="cursor: pointer; display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; font-size: 11px; font-weight: 600; border-radius: 5px; border: 1px solid var(--border); background: var(--bg-secondary); color: var(--text-primary); transition: all 0.2s;">
                     <span>🌓</span> <span>Theme</span>
+                </button>
+                <button class="btn-export" id="btn-show-intents" onclick="window.LcmTools.openToolIntents()" title="Open LCM Tool Intents Explorer (🎯 Intents)" style="cursor: pointer; display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; font-size: 11px; font-weight: 600; border-radius: 5px; border: 1px solid var(--border); background: var(--bg-secondary); color: var(--text-primary); transition: all 0.2s;">
+                    <span>🎯</span> <span>Tool Intents</span>
                 </button>
                 <button class="btn-refresh" onclick="window.LcmTools.refreshToolCatalog()" title="Re-scan tools and regenerate catalog (🔄 Refresh)" style="padding: 4px 10px; font-size: 11px; border-radius: 5px;">
                     <span>🔄</span> <span>Refresh</span>

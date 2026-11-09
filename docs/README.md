@@ -6,7 +6,7 @@ Path: LCM_Inventory/docs/README.md
 Authors: Rolf, LCM_AI Engine  
 Version: 10.0.1  
 Status: Authoritative Reference  
-Updated: 2026-11-08 15:20:50  
+Updated: 2026-11-09 19:06:49  
 
 ---
 
@@ -142,6 +142,7 @@ TestWorkspaceReadiness
 | **searchsyssensors** | [search_sys_sensors.py](file:///HaSSD06/search_sys_sensors.py) | Utility | HaSSD06 | Python | Utility | search_sys_sensors execution tool. | searchsyssensors |
 | **SetGitRoot** | [Set-GitRoot.ps1](file:///LCM_Inventory/tools/Set-GitRoot.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Set-GitRoot execution tool. | SetGitRoot |
 | **SetLcmActionProgress** | [Set-LcmActionProgress.ps1](file:///LCM_Inventory/tools/Set-LcmActionProgress.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Set-LcmActionProgress execution tool. | SetLcmActionProgress |
+| **SetLcmMachineRegistry** | [Set-LcmMachineRegistry.ps1](file:///LCM_Inventory/tools/Set-LcmMachineRegistry.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Set-LcmMachineRegistry execution tool. | SetLcmMachineRegistry |
 | **SetRealRepoTestPlan** | [Set-RealRepoTestPlan.ps1](file:///LCM_Inventory/tools/Set-RealRepoTestPlan.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Set-RealRepoTestPlan execution tool. | SetRealRepoTestPlan |
 | **ShowFailureDiagnostic** | [Show-LcmFailureDiagnostic.ps1](file:///LCM_Inventory/tools/Show-LcmFailureDiagnostic.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Show-LcmFailureDiagnostic execution tool. | ShowFailureDiagnostic |
 | **ShowHaInventoryApp** | [Show-HaInventoryApp.ps1](file:///HaSSD06_Inventory/tools/Show-HaInventoryApp.ps1) | Utility | HaSSD06 | PowerShell | Utility | Show-HaInventoryApp execution tool. | ShowHaInventoryApp |
@@ -152,7 +153,9 @@ TestWorkspaceReadiness
 | **ShowRepos** | [Show-Repos.ps1](file:///LCM_Inventory/tools/Show-Repos.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Show-Repos execution tool. | ShowRepos |
 | **ShowRules** | [Show-Rules.ps1](file:///LCM_Inventory/tools/Show-Rules.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Show-Rules execution tool. | ShowRules |
 | **ShowSupervision** | [Show-Supervision.ps1](file:///LCM_Supervision/tools/Show-Supervision.ps1) | Utility | LCM_Supervision | PowerShell | Utility | Show-Supervision execution tool. | ShowSupervision |
+| **ShowToolIntents** | [Show-ToolIntents.ps1](file:///LCM_Inventory/tools/Show-ToolIntents.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Show-ToolIntents execution tool. | ShowToolIntents |
 | **SplitTextFile** | [Split-TextFile.ps1](file:///LCM_Inventory/tools/Split-TextFile.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Split-TextFile execution tool. | SplitTextFile |
+| **StartMacriumDailyBackup** | [Start-MacriumDailyBackup.ps1](file:///LCM_Inventory/tools/Start-MacriumDailyBackup.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Start-MacriumDailyBackup execution tool. | StartMacriumDailyBackup |
 | **StartRemoteBridge** | [Start-RemoteBridge.ps1](file:///LCM_Inventory/tools/Start-RemoteBridge.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Start-RemoteBridge execution tool. | StartRemoteBridge |
 | **SubmitReviewResult** | [Submit-ReviewResult.ps1](file:///LCM_Inventory/tools/Submit-ReviewResult.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Submit-ReviewResult execution tool. | SubmitReviewResult |
 | **SyncGeminiInbox** | [Sync-GeminiInbox.ps1](file:///LCM_Inventory/tools/Sync-GeminiInbox.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Sync-GeminiInbox execution tool. | SyncGeminiInbox |
@@ -161,9 +164,10 @@ TestWorkspaceReadiness
 | **SyncLCMResearchSnapshot** | [Sync-LCMResearchSnapshot.ps1](file:///LCM_Tools/tools/Sync-LCMResearchSnapshot.ps1) | Utility | LCM_Tools | PowerShell | Research Snapshot | Mirrors selected LCM workspace research and governance files to a configured snapshot destination. | SyncLCMResearchSnapshot |
 | **SyncToolSymlinks** | [Sync-ToolSymlinks.ps1](file:///LCM_Inventory/tools/Sync-ToolSymlinks.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Sync-ToolSymlinks execution tool. | SyncToolSymlinks |
 | **TestExternalTools** | [Test-ExternalTools.ps1](file:///LCM_Inventory/tools/Test-ExternalTools.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Test-ExternalTools execution tool. | TestExternalTools |
+| **TestGeneralReadiness** | [Test-GeneralReadiness.ps1](file:///LCM_Inventory/tools/Test-GeneralReadiness.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Test-GeneralReadiness execution tool. | TestGeneralReadiness |
 | **TestGuardrail** | [Test-Guardrail.ps1](file:///LCM_Inventory/tools/Test-Guardrail.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Test-Guardrail execution tool. | TestGuardrail |
-| **TestHaRepoReady** | [Test-RepoReadiness.ps1](file:///HaSSD06/tools/Test-RepoReadiness.ps1) | Utility | HaSSD06 | PowerShell | Utility | Test-RepoReadiness execution tool. | TestHaRepoReady |
 | **TestHaRepoReady** | [Test-RepoReadiness.ps1](file:///HaSSD06_Inventory/tools/Test-RepoReadiness.ps1) | Utility | HaSSD06 | PowerShell | Utility | Test-RepoReadiness execution tool. | TestHaRepoReady |
+| **TestHaRepoReady** | [Test-RepoReadiness.ps1](file:///HaSSD06/tools/Test-RepoReadiness.ps1) | Utility | HaSSD06 | PowerShell | Utility | Test-RepoReadiness execution tool. | TestHaRepoReady |
 | **TestLCMDrift** | [Test-LCM_Drift.ps1](file:///LCM_Inventory/tools/Test-LCM_Drift.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Test-LCM_Drift execution tool. | TestLCMDrift |
 | **TestLCMIncrementalGovernance** | [Test-LCMIncrementalGovernance.ps1](file:///LCM_Inventory/tools/Test-LCMIncrementalGovernance.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Test-LCMIncrementalGovernance execution tool. | TestLCMIncrementalGovernance |
 | **TestLCMRuleHealth** | [Test-LCMRuleHealth.ps1](file:///LCM_Inventory/tools/Test-LCMRuleHealth.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Test-LCMRuleHealth execution tool. | TestLCMRuleHealth |

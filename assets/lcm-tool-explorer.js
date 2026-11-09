@@ -2914,6 +2914,29 @@
         }
     }
 
+    function openToolIntents() {
+        showToast('🎯 Opening Tool Intents Explorer...');
+        if (window.location.protocol === 'file:') {
+            window.location.href = 'SHOW_TOOL_INTENTS.html';
+            return;
+        }
+        fetch(DAEMON_URL + '/api/action', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                action: 'DO',
+                target: 'ShowToolIntents',
+                caller: 'WebUI'
+            })
+        }).then(r => r.json()).then(data => {
+            if (data.status === 'ERROR') {
+                window.open('SHOW_TOOL_INTENTS.html', '_blank');
+            }
+        }).catch(() => {
+            window.open('SHOW_TOOL_INTENTS.html', '_blank');
+        });
+    }
+
     function initTheme() {
         const savedTheme = localStorage.getItem('lcm_theme') || localStorage.getItem('lcm_theme_mode') || 'dark';
         applyTheme(savedTheme);
@@ -3078,6 +3101,7 @@
         replaceCustomPreset: replaceCustomPreset,
         deleteCustomPreset: deleteCustomPreset,
         goBack: goBack,
+        openToolIntents: openToolIntents,
         openRunDialog: openRunDialog,
         recalculateCommandLine: recalculateCommandLine,
         validateRunCommand: validateRunCommand,

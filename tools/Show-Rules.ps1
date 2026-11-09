@@ -12,7 +12,7 @@
   Path: LCM_Inventory/tools/Show-Rules.ps1
   Authors: Rolf, LCM_AI Governance
   Version: 10.0.1
-  Date: 2026-10-21
+  Date: 2026-11-08 17:34:00
 .PARAMETER Domain
   Pre-filter by governance domain (e.g. 'Proposal & Review Flow', 'PowerShell Standards', 'Security', 'All'). Defaults to 'All'.
 .PARAMETER Filter
@@ -21,6 +21,8 @@
   Suppresses launching the web browser and outputs the rules catalog directly as formatted text in the terminal (Aliases: -Cli, -Text, -Console).
 .PARAMETER NoLaunch
   Renders the HTML dashboard and logs without launching the browser window.
+.PARAMETER Pane
+  Opens the display inside an Antigravity IDE editor/side pane instead of an external browser window (Alias: -Panel).
 .PARAMETER LogFile
   Custom log file destination. Defaults to LCM_Inventory/data/logs/lcm/Show-Rules-yyyyMMdd_HHmmss.log.
 .PARAMETER Help
@@ -42,6 +44,9 @@ param(
   [Alias('Cli', 'Text', 'Console')]
   [switch]$NoBrowser,
   [switch]$NoLaunch,
+  [Parameter(Mandatory = $false, HelpMessage = 'Opens the display inside an Antigravity IDE editor/side pane')]
+  [Alias('Panel')]
+  [switch]$Pane,
   [string]$LogFile = '',
   [Alias('h', '?')]
   [switch]$Help
@@ -1803,7 +1808,7 @@ if (-not $NoLaunch) {
     throw "Standard Display launcher module is missing: $standardDisplayModule"
   }
   Import-Module -Name $standardDisplayModule -Force
-  Open-LcmStandardDisplay -DisplayId rules -Parameters @{
+  Open-LcmStandardDisplay -DisplayId rules -Pane:$Pane -Parameters @{
     Domain = $Domain
     Filter = $Filter
   }

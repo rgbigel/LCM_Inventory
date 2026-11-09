@@ -3,8 +3,8 @@ Module: ToolExplorerVersion.Tests
 Purpose: Verify source-derived Tool Explorer version provenance.
 Path: tests/ToolExplorerVersion.Tests.ps1
 Authors: Rolf, Copilot
-Version: 10.0.1
-Date: 2026-10-21
+Version: 10.0.2
+Date: 2026-11-09
 #>
 BeforeAll {
   $root = Split-Path $PSScriptRoot -Parent
@@ -13,7 +13,7 @@ BeforeAll {
   $modulePath = Join-Path $fixture 'LCM_Inventory\modules\ToolVersionFixture.psm1'
   $null = New-Item -ItemType Directory -Path $tools, (Split-Path $modulePath), (Join-Path $fixture 'LCM_Inventory\config') -Force
   $moduleText = [IO.File]::ReadAllText((Join-Path $root 'modules\LcmToolCatalog.psm1'))
-  [IO.File]::WriteAllText($modulePath, $moduleText.Replace('Version: 10.0.1', 'Version: 10.7.9'))
+  [IO.File]::WriteAllText($modulePath, ([regex]::Replace($moduleText, 'Version:\s*\d+\.\d+\.\d+', 'Version: 10.7.9', 1)))
   Copy-Item -LiteralPath (Join-Path $root 'modules\LcmDisplayVersion.psm1') -Destination (Split-Path $modulePath)
   Import-Module -Name $modulePath -Force
   Import-Module -Name (Join-Path $root 'modules\LcmDisplayDependencies.psm1') -Force

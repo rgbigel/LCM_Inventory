@@ -167,7 +167,26 @@ if ($Uninstall) {
 # 5. Install Action
 # ------------------------------------------------------------------------------
 if ($Install) {
-  Write-Host "Registering LCM Desktop Daemon for automatic logon startup..." -ForegroundColor Yellow
+  # Verify administrative elevation for RunLevel Highest registration (RULE-ELEV-005 / RULE-ELEV-006)
+  $identity = [System.Security.Principal.WindowsIdentity]::GetCurrent()
+  $principal = [System.Security.Principal.WindowsPrincipal]::new($identity)
+  $isElevated = $principal.IsInRole([System.Security.Principal.WindowsBuiltInRole]::Administrator)
+
+  if (-not $isElevated) {
+    Write-Host "Registering Scheduled Task with Highest Available privileges requires elevation (RULE-ELEV-006)..." -ForegroundColor Yellow
+    $thisScript = if ($PSCommandPath) { $PSCommandPath } elseif ($MyInvocation.MyCommand.Path) { $MyInvocation.MyCommand.Path } else { Join-Path $toolsDir 'Register-LcmDesktopDaemon.ps1' }
+    $argList = "-NoProfile -ExecutionPolicy Bypass -File `"$thisScript`" -Install -Port $Port"
+    $proc = Start-Process -FilePath "pwsh.exe" -ArgumentList $argList -Verb RunAs -PassThru
+    $proc.WaitForExit()
+    if ($proc.ExitCode -eq 0) {
+      Write-Host "[COMPLETED] LCM Desktop Daemon scheduled task registered elevated." -ForegroundColor Green
+    } else {
+      Write-Host "[ERROR] Elevated registration failed with exit code $($proc.ExitCode)." -ForegroundColor Red
+    }
+    return
+  }
+
+  Write-Host "Registering LCM Desktop Daemon for automatic logon startup (Elevated: HighestAvailable)..." -ForegroundColor Yellow
 
   # 1. Remove the legacy Run-key launcher so the scheduled task has one owner.
   if (Test-Path -LiteralPath $runKeyPath) {
@@ -175,25 +194,36 @@ if ($Install) {
   }
   Write-Host "  -> Removed legacy HKCU Run launcher (if present)." -ForegroundColor Green
 
-  # 2. Configure one logon-owned daemon task with bounded restart-on-failure.
+  # 2. Configure one logon-owned daemon task with bounded restart-on-failure and Highest privileges.
   try {
     $action = New-ScheduledTaskAction -Execute "pwsh.exe" -Argument "-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File `"$daemonScript`" -Port $Port"
     $logonTrigger = New-ScheduledTaskTrigger -AtLogOn -User $env:USERNAME
-    $principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive -RunLevel Highest
+    $taskPrincipal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive -RunLevel Highest
     $settings = New-ScheduledTaskSettingsSet -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1) -ExecutionTimeLimit (New-TimeSpan -Days 365) -MultipleInstances IgnoreNew -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
-    Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $logonTrigger -Principal $principal -Settings $settings -Force | Out-Null
-    Write-Host "  -> Configured single-owner logon task with bounded restart: $taskName" -ForegroundColor Green
+    Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $logonTrigger -Principal $taskPrincipal -Settings $settings -Force | Out-Null
+    Write-Host "  -> Configured single-owner logon task with Highest privileges: $taskName" -ForegroundColor Green
   } catch {
-    Write-Host "  -> Note: Scheduled task auto-restart registration skipped ($($_.Exception.Message))" -ForegroundColor Gray
+    Write-Host "  -> Scheduled task registration error: $($_.Exception.Message)" -ForegroundColor Red
+    throw
   }
 
-  # 3. Start daemon in background immediately
-  & (Join-Path $toolsDir 'LcmDesktopDaemon.ps1') -Port $Port -Background
+  # 3. Start daemon in background via the scheduled task so it runs under the elevated token
+  try {
+    # Stop existing un-elevated instance if running
+    & (Join-Path $toolsDir 'LcmDesktopDaemon.ps1') -Port $Port -Stop -ErrorAction SilentlyContinue | Out-Null
+    Start-Sleep -Milliseconds 500
+    Start-ScheduledTask -TaskName $taskName -ErrorAction Stop
+    Write-Host "  -> Started daemon via elevated scheduled task ($taskName)." -ForegroundColor Green
+  } catch {
+    Write-Host "  -> Fallback: Starting background daemon directly." -ForegroundColor Yellow
+    & (Join-Path $toolsDir 'LcmDesktopDaemon.ps1') -Port $Port -Background
+  }
 
   Write-Host ""
   Write-Host "==========================================================================" -ForegroundColor Green
-  Write-Host " LCM DESKTOP DAEMON REGISTERED SUCCESSFULLY" -ForegroundColor Green
+  Write-Host " LCM DESKTOP DAEMON REGISTERED SUCCESSFULLY (ELEVATED)" -ForegroundColor Green
   Write-Host " Port         : $Port" -ForegroundColor White
+  Write-Host " RunLevel     : HighestAvailable (Administrative Token)" -ForegroundColor White
   Write-Host " Auto-Start   : Active at User Logon" -ForegroundColor White
   Write-Host " Auto-Restart : Enabled (3 bounded retries; no recurring watchdog launch)" -ForegroundColor White
   Write-Host " Script       : $daemonScript" -ForegroundColor White

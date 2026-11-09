@@ -749,6 +749,13 @@
         "Mandatory": false,
         "Default": "",
         "Description": "Queries live Home Assistant API to refresh data/subsystem_inventory.json before rendering. Defaults to false (instant local render)."
+      },
+      {
+        "Name": "Pane",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Opens the display inside an Antigravity IDE editor/side pane"
       }
     ],
     "Dependencies": [
@@ -785,19 +792,11 @@
     "Category": "Utility",
     "Description": "Test-RepoReadiness execution tool.",
     "Example": "TestRepoReadiness",
-    "RelativePath": "HaSSD06\\tools\\Test-RepoReadiness.ps1",
-    "Parameters": [
-      {
-        "Name": "MinimalTests",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Single-cycle minimal testing scope: fast syntax and AST validation only"
-      }
-    ],
+    "RelativePath": "HaSSD06_Inventory\\tools\\Test-RepoReadiness.ps1",
+    "Parameters": [],
     "Dependencies": [
       "RepoQualityGates.psm1",
-      "Update-ToolCatalog.ps1",
+      "Test-GeneralReadiness.ps1",
       "Module: (Resolve-Path $modulePath)"
     ]
   },
@@ -815,10 +814,20 @@
     "Category": "Utility",
     "Description": "Test-RepoReadiness execution tool.",
     "Example": "TestRepoReadiness",
-    "RelativePath": "HaSSD06_Inventory\\tools\\Test-RepoReadiness.ps1",
-    "Parameters": [],
+    "RelativePath": "HaSSD06\\tools\\Test-RepoReadiness.ps1",
+    "Parameters": [
+      {
+        "Name": "MinimalTests",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Single-cycle minimal testing scope: fast syntax and AST validation only"
+      }
+    ],
     "Dependencies": [
       "RepoQualityGates.psm1",
+      "Test-GeneralReadiness.ps1",
+      "Update-ToolCatalog.ps1",
       "Module: (Resolve-Path $modulePath)"
     ]
   },
@@ -1151,6 +1160,13 @@
         "Mandatory": false,
         "Default": "",
         "Description": "Optional snapshot root; defaults to data\\artifacts\\failure-analysis."
+      },
+      {
+        "Name": "Pane",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Opens the display inside an Antigravity IDE editor/side pane"
       },
       {
         "Name": "ShowAll",
@@ -1609,7 +1625,7 @@
     "Aliases": null,
     "Role": "Recovery",
     "Audience": "User",
-    "Admin": false,
+    "Admin": true,
     "NoExit": false,
     "Group": "LCM_Inventory",
     "Domain": "LCM_Inventory",
@@ -1656,7 +1672,7 @@
     "Aliases": null,
     "Role": "Recovery",
     "Audience": "User",
-    "Admin": false,
+    "Admin": true,
     "NoExit": false,
     "Group": "LCM_Inventory",
     "Domain": "LCM_Inventory",
@@ -1725,49 +1741,49 @@
         "Type": "String",
         "Mandatory": true,
         "Default": "",
-        "Description": ""
+        "Description": "Identifier of the CRP or BUG proposal under review (e.g. CRP-309)."
       },
       {
         "Name": "RepositoryName",
         "Type": "String",
         "Mandatory": false,
         "Default": "LCM_Inventory",
-        "Description": ""
+        "Description": "Target repository containing the review changes (Default: LCM_Inventory)."
       },
       {
         "Name": "BaseCommit",
         "Type": "String",
         "Mandatory": false,
         "Default": "HEAD",
-        "Description": ""
+        "Description": "Base commit to compare against (Default: HEAD)."
       },
       {
         "Name": "LifecycleManaged",
         "Type": "SwitchParameter",
         "Mandatory": false,
         "Default": "",
-        "Description": ""
+        "Description": "Indicates the invocation is dispatched through proposal lifecycle gating."
       },
       {
         "Name": "NewBaseline",
         "Type": "SwitchParameter",
         "Mandatory": false,
         "Default": "",
-        "Description": ""
+        "Description": "Forces unmounting and remounting a fresh Macrium baseline image."
       },
       {
         "Name": "CandidateDrives",
         "Type": "Object",
         "Mandatory": false,
         "Default": "@('F', 'G', 'H', 'I')",
-        "Description": ""
+        "Description": "Acceptable drive letters for mounting baseline partition (Default: F, G, H, I)."
       },
       {
         "Name": "MountTimeoutSeconds",
         "Type": "Int32",
         "Mandatory": false,
         "Default": "120",
-        "Description": ""
+        "Description": "Timeout in seconds for drive mount operations (Default: 120)."
       }
     ],
     "Dependencies": [
@@ -1921,7 +1937,7 @@
     "Aliases": null,
     "Role": "Elevation",
     "Audience": "Developer",
-    "Admin": false,
+    "Admin": true,
     "NoExit": true,
     "Group": "LCM_Inventory",
     "Domain": "LCM_Inventory",
@@ -1968,8 +1984,9 @@
       }
     ],
     "Dependencies": [
-      "tools/modules/LcmDaemonCore.psm1",
       "DaemonDto.ps1",
+      "LcmTokenVault.ps1",
+      "LcmSecurityGateway.ps1",
       "DaemonEnvironment.ps1",
       "DaemonActionController.ps1",
       "LcmDisplayHttp.psm1",
@@ -1983,7 +2000,7 @@
     "Aliases": null,
     "Role": "Elevation",
     "Audience": "Developer",
-    "Admin": false,
+    "Admin": true,
     "NoExit": true,
     "Group": "LCM_Inventory",
     "Domain": "LCM_Inventory",
@@ -3667,7 +3684,7 @@
         "Type": "String[]",
         "Mandatory": false,
         "Default": "",
-        "Description": ""
+        "Description": "Additional command-line parameters and arguments passed directly to the target tool"
       }
     ],
     "Dependencies": "Register-LcmDesktopDaemon.ps1"
@@ -3751,7 +3768,7 @@
         "Type": "SwitchParameter",
         "Mandatory": false,
         "Default": "",
-        "Description": "Session-start mode: silent (one line) when the gap is below -GapHours."
+        "Description": "Session-start mode: silent (one line) when the gap is below -GapHours and -NoBaseline is specified."
       },
       {
         "Name": "GapHours",
@@ -3772,18 +3789,26 @@
         "Type": "SwitchParameter",
         "Mandatory": false,
         "Default": "",
-        "Description": "After the existing GoodMorning report, prepare today's Macrium baseline and open the operator-owned _LCM review profile."
+        "Description": "After the existing GoodMorning report, verifies or reuses today's Macrium baseline without initiating backup creation (Default: $true). Backup generation is a separate atom (Start-MacriumDailyBackup.ps1) executed at operator discretion."
+      },
+      {
+        "Name": "NoBaseline",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Suppresses Macrium baseline preparation while retaining unconditional baseline inspection."
       },
       {
         "Name": "ReviewScope",
         "Type": "String",
         "Mandatory": false,
         "Default": "",
-        "Description": ""
+        "Description": "Active CRP or BUG identifier to associate with the Beyond Compare window title."
       }
     ],
     "Dependencies": [
       "LCM_Context.psm1",
+      "LcmMacriumAtoms.psm1",
       "Test-Guardrail.ps1",
       "Invoke-MacriumDailyBcrBaseline.ps1"
     ]
@@ -4089,7 +4114,14 @@
         "Type": "Int32[]",
         "Mandatory": false,
         "Default": "@()",
-        "Description": "Candidate numbers to delete."
+        "Description": "Candidate numbers to delete (requires -ProposalId to document the active CRP correcting/retiring the entry)."
+      },
+      {
+        "Name": "ProposalId",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Active CRP or BUG identifier (e.g. CRP-310, BUG-311) required when rejecting or retiring learned advice."
       },
       {
         "Name": "Check",
@@ -5165,6 +5197,53 @@
     "Dependencies": "LcmProgressAtom.psm1"
   },
   {
+    "Name": "Set-LcmMachineRegistry.ps1",
+    "ShortName": "SetLcmMachineRegistry",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Set-LcmMachineRegistry execution tool.",
+    "Example": "SetLcmMachineRegistry",
+    "RelativePath": "LCM_Inventory\\tools\\Set-LcmMachineRegistry.ps1",
+    "Parameters": [
+      {
+        "Name": "KeyPath",
+        "Type": "String",
+        "Mandatory": true,
+        "Default": "",
+        "Description": "Target registry key path"
+      },
+      {
+        "Name": "Name",
+        "Type": "String",
+        "Mandatory": true,
+        "Default": "",
+        "Description": "Name of the registry property"
+      },
+      {
+        "Name": "Value",
+        "Type": "Object",
+        "Mandatory": true,
+        "Default": "",
+        "Description": "Value to assign"
+      },
+      {
+        "Name": "PropertyType",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "String",
+        "Description": "Registry property type"
+      }
+    ],
+    "Dependencies": null
+  },
+  {
     "Name": "Set-RealRepoTestPlan.ps1",
     "ShortName": "SetRealRepoTestPlan",
     "Aliases": null,
@@ -5327,6 +5406,13 @@
         "Mandatory": false,
         "Default": "Auto",
         "Description": "VS Code URI scheme used by source-location links."
+      },
+      {
+        "Name": "Pane",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Opens the display inside an Antigravity IDE editor/side pane"
       }
     ],
     "Dependencies": [
@@ -5350,7 +5436,15 @@
     "Description": "Show-LCM_InventoryApp execution tool.",
     "Example": "ShowLCMInventoryApp",
     "RelativePath": "LCM_Inventory\\tools\\Show-LCM_InventoryApp.ps1",
-    "Parameters": [],
+    "Parameters": [
+      {
+        "Name": "Pane",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Opens the display inside an Antigravity IDE editor/side pane"
+      }
+    ],
     "Dependencies": [
       "LcmStandardDisplay.psm1",
       "Module: (Join-Path $PSScriptRoot '..\\modules\\LcmDisplayVersion.psm1')"
@@ -5399,6 +5493,13 @@
         "Mandatory": false,
         "Default": "",
         "Description": "Automatically runs Test-RepoReadiness.ps1 for any repository that has the test harness but lacks an up-to-date receipt."
+      },
+      {
+        "Name": "Pane",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Opens the display inside an Antigravity IDE editor/side pane"
       }
     ],
     "Dependencies": [
@@ -5485,12 +5586,52 @@
         "Mandatory": false,
         "Default": "",
         "Description": "Suppresses launching the web browser and outputs the rules catalog directly as formatted text in the terminal (Aliases: -Cli, -Text, -Console)."
+      },
+      {
+        "Name": "Pane",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Opens the display inside an Antigravity IDE editor/side pane"
       }
     ],
     "Dependencies": [
       "LcmStandardDisplay.psm1",
       "Module: (Join-Path $PSScriptRoot '..\\modules\\LcmDisplayVersion.psm1')"
     ]
+  },
+  {
+    "Name": "Show-ToolIntents.ps1",
+    "ShortName": "ShowToolIntents",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Show-ToolIntents execution tool.",
+    "Example": "ShowToolIntents",
+    "RelativePath": "LCM_Inventory\\tools\\Show-ToolIntents.ps1",
+    "Parameters": [
+      {
+        "Name": "Filter",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Initial search keyword to filter intents upon launch."
+      },
+      {
+        "Name": "Cli",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Outputs the intent table directly to terminal without launching browser (Aliases: -Text, -Console)."
+      }
+    ],
+    "Dependencies": null
   },
   {
     "Name": "Split-TextFile.ps1",
@@ -5538,6 +5679,98 @@
       }
     ],
     "Dependencies": null
+  },
+  {
+    "Name": "Start-MacriumDailyBackup.ps1",
+    "ShortName": "StartMacriumDailyBackup",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Start-MacriumDailyBackup execution tool.",
+    "Example": "StartMacriumDailyBackup",
+    "RelativePath": "LCM_Inventory\\tools\\Start-MacriumDailyBackup.ps1",
+    "Parameters": [
+      {
+        "Name": "Mount",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Mounts the newly created backup image as the writable BCR baseline partition upon completion."
+      },
+      {
+        "Name": "ForceNewBackup",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Forces execution of a fresh backup definition even if a completed image exists for today."
+      },
+      {
+        "Name": "ReviewScope",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Active CRP or BUG identifier to associate with the Beyond Compare window title if -Mount is set."
+      },
+      {
+        "Name": "CandidateDrives",
+        "Type": "Object",
+        "Mandatory": false,
+        "Default": "@('F', 'G', 'H', 'I')",
+        "Description": "List or delimited string of acceptable drive letters for mounting (Default: F;G;H;I)."
+      },
+      {
+        "Name": "NoLaunchReview",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "When -Mount is set, mounts the baseline and records registry telemetry without opening Beyond Compare."
+      },
+      {
+        "Name": "BackupDefinitionPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\OneDrive\\Documents\\Reflect\\@B_D4P3+4-WDB850-AD.xml",
+        "Description": "Path to the Macrium Reflect backup definition XML file."
+      },
+      {
+        "Name": "BackupDirectory",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "B:\\Backups\\D4P3+4-WDB850-AD",
+        "Description": "Path to the directory containing completed .mrimgx backup images."
+      },
+      {
+        "Name": "PollSeconds",
+        "Type": "Int32",
+        "Mandatory": false,
+        "Default": "5",
+        "Description": "Interval in seconds between completion polls (Default: 5)."
+      },
+      {
+        "Name": "TimeoutMinutes",
+        "Type": "Int32",
+        "Mandatory": false,
+        "Default": "45",
+        "Description": "Maximum wait time in minutes for backup completion (Default: 45)."
+      },
+      {
+        "Name": "MountTimeoutSeconds",
+        "Type": "Int32",
+        "Mandatory": false,
+        "Default": "120",
+        "Description": "Timeout in seconds for drive mount dialog interaction and volume appearance (Default: 120)."
+      }
+    ],
+    "Dependencies": [
+      "Set-LcmMachineRegistry.ps1",
+      "Mount-MacriumLatestBaseline.ps1"
+    ]
   },
   {
     "Name": "Start-RemoteBridge.ps1",
@@ -5879,6 +6112,39 @@
     ]
   },
   {
+    "Name": "Test-GeneralReadiness.ps1",
+    "ShortName": "TestGeneralReadiness",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Test-GeneralReadiness execution tool.",
+    "Example": "TestGeneralReadiness",
+    "RelativePath": "LCM_Inventory\\tools\\Test-GeneralReadiness.ps1",
+    "Parameters": [
+      {
+        "Name": "RepositoryPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Target repository root path to audit"
+      }
+    ],
+    "Dependencies": [
+      "DaemonDto.ps1",
+      "DaemonEnvironment.ps1",
+      "LcmTokenVault.ps1",
+      "LcmSecurityGateway.ps1",
+      "DaemonActionController.ps1",
+      "BCompare"
+    ]
+  },
+  {
     "Name": "Test-Guardrail.ps1",
     "ShortName": "TestGuardrail",
     "Aliases": null,
@@ -6009,7 +6275,14 @@
         "Description": "Throws an exception if any governance violation is detected, blocking commit/verification gates."
       }
     ],
-    "Dependencies": "Module: PSScriptAnalyzer"
+    "Dependencies": [
+      "DaemonDto.ps1",
+      "DaemonEnvironment.ps1",
+      "LcmTokenVault.ps1",
+      "LcmSecurityGateway.ps1",
+      "DaemonActionController.ps1",
+      "Module: PSScriptAnalyzer"
+    ]
   },
   {
     "Name": "Test-LCMRuleHealth.ps1",

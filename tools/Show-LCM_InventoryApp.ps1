@@ -12,10 +12,12 @@
   Path: LCM_Inventory/tools/Show-LCM_InventoryApp.ps1
   Authors: Rolf, LCM_AI Engine
   Version: 10.0.1
-  Date: 2026-10-21
+  Date: 2026-11-08 17:34:00
   ShortName: ShowLCMExplorer
 .PARAMETER NoLaunch
 Generates the HTML dashboard without opening the HTTP Standard Display.
+.PARAMETER Pane
+  Opens the display inside an Antigravity IDE editor/side pane instead of an external browser window (Alias: -Panel).
 .PARAMETER Help
   Displays this comprehensive parameter reference and usage instructions (Aliases: -h, -?).
 .EXAMPLE
@@ -27,6 +29,9 @@ Generates the HTML dashboard without opening the HTTP Standard Display.
 [CmdletBinding()]
 param(
   [switch]$NoLaunch,
+  [Parameter(Mandatory = $false, HelpMessage = 'Opens the display inside an Antigravity IDE editor/side pane')]
+  [Alias('Panel')]
+  [switch]$Pane,
   [Alias('h', '?')]
   [switch]$Help
 )
@@ -118,7 +123,7 @@ if (-not $NoLaunch) {
   Import-Module -Name $standardDisplayModule -Force
   Write-Host " Launching Workspace Inventory through port 9876 HTTP..." -ForegroundColor Green
   Write-Host "==========================================================================" -ForegroundColor Cyan
-  Open-LcmStandardDisplay -DisplayId inventory
+  Open-LcmStandardDisplay -DisplayId inventory -Pane:$Pane
 } else {
   Write-Host " Dashboard rendered cleanly (browser launch suppressed via -NoLaunch)." -ForegroundColor DarkGray
   Write-Host "==========================================================================" -ForegroundColor Cyan

@@ -1,11 +1,15 @@
 # CRP-251: Sandboxed Prototyping Mode
 
+> [!NOTE]
+> **SUPERSEDED BY CRP-253**: The requirements, isolation tiers (Tier 1 baseline prototype on virtual drive, Tier 2 secure disposable sandbox), manifest lifecycle, and promotion protocols defined here have been formally absorbed and merged into **[`CRP-253`](file:///LCM_Inventory/docs/Proposals/CRP-253-LCM_Mode-World-Switch/Specification.md)** per operator instruction.
+
 | Metadata Field | Value |
 |---|---|
 | **Proposal ID** | `CRP-251` |
-| **Lifecycle State** | `SUGGESTED` |
+| **Lifecycle State** | `SUPERSEDED` |
+| **Superseded By** | `CRP-253` (Merged into CRP-253) |
 | **Origin Repository** | `LCM_Inventory` |
-| **Date** | 2026-10-13 |
+| **Date** | 2026-11-09 (Superseded; originally 2026-10-13) |
 
 ## Objective
 

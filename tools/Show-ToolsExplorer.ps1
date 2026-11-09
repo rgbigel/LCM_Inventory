@@ -19,7 +19,7 @@
   Path: LCM_Inventory/tools/Show-ToolsExplorer.ps1
   Authors: Rolf, LCM_AI Engine
   Version: 10.0.1
-  Date: 2026-11-08 15:07:36
+  Date: 2026-11-08 17:34:00
 .PARAMETER Audience
   Pre-filter by audience category: 'User' (daily operations), 'Dev' (internal plumbing), or 'All'. Defaults to 'User'.
 .PARAMETER Group
@@ -42,6 +42,8 @@
   Suppresses launching the web browser and outputs the tool catalog directly as formatted text in the terminal (Aliases: -Cli, -Text, -Console).
 .PARAMETER NoLaunch
   Generates the HTML dashboard and caches but does NOT automatically trigger browser launch.
+.PARAMETER Pane
+  Opens the dashboard inside an Antigravity IDE editor/side pane instead of an external browser window (Alias: -Panel).
 .PARAMETER LogFile
   Custom log file destination. Defaults to LCM_Inventory/data/logs/lcm/Show-ToolsExplorer-yyyyMMdd_HHmmss.log.
 .PARAMETER Help
@@ -90,6 +92,7 @@ param(
   [switch]$NoLaunch,
 
   [Parameter(HelpMessage = 'Opens the dashboard inside an Antigravity IDE editor/side pane')]
+  [Alias('Panel')]
   [switch]$Pane,
 
   [string]$LogFile = "",

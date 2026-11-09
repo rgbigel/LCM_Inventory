@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
   Universal Command Gateway CLI client dispatching typed Interface Objects to Port 9876.
 .DESCRIPTION
@@ -7,8 +7,8 @@
            Elevated Desktop Daemon and Security Authorization Gateway per CRP-309 Clause 9.
   Path: LCM_Inventory/tools/Invoke-LcmAction.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.1
-  Date: 2026-11-08 15:39:00
+  Version: 10.0.2
+  Date: 2026-11-08 22:00:00
 .NOTES
   Implementation Choices (CRP-309):
   1. Serializes CLI flags and arguments into a typed Interface Object (Action Intent DTO).
@@ -140,6 +140,27 @@ if (-not $daemonOnline) {
 }
 
 # 3. Construct Interface Object (Action Intent DTO)
+$requiresElevation = [bool]$Elevated
+if (-not $requiresElevation -and -not [string]::IsNullOrWhiteSpace($Target)) {
+  $catalogPath = Join-Path $workspaceRoot 'LCM_Inventory\config\tool_catalog.json'
+  if (Test-Path -LiteralPath $catalogPath) {
+    try {
+      $rawCat = [System.IO.File]::ReadAllText($catalogPath, [System.Text.Encoding]::UTF8)
+      $catList = $rawCat | ConvertFrom-Json
+      $tools = if ($catList -is [System.Collections.IEnumerable] -and $catList -isnot [PSCustomObject]) { $catList } elseif ($catList.PSObject.Properties['tools']) { $catList.tools } else { @($catList) }
+      $cleanTarget = $Target.Trim()
+      $match = @($tools | Where-Object {
+        $_.Name -eq $cleanTarget -or
+        $_.ShortName -eq $cleanTarget -or
+        ($_.RelativePath -and ($cleanTarget -like "*$($_.RelativePath)*" -or $cleanTarget -like "*$($_.Name)*"))
+      })[0]
+      if ($null -ne $match -and ($match.Admin -or $match.Elevated)) {
+        $requiresElevation = $true
+      }
+    } catch {}
+  }
+}
+
 $intent = @{
   action     = "DO"
   target     = $Target
@@ -153,7 +174,7 @@ $intent = @{
   options    = @{
     sync     = (-not $Async)
     noExit   = [bool]$NoExit
-    elevated = [bool]$Elevated
+    elevated = $requiresElevation
   }
 }
 

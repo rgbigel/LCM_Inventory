@@ -3,8 +3,8 @@ Module: LcmDaemon/Classes/DaemonDto.ps1
 Purpose: Strongly-typed data transfer objects (DTOs) for LCM Desktop Daemon REST Bridge.
 Path: LCM_Inventory/modules/LcmDaemon/Classes/DaemonDto.ps1
 Authors: Rolf, LCM_AI Engine
-Version: 10.0.1
-Date: 2026-11-08 15:17:24
+Version: 10.0.2
+Date: 2026-11-09 19:05:00
 #>
 
 Set-StrictMode -Version Latest
@@ -239,6 +239,7 @@ class DaemonActionLogRequest {
 class DaemonActionIntent {
   [string]$Action = "DO"
   [string]$Target = ""
+  [string]$Command = ""
   [string]$Caller = "CLI"
   [hashtable]$Context = @{}
   [hashtable]$Parameters = @{}
@@ -249,9 +250,14 @@ class DaemonActionIntent {
     $dto = [DaemonActionIntent]::new()
     if ($null -eq $json) { return $dto }
     if ($json.PSObject.Properties['action'] -and $json.action) { $dto.Action = [string]$json.action }
+    if ($json.PSObject.Properties['command'] -and $json.command) { $dto.Command = [string]$json.command }
     if ($json.PSObject.Properties['target'] -and $json.target) { $dto.Target = [string]$json.target }
+    elseif ($json.PSObject.Properties['command'] -and $json.command) { $dto.Target = [string]$json.command }
     if ($json.PSObject.Properties['caller'] -and $json.caller) { $dto.Caller = [string]$json.caller }
     if ($json.PSObject.Properties['token'] -and $json.token) { $dto.Token = [string]$json.token }
+    if ($json.PSObject.Properties['elevated'] -and $null -ne $json.elevated) {
+      $dto.Options['elevated'] = [bool]$json.elevated
+    }
     if ($json.PSObject.Properties['context'] -and $null -ne $json.context) {
       $dto.Context = [hashtable]@{}
       foreach ($prop in $json.context.PSObject.Properties) {

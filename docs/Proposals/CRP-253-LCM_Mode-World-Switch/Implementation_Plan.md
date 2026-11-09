@@ -38,6 +38,13 @@
 6. Governed-repo list and clean-tree pre-check; onboard the 7 repos without an
    `origin` using the base folder as origin.
 
+## Phase 2c - Sandboxed Prototyping Mode & Promotion (Merged from CRP-251)
+
+1. **Manifest Schema**: Define a versioned prototype manifest schema distinguishing `baseline-prototype` (Tier 1) and `secure-sandbox` (Tier 2).
+2. **Configurable Sandbox Root**: Expose configurable `Git_Root` variable to allow dynamic tooling binding to sandbox copies.
+3. **Internal Junction Integration**: Formalize the operator's existing scripts (`RelocateJunctions.ps1`, `ReplaceByJunction`) into canonical tooling for switching internal junctions.
+4. **Promotion Protocol**: Define non-mutating promotion procedure creating a standard proposal with manifest evidence, rule delta maps, and BCR gating.
+
 ## Phase 3 - Activation (separate review gate; replaces the earlier root-junction migration)
 
 The earlier step "move `D:\Git_Repositories` to world A and create a root

@@ -1,7 +1,9 @@
 # CRP-251 Walkthrough
 
-No implementation has started. This proposal records the requested design
-boundary before any sandbox or policy behavior is introduced.
+> [!NOTE]
+> **SUPERSEDED**: Formally merged into **`CRP-253`** on 2026-11-09 per operator instruction. All prototyping sandbox and isolation tiers are consolidated under `CRP-253`.
+
+No standalone implementation started under CRP-251. This proposal is archived as superseded.
 
 ## Design Refinement
 

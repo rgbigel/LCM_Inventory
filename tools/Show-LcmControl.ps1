@@ -1,3 +1,54 @@
+<#
+.SYNOPSIS
+    Unified LCM Configuration Management Control Hub & Proposal Lifecycle Manager.
+.DESCRIPTION
+    Module: tools/Show-LcmControl.ps1
+    Purpose: Renders and launches the interactive CM Control Hub single-page web dashboard
+             and provides direct terminal/CLI proposal lifecycle date querying.
+             Absorbs and consolidates Show-CmControlHub and Show-CrpDates into a single canonical tool.
+    Path: tools/Show-LcmControl.ps1
+    Authors: Rolf, LCM_AI Engine
+    Version: 10.0.1
+    Date: 2026-11-08 17:34:00
+.PARAMETER ReviewMode
+    Opens the Control Hub filtered directly to pending visual reviews requiring Beyond Compare action.
+.PARAMETER DatesMode
+    Opens the Control Hub focused directly on the CRP Lifecycle Dates & Transition Timeline modal.
+.PARAMETER Repo
+    Pre-selects a specific repository or subsystem filter on launch.
+.PARAMETER State
+    Pre-selects a plan state filter (e.g. bug, suggested, approved, completed, deferred).
+.PARAMETER Id
+    Optional array of Proposal IDs to filter in CLI or browser mode.
+.PARAMETER StateEvent
+    Filter by presence of milestone date (created, in_progress, completed, pushed, deferred).
+.PARAMETER CliMode
+    Outputs the formatted proposal lifecycle dates table to the terminal without opening a browser.
+.PARAMETER Detail
+    Displays detailed individual state transition timeline and user notes in CLI mode.
+.PARAMETER NoLaunch
+    Renders HTML artifacts without opening a Standard Display.
+.PARAMETER Pane
+    Opens the Control Hub inside an Antigravity IDE editor/side pane instead of an external browser window (Alias: -Panel).
+.PARAMETER StartDaemon
+    Compatibility switch. Interactive launches use the shared HTTP launcher,
+    which performs bounded daemon recovery and never opens a local-file fallback.
+.PARAMETER TimerOn
+    Display verbose execution timing milestones (Aliases: -Timer, -Timing, -timer-ON). Defaults to false.
+.PARAMETER Help
+    Displays this parameter reference (Aliases: -h, -?).
+.EXAMPLE
+    pwsh tools/Show-LcmControl.ps1
+.EXAMPLE
+    pwsh tools/Show-LcmControl.ps1 -ReviewMode
+.EXAMPLE
+    pwsh tools/Show-LcmControl.ps1 -Dates
+.EXAMPLE
+    pwsh tools/Show-LcmControl.ps1 -Cli -Detail
+.EXAMPLE
+    pwsh tools/Show-LcmControl.ps1 -Id 164
+#>
+
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $false, HelpMessage = 'Open in pending visual review mode')]
@@ -35,6 +86,7 @@ param(
     [switch]$NoLaunch,
 
     [Parameter(Mandatory = $false, HelpMessage = 'Opens the Control Hub inside an Antigravity IDE editor/side pane')]
+    [Alias('Panel')]
     [switch]$Pane,
 
     [Parameter(Mandatory = $false, HelpMessage = 'Compatibility switch; interactive launches automatically recover the desktop daemon when it is offline')]
@@ -47,55 +99,6 @@ param(
     [Alias('h', '?')]
     [switch]$Help
 )
-
-<#
-.SYNOPSIS
-    Unified LCM Configuration Management Control Hub & Proposal Lifecycle Manager.
-.DESCRIPTION
-    Module: tools/Show-LcmControl.ps1
-    Purpose: Renders and launches the interactive CM Control Hub single-page web dashboard
-             and provides direct terminal/CLI proposal lifecycle date querying.
-             Absorbs and consolidates Show-CmControlHub and Show-CrpDates into a single canonical tool.
-    Path: tools/Show-LcmControl.ps1
-    Authors: Rolf, LCM_AI Engine
-    Version: 10.0.1
-    Date: 2026-11-08 15:07:36
-.PARAMETER ReviewMode
-    Opens the Control Hub filtered directly to pending visual reviews requiring Beyond Compare action.
-.PARAMETER DatesMode
-    Opens the Control Hub focused directly on the CRP Lifecycle Dates & Transition Timeline modal.
-.PARAMETER Repo
-    Pre-selects a specific repository or subsystem filter on launch.
-.PARAMETER State
-    Pre-selects a plan state filter (e.g. bug, suggested, approved, completed, deferred).
-.PARAMETER Id
-    Optional array of Proposal IDs to filter in CLI or browser mode.
-.PARAMETER StateEvent
-    Filter by presence of milestone date (created, in_progress, completed, pushed, deferred).
-.PARAMETER CliMode
-    Outputs the formatted proposal lifecycle dates table to the terminal without opening a browser.
-.PARAMETER Detail
-    Displays detailed individual state transition timeline and user notes in CLI mode.
-.PARAMETER NoLaunch
-    Renders HTML artifacts without opening a Standard Display.
-.PARAMETER StartDaemon
-    Compatibility switch. Interactive launches use the shared HTTP launcher,
-    which performs bounded daemon recovery and never opens a local-file fallback.
-.PARAMETER TimerOn
-    Display verbose execution timing milestones (Aliases: -Timer, -Timing, -timer-ON). Defaults to false.
-.PARAMETER Help
-    Displays this parameter reference (Aliases: -h, -?).
-.EXAMPLE
-    pwsh tools/Show-LcmControl.ps1
-.EXAMPLE
-    pwsh tools/Show-LcmControl.ps1 -ReviewMode
-.EXAMPLE
-    pwsh tools/Show-LcmControl.ps1 -Dates
-.EXAMPLE
-    pwsh tools/Show-LcmControl.ps1 -Cli -Detail
-.EXAMPLE
-    pwsh tools/Show-LcmControl.ps1 -Id 164
-#>
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'

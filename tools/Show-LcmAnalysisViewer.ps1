@@ -8,7 +8,21 @@
   Path: tools/Show-LcmAnalysisViewer.ps1
   Authors: Rolf, LCM_AI Engine
   Version: 10.0.1
-  Date: 2026-10-21
+  Date: 2026-11-08 17:34:00
+.PARAMETER ReportPath
+  Path to the Level 1 JSON evidence report.
+.PARAMETER OutputPath
+  Path for the generated interactive HTML viewer.
+.PARAMETER ReconciliationPath
+  Path to derived caller-intent reconciliation evidence.
+.PARAMETER EditorUriScheme
+  VS Code URI scheme used by source-location links.
+.PARAMETER NoLaunch
+  Generate the HTML viewer without launching it.
+.PARAMETER Pane
+  Opens the display inside an Antigravity IDE editor/side pane instead of an external browser window (Alias: -Panel).
+.PARAMETER Help
+  Displays this parameter reference.
 #>
 
 [CmdletBinding()]
@@ -28,6 +42,10 @@ param(
 
   [Parameter(Mandatory = $false, HelpMessage = 'Generate the HTML viewer without launching it.')]
   [switch]$NoLaunch,
+
+  [Parameter(Mandatory = $false, HelpMessage = 'Opens the display inside an Antigravity IDE editor/side pane')]
+  [Alias('Panel')]
+  [switch]$Pane,
 
   [Alias('h', '?')]
   [switch]$Help
@@ -175,13 +193,8 @@ if ($reconciliation) {
 $check0 = if ($report.PSObject.Properties['step0_rule_baseline']) { $report.step0_rule_baseline } else { $null }
 $check0Status = if ($check0) { Get-PropertyValue -Object $check0 -Name 'check0' -Default 'Check 0: not found' } else { 'Check 0: not found' }
 $workspaceRoot = 'D:\Git_Repositories\'
-$legacyMatchCount = @($elements | Where-Object {
-    $_.check1 -eq 'OK' -or $_.check2 -eq 'OK' -or $_.check3 -eq 'OK' -or $_.check4 -eq 'OK'
-  }).Count
 $refinementSummary = if ($report.PSObject.Properties['refinement_summary']) { $report.refinement_summary } else { $null }
-$publicParameterGateCount = if ($refinementSummary) { [int]$refinementSummary.public_parameter_gates } else { 0 }
 $undocumentedParameterGateCount = if ($refinementSummary) { [int]$refinementSummary.undocumented_parameter_gates } else { 0 }
-$internalControlFlowCount = if ($refinementSummary) { [int]$refinementSummary.internal_control_flow } else { 0 }
 $directDocumentedCount = if ($refinementSummary) { [int]$refinementSummary.documented_parameter_gates } else { 0 }
 $callerContextDocumentedCount = if ($reconciliation) { [int]$reconciliation.statistics.caller_context_documented } else { 0 }
 $totalDocumentedCount = if ($reconciliation) { [int]$reconciliation.statistics.total_documented } else { $directDocumentedCount }
@@ -197,7 +210,6 @@ $powershellParameterHelpMissingDisplay = if ($powershellParameterHelpSummary) {
 } else {
   'N/A'
 }
-$repositoryCount = @($elements.repository | Sort-Object -Unique).Count
 $resolvedEditorUriScheme = if ($EditorUriScheme -eq 'Auto') {
   if (
     $env:VSCODE_IPC_HOOK_CLI -match 'Code - Insiders' -or
@@ -607,6 +619,6 @@ Write-Host "Rendered LCM Analysis Viewer dashboard: $OutputPath" -ForegroundColo
 if (-not $NoLaunch) {
   Import-Module -Name (Join-Path $repositoryRoot 'modules\LcmStandardDisplay.psm1') -Force
   $snapshotId = Publish-LcmEvidenceSnapshot -Path $OutputPath
-  Open-LcmStandardDisplay -DisplayId snapshot -SnapshotId $snapshotId
+  Open-LcmStandardDisplay -DisplayId snapshot -SnapshotId $snapshotId -Pane:$Pane
   Write-AnalysisLog -Message "Launched HTML dashboard: $OutputPath." -Level INFO
 }

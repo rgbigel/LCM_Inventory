@@ -6,8 +6,11 @@
   until each targeted drive letter is unavailable.
   Path: LCM_Inventory/tools/Dismount-MacriumCurrentBaseline.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.0
-  Date: 2026-10-16
+  Version: 10.0.1
+  Date: 2026-11-09
+.NOTES
+  Elevated Operations:
+    - Dismount-MacriumBaseline: Detaches baseline candidate drive via elevated worker or daemon.
 #>
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
@@ -28,6 +31,9 @@ param(
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+
+# Approved elevated operations for this tool (RULE-ELEV-007)
+New-Variable -Name ElevatedOperations -Value ([string[]]@('Dismount-MacriumBaseline')) -Option ReadOnly -Scope Script -Force
 
 if ($Help) {
   Write-Host 'Dismount-MacriumCurrentBaseline.ps1 [-DriveLetter <F|G|H|I>] [-ConfirmDetach] [-h]'

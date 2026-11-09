@@ -17,29 +17,40 @@
            5. Prints the confirmation the AI must give before working.
   Path: LCM_Inventory/tools/Invoke-LCM_GoodMorning.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.1
-  Date: 2026-10-21
+  Version: 10.0.4
+  Date: 2026-11-08 22:08:00
   Rule: RULE-CTX-006
 .PARAMETER Auto
-  Session-start mode: silent (one line) when the gap is below -GapHours.
+  Session-start mode: silent (one line) when the gap is below -GapHours and -NoBaseline is specified.
 .PARAMETER GapHours
   Gap that implies a good morning. Default 7.
 .PARAMETER Force
   Run the full check regardless of the gap.
 .PARAMETER PrepareBcrBaseline
-  After the existing GoodMorning report, prepare today's Macrium baseline and
-  open the operator-owned _LCM review profile.
+  After the existing GoodMorning report, verifies or reuses today's Macrium baseline
+  without initiating backup creation (Default: $true). Backup generation is a separate
+  atom (Start-MacriumDailyBackup.ps1) executed at operator discretion.
+.PARAMETER NoBaseline
+  Suppresses Macrium baseline preparation while retaining unconditional baseline inspection.
+.PARAMETER ReviewScope
+  Active CRP or BUG identifier to associate with the Beyond Compare window title.
+.PARAMETER WhatIf
+  Simulates baseline preparation without executing background tasks.
+.PARAMETER Help
+  Displays this parameter documentation and usage syntax.
 .NOTES
   Exit code 0 = nothing needing attention, 3 = attention items found (the AI must report them).
 #>
 
-[CmdletBinding(SupportsShouldProcess = $true)]
+[CmdletBinding()]
 param(
     [switch]$Auto,
     [double]$GapHours = 7,
     [switch]$Force,
     [switch]$PrepareBcrBaseline,
+    [switch]$NoBaseline,
     [string]$ReviewScope = '',
+    [switch]$WhatIf,
     [Alias('h', '?')]
     [switch]$Help
 )
@@ -47,14 +58,27 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
+# Default baseline preparation is $true unless -NoBaseline is passed or -PrepareBcrBaseline is explicitly $false
+if ($NoBaseline) {
+    $PrepareBcrBaseline = $false
+} elseif (-not $PSBoundParameters.ContainsKey('PrepareBcrBaseline')) {
+    $PrepareBcrBaseline = $true
+}
+
 if ($Help) {
-    Write-Host 'Invoke-LCM_GoodMorning.ps1 [-Auto] [-GapHours <n>] [-Force] [-PrepareBcrBaseline] [-ReviewScope <CRP|BUG>] [-h]'
+    Write-Host 'Invoke-LCM_GoodMorning.ps1 [-Auto] [-GapHours <n>] [-Force] [-PrepareBcrBaseline] [-NoBaseline] [-ReviewScope <CRP|BUG>] [-WhatIf] [-h]'
     Write-Host '  Read-only session-start check; exit code 3 when attention items exist.'
     return
 }
 
-$contextModule = Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\LCM_Context.psm1'
+$inventoryRoot = Split-Path $PSScriptRoot -Parent
+$contextModule = Join-Path $inventoryRoot 'modules\LCM_Context.psm1'
 Import-Module -Name $contextModule -Force
+
+$macriumAtomsModule = Join-Path $inventoryRoot 'modules\LcmMacriumAtoms.psm1'
+if (Test-Path -LiteralPath $macriumAtomsModule) {
+    Import-Module -Name $macriumAtomsModule -Force
+}
 $gitRoot = Get-LcmMachineGitRoot
 $agentsDir = Join-Path $gitRoot 'LCM_AI\.agents'
 $contextFile = Join-Path $agentsDir 'ACTIVE_CONTEXT.md'
@@ -113,6 +137,29 @@ if (-not [string]::IsNullOrWhiteSpace($lastPushStr)) {
             $attention.Add(("Remote repositories have not been pushed in {0:N1} days (last push: {1}). Run Invoke-LCM_Push.ps1 to synchronize." -f $pushDays, $lastPushStr))
         }
     }
+}
+
+# --- 1b. Baseline Telemetry (Unconditional) -----------------------------------
+Write-Host "`n[BASELINE] Macrium BCR baseline telemetry & physical mount" -ForegroundColor Yellow
+$baselineState = if (Get-Command -Name Get-MacriumBaselineState -ErrorAction SilentlyContinue) {
+    Get-MacriumBaselineState
+} else {
+    $null
+}
+
+if ($null -ne $baselineState) {
+    if ($baselineState.Plausible) {
+        Write-Host ("  Mounted baseline drive : {0} (Volume: {1})" -f $baselineState.MountedDrive, $baselineState.VolumeLabel) -ForegroundColor Green
+        Write-Host ("  Snapshot saved at      : {0}" -f $(if ($baselineState.SnapshotSavedAt) { $baselineState.SnapshotSavedAt } else { 'unknown' }))
+        Write-Host ("  GoodNight observed     : {0}" -f $(if ($baselineState.GoodNightObserved) { 'Yes' } else { 'No' }))
+    } else {
+        Write-Host ("  Mounted baseline drive : None (searched {0})" -f ($baselineState.CandidateDrives -join ', ')) -ForegroundColor DarkYellow
+    }
+    $regStamp = if ($baselineState.RegistryMRMTimeStamp) { $baselineState.RegistryMRMTimeStamp } else { 'none' }
+    $regDrive = if ($baselineState.RegistryMRMdrive) { $baselineState.RegistryMRMdrive } else { 'none' }
+    Write-Host ("  Registry registered    : {0} on {1}" -f $regStamp, $regDrive) -ForegroundColor Gray
+} else {
+    Write-Host '  Baseline telemetry module unavailable.' -ForegroundColor DarkYellow
 }
 
 # --- 2. Work in between --------------------------------------------------------
@@ -247,10 +294,18 @@ if ($PrepareBcrBaseline) {
     $automaticMorning = $Auto -and -not $Force -and $gap -ge $GapHours
     if ($Auto -and -not $Force -and -not $automaticMorning) {
         Write-Host ("Macrium baseline preparation deferred (gap {0:N1} h < {1} h); the writable baseline is not replaced automatically during the workday." -f $gap, $GapHours)
-    } elseif ($WhatIfPreference) {
-        & $baselineTool -StartBackupIfMissing -ReviewScope $ReviewScope -WhatIf
     } else {
-        & $baselineTool -StartBackupIfMissing -ReviewScope $ReviewScope
+        try {
+            if ($WhatIf -or $WhatIfPreference) {
+                & $baselineTool -ReviewScope $ReviewScope -WhatIf -Confirm:$false
+            } else {
+                & $baselineTool -ReviewScope $ReviewScope -Confirm:$false
+            }
+        } catch {
+            Write-Host "`n[BASELINE STATUS] $($_.Exception.Message)" -ForegroundColor Yellow
+            Write-Host "                 Backup generation is decoupled from GoodMorning." -ForegroundColor Cyan
+            Write-Host "                 Run 'Start-MacriumDailyBackup.ps1 [-Mount]' at your discretion after GoodMorning.`n" -ForegroundColor Cyan
+        }
     }
 }
 if ($attention.Count -gt 0) { exit 3 }

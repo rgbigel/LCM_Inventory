@@ -11,7 +11,7 @@
   Path: D:\Git_Repositories\LCM_Tools\Invoke-InteractiveDesktop.ps1
   Authors: Rolf, LCM_AI Engine
   Version: 10.0.1
-  Date: 2026-11-08 15:07:36
+  Date: 2026-11-08 17:34:00
 .PARAMETER FilePath
   The executable or script to launch on the interactive desktop.
 .PARAMETER ArgumentList
@@ -52,6 +52,7 @@ param(
   [switch]$Elevated,
 
   [Parameter(HelpMessage = 'Opens displays inside an Antigravity IDE editor/side pane')]
+  [Alias('Panel')]
   [switch]$Pane,
 
   [Parameter(HelpMessage = 'Display verbose task creation, dispatch, and cleanup logs')]

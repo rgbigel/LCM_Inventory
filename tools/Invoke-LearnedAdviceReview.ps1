@@ -18,7 +18,9 @@
 .PARAMETER Promote
   Candidate numbers to accept and tag for promotion into the rules.
 .PARAMETER Reject
-  Candidate numbers to delete.
+  Candidate numbers to delete (requires -ProposalId to document the active CRP correcting/retiring the entry).
+.PARAMETER ProposalId
+  Active CRP or BUG identifier (e.g. CRP-310, BUG-311) required when rejecting or retiring learned advice.
 .PARAMETER Check
   Only report; exit 1 if candidates are pending.
 #>
@@ -28,6 +30,7 @@ param(
     [int[]]$Accept = @(),
     [int[]]$Promote = @(),
     [int[]]$Reject = @(),
+    [string]$ProposalId = '',
     [switch]$Check,
     [Alias('h', '?')]
     [switch]$Help
@@ -37,9 +40,14 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 if ($Help) {
-    Write-Host 'Invoke-LearnedAdviceReview.ps1 [-Accept <n,..>] [-Promote <n,..>] [-Reject <n,..>] [-Check] [-h]'
+    Write-Host 'Invoke-LearnedAdviceReview.ps1 [-Accept <n,..>] [-Promote <n,..>] [-Reject <n,..> -ProposalId <CRP>] [-Check] [-h]'
     Write-Host '  Lists pending candidates of LEARNED_ADVICE.md, or applies the given decisions.'
+    Write-Host '  Rejection/removal requires an explicit -ProposalId per RULE-CTX-005.'
     return
+}
+
+if ($Reject.Count -gt 0 -and [string]::IsNullOrWhiteSpace($ProposalId)) {
+    throw 'RULE-CTX-005 Invariant: Rejecting or removing learned advice requires an active -ProposalId (CRP/BUG) documenting why the advice is retired or superseded.'
 }
 
 $contextModule = Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\LCM_Context.psm1'
@@ -84,9 +92,14 @@ foreach ($n in ($decisions.Keys | Sort-Object)) {
 foreach ($idx in ($remove | Sort-Object -Descending)) { $lines.RemoveAt($idx) }
 
 if ($acceptedText.Count -gt 0) {
-    $candHeader = $lines.FindIndex({ param($l) $l -like '## Candidates*' })
-    $at = $candHeader
-    while ($at -gt 0 -and [string]::IsNullOrWhiteSpace($lines[$at - 1])) { $at-- }
+    # New advice is always added at the top per RULE-CTX-005
+    $targetHeader = $lines.FindIndex({ param($l) $l -like '### Working agreement*' })
+    $at = if ($targetHeader -ge 0) {
+        $targetHeader + 1
+    } else {
+        $accHeader = $lines.FindIndex({ param($l) $l -like '## Accepted*' })
+        if ($accHeader -ge 0) { $accHeader + 1 } else { 0 }
+    }
     $lines.InsertRange($at, [string[]]$acceptedText.ToArray())
 }
 [System.IO.File]::WriteAllText($file, (($lines -join "`r`n") + "`r`n"), [System.Text.UTF8Encoding]::new($false))

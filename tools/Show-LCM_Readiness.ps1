@@ -7,7 +7,7 @@
   Path: tools/Show-LCM_Readiness.ps1
   Authors: Rolf, LCM_AI Engine
   Version: 10.0.1
-  Date: 2026-10-21
+  Date: 2026-11-08 17:34:00
   ShortName: ShowReadiness
   
   Features:
@@ -29,6 +29,8 @@
   Automatically runs Test-RepoReadiness.ps1 for any repository that has the test harness but lacks an up-to-date receipt.
 .PARAMETER NoLaunch
   When -Html is specified, generates the HTML report without launching the browser.
+.PARAMETER Pane
+  Opens the display inside an Antigravity IDE editor/side pane instead of an external browser window (Alias: -Panel).
 .PARAMETER Help
   Displays this comprehensive parameter reference and usage instructions (Aliases: -h, -?).
 
@@ -59,6 +61,10 @@ param(
 
     [Parameter(Mandatory = $false)]
     [switch]$NoLaunch,
+
+    [Parameter(Mandatory = $false, HelpMessage = 'Opens the display inside an Antigravity IDE editor/side pane')]
+    [Alias('Panel')]
+    [switch]$Pane,
 
     [Alias('h', '?')]
     [switch]$Help
@@ -685,7 +691,7 @@ if ($Html) {
         Write-Host "Opening interactive Quality Gate Readiness Dashboard in browser..." -ForegroundColor Cyan
         Import-Module -Name (Join-Path $PSScriptRoot '..\modules\LcmStandardDisplay.psm1') -Force
         $snapshotId = Publish-LcmEvidenceSnapshot -Path $htmlPath
-        Open-LcmStandardDisplay -DisplayId snapshot -SnapshotId $snapshotId
+        Open-LcmStandardDisplay -DisplayId snapshot -SnapshotId $snapshotId -Pane:$Pane
     }
 }
 

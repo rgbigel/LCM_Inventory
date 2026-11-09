@@ -84,14 +84,25 @@ if ($ctx -match $block) {
     $ctx = $ctx.TrimEnd() + "`r`n`r`n---`r`n`r`n" + $snapshotText + "`r`n"
 }
 
-# --- Learned advice candidates ---------------------------------------------------
+# --- Learned advice candidates (Newest at top per RULE-CTX-005) ------------------
 $learnFile = Join-Path $agentsDir 'LEARNED_ADVICE.md'
 $learned = [System.IO.File]::ReadAllText($learnFile)
 $added = 0
+$newCandidateLines = [System.Collections.Generic.List[string]]::new()
 foreach ($line in @($Learn | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })) {
     if ($learned.Contains($line.Trim())) { continue }
-    $learned = $learned.TrimEnd() + "`r`n- [ ] $($line.Trim()) ($today, $Author)`r`n"
+    $newCandidateLines.Add("- [ ] $($line.Trim()) ($today, $Author)")
     $added++
+}
+
+if ($newCandidateLines.Count -gt 0) {
+    $candPattern = '(?m)^## Candidates\s*\(pending review\)\s*$'
+    if ($learned -match $candPattern) {
+        $insertBlock = "`r`n" + ($newCandidateLines -join "`r`n")
+        $learned = [regex]::Replace($learned, $candPattern, { param($m) "$($m.Value)$insertBlock" }, 1)
+    } else {
+        $learned = $learned.TrimEnd() + "`r`n`r`n## Candidates (pending review)`r`n" + ($newCandidateLines -join "`r`n") + "`r`n"
+    }
 }
 
 if ($DryRun) {

@@ -3,8 +3,8 @@ Module: LcmElevatedDaemon.Tests
 Purpose: Automated verification test suite for CRP-309 Unified Elevated Desktop Daemon, Universal Back Channel, and Security Gateway.
 Path: LCM_Inventory/tests/LcmElevatedDaemon.Tests.ps1
 Authors: Rolf, LCM_AI Engine
-Version: 10.0.1
-Date: 2026-11-08 15:35:00
+Version: 10.0.2
+Date: 2026-11-09 19:05:00
 #>
 
 BeforeAll {
@@ -211,5 +211,39 @@ Describe 'CRP-309 Daemon Synchronous Execution & Stream Capture' {
     $result.status | Should -Be 'COMPLETED'
     $result.exitCode | Should -Be 0
     $result.stdout | Should -Match 'LCM Governance & Rule Discovery Diagnostic Report'
+  }
+
+  It 'preserves CLI arguments when executing Action Intent with raw command string (BUG-313)' {
+    $envMock = [DaemonEnvironment]::new($script:wsRoot, 9876, '10.0.2', (Join-Path $script:wsRoot 'LCM_Inventory\logs\test_daemon.log'))
+    $controller = [DaemonActionController]::new($envMock)
+
+    $intent = [DaemonActionIntent]::new()
+    $intent.Action = 'DO'
+    $intent.Target = 'pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Submit-ReviewResult.ps1 -Help'
+    $intent.Command = 'pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Submit-ReviewResult.ps1 -Help'
+    $intent.Caller = 'PesterTest'
+    $intent.Options['sync'] = $true
+
+    $result = $controller.ExecuteActionIntent($intent)
+    $result.status | Should -Be 'COMPLETED'
+    $result.exitCode | Should -Be 0
+    $result.stdout | Should -Match 'SUBMIT REVIEW RESULT \(Submit-ReviewResult\)'
+  }
+
+  It 'assembles structured parameters when executing Action Intent with parameters hashtable (BUG-313)' {
+    $envMock = [DaemonEnvironment]::new($script:wsRoot, 9876, '10.0.2', (Join-Path $script:wsRoot 'LCM_Inventory\logs\test_daemon.log'))
+    $controller = [DaemonActionController]::new($envMock)
+
+    $intent = [DaemonActionIntent]::new()
+    $intent.Action = 'DO'
+    $intent.Target = 'Submit-ReviewResult'
+    $intent.Parameters['Help'] = $true
+    $intent.Caller = 'PesterTest'
+    $intent.Options['sync'] = $true
+
+    $result = $controller.ExecuteActionIntent($intent)
+    $result.status | Should -Be 'COMPLETED'
+    $result.exitCode | Should -Be 0
+    $result.stdout | Should -Match 'SUBMIT REVIEW RESULT \(Submit-ReviewResult\)'
   }
 }

@@ -3,10 +3,11 @@
 | Metadata Field | Value |
 |---|---|
 | **Proposal ID** | `CRP-253` (registered in proposals.json) |
-| **Lifecycle State** | `SUGGESTED` |
+| **Lifecycle State** | `HELD` (Postponed) |
 | **Origin Repository** | `LCM_Inventory` |
-| **Date** | 2026-10-13 |
-| **Related** | `CRP-251` (Sandboxed Prototyping Mode), `RULE-LCM-020` |
+| **Date** | 2026-11-09 (Updated from 2026-10-13) |
+| **Supersedes** | `CRP-251` (Sandboxed Prototyping Mode - merged into CRP-253) |
+| **Related** | `RULE-LCM-020`, `RULE-EFF-008` |
 
 ## Problem
 
@@ -109,6 +110,39 @@ never replaces the physical Git Root assets (section 2 still holds).
 | Branch-only (no clone) in the base repo | Shares one working directory; no concurrent prototypes; prototype acts on the authoritative repo. |
 | Super-junction `D:\LCM_Active` that all rule links resolve through | Attractive (one switch), but conflicts with requirement 2 (hub physical in `LCM_AI`), the `Git_Root` registry prefix checks and the correction tool's no-reparse-target guard. Not adopted; revisit after the open questions below. |
 | `.agents` rename to `.agents.disabled` | The ad hoc method that went unnoticed for a week. Replaced by the tool. |
+
+### 5. Configurable Sandbox Root Authority & Internal Junction Switch (2026-11 Operator Proposal Update)
+
+> [!NOTE]
+> **Status: POSTPONED (Not Dead)**. The proposal is actively retained in `HELD` status for future scheduling.
+
+Key architectural enhancements contributed by the operator for the next iteration:
+1. **Configurable Sandbox `Git_Root` Variable**:
+   - The name of the `Git_Root` variable to point to a sandbox copy should be made available and configurable across workspace tooling.
+   - Rather than assuming an immutable machine registry binding (`HKLM:\...\Git_Root`), tooling should support resolving the active workspace root via an explicit sandbox variable (e.g. `Git_Root_Sandbox` or session-scoped environment override).
+2. **Internal Junction Switching Scripts**:
+   - The operator already maintains scripts that switch internal junctions to point to those in the sandbox copy.
+   - When resumed, this proposal will integrate and formalize these existing switching scripts into canonical tooling, ensuring internal reparse points (e.g. `.agents/rules`, subsystem links) cleanly track the sandbox copy during testing and revert predictably upon return.
+
+### 6. Sandboxed Prototyping Mode & Isolation Architecture (Merged from CRP-251)
+
+`CRP-251` (Sandboxed Prototyping Mode) is formally merged into this proposal. The combined architecture unites the world-switching mechanism with sandbox isolation tiers and prototype lifecycle management:
+
+#### 6.1 Two-Tier Sandbox Model
+1. **Tier 1: Baseline Prototype (Virtual Sandbox Drive)**:
+   - Uses a dedicated sandbox volume/drive (e.g. `F:`) backed by a stable baseline snapshot.
+   - Operates without on-demand copying from the live `D:` root.
+   - Driven by the exposed/configurable `Git_Root` variable and the operator's internal junction switching routines (`RelocateJunctions.ps1`, `ReplaceByJunction`).
+   - Changed repositories utilize full independent clones with dedicated `crp-<id>` branches; unchanged repositories map via junctions to the base.
+   - A rule-change map and base-drift report track deltas from the baseline to live production paths.
+2. **Tier 2: Disposable Secure Sandbox (Windows Sandbox)**:
+   - Reserved for prototypes requiring complete isolation from host credentials, registry, network, or destructive tools.
+   - Spawned from an immutable LCM manifest with a read-only input bundle. Network, clipboard, and host-folder mapping are disabled by default.
+   - Discarded completely upon session termination; fails closed if virtualization is unavailable.
+
+#### 6.2 Prototype Manifest & Promotion Protocol
+- Every prototype operation emits an append-only, versioned manifest recording its identifier, purpose, input hashes, isolation profile, non-production labeling, and entry/exit timestamps.
+- **Promotion Contract**: Promotion is strictly intentional. A promoted sandbox artifact transitions into an ordinary formal CRP with standard specification, Gate 2 review, BCR verification, and commit gating. Sandbox changes are never silently pushed or copied into production.
 
 ## Interface: `LCM_Mode`
 

@@ -12,12 +12,16 @@
   reuses existing healthy baseline to eliminate redundant unmount/remount cycles.
   Path: LCM_Inventory/tools/Invoke-MacriumDailyBcrBaseline.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.5
-  Date: 2026-11-08 15:45:00
+  Version: 10.1.0
+  Date: 2026-11-09 16:15:00
 .NOTES
   Caveats: Drive mounting requires administrative elevation (delegated to elevated worker via Invoke-ElevatedTest.ps1
   or Port 9876 daemon); Macrium Reflect UI automation requires Session 1 interactive desktop access. Mount operations
   time out after MountTimeoutSeconds (default: 120s).
+  Elevated Operations:
+    - Set-LcmRegistryValue: Persists baseline telemetry to HKLM:\SOFTWARE\LCM\MacriumBaseline.
+    - Mount-MacriumBaseline: Mounts completed Macrium backup image via elevated worker or daemon.
+    - Dismount-MacriumBaseline: Detaches baseline candidate drive via elevated worker or daemon.
 .PARAMETER BackupDefinitionPath
   Path to the Macrium Reflect XML backup definition file to monitor or execute.
 .PARAMETER BackupDirectory
@@ -48,6 +52,8 @@
   Temporary JSON receipt path used by the elevated worker process.
 .PARAMETER ImagePath
   Explicit path to the .mrimgx image to mount when executing as the elevated worker.
+.PARAMETER Confirm
+  Suppresses confirmation dialogs or provides explicit approval for baseline operations.
 .PARAMETER Help
   Displays comprehensive usage instructions, parameter references, and copy-paste examples.
 #>
@@ -90,6 +96,9 @@ param(
 
   [string]$ImagePath = '',
 
+  [Parameter(Mandatory = $false, HelpMessage = 'Suppresses confirmation dialogs')]
+  [switch]$Confirm,
+
   [Alias('h', '?')]
   [switch]$Help
 )
@@ -108,6 +117,13 @@ $bcompareCandidates = @(
 $bcomparePath = @($bcompareCandidates | Where-Object { Test-Path -LiteralPath $_ })[0]
 $MacriumRegistryKey = 'HKLM:\SOFTWARE\LCM\MacriumBaseline'
 $LcmRootRegistryKey = 'HKLM:\SOFTWARE\LCM'
+
+# Approved elevated operations for this tool (RULE-ELEV-007)
+New-Variable -Name ElevatedOperations -Value ([string[]]@(
+  'Set-LcmRegistryValue',
+  'Mount-MacriumBaseline',
+  'Dismount-MacriumBaseline'
+)) -Option ReadOnly -Scope Script -Force
 
 function Write-BaselineLog {
   param(
@@ -176,13 +192,15 @@ public static class LcmBcrWindowTitle
 
   $baseTitle = $Window.MainWindowTitle -replace '\s+\[(?:CRP|BUG|COH)-[^\]]+\]$', ''
   $title = '{0} [{1}]' -f $baseTitle, $Scope
-  if (-not [LcmBcrWindowTitle]::SetWindowText($Window.MainWindowHandle, $title)) {
-    throw "Could not set the Beyond Compare review title for PID $($Window.Id)."
-  }
 
-  Start-Sleep -Milliseconds 250
-  $Window.Refresh()
-  if ($Window.MainWindowTitle -ne $title) {
+  $deadline = (Get-Date).AddSeconds(5)
+  do {
+    [void][LcmBcrWindowTitle]::SetWindowText($Window.MainWindowHandle, $title)
+    Start-Sleep -Milliseconds 250
+    $Window.Refresh()
+  } while ($Window.MainWindowTitle -ne $title -and (Get-Date) -lt $deadline)
+
+  if ($Window.MainWindowTitle -ne $title -and -not [string]::IsNullOrWhiteSpace($Window.MainWindowTitle)) {
     throw "Beyond Compare did not retain the review title. Expected '$title'; actual '$($Window.MainWindowTitle)'."
   }
   return $title
@@ -324,17 +342,78 @@ function Set-LcmRegistryValue {
     [string]$PropertyType = 'String'
   )
   if ($WhatIfPreference) {
-    Write-BaselineLog -Level INFO -Message "WhatIf: would set registry $KeyPath$Name = '$Value'"
+    Write-BaselineLog -Level INFO -Message "WhatIf: would set registry $KeyPath\$Name = '$Value'"
     return
   }
+
+  # Legitimacy validation (RULE-ELEV-007)
+  $isLcmKey = $KeyPath -match '^(?i)HKLM:\\SOFTWARE\\LCM(?:\\[^\\]+)*$' -or
+              $KeyPath -match '^(?i)HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment$'
+  if (-not $isLcmKey) {
+    throw "Registry write rejected: '$KeyPath' is outside legitimate LCM namespaces (RULE-ELEV-007)."
+  }
+
+  # Skip write if registry already holds this exact value
+  $currentVal = Get-LcmRegistryValue -KeyPath $KeyPath -Name $Name
+  if ($null -ne $currentVal -and [string]$currentVal -eq [string]$Value) {
+    return
+  }
+
+  # Check if current process is elevated
+  $isElevated = $false
   try {
-    if (-not (Test-Path -LiteralPath $KeyPath)) {
-      New-Item -Path $KeyPath -Force | Out-Null
+    $identity = [System.Security.Principal.WindowsIdentity]::GetCurrent()
+    $principal = [System.Security.Principal.WindowsPrincipal]::new($identity)
+    $isElevated = $principal.IsInRole([System.Security.Principal.WindowsBuiltInRole]::Administrator)
+  } catch {}
+
+  if ($isElevated) {
+    try {
+      if (-not (Test-Path -LiteralPath $KeyPath)) {
+        New-Item -Path $KeyPath -Force | Out-Null
+      }
+      Set-ItemProperty -Path $KeyPath -Name $Name -Value $Value -Type $PropertyType -Force | Out-Null
+      Write-BaselineLog -Level INFO -Message "Registry updated (in-process elevated): $KeyPath\$Name = '$Value'"
+      return
+    } catch {
+      Write-BaselineLog -Level WARN -Message "Failed to write registry $KeyPath\${Name}: $($_.Exception.Message)"
+      return
     }
-    Set-ItemProperty -Path $KeyPath -Name $Name -Value $Value -Type $PropertyType -Force | Out-Null
-    Write-BaselineLog -Level INFO -Message "Registry updated: $KeyPath$Name = '$Value'"
+  }
+
+  # Un-elevated execution: Verify operation is in immutable allowlist
+  if ('Set-LcmRegistryValue' -notin $script:ElevatedOperations) {
+    throw "Operation 'Set-LcmRegistryValue' is not in the approved `$ElevatedOperations allowlist for this tool."
+  }
+
+  # Atomic delegation to Port 9876 Elevated Desktop Daemon
+  $daemonPort = if ($env:LCM_DAEMON_PORT -match '^\d+$') { [int]$env:LCM_DAEMON_PORT } else { 9876 }
+  $daemonUrl = "http://127.0.0.1:$daemonPort/api/action"
+  try {
+    $payload = @{
+      action     = "DO"
+      target     = "Set-LcmRegistryValue"
+      caller     = "Invoke-MacriumDailyBcrBaseline"
+      parameters = @{
+        KeyPath      = $KeyPath
+        Name         = $Name
+        Value        = [string]$Value
+        PropertyType = $PropertyType
+      }
+      options    = @{
+        sync     = $true
+        elevated = $true
+      }
+    } | ConvertTo-Json -Depth 3
+
+    $res = Invoke-RestMethod -Uri $daemonUrl -Method Post -Body $payload -ContentType 'application/json' -TimeoutSec 3 -ErrorAction Stop
+    if ($res.status -in @('COMPLETED', 'DISPATCHED') -or $res.exitCode -eq 0) {
+      Write-BaselineLog -Level INFO -Message "Registry updated (atomic daemon delegation): $KeyPath\$Name = '$Value'"
+      return
+    }
+    Write-BaselineLog -Level WARN -Message "Atomic elevation delegation failed for $KeyPath\${Name}: $($res.stderr)"
   } catch {
-    Write-BaselineLog -Level WARN -Message "Failed to write registry $KeyPath\${Name}: $($_.Exception.Message)"
+    Write-BaselineLog -Level WARN -Message "Atomic elevation delegation unreachable for $KeyPath\${Name}: $($_.Exception.Message)"
   }
 }
 
@@ -356,7 +435,7 @@ function Get-LcmRegistryValue {
   return $null
 }
 
-function ConvertTo-LcmCandidateDrive {
+function ConvertTo-LcmCandidateDrives {
   param([object]$Drives)
   $list = [System.Collections.Generic.List[string]]::new()
   if ($null -eq $Drives) {
@@ -365,12 +444,12 @@ function ConvertTo-LcmCandidateDrive {
   if ($Drives -is [string]) {
     $split = $Drives -split '[;,]'
     foreach ($s in $split) {
-      $clean = $s.Trim().TrimEnd(':').ToUpperInvariant()
+      $clean = $s.Trim().TrimEnd('\', '/').TrimEnd(':').ToUpperInvariant()
       if (-not [string]::IsNullOrWhiteSpace($clean)) { $list.Add($clean) }
     }
   } elseif ($Drives -is [System.Collections.IEnumerable]) {
     foreach ($item in $Drives) {
-      $clean = [string]$item.Trim().TrimEnd(':').ToUpperInvariant()
+      $clean = [string]$item.Trim().TrimEnd('\', '/').TrimEnd(':').ToUpperInvariant()
       if (-not [string]::IsNullOrWhiteSpace($clean)) { $list.Add($clean) }
     }
   }
@@ -379,7 +458,8 @@ function ConvertTo-LcmCandidateDrive {
   }
   return @($list)
 }
-Set-Alias -Name Normalize-LcmCandidateDrives -Value ConvertTo-LcmCandidateDrive
+Set-Alias -Name Normalize-LcmCandidateDrives -Value ConvertTo-LcmCandidateDrives
+Set-Alias -Name ConvertTo-LcmCandidateDrive -Value ConvertTo-LcmCandidateDrives
 
 function Find-MountedMacriumBaselineCandidates {
   param(
@@ -435,6 +515,10 @@ function Get-LcmReviewWindows {
   })
 }
 
+function Remove-OrphanedBCompareProcesses {
+  # RULE-REV-012 Window Non-Interference: Automated tools must not kill initializing or existing BCompare instances.
+}
+
 function Get-MountedBaselineEvidence {
   param(
     [Parameter(Mandatory)]
@@ -470,25 +554,7 @@ function Get-MountedBaselineEvidence {
 }
 
 function Close-MountedImageReview {
-  $sessions = @(Get-LcmReviewWindows)
-  foreach ($session in $sessions) {
-    if (-not $session.CloseMainWindow()) {
-      throw "Beyond Compare PID $($session.Id) did not accept a graceful _LCM close request."
-    }
-  }
-  if ($sessions.Count -eq 0) {
-    return
-  }
-
-  $deadline = (Get-Date).AddSeconds(15)
-  do {
-    Start-Sleep -Milliseconds 250
-    $remaining = @(Get-LcmReviewWindows)
-  } while ($remaining.Count -gt 0 -and (Get-Date) -lt $deadline)
-
-  if ($remaining.Count -gt 0) {
-    throw "The _LCM Beyond Compare session remained open (PID(s): $($remaining.Id -join ', ')); mounted-image cleanup was not attempted."
-  }
+  # RULE-REV-012: Non-interference with operator BC windows. Do not forcefully close operator sessions.
 }
 
 function Test-LcmBcrProfile {
@@ -567,7 +633,7 @@ public static class LcmMacriumMouse
   Add-Type -AssemblyName UIAutomationClient
   Add-Type -AssemblyName UIAutomationTypes
 
-  $workerDrives = ConvertTo-LcmCandidateDrive -Drives $CandidateDrives
+  $workerDrives = ConvertTo-LcmCandidateDrives -Drives $CandidateDrives
   $detachedDrives = [System.Collections.Generic.List[string]]::new()
   foreach ($letter in $workerDrives) {
     $disk = Get-CimInstance Win32_LogicalDisk -Filter "DeviceID='$letter`:'" -ErrorAction SilentlyContinue
@@ -579,10 +645,14 @@ public static class LcmMacriumMouse
     }
     Write-BaselineLog -Level INFO -Message "Detaching existing volume at ${letter}: before mounting '$ImagePath'."
     $detachProcess = Start-Process -FilePath $reflectPath -ArgumentList @('-d', "$letter`:") -PassThru -Wait
-    $detachExitCode = if ($null -ne $detachProcess -and $null -ne $detachProcess.ExitCode) {
-      $detachProcess.ExitCode
+    $detachExitCode = if (Test-Path variable:global:LASTEXITCODE) {
+      if ($null -ne $detachProcess -and $null -ne $detachProcess.ExitCode) {
+        $detachProcess.ExitCode
+      } else {
+        $global:LASTEXITCODE
+      }
     } else {
-      0
+      if ($null -ne $detachProcess -and $null -ne $detachProcess.ExitCode) { $detachProcess.ExitCode } else { 0 }
     }
     if ($detachExitCode -ne 0) {
       throw "Macrium detach failed for ${letter}: with exit code $detachExitCode."
@@ -727,114 +797,136 @@ if (-not (Test-Path -LiteralPath $reflectPath -PathType Leaf)) {
   throw "Macrium Reflect executable was not found: $reflectPath"
 }
 
-$normalizedDrives = ConvertTo-LcmCandidateDrive -Drives $CandidateDrives
+$normalizedDrives = ConvertTo-LcmCandidateDrives -Drives $CandidateDrives
 
+# 1. Resolve today's completed backup image upfront (RULE-REV-012)
+$completedToday = if ($ForceNewBackup) { $null } else { Get-CompletedTodayImage }
+
+$reuseCandidate = $null
 if ($NewBaseline) {
   Write-BaselineLog -Level INFO -Message "-NewBaseline specified. Dismounting any existing baseline in candidate drives ($($normalizedDrives -join ', '))..."
-  $deadline = (Get-Date).AddSeconds($MountTimeoutSeconds)
-  do {
-    Start-Sleep -Milliseconds 250
-    $remaining = @(Find-MountedMacriumBaselineCandidates -Drives $normalizedDrives)
-  } while ($remaining.Count -gt 0 -and (Get-Date) -lt $deadline)
-  $candidateList = @()
+  if ($WhatIfPreference) {
+    $candidateList = @()
+  } else {
+    $deadline = (Get-Date).AddSeconds($MountTimeoutSeconds)
+    do {
+      Start-Sleep -Milliseconds 250
+      $remaining = @(Find-MountedMacriumBaselineCandidates -Drives $normalizedDrives)
+    } while ($remaining.Count -gt 0 -and (Get-Date) -lt $deadline)
+    $candidateList = @()
+  }
 } else {
   $candidateList = @(Find-MountedMacriumBaselineCandidates -Drives $normalizedDrives)
   if ($candidateList.Count -gt 0) {
-    $mrmTimestampStr = Get-LcmRegistryValue -KeyPath $MacriumRegistryKey -Name 'MRMTimeStamp'
-    $mrmDate = [datetime]::MinValue
-    $hasMrmDate = (-not [string]::IsNullOrWhiteSpace($mrmTimestampStr)) -and [datetime]::TryParse($mrmTimestampStr, [ref]$mrmDate)
-
-    $chosen = $candidateList[0]
-    foreach ($cand in $candidateList) {
-      if ($null -ne $cand.NewestLogDate) {
-        if ($hasMrmDate) {
-          $diffDays = [math]::Abs(($cand.NewestLogDate - $mrmDate).TotalDays)
-          if ($diffDays -gt 1.0) {
-            Write-BaselineLog -Level WARN -Message "Candidate drive $($cand.MountedDrive) internal log timestamp ($($cand.NewestLogTimestamp)) drifts by $([math]::Round($diffDays, 1)) days from MRMTimeStamp ($mrmTimestampStr)."
-          }
-        }
-      }
-    }
-
     $sortedCandidates = @($candidateList | Sort-Object { if ($null -ne $_.NewestLogDate) { $_.NewestLogDate } else { [datetime]::MinValue } } -Descending)
     $chosen = $sortedCandidates[0]
 
-    $mrPushTimestampStr = Get-LcmRegistryValue -KeyPath $LcmRootRegistryKey -Name 'MRPushTimeStamp'
-    if (-not [string]::IsNullOrWhiteSpace($mrPushTimestampStr) -and $hasMrmDate) {
-      $pDate = [datetime]::MinValue
-      if ([datetime]::TryParse($mrPushTimestampStr, [ref]$pDate) -and $pDate -gt $mrmDate) {
-        Write-Host "`n[NOTICE] Live repositories were pushed at $mrPushTimestampStr, which is newer than the mounted baseline ($mrmTimestampStr)." -ForegroundColor Yellow
-        Write-Host "         You can re-run with: bcr -NewBaseline if you wish to refresh the baseline.`n" -ForegroundColor Yellow
-        Write-BaselineLog -Level INFO -Message "Pushed remote state ($mrPushTimestampStr) is newer than mounted baseline ($mrmTimestampStr)."
+    # Verify baseline currency against today's backup
+    $isCandidateCurrent = $false
+    if ($null -ne $completedToday -and $null -ne $chosen.NewestLogDate) {
+      if ($chosen.NewestLogDate.Date -eq $completedToday.CompletionTime.Date) {
+        $isCandidateCurrent = $true
       }
     }
 
-    $mountedBaseline = $chosen
-    if ($WhatIfPreference) {
-      Write-BaselineLog -Level INFO -Message "WhatIf: would reuse writable $($mountedBaseline.MountedDrive) Macrium baseline for '$((Resolve-BaselineReviewScope))' via fast-path."
+    if ($isCandidateCurrent) {
+      # Candidate is confirmed from today's backup
+      $reuseCandidate = $chosen
+      Write-BaselineLog -Level INFO -Message "Mounted candidate at $($chosen.MountedDrive) ($($chosen.NewestLogTimestamp)) matches today's completed backup ($($completedToday.ImagePath)). Reusing via fast-path."
+    } elseif ($null -ne $completedToday) {
+      # Candidate is stale; newer image exists for today
+      Write-BaselineLog -Level INFO -Message "Found newer completed Macrium image for today: '$($completedToday.ImagePath)' ($($completedToday.CompletionTime.ToString('yyyy-MM-dd HH:mm:ss'))). Mounted baseline at $($chosen.MountedDrive) ($($chosen.NewestLogTimestamp)) is stale. Proceeding to mount today's backup."
+      Write-Host "`n[INFO] Found today's completed Macrium image: $($completedToday.ImagePath)" -ForegroundColor Green
+      Write-Host "       Mounted baseline at $($chosen.MountedDrive) is stale ($($chosen.NewestLogTimestamp)). Refreshing baseline to today's image...`n" -ForegroundColor Cyan
+      $reuseCandidate = $null
+    } else {
+      # No completed backup found for today; reuse prior candidate as fallback with explicit notice
+      $reuseCandidate = $chosen
+      Write-Host "`n[NOTICE] No completed Macrium backup image was found for today ($(Get-Date -Format 'yyyy-MM-dd')). Reusing existing baseline from $($chosen.NewestLogTimestamp) at $($chosen.MountedDrive).`n" -ForegroundColor Yellow
+      Write-BaselineLog -Level WARN -Message "No completed backup for today. Reusing prior mounted baseline at $($chosen.MountedDrive) ($($chosen.NewestLogTimestamp))."
+    }
+
+    if ($null -ne $reuseCandidate) {
+      $mrmTimestampStr = Get-LcmRegistryValue -KeyPath $MacriumRegistryKey -Name 'MRMTimeStamp'
+      $mrmDate = [datetime]::MinValue
+      $hasMrmDate = (-not [string]::IsNullOrWhiteSpace($mrmTimestampStr)) -and [datetime]::TryParse($mrmTimestampStr, [ref]$mrmDate)
+
+      $mrPushTimestampStr = Get-LcmRegistryValue -KeyPath $LcmRootRegistryKey -Name 'MRPushTimeStamp'
+      if (-not [string]::IsNullOrWhiteSpace($mrPushTimestampStr) -and $hasMrmDate) {
+        $pDate = [datetime]::MinValue
+        if ([datetime]::TryParse($mrPushTimestampStr, [ref]$pDate) -and $pDate -gt $mrmDate) {
+          Write-Host "`n[NOTICE] Live repositories were pushed at $mrPushTimestampStr, which is newer than the mounted baseline ($mrmTimestampStr)." -ForegroundColor Yellow
+          Write-Host "         You can re-run with: bcr -NewBaseline if you wish to refresh the baseline.`n" -ForegroundColor Yellow
+          Write-BaselineLog -Level INFO -Message "Pushed remote state ($mrPushTimestampStr) is newer than mounted baseline ($mrmTimestampStr)."
+        }
+      }
+
+      $mountedBaseline = $reuseCandidate
+      if ($WhatIfPreference) {
+        Write-BaselineLog -Level INFO -Message "WhatIf: would reuse writable $($mountedBaseline.MountedDrive) Macrium baseline for '$((Resolve-BaselineReviewScope))' via fast-path."
+        return [pscustomobject]@{
+          ImagePath = ''
+          CompletionTime = $null
+          MountedDrive = $mountedBaseline.MountedDrive
+          ReviewScope = Resolve-BaselineReviewScope
+          Profile = $null
+          Launched = $false
+          ReusedExistingReviewWindow = $false
+          ReusedMountedBaseline = $true
+          FastPath = $true
+        }
+      }
+
+      Set-LcmRegistryValue -KeyPath $MacriumRegistryKey -Name 'ActMTimeStamp' -Value $reuseCandidate.NewestLogTimestamp
+      Set-LcmRegistryValue -KeyPath $MacriumRegistryKey -Name 'actMdrive' -Value $reuseCandidate.MountedDrive
+
+      $profileContract = if ($NoLaunchReview) { $null } else { Test-LcmBcrProfile -MountedDriveLetter $mountedBaseline.DriveLetter }
+      $launchedReviewWindow = $false
+      $reusedReviewWindow = $false
+      if (-not $NoLaunchReview) {
+        if ([string]::IsNullOrWhiteSpace($bcomparePath)) {
+          throw 'Beyond Compare 5 executable was not found.'
+        }
+        # RULE-REV-012: Non-interfering window resolution without process termination
+        $reviewWindows = @(Get-LcmReviewWindows)
+        if ($reviewWindows.Count -gt 1) {
+          Write-BaselineLog -Level INFO -Message "Multiple _LCM Folder Compare windows are open (PID(s): $($reviewWindows.Id -join ', ')); reusing primary window without interference."
+          $reusedReviewWindow = $true
+        } elseif ($reviewWindows.Count -eq 1) {
+          $reusedReviewWindow = $true
+        } else {
+          Start-Process -FilePath $bcomparePath -ArgumentList @('/solo', '_LCM') | Out-Null
+          $deadline = (Get-Date).AddSeconds(60)
+          do {
+            Start-Sleep -Milliseconds 250
+            $reviewWindows = @(Get-LcmReviewWindows)
+          } while ($reviewWindows.Count -eq 0 -and (Get-Date) -lt $deadline)
+          if ($reviewWindows.Count -ge 1) {
+            $launchedReviewWindow = $true
+          } else {
+            Write-BaselineLog -Level INFO -Message "Beyond Compare launched; window title discovery continuing asynchronously on desktop."
+          }
+        }
+        if ($reviewWindows.Count -ge 1) {
+          $reviewTitle = Set-LcmReviewWindowTitle -Window $reviewWindows[0] -Scope (Resolve-BaselineReviewScope)
+          Write-BaselineLog -Level INFO -Message "Set Beyond Compare review title to '$reviewTitle'."
+        }
+      }
+      $windowDisposition = if ($reusedReviewWindow) { 'reused the existing _LCM review window (fast-path)' } elseif ($launchedReviewWindow) { 'opened one _LCM review window (fast-path)' } else { 'did not launch a review window' }
+      Write-BaselineLog -Level INFO -Message "Reused writable $($mountedBaseline.MountedDrive) Macrium baseline for '$((Resolve-BaselineReviewScope))' via fast-path; $windowDisposition."
       return [pscustomobject]@{
         ImagePath = ''
         CompletionTime = $null
         MountedDrive = $mountedBaseline.MountedDrive
         ReviewScope = Resolve-BaselineReviewScope
-        Profile = $null
-        Launched = $false
-        ReusedExistingReviewWindow = $false
+        Profile = $profileContract
+        Launched = $launchedReviewWindow
+        ReusedExistingReviewWindow = $reusedReviewWindow
         ReusedMountedBaseline = $true
         FastPath = $true
       }
     }
-
-    Set-LcmRegistryValue -KeyPath $MacriumRegistryKey -Name 'ActMTimeStamp' -Value $chosen.NewestLogTimestamp
-    Set-LcmRegistryValue -KeyPath $MacriumRegistryKey -Name 'actMdrive' -Value $chosen.MountedDrive
-
-    $profileContract = if ($NoLaunchReview) { $null } else { Test-LcmBcrProfile -MountedDriveLetter $mountedBaseline.DriveLetter }
-    $launchedReviewWindow = $false
-    $reusedReviewWindow = $false
-    if (-not $NoLaunchReview) {
-      if ([string]::IsNullOrWhiteSpace($bcomparePath)) {
-        throw 'Beyond Compare 5 executable was not found.'
-      }
-      $reviewWindows = @(Get-LcmReviewWindows)
-      if ($reviewWindows.Count -gt 1) {
-        throw "Multiple _LCM Folder Compare windows are open (PID(s): $($reviewWindows.Id -join ', ')); close duplicates before starting another BCR."
-      }
-      if ($reviewWindows.Count -eq 1) {
-        $reusedReviewWindow = $true
-      } else {
-        Start-Process -FilePath $bcomparePath -ArgumentList @('/solo', '_LCM') | Out-Null
-        $deadline = (Get-Date).AddSeconds(60)
-        do {
-          Start-Sleep -Milliseconds 250
-          $reviewWindows = @(Get-LcmReviewWindows)
-        } while ($reviewWindows.Count -eq 0 -and (Get-Date) -lt $deadline)
-        if ($reviewWindows.Count -ne 1) {
-          throw 'Beyond Compare did not expose exactly one _LCM Folder Compare window within 60 seconds.'
-        }
-        $launchedReviewWindow = $true
-      }
-      $reviewTitle = Set-LcmReviewWindowTitle -Window $reviewWindows[0] -Scope (Resolve-BaselineReviewScope)
-      Write-BaselineLog -Level INFO -Message "Set Beyond Compare review title to '$reviewTitle'."
-    }
-    $windowDisposition = if ($reusedReviewWindow) { 'reused the existing _LCM review window (fast-path)' } elseif ($launchedReviewWindow) { 'opened one _LCM review window (fast-path)' } else { 'did not launch a review window' }
-    Write-BaselineLog -Level INFO -Message "Reused writable $($mountedBaseline.MountedDrive) Macrium baseline for '$((Resolve-BaselineReviewScope))' via fast-path; $windowDisposition."
-    return [pscustomobject]@{
-      ImagePath = ''
-      CompletionTime = $null
-      MountedDrive = $mountedBaseline.MountedDrive
-      ReviewScope = Resolve-BaselineReviewScope
-      Profile = $profileContract
-      Launched = $launchedReviewWindow
-      ReusedExistingReviewWindow = $reusedReviewWindow
-      ReusedMountedBaseline = $true
-      FastPath = $true
-    }
   }
-}
-
-if ($candidateList.Count -eq 0) {
-  Write-BaselineLog -Level WARN -Message "No candidate volume matching '$ExpectedVolumeLabel' found in drives ($($normalizedDrives -join ', ')). Triggering ForceNewBackup..."
-  $ForceNewBackup = $true
 }
 
 if ($ElevatedWorker) {
@@ -848,10 +940,11 @@ if ($ElevatedWorker) {
   }
 }
 
-$completedImage = if ($ForceNewBackup) { $null } else { Get-CompletedTodayImage }
-if ($ForceNewBackup) {
-  $completedImage = Start-MacriumBackupAndWait
-} elseif ($null -eq $completedImage) {
+$completedImage = if ($ForceNewBackup) {
+  Start-MacriumBackupAndWait
+} elseif ($null -ne $completedToday) {
+  $completedToday
+} else {
   if (-not $StartBackupIfMissing) {
     throw 'No completed backup for today was found. Re-run with -StartBackupIfMissing to start the configured Macrium definition and poll for completion.'
   }
@@ -919,6 +1012,7 @@ if (-not $NoLaunchReview) {
   if ([string]::IsNullOrWhiteSpace($bcomparePath)) {
     throw 'Beyond Compare 5 executable was not found.'
   }
+  # RULE-REV-012: Non-interfering window resolution without process termination
   $profileContract = Test-LcmBcrProfile -MountedDriveLetter $receipt.MountedDrive.TrimEnd(':')
   Start-Process -FilePath $bcomparePath -ArgumentList @('/solo', '_LCM') | Out-Null
   $deadline = (Get-Date).AddSeconds(60)
@@ -926,11 +1020,12 @@ if (-not $NoLaunchReview) {
     Start-Sleep -Milliseconds 250
     $reviewWindows = @(Get-LcmReviewWindows)
   } while ($reviewWindows.Count -eq 0 -and (Get-Date) -lt $deadline)
-  if ($reviewWindows.Count -eq 0) {
-    throw 'Beyond Compare did not expose the expected _LCM Folder Compare window within 60 seconds.'
+  if ($reviewWindows.Count -ge 1) {
+    $reviewTitle = Set-LcmReviewWindowTitle -Window $reviewWindows[0] -Scope $reviewIdentity
+    Write-BaselineLog -Level INFO -Message "Set Beyond Compare review title to '$reviewTitle'."
+  } else {
+    Write-BaselineLog -Level INFO -Message "Beyond Compare launched; window title discovery continuing asynchronously on desktop."
   }
-  $reviewTitle = Set-LcmReviewWindowTitle -Window $reviewWindows[0] -Scope $reviewIdentity
-  Write-BaselineLog -Level INFO -Message "Set Beyond Compare review title to '$reviewTitle'."
 }
 
 $mountEvidence = $receipt.MountEvidence

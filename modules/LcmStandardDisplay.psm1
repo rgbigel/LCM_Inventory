@@ -7,7 +7,7 @@
   Path: modules/LcmStandardDisplay.psm1
   Authors: Rolf, Copilot
   Version: 10.0.1
-  Date: 2026-11-08 15:07:36
+  Date: 2026-11-08 17:34:00
 #>
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
@@ -19,6 +19,7 @@ function Open-LcmStandardDisplay {
     [ValidatePattern('^[a-f0-9]{32}$')][string]$SnapshotId,
     [hashtable]$Parameters = @{},
     [ValidateRange(1,300)][int]$TimeoutSeconds = 120,
+    [Alias('Panel')]
     [switch]$Pane
   )
   $origin = 'http://127.0.0.1:9876'

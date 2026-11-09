@@ -10,11 +10,13 @@
   Path: LCM_Inventory/tools/Show-FailureAnalysis.ps1
   Authors: Rolf, Copilot
   Version: 10.0.1
-  Date: 2026-10-21
+  Date: 2026-11-08 17:34:00
 .PARAMETER ReportPath
   Exact retained Markdown or structured JSON report to display.
 .PARAMETER NoLaunch
   Creates the retained snapshot without opening the browser.
+.PARAMETER Pane
+  Opens the display inside an Antigravity IDE editor/side pane instead of an external browser window (Alias: -Panel).
 .PARAMETER SnapshotRoot
   Optional snapshot root; defaults to data\artifacts\failure-analysis.
 .PARAMETER ShowAll
@@ -31,6 +33,9 @@ param(
   [string]$ReportPath,
   [string]$SnapshotRoot,
   [switch]$NoLaunch,
+  [Parameter(Mandatory = $false, HelpMessage = 'Opens the display inside an Antigravity IDE editor/side pane')]
+  [Alias('Panel')]
+  [switch]$Pane,
   [Alias('Detailed')]
   [switch]$ShowAll,
   [string]$LogFile,
@@ -66,12 +71,12 @@ if (-not (Test-Path -LiteralPath $logDirectory -PathType Container)) {
 }
 function Write-FailureViewerAudit {
   [CmdletBinding()]
-  param([string]$Event, [string]$State, [string]$Message)
+  param([Alias('Event')][string]$AuditEvent, [string]$State, [string]$Message)
   $record = [ordered]@{
     Timestamp = [DateTimeOffset]::Now.ToString('o')
     Tool = $toolName
     Version = $toolVersion
-    Event = $Event
+    Event = $AuditEvent
     Status = $State
     ReportPath = $ReportPath
     SnapshotId = $snapshotId
@@ -160,7 +165,7 @@ if (-not $NoLaunch) {
   }
   try {
     Import-Module -Name $displayModule -Force -ErrorAction Stop
-    $displayResult = Open-LcmStandardDisplay -DisplayId failure-analysis -SnapshotId $snapshotId -ErrorAction Stop
+    $displayResult = Open-LcmStandardDisplay -DisplayId failure-analysis -SnapshotId $snapshotId -Pane:$Pane -ErrorAction Stop
     if ($displayResult -is [psobject] -and $displayResult.PSObject.Properties['Success'] -and -not $displayResult.Success) {
       throw 'The shared display helper reported that the daemon route could not be opened.'
     }
