@@ -11,20 +11,20 @@ Describe 'LCM Rule Health Diagnostics & Repair Engine' {
     Context 'Diagnostic Engine' {
         It 'Executes Test-LCMRuleHealth and returns structured results' {
             $results = & $script:diagTool -WorkspaceRoot 'D:\Git_Repositories'
-            @($results).Count | Should BeGreaterThan 0
+            @($results).Count | Should -BeGreaterThan 0
         }
 
         It 'Validates that LCM_Inventory has a valid junction' {
             $results = & $script:diagTool -TargetRepository 'LCM_Inventory' -WorkspaceRoot 'D:\Git_Repositories'
             $wi = @($results | Where-Object { $_.Repository -eq 'LCM_Inventory' })
-            $wi.Count | Should Be 1
-            $wi[0].JunctionState | Should Be 'Junction Valid'
+            $wi.Count | Should -Be 1
+            $wi[0].JunctionState | Should -Be 'Junction Valid'
         }
     }
 
     Context 'Repair Engine Simulation' {
         It 'Executes Repair-LCMRules in DryRun mode without errors' {
-            { & $script:repairTool -TargetRepository 'BootEntryManager' -DryRun -WorkspaceRoot 'D:\Git_Repositories' } | Should Not Throw
+            { & $script:repairTool -TargetRepository 'BootEntryManager' -DryRun -WorkspaceRoot 'D:\Git_Repositories' } | Should -Not -Throw
         }
     }
 }

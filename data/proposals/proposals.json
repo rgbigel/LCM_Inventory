@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-11-07T16:56:06+01:00",
+  "updated_at": "2026-11-09T20:02:13+01:00",
   "review_granularity": "coarse",
   "lcm_mode": "active",
-  "last_proposal_id": 309,
+  "last_proposal_id": 313,
   "proposals": [
     {
       "id": 261,
@@ -478,7 +478,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "approved",
+      "state": "held",
       "bundle_id": "CRP-253",
       "bundle_dir": "docs/Proposals/CRP-253-LCM_Mode-World-Switch",
       "docs": {
@@ -492,10 +492,11 @@
       "details": "Decouples child application repositories from Git Root into secondary storage (D:\\Git_World) linked via NTFS junctions on demand, while preserving Git Root core repository assets and LCM infrastructure physically intact.",
       "plan_path": "docs/Proposals/CRP-253-LCM_Mode-World-Switch/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-253-LCM_Mode-World-Switch/Walkthrough.md",
-      "priority": 3,
+      "priority": 6,
       "dates": {
         "created": "2026-10-13 15:55:00",
-        "suggested": "2026-10-13 15:55:00"
+        "suggested": "2026-10-13 15:55:00",
+        "held": "2026-11-09 18:38:13"
       },
       "state_history": [
         {
@@ -503,12 +504,25 @@
           "timestamp": "2026-10-13 15:55:00",
           "user": "rgbig",
           "note": "Registered design proposal for hybrid Git World mounting and governance pre-linking."
+        },
+        {
+          "from_state": "approved",
+          "state": "held",
+          "timestamp": "2026-11-09 18:38:13",
+          "user": "rgbig",
+          "note": "Postponed per operator instruction: Retain CRP-253 (not dead); incorporate configurable sandbox Git_Root variable and internal junction switching scripts.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
-      "progress_state": "in_progress",
+      "progress_state": "deferred",
       "flow_mode": "doit",
       "always_proceed": true,
-      "disposition": null
+      "disposition": "Postponed",
+      "supersedes": "CRP-251",
+      "supersedes_id": 251,
+      "supersedes_at": "2026-11-09 18:44:14"
     },
     {
       "id": 252,
@@ -561,7 +575,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "suggested",
+      "state": "superseded",
       "bundle_id": "CRP-251",
       "bundle_dir": "docs/Proposals/CRP-251-Sandboxed-Prototyping-Mode",
       "docs": {
@@ -577,11 +591,12 @@
       "walkthrough_path": "docs/Proposals/CRP-251-Sandboxed-Prototyping-Mode/Walkthrough.md",
       "flow_mode": "normal",
       "always_proceed": false,
-      "progress_state": "suggested",
+      "progress_state": "deferred",
       "priority": 2,
       "dates": {
         "created": "2026-10-13 16:14:00",
-        "suggested": "2026-10-13 16:14:00"
+        "suggested": "2026-10-13 16:14:00",
+        "superseded": "2026-11-09 18:44:14"
       },
       "state_history": [
         {
@@ -589,10 +604,23 @@
           "timestamp": "2026-10-13 16:14:00",
           "user": "rgbig",
           "note": "Deferred design request for isolated non-live experimentation and optional CRP promotion."
+        },
+        {
+          "from_state": "suggested",
+          "state": "superseded",
+          "timestamp": "2026-11-09 18:44:14",
+          "user": "rgbig",
+          "note": "Merged into CRP-253 (Sandboxed Prototyping Mode and isolation tiers consolidated into World Switch architecture) per operator instruction.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "supersedes_id": 244,
-      "supersedes_at": "2026-10-16 20:56:10"
+      "supersedes_at": "2026-10-16 20:56:10",
+      "superseded_by": "CRP-253",
+      "superseded_at": "2026-11-09 18:44:14",
+      "disposition": "Superseded by CRP-253"
     },
     {
       "id": 250,
@@ -747,7 +775,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "suggested",
+      "state": "superseded",
       "bundle_id": "CRP-248",
       "bundle_dir": "docs/Proposals/CRP-248-Standard-Display-Tri-State-Filter-and-Qualified-Search-Atom",
       "docs": {
@@ -763,11 +791,11 @@
       "walkthrough_path": "docs/Proposals/CRP-248-Standard-Display-Tri-State-Filter-and-Qualified-Search-Atom/Walkthrough.md",
       "flow_mode": "normal",
       "always_proceed": false,
-      "progress_state": "suggested",
       "priority": 3,
       "dates": {
         "created": "2026-10-13 20:31:51",
-        "suggested": "2026-10-13 20:31:51"
+        "suggested": "2026-10-13 20:31:51",
+        "superseded": "2026-11-08 15:00:39"
       },
       "state_history": [
         {
@@ -775,8 +803,22 @@
           "timestamp": "2026-10-13 20:31:51",
           "user": "rgbig",
           "note": "Registered from the proven LCM Analysis Viewer interaction pattern; implementation is deferred."
+        },
+        {
+          "from_state": "suggested",
+          "state": "superseded",
+          "timestamp": "2026-11-08 15:00:39",
+          "user": "rgbig",
+          "note": "Consolidated into Master Proposal CRP-309",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
-      ]
+      ],
+      "progress_state": "deferred",
+      "disposition": "superseded",
+      "superseded_by_id": 309,
+      "superseded_at": "2026-11-08 15:00:39"
     },
     {
       "id": 247,
@@ -13698,8 +13740,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "suggested",
-      "progress_state": "undecided",
+      "state": "superseded",
       "bundle_id": "BUG-289",
       "bundle_dir": "docs/Proposals/BUG-289-BUG-Control-Hub-governance-switch-does-not-reflect",
       "docs": {
@@ -13712,11 +13753,29 @@
       "author": "rgbig",
       "details": "The Control Hub Governance switch presents ON while the authoritative proposal ledger has lcm_mode: paused. The operator cannot tell whether a click reached the daemon, changed governance, or was ignored. Repair backend-confirmed ON/OFF feedback first; define a yellow bounded-recovery indicator only as an explicit, scoped, authorized state that retains Gate 2.",
       "priority": 5,
-      "disposition": null,
       "flow_mode": "doit",
       "always_proceed": true,
       "plan_path": "docs/Proposals/BUG-289-BUG-Control-Hub-governance-switch-does-not-reflect/Implementation_Plan.md",
-      "walkthrough_path": "docs/Proposals/BUG-289-BUG-Control-Hub-governance-switch-does-not-reflect/Walkthrough.md"
+      "walkthrough_path": "docs/Proposals/BUG-289-BUG-Control-Hub-governance-switch-does-not-reflect/Walkthrough.md",
+      "progress_state": "deferred",
+      "disposition": "superseded",
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "superseded",
+          "timestamp": "2026-11-08 15:00:40",
+          "user": "rgbig",
+          "note": "Consolidated into Master Proposal CRP-309",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "superseded": "2026-11-08 15:00:40"
+      },
+      "superseded_by_id": 309,
+      "superseded_at": "2026-11-08 15:00:40"
     },
     {
       "id": 290,
@@ -13926,8 +13985,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "suggested",
-      "progress_state": "undecided",
+      "state": "superseded",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-292-Standard-Display-Atom-and-Adoption-Programme",
       "docs": {
@@ -13940,11 +13998,29 @@
       "author": "rgbig",
       "details": "Umbrella Goal: establish one reusable, governed Standard Display system across LCM web, native, and console presentation surfaces without copying ShowCM wholesale or advancing implementation.",
       "priority": 5,
-      "disposition": null,
       "flow_mode": "standard",
       "always_proceed": false,
       "plan_path": "docs/Proposals/CRP-292-Standard-Display-Atom-and-Adoption-Programme/Implementation_Plan.md",
-      "walkthrough_path": "docs/Proposals/CRP-292-Standard-Display-Atom-and-Adoption-Programme/Walkthrough.md"
+      "walkthrough_path": "docs/Proposals/CRP-292-Standard-Display-Atom-and-Adoption-Programme/Walkthrough.md",
+      "progress_state": "deferred",
+      "disposition": "superseded",
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "superseded",
+          "timestamp": "2026-11-08 14:58:08",
+          "user": "rgbig",
+          "note": "",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "superseded": "2026-11-08 14:58:08"
+      },
+      "superseded_by_id": 309,
+      "superseded_at": "2026-11-08 14:58:08"
     },
     {
       "id": 293,
@@ -13956,8 +14032,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "suggested",
-      "progress_state": "undecided",
+      "state": "superseded",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-293-ShowCM-Typed-Controller-Reference-Completion",
       "docs": {
@@ -13970,11 +14045,29 @@
       "author": "rgbig",
       "details": "First implementation path: make the completed CRP-266 architecture operational in ShowCM through typed controller contracts and reusable front-end action atoms. This is the required reference predecessor for later Standard Display migrations.",
       "priority": 5,
-      "disposition": null,
       "flow_mode": "standard",
       "always_proceed": false,
       "plan_path": "docs/Proposals/CRP-293-ShowCM-Typed-Controller-Reference-Completion/Implementation_Plan.md",
-      "walkthrough_path": "docs/Proposals/CRP-293-ShowCM-Typed-Controller-Reference-Completion/Walkthrough.md"
+      "walkthrough_path": "docs/Proposals/CRP-293-ShowCM-Typed-Controller-Reference-Completion/Walkthrough.md",
+      "progress_state": "deferred",
+      "disposition": "superseded",
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "superseded",
+          "timestamp": "2026-11-08 14:59:33",
+          "user": "rgbig",
+          "note": "Consolidated into Master Proposal CRP-309",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "superseded": "2026-11-08 14:59:33"
+      },
+      "superseded_by_id": 309,
+      "superseded_at": "2026-11-08 14:59:33"
     },
     {
       "id": 294,
@@ -13986,8 +14079,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "suggested",
-      "progress_state": "undecided",
+      "state": "superseded",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-294-Read-Only-Standard-Display-Shell-and-Evidence-Migr",
       "docs": {
@@ -14000,11 +14092,29 @@
       "author": "rgbig",
       "details": "Adopt the Standard Display shell and read-only atoms for analysis, rules, readiness, and folder-analysis web displays after the ShowCM controller reference is accepted.",
       "priority": 5,
-      "disposition": null,
       "flow_mode": "standard",
       "always_proceed": false,
       "plan_path": "docs/Proposals/CRP-294-Read-Only-Standard-Display-Shell-and-Evidence-Migr/Implementation_Plan.md",
-      "walkthrough_path": "docs/Proposals/CRP-294-Read-Only-Standard-Display-Shell-and-Evidence-Migr/Walkthrough.md"
+      "walkthrough_path": "docs/Proposals/CRP-294-Read-Only-Standard-Display-Shell-and-Evidence-Migr/Walkthrough.md",
+      "progress_state": "deferred",
+      "disposition": "superseded",
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "superseded",
+          "timestamp": "2026-11-08 14:59:34",
+          "user": "rgbig",
+          "note": "Consolidated into Master Proposal CRP-309",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "superseded": "2026-11-08 14:59:34"
+      },
+      "superseded_by_id": 309,
+      "superseded_at": "2026-11-08 14:59:34"
     },
     {
       "id": 295,
@@ -14016,8 +14126,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "suggested",
-      "progress_state": "undecided",
+      "state": "superseded",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-295-Interactive-Table-Standard-Display-Migration",
       "docs": {
@@ -14030,11 +14139,29 @@
       "author": "rgbig",
       "details": "Adopt reusable table, filter, selection, modal, and async-action atoms for Tool Explorer, Workspace Inventory, and HA Inventory after the ShowCM controller reference is accepted.",
       "priority": 5,
-      "disposition": null,
       "flow_mode": "standard",
       "always_proceed": false,
       "plan_path": "docs/Proposals/CRP-295-Interactive-Table-Standard-Display-Migration/Implementation_Plan.md",
-      "walkthrough_path": "docs/Proposals/CRP-295-Interactive-Table-Standard-Display-Migration/Walkthrough.md"
+      "walkthrough_path": "docs/Proposals/CRP-295-Interactive-Table-Standard-Display-Migration/Walkthrough.md",
+      "progress_state": "deferred",
+      "disposition": "superseded",
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "superseded",
+          "timestamp": "2026-11-08 14:59:35",
+          "user": "rgbig",
+          "note": "Consolidated into Master Proposal CRP-309",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "superseded": "2026-11-08 14:59:35"
+      },
+      "superseded_by_id": 309,
+      "superseded_at": "2026-11-08 14:59:35"
     },
     {
       "id": 296,
@@ -14046,8 +14173,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "suggested",
-      "progress_state": "undecided",
+      "state": "superseded",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-296-Native-Standard-Display-Dialog-and-Launcher-Parity",
       "docs": {
@@ -14060,11 +14186,29 @@
       "author": "rgbig",
       "details": "Bring native WPF and WinForms Show surfaces into Standard Display dialog, DPI, desktop-dispatch, and single-instance parity without converting them to HTML.",
       "priority": 5,
-      "disposition": null,
       "flow_mode": "standard",
       "always_proceed": false,
       "plan_path": "docs/Proposals/CRP-296-Native-Standard-Display-Dialog-and-Launcher-Parity/Implementation_Plan.md",
-      "walkthrough_path": "docs/Proposals/CRP-296-Native-Standard-Display-Dialog-and-Launcher-Parity/Walkthrough.md"
+      "walkthrough_path": "docs/Proposals/CRP-296-Native-Standard-Display-Dialog-and-Launcher-Parity/Walkthrough.md",
+      "progress_state": "deferred",
+      "disposition": "superseded",
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "superseded",
+          "timestamp": "2026-11-08 14:59:36",
+          "user": "rgbig",
+          "note": "Consolidated into Master Proposal CRP-309",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "superseded": "2026-11-08 14:59:36"
+      },
+      "superseded_by_id": 309,
+      "superseded_at": "2026-11-08 14:59:36"
     },
     {
       "id": 297,
@@ -14076,8 +14220,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "suggested",
-      "progress_state": "undecided",
+      "state": "superseded",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-297-Console-and-Launcher-Standard-Display-Parity",
       "docs": {
@@ -14090,11 +14233,29 @@
       "author": "rgbig",
       "details": "Bring console and launcher Show surfaces into structured ANSI, progress, deterministic dispatch, provenance, and window-hygiene parity without forcing dashboard conversion.",
       "priority": 5,
-      "disposition": null,
       "flow_mode": "standard",
       "always_proceed": false,
       "plan_path": "docs/Proposals/CRP-297-Console-and-Launcher-Standard-Display-Parity/Implementation_Plan.md",
-      "walkthrough_path": "docs/Proposals/CRP-297-Console-and-Launcher-Standard-Display-Parity/Walkthrough.md"
+      "walkthrough_path": "docs/Proposals/CRP-297-Console-and-Launcher-Standard-Display-Parity/Walkthrough.md",
+      "progress_state": "deferred",
+      "disposition": "superseded",
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "superseded",
+          "timestamp": "2026-11-08 14:59:36",
+          "user": "rgbig",
+          "note": "Consolidated into Master Proposal CRP-309",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "superseded": "2026-11-08 14:59:36"
+      },
+      "superseded_by_id": 309,
+      "superseded_at": "2026-11-08 14:59:36"
     },
     {
       "id": 298,
@@ -14106,7 +14267,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "in_review",
+      "state": "held",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-298-Formalize-LCM-Repository-and-App-Onboarding-Modes",
       "docs": {
@@ -14151,17 +14312,28 @@
           "cohort_id": "",
           "cohort_gate": "BCR",
           "synchronization_outcome": "synchronized"
+        },
+        {
+          "from_state": "in_review",
+          "state": "held",
+          "timestamp": "2026-11-08 18:08:14",
+          "user": "rgbig",
+          "note": "Held per operator request for reassessment / pending implementation.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "dates": {
         "in_progress": "2026-10-20 20:52:00",
         "verified": "2026-10-20 20:54:48",
-        "in_review": "2026-10-20 20:54:54"
+        "in_review": "2026-10-20 20:54:54",
+        "held": "2026-11-08 18:08:14"
       },
       "flow_mode": "doit",
       "always_proceed": true,
-      "progress_state": "verification",
-      "disposition": null,
+      "progress_state": "deferred",
+      "disposition": "Held",
       "bcr_initiated_at": "2026-10-20 20:54:54",
       "bcr_disposition": null,
       "bcr_scope": "CRP-298"
@@ -14640,7 +14812,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "verified",
+      "state": "completed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-304-Atomized-failure-analysis-report-viewer",
       "docs": {
@@ -14675,11 +14847,22 @@
           "cohort_id": "",
           "cohort_gate": "",
           "synchronization_outcome": ""
+        },
+        {
+          "from_state": "verified",
+          "state": "completed",
+          "timestamp": "2026-11-08 18:08:14",
+          "user": "rgbig",
+          "note": "Bookkeeping synchronization: verified and accepted.",
+          "cohort_id": "unassigned",
+          "cohort_gate": "Gate 2",
+          "synchronization_outcome": "synchronized"
         }
       ],
       "dates": {
         "in_progress": "2026-10-21 22:03:56",
-        "verified": "2026-10-21 23:11:08"
+        "verified": "2026-10-21 23:11:08",
+        "completed": "2026-11-08 18:08:14"
       },
       "flow_mode": "doit",
       "always_proceed": true,
@@ -14689,8 +14872,8 @@
         "specification_path": "docs/Proposals/CRP-304-Atomized-failure-analysis-report-viewer/Specification.md",
         "scope": "DOIT 304,305; atomized viewer first, coordinated freshness contract; exclusive port 9876 delivery with no local-file fallback."
       },
-      "progress_state": "verification",
-      "disposition": null
+      "progress_state": "completed",
+      "disposition": "Completed"
     },
     {
       "id": 305,
@@ -14702,7 +14885,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "verified",
+      "state": "completed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-305-Coordinated-standard-display-freshness-contract",
       "docs": {
@@ -14737,11 +14920,22 @@
           "cohort_id": "",
           "cohort_gate": "",
           "synchronization_outcome": ""
+        },
+        {
+          "from_state": "verified",
+          "state": "completed",
+          "timestamp": "2026-11-08 18:08:14",
+          "user": "rgbig",
+          "note": "Bookkeeping synchronization: verified and accepted.",
+          "cohort_id": "unassigned",
+          "cohort_gate": "Gate 2",
+          "synchronization_outcome": "synchronized"
         }
       ],
       "dates": {
         "in_progress": "2026-10-21 22:03:56",
-        "verified": "2026-10-21 23:11:08"
+        "verified": "2026-10-21 23:11:08",
+        "completed": "2026-11-08 18:08:14"
       },
       "flow_mode": "doit",
       "always_proceed": true,
@@ -14751,8 +14945,8 @@
         "specification_path": "docs/Proposals/CRP-305-Coordinated-standard-display-freshness-contract/Specification.md",
         "scope": "DOIT 304,305; atomized viewer first, coordinated freshness contract; exclusive port 9876 delivery with no local-file fallback."
       },
-      "progress_state": "verification",
-      "disposition": null
+      "progress_state": "completed",
+      "disposition": "Completed"
     },
     {
       "id": 306,
@@ -14764,7 +14958,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "verified",
+      "state": "completed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-306-Normalize-Legacy-Workspace-Tool-and-Launcher-Namin",
       "docs": {
@@ -14801,14 +14995,25 @@
           "cohort_id": "",
           "cohort_gate": "",
           "synchronization_outcome": ""
+        },
+        {
+          "from_state": "verified",
+          "state": "completed",
+          "timestamp": "2026-11-08 18:08:14",
+          "user": "rgbig",
+          "note": "Bookkeeping synchronization: verified and accepted.",
+          "cohort_id": "unassigned",
+          "cohort_gate": "Gate 2",
+          "synchronization_outcome": "synchronized"
         }
       ],
       "dates": {
         "in_progress": "2026-11-06 10:31:47",
-        "verified": "2026-11-06 10:45:35"
+        "verified": "2026-11-06 10:45:35",
+        "completed": "2026-11-08 18:08:14"
       },
-      "progress_state": "verification",
-      "disposition": null
+      "progress_state": "completed",
+      "disposition": "Completed"
     },
     {
       "id": 307,
@@ -14819,7 +15024,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "in_review",
+      "state": "completed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-307-Macrium-BCR-baseline-drive-candidate-validation-an",
       "docs": {
@@ -14877,17 +15082,28 @@
           "cohort_id": "",
           "cohort_gate": "BCR",
           "synchronization_outcome": "synchronized"
+        },
+        {
+          "from_state": "in_review",
+          "state": "completed",
+          "timestamp": "2026-11-08 18:08:14",
+          "user": "rgbig",
+          "note": "Bookkeeping synchronization: verified and accepted.",
+          "cohort_id": "unassigned",
+          "cohort_gate": "Gate 2",
+          "synchronization_outcome": "synchronized"
         }
       ],
       "dates": {
         "in_progress": "2026-11-06 17:29:35",
         "verified": "2026-11-06 17:41:17",
-        "in_review": "2026-11-06 17:54:28"
+        "in_review": "2026-11-06 17:54:28",
+        "completed": "2026-11-08 18:08:14"
       },
       "flow_mode": "doit",
       "always_proceed": true,
-      "progress_state": "verification",
-      "disposition": null,
+      "progress_state": "completed",
+      "disposition": "Completed",
       "bcr_initiated_at": "2026-11-06 18:20:46",
       "bcr_disposition": null,
       "bcr_scope": "BUG-307"
@@ -14902,8 +15118,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "suggested",
-      "progress_state": "undecided",
+      "state": "completed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-308-GoodMorning-Baseline-Visibility-Default-BCR-Prepar",
       "docs": {
@@ -14916,11 +15131,49 @@
       "author": "rgbig",
       "details": "",
       "priority": 5,
-      "disposition": null,
-      "flow_mode": "standard",
-      "always_proceed": false,
       "plan_path": "docs/Proposals/CRP-308-GoodMorning-Baseline-Visibility-Default-BCR-Prepar/Implementation_Plan.md",
-      "walkthrough_path": "docs/Proposals/CRP-308-GoodMorning-Baseline-Visibility-Default-BCR-Prepar/Walkthrough.md"
+      "walkthrough_path": "docs/Proposals/CRP-308-GoodMorning-Baseline-Visibility-Default-BCR-Prepar/Walkthrough.md",
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-11-08 15:00:53",
+          "user": "rgbig",
+          "note": "",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-11-08 16:54:57",
+          "user": "rgbig",
+          "note": "",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "verified",
+          "state": "completed",
+          "timestamp": "2026-11-08 18:08:14",
+          "user": "rgbig",
+          "note": "Bookkeeping synchronization: verified and accepted.",
+          "cohort_id": "unassigned",
+          "cohort_gate": "Gate 2",
+          "synchronization_outcome": "synchronized"
+        }
+      ],
+      "dates": {
+        "in_progress": "2026-11-08 15:00:53",
+        "verified": "2026-11-08 16:54:57",
+        "completed": "2026-11-08 18:08:14"
+      },
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "progress_state": "completed",
+      "disposition": "Completed"
     },
     {
       "id": 309,
@@ -14932,8 +15185,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "suggested",
-      "progress_state": "undecided",
+      "state": "completed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-309-Unified-Elevated-Desktop-Daemon-Universal-Back-Cha",
       "docs": {
@@ -14946,16 +15198,386 @@
       "author": "rgbig",
       "details": "Consolidate desktop daemon and elevated execution into a single unified daemon on Port 9876 running with RunLevel Highest. Implements universal back-channel stdout/stderr capture, binding CORS headers for IDE pane hosting, and JIT ephemeral token security under the Quad-Principal Authenticated Users standard.",
       "priority": 5,
-      "disposition": null,
-      "flow_mode": "standard",
-      "always_proceed": false,
       "plan_path": "docs/Proposals/CRP-309-Unified-Elevated-Desktop-Daemon-Universal-Back-Cha/Implementation_Plan.md",
-      "walkthrough_path": "docs/Proposals/CRP-309-Unified-Elevated-Desktop-Daemon-Universal-Back-Cha/Walkthrough.md"
+      "walkthrough_path": "docs/Proposals/CRP-309-Unified-Elevated-Desktop-Daemon-Universal-Back-Cha/Walkthrough.md",
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-11-08 14:57:54",
+          "user": "rgbig",
+          "note": "",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-11-08 15:43:34",
+          "user": "rgbig",
+          "note": "",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-11-08 15:48:22",
+          "user": "rgbig",
+          "note": "",
+          "cohort_id": "",
+          "cohort_gate": "BCR",
+          "synchronization_outcome": "synchronized"
+        },
+        {
+          "from_state": "in_review",
+          "state": "completed",
+          "timestamp": "2026-11-08 16:41:23",
+          "user": "rgbig",
+          "note": "Review completed and committed (4d8f3d5).",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "in_progress": "2026-11-08 14:57:54",
+        "verified": "2026-11-08 15:43:34",
+        "in_review": "2026-11-08 15:48:22",
+        "completed": "2026-11-08 16:41:23"
+      },
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "supersedes_id": 289,
+      "supersedes_at": "2026-11-08 15:00:40",
+      "bcr_disposition": "Completed",
+      "bcr_disposition_at": "2026-11-08 16:41:23",
+      "bcr_disposition_notes": "",
+      "progress_state": "completed",
+      "disposition": "completed"
+    },
+    {
+      "id": 310,
+      "crp_id": "CRP-310",
+      "timestamp": "2026-11-08 17:22:00",
+      "title": "Workspace-Wide Subsystem and Repository Alignment with LCM Port 9876 Architecture",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-310",
+      "app_id": "APP-001",
+      "primary_app": "APP-001",
+      "affected_apps": [
+        "APP-001"
+      ],
+      "state": "completed",
+      "plan_state": "verified",
+      "bundle_id": "COH-310",
+      "bundle_dir": "docs/Proposals/CRP-310-Workspace-Subsystem-Repository-Alignment",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig",
+      "details": "Align all LCM-governed child repositories and subsystems with the Port 9876 elevated daemon, eliminate speculative relative pathing across HaSSD06_Inventory, implement two-step readiness testing standard, repair rule reparse points, and migrate remaining frontend dispatchers to typed Action Intent DTOs.",
+      "priority": 5,
+      "plan_path": "docs/Proposals/CRP-310-Workspace-Subsystem-Repository-Alignment/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-310-Workspace-Subsystem-Repository-Alignment/Walkthrough.md",
+      "state_history": [
+        {
+          "from_state": "new",
+          "state": "suggested",
+          "timestamp": "2026-11-08 17:22:00",
+          "user": "rgbig",
+          "note": "Initialized alignment proposal and cohort COH-310.",
+          "cohort_id": "COH-310",
+          "cohort_gate": "Gate 1",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-11-08 17:28:44",
+          "user": "rgbig",
+          "note": "",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-11-08 17:48:08",
+          "user": "rgbig",
+          "note": "",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-11-08 17:58:18",
+          "user": "rgbig",
+          "note": "Operator accepted in chat: accept (here)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_review",
+          "state": "completed",
+          "timestamp": "2026-11-08 18:08:14",
+          "user": "rgbig",
+          "note": "Bookkeeping synchronization: verified and accepted.",
+          "cohort_id": "COH-310",
+          "cohort_gate": "Gate 2",
+          "synchronization_outcome": "synchronized"
+        },
+        {
+          "from_state": "completed",
+          "state": "held",
+          "timestamp": "2026-11-09 15:03:26",
+          "user": "rgbig",
+          "note": "Re-opening for Gate 2 visual review",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "held",
+          "state": "in_review",
+          "timestamp": "2026-11-09 15:03:54",
+          "user": "rgbig",
+          "note": "Restored to in_review for Gate 2 visual review",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_review",
+          "state": "completed",
+          "timestamp": "2026-11-09 19:12:19",
+          "user": "rgbig",
+          "note": "Review completed and committed (1452779).",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "suggested": "2026-11-08 17:22:00",
+        "in_progress": "2026-11-08 17:28:44",
+        "verified": "2026-11-08 17:48:08",
+        "held": "2026-11-09 15:03:26",
+        "in_review": "2026-11-09 15:03:54",
+        "completed": "2026-11-09 19:12:19"
+      },
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "bcr_initiated_at": "2026-11-08 17:59:09",
+      "bcr_scope": "CRP-310",
+      "resume_state": "completed",
+      "hold_reason": null,
+      "bcr_disposition": "Completed",
+      "bcr_disposition_at": "2026-11-09 19:12:18",
+      "bcr_disposition_notes": "",
+      "progress_state": "completed",
+      "disposition": "completed"
+    },
+    {
+      "id": 311,
+      "crp_id": "BUG-311",
+      "timestamp": "2026-11-09 16:15:39",
+      "title": "[BUG] Repair Macrium Daily Baseline Selection, BCompare Non-Interference, and Direct Intent Mapping",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "BUG-311",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "in_review",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/BUG-311-BUG-Repair-Macrium-Daily-Baseline-Selection-BCompa",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig",
+      "details": "Fix fast-path baseline selection to prioritize today completed backup images over yesterday stale mounts, eliminate premature BCompare process killing and single-window assertions, implement interim tool_intents.json direct goal mapping, and re-inforce execution governance rules.",
+      "priority": 5,
+      "plan_path": "docs/Proposals/BUG-311-BUG-Repair-Macrium-Daily-Baseline-Selection-BCompa/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/BUG-311-BUG-Repair-Macrium-Daily-Baseline-Selection-BCompa/Walkthrough.md",
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-11-09 16:15:48",
+          "user": "rgbig",
+          "note": "",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-11-09 16:27:37",
+          "user": "rgbig",
+          "note": "",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-11-09 20:02:13",
+          "user": "rgbig",
+          "note": "",
+          "cohort_id": "",
+          "cohort_gate": "BCR",
+          "synchronization_outcome": "synchronized"
+        }
+      ],
+      "dates": {
+        "in_progress": "2026-11-09 16:15:48",
+        "verified": "2026-11-09 16:27:37",
+        "in_review": "2026-11-09 20:02:13"
+      },
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "progress_state": "verification",
+      "disposition": null,
+      "bcr_initiated_at": "2026-11-09 20:02:13",
+      "bcr_disposition": null,
+      "bcr_scope": "BUG-311"
+    },
+    {
+      "id": 312,
+      "crp_id": "CRP-312",
+      "timestamp": "2026-11-09 18:33:04",
+      "title": "[FEAT] Dedicated Show-ToolIntents Viewer and ShowTools Explorer Integration",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-312",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "in_progress",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/CRP-312-Dedicated-Show-ToolIntents-Viewer-and-ShowTools-Explorer",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig",
+      "details": "Create Show-ToolIntents.ps1 viewer script with Cmd/ShowToolIntents.cmd trampoline and integrate a Show-Tool-Intents button in Show-ToolsExplorer.ps1.",
+      "priority": 5,
+      "plan_path": "docs/Proposals/CRP-312-Dedicated-Show-ToolIntents-Viewer-and-ShowTools-Explorer/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-312-Dedicated-Show-ToolIntents-Viewer-and-ShowTools-Explorer/Walkthrough.md",
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-11-09 18:33:04",
+          "user": "rgbig",
+          "note": "Immediate registration per operator command",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "in_progress": "2026-11-09 18:33:04"
+      },
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "progress_state": "in_progress",
+      "disposition": null
+    },
+    {
+      "id": 313,
+      "crp_id": "BUG-313",
+      "timestamp": "2026-11-09 19:01:08",
+      "title": "[BUG] Repair Action Gateway CLI Argument Preservation and Port 9876 Direct Intent Completion",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "BUG-313",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "verified",
+      "progress_state": "verification",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/BUG-313-Repair-Action-Gateway-CLI-Argument-Preservation",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig",
+      "details": "Fix ExecuteActionIntent in DaemonActionController.ps1 to preserve command line arguments when matching tools or executing raw commands, preventing argument dropping (e.g. -CRP). Migrate Control Hub action dispatching to structured DaemonActionIntent DTOs.",
+      "priority": 5,
+      "disposition": null,
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "plan_path": "docs/Proposals/BUG-313-Repair-Action-Gateway-CLI-Argument-Preservation/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/BUG-313-Repair-Action-Gateway-CLI-Argument-Preservation/Walkthrough.md",
+      "state_history": [
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-11-09 19:07:31",
+          "user": "rgbig",
+          "note": "Automated verification passed: LcmElevatedDaemon.Tests.ps1 14/14 tests and live daemon REST argument preservation.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ]
     }
   ],
   "testing_mode": "active",
   "active_context": null,
   "review_cohorts": [
+    {
+      "id": "COH-310",
+      "state": "open",
+      "prime_proposal_id": 310,
+      "proposal_ids": [
+        310
+      ],
+      "repositories": [
+        "LCM_Inventory",
+        "HaSSD06",
+        "HaSSD06_Inventory",
+        "LCM_Tools",
+        "OneDriveMaintenance"
+      ],
+      "created_at": "2026-11-08T17:22:00+01:00",
+      "gate_history": [
+        {
+          "gate": "BCR",
+          "required_state": "verified",
+          "timestamp": "2026-11-09T15:03:06.9928634+01:00",
+          "synchronized_member_ids": [],
+          "no_op_member_ids": [],
+          "stopped_members": [
+            "Proposal #310 cannot synchronize from 'completed' to 'verified' for BCR because it has already passed the required gate state."
+          ]
+        }
+      ],
+      "updated_at": "2026-11-09T15:03:06.9928634+01:00"
+    },
     {
       "id": "COH-260",
       "state": "closed",

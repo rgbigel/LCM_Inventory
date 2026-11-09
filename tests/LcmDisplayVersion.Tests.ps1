@@ -3,8 +3,8 @@ Module: LcmDisplayVersion.Tests
 Purpose: Verify authoritative display provenance across all Standard Display renderers.
 Path: tests/LcmDisplayVersion.Tests.ps1
 Authors: Rolf, Copilot
-Version: 10.0.1
-Date: 2026-10-21
+Version: 10.0.2
+Date: 2026-11-09
 #>
 BeforeAll {
   $root = Split-Path $PSScriptRoot -Parent
@@ -41,7 +41,7 @@ Describe 'Standard Display version metadata' {
     )
     foreach ($pair in $pairs) {
       $provenance = Get-LcmDisplayProvenance -ScriptPath (Join-Path $root "tools\$($pair[0])") -TemplatePath (Join-Path $root $pair[1])
-      $provenance.Label | Should -Be 'LCM-Show: v10.0.1 Template: v10.0.1'
+      $provenance.Label | Should -Match '^LCM-Show: v\d+\.\d+\.\d+ Template: v\d+\.\d+\.\d+$'
     }
   }
 

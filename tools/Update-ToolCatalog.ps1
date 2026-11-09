@@ -12,7 +12,7 @@
   Path: D:\Git_Repositories\LCM_Inventory\tools\Update-ToolCatalog.ps1
   Authors: Rolf, LCM_AI Engine
   Version: 10.0.1
-  Date: 2026-10-21
+  Date: 2026-11-09 19:30:00
 .PARAMETER Silent
   Suppresses non-error terminal output (useful in automated pipelines).
 .PARAMETER ShowAll
@@ -1253,6 +1253,105 @@ try {
   if ($purgedCount -gt 0) {
     Write-ToolLog -Message "Cleaned $purgedCount legacy companion .cmd files from tools/ root." -Level ACTION
   }
+
+  # ----------------------------------------------------------------------------
+  # 6.5 Synchronize LCM Tool Intents Ledger (LCM_Inventory/config/tool_intents.json)
+  # ----------------------------------------------------------------------------
+  $toolIntentsJsonPath = Join-Path $configDir 'tool_intents.json'
+  $intentsDict = [ordered]@{}
+
+  # Primary semantic aliases
+  $primaryShortcuts = @{
+    "bcr"             = @{ target = "Invoke-MacriumDailyBcrBaseline.ps1"; goal = "Open Beyond Compare 5 review comparing workspace against today daily Macrium baseline" }
+    "mount"           = @{ target = "Mount-MacriumDailyBaseline.ps1"; goal = "Mount today daily Macrium backup image as a virtual drive for baseline review" }
+    "dismount"        = @{ target = "Dismount-MacriumCurrentBaseline.ps1"; goal = "Dismount currently mounted Macrium virtual drive" }
+    "goodmorning"     = @{ target = "Invoke-LCM_GoodMorning.ps1"; goal = "Execute morning workspace synchronization and environment verification" }
+    "goodnight"       = @{ target = "Invoke-LCM_GoodNight.ps1"; goal = "Execute evening session archive and memory preservation" }
+    "rules"           = @{ target = "Show-Rules.ps1"; goal = "Open LCM Rules and Governance Matrix dashboard" }
+    "tools"           = @{ target = "Show-ToolsExplorer.ps1"; goal = "Open LCM Tool Explorer dashboard" }
+    "showtools"       = @{ target = "Show-ToolsExplorer.ps1"; goal = "Open LCM Tool Explorer dashboard" }
+    "toolintents"     = @{ target = "Show-ToolIntents.ps1"; goal = "Open LCM Tool Intents Explorer" }
+    "showtoolintents" = @{ target = "Show-ToolIntents.ps1"; goal = "Open LCM Tool Intents Explorer" }
+    "push"            = @{ target = "Invoke-LCM_Push.ps1"; goal = "Push all ahead workspace repositories to remote Git repositories in lockstep" }
+    "readiness"       = @{ target = "Show-LCM_Readiness.ps1"; goal = "Open LCM Quality Gate and Subsystem Readiness Rollup dashboard" }
+    "controlhub"      = @{ target = "Show-LcmControl.ps1"; goal = "Open Configuration Management Control Hub dashboard" }
+    "showcm"          = @{ target = "Show-LcmControl.ps1"; goal = "Open Configuration Management Control Hub dashboard" }
+    "hub"             = @{ target = "Show-LcmControl.ps1"; goal = "Open Configuration Management Control Hub dashboard" }
+  }
+
+  foreach ($k in $primaryShortcuts.Keys) {
+    $info = $primaryShortcuts[$k]
+    $t = $sortedTools | Where-Object { $_.Name -eq $info.target } | Select-Object -First 1
+    if ($t) {
+      $trampoline = if ($t.ShortName -and (Test-Path (Join-Path $cmdDir "$($t.ShortName).cmd"))) { "$($t.ShortName).cmd" } else { $null }
+      $intentsDict[$k] = [ordered]@{
+        goal              = $info.goal
+        executable        = if ($t.Type -eq "Batch") { "cmd.exe /c" } else { "pwsh.exe" }
+        script            = $t.RelativePath.Replace("\", "/")
+        parameters        = [ordered]@{}
+        trampoline        = $trampoline
+        elevated          = [bool]$t.Admin
+        group             = $t.Group
+        category          = $t.Category
+        audience          = $t.Audience
+        role              = $t.Role
+        is_primary_intent = $true
+      }
+    }
+  }
+
+  foreach ($t in $sortedTools) {
+    $stem = [System.IO.Path]::GetFileNameWithoutExtension($t.Name)
+    $cleanStem = $stem.ToLowerInvariant()
+    $trampoline = if ($t.ShortName -and (Test-Path (Join-Path $cmdDir "$($t.ShortName).cmd"))) { "$($t.ShortName).cmd" } else { $null }
+
+    $params = [ordered]@{}
+    if ($t.Parameters) {
+      foreach ($p in $t.Parameters) {
+        $params["-$($p.Name)"] = if ($p.Mandatory) { "{REQUIRED}" } else { if ($p.Default) { $p.Default } else { "{OPTIONAL}" } }
+      }
+    }
+
+    $entry = [ordered]@{
+      goal              = $t.Description
+      executable        = if ($t.Type -eq "Batch") { "cmd.exe /c" } else { "pwsh.exe" }
+      script            = $t.RelativePath.Replace("\", "/")
+      parameters        = $params
+      trampoline        = $trampoline
+      elevated          = [bool]$t.Admin
+      group             = $t.Group
+      category          = $t.Category
+      audience          = $t.Audience
+      role              = $t.Role
+      is_primary_intent = $false
+    }
+
+    if (-not $intentsDict.Contains($cleanStem)) {
+      $intentsDict[$cleanStem] = $entry
+    }
+    $noDash = $cleanStem.Replace("-", "").Replace("_", "")
+    if (-not $intentsDict.Contains($noDash)) {
+      $intentsDict[$noDash] = $entry
+    }
+    if ($t.ShortName) {
+      $snLower = $t.ShortName.ToLowerInvariant()
+      if (-not $intentsDict.Contains($snLower)) {
+        $intentsDict[$snLower] = $entry
+      }
+    }
+  }
+
+  $intentsPayload = [ordered]@{
+    version        = "1.0.0"
+    description    = "Direct operational intents to executable commands ledger for AI pairs and operators"
+    total_intents  = $intentsDict.Count
+    updated_at     = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+    intents        = $intentsDict
+  }
+
+  $intentsJsonContent = $intentsPayload | ConvertTo-Json -Depth 6
+  [System.IO.File]::WriteAllText($toolIntentsJsonPath, $intentsJsonContent, $utf8NoBom)
+  Write-ToolLog -Message "Synchronized tool intents ledger ($($intentsDict.Count) intents): $toolIntentsJsonPath" -Level ACTION
 
   # ----------------------------------------------------------------------------
   # 7. Generate README.md Reference

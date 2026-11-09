@@ -215,7 +215,7 @@ class DaemonActionController {
 
       $timeoutMs = if ($req.TimeoutMs -gt 0) {
         $req.TimeoutMs
-      } elseif ($cmdToRun -match '(?i)push|gemini|export|maintenance|macrium') {
+      } elseif ($cmdToRun -match '(?i)push|gemini|export|maintenance|macrium|bcr|baseline') {
         300000
       } else {
         60000

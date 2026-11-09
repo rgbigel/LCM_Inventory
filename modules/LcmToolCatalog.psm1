@@ -11,7 +11,7 @@
   Path: tools/modules/LcmToolCatalog.psm1
   Authors: Rolf, Copilot
   Version: 10.0.1
-  Date: 2026-11-09 18:43:00
+  Date: 2026-11-09 19:15:00
 #>
 
 Set-StrictMode -Version Latest
@@ -273,16 +273,7 @@ function Build-LcmToolIndexHtml {
                     </select>
                 </div>
             </div>
-            <div class="header-actions">
-                <button class="btn-export" id="btn-theme-toggle" onclick="window.LcmTools.toggleTheme()" title="Toggle Light/Dark Theme" style="cursor: pointer; display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; font-size: 11px; font-weight: 600; border-radius: 5px; border: 1px solid var(--border); background: var(--bg-secondary); color: var(--text-primary); transition: all 0.2s;">
-                    <span>🌓</span> <span>Theme</span>
-                </button>
-                <button class="btn-export" id="btn-show-intents" onclick="window.LcmTools.openToolIntents()" title="Open LCM Tool Intents Explorer (🎯 Intents)" style="cursor: pointer; display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; font-size: 11px; font-weight: 600; border-radius: 5px; border: 1px solid var(--border); background: var(--bg-secondary); color: var(--text-primary); transition: all 0.2s;">
-                    <span>🎯</span> <span>Tool Intents</span>
-                </button>
-                <button class="btn-refresh" onclick="window.LcmTools.refreshToolCatalog()" title="Re-scan tools and regenerate catalog (🔄 Refresh)" style="padding: 4px 10px; font-size: 11px; border-radius: 5px;">
-                    <span>🔄</span> <span>Refresh</span>
-                </button>
+            <div class="header-actions" style="margin-left: auto; display: flex; align-items: center; gap: 8px;">
                 <button class="btn-help-nav" onclick="window.LcmTools.openHelpModal()" title="Open UI Feature Guide, Icon Legend & Parameter Explanations" style="padding: 4px 10px; font-size: 11px; border-radius: 5px;">
                     <span>❓</span> <span>Help & Legend</span>
                 </button>
@@ -327,15 +318,34 @@ function Build-LcmToolIndexHtml {
         </div>
 
         <!-- Aligned Column Controls Toolbar & Search -->
-        <div class="filter-panel-top">
-            <div class="search-wrapper">
-                <input type="text" class="search-input" id="search-input" placeholder="🔍 Global Search across all fields (support !term and !Col:Val negation)..." oninput="window.LcmTools.applyFilters()">
+        <!-- Universal Toolbar & Filters Panel (Split into Two Clean Lines to Prevent Overflow) -->
+        <div class="filter-panel-top" style="display: flex; flex-direction: column; gap: 8px; padding: 8px 12px;">
+            <!-- Line 3A: Global Search Bar and Quick Utility Switches (Theme, Tool Intents, Refresh, Reset) -->
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; flex-wrap: wrap;">
+                <div class="search-wrapper" style="flex: 1; min-width: 280px;">
+                    <input type="text" class="search-input" id="search-input" placeholder="🔍 Global Search across all fields (support !term and !Col:Val negation)..." oninput="window.LcmTools.applyFilters()" style="padding: 6px 12px; height: 32px; font-size: 12px;">
+                </div>
+                <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
+                    <button class="btn-export" id="btn-theme-toggle" onclick="window.LcmTools.toggleTheme()" title="Toggle Light/Dark Theme" style="cursor: pointer; display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; font-size: 11px; font-weight: 600; border-radius: 5px; border: 1px solid var(--border); background: var(--bg-secondary); color: var(--text-primary); transition: all 0.2s;">
+                        <span>🌓</span> <span>Theme</span>
+                    </button>
+                    <button class="btn-export" id="btn-show-intents" onclick="window.LcmTools.openToolIntents()" title="Open LCM Tool Intents Explorer (🎯 Intents)" style="cursor: pointer; display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; font-size: 11px; font-weight: 600; border-radius: 5px; border: 1px solid var(--border); background: var(--bg-secondary); color: var(--text-primary); transition: all 0.2s;">
+                        <span>🎯</span> <span>Tool Intents</span>
+                    </button>
+                    <button class="btn-refresh" onclick="window.LcmTools.refreshToolCatalog()" title="Re-scan tools and regenerate catalog (🔄 Refresh)" style="padding: 4px 10px; font-size: 11px; border-radius: 5px;">
+                        <span>🔄</span> <span>Refresh</span>
+                    </button>
+                    <button class="btn-reset" onclick="window.LcmTools.resetFilters()" style="display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; font-size: 11px; font-weight: 600;" title="Reset all search queries and column selectors">
+                        <span style="font-size: 14px; line-height: 1;">↺</span> Reset Filters
+                    </button>
+                </div>
             </div>
 
-            <div class="toolbar-actions" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+            <!-- Line 3B: View, Filter & Presets Switches -->
+            <div class="toolbar-actions" style="display: flex; align-items: center; gap: 8px; width: 100%; flex-wrap: wrap;">
                 <div class="preset-control-wrapper" style="display: flex; align-items: center; gap: 4px;">
                     <label for="filter-presets-select" style="font-size: 11px; font-weight: 700; color: var(--text-primary); text-transform: none !important;">Presets:</label>
-                    <select id="filter-presets-select" class="col-filter-select" onchange="window.LcmTools.applyPreset(this.value)" style="min-width: 170px; height: 32px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; color: var(--text-primary); font-size: 12px; padding: 2px 8px;">
+                    <select id="filter-presets-select" class="col-filter-select" onchange="window.LcmTools.applyPreset(this.value)" style="min-width: 170px; height: 28px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; color: var(--text-primary); font-size: 12px; padding: 2px 8px;">
                         <option value="">-- Presets --</option>
                         <optgroup label="Standard Presets">
                             <option value="preset_default">⭐ Default View</option>
@@ -348,16 +358,15 @@ function Build-LcmToolIndexHtml {
                         <optgroup label="Custom Presets" id="custom-presets-group">
                         </optgroup>
                     </select>
-                    <button class="btn-action" id="btn-add-preset" onclick="window.LcmTools.addCustomPreset()" title="Save current filter configuration as a new custom preset" style="padding: 4px 10px; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 5px;"><span style="font-size: 16px; line-height: 1;">💾</span> Save</button>
-                    <button class="btn-action" id="btn-replace-preset" onclick="window.LcmTools.replaceCustomPreset()" title="Replace selected custom preset with current filters" style="padding: 4px 10px; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 5px;"><span style="font-size: 16px; line-height: 1;">🔄</span> Replace</button>
-                    <button class="btn-action" id="btn-delete-preset" onclick="window.LcmTools.deleteCustomPreset()" title="Delete selected custom preset" style="padding: 4px 10px; font-size: 12px; font-weight: 600; color: var(--danger); border-color: rgba(248,81,73,0.4); display: inline-flex; align-items: center; gap: 5px;"><span style="font-size: 16px; line-height: 1;">🗑️</span> Delete</button>
+                    <button class="btn-action" id="btn-add-preset" onclick="window.LcmTools.addCustomPreset()" title="Save current filter configuration as a new custom preset" style="padding: 3px 8px; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;"><span style="font-size: 14px; line-height: 1;">💾</span> Save</button>
+                    <button class="btn-action" id="btn-replace-preset" onclick="window.LcmTools.replaceCustomPreset()" title="Replace selected custom preset with current filters" style="padding: 3px 8px; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;"><span style="font-size: 14px; line-height: 1;">🔄</span> Replace</button>
+                    <button class="btn-action" id="btn-delete-preset" onclick="window.LcmTools.deleteCustomPreset()" title="Delete selected custom preset" style="padding: 3px 8px; font-size: 11px; font-weight: 600; color: var(--danger); border-color: rgba(248,81,73,0.4); display: inline-flex; align-items: center; gap: 4px;"><span style="font-size: 14px; line-height: 1;">🗑️</span> Delete</button>
                 </div>
-                <button class="tab-btn" id="tab-view-mode" onclick="window.LcmTools.toggleViewMode()" style="font-weight: 700; display: inline-flex; align-items: center; gap: 4px; font-size: 12px; padding: 4px 8px; white-space: nowrap;" title="Switch column display between Short-Names and Source Code"><span style="font-size: 16px; line-height: 1;">💬</span> Mode: Short</button>
-                <button class="btn-export" onclick="LcmTablePrintAtom.openModal()" style="display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; padding: 4px 10px;" title="Open print and PDF document generator"><span style="font-size: 16px; line-height: 1;">🖨️</span> Print / PDF</button>
-                <button class="tab-btn" id="btn-show-tools-filter" onclick="window.LcmTools.toggleShowFilter()" style="display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; padding: 4px 8px;" title="Filter to ShowTools standard displays"><span style="font-size: 16px; line-height: 1;">📊</span> ShowTools</button>
-                <button class="tab-btn" id="btn-internal-filter" onclick="window.LcmTools.toggleInternalFilter()" style="display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; padding: 4px 8px;" title="Toggle Internal tools inclusion in view"><span style="font-size: 16px; line-height: 1;">🔒</span> Intern</button>
-                <button class="btn-action" id="btn-mass-edit" onclick="window.LcmTools.openMassEditModal()" style="display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; font-size: 12px; font-weight: 600;" title="Mass assign / rename dropdown column values for currently visible filtered tools"><span style="font-size: 16px; line-height: 1;">⚡</span> Bulk Assign</button>
-                <button class="btn-reset" onclick="window.LcmTools.resetFilters()" style="display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; font-size: 12px; font-weight: 600;" title="Reset all search queries and column selectors"><span style="font-size: 16px; line-height: 1;">↺</span> Reset All Filters</button>
+                <button class="tab-btn" id="tab-view-mode" onclick="window.LcmTools.toggleViewMode()" style="font-weight: 700; display: inline-flex; align-items: center; gap: 4px; font-size: 11px; padding: 3px 8px; white-space: nowrap;" title="Switch column display between Short-Names and Source Code"><span style="font-size: 14px; line-height: 1;">💬</span> Mode: Short</button>
+                <button class="btn-export" onclick="LcmTablePrintAtom.openModal()" style="display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; padding: 3px 8px;" title="Open print and PDF document generator"><span style="font-size: 14px; line-height: 1;">🖨️</span> Print / PDF</button>
+                <button class="tab-btn" id="btn-show-tools-filter" onclick="window.LcmTools.toggleShowFilter()" style="display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; padding: 3px 8px;" title="Filter to ShowTools standard displays"><span style="font-size: 14px; line-height: 1;">📊</span> ShowTools</button>
+                <button class="tab-btn" id="btn-internal-filter" onclick="window.LcmTools.toggleInternalFilter()" style="display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; padding: 3px 8px;" title="Toggle Internal tools inclusion in view"><span style="font-size: 14px; line-height: 1;">🔒</span> Intern</button>
+                <button class="btn-action" id="btn-mass-edit" onclick="window.LcmTools.openMassEditModal()" style="display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; font-size: 11px; font-weight: 600;" title="Mass assign / rename dropdown column values for currently visible filtered tools"><span style="font-size: 14px; line-height: 1;">⚡</span> Bulk Assign</button>
             </div>
         </div>
 

@@ -12,8 +12,8 @@
   reuses existing healthy baseline to eliminate redundant unmount/remount cycles.
   Path: LCM_Inventory/tools/Invoke-MacriumDailyBcrBaseline.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.1.0
-  Date: 2026-11-09 16:15:00
+  Version: 10.1.2
+  Date: 2026-11-09 20:00:00
 .NOTES
   Caveats: Drive mounting requires administrative elevation (delegated to elevated worker via Invoke-ElevatedTest.ps1
   or Port 9876 daemon); Macrium Reflect UI automation requires Session 1 interactive desktop access. Mount operations
@@ -499,11 +499,14 @@ function Find-MountedMacriumBaselineCandidates {
 
 function Find-MountedMacriumBaseline {
   param(
-    [string[]]$Drives = @('F', 'G', 'H', 'I')
+    [string[]]$Drives = @('F', 'G', 'H', 'I'),
+    [string[]]$ExcludeDrives = @()
   )
   $all = @(Find-MountedMacriumBaselineCandidates -Drives $Drives)
-  if ($all.Count -gt 0) {
-    return $all[0]
+  $filtered = @($all | Where-Object { $_.MountedDrive -notin $ExcludeDrives -and "$($_.DriveLetter):" -notin $ExcludeDrives })
+  if ($filtered.Count -gt 0) {
+    $sorted = @($filtered | Sort-Object { if ($null -ne $_.NewestLogDate) { $_.NewestLogDate } else { [datetime]::MinValue } } -Descending)
+    return $sorted[0]
   }
   return $null
 }
@@ -585,7 +588,15 @@ function Test-LcmBcrProfile {
   }
 
   if ($leftPath -ne $expectedLeftPath) {
-    throw "The _LCM Beyond Compare profile specifies left path '$leftPath'; expected '$expectedLeftPath'."
+    $leftDrive = ($leftPath -split ':')[0].Trim().ToUpperInvariant()
+    if ($leftDrive -in @('F', 'G', 'H', 'I')) {
+      $session.SelectSingleNode('./Specs/Left').SetAttribute('Value', $expectedLeftPath)
+      $sessionRegistry.Save($sessionRegistryPath)
+      Write-BaselineLog -Level INFO -Message "Synchronized _LCM Beyond Compare profile left path from '$leftPath' to '$expectedLeftPath'."
+      $leftPath = $expectedLeftPath
+    } else {
+      throw "The _LCM Beyond Compare profile specifies left path '$leftPath'; expected '$expectedLeftPath'."
+    }
   }
   if ($rightPath -ne 'D:\Git_Repositories') {
     throw "The _LCM Beyond Compare profile specifies right path '$rightPath'; expected 'D:\Git_Repositories'."
@@ -635,6 +646,7 @@ public static class LcmMacriumMouse
 
   $workerDrives = ConvertTo-LcmCandidateDrives -Drives $CandidateDrives
   $detachedDrives = [System.Collections.Generic.List[string]]::new()
+  $busyDrives = [System.Collections.Generic.List[string]]::new()
   foreach ($letter in $workerDrives) {
     $disk = Get-CimInstance Win32_LogicalDisk -Filter "DeviceID='$letter`:'" -ErrorAction SilentlyContinue
     if ($null -eq $disk) {
@@ -654,32 +666,50 @@ public static class LcmMacriumMouse
     } else {
       if ($null -ne $detachProcess -and $null -ne $detachProcess.ExitCode) { $detachProcess.ExitCode } else { 0 }
     }
-    if ($detachExitCode -ne 0) {
-      throw "Macrium detach failed for ${letter}: with exit code $detachExitCode."
-    }
-    $deadline = (Get-Date).AddSeconds($MountTimeoutSeconds)
+    $deadline = (Get-Date).AddSeconds([Math]::Min(15, $MountTimeoutSeconds))
     do {
       Start-Sleep -Milliseconds 250
       $disk = Get-CimInstance Win32_LogicalDisk -Filter "DeviceID='$letter`:'" -ErrorAction SilentlyContinue
     } while ($null -ne $disk -and (Get-Date) -lt $deadline)
-    if ($null -ne $disk) {
-      throw "Macrium did not detach ${letter}: within $MountTimeoutSeconds seconds."
+    if ($null -ne $disk -or $detachExitCode -ne 0) {
+      Write-BaselineLog -Level WARN -Message "Drive ${letter}: could not be detached (likely open in other applications, exitCode=$detachExitCode). Retaining ${letter}: and falling back to alternative candidate drive."
+      $busyDrives.Add("$letter`:")
+    } else {
+      $detachedDrives.Add("$letter`:")
     }
-    $detachedDrives.Add("$letter`:")
   }
 
-  $existingReflectBinIds = @(Get-Process -Name 'ReflectBin' -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Id)
+  # Verify that at least one candidate drive is available for mounting
+  $availableCandidateLetters = [System.Collections.Generic.List[string]]::new()
+  foreach ($letter in $workerDrives) {
+    if ("$letter`:" -in $busyDrives) {
+      continue
+    }
+    $existingDisk = Get-CimInstance Win32_LogicalDisk -Filter "DeviceID='$letter`:'" -ErrorAction SilentlyContinue
+    if ($null -eq $existingDisk) {
+      $availableCandidateLetters.Add($letter)
+    }
+  }
+  if ($availableCandidateLetters.Count -eq 0 -and $busyDrives.Count -gt 0) {
+    throw "All candidate drives ($($workerDrives -join ', ')) are in use, and busy baseline drive(s) ($($busyDrives -join ', ')) could not be detached."
+  }
+  if ($busyDrives.Count -gt 0) {
+    Write-BaselineLog -Level INFO -Message "Fallback drive candidate(s) available for mounting: $($availableCandidateLetters -join ', '). Proceeding with mount."
+  }
+
+  $reflectProcessNames = @('ReflectBin', 'ReflectUI', 'Reflect')
+  $existingReflectBinIds = @(Get-Process -Name $reflectProcessNames -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Id)
   Start-Process -FilePath $reflectPath -ArgumentList @('-b', $ImagePath) | Out-Null
   $deadline = (Get-Date).AddSeconds($MountTimeoutSeconds)
   $dialog = $null
   while ((Get-Date) -lt $deadline -and $null -eq $dialog) {
-    $newReflectBinIds = @(Get-Process -Name 'ReflectBin' -ErrorAction SilentlyContinue |
+    $newReflectBinIds = @(Get-Process -Name $reflectProcessNames -ErrorAction SilentlyContinue |
       Where-Object { $_.Id -notin $existingReflectBinIds } |
       Select-Object -ExpandProperty Id)
     $candidateProcessIds = if ($newReflectBinIds.Count -gt 0) {
       $newReflectBinIds
     } else {
-      @(Get-Process -Name 'ReflectBin' -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Id)
+      @(Get-Process -Name $reflectProcessNames -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Id)
     }
     foreach ($processId in $candidateProcessIds) {
       $root = [System.Windows.Automation.AutomationElement]::RootElement
@@ -757,7 +787,7 @@ public static class LcmMacriumMouse
   $deadline = (Get-Date).AddSeconds($MountTimeoutSeconds)
   do {
     Start-Sleep -Milliseconds 250
-    $mountedBaseline = Find-MountedMacriumBaseline -Drives $workerDrives
+    $mountedBaseline = Find-MountedMacriumBaseline -Drives $workerDrives -ExcludeDrives $busyDrives
   } while ($null -eq $mountedBaseline -and (Get-Date) -lt $deadline)
   if ($null -eq $mountedBaseline) {
     throw "Macrium accepted the mount dialog, but no matching '$ExpectedVolumeLabel' volume appeared in the candidate drives ($($workerDrives -join ', ')) within $MountTimeoutSeconds seconds."
@@ -804,17 +834,8 @@ $completedToday = if ($ForceNewBackup) { $null } else { Get-CompletedTodayImage 
 
 $reuseCandidate = $null
 if ($NewBaseline) {
-  Write-BaselineLog -Level INFO -Message "-NewBaseline specified. Dismounting any existing baseline in candidate drives ($($normalizedDrives -join ', '))..."
-  if ($WhatIfPreference) {
-    $candidateList = @()
-  } else {
-    $deadline = (Get-Date).AddSeconds($MountTimeoutSeconds)
-    do {
-      Start-Sleep -Milliseconds 250
-      $remaining = @(Find-MountedMacriumBaselineCandidates -Drives $normalizedDrives)
-    } while ($remaining.Count -gt 0 -and (Get-Date) -lt $deadline)
-    $candidateList = @()
-  }
+  Write-BaselineLog -Level INFO -Message "-NewBaseline specified. Will detach existing baseline and mount fresh image via elevated worker."
+  $candidateList = @()
 } else {
   $candidateList = @(Find-MountedMacriumBaselineCandidates -Drives $normalizedDrives)
   if ($candidateList.Count -gt 0) {
@@ -825,6 +846,8 @@ if ($NewBaseline) {
     $isCandidateCurrent = $false
     if ($null -ne $completedToday -and $null -ne $chosen.NewestLogDate) {
       if ($chosen.NewestLogDate.Date -eq $completedToday.CompletionTime.Date) {
+        $isCandidateCurrent = $true
+      } elseif ($chosen.NewestLogDate -le $completedToday.CompletionTime -and ($completedToday.CompletionTime - $chosen.NewestLogDate).TotalHours -le 36) {
         $isCandidateCurrent = $true
       }
     }
@@ -993,7 +1016,17 @@ try {
     '-ImagePath',
     $completedImage.ImagePath
   )
-  $worker = Start-Process -FilePath $pwshPath -ArgumentList $arguments -Verb RunAs -PassThru -Wait
+  $isCurrentlyElevated = [System.Security.Principal.WindowsPrincipal]::new([System.Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([System.Security.Principal.WindowsBuiltInRole]::Administrator)
+  $startArgs = @{
+    FilePath     = $pwshPath
+    ArgumentList = $arguments
+    PassThru     = $true
+    Wait         = $true
+  }
+  if (-not $isCurrentlyElevated) {
+    $startArgs.Verb = 'RunAs'
+  }
+  $worker = Start-Process @startArgs
   if (-not (Test-Path -LiteralPath $receiptPath)) {
     throw "The elevated Macrium worker exited with code $($worker.ExitCode) without a receipt."
   }

@@ -51,4 +51,4 @@ if (-not (Test-Path -LiteralPath $baselineTool -PathType Leaf)) {
   throw "Canonical Macrium baseline tool was not found: $baselineTool"
 }
 
-& $baselineTool -NewBaseline -CandidateDrives $CandidateDrives -ReviewScope $ReviewScope -MountTimeoutSeconds $MountTimeoutSeconds -NoLaunchReview:$NoLaunchReview -Confirm:$false
+& $baselineTool -NewBaseline -CandidateDrives $CandidateDrives -ReviewScope $ReviewScope -MountTimeoutSeconds $MountTimeoutSeconds -NoLaunchReview:$NoLaunchReview -Confirm:$false -WhatIf:$WhatIfPreference

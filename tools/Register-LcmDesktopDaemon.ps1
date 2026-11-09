@@ -134,8 +134,14 @@ if ($Stop) {
 # 3. Start Action
 # ------------------------------------------------------------------------------
 if ($Start) {
-  & (Join-Path $toolsDir 'LcmDesktopDaemon.ps1') -Port $Port -Background
-  return
+  try {
+    Start-ScheduledTask -TaskName $taskName -ErrorAction Stop
+    Write-Host "  -> Started daemon via elevated scheduled task ($taskName)." -ForegroundColor Green
+    return
+  } catch {
+    & (Join-Path $toolsDir 'LcmDesktopDaemon.ps1') -Port $Port -Background
+    return
+  }
 }
 
 # ------------------------------------------------------------------------------

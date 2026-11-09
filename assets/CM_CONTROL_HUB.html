@@ -1,7 +1,7 @@
 <!--
   Template: CM_CONTROL_HUB.html
-  Version: 10.0.2
-  Date: 2026-11-09 19:05:00
+  Version: 10.0.3
+  Date: 2026-11-09 19:22:00
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -805,7 +805,8 @@
       overflow-y: auto;
       max-height: 232px;
       white-space: pre-wrap;
-      word-break: break-all;
+      word-break: normal;
+      overflow-wrap: anywhere;
     }
 
     /* Busy Overlay and Indicator Styles */
@@ -3749,6 +3750,23 @@
       }
     }
 
+    function cleanClixml(raw) {
+      if (!raw || typeof raw !== "string" || !raw.includes("#< CLIXML")) return raw || "";
+      const matches = [...raw.matchAll(/<S S="[^"]*">(.*?)<\/S>/gs)];
+      if (matches.length > 0) {
+        return matches.map(m => m[1]
+          .replace(/_x000D__x000A_/g, "\n")
+          .replace(/_x000A_/g, "\n")
+          .replace(/_x000D_/g, "\r")
+          .replace(/_x001B_/g, "")
+          .replace(/&lt;/g, "<")
+          .replace(/&gt;/g, ">")
+          .replace(/&amp;/g, "&")
+        ).join("").trim();
+      }
+      return raw.replace(/#<\s*CLIXML[\s\S]*$/, "").trim();
+    }
+
     function showExecutionFeedback(target, exitCode, durationMs, stdout, stderr, isRunning = false) {
       const drawer = document.getElementById("executionFeedbackDrawer");
       const body = document.getElementById("executionFeedbackBody");
@@ -3782,21 +3800,27 @@
       }
 
       let text = "";
-      if (stdout) text += stdout;
-      if (stderr) {
-        if (text) text += "\n--- STDERR ---\n";
-        text += stderr;
+      const cleanOut = stdout ? String(stdout).trim() : "";
+      const cleanErr = stderr ? cleanClixml(String(stderr)).trim() : "";
+      if (cleanOut) text += cleanOut;
+      if (cleanErr) {
+        if (text) text += "\n\n--- STDERR ---\n";
+        text += cleanErr;
       }
       if (!text) {
-        text = isSuccess ? "(Command exited with code 0 and produced no stdout output)" : "(Command failed with no output)";
+        text = isSuccess ? "(Command exited with code 0 and produced no output)" : "(Command failed with no output)";
       }
       body.innerText = text;
 
-      // Auto-expand on error or non-zero exit code
-      if (!isSuccess || (stderr && String(stderr).trim().length > 0)) {
+      // Auto-expand ONLY on real failure; stay collapsed by default on success
+      if (!isSuccess) {
         drawer.classList.remove("collapsed");
         drawer.classList.add("expanded");
         if (btn) btn.innerText = "▼ Collapse";
+      } else {
+        drawer.classList.remove("expanded");
+        drawer.classList.add("collapsed");
+        if (btn) btn.innerText = "▲ Expand";
       }
     }
 
@@ -3893,7 +3917,7 @@
     }
 
     function formatDaemonError(rawError) {
-      let message = String(rawError)
+      let message = cleanClixml(String(rawError || ""))
         .replace(/(?:\\u001b|\\x1b|[\u001b\u009b\uFFFD])\[[0-?]*[ -/]*[@-~]/gi, "")
         .replace(/\[(?:\d{1,4}(?:;\d{0,4})*)m/gi, "")
         .replace(/\r\n/g, "\n")
@@ -3907,22 +3931,36 @@
 
     function formatDaemonSuccess(rawOutput, actionLabel, userTitle) {
       const message = String(rawOutput || "").replace(/\r\n/g, "\n").trim();
-      if (String(actionLabel).toUpperCase() !== "BCR") {
-        return message || `${userTitle || "Command"} completed successfully.`;
+      if (String(actionLabel).toUpperCase() === "BCR") {
+        const readValue = label => {
+          const match = message.match(new RegExp(`^${label}\\s*:\\s*(.+)$`, "mi"));
+          return match ? match[1].trim() : "";
+        };
+        const baseCommit = readValue("BaseCommit");
+        const mountedDrive = readValue("MountedDrive");
+        const reused = /^true$/i.test(readValue("ReusedExistingReviewWindow"));
+        const launched = /^true$/i.test(readValue("Launched"));
+        const baseSummary = baseCommit ? ` at ${baseCommit.slice(0, 12)}` : "";
+        const driveSummary = mountedDrive ? `${mountedDrive} baseline` : "baseline";
+        const windowSummary = reused ? "existing _LCM window reused" : (launched ? "_LCM window opened" : "review window ready");
+        return `Review ready: ${driveSummary}${baseSummary}; ${windowSummary}.`;
       }
 
-      const readValue = label => {
-        const match = message.match(new RegExp(`^${label}\\s*:\\s*(.+)$`, "mi"));
-        return match ? match[1].trim() : "";
-      };
-      const baseCommit = readValue("BaseCommit");
-      const mountedDrive = readValue("MountedDrive");
-      const reused = /^true$/i.test(readValue("ReusedExistingReviewWindow"));
-      const launched = /^true$/i.test(readValue("Launched"));
-      const baseSummary = baseCommit ? ` at ${baseCommit.slice(0, 12)}` : "";
-      const driveSummary = mountedDrive ? `${mountedDrive} baseline` : "baseline";
-      const windowSummary = reused ? "existing _LCM window reused" : (launched ? "_LCM window opened" : "review window ready");
-      return `Review ready: ${driveSummary}${baseSummary}; ${windowSummary}.`;
+      if (String(actionLabel).toUpperCase() === "ACCEPT") {
+        const shaMatch = message.match(/REVIEW COMPLETED AND COMMITTED\s*\(([a-f0-9]+)\)/i);
+        const repoMatch = message.match(/Repository\s*:\s*([^\r\n]+)/i);
+        if (shaMatch) {
+          const repo = repoMatch ? repoMatch[1].trim() : "workspace";
+          return `Review completed and committed (${shaMatch[1]}) in ${repo}.`;
+        }
+      }
+
+      // If multi-line, extract first meaningful summary line or fallback to userTitle
+      const lines = message.split("\n").map(l => l.trim()).filter(l => l && !l.startsWith("=="));
+      if (lines.length > 0 && lines[0].length < 120) {
+        return lines[0];
+      }
+      return `${userTitle || "Command"} completed successfully.`;
     }
 
     // -------------------------------------------------------------------------
