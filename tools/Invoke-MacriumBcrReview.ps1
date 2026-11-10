@@ -9,7 +9,7 @@
     Purpose: Opens or reuses the governed Macrium BCR window and records the exact lifecycle review state.
     Path: LCM_Inventory/tools/Invoke-MacriumBcrReview.ps1
     Authors: Rolf, LCM_AI Engine
-    Version: 10.0.6
+    Version: 10.2.6
     Date: 2026-11-10 14:58:00
 .PARAMETER CRP
     Identifier of the CRP or BUG proposal under review (e.g. CRP-309).

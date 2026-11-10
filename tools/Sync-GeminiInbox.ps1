@@ -9,7 +9,7 @@
            Conforms to RULE-PS-001 through RULE-PS-014, RULE-DOC-001 - 004, and the Gemini Inbox Security Invariant.
   Path: LCM_Inventory/tools/Sync-GeminiInbox.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.0
+  Version: 10.2.0
   Date: 2026-10-13
 .PARAMETER InboxPath
   Path to the Google Drive inbox folder. Defaults to 'D:\GDrive\LCM\INBOX'.

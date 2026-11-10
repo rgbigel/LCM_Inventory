@@ -4,7 +4,7 @@ Module: LCM_Inventory/assets/CM_CONTROL_HUB.html
 Purpose: Resolves Execution Ledger milestone evaluation disconnects, adds interstitial operational action connectors, introduces busy state indicators, and formalizes the dual-domain (internal vs. external) state transition matrix in governance documentation.  
 Path: LCM_Inventory/docs/Proposals/CRP-220-Control-Hub-Execution-Ledger-Progress-Milestones-and-Labels/Specification.md  
 Authors: rgbig, LCM_AI Governance  
-Version: 10.0.0
+Version: 10.2.0
 Status: Approved  
 Date: 2026-10-13
 App: App: 1 - CM Interactive Control Hub  

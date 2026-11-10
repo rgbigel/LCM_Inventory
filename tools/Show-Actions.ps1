@@ -9,7 +9,7 @@
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), RULE-PS-010 (CLI Help), and RULE-PS-011 (Interactive Desktop Dispatch).
   Path: tools/Show-Actions.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.0
+  Version: 10.2.0
   Date: 2026-10-13
 .PARAMETER Count
   Number of recent actions to display (Default: 5).

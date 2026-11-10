@@ -9,7 +9,7 @@ Affected-Scopes:
   - LCM_Inventory
   - D:\Git_Repositories
   - D:\Git_Repositories\.copilot
-Baseline-Version: 10.0.0
+Baseline-Version: 10.2.0
 Author: Rolf, Antigravity AI Assistant
 Date: 2026-10-13 18:21:00
 Status: In_Progress

@@ -7,7 +7,7 @@
            member of the required lockstep cohort.
   Path: LCM_Inventory/tests/LCM_PushEligibility.Tests.ps1
   Authors: GitHub Copilot
-  Version: 10.0.0
+  Version: 10.2.0
   Date: 2026-10-13
 #>
 

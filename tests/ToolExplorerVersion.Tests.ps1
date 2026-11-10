@@ -3,7 +3,7 @@ Module: ToolExplorerVersion.Tests
 Purpose: Verify source-derived Tool Explorer version provenance.
 Path: tests/ToolExplorerVersion.Tests.ps1
 Authors: Rolf, Copilot
-Version: 10.0.2
+Version: 10.2.2
 Date: 2026-11-09
 #>
 BeforeAll {

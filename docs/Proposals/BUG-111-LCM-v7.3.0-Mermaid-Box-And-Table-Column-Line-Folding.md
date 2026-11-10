@@ -2,7 +2,7 @@
 Proposal-ID: BUG-111
 CR-ID: BUG-111
 Scope: LCM / Documentation & Visualization
-Version: 10.0.0
+Version: 10.2.0
 Affected-Repos: [LCM, LCM_AI, LCM_Inventory]
 Status: OPEN
 Date: 2026-10-13

@@ -19,7 +19,7 @@ Module: LoadAtoms.ps1
 Purpose: Load atom files for LCM_AI fix-module execution.
 Path: tools/LoadAtoms.ps1
 Authors: LCM_AI Engine
-Version: 10.0.0
+Version: 10.2.0
 Caller Contract: Called from APPLY/fix-module validation; returns a hashtable keyed by atom base name.
 Changelog:
 - 2026-10-13: Updated active loader identity from Workspace_AC to LCM_AI.

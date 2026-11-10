@@ -1,10 +1,10 @@
-﻿# Change Request Proposal: CRP-277
+# Change Request Proposal: CRP-277
 
 ```yaml
 CRP-ID: CRP-277
 Title: Macrium Reflect-Backed BCR Review Workflow
 Scope: LCM_Inventory
-Baseline-Version: 10.0.0
+Baseline-Version: 10.2.0
 Author: rgbig
 Date: 2026-10-15 14:31:18
 Status: Suggested

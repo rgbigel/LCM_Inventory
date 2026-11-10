@@ -10,7 +10,7 @@
   Purpose: Loads the governed tool catalog and generates the HTTP-backed Tool Explorer.
   Path: tools/modules/LcmToolCatalog.psm1
   Authors: Rolf, Copilot
-  Version: 10.0.1
+  Version: 10.2.1
   Date: 2026-11-09 19:15:00
 #>
 

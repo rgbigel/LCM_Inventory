@@ -56,7 +56,7 @@ Module: Get-LCM_Repositories.ps1
 Purpose: Discover sibling Git repositories read-only for LCM_AI stabilization checks.
 Path: tools/Get-LCM_Repositories.ps1
 Authors: LCM_AI Engine
-Version: 10.0.0
+Version: 10.2.0
 Caller Contract: Called during LCM_AI stabilization; returns direct child directories with .git folders without modifying them.
 Changelog:
 - 2026-10-13: Added read-only sibling repository discovery command.

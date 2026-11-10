@@ -1,7 +1,7 @@
 ---
 Bug-ID: BUG-133
 Scope: LCM
-Version: 10.0.0
+Version: 10.2.0
 Affected-Repos: [LCM, LCM_AI, LCM_Inventory]
 Severity: High
 Status: ACCEPTED

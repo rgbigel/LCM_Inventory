@@ -7,7 +7,7 @@
 #          Phase 2 terminal outcome ACK (success with proposal ID or failure with error reason).
 # Path: LCM_Inventory/modules/InboxWatcher.psm1
 # Authors: Rolf, LCM_AI Engine
-# Version: 10.0.0
+# Version: 10.2.0
 # Date: 2026-11-10
 # =====================================================================
 

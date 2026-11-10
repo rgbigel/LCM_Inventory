@@ -4,7 +4,7 @@
 CRP-ID: CRP-306
 Title: Normalize Legacy Workspace Tool and Launcher Naming to LCM_ Prefix
 Scope: LCM_Inventory
-Baseline-Version: 10.0.1
+Baseline-Version: 10.2.1
 Author: rgbig
 Date: 2026-11-06 10:30:13
 Status: Verified

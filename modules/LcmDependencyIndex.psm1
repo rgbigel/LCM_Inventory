@@ -7,7 +7,7 @@
            WIUD call evidence and inverting accepted production edges into WUD data.
   Path: modules/LcmDependencyIndex.psm1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.1
+  Version: 10.2.1
   Date: 2026-10-18
 #>
 

@@ -3,7 +3,7 @@ Module: ProposalSpecificationState.Tests
 Purpose: Verify automatic lifecycle metadata mirroring and failed-write safeguards.
 Path: tests/ProposalSpecificationState.Tests.ps1
 Authors: Rolf, Copilot
-Version: 10.0.1
+Version: 10.2.1
 Date: 2026-10-21
 #>
 BeforeAll {

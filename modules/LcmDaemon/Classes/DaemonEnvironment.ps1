@@ -3,7 +3,7 @@ Module: LcmDaemon/Classes/DaemonEnvironment.ps1
 Purpose: Strongly-typed runtime environment state and structured logging for LCM Desktop Daemon.
 Path: LCM_Inventory/modules/LcmDaemon/Classes/DaemonEnvironment.ps1
 Authors: Rolf, LCM_AI Engine
-Version: 10.0.0
+Version: 10.2.0
 Date: 2026-10-13
 #>
 

@@ -3,7 +3,7 @@ Module: LcmDaemon/LcmDaemon.psm1
 Purpose: Root module loader dot-sourcing atomized classes for LCM Desktop Daemon.
 Path: LCM_Inventory/modules/LcmDaemon/LcmDaemon.psm1
 Authors: Rolf, LCM_AI Engine
-Version: 10.0.1
+Version: 10.2.1
 Date: 2026-11-08 15:17:24
 #>
 

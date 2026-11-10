@@ -2,7 +2,7 @@
 Proposal-ID: CRP-088
 CR-ID: CR-2026-039
 Scope: HaSSD06
-Version: 10.0.0
+Version: 10.2.0
 Affected-Repos: [HaSSD06, HaSSD06_Inventory]
 Status: Suggested
 Date: 2026-10-13

@@ -3,7 +3,7 @@
 ```yaml
 Bug-ID: BUG-200
 Scope: LCM_Inventory BCompare staging audit
-Version: 10.0.0
+Version: 10.2.0
 Affected-Repos:
   - LCM_Inventory
 Severity: High

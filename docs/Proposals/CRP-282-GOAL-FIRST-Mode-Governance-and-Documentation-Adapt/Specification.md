@@ -1,10 +1,10 @@
-﻿# Change Request Proposal: CRP-282
+# Change Request Proposal: CRP-282
 
 ```yaml
 CRP-ID: CRP-282
 Title: GOAL-FIRST Mode Governance and Documentation Adaptation
 Scope: LCM_Inventory
-Baseline-Version: 10.0.1
+Baseline-Version: 10.2.1
 Author: rgbig
 Date: 2026-10-16 20:05:25
 Status: Accepted (Specification)

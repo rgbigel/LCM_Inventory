@@ -8,7 +8,7 @@
            runbooks (install/Installation.md per RULE-DOC-004) on demand.
   Path: LCM_Inventory/tools/New-RepositoryDocumentation.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.0
+  Version: 10.2.0
   Date: 2026-11-10
 .PARAMETER RepositoryName
   Name or folder path of the target repository.

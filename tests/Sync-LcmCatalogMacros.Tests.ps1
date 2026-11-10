@@ -4,7 +4,7 @@
 # Module: Sync-LcmCatalogMacros.Tests
 # Purpose: Pester tests for Catalog-Synced Show Command Macros and Managed Alias Maintenance
 # Authors: Rolf, LCM_AI Engine
-# Version: 10.0.0
+# Version: 10.2.0
 # Date: 2026-11-10
 # =====================================================================
 
@@ -20,7 +20,7 @@ Describe 'Sync-LcmCatalogMacros (CRP-280)' {
 
     $sampleMacroContent = @"
 # macro-definitions.md
-# version: 10.0.0
+# version: 10.2.0
 # date: 2026-11-10
 
 MACRO: technical

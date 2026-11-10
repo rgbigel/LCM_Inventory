@@ -7,7 +7,7 @@
   read-only baseline telemetry extraction, and backup status evaluations.
   Path: LCM_Inventory/tests/LcmMacriumAtoms.Tests.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.0
+  Version: 10.2.0
   Date: 2026-11-08 16:53:00
 .NOTES
   Part of CRP-308 verification suite.

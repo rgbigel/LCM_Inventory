@@ -2,7 +2,7 @@
 Module: tools/build_offline_docs.py
 Purpose: Converts Markdown specifications and runbooks into standalone, beautifully styled HTML documents for offline travel reading.
 Authors: Rolf, Workspace_AI Engine
-Version: 10.0.0
+Version: 10.2.0
 Date: 2026-10-13
 """
 

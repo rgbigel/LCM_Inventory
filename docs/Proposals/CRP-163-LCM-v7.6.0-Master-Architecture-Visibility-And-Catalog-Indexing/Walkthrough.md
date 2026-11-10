@@ -4,7 +4,7 @@
 CRP-ID: CRP-163
 Title: Master Tripartite Architecture Visibility, Catalog Indexing & Cross-App Governance Focus
 Scope: LCM Governance, LCM_Inventory & Governed Child Repositories
-Baseline-Version: 10.0.0
+Baseline-Version: 10.2.0
 Author: Rolf, LCM_AI Engine
 Date: 2026-10-13
 Status: Suggested

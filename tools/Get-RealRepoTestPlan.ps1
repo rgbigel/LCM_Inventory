@@ -35,7 +35,7 @@ Module: Get-RealRepoTestPlan.ps1
 Purpose: Read LCM_AI real-repository test plan state without changing it.
 Path: tools/Get-RealRepoTestPlan.ps1
 Authors: LCM_AI Engine
-Version: 10.0.0
+Version: 10.2.0
 Caller Contract: Called by operators or governance scripts when inspecting real-repository dry-run state; performs no external repository access.
 Changelog:
 - 2026-10-13: Added proposal cleanup check summary field.

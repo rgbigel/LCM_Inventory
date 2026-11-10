@@ -4,7 +4,7 @@
 CRP-ID: CRP-174
 Title: Beyond Compare Review Baseline Caching, Invocation Fix, UI Ergonomics, and COMPLETE Lifecycle Consolidation
 Scope: Review Lifecycle, LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1, LCM_SIDECAR.html, CM_CONTROL_HUB.html, Submit-ReviewResult.ps1, Tool Explorer
-Baseline-Version: 10.0.0
+Baseline-Version: 10.2.0
 Author: Rolf, Antigravity AI Assistant
 Date: 2026-10-13
 Status: In Progress

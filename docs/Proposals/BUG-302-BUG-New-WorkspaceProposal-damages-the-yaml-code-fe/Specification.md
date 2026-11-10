@@ -4,7 +4,7 @@
 CRP-ID: BUG-302
 Title: [BUG] New-WorkspaceProposal damages the yaml code fences of generated Specification.md
 Scope: LCM_Inventory
-Baseline-Version: 10.0.1
+Baseline-Version: 10.2.1
 Author: rgbig
 Date: 2026-10-21 13:10:43
 Status: Suggested

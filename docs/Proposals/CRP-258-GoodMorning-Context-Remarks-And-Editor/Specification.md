@@ -4,7 +4,7 @@
 CRP-ID: CRP-258
 Title: GoodMorning Context Remarks and Editor
 Scope: LCM_Inventory
-Baseline-Version: 10.0.0
+Baseline-Version: 10.2.0
 Author: rgbig
 Date: 2026-10-13 15:22:05
 Status: Superseded

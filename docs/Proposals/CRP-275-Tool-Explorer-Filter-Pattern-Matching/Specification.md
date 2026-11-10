@@ -4,7 +4,7 @@
 CRP-ID: CRP-275
 Title: Tool Explorer Filter Pattern Matching
 Scope: LCM_Inventory
-Baseline-Version: 10.0.0
+Baseline-Version: 10.2.0
 Author: Rolf
 Date: 2026-10-14 12:59:25
 Status: In Progress

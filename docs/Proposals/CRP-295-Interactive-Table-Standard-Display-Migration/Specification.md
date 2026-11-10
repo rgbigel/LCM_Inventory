@@ -4,7 +4,7 @@
 CRP-ID: CRP-295
 Title: Interactive Table Standard Display Migration
 Scope: Tool Explorer, Workspace Inventory, and HA Inventory
-Baseline-Version: 10.0.1
+Baseline-Version: 10.2.1
 Author: rgbig
 Date: 2026-11-08 14:59:30
 Status: Superseded

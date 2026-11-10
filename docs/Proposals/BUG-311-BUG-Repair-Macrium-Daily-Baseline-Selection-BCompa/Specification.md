@@ -4,7 +4,7 @@
 CRP-ID: BUG-311
 Title: [BUG] Repair Macrium Daily Baseline Selection, BCompare Non-Interference, and Direct Intent Mapping
 Scope: LCM_Inventory, LCM_AI
-Baseline-Version: 10.1.0
+Baseline-Version: 10.2.0
 Author: Rolf, LCM_AI Engine
 Date: 2026-11-09 17:20:00
 Status: Completed

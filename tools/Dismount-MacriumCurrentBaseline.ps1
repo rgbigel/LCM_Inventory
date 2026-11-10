@@ -6,7 +6,7 @@
   until each targeted drive letter is unavailable.
   Path: LCM_Inventory/tools/Dismount-MacriumCurrentBaseline.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.3
+  Version: 10.2.3
   Date: 2026-11-10 20:30:00
 .NOTES
   Elevated Operations:

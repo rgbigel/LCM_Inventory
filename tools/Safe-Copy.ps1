@@ -6,7 +6,7 @@
   Purpose: Copies files from source to target with error recovery, optional exclusion masks, and audit logging.
   Path: tools/Safe-Copy.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.0
+  Version: 10.2.0
   Date: 2026-10-13
 .PARAMETER SourcePath
   Source directory path to copy files from (default 'F:\OneDrive').

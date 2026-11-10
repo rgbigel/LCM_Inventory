@@ -1,10 +1,10 @@
-﻿# Change Request Proposal: CRP-267
+# Change Request Proposal: CRP-267
 
 ```yaml
 CRP-ID: CRP-267
 Title: Durable Documentation Completeness for LCM and Governed Repositories
 Scope: LCM_Inventory
-Baseline-Version: 10.0.0
+Baseline-Version: 10.2.0
 Author: rgbig
 Date: 2026-10-13 17:41:07
 Status: Completed

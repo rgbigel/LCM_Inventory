@@ -4,7 +4,7 @@
 CRP-ID: CRP-317
 Title: Eliminate Git_Root Escape Fallback Logic for Multi-Workspace and Sandbox Isolation
 Scope: LCM_Inventory
-Baseline-Version: 10.0.1
+Baseline-Version: 10.2.1
 Author: rgbig
 Date: 2026-11-10 20:18:32
 Status: Accepted

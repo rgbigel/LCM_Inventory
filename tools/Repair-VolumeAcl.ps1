@@ -17,7 +17,7 @@
            7. Conforms to RULE-PS-001 through RULE-PS-012, RULE-ELEV-002, and LCM structured logging.
   Path: D:\Git_Repositories\LCM_Tools\Repair-VolumeAcl.ps1
   Authors: Rolf, LCM_AI Governance
-  Version: 10.0.0
+  Version: 10.2.0
   Date: 2026-10-13
 .PARAMETER TargetVolume
   The drive letter or root path to repair (e.g. 'D:', 'A:', 'E:'). Defaults to 'D:'.

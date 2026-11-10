@@ -7,7 +7,7 @@
   image, it fails and reports that fact.
   Path: LCM_Inventory/tools/Mount-MacriumLatestBaseline.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.2
+  Version: 10.2.2
   Date: 2026-11-09
 .NOTES
   Elevated Operations:

@@ -4,7 +4,7 @@
 CRP-ID: CRP-296
 Title: Native Standard Display Dialog and Launcher Parity
 Scope: WPF and WinForms Show surfaces
-Baseline-Version: 10.0.1
+Baseline-Version: 10.2.1
 Author: rgbig
 Date: 2026-11-08 14:59:30
 Status: Superseded

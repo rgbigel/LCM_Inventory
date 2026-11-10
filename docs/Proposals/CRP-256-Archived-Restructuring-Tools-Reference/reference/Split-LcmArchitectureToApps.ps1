@@ -4,7 +4,7 @@
 .DESCRIPTION
     Module: tools/Split-LcmArchitectureToApps.ps1
     Authors: Rolf, LCM_AI Engine
-    Version: 10.0.0
+    Version: 10.2.0
     Date: 2026-10-13
     Purpose: High-Order Lifecycle Operator that partitions large un-sliced tripartite specifications
              (Architecture.md, Requirements.md, Implementation.md) into cohesive App: # slices per RULE-DOC-007.

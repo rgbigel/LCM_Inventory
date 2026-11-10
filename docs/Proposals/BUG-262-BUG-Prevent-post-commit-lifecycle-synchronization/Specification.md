@@ -4,7 +4,7 @@
 CRP-ID: BUG-262
 Title: [BUG] Prevent post-commit lifecycle synchronization failures
 Scope: LCM_Inventory
-Baseline-Version: 10.0.0
+Baseline-Version: 10.2.0
 Author: rgbig
 Date: 2026-10-13 19:50:04
 Status: Suggested

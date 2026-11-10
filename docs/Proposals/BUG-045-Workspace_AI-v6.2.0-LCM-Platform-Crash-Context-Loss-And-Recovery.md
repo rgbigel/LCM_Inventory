@@ -1,7 +1,7 @@
 ---
 Bug-ID: BUG-045
 Scope: LCM_AI / LCM_Inventory
-Version: 10.0.0
+Version: 10.2.0
 Affected-Repos: [LCM_AI, LCM_Inventory, Git_Repositories]
 Severity: High
 Status: Archived

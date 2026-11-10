@@ -30,7 +30,7 @@ Module: Advance-Governance.ps1
 Purpose: Validate native LCM_AI governance readiness and log separation without staging or committing changes.
 Path: tools/Advance-Governance.ps1
 Authors: LCM_AI Engine
-Version: 10.0.0
+Version: 10.2.0
 Date: 2026-11-08 15:02:28
 Caller Contract: Called from VS Code tasks or terminal; validates native governance inputs and reports status.
 Changelog:

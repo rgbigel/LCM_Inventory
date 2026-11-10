@@ -11,7 +11,7 @@
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
   Path: LCM_Inventory/tools/Update-Gemini.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.0
+  Version: 10.2.0
   Date: 2026-10-13
 .PARAMETER Force
   Forces a full clean export of knowledge base files.
@@ -160,7 +160,7 @@ try {
     $commitSha = try { (git -C (Join-Path $workspaceRoot 'LCM_AI') rev-parse HEAD).Trim() } catch { '' }
 
     $manifest = [PSCustomObject]@{
-      version     = '10.0.0'
+      version     = '10.2.0'
       updated_at  = $nowUtc
       commit_sha  = $commitSha
       root_hash   = $rootHash

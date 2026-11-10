@@ -3,7 +3,7 @@ Module: LCM_QualityGates.psm1
 Purpose: Provide reusable LCM readiness and stabilization quality gates.
 Path: tools/QualityGates/LCM_QualityGates.psm1
 Authors: LCM_AI Engine
-Version: 10.0.0
+Version: 10.2.0
 Caller Contract: Imported by native governance scripts; validates LCM state without writing to external repositories.
 Changelog:
 - 2026-11-06: Renamed from WorkspaceQualityGates to LCM_QualityGates per operator directive. Integrated Assert-LCMIncrementalGovernance and Repair-LCMIncrementalGovernance.
@@ -784,4 +784,4 @@ function Repair-LCMIncrementalGovernance {
 }
 
 Export-ModuleMember -Function Get-LCM_Root, Get-WorkspaceRoot, Resolve-TargetMethodInstance, Assert-IgnoredRepositories, Assert-StabilizationPolicy, Assert-RealRepoTestPlan, Assert-StaleAuthorityReferences, Assert-PesterV5Syntax, Assert-TripartiteDocumentationCompliance, Assert-LCMIncrementalGovernance, Repair-LCMIncrementalGovernance -Alias Get-WorkspaceRoot
-
+

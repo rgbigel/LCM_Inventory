@@ -4,7 +4,7 @@
 BUG-ID: BUG-172
 Title: Remediate Get-Content Parameter Conflict in Apply-AllCustomizations
 Scope: SystemConfiguration / Source / Apply-AllCustomizations.ps1
-Baseline-Version: 10.0.0
+Baseline-Version: 10.2.0
 Author: Rolf, Antigravity AI Assistant
 Date: 2026-10-13
 Status: In Progress

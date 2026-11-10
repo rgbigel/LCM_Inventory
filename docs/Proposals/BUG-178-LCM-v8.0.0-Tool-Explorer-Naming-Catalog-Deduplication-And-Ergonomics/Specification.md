@@ -4,7 +4,7 @@
 BUG-ID: BUG-178
 Title: Tool Explorer Approved Verb Naming, Catalog Deduplication, Self-Tool Filtering, and Scrollbar Hardening
 Scope: .lcm, LCM_Inventory, Tool Explorer UI, Tool Catalog Sync Engine
-Baseline-Version: 10.0.0
+Baseline-Version: 10.2.0
 Author: Rolf, Antigravity AI Assistant
 Date: 2026-10-13
 Status: Completed

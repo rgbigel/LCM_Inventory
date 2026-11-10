@@ -6,7 +6,7 @@
   Purpose: Consolidates and exports LCM rules and governance files to markdown and clipboard.
   Path: tools/Save-LCMRules.ps1
   Authors: Rolf, LCM_AI Governance
-  Version: 10.0.0
+  Version: 10.2.0
   Date: 2026-10-13
 #>
 

@@ -3,7 +3,7 @@ Module: WorkspaceQualityGates.psm1
 Purpose: Backward-compatibility shim forwarding to LCM_QualityGates.psm1
 Path: tools/QualityGates/WorkspaceQualityGates.psm1
 Authors: LCM Governance
-Version: 10.0.0
+Version: 10.2.0
 Changelog:
 - 2026-11-06: Forwarding shim to LCM_QualityGates.psm1.
 #>

@@ -8,7 +8,7 @@
            acknowledgements by correlation ID or lists recent submissions.
   Path: LCM_Inventory/tools/Get-GeminiInboxStatus.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.0
+  Version: 10.2.0
   Date: 2026-11-10
 .PARAMETER CorrelationId
   The exact correlation identifier of the inbox submission (e.g. INBOX-BUG-20261110-12345).

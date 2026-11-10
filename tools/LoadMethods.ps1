@@ -19,7 +19,7 @@ Module: LoadMethods.ps1
 Purpose: Load method script metadata for LCM_AI fix-module execution.
 Path: tools/LoadMethods.ps1
 Authors: LCM_AI Engine
-Version: 10.0.0
+Version: 10.2.0
 Caller Contract: Called from APPLY/fix-module validation; returns a hashtable keyed by method file name.
 Changelog:
 - 2026-10-13: Updated active loader identity from Workspace_AC to LCM_AI.

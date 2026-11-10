@@ -4,7 +4,7 @@
 CRP-ID: CRP-293
 Title: ShowCM Typed Controller Reference Completion
 Scope: LCM_Inventory ShowCM, daemon controller, and public contracts
-Baseline-Version: 10.0.1
+Baseline-Version: 10.2.1
 Author: rgbig
 Date: 2026-11-08 14:59:30
 Status: Superseded

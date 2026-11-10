@@ -7,7 +7,7 @@
            optionally pushes those commits without staging unrelated changes.
   Path: LCM_Inventory/tools/Publish-LCM_ProposalBundles.ps1
   Authors: GitHub Copilot
-  Version: 10.0.0
+  Version: 10.2.0
   Date: 2026-10-13
 #>
 

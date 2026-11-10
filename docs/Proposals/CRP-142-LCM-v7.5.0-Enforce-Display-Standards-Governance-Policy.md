@@ -1,7 +1,7 @@
 ---
 Proposal-ID: CRP-142
 Scope: LCM
-Version: 10.0.0
+Version: 10.2.0
 Affected-Repos: [LCM_Inventory, .lcm, HaSSD06_Inventory, All Child Repositories]
 Priority: High
 Status: Open

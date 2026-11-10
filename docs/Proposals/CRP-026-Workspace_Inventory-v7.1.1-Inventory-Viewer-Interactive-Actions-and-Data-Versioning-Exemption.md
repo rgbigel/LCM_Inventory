@@ -2,7 +2,7 @@
 Proposal-ID: CRP-026
 CR-ID: CR-2026-037
 Scope: LCM_Inventory
-Version: 10.0.0
+Version: 10.2.0
 Affected-Repos: [LCM_Inventory, .agents, LCM_AI]
 Status: In-Progress
 Date: 2026-10-13

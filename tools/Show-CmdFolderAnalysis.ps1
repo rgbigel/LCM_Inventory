@@ -10,7 +10,7 @@
            and localStorage priority persistence with automatic sorting.
   Path: tools/Show-CmdFolderAnalysis.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.0
+  Version: 10.2.0
   Date: 2026-10-13
 .PARAMETER Path
   Target directory to analyze (default: D:\OneDrive\cmd). Supports D:\@cmd, D:\OneDrive\cmd\@Repair, etc.

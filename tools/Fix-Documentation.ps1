@@ -32,7 +32,7 @@ param(
     Reconciles explicit CRP and BUG documentation payloads into tripartite LCM documents.
 .DESCRIPTION
     Module: tools/Fix-Documentation.ps1
-    Version: 10.0.0
+    Version: 10.2.0
     Purpose: Provides the review-gated FixDocumentation <crp-scope> workflow.
     Caller Contract: Bundles must declare updates in a Documentation Updates section.
 #>

@@ -35,7 +35,7 @@ Module: Get-RealRepoTargetProfile.ps1
 Purpose: Build a read-only profile of the selected real-repository dry-run target.
 Path: tools/Get-RealRepoTargetProfile.ps1
 Authors: LCM_AI Engine
-Version: 10.0.1
+Version: 10.2.1
 Date: 2026-11-08 15:02:28
 Caller Contract: Called only after LCM_AI dry-run policy validation; reads target path, git status, and adapter surface presence without writing to the target.
 Changelog:

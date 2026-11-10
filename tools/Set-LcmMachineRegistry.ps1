@@ -8,7 +8,7 @@
   Rejects any target key outside legitimate LCM namespaces.
   Path: LCM_Inventory/tools/Set-LcmMachineRegistry.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.0
+  Version: 10.2.0
   Date: 2026-11-09 12:35:00
 .PARAMETER KeyPath
   Target registry key path (must start with HKLM:\SOFTWARE\LCM\ or HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment).

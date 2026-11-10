@@ -11,7 +11,7 @@
 .DESCRIPTION
   Module: tools/Get-RealRepoActionPlan.ps1
   Authors: LCM_AI Engine
-  Version: 10.0.1
+  Version: 10.2.1
   Date: 2026-11-08 15:05:30
 #>
 [CmdletBinding()]
@@ -41,7 +41,7 @@ Module: Get-RealRepoActionPlan.ps1
 Purpose: Build a read-only intended-action preview for a selected real-repository dry-run target.
 Path: tools/Get-RealRepoActionPlan.ps1
 Authors: LCM_AI Engine
-Version: 10.0.0
+Version: 10.2.0
 Caller Contract: Called during real-repository dry-run preparation; reports intended adapter actions without writing to the target repository.
 Changelog:
 - 2026-10-13: Added bottom-up concrete change-request phase preview.

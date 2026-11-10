@@ -2,7 +2,7 @@
 Proposal-ID: CRP-054
 CR-ID: CRP-054
 Scope: LCM_Inventory
-Version: 10.0.0
+Version: 10.2.0
 Affected-Repos: [LCM_Inventory, Git_Repositories]
 Severity: Medium
 Status: In-Progress

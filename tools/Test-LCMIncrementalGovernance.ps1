@@ -14,7 +14,7 @@
            Audits ALL sources against universal-header-modification-timestamp-invariant and single-commit-version-increment-invariant.
   Path: LCM_Inventory/tools/Test-LCMIncrementalGovernance.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.1.1
+  Version: 10.2.1
   Date: 2026-11-08 15:41:00
 .PARAMETER Path
   Explicit file or directory path(s) to audit.

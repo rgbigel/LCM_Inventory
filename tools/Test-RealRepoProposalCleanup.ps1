@@ -50,7 +50,7 @@ Module: Test-RealRepoProposalCleanup.ps1
 Purpose: Report target-local proposal files that are void because they are accepted and implemented.
 Path: tools/Test-RealRepoProposalCleanup.ps1
 Authors: LCM_AI Engine
-Version: 10.0.1
+Version: 10.2.1
 Date: 2026-11-08 15:02:28
 Caller Contract: Performs a read-only scan of the selected target repository's method proposal queue; does not delete, stage, or commit files.
 Changelog:

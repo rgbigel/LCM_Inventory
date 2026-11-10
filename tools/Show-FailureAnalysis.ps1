@@ -9,7 +9,7 @@
   Purpose: Prepares and opens retained failure-analysis snapshots through the LCM daemon.
   Path: LCM_Inventory/tools/Show-FailureAnalysis.ps1
   Authors: Rolf, Copilot
-  Version: 10.0.1
+  Version: 10.2.1
   Date: 2026-11-08 17:34:00
 .PARAMETER ReportPath
   Exact retained Markdown or structured JSON report to display.

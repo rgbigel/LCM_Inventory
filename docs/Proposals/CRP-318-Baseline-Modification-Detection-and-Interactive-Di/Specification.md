@@ -4,7 +4,7 @@
 CRP-ID: CRP-318
 Title: Baseline Modification Detection and Interactive Dismount Choice Guardrail
 Scope: LCM_Inventory
-Baseline-Version: 10.0.1
+Baseline-Version: 10.2.1
 Author: rgbig
 Date: 2026-11-10 20:27:20
 Status: Completed

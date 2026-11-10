@@ -17,7 +17,7 @@
            5. Prints the confirmation the AI must give before working.
   Path: LCM_Inventory/tools/Invoke-LCM_GoodMorning.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.5
+  Version: 10.2.5
   Date: 2026-11-10 11:30:00
   Rule: RULE-CTX-006, RULE-LCM-030
 .PARAMETER Auto

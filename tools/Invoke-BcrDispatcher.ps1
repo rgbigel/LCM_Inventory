@@ -25,7 +25,7 @@ param(
            validation and review launching to Invoke-ProposalAction.ps1.
   Path: tools/Invoke-BcrDispatcher.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.0
+  Version: 10.2.0
   Date: 2026-10-13
 #>
 

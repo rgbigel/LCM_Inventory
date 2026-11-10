@@ -4,7 +4,7 @@
 .DESCRIPTION
     Path: D:\Git_Repositories\LCM_Inventory\tools\Disable-WakeDevices.ps1
     Authors: Rolf, Antigravity
-    Version: 10.0.0
+    Version: 10.2.0
     Date: 2026-10-13
 #>
 

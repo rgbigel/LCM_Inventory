@@ -71,7 +71,7 @@ Module: Set-RealRepoTestPlan.ps1
 Purpose: Update the LCM_AI real-repository test plan without enabling writes.
 Path: tools/Set-RealRepoTestPlan.ps1
 Authors: LCM_AI Engine
-Version: 10.0.1
+Version: 10.2.1
 Date: 2026-11-08 15:05:30
 Caller Contract: Called only for LCM_AI governance preparation; refuses write enablement and validates policy after updating the local plan file.
 Changelog:

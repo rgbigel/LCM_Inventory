@@ -4,7 +4,7 @@
 CRP-ID: CRP-263
 Title: LCM Inbox Two-Phase Acknowledgement
 Scope: LCM_Inventory
-Baseline-Version: 10.0.0
+Baseline-Version: 10.2.0
 Author: rgbig
 Date: 2026-10-13 16:15:33
 Status: Completed

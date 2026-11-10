@@ -1,4 +1,4 @@
-﻿# =====================================================================
+# =====================================================================
 # ProposalManager.psm1 - LCM Proposal & Two-Tier Review Governance Module
 # =====================================================================
 # Module: ProposalManager
@@ -6,7 +6,7 @@
 #          batch operations, review granularity ('coarse' | 'tight'), repo review queue inspection,
 #          and persistent ledger storage in LCM_Inventory.
 # Authors: Rolf, LCM_AI Engine
-# Version: 10.0.2
+# Version: 10.2.2
 # Date: 2026-10-21
 # =====================================================================
 
@@ -245,7 +245,7 @@ ${fence}yaml
 CRP-ID: $canonicalId
 Title: $Title
 Scope: $OriginRepo
-Baseline-Version: 10.0.1
+Baseline-Version: 10.2.1
 Author: $Author
 Date: $timestamp
 Status: Suggested

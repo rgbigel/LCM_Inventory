@@ -3,7 +3,7 @@ Module: tools/Find-ChangeRequest.ps1
 Purpose: Queries and displays Change Requests from the central CM index and junction-mirrored proposals.
 Path: tools/Find-ChangeRequest.ps1
 Authors: Rolf, LCM_AI Engine
-Version: 10.0.0
+Version: 10.2.0
 Date: 2026-10-13
 Changelog:
 - 2026-10-13: Initial versioned implementation with bundle and repo filtering.

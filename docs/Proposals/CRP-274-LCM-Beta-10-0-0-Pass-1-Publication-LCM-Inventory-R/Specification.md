@@ -1,10 +1,10 @@
-﻿# Change Request Proposal: CRP-274
+# Change Request Proposal: CRP-274
 
 ```yaml
 CRP-ID: CRP-274
 Title: LCM Beta 10.0.0 Pass 1 Publication - LCM_Inventory Replacement
 Scope: LCM_Inventory
-Baseline-Version: 10.0.0
+Baseline-Version: 10.2.0
 Author: Copilot
 Date: 2026-10-13 19:27:26
 Status: Suggested

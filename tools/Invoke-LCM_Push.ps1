@@ -6,7 +6,7 @@
   Purpose: Iterates across all governed and child repositories under D:\Git_Repositories, detects if a Git remote exists and if local branch is ahead of remote tracking branch, and executes git push with structured audit logging.
   Path: LCM_Inventory/tools/Invoke-LCM_Push.ps1
   Authors: Rolf, LCM_AI Engine
-    Version: 10.0.3
+    Version: 10.2.3
     Date: 2026-11-08 22:08:00
 #>
 

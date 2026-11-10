@@ -35,7 +35,7 @@ Module: Invoke-RealRepoDryRun.ps1
 Purpose: Report LCM_AI real-repository dry-run readiness without writing to any target repository.
 Path: tools/Invoke-RealRepoDryRun.ps1
 Authors: LCM_AI Engine
-Version: 10.0.1
+Version: 10.2.1
 Date: 2026-11-08 15:02:28
 Caller Contract: Called during readiness and operator preparation; reports blocked/ready state and performs read-only git status only after dry-run is enabled.
 Changelog:

@@ -4,7 +4,7 @@
 Bug-ID: BUG-286
 Title: [BUG] Control Hub daemon outage capture and automatic recovery
 Scope: LCM_Inventory
-Version: 10.0.0
+Version: 10.2.0
 Author: rgbig
 Date: 2026-10-17 20:33:52
 Affected-Repos:

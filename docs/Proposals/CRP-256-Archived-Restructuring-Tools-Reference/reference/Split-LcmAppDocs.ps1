@@ -4,7 +4,7 @@
 .DESCRIPTION
     Module: tools/Split-LcmAppDocs.ps1
     Authors: Rolf, LCM_AI Engine
-    Version: 10.0.0
+    Version: 10.2.0
     Date: 2026-10-13
     Purpose: High-Order Lifecycle Operator that parses monolithic in-document App: # sections
              from root Architecture.md, Requirements.md, and Implementation.md and extracts

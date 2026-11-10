@@ -2,7 +2,7 @@
 Proposal-ID: CRP-099
 CR-ID: CR-2026-048
 Scope: LCM Platform (.lcm)
-Version: 10.0.0
+Version: 10.2.0
 Affected-Repos: [.lcm, LCM_Inventory]
 Status: Suggested
 Date: 2026-10-13

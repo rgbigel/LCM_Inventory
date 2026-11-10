@@ -4,7 +4,7 @@
 CRP-ID: BUG-314
 Title: [BUG] Tool Explorer & Show-ToolIntents Reset Filters Fix & Pipe (OR) Filter Support
 Scope: LCM_Inventory
-Baseline-Version: 10.0.1
+Baseline-Version: 10.2.1
 Author: rgbig
 Date: 2026-11-10 15:33:00
 Status: Completed

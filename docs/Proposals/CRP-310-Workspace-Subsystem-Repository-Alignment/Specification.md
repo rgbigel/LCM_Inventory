@@ -5,7 +5,7 @@ CRP-ID: CRP-310
 Title: Workspace-Wide Subsystem and Repository Alignment with LCM Port 9876 Architecture
 Scope: Workspace Cohort (LCM_Inventory, HaSSD06, HaSSD06_Inventory, LCM_Tools, OneDriveMaintenance)
 Cohort-ID: COH-310
-Baseline-Version: 10.0.1
+Baseline-Version: 10.2.1
 Author: rgbig
 Date: 2026-11-08 17:47:00
 Status: Completed

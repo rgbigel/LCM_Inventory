@@ -21,7 +21,7 @@ param(
              JSON overlay without modifying repository state.
     Path: tools/Show-Repos.ps1
     Authors: Rolf, GitHub Copilot
-    Version: 10.0.0
+    Version: 10.2.0
     Date: 2026-10-13
 #>
 

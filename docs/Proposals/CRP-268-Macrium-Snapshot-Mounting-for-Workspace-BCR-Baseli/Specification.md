@@ -1,10 +1,10 @@
-﻿# Change Request Proposal: CRP-268
+# Change Request Proposal: CRP-268
 
 ```yaml
 CRP-ID: CRP-268
 Title: Macrium Snapshot Mounting for Workspace BCR Baselines
 Scope: LCM_Inventory
-Baseline-Version: 10.0.0
+Baseline-Version: 10.2.0
 Author: rgbig
 Date: 2026-10-13 18:01:13
 Status: Suggested

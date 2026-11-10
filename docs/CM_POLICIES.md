@@ -4,7 +4,7 @@ Module: docs/CM_POLICIES.md
 Purpose: Formal rules, policies, and invariants governing Configuration Management across the multi-repo workspace.
 Path: D:\Git_Repositories\LCM_Inventory\docs\CM_POLICIES.md
 Authors: Rolf, LCM_AI Engine
-Version: 10.0.0
+Version: 10.2.0
 Date: 2026-10-13
 
 ---

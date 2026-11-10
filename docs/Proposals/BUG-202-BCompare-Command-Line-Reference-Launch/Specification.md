@@ -3,7 +3,7 @@
 ```yaml
 Bug-ID: BUG-202
 Scope: LCM_Inventory BCompare launch dispatch
-Version: 10.0.0
+Version: 10.2.0
 Affected-Repos:
   - LCM_Inventory
 Severity: High

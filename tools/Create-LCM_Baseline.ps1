@@ -3,7 +3,7 @@ Module: tools/Create-LCM_Baseline.ps1
 Purpose: Captures a full configuration baseline snapshot of all workspace repositories.
 Path: tools/Create-LCM_Baseline.ps1
 Authors: Rolf, LCM_AI Engine
-Version: 10.0.0
+Version: 10.2.0
 Date: 2026-10-13
 Changelog:
 - 2026-10-13: Renamed to Create-WorkspaceBaseline conforming to Creator naming taxonomy.

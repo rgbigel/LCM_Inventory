@@ -19,7 +19,7 @@ Module: LoadFixes.ps1
 Purpose: Load fix-module descriptors for LCM_AI fix-module execution.
 Path: tools/LoadFixes.ps1
 Authors: LCM_AI Engine
-Version: 10.0.0
+Version: 10.2.0
 Caller Contract: Called from APPLY/fix-module validation; returns a hashtable keyed by fix id and module name.
 Changelog:
 - 2026-10-13: Updated active loader identity from Workspace_AC to LCM_AI.

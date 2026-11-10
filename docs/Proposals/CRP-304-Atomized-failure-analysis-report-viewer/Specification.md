@@ -4,7 +4,7 @@
 CRP-ID: CRP-304
 Title: Atomized failure analysis report viewer
 Scope: LCM_Inventory
-Baseline-Version: 10.0.1
+Baseline-Version: 10.2.1
 Author: Rolf, Copilot
 Date: 2026-10-21 21:55:00
 Status: Verified

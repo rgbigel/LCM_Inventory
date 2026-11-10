@@ -7,7 +7,7 @@
   automation atoms for inspection, status querying, backup launching, mounting, and dismounting.
   Path: LCM_Inventory/modules/LcmMacriumAtoms.psm1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.3
+  Version: 10.2.3
   Date: 2026-11-10 20:30:00
 .NOTES
   Caveats: Drive mounting and dismounting require administrative elevation and Session 1

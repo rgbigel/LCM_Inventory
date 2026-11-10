@@ -10,7 +10,7 @@
            -Check exits with code 1 when candidates are pending (used as the push gate).
   Path: LCM_Inventory/tools/Invoke-LearnedAdviceReview.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.0
+  Version: 10.2.0
   Date: 2026-10-13
   Rule: RULE-CTX-005
 .PARAMETER Accept

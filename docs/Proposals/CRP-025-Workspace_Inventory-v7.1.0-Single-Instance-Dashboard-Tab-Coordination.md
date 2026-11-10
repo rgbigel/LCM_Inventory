@@ -2,7 +2,7 @@
 Proposal-ID: CRP-025
 CR-ID: CR-2026-036
 Scope: LCM_Inventory
-Version: 10.0.0
+Version: 10.2.0
 Affected-Repos: [LCM_Inventory, .lcm]
 Status: OPEN (Bundled in BUNDLE-STD-DISPLAY-10.0.0)
 Date: 2026-10-13

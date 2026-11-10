@@ -28,7 +28,7 @@ Module: Validate-CopilotProfile.ps1
 Purpose: Validate the active LCM_AI .copilot profile structure.
 Path: tools/Validate-CopilotProfile.ps1
 Authors: LCM_AI Engine
-Version: 10.0.0
+Version: 10.2.0
 Caller Contract: Called from the LCM_AI repository root or tools folder; performs read-only file existence and version checks.
 Changelog:
 - 2026-10-13: Bumped to LCM pre-release Version 4.1.0.

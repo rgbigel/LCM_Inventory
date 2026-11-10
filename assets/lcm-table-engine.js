@@ -12,7 +12,7 @@
     const STORAGE_KEY_THEME = 'lcm_theme_mode';
 
     const LcmTableEngine = {
-        version: '10.0.0',
+        version: '10.2.0',
 
         // --------------------------------------------------------------------------
         // 1. Theme Management (Light / Dark with High Contrast Persistence)

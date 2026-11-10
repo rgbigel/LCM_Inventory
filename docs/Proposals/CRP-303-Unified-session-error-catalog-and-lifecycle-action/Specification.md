@@ -4,7 +4,7 @@
 CRP-ID: CRP-303
 Title: Unified session error catalog and lifecycle action diagnostics
 Scope: LCM_Inventory
-Baseline-Version: 10.0.1
+Baseline-Version: 10.2.1
 Author: Rolf, Copilot
 Date: 2026-10-21 18:28:34
 Status: Revision Verified

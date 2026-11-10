@@ -6,7 +6,7 @@
   Purpose: Serve allowlisted display pages, revisions and retained evidence on port 9876.
   Path: modules/LcmDisplayHttp.psm1
   Authors: Rolf, Copilot
-  Version: 10.0.1
+  Version: 10.2.1
   Date: 2026-11-08 15:07:36
 #>
 Set-StrictMode -Version Latest

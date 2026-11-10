@@ -56,7 +56,7 @@ Module: Generate-Log.ps1
 Purpose: Generate native LCM_AI step and permanent governance logs.
 Path: tools/Generate-Log.ps1
 Authors: LCM_AI Engine
-Version: 10.0.0
+Version: 10.2.0
 Caller Contract: Called from VS Code tasks or terminal; writes deterministic checkpoint and accepted-change governance logs.
 Changelog:
 - 2026-10-13: Added proposal disposition summary section.

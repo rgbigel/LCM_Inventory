@@ -10,7 +10,7 @@
            Supports execution across Git_root, Repo, Folder, and Document scopes.
   Path: LCM_Inventory/tools/Format-LcmMarkdownDiagrams.ps1
   Authors: Rolf, LCM_AI Governance
-  Version: 10.0.0
+  Version: 10.2.0
   Date: 2026-10-13
 
 .PARAMETER Scope

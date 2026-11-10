@@ -3,7 +3,7 @@ Module: InvokeLcmDisplayRender.Tests
 Purpose: Verify worker completion reflects renderer failures and preserves audit output.
 Path: tests/InvokeLcmDisplayRender.Tests.ps1
 Authors: Rolf, Copilot
-Version: 10.0.1
+Version: 10.2.1
 Date: 2026-10-21
 #>
 BeforeAll {

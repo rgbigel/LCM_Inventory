@@ -4,7 +4,7 @@ Module: docs/Requirements.md
 Purpose: Normative technical requirements, environmental prerequisites, safety boundaries, and compliance constraints for LCM_Inventory.  
 Path: D:/Git_Repositories/LCM_Inventory/docs/Requirements.md  
 Authors: Rolf, LCM_AI Engine  
-Version: 10.0.0
+Version: 10.2.0
 Status: Authoritative Requirements  
 Date: 2026-10-13
 

@@ -4,7 +4,7 @@
 BUG-ID: BUG-245
 Title: BCR Foreground Console Window Hygiene and Premature Review Scratchpad Purge
 Scope: LCM_Inventory, Root (LCM_Inventory/modules/LcmDaemon)
-Baseline-Version: 10.0.0
+Baseline-Version: 10.2.0
 Author: rgbig
 Date: 2026-10-13
 Status: Suggested

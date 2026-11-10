@@ -7,7 +7,7 @@
            session, without applying lifecycle actions or altering the source catalog.
   Path: LCM_Inventory/tools/Invoke-FailureModeAnalysis.ps1
   Authors: Rolf, Copilot
-  Version: 10.0.1
+  Version: 10.2.1
   Date: 2026-10-21
 .PARAMETER Number
   Bare item number whose latest explicit conversation reference is the start anchor.

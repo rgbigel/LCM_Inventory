@@ -7,7 +7,7 @@
            and sortable LCM-standard HTML viewer, and optionally opens it.
   Path: tools/Show-LcmAnalysisViewer.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.1
+  Version: 10.2.1
   Date: 2026-11-08 17:34:00
 .PARAMETER ReportPath
   Path to the Level 1 JSON evidence report.

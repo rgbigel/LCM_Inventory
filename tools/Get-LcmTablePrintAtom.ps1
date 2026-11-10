@@ -9,7 +9,7 @@
   Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
   Path: tools/Get-LcmTablePrintAtom.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.0
+  Version: 10.2.0
   Date: 2026-10-13
 .PARAMETER Inline
   Returns the raw JavaScript content wrapped in <script> tags for direct single-file HTML inlining.

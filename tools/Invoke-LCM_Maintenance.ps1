@@ -8,7 +8,7 @@
            Designed to run standalone or as part of the pre-push pipeline in Invoke-LCM_Push.ps1.
   Path: LCM_Inventory/tools/Invoke-LCM_Maintenance.ps1
   Authors: Rolf, LCM_AI Governance
-  Version: 10.0.2
+  Version: 10.2.2
   Date: 2026-10-18
   Rule: RULE-PS-001 - RULE-PS-014, RULE-LCM-014
 #>

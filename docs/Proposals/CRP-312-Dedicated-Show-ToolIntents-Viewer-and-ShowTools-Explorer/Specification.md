@@ -4,7 +4,7 @@
 CRP-ID: CRP-312
 Title: [FEAT] Dedicated Show-ToolIntents Viewer and ShowTools Explorer Integration
 Scope: LCM_Inventory
-Baseline-Version: 10.1.0
+Baseline-Version: 10.2.0
 Author: rgbig
 Date: 2026-11-09 18:32:00
 Status: Completed

@@ -4,7 +4,7 @@
 CRP-ID: CRP-162
 Title: Proposal Bundle Directory Architecture, Dual Lifecycle, Git Object Document Retrieval, and Post-Push Working Tree Purge Engine
 Scope: LCM Governance, LCM_Inventory, & Governed Child Repositories
-Baseline-Version: 10.0.0
+Baseline-Version: 10.2.0
 Author: Rolf, LCM_AI Engine
 Date: 2026-10-13
 Status: Processed

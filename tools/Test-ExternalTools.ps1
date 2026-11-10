@@ -11,7 +11,7 @@
 .EXAMPLE
   pwsh LCM_Inventory/tools/Test-ExternalTools.ps1
 .NOTES
-  Version: 10.0.1
+  Version: 10.2.1
   Date: 2026-10-21
 #>
 [CmdletBinding()]

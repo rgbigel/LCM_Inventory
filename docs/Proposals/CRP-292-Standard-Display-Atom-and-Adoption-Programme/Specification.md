@@ -4,7 +4,7 @@
 CRP-ID: CRP-292
 Title: Standard Display Atom and Adoption Programme
 Scope: LCM_Inventory and governed display repositories
-Baseline-Version: 10.0.1
+Baseline-Version: 10.2.1
 Author: rgbig
 Date: 2026-11-08 14:59:30
 Status: Superseded

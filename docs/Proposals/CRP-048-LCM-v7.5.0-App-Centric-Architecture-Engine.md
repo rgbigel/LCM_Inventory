@@ -4,7 +4,7 @@ Module: docs/Proposals/CRP-048-LCM-10.0.0-App-Centric-Architecture-Engine.md
 Purpose: Formalizes the App-Centric Architecture Taxonomy (App: #), the Active Context Engine (Workon: A#), and cross-App problem governance in the LCM framework.  
 Path: LCM_Inventory/docs/Proposals/CRP-048-LCM-10.0.0-App-Centric-Architecture-Engine.md  
 Authors: Rolf, LCM_AI Engine  
-Version: 10.0.0
+Version: 10.2.0
 Status: Approved Proposal  
 Date: 2026-10-13
 

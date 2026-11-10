@@ -13,7 +13,7 @@
            4. Synchronizes tool_catalog.json, README.md, and SHOW_TOOLS.html automatically.
   Path: tools/Create-LcmTool.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.0
+  Version: 10.2.0
   Date: 2026-10-13
 .PARAMETER Name
   The canonical tool file name or base name (e.g. 'Test-NetworkAdapter.ps1' or 'Test-NetworkAdapter').
@@ -216,7 +216,7 @@ $scriptContent = @"
   Purpose: $Description
   Path: $relPath
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.0
+  Version: 10.2.0
   Date: $todayStr
 .PARAMETER Help
   Displays this parameter reference (Aliases: -h, -?).

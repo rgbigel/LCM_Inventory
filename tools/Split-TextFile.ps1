@@ -7,7 +7,7 @@
            Each part is limited by a maximum character count.
   Path: tools/Split-TextFile.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.0
+  Version: 10.2.0
   Date: 2026-10-13
 .PARAMETER InputFile
   Path to the input text file to split.

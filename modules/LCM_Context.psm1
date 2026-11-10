@@ -7,7 +7,7 @@
 .NOTES
   Module: LCM_Context
   Path: LCM_Inventory/modules/LCM_Context.psm1
-  Version: 10.0.0
+  Version: 10.2.0
   Date: 2026-10-13
 #>
 

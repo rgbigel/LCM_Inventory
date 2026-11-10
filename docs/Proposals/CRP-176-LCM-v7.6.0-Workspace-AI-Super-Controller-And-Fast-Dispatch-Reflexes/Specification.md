@@ -4,7 +4,7 @@
 CRP-ID: CRP-176
 Title: Workspace AI Super-Controller for Unified Subsystem Navigation (ToolsExplorer & ShowCM)
 Scope: LCM_AI, .lcm, LCM_Inventory, IDE Answer Box & Companion Interface
-Baseline-Version: 10.0.0
+Baseline-Version: 10.2.0
 Author: Rolf, Antigravity AI Assistant
 Date: 2026-10-13
 Status: Suggested

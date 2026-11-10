@@ -13,7 +13,7 @@
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
   Path: tools/Register-LcmDesktopDaemon.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.1
+  Version: 10.2.1
   Date: 2026-11-08 15:07:36
 .PARAMETER Install
   Installs the user scheduled task for automatic launch at user logon.

@@ -10,7 +10,7 @@
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
   Path: LCM_Inventory/tools/Set-GitRoot.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.0
+  Version: 10.2.0
   Date: 2026-10-13
 .PARAMETER RootPath
   Container root directory for Git repositories. Defaults to D:\Git_Repositories.

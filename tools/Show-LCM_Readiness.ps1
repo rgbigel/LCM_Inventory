@@ -6,7 +6,7 @@
   Purpose: Summarize retained workspace readiness receipts and optionally publish an HTTP snapshot.
   Path: tools/Show-LCM_Readiness.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.1
+  Version: 10.2.1
   Date: 2026-11-08 17:34:00
   ShortName: ShowReadiness
   

@@ -1,10 +1,10 @@
-﻿# Change Request Proposal: CRP-243
+# Change Request Proposal: CRP-243
 
 ```yaml
 CRP-ID: CRP-243
 Title: Test Feature Proposal
 Scope: TestRepo
-Baseline-Version: 10.0.0
+Baseline-Version: 10.2.0
 Author: rgbig
 Date: 2026-10-13 21:28:44
 Status: Suggested

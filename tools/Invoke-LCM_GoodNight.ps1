@@ -13,7 +13,7 @@
            7. Logs structured [GOOD_NIGHT] audit receipt to cm_activity.log.
   Path: LCM_Inventory/tools/Invoke-LCM_GoodNight.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.2
+  Version: 10.2.2
   Date: 2026-11-10
   Rule: RULE-PS-001 - RULE-PS-021, RULE-LCM-014, RULE-LCM-030, RULE-REV-001
 #>

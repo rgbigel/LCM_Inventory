@@ -4,7 +4,7 @@ Module: install/Installation.md
 Purpose: Authoritative 7-phase operational installation, configuration, health verification, update, and rollback runbook for LCM_Inventory.  
 Path: LCM_Inventory/install/Installation.md  
 Authors: Rolf, LCM_AI Engine  
-Version: 10.0.0  
+Version: 10.2.0  
 Status: Authoritative Standard  
 Date: 2026-11-10  
 

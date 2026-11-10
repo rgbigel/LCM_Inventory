@@ -11,7 +11,7 @@
            The narrative parts of ACTIVE_CONTEXT.md are written by the agent, not by this script.
   Path: LCM_Inventory/tools/Save-AllSessionMemory.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.1
+  Version: 10.2.1
   Date: 2026-11-10
   Rule: RULE-PS-001 - RULE-PS-021, RULE-LCM-030
 .PARAMETER Learn

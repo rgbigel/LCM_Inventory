@@ -5,7 +5,7 @@ CRP-ID: CRP-308
 Document: Implementation_Plan
 Title: GoodMorning Baseline Visibility, Default BCR Preparation, and Macrium Automation Atoms
 Scope: LCM_Inventory
-Baseline-Version: 10.0.1
+Baseline-Version: 10.2.1
 Author: rgbig
 Date: 2026-11-08 16:55:00
 Status: Verified

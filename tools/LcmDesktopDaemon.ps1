@@ -19,7 +19,7 @@
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
   Path: tools/LcmDesktopDaemon.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.1
+  Version: 10.2.1
   Date: 2026-11-08 15:39:00
 .NOTES
   Dependencies: tools/modules/LcmDaemonCore.psm1

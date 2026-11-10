@@ -4,7 +4,7 @@
 .DESCRIPTION
     Module: tools/Sync-LcmModuleVersions.ps1
     Authors: Rolf, LCM_AI Governance
-    Version: 10.0.1
+    Version: 10.2.1
     Date: 2026-10-18
     Rule: RULE-DOC-005, RULE-PS-001 - RULE-PS-014
 #>

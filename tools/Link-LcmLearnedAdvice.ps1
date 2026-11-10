@@ -10,7 +10,7 @@
                     AND verifiable test evidence (Pester test, rule codification) is provided.
   Path: LCM_Inventory/tools/Link-LcmLearnedAdvice.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.0
+  Version: 10.2.0
   Date: 2026-11-10 18:48:00
   Rule: RULE-LCM-031, RULE-CTX-005, RULE-PS-001 - RULE-PS-025
 .PARAMETER Id

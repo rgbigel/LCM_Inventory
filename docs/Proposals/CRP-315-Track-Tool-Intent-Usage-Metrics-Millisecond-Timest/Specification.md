@@ -4,7 +4,7 @@
 CRP-ID: CRP-315
 Title: Track Tool Intent Usage Metrics, Millisecond Timestamps and Computational Cost
 Scope: LCM_Inventory
-Baseline-Version: 10.0.1
+Baseline-Version: 10.2.1
 Author: rgbig
 Date: 2026-11-10 19:05:51
 Status: Completed

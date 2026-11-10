@@ -2,7 +2,7 @@
 Proposal-ID: BUG-120
 CR-ID: BUG-120
 Scope: LCM / Desktop UI & Document Viewer
-Version: 10.0.0
+Version: 10.2.0
 Affected-Repos: [LCM, LCM_Inventory]
 Status: COMPLETED
 Date: 2026-10-13

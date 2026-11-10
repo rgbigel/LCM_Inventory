@@ -4,7 +4,7 @@
 CRP-ID: CRP-285
 Title: Operator-Authorized Lifecycle Switches and Flow Traceability (Consolidated)
 Scope: LCM_AI and LCM_Inventory
-Baseline-Version: 10.0.0
+Baseline-Version: 10.2.0
 Author: rgbig
 Date: 2026-10-17
 Status: Superseded

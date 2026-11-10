@@ -11,7 +11,7 @@
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
   Path: D:\Git_Repositories\LCM_Inventory\tools\Update-ToolCatalog.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.7
+  Version: 10.2.7
   Date: 2026-11-10 20:36:00
 .PARAMETER Silent
   Suppresses non-error terminal output (useful in automated pipelines).

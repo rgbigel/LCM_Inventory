@@ -57,7 +57,7 @@ Module: Initialize-RealRepoMethodInstance.ps1
 Purpose: Create a target-local Docs/Methods method instance for a selected real repository.
 Path: tools/Initialize-RealRepoMethodInstance.ps1
 Authors: LCM_AI Engine
-Version: 10.0.1
+Version: 10.2.1
 Date: 2026-11-08 15:05:30
 Caller Contract: Called only after explicit operator approval; writes method scaffolding inside the target repository and never stages or commits target changes.
 Changelog:
@@ -182,7 +182,7 @@ $manifest = [ordered]@{
   meta = [ordered]@{
     module = 'MethodInstance.json'
     path = "$relativeMethodRoot/MethodInstance.json"
-    version = '10.0.0'
+    version = '10.2.0'
     config_type = 'target-local-method-instance'
     generated_by = $scriptName
     generated_by_version = $scriptVersion

@@ -2,7 +2,7 @@
 Proposal-ID: CRP-140
 CR-ID: CRP-140
 Scope: One2Md
-Version: 10.0.0
+Version: 10.2.0
 Affected-Repos: [One2Md, LCM_Inventory]
 Severity: Low
 Status: COMPLETED

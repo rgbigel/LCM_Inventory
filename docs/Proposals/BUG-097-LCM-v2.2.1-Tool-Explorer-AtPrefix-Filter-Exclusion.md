@@ -2,7 +2,7 @@
 Bug-ID: BUG-097
 CR-ID: CR-2026-050
 Scope: LCM Platform (.lcm)
-Version: 10.0.0
+Version: 10.2.0
 Status: Suggested
 Date: 2026-10-13
 Author: Rolf, LCM_AI Engine

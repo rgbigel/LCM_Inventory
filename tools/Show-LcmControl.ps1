@@ -8,7 +8,7 @@
              Absorbs and consolidates Show-CmControlHub and Show-CrpDates into a single canonical tool.
     Path: tools/Show-LcmControl.ps1
     Authors: Rolf, LCM_AI Engine
-    Version: 10.0.1
+    Version: 10.2.1
     Date: 2026-11-08 17:34:00
 .PARAMETER ReviewMode
     Opens the Control Hub filtered directly to pending visual reviews requiring Beyond Compare action.

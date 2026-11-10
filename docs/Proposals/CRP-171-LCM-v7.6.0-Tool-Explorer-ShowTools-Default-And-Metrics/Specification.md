@@ -4,7 +4,7 @@
 CRP-ID: CRP-171
 Title: LCM Tool Explorer ShowTools Default Mode, Self-Tool Exclusion, and Dynamic Filtered Count Metric Card
 Scope: LCM Tool Explorer, Tools Catalog, UI Filtering & Metrics Cards
-Baseline-Version: 10.0.0
+Baseline-Version: 10.2.0
 Author: Rolf, Antigravity AI Assistant
 Date: 2026-10-13
 Status: Suggested

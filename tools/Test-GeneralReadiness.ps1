@@ -8,7 +8,7 @@
   reparse points, source file encoding, AST parser syntax, and secrets isolation.
   Path: LCM_Inventory/tools/Test-GeneralReadiness.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.1
+  Version: 10.2.1
   Date: 2026-11-09 12:30:00
 .PARAMETER RepositoryPath
   Target repository root path to audit. Defaults to current working directory.

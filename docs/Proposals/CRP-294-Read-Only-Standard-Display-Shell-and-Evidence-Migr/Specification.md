@@ -4,7 +4,7 @@
 CRP-ID: CRP-294
 Title: Read-Only Standard Display Shell and Evidence Migration
 Scope: Show-LcmAnalysisViewer, Show-Rules, Show-WorkspaceReadiness, Show-CmdFolderAnalysis
-Baseline-Version: 10.0.1
+Baseline-Version: 10.2.1
 Author: rgbig
 Date: 2026-11-08 14:59:30
 Status: Superseded

@@ -46,7 +46,7 @@ Module: APPLY.ps1
 Purpose: Run native LCM_AI fix descriptor validation from PowerShell 7.
 Path: tools/APPLY.ps1
 Authors: LCM_AI Engine
-Version: 10.0.0
+Version: 10.2.0
 Caller Contract: Called with a fix module name or id; validates declared rules, atoms, methods, and quality-check actions without modifying target content.
 Changelog:
 - 2026-10-13: Replaced loader stub with native fix descriptor validation for Gemini/Continue migration.

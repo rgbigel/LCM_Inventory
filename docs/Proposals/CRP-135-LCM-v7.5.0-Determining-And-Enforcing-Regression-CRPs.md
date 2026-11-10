@@ -2,7 +2,7 @@
 Proposal-ID: CRP-135
 CR-ID: CRP-135
 Scope: LCM
-Version: 10.0.0
+Version: 10.2.0
 Affected-Repos: [LCM, LCM_Inventory, LCM_AI]
 Severity: High
 Status: ACCEPTED

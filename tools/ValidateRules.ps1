@@ -35,7 +35,7 @@ Module: ValidateRules.ps1
 Purpose: Validate that loaded LCM_AI rule sets are present and non-empty.
 Path: tools/ValidateRules.ps1
 Authors: LCM_AI Engine
-Version: 10.0.0
+Version: 10.2.0
 Caller Contract: Called with a hashtable returned by LoadRules.ps1; throws on missing or empty rule sets.
 Changelog:
 - 2026-10-13: Added standard LCM_AI script header.

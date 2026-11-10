@@ -1,10 +1,10 @@
-﻿# Change Request Proposal: CRP-283
+# Change Request Proposal: CRP-283
 
 ```yaml
 CRP-ID: CRP-283
 Title: Machine-Registry-Only CMD Launcher Authority
 Scope: LCM_Inventory
-Baseline-Version: 10.0.0
+Baseline-Version: 10.2.0
 Author: rgbig
 Date: 2026-10-16 20:49:31
 Status: Superseded

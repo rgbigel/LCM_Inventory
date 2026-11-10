@@ -2,7 +2,7 @@
 Bug-ID: BUG-098
 CR-ID: CR-2026-051
 Scope: LCM_AI
-Version: 10.0.0
+Version: 10.2.0
 Status: Suggested
 Date: 2026-10-13
 Author: Rolf, LCM_AI Engine

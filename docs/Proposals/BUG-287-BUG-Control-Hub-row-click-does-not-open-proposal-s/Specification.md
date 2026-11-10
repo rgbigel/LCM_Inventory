@@ -4,7 +4,7 @@
 Bug-ID: BUG-287
 Title: [BUG] Control Hub row click does not open proposal specification
 Scope: LCM_Inventory
-Version: 10.0.0
+Version: 10.2.0
 Author: rgbig
 Date: 2026-10-17 20:49:32
 Affected-Repos:

@@ -3,7 +3,7 @@ Module: LcmPackageVersion.Tests
 Purpose: Verify commit-index maximum component version enforcement.
 Path: tests/LcmPackageVersion.Tests.ps1
 Authors: Rolf, Copilot
-Version: 10.0.1
+Version: 10.2.1
 Date: 2026-10-21
 #>
 BeforeAll {

@@ -9,7 +9,7 @@
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), RULE-PS-010 (CLI Help), and RULE-PS-011 (Interactive Desktop Dispatch).
   Path: tools/Start-RemoteBridge.ps1
   Authors: Rolf, LCM Workspace Automation
-  Version: 10.0.0
+  Version: 10.2.0
   Date: 2026-10-13
 .PARAMETER BindIp
   IP address interface to bind the remote bridge daemon on (Defaults to detected LAN IP e.g. 192.168.10.2).

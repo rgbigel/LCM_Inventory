@@ -28,7 +28,7 @@ Module: Test-LCM_Readiness.ps1
 Purpose: Run native LCM_AI self-readiness checks before real-repository testing.
 Path: tools/Test-LCM_Readiness.ps1
 Authors: LCM_AI Engine
-Version: 10.0.1
+Version: 10.2.1
 Date: 2026-11-08 15:02:28
 Caller Contract: Called manually before enabling real-repository tests; validates current native governance pipeline.
 Changelog:

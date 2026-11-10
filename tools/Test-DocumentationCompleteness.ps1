@@ -8,7 +8,7 @@
            all LCM-governed workspace repositories. Emits structured compliance diagnostics and summary.
   Path: LCM_Inventory/tools/Test-DocumentationCompleteness.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.0
+  Version: 10.2.0
   Date: 2026-11-10
 .PARAMETER WorkspaceRoot
   Path to the root container of repositories. Defaults to 'D:\Git_Repositories'.

@@ -12,7 +12,7 @@
            Does NOT alter or replace existing repositories in Git Root.
   Path: LCM_Inventory/tools/Initialize-GitWorld.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.0
+  Version: 10.2.0
   Date: 2026-10-13
   Rule: RULE-PS-001 - RULE-PS-021, RULE-LCM-020
 #>

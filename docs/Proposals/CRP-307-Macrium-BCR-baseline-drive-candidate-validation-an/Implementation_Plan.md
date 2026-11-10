@@ -4,7 +4,7 @@
 CRP-ID: BUG-307
 Title: Macrium BCR baseline drive candidate validation and registry timestamp tracking
 Scope: LCM_Inventory
-Baseline-Version: 10.0.2
+Baseline-Version: 10.2.2
 Author: rgbig
 Date: 2026-11-06 16:51:55
 Status: In_Progress

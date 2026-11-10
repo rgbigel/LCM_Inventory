@@ -1,7 +1,7 @@
 ---
 Proposal-ID: CRP-146
 Scope: HaSSD06_Inventory
-Version: 10.0.0
+Version: 10.2.0
 Affected-Repos: [HaSSD06_Inventory, HaSSD06]
 Priority: High
 Status: Open

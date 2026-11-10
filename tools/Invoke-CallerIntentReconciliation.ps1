@@ -7,7 +7,7 @@
            immutable Level 1 baseline and published CRP-121 dependency indexes.
   Path: tools/Invoke-CallerIntentReconciliation.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.0
+  Version: 10.2.0
   Date: 2026-10-13
 #>
 

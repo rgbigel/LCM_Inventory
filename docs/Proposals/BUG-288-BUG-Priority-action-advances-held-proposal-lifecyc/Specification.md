@@ -4,7 +4,7 @@
 Bug-ID: BUG-288
 Title: [BUG] Priority action advances held proposal lifecycle state
 Scope: LCM_Inventory
-Version: 10.0.0
+Version: 10.2.0
 Author: rgbig
 Date: 2026-10-17 20:58:50
 Affected-Repos:

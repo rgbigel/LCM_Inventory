@@ -2,7 +2,7 @@
 Proposal-ID: CRP-114
 CR-ID: CRP-114
 Scope: LCM / Tool Explorer & Dashboard UI
-Version: 10.0.0
+Version: 10.2.0
 Affected-Repos: [LCM]
 Status: OPEN
 Date: 2026-10-13

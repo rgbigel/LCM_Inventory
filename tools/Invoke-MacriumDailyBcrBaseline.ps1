@@ -13,7 +13,7 @@
   reuses existing healthy baseline to eliminate redundant unmount/remount cycles.
   Path: LCM_Inventory/tools/Invoke-MacriumDailyBcrBaseline.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.1.5
+  Version: 10.2.5
   Date: 2026-11-10 15:43:00
 .NOTES
   Caveats: Drive mounting requires administrative elevation (delegated to elevated worker via Invoke-ElevatedTest.ps1

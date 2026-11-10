@@ -7,7 +7,7 @@
              scoped cleanly to a specific workspace subsystem.
     Path: tools/Show-SuperController.ps1
     Authors: Rolf, LCM_AI Engine
-    Version: 10.0.0
+    Version: 10.2.0
     Date: 2026-10-13
 .PARAMETER Subsystem
     Workspace subsystem to scope tools and proposals to (e.g. LCM, LCM_Inventory, LCM_AI, HaSSD06, SystemConfiguration, LCM_Supervision, or ALL).

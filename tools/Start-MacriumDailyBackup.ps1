@@ -9,7 +9,7 @@
   baseline mounting atom (-Mount) to mount the newly generated backup as the writable BCR baseline.
   Path: LCM_Inventory/tools/Start-MacriumDailyBackup.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.0
+  Version: 10.2.0
   Date: 2026-11-09 17:15:00
 .NOTES
   Elevated Operations:

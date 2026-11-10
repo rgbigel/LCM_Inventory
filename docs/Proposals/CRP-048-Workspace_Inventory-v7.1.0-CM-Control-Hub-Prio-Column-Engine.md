@@ -2,7 +2,7 @@
 title: "CRP-048: CM Control Hub Compact Prio Column (C/H/M/L/D), Filtering, Sorting & Persistence Engine"
 crp_id: "CRP-048"
 scope: "LCM_Inventory"
-version: "10.0.0"
+version: "10.2.0"
 target_repos:
   - "LCM_Inventory"
 type: "CRP"

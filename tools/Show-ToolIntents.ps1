@@ -10,7 +10,7 @@
   command line copying to Windows clipboard with toast notifications.
   Path: LCM_Inventory/tools/Show-ToolIntents.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.1.0
+  Version: 10.2.0
   Date: 2026-11-09 19:35:00
 .PARAMETER Filter
   Initial search keyword to filter intents upon launch.

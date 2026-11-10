@@ -13,7 +13,7 @@
 .NOTES
   Module: Archive-LcmDaemonLogs
   Path: LCM_Inventory/tools/Archive-LcmDaemonLogs.ps1
-  Version: 10.0.0
+  Version: 10.2.0
   Date: 2026-10-13
 #>
 

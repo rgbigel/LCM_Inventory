@@ -7,7 +7,7 @@
            and logs caller provenance to security_gateway.log per CRP-309 Clause 10.
   Path: LCM_Inventory/modules/LcmDaemon/Classes/LcmSecurityGateway.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.1
+  Version: 10.2.1
   Date: 2026-11-08 15:26:00
 .NOTES
   Implementation Choices (CRP-309):

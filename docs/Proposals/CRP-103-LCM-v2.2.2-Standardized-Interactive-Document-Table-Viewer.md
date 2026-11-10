@@ -2,7 +2,7 @@
 Proposal-ID: CRP-103
 CR-ID: CR-2026-054
 Scope: LCM Platform (.lcm) & Shared Dashboards
-Version: 10.0.0
+Version: 10.2.0
 Affected-Repos: [LCM_Inventory, LCM_AI, HaSSD06_Inventory, .lcm]
 Status: OPEN (Bundled in BUNDLE-STD-DISPLAY-10.0.0)
 Date: 2026-10-13

@@ -6,7 +6,7 @@
     Purpose: Verifies the governed Macrium BCR wrapper, baseline reuse, and lifecycle routing contracts.
     Path: LCM_Inventory/tests/MacriumBcrReview.Tests.ps1
     Authors: Rolf, LCM_AI Engine
-    Version: 10.0.1
+    Version: 10.2.1
     Date: 2026-10-17
 #>
 

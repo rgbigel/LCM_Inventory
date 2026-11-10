@@ -1,10 +1,10 @@
-﻿# Change Request Proposal: CRP-280
+# Change Request Proposal: CRP-280
 
 ```yaml
 CRP-ID: CRP-280
 Title: Catalog-Synced Show Command Macros and Managed Alias Maintenance
 Scope: LCM_Inventory
-Baseline-Version: 10.0.0
+Baseline-Version: 10.2.0
 Author: rgbig
 Date: 2026-10-15 18:03:28
 Status: Completed

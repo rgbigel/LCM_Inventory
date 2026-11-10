@@ -7,7 +7,7 @@
            Elevated Desktop Daemon and Security Authorization Gateway per CRP-309 Clause 9.
   Path: LCM_Inventory/tools/Invoke-LcmAction.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.2
+  Version: 10.2.2
   Date: 2026-11-08 22:00:00
 .NOTES
   Implementation Choices (CRP-309):

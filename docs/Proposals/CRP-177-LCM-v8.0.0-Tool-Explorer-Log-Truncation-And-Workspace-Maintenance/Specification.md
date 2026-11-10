@@ -4,7 +4,7 @@
 CRP-ID: CRP-177
 Title: Tool Explorer Ergonomics, Daemon Log Truncation, and Automated Workspace Maintenance Engine
 Scope: .lcm, LCM_Inventory, Tool Explorer UI, Desktop Daemon Logs, Pre-Push Pipeline
-Baseline-Version: 10.0.0
+Baseline-Version: 10.2.0
 Author: Rolf, Antigravity AI Assistant
 Date: 2026-10-13
 Status: Completed
