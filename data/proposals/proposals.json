@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-11-10T20:42:31+01:00",
+  "updated_at": "2026-11-10T20:50:36+01:00",
   "review_granularity": "coarse",
   "lcm_mode": "active",
   "last_proposal_id": 318,
@@ -13040,7 +13040,11 @@
       },
       "bcr_disposition": "COMPLETED",
       "progress_state": "completed",
-      "disposition": "completed"
+      "disposition": "completed",
+      "affected_repos": [
+        "LCM_Inventory",
+        "LCM_AI"
+      ]
     },
     {
       "id": 281,
@@ -15670,7 +15674,11 @@
       "bcr_scope": "BUG-311",
       "bcr_disposition": "COMPLETED",
       "progress_state": "completed",
-      "disposition": "completed"
+      "disposition": "completed",
+      "affected_repos": [
+        "LCM_Inventory",
+        "LCM_AI"
+      ]
     },
     {
       "id": 312,
@@ -15999,7 +16007,11 @@
       },
       "bcr_disposition": "COMPLETED",
       "progress_state": "completed",
-      "disposition": "completed"
+      "disposition": "completed",
+      "affected_repos": [
+        "LCM_Inventory",
+        "LCM_AI"
+      ]
     },
     {
       "id": 316,
@@ -16189,7 +16201,11 @@
       },
       "bcr_disposition": "COMPLETED",
       "progress_state": "completed",
-      "disposition": "completed"
+      "disposition": "completed",
+      "affected_repos": [
+        "LCM_Inventory",
+        "LCM_AI"
+      ]
     }
   ],
   "testing_mode": "active",
