@@ -7,8 +7,8 @@
   automation atoms for inspection, status querying, backup launching, mounting, and dismounting.
   Path: LCM_Inventory/modules/LcmMacriumAtoms.psm1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.2
-  Date: 2026-11-08 22:08:00
+  Version: 10.0.3
+  Date: 2026-11-10 20:30:00
 .NOTES
   Caveats: Drive mounting and dismounting require administrative elevation and Session 1
   interactive desktop access when automated through Macrium UI Automation. Telemetry and
@@ -373,10 +373,70 @@ function Dismount-MacriumBaseline {
       $disk = Get-CimInstance Win32_LogicalDisk -Filter "DeviceID='$letter`:'" -ErrorAction SilentlyContinue
       if ($null -ne $disk -and $disk.DriveType -eq 3 -and $disk.VolumeName -eq $ExpectedVolumeLabel) {
         if (Test-Path -LiteralPath $reflectPath -PathType Leaf) {
-          Start-Process -FilePath $reflectPath -ArgumentList @('-d', "$letter`:") -Wait | Out-Null
+          Start-Process -FilePath $reflectPath -ArgumentList @("$letter`:", '-u') -Wait | Out-Null
         }
       }
     }
+  }
+}
+
+function Test-LcmBaselineModifications {
+  <#
+  .SYNOPSIS
+    Detects modifications, untracked files, and review markers on the mounted baseline drive.
+  .DESCRIPTION
+    Scans child repositories on the mounted baseline volume using git status --porcelain.
+    Returns a PSObject with HasModifications ($true/$false), TotalModifiedFiles, and ModifiedRepositories.
+    Part of LcmMacriumAtoms (RULE-REV-013).
+  #>
+  [CmdletBinding()]
+  param(
+    [Parameter(Mandatory = $false, HelpMessage = 'Candidate drive letters to inspect')]
+    [object]$CandidateDrives = @('F', 'G', 'H', 'I'),
+
+    [Parameter(Mandatory = $false, HelpMessage = 'Expected volume label for Macrium baseline')]
+    [string]$ExpectedVolumeLabel = 'D4P3-WDB850-D'
+  )
+
+  $normalized = ConvertTo-LcmCandidateDrives -Drives $CandidateDrives
+  $results = @()
+  $totalModCount = 0
+
+  foreach ($letter in $normalized) {
+    $driveRoot = "$letter`:"
+    $disk = Get-CimInstance Win32_LogicalDisk -Filter "DeviceID='$driveRoot'" -ErrorAction SilentlyContinue
+    if ($null -eq $disk -or $disk.DriveType -ne 3) { continue }
+    if (-not [string]::IsNullOrWhiteSpace($ExpectedVolumeLabel) -and $disk.VolumeName -ne $ExpectedVolumeLabel) { continue }
+
+    $reposBase = Join-Path $driveRoot 'Git_Repositories'
+    $repoDirs = if (Test-Path -LiteralPath $reposBase -PathType Container) {
+      Get-ChildItem -LiteralPath $reposBase -Directory | Where-Object { Test-Path (Join-Path $_.FullName '.git') }
+    } else {
+      Get-ChildItem -LiteralPath $driveRoot -Directory | Where-Object { Test-Path (Join-Path $_.FullName '.git') }
+    }
+
+    foreach ($rd in $repoDirs) {
+      $gitStatus = @(& git -C $rd.FullName status --porcelain 2>$null)
+      if ($LASTEXITCODE -eq 0 -and $gitStatus.Count -gt 0) {
+        $nonEmpty = @($gitStatus | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+        if ($nonEmpty.Count -gt 0) {
+          $totalModCount += $nonEmpty.Count
+          $results += [PSCustomObject]@{
+            DriveLetter    = $letter
+            RepositoryName = $rd.Name
+            RepositoryPath = $rd.FullName
+            ModifiedFiles  = $nonEmpty
+            Count          = $nonEmpty.Count
+          }
+        }
+      }
+    }
+  }
+
+  return [PSCustomObject]@{
+    HasModifications     = ($totalModCount -gt 0)
+    TotalModifiedFiles   = $totalModCount
+    ModifiedRepositories = $results
   }
 }
 
@@ -386,5 +446,6 @@ Export-ModuleMember -Function @(
   'Get-MacriumBackupStatus',
   'Start-MacriumBackup',
   'Mount-MacriumBaseline',
-  'Dismount-MacriumBaseline'
+  'Dismount-MacriumBaseline',
+  'Test-LcmBaselineModifications'
 )

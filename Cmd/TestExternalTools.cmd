@@ -7,4 +7,5 @@ if %errorlevel% neq 0 (
   pwsh.exe -NoProfile -ExecutionPolicy Bypass -File "%Git_Root%/LCM_Inventory/tools/Invoke-PrivilegedTool.ps1" -Tool "TestExternalTools" -Arguments "%*"
   exit /b
 )
+echo # [LCM Launcher] %~nx0 - Goal: Test-ExternalTools execution tool.
 pwsh.exe -NoExit -NoProfile -ExecutionPolicy Bypass -File "%Git_Root%/LCM_Inventory/tools/Test-ExternalTools.ps1" %*

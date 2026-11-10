@@ -1,22 +1,9 @@
 {
   "version": "1.0.0",
   "description": "Direct operational intents to executable commands ledger for AI pairs and operators",
-  "total_intents": 340,
-  "updated_at": "2026-11-09 20:00:52",
+  "total_intents": 354,
+  "updated_at": "2026-11-10 20:42:07",
   "intents": {
-    "goodnight": {
-      "goal": "Execute evening session archive and memory preservation",
-      "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/Invoke-LCM_GoodNight.ps1",
-      "parameters": {},
-      "trampoline": "LCMGoodNight.cmd",
-      "elevated": false,
-      "group": "LCM_Inventory",
-      "category": "Utility",
-      "audience": "Developer",
-      "role": "Utility",
-      "is_primary_intent": true
-    },
     "showcm": {
       "goal": "Open Configuration Management Control Hub dashboard",
       "executable": "pwsh.exe",
@@ -28,110 +15,10 @@
       "category": "Configuration Management",
       "audience": "User",
       "role": "GUI",
-      "is_primary_intent": true
-    },
-    "bcr": {
-      "goal": "Open Beyond Compare 5 review comparing workspace against today daily Macrium baseline",
-      "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/Invoke-MacriumDailyBcrBaseline.ps1",
-      "parameters": {},
-      "trampoline": "MacriumDailyBcrBaseline.cmd",
-      "elevated": false,
-      "group": "LCM_Inventory",
-      "category": "Utility",
-      "audience": "Developer",
-      "role": "Utility",
-      "is_primary_intent": true
-    },
-    "rules": {
-      "goal": "Open LCM Rules and Governance Matrix dashboard",
-      "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/Show-Rules.ps1",
-      "parameters": {},
-      "trampoline": "ShowRules.cmd",
-      "elevated": false,
-      "group": "LCM_Inventory",
-      "category": "Utility",
-      "audience": "Developer",
-      "role": "Utility",
-      "is_primary_intent": true
-    },
-    "controlhub": {
-      "goal": "Open Configuration Management Control Hub dashboard",
-      "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/Show-LcmControl.ps1",
-      "parameters": {},
-      "trampoline": "ShowCM.cmd",
-      "elevated": false,
-      "group": "LCM_Inventory",
-      "category": "Configuration Management",
-      "audience": "User",
-      "role": "GUI",
-      "is_primary_intent": true
-    },
-    "dismount": {
-      "goal": "Dismount currently mounted Macrium virtual drive",
-      "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/Dismount-MacriumCurrentBaseline.ps1",
-      "parameters": {},
-      "trampoline": "DismountMacriumBaseline.cmd",
-      "elevated": true,
-      "group": "LCM_Inventory",
-      "category": "Macrium BCR Baseline",
-      "audience": "User",
-      "role": "Recovery",
-      "is_primary_intent": true
-    },
-    "hub": {
-      "goal": "Open Configuration Management Control Hub dashboard",
-      "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/Show-LcmControl.ps1",
-      "parameters": {},
-      "trampoline": "ShowCM.cmd",
-      "elevated": false,
-      "group": "LCM_Inventory",
-      "category": "Configuration Management",
-      "audience": "User",
-      "role": "GUI",
-      "is_primary_intent": true
-    },
-    "goodmorning": {
-      "goal": "Execute morning workspace synchronization and environment verification",
-      "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/Invoke-LCM_GoodMorning.ps1",
-      "parameters": {},
-      "trampoline": "LCMGoodMorning.cmd",
-      "elevated": false,
-      "group": "LCM_Inventory",
-      "category": "Utility",
-      "audience": "Developer",
-      "role": "Utility",
-      "is_primary_intent": true
-    },
-    "push": {
-      "goal": "Push all ahead workspace repositories to remote Git repositories in lockstep",
-      "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/Invoke-LCM_Push.ps1",
-      "parameters": {},
-      "trampoline": "LCMPush.cmd",
-      "elevated": false,
-      "group": "LCM_Inventory",
-      "category": "Utility",
-      "audience": "Developer",
-      "role": "Utility",
-      "is_primary_intent": true
-    },
-    "readiness": {
-      "goal": "Open LCM Quality Gate and Subsystem Readiness Rollup dashboard",
-      "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/Show-LCM_Readiness.ps1",
-      "parameters": {},
-      "trampoline": "ShowLCMReadiness.cmd",
-      "elevated": false,
-      "group": "LCM_Inventory",
-      "category": "Utility",
-      "audience": "Developer",
-      "role": "Utility",
+      "call_count": 1,
+      "last_called_at": "2026-11-10 19:13:58.700",
+      "last_duration_ms": 142.85,
+      "total_duration_ms": 142.85,
       "is_primary_intent": true
     },
     "toolintents": {
@@ -145,19 +32,27 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 1,
+      "last_called_at": "2026-11-10 19:14:35.980",
+      "last_duration_ms": 88.5,
+      "total_duration_ms": 88.5,
       "is_primary_intent": true
     },
-    "tools": {
-      "goal": "Open LCM Tool Explorer dashboard",
+    "goodmorning": {
+      "goal": "Execute morning workspace synchronization and environment verification",
       "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/Show-ToolsExplorer.ps1",
+      "script": "LCM_Inventory/tools/Invoke-LCM_GoodMorning.ps1",
       "parameters": {},
-      "trampoline": "ToolsExplorer.cmd",
+      "trampoline": "LCMGoodMorning.cmd",
       "elevated": false,
       "group": "LCM_Inventory",
-      "category": "Tool Discovery",
-      "audience": "User",
-      "role": "GUI",
+      "category": "Utility",
+      "audience": "Developer",
+      "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": true
     },
     "showtoolintents": {
@@ -171,6 +66,27 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 1,
+      "last_called_at": "2026-11-10 19:14:35.980",
+      "last_duration_ms": 88.5,
+      "total_duration_ms": 88.5,
+      "is_primary_intent": true
+    },
+    "push": {
+      "goal": "Push all ahead workspace repositories to remote Git repositories in lockstep",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/Invoke-LCM_Push.ps1",
+      "parameters": {},
+      "trampoline": "LCMPush.cmd",
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Utility",
+      "audience": "Developer",
+      "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": true
     },
     "showtools": {
@@ -184,6 +100,146 @@
       "category": "Tool Discovery",
       "audience": "User",
       "role": "GUI",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
+      "is_primary_intent": true
+    },
+    "goodnight": {
+      "goal": "Execute evening session archive and memory preservation",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/Invoke-LCM_GoodNight.ps1",
+      "parameters": {},
+      "trampoline": "LCMGoodNight.cmd",
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Utility",
+      "audience": "Developer",
+      "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
+      "is_primary_intent": true
+    },
+    "hub": {
+      "goal": "Open Configuration Management Control Hub dashboard",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/Show-LcmControl.ps1",
+      "parameters": {},
+      "trampoline": "ShowCM.cmd",
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Configuration Management",
+      "audience": "User",
+      "role": "GUI",
+      "call_count": 1,
+      "last_called_at": "2026-11-10 19:13:58.700",
+      "last_duration_ms": 142.85,
+      "total_duration_ms": 142.85,
+      "is_primary_intent": true
+    },
+    "tools": {
+      "goal": "Open LCM Tool Explorer dashboard",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/Show-ToolsExplorer.ps1",
+      "parameters": {},
+      "trampoline": "ToolsExplorer.cmd",
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Tool Discovery",
+      "audience": "User",
+      "role": "GUI",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
+      "is_primary_intent": true
+    },
+    "bcr": {
+      "goal": "Open Beyond Compare 5 review comparing workspace against today daily Macrium baseline",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/Invoke-MacriumDailyBcrBaseline.ps1",
+      "parameters": {},
+      "trampoline": "MacriumDailyBcrBaseline.cmd",
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Beyond Compare Review",
+      "audience": "Developer",
+      "role": "ReviewGate",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
+      "is_primary_intent": true
+    },
+    "dismount": {
+      "goal": "Dismount currently mounted Macrium virtual drive",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/Dismount-MacriumCurrentBaseline.ps1",
+      "parameters": {},
+      "trampoline": "DismountMacriumBaseline.cmd",
+      "elevated": true,
+      "group": "LCM_Inventory",
+      "category": "Macrium BCR Baseline",
+      "audience": "User",
+      "role": "Recovery",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
+      "is_primary_intent": true
+    },
+    "readiness": {
+      "goal": "Open LCM Quality Gate and Subsystem Readiness Rollup dashboard",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/Show-LCM_Readiness.ps1",
+      "parameters": {},
+      "trampoline": "ShowLCMReadiness.cmd",
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Utility",
+      "audience": "Developer",
+      "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
+      "is_primary_intent": true
+    },
+    "controlhub": {
+      "goal": "Open Configuration Management Control Hub dashboard",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/Show-LcmControl.ps1",
+      "parameters": {},
+      "trampoline": "ShowCM.cmd",
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Configuration Management",
+      "audience": "User",
+      "role": "GUI",
+      "call_count": 1,
+      "last_called_at": "2026-11-10 19:13:58.700",
+      "last_duration_ms": 142.85,
+      "total_duration_ms": 142.85,
+      "is_primary_intent": true
+    },
+    "rules": {
+      "goal": "Open LCM Rules and Governance Matrix dashboard",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/Show-Rules.ps1",
+      "parameters": {},
+      "trampoline": "ShowRules.cmd",
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Utility",
+      "audience": "Developer",
+      "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": true
     },
     "show-haauthdialog": {
@@ -202,6 +258,10 @@
       "category": "JIT Authentication",
       "audience": "User",
       "role": "Auth",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "showhaauthdialog": {
@@ -220,6 +280,10 @@
       "category": "JIT Authentication",
       "audience": "User",
       "role": "Auth",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invoke-haupdategate": {
@@ -235,6 +299,10 @@
       "category": "Subsystem Update Gate",
       "audience": "User",
       "role": "QualityGate",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invokehaupdategate": {
@@ -250,6 +318,10 @@
       "category": "Subsystem Update Gate",
       "audience": "User",
       "role": "QualityGate",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "haupdategate": {
@@ -265,6 +337,10 @@
       "category": "Subsystem Update Gate",
       "audience": "User",
       "role": "QualityGate",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "update-hainventory": {
@@ -278,6 +354,10 @@
       "category": "Subsystem Telemetry",
       "audience": "User",
       "role": "Telemetry",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "updatehainventory": {
@@ -291,6 +371,10 @@
       "category": "Subsystem Telemetry",
       "audience": "User",
       "role": "Telemetry",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "analyze_lcm_components": {
@@ -304,6 +388,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "analyzelcmcomponents": {
@@ -317,6 +405,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "build-hainventoryviewer": {
@@ -333,6 +425,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "buildhainventoryviewer": {
@@ -349,6 +445,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "build_matrix": {
@@ -362,6 +462,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "buildmatrix": {
@@ -375,6 +479,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "check_specific": {
@@ -388,6 +496,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "checkspecific": {
@@ -401,6 +513,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "compare_tuya_integrations": {
@@ -414,6 +530,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "comparetuyaintegrations": {
@@ -427,6 +547,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "deep_device_scan": {
@@ -440,6 +564,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "deepdevicescan": {
@@ -453,6 +581,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "deep_tuya_scan": {
@@ -466,6 +598,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "deeptuyascan": {
@@ -479,6 +615,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "extract_ha_central_registry": {
@@ -492,6 +632,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "extracthacentralregistry": {
@@ -505,6 +649,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "extract_ha_update_crps": {
@@ -518,6 +666,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "extracthaupdatecrps": {
@@ -531,6 +683,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "generate_system_docs": {
@@ -544,6 +700,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "generatesystemdocs": {
@@ -557,6 +717,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "run_audit": {
@@ -570,6 +734,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "runaudit": {
@@ -583,6 +751,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "haaudit": {
@@ -596,6 +768,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invoke_ha_backup": {
@@ -609,6 +785,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invokehabackup": {
@@ -622,6 +802,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "habackup": {
@@ -635,6 +819,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invoke_ha_core_update": {
@@ -648,6 +836,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invokehacoreupdate": {
@@ -661,6 +853,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "hacoreupdate": {
@@ -674,6 +870,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "ha_inventory_collector": {
@@ -687,6 +887,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "hainventorycollector": {
@@ -700,6 +904,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "list_all_updates": {
@@ -713,6 +921,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "listallupdates": {
@@ -726,6 +938,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "halistupdates": {
@@ -739,6 +955,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "inspect_ha_logs": {
@@ -752,6 +972,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "inspecthalogs": {
@@ -765,6 +989,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "halogs": {
@@ -778,6 +1006,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invoke-harenamecascade": {
@@ -804,6 +1036,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invokeharenamecascade": {
@@ -830,6 +1066,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "harenamecascade": {
@@ -856,6 +1096,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invoke-haservice": {
@@ -875,6 +1119,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invokehaservice": {
@@ -894,6 +1142,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "haservice": {
@@ -913,6 +1165,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "test-reporeadiness": {
@@ -928,6 +1184,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "testreporeadiness": {
@@ -943,6 +1203,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "lcmsupervisiontestreporeadiness": {
@@ -958,6 +1222,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "lcmtoolstestreporeadiness": {
@@ -973,6 +1241,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "mcp_ha_readonly": {
@@ -986,6 +1258,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "mcphareadonly": {
@@ -999,6 +1275,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "register-blesupervisiontask": {
@@ -1016,6 +1296,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "registerblesupervisiontask": {
@@ -1033,6 +1317,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "scan_community_issues": {
@@ -1046,6 +1334,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "scancommunityissues": {
@@ -1059,6 +1351,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "search_sys_sensors": {
@@ -1072,6 +1368,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "searchsyssensors": {
@@ -1085,6 +1385,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "show-hainventoryapp": {
@@ -1102,6 +1406,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "showhainventoryapp": {
@@ -1119,6 +1427,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "testharepoready": {
@@ -1132,6 +1444,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "show-supercontroller": {
@@ -1149,6 +1465,10 @@
       "category": "Navigation",
       "audience": "User",
       "role": "GUI",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "showsupercontroller": {
@@ -1166,6 +1486,10 @@
       "category": "Navigation",
       "audience": "User",
       "role": "GUI",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "supercontroller": {
@@ -1183,6 +1507,10 @@
       "category": "Navigation",
       "audience": "User",
       "role": "GUI",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invoke-failuremodeanalysis": {
@@ -1206,6 +1534,10 @@
       "category": "Session Failure Analysis",
       "audience": "User",
       "role": "Diagnostics",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invokefailuremodeanalysis": {
@@ -1229,6 +1561,10 @@
       "category": "Session Failure Analysis",
       "audience": "User",
       "role": "Diagnostics",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "analyzefailures": {
@@ -1252,6 +1588,10 @@
       "category": "Session Failure Analysis",
       "audience": "User",
       "role": "Diagnostics",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "get-systemportinventory": {
@@ -1270,6 +1610,10 @@
       "category": "Network Diagnostics",
       "audience": "User",
       "role": "Diagnostics",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "getsystemportinventory": {
@@ -1288,6 +1632,10 @@
       "category": "Network Diagnostics",
       "audience": "User",
       "role": "Diagnostics",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "show-lcmdaemon": {
@@ -1312,6 +1660,10 @@
       "category": "Desktop Bridge",
       "audience": "User",
       "role": "Diagnostics",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "showlcmdaemon": {
@@ -1336,6 +1688,10 @@
       "category": "Desktop Bridge",
       "audience": "User",
       "role": "Diagnostics",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "showdaemon": {
@@ -1360,6 +1716,10 @@
       "category": "Desktop Bridge",
       "audience": "User",
       "role": "Diagnostics",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "show-failureanalysis": {
@@ -1378,6 +1738,10 @@
       "category": "Session Failure Analysis",
       "audience": "User",
       "role": "Diagnostics",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "showfailureanalysis": {
@@ -1396,6 +1760,10 @@
       "category": "Session Failure Analysis",
       "audience": "User",
       "role": "Diagnostics",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "show-lastlog": {
@@ -1417,6 +1785,10 @@
       "category": "Log Diagnostics",
       "audience": "User",
       "role": "Diagnostics",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "showlastlog": {
@@ -1438,6 +1810,10 @@
       "category": "Log Diagnostics",
       "audience": "User",
       "role": "Diagnostics",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "test-macriumcurrentbaseline": {
@@ -1454,6 +1830,10 @@
       "category": "Macrium BCR Baseline",
       "audience": "User",
       "role": "Diagnostics",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "testmacriumcurrentbaseline": {
@@ -1470,6 +1850,10 @@
       "category": "Macrium BCR Baseline",
       "audience": "User",
       "role": "Diagnostics",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "testmacriumbaseline": {
@@ -1486,6 +1870,10 @@
       "category": "Macrium BCR Baseline",
       "audience": "User",
       "role": "Diagnostics",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "show-lcmcontrol": {
@@ -1512,6 +1900,10 @@
       "category": "Configuration Management",
       "audience": "User",
       "role": "GUI",
+      "call_count": 1,
+      "last_called_at": "2026-11-10 19:13:58.700",
+      "last_duration_ms": 142.85,
+      "total_duration_ms": 142.85,
       "is_primary_intent": false
     },
     "showlcmcontrol": {
@@ -1538,6 +1930,10 @@
       "category": "Configuration Management",
       "audience": "User",
       "role": "GUI",
+      "call_count": 1,
+      "last_called_at": "2026-11-10 19:13:58.700",
+      "last_duration_ms": 142.85,
+      "total_duration_ms": 142.85,
       "is_primary_intent": false
     },
     "show-cmdfolderanalysis": {
@@ -1553,6 +1949,10 @@
       "category": "Tool Analysis",
       "audience": "User",
       "role": "GUI",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "showcmdfolderanalysis": {
@@ -1568,6 +1968,10 @@
       "category": "Tool Analysis",
       "audience": "User",
       "role": "GUI",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "showcmdanalysis": {
@@ -1583,6 +1987,10 @@
       "category": "Tool Analysis",
       "audience": "User",
       "role": "GUI",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "show-hainventory": {
@@ -1599,6 +2007,10 @@
       "category": "Subsystem GUI",
       "audience": "User",
       "role": "GUI",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "showhainventory": {
@@ -1615,6 +2027,10 @@
       "category": "Subsystem GUI",
       "audience": "User",
       "role": "GUI",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "show-toolsexplorer": {
@@ -1640,6 +2056,10 @@
       "category": "Tool Discovery",
       "audience": "User",
       "role": "GUI",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "showtoolsexplorer": {
@@ -1665,6 +2085,10 @@
       "category": "Tool Discovery",
       "audience": "User",
       "role": "GUI",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "toolsexplorer": {
@@ -1690,6 +2114,10 @@
       "category": "Tool Discovery",
       "audience": "User",
       "role": "GUI",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "restore-systemsettings": {
@@ -1703,6 +2131,10 @@
       "category": "System Invariants",
       "audience": "User",
       "role": "Invariants",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "restoresystemsettings": {
@@ -1716,6 +2148,10 @@
       "category": "System Invariants",
       "audience": "User",
       "role": "Invariants",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "test-lcm_readiness": {
@@ -1729,6 +2165,10 @@
       "category": "Quality Gate",
       "audience": "User",
       "role": "QualityGate",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "testlcmreadiness": {
@@ -1742,6 +2182,10 @@
       "category": "Quality Gate",
       "audience": "User",
       "role": "QualityGate",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "testlcm_readiness": {
@@ -1755,6 +2199,10 @@
       "category": "Quality Gate",
       "audience": "User",
       "role": "QualityGate",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "dismount-macriumcurrentbaseline": {
@@ -1765,7 +2213,8 @@
         "-DriveLetter": "{OPTIONAL}",
         "-ExpectedVolumeLabel": "D4P3-WDB850-D",
         "-DetachTimeoutSeconds": "120",
-        "-ConfirmDetach": "{OPTIONAL}"
+        "-ConfirmDetach": "{OPTIONAL}",
+        "-Force": "{OPTIONAL}"
       },
       "trampoline": "DismountMacriumBaseline.cmd",
       "elevated": true,
@@ -1773,6 +2222,10 @@
       "category": "Macrium BCR Baseline",
       "audience": "User",
       "role": "Recovery",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "dismountmacriumcurrentbaseline": {
@@ -1783,7 +2236,8 @@
         "-DriveLetter": "{OPTIONAL}",
         "-ExpectedVolumeLabel": "D4P3-WDB850-D",
         "-DetachTimeoutSeconds": "120",
-        "-ConfirmDetach": "{OPTIONAL}"
+        "-ConfirmDetach": "{OPTIONAL}",
+        "-Force": "{OPTIONAL}"
       },
       "trampoline": "DismountMacriumBaseline.cmd",
       "elevated": true,
@@ -1791,6 +2245,10 @@
       "category": "Macrium BCR Baseline",
       "audience": "User",
       "role": "Recovery",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "dismountmacriumbaseline": {
@@ -1801,7 +2259,8 @@
         "-DriveLetter": "{OPTIONAL}",
         "-ExpectedVolumeLabel": "D4P3-WDB850-D",
         "-DetachTimeoutSeconds": "120",
-        "-ConfirmDetach": "{OPTIONAL}"
+        "-ConfirmDetach": "{OPTIONAL}",
+        "-Force": "{OPTIONAL}"
       },
       "trampoline": "DismountMacriumBaseline.cmd",
       "elevated": true,
@@ -1809,6 +2268,10 @@
       "category": "Macrium BCR Baseline",
       "audience": "User",
       "role": "Recovery",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "mount-macriumlatestbaseline": {
@@ -1828,6 +2291,10 @@
       "category": "Macrium BCR Baseline",
       "audience": "User",
       "role": "Recovery",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "mountmacriumlatestbaseline": {
@@ -1847,6 +2314,10 @@
       "category": "Macrium BCR Baseline",
       "audience": "User",
       "role": "Recovery",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "mountmacriumbaseline": {
@@ -1866,14 +2337,18 @@
       "category": "Macrium BCR Baseline",
       "audience": "User",
       "role": "Recovery",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invoke-macriumbcrreview": {
-      "goal": "Opens the exact CRP/BUG Macrium BCR review using the writable baseline and the _LCM Beyond Compare profile.",
+      "goal": "Opens the exact CRP/BUG Macrium BCR review using writable baseline and AutoHotkey (AHK) UI automation with _LCM Beyond Compare profile.",
       "executable": "pwsh.exe",
       "script": "LCM_Inventory/tools/Invoke-MacriumBcrReview.ps1",
       "parameters": {
-        "-CRP": "{REQUIRED}",
+        "-CRP": "{OPTIONAL}",
         "-RepositoryName": "LCM_Inventory",
         "-BaseCommit": "HEAD",
         "-LifecycleManaged": "{OPTIONAL}",
@@ -1887,14 +2362,18 @@
       "category": "Proposal Review",
       "audience": "User",
       "role": "ReviewGate",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invokemacriumbcrreview": {
-      "goal": "Opens the exact CRP/BUG Macrium BCR review using the writable baseline and the _LCM Beyond Compare profile.",
+      "goal": "Opens the exact CRP/BUG Macrium BCR review using writable baseline and AutoHotkey (AHK) UI automation with _LCM Beyond Compare profile.",
       "executable": "pwsh.exe",
       "script": "LCM_Inventory/tools/Invoke-MacriumBcrReview.ps1",
       "parameters": {
-        "-CRP": "{REQUIRED}",
+        "-CRP": "{OPTIONAL}",
         "-RepositoryName": "LCM_Inventory",
         "-BaseCommit": "HEAD",
         "-LifecycleManaged": "{OPTIONAL}",
@@ -1908,6 +2387,10 @@
       "category": "Proposal Review",
       "audience": "User",
       "role": "ReviewGate",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "show-actions": {
@@ -1927,6 +2410,10 @@
       "category": "Audit Logs",
       "audience": "User",
       "role": "Telemetry",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "showactions": {
@@ -1946,6 +2433,10 @@
       "category": "Audit Logs",
       "audience": "User",
       "role": "Telemetry",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "search-everything": {
@@ -1969,6 +2460,10 @@
       "category": "File Search",
       "audience": "User",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "searcheverything": {
@@ -1992,6 +2487,10 @@
       "category": "File Search",
       "audience": "User",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "lcmdesktopdaemon": {
@@ -2011,6 +2510,10 @@
       "category": "Desktop Bridge",
       "audience": "Developer",
       "role": "Elevation",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "lcmdaemon": {
@@ -2030,6 +2533,10 @@
       "category": "Desktop Bridge",
       "audience": "Developer",
       "role": "Elevation",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "register-lcmdesktopdaemon": {
@@ -2050,6 +2557,10 @@
       "category": "Desktop Bridge",
       "audience": "Developer",
       "role": "Elevation",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "registerlcmdesktopdaemon": {
@@ -2070,6 +2581,10 @@
       "category": "Desktop Bridge",
       "audience": "Developer",
       "role": "Elevation",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "registerdaemon": {
@@ -2090,6 +2605,10 @@
       "category": "Desktop Bridge",
       "audience": "Developer",
       "role": "Elevation",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "show-toolindex": {
@@ -2116,6 +2635,10 @@
       "category": "Tool Discovery",
       "audience": "Developer",
       "role": "GUI",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "showtoolindex": {
@@ -2142,6 +2665,10 @@
       "category": "Tool Discovery",
       "audience": "Developer",
       "role": "GUI",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invoke-lcmdisplayrender": {
@@ -2159,6 +2686,10 @@
       "category": "Internal Display Infrastructure",
       "audience": "Developer",
       "role": "Internal",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invokelcmdisplayrender": {
@@ -2176,6 +2707,10 @@
       "category": "Internal Display Infrastructure",
       "audience": "Developer",
       "role": "Internal",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "renderlcmdisplay": {
@@ -2193,6 +2728,153 @@
       "category": "Internal Display Infrastructure",
       "audience": "Developer",
       "role": "Internal",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
+      "is_primary_intent": false
+    },
+    "invoke-macriumdailybcrbaseline": {
+      "goal": "Prepares today Macrium Reflect image as writable Beyond Compare baseline with AutoHotkey (AHK) UI automation.",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/Invoke-MacriumDailyBcrBaseline.ps1",
+      "parameters": {
+        "-BackupDefinitionPath": "D:\\OneDrive\\Documents\\Reflect\\@B_D4P3+4-WDB850-AD.xml",
+        "-BackupDirectory": "B:\\Backups\\D4P3+4-WDB850-AD",
+        "-ExpectedVolumeLabel": "D4P3-WDB850-D",
+        "-CandidateDrives": "@('F', 'G', 'H', 'I')",
+        "-PollSeconds": "60",
+        "-TimeoutMinutes": "240",
+        "-MountTimeoutSeconds": "120",
+        "-ReviewScope": "{OPTIONAL}",
+        "-StartBackupIfMissing": "{OPTIONAL}",
+        "-ForceNewBackup": "{OPTIONAL}",
+        "-NewBaseline": "{OPTIONAL}",
+        "-NoLaunchReview": "{OPTIONAL}",
+        "-ElevatedWorker": "{OPTIONAL}",
+        "-ReceiptPath": "{OPTIONAL}",
+        "-ImagePath": "{OPTIONAL}"
+      },
+      "trampoline": "MacriumDailyBcrBaseline.cmd",
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Beyond Compare Review",
+      "audience": "Developer",
+      "role": "ReviewGate",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
+      "is_primary_intent": false
+    },
+    "invokemacriumdailybcrbaseline": {
+      "goal": "Prepares today Macrium Reflect image as writable Beyond Compare baseline with AutoHotkey (AHK) UI automation.",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/Invoke-MacriumDailyBcrBaseline.ps1",
+      "parameters": {
+        "-BackupDefinitionPath": "D:\\OneDrive\\Documents\\Reflect\\@B_D4P3+4-WDB850-AD.xml",
+        "-BackupDirectory": "B:\\Backups\\D4P3+4-WDB850-AD",
+        "-ExpectedVolumeLabel": "D4P3-WDB850-D",
+        "-CandidateDrives": "@('F', 'G', 'H', 'I')",
+        "-PollSeconds": "60",
+        "-TimeoutMinutes": "240",
+        "-MountTimeoutSeconds": "120",
+        "-ReviewScope": "{OPTIONAL}",
+        "-StartBackupIfMissing": "{OPTIONAL}",
+        "-ForceNewBackup": "{OPTIONAL}",
+        "-NewBaseline": "{OPTIONAL}",
+        "-NoLaunchReview": "{OPTIONAL}",
+        "-ElevatedWorker": "{OPTIONAL}",
+        "-ReceiptPath": "{OPTIONAL}",
+        "-ImagePath": "{OPTIONAL}"
+      },
+      "trampoline": "MacriumDailyBcrBaseline.cmd",
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Beyond Compare Review",
+      "audience": "Developer",
+      "role": "ReviewGate",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
+      "is_primary_intent": false
+    },
+    "macriumdailybcrbaseline": {
+      "goal": "Prepares today Macrium Reflect image as writable Beyond Compare baseline with AutoHotkey (AHK) UI automation.",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/Invoke-MacriumDailyBcrBaseline.ps1",
+      "parameters": {
+        "-BackupDefinitionPath": "D:\\OneDrive\\Documents\\Reflect\\@B_D4P3+4-WDB850-AD.xml",
+        "-BackupDirectory": "B:\\Backups\\D4P3+4-WDB850-AD",
+        "-ExpectedVolumeLabel": "D4P3-WDB850-D",
+        "-CandidateDrives": "@('F', 'G', 'H', 'I')",
+        "-PollSeconds": "60",
+        "-TimeoutMinutes": "240",
+        "-MountTimeoutSeconds": "120",
+        "-ReviewScope": "{OPTIONAL}",
+        "-StartBackupIfMissing": "{OPTIONAL}",
+        "-ForceNewBackup": "{OPTIONAL}",
+        "-NewBaseline": "{OPTIONAL}",
+        "-NoLaunchReview": "{OPTIONAL}",
+        "-ElevatedWorker": "{OPTIONAL}",
+        "-ReceiptPath": "{OPTIONAL}",
+        "-ImagePath": "{OPTIONAL}"
+      },
+      "trampoline": "MacriumDailyBcrBaseline.cmd",
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Beyond Compare Review",
+      "audience": "Developer",
+      "role": "ReviewGate",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
+      "is_primary_intent": false
+    },
+    "absorb-lcmcontextremark": {
+      "goal": "Absorb-LcmContextRemark execution tool.",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/Absorb-LcmContextRemark.ps1",
+      "parameters": {
+        "-Id": "{REQUIRED}",
+        "-TextMatch": "{REQUIRED}",
+        "-DryRun": "{OPTIONAL}",
+        "-CheckOnly": "{OPTIONAL}"
+      },
+      "trampoline": "AbsorbLcmContextRemark.cmd",
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Utility",
+      "audience": "Developer",
+      "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
+      "is_primary_intent": false
+    },
+    "absorblcmcontextremark": {
+      "goal": "Absorb-LcmContextRemark execution tool.",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/Absorb-LcmContextRemark.ps1",
+      "parameters": {
+        "-Id": "{REQUIRED}",
+        "-TextMatch": "{REQUIRED}",
+        "-DryRun": "{OPTIONAL}",
+        "-CheckOnly": "{OPTIONAL}"
+      },
+      "trampoline": "AbsorbLcmContextRemark.cmd",
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Utility",
+      "audience": "Developer",
+      "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "advance-governance": {
@@ -2214,6 +2896,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "advancegovernance": {
@@ -2235,6 +2921,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "apply": {
@@ -2251,6 +2941,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "archive-lcmdaemonlogs": {
@@ -2267,6 +2961,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "archivelcmdaemonlogs": {
@@ -2283,6 +2981,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "authorizemasteruser": {
@@ -2303,6 +3005,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invoke-bcrdispatcher": {
@@ -2320,6 +3026,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invokebcrdispatcher": {
@@ -2337,6 +3047,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "bcrdispatcher": {
@@ -2354,6 +3068,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "build_offline_docs": {
@@ -2367,6 +3085,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "buildofflinedocs": {
@@ -2380,6 +3102,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invoke-callerintentreconciliation": {
@@ -2398,6 +3124,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invokecallerintentreconciliation": {
@@ -2416,6 +3146,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "callerintentreconciliation": {
@@ -2434,6 +3168,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "clear-bcreviewtemp": {
@@ -2452,6 +3190,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "clearbcreviewtemp": {
@@ -2470,6 +3212,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invoke-compactbcomparereview": {
@@ -2489,6 +3235,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invokecompactbcomparereview": {
@@ -2508,6 +3258,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "compactbcomparereview": {
@@ -2527,6 +3281,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "complete-reviewcohort": {
@@ -2544,6 +3302,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "completereviewcohort": {
@@ -2561,6 +3323,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "complete-tooldocumentation": {
@@ -2580,6 +3346,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "completetooldocumentation": {
@@ -2599,6 +3369,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "create-lcm_baseline": {
@@ -2615,6 +3389,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "createlcmbaseline": {
@@ -2631,6 +3409,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "create-lcmtool": {
@@ -2655,6 +3437,10 @@
       "category": "Tool Scaffolding",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "createlcmtool": {
@@ -2679,6 +3465,10 @@
       "category": "Tool Scaffolding",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "createtool": {
@@ -2703,6 +3493,10 @@
       "category": "Tool Scaffolding",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "disable-wakedevices": {
@@ -2716,6 +3510,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "disablewakedevices": {
@@ -2729,6 +3527,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "export-lcmknowledgebase": {
@@ -2747,6 +3549,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "exportlcmknowledgebase": {
@@ -2765,6 +3571,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "export-lcmrules": {
@@ -2782,6 +3592,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "exportlcmrules": {
@@ -2799,6 +3613,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "find-changerequest": {
@@ -2818,6 +3636,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "findchangerequest": {
@@ -2837,6 +3659,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "fix-documentation": {
@@ -2858,6 +3684,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "fixdocumentation": {
@@ -2879,6 +3709,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "format-lcmmarkdowndiagrams": {
@@ -2901,6 +3735,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "formatlcmmarkdowndiagrams": {
@@ -2923,6 +3761,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "generate-log": {
@@ -2941,6 +3783,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "generatelog": {
@@ -2959,6 +3805,58 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
+      "is_primary_intent": false
+    },
+    "get-geminiinboxstatus": {
+      "goal": "Get-GeminiInboxStatus execution tool.",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/Get-GeminiInboxStatus.ps1",
+      "parameters": {
+        "-CorrelationId": "{OPTIONAL}",
+        "-InboxPath": "D:\\GDrive\\LCM\\INBOX",
+        "-AckLedgerPath": "D:\\Git_Repositories\\LCM_Inventory\\data\\inbox\\acks",
+        "-Latest": "10",
+        "-AsJson": "{OPTIONAL}",
+        "-PassThru": "{OPTIONAL}"
+      },
+      "trampoline": "GetGeminiInboxStatus.cmd",
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Utility",
+      "audience": "Developer",
+      "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
+      "is_primary_intent": false
+    },
+    "getgeminiinboxstatus": {
+      "goal": "Get-GeminiInboxStatus execution tool.",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/Get-GeminiInboxStatus.ps1",
+      "parameters": {
+        "-CorrelationId": "{OPTIONAL}",
+        "-InboxPath": "D:\\GDrive\\LCM\\INBOX",
+        "-AckLedgerPath": "D:\\Git_Repositories\\LCM_Inventory\\data\\inbox\\acks",
+        "-Latest": "10",
+        "-AsJson": "{OPTIONAL}",
+        "-PassThru": "{OPTIONAL}"
+      },
+      "trampoline": "GetGeminiInboxStatus.cmd",
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Utility",
+      "audience": "Developer",
+      "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "get-lcm_repositories": {
@@ -2977,6 +3875,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "getlcmrepositories": {
@@ -2995,6 +3897,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "get-lcmtableprintatom": {
@@ -3012,6 +3918,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "getlcmtableprintatom": {
@@ -3029,6 +3939,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "get-openproposals": {
@@ -3046,6 +3960,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "getopenproposals": {
@@ -3063,6 +3981,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "get-realrepoactionplan": {
@@ -3078,6 +4000,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "getrealrepoactionplan": {
@@ -3093,6 +4019,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "get-realrepotargetprofile": {
@@ -3108,6 +4038,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "getrealrepotargetprofile": {
@@ -3123,6 +4057,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "get-realrepotestplan": {
@@ -3138,6 +4076,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "getrealrepotestplan": {
@@ -3153,6 +4095,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "get-reposunderreview": {
@@ -3168,6 +4114,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "getreposunderreview": {
@@ -3183,6 +4133,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "initialize-adminmode": {
@@ -3196,6 +4150,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "initializeadminmode": {
@@ -3209,6 +4167,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "initialize-gitworld": {
@@ -3228,6 +4190,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "initializegitworld": {
@@ -3247,6 +4213,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "initialize-realrepomethodinstance": {
@@ -3265,6 +4235,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "initializerealrepomethodinstance": {
@@ -3283,6 +4257,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invoke-interactivedesktop": {
@@ -3304,6 +4282,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invokeinteractivedesktop": {
@@ -3325,6 +4307,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "interactivedesktop": {
@@ -3346,6 +4332,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invoke-lcmaction": {
@@ -3369,6 +4359,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invokelcmaction": {
@@ -3392,6 +4386,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "lcmaction": {
@@ -3415,6 +4413,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invoke-lcm_audit": {
@@ -3428,6 +4430,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invokelcmaudit": {
@@ -3441,6 +4447,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "lcmaudit": {
@@ -3454,6 +4464,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invoke-lcmgiantreview": {
@@ -3471,6 +4485,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invokelcmgiantreview": {
@@ -3488,6 +4506,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "lcmgiantreview": {
@@ -3505,6 +4527,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invoke-lcm_goodmorning": {
@@ -3525,6 +4551,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invokelcmgoodmorning": {
@@ -3545,6 +4575,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "lcmgoodmorning": {
@@ -3565,6 +4599,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invoke-lcm_goodnight": {
@@ -3586,6 +4624,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invokelcmgoodnight": {
@@ -3607,6 +4649,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "lcmgoodnight": {
@@ -3628,6 +4674,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invoke-lcm_maintenance": {
@@ -3647,6 +4697,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invokelcmmaintenance": {
@@ -3666,6 +4720,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "lcmmaintenance": {
@@ -3685,6 +4743,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invoke-lcmpathmigration": {
@@ -3702,6 +4764,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invokelcmpathmigration": {
@@ -3719,6 +4785,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "lcmpathmigration": {
@@ -3736,6 +4806,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invoke-lcmprotocol": {
@@ -3751,6 +4825,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invokelcmprotocol": {
@@ -3766,6 +4844,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "lcmprotocol": {
@@ -3781,6 +4863,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invoke-lcm_push": {
@@ -3801,6 +4887,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invokelcmpush": {
@@ -3821,6 +4911,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "lcmpush": {
@@ -3841,6 +4935,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invoke-learnedadvicereview": {
@@ -3851,6 +4949,8 @@
         "-Accept": "@()",
         "-Promote": "@()",
         "-Reject": "@()",
+        "-RetireAccepted": "{OPTIONAL}",
+        "-TextMatch": "{OPTIONAL}",
         "-ProposalId": "{OPTIONAL}",
         "-Check": "{OPTIONAL}"
       },
@@ -3860,6 +4960,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invokelearnedadvicereview": {
@@ -3870,6 +4974,8 @@
         "-Accept": "@()",
         "-Promote": "@()",
         "-Reject": "@()",
+        "-RetireAccepted": "{OPTIONAL}",
+        "-TextMatch": "{OPTIONAL}",
         "-ProposalId": "{OPTIONAL}",
         "-Check": "{OPTIONAL}"
       },
@@ -3879,6 +4985,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "learnedadvicereview": {
@@ -3889,6 +4999,8 @@
         "-Accept": "@()",
         "-Promote": "@()",
         "-Reject": "@()",
+        "-RetireAccepted": "{OPTIONAL}",
+        "-TextMatch": "{OPTIONAL}",
         "-ProposalId": "{OPTIONAL}",
         "-Check": "{OPTIONAL}"
       },
@@ -3898,6 +5010,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invoke-level1analysisrefinement": {
@@ -3915,6 +5031,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invokelevel1analysisrefinement": {
@@ -3932,6 +5052,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "level1analysisrefinement": {
@@ -3949,6 +5073,56 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
+      "is_primary_intent": false
+    },
+    "link-lcmlearnedadvice": {
+      "goal": "Link-LcmLearnedAdvice execution tool.",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/Link-LcmLearnedAdvice.ps1",
+      "parameters": {
+        "-Id": "{REQUIRED}",
+        "-TextMatch": "{REQUIRED}",
+        "-PurgeGuaranteed": "{OPTIONAL}",
+        "-GuaranteeEvidence": "{OPTIONAL}",
+        "-DryRun": "{OPTIONAL}"
+      },
+      "trampoline": "LinkLcmLearnedAdvice.cmd",
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Utility",
+      "audience": "Developer",
+      "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
+      "is_primary_intent": false
+    },
+    "linklcmlearnedadvice": {
+      "goal": "Link-LcmLearnedAdvice execution tool.",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/Link-LcmLearnedAdvice.ps1",
+      "parameters": {
+        "-Id": "{REQUIRED}",
+        "-TextMatch": "{REQUIRED}",
+        "-PurgeGuaranteed": "{OPTIONAL}",
+        "-GuaranteeEvidence": "{OPTIONAL}",
+        "-DryRun": "{OPTIONAL}"
+      },
+      "trampoline": "LinkLcmLearnedAdvice.cmd",
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Utility",
+      "audience": "Developer",
+      "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "loadatoms": {
@@ -3962,6 +5136,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "loadfixes": {
@@ -3975,6 +5153,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "loadmethods": {
@@ -3988,6 +5170,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "loadrules": {
@@ -4001,93 +5187,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
-      "is_primary_intent": false
-    },
-    "invoke-macriumdailybcrbaseline": {
-      "goal": "Invoke-MacriumDailyBcrBaseline execution tool.",
-      "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/Invoke-MacriumDailyBcrBaseline.ps1",
-      "parameters": {
-        "-BackupDefinitionPath": "D:\\OneDrive\\Documents\\Reflect\\@B_D4P3+4-WDB850-AD.xml",
-        "-BackupDirectory": "B:\\Backups\\D4P3+4-WDB850-AD",
-        "-ExpectedVolumeLabel": "D4P3-WDB850-D",
-        "-CandidateDrives": "@('F', 'G', 'H', 'I')",
-        "-PollSeconds": "60",
-        "-TimeoutMinutes": "240",
-        "-MountTimeoutSeconds": "120",
-        "-ReviewScope": "{OPTIONAL}",
-        "-StartBackupIfMissing": "{OPTIONAL}",
-        "-ForceNewBackup": "{OPTIONAL}",
-        "-NewBaseline": "{OPTIONAL}",
-        "-NoLaunchReview": "{OPTIONAL}",
-        "-ElevatedWorker": "{OPTIONAL}",
-        "-ReceiptPath": "{OPTIONAL}",
-        "-ImagePath": "{OPTIONAL}"
-      },
-      "trampoline": "MacriumDailyBcrBaseline.cmd",
-      "elevated": false,
-      "group": "LCM_Inventory",
-      "category": "Utility",
-      "audience": "Developer",
-      "role": "Utility",
-      "is_primary_intent": false
-    },
-    "invokemacriumdailybcrbaseline": {
-      "goal": "Invoke-MacriumDailyBcrBaseline execution tool.",
-      "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/Invoke-MacriumDailyBcrBaseline.ps1",
-      "parameters": {
-        "-BackupDefinitionPath": "D:\\OneDrive\\Documents\\Reflect\\@B_D4P3+4-WDB850-AD.xml",
-        "-BackupDirectory": "B:\\Backups\\D4P3+4-WDB850-AD",
-        "-ExpectedVolumeLabel": "D4P3-WDB850-D",
-        "-CandidateDrives": "@('F', 'G', 'H', 'I')",
-        "-PollSeconds": "60",
-        "-TimeoutMinutes": "240",
-        "-MountTimeoutSeconds": "120",
-        "-ReviewScope": "{OPTIONAL}",
-        "-StartBackupIfMissing": "{OPTIONAL}",
-        "-ForceNewBackup": "{OPTIONAL}",
-        "-NewBaseline": "{OPTIONAL}",
-        "-NoLaunchReview": "{OPTIONAL}",
-        "-ElevatedWorker": "{OPTIONAL}",
-        "-ReceiptPath": "{OPTIONAL}",
-        "-ImagePath": "{OPTIONAL}"
-      },
-      "trampoline": "MacriumDailyBcrBaseline.cmd",
-      "elevated": false,
-      "group": "LCM_Inventory",
-      "category": "Utility",
-      "audience": "Developer",
-      "role": "Utility",
-      "is_primary_intent": false
-    },
-    "macriumdailybcrbaseline": {
-      "goal": "Invoke-MacriumDailyBcrBaseline execution tool.",
-      "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/Invoke-MacriumDailyBcrBaseline.ps1",
-      "parameters": {
-        "-BackupDefinitionPath": "D:\\OneDrive\\Documents\\Reflect\\@B_D4P3+4-WDB850-AD.xml",
-        "-BackupDirectory": "B:\\Backups\\D4P3+4-WDB850-AD",
-        "-ExpectedVolumeLabel": "D4P3-WDB850-D",
-        "-CandidateDrives": "@('F', 'G', 'H', 'I')",
-        "-PollSeconds": "60",
-        "-TimeoutMinutes": "240",
-        "-MountTimeoutSeconds": "120",
-        "-ReviewScope": "{OPTIONAL}",
-        "-StartBackupIfMissing": "{OPTIONAL}",
-        "-ForceNewBackup": "{OPTIONAL}",
-        "-NewBaseline": "{OPTIONAL}",
-        "-NoLaunchReview": "{OPTIONAL}",
-        "-ElevatedWorker": "{OPTIONAL}",
-        "-ReceiptPath": "{OPTIONAL}",
-        "-ImagePath": "{OPTIONAL}"
-      },
-      "trampoline": "MacriumDailyBcrBaseline.cmd",
-      "elevated": false,
-      "group": "LCM_Inventory",
-      "category": "Utility",
-      "audience": "Developer",
-      "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "make-admin": {
@@ -4103,6 +5206,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "makeadmin": {
@@ -4118,6 +5225,58 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
+      "is_primary_intent": false
+    },
+    "new-repositorydocumentation": {
+      "goal": "New-RepositoryDocumentation execution tool.",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/New-RepositoryDocumentation.ps1",
+      "parameters": {
+        "-RepositoryName": "{REQUIRED}",
+        "-WorkspaceRoot": "D:\\Git_Repositories",
+        "-Authors": "Rolf, LCM_AI Engine",
+        "-Version": "10.0.0",
+        "-IncludeInstall": "{OPTIONAL}",
+        "-Force": "{OPTIONAL}"
+      },
+      "trampoline": "NewRepositoryDocumentation.cmd",
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Utility",
+      "audience": "Developer",
+      "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
+      "is_primary_intent": false
+    },
+    "newrepositorydocumentation": {
+      "goal": "New-RepositoryDocumentation execution tool.",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/New-RepositoryDocumentation.ps1",
+      "parameters": {
+        "-RepositoryName": "{REQUIRED}",
+        "-WorkspaceRoot": "D:\\Git_Repositories",
+        "-Authors": "Rolf, LCM_AI Engine",
+        "-Version": "10.0.0",
+        "-IncludeInstall": "{OPTIONAL}",
+        "-Force": "{OPTIONAL}"
+      },
+      "trampoline": "NewRepositoryDocumentation.cmd",
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Utility",
+      "audience": "Developer",
+      "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invoke-privilegedtool": {
@@ -4137,6 +5296,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invokeprivilegedtool": {
@@ -4156,6 +5319,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "privilegedtool": {
@@ -4175,6 +5342,60 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
+      "is_primary_intent": false
+    },
+    "process-lcminbox": {
+      "goal": "Process-LcmInbox execution tool.",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/Process-LcmInbox.ps1",
+      "parameters": {
+        "-InboxPath": "D:\\GDrive\\LCM\\INBOX",
+        "-ArchivePath": "D:\\GDrive\\LCM\\INBOX\\archive",
+        "-AckPath": "{OPTIONAL}",
+        "-AckLedgerPath": "{OPTIONAL}",
+        "-Watch": "{OPTIONAL}",
+        "-IntervalSeconds": "30",
+        "-DryRun": "{OPTIONAL}"
+      },
+      "trampoline": "ProcessLcmInbox.cmd",
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Utility",
+      "audience": "Developer",
+      "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
+      "is_primary_intent": false
+    },
+    "processlcminbox": {
+      "goal": "Process-LcmInbox execution tool.",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/Process-LcmInbox.ps1",
+      "parameters": {
+        "-InboxPath": "D:\\GDrive\\LCM\\INBOX",
+        "-ArchivePath": "D:\\GDrive\\LCM\\INBOX\\archive",
+        "-AckPath": "{OPTIONAL}",
+        "-AckLedgerPath": "{OPTIONAL}",
+        "-Watch": "{OPTIONAL}",
+        "-IntervalSeconds": "30",
+        "-DryRun": "{OPTIONAL}"
+      },
+      "trampoline": "ProcessLcmInbox.cmd",
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Utility",
+      "audience": "Developer",
+      "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invoke-proposalaction": {
@@ -4214,6 +5435,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invokeproposalaction": {
@@ -4253,6 +5478,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "proposalaction": {
@@ -4292,6 +5521,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "publish-lcm_proposalbundles": {
@@ -4311,6 +5544,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "publishlcmproposalbundles": {
@@ -4330,6 +5567,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invoke-realrepodryrun": {
@@ -4345,6 +5586,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invokerealrepodryrun": {
@@ -4360,6 +5605,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "realrepodryrun": {
@@ -4375,6 +5624,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invoke-reasoninganalysis": {
@@ -4398,6 +5651,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invokereasoninganalysis": {
@@ -4421,6 +5678,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "reasoninganalysis": {
@@ -4444,6 +5705,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "remove-lcmshortname": {
@@ -4461,6 +5726,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "removelcmshortname": {
@@ -4478,6 +5747,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "repair-lcmrules": {
@@ -4497,6 +5770,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "repairlcmrules": {
@@ -4516,6 +5793,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "repair-volumeacl": {
@@ -4535,6 +5816,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "repairvolumeacl": {
@@ -4554,6 +5839,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "safe-copy": {
@@ -4572,6 +5861,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "safecopy": {
@@ -4590,6 +5883,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "save-allsessionmemory": {
@@ -4599,6 +5896,7 @@
       "parameters": {
         "-Learn": "@()",
         "-Author": "AI",
+        "-Quiescent": "{OPTIONAL}",
         "-DryRun": "{OPTIONAL}"
       },
       "trampoline": "SaveAllSessionMemory.cmd",
@@ -4607,6 +5905,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "saveallsessionmemory": {
@@ -4616,6 +5918,7 @@
       "parameters": {
         "-Learn": "@()",
         "-Author": "AI",
+        "-Quiescent": "{OPTIONAL}",
         "-DryRun": "{OPTIONAL}"
       },
       "trampoline": "SaveAllSessionMemory.cmd",
@@ -4624,6 +5927,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "save-lcmrules": {
@@ -4639,6 +5946,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "savelcmrules": {
@@ -4654,6 +5965,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "set-gitroot": {
@@ -4671,6 +5986,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "setgitroot": {
@@ -4688,6 +6007,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "set-lcmactionprogress": {
@@ -4710,6 +6033,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "setlcmactionprogress": {
@@ -4732,6 +6059,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "set-lcmmachineregistry": {
@@ -4750,6 +6081,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "setlcmmachineregistry": {
@@ -4768,6 +6103,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "set-realrepotestplan": {
@@ -4788,6 +6127,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "setrealrepotestplan": {
@@ -4808,6 +6151,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "show-lcmfailurediagnostic": {
@@ -4824,6 +6171,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "showlcmfailurediagnostic": {
@@ -4840,6 +6191,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "showfailurediagnostic": {
@@ -4856,6 +6211,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "show-lcmactivelauncher": {
@@ -4869,6 +6228,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "showlcmactivelauncher": {
@@ -4882,6 +6245,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "show-lcmanalysisviewer": {
@@ -4901,6 +6268,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "showlcmanalysisviewer": {
@@ -4920,6 +6291,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "show-lcm_inventoryapp": {
@@ -4935,6 +6310,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "showlcminventoryapp": {
@@ -4950,6 +6329,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "show-lcm_readiness": {
@@ -4969,6 +6352,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "showlcmreadiness": {
@@ -4988,6 +6375,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "show-repos": {
@@ -5005,6 +6396,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "showrepos": {
@@ -5022,6 +6417,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "show-rules": {
@@ -5040,6 +6439,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "showrules": {
@@ -5058,6 +6461,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "show-toolintents": {
@@ -5074,6 +6481,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 1,
+      "last_called_at": "2026-11-10 19:14:35.980",
+      "last_duration_ms": 88.5,
+      "total_duration_ms": 88.5,
       "is_primary_intent": false
     },
     "split-textfile": {
@@ -5092,6 +6503,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "splittextfile": {
@@ -5110,6 +6525,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "start-macriumdailybackup": {
@@ -5134,6 +6553,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "startmacriumdailybackup": {
@@ -5158,6 +6581,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "start-remotebridge": {
@@ -5176,6 +6603,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "startremotebridge": {
@@ -5194,6 +6625,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "submit-reviewresult": {
@@ -5218,6 +6653,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "submitreviewresult": {
@@ -5242,6 +6681,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "sync-geminiinbox": {
@@ -5260,6 +6703,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "syncgeminiinbox": {
@@ -5278,6 +6725,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "sync-lcmappcatalog": {
@@ -5294,6 +6745,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "synclcmappcatalog": {
@@ -5310,6 +6765,66 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
+      "is_primary_intent": false
+    },
+    "sync-lcmcatalogmacros": {
+      "goal": "Sync-LcmCatalogMacros execution tool.",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/Sync-LcmCatalogMacros.ps1",
+      "parameters": {
+        "-CatalogPath": "{OPTIONAL}",
+        "-MacroFilePath": "{OPTIONAL}",
+        "-SubAction": "Sync",
+        "-DryRun": "{OPTIONAL}",
+        "-Name": "{OPTIONAL}",
+        "-Description": "{OPTIONAL}",
+        "-Syntax": "{OPTIONAL}",
+        "-Target": "{OPTIONAL}",
+        "-Aliases": "@()",
+        "-Rules": "@()"
+      },
+      "trampoline": "SyncLcmCatalogMacros.cmd",
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Utility",
+      "audience": "Developer",
+      "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
+      "is_primary_intent": false
+    },
+    "synclcmcatalogmacros": {
+      "goal": "Sync-LcmCatalogMacros execution tool.",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/Sync-LcmCatalogMacros.ps1",
+      "parameters": {
+        "-CatalogPath": "{OPTIONAL}",
+        "-MacroFilePath": "{OPTIONAL}",
+        "-SubAction": "Sync",
+        "-DryRun": "{OPTIONAL}",
+        "-Name": "{OPTIONAL}",
+        "-Description": "{OPTIONAL}",
+        "-Syntax": "{OPTIONAL}",
+        "-Target": "{OPTIONAL}",
+        "-Aliases": "@()",
+        "-Rules": "@()"
+      },
+      "trampoline": "SyncLcmCatalogMacros.cmd",
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Utility",
+      "audience": "Developer",
+      "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "sync-lcmmoduleversions": {
@@ -5330,6 +6845,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "synclcmmoduleversions": {
@@ -5350,6 +6869,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "sync-toolsymlinks": {
@@ -5366,6 +6889,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "synctoolsymlinks": {
@@ -5382,6 +6909,58 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
+      "is_primary_intent": false
+    },
+    "test-documentationcompleteness": {
+      "goal": "Test-DocumentationCompleteness execution tool.",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/Test-DocumentationCompleteness.ps1",
+      "parameters": {
+        "-WorkspaceRoot": "D:\\Git_Repositories",
+        "-Repositories": "@()",
+        "-Scope": "Governed",
+        "-RequireInstall": "{OPTIONAL}",
+        "-AsJson": "{OPTIONAL}",
+        "-PassThru": "{OPTIONAL}"
+      },
+      "trampoline": "TestDocumentationCompleteness.cmd",
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Utility",
+      "audience": "Developer",
+      "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
+      "is_primary_intent": false
+    },
+    "testdocumentationcompleteness": {
+      "goal": "Test-DocumentationCompleteness execution tool.",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/Test-DocumentationCompleteness.ps1",
+      "parameters": {
+        "-WorkspaceRoot": "D:\\Git_Repositories",
+        "-Repositories": "@()",
+        "-Scope": "Governed",
+        "-RequireInstall": "{OPTIONAL}",
+        "-AsJson": "{OPTIONAL}",
+        "-PassThru": "{OPTIONAL}"
+      },
+      "trampoline": "TestDocumentationCompleteness.cmd",
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Utility",
+      "audience": "Developer",
+      "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "test-externaltools": {
@@ -5395,6 +6974,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "testexternaltools": {
@@ -5408,6 +6991,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "test-generalreadiness": {
@@ -5423,6 +7010,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "testgeneralreadiness": {
@@ -5438,6 +7029,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "test-guardrail": {
@@ -5459,6 +7054,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "testguardrail": {
@@ -5480,6 +7079,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "test-lcm_drift": {
@@ -5493,6 +7096,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "testlcmdrift": {
@@ -5506,6 +7113,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "test-lcmincrementalgovernance": {
@@ -5524,6 +7135,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "testlcmincrementalgovernance": {
@@ -5542,6 +7157,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "test-lcmrulehealth": {
@@ -5560,6 +7179,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "testlcmrulehealth": {
@@ -5578,6 +7201,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "test-realrepoproposalcleanup": {
@@ -5595,6 +7222,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "testrealrepoproposalcleanup": {
@@ -5612,6 +7243,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "test-reviewcommitgate": {
@@ -5627,6 +7262,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "testreviewcommitgate": {
@@ -5642,6 +7281,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "update-gemini": {
@@ -5658,6 +7301,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "updategemini": {
@@ -5674,6 +7321,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "update-proposal": {
@@ -5693,6 +7344,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "updateproposal": {
@@ -5712,6 +7367,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "update-toolcatalog": {
@@ -5728,6 +7387,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "updatetoolcatalog": {
@@ -5744,6 +7407,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "validate-copilotprofile": {
@@ -5757,6 +7424,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "validatecopilotprofile": {
@@ -5770,6 +7441,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "validaterules": {
@@ -5785,6 +7460,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "manage-supervisiontask": {
@@ -5804,6 +7483,10 @@
       "category": "Supervision & Health",
       "audience": "User",
       "role": "Management",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "managesupervisiontask": {
@@ -5823,6 +7506,10 @@
       "category": "Supervision & Health",
       "audience": "User",
       "role": "Management",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invoke-supervisionrunner": {
@@ -5841,6 +7528,10 @@
       "category": "Supervision & Health",
       "audience": "Developer",
       "role": "Management",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "invokesupervisionrunner": {
@@ -5859,6 +7550,10 @@
       "category": "Supervision & Health",
       "audience": "Developer",
       "role": "Management",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "show-supervision": {
@@ -5872,6 +7567,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "showsupervision": {
@@ -5885,6 +7584,10 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "sync-lcmresearchsnapshot": {
@@ -5904,6 +7607,10 @@
       "category": "Research Snapshot",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
     "synclcmresearchsnapshot": {
@@ -5923,6 +7630,10 @@
       "category": "Research Snapshot",
       "audience": "Developer",
       "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": false
     }
   }

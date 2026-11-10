@@ -228,6 +228,16 @@ class DaemonActionController {
           [void][System.Threading.Tasks.Task]::WaitAll(@($stdoutTask, $stderrTask), 5000)
           $exitCode = $proc.ExitCode
           $status = if ($exitCode -eq 0) { "COMPLETED" } else { "ERROR" }
+
+          # Record tool intent execution metrics (CRP-315)
+          try {
+            $catModule = [System.IO.Path]::Combine($wsRoot, 'LCM_Inventory\modules\LcmToolCatalog.psm1')
+            if (Test-Path -LiteralPath $catModule) {
+              Import-Module -Name $catModule -Force
+              Update-LcmToolIntentCall -CommandOrPath $cmd -DurationMs $sw.ElapsedMilliseconds
+            }
+          } catch {}
+
           return @{
             status     = $status
             exitCode   = $exitCode
@@ -306,6 +316,16 @@ class DaemonActionController {
       $encodedCmd = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($cmdToRun))
       Start-Process -FilePath "pwsh.exe" -ArgumentList "-NoProfile -ExecutionPolicy Bypass $noExitFlag-EncodedCommand $encodedCmd" -WorkingDirectory $wsRoot -WindowStyle $windowStyle
     }
+
+    # Record tool intent invocation metrics (CRP-315)
+    try {
+      $catModule = [System.IO.Path]::Combine($wsRoot, 'LCM_Inventory\modules\LcmToolCatalog.psm1')
+      if (Test-Path -LiteralPath $catModule) {
+        Import-Module -Name $catModule -Force
+        Update-LcmToolIntentCall -CommandOrPath $cmd -DurationMs 0.0
+      }
+    } catch {}
+
     return @{ status = "DISPATCHED"; command = $cmdToRun; elevated = $req.Elevated; noExit = $req.NoExit; windowStyle = $windowStyle }
   }
 
@@ -405,6 +425,14 @@ class DaemonActionController {
     $rawCmdProvided = -not [string]::IsNullOrWhiteSpace($intent.Command)
     $hasExplicitParams = ($null -ne $intent.Parameters -and $intent.Parameters.Count -gt 0)
 
+    # Separate base target name and any trailing arguments embedded in target string
+    $baseTarget = $targetName
+    $trailingArgs = ""
+    if ($targetName -match '^([^\s]+)\s+(.+)$') {
+      $baseTarget = $Matches[1].Trim()
+      $trailingArgs = $Matches[2].Trim()
+    }
+
     # Check if target matches tool_catalog.json entry
     $catalogPath = [System.IO.Path]::Combine($wsRoot, "LCM_Inventory\config\tool_catalog.json")
     $matchedCatalogTool = $null
@@ -413,13 +441,13 @@ class DaemonActionController {
         $rawCat = [System.IO.File]::ReadAllText($catalogPath, [System.Text.Encoding]::UTF8)
         $catalog = $rawCat | ConvertFrom-Json
         $toolsList = if ($catalog -is [System.Collections.IEnumerable] -and $catalog -isnot [PSCustomObject]) { $catalog } elseif ($catalog.PSObject.Properties['tools']) { $catalog.tools } else { @($catalog) }
-        $normTarget = $targetName -replace '^(?:tools/|tools\\)?', '' -replace '\.ps1$', ''
+        $normTarget = $baseTarget -replace '^(?:tools/|tools\\)?', '' -replace '\.ps1$', ''
         $matchedCatalogTool = @($toolsList | Where-Object {
-          $_.Name -eq $targetName -or
-          $_.ShortName -eq $targetName -or
+          $_.Name -eq $baseTarget -or
+          $_.ShortName -eq $baseTarget -or
           $_.Name -eq "$normTarget.ps1" -or
           $_.ShortName -eq ($normTarget -replace '[^A-Za-z0-9]', '') -or
-          ($_.RelativePath -and ($targetName -like "*$($_.RelativePath)*" -or $targetName -like "*$($_.Name)*"))
+          ($_.RelativePath -and ($baseTarget -like "*$($_.RelativePath)*" -or $baseTarget -like "*$($_.Name)*"))
         })[0]
         if ($null -ne $matchedCatalogTool -and ($matchedCatalogTool.Admin -or $matchedCatalogTool.Elevated)) {
           $isElevated = $true
@@ -427,11 +455,9 @@ class DaemonActionController {
       } catch {}
     }
 
-    # If raw command was provided or target carries trailing CLI arguments without structured params, preserve arguments
+    # If raw command was provided without structured parameters, preserve it
     if ($rawCmdProvided -and -not $hasExplicitParams) {
       $fullCmd = $intent.Command.Trim()
-    } elseif (-not $hasExplicitParams -and $targetName -match '\s+-[A-Za-z]') {
-      $fullCmd = $targetName.Trim()
     } else {
       if ($null -ne $matchedCatalogTool) {
         if ($matchedCatalogTool.RelativePath) {
@@ -443,28 +469,28 @@ class DaemonActionController {
       }
 
       if ([string]::IsNullOrWhiteSpace($scriptToRun)) {
-        if ($targetName.EndsWith('.ps1') -or $targetName.EndsWith('.cmd')) {
-          $candidate = [System.IO.Path]::Combine($wsRoot, $targetName)
+        if ($baseTarget.EndsWith('.ps1') -or $baseTarget.EndsWith('.cmd')) {
+          $candidate = [System.IO.Path]::Combine($wsRoot, $baseTarget)
           if (Test-Path -LiteralPath $candidate) {
             $scriptToRun = "& `"$candidate`""
           } else {
-            $candidateTool = [System.IO.Path]::Combine($wsRoot, "LCM_Inventory\tools", $targetName)
+            $candidateTool = [System.IO.Path]::Combine($wsRoot, "LCM_Inventory\tools", $baseTarget)
             if (Test-Path -LiteralPath $candidateTool) {
               $scriptToRun = "& `"$candidateTool`""
             } else {
-              $scriptToRun = $targetName
+              $scriptToRun = $baseTarget
             }
           }
         } else {
-          $candidatePs1 = [System.IO.Path]::Combine($wsRoot, "LCM_Inventory\tools", "$targetName.ps1")
+          $candidatePs1 = [System.IO.Path]::Combine($wsRoot, "LCM_Inventory\tools", "$baseTarget.ps1")
           if (Test-Path -LiteralPath $candidatePs1) {
             $scriptToRun = "& `"$candidatePs1`""
           } else {
-            $candidateCmd = [System.IO.Path]::Combine($wsRoot, "LCM_Inventory\Cmd", "$targetName.cmd")
+            $candidateCmd = [System.IO.Path]::Combine($wsRoot, "LCM_Inventory\Cmd", "$baseTarget.cmd")
             if (Test-Path -LiteralPath $candidateCmd) {
               $scriptToRun = "& `"$candidateCmd`""
             } else {
-              $scriptToRun = $targetName
+              $scriptToRun = $baseTarget
             }
           }
         }
@@ -472,11 +498,14 @@ class DaemonActionController {
 
       # 3. Assemble parameters from Intent DTO
       $argParts = @()
+      if (-not [string]::IsNullOrWhiteSpace($trailingArgs)) {
+        $argParts += $trailingArgs
+      }
       if ($null -ne $intent.Parameters) {
         foreach ($key in $intent.Parameters.Keys) {
           $val = $intent.Parameters[$key]
-          if ($val -is [bool]) {
-            if ($val) { $argParts += "-$key" }
+          if ($val -is [bool] -or "$val" -eq 'True') {
+            if ($val -eq $true -or "$val" -eq 'True') { $argParts += "-$key" }
           } elseif ($null -ne $val -and -not [string]::IsNullOrWhiteSpace("$val")) {
             $argParts += "-$key `"$val`""
           }

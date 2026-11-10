@@ -110,162 +110,50 @@ function Write-ToolLog {
 }
 
 # Ensure directories exist
-if (-not (Test-Path -LiteralPath $InboxPath)) {
-  New-Item -ItemType Directory -Force -Path $InboxPath | Out-Null
-}
-if (-not (Test-Path -LiteralPath $ArchivePath)) {
-  New-Item -ItemType Directory -Force -Path $ArchivePath | Out-Null
+$ackPath = Join-Path $InboxPath 'acks'
+$ackLedgerPath = Join-Path $workspaceRoot 'LCM_Inventory\data\inbox\acks'
+
+foreach ($dir in @($InboxPath, $ArchivePath, $ackPath, $ackLedgerPath)) {
+  if (-not (Test-Path -LiteralPath $dir)) {
+    New-Item -ItemType Directory -Force -Path $dir | Out-Null
+  }
 }
 
-# Import ProposalManager module
-$modulePath = Join-Path $workspaceRoot 'LCM_Inventory\modules\ProposalManager.psm1'
-if (Test-Path -LiteralPath $modulePath) {
-  Import-Module -Name $modulePath -Force
+# Import ProposalManager and InboxWatcher modules
+$pmPath = Join-Path $workspaceRoot 'LCM_Inventory\modules\ProposalManager.psm1'
+if (Test-Path -LiteralPath $pmPath) {
+  Import-Module -Name $pmPath -Force
 } else {
-  Write-ToolLog -Message "ProposalManager module not found at: $($modulePath)" -Level ERROR
+  Write-ToolLog -Message "ProposalManager module not found at: $pmPath" -Level ERROR
   throw "ProposalManager module missing."
 }
 
-# ------------------------------------------------------------------------------
-# 2. Intake Parsing Logic
-# ------------------------------------------------------------------------------
-function Parse-InboxItem {
-  param([System.IO.FileInfo]$File)
-
-  $rawContent = [System.IO.File]::ReadAllText($File.FullName)
-  $itemData = @{
-    FileName        = $File.Name
-    RawContent      = $rawContent
-    Type            = 'TASK'
-    Title           = $File.BaseName
-    Timestamp       = $File.LastWriteTime.ToString("yyyy-MM-dd HH:mm:ss")
-    TimestampValid  = $false
-    OriginRepo      = 'Gemini / GDrive Inbox'
-    Criticality     = 'MEDIUM'
-    Details         = ''
-  }
-
-  if ($File.Extension -eq '.json') {
-    try {
-      $json = $rawContent | ConvertFrom-Json
-      if ($json.type) { $itemData.Type = $json.type }
-      if ($json.title) { $itemData.Title = $json.title }
-      if ($json.timestamp) {
-        $itemData.Timestamp = $json.timestamp
-        $itemData.TimestampValid = $true
-      }
-      if ($json.target_repo) { $itemData.OriginRepo = "Gemini / $($json.target_repo)" }
-      if ($json.criticality) { $itemData.Criticality = $json.criticality }
-      if ($json.details) { $itemData.Details = $json.details }
-      elseif ($json.summary) { $itemData.Details = $json.summary }
-      return $itemData
-    } catch {
-      Write-ToolLog -Message "JSON parse failed for $($File.Name): $($_.Exception.Message)" -Level WARN
-    }
-  }
-
-  # Parse Markdown / Text metadata headers
-  $lines = $rawContent -split "\r?\n"
-  foreach ($line in $lines) {
-    if ($line -match '^(?:#\s*)?\[?(?:TYPE:\s*)?(BUG|TASK|PROPOSAL|FEATURE|NOTE)\]?:?\s*(.+)$') {
-      $itemData.Type = $matches[1].ToUpperInvariant()
-      $itemData.Title = $matches[2].Trim().TrimStart(':').Trim()
-    }
-    if ($line -match '(?i)\*\*(?:Timestamp|Date)\*\*:\s*([0-9T:_\-+ ]+)') {
-      $itemData.Timestamp = $matches[1].Trim()
-      $itemData.TimestampValid = $true
-    }
-    if ($line -match '(?i)\*\*(?:Target Repository|Target Repo|Repo)\*\*:\s*(.+)$') {
-      $itemData.OriginRepo = "Gemini / $($matches[1].Trim())"
-    }
-    if ($line -match '(?i)\*\*(?:Criticality|Severity|Priority)\*\*:\s*(.+)$') {
-      $itemData.Criticality = $matches[1].Trim().ToUpperInvariant()
-    }
-  }
-
-  # Fallback if title still default
-  if ([string]::IsNullOrWhiteSpace($itemData.Title) -or $itemData.Title -eq $File.BaseName) {
-    $firstHeader = $lines | Where-Object { $_ -match '^#+\s+(.+)$' } | Select-Object -First 1
-    if ($firstHeader) {
-      $itemData.Title = ($firstHeader -replace '^#+\s+', '').Trim()
-    }
-  }
-
-  $itemData.Details = $rawContent
-  return $itemData
+$iwPath = Join-Path $workspaceRoot 'LCM_Inventory\modules\InboxWatcher.psm1'
+if (Test-Path -LiteralPath $iwPath) {
+  Import-Module -Name $iwPath -Force
+} else {
+  Write-ToolLog -Message "InboxWatcher module not found at: $iwPath" -Level ERROR
+  throw "InboxWatcher module missing."
 }
 
 # ------------------------------------------------------------------------------
-# 3. Process Pending Inbox Items
+# 2. Intake Execution with Two-Phase ACK Protocol (CRP-263)
 # ------------------------------------------------------------------------------
 function Invoke-InboxIntakeCycle {
-  $pendingFiles = @(Get-ChildItem -Path $InboxPath -File | Where-Object {
-    $_.Extension -in @('.md', '.txt', '.json') -and $_.DirectoryName -ne $ArchivePath
-  })
-
-  if ($pendingFiles.Count -eq 0) {
-    return 0
+  $logCallback = {
+    param([string]$Msg, [string]$Lvl)
+    Write-ToolLog -Message $Msg -Level $Lvl
   }
 
-  Write-ToolLog -Message "Discovered $($pendingFiles.Count) pending item(s) in Inbox." -Level ACTION
-  $processed = 0
+  $outcomes = @(Invoke-TwoPhaseInboxIntake -InboxPath $InboxPath `
+                                         -ArchivePath $ArchivePath `
+                                         -AckPath $ackPath `
+                                         -AckLedgerPath $ackLedgerPath `
+                                         -WorkspaceRoot $workspaceRoot `
+                                         -LogCallback $logCallback)
 
-  foreach ($file in $pendingFiles) {
-    try {
-      $parsed = Parse-InboxItem -File $file
-
-      if (-not $parsed.TimestampValid) {
-        Write-ToolLog -Message "Notice: No explicit timestamp found in '$($file.Name)'. Using file timestamp: $($parsed.Timestamp)" -Level WARN
-      }
-
-      $proposalTitle = "[$($parsed.Type)] $($parsed.Title)"
-      $proposalDetails = "Source: Gemini Inbox ($($file.Name)) | Time: $($parsed.Timestamp) | Criticality: $($parsed.Criticality)`n`n$($parsed.Details)"
-
-      # Register in LCM proposal store
-      $prop = New-WorkspaceProposal -Title $proposalTitle -OriginRepo $parsed.OriginRepo -Details $proposalDetails -Author 'Gemini Cloud'
-
-      # Save complete content to proposal plan path
-      $fullPlanPath = Join-Path $workspaceRoot $prop.plan_path
-      $planDir = Split-Path $fullPlanPath -Parent
-      if (-not (Test-Path -LiteralPath $planDir)) {
-        New-Item -ItemType Directory -Force -Path $planDir | Out-Null
-      }
-
-      $planHeader = @(
-        "# LCM Proposal #$($prop.id): $($prop.title)",
-        "",
-        "- **CR ID**: $($prop.cr_id)",
-        "- **Origin**: $($prop.origin_repo)",
-        "- **Intake Timestamp**: $((Get-Date).ToString('yyyy-MM-dd HH:mm:ss'))",
-        "- **Gemini Source Timestamp**: $($parsed.Timestamp)",
-        "- **Criticality**: $($parsed.Criticality)",
-        "- **Status**: $($prop.state) (Awaiting operator review: ProposalAction do $($prop.id))",
-        "",
-        "---",
-        "",
-        "## Gemini Intake Payload",
-        "",
-        $parsed.RawContent
-      ) -join "`n"
-
-      [System.IO.File]::WriteAllText($fullPlanPath, $planHeader, [System.Text.UTF8Encoding]::new($false))
-      Write-ToolLog -Message "Created Proposal #$($prop.id) -> $($prop.plan_path)" -Level ACTION
-
-      # Archive original item with timestamp prefix and delete from inbox
-      $stampPrefix = (Get-Date).ToString("yyyyMMdd_HHmmss")
-      $archivedName = "$($stampPrefix)_$($file.Name)"
-      $archivedPath = Join-Path $ArchivePath $archivedName
-
-      Move-Item -LiteralPath $file.FullName -Destination $archivedPath -Force
-      Write-ToolLog -Message "Archived and removed from Inbox: $($file.Name) -> archive/$($archivedName)" -Level ACTION
-
-      $processed++
-    } catch {
-      Write-ToolLog -Message "Failed to process item '$($file.FullName)': $($_.Exception.Message)" -Level ERROR
-    }
-  }
-
-  return $processed
+  $successful = @($outcomes | Where-Object { $_.Status -eq 'SUCCESS' })
+  return $successful.Count
 }
 
 # ------------------------------------------------------------------------------

@@ -7,4 +7,5 @@ if %errorlevel% neq 0 (
   pwsh.exe -NoProfile -ExecutionPolicy Bypass -File "%Git_Root%/LCM_Inventory/tools/Invoke-PrivilegedTool.ps1" -Tool "SetLcmMachineRegistry" -Arguments "%*"
   exit /b
 )
+echo # [LCM Launcher] %~nx0 - Goal: Set-LcmMachineRegistry execution tool.
 pwsh.exe -NoExit -NoProfile -ExecutionPolicy Bypass -File "%Git_Root%/LCM_Inventory/tools/Set-LcmMachineRegistry.ps1" %*

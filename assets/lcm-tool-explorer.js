@@ -980,12 +980,16 @@
 
         const tokens = q.split(/\s+/);
         for (const token of tokens) {
-            if (token.startsWith('!')) {
-                const exclude = token.slice(1);
-                if (exclude && target.includes(exclude)) return false;
-            } else {
-                if (!target.includes(token)) return false;
-            }
+            const isNegation = token.startsWith('!');
+            const cleanToken = isNegation ? token.slice(1) : token;
+            if (!cleanToken) continue;
+
+            const alts = cleanToken.split('|').filter(Boolean);
+            if (alts.length === 0) continue;
+
+            const matchesAny = alts.some(alt => target.includes(alt));
+            if (isNegation && matchesAny) return false;
+            if (!isNegation && !matchesAny) return false;
         }
         return true;
     }
@@ -1000,76 +1004,78 @@
             const token = isNegation ? rawToken.slice(1) : rawToken;
             if (!token) continue;
 
-            const colonIdx = token.indexOf(':');
-            if (colonIdx > 0) {
-                const colKey = token.slice(0, colonIdx).toLowerCase();
-                const colVal = token.slice(colonIdx + 1).toLowerCase();
-                let fieldVal = '';
+            // Support pipe | alternation: term1|term2|term3 (OR within token)
+            const alternatives = token.split('|').filter(Boolean);
+            if (alternatives.length === 0) continue;
 
-                switch (colKey) {
-                    case 'group':
-                    case 'subsystem':
-                        fieldVal = (tool.Group || '') + ' ' + (tool.Domain || '');
-                        break;
-                    case 'env':
-                        fieldVal = tool.Env || '';
-                        break;
-                    case 'role':
-                        fieldVal = tool.Role || '';
-                        break;
-                    case 'aud':
-                    case 'audience':
-                        fieldVal = tool.Audience || '';
-                        break;
-                    case 'admin':
-                        fieldVal = String(Boolean(tool.Admin));
-                        break;
-                    case 'noexit':
-                        fieldVal = String(Boolean(tool.NoExit));
-                        break;
-                    case 'cat':
-                    case 'category':
-                        fieldVal = tool.Category || '';
-                        break;
-                    case 'name':
-                    case 'tool':
-                        fieldVal = (tool.Name || '') + ' ' + (tool.ShortName || '');
-                        break;
-                    case 'desc':
-                    case 'description':
-                        fieldVal = tool.Description || '';
-                        break;
-                    default:
-                        fieldVal = [
-                            tool.Name, tool.ShortName || '', tool.Description || '',
-                            tool.Role || '', tool.Category || '', tool.Group || '',
-                            tool.Domain || '', tool.Env || ''
-                        ].join(' ');
-                        break;
-                }
+            const matchesAnyAlternative = alternatives.some(alt => {
+                const colonIdx = alt.indexOf(':');
+                if (colonIdx > 0) {
+                    const colKey = alt.slice(0, colonIdx).toLowerCase();
+                    const colVal = alt.slice(colonIdx + 1).toLowerCase();
+                    let fieldVal = '';
 
-                const matchesField = fieldVal.toLowerCase().includes(colVal);
-                if (isNegation && matchesField) return false;
-                if (!isNegation && !matchesField) return false;
-            } else {
-                const fullContent = [
-                    tool.Name,
-                    tool.ShortName || '',
-                    tool.Description || '',
-                    tool.Role || '',
-                    tool.Category || '',
-                    tool.Group || '',
-                    tool.Domain || '',
-                    tool.Env || ''
-                ].join(' ').toLowerCase();
+                    switch (colKey) {
+                        case 'group':
+                        case 'subsystem':
+                            fieldVal = (tool.Group || '') + ' ' + (tool.Domain || '');
+                            break;
+                        case 'env':
+                            fieldVal = tool.Env || '';
+                            break;
+                        case 'role':
+                            fieldVal = tool.Role || '';
+                            break;
+                        case 'aud':
+                        case 'audience':
+                            fieldVal = tool.Audience || '';
+                            break;
+                        case 'admin':
+                            fieldVal = String(Boolean(tool.Admin));
+                            break;
+                        case 'noexit':
+                            fieldVal = String(Boolean(tool.NoExit));
+                            break;
+                        case 'cat':
+                        case 'category':
+                            fieldVal = tool.Category || '';
+                            break;
+                        case 'name':
+                        case 'tool':
+                            fieldVal = (tool.Name || '') + ' ' + (tool.ShortName || '');
+                            break;
+                        case 'desc':
+                        case 'description':
+                            fieldVal = tool.Description || '';
+                            break;
+                        default:
+                            fieldVal = [
+                                tool.Name, tool.ShortName || '', tool.Description || '',
+                                tool.Role || '', tool.Category || '', tool.Group || '',
+                                tool.Domain || '', tool.Env || ''
+                            ].join(' ');
+                            break;
+                    }
 
-                const lowerToken = token.toLowerCase();
-                if (isNegation) {
-                    if (fullContent.includes(lowerToken)) return false;
+                    return fieldVal.toLowerCase().includes(colVal);
                 } else {
-                    if (!fullContent.includes(lowerToken)) return false;
+                    const fullContent = [
+                        tool.Name,
+                        tool.ShortName || '',
+                        tool.Description || '',
+                        tool.Role || '',
+                        tool.Category || '',
+                        tool.Group || '',
+                        tool.Domain || '',
+                        tool.Env || ''
+                    ].join(' ').toLowerCase();
+
+                    return fullContent.includes(alt.toLowerCase());
                 }
-            }
+            });
+
+            if (isNegation && matchesAnyAlternative) return false;
+            if (!isNegation && !matchesAnyAlternative) return false;
         }
         return true;
     }
@@ -1283,6 +1289,10 @@
 
     function resetFilters() {
         sessionStorage.clear();
+        searchFilter = '';
+        if (window.history && window.history.replaceState) {
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
         if (document.getElementById('search-input')) document.getElementById('search-input').value = '';
         isSourceMode = false;
         isFilteringShowTools = false;

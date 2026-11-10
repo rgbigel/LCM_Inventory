@@ -88,6 +88,22 @@ To eliminate repetitive daily elevation confirmations while preserving least-pri
 3. **Bounded Recovery**:
    - The task definition includes bounded restart settings (3 retries with 1-minute intervals) to recover from transient crashes without spawning unconstrained runaway processes.
 
+### 2.2 Universal Command Gateway (`lcm do`), Pure Trampolines & In-Script Self-Governance
+
+To eliminate fragile, ad-hoc elevation boilerplate across hundreds of scripts:
+
+1. **Pure Trampoline Architecture (`*.cmd`)**:
+   - Trampolines must never perform administrative checks, environment sniffing, or execution decisions (`net session >nul`).
+   - A trampoline's sole invariant is:
+     a) Verify that the target script exists on disk (if not, exit `1` with a human-readable missing script error).
+     b) Forward execution and all command-line arguments (`%*`) directly to `lcm do <ToolName> %*`.
+2. **Universal Parameter Serialization**:
+   - Parameters passed from trampolines or CLI invocations are ingested by `Invoke-LcmAction.ps1` (`lcm do`), converted into a structured `DaemonActionIntent` DTO (handling switch flags, strings, integers, and parameter objects), and transmitted over HTTP POST to Port 9876.
+   - The daemon's `ExecuteActionIntent` dynamically inspects `tool_catalog.json`. If the tool requires `Admin: true`, it executes elevated inside Session 1; if standard user, it executes un-elevated.
+3. **Self-Sufficient In-Script Elevation Interception**:
+   - When a PowerShell script (e.g. `Dismount-MacriumCurrentBaseline.ps1`) is executed directly via `pwsh.exe` without going through a trampoline, the script must not assume elevation or stall on unhandled UAC prompts.
+   - The script body checks its current security token (`Test-IsAdmin`). If running un-elevated, it intercepts execution and automatically delegates itself to `lcm do <ToolName> @PSBoundParameters`, returning the exact exit code and streaming output transparently.
+
 ---
 
 ## 3. Detailed Control Flow & Code Mapping
@@ -237,4 +253,24 @@ A naive approach to resolving `Access is denied` on `HKLM` is to mark `Invoke-Ma
 Declaring `$ElevatedOperations` as a normal array (`$ElevatedOperations = @(...)`) leaves the allowlist vulnerable to runtime modification:
 - Malicious or buggy script logic could append arbitrary commands (`$ElevatedOperations += 'FormatDisk'`).
 - Using PowerShell's engine-level `New-Variable -Name ElevatedOperations -Value (...) -Option ReadOnly -Scope Script -Force` enforces that any assignment attempt at runtime throws a non-catchable parser exception, guaranteeing that the approved set of operations cannot be manipulated after script initialization.
+
+### 7.3 Routing Policy: External Tools vs. Internal Atoms
+To maintain strict determinism across the boundary between external binaries and LCM atoms:
+
+1. **External Third-Party Executables (`Reflect.exe`, `es.exe`, `BCompare.exe`, `PsExec.exe`)**:
+   - `tool_catalog.json` catalogs external tools alongside scripts.
+   - When external tools require administrative elevation (e.g. `Reflect.exe -u`), they `MUST` be routed through the Port 9876 gateway so they execute within the pre-elevated daemon token without surfacing interactive UAC stalls.
+   - Interactive GUI applications (`BCompare.exe`) dispatched by the daemon spawn in Session 1 desktop mode without inheriting elevated credentials unless explicitly authorized.
+2. **Internal Module Atoms (Functions exported by `*.psm1`)**:
+   - Pure, stateless PowerShell functions (such as `ConvertTo-LcmCandidateDrives`, `Get-MacriumBaselineState`, `Get-LcmMachineGitRoot`) remain in-process module atoms.
+   - Callers import them directly via `Import-Module -Name ...` for instant execution without the latency of inter-process HTTP calls.
+   - Standalone executable scripts (`*.ps1` files in `LCM_Inventory/tools/`) are the units routed through `lcm do`.
+
+### 7.4 IDE PreToolUse Harness Architecture
+Declarative prompt rules tell AI agents what they *should* do, but cannot physically block an unprompted file modification. 
+By anchoring the **Antigravity IDE PreToolUse Lifecycle Hook** (`.agents/hooks.json`) directly to the Port 9876 Daemon Gateway:
+- Every agent tool call (`edit_file`, `write_file`, `run_command`) is validated against active proposal records in `proposals.json`.
+- If an agent attempts direct code edits outside of an accepted proposal, the validator script returns exit code `1`.
+- The IDE harness hard-blocks the mutation before disk writes occur, guaranteeing zero unreviewed drift across the workspace.
+
 

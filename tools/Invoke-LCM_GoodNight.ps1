@@ -13,9 +13,9 @@
            7. Logs structured [GOOD_NIGHT] audit receipt to cm_activity.log.
   Path: LCM_Inventory/tools/Invoke-LCM_GoodNight.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.1
-  Date: 2026-10-18
-  Rule: RULE-PS-001 - RULE-PS-021, RULE-LCM-014, RULE-REV-001
+  Version: 10.0.2
+  Date: 2026-11-10
+  Rule: RULE-PS-001 - RULE-PS-021, RULE-LCM-014, RULE-LCM-030, RULE-REV-001
 #>
 
 [CmdletBinding(SupportsShouldProcess = $true)]
@@ -147,7 +147,7 @@ if ($dirtyRepos.Count -gt 0) {
 Write-Host "`n[2/6] Save All: Writing Session Memory..." -ForegroundColor Yellow
 $saveScript = Join-Path $toolsDir 'Save-AllSessionMemory.ps1'
 if (-not (Test-Path -LiteralPath $saveScript)) { throw "Save-AllSessionMemory.ps1 was not found: $saveScript" }
-$saveParams = @{ Learn = $Learn; Author = $Author }
+$saveParams = @{ Learn = $Learn; Author = $Author; Quiescent = $true }
 if ($DryRun) { $saveParams['DryRun'] = $true }
 & $saveScript @saveParams
 
@@ -221,10 +221,10 @@ if ($NoCommit) {
 
 # The snapshot is refreshed after the commit step so that it records the final state.
 if (-not $NoCommit -and -not $DryRun) {
-    & $saveScript -Author $Author | Out-Null
+    & $saveScript -Author $Author -Quiescent | Out-Null
     $aiRepo = Join-Path $gitRoot 'LCM_AI'
-    git -C $aiRepo add -f -- .agents/ACTIVE_CONTEXT.md 2>&1 | Out-Null
-    git -C $aiRepo commit --no-verify -m 'chore(memory): final session snapshot' -m 'Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>' -- .agents/ACTIVE_CONTEXT.md 2>&1 | Out-Null
+    git -C $aiRepo add -f -- .agents/ACTIVE_CONTEXT.md .agents/ACTIVE_SESSION.md 2>&1 | Out-Null
+    git -C $aiRepo commit --no-verify -m 'chore(memory): final session snapshot' -m 'Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>' -- .agents/ACTIVE_CONTEXT.md .agents/ACTIVE_SESSION.md 2>&1 | Out-Null
 }
 
 # ------------------------------------------------------------------------------
@@ -267,6 +267,7 @@ if (-not $DryRun -and (Test-Path -LiteralPath $logFile)) {
 }
 
 Write-Host "`n==========================================================================" -ForegroundColor Cyan
-Write-Host " GOOD NIGHT SEQUENCE COMPLETED" -ForegroundColor Green
+Write-Host " GOOD NIGHT SEQUENCE COMPLETED at $timestamp" -ForegroundColor Green
+Write-Host " 🌙 Good Night completed at $timestamp. Session is Quiescent." -ForegroundColor Cyan
 Write-Host " Have a wonderful rest!" -ForegroundColor Cyan
 Write-Host "==========================================================================" -ForegroundColor Cyan

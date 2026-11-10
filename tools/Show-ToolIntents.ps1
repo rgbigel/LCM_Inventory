@@ -79,6 +79,9 @@ if ($Cli) {
     [pscustomobject]@{
       Intent     = $prop.Name
       Goal       = $item.goal
+      Calls      = if ($null -ne $item.call_count) { $item.call_count } else { 0 }
+      LastCalled = if ($item.last_called_at) { $item.last_called_at } else { '-' }
+      DurationMs = if ($null -ne $item.last_duration_ms) { $item.last_duration_ms } else { 0 }
       Group      = if ($item.group) { $item.group } else { '-' }
       Category   = if ($item.category) { $item.category } else { '-' }
       Audience   = if ($item.audience) { $item.audience } else { '-' }
@@ -461,13 +464,15 @@ $htmlContent = @"
                         <th class="sortable" onclick="sortTable('audience')" style="width: 80px;">Audience <span class="sort-icon" id="sort-audience">⇅</span></th>
                         <th class="sortable" onclick="sortTable('privilege')" style="width: 85px;">Privilege <span class="sort-icon" id="sort-privilege">⇅</span></th>
                         <th class="sortable" onclick="sortTable('script')">Target Script & Parameters <span class="sort-icon" id="sort-script">⇅</span></th>
-                        <th class="sortable" onclick="sortTable('trampoline')" style="width: 130px;">Trampoline <span class="sort-icon" id="sort-trampoline">⇅</span></th>
+                        <th class="sortable" onclick="sortTable('trampoline')" style="width: 120px;">Trampoline <span class="sort-icon" id="sort-trampoline">⇅</span></th>
+                        <th class="sortable" onclick="sortTable('call_count')" style="width: 65px; text-align: center;">Calls <span class="sort-icon" id="sort-call_count">⇅</span></th>
+                        <th class="sortable" onclick="sortTable('last_called_at')" style="width: 140px;">Last Called (ms) <span class="sort-icon" id="sort-last_called_at">⇅</span></th>
                         <th style="width: 70px; text-align: center;">Action</th>
                     </tr>
                     <!-- Aligned Column Selectors Row -->
                     <tr class="col-filter-row">
                         <th><input type="text" class="col-filter-input" id="col-filter-intent" placeholder="Filter..." oninput="applyFilters()"></th>
-                        <th><input type="text" class="col-filter-input" id="col-filter-goal" placeholder="Filter goals..." oninput="applyFilters()"></th>
+                        <th><input type="text" class="col-filter-goal" id="col-filter-goal" placeholder="Filter goals..." oninput="applyFilters()"></th>
                         <th>
                             <select class="col-filter-select" id="col-filter-group" onchange="applyFilters()">
                                 <option value="">All Groups</option>
@@ -494,6 +499,8 @@ $htmlContent = @"
                         </th>
                         <th><input type="text" class="col-filter-input" id="col-filter-script" placeholder="Filter target..." oninput="applyFilters()"></th>
                         <th><input type="text" class="col-filter-input" id="col-filter-trampoline" placeholder="Filter launcher..." oninput="applyFilters()"></th>
+                        <th><input type="text" class="col-filter-input" id="col-filter-calls" placeholder="Calls..." oninput="applyFilters()" style="text-align: center;"></th>
+                        <th><input type="text" class="col-filter-input" id="col-filter-lastcalled" placeholder="Filter date/time..." oninput="applyFilters()"></th>
                         <th style="text-align: center;">
                             <button class="btn" onclick="resetAllFilters()" style="padding: 1px 6px; font-size: 10px;" title="Reset Filters">↺</button>
                         </th>
@@ -557,7 +564,11 @@ $htmlContent = @"
                 script: item.script || '',
                 parameters: item.parameters || {},
                 trampoline: item.trampoline || '',
-                is_primary_intent: item.is_primary_intent === true
+                is_primary_intent: item.is_primary_intent === true,
+                call_count: typeof item.call_count === 'number' ? item.call_count : 0,
+                last_called_at: item.last_called_at || '',
+                last_duration_ms: typeof item.last_duration_ms === 'number' ? item.last_duration_ms : 0,
+                total_duration_ms: typeof item.total_duration_ms === 'number' ? item.total_duration_ms : 0
             };
         });
 
@@ -598,7 +609,7 @@ $htmlContent = @"
         }
 
         function updateSortIcons() {
-            const fields = ['intent', 'goal', 'group', 'category', 'audience', 'privilege', 'script', 'trampoline'];
+            const fields = ['intent', 'goal', 'group', 'category', 'audience', 'privilege', 'script', 'trampoline', 'call_count', 'last_called_at'];
             fields.forEach(f => {
                 const el = document.getElementById('sort-' + f);
                 if (el) {
@@ -625,30 +636,54 @@ $htmlContent = @"
             const fPrivilege = (document.getElementById('col-filter-privilege').value || '').toLowerCase().trim();
             const fScript = (document.getElementById('col-filter-script').value || '').toLowerCase().trim();
             const fTrampoline = (document.getElementById('col-filter-trampoline').value || '').toLowerCase().trim();
+            const fCalls = (document.getElementById('col-filter-calls').value || '').toLowerCase().trim();
+            const fLastCalled = (document.getElementById('col-filter-lastcalled').value || '').toLowerCase().trim();
 
             const tbody = document.getElementById('intents-tbody');
             tbody.innerHTML = '';
 
+            function matchOrToken(targetText, queryText) {
+                if (!queryText) return true;
+                const lowerTarget = (targetText || '').toLowerCase();
+                const tokens = queryText.toLowerCase().trim().split(/\s+/);
+                for (const t of tokens) {
+                    const isNeg = t.startsWith('!');
+                    const cleanT = isNeg ? t.slice(1) : t;
+                    if (!cleanT) continue;
+                    const alts = cleanT.split('|').filter(Boolean);
+                    if (alts.length === 0) continue;
+                    const matchesAny = alts.some(alt => lowerTarget.includes(alt));
+                    if (isNeg && matchesAny) return false;
+                    if (!isNeg && !matchesAny) return false;
+                }
+                return true;
+            }
+
             const filtered = allItems.filter(item => {
                 if (globalQuery) {
-                    const haystack = (item.intent + ' ' + item.goal + ' ' + item.group + ' ' + item.category + ' ' + item.audience + ' ' + item.script + ' ' + item.trampoline).toLowerCase();
-                    if (!haystack.includes(globalQuery)) return false;
+                    const haystack = (item.intent + ' ' + item.goal + ' ' + item.group + ' ' + item.category + ' ' + item.audience + ' ' + item.script + ' ' + item.trampoline + ' ' + item.last_called_at).toLowerCase();
+                    if (!matchOrToken(haystack, globalQuery)) return false;
                 }
-                if (fIntent && !item.intent.toLowerCase().includes(fIntent)) return false;
-                if (fGoal && !item.goal.toLowerCase().includes(fGoal)) return false;
+                if (fIntent && !matchOrToken(item.intent, fIntent)) return false;
+                if (fGoal && !matchOrToken(item.goal, fGoal)) return false;
                 if (fGroup && item.group.toLowerCase() !== fGroup) return false;
                 if (fCategory && item.category.toLowerCase() !== fCategory) return false;
                 if (fAudience && item.audience.toLowerCase() !== fAudience) return false;
                 if (fPrivilege && item.privilege.toLowerCase() !== fPrivilege) return false;
-                if (fScript && !item.script.toLowerCase().includes(fScript)) return false;
-                if (fTrampoline && !item.trampoline.toLowerCase().includes(fTrampoline)) return false;
+                if (fScript && !matchOrToken(item.script, fScript)) return false;
+                if (fTrampoline && !matchOrToken(item.trampoline, fTrampoline)) return false;
+                if (fCalls && !matchOrToken(item.call_count.toString(), fCalls)) return false;
+                if (fLastCalled && !matchOrToken(item.last_called_at, fLastCalled)) return false;
                 return true;
             });
 
             // Sort
             filtered.sort((a, b) => {
-                let valA = a[currentSortField] || '';
-                let valB = b[currentSortField] || '';
+                let valA = a[currentSortField] !== undefined ? a[currentSortField] : '';
+                let valB = b[currentSortField] !== undefined ? b[currentSortField] : '';
+                if (typeof valA === 'number' && typeof valB === 'number') {
+                    return currentSortAsc ? valA - valB : valB - valA;
+                }
                 if (typeof valA === 'string') valA = valA.toLowerCase();
                 if (typeof valB === 'string') valB = valB.toLowerCase();
                 if (valA < valB) return currentSortAsc ? -1 : 1;
@@ -685,6 +720,8 @@ $htmlContent = @"
                         paramsHtml +
                     '</td>' +
                     '<td>' + (item.trampoline ? '<span class="code-snippet">' + item.trampoline + '</span>' : '<span style="color:var(--text-muted)">-</span>') + '</td>' +
+                    '<td style="text-align: center;"><span class="badge badge-primary" style="font-size: 11px;">' + item.call_count + '</span></td>' +
+                    '<td>' + (item.last_called_at ? '<div style="font-size: 11px; font-family: var(--font-mono);">' + item.last_called_at + '</div>' + (item.last_duration_ms ? '<div style="font-size: 10px; color: var(--text-secondary);">' + item.last_duration_ms + ' ms</div>' : '') : '<span style="color:var(--text-muted)">-</span>') + '</td>' +
                     '<td style="text-align: center;"><button class="btn btn-copy" onclick="copyCmd(\'' + item.intent + '\')">📋 Copy</button></td>';
 
                 tbody.appendChild(tr);
@@ -707,6 +744,8 @@ $htmlContent = @"
             document.getElementById('col-filter-privilege').value = '';
             document.getElementById('col-filter-script').value = '';
             document.getElementById('col-filter-trampoline').value = '';
+            document.getElementById('col-filter-calls').value = '';
+            document.getElementById('col-filter-lastcalled').value = '';
             renderTable();
         }
 

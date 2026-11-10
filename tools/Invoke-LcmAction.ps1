@@ -53,7 +53,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-if ($Help -or ([string]::IsNullOrWhiteSpace($Target) -and $Action -notin @('status', 'start', 'stop', 'help'))) {
+if (($Help -and [string]::IsNullOrWhiteSpace($Target)) -or ([string]::IsNullOrWhiteSpace($Target) -and $Action -notin @('status', 'start', 'stop', 'help'))) {
   Write-Host "==========================================================================" -ForegroundColor Cyan
   Write-Host " LCM UNIVERSAL COMMAND GATEWAY (lcm do)" -ForegroundColor Cyan
   Write-Host "==========================================================================" -ForegroundColor Cyan
@@ -176,6 +176,10 @@ $intent = @{
     noExit   = [bool]$NoExit
     elevated = $requiresElevation
   }
+}
+
+if ($Help -and -not [string]::IsNullOrWhiteSpace($Target)) {
+  $intent['parameters']['Help'] = $true
 }
 
 # If raw InputObject provided, parse JSON

@@ -19,6 +19,12 @@
   Candidate numbers to accept and tag for promotion into the rules.
 .PARAMETER Reject
   Candidate numbers to delete (requires -ProposalId to document the active CRP correcting/retiring the entry).
+.PARAMETER RetireAccepted
+  Retires/purges an accepted advice entry matching -TextMatch or -Index (requires -ProposalId).
+.PARAMETER PurgeResolved
+  Alias for -RetireAccepted.
+.PARAMETER TextMatch
+  Substring or regex pattern to locate the accepted advice entry to retire.
 .PARAMETER ProposalId
   Active CRP or BUG identifier (e.g. CRP-310, BUG-311) required when rejecting or retiring learned advice.
 .PARAMETER Check
@@ -30,6 +36,9 @@ param(
     [int[]]$Accept = @(),
     [int[]]$Promote = @(),
     [int[]]$Reject = @(),
+    [Alias('PurgeResolved')]
+    [switch]$RetireAccepted,
+    [string]$TextMatch = '',
     [string]$ProposalId = '',
     [switch]$Check,
     [Alias('h', '?')]
@@ -40,14 +49,14 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 if ($Help) {
-    Write-Host 'Invoke-LearnedAdviceReview.ps1 [-Accept <n,..>] [-Promote <n,..>] [-Reject <n,..> -ProposalId <CRP>] [-Check] [-h]'
+    Write-Host 'Invoke-LearnedAdviceReview.ps1 [-Accept <n,..>] [-Promote <n,..>] [-Reject <n,..> -ProposalId <CRP>] [-RetireAccepted -TextMatch <pattern> -ProposalId <CRP>] [-Check] [-h]'
     Write-Host '  Lists pending candidates of LEARNED_ADVICE.md, or applies the given decisions.'
     Write-Host '  Rejection/removal requires an explicit -ProposalId per RULE-CTX-005.'
     return
 }
 
-if ($Reject.Count -gt 0 -and [string]::IsNullOrWhiteSpace($ProposalId)) {
-    throw 'RULE-CTX-005 Invariant: Rejecting or removing learned advice requires an active -ProposalId (CRP/BUG) documenting why the advice is retired or superseded.'
+if (($Reject.Count -gt 0 -or $RetireAccepted) -and [string]::IsNullOrWhiteSpace($ProposalId)) {
+    throw 'RULE-CTX-005 Invariant: Rejecting or retiring learned advice requires an active -ProposalId (CRP/BUG) documenting why the advice is retired or superseded.'
 }
 
 $contextModule = Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\LCM_Context.psm1'
@@ -55,6 +64,36 @@ Import-Module -Name $contextModule -Force
 $file = Join-Path (Get-LcmMachineGitRoot) 'LCM_AI\.agents\LEARNED_ADVICE.md'
 $lines = [System.Collections.Generic.List[string]]::new()
 $lines.AddRange([string[]]@([System.IO.File]::ReadAllLines($file)))
+
+# Handle -RetireAccepted / -PurgeResolved
+if ($RetireAccepted) {
+    if ([string]::IsNullOrWhiteSpace($TextMatch)) {
+        throw 'Retiring accepted advice requires -TextMatch to identify the entry to remove.'
+    }
+
+    $accHeader = $lines.FindIndex({ param($l) $l -like '## Accepted*' })
+    if ($accHeader -lt 0) { throw 'Section "## Accepted" not found in LEARNED_ADVICE.md' }
+
+    $removedCount = 0
+    for ($i = $lines.Count - 1; $i -ge $accHeader; $i--) {
+        $curLine = $lines[$i]
+        if ($curLine.StartsWith('- ') -and ($curLine -match [regex]::Escape($TextMatch) -or $curLine -like "*$TextMatch*")) {
+            Write-Host "Retiring accepted advice entry (authorized by $ProposalId):" -ForegroundColor Yellow
+            Write-Host "  $curLine" -ForegroundColor DarkGray
+            $lines.RemoveAt($i)
+            $removedCount++
+        }
+    }
+
+    if ($removedCount -eq 0) {
+        Write-Host "No accepted entries found matching '$TextMatch'." -ForegroundColor Yellow
+        return
+    }
+
+    [System.IO.File]::WriteAllText($file, (($lines -join "`r`n") + "`r`n"), [System.Text.UTF8Encoding]::new($false))
+    Write-Host "Successfully retired $removedCount accepted entry/entries under $ProposalId." -ForegroundColor Green
+    return
+}
 
 $candHeader = $lines.FindIndex({ param($l) $l -like '## Candidates*' })
 if ($candHeader -lt 0) { throw 'Section "## Candidates" not found in LEARNED_ADVICE.md' }

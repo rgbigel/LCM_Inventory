@@ -7,4 +7,5 @@ if %errorlevel% neq 0 (
   pwsh.exe -NoProfile -ExecutionPolicy Bypass -File "%Git_Root%/LCM_Inventory/tools/Invoke-PrivilegedTool.ps1" -Tool "MountMacriumBaseline" -Arguments "%*"
   exit /b
 )
+echo # [LCM Launcher] %~nx0 - Goal: Explicitly mounts the latest completed same-day Macrium image through the canonical baseline workflow.
 pwsh.exe -NoProfile -ExecutionPolicy Bypass -File "%Git_Root%/LCM_Inventory/tools/Mount-MacriumLatestBaseline.ps1" %*

@@ -6,7 +6,7 @@ Path: LCM_Inventory/docs/README.md
 Authors: Rolf, LCM_AI Engine  
 Version: 10.0.1  
 Status: Authoritative Reference  
-Updated: 2026-11-09 20:00:52  
+Updated: 2026-11-10 20:42:07  
 
 ---
 
@@ -41,7 +41,7 @@ TestWorkspaceReadiness
 | **TestLCM_Readiness** | [Test-LCM_Readiness.ps1](file:///LCM_Inventory/tools/Test-LCM_Readiness.ps1) | QualityGate | LCM_Inventory | PowerShell | Quality Gate | Executes the 5-stage automated LCM readiness quality gate across all repositories. | TestLCM_Readiness |
 | **DismountMacriumBaseline** | [Dismount-MacriumCurrentBaseline.ps1](file:///LCM_Inventory/tools/Dismount-MacriumCurrentBaseline.ps1) | Recovery | LCM_Inventory | PowerShell | Macrium BCR Baseline | Explicitly detaches only the label-matched F:-I: Macrium BCR baseline after confirmation. | DismountMacriumBaseline |
 | **MountMacriumBaseline** | [Mount-MacriumLatestBaseline.ps1](file:///LCM_Inventory/tools/Mount-MacriumLatestBaseline.ps1) | Recovery | LCM_Inventory | PowerShell | Macrium BCR Baseline | Explicitly mounts the latest completed same-day Macrium image through the canonical baseline workflow. | MountMacriumBaseline |
-| **BCR** | [Invoke-MacriumBcrReview.ps1](file:///LCM_Inventory/tools/Invoke-MacriumBcrReview.ps1) | ReviewGate | LCM_Inventory | PowerShell | Proposal Review | Opens the exact CRP/BUG Macrium BCR review using the writable baseline and the _LCM Beyond Compare profile. | BCR |
+| **BCR** | [Invoke-MacriumBcrReview.ps1](file:///LCM_Inventory/tools/Invoke-MacriumBcrReview.ps1) | ReviewGate | LCM_Inventory | PowerShell | Proposal Review | Opens the exact CRP/BUG Macrium BCR review using writable baseline and AutoHotkey (AHK) UI automation with _LCM Beyond Compare profile. | BCR |
 | **ShowActions** | [Show-Actions.ps1](file:///LCM_Inventory/tools/Show-Actions.ps1) | Telemetry | LCM_Inventory | PowerShell | Audit Logs | Fast lightweight terminal reader displaying recent operational actions and tool execution step summaries. | ShowActions |
 | **UpdateHaInventory** | [Update-HaInventory.ps1](file:///HaSSD06_Inventory/tools/Update-HaInventory.ps1) | Telemetry | HaSSD06 | PowerShell | Subsystem Telemetry | Pulls live WebSocket registry & REST data to reconcile all entities, devices, & integrations. | UpdateHaInventory |
 | **SearchEverything** | [Search-Everything.ps1](file:///LCM_Inventory/tools/Search-Everything.ps1) | Utility | LCM_Inventory | PowerShell | File Search | CLI search interface utilizing Voidtools Everything command line utility (es.exe). | SearchEverything |
@@ -57,6 +57,8 @@ TestWorkspaceReadiness
 | **ShowToolIndex** | [Show-ToolIndex.ps1](file:///LCM_Inventory/tools/Show-ToolIndex.ps1) | GUI | LCM_Inventory | PowerShell | Tool Discovery | Underlying generation engine for the interactive LCM Tool Explorer HTML application. | ShowToolIndex |
 | **RenderLcmDisplay** | [Invoke-LcmDisplayRender.ps1](file:///LCM_Inventory/tools/Invoke-LcmDisplayRender.ps1) | Internal | LCM_Inventory | PowerShell | Internal Display Infrastructure | Internal allowlisted renderer for verified Standard Display publication; not a user-facing display launcher. | RenderLcmDisplay |
 | **InvokeSupervisionRunner** | [Invoke-SupervisionRunner.ps1](file:///LCM_Supervision/tools/Invoke-SupervisionRunner.ps1) | Management | LCM_Supervision | PowerShell | Supervision & Health | Unified task dispatcher executing supervision cycles and logging observation telemetry. | InvokeSupervisionRunner |
+| **MacriumDailyBcrBaseline** | [Invoke-MacriumDailyBcrBaseline.ps1](file:///LCM_Inventory/tools/Invoke-MacriumDailyBcrBaseline.ps1) | ReviewGate | LCM_Inventory | PowerShell | Beyond Compare Review | Prepares today Macrium Reflect image as writable Beyond Compare baseline with AutoHotkey (AHK) UI automation. | MacriumDailyBcrBaseline |
+| **AbsorbLcmContextRemark** | [Absorb-LcmContextRemark.ps1](file:///LCM_Inventory/tools/Absorb-LcmContextRemark.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Absorb-LcmContextRemark execution tool. | AbsorbLcmContextRemark |
 | **AdvanceGovernance** | [Advance-Governance.ps1](file:///LCM_Inventory/tools/Advance-Governance.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Advance-Governance execution tool. | AdvanceGovernance |
 | **analyzelcmcomponents** | [analyze_lcm_components.py](file:///HaSSD06/analyze_lcm_components.py) | Utility | HaSSD06 | Python | Utility | analyze_lcm_components execution tool. | analyzelcmcomponents |
 | **APPLY** | [APPLY.ps1](file:///LCM_Inventory/tools/APPLY.ps1) | Utility | LCM_Inventory | PowerShell | Utility | APPLY execution tool. | APPLY |
@@ -87,6 +89,7 @@ TestWorkspaceReadiness
 | **FormatLcmMarkdownDiagrams** | [Format-LcmMarkdownDiagrams.ps1](file:///LCM_Inventory/tools/Format-LcmMarkdownDiagrams.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Format-LcmMarkdownDiagrams execution tool. | FormatLcmMarkdownDiagrams |
 | **GenerateLog** | [Generate-Log.ps1](file:///LCM_Inventory/tools/Generate-Log.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Generate-Log execution tool. | GenerateLog |
 | **generatesystemdocs** | [generate_system_docs.py](file:///HaSSD06/generate_system_docs.py) | Utility | HaSSD06 | Python | Utility | generate_system_docs execution tool. | generatesystemdocs |
+| **GetGeminiInboxStatus** | [Get-GeminiInboxStatus.ps1](file:///LCM_Inventory/tools/Get-GeminiInboxStatus.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Get-GeminiInboxStatus execution tool. | GetGeminiInboxStatus |
 | **GetLCMRepositories** | [Get-LCM_Repositories.ps1](file:///LCM_Inventory/tools/Get-LCM_Repositories.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Get-LCM_Repositories execution tool. | GetLCMRepositories |
 | **GetLcmTablePrintAtom** | [Get-LcmTablePrintAtom.ps1](file:///LCM_Inventory/tools/Get-LcmTablePrintAtom.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Get-LcmTablePrintAtom execution tool. | GetLcmTablePrintAtom |
 | **GetOpenProposals** | [Get-OpenProposals.ps1](file:///LCM_Inventory/tools/Get-OpenProposals.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Get-OpenProposals execution tool. | GetOpenProposals |
@@ -119,14 +122,16 @@ TestWorkspaceReadiness
 | **LCMToolsTestRepoReadiness** | [Test-RepoReadiness.ps1](file:///LCM_Tools/tools/Test-RepoReadiness.ps1) | Utility | HaSSD06 | PowerShell | Utility | Test-RepoReadiness execution tool. | LCMToolsTestRepoReadiness |
 | **LearnedAdviceReview** | [Invoke-LearnedAdviceReview.ps1](file:///LCM_Inventory/tools/Invoke-LearnedAdviceReview.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-LearnedAdviceReview execution tool. | LearnedAdviceReview |
 | **Level1AnalysisRefinement** | [Invoke-Level1AnalysisRefinement.ps1](file:///LCM_Inventory/tools/Invoke-Level1AnalysisRefinement.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-Level1AnalysisRefinement execution tool. | Level1AnalysisRefinement |
+| **LinkLcmLearnedAdvice** | [Link-LcmLearnedAdvice.ps1](file:///LCM_Inventory/tools/Link-LcmLearnedAdvice.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Link-LcmLearnedAdvice execution tool. | LinkLcmLearnedAdvice |
 | **LoadAtoms** | [LoadAtoms.ps1](file:///LCM_Inventory/tools/LoadAtoms.ps1) | Utility | LCM_Inventory | PowerShell | Utility | LoadAtoms execution tool. | LoadAtoms |
 | **LoadFixes** | [LoadFixes.ps1](file:///LCM_Inventory/tools/LoadFixes.ps1) | Utility | LCM_Inventory | PowerShell | Utility | LoadFixes execution tool. | LoadFixes |
 | **LoadMethods** | [LoadMethods.ps1](file:///LCM_Inventory/tools/LoadMethods.ps1) | Utility | LCM_Inventory | PowerShell | Utility | LoadMethods execution tool. | LoadMethods |
 | **LoadRules** | [LoadRules.ps1](file:///LCM_Inventory/tools/LoadRules.ps1) | Utility | LCM_Inventory | PowerShell | Utility | LoadRules execution tool. | LoadRules |
-| **MacriumDailyBcrBaseline** | [Invoke-MacriumDailyBcrBaseline.ps1](file:///LCM_Inventory/tools/Invoke-MacriumDailyBcrBaseline.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-MacriumDailyBcrBaseline execution tool. | MacriumDailyBcrBaseline |
 | **MakeAdmin** | [Make-Admin.ps1](file:///LCM_Inventory/tools/Make-Admin.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Make-Admin execution tool. | MakeAdmin |
 | **mcphareadonly** | [mcp_ha_readonly.py](file:///HaSSD06/mcp_ha_readonly.py) | Utility | HaSSD06 | Python | Utility | mcp_ha_readonly execution tool. | mcphareadonly |
+| **NewRepositoryDocumentation** | [New-RepositoryDocumentation.ps1](file:///LCM_Inventory/tools/New-RepositoryDocumentation.ps1) | Utility | LCM_Inventory | PowerShell | Utility | New-RepositoryDocumentation execution tool. | NewRepositoryDocumentation |
 | **PrivilegedTool** | [Invoke-PrivilegedTool.ps1](file:///LCM_Inventory/tools/Invoke-PrivilegedTool.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-PrivilegedTool execution tool. | PrivilegedTool |
+| **ProcessLcmInbox** | [Process-LcmInbox.ps1](file:///LCM_Inventory/tools/Process-LcmInbox.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Process-LcmInbox execution tool. | ProcessLcmInbox |
 | **ProposalAction** | [Invoke-ProposalAction.ps1](file:///LCM_Inventory/tools/Invoke-ProposalAction.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-ProposalAction execution tool. | ProposalAction |
 | **PublishLCMProposalBundles** | [Publish-LCM_ProposalBundles.ps1](file:///LCM_Inventory/tools/Publish-LCM_ProposalBundles.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Publish-LCM_ProposalBundles execution tool. | PublishLCMProposalBundles |
 | **RealRepoDryRun** | [Invoke-RealRepoDryRun.ps1](file:///LCM_Inventory/tools/Invoke-RealRepoDryRun.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-RealRepoDryRun execution tool. | RealRepoDryRun |
@@ -160,9 +165,11 @@ TestWorkspaceReadiness
 | **SubmitReviewResult** | [Submit-ReviewResult.ps1](file:///LCM_Inventory/tools/Submit-ReviewResult.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Submit-ReviewResult execution tool. | SubmitReviewResult |
 | **SyncGeminiInbox** | [Sync-GeminiInbox.ps1](file:///LCM_Inventory/tools/Sync-GeminiInbox.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Sync-GeminiInbox execution tool. | SyncGeminiInbox |
 | **SyncLcmAppCatalog** | [Sync-LcmAppCatalog.ps1](file:///LCM_Inventory/tools/Sync-LcmAppCatalog.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Sync-LcmAppCatalog execution tool. | SyncLcmAppCatalog |
+| **SyncLcmCatalogMacros** | [Sync-LcmCatalogMacros.ps1](file:///LCM_Inventory/tools/Sync-LcmCatalogMacros.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Sync-LcmCatalogMacros execution tool. | SyncLcmCatalogMacros |
 | **SyncLcmModuleVersions** | [Sync-LcmModuleVersions.ps1](file:///LCM_Inventory/tools/Sync-LcmModuleVersions.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Sync-LcmModuleVersions execution tool. | SyncLcmModuleVersions |
 | **SyncLCMResearchSnapshot** | [Sync-LCMResearchSnapshot.ps1](file:///LCM_Tools/tools/Sync-LCMResearchSnapshot.ps1) | Utility | LCM_Tools | PowerShell | Research Snapshot | Mirrors selected LCM workspace research and governance files to a configured snapshot destination. | SyncLCMResearchSnapshot |
 | **SyncToolSymlinks** | [Sync-ToolSymlinks.ps1](file:///LCM_Inventory/tools/Sync-ToolSymlinks.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Sync-ToolSymlinks execution tool. | SyncToolSymlinks |
+| **TestDocumentationCompleteness** | [Test-DocumentationCompleteness.ps1](file:///LCM_Inventory/tools/Test-DocumentationCompleteness.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Test-DocumentationCompleteness execution tool. | TestDocumentationCompleteness |
 | **TestExternalTools** | [Test-ExternalTools.ps1](file:///LCM_Inventory/tools/Test-ExternalTools.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Test-ExternalTools execution tool. | TestExternalTools |
 | **TestGeneralReadiness** | [Test-GeneralReadiness.ps1](file:///LCM_Inventory/tools/Test-GeneralReadiness.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Test-GeneralReadiness execution tool. | TestGeneralReadiness |
 | **TestGuardrail** | [Test-Guardrail.ps1](file:///LCM_Inventory/tools/Test-Guardrail.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Test-Guardrail execution tool. | TestGuardrail |

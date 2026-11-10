@@ -11,8 +11,8 @@
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
   Path: D:\Git_Repositories\LCM_Inventory\tools\Update-ToolCatalog.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.1
-  Date: 2026-11-09 19:30:00
+  Version: 10.0.7
+  Date: 2026-11-10 20:36:00
 .PARAMETER Silent
   Suppresses non-error terminal output (useful in automated pipelines).
 .PARAMETER ShowAll
@@ -152,6 +152,13 @@ $metadataOverrides = @{
     Description = "Mirrors selected LCM workspace research and governance files to a configured snapshot destination."
   }
   # System Invariants & Hardware Stability
+  "Invoke-MacriumDailyBcrBaseline.ps1" = @{
+    ShortName   = "MacriumDailyBcrBaseline"
+    Audience    = "Developer"
+    Role        = "ReviewGate"
+    Category    = "Beyond Compare Review"
+    Description = "Prepares today Macrium Reflect image as writable Beyond Compare baseline with AutoHotkey (AHK) UI automation."
+  }
   "Kill-LogitechUpdate.ps1" = @{
     ShortName   = "KillLogitech"
     Audience    = "User"
@@ -489,7 +496,7 @@ $metadataOverrides = @{
   }
   "Show-ToolsExplorer.ps1" = @{
     ShortName   = "ToolsExplorer"
-    Aliases     = @("ToolExplorer")
+    Aliases     = @("ToolExplorer", "ShowTools", "tools")
     Audience    = "User"
     Role        = "GUI"
     NoExit      = $false
@@ -530,7 +537,7 @@ $metadataOverrides = @{
     Role        = "ReviewGate"
     NoExit      = $false
     Category    = "Proposal Review"
-    Description = "Opens the exact CRP/BUG Macrium BCR review using the writable baseline and the _LCM Beyond Compare profile."
+    Description = "Opens the exact CRP/BUG Macrium BCR review using writable baseline and AutoHotkey (AHK) UI automation with _LCM Beyond Compare profile."
     Example     = 'BCR -CRP CRP-284 -RepositoryName LCM_Inventory'
   }
   "Invoke-AsusDebloater.ps1" = @{
@@ -1177,7 +1184,8 @@ try {
       $targetCmdPath = Join-Path $cmdDir "$sn.cmd"
       if (Test-Path -LiteralPath $targetCmdPath) {
         $existingContent = [System.IO.File]::ReadAllText($targetCmdPath)
-        if (-not $existingContent.Contains($generatedLauncherMarker)) {
+        $isManaged = $existingContent.Contains($generatedLauncherMarker) -or $existingContent.Contains('if not defined Git_Root set "Git_Root=%~dp0..\.."')
+        if (-not $isManaged) {
           $preservedCmdCount++
           Write-ToolLog -Message "Preserved unmanaged launcher: $($targetCmdPath)" -Level INFO
           continue
@@ -1191,18 +1199,28 @@ try {
 
       $gitRootPreamble = "if not defined Git_Root set `"Git_Root=%~dp0..\..`"`r`nif not exist `"%Git_Root%\LCM_Inventory`" set `"Git_Root=D:\Git_Repositories`"`r`n"
 
+      $cleanGoal = if (-not [string]::IsNullOrWhiteSpace($t.Description)) {
+        ($t.Description -split "`r?`n")[0].Trim()
+      } elseif (-not [string]::IsNullOrWhiteSpace($t.Name)) {
+        $t.Name.Trim()
+      } else {
+        $sn
+      }
+      $cleanGoal = $cleanGoal.Replace('^', '^^').Replace('&', '^&').Replace('|', '^|').Replace('<', '^<').Replace('>', '^>').Replace('%', '%%')
+      $commentBanner = "echo # [LCM Launcher] %~nx0 - Goal: $cleanGoal`r`n"
+
       $elevationCheck = if ($t.Admin) {
         "net session >nul 2>&1`r`nif %errorlevel% neq 0 (`r`n  pwsh.exe -NoProfile -ExecutionPolicy Bypass -File `"%Git_Root%/LCM_Inventory/tools/Invoke-PrivilegedTool.ps1`" -Tool `"$sn`" -Arguments `"%*`"`r`n  exit /b`r`n)`r`n"
       } else { "" }
 
       $cmdBody = if ($t.Type -eq 'Python') {
-        "@echo off`r`n$generatedLauncherMarker`r`n${gitRootPreamble}${elevationCheck}setlocal`r`npython `"$targetRef`" %*`r`nendlocal`r`n"
+        "@echo off`r`n$generatedLauncherMarker`r`n${gitRootPreamble}${elevationCheck}${commentBanner}setlocal`r`npython `"$targetRef`" %*`r`nendlocal`r`n"
       } elseif ($t.Type -eq 'Batch') {
-        "@echo off`r`n$generatedLauncherMarker`r`n${gitRootPreamble}${elevationCheck}call `"$targetRef`" %*`r`n"
+        "@echo off`r`n$generatedLauncherMarker`r`n${gitRootPreamble}${elevationCheck}${commentBanner}call `"$targetRef`" %*`r`n"
       } elseif ($t.Type -eq 'Executable') {
-        "@echo off`r`n$generatedLauncherMarker`r`n${gitRootPreamble}${elevationCheck}`"$targetRef`" %*`r`n"
+        "@echo off`r`n$generatedLauncherMarker`r`n${gitRootPreamble}${elevationCheck}${commentBanner}`"$targetRef`" %*`r`n"
       } else {
-        "@echo off`r`n$generatedLauncherMarker`r`n${gitRootPreamble}${elevationCheck}pwsh.exe $noExitFlag-NoProfile -ExecutionPolicy Bypass -File `"$targetRef`" %*`r`n"
+        "@echo off`r`n$generatedLauncherMarker`r`n${gitRootPreamble}${elevationCheck}${commentBanner}pwsh.exe $noExitFlag-NoProfile -ExecutionPolicy Bypass -File `"$targetRef`" %*`r`n"
       }
 
       [System.IO.File]::WriteAllText($targetCmdPath, $cmdBody, [System.Text.Encoding]::ASCII)
@@ -1260,6 +1278,25 @@ try {
   $toolIntentsJsonPath = Join-Path $configDir 'tool_intents.json'
   $intentsDict = [ordered]@{}
 
+  # Load existing telemetry metrics to preserve across catalog regenerations (CRP-315)
+  $existingMetricsMap = @{}
+  if (Test-Path -LiteralPath $toolIntentsJsonPath) {
+    try {
+      $existingRaw = Get-Content -LiteralPath $toolIntentsJsonPath -Raw -Encoding UTF8 | ConvertFrom-Json
+      if ($existingRaw -and $existingRaw.intents) {
+        foreach ($prop in $existingRaw.intents.PSObject.Properties) {
+          $val = $prop.Value
+          $existingMetricsMap[$prop.Name] = @{
+            call_count        = if ($val.call_count -ne $null) { [int]$val.call_count } else { 0 }
+            last_called_at    = if ($val.last_called_at) { [string]$val.last_called_at } else { $null }
+            last_duration_ms  = if ($val.last_duration_ms -ne $null) { [double]$val.last_duration_ms } else { 0.0 }
+            total_duration_ms = if ($val.total_duration_ms -ne $null) { [double]$val.total_duration_ms } else { 0.0 }
+          }
+        }
+      }
+    } catch {}
+  }
+
   # Primary semantic aliases
   $primaryShortcuts = @{
     "bcr"             = @{ target = "Invoke-MacriumDailyBcrBaseline.ps1"; goal = "Open Beyond Compare 5 review comparing workspace against today daily Macrium baseline" }
@@ -1284,6 +1321,7 @@ try {
     $t = $sortedTools | Where-Object { $_.Name -eq $info.target } | Select-Object -First 1
     if ($t) {
       $trampoline = if ($t.ShortName -and (Test-Path (Join-Path $cmdDir "$($t.ShortName).cmd"))) { "$($t.ShortName).cmd" } else { $null }
+      $m = if ($existingMetricsMap.ContainsKey($k)) { $existingMetricsMap[$k] } else { $null }
       $intentsDict[$k] = [ordered]@{
         goal              = $info.goal
         executable        = if ($t.Type -eq "Batch") { "cmd.exe /c" } else { "pwsh.exe" }
@@ -1295,6 +1333,10 @@ try {
         category          = $t.Category
         audience          = $t.Audience
         role              = $t.Role
+        call_count        = if ($m) { $m.call_count } else { 0 }
+        last_called_at    = if ($m) { $m.last_called_at } else { $null }
+        last_duration_ms  = if ($m) { $m.last_duration_ms } else { 0.0 }
+        total_duration_ms = if ($m) { $m.total_duration_ms } else { 0.0 }
         is_primary_intent = $true
       }
     }
@@ -1312,6 +1354,14 @@ try {
       }
     }
 
+    $m = if ($existingMetricsMap.ContainsKey($cleanStem)) {
+      $existingMetricsMap[$cleanStem]
+    } elseif ($t.ShortName -and $existingMetricsMap.ContainsKey($t.ShortName.ToLowerInvariant())) {
+      $existingMetricsMap[$t.ShortName.ToLowerInvariant()]
+    } else {
+      $null
+    }
+
     $entry = [ordered]@{
       goal              = $t.Description
       executable        = if ($t.Type -eq "Batch") { "cmd.exe /c" } else { "pwsh.exe" }
@@ -1323,6 +1373,10 @@ try {
       category          = $t.Category
       audience          = $t.Audience
       role              = $t.Role
+      call_count        = if ($m) { $m.call_count } else { 0 }
+      last_called_at    = if ($m) { $m.last_called_at } else { $null }
+      last_duration_ms  = if ($m) { $m.last_duration_ms } else { 0.0 }
+      total_duration_ms = if ($m) { $m.total_duration_ms } else { 0.0 }
       is_primary_intent = $false
     }
 

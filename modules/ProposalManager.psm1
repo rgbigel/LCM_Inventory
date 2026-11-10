@@ -1,4 +1,4 @@
-# =====================================================================
+﻿# =====================================================================
 # ProposalManager.psm1 - LCM Proposal & Two-Tier Review Governance Module
 # =====================================================================
 # Module: ProposalManager
@@ -123,7 +123,8 @@ function Update-LcmControlHubAfterCompletion {
     }
 
     & $rendererPath -NoLaunch | Out-Null
-    if ($LASTEXITCODE -ne 0) {
+    $scriptExit = if (Test-Path Variable:LASTEXITCODE) { $LASTEXITCODE } else { 0 }
+    if (-not $? -or $scriptExit -ne 0) {
         throw "ShowCM renderer failed after completing proposal(s): $($ProposalId -join ', ')"
     }
 

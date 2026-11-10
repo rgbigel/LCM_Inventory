@@ -17,9 +17,9 @@
            5. Prints the confirmation the AI must give before working.
   Path: LCM_Inventory/tools/Invoke-LCM_GoodMorning.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.0.4
-  Date: 2026-11-08 22:08:00
-  Rule: RULE-CTX-006
+  Version: 10.0.5
+  Date: 2026-11-10 11:30:00
+  Rule: RULE-CTX-006, RULE-LCM-030
 .PARAMETER Auto
   Session-start mode: silent (one line) when the gap is below -GapHours and -NoBaseline is specified.
 .PARAMETER GapHours
@@ -121,7 +121,10 @@ if ($Auto -and -not $Force -and -not $PrepareBcrBaseline -and $gap -lt $GapHours
 Write-Host '==========================================================================' -ForegroundColor Cyan
 Write-Host ' LCM GOODMORNING (read-only)' -ForegroundColor Cyan
 Write-Host '==========================================================================' -ForegroundColor Cyan
-Write-Host ("Now: {0:yyyy-MM-dd HH:mm}   Last activity: {1}   Gap: {2}" -f $now, $(if ($lastActivity) { $lastActivity.ToString('yyyy-MM-dd HH:mm') } else { 'unknown' }), $(if ([double]::IsInfinity($gap)) { 'unknown' } else { '{0:N1} h' -f $gap }))
+$goodNightDisplay = if ($savedAt) { $savedAt.ToString('yyyy-MM-dd HH:mm:ss') } elseif ($lastActivity) { $lastActivity.ToString('yyyy-MM-dd HH:mm:ss') } else { 'unknown' }
+$gapDisplay = if ([double]::IsInfinity($gap)) { 'unknown' } else { '{0:N1} h' -f $gap }
+Write-Host ("Now: {0:yyyy-MM-dd HH:mm:ss}   Last GoodNight: {1}   Gap: {2}" -f $now, $goodNightDisplay, $gapDisplay)
+Write-Host ("☀️ Good Morning! Resuming from Good Night at {0} (Gap: {1})." -f $goodNightDisplay, $gapDisplay) -ForegroundColor Green
 if ($null -eq $savedAt) { $attention.Add('No Session Snapshot in ACTIVE_CONTEXT.md; "work in between" cannot be determined. Run Save-AllSessionMemory.ps1 at the end of each day.') }
 
 # Remote Push Synchronization Telemetry check

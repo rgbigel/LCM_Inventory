@@ -1,17 +1,11 @@
 {
-  "updated_at": "2026-11-06T17:41:17+01:00",
   "active_context": {
     "app_id": "App: 1",
     "app_number": 1,
     "app_title": "Telemetry Streamer",
     "repo": "TestRepoSplit",
-    "set_at": "2026-11-06 17:32:31",
+    "set_at": "2026-11-10 15:07:18",
     "details": "Telemetry Streamer"
   },
-  "operating_mode": "GOVERNED_IMPLEMENTATION",
-  "active_gate": "STEP_001",
-  "search_radius": 2,
-  "settled_facts": [],
-  "open_hypotheses": [],
-  "circuit_breaker": false
+  "updated_at": "2026-11-10T15:07:18+01:00"
 }

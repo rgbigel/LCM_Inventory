@@ -33,7 +33,16 @@ When accepting a proposal review in `CM_CONTROL_HUB.html`, clicking "ACCEPTED: I
   ```
   This transfers the command line formatting logic out of JavaScript and into the daemon DTO layer.
 
+### Component 3: AutoHotkey Automation Atom & Baseline Launch Gating
+- Create `LCM_Inventory/modules/LcmAhkAtoms.psm1` for modular AHK discovery and execution.
+- Create `LCM_Inventory/tools/automation/Mount-MacriumBrowseDialog.ahk` to automate Macrium Reflect v10 dialog controls.
+- Update `LCM_Inventory/tools/Invoke-MacriumDailyBcrBaseline.ps1` to version 10.1.3:
+  - Consume `LcmAhkAtoms.psm1`.
+  - Parse structured AHK output tokens for checkboxes.
+  - Add pre-BCR launch verification of baseline drive container.
+
 ## 4. Verification Plan
 - Pester unit tests in `LCM_Inventory/tests/LcmElevatedDaemon.Tests.ps1`.
 - Direct test of `Submit-ReviewResult.ps1` via daemon action intent.
+- Live verification of `Mount-MacriumBrowseDialog.ahk` and drive `F:` baseline mounting.
 - `Test-GeneralReadiness.ps1` on `LCM_Inventory`.

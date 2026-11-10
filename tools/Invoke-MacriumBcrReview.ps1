@@ -9,8 +9,8 @@
     Purpose: Opens or reuses the governed Macrium BCR window and records the exact lifecycle review state.
     Path: LCM_Inventory/tools/Invoke-MacriumBcrReview.ps1
     Authors: Rolf, LCM_AI Engine
-    Version: 10.0.5
-    Date: 2026-11-08 16:48:00
+    Version: 10.0.6
+    Date: 2026-11-10 14:58:00
 .PARAMETER CRP
     Identifier of the CRP or BUG proposal under review (e.g. CRP-309).
 .PARAMETER RepositoryName
@@ -35,9 +35,9 @@
 
 [CmdletBinding()]
 param(
-  [Parameter(Mandatory = $true)]
-  [ValidatePattern('^(CRP|BUG)-\d+$')]
-  [string]$CRP,
+  [Parameter(Mandatory = $false)]
+  [ValidatePattern('^(?:(CRP|BUG)-\d+)?$')]
+  [string]$CRP = '',
 
   [Parameter(Mandatory = $false)]
   [string]$RepositoryName = 'LCM_Inventory',
@@ -67,9 +67,13 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-if ($Help) {
-  Write-Host 'Invoke-MacriumBcrReview.ps1 -CRP <CRP|BUG> [-RepositoryName <repo>] [-BaseCommit <commit>] [-NewBaseline] [-NoLaunch]'
-  Write-Host 'Prepares or reuses the writable F: Macrium baseline and opens only the _LCM BCR profile.'
+if ($Help -or [string]::IsNullOrWhiteSpace($CRP)) {
+  Write-Host "==========================================================================" -ForegroundColor Cyan
+  Write-Host " INVOKE MACRIUM BCR REVIEW (Invoke-MacriumBcrReview)" -ForegroundColor Cyan
+  Write-Host "==========================================================================" -ForegroundColor Cyan
+  Write-Host "Usage: pwsh tools/Invoke-MacriumBcrReview.ps1 -CRP <CRP-ID|BUG-ID> [-RepositoryName <Repo>] [-NewBaseline]" -ForegroundColor Yellow
+  Write-Host "       MacriumBcrReview.cmd -CRP <CRP-ID|BUG-ID>" -ForegroundColor Yellow
+  Write-Host "Prepares or reuses the writable F: Macrium baseline and opens only the _LCM BCR profile."
   return
 }
 

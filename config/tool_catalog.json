@@ -1478,7 +1478,11 @@
   {
     "Name": "Show-ToolsExplorer.ps1",
     "ShortName": "ToolsExplorer",
-    "Aliases": "ToolExplorer",
+    "Aliases": [
+      "ToolExplorer",
+      "ShowTools",
+      "tools"
+    ],
     "Role": "GUI",
     "Audience": "User",
     "Admin": false,
@@ -1662,9 +1666,19 @@
         "Mandatory": false,
         "Default": "",
         "Description": ""
+      },
+      {
+        "Name": "Force",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
       }
     ],
-    "Dependencies": null
+    "Dependencies": [
+      "lcm.cmd",
+      "LcmMacriumAtoms.psm1"
+    ]
   },
   {
     "Name": "Mount-MacriumLatestBaseline.ps1",
@@ -1732,14 +1746,14 @@
     "Domain": "LCM_Inventory",
     "Type": "PowerShell",
     "Category": "Proposal Review",
-    "Description": "Opens the exact CRP/BUG Macrium BCR review using the writable baseline and the _LCM Beyond Compare profile.",
+    "Description": "Opens the exact CRP/BUG Macrium BCR review using writable baseline and AutoHotkey (AHK) UI automation with _LCM Beyond Compare profile.",
     "Example": "BCR -CRP CRP-284 -RepositoryName LCM_Inventory",
     "RelativePath": "LCM_Inventory\\tools\\Invoke-MacriumBcrReview.ps1",
     "Parameters": [
       {
         "Name": "CRP",
         "Type": "String",
-        "Mandatory": true,
+        "Mandatory": false,
         "Default": "",
         "Description": "Identifier of the CRP or BUG proposal under review (e.g. CRP-309)."
       },
@@ -2201,6 +2215,182 @@
       "Update-ToolCatalog.ps1",
       "Module: (Join-Path $root 'modules\\LcmDisplayDependencies.psm1')"
     ]
+  },
+  {
+    "Name": "Invoke-MacriumDailyBcrBaseline.ps1",
+    "ShortName": "MacriumDailyBcrBaseline",
+    "Aliases": null,
+    "Role": "ReviewGate",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": false,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Beyond Compare Review",
+    "Description": "Prepares today Macrium Reflect image as writable Beyond Compare baseline with AutoHotkey (AHK) UI automation.",
+    "Example": "MacriumDailyBcrBaseline",
+    "RelativePath": "LCM_Inventory\\tools\\Invoke-MacriumDailyBcrBaseline.ps1",
+    "Parameters": [
+      {
+        "Name": "BackupDefinitionPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\OneDrive\\Documents\\Reflect\\@B_D4P3+4-WDB850-AD.xml",
+        "Description": "Path to the Macrium Reflect XML backup definition file to monitor or execute."
+      },
+      {
+        "Name": "BackupDirectory",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "B:\\Backups\\D4P3+4-WDB850-AD",
+        "Description": "Directory containing the completed Macrium .mrimgx backup images."
+      },
+      {
+        "Name": "ExpectedVolumeLabel",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D4P3-WDB850-D",
+        "Description": "Expected volume label for the mounted baseline partition (default: D4P3-WDB850-D)."
+      },
+      {
+        "Name": "CandidateDrives",
+        "Type": "Object",
+        "Mandatory": false,
+        "Default": "@('F', 'G', 'H', 'I')",
+        "Description": "List or delimited string of acceptable drive letters (length >= 1)"
+      },
+      {
+        "Name": "PollSeconds",
+        "Type": "Int32",
+        "Mandatory": false,
+        "Default": "60",
+        "Description": "Polling interval in seconds when awaiting Macrium backup completion."
+      },
+      {
+        "Name": "TimeoutMinutes",
+        "Type": "Int32",
+        "Mandatory": false,
+        "Default": "240",
+        "Description": "Maximum wait time in minutes before timing out an in-progress Macrium backup."
+      },
+      {
+        "Name": "MountTimeoutSeconds",
+        "Type": "Int32",
+        "Mandatory": false,
+        "Default": "120",
+        "Description": "Timeout in seconds for drive mount dialog interaction and volume appearance."
+      },
+      {
+        "Name": "ReviewScope",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Active CRP or BUG identifier to associate with the Beyond Compare window title."
+      },
+      {
+        "Name": "StartBackupIfMissing",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Automatically initiates the configured backup definition if today's image is not found."
+      },
+      {
+        "Name": "ForceNewBackup",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Forces execution of a fresh Macrium backup definition regardless of same-day images."
+      },
+      {
+        "Name": "NewBaseline",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Forces unmounting existing baselines and mounting a new Macrium image (fast-path is default)."
+      },
+      {
+        "Name": "NoLaunchReview",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Mounts the baseline image and sets registry telemetry without opening Beyond Compare."
+      },
+      {
+        "Name": "ElevatedWorker",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Internal switch executed under administrative elevation to perform drive mounting."
+      },
+      {
+        "Name": "ReceiptPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Temporary JSON receipt path used by the elevated worker process."
+      },
+      {
+        "Name": "ImagePath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Explicit path to the .mrimgx image to mount when executing as the elevated worker."
+      }
+    ],
+    "Dependencies": [
+      "LcmAhkAtoms.psm1",
+      "bcompare",
+      "BCompare.exe",
+      "BCompare"
+    ]
+  },
+  {
+    "Name": "Absorb-LcmContextRemark.ps1",
+    "ShortName": "AbsorbLcmContextRemark",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Absorb-LcmContextRemark execution tool.",
+    "Example": "AbsorbLcmContextRemark",
+    "RelativePath": "LCM_Inventory\\tools\\Absorb-LcmContextRemark.ps1",
+    "Parameters": [
+      {
+        "Name": "Id",
+        "Type": "String",
+        "Mandatory": true,
+        "Default": "",
+        "Description": "Proposal ID number (e.g. 280, 267) or CRP identifier (e.g. CRP-280, BUG-311)."
+      },
+      {
+        "Name": "TextMatch",
+        "Type": "String",
+        "Mandatory": true,
+        "Default": "",
+        "Description": "Substring or regex pattern matching the operator remark in ACTIVE_CONTEXT.md to absorb."
+      },
+      {
+        "Name": "DryRun",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Previews absorption and removal without modifying ACTIVE_CONTEXT.md or the proposal specification."
+      },
+      {
+        "Name": "CheckOnly",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Performs contradiction analysis between the remark and the target CRP specification without mutating files."
+      }
+    ],
+    "Dependencies": "ProposalManager.psm1"
   },
   {
     "Name": "Advance-Governance.ps1",
@@ -3182,6 +3372,67 @@
     "Dependencies": null
   },
   {
+    "Name": "Get-GeminiInboxStatus.ps1",
+    "ShortName": "GetGeminiInboxStatus",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Get-GeminiInboxStatus execution tool.",
+    "Example": "GetGeminiInboxStatus",
+    "RelativePath": "LCM_Inventory\\tools\\Get-GeminiInboxStatus.ps1",
+    "Parameters": [
+      {
+        "Name": "CorrelationId",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "The exact correlation identifier of the inbox submission (e.g. INBOX-BUG-20261110-12345)."
+      },
+      {
+        "Name": "InboxPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\GDrive\\LCM\\INBOX",
+        "Description": "Path to Google Drive inbox. Defaults to 'D:\\GDrive\\LCM\\INBOX'."
+      },
+      {
+        "Name": "AckLedgerPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\Git_Repositories\\LCM_Inventory\\data\\inbox\\acks",
+        "Description": "Path to governed CM acknowledgement ledger. Defaults to 'LCM_Inventory/data/inbox/acks'."
+      },
+      {
+        "Name": "Latest",
+        "Type": "Int32",
+        "Mandatory": false,
+        "Default": "10",
+        "Description": "Number of recent acknowledgement records to return when -CorrelationId is omitted. Defaults to 10."
+      },
+      {
+        "Name": "AsJson",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Emits formatted JSON result."
+      },
+      {
+        "Name": "PassThru",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Emits acknowledgement objects to pipeline."
+      }
+    ],
+    "Dependencies": null
+  },
+  {
     "Name": "Get-LCM_Repositories.ps1",
     "ShortName": "GetLCMRepositories",
     "Aliases": null,
@@ -4117,6 +4368,20 @@
         "Description": "Candidate numbers to delete (requires -ProposalId to document the active CRP correcting/retiring the entry)."
       },
       {
+        "Name": "RetireAccepted",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Retires/purges an accepted advice entry matching -TextMatch or -Index (requires -ProposalId)."
+      },
+      {
+        "Name": "TextMatch",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Substring or regex pattern to locate the accepted advice entry to retire."
+      },
+      {
         "Name": "ProposalId",
         "Type": "String",
         "Mandatory": false,
@@ -4172,6 +4437,60 @@
       }
     ],
     "Dependencies": null
+  },
+  {
+    "Name": "Link-LcmLearnedAdvice.ps1",
+    "ShortName": "LinkLcmLearnedAdvice",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Link-LcmLearnedAdvice execution tool.",
+    "Example": "LinkLcmLearnedAdvice",
+    "RelativePath": "LCM_Inventory\\tools\\Link-LcmLearnedAdvice.ps1",
+    "Parameters": [
+      {
+        "Name": "Id",
+        "Type": "String",
+        "Mandatory": true,
+        "Default": "",
+        "Description": "Proposal ID number (e.g. 280, 267) or CRP identifier (e.g. CRP-280, BUG-311)."
+      },
+      {
+        "Name": "TextMatch",
+        "Type": "String",
+        "Mandatory": true,
+        "Default": "",
+        "Description": "Substring or regex pattern matching the advice entry in LEARNED_ADVICE.md."
+      },
+      {
+        "Name": "PurgeGuaranteed",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Authorizes final retirement/deletion of the recognized advice entry. Requires verified CRP state and -GuaranteeEvidence."
+      },
+      {
+        "Name": "GuaranteeEvidence",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Description or path to the test harness, Pester test, or rule reference guaranteeing the advice requirement is satisfied."
+      },
+      {
+        "Name": "DryRun",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Previews mutations without updating files."
+      }
+    ],
+    "Dependencies": "ProposalManager.psm1"
   },
   {
     "Name": "LoadAtoms.ps1",
@@ -4246,134 +4565,6 @@
     "Dependencies": null
   },
   {
-    "Name": "Invoke-MacriumDailyBcrBaseline.ps1",
-    "ShortName": "MacriumDailyBcrBaseline",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": false,
-    "Group": "LCM_Inventory",
-    "Domain": "LCM_Inventory",
-    "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "Invoke-MacriumDailyBcrBaseline execution tool.",
-    "Example": "MacriumDailyBcrBaseline",
-    "RelativePath": "LCM_Inventory\\tools\\Invoke-MacriumDailyBcrBaseline.ps1",
-    "Parameters": [
-      {
-        "Name": "BackupDefinitionPath",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "D:\\OneDrive\\Documents\\Reflect\\@B_D4P3+4-WDB850-AD.xml",
-        "Description": "Path to the Macrium Reflect XML backup definition file to monitor or execute."
-      },
-      {
-        "Name": "BackupDirectory",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "B:\\Backups\\D4P3+4-WDB850-AD",
-        "Description": "Directory containing the completed Macrium .mrimgx backup images."
-      },
-      {
-        "Name": "ExpectedVolumeLabel",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "D4P3-WDB850-D",
-        "Description": "Expected volume label for the mounted baseline partition (default: D4P3-WDB850-D)."
-      },
-      {
-        "Name": "CandidateDrives",
-        "Type": "Object",
-        "Mandatory": false,
-        "Default": "@('F', 'G', 'H', 'I')",
-        "Description": "List or delimited string of acceptable drive letters (length >= 1)"
-      },
-      {
-        "Name": "PollSeconds",
-        "Type": "Int32",
-        "Mandatory": false,
-        "Default": "60",
-        "Description": "Polling interval in seconds when awaiting Macrium backup completion."
-      },
-      {
-        "Name": "TimeoutMinutes",
-        "Type": "Int32",
-        "Mandatory": false,
-        "Default": "240",
-        "Description": "Maximum wait time in minutes before timing out an in-progress Macrium backup."
-      },
-      {
-        "Name": "MountTimeoutSeconds",
-        "Type": "Int32",
-        "Mandatory": false,
-        "Default": "120",
-        "Description": "Timeout in seconds for drive mount dialog interaction and volume appearance."
-      },
-      {
-        "Name": "ReviewScope",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Active CRP or BUG identifier to associate with the Beyond Compare window title."
-      },
-      {
-        "Name": "StartBackupIfMissing",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Automatically initiates the configured backup definition if today's image is not found."
-      },
-      {
-        "Name": "ForceNewBackup",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Forces execution of a fresh Macrium backup definition regardless of same-day images."
-      },
-      {
-        "Name": "NewBaseline",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Forces unmounting existing baselines and mounting a new Macrium image (fast-path is default)."
-      },
-      {
-        "Name": "NoLaunchReview",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Mounts the baseline image and sets registry telemetry without opening Beyond Compare."
-      },
-      {
-        "Name": "ElevatedWorker",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Internal switch executed under administrative elevation to perform drive mounting."
-      },
-      {
-        "Name": "ReceiptPath",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Temporary JSON receipt path used by the elevated worker process."
-      },
-      {
-        "Name": "ImagePath",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Explicit path to the .mrimgx image to mount when executing as the elevated worker."
-      }
-    ],
-    "Dependencies": [
-      "bcompare",
-      "BCompare.exe",
-      "BCompare"
-    ]
-  },
-  {
     "Name": "Make-Admin.ps1",
     "ShortName": "MakeAdmin",
     "Aliases": null,
@@ -4398,6 +4589,67 @@
       }
     ],
     "Dependencies": "AdminMode.psm1"
+  },
+  {
+    "Name": "New-RepositoryDocumentation.ps1",
+    "ShortName": "NewRepositoryDocumentation",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "New-RepositoryDocumentation execution tool.",
+    "Example": "NewRepositoryDocumentation",
+    "RelativePath": "LCM_Inventory\\tools\\New-RepositoryDocumentation.ps1",
+    "Parameters": [
+      {
+        "Name": "RepositoryName",
+        "Type": "String",
+        "Mandatory": true,
+        "Default": "",
+        "Description": "Name or folder path of the target repository."
+      },
+      {
+        "Name": "WorkspaceRoot",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\Git_Repositories",
+        "Description": "Root directory containing repositories. Defaults to 'D:\\Git_Repositories'."
+      },
+      {
+        "Name": "Authors",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "Rolf, LCM_AI Engine",
+        "Description": "Document authors string for DOX metadata headers. Defaults to 'Rolf, LCM_AI Engine'."
+      },
+      {
+        "Name": "Version",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "10.0.0",
+        "Description": "Initial baseline version string. Defaults to '10.0.0'."
+      },
+      {
+        "Name": "IncludeInstall",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "When specified, scaffolds install/Installation.md conforming to the 7-phase runbook standard."
+      },
+      {
+        "Name": "Force",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Overwrites existing documentation files if they already exist."
+      }
+    ],
+    "Dependencies": null
   },
   {
     "Name": "Invoke-PrivilegedTool.ps1",
@@ -4455,6 +4707,74 @@
       "Restore-SystemSettings.ps1",
       "Invoke-InteractiveDesktop.ps1"
     ]
+  },
+  {
+    "Name": "Process-LcmInbox.ps1",
+    "ShortName": "ProcessLcmInbox",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Process-LcmInbox execution tool.",
+    "Example": "ProcessLcmInbox",
+    "RelativePath": "LCM_Inventory\\tools\\Process-LcmInbox.ps1",
+    "Parameters": [
+      {
+        "Name": "InboxPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\GDrive\\LCM\\INBOX",
+        "Description": "Path to the source inbox folder. Defaults to 'D:\\GDrive\\LCM\\INBOX'."
+      },
+      {
+        "Name": "ArchivePath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\GDrive\\LCM\\INBOX\\archive",
+        "Description": "Path to the archive folder for processed items. Defaults to 'D:\\GDrive\\LCM\\INBOX\\archive'."
+      },
+      {
+        "Name": "AckPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Sender-visible acknowledgement return channel folder. Defaults to 'D:\\GDrive\\LCM\\INBOX\\ack'."
+      },
+      {
+        "Name": "AckLedgerPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "CM-governed persistent acknowledgement store. Defaults to 'LCM_Inventory/data/inbox_ack'."
+      },
+      {
+        "Name": "Watch",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Runs in continuous scheduled watching loop."
+      },
+      {
+        "Name": "IntervalSeconds",
+        "Type": "Int32",
+        "Mandatory": false,
+        "Default": "30",
+        "Description": "Polling interval when running in -Watch mode. Defaults to 30 seconds."
+      },
+      {
+        "Name": "DryRun",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Simulates intake and Phase 1 receipt ACK without modifying the proposal ledger or moving files."
+      }
+    ],
+    "Dependencies": "InboxWatcher.psm1"
   },
   {
     "Name": "Invoke-ProposalAction.ps1",
@@ -5044,6 +5364,13 @@
         "Mandatory": false,
         "Default": "AI",
         "Description": ""
+      },
+      {
+        "Name": "Quiescent",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Record session status as Quiescent in ACTIVE_SESSION.md."
       },
       {
         "Name": "DryRun",
@@ -5957,7 +6284,10 @@
         "Description": "Polling interval when running in -Watch mode. Defaults to 30 seconds."
       }
     ],
-    "Dependencies": "ProposalManager.psm1"
+    "Dependencies": [
+      "ProposalManager.psm1",
+      "InboxWatcher.psm1"
+    ]
   },
   {
     "Name": "Sync-LcmAppCatalog.ps1",
@@ -5988,6 +6318,95 @@
         "Mandatory": false,
         "Default": "D:\\Git_Repositories",
         "Description": "Workspace root directory"
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "Sync-LcmCatalogMacros.ps1",
+    "ShortName": "SyncLcmCatalogMacros",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Sync-LcmCatalogMacros execution tool.",
+    "Example": "SyncLcmCatalogMacros",
+    "RelativePath": "LCM_Inventory\\tools\\Sync-LcmCatalogMacros.ps1",
+    "Parameters": [
+      {
+        "Name": "CatalogPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Path to tool_catalog.json. Defaults to 'LCM_Inventory/config/tool_catalog.json'."
+      },
+      {
+        "Name": "MacroFilePath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Path to macro-definitions.md. Defaults to '.agents/rules/macro-definitions.md'."
+      },
+      {
+        "Name": "SubAction",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "Sync",
+        "Description": "The operation to execute: Sync (default), List, Add, Update, Retire, Validate."
+      },
+      {
+        "Name": "DryRun",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "When specified, simulates changes and outputs proposed modifications without writing to disk."
+      },
+      {
+        "Name": "Name",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Macro name for Add, Update, or Retire operations."
+      },
+      {
+        "Name": "Description",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Operator-facing description for Add or Update operations."
+      },
+      {
+        "Name": "Syntax",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Command syntax string for Add or Update operations."
+      },
+      {
+        "Name": "Target",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Script target path for Add or Update operations."
+      },
+      {
+        "Name": "Aliases",
+        "Type": "String[]",
+        "Mandatory": false,
+        "Default": "@()",
+        "Description": "Array of alias names for Add or Update operations."
+      },
+      {
+        "Name": "Rules",
+        "Type": "String[]",
+        "Mandatory": false,
+        "Default": "@()",
+        "Description": "Array of specific rule strings for Add or Update operations."
       }
     ],
     "Dependencies": null
@@ -6088,6 +6507,67 @@
       "LcmToolCatalog.psm1",
       "Update-ToolCatalog.ps1"
     ]
+  },
+  {
+    "Name": "Test-DocumentationCompleteness.ps1",
+    "ShortName": "TestDocumentationCompleteness",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Test-DocumentationCompleteness execution tool.",
+    "Example": "TestDocumentationCompleteness",
+    "RelativePath": "LCM_Inventory\\tools\\Test-DocumentationCompleteness.ps1",
+    "Parameters": [
+      {
+        "Name": "WorkspaceRoot",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\Git_Repositories",
+        "Description": "Path to the root container of repositories. Defaults to 'D:\\Git_Repositories'."
+      },
+      {
+        "Name": "Repositories",
+        "Type": "String[]",
+        "Mandatory": false,
+        "Default": "@()",
+        "Description": "Optional list of specific repository folder names to audit. If omitted, audits all discovered repositories."
+      },
+      {
+        "Name": "Scope",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "Governed",
+        "Description": ""
+      },
+      {
+        "Name": "RequireInstall",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "When set, treats missing install/Installation.md as a failure."
+      },
+      {
+        "Name": "AsJson",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Outputs audit results as formatted JSON."
+      },
+      {
+        "Name": "PassThru",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Returns structured audit result objects to the PowerShell pipeline."
+      }
+    ],
+    "Dependencies": null
   },
   {
     "Name": "Test-ExternalTools.ps1",
@@ -6521,6 +7001,7 @@
     ],
     "Dependencies": [
       "Sync-LCMResearchSnapshot.ps1",
+      "Invoke-MacriumDailyBcrBaseline.ps1",
       "Kill-LogitechUpdate.ps1",
       "Set-MouseFlickerInvariants.ps1",
       "Restore-SystemSettings.ps1",
@@ -6566,7 +7047,6 @@
       "Show-SuperController.ps1",
       "LcmToolScanLocations.psm1",
       "Test-RepoReadiness.ps1",
-      "Invoke-MacriumDailyBcrBaseline.ps1",
       "Mount-MacriumDailyBaseline.ps1",
       "Dismount-MacriumCurrentBaseline.ps1",
       "Invoke-LCM_GoodMorning.ps1",

@@ -936,4 +936,65 @@ function Send-LcmIncidentTelemetry {
   }
 }
 
-Export-ModuleMember -Function Get-LcmToolCatalogData, Measure-LcmToolCatalogMetrics, Format-LcmToolCatalogCli, Build-LcmToolIndexHtml, Send-LcmIncidentTelemetry
+function Update-LcmToolIntentCall {
+  [CmdletBinding()]
+  param(
+    [Parameter(Mandatory = $true)]
+    [string]$CommandOrPath,
+    [double]$DurationMs = 0.0,
+    [datetime]$Timestamp = [System.DateTime]::Now
+  )
+
+  try {
+    $wsRoot = 'D:\Git_Repositories'
+    $intentsPath = Join-Path $wsRoot 'LCM_Inventory\config\tool_intents.json'
+    if (-not (Test-Path -LiteralPath $intentsPath)) { return }
+
+    $jsonRaw = [System.IO.File]::ReadAllText($intentsPath)
+    $data = $jsonRaw | ConvertFrom-Json
+    if ($null -eq $data -or $null -eq $data.intents) { return }
+
+    $cleanTarget = $CommandOrPath.Trim()
+    $targetName = [System.IO.Path]::GetFileName($cleanTarget)
+    if ($cleanTarget -match '(?i)([A-Za-z0-9_\-\.]+\.(?:ps1|cmd|bat|py))') {
+      $targetName = $Matches[1]
+    }
+
+    $timeStr = $Timestamp.ToString("yyyy-MM-dd HH:mm:ss.fff")
+    $matched = $false
+
+    foreach ($prop in $data.intents.PSObject.Properties) {
+      $item = $prop.Value
+      $isMatch = $false
+      if ($prop.Name -ieq $cleanTarget -or $prop.Name -ieq $targetName) {
+        $isMatch = $true
+      } elseif ($item.script -and ($item.script -like "*$targetName*" -or $item.script -like "*$cleanTarget*")) {
+        $isMatch = $true
+      } elseif ($item.trampoline -and ($item.trampoline -ieq $targetName -or $item.trampoline -ieq $cleanTarget)) {
+        $isMatch = $true
+      }
+
+      if ($isMatch) {
+        $matched = $true
+        $curCount = if ($null -ne $item.call_count) { [int]$item.call_count } else { 0 }
+        $curTotal = if ($null -ne $item.total_duration_ms) { [double]$item.total_duration_ms } else { 0.0 }
+
+        $item | Add-Member -NotePropertyName 'call_count' -NotePropertyValue ($curCount + 1) -Force
+        $item | Add-Member -NotePropertyName 'last_called_at' -NotePropertyValue $timeStr -Force
+        $item | Add-Member -NotePropertyName 'last_duration_ms' -NotePropertyValue ([Math]::Round($DurationMs, 2)) -Force
+        $item | Add-Member -NotePropertyName 'total_duration_ms' -NotePropertyValue ([Math]::Round($curTotal + $DurationMs, 2)) -Force
+      }
+    }
+
+    if ($matched) {
+      $data.updated_at = $timeStr
+      $utf8NoBom = [System.Text.UTF8Encoding]::new($false)
+      $newJson = $data | ConvertTo-Json -Depth 6
+      [System.IO.File]::WriteAllText($intentsPath, $newJson, $utf8NoBom)
+    }
+  } catch {
+    # Logging failure in telemetry tracking must never break the caller
+  }
+}
+
+Export-ModuleMember -Function Get-LcmToolCatalogData, Measure-LcmToolCatalogMetrics, Format-LcmToolCatalogCli, Build-LcmToolIndexHtml, Send-LcmIncidentTelemetry, Update-LcmToolIntentCall

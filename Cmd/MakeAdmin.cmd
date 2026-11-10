@@ -7,4 +7,5 @@ if %errorlevel% neq 0 (
   pwsh.exe -NoProfile -ExecutionPolicy Bypass -File "%Git_Root%/LCM_Inventory/tools/Invoke-PrivilegedTool.ps1" -Tool "MakeAdmin" -Arguments "%*"
   exit /b
 )
+echo # [LCM Launcher] %~nx0 - Goal: Make-Admin execution tool.
 pwsh.exe -NoExit -NoProfile -ExecutionPolicy Bypass -File "%Git_Root%/LCM_Inventory/tools/Make-Admin.ps1" %*

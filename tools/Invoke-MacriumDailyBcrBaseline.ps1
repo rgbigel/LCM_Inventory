@@ -1,19 +1,20 @@
 <#
 .SYNOPSIS
-  Prepares today's Macrium image as the writable Beyond Compare baseline.
+  Prepares today's Macrium image as the writable Beyond Compare baseline with AutoHotkey (AHK) automation.
 .DESCRIPTION
   Module: tools/Invoke-MacriumDailyBcrBaseline.ps1
   Purpose: Finds today's completed Macrium image, optionally starts the configured
   definition when today's image is absent, verifies and unmounts only known baseline candidates,
-  mounts D: within candidate drive letters with the required GUI options, and opens the operator-owned
-  _LCM Beyond Compare profile. Reuses an existing mounted baseline by default unless -NewBaseline is set.
+  mounts D: within candidate drive letters with AutoHotkey (AHK) UI automation for restricted folders
+  and temporary write permissions, and opens the operator-owned _LCM Beyond Compare profile.
+  Reuses an existing mounted baseline by default unless -NewBaseline is set.
   Implementation Choices (CRP-307 / CRP-308): Uses dynamic CandidateDrives evaluation instead of hardcoded
   drive ranges; persists baseline telemetry in registry (MRMdrive, MRMTimeStamp, actMdrive, ActMTimeStamp);
   reuses existing healthy baseline to eliminate redundant unmount/remount cycles.
   Path: LCM_Inventory/tools/Invoke-MacriumDailyBcrBaseline.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.1.2
-  Date: 2026-11-09 20:00:00
+  Version: 10.1.5
+  Date: 2026-11-10 15:43:00
 .NOTES
   Caveats: Drive mounting requires administrative elevation (delegated to elevated worker via Invoke-ElevatedTest.ps1
   or Port 9876 daemon); Macrium Reflect UI automation requires Session 1 interactive desktop access. Mount operations
@@ -117,6 +118,11 @@ $bcompareCandidates = @(
 $bcomparePath = @($bcompareCandidates | Where-Object { Test-Path -LiteralPath $_ })[0]
 $MacriumRegistryKey = 'HKLM:\SOFTWARE\LCM\MacriumBaseline'
 $LcmRootRegistryKey = 'HKLM:\SOFTWARE\LCM'
+
+$ahkModulePath = Join-Path $inventoryRoot 'modules\LcmAhkAtoms.psm1'
+if (Test-Path -LiteralPath $ahkModulePath -PathType Leaf) {
+  Import-Module -Name $ahkModulePath -Force -ErrorAction SilentlyContinue
+}
 
 # Approved elevated operations for this tool (RULE-ELEV-007)
 New-Variable -Name ElevatedOperations -Value ([string[]]@(
@@ -518,6 +524,42 @@ function Get-LcmReviewWindows {
   })
 }
 
+function Start-LcmBCompareProcess {
+  param(
+    [Parameter(Mandatory = $true)]
+    [string]$BComparePath,
+    [string[]]$Arguments = @('/solo', '_LCM')
+  )
+
+  # RULE-DSP-007 / RULE-PS-008: Always dispatch BCompare to Session 1 via Desktop Daemon
+  # This guarantees the GUI opens on the interactive desktop without elevated token poisoning.
+  $daemonUrl = 'http://127.0.0.1:9876/execute'
+  $argListArray = @($Arguments | ForEach-Object { "'$_'" }) -join ', '
+  $dispatchedViaDaemon = $false
+
+  try {
+    $ping = Invoke-RestMethod -Uri 'http://127.0.0.1:9876/ping' -TimeoutSec 1 -ErrorAction Stop
+    if ($ping.status -eq 'ONLINE') {
+      $body = @{
+        command  = "Start-Process -FilePath `"$BComparePath`" -ArgumentList @($argListArray)"
+        elevated = $false
+        sync     = $false
+      } | ConvertTo-Json
+      $resp = Invoke-RestMethod -Uri $daemonUrl -Method Post -Body $body -ContentType 'application/json' -TimeoutSec 5 -ErrorAction Stop
+      if ($resp.status -eq 'DISPATCHED') {
+        $dispatchedViaDaemon = $true
+        Write-BaselineLog -Level INFO -Message 'Dispatched Beyond Compare 5 to Session 1 via Desktop Daemon.'
+      }
+    }
+  } catch {
+    Write-BaselineLog -Level WARN -Message "Desktop Daemon dispatch unavailable ($($_.Exception.Message)); falling back to local Start-Process."
+  }
+
+  if (-not $dispatchedViaDaemon) {
+    Start-Process -FilePath $BComparePath -ArgumentList $Arguments | Out-Null
+  }
+}
+
 function Remove-OrphanedBCompareProcesses {
   # RULE-REV-012 Window Non-Interference: Automated tools must not kill initializing or existing BCompare instances.
 }
@@ -656,7 +698,7 @@ public static class LcmMacriumMouse
       continue
     }
     Write-BaselineLog -Level INFO -Message "Detaching existing volume at ${letter}: before mounting '$ImagePath'."
-    $detachProcess = Start-Process -FilePath $reflectPath -ArgumentList @('-d', "$letter`:") -PassThru -Wait
+    $detachProcess = Start-Process -FilePath $reflectPath -ArgumentList @("$letter`:", '-u') -PassThru -Wait
     $detachExitCode = if (Test-Path variable:global:LASTEXITCODE) {
       if ($null -ne $detachProcess -and $null -ne $detachProcess.ExitCode) {
         $detachProcess.ExitCode
@@ -697,92 +739,136 @@ public static class LcmMacriumMouse
     Write-BaselineLog -Level INFO -Message "Fallback drive candidate(s) available for mounting: $($availableCandidateLetters -join ', '). Proceeding with mount."
   }
 
-  $reflectProcessNames = @('ReflectBin', 'ReflectUI', 'Reflect')
-  $existingReflectBinIds = @(Get-Process -Name $reflectProcessNames -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Id)
+  $ahkAutomationScript = Join-Path $inventoryRoot 'tools\automation\Mount-MacriumBrowseDialog.ahk'
+  $ahkHandled = $false
+
   Start-Process -FilePath $reflectPath -ArgumentList @('-b', $ImagePath) | Out-Null
-  $deadline = (Get-Date).AddSeconds($MountTimeoutSeconds)
-  $dialog = $null
-  while ((Get-Date) -lt $deadline -and $null -eq $dialog) {
-    $newReflectBinIds = @(Get-Process -Name $reflectProcessNames -ErrorAction SilentlyContinue |
-      Where-Object { $_.Id -notin $existingReflectBinIds } |
-      Select-Object -ExpandProperty Id)
-    $candidateProcessIds = if ($newReflectBinIds.Count -gt 0) {
-      $newReflectBinIds
-    } else {
-      @(Get-Process -Name $reflectProcessNames -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Id)
+
+  if ((Test-Path -LiteralPath $ahkAutomationScript -PathType Leaf) -and (Get-Command -Name 'Invoke-LcmAhkScript' -ErrorAction SilentlyContinue)) {
+    Write-BaselineLog -Level INFO -Message 'Macrium Reflect Browse Image launched. Delegating dialog interaction to AHK atom.'
+    try {
+      $ahkResult = Invoke-LcmAhkScript -ScriptPath $ahkAutomationScript -ArgumentList @([string]$MountTimeoutSeconds) -TimeoutSeconds ($MountTimeoutSeconds + 5)
+      
+      # Log structured AHK output lines
+      if (-not [string]::IsNullOrWhiteSpace($ahkResult.Output)) {
+        foreach ($line in ($ahkResult.Output -split "`r?`n")) {
+          if (-not [string]::IsNullOrWhiteSpace($line)) {
+            Write-BaselineLog -Level INFO -Message "[AHK] $line"
+          }
+        }
+      }
+
+      $outputContainsSuccess = $ahkResult.Output -match 'STATUS:\s*SUCCESS'
+      $outputContainsRestricted = $ahkResult.Output -match 'STEP_RESTRICTED_FOLDERS:\s*(?:CHECKED|CLICKED)'
+      $outputContainsWritable = $ahkResult.Output -match 'STEP_WRITABLE:\s*(?:CHECKED|CLICKED)'
+      $outputContainsPartition = $ahkResult.Output -match 'STEP_PARTITION_SELECT:\s*(?:CHECKED|CLICKED)'
+      $allBoxesChecked = $outputContainsRestricted -and $outputContainsWritable -and $outputContainsPartition
+
+      if ($ahkResult.Succeeded -and $outputContainsSuccess -and $allBoxesChecked) {
+        Write-BaselineLog -Level INFO -Message 'AHK atom verified: all checkboxes set (Restricted, Writable, Partition) and OK button clicked successfully.'
+        $ahkHandled = $true
+      } else {
+        $failedReason = if (-not $allBoxesChecked) {
+          "Not all required checkboxes were confirmed checked (Restricted: $outputContainsRestricted, Writable: $outputContainsWritable, Partition: $outputContainsPartition)"
+        } elseif (-not $outputContainsSuccess) {
+          "AHK output did not signal STATUS: SUCCESS"
+        } else {
+          "AHK exited with code $($ahkResult.ExitCode)"
+        }
+        throw "AHK automation atom failed: $failedReason. Error: $($ahkResult.Error). Output: $($ahkResult.Output)"
+      }
+    } catch {
+      throw "AHK automation atom failed: $($_.Exception.Message)"
     }
-    foreach ($processId in $candidateProcessIds) {
+  }
+
+  if (-not $ahkHandled) {
+    # Resilient UI Automation Fallback (only used when AHK atom is not installed)
+    # candidateProcessIds tracked for BUG-299 process enumeration
+    $candidateProcessIds = @(Get-Process -Name 'ReflectBin' -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Id)
+    $deadline = (Get-Date).AddSeconds($MountTimeoutSeconds)
+    $dialog = $null
+    while ((Get-Date) -lt $deadline -and $null -eq $dialog) {
       $root = [System.Windows.Automation.AutomationElement]::RootElement
-      $condition = New-Object System.Windows.Automation.PropertyCondition(
-        [System.Windows.Automation.AutomationElement]::ProcessIdProperty,
-        $processId
-      )
-      $candidate = $root.FindFirst([System.Windows.Automation.TreeScope]::Children, $condition)
-      if ($null -eq $candidate) {
-        continue
+      $topWindows = @($root.FindAll([System.Windows.Automation.TreeScope]::Children, [System.Windows.Automation.Condition]::TrueCondition))
+      foreach ($w in $topWindows) {
+        $chk = $w.FindFirst(
+          [System.Windows.Automation.TreeScope]::Descendants,
+          (New-Object System.Windows.Automation.PropertyCondition(
+            [System.Windows.Automation.AutomationElement]::NameProperty,
+            'Enable access to restricted folders'
+          ))
+        )
+        if ($null -ne $chk) {
+          $dialog = $w
+          break
+        }
       }
-      $dPartition = $candidate.FindFirst(
-        [System.Windows.Automation.TreeScope]::Descendants,
-        (New-Object System.Windows.Automation.PropertyCondition(
-          [System.Windows.Automation.AutomationElement]::NameProperty,
-          'D4P3-WDB850-D (D:)'
-        ))
-      )
-      if ($null -ne $dPartition) {
-        $dialog = $candidate
-        break
+      if ($null -eq $dialog) {
+        Start-Sleep -Milliseconds 250
       }
     }
-    Start-Sleep -Milliseconds 250
-  }
-  if ($null -eq $dialog) {
-    throw "Macrium Browse Image dialog did not become ready within $MountTimeoutSeconds seconds."
-  }
+    if ($null -eq $dialog) {
+      throw "Macrium Browse Image dialog did not become ready within $MountTimeoutSeconds seconds."
+    }
 
-  $bounds = $dialog.Current.BoundingRectangle
-  [LcmMacriumMouse]::SetCursorPos([int]($bounds.Left + 37), [int]($bounds.Top + 236)) | Out-Null
-  [LcmMacriumMouse]::mouse_event(0x0002, 0, 0, 0, [UIntPtr]::Zero)
-  [LcmMacriumMouse]::mouse_event(0x0004, 0, 0, 0, [UIntPtr]::Zero)
-  Start-Sleep -Milliseconds 250
-
-  foreach ($optionName in @(
-    'Enable access to restricted folders',
-    'Make writable. Note: Changes are temporary and will be discarded.'
-  )) {
-    $option = $dialog.FindFirst(
+    $part = $dialog.FindFirst(
       [System.Windows.Automation.TreeScope]::Descendants,
       (New-Object System.Windows.Automation.PropertyCondition(
         [System.Windows.Automation.AutomationElement]::NameProperty,
-        $optionName
+        'D4P3-WDB850-D (D:)'
       ))
     )
-    if ($null -eq $option) {
-      throw "Macrium mount option was not found: $optionName"
+    if ($null -ne $part) {
+      $pRect = $part.Current.BoundingRectangle
+      [LcmMacriumMouse]::SetCursorPos([int]($pRect.Left + 12), [int]($pRect.Top + ($pRect.Height / 2))) | Out-Null
+    } else {
+      $bounds = $dialog.Current.BoundingRectangle
+      [LcmMacriumMouse]::SetCursorPos([int]($bounds.Left + 37), [int]($bounds.Top + 236)) | Out-Null
     }
-    $toggle = [System.Windows.Automation.TogglePattern]$option.GetCurrentPattern(
-      [System.Windows.Automation.TogglePattern]::Pattern
-    )
-    if ($toggle.Current.ToggleState -ne [System.Windows.Automation.ToggleState]::On) {
-      $toggle.Toggle()
-    }
-    if ($toggle.Current.ToggleState -ne [System.Windows.Automation.ToggleState]::On) {
-      throw "Macrium mount option was not enabled: $optionName"
-    }
-  }
+    [LcmMacriumMouse]::mouse_event(0x0002, 0, 0, 0, [UIntPtr]::Zero)
+    [LcmMacriumMouse]::mouse_event(0x0004, 0, 0, 0, [UIntPtr]::Zero)
+    Start-Sleep -Milliseconds 250
 
-  $ok = $dialog.FindFirst(
-    [System.Windows.Automation.TreeScope]::Descendants,
-    (New-Object System.Windows.Automation.PropertyCondition(
-      [System.Windows.Automation.AutomationElement]::NameProperty,
-      'OK'
-    ))
-  )
-  if ($null -eq $ok -or -not $ok.Current.IsEnabled) {
-    throw 'Macrium mount confirmation is not available.'
+    foreach ($optionName in @(
+      'Enable access to restricted folders',
+      'Make writable. Note: Changes are temporary and will be discarded.'
+    )) {
+      $option = $dialog.FindFirst(
+        [System.Windows.Automation.TreeScope]::Descendants,
+        (New-Object System.Windows.Automation.PropertyCondition(
+          [System.Windows.Automation.AutomationElement]::NameProperty,
+          $optionName
+        ))
+      )
+      if ($null -eq $option) {
+        throw "Macrium mount option was not found: $optionName"
+      }
+      $toggle = [System.Windows.Automation.TogglePattern]$option.GetCurrentPattern(
+        [System.Windows.Automation.TogglePattern]::Pattern
+      )
+      if ($toggle.Current.ToggleState -ne [System.Windows.Automation.ToggleState]::On) {
+        $toggle.Toggle()
+      }
+      if ($toggle.Current.ToggleState -ne [System.Windows.Automation.ToggleState]::On) {
+        throw "Macrium mount option was not enabled: $optionName"
+      }
+    }
+
+    $ok = $dialog.FindFirst(
+      [System.Windows.Automation.TreeScope]::Descendants,
+      (New-Object System.Windows.Automation.PropertyCondition(
+        [System.Windows.Automation.AutomationElement]::NameProperty,
+        'OK'
+      ))
+    )
+    if ($null -eq $ok -or -not $ok.Current.IsEnabled) {
+      throw 'Macrium mount confirmation is not available.'
+    }
+    ([System.Windows.Automation.InvokePattern]$ok.GetCurrentPattern(
+      [System.Windows.Automation.InvokePattern]::Pattern
+    )).Invoke()
   }
-  ([System.Windows.Automation.InvokePattern]$ok.GetCurrentPattern(
-    [System.Windows.Automation.InvokePattern]::Pattern
-  )).Invoke()
 
   $deadline = (Get-Date).AddSeconds($MountTimeoutSeconds)
   do {
@@ -918,7 +1004,7 @@ if ($NewBaseline) {
         } elseif ($reviewWindows.Count -eq 1) {
           $reusedReviewWindow = $true
         } else {
-          Start-Process -FilePath $bcomparePath -ArgumentList @('/solo', '_LCM') | Out-Null
+          Start-LcmBCompareProcess -BComparePath $bcomparePath -Arguments @('/solo', '_LCM')
           $deadline = (Get-Date).AddSeconds(60)
           do {
             Start-Sleep -Milliseconds 250
@@ -1045,9 +1131,14 @@ if (-not $NoLaunchReview) {
   if ([string]::IsNullOrWhiteSpace($bcomparePath)) {
     throw 'Beyond Compare 5 executable was not found.'
   }
+  # Strict allocation gate: Verify the baseline drive and repository container are fully ready before launching BCR
+  $baselineWorkspacePath = "$($receipt.MountedDrive)\Git_Repositories"
+  if (-not (Test-Path -LiteralPath $baselineWorkspacePath -PathType Container)) {
+    throw "Mounted baseline at $($receipt.MountedDrive) does not contain a verified Git_Repositories container. Aborting Beyond Compare launch to prevent review locks."
+  }
   # RULE-REV-012: Non-interfering window resolution without process termination
   $profileContract = Test-LcmBcrProfile -MountedDriveLetter $receipt.MountedDrive.TrimEnd(':')
-  Start-Process -FilePath $bcomparePath -ArgumentList @('/solo', '_LCM') | Out-Null
+  Start-LcmBCompareProcess -BComparePath $bcomparePath -Arguments @('/solo', '_LCM')
   $deadline = (Get-Date).AddSeconds(60)
   do {
     Start-Sleep -Milliseconds 250

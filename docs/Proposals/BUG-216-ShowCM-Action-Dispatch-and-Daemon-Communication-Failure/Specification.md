@@ -1,5 +1,19 @@
 # BUG-216: ShowCM Action Dispatch and Daemon Communication Failure for Proposals
 
+```yaml
+CRP-ID: BUG-216
+Title: ShowCM Action Dispatch and Daemon Communication Failure for Proposals
+Scope: LCM_Inventory
+Baseline-Version: 10.0.0
+Author: rgbig
+Date: 2026-10-13 12:36:04
+Status: Superseded
+Plan-State: superseded
+Progress-State: deferred
+Priority: High
+App-ID: App: 1
+```
+
 Module: LCM_Inventory/assets/CM_CONTROL_HUB.html  
 Purpose: Fix ShowCM proposal lifecycle action dispatching to non-existent scripts, correct silent error swallowing in executeDaemonCommand, and validate held/deferred lifecycle states in backend tools.  
 Path: LCM_Inventory/docs/Proposals/BUG-216-ShowCM-Action-Dispatch-and-Daemon-Communication-Failure/Specification.md  

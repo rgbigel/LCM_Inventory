@@ -1,5 +1,19 @@
 # CRP-263: LCM Inbox Two-Phase Acknowledgement
 
+```yaml
+CRP-ID: CRP-263
+Title: LCM Inbox Two-Phase Acknowledgement
+Scope: LCM_Inventory
+Baseline-Version: 10.0.0
+Author: rgbig
+Date: 2026-10-13 16:15:33
+Status: Completed
+Plan-State: completed
+Progress-State: completed
+Priority: High
+App-ID: None
+```
+
 | Metadata Field | Value |
 |---|---|
 | Proposal ID | `CRP-263` |
