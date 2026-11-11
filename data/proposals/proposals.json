@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-11-11T21:54:46+01:00",
+  "updated_at": "2026-11-11T21:58:48+01:00",
   "review_granularity": "coarse",
   "lcm_mode": "active",
   "last_proposal_id": 320,
@@ -16421,7 +16421,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/BUG-319-BUG-Prohibit-Ad-Hoc-Git-BCompare-Diff-and-Guarante",
       "docs": {
@@ -16478,21 +16478,33 @@
           "cohort_id": "",
           "cohort_gate": "",
           "synchronization_outcome": ""
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-11 21:58:47",
+          "user": "rgbig",
+          "note": "Pushed to remote (LCM_Tools, LCM_Inventory, LCM_AI)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "dates": {
         "in_progress": "2026-11-11 15:26:53",
         "verified": "2026-11-11 15:35:12",
         "in_review": "2026-11-11 21:14:41",
-        "completed": "2026-11-11 21:15:17"
+        "completed": "2026-11-11 21:15:17",
+        "pushed": "2026-11-11 21:58:47"
       },
       "bcr_disposition": "Completed",
       "bcr_disposition_at": "2026-11-11 21:15:17",
       "bcr_disposition_notes": "",
-      "progress_state": "completed",
-      "disposition": "completed",
       "test_scope": "minimal",
-      "minimal_tests": true
+      "minimal_tests": true,
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-11 21:58:47"
     },
     {
       "id": 320,
@@ -16500,11 +16512,14 @@
       "timestamp": "2026-11-11 19:35:29",
       "title": "CRP-320: Unified Tool Gateway and Simplified Execution Architecture",
       "origin_repo": "LCM_Inventory",
+      "affected_repos": [
+        "LCM_Tools"
+      ],
       "cr_id": "CRP-320",
       "app_id": "1",
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-320-CRP-320-Unified-Tool-Gateway-and-Simplified-Execut",
       "docs": {
@@ -16549,22 +16564,34 @@
           "cohort_id": "",
           "cohort_gate": "",
           "synchronization_outcome": ""
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-11 21:58:48",
+          "user": "rgbig",
+          "note": "Pushed to remote (LCM_Tools, LCM_Inventory, LCM_AI)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "dates": {
         "in_progress": "2026-11-11 19:53:24",
         "verified": "2026-11-11 21:49:37",
-        "completed": "2026-11-11 21:54:44"
+        "completed": "2026-11-11 21:54:44",
+        "pushed": "2026-11-11 21:58:48"
       },
       "flow_mode": "doit",
       "always_proceed": true,
       "bcr_disposition": "Completed",
       "bcr_disposition_at": "2026-11-11 21:54:43",
       "bcr_disposition_notes": "",
-      "progress_state": "completed",
-      "disposition": "completed",
       "test_scope": "minimal",
-      "minimal_tests": true
+      "minimal_tests": true,
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-11 21:58:47"
     }
   ],
   "testing_mode": "active",
