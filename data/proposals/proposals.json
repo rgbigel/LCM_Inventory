@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-11-11T21:49:37+01:00",
+  "updated_at": "2026-11-11T21:54:46+01:00",
   "review_granularity": "coarse",
   "lcm_mode": "active",
   "last_proposal_id": 320,
@@ -16504,7 +16504,7 @@
       "app_id": "1",
       "primary_app": null,
       "affected_apps": null,
-      "state": "verified",
+      "state": "completed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-320-CRP-320-Unified-Tool-Gateway-and-Simplified-Execut",
       "docs": {
@@ -16539,16 +16539,32 @@
           "cohort_id": "",
           "cohort_gate": "",
           "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_review",
+          "state": "completed",
+          "timestamp": "2026-11-11 21:54:44",
+          "user": "rgbig",
+          "note": "Review completed and committed (401b24d).",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "dates": {
         "in_progress": "2026-11-11 19:53:24",
-        "verified": "2026-11-11 21:49:37"
+        "verified": "2026-11-11 21:49:37",
+        "completed": "2026-11-11 21:54:44"
       },
       "flow_mode": "doit",
       "always_proceed": true,
-      "progress_state": "verification",
-      "disposition": null
+      "bcr_disposition": "Completed",
+      "bcr_disposition_at": "2026-11-11 21:54:43",
+      "bcr_disposition_notes": "",
+      "progress_state": "completed",
+      "disposition": "completed",
+      "test_scope": "minimal",
+      "minimal_tests": true
     }
   ],
   "testing_mode": "active",

@@ -80,6 +80,9 @@ func RunDaemon(port int) error {
 	daemonMux.HandleFunc("/session_state", handleSessionState)
 	daemonMux.HandleFunc("/api/session_state", handleSessionState)
 
+	daemonMux.HandleFunc("/hub-refresh", handleHubRefresh)
+	daemonMux.HandleFunc("/api/hub-refresh", handleHubRefresh)
+
 	daemonMux.HandleFunc("/log", handleLog)
 	daemonMux.HandleFunc("/action_log", handleLog)
 	daemonMux.HandleFunc("/telemetry", handleLog)
@@ -588,6 +591,10 @@ func handleGetLogs(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	_, _ = w.Write(data)
+}
+
+func handleHubRefresh(w http.ResponseWriter, r *http.Request) {
+	writeJSON(w, http.StatusOK, map[string]interface{}{"status": "OK", "delivered": true})
 }
 
 func handleOpenEditor(w http.ResponseWriter, r *http.Request) {
