@@ -3,4 +3,4 @@
 if not defined Git_Root set "Git_Root=%~dp0..\.."
 if not exist "%Git_Root%\LCM_Inventory" set "Git_Root=D:\Git_Repositories"
 echo # [LCM Launcher] %~nx0 - Goal: Pulls live WebSocket registry ^& REST data to reconcile all entities, devices, ^& integrations.
-pwsh.exe -NoProfile -ExecutionPolicy Bypass -File "%Git_Root%/HaSSD06_Inventory/tools/Update-HaInventory.ps1" %*
+pwsh.exe -NoProfile -ExecutionPolicy Bypass -File "%Git_Root%/LCM_Inventory/tools/Update-HaInventory.ps1" %*

@@ -3,4 +3,4 @@
 if not defined Git_Root set "Git_Root=%~dp0..\.."
 if not exist "%Git_Root%\LCM_Inventory" set "Git_Root=D:\Git_Repositories"
 echo # [LCM Launcher] %~nx0 - Goal: Mirrors selected LCM workspace research and governance files to a configured snapshot destination.
-pwsh.exe -NoProfile -ExecutionPolicy Bypass -File "%Git_Root%/LCM_Tools/tools/Sync-LCMResearchSnapshot.ps1" %*
+pwsh.exe -NoProfile -ExecutionPolicy Bypass -File "%Git_Root%/LCM_Inventory/tools/Sync-LCMResearchSnapshot.ps1" %*

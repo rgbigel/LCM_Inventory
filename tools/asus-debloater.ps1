@@ -1,0 +1,1 @@
+D:/Git_Repositories/LCM_Tools/tools/asus-debloater.ps1

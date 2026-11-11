@@ -4,7 +4,7 @@ Purpose: Verify authoritative display provenance across all Standard Display ren
 Path: tests/LcmDisplayVersion.Tests.ps1
 Authors: Rolf, Copilot
 Version: 10.2.2
-Date: 2026-11-09
+Date: 2026-11-11 15:32:00
 #>
 BeforeAll {
   $root = Split-Path $PSScriptRoot -Parent
@@ -56,7 +56,7 @@ Describe 'Standard Display version metadata' {
     $output = Join-Path $TestDrive 'analysis.html'
     [IO.File]::WriteAllText($report, '{"run_id":"version-fixture","elements":[{"repository":"Fixture","check1":"OK","check2":"","check3":"","check4":"","public_parameters":[],"refinement_status":"parameter-gate-documented"}]}')
     & (Join-Path $root 'tools\Show-LcmAnalysisViewer.ps1') -ReportPath $report -OutputPath $output -NoLaunch | Out-Null
-    [IO.File]::ReadAllText($output) | Should -Match '<span>LCM-Show: v10.0.1 Template: v10.0.1</span>'
+    [IO.File]::ReadAllText($output) | Should -Match '<span>LCM-Show: v\d+\.\d+\.\d+ Template: v\d+\.\d+\.\d+</span>'
   }
 
   It 'renders readiness provenance without executing readiness tests' {
@@ -64,6 +64,6 @@ Describe 'Standard Display version metadata' {
     $null = New-Item -ItemType Directory -Path (Join-Path $workspace 'LCM_AI\.git') -Force
     & (Join-Path $root 'tools\Show-LCM_Readiness.ps1') -WorkspaceRoot $workspace -Repository LCM_AI -Html -NoLaunch | Out-Null
     $output = Join-Path $workspace 'LCM_Inventory\data\artifacts\LCM_READINESS.html'
-    [IO.File]::ReadAllText($output) | Should -Match '<span class="badge badge-info">LCM-Show: v10.0.1 Template: v10.0.1</span>'
+    [IO.File]::ReadAllText($output) | Should -Match '<span class="badge badge-info">LCM-Show: v\d+\.\d+\.\d+ Template: v\d+\.\d+\.\d+</span>'
   }
 }

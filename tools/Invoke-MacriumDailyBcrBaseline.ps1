@@ -13,8 +13,8 @@
   reuses existing healthy baseline to eliminate redundant unmount/remount cycles.
   Path: LCM_Inventory/tools/Invoke-MacriumDailyBcrBaseline.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.2.5
-  Date: 2026-11-10 15:43:00
+  Version: 10.2.6
+  Date: 2026-11-11 20:30:00
 .NOTES
   Caveats: Drive mounting requires administrative elevation (delegated to elevated worker via Invoke-ElevatedTest.ps1
   or Port 9876 daemon); Macrium Reflect UI automation requires Session 1 interactive desktop access. Mount operations
@@ -1176,5 +1176,6 @@ if ($freshCandidates.Count -gt 0 -and -not [string]::IsNullOrWhiteSpace($freshCa
   ReviewScope = $reviewIdentity
   Profile = if ($NoLaunchReview) { $null } else { $profileContract }
   Launched = (-not $NoLaunchReview)
+  ReusedExistingReviewWindow = $false
   MountEvidence = $mountEvidence
 }

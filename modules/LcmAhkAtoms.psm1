@@ -210,26 +210,31 @@ function Invoke-LcmAhkScript {
       RedirectStandardError  = $errTemp
     }
 
-    $process = Start-Process @startInfo
-    $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
+    $env:LCM_AHK_OUT = $outTemp
+    try {
+      $process = Start-Process @startInfo
+      $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
 
-    while (-not $process.HasExited -and (Get-Date) -lt $deadline) {
-      Start-Sleep -Milliseconds 200
-    }
-
-    $timedOut = $false
-    if (-not $process.HasExited) {
-      $timedOut = $true
-      try {
-        Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue
-      } catch {
-        # Process may have exited during stop
+      while (-not $process.HasExited -and (Get-Date) -lt $deadline) {
+        Start-Sleep -Milliseconds 200
       }
-    }
 
-    $exitCode = if ($timedOut) { -1 } else { $process.ExitCode }
-    $stdout = if (Test-Path -LiteralPath $outTemp) { Get-Content -LiteralPath $outTemp -Raw -ErrorAction SilentlyContinue } else { '' }
-    $stderr = if (Test-Path -LiteralPath $errTemp) { Get-Content -LiteralPath $errTemp -Raw -ErrorAction SilentlyContinue } else { '' }
+      $timedOut = $false
+      if (-not $process.HasExited) {
+        $timedOut = $true
+        try {
+          Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue
+        } catch {
+          # Process may have exited during stop
+        }
+      }
+
+      $exitCode = if ($timedOut) { -1 } else { $process.ExitCode }
+      $stdout = if (Test-Path -LiteralPath $outTemp) { Get-Content -LiteralPath $outTemp -Raw -ErrorAction SilentlyContinue } else { '' }
+      $stderr = if (Test-Path -LiteralPath $errTemp) { Get-Content -LiteralPath $errTemp -Raw -ErrorAction SilentlyContinue } else { '' }
+    } finally {
+      Remove-Item env:LCM_AHK_OUT -ErrorAction SilentlyContinue
+    }
 
     if ($null -eq $stdout) { $stdout = '' }
     if ($null -eq $stderr) { $stderr = '' }

@@ -1,0 +1,1 @@
+D:/Git_Repositories/HaSSD06/tools/invoke_ha_core_update.py

@@ -1,0 +1,1 @@
+D:/Git_Repositories/HaSSD06_Inventory/tools/extract_ha_central_registry.py

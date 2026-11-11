@@ -3,4 +3,4 @@
 if not defined Git_Root set "Git_Root=%~dp0..\.."
 if not exist "%Git_Root%\LCM_Inventory" set "Git_Root=D:\Git_Repositories"
 echo # [LCM Launcher] %~nx0 - Goal: Register-BleSupervisionTask execution tool.
-pwsh.exe -NoExit -NoProfile -ExecutionPolicy Bypass -File "%Git_Root%/HaSSD06/tools/Register-BleSupervisionTask.ps1" %*
+pwsh.exe -NoExit -NoProfile -ExecutionPolicy Bypass -File "%Git_Root%/LCM_Inventory/tools/Register-BleSupervisionTask.ps1" %*

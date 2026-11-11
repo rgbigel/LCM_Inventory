@@ -13,7 +13,7 @@
     "Category": "JIT Authentication",
     "Description": "WPF desktop dialog for secure ephemeral credentials with password reveal (RULE-SUB-003).",
     "Example": "ShowHaAuthDialog",
-    "RelativePath": "HaSSD06\\tools\\subsystem\\Show-HaAuthDialog.ps1",
+    "RelativePath": "LCM_Inventory\\tools\\Show-HaAuthDialog.ps1",
     "Parameters": [
       {
         "Name": "TargetSubsystem",
@@ -60,7 +60,7 @@
     "Category": "Subsystem Update Gate",
     "Description": "5-stage update runner (RULE-SUB-006): changelog review, CRP extraction, backup & execution.",
     "Example": "HaUpdateGate",
-    "RelativePath": "HaSSD06_Inventory\\tools\\Invoke-HaUpdateGate.ps1",
+    "RelativePath": "LCM_Inventory\\tools\\Invoke-HaUpdateGate.ps1",
     "Parameters": [
       {
         "Name": "SkipBackupProbe",
@@ -89,7 +89,7 @@
     "Category": "Subsystem Telemetry",
     "Description": "Pulls live WebSocket registry & REST data to reconcile all entities, devices, & integrations.",
     "Example": "UpdateHaInventory",
-    "RelativePath": "HaSSD06_Inventory\\tools\\Update-HaInventory.ps1",
+    "RelativePath": "LCM_Inventory\\tools\\Update-HaInventory.ps1",
     "Parameters": [],
     "Dependencies": [
       "extract_ha_central_registry.py",
@@ -124,7 +124,7 @@
     "Category": "Utility",
     "Description": "analyze_lcm_components execution tool.",
     "Example": "analyzelcmcomponents",
-    "RelativePath": "HaSSD06\\analyze_lcm_components.py",
+    "RelativePath": "LCM_Inventory\\tools\\analyze_lcm_components.py",
     "Parameters": [],
     "Dependencies": null
   },
@@ -142,7 +142,7 @@
     "Category": "Utility",
     "Description": "Build-HaInventoryViewer execution tool.",
     "Example": "BuildHaInventoryViewer",
-    "RelativePath": "HaSSD06_Inventory\\tools\\Build-HaInventoryViewer.ps1",
+    "RelativePath": "LCM_Inventory\\tools\\Build-HaInventoryViewer.ps1",
     "Parameters": [
       {
         "Name": "Instance",
@@ -179,7 +179,7 @@
     "Category": "Utility",
     "Description": "build_matrix execution tool.",
     "Example": "buildmatrix",
-    "RelativePath": "HaSSD06\\build_matrix.py",
+    "RelativePath": "LCM_Inventory\\tools\\build_matrix.py",
     "Parameters": [],
     "Dependencies": null
   },
@@ -197,7 +197,7 @@
     "Category": "Utility",
     "Description": "check_specific execution tool.",
     "Example": "checkspecific",
-    "RelativePath": "HaSSD06\\check_specific.py",
+    "RelativePath": "LCM_Inventory\\tools\\check_specific.py",
     "Parameters": [],
     "Dependencies": null
   },
@@ -215,7 +215,7 @@
     "Category": "Utility",
     "Description": "compare_tuya_integrations execution tool.",
     "Example": "comparetuyaintegrations",
-    "RelativePath": "HaSSD06\\compare_tuya_integrations.py",
+    "RelativePath": "LCM_Inventory\\tools\\compare_tuya_integrations.py",
     "Parameters": [],
     "Dependencies": null
   },
@@ -233,7 +233,7 @@
     "Category": "Utility",
     "Description": "deep_device_scan execution tool.",
     "Example": "deepdevicescan",
-    "RelativePath": "HaSSD06\\deep_device_scan.py",
+    "RelativePath": "LCM_Inventory\\tools\\deep_device_scan.py",
     "Parameters": [],
     "Dependencies": null
   },
@@ -251,7 +251,7 @@
     "Category": "Utility",
     "Description": "deep_tuya_scan execution tool.",
     "Example": "deeptuyascan",
-    "RelativePath": "HaSSD06\\deep_tuya_scan.py",
+    "RelativePath": "LCM_Inventory\\tools\\deep_tuya_scan.py",
     "Parameters": [],
     "Dependencies": null
   },
@@ -269,7 +269,7 @@
     "Category": "Utility",
     "Description": "extract_ha_central_registry execution tool.",
     "Example": "extracthacentralregistry",
-    "RelativePath": "HaSSD06_Inventory\\tools\\extract_ha_central_registry.py",
+    "RelativePath": "LCM_Inventory\\tools\\extract_ha_central_registry.py",
     "Parameters": [],
     "Dependencies": null
   },
@@ -287,7 +287,7 @@
     "Category": "Utility",
     "Description": "extract_ha_update_crps execution tool.",
     "Example": "extracthaupdatecrps",
-    "RelativePath": "HaSSD06\\extract_ha_update_crps.py",
+    "RelativePath": "LCM_Inventory\\tools\\extract_ha_update_crps.py",
     "Parameters": [],
     "Dependencies": null
   },
@@ -305,7 +305,7 @@
     "Category": "Utility",
     "Description": "generate_system_docs execution tool.",
     "Example": "generatesystemdocs",
-    "RelativePath": "HaSSD06\\generate_system_docs.py",
+    "RelativePath": "LCM_Inventory\\tools\\generate_system_docs.py",
     "Parameters": [],
     "Dependencies": null
   },
@@ -323,7 +323,7 @@
     "Category": "Utility",
     "Description": "run_audit execution tool.",
     "Example": "HaAudit",
-    "RelativePath": "HaSSD06\\run_audit.py",
+    "RelativePath": "LCM_Inventory\\tools\\run_audit.py",
     "Parameters": [],
     "Dependencies": null
   },
@@ -341,7 +341,7 @@
     "Category": "Utility",
     "Description": "invoke_ha_backup execution tool.",
     "Example": "habackup",
-    "RelativePath": "HaSSD06\\tools\\invoke_ha_backup.py",
+    "RelativePath": "LCM_Inventory\\tools\\invoke_ha_backup.py",
     "Parameters": [],
     "Dependencies": null
   },
@@ -359,7 +359,7 @@
     "Category": "Utility",
     "Description": "invoke_ha_core_update execution tool.",
     "Example": "hacoreupdate",
-    "RelativePath": "HaSSD06\\tools\\invoke_ha_core_update.py",
+    "RelativePath": "LCM_Inventory\\tools\\invoke_ha_core_update.py",
     "Parameters": [],
     "Dependencies": null
   },
@@ -377,7 +377,7 @@
     "Category": "Utility",
     "Description": "ha_inventory_collector execution tool.",
     "Example": "hainventorycollector",
-    "RelativePath": "HaSSD06\\ha_inventory_collector.py",
+    "RelativePath": "LCM_Inventory\\tools\\ha_inventory_collector.py",
     "Parameters": [],
     "Dependencies": null
   },
@@ -395,7 +395,7 @@
     "Category": "Utility",
     "Description": "list_all_updates execution tool.",
     "Example": "HaListUpdates",
-    "RelativePath": "HaSSD06\\list_all_updates.py",
+    "RelativePath": "LCM_Inventory\\tools\\list_all_updates.py",
     "Parameters": [],
     "Dependencies": null
   },
@@ -413,7 +413,7 @@
     "Category": "Utility",
     "Description": "inspect_ha_logs execution tool.",
     "Example": "HaLogs",
-    "RelativePath": "HaSSD06\\inspect_ha_logs.py",
+    "RelativePath": "LCM_Inventory\\tools\\inspect_ha_logs.py",
     "Parameters": [],
     "Dependencies": null
   },
@@ -431,7 +431,7 @@
     "Category": "Utility",
     "Description": "Invoke-HaRenameCascade execution tool.",
     "Example": "HaRenameCascade",
-    "RelativePath": "HaSSD06_Inventory\\tools\\Invoke-HaRenameCascade.ps1",
+    "RelativePath": "LCM_Inventory\\tools\\Invoke-HaRenameCascade.ps1",
     "Parameters": [
       {
         "Name": "DeviceId",
@@ -534,7 +534,7 @@
     "Category": "Utility",
     "Description": "Invoke-HaService execution tool.",
     "Example": "HaService",
-    "RelativePath": "HaSSD06_Inventory\\tools\\Invoke-HaService.ps1",
+    "RelativePath": "LCM_Inventory\\tools\\Invoke-HaService.ps1",
     "Parameters": [
       {
         "Name": "Domain",
@@ -640,7 +640,7 @@
     "Category": "Utility",
     "Description": "mcp_ha_readonly execution tool.",
     "Example": "mcphareadonly",
-    "RelativePath": "HaSSD06\\mcp_ha_readonly.py",
+    "RelativePath": "LCM_Inventory\\tools\\mcp_ha_readonly.py",
     "Parameters": [],
     "Dependencies": null
   },
@@ -658,7 +658,7 @@
     "Category": "Utility",
     "Description": "Register-BleSupervisionTask execution tool.",
     "Example": "RegisterBleSupervisionTask",
-    "RelativePath": "HaSSD06\\tools\\Register-BleSupervisionTask.ps1",
+    "RelativePath": "LCM_Inventory\\tools\\Register-BleSupervisionTask.ps1",
     "Parameters": [
       {
         "Name": "TaskName",
@@ -698,7 +698,7 @@
     "Category": "Utility",
     "Description": "scan_community_issues execution tool.",
     "Example": "scancommunityissues",
-    "RelativePath": "HaSSD06\\scan_community_issues.py",
+    "RelativePath": "LCM_Inventory\\tools\\scan_community_issues.py",
     "Parameters": [],
     "Dependencies": null
   },
@@ -716,7 +716,7 @@
     "Category": "Utility",
     "Description": "search_sys_sensors execution tool.",
     "Example": "searchsyssensors",
-    "RelativePath": "HaSSD06\\search_sys_sensors.py",
+    "RelativePath": "LCM_Inventory\\tools\\search_sys_sensors.py",
     "Parameters": [],
     "Dependencies": null
   },
@@ -734,7 +734,7 @@
     "Category": "Utility",
     "Description": "Show-HaInventoryApp execution tool.",
     "Example": "ShowHaInventoryApp",
-    "RelativePath": "HaSSD06_Inventory\\tools\\Show-HaInventoryApp.ps1",
+    "RelativePath": "LCM_Inventory\\tools\\Show-HaInventoryApp.ps1",
     "Parameters": [
       {
         "Name": "Instance",
@@ -802,37 +802,6 @@
   },
   {
     "Name": "Test-RepoReadiness.ps1",
-    "ShortName": "TestHaRepoReady",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "HaSSD06",
-    "Domain": "HaSSD06",
-    "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "Test-RepoReadiness execution tool.",
-    "Example": "TestRepoReadiness",
-    "RelativePath": "HaSSD06\\tools\\Test-RepoReadiness.ps1",
-    "Parameters": [
-      {
-        "Name": "MinimalTests",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Single-cycle minimal testing scope: fast syntax and AST validation only"
-      }
-    ],
-    "Dependencies": [
-      "RepoQualityGates.psm1",
-      "Test-GeneralReadiness.ps1",
-      "Update-ToolCatalog.ps1",
-      "Module: (Resolve-Path $modulePath)"
-    ]
-  },
-  {
-    "Name": "Test-RepoReadiness.ps1",
     "ShortName": "TestRepoReadiness",
     "Aliases": null,
     "Role": "Utility",
@@ -852,14 +821,14 @@
         "Type": "SwitchParameter",
         "Mandatory": false,
         "Default": "",
-        "Description": "Runs fast structural, governance, and static analysis gates without triggering extended test suites"
+        "Description": "Single-cycle minimal testing scope: fast syntax and AST validation only"
       }
     ],
     "Dependencies": [
-      "LCM_CM.psm1",
-      "ProposalManager.psm1",
-      "Test-Guardrail.ps1",
-      "Test-LCMIncrementalGovernance.ps1"
+      "RepoQualityGates.psm1",
+      "Test-GeneralReadiness.ps1",
+      "Update-ToolCatalog.ps1",
+      "Module: (Resolve-Path $modulePath)"
     ]
   },
   {
@@ -1289,6 +1258,73 @@
       }
     ],
     "Dependencies": null
+  },
+  {
+    "Name": "Invoke-LcmDo.ps1",
+    "ShortName": "do",
+    "Aliases": [
+      "InvokeLcmDo",
+      "lcmdo"
+    ],
+    "Role": "Gateway",
+    "Audience": "User",
+    "Admin": false,
+    "NoExit": false,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Execution Gateway",
+    "Description": "Dispatches commands through the LCM Desktop Daemon on port 9876 for elevated or sandbox-free user desktop execution.",
+    "Example": "do -Command \"es.exe FolderTimeUpdate\" -Sync",
+    "RelativePath": "LCM_Inventory\\tools\\Invoke-LcmDo.ps1",
+    "Parameters": [
+      {
+        "Name": "Command",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "The command line or executable path to execute."
+      },
+      {
+        "Name": "Elevated",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Executes with Administrator elevation."
+      },
+      {
+        "Name": "Sync",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Executes synchronously and returns stdout/stderr."
+      },
+      {
+        "Name": "NoExit",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Keeps spawned console window open."
+      },
+      {
+        "Name": "TimeoutSec",
+        "Type": "Int32",
+        "Mandatory": false,
+        "Default": "30",
+        "Description": "Maximum timeout in seconds for synchronous execution."
+      },
+      {
+        "Name": "Port",
+        "Type": "Int32",
+        "Mandatory": false,
+        "Default": "9876",
+        "Description": "Desktop Daemon port."
+      }
+    ],
+    "Dependencies": [
+      "KillLogitechUpdateFull.ps1",
+      "es.exe"
+    ]
   },
   {
     "Name": "Show-LcmControl.ps1",
@@ -1940,6 +1976,7 @@
       }
     ],
     "Dependencies": [
+      "Invoke-LcmDo.ps1",
       "Everything",
       "es.exe",
       "EVERYTHING"
@@ -2494,6 +2531,114 @@
     "Dependencies": "LoadFixes.ps1"
   },
   {
+    "Name": "Archive-Clean.ps1",
+    "ShortName": "ArchiveClean",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Archive-Clean execution tool.",
+    "Example": "ArchiveClean",
+    "RelativePath": "LCM_Inventory\\tools\\Archive-Clean.ps1",
+    "Parameters": [
+      {
+        "Name": "Older",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "1m",
+        "Description": "Age threshold for archived conversations to delete. Default is '1m' (older than 1 month). Supported units: d (days), w (weeks), m (months), y (years), h (hours). Examples: '3d', '2w', '1m', '6m'."
+      },
+      {
+        "Name": "AntigravityDir",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Path to the Antigravity data directory. Defaults to $env:USERPROFILE\\.gemini\\antigravity."
+      },
+      {
+        "Name": "DryRun",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Simulates execution without deleting files or records."
+      },
+      {
+        "Name": "Force",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Bypasses the interactive confirmation prompt before deletion."
+      },
+      {
+        "Name": "ShowAll",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Displays detailed information for each evaluated archived conversation."
+      }
+    ],
+    "Dependencies": "Python 3.x (with built-in sqlite3)"
+  },
+  {
+    "Name": "Archive-Conversations.ps1",
+    "ShortName": "ArchiveConversations",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Archive-Conversations execution tool.",
+    "Example": "ArchiveConversations",
+    "RelativePath": "LCM_Inventory\\tools\\Archive-Conversations.ps1",
+    "Parameters": [
+      {
+        "Name": "Older",
+        "Type": "Int32",
+        "Mandatory": false,
+        "Default": "1",
+        "Description": "Number of newest conversations to preserve active (not archived). Default is 1 (leaves latest active). Can be passed positionally or with standard flag formats: -Older 5, 5, or -5."
+      },
+      {
+        "Name": "AntigravityDir",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Path to the Antigravity data directory. Defaults to $env:USERPROFILE\\.gemini\\antigravity."
+      },
+      {
+        "Name": "DryRun",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Simulates execution without modifying any annotation files or databases."
+      },
+      {
+        "Name": "ShowAll",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Displays detailed status for each processed conversation."
+      },
+      {
+        "Name": "RemainingArgs",
+        "Type": "String[]",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      }
+    ],
+    "Dependencies": "Python 3.x (with built-in sqlite3)"
+  },
+  {
     "Name": "Archive-LcmDaemonLogs.ps1",
     "ShortName": "ArchiveLcmDaemonLogs",
     "Aliases": null,
@@ -3039,6 +3184,46 @@
     "RelativePath": "LCM_Inventory\\tools\\Disable-WakeDevices.ps1",
     "Parameters": [],
     "Dependencies": null
+  },
+  {
+    "Name": "Invoke-ElevatedTest.ps1",
+    "ShortName": "ElevatedTest",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Invoke-ElevatedTest execution tool.",
+    "Example": "ElevatedTest",
+    "RelativePath": "LCM_Inventory\\tools\\Invoke-ElevatedTest.ps1",
+    "Parameters": [
+      {
+        "Name": "TestPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "(Join-Path $PSScriptRoot '..\\tests')",
+        "Description": "Path to the test directory or test file to execute."
+      },
+      {
+        "Name": "OutEvidencePath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "(Join-Path $PSScriptRoot '..\\out\\test_results.json')",
+        "Description": "Target path for the structured JSON test evidence output."
+      },
+      {
+        "Name": "ForceInProcess",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Runs tests in-process even if elevated privileges are requested."
+      }
+    ],
+    "Dependencies": "Module: Pester"
   },
   {
     "Name": "Export-LcmKnowledgeBase.ps1",
@@ -3973,30 +4158,8 @@
     "Description": "Invoke-LcmGiantReview execution tool.",
     "Example": "LcmGiantReview",
     "RelativePath": "LCM_Inventory\\tools\\Invoke-LcmGiantReview.ps1",
-    "Parameters": [
-      {
-        "Name": "Repos",
-        "Type": "String[]",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Repository folder names. Default: every folder under the workspace root with a .git."
-      },
-      {
-        "Name": "BaseRef",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "@{u}",
-        "Description": "Ref for the left side. Default '@{u}' (the tracked upstream branch)."
-      },
-      {
-        "Name": "Out",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "(Join-Path $env:TEMP 'LCM_GiantBCR')",
-        "Description": "Export folder. Default: %TEMP%\\LCM_GiantBCR."
-      }
-    ],
-    "Dependencies": "BCompare.exe"
+    "Parameters": [],
+    "Dependencies": null
   },
   {
     "Name": "Invoke-LCM_GoodMorning.ps1",
@@ -5981,28 +6144,14 @@
         "Type": "String",
         "Mandatory": true,
         "Default": "",
-        "Description": "Path to the input text file to split."
+        "Description": ""
       },
       {
         "Name": "MaxChars",
         "Type": "Int32",
         "Mandatory": false,
         "Default": "6000",
-        "Description": "Maximum character count per split chunk (default 6000)."
-      },
-      {
-        "Name": "OutputDirectory",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Optional output directory. Defaults to a 'Parts' subfolder next to the input file."
-      },
-      {
-        "Name": "TraceMode",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Enables verbose step tracing (Aliases: -t, -Trace)."
+        "Description": ""
       }
     ],
     "Dependencies": null
@@ -7000,6 +7149,8 @@
       }
     ],
     "Dependencies": [
+      "Invoke-LcmDo.ps1",
+      "FolderTimeUpdate.ps1",
       "Sync-LCMResearchSnapshot.ps1",
       "Invoke-MacriumDailyBcrBaseline.ps1",
       "Kill-LogitechUpdate.ps1",
@@ -7055,8 +7206,8 @@
       "Show-ToolIntents.ps1",
       "Invoke-LCM_Push.ps1",
       "Show-LCM_Readiness.ps1",
-      "Everything",
       "es.exe",
+      "Everything",
       "PsExec.exe",
       "BCompare.exe",
       "Everything.exe",
@@ -7123,7 +7274,7 @@
     "Category": "Supervision & Health",
     "Description": "CM Task Controller to Start, Stop, Pause, Resume, Add, Delete, and Run supervision tasks.",
     "Example": "ManageSupervisionTask",
-    "RelativePath": "LCM_Supervision\\tools\\Manage-SupervisionTask.ps1",
+    "RelativePath": "LCM_Inventory\\tools\\Manage-SupervisionTask.ps1",
     "Parameters": [
       {
         "Name": "Action",
@@ -7177,7 +7328,7 @@
     "Category": "Supervision & Health",
     "Description": "Unified task dispatcher executing supervision cycles and logging observation telemetry.",
     "Example": "InvokeSupervisionRunner",
-    "RelativePath": "LCM_Supervision\\tools\\Invoke-SupervisionRunner.ps1",
+    "RelativePath": "LCM_Inventory\\tools\\Invoke-SupervisionRunner.ps1",
     "Parameters": [
       {
         "Name": "TaskId",
@@ -7224,8 +7375,2223 @@
     "Category": "Utility",
     "Description": "Show-Supervision execution tool.",
     "Example": "ShowSupervision",
-    "RelativePath": "LCM_Supervision\\tools\\Show-Supervision.ps1",
+    "RelativePath": "LCM_Inventory\\tools\\Show-Supervision.ps1",
     "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "FolderTimeUpdate.ps1",
+    "ShortName": "FolderTimeUpdate",
+    "Aliases": null,
+    "Role": "GUI",
+    "Audience": "User",
+    "Admin": false,
+    "NoExit": false,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Updates folder modified timestamps based on newest contained child elements.",
+    "Example": "FolderTimeUpdate",
+    "RelativePath": "LCM_Inventory\\tools\\FolderTimeUpdate.ps1",
+    "Parameters": [
+      {
+        "Name": "Path",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Base directory path to process with FolderTimeUpdate."
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "@Repair_Diagnose-OneDriveSync.ps1",
+    "ShortName": "@RepairDiagnoseOneDriveSync",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "@Repair_Diagnose-OneDriveSync execution tool.",
+    "Example": "@RepairDiagnoseOneDriveSync",
+    "RelativePath": "LCM_Inventory\\tools\\@Repair_Diagnose-OneDriveSync.ps1",
+    "Parameters": [
+      {
+        "Name": "FixAcl",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Repairs ownership and sets AuthorizeMasterUser ACLs on all inaccessible OneDrive target folders."
+      },
+      {
+        "Name": "Reconcile",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Flips stuck 0-byte download items (fileStatus=3) to Synced (fileStatus=2) and resets postponed change locks."
+      },
+      {
+        "Name": "Reset",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Executes official Microsoft OneDrive cache reset and explicitly restarts the OneDrive tray process."
+      },
+      {
+        "Name": "PurgeGhosts",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Purges stale 0-byte ghost download intents from SQLite sync database by generating local placeholders."
+      },
+      {
+        "Name": "All",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Performs full automated repair: ACL fix, database reconciliation, ghost purge, and non-elevated restart."
+      },
+      {
+        "Name": "ShowAll",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Displays full detailed diagnostic flow, database table stats, postponed changes, and path evaluations."
+      }
+    ],
+    "Dependencies": [
+      "od_diag_runner.py",
+      "od_reconcile_runner.py"
+    ]
+  },
+  {
+    "Name": "@Repair_Test-OneDriveSync.ps1",
+    "ShortName": "@RepairTestOneDriveSync",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "@Repair_Test-OneDriveSync execution tool.",
+    "Example": "@RepairTestOneDriveSync",
+    "RelativePath": "LCM_Inventory\\tools\\@Repair_Test-OneDriveSync.ps1",
+    "Parameters": [
+      {
+        "Name": "FixAcl",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Repairs ownership and sets AuthorizeMasterUser ACLs on all inaccessible OneDrive target folders."
+      },
+      {
+        "Name": "Reconcile",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Flips stuck 0-byte download items (fileStatus=3) to Synced (fileStatus=2) and resets postponed change locks."
+      },
+      {
+        "Name": "Reset",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Executes official Microsoft OneDrive cache reset and explicitly restarts the OneDrive tray process."
+      },
+      {
+        "Name": "PurgeGhosts",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Purges stale 0-byte ghost download intents from SQLite sync database by generating local placeholders."
+      },
+      {
+        "Name": "All",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Performs full automated repair: ACL fix, database reconciliation, ghost purge, and non-elevated restart."
+      },
+      {
+        "Name": "ShowAll",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Displays full detailed diagnostic flow, database table stats, postponed changes, and path evaluations."
+      }
+    ],
+    "Dependencies": [
+      "od_diag_runner.py",
+      "od_reconcile_runner.py"
+    ]
+  },
+  {
+    "Name": "Activate.ps1",
+    "ShortName": "Activate",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Activate execution tool.",
+    "Example": "Activate",
+    "RelativePath": "LCM_Inventory\\tools\\Activate.ps1",
+    "Parameters": [
+      {
+        "Name": "VenvDir",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Path to the directory that contains the virtual environment to activate. The default value for this is the parent of the directory that the Activate.ps1 script is located within."
+      },
+      {
+        "Name": "Prompt",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "The prompt prefix to display when this virtual environment is activated. By default, this prompt is the name of the virtual environment folder (VenvDir) surrounded by parentheses and followed by a single space (ie. '(.venv) ')."
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "Activate_py.ps1",
+    "ShortName": "Activatepy",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Activate_py execution tool.",
+    "Example": "Activatepy",
+    "RelativePath": "LCM_Inventory\\tools\\Activate_py.ps1",
+    "Parameters": [
+      {
+        "Name": "VenvDir",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Path to the directory that contains the virtual environment to activate. The default value for this is the parent of the directory that the Activate.ps1 script is located within."
+      },
+      {
+        "Name": "Prompt",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "The prompt prefix to display when this virtual environment is activated. By default, this prompt is the name of the virtual environment folder (VenvDir) surrounded by parentheses and followed by a single space (ie. '(.venv) ')."
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "Add2Path.ps1",
+    "ShortName": "Add2Path",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Add2Path execution tool.",
+    "Example": "Add2Path",
+    "RelativePath": "LCM_Inventory\\tools\\Add2Path.ps1",
+    "Parameters": [
+      {
+        "Name": "Directory",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\OneDrive\\cmd",
+        "Description": ""
+      },
+      {
+        "Name": "User",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "AdminShell.ps1",
+    "ShortName": "AdminShell",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "AdminShell execution tool.",
+    "Example": "AdminShell",
+    "RelativePath": "LCM_Inventory\\tools\\AdminShell.ps1",
+    "Parameters": [
+      {
+        "Name": "StartIn",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\OneDrive\\cmd",
+        "Description": ""
+      },
+      {
+        "Name": "CmdRoot",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\OneDrive\\cmd",
+        "Description": ""
+      },
+      {
+        "Name": "t",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      }
+    ],
+    "Dependencies": [
+      "InstallerTools.psm1",
+      "Setup.ps1",
+      "Verifyer.ps1",
+      "Cleanup.ps1",
+      "Disable.ps1",
+      "Enable.ps1",
+      "Uninstall.ps1",
+      "BootIdentity.ps1",
+      "BackgroundRenderer.ps1",
+      "BackgroundSetter.ps1",
+      "BackgroundApply.ps1",
+      "BackgroundModifier-BootIdentityTest.ps1",
+      "BackgroundModifier-RenderTest.ps1",
+      "BackgroundModifier-ApplyTest.ps1",
+      "BackgroundModifier-LogonStage.ps1",
+      "Module: (Join-Path $ModuleRoot \"InstallerTools.psm1\")"
+    ]
+  },
+  {
+    "Name": "AllowSecureWinaeroTweaker.ps1",
+    "ShortName": "AllowSecureWinaeroTweaker",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "AllowSecureWinaeroTweaker execution tool.",
+    "Example": "AllowSecureWinaeroTweaker",
+    "RelativePath": "LCM_Inventory\\tools\\AllowSecureWinaeroTweaker.ps1",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "asus-debloater.ps1",
+    "ShortName": "asusdebloater",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "asus-debloater execution tool.",
+    "Example": "asusdebloater",
+    "RelativePath": "LCM_Inventory\\tools\\asus-debloater.ps1",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "BackgroundApply.ps1",
+    "ShortName": "BackgroundApply",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "BackgroundApply execution tool.",
+    "Example": "BackgroundApply",
+    "RelativePath": "LCM_Inventory\\tools\\BackgroundApply.ps1",
+    "Parameters": [
+      {
+        "Name": "t",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      }
+    ],
+    "Dependencies": [
+      "Constants.psm1",
+      "Logging.psm1",
+      "TranscriptTools.psm1",
+      "PathTools.psm1",
+      "ErrorTools.psm1",
+      "Validation.psm1",
+      "ModeTools.psm1",
+      "SummaryTools.psm1",
+      "SetFlagsTool.psm1",
+      "BackgroundNoBlurReg.psm1",
+      "BackgroundRenderer.ps1",
+      "BackgroundSetter.ps1",
+      "Module: (Join-Path $ModuleRoot \"Constants.psm1\")",
+      "Module: (Join-Path $ModuleRoot \"Logging.psm1\")",
+      "Module: (Join-Path $ModuleRoot \"TranscriptTools.psm1\")",
+      "Module: (Join-Path $ModuleRoot \"PathTools.psm1\")",
+      "Module: (Join-Path $ModuleRoot \"ErrorTools.psm1\")",
+      "Module: (Join-Path $ModuleRoot \"Validation.psm1\")",
+      "Module: (Join-Path $ModuleRoot \"ModeTools.psm1\")",
+      "Module: (Join-Path $ModuleRoot \"SummaryTools.psm1\")",
+      "Module: (Join-Path $ModuleRoot \"SetFlagsTool.psm1\")",
+      "Module: (Join-Path $ModuleRoot \"BackgroundNoBlurReg.psm1\")"
+    ]
+  },
+  {
+    "Name": "Bad Copy-JunctionsOnly.ps1",
+    "ShortName": "Bad CopyJunctionsOnly",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Bad Copy-JunctionsOnly execution tool.",
+    "Example": "Bad CopyJunctionsOnly",
+    "RelativePath": "LCM_Inventory\\tools\\Bad Copy-JunctionsOnly.ps1",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "BootIdentity.ps1",
+    "ShortName": "BootIdentity",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "BootIdentity execution tool.",
+    "Example": "BootIdentity",
+    "RelativePath": "LCM_Inventory\\tools\\BootIdentity.ps1",
+    "Parameters": [],
+    "Dependencies": [
+      "LoggingTools.psm1",
+      "ConfigTools.psm1",
+      "TimeTools.psm1",
+      "BootTools.psm1",
+      "BackgroundStateMgr.psm1",
+      "SystemTools.psm1",
+      "ErrorTools.psm1",
+      "Module: (Join-Path $ModuleRoot \"LoggingTools.psm1\")",
+      "Module: (Join-Path $ModuleRoot \"ConfigTools.psm1\")",
+      "Module: (Join-Path $ModuleRoot \"TimeTools.psm1\")",
+      "Module: (Join-Path $ModuleRoot \"BootTools.psm1\")",
+      "Module: (Join-Path $ModuleRoot \"BackgroundStateMgr.psm1\")",
+      "Module: (Join-Path $ModuleRoot \"SystemTools.psm1\")",
+      "Module: (Join-Path $ModuleRoot \"ErrorTools.psm1\")"
+    ]
+  },
+  {
+    "Name": "Cleanup.ps1",
+    "ShortName": "Cleanup",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Cleanup execution tool.",
+    "Example": "Cleanup",
+    "RelativePath": "LCM_Inventory\\tools\\Cleanup.ps1",
+    "Parameters": [
+      {
+        "Name": "t",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "f",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "CmdRoot",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\OneDrive\\cmd",
+        "Description": ""
+      }
+    ],
+    "Dependencies": [
+      "InstallerTools.psm1",
+      "CleanupTools.psm1",
+      "Module: (Join-Path $ModuleRoot \"InstallerTools.psm1\")"
+    ]
+  },
+  {
+    "Name": "CleanWindowsUpdates.ps1",
+    "ShortName": "CleanWindowsUpdates",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "CleanWindowsUpdates execution tool.",
+    "Example": "CleanWindowsUpdates",
+    "RelativePath": "LCM_Inventory\\tools\\CleanWindowsUpdates.ps1",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "Invoke-CopilotReasoningAnalysis.ps1",
+    "ShortName": "CopilotReasoningAnalysis",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Invoke-CopilotReasoningAnalysis execution tool.",
+    "Example": "CopilotReasoningAnalysis",
+    "RelativePath": "LCM_Inventory\\tools\\Invoke-CopilotReasoningAnalysis.ps1",
+    "Parameters": [
+      {
+        "Name": "Auto",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "TranscriptPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "From",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "Until",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "ListMatches",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "Offset",
+        "Type": "Int32",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "Context",
+        "Type": "Int32",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "Include",
+        "Type": "String[]",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "OutputPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "View",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      }
+    ],
+    "Dependencies": [
+      "Invoke-ReasoningAnalysis.ps1",
+      "Export-CopilotReasoningTranscript.ps1"
+    ]
+  },
+  {
+    "Name": "Create-ContextSnapshot.ps1",
+    "ShortName": "CreateContextSnapshot",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Create-ContextSnapshot execution tool.",
+    "Example": "CreateContextSnapshot",
+    "RelativePath": "LCM_Inventory\\tools\\Create-ContextSnapshot.ps1",
+    "Parameters": [
+      {
+        "Name": "OutputPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\OneDrive\\Documents\\Einstellungen\\Antigravity\\ContextSnapshot.txt",
+        "Description": "The destination file path for the snapshot. Defaults to: 'D:\\OneDrive\\Documents\\Einstellungen\\Antigravity\\ContextSnapshot.txt'"
+      },
+      {
+        "Name": "AddTimestamp",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "BaselineId",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Explicit baseline identifier. Defaults to the current short commit SHA."
+      },
+      {
+        "Name": "RecentHours",
+        "Type": "Int32",
+        "Mandatory": false,
+        "Default": "2",
+        "Description": "Lookback window in hours for detecting recently edited workspace files. Defaults to 2."
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "Create_DesktopBGInfo.ps1",
+    "ShortName": "CreateDesktopBGInfo",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Create_DesktopBGInfo execution tool.",
+    "Example": "CreateDesktopBGInfo",
+    "RelativePath": "LCM_Inventory\\tools\\Create_DesktopBGInfo.ps1",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "Create-LCM-CRP.ps1",
+    "ShortName": "CreateLCMCRP",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Create-LCM-CRP execution tool.",
+    "Example": "CreateLCMCRP",
+    "RelativePath": "LCM_Inventory\\tools\\Create-LCM-CRP.ps1",
+    "Parameters": [
+      {
+        "Name": "AnalysisRange",
+        "Type": "String",
+        "Mandatory": true,
+        "Default": "",
+        "Description": "Analysis number or range (e.g. 01, 1, 01-02)"
+      },
+      {
+        "Name": "ProposalId",
+        "Type": "String",
+        "Mandatory": true,
+        "Default": "",
+        "Description": "Proposal ID (e.g. 005, 5, CRP-005)"
+      },
+      {
+        "Name": "Title",
+        "Type": "String",
+        "Mandatory": true,
+        "Default": "",
+        "Description": "Short descriptive title"
+      },
+      {
+        "Name": "Purpose",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "LCM architectural convergence and rule standardization.",
+        "Description": "Purpose statement for the change request."
+      },
+      {
+        "Name": "ProposedChanges",
+        "Type": "String[]",
+        "Mandatory": false,
+        "Default": "@('Automated proposal generation from analysis.')",
+        "Description": "Array of change bullet points."
+      },
+      {
+        "Name": "DriveRoot",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\GDrive",
+        "Description": "Root drive for Google Drive synchronization. Defaults to D:\\GDrive."
+      },
+      {
+        "Name": "StagingSubPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "LCM_ConvergenceProposals",
+        "Description": "Subdirectory within DriveRoot for proposal staging. Defaults to LCM_ConvergenceProposals."
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "deactivate.ps1",
+    "ShortName": "deactivate",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "deactivate execution tool.",
+    "Example": "deactivate",
+    "RelativePath": "LCM_Inventory\\tools\\deactivate.ps1",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "DesktopSubFoldersLauncher.ps1",
+    "ShortName": "DesktopSubFoldersLauncher",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "DesktopSubFoldersLauncher execution tool.",
+    "Example": "DesktopSubFoldersLauncher",
+    "RelativePath": "LCM_Inventory\\tools\\DesktopSubFoldersLauncher.ps1",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "Disable.ps1",
+    "ShortName": "Disable",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Disable execution tool.",
+    "Example": "Disable",
+    "RelativePath": "LCM_Inventory\\tools\\Disable.ps1",
+    "Parameters": [
+      {
+        "Name": "t",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      }
+    ],
+    "Dependencies": [
+      "InstallerTools.psm1",
+      "Module: (Join-Path $ModuleRoot \"InstallerTools.psm1\")"
+    ]
+  },
+  {
+    "Name": "DiskAssignmentStatus.ps1",
+    "ShortName": "DiskAssignmentStatus",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "DiskAssignmentStatus execution tool.",
+    "Example": "DiskAssignmentStatus",
+    "RelativePath": "LCM_Inventory\\tools\\DiskAssignmentStatus.ps1",
+    "Parameters": [
+      {
+        "Name": "ShowMSR",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Include MSR partitions in output."
+      },
+      {
+        "Name": "HelpMode",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Show full help. Aliases: h, ?"
+      },
+      {
+        "Name": "TraceMode",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Enable debug trace lines. Alias: t"
+      },
+      {
+        "Name": "LogMode",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Enable file logging using a timestamped log file in C:\\Temp. Aliases: l, log"
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "DiskState.ps1",
+    "ShortName": "DiskState",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "DiskState execution tool.",
+    "Example": "DiskState",
+    "RelativePath": "LCM_Inventory\\tools\\DiskState.ps1",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "EFIChecker.ps1",
+    "ShortName": "EFIChecker",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "EFIChecker execution tool.",
+    "Example": "EFIChecker",
+    "RelativePath": "LCM_Inventory\\tools\\EFIChecker.ps1",
+    "Parameters": [
+      {
+        "Name": "LiveMode",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "ForceGlobal",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "Enable.ps1",
+    "ShortName": "Enable",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Enable execution tool.",
+    "Example": "Enable",
+    "RelativePath": "LCM_Inventory\\tools\\Enable.ps1",
+    "Parameters": [
+      {
+        "Name": "t",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      }
+    ],
+    "Dependencies": [
+      "InstallerTools.psm1",
+      "Module: (Join-Path $ModuleRoot \"InstallerTools.psm1\")"
+    ]
+  },
+  {
+    "Name": "Export-AntigravityReasoningTranscript.ps1",
+    "ShortName": "ExportAntigravityReasoningTranscript",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Export-AntigravityReasoningTranscript execution tool.",
+    "Example": "ExportAntigravityReasoningTranscript",
+    "RelativePath": "LCM_Inventory\\tools\\Export-AntigravityReasoningTranscript.ps1",
+    "Parameters": [
+      {
+        "Name": "SessionId",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "$env:ANTIGRAVITY_CONVERSATION_ID",
+        "Description": "Active Antigravity conversation identifier. Defaults to ANTIGRAVITY_CONVERSATION_ID."
+      },
+      {
+        "Name": "OutputPath",
+        "Type": "String",
+        "Mandatory": true,
+        "Default": "",
+        "Description": "Normalized JSONL destination."
+      },
+      {
+        "Name": "DatabasePath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Test-only or explicit override for an Antigravity SQLite database path or JSON/JSONL event file."
+      }
+    ],
+    "Dependencies": "Export-AntigravityExtractor.py"
+  },
+  {
+    "Name": "Export-CopilotReasoningTranscript.ps1",
+    "ShortName": "ExportCopilotReasoningTranscript",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Export-CopilotReasoningTranscript execution tool.",
+    "Example": "ExportCopilotReasoningTranscript",
+    "RelativePath": "LCM_Inventory\\tools\\Export-CopilotReasoningTranscript.ps1",
+    "Parameters": [
+      {
+        "Name": "SessionId",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "$env:COPILOT_AGENT_SESSION_ID",
+        "Description": "Active Copilot session identifier. Defaults to COPILOT_AGENT_SESSION_ID."
+      },
+      {
+        "Name": "OutputPath",
+        "Type": "String",
+        "Mandatory": true,
+        "Default": "",
+        "Description": "Normalized JSONL destination."
+      },
+      {
+        "Name": "EventLogPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Test-only override for a specific Copilot event log."
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "Export-CopilotSessionHandoff.ps1",
+    "ShortName": "ExportCopilotSessionHandoff",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Export-CopilotSessionHandoff execution tool.",
+    "Example": "ExportCopilotSessionHandoff",
+    "RelativePath": "LCM_Inventory\\tools\\Export-CopilotSessionHandoff.ps1",
+    "Parameters": [
+      {
+        "Name": "SessionId",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "$env:COPILOT_AGENT_SESSION_ID",
+        "Description": "Copilot session identifier. Defaults to COPILOT_AGENT_SESSION_ID."
+      },
+      {
+        "Name": "OutputPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "C:\\Temp\\CopilotSessionHandoff.md",
+        "Description": "Destination Markdown report path."
+      },
+      {
+        "Name": "HandoffPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Optional curated Markdown handoff appended to the transcript."
+      },
+      {
+        "Name": "AddTimestamp",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Prefix the output file name with a timestamp."
+      },
+      {
+        "Name": "IncludeUserDirectiveIndex",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Include a chronological index of user directives."
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "Export-OneNoteSectionToMarkdown.ps1",
+    "ShortName": "ExportOneNoteSectionToMarkdown",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Export-OneNoteSectionToMarkdown execution tool.",
+    "Example": "ExportOneNoteSectionToMarkdown",
+    "RelativePath": "LCM_Inventory\\tools\\Export-OneNoteSectionToMarkdown.ps1",
+    "Parameters": [
+      {
+        "Name": "DocxPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\GDrive\\LCM\\AnalysisOfLCMintents\\LCM_Sessions.docx",
+        "Description": ""
+      },
+      {
+        "Name": "OutputDir",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\GDrive\\LCM\\AnalysisOfLCMintents\\Extracted_Pages",
+        "Description": ""
+      },
+      {
+        "Name": "MaxChunkChars",
+        "Type": "Int32",
+        "Mandatory": false,
+        "Default": "120000",
+        "Description": ""
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "Get-DevicePath-from-DeviceName.ps1",
+    "ShortName": "GetDevicePathfromDeviceName",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Get-DevicePath-from-DeviceName execution tool.",
+    "Example": "GetDevicePathfromDeviceName",
+    "RelativePath": "LCM_Inventory\\tools\\Get-DevicePath-from-DeviceName.ps1",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "GetPartialFileContent.ps1",
+    "ShortName": "GetPartialFileContent",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "GetPartialFileContent execution tool.",
+    "Example": "GetPartialFileContent",
+    "RelativePath": "LCM_Inventory\\tools\\GetPartialFileContent.ps1",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "Get-RecoveryVolume.ps1",
+    "ShortName": "GetRecoveryVolume",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Get-RecoveryVolume execution tool.",
+    "Example": "GetRecoveryVolume",
+    "RelativePath": "LCM_Inventory\\tools\\Get-RecoveryVolume.ps1",
+    "Parameters": [
+      {
+        "Name": "p",
+        "Type": "String",
+        "Mandatory": true,
+        "Default": "",
+        "Description": "Path to the mounted volume containing the Windows installation (e.g. C: or D:\\). Required."
+      },
+      {
+        "Name": "t",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Enables trace/diagnostic output."
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "Get_SamurizeInfo.ps1",
+    "ShortName": "GetSamurizeInfo",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Get_SamurizeInfo execution tool.",
+    "Example": "GetSamurizeInfo",
+    "RelativePath": "LCM_Inventory\\tools\\Get_SamurizeInfo.ps1",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "GetTailFileContent.ps1",
+    "ShortName": "GetTailFileContent",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "GetTailFileContent execution tool.",
+    "Example": "GetTailFileContent",
+    "RelativePath": "LCM_Inventory\\tools\\GetTailFileContent.ps1",
+    "Parameters": [
+      {
+        "Name": "path",
+        "Type": "String",
+        "Mandatory": true,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "TailCount",
+        "Type": "Int32",
+        "Mandatory": false,
+        "Default": "500",
+        "Description": ""
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "Git_Restore_HubToLocal_All.ps1",
+    "ShortName": "GitRestoreHubToLocalAll",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Git_Restore_HubToLocal_All execution tool.",
+    "Example": "GitRestoreHubToLocalAll",
+    "RelativePath": "LCM_Inventory\\tools\\Git_Restore_HubToLocal_All.ps1",
+    "Parameters": [
+      {
+        "Name": "GitHubOwner",
+        "Type": "String",
+        "Mandatory": true,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "TargetRoot",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\OneDrive\\Git_Repositories",
+        "Description": ""
+      },
+      {
+        "Name": "CmdRoot",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\OneDrive\\cmd",
+        "Description": ""
+      },
+      {
+        "Name": "UpdateExisting",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "RunBackgroundModifierHousekeeping",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "BackgroundCmdRoot",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\OneDrive\\cmd",
+        "Description": ""
+      },
+      {
+        "Name": "BackgroundRuntimeRoot",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "C:\\BootOpsHub",
+        "Description": ""
+      }
+    ],
+    "Dependencies": [
+      "Setup.ps1",
+      "Verifyer.ps1",
+      "git.exe"
+    ]
+  },
+  {
+    "Name": "GoAdm.ps1",
+    "ShortName": "GoAdm",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "GoAdm execution tool.",
+    "Example": "GoAdm",
+    "RelativePath": "LCM_Inventory\\tools\\GoAdm.ps1",
+    "Parameters": [
+      {
+        "Name": "t",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      }
+    ],
+    "Dependencies": "profile.ps1"
+  },
+  {
+    "Name": "InstallAutoDT_BG_Info.ps1",
+    "ShortName": "InstallAutoDTBGInfo",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "InstallAutoDT_BG_Info execution tool.",
+    "Example": "InstallAutoDTBGInfo",
+    "RelativePath": "LCM_Inventory\\tools\\InstallAutoDT_BG_Info.ps1",
+    "Parameters": [
+      {
+        "Name": "p",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "Install-GoEnvironment.ps1",
+    "ShortName": "InstallGoEnvironment",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Install-GoEnvironment execution tool.",
+    "Example": "InstallGoEnvironment",
+    "RelativePath": "LCM_Inventory\\tools\\Install-GoEnvironment.ps1",
+    "Parameters": [
+      {
+        "Name": "GoToolsRoot",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\Tools\\Go",
+        "Description": ""
+      },
+      {
+        "Name": "DownloadDir",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "$env:TEMP\\GoInstaller",
+        "Description": ""
+      },
+      {
+        "Name": "InstallTools",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "$true",
+        "Description": ""
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "KillLogitechUpdateFull.ps1",
+    "ShortName": "KillLogitechUpdateFull",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "KillLogitechUpdateFull execution tool.",
+    "Example": "KillLogitechUpdateFull",
+    "RelativePath": "LCM_Inventory\\tools\\KillLogitechUpdateFull.ps1",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "LcmJunctionFixer.ps1",
+    "ShortName": "LcmJunctionFixer",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "LcmJunctionFixer execution tool.",
+    "Example": "LcmJunctionFixer",
+    "RelativePath": "LCM_Inventory\\tools\\LcmJunctionFixer.ps1",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "Invoke-LcmRepositoryNamingMigrationStaged.ps1",
+    "ShortName": "LcmRepositoryNamingMigrationStaged",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Invoke-LcmRepositoryNamingMigrationStaged execution tool.",
+    "Example": "LcmRepositoryNamingMigrationStaged",
+    "RelativePath": "LCM_Inventory\\tools\\Invoke-LcmRepositoryNamingMigrationStaged.ps1",
+    "Parameters": [
+      {
+        "Name": "Mode",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "Stage",
+        "Description": ""
+      },
+      {
+        "Name": "Apply",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "WorkspaceRoot",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\Git_Repositories",
+        "Description": ""
+      },
+      {
+        "Name": "StageRoot",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\Git_Repositories.Staged",
+        "Description": ""
+      },
+      {
+        "Name": "BackupRoot",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\Git_Repositories.Backup",
+        "Description": ""
+      }
+    ],
+    "Dependencies": ".ps1"
+  },
+  {
+    "Name": "Invoke-LCMReviewIntake.ps1",
+    "ShortName": "LCMReviewIntake",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Invoke-LCMReviewIntake execution tool.",
+    "Example": "LCMReviewIntake",
+    "RelativePath": "LCM_Inventory\\tools\\Invoke-LCMReviewIntake.ps1",
+    "Parameters": [
+      {
+        "Name": "ProposalPattern",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "*.md",
+        "Description": ""
+      },
+      {
+        "Name": "StagingPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\GDrive\\LCM_ConvergenceProposals",
+        "Description": ""
+      },
+      {
+        "Name": "InboxPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\GDrive\\LCM\\INBOX",
+        "Description": ""
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "LCM_StructureFix-Post-cleanup.ps1",
+    "ShortName": "LCMStructureFixPostcleanup",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "LCM_StructureFix-Post-cleanup execution tool.",
+    "Example": "LCMStructureFixPostcleanup",
+    "RelativePath": "LCM_Inventory\\tools\\LCM_StructureFix-Post-cleanup.ps1",
+    "Parameters": [],
+    "Dependencies": "Migrate-Workspace_AI.ps1"
+  },
+  {
+    "Name": "SafeCopy.ps1",
+    "ShortName": "LCMToolsSafeCopy",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "SafeCopy execution tool.",
+    "Example": "LCMToolsSafeCopy",
+    "RelativePath": "LCM_Inventory\\tools\\SafeCopy.ps1",
+    "Parameters": [
+      {
+        "Name": "SourcePath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "F:\\OneDrive",
+        "Description": ""
+      },
+      {
+        "Name": "TargetPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "J:\\OneDrive_Safe",
+        "Description": ""
+      },
+      {
+        "Name": "ExtraSkip",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "List-Device-Name-and-Path.ps1",
+    "ShortName": "ListDeviceNameandPath",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "List-Device-Name-and-Path execution tool.",
+    "Example": "ListDeviceNameandPath",
+    "RelativePath": "LCM_Inventory\\tools\\List-Device-Name-and-Path.ps1",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "Migrate-Workspace_CO .ps1",
+    "ShortName": "MigrateWorkspaceCO ",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Migrate-Workspace_CO  execution tool.",
+    "Example": "MigrateWorkspaceCO ",
+    "RelativePath": "LCM_Inventory\\tools\\Migrate-Workspace_CO .ps1",
+    "Parameters": [
+      {
+        "Name": "SourcePath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\Git_Repositories\\Workspace_GC",
+        "Description": ""
+      },
+      {
+        "Name": "TargetPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\Git_Repositories\\Workspace_CO",
+        "Description": ""
+      },
+      {
+        "Name": "Force",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "OneNoteCOM_DiagnosticHierarchyProbe.ps1",
+    "ShortName": "OneNoteCOMDiagnosticHierarchyProbe",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "OneNoteCOM_DiagnosticHierarchyProbe execution tool.",
+    "Example": "OneNoteCOMDiagnosticHierarchyProbe",
+    "RelativePath": "LCM_Inventory\\tools\\OneNoteCOM_DiagnosticHierarchyProbe.ps1",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "OneNoteHierarchyDiscovery.ps1",
+    "ShortName": "OneNoteHierarchyDiscovery",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "OneNoteHierarchyDiscovery execution tool.",
+    "Example": "OneNoteHierarchyDiscovery",
+    "RelativePath": "LCM_Inventory\\tools\\OneNoteHierarchyDiscovery.ps1",
+    "Parameters": [
+      {
+        "Name": "TargetSectionName",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "YOUR_SECTION_NAME_HERE",
+        "Description": ""
+      },
+      {
+        "Name": "TargetDir",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\GDrive\\LCM\\AnalysisOfLCMintents",
+        "Description": ""
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "PostCompute.ps1",
+    "ShortName": "PostCompute",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "PostCompute execution tool.",
+    "Example": "PostCompute",
+    "RelativePath": "LCM_Inventory\\tools\\PostCompute.ps1",
+    "Parameters": [
+      {
+        "Name": "Context",
+        "Type": "Hashtable",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "PostWrite.ps1",
+    "ShortName": "PostWrite",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "PostWrite execution tool.",
+    "Example": "PostWrite",
+    "RelativePath": "LCM_Inventory\\tools\\PostWrite.ps1",
+    "Parameters": [
+      {
+        "Name": "Context",
+        "Type": "Hashtable",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "PreCompute.ps1",
+    "ShortName": "PreCompute",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "PreCompute execution tool.",
+    "Example": "PreCompute",
+    "RelativePath": "LCM_Inventory\\tools\\PreCompute.ps1",
+    "Parameters": [
+      {
+        "Name": "Context",
+        "Type": "Hashtable",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "ProfileModify.ps1",
+    "ShortName": "ProfileModify",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "ProfileModify execution tool.",
+    "Example": "ProfileModify",
+    "RelativePath": "LCM_Inventory\\tools\\ProfileModify.ps1",
+    "Parameters": [
+      {
+        "Name": "EditMode",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "Parameters",
+        "Description": ""
+      },
+      {
+        "Name": "ProfValue",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "Yellow",
+        "Description": ""
+      },
+      {
+        "Name": "HelpMode",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "ListMode",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "ListAllMode",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "TraceMode",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "Force",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      }
+    ],
+    "Dependencies": "Module: PSReadLine"
+  },
+  {
+    "Name": "ProfileRecoveryToolkit.ps1",
+    "ShortName": "ProfileRecoveryToolkit",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "ProfileRecoveryToolkit execution tool.",
+    "Example": "ProfileRecoveryToolkit",
+    "RelativePath": "LCM_Inventory\\tools\\ProfileRecoveryToolkit.ps1",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "Invoke-ReasoningAnalysisAuto.ps1",
+    "ShortName": "ReasoningAnalysisAuto",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Invoke-ReasoningAnalysisAuto execution tool.",
+    "Example": "ReasoningAnalysisAuto",
+    "RelativePath": "LCM_Inventory\\tools\\Invoke-ReasoningAnalysisAuto.ps1",
+    "Parameters": [
+      {
+        "Name": "Auto",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "TranscriptPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "From",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "Until",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "ListMatches",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "Offset",
+        "Type": "Int32",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "Context",
+        "Type": "Int32",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "Include",
+        "Type": "String[]",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "OutputPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "View",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      }
+    ],
+    "Dependencies": "Invoke-ReasoningAnalysis.ps1"
+  },
+  {
+    "Name": "RelocateJunctions.ps1",
+    "ShortName": "RelocateJunctions",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "RelocateJunctions execution tool.",
+    "Example": "RelocateJunctions",
+    "RelativePath": "LCM_Inventory\\tools\\RelocateJunctions.ps1",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "RenameTestFolders.ps1",
+    "ShortName": "RenameTestFolders",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "RenameTestFolders execution tool.",
+    "Example": "RenameTestFolders",
+    "RelativePath": "LCM_Inventory\\tools\\RenameTestFolders.ps1",
+    "Parameters": [
+      {
+        "Name": "RepoPath",
+        "Type": "String",
+        "Mandatory": true,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "t",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "p",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "ReplaceByJunction.ps1",
+    "ShortName": "ReplaceByJunction",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "ReplaceByJunction execution tool.",
+    "Example": "ReplaceByJunction",
+    "RelativePath": "LCM_Inventory\\tools\\ReplaceByJunction.ps1",
+    "Parameters": [
+      {
+        "Name": "SourcePath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Path to the folder to be replaced by a junction."
+      },
+      {
+        "Name": "TargetPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Target folder the junction will point to (skips GUI selector)."
+      },
+      {
+        "Name": "InFolder",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Optional compatibility mode. \"IsChild\" appends the source folder name only when the supplied target path has a different name. \"Direct\" is the default exact-target behavior."
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "RunShell.ps1",
+    "ShortName": "RunShell",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "RunShell execution tool.",
+    "Example": "RunShell",
+    "RelativePath": "LCM_Inventory\\tools\\RunShell.ps1",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "SafelyRepairUserProfile.ps1",
+    "ShortName": "SafelyRepairUserProfile",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "SafelyRepairUserProfile execution tool.",
+    "Example": "SafelyRepairUserProfile",
+    "RelativePath": "LCM_Inventory\\tools\\SafelyRepairUserProfile.ps1",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "search certificate stores for private key container Guids.ps1",
+    "ShortName": "search certificate stores for private key container Guids",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "search certificate stores for private key container Guids execution tool.",
+    "Example": "search certificate stores for private key container Guids",
+    "RelativePath": "LCM_Inventory\\tools\\search certificate stores for private key container Guids.ps1",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "Set-MachineWideExecutionPolicy.ps1",
+    "ShortName": "SetMachineWideExecutionPolicy",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Set-MachineWideExecutionPolicy execution tool.",
+    "Example": "SetMachineWideExecutionPolicy",
+    "RelativePath": "LCM_Inventory\\tools\\Set-MachineWideExecutionPolicy.ps1",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "Set_PS_Env_Machine.ps1",
+    "ShortName": "SetPSEnvMachine",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Set_PS_Env_Machine execution tool.",
+    "Example": "SetPSEnvMachine",
+    "RelativePath": "LCM_Inventory\\tools\\Set_PS_Env_Machine.ps1",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "SetUser_Env.ps1",
+    "ShortName": "SetUserEnv",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "SetUser_Env execution tool.",
+    "Example": "SetUserEnv",
+    "RelativePath": "LCM_Inventory\\tools\\SetUser_Env.ps1",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "ShortPromptPS.ps1",
+    "ShortName": "ShortPromptPS",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "ShortPromptPS execution tool.",
+    "Example": "ShortPromptPS",
+    "RelativePath": "LCM_Inventory\\tools\\ShortPromptPS.ps1",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "ShowPathPS.ps1",
+    "ShortName": "ShowPathPS",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "ShowPathPS execution tool.",
+    "Example": "ShowPathPS",
+    "RelativePath": "LCM_Inventory\\tools\\ShowPathPS.ps1",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "Split-OneNoteExportDocxForGemini.ps1",
+    "ShortName": "SplitOneNoteExportDocxForGemini",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Split-OneNoteExportDocxForGemini execution tool.",
+    "Example": "SplitOneNoteExportDocxForGemini",
+    "RelativePath": "LCM_Inventory\\tools\\Split-OneNoteExportDocxForGemini.ps1",
+    "Parameters": [
+      {
+        "Name": "SourceDocx",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\GDrive\\LCMAnalysisOfIntents-Docx\\LCM_Sessions.docx",
+        "Description": "Path to the source .docx exported from OneNote."
+      },
+      {
+        "Name": "TargetDir",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\GDrive\\LCMAnalysisOfIntents-Docx\\Parsed_Sessions",
+        "Description": "Target directory for the generated .docx.txt chunks."
+      },
+      {
+        "Name": "MaxChunkChars",
+        "Type": "Int32",
+        "Mandatory": false,
+        "Default": "120000",
+        "Description": "Maximum character threshold before a file is split at a conversational boundary."
+      }
+    ],
     "Dependencies": null
   },
   {
@@ -7242,7 +9608,7 @@
     "Category": "Research Snapshot",
     "Description": "Mirrors selected LCM workspace research and governance files to a configured snapshot destination.",
     "Example": "SyncLCMResearchSnapshot",
-    "RelativePath": "LCM_Tools\\tools\\Sync-LCMResearchSnapshot.ps1",
+    "RelativePath": "LCM_Inventory\\tools\\Sync-LCMResearchSnapshot.ps1",
     "Parameters": [
       {
         "Name": "SourceRoot",
@@ -7281,5 +9647,236 @@
       }
     ],
     "Dependencies": null
+  },
+  {
+    "Name": "Test-FileReadIntegrity.ps1",
+    "ShortName": "TestFileReadIntegrity",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Test-FileReadIntegrity execution tool.",
+    "Example": "TestFileReadIntegrity",
+    "RelativePath": "LCM_Inventory\\tools\\Test-FileReadIntegrity.ps1",
+    "Parameters": [
+      {
+        "Name": "RootPath",
+        "Type": "String",
+        "Mandatory": true,
+        "Default": "",
+        "Description": ""
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "Test-PowerShellHklmState.ps1",
+    "ShortName": "TestPowerShellHklmState",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Test-PowerShellHklmState execution tool.",
+    "Example": "TestPowerShellHklmState",
+    "RelativePath": "LCM_Inventory\\tools\\Test-PowerShellHklmState.ps1",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "Toggle Windows Search on off.ps1",
+    "ShortName": "Toggle Windows Search on off",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Toggle Windows Search on off execution tool.",
+    "Example": "Toggle Windows Search on off",
+    "RelativePath": "LCM_Inventory\\tools\\Toggle Windows Search on off.ps1",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "Uninstall.ps1",
+    "ShortName": "Uninstall",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Uninstall execution tool.",
+    "Example": "Uninstall",
+    "RelativePath": "LCM_Inventory\\tools\\Uninstall.ps1",
+    "Parameters": [
+      {
+        "Name": "t",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "CmdRoot",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\OneDrive\\cmd",
+        "Description": ""
+      },
+      {
+        "Name": "RuntimeRoot",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "C:\\BootOpsHub",
+        "Description": ""
+      },
+      {
+        "Name": "RemoveRuntimeData",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      }
+    ],
+    "Dependencies": [
+      "InstallerTools.psm1",
+      "BackgroundNoBlurReg.psm1",
+      "BackgroundModifier_Install.cmd",
+      "BackgroundModifier.cmd",
+      "Module: (Join-Path $ModuleRoot \"InstallerTools.psm1\")",
+      "Module: (Join-Path $ModuleRoot \"BackgroundNoBlurReg.psm1\")"
+    ]
+  },
+  {
+    "Name": "UninstallAutoDT_BG_Info.ps1",
+    "ShortName": "UninstallAutoDTBGInfo",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "UninstallAutoDT_BG_Info execution tool.",
+    "Example": "UninstallAutoDTBGInfo",
+    "RelativePath": "LCM_Inventory\\tools\\UninstallAutoDT_BG_Info.ps1",
+    "Parameters": [
+      {
+        "Name": "p",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "Verifyer.ps1",
+    "ShortName": "Verifyer",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Verifyer execution tool.",
+    "Example": "Verifyer",
+    "RelativePath": "LCM_Inventory\\tools\\Verifyer.ps1",
+    "Parameters": [
+      {
+        "Name": "t",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "IncludeTestLinks",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "CmdRoot",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\OneDrive\\cmd",
+        "Description": ""
+      },
+      {
+        "Name": "RuntimeRoot",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "C:\\BootOpsHub",
+        "Description": ""
+      }
+    ],
+    "Dependencies": [
+      "Constants.psm1",
+      "Logging.psm1",
+      "TranscriptTools.psm1",
+      "PathTools.psm1",
+      "InstallerTools.psm1",
+      "ErrorTools.psm1",
+      "Validation.psm1",
+      "ModeTools.psm1",
+      "SummaryTools.psm1",
+      "SetFlagsTool.psm1",
+      "BackgroundNoBlurReg.psm1",
+      "BackgroundStateMgr.psm1",
+      "BootTools.psm1",
+      "CleanupTools.psm1",
+      "ConfigTools.psm1",
+      "ImageTools.psm1",
+      "LoggingTools.psm1",
+      "ProfileTools.psm1",
+      "RenderTools.psm1",
+      "SchedulerTools.psm1",
+      "ValidationTools.psm1",
+      "WallpaperTools.psm1",
+      "SystemTools.psm1",
+      "TaskTools.psm1",
+      "TimeTools.psm1",
+      "BackgroundModifier_Install.cmd",
+      "BackgroundModifier.cmd",
+      "BackgroundModifier-BootIdentityTest.ps1",
+      "BackgroundModifier-RenderTest.ps1",
+      "BackgroundModifier-ApplyTest.ps1",
+      "BackgroundModifier-LogonStage.ps1",
+      "Module: (Join-Path $ModuleRoot \"Constants.psm1\")",
+      "Module: (Join-Path $ModuleRoot \"Logging.psm1\")",
+      "Module: (Join-Path $ModuleRoot \"TranscriptTools.psm1\")",
+      "Module: (Join-Path $ModuleRoot \"PathTools.psm1\")",
+      "Module: (Join-Path $ModuleRoot \"InstallerTools.psm1\")",
+      "Module: (Join-Path $ModuleRoot \"ErrorTools.psm1\")",
+      "Module: (Join-Path $ModuleRoot \"Validation.psm1\")",
+      "Module: (Join-Path $ModuleRoot \"ModeTools.psm1\")",
+      "Module: (Join-Path $ModuleRoot \"SummaryTools.psm1\")",
+      "Module: (Join-Path $ModuleRoot \"SetFlagsTool.psm1\")"
+    ]
   }
 ]

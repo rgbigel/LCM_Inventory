@@ -11,8 +11,8 @@
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
   Path: D:\Git_Repositories\LCM_Inventory\tools\Update-ToolCatalog.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.2.7
-  Date: 2026-11-10 20:36:00
+  Version: 10.2.8
+  Date: 2026-11-11 19:12:00
 .PARAMETER Silent
   Suppresses non-error terminal output (useful in automated pipelines).
 .PARAMETER ShowAll
@@ -141,6 +141,30 @@ $readmePath = Join-Path $docsDir 'README.md'
 # 2. Authoritative Metadata Dictionary with Role, Audience, and Short-Names
 # ------------------------------------------------------------------------------
 $metadataOverrides = @{
+  "LCM_Inventory\tools\Invoke-LcmDo.ps1" = @{
+    ShortName   = "do"
+    Aliases     = @("InvokeLcmDo", "lcmdo")
+    Group       = "LCM_Inventory"
+    Domain      = "LCM_Inventory"
+    Audience    = "User"
+    Role        = "Gateway"
+    Admin       = $false
+    NoExit      = $false
+    Category    = "Execution Gateway"
+    Description = "Dispatches commands through the LCM Desktop Daemon on port 9876 for elevated or sandbox-free user desktop execution."
+    Example     = 'do -Command "es.exe FolderTimeUpdate" -Sync'
+  }
+  "LCM_Tools\tools\FolderTimeUpdate.ps1" = @{
+    ShortName   = "FolderTimeUpdate"
+    Group       = "LCM_Tools"
+    Domain      = "LCM_Tools"
+    Audience    = "User"
+    Role        = "DesktopGUI"
+    NoExit      = $false
+    Category    = "Utility"
+    Description = "Updates folder modified timestamps based on newest contained child elements."
+    Example     = 'FolderTimeUpdate'
+  }
   "LCM_Tools\tools\Sync-LCMResearchSnapshot.ps1" = @{
     ShortName   = "SyncLCMResearchSnapshot"
     Group       = "LCM_Tools"
@@ -1287,10 +1311,10 @@ try {
         foreach ($prop in $existingRaw.intents.PSObject.Properties) {
           $val = $prop.Value
           $existingMetricsMap[$prop.Name] = @{
-            call_count        = if ($val.call_count -ne $null) { [int]$val.call_count } else { 0 }
+            call_count        = if ($null -ne $val.call_count) { [int]$val.call_count } else { 0 }
             last_called_at    = if ($val.last_called_at) { [string]$val.last_called_at } else { $null }
-            last_duration_ms  = if ($val.last_duration_ms -ne $null) { [double]$val.last_duration_ms } else { 0.0 }
-            total_duration_ms = if ($val.total_duration_ms -ne $null) { [double]$val.total_duration_ms } else { 0.0 }
+            last_duration_ms  = if ($null -ne $val.last_duration_ms) { [double]$val.last_duration_ms } else { 0.0 }
+            total_duration_ms = if ($null -ne $val.total_duration_ms) { [double]$val.total_duration_ms } else { 0.0 }
           }
         }
       }

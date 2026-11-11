@@ -4,5 +4,5 @@ if not defined Git_Root set "Git_Root=%~dp0..\.."
 if not exist "%Git_Root%\LCM_Inventory" set "Git_Root=D:\Git_Repositories"
 echo # [LCM Launcher] %~nx0 - Goal: build_matrix execution tool.
 setlocal
-python "%Git_Root%/HaSSD06/build_matrix.py" %*
+python "%Git_Root%/LCM_Inventory/tools/build_matrix.py" %*
 endlocal

@@ -4,5 +4,5 @@ if not defined Git_Root set "Git_Root=%~dp0..\.."
 if not exist "%Git_Root%\LCM_Inventory" set "Git_Root=D:\Git_Repositories"
 echo # [LCM Launcher] %~nx0 - Goal: analyze_lcm_components execution tool.
 setlocal
-python "%Git_Root%/HaSSD06/analyze_lcm_components.py" %*
+python "%Git_Root%/LCM_Inventory/tools/analyze_lcm_components.py" %*
 endlocal
