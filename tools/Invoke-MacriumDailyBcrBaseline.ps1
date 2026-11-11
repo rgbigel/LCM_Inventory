@@ -235,7 +235,7 @@ function Get-CompletedTodayImage {
       continue
     }
     $content = Get-Content -LiteralPath $report.FullName -Raw
-    if ($content -notmatch [regex]::Escape($BackupDefinitionPath)) {
+    if ([string]::IsNullOrWhiteSpace($content) -or $content -notmatch [regex]::Escape($BackupDefinitionPath)) {
       continue
     }
     $match = [regex]::Match($content, '(?i)[A-Z]:\\[^<>"'']+\.mrimgx')
@@ -579,9 +579,11 @@ function Get-MountedBaselineEvidence {
 
   if (Test-Path -LiteralPath $contextPath -PathType Leaf) {
     $context = Get-Content -LiteralPath $contextPath -Raw -Encoding utf8
-    $savedMatch = [regex]::Match($context, '(?m)^Saved:\s*(.+)$')
-    if ($savedMatch.Success) {
-      $savedAt = $savedMatch.Groups[1].Value.Trim()
+    if (-not [string]::IsNullOrWhiteSpace($context)) {
+      $savedMatch = [regex]::Match($context, '(?m)^Saved:\s*(.+)$')
+      if ($savedMatch.Success) {
+        $savedAt = $savedMatch.Groups[1].Value.Trim()
+      }
     }
   }
 

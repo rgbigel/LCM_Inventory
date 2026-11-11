@@ -13,8 +13,8 @@
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
   Path: tools/Register-LcmDesktopDaemon.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.2.1
-  Date: 2026-11-08 15:07:36
+  Version: 10.2.2
+  Date: 2026-11-11 21:44:00
 .PARAMETER Install
   Installs the user scheduled task for automatic launch at user logon.
 .PARAMETER Uninstall
@@ -91,6 +91,7 @@ $workspaceRoot = 'D:\Git_Repositories'
 $lcdRoot = Join-Path $workspaceRoot 'LCM_Inventory'
 $toolsDir = Join-Path $lcdRoot 'tools'
 $daemonScript = Join-Path $toolsDir 'LcmDesktopDaemon.ps1'
+$doExe = Join-Path $lcdRoot 'Cmd\do.exe'
 $runKeyPath = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run'
 $runKeyName = 'LcmDesktopDaemon'
 $taskName = "LCM_DesktopDaemon_$env:USERNAME"
@@ -202,7 +203,11 @@ if ($Install) {
 
   # 2. Configure one logon-owned daemon task with bounded restart-on-failure and Highest privileges.
   try {
-    $action = New-ScheduledTaskAction -Execute "pwsh.exe" -Argument "-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File `"$daemonScript`" -Port $Port"
+    $action = if (Test-Path -LiteralPath $doExe) {
+      New-ScheduledTaskAction -Execute $doExe -Argument "daemon -port $Port"
+    } else {
+      New-ScheduledTaskAction -Execute "pwsh.exe" -Argument "-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File `"$daemonScript`" -Port $Port"
+    }
     $logonTrigger = New-ScheduledTaskTrigger -AtLogOn -User $env:USERNAME
     $taskPrincipal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive -RunLevel Highest
     $settings = New-ScheduledTaskSettingsSet -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1) -ExecutionTimeLimit (New-TimeSpan -Days 365) -MultipleInstances IgnoreNew -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
