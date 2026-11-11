@@ -11,8 +11,8 @@
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
   Path: D:\Git_Repositories\LCM_Inventory\tools\Update-ToolCatalog.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.2.8
-  Date: 2026-11-11 19:12:00
+  Version: 10.2.9
+  Date: 2026-11-11 21:25:00
 .PARAMETER Silent
   Suppresses non-error terminal output (useful in automated pipelines).
 .PARAMETER ShowAll
@@ -1234,7 +1234,7 @@ try {
       $commentBanner = "echo # [LCM Launcher] %~nx0 - Goal: $cleanGoal`r`n"
 
       $elevationCheck = if ($t.Admin) {
-        "net session >nul 2>&1`r`nif %errorlevel% neq 0 (`r`n  pwsh.exe -NoProfile -ExecutionPolicy Bypass -File `"%Git_Root%/LCM_Inventory/tools/Invoke-PrivilegedTool.ps1`" -Tool `"$sn`" -Arguments `"%*`"`r`n  exit /b`r`n)`r`n"
+        "net session >nul 2>&1`r`nif %errorlevel% neq 0 (`r`n  call `"%Git_Root%/LCM_Inventory/Cmd/do.cmd`" -Command `"`& '$targetRef' %*`" -Elevated`r`n  exit /b`r`n)`r`n"
       } else { "" }
 
       $cmdBody = if ($t.Type -eq 'Python') {

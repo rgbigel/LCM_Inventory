@@ -7,5 +7,11 @@
     "set_at": "2026-11-10 15:07:18",
     "details": "Telemetry Streamer"
   },
-  "updated_at": "2026-11-10T15:07:18+01:00"
+  "updated_at": "2026-11-11T19:51:13+01:00",
+  "operating_mode": "GOVERNED_IMPLEMENTATION",
+  "active_gate": "STEP_001",
+  "search_radius": 2,
+  "settled_facts": [],
+  "open_hypotheses": [],
+  "circuit_breaker": false
 }
