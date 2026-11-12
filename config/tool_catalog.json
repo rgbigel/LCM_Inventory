@@ -821,15 +821,10 @@
         "Type": "SwitchParameter",
         "Mandatory": false,
         "Default": "",
-        "Description": "Single-cycle minimal testing scope: fast syntax and AST validation only"
+        "Description": "Runs fast structural, governance, and static analysis gates without triggering extended test suites"
       }
     ],
-    "Dependencies": [
-      "RepoQualityGates.psm1",
-      "Test-GeneralReadiness.ps1",
-      "Update-ToolCatalog.ps1",
-      "Module: (Resolve-Path $modulePath)"
-    ]
+    "Dependencies": null
   },
   {
     "Name": "Show-SuperController.ps1",
@@ -1357,6 +1352,20 @@
         "Description": "Open in CRP Lifecycle Dates modal mode"
       },
       {
+        "Name": "Horizon",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "active",
+        "Description": "Release horizon filter: active (default), all, or historical"
+      },
+      {
+        "Name": "LcmVersion",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Filter by specific LCM version (e.g. 10.2.3, 10.2.1, 10.1.0, 10.0.0)"
+      },
+      {
         "Name": "Repo",
         "Type": "String",
         "Mandatory": false,
@@ -1712,7 +1721,7 @@
       }
     ],
     "Dependencies": [
-      "lcm.cmd",
+      "run.cmd",
       "LcmMacriumAtoms.psm1"
     ]
   },
@@ -4144,6 +4153,72 @@
     "Dependencies": null
   },
   {
+    "Name": "Invoke-LcmDecisionGate.ps1",
+    "ShortName": "LcmDecisionGate",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Invoke-LcmDecisionGate execution tool.",
+    "Example": "LcmDecisionGate",
+    "RelativePath": "LCM_Inventory\\tools\\Invoke-LcmDecisionGate.ps1",
+    "Parameters": [
+      {
+        "Name": "ProposalPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Path to proposal specification markdown file."
+      },
+      {
+        "Name": "RepositoryPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Target repository path to validate."
+      },
+      {
+        "Name": "ConfidenceThreshold",
+        "Type": "Double",
+        "Mandatory": false,
+        "Default": "0.85",
+        "Description": "Minimum confidence score required for Stage 1 acceptance."
+      },
+      {
+        "Name": "ForceFallback",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Bypass Stage 1 and execute Stage 2 fallback evaluation directly."
+      },
+      {
+        "Name": "DiagnosticOnFailure",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Invoke Show-LcmFailureDiagnostic.ps1 upon hard governance failure."
+      },
+      {
+        "Name": "Interactive",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Prompt operator interactively when LEV produces low confidence (< 85%)."
+      }
+    ],
+    "Dependencies": [
+      "Test-LcmDeterministicGate.ps1",
+      "Show-LcmFailureDiagnostic.ps1",
+      "Invoke-LcmSystemOneClient.ps1",
+      "Invoke-LcmStageTwoFallback.ps1"
+    ]
+  },
+  {
     "Name": "Invoke-LcmGiantReview.ps1",
     "ShortName": "LcmGiantReview",
     "Aliases": null,
@@ -4475,6 +4550,27 @@
         "Description": "Force git push even if validation warnings exist"
       },
       {
+        "Name": "ForceRequalify",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Automatically execute stepwise requalification without interactive prompt"
+      },
+      {
+        "Name": "BypassReliefGate",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Bypass the pre-push relief / minimal-tests gate and record an audit waiver"
+      },
+      {
+        "Name": "NonInteractive",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Run in non-interactive mode; fail closed if triage decisions are required"
+      },
+      {
         "Name": "DryRun",
         "Type": "SwitchParameter",
         "Mandatory": false,
@@ -4486,12 +4582,146 @@
       "LCM_PushEligibility.psm1",
       "Invoke-LearnedAdviceReview.ps1",
       "ProposalManager.psm1",
+      "LcmPushRequalification.psm1",
       "Invoke-LCM_Maintenance.ps1",
       "Update-Gemini.ps1",
       "Update-ToolCatalog.ps1",
       "Clear-BCReviewTemp.ps1",
       "Module: (Join-Path $workspaceRoot 'LCM_Inventory\\modules\\ProposalManager.psm1')"
     ]
+  },
+  {
+    "Name": "Invoke-LcmPushRequalification.ps1",
+    "ShortName": "LcmPushRequalification",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Invoke-LcmPushRequalification execution tool.",
+    "Example": "LcmPushRequalification",
+    "RelativePath": "LCM_Inventory\\tools\\Invoke-LcmPushRequalification.ps1",
+    "Parameters": [
+      {
+        "Name": "Repositories",
+        "Type": "String[]",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Specific repositories to include (defaults to all workspace repositories)"
+      },
+      {
+        "Name": "AutoRemediate",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Auto-remediate mechanical issues (BOM, switch reset) without prompting"
+      },
+      {
+        "Name": "NonInteractive",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Non-interactive mode (fail closed on unresolvable issues)"
+      }
+    ],
+    "Dependencies": [
+      "LCM_PushEligibility.psm1",
+      "LcmPushRequalification.psm1"
+    ]
+  },
+  {
+    "Name": "Invoke-LcmStageTwoFallback.ps1",
+    "ShortName": "LcmStageTwoFallback",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Invoke-LcmStageTwoFallback execution tool.",
+    "Example": "LcmStageTwoFallback",
+    "RelativePath": "LCM_Inventory\\tools\\Invoke-LcmStageTwoFallback.ps1",
+    "Parameters": [
+      {
+        "Name": "ProposalPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Path to proposal specification markdown file."
+      },
+      {
+        "Name": "RepositoryPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Repository path to validate."
+      }
+    ],
+    "Dependencies": [
+      "Test-RepoReadiness.ps1",
+      "Test-GeneralReadiness.ps1"
+    ]
+  },
+  {
+    "Name": "Invoke-LcmSystemOneClient.ps1",
+    "ShortName": "LcmSystemOneClient",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Invoke-LcmSystemOneClient execution tool.",
+    "Example": "LcmSystemOneClient",
+    "RelativePath": "LCM_Inventory\\tools\\Invoke-LcmSystemOneClient.ps1",
+    "Parameters": [
+      {
+        "Name": "ProposalPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Path to proposal specification markdown file."
+      },
+      {
+        "Name": "PayloadText",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Payload text if ProposalPath is omitted."
+      },
+      {
+        "Name": "ConfidenceThreshold",
+        "Type": "Double",
+        "Mandatory": false,
+        "Default": "0.85",
+        "Description": "Minimum confidence score required to avoid fallback."
+      },
+      {
+        "Name": "DeciderUrl",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "$env:LCM_DECIDER_URL",
+        "Description": "Decider service endpoint URL. Defaults to $env:LCM_DECIDER_URL."
+      },
+      {
+        "Name": "TimeoutMs",
+        "Type": "Int32",
+        "Mandatory": false,
+        "Default": "1500",
+        "Description": "Maximum request timeout in milliseconds."
+      }
+    ],
+    "Dependencies": null
   },
   {
     "Name": "Invoke-LearnedAdviceReview.ps1",
@@ -4970,6 +5200,13 @@
         "Description": "Target proposal expression (e.g. all, #1, 105, 100-105)"
       },
       {
+        "Name": "Title",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "New title when executing action rename or title"
+      },
+      {
         "Name": "ProposalId",
         "Type": "Int32",
         "Mandatory": false,
@@ -5132,6 +5369,7 @@
       }
     ],
     "Dependencies": [
+      "sync_proposals_db.py",
       "Invoke-MacriumBcrReview.ps1",
       "Complete-ReviewCohort.ps1",
       "Submit-ReviewResult.ps1"
@@ -5732,6 +5970,53 @@
       }
     ],
     "Dependencies": null
+  },
+  {
+    "Name": "Set-LcmReliefMode.ps1",
+    "ShortName": "SetLcmReliefMode",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Set-LcmReliefMode execution tool.",
+    "Example": "SetLcmReliefMode",
+    "RelativePath": "LCM_Inventory\\tools\\Set-LcmReliefMode.ps1",
+    "Parameters": [
+      {
+        "Name": "State",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "Status",
+        "Description": "Target state for relief mode: 'On', 'Off', 'Toggle', or 'Status' (Default: 'Status')."
+      },
+      {
+        "Name": "On",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Enables development relief mode (coarse reviews, minimal testing, doit flow mode)."
+      },
+      {
+        "Name": "Off",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Disables development relief mode, restoring strict governance (tight reviews, active tests, standard flow)."
+      },
+      {
+        "Name": "Toggle",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Toggles the current relief mode between On and Off."
+      }
+    ],
+    "Dependencies": "ProposalManager.psm1"
   },
   {
     "Name": "Set-RealRepoTestPlan.ps1",
@@ -6622,6 +6907,120 @@
     "Dependencies": null
   },
   {
+    "Name": "Sync-LcmProposalsDb.ps1",
+    "ShortName": "SyncLcmProposalsDb",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Sync-LcmProposalsDb execution tool.",
+    "Example": "SyncLcmProposalsDb",
+    "RelativePath": "LCM_Inventory\\tools\\Sync-LcmProposalsDb.ps1",
+    "Parameters": [
+      {
+        "Name": "Action",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "Sync",
+        "Description": "Operation to perform: - 'Sync' : JSON -> SQLite DB + SQL text dump (default). - 'Dump' : SQLite DB -> Canonical proposals.sql text dump. - 'Hydrate' : Reconstructs SQLite DB from canonical proposals.sql text dump. - 'Verify' : 3-way parity check across JSON, SQLite DB, and SQL text dump. - 'Query' : High-speed query returning objects from SQLite. - 'InstallHooks' : Installs Git post-merge and post-checkout hooks for automatic hydration on pull/checkout."
+      },
+      {
+        "Name": "Horizon",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Release horizon filter for querying: 'active' (hides published historical releases < 10.2.0), 'historical' (only historical releases), or 'all' (all 296+ proposals)."
+      },
+      {
+        "Name": "Version",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Specific LCM version to filter by (e.g. '10.2.3', '10.2.x', '10.1.0', '10.0.0', 'Legacy (<10.0)')."
+      },
+      {
+        "Name": "State",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Specific proposal lifecycle state to filter by (e.g. 'in_progress', 'pushed', 'held')."
+      },
+      {
+        "Name": "ActiveOnly",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Filters only active/open proposals (excluding terminal pushed, rejected, superseded, withdrawn)."
+      },
+      {
+        "Name": "WorkspaceRole",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "LIVE",
+        "Description": "Context role for database metadata: 'LIVE' (default), 'SANDBOX', or 'BASELINE_ARCHIVE'."
+      },
+      {
+        "Name": "SandboxId",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Sandbox identifier when executing within an isolated sandbox (e.g. 'SBX-01')."
+      },
+      {
+        "Name": "DatabasePath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Custom path to SQLite database. Defaults to LCM_Inventory/data/proposals/proposals.db."
+      },
+      {
+        "Name": "JsonPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Custom path to JSON proposals ledger. Defaults to LCM_Inventory/data/proposals/proposals.json."
+      },
+      {
+        "Name": "SqlPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Custom path to canonical SQL dump. Defaults to LCM_Inventory/data/proposals/proposals.sql."
+      },
+      {
+        "Name": "Silent",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Suppresses informational console banners."
+      }
+    ],
+    "Dependencies": "sync_proposals_db.py"
+  },
+  {
+    "Name": "sync_proposals_db.py",
+    "ShortName": "syncproposalsdb",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "Python",
+    "Category": "Utility",
+    "Description": "sync_proposals_db execution tool.",
+    "Example": "syncproposalsdb",
+    "RelativePath": "LCM_Inventory\\tools\\sync_proposals_db.py",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
     "Name": "Sync-ToolSymlinks.ps1",
     "ShortName": "SyncToolSymlinks",
     "Aliases": null,
@@ -6837,6 +7236,39 @@
         "Mandatory": false,
         "Default": "0",
         "Description": "Grant lifetime."
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "Test-LcmDeterministicGate.ps1",
+    "ShortName": "TestLcmDeterministicGate",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Test-LcmDeterministicGate execution tool.",
+    "Example": "TestLcmDeterministicGate",
+    "RelativePath": "LCM_Inventory\\tools\\Test-LcmDeterministicGate.ps1",
+    "Parameters": [
+      {
+        "Name": "ProposalPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Path to proposal specification markdown file."
+      },
+      {
+        "Name": "RepositoryPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Path to repository being evaluated."
       }
     ],
     "Dependencies": null
@@ -7207,6 +7639,7 @@
       "Show-ToolIntents.ps1",
       "Invoke-LCM_Push.ps1",
       "Show-LCM_Readiness.ps1",
+      "Invoke-LcmAction.ps1",
       "es.exe",
       "Everything",
       "PsExec.exe",
@@ -9685,7 +10118,7 @@
     "Category": "Utility",
     "Description": "search certificate stores for private key container Guids execution tool.",
     "Example": "search certificate stores for private key container Guids",
-    "RelativePath": "SystemConfiguration\\Source\\search certificate stores for private key container Guids.ps1",
+    "RelativePath": "LCM_Inventory\\tools\\search certificate stores for private key container Guids.ps1",
     "Parameters": [],
     "Dependencies": null
   },
@@ -9703,7 +10136,25 @@
     "Category": "Utility",
     "Description": "search certificate stores for private key container Guids execution tool.",
     "Example": "search certificate stores for private key container Guids",
-    "RelativePath": "LCM_Inventory\\tools\\search certificate stores for private key container Guids.ps1",
+    "RelativePath": "SystemConfiguration\\Source\\search certificate stores for private key container Guids.ps1",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "Set-MachineWideExecutionPolicy.ps1",
+    "ShortName": "SystemConfigurationSetMachineWideExecutionPolicy",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Set-MachineWideExecutionPolicy execution tool.",
+    "Example": "SetMachineWideExecutionPolicy",
+    "RelativePath": "LCM_Inventory\\tools\\Set-MachineWideExecutionPolicy.ps1",
     "Parameters": [],
     "Dependencies": null
   },
@@ -9738,24 +10189,6 @@
         "Description": "Displays detailed registry modification logs."
       }
     ],
-    "Dependencies": null
-  },
-  {
-    "Name": "Set-MachineWideExecutionPolicy.ps1",
-    "ShortName": "SystemConfigurationSetMachineWideExecutionPolicy",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": true,
-    "NoExit": true,
-    "Group": "LCM_Tools",
-    "Domain": "LCM_Tools",
-    "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "Set-MachineWideExecutionPolicy execution tool.",
-    "Example": "SetMachineWideExecutionPolicy",
-    "RelativePath": "LCM_Inventory\\tools\\Set-MachineWideExecutionPolicy.ps1",
-    "Parameters": [],
     "Dependencies": null
   },
   {
@@ -10136,6 +10569,24 @@
     "Dependencies": null
   },
   {
+    "Name": "@11-FileMenuTools.lnk",
+    "ShortName": "FileMenuTools",
+    "Aliases": null,
+    "Role": "Customization",
+    "Audience": "User",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "Shortcut",
+    "Category": "Context Menus",
+    "Description": "Shortcut launcher for FileMenuTools context menu extension.",
+    "Example": "start \"SystemConfiguration\\Source\\@11-FileMenuTools.lnk\"",
+    "RelativePath": "SystemConfiguration\\Source\\@11-FileMenuTools.lnk",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
     "Name": "@17-FiraFonts.ps1",
     "ShortName": "FiraFonts",
     "Aliases": "@17-FiraFonts",
@@ -10234,6 +10685,24 @@
     "Description": "Disables Windows 11 'Show more options' collapsed context menu to restore classic full menu.",
     "Example": "reg import \"SystemConfiguration\\Source\\@10-More_Options_OFF.reg\"",
     "RelativePath": "SystemConfiguration\\Source\\@10-More_Options_OFF.reg",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "@13-PowerToys.lnk",
+    "ShortName": "PowerToys",
+    "Aliases": null,
+    "Role": "Customization",
+    "Audience": "User",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "Shortcut",
+    "Category": "System Personalization",
+    "Description": "Shortcut launcher for Microsoft PowerToys suite.",
+    "Example": "start \"SystemConfiguration\\Source\\@13-PowerToys.lnk\"",
+    "RelativePath": "SystemConfiguration\\Source\\@13-PowerToys.lnk",
     "Parameters": [],
     "Dependencies": null
   },
@@ -10614,6 +11083,24 @@
     "Dependencies": "Invoke-InteractiveDesktop.ps1"
   },
   {
+    "Name": "@08-WinSetView.lnk",
+    "ShortName": "WinSetView",
+    "Aliases": null,
+    "Role": "Customization",
+    "Audience": "User",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "Shortcut",
+    "Category": "Explorer Tweaks",
+    "Description": "Shortcut launcher for WinSetView folder view preferences customizer.",
+    "Example": "start \"SystemConfiguration\\Source\\@08-WinSetView.lnk\"",
+    "RelativePath": "SystemConfiguration\\Source\\@08-WinSetView.lnk",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
     "Name": "Get-ChkdskBootLog.ps1",
     "ShortName": "GetChkdskBootLog",
     "Aliases": null,
@@ -10632,9 +11119,9 @@
     "Dependencies": null
   },
   {
-    "Name": "@21-FixMouseFlickerInvariants.ps1",
+    "Name": "@22-FixMouseFlickerInvariants.ps1",
     "ShortName": "FixMouseFlickerInvariants",
-    "Aliases": "@21-FixMouseFlickerInvariants",
+    "Aliases": "@22-FixMouseFlickerInvariants",
     "Role": "Invariants",
     "Audience": "User",
     "Admin": true,
@@ -10644,8 +11131,8 @@
     "Type": "PowerShell",
     "Category": "Hardware Stability",
     "Description": "Enforces AMD Radeon RX 580 ULPS disabled, DWM MPO OverlayTestMode=5, and PowerToys hook locks.",
-    "Example": "pwsh -File \"SystemConfiguration\\Source\\@21-FixMouseFlickerInvariants.ps1\"",
-    "RelativePath": "SystemConfiguration\\Source\\@21-FixMouseFlickerInvariants.ps1",
+    "Example": "pwsh -File \"SystemConfiguration\\Source\\@22-FixMouseFlickerInvariants.ps1\"",
+    "RelativePath": "SystemConfiguration\\Source\\@22-FixMouseFlickerInvariants.ps1",
     "Parameters": [
       {
         "Name": "TraceMode",
@@ -10885,6 +11372,24 @@
         "Description": "Target volume drive letters or volume GUID list. Defaults to current system drive."
       }
     ],
+    "Dependencies": null
+  },
+  {
+    "Name": "@06-ConfigureEasyContextMenu.lnk",
+    "ShortName": "ConfigureEasyContextMenu",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "Shortcut",
+    "Category": "Utility",
+    "Description": "@06-ConfigureEasyContextMenu execution tool.",
+    "Example": "ConfigureEasyContextMenu",
+    "RelativePath": "SystemConfiguration\\Source\\@06-ConfigureEasyContextMenu.lnk",
+    "Parameters": [],
     "Dependencies": null
   },
   {
@@ -11790,6 +12295,24 @@
     "Description": "Unlock-ForcedUSO execution tool.",
     "Example": "UnlockForcedUSO",
     "RelativePath": "SystemConfiguration\\Source\\Unlock-ForcedUSO.cmd",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "@12-WinaeroTweaker.lnk",
+    "ShortName": "WinaeroTweaker",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "Shortcut",
+    "Category": "Utility",
+    "Description": "@12-WinaeroTweaker execution tool.",
+    "Example": "WinaeroTweaker",
+    "RelativePath": "SystemConfiguration\\Source\\@12-WinaeroTweaker.lnk",
     "Parameters": [],
     "Dependencies": null
   },

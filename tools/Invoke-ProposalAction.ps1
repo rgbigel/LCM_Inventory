@@ -11,11 +11,14 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $false, Position = 0, HelpMessage = 'Action to perform on proposals or governance settings')]
-    [ValidateSet('do', 'delete', 'defer', 'deferred', 'complete', 'completed', 'suggest', 'suggested', 'granularity', 'mode', 'testing-mode', 'testing', 'minimal-tests', 'doit-mode', 'list', 'progress', 'state', 'reject', 'rejected', 'approve', 'approved', 'bug', 'push', 'pushed', 'verify', 'bcr', 'cohort', 'priority', 'commit', 'committed', 'proceed', 'regression', 'regressions', 'check-regressions', 'generate-regression', 'workon', 'work-on', 'app', 'new-app', 'apps', 'list-apps', 'sync-apps', 'catalog', 'split-docs', 'splitdocs', 'doc', 'docs', 'show-doc', 'purge-bundle', 'hold', 'held', 'resume', 'continue', 'withdraw', 'retire', 'supersede', 'reopen', 'reinstate', 'reset', 'analyze', 'implement', 'operating-mode', 'analysis-mode', 'trip-breaker', 'circuit-breaker', 'reset-breaker')]
+    [ValidateSet('do', 'delete', 'defer', 'deferred', 'complete', 'completed', 'suggest', 'suggested', 'granularity', 'mode', 'testing-mode', 'testing', 'minimal-tests', 'doit-mode', 'list', 'progress', 'state', 'reject', 'rejected', 'approve', 'approved', 'bug', 'push', 'pushed', 'verify', 'bcr', 'cohort', 'priority', 'commit', 'committed', 'proceed', 'regression', 'regressions', 'check-regressions', 'generate-regression', 'workon', 'work-on', 'app', 'new-app', 'apps', 'list-apps', 'sync-apps', 'catalog', 'split-docs', 'splitdocs', 'doc', 'docs', 'show-doc', 'purge-bundle', 'hold', 'held', 'resume', 'continue', 'withdraw', 'retire', 'supersede', 'reopen', 'reinstate', 'reset', 'analyze', 'implement', 'operating-mode', 'analysis-mode', 'trip-breaker', 'circuit-breaker', 'reset-breaker', 'rename', 'title')]
     [string]$Action = 'list',
 
     [Parameter(Mandatory = $false, Position = 1, HelpMessage = 'Target proposal expression (e.g. all, #1, 105, 100-105)')]
     [string]$TargetExpression = '',
+
+    [Parameter(Mandatory = $false, HelpMessage = 'New title when executing action rename or title')]
+    [string]$Title = '',
 
     [Parameter(Mandatory = $false, HelpMessage = 'Explicit Gate-1-accepted proposal ID required for structural App creation')]
     [ValidateRange(1, [int]::MaxValue)]
@@ -386,6 +389,44 @@ switch -Regex ($Action) {
         }
         $updated = Set-LcmProposalSupersession -Id $targetIds[0] -SuccessorId $SuccessorId -Details $Details
         Format-ProposalsTable -Proposals @($updated)
+        break
+    }
+    '^(rename|title)$' {
+        if ([string]::IsNullOrWhiteSpace($TargetExpression)) {
+            throw "TargetExpression (e.g. '322') is required for action 'rename'."
+        }
+        if ([string]::IsNullOrWhiteSpace($Title)) {
+            throw "-Title <string> is required for action 'rename'."
+        }
+        $targetIds = @(Resolve-ProposalIdExpression -Expression $TargetExpression)
+        $store = Get-ProposalStore
+        $updated = @()
+        foreach ($id in $targetIds) {
+            $p = @($store.proposals | Where-Object { $_.id -eq $id })[0]
+            if ($p) {
+                $oldTitle = $p.title
+                $p.title = $Title
+                $updated += $p
+                Write-Host "Renamed Proposal #$id : '$oldTitle' -> '$Title'" -ForegroundColor Green
+
+                if ($p.PSObject.Properties['bundle_dir'] -and $p.bundle_dir) {
+                    $originRepo = if ($p.PSObject.Properties['origin_repo'] -and $p.origin_repo) { $p.origin_repo } else { 'LCM_Inventory' }
+                    $bundleSpec = Join-Path $workspaceRoot (Join-Path $originRepo (Join-Path $p.bundle_dir 'Specification.md'))
+                    if (Test-Path -LiteralPath $bundleSpec) {
+                        $content = Get-Content -LiteralPath $bundleSpec -Raw
+                        $newContent = [regex]::Replace($content, '(?m)^Title:\s+.*$', "Title: $Title")
+                        [System.IO.File]::WriteAllText($bundleSpec, $newContent, [System.Text.UTF8Encoding]::new($false))
+                    }
+                }
+            }
+        }
+        Set-ProposalStore -Store $store
+        $syncDbScript = Join-Path $inventoryRoot 'tools\sync_proposals_db.py'
+        if (Test-Path -LiteralPath $syncDbScript) {
+            python $syncDbScript --action sync | Out-Null
+            python $syncDbScript --action dump | Out-Null
+        }
+        Format-ProposalsTable -Proposals $updated
         break
     }
     '^bcr$' {

@@ -1,7 +1,7 @@
 <!--
   Template: CM_CONTROL_HUB.html
-  Version: 10.2.3
-  Date: 2026-11-09 19:22:00
+  Version: 10.2.4
+  Date: 2026-11-12 08:58:00
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -1129,9 +1129,21 @@
           <select class="control-select" id="presetSelect" onchange="applyPresetFilter(this.value)">
             <option value="all" selected>All Proposals</option>
             <option value="open">Open (All Active Work)</option>
+            <option value="unfinished">Unfinished Business</option>
             <option value="inprogress">In Progress</option>
             <option value="review">Pending Review</option>
             <option value="complete">Ready to Push</option>
+          </select>
+        </div>
+        <div class="control-group">
+          <span class="control-label">Horizon:</span>
+          <select class="control-select" id="horizonSelect" onchange="applyFilters()">
+            <option value="active" selected>Active Horizon (Current 10.2.x)</option>
+            <option value="all">All Releases (296)</option>
+            <option value="10.2.x">Release 10.2.x</option>
+            <option value="10.1.0">Release 10.1.0</option>
+            <option value="10.0.0">Release 10.0.0</option>
+            <option value="legacy">Legacy (&lt; 10.0)</option>
           </select>
         </div>
         <div class="control-group">
@@ -2361,6 +2373,7 @@
       let reviewCount = 0;
       let completeCount = 0;
       let publishedCount = 0;
+      let unfinishedCount = 0;
 
       (proposalsData.proposals || []).forEach(p => {
         const status = getLifecycleState(p);
@@ -2376,6 +2389,10 @@
         if (["verified", "in_review"].includes(status)) reviewCount++;
         if (status === "completed" || vis === "complete") completeCount++;
         if (status === "pushed" || status === "published" || vis === "published") publishedCount++;
+
+        const isFinishedOrDiscarded = ["pushed", "rejected", "deleted", "cancelled", "withdrawn"].includes(status) ||
+                                     ["published", "cancelled"].includes(vis);
+        if (!isFinishedOrDiscarded) unfinishedCount++;
       });
 
       if ($("count-all")) $("count-all").innerText = allCount;
@@ -2383,6 +2400,7 @@
       if ($("count-review")) $("count-review").innerText = reviewCount;
       if ($("count-complete")) $("count-complete").innerText = completeCount;
       if ($("count-published")) $("count-published").innerText = publishedCount;
+      if ($("count-unfinished")) $("count-unfinished").innerText = unfinishedCount;
     }
 
     function renderReviewCohortPreview() {
@@ -2448,7 +2466,7 @@
         const el = $("rail-" + status);
         if (el) el.classList.add("active");
         if ($("presetSelect")) {
-          if (["open", "inprogress", "review", "complete"].includes(status)) {
+          if (["open", "unfinished", "inprogress", "review", "complete"].includes(status)) {
             $("presetSelect").value = status;
           } else {
             $("presetSelect").value = "all";
@@ -2571,6 +2589,10 @@
         const isClosed = ["held", "completed", "pushed", "rejected", "deleted", "cancelled"].includes(state) ||
                          ["complete", "published", "cancelled"].includes(vis);
         if (isClosed) return false;
+      } else if (activeRailFilter === "unfinished") {
+        const isFinishedOrDiscarded = ["pushed", "rejected", "deleted", "cancelled", "withdrawn"].includes(state) ||
+                                     ["published", "cancelled"].includes(vis);
+        if (isFinishedOrDiscarded) return false;
       } else if (activeRailFilter === "inprogress") {
         if (state === "completed" || state === "pushed") return false;
         if (!["in_progress", "verified", "in_review"].includes(state)) return false;
@@ -2580,6 +2602,24 @@
         if (state !== "completed" && vis !== "complete") return false;
       } else if (activeRailFilter === "published") {
         if (state !== "pushed" && vis !== "published") return false;
+      }
+
+      // Release Horizon check (hides published historical releases)
+      const horizonVal = $("horizonSelect") ? $("horizonSelect").value : "active";
+      const ver = String(p.lcm_version || "Legacy (<10.0)");
+      const isTerminalPublished = ["pushed", "rejected", "superseded", "withdrawn"].includes(state) || vis === "published";
+      const isActiveSeries = ver.startsWith("10.2.");
+
+      if (horizonVal === "active") {
+        if (isTerminalPublished && !isActiveSeries) return false;
+      } else if (horizonVal === "10.2.x") {
+        if (!isActiveSeries) return false;
+      } else if (horizonVal === "10.1.0") {
+        if (!ver.startsWith("10.1.")) return false;
+      } else if (horizonVal === "10.0.0") {
+        if (!ver.startsWith("10.0.")) return false;
+      } else if (horizonVal === "legacy") {
+        if (!ver.includes("Legacy") && !ver.startsWith("7.") && !ver.startsWith("8.") && !ver.startsWith("9.")) return false;
       }
 
       // Scope select check
@@ -2671,6 +2711,8 @@
             if (v.includes("min") && !isMinTests) return false;
             if (v.includes("force") && !isBypass) return false;
             if (v.includes("held") && !isHeld) return false;
+          } else if (k === "ver" || k === "version") {
+            if (!ver.toLowerCase().includes(v)) return false;
           }
           continue;
         }
@@ -2681,6 +2723,7 @@
                             crpTag.includes(term) ||
                             title.includes(term) ||
                             repo.includes(term) ||
+                            ver.toLowerCase().includes(term) ||
                             cohortText.includes(term) ||
                             vis.includes(term) ||
                             state.includes(term) ||
@@ -2775,7 +2818,7 @@
             <td>
               <span class="proposal-id">${crpTag}</span>
               <span class="proposal-title">${esc(getProposalDisplayTitle(p))}</span>
-              <span class="repo-sub">${esc(p.origin_repo || "LCM_Inventory")}</span>
+              <span class="repo-sub">${esc(p.origin_repo || "LCM_Inventory")} · <span style="font-weight:600; color:var(--blue);">${esc(p.lcm_version || "Legacy")}</span></span>
             </td>
             <td class="cohort-cell">
               ${getProposalWorkQueueCohorts(p.id).length
@@ -4384,8 +4427,18 @@ REST DAEMON BRIDGE:
         };
       }
       if (typeof state.scope === "string") $("scopeSelect").value = state.scope;
-      if (["all", "open", "inprogress", "review", "complete", "published", "held"].includes(state.activeRailFilter)) {
+      if (["all", "open", "unfinished", "inprogress", "review", "complete", "published", "held"].includes(state.activeRailFilter)) {
         activeRailFilter = state.activeRailFilter;
+        document.querySelectorAll(".rail-state").forEach(el => el.classList.remove("active"));
+        const el = $("rail-" + activeRailFilter);
+        if (el) el.classList.add("active");
+        if ($("presetSelect")) {
+          if (["open", "unfinished", "inprogress", "review", "complete"].includes(activeRailFilter)) {
+            $("presetSelect").value = activeRailFilter;
+          } else {
+            $("presetSelect").value = "all";
+          }
+        }
       }
       if (["id-desc", "id-asc", "prio-desc", "prio-asc", "updated-desc", "updated-asc"].includes(state.activeSort)) {
         activeSort = state.activeSort;

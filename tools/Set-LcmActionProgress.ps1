@@ -9,8 +9,8 @@
            milestones for single and multi-item operations (PROCEED, COMPLETE, PUSH, do #n-#m).
   Path: LCM_Inventory/tools/Set-LcmActionProgress.ps1
   Authors: Rolf, LCM_AI Governance
-  Version: 10.2.0
-  Date: 2026-10-13
+  Version: 10.2.1
+  Date: 2026-11-12
 
 .PARAMETER Action
   Operation to execute: 'Start', 'Update', 'Complete', 'Stop', or 'Get'. Defaults to 'Get'.
@@ -114,7 +114,15 @@ if ($Help) {
 # ------------------------------------------------------------------------------
 # 1. Import Module per RULE-PS-012
 # ------------------------------------------------------------------------------
-$workspaceRoot = if (-not [string]::IsNullOrWhiteSpace($env:Git_Root)) { $env:Git_Root.TrimEnd('\', '/') } else { 'D:\Git_Repositories' }
+$workspaceRoot = if (-not [string]::IsNullOrWhiteSpace($env:LCM_WORKSPACE_ROOT)) {
+  $env:LCM_WORKSPACE_ROOT.TrimEnd('\', '/')
+} elseif ($PSScriptRoot -and (Test-Path -LiteralPath (Join-Path $PSScriptRoot '..\..\LCM_Inventory'))) {
+  (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
+} elseif (-not [string]::IsNullOrWhiteSpace($env:Git_Root)) {
+  $env:Git_Root.TrimEnd('\', '/')
+} else {
+  'D:\Git_Repositories'
+}
 $modulePath = Join-Path $workspaceRoot 'LCM_Inventory\modules\LcmProgressAtom.psm1'
 
 if (-not (Test-Path -LiteralPath $modulePath)) {

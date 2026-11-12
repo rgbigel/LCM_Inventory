@@ -10,14 +10,22 @@
            (Port 9876) for real-time web dashboard row mutations and console streaming.
   Path: LCM_Inventory/modules/LcmProgressAtom.psm1
   Authors: Rolf, LCM_AI Governance
-  Version: 10.2.0
-  Date: 2026-10-13
+  Version: 10.2.1
+  Date: 2026-11-12
 #>
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$script:WorkspaceRoot = if (-not [string]::IsNullOrWhiteSpace($env:Git_Root)) { $env:Git_Root.TrimEnd('\', '/') } else { 'D:\Git_Repositories' }
+$script:WorkspaceRoot = if (-not [string]::IsNullOrWhiteSpace($env:LCM_WORKSPACE_ROOT)) {
+  $env:LCM_WORKSPACE_ROOT.TrimEnd('\', '/')
+} elseif ($PSScriptRoot -and (Test-Path -LiteralPath (Join-Path $PSScriptRoot '..\..\LCM_Inventory'))) {
+  (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
+} elseif (-not [string]::IsNullOrWhiteSpace($env:Git_Root)) {
+  $env:Git_Root.TrimEnd('\', '/')
+} else {
+  'D:\Git_Repositories'
+}
 $script:ScratchDir = Join-Path ([System.IO.Path]::GetTempPath()) 'lcm'
 $script:ProgressFile = Join-Path $script:ScratchDir 'active_progress.json'
 $script:LogFile = Join-Path $script:WorkspaceRoot 'LCM_Inventory\data\logs\lcm\progress_activity.log'

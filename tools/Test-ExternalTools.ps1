@@ -29,8 +29,16 @@ if ($Help) {
   return
 }
 
-$gitRoot = [Environment]::GetEnvironmentVariable('Git_Root', 'Machine')
-if ([string]::IsNullOrWhiteSpace($gitRoot)) { throw 'Machine environment value Git_Root is not set. Run SetGitRoot (elevated).' }
+$gitRoot = if (-not [string]::IsNullOrWhiteSpace($env:LCM_WORKSPACE_ROOT)) {
+  $env:LCM_WORKSPACE_ROOT.TrimEnd('\', '/')
+} elseif ($PSScriptRoot -and (Test-Path -LiteralPath (Join-Path $PSScriptRoot '..\..\LCM_Inventory'))) {
+  (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
+} elseif (-not [string]::IsNullOrWhiteSpace($env:Git_Root)) {
+  $env:Git_Root.TrimEnd('\', '/')
+} else {
+  [Environment]::GetEnvironmentVariable('Git_Root', 'Machine')
+}
+if ([string]::IsNullOrWhiteSpace($gitRoot)) { throw 'Workspace root or Machine Git_Root is not set. Run SetGitRoot (elevated).' }
 $manifestFile = Join-Path $gitRoot 'LCM_AI\docs\Requisites\external-tools.json'
 if (-not (Test-Path -LiteralPath $manifestFile)) {
   $manifestFile = Join-Path $gitRoot 'docs\Requisites\external-tools.json'

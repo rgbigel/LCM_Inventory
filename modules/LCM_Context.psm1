@@ -18,6 +18,13 @@ function Get-LcmMachineGitRoot {
   [CmdletBinding()]
   param()
 
+  if (-not [string]::IsNullOrWhiteSpace($env:LCM_WORKSPACE_ROOT) -and (Test-Path -LiteralPath (Join-Path $env:LCM_WORKSPACE_ROOT 'LCM_Inventory'))) {
+    return [System.IO.Path]::GetFullPath($env:LCM_WORKSPACE_ROOT).TrimEnd('\', '/')
+  }
+  if ($PSScriptRoot -and (Test-Path -LiteralPath (Join-Path $PSScriptRoot '..\..\LCM_Inventory'))) {
+    return (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
+  }
+
   $environmentKey = 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment'
   if (-not (Test-Path -LiteralPath $environmentKey -PathType Container)) {
     throw "Machine environment registry key was not found: $environmentKey"

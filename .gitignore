@@ -25,6 +25,7 @@ data/reviews/
 data/staging/
 data/logs/
 data/tokens/
+*.db
 logs/*.log
 !logs/cm_activity.log
 logs/*.jsonl

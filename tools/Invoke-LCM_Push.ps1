@@ -27,6 +27,16 @@ param(
     [Parameter(Mandatory = $false, HelpMessage = 'Force git push even if validation warnings exist')]
     [switch]$Force,
 
+    [Parameter(Mandatory = $false, HelpMessage = 'Automatically execute stepwise requalification without interactive prompt')]
+    [switch]$ForceRequalify,
+
+    [Parameter(Mandatory = $false, HelpMessage = 'Bypass the pre-push relief / minimal-tests gate and record an audit waiver')]
+    [Alias('SkipReliefGate', 'ForceRelief')]
+    [switch]$BypassReliefGate,
+
+    [Parameter(Mandatory = $false, HelpMessage = 'Run in non-interactive mode; fail closed if triage decisions are required')]
+    [switch]$NonInteractive,
+
     [Parameter(Mandatory = $false, HelpMessage = 'Simulate the push operation and show actions without modifying remotes')]
     [Alias('WhatIf')]
     [switch]$DryRun,
@@ -115,6 +125,61 @@ $ledgerJson = Get-Content -LiteralPath $proposalsFile -Raw -Encoding UTF8 | Conv
 $requestedProposalIds = @($targetProposalSet)
 $requestedRepositories = if ($null -eq $Repositories) { @() } else { @($Repositories | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }) }
 $pushPlan = Resolve-WorkspacePushPlan -Proposals @($ledgerJson.proposals) -RequestedRepositories $requestedRepositories -ProposalIds $requestedProposalIds
+
+# ------------------------------------------------------------------------------
+# RULE-DEC-005 Preflight: Stepwise Requalification & Dynamic Pre-Publish Triage
+# ------------------------------------------------------------------------------
+$requalModule = Join-Path $workspaceRoot 'LCM_Inventory\modules\LcmPushRequalification.psm1'
+Import-Module -Name $requalModule -Force
+
+$preflightCheck = Test-LcmPublishPreflight -PushPlan $pushPlan -WorkspaceRoot $workspaceRoot -ProposalsFile $proposalsFile
+
+if ($preflightCheck.HasReliefOrDebt) {
+    if ($BypassReliefGate -or $Force) {
+        Write-Host "`n[RULE-DEC-005 PREFLIGHT] Bypass active (-BypassReliefGate / -Force). Proceeding with publish..." -ForegroundColor Yellow
+        $waiverDir = Join-Path $workspaceRoot "LCM_Inventory\data\reviews\push_receipts"
+        if (-not (Test-Path -LiteralPath $waiverDir)) { New-Item -ItemType Directory -Path $waiverDir -Force | Out-Null }
+        $waiverFile = Join-Path $waiverDir ("bypass_waiver_{0:yyyyMMdd_HHmmss}.json" -f (Get-Date))
+        $waiverPayload = @{
+            Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+            Summary   = $preflightCheck.Summary
+            Actor     = $env:USERNAME
+            Bypass    = $true
+        }
+        [System.IO.File]::WriteAllText($waiverFile, ($waiverPayload | ConvertTo-Json), [System.Text.UTF8Encoding]::new($false))
+    } elseif ($ForceRequalify) {
+        Write-Host "`n[RULE-DEC-005 PREFLIGHT] -ForceRequalify specified. Initiating Stepwise Requalification..." -ForegroundColor Cyan
+        $requalResult = Invoke-LcmStepwiseRequalification -PushPlan $pushPlan -WorkspaceRoot $workspaceRoot -ProposalsFile $proposalsFile -NonInteractive:$NonInteractive
+        if (-not $requalResult.Success) {
+            throw "Stepwise Requalification failed or was aborted by operator at Step $($requalResult.FailedStep)."
+        }
+    } elseif ($NonInteractive) {
+        throw "PUSH refused by RULE-DEC-005: Workspace has active relief mode or test debt ($($preflightCheck.Summary)). Re-run with -ForceRequalify or -BypassReliefGate."
+    } else {
+        $triageChoice = Show-LcmPublishTriagePrompt -PreflightCheck $preflightCheck
+        switch ($triageChoice) {
+            'requalify' {
+                $requalResult = Invoke-LcmStepwiseRequalification -PushPlan $pushPlan -WorkspaceRoot $workspaceRoot -ProposalsFile $proposalsFile
+                if (-not $requalResult.Success) {
+                    throw "Stepwise Requalification failed or was aborted by operator at Step $($requalResult.FailedStep)."
+                }
+            }
+            'circumvent' {
+                Write-Host "`n[RULE-DEC-005 PREFLIGHT] Operator selected Circumvent / Force Push. Proceeding with publish..." -ForegroundColor Yellow
+            }
+            'continue' {
+                Write-Host "`n[RULE-DEC-005 PREFLIGHT] Continuing without requalification. Downstream checks may fail." -ForegroundColor Yellow
+                if ($preflightCheck.DebtProposals.Count -gt 0) {
+                    throw "PUSH refused by RULE-DEC-005: Proposal #$($preflightCheck.DebtProposals[0].id) is marked '[minimal-tests]' or has deferred quality checks. Full verification required before remote push."
+                }
+            }
+            'cancel' {
+                Write-Host "`n[PUBLISH] Cancelled by operator. Working tree and git remotes untouched." -ForegroundColor Yellow
+                return
+            }
+        }
+    }
+}
 
 $repositoryStates = @(
     foreach ($repoName in $pushPlan.RequiredRepositories) {
@@ -327,6 +392,20 @@ if ($cohortPushed) {
         }
         if ($transitionCount -gt 0) {
             Write-Host "  -> Transitioned $transitionCount proposal(s) from 'completed' to 'pushed' state in proposals.json." -ForegroundColor Green
+        }
+
+        # RULE-DEC-005 Post-Push Clean State & Relief Switch Reset
+        Write-Host "`n[Clean State Pipeline (RULE-DEC-005)] Resetting development relief switches..." -ForegroundColor Yellow
+        try {
+            Set-ReviewGranularity -Granularity 'tight' | Out-Null
+            Set-TestingMode -Mode 'active' | Out-Null
+            $store = Get-ProposalStore
+            if ($store.PSObject.Properties['flow_mode']) { $store.flow_mode = 'standard' }
+            if ($store.PSObject.Properties['always_proceed']) { $store.always_proceed = $false }
+            Set-ProposalStore -Store $store
+            Write-Host "  -> Relief switches deactivated: Granularity=tight, TestingMode=active, FlowMode=standard, AlwaysProceed=false." -ForegroundColor Green
+        } catch {
+            Write-Warning "Failed to reset relief switches: $($_.Exception.Message)"
         }
     }
 }

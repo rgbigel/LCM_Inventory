@@ -8,12 +8,16 @@
              Absorbs and consolidates Show-CmControlHub and Show-CrpDates into a single canonical tool.
     Path: tools/Show-LcmControl.ps1
     Authors: Rolf, LCM_AI Engine
-    Version: 10.2.1
-    Date: 2026-11-08 17:34:00
+    Version: 10.2.3
+    Date: 2026-11-12 10:00:00
 .PARAMETER ReviewMode
     Opens the Control Hub filtered directly to pending visual reviews requiring Beyond Compare action.
 .PARAMETER DatesMode
     Opens the Control Hub focused directly on the CRP Lifecycle Dates & Transition Timeline modal.
+.PARAMETER Horizon
+    Release horizon filter: 'active' (hides published historical releases < 10.2.0; default), 'all' (complete history), or 'historical'.
+.PARAMETER LcmVersion
+    Filter proposals by specific LCM version (e.g. 10.2.3, 10.2.1, 10.1.0, 10.0.0).
 .PARAMETER Repo
     Pre-selects a specific repository or subsystem filter on launch.
 .PARAMETER State
@@ -59,6 +63,13 @@ param(
     [Alias('Dates', 'CrpDates')]
     [switch]$DatesMode,
 
+    [Parameter(Mandatory = $false, HelpMessage = 'Release horizon filter: active (default), all, or historical')]
+    [ValidateSet('active', 'all', 'historical')]
+    [string]$Horizon = 'active',
+
+    [Parameter(Mandatory = $false, HelpMessage = 'Filter by specific LCM version (e.g. 10.2.3, 10.2.1, 10.1.0, 10.0.0)')]
+    [string]$LcmVersion,
+
     [Parameter(Mandatory = $false, HelpMessage = 'Filter by repository or subsystem')]
     [Alias('Scope')]
     [string]$Repo,
@@ -83,6 +94,7 @@ param(
     [switch]$Lifecycle,
 
     [Parameter(Mandatory = $false, HelpMessage = 'Render HTML data cache without launching desktop browser')]
+    [Alias('RenderOnly', 'Render')]
     [switch]$NoLaunch,
 
     [Parameter(Mandatory = $false, HelpMessage = 'Opens the Control Hub inside an Antigravity IDE editor/side pane')]
@@ -249,6 +261,28 @@ if ($CliMode) {
         })
     }
 
+    if ($Horizon -eq 'active') {
+        $list = @($list | Where-Object {
+            $st = (Get-ObjProperty $_ 'state').ToLower()
+            $isTerminal = $st -in @('pushed', 'rejected', 'superseded', 'withdrawn')
+            $ver = Get-ObjProperty $_ 'lcm_version' 'Legacy (<10.0)'
+            $isActiveVer = $ver -like '10.2.*'
+            (-not $isTerminal) -or $isActiveVer
+        })
+    } elseif ($Horizon -eq 'historical') {
+        $list = @($list | Where-Object {
+            $ver = Get-ObjProperty $_ 'lcm_version' 'Legacy (<10.0)'
+            -not ($ver -like '10.2.*')
+        })
+    }
+
+    if (-not [string]::IsNullOrWhiteSpace($LcmVersion)) {
+        $vNorm = $LcmVersion.ToLower()
+        $list = @($list | Where-Object {
+            (Get-ObjProperty $_ 'lcm_version' '').ToLower() -like "*$vNorm*"
+        })
+    }
+
     Write-Host "==========================================================================" -ForegroundColor Cyan
     Write-Host " LCM PROPOSAL & CRP LIFECYCLE DATES LEDGER" -ForegroundColor Cyan
     Write-Host " Found $($list.Count) proposal(s) matching filter criteria." -ForegroundColor Yellow
@@ -265,6 +299,7 @@ if ($CliMode) {
         [PSCustomObject]@{
             ID          = $p.id
             Tag         = Get-ObjProperty $p 'crp_id' (Get-ObjProperty $p 'cr_id')
+            LCMVer      = Get-ObjProperty $p 'lcm_version' '-'
             Scope       = Get-ObjProperty $p 'origin_repo' 'LCM'
             State       = (Get-ObjProperty $p 'state').ToUpper()
             Status      = (Get-ObjProperty $p 'progress_state' 'undecided').ToUpper()
@@ -277,7 +312,7 @@ if ($CliMode) {
         }
     }
 
-    $rows | Sort-Object ID -Descending | Format-Table -Property ID, Tag, Scope, State, Status, QualityDeferred, Created, InProgress, Completed, Pushed, Title -AutoSize
+    $rows | Sort-Object ID -Descending | Format-Table -Property ID, Tag, LCMVer, Scope, State, Status, QualityDeferred, Created, InProgress, Completed, Pushed, Title -AutoSize
 
     if ($Detail) {
         Write-Host ""

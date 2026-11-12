@@ -54,7 +54,7 @@ if (-not [string]::IsNullOrWhiteSpace($DriveLetter)) {
 # In-script elevation self-governance (RULE-ELEV-005)
 $isAdmin = [System.Security.Principal.WindowsPrincipal]::new([System.Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([System.Security.Principal.WindowsBuiltInRole]::Administrator)
 if (-not $isAdmin) {
-  $lcmCmd = Join-Path (Split-Path $PSScriptRoot -Parent) 'Cmd\lcm.cmd'
+  $lcmCmd = Join-Path (Split-Path $PSScriptRoot -Parent) 'Cmd\run.cmd'
   if (Test-Path -LiteralPath $lcmCmd) {
     Write-Verbose "Standard user context detected. Delegating to elevated daemon via $lcmCmd..."
     $delegatedArgs = @('do', 'DismountMacriumBaseline')

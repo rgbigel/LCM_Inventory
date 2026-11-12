@@ -176,7 +176,7 @@ Write-Host "`n[Gate 6/6] Validating Elevated Operations & Immutability Governanc
 $elevatedCheckFailures = [System.Collections.Generic.List[string]]::new()
 $catalogJsonPath = Join-Path $repoPath 'config\tool_catalog.json'
 if (-not (Test-Path -LiteralPath $catalogJsonPath)) {
-  $catalogJsonPath = 'D:\Git_Repositories\LCM_Inventory\config\tool_catalog.json'
+  $catalogJsonPath = Join-Path (Split-Path $repoPath -Parent) 'LCM_Inventory\config\tool_catalog.json'
 }
 $catalogMap = @{}
 if (Test-Path -LiteralPath $catalogJsonPath) {

@@ -34,8 +34,8 @@
   pwsh tools/Search-Everything.ps1 -Query "Test-*" -Extension "ps1" -MaxResults 20
 .NOTES
   Author: Rolf + Antigravity
-  Date: 2026-11-11 19:11:00
-  Version: 10.2.1
+  Date: 2026-11-12 14:35:00
+  Version: 10.2.2
 #>
 
 [CmdletBinding(DefaultParameterSetName = 'Structured')]
@@ -154,7 +154,15 @@ $esBin = $null
 $esCmd = Get-Command -Name 'es.exe' -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1
 if ($esCmd) { $esBin = $esCmd.Source }
 if (-not $esBin) {
-  $gitRoot = [Environment]::GetEnvironmentVariable('Git_Root', 'Machine')
+  $gitRoot = if (-not [string]::IsNullOrWhiteSpace($env:LCM_WORKSPACE_ROOT)) {
+    $env:LCM_WORKSPACE_ROOT.TrimEnd('\', '/')
+  } elseif ($PSScriptRoot -and (Test-Path -LiteralPath (Join-Path $PSScriptRoot '..\..\LCM_Inventory'))) {
+    (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
+  } elseif (-not [string]::IsNullOrWhiteSpace($env:Git_Root)) {
+    $env:Git_Root.TrimEnd('\', '/')
+  } else {
+    [Environment]::GetEnvironmentVariable('Git_Root', 'Machine')
+  }
   $manifest = if ($gitRoot) {
     $primaryManifest = Join-Path $gitRoot 'LCM_AI\docs\Requisites\external-tools.json'
     if (Test-Path -LiteralPath $primaryManifest) { $primaryManifest } else { Join-Path $gitRoot 'docs\Requisites\external-tools.json' }

@@ -6,8 +6,8 @@
 #          batch operations, review granularity ('coarse' | 'tight'), repo review queue inspection,
 #          and persistent ledger storage in LCM_Inventory.
 # Authors: Rolf, LCM_AI Engine
-# Version: 10.2.2
-# Date: 2026-10-21
+# Version: 10.2.3
+# Date: 2026-11-12 10:00:00
 # =====================================================================
 
 Set-StrictMode -Version Latest
@@ -86,7 +86,7 @@ function Set-ProposalStore {
     $path = Get-ProposalStorePath
     $Store.updated_at = (Get-Date).ToString('yyyy-MM-ddTHH:mm:sszzz')
     $edits = @(Get-LcmSpecificationStateEdits -Store $Store -StorePath $path)
-    $json = $Store | ConvertTo-Json -Depth 5
+    $json = $Store | ConvertTo-Json -Depth 10
     $written = [Collections.Generic.List[object]]::new()
     $temporaryPath = "$path.$([guid]::NewGuid().ToString('N')).tmp"
     try {
@@ -96,6 +96,10 @@ function Set-ProposalStore {
             [IO.File]::WriteAllText($edit.Path, $edit.Content, [Text.UTF8Encoding]::new($false))
         }
         [IO.File]::Move($temporaryPath, $path, $true)
+        $syncScript = Join-Path (Split-Path -Path $PSScriptRoot -Parent) 'tools\Sync-LcmProposalsDb.ps1'
+        if (Test-Path -LiteralPath $syncScript) {
+            try { & $syncScript -Silent -ErrorAction SilentlyContinue } catch { }
+        }
     } catch {
         $failure = $_
         foreach ($edit in $written) {
@@ -152,11 +156,37 @@ function Get-LCM_Proposals {
         [int[]]$Id,
         [string]$State,
         [string]$OriginRepo,
+        [ValidateSet('active', 'all', 'historical')]
+        [string]$Horizon,
+        [string]$LcmVersion,
         [switch]$OpenOnly
     )
 
     $store = Get-ProposalStore
     $items = @($store.proposals)
+
+    if ($Horizon -eq 'active') {
+        $items = @($items | Where-Object {
+            $st = [string]$_.state
+            $isTerminal = $st -in @('pushed', 'rejected', 'superseded', 'withdrawn')
+            $ver = if ($_.PSObject.Properties['lcm_version'] -and $_.lcm_version) { [string]$_.lcm_version } else { 'Legacy (<10.0)' }
+            $isActiveVer = $ver -like '10.2.*'
+            (-not $isTerminal) -or $isActiveVer
+        })
+    } elseif ($Horizon -eq 'historical') {
+        $items = @($items | Where-Object {
+            $ver = if ($_.PSObject.Properties['lcm_version'] -and $_.lcm_version) { [string]$_.lcm_version } else { 'Legacy (<10.0)' }
+            -not ($ver -like '10.2.*')
+        })
+    }
+
+    if (-not [string]::IsNullOrWhiteSpace($LcmVersion)) {
+        $vNorm = $LcmVersion.ToLowerInvariant()
+        $items = @($items | Where-Object {
+            $ver = if ($_.PSObject.Properties['lcm_version'] -and $_.lcm_version) { [string]$_.lcm_version } else { '' }
+            $ver.ToLowerInvariant().Contains($vNorm)
+        })
+    }
 
     if ($OpenOnly) {
         $items = @($items | Where-Object { $_.state -in @('bug', 'suggested', 'approved', 'processed', 'deferred') })
@@ -325,9 +355,21 @@ Implementation and verification records for $canonicalId.
         $WalkthroughPath = "$bundleRelPath/Walkthrough.md"
     }
 
+    $invPath = Join-Path (Join-Path $WorkspaceRoot 'LCM_Inventory') 'data\inventory.json'
+    $currentLcmVersion = '10.2.3'
+    if (Test-Path -LiteralPath $invPath) {
+        try {
+            $inv = Get-Content -LiteralPath $invPath -Raw | ConvertFrom-Json
+            if ($inv.workspace_ai_baseline -and $inv.workspace_ai_baseline.GlobalLCMVersion) {
+                $currentLcmVersion = [string]$inv.workspace_ai_baseline.GlobalLCMVersion
+            }
+        } catch { }
+    }
+
     $proposal = [ordered]@{
         id               = $newId
         crp_id           = $canonicalId
+        lcm_version      = $currentLcmVersion
         timestamp        = $timestamp
         title            = $Title
         origin_repo      = $OriginRepo

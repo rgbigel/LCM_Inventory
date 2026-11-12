@@ -11,8 +11,8 @@
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
   Path: LCM_Inventory/tools/Show-Rules.ps1
   Authors: Rolf, LCM_AI Governance
-  Version: 10.2.1
-  Date: 2026-11-08 17:34:00
+  Version: 10.2.2
+  Date: 2026-11-12 14:35:00
 .PARAMETER Domain
   Pre-filter by governance domain (e.g. 'Proposal & Review Flow', 'PowerShell Standards', 'Security', 'All'). Defaults to 'All'.
 .PARAMETER Filter
@@ -96,7 +96,15 @@ if ($Help) {
 # ------------------------------------------------------------------------------
 # 1. Initialize Logging Context per RULE-PS-009
 # ------------------------------------------------------------------------------
-$workspaceRoot = if (-not [string]::IsNullOrWhiteSpace($env:Git_Root)) { $env:Git_Root.TrimEnd('\', '/') } else { 'D:\Git_Repositories' }
+$workspaceRoot = if (-not [string]::IsNullOrWhiteSpace($env:LCM_WORKSPACE_ROOT)) {
+  $env:LCM_WORKSPACE_ROOT.TrimEnd('\', '/')
+} elseif ($PSScriptRoot -and (Test-Path -LiteralPath (Join-Path $PSScriptRoot '..\..\LCM_Inventory'))) {
+  (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
+} elseif (-not [string]::IsNullOrWhiteSpace($env:Git_Root)) {
+  $env:Git_Root.TrimEnd('\', '/')
+} else {
+  'D:\Git_Repositories'
+}
 $lcmRoot = Join-Path $workspaceRoot 'LCM_Inventory'
 $logDir = Join-Path $workspaceRoot 'LCM_Inventory\data\logs\lcm'
 if (-not (Test-Path -LiteralPath $logDir)) {
