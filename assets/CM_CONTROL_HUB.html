@@ -227,13 +227,13 @@
     }
     .reset-button:hover { background: var(--red-soft); }
 
-    /* Status Rail (5 Focused Lifecycle States) */
+    /* Status Rail (7 Focused Lifecycle States) */
     .status-rail {
       background: var(--surface);
       border: 1px solid var(--line);
       border-radius: 6px;
       display: grid;
-      grid-template-columns: repeat(5, minmax(130px, 1fr));
+      grid-template-columns: repeat(7, minmax(110px, 1fr));
       overflow-x: auto;
       margin-bottom: 6px;
     }
@@ -1128,7 +1128,8 @@
           <span class="control-label">Preset:</span>
           <select class="control-select" id="presetSelect" onchange="applyPresetFilter(this.value)">
             <option value="all" selected>All Proposals</option>
-            <option value="open">Open (All Active Work)</option>
+            <option value="open">Open Business (All Open Work)</option>
+            <option value="suggested">Suggested (Awaiting Gate 1)</option>
             <option value="unfinished">Unfinished Business</option>
             <option value="inprogress">In Progress</option>
             <option value="review">Pending Review</option>
@@ -1174,11 +1175,19 @@
         <button class="action-result-close" type="button" onclick="dismissActionResult()" aria-label="Hide action result" title="Hide message output">×</button>
       </div>
 
-      <!-- Status Rail (All Proposals + 4 Focused Lifecycle States) -->
+      <!-- Status Rail (All Proposals + 6 Focused Lifecycle States) -->
       <nav class="status-rail" aria-label="Visible proposal statuses">
         <div class="rail-state active" id="rail-all" onclick="filterByRail('all')" title="All proposals without a lifecycle restriction">
           <div class="rail-name">All <span class="rail-count" id="count-all">0</span></div>
           <span class="rail-detail">all proposals</span>
+        </div>
+        <div class="rail-state" id="rail-open" onclick="filterByRail('open')" title="All open business (suggested, in-progress, review, held)">
+          <div class="rail-name">Open <span class="rail-count" id="count-open">0</span></div>
+          <span class="rail-detail">all open business</span>
+        </div>
+        <div class="rail-state" id="rail-suggested" onclick="filterByRail('suggested')" title="Proposals in Suggested / 1 - REVIEW state">
+          <div class="rail-name">Suggested <span class="rail-count" id="count-suggested">0</span></div>
+          <span class="rail-detail">awaiting Gate 1</span>
         </div>
         <div class="rail-state" id="rail-inprogress" onclick="filterByRail('inprogress')" title="Proposals progressing from Scoped up to Committed">
           <div class="rail-name">In Progress <span class="rail-count" id="count-inprogress">0</span></div>
@@ -2369,6 +2378,8 @@
 
     function calculateStatusCounts() {
       const allCount = (proposalsData.proposals || []).length;
+      let openCount = 0;
+      let suggestedCount = 0;
       let inprogressCount = 0;
       let reviewCount = 0;
       let completeCount = 0;
@@ -2378,6 +2389,14 @@
       (proposalsData.proposals || []).forEach(p => {
         const status = getLifecycleState(p);
         const vis = getVisibleStatus(p);
+
+        // Open Business: all uncompleted, non-terminal work (suggested, active, review, held)
+        const isClosed = ["completed", "pushed", "published", "rejected", "deleted", "cancelled", "withdrawn", "superseded"].includes(status) ||
+                         ["complete", "published", "cancelled"].includes(vis);
+        if (!isClosed) openCount++;
+
+        // Suggested: intake awaiting Gate 1
+        if (status === "suggested" || vis === "open") suggestedCount++;
 
         // In Progress: following scoped up to but excluding committed
         if (status !== "completed" && status !== "pushed" && status !== "published" && status !== "committed") {
@@ -2390,12 +2409,14 @@
         if (status === "completed" || vis === "complete") completeCount++;
         if (status === "pushed" || status === "published" || vis === "published") publishedCount++;
 
-        const isFinishedOrDiscarded = ["pushed", "rejected", "deleted", "cancelled", "withdrawn"].includes(status) ||
+        const isFinishedOrDiscarded = ["pushed", "published", "rejected", "deleted", "cancelled", "withdrawn", "superseded"].includes(status) ||
                                      ["published", "cancelled"].includes(vis);
         if (!isFinishedOrDiscarded) unfinishedCount++;
       });
 
       if ($("count-all")) $("count-all").innerText = allCount;
+      if ($("count-open")) $("count-open").innerText = openCount;
+      if ($("count-suggested")) $("count-suggested").innerText = suggestedCount;
       if ($("count-inprogress")) $("count-inprogress").innerText = inprogressCount;
       if ($("count-review")) $("count-review").innerText = reviewCount;
       if ($("count-complete")) $("count-complete").innerText = completeCount;
@@ -2466,7 +2487,7 @@
         const el = $("rail-" + status);
         if (el) el.classList.add("active");
         if ($("presetSelect")) {
-          if (["open", "unfinished", "inprogress", "review", "complete"].includes(status)) {
+          if (["open", "suggested", "unfinished", "inprogress", "review", "complete"].includes(status)) {
             $("presetSelect").value = status;
           } else {
             $("presetSelect").value = "all";
@@ -2584,13 +2605,14 @@
       const cohortText = cohortIds.join(" ");
 
       // Rail filter check
-      if (activeRailFilter === "open") {
-        if (prio === 0) return false;
-        const isClosed = ["held", "completed", "pushed", "rejected", "deleted", "cancelled"].includes(state) ||
+      if (activeRailFilter === "open" || activeRailFilter === "openbusiness") {
+        const isClosed = ["completed", "pushed", "published", "rejected", "deleted", "cancelled", "withdrawn", "superseded"].includes(state) ||
                          ["complete", "published", "cancelled"].includes(vis);
         if (isClosed) return false;
+      } else if (activeRailFilter === "suggested") {
+        if (state !== "suggested" && vis !== "open") return false;
       } else if (activeRailFilter === "unfinished") {
-        const isFinishedOrDiscarded = ["pushed", "rejected", "deleted", "cancelled", "withdrawn"].includes(state) ||
+        const isFinishedOrDiscarded = ["pushed", "published", "rejected", "deleted", "cancelled", "withdrawn", "superseded"].includes(state) ||
                                      ["published", "cancelled"].includes(vis);
         if (isFinishedOrDiscarded) return false;
       } else if (activeRailFilter === "inprogress") {
@@ -4427,13 +4449,13 @@ REST DAEMON BRIDGE:
         };
       }
       if (typeof state.scope === "string") $("scopeSelect").value = state.scope;
-      if (["all", "open", "unfinished", "inprogress", "review", "complete", "published", "held"].includes(state.activeRailFilter)) {
+      if (["all", "open", "suggested", "unfinished", "inprogress", "review", "complete", "published", "held"].includes(state.activeRailFilter)) {
         activeRailFilter = state.activeRailFilter;
         document.querySelectorAll(".rail-state").forEach(el => el.classList.remove("active"));
         const el = $("rail-" + activeRailFilter);
         if (el) el.classList.add("active");
         if ($("presetSelect")) {
-          if (["open", "unfinished", "inprogress", "review", "complete"].includes(activeRailFilter)) {
+          if (["open", "suggested", "unfinished", "inprogress", "review", "complete"].includes(activeRailFilter)) {
             $("presetSelect").value = activeRailFilter;
           } else {
             $("presetSelect").value = "all";

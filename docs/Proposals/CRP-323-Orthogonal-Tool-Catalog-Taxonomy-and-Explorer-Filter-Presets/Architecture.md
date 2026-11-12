@@ -45,7 +45,7 @@ The table below defines how the legacy 40 fragmented categories and 15 legacy ro
 | :--- | :--- |
 | `File Search`, `Explorer Tweaks`, `Disk Diagnostics`, `Volume Security`, `FileReadIntegrity` | **`File System & Search`** |
 | `Macrium BCR Baseline`, `Disaster Recovery`, `RestorePoints`, `Backup` | **`Backup & Recovery`** |
-| `Configuration Management`, `Proposal Review`, `Tool Analysis`, `Tool Discovery`, `Tool Scaffolding`, `Rules` | **`Governance & Proposals`** |
+| `Configuration Management`, `Proposal Review`, `Tool Analysis`, `Tool Discovery`, `Tool Scaffolding`, `Rules`, `Strategies / RFCs` | **`Governance & Proposals`** |
 | `Beyond Compare Review`, `Quality Gate`, `Audit Logs`, `Drift Detection`, `AsciiCompliance`, `Readiness` | **`Review & Quality Gates`** |
 | `Administrative Privileges`, `JIT Authentication`, `Security Tweaks`, `System Security`, `Role: Elevation`, `Role: Auth` | **`Elevation & Access`** |
 | `Log Diagnostics`, `Network Diagnostics`, `Session Failure Analysis`, `Supervision & Health`, `Telemetry`, `Metrics` | **`Diagnostics & Telemetry`** |
@@ -99,3 +99,55 @@ const PRESETS = {
   }
 };
 ```
+
+---
+
+### 5. Integration with `ShowTools` & `ShowCM`
+
+1. **`ShowTools` (`ToolExplorer.html` / `Show-ToolIntents.ps1`)**:
+   - The primary interactive viewer for the 3-axis taxonomy.
+   - The table drops the obsolete `Role` column to eliminate layout clutter and maximize space for descriptions.
+   - The `Group` column and filter are renamed to `SubSystem`.
+   - The Preset Selector bar is positioned prominently at the top with `User` as the default.
+
+2. **`ShowCM` (`CM_CONTROL_HUB.html` / `Show-LcmControl.ps1`)**:
+   - The Control Hub redesign aligns proposals and change requests with the unified `SubSystem` model (`PC`, `LCM`, `LCM_Inventory`, `LCM_AI`, `LCM_Tools`, `HaSSD06`, `Sandboxes`).
+   - Obsolete role/group terminology is removed from the dashboard widgets and ledger displays.
+
+---
+
+### 6. SQLite Tool Catalog Engine (`tools.db` & `tools.sql`)
+
+Following the Dual-State Projection Architecture proven in `CRP-322`, `tool_catalog.json` is paired with a high-performance SQLite database:
+
+```sql
+CREATE TABLE IF NOT EXISTS tools (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL UNIQUE,
+    short_name TEXT NOT NULL,
+    subsystem TEXT NOT NULL,
+    category TEXT NOT NULL,
+    audience TEXT NOT NULL, -- 'User', 'Maintenance', 'Internal'
+    admin INTEGER NOT NULL DEFAULT 0,
+    no_exit INTEGER NOT NULL DEFAULT 0,
+    type TEXT NOT NULL, -- 'PowerShell', 'Python', 'Batch', 'Executable'
+    description TEXT,
+    example TEXT,
+    relative_path TEXT NOT NULL,
+    parameters_json TEXT,
+    dependencies_json TEXT,
+    updated_at TEXT NOT NULL
+);
+
+-- Targeted indexes for sub-millisecond ShowTools preset & column filtering
+CREATE INDEX IF NOT EXISTS idx_tools_audience ON tools(audience);
+CREATE INDEX IF NOT EXISTS idx_tools_subsystem ON tools(subsystem);
+CREATE INDEX IF NOT EXISTS idx_tools_category ON tools(category);
+CREATE INDEX IF NOT EXISTS idx_tools_shortname ON tools(short_name);
+```
+
+#### Dual-State Properties:
+1. **Binary Store (`data/tools/tools.db`)**: Local runtime database, git-ignored (`RULE-REV-001`), loaded instantly by `ShowTools` without JSON deserialization overhead.
+2. **Text Store (`data/tools/tools.sql`)**: Deterministic SQL dump committed to Git for transparent diffs in Beyond Compare.
+3. **Synchronization**: Bidirectional sync between `tool_catalog.json` and `tools.db` via `Sync-LcmToolCatalogDb.ps1` / Python sync atom.
+4. **Go Engine Readiness**: Providing an SQLite database opens the immediate path for a compiled Go binary (`showtools.exe` / `lcm.exe`) with microsecond response times.

@@ -28,17 +28,30 @@
   - Ensure `Category = "Utility"` is completely eliminated.
 - [ ] Support `SubSystem = "Sandboxes"` detection and isolation.
 
-### Phase 3: Tool Explorer UI (`ToolExplorer.html` & `Show-ToolIntents.ps1`)
-- [ ] Update `ToolExplorer.html`:
+### Phase 3: Tool Explorer (`ShowTools`) & Control Hub (`ShowCM`) UI Redesign
+- [ ] Update `ToolExplorer.html` (`ShowTools`):
   - Remove `Role` table column and dropdown filter.
   - Rename `Group` dropdown filter to `SubSystem`.
   - Add Preset Selector toolbar (`User`, `Developer`, `Maintenance`, `All`).
   - Configure `Developer` preset to default to `NoInternals` (`['User', 'Maintenance']`), while allowing the Audience column filter to opt into `Internal`.
   - Set initial launch state to `Preset: User`.
   - Render the 9 unified categories in the Category filter dropdown.
-- [ ] Update `Show-ToolIntents.ps1` parameter sets to replace `-Role` with `-Category` and `-Group` with `-SubSystem`.
+- [ ] Update `Show-ToolIntents.ps1` (`ShowTools` entrypoint):
+  - Replace `-Role` parameter with `-Category` and `-Group` with `-SubSystem`.
+  - Add `-Preset` parameter (`User`, `Developer`, `Maintenance`, `All`).
+- [ ] Update `CM_CONTROL_HUB.html` & `Show-LcmControl.ps1` (`ShowCM`):
+  - Align subsystem filtering and status rails with the unified `SubSystem` architecture (`PC`, `LCM`, `HaSSD06`, `Sandboxes`).
+  - Drop references to legacy roles.
 
-### Phase 4: Ledger & Database Synchronization
+### Phase 4: SQLite Tool Catalog Migration (`tools.db`) & Dual-State Sync
 - [ ] Run `Update-ToolCatalog.ps1 -Silent` to regenerate `tool_catalog.json` and all `.cmd` launchers in `DoT`.
-- [ ] Execute `Sync-LcmProposalsDb.ps1` to update SQLite `proposals.db` and commit `proposals.sql`.
+- [ ] Create SQLite Tool Catalog Engine (`data/tools/tools.db` & `tools.sql`):
+  - Implement `tools` table schema with indexes on `audience`, `subsystem`, `category`, and `short_name`.
+  - Author `Sync-LcmToolCatalogDb.ps1` (and `sync_tool_catalog_db.py`) to sync `tool_catalog.json` -> `tools.db` + `tools.sql`.
+- [ ] Integrate SQLite querying into `ShowTools` (`Show-ToolIntents.ps1` & `ToolExplorer.html`):
+  - Read directly from `tools.db` for instant startup and preset filtering.
+- [ ] Execute `Sync-LcmProposalsDb.ps1` to keep `proposals.db` in sync.
 - [ ] Verify 6/6 General Readiness gates pass across all governed repositories.
+
+### Scope Boundary / Non-Goal Notice
+- **Strategy Relational Database & `ShowStrategies`**: While CRP-323 establishes the category home for Strategies and serves as the baseline for the *Tool Taxonomy, Fast Discovery & High-Performance Execution* strategic direction, implementing the `strategies` database schema, referential integrity triggers, and `ShowStrategies` display is strictly out-of-scope and is owned exclusively by **`CRP-324`**.

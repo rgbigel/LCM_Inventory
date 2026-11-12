@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-11-11T21:58:48+01:00",
-  "review_granularity": "coarse",
+  "updated_at": "2026-11-12T17:25:00+01:00",
+  "review_granularity": "tight",
   "lcm_mode": "active",
-  "last_proposal_id": 320,
+  "last_proposal_id": 324,
   "proposals": [
     {
       "id": 261,
@@ -114,7 +114,8 @@
       "progress_state": "pushed",
       "disposition": "completed",
       "priority": 0,
-      "pushed_at": "2026-11-06 10:44:45"
+      "pushed_at": "2026-11-06 10:44:45",
+      "lcm_version": "10.2.0"
     },
     {
       "id": 260,
@@ -197,7 +198,8 @@
       "progress_state": "pushed",
       "disposition": "completed",
       "priority": 0,
-      "pushed_at": "2026-11-06 10:44:45"
+      "pushed_at": "2026-11-06 10:44:45",
+      "lcm_version": "10.2.0"
     },
     {
       "id": 259,
@@ -301,7 +303,8 @@
       "progress_state": "pushed",
       "disposition": "completed",
       "priority": 0,
-      "pushed_at": "2026-11-06 10:44:45"
+      "pushed_at": "2026-11-06 10:44:45",
+      "lcm_version": "10.2.0"
     },
     {
       "id": 258,
@@ -356,7 +359,8 @@
       "progress_state": "deferred",
       "disposition": "superseded",
       "superseded_by_id": 308,
-      "superseded_at": "2026-11-10 17:50:37"
+      "superseded_at": "2026-11-10 17:50:37",
+      "lcm_version": "10.2.0"
     },
     {
       "id": 257,
@@ -441,7 +445,8 @@
       "disposition": "published",
       "commit_sha": "52fd362e957e75883881b1d024928ccbfd7224ce",
       "github_url": "https://github.com/rgbigel/Workspace_Inventory/commit/52fd362e957e75883881b1d024928ccbfd7224ce",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.2.0"
     },
     {
       "id": 254,
@@ -479,7 +484,8 @@
       "progress_state": "not_started",
       "flow_mode": "doit",
       "always_proceed": false,
-      "disposition": null
+      "disposition": null,
+      "lcm_version": "10.1.0"
     },
     {
       "id": 253,
@@ -535,19 +541,20 @@
       "disposition": "Postponed",
       "supersedes": "CRP-251",
       "supersedes_id": 251,
-      "supersedes_at": "2026-11-09 18:44:14"
+      "supersedes_at": "2026-11-09 18:44:14",
+      "lcm_version": "10.1.0"
     },
     {
       "id": 252,
       "crp_id": "CRP-252",
       "timestamp": "2026-10-13 16:14:00",
-      "title": "LEV Model Adaptation Prototype and Evidence Replay",
+      "title": "Multi-Stage System-1 Decision Cascade - Core PowerShell Pipeline and Graceful Fallback",
       "origin_repo": "LCM_Inventory",
       "cr_id": "CRP-252",
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "suggested",
+      "state": "in_progress",
       "bundle_id": "CRP-252",
       "bundle_dir": "docs/Proposals/CRP-252-LEV-Model-Adaptation-Prototype-and-Evidence-Replay",
       "docs": {
@@ -558,16 +565,14 @@
       "commit_sha": null,
       "github_url": null,
       "author": "rgbig",
-      "details": "Evaluates adaptation of the LEV AI model into LCM internal and external tools through a sandboxed prototype. Repeats and exploits the prior Gemini analysis as verified prototype evidence adapted to LCM requirements.",
+      "details": "Integrates a System-1 Decision Gate (/v1/systemone contract for lev / strands-decider) into LCM 10.2.1 architecture with standalone multi-stage pwsh scripts (Stage 0, Stage 1, Stage 2 Fallback, and Orchestrator Facade).",
       "plan_path": "docs/Proposals/CRP-252-LEV-Model-Adaptation-Prototype-and-Evidence-Replay/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-252-LEV-Model-Adaptation-Prototype-and-Evidence-Replay/Walkthrough.md",
-      "flow_mode": "normal",
-      "always_proceed": false,
-      "progress_state": "suggested",
-      "priority": 2,
+      "priority": 8,
       "dates": {
         "created": "2026-10-13 16:14:00",
-        "suggested": "2026-10-13 16:14:00"
+        "suggested": "2026-10-13 16:14:00",
+        "in_progress": "2026-11-12 08:49:19"
       },
       "state_history": [
         {
@@ -575,8 +580,23 @@
           "timestamp": "2026-10-13 16:14:00",
           "user": "rgbig",
           "note": "Deferred pending LEV identity, provider, access, sandbox, and success-criteria definition."
+        },
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-11-12 08:49:19",
+          "user": "rgbig",
+          "note": "",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
-      ]
+      ],
+      "progress_state": "in_progress",
+      "disposition": null,
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "lcm_version": "10.2.1"
     },
     {
       "id": 251,
@@ -633,7 +653,8 @@
       "supersedes_at": "2026-10-16 20:56:10",
       "superseded_by": "CRP-253",
       "superseded_at": "2026-11-09 18:44:14",
-      "disposition": "Superseded by CRP-253"
+      "disposition": "Superseded by CRP-253",
+      "lcm_version": "10.1.0"
     },
     {
       "id": 250,
@@ -702,7 +723,8 @@
       "progress_state": "deferred",
       "disposition": "superseded",
       "superseded_by_id": 283,
-      "superseded_at": "2026-10-16 20:49:31"
+      "superseded_at": "2026-10-16 20:49:31",
+      "lcm_version": "10.1.0"
     },
     {
       "id": 249,
@@ -776,7 +798,8 @@
       "disposition": "published",
       "commit_sha": "8181d4ebba947baafebdc117625e31780e70f617",
       "github_url": "https://github.com/rgbigel/Workspace_Inventory/commit/8181d4ebba947baafebdc117625e31780e70f617",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.1.0"
     },
     {
       "id": 248,
@@ -831,7 +854,8 @@
       "progress_state": "deferred",
       "disposition": "superseded",
       "superseded_by_id": 309,
-      "superseded_at": "2026-11-08 15:00:39"
+      "superseded_at": "2026-11-08 15:00:39",
+      "lcm_version": "10.2.0"
     },
     {
       "id": 247,
@@ -925,7 +949,8 @@
       "progress_state": "pushed",
       "disposition": "completed",
       "priority": 0,
-      "pushed_at": "2026-11-06 10:44:45"
+      "pushed_at": "2026-11-06 10:44:45",
+      "lcm_version": "10.1.0"
     },
     {
       "id": 1,
@@ -975,7 +1000,8 @@
       ],
       "crp_id": "CRP-001",
       "cr_id": "CRP-001",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 2,
@@ -1025,7 +1051,8 @@
       ],
       "crp_id": "CRP-002",
       "cr_id": "CRP-002",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 3,
@@ -1075,7 +1102,8 @@
       ],
       "crp_id": "CRP-003",
       "cr_id": "CRP-003",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 4,
@@ -1125,7 +1153,8 @@
       ],
       "crp_id": "CRP-004",
       "cr_id": "CRP-004",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 5,
@@ -1175,7 +1204,8 @@
       ],
       "crp_id": "CRP-005",
       "cr_id": "CRP-005",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 6,
@@ -1225,7 +1255,8 @@
       ],
       "crp_id": "CRP-006",
       "cr_id": "CRP-006",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 7,
@@ -1275,7 +1306,8 @@
       ],
       "crp_id": "CRP-007",
       "cr_id": "CRP-007",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 8,
@@ -1325,7 +1357,8 @@
       ],
       "crp_id": "CRP-008",
       "cr_id": "CRP-008",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 9,
@@ -1375,7 +1408,8 @@
       ],
       "crp_id": "CRP-009",
       "cr_id": "CRP-009",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 10,
@@ -1425,7 +1459,8 @@
       ],
       "crp_id": "CRP-010",
       "cr_id": "CRP-010",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 11,
@@ -1475,7 +1510,8 @@
       ],
       "crp_id": "CRP-011",
       "cr_id": "CRP-011",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 12,
@@ -1525,7 +1561,8 @@
       ],
       "crp_id": "CRP-012",
       "cr_id": "CRP-012",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 13,
@@ -1575,7 +1612,8 @@
       ],
       "crp_id": "CRP-013",
       "cr_id": "CRP-013",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 14,
@@ -1625,7 +1663,8 @@
       ],
       "crp_id": "CRP-014",
       "cr_id": "CRP-014",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 15,
@@ -1675,7 +1714,8 @@
       ],
       "crp_id": "CRP-015",
       "cr_id": "CRP-015",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 16,
@@ -1725,7 +1765,8 @@
       ],
       "crp_id": "CRP-016",
       "cr_id": "CRP-016",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 17,
@@ -1775,7 +1816,8 @@
       ],
       "crp_id": "CRP-017",
       "cr_id": "CRP-017",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 18,
@@ -1825,7 +1867,8 @@
       ],
       "crp_id": "CRP-018",
       "cr_id": "CRP-018",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 19,
@@ -1875,7 +1918,8 @@
       ],
       "crp_id": "CRP-019",
       "cr_id": "CRP-019",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 20,
@@ -1925,7 +1969,8 @@
       ],
       "crp_id": "CRP-020",
       "cr_id": "CRP-020",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 21,
@@ -1975,7 +2020,8 @@
       ],
       "crp_id": "CRP-021",
       "cr_id": "CRP-021",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 22,
@@ -2025,7 +2071,8 @@
       ],
       "crp_id": "CRP-022",
       "cr_id": "CRP-022",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 23,
@@ -2075,7 +2122,8 @@
       ],
       "crp_id": "CRP-023",
       "cr_id": "CRP-023",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 24,
@@ -2125,7 +2173,8 @@
       ],
       "crp_id": "BUG-024",
       "cr_id": "BUG-024",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 25,
@@ -2193,7 +2242,8 @@
       "crp_id": "CRP-025",
       "cr_id": "CRP-025",
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 26,
@@ -2243,7 +2293,8 @@
       ],
       "crp_id": "CRP-026",
       "cr_id": "CRP-026",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 27,
@@ -2293,7 +2344,8 @@
       ],
       "crp_id": "CRP-027",
       "cr_id": "CRP-027",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 28,
@@ -2341,7 +2393,8 @@
       "pushed_at": "2026-10-13 15:53:01",
       "crp_id": "CRP-028",
       "cr_id": "CRP-028",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 29,
@@ -2389,7 +2442,8 @@
       "pushed_at": "2026-10-13 15:53:01",
       "crp_id": "CRP-029",
       "cr_id": "CRP-029",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 30,
@@ -2437,7 +2491,8 @@
       "pushed_at": "2026-10-13 15:53:01",
       "crp_id": "CRP-030",
       "cr_id": "CRP-030",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 31,
@@ -2485,7 +2540,8 @@
       "pushed_at": "2026-10-13 15:53:01",
       "crp_id": "CRP-031",
       "cr_id": "CRP-031",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 32,
@@ -2533,7 +2589,8 @@
       "pushed_at": "2026-10-13 15:53:01",
       "crp_id": "CRP-032",
       "cr_id": "CRP-032",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 33,
@@ -2581,7 +2638,8 @@
       "pushed_at": "2026-10-13 15:53:01",
       "crp_id": "CRP-033",
       "cr_id": "CRP-033",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 34,
@@ -2629,7 +2687,8 @@
       "pushed_at": "2026-10-13 15:53:01",
       "crp_id": "CRP-034",
       "cr_id": "CRP-034",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 35,
@@ -2685,7 +2744,8 @@
       "pushed_at": "2026-10-13 15:53:01",
       "crp_id": "CRP-035",
       "cr_id": "CRP-035",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 36,
@@ -2741,7 +2801,8 @@
       "pushed_at": "2026-10-13 15:53:01",
       "crp_id": "CRP-036",
       "cr_id": "CRP-036",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 37,
@@ -2797,7 +2858,8 @@
       "pushed_at": "2026-10-13 15:53:01",
       "crp_id": "BUG-037",
       "cr_id": "BUG-037",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 38,
@@ -2853,7 +2915,8 @@
       "pushed_at": "2026-10-13 15:53:01",
       "crp_id": "BUG-038",
       "cr_id": "BUG-038",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 39,
@@ -2909,7 +2972,8 @@
       "pushed_at": "2026-10-13 15:53:01",
       "crp_id": "CRP-039",
       "cr_id": "CRP-039",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 40,
@@ -2965,7 +3029,8 @@
       "pushed_at": "2026-10-13 15:53:01",
       "crp_id": "CRP-040",
       "cr_id": "CRP-040",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 41,
@@ -3021,7 +3086,8 @@
       "pushed_at": "2026-10-13 15:53:01",
       "crp_id": "CRP-041",
       "cr_id": "CRP-041",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 42,
@@ -3077,7 +3143,8 @@
       "pushed_at": "2026-10-13 15:53:01",
       "crp_id": "CRP-042",
       "cr_id": "CRP-042",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 43,
@@ -3133,7 +3200,8 @@
       "pushed_at": "2026-10-13 15:53:01",
       "crp_id": "CRP-043",
       "cr_id": "CRP-043",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 44,
@@ -3189,7 +3257,8 @@
       "pushed_at": "2026-10-13 15:53:01",
       "crp_id": "CRP-044",
       "cr_id": "CRP-044",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 45,
@@ -3232,7 +3301,8 @@
       "crp_id": "BUG-045",
       "cr_id": "BUG-045",
       "pushed_at": "2026-10-13 13:42:00",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 46,
@@ -3275,7 +3345,8 @@
       "crp_id": "CRP-046",
       "cr_id": "CRP-046",
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 47,
@@ -3310,7 +3381,8 @@
       "crp_id": "CRP-047",
       "cr_id": "CRP-047",
       "progress_state": "rejected",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 48,
@@ -3346,7 +3418,8 @@
       "cr_id": "CRP-048",
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 22:06:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 49,
@@ -3381,7 +3454,8 @@
       "crp_id": "CRP-049",
       "cr_id": "CRP-049",
       "progress_state": "rejected",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 50,
@@ -3416,7 +3490,8 @@
       "crp_id": "CRP-050",
       "cr_id": "CRP-050",
       "progress_state": "rejected",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 51,
@@ -3451,7 +3526,8 @@
       "crp_id": "CRP-051",
       "cr_id": "CRP-051",
       "progress_state": "rejected",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 52,
@@ -3486,7 +3562,8 @@
       "crp_id": "CRP-052",
       "cr_id": "CRP-052",
       "progress_state": "rejected",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 53,
@@ -3521,7 +3598,8 @@
       "crp_id": "CRP-053",
       "cr_id": "CRP-053",
       "progress_state": "rejected",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 54,
@@ -3571,7 +3649,8 @@
       "crp_id": "CRP-054",
       "cr_id": "CRP-054",
       "pushed_at": "2026-10-13 22:38:53",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 55,
@@ -3614,7 +3693,8 @@
       "crp_id": "CRP-055",
       "cr_id": "CRP-055",
       "pushed_at": "2026-10-13 14:10:00",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 56,
@@ -3672,7 +3752,8 @@
       "crp_id": "CRP-056",
       "cr_id": "CRP-056",
       "progress_state": "rejected",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 57,
@@ -3723,7 +3804,8 @@
       "crp_id": "CRP-057",
       "cr_id": "CRP-057",
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 58,
@@ -3798,7 +3880,8 @@
       "pushed_at": "2026-10-13 22:20:19",
       "crp_id": "CRP-058",
       "cr_id": "CRP-058",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 59,
@@ -3851,7 +3934,8 @@
       "crp_id": "CRP-059",
       "cr_id": "CRP-059",
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 60,
@@ -3917,7 +4001,8 @@
       "pushed_at": "2026-10-13 22:20:19",
       "crp_id": "CRP-060",
       "cr_id": "CRP-060",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 61,
@@ -3974,7 +4059,8 @@
       "pushed_at": "2026-10-13 22:20:19",
       "crp_id": "CRP-061",
       "cr_id": "CRP-061",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 62,
@@ -3991,7 +4077,8 @@
       "crp_id": "CRP-062",
       "cr_id": "CRP-062",
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 63,
@@ -4008,7 +4095,8 @@
       "crp_id": "CRP-063",
       "cr_id": "CRP-063",
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 64,
@@ -4025,7 +4113,8 @@
       "crp_id": "CRP-064",
       "cr_id": "CRP-064",
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 65,
@@ -4042,7 +4131,8 @@
       "crp_id": "CRP-065",
       "cr_id": "CRP-065",
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 66,
@@ -4059,7 +4149,8 @@
       "crp_id": "CRP-066",
       "cr_id": "CRP-066",
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 67,
@@ -4109,7 +4200,8 @@
       "crp_id": "BUG-067",
       "cr_id": "BUG-067",
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "description": "CM Control Hub template script block escaping fix, global Escape modal dismissal, and alignment with Display Standard.",
@@ -4143,7 +4235,8 @@
       "crp_id": "CRP-068",
       "cr_id": "CRP-068",
       "timestamp": "2026-10-13 20:55:30",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "description": "Modal exit ergonomics via Escape key across Tool Explorer subdisplays.",
@@ -4177,7 +4270,8 @@
       "crp_id": "CRP-069",
       "cr_id": "CRP-069",
       "timestamp": "2026-10-13 20:55:30",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "description": "Direct code editing in active VS Code IDE instead of Notepad++.",
@@ -4211,7 +4305,8 @@
       "crp_id": "BUG-070",
       "cr_id": "BUG-070",
       "timestamp": "2026-10-13 20:55:30",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "description": "Tool renaming persistence via tool_catalog_overrides.json and immediate .cmd trampoline regeneration in LCM_Inventory/Cmd.",
@@ -4245,7 +4340,8 @@
       "crp_id": "BUG-071",
       "cr_id": "BUG-071",
       "timestamp": "2026-10-13 20:55:30",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "description": "Automatic elevation interlock for SystemPrivilege PsExec tools.",
@@ -4279,7 +4375,8 @@
       "crp_id": "BUG-072",
       "cr_id": "BUG-072",
       "timestamp": "2026-10-13 20:55:30",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "description": "Resolved path errors for Set-MouseFlickerInvariants, forwarded self-elevation arguments, and surfaced script dependencies.",
@@ -4313,7 +4410,8 @@
       "crp_id": "BUG-073",
       "cr_id": "BUG-073",
       "timestamp": "2026-10-13 20:55:30",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "description": "Correct log file detection and cleanup across all LCM log roots.",
@@ -4347,7 +4445,8 @@
       "crp_id": "BUG-074",
       "cr_id": "BUG-074",
       "timestamp": "2026-10-13 20:55:30",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "description": "Convergence of ShowToolIndex into ShowTools and enforcing browser table displays for GUI role tools unless -NoBrowser is specified.",
@@ -4381,7 +4480,8 @@
       "crp_id": "BUG-075",
       "cr_id": "BUG-075",
       "timestamp": "2026-10-13 20:55:30",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 76,
@@ -4431,7 +4531,8 @@
       "pushed_at": "2026-10-13 22:33:38",
       "crp_id": "CRP-076",
       "cr_id": "CRP-076",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 77,
@@ -4482,7 +4583,8 @@
       "crp_id": "CRP-077",
       "cr_id": "CRP-077",
       "pushed_at": "2026-10-13 19:42:05",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 78,
@@ -4526,7 +4628,8 @@
       "crp_id": "CRP-078",
       "cr_id": "CRP-078",
       "pushed_at": "2026-10-13 19:42:05",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 79,
@@ -4575,7 +4678,8 @@
       "progress_state": "pushed",
       "crp_id": "CRP-079",
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 80,
@@ -4638,7 +4742,8 @@
         "final_progress": "pushed",
         "title": "Modernize BackgroundModifier Architecture via Dynamic Rainmeter Skin Engine"
       },
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 81,
@@ -4701,7 +4806,8 @@
         "final_progress": "pushed",
         "title": "Design and Implement LCM Universal Installation Path, Packaging Agent, Preflight Engine, and UX Verification Suite"
       },
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 82,
@@ -4764,7 +4870,8 @@
         "final_progress": "pushed",
         "title": "Enhance Pre-Installation Check with Modular Tool Selection & Conditional Deployment Engine"
       },
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 83,
@@ -4827,7 +4934,8 @@
         "final_progress": "pushed",
         "title": "Design and Author Comprehensive Tripartite Specifications and Normative Runbook for Installation_LCD"
       },
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 84,
@@ -4890,7 +4998,8 @@
         "final_progress": "pushed",
         "title": "Default to Lightweight BUG Report on Error/Unwanted Behavior Feedback"
       },
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 85,
@@ -4953,7 +5062,8 @@
         "final_progress": "pushed",
         "title": "Scope and Version-Explicit Naming Standard for Change Request Proposals (CRPs)"
       },
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 86,
@@ -5016,7 +5126,8 @@
         "final_progress": "pushed",
         "title": "Workspace Inventory Viewer Interactive Actions Suite, Non-Git Visibility, and Data Versioning Exemption"
       },
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 87,
@@ -5079,7 +5190,8 @@
         "final_progress": "pushed",
         "title": "Unescaped $timestamp Variable Interpolation in Show-HaInventoryApp.ps1"
       },
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 88,
@@ -5142,7 +5254,8 @@
         "final_progress": "pushed",
         "title": "Spook ðŸ‘» Your Homie Custom Integration Update (10.0.0 -> 10.0.0)"
       },
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 89,
@@ -5205,7 +5318,8 @@
         "final_progress": "pushed",
         "title": "Shelly BLU Gateway Firmware Stabilization (10.0.0-beta1 -> 10.0.0 Stable)"
       },
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 90,
@@ -5268,7 +5382,8 @@
         "final_progress": "pushed",
         "title": "FRITZ!Box Deprecated Button Entities Cleanup (Breaks in HA 10.0.0)"
       },
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 91,
@@ -5331,7 +5446,8 @@
         "final_progress": "pushed",
         "title": "Active Notification Count Template Sensor Default Value Fix"
       },
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 92,
@@ -5394,7 +5510,8 @@
         "final_progress": "pushed",
         "title": "Alexa Devices HTTP/2 Push DNS Resolution Timeout (ClientConnectorDNSError)"
       },
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 93,
@@ -5457,7 +5574,8 @@
         "final_progress": "pushed",
         "title": "Tuya Device Handlers Invalid Enum Value for Datapoint relay_status"
       },
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 94,
@@ -5520,7 +5638,8 @@
         "final_progress": "pushed",
         "title": "Tuya Local Unregistered Product IDs in Smart Plug Device Profiles"
       },
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 95,
@@ -5589,7 +5708,8 @@
         "final_progress": "pushed",
         "title": "Workspace Artifact Deduplication, Archive Consolidation & .lcd Junction Removal"
       },
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 96,
@@ -5658,7 +5778,8 @@
         "final_progress": "pushed",
         "title": "Disable Raspberry Pi Onboard Bluetooth Adapter & Consolidate BLE to Shelly Gateway"
       },
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 97,
@@ -5727,7 +5848,8 @@
         "final_progress": "pushed",
         "title": "Tool Explorer '@nn-' Prefix Tool Disappearance on Filter Reset"
       },
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 98,
@@ -5796,7 +5918,8 @@
         "final_progress": "pushed",
         "title": "Excessive Repetitive Windows Notifications during Project Rule Access"
       },
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 99,
@@ -5865,7 +5988,8 @@
         "final_progress": "pushed",
         "title": "Tool Explorer Asset Path Resolution, Draggable Help Modal, and Catalog Sync"
       },
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "Legacy (<10.0)"
     },
     {
       "id": 100,
@@ -5934,7 +6058,8 @@
         "final_progress": "pushed",
         "title": "Prevent BLE Packet Collisions via Selective Single-Receiver Ingestion"
       },
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 101,
@@ -6003,7 +6128,8 @@
         "final_progress": "pushed",
         "title": "Universal Light/Dark Theme Standardization & High-Contrast Design Hardening"
       },
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 102,
@@ -6072,7 +6198,8 @@
         "final_progress": "pushed",
         "title": "CM Control Hub Navigation Hardening, Filter Reconciliation, and Action Engine"
       },
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 103,
@@ -6160,7 +6287,8 @@
         "title": "Universal LCM Table UI/UX Standard & Standardized Interactive Document Viewer"
       },
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 104,
@@ -6229,7 +6357,8 @@
         "final_progress": "pushed",
         "title": "LCM Deterministic Hook Engine & Zero-Trust Tool Execution Boundary"
       },
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 105,
@@ -6298,7 +6427,8 @@
       },
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 106,
@@ -6354,7 +6484,8 @@
       },
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 19:42:05",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 107,
@@ -6416,7 +6547,8 @@
         }
       ],
       "pushed_at": "2026-10-13 19:42:05",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 108,
@@ -6465,7 +6597,8 @@
       ],
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 109,
@@ -6508,7 +6641,8 @@
       ],
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 110,
@@ -6551,7 +6685,8 @@
         }
       ],
       "pushed_at": "2026-10-13 19:42:05",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 111,
@@ -6601,7 +6736,8 @@
         }
       ],
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 112,
@@ -6644,7 +6780,8 @@
         }
       ],
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 113,
@@ -6687,7 +6824,8 @@
         }
       ],
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 114,
@@ -6730,7 +6868,8 @@
         }
       ],
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 115,
@@ -6798,7 +6937,8 @@
         }
       ],
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 116,
@@ -6848,7 +6988,8 @@
         }
       ],
       "pushed_at": "2026-10-13 19:42:05",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 117,
@@ -6898,7 +7039,8 @@
         }
       ],
       "pushed_at": "2026-10-13 20:07:12",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 118,
@@ -6955,7 +7097,8 @@
       ],
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 21:29:59",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 119,
@@ -7005,7 +7148,8 @@
         }
       ],
       "pushed_at": "2026-10-13 19:42:05",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 120,
@@ -7055,7 +7199,8 @@
         }
       ],
       "pushed_at": "2026-10-13 19:42:05",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 121,
@@ -7108,7 +7253,8 @@
       ],
       "cm_scope_note": "CRP-121 implementation is owned by LCM_Inventory; the reviewed authority-rule and root-index corrections are affected-repository cohort members.",
       "pushed_at": "2026-10-13 17:39:04",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 122,
@@ -7136,7 +7282,8 @@
         }
       ],
       "progress_state": "rejected",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 123,
@@ -7186,7 +7333,8 @@
         }
       ],
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 124,
@@ -7236,7 +7384,8 @@
         }
       ],
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 125,
@@ -7286,7 +7435,8 @@
         }
       ],
       "pushed_at": "2026-10-13 20:33:07",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 126,
@@ -7330,7 +7480,8 @@
       ],
       "pushed_at": "2026-10-13 14:10:00",
       "regression_needed": false,
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 127,
@@ -7381,7 +7532,8 @@
       "cr_id": "BUG-127",
       "pushed_at": "2026-10-13 22:38:53",
       "regression_needed": false,
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 128,
@@ -7425,7 +7577,8 @@
       "cr_id": "CRP-128",
       "regression_needed": false,
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 129,
@@ -7469,7 +7622,8 @@
       "cr_id": "CRP-129",
       "regression_needed": false,
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 130,
@@ -7513,7 +7667,8 @@
       "cr_id": "CRP-130",
       "regression_needed": false,
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 131,
@@ -7564,7 +7719,8 @@
       "cr_id": "CRP-131",
       "pushed_at": "2026-10-13 22:38:53",
       "regression_needed": true,
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 132,
@@ -7608,7 +7764,8 @@
       "cr_id": "CRP-132",
       "regression_needed": true,
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 133,
@@ -7666,7 +7823,8 @@
       "cr_id": "BUG-133",
       "regression_needed": true,
       "pushed_at": "2026-10-13 18:33:01",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 134,
@@ -7724,7 +7882,8 @@
       "cr_id": "CRP-134",
       "regression_needed": true,
       "pushed_at": "2026-10-13 18:33:01",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 135,
@@ -7781,7 +7940,8 @@
       "max_regression_depth": 2,
       "regression_needed": true,
       "pushed_at": "2026-10-13 18:24:56",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 136,
@@ -7838,7 +7998,8 @@
       "cr_id": "BUG-136",
       "regression_needed": true,
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 137,
@@ -7895,7 +8056,8 @@
       "cr_id": "BUG-137",
       "regression_needed": true,
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 138,
@@ -7952,7 +8114,8 @@
       "cr_id": "CRP-138",
       "regression_needed": true,
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 139,
@@ -8009,7 +8172,8 @@
       "cr_id": "BUG-139",
       "regression_needed": false,
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 140,
@@ -8061,7 +8225,8 @@
       "cr_id": "CRP-140",
       "regression_needed": false,
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 141,
@@ -8105,7 +8270,8 @@
       "cr_id": "BUG-141",
       "regression_needed": false,
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 142,
@@ -8149,7 +8315,8 @@
       "cr_id": "CRP-142",
       "regression_needed": false,
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 143,
@@ -8193,7 +8360,8 @@
       "cr_id": "CRP-143",
       "regression_needed": false,
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 144,
@@ -8237,7 +8405,8 @@
       "cr_id": "CRP-144",
       "regression_needed": false,
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 145,
@@ -8281,7 +8450,8 @@
       "cr_id": "CRP-145",
       "regression_needed": false,
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 146,
@@ -8325,7 +8495,8 @@
       "cr_id": "CRP-146",
       "regression_needed": false,
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 147,
@@ -8367,7 +8538,8 @@
       "regression_needed": false,
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 18:10:53",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 148,
@@ -8411,7 +8583,8 @@
       "cr_id": "BUG-148",
       "regression_needed": false,
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 149,
@@ -8455,7 +8628,8 @@
       "cr_id": "BUG-149",
       "regression_needed": false,
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 150,
@@ -8499,7 +8673,8 @@
       "cr_id": "CRP-150",
       "regression_needed": false,
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 151,
@@ -8557,7 +8732,8 @@
       "cr_id": "CRP-151",
       "regression_needed": false,
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 152,
@@ -8615,7 +8791,8 @@
       "cr_id": "CRP-152",
       "regression_needed": false,
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 153,
@@ -8659,7 +8836,8 @@
       "cr_id": "BUG-153",
       "regression_needed": false,
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 154,
@@ -8703,7 +8881,8 @@
       "cr_id": "BUG-154",
       "regression_needed": false,
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 155,
@@ -8747,7 +8926,8 @@
       "cr_id": "BUG-155",
       "regression_needed": false,
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 156,
@@ -8791,7 +8971,8 @@
       "cr_id": "CRP-156",
       "regression_needed": false,
       "pushed_at": "2026-10-13 18:05:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 157,
@@ -8836,7 +9017,8 @@
       "regression_needed": false,
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 20:17:00",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 158,
@@ -8888,7 +9070,8 @@
       "regression_needed": false,
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 20:49:00",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 159,
@@ -8939,7 +9122,8 @@
       "cr_id": "BUG-159",
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 22:06:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 160,
@@ -8990,7 +9174,8 @@
       "cr_id": "CRP-160",
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 22:06:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 161,
@@ -9041,7 +9226,8 @@
       "cr_id": "CRP-161",
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 22:06:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 162,
@@ -9098,7 +9284,8 @@
       "cr_id": "CRP-162",
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 22:06:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 163,
@@ -9141,7 +9328,8 @@
       "cr_id": "CRP-163",
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 22:06:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 164,
@@ -9184,7 +9372,8 @@
       "cr_id": "CRP-164",
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 02:40:46",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 169,
@@ -9241,7 +9430,8 @@
       "cr_id": "CRP-169",
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 22:06:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 170,
@@ -9298,7 +9488,8 @@
       "cr_id": "CRP-170",
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 22:06:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 171,
@@ -9342,7 +9533,8 @@
       "cr_id": "CRP-171",
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 20:45:50",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 172,
@@ -9395,7 +9587,8 @@
       "cr_id": "BUG-172",
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 20:45:50",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.2.0"
     },
     {
       "id": 173,
@@ -9453,7 +9646,8 @@
       "cr_id": "CRP-173",
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 20:45:50",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 174,
@@ -9510,7 +9704,8 @@
       "cr_id": "CRP-174",
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 20:45:50",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": "175",
@@ -9560,7 +9755,8 @@
       "cr_id": "CRP-175",
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 19:11:58",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 176,
@@ -9610,7 +9806,8 @@
       "cr_id": "CRP-176",
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 01:56:04",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 177,
@@ -9660,7 +9857,8 @@
       "cr_id": "CRP-177",
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 01:56:04",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 178,
@@ -9710,7 +9908,8 @@
       "cr_id": "BUG-178",
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 01:56:04",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 179,
@@ -9760,7 +9959,8 @@
       "cr_id": "BUG-179",
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 01:56:04",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 180,
@@ -9810,7 +10010,8 @@
       "cr_id": "CRP-180",
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 01:56:04",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.1.0"
     },
     {
       "id": 181,
@@ -9860,7 +10061,8 @@
       "cr_id": "BUG-181",
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 01:56:04",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.1.0"
     },
     {
       "id": 182,
@@ -9910,7 +10112,8 @@
       "cr_id": "CRP-182",
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 21:13:05",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.1.0"
     },
     {
       "id": 183,
@@ -9959,7 +10162,8 @@
       "cr_id": "BUG-183",
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 21:22:17",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.2.0"
     },
     {
       "id": 184,
@@ -10009,7 +10213,8 @@
       "cr_id": "CRP-184",
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 21:22:17",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.1.0"
     },
     {
       "id": 185,
@@ -10059,7 +10264,8 @@
       "cr_id": "BUG-185",
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 21:22:17",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.1.0"
     },
     {
       "id": 186,
@@ -10102,7 +10308,8 @@
       "cr_id": "CRP-186",
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 21:22:17",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.1.0"
     },
     {
       "id": 187,
@@ -10146,7 +10353,8 @@
       "cr_id": "CRP-187",
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 18:05:46",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.1.0"
     },
     {
       "id": 188,
@@ -10191,7 +10399,8 @@
       "cr_id": "CRP-188",
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 18:05:46",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.1.0"
     },
     {
       "id": 189,
@@ -10224,7 +10433,8 @@
       "walkthrough_path": "docs/Proposals/BUG-189-LCM-Lifecycle-Command-Migration-and-Lockstep-Push/Walkthrough.md",
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 18:05:46",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.1.0"
     },
     {
       "id": 190,
@@ -10252,7 +10462,8 @@
       "plan_path": "docs/Proposals/CRP-190-Antigravity-Temporary-Tool-Guardrails-and-Prefligh/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-190-Antigravity-Temporary-Tool-Guardrails-and-Prefligh/Walkthrough.md",
       "pushed_at": "2026-10-13 19:42:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.1.0"
     },
     {
       "id": 197,
@@ -10280,7 +10491,8 @@
       "plan_path": "docs/Proposals/CRP-197-Delivery-and-Verification-Follow-Through-for-CRPs-190-195/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-197-Delivery-and-Verification-Follow-Through-for-CRPs-190-195/Walkthrough.md",
       "pushed_at": "2026-10-13 21:29:52",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.1.0"
     },
     {
       "id": 196,
@@ -10308,7 +10520,8 @@
       "plan_path": "docs/Proposals/CRP-196-LCM-Control-Hub-Lifecycle-and-Action-Model-Redesign/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-196-LCM-Control-Hub-Lifecycle-and-Action-Model-Redesign/Walkthrough.md",
       "pushed_at": "2026-10-13 21:29:52",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.1.0"
     },
     {
       "id": 195,
@@ -10339,7 +10552,8 @@
       "plan_path": "docs/Proposals/BUG-195-Close-Stale-Beyond-Compare-Review-Windows/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/BUG-195-Close-Stale-Beyond-Compare-Review-Windows/Walkthrough.md",
       "pushed_at": "2026-10-13 18:05:46",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.1.0"
     },
     {
       "id": 165,
@@ -10367,7 +10581,8 @@
       "plan_path": "docs/Proposals/CRP-165-Beyond-Compare-Replacement-Session-Hygiene/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-165-Beyond-Compare-Replacement-Session-Hygiene/Walkthrough.md",
       "pushed_at": "2026-10-13 18:05:46",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.0.0"
     },
     {
       "id": 194,
@@ -10398,7 +10613,8 @@
       "plan_path": "docs/Proposals/BUG-194-PUSH-Omitted-Repository-Filter-Normalization/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/BUG-194-PUSH-Omitted-Repository-Filter-Normalization/Walkthrough.md",
       "pushed_at": "2026-10-13 18:05:46",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.1.0"
     },
     {
       "id": 193,
@@ -10429,7 +10645,8 @@
       "walkthrough_path": "docs/Proposals/BUG-193-PUSH-Proposal-ID-HashSet-Enumeration-Failure/Walkthrough.md",
       "progress_state": "pushed",
       "pushed_at": "2026-10-13 18:05:46",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.1.0"
     },
     {
       "id": 192,
@@ -10455,7 +10672,8 @@
       "plan_path": "docs/Proposals/CRP-192-Compact-Inclusion-Scoped-Beyond-Compare-Review/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-192-Compact-Inclusion-Scoped-Beyond-Compare-Review/Walkthrough.md",
       "pushed_at": "2026-10-13 19:42:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.1.0"
     },
     {
       "id": 191,
@@ -10483,7 +10701,8 @@
       "plan_path": "docs/Proposals/CRP-191-Workspace-Repository-Index-Enrollment-Filter-and-S/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-191-Workspace-Repository-Index-Enrollment-Filter-and-S/Walkthrough.md",
       "pushed_at": "2026-10-13 19:42:33",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.1.0"
     },
     {
       "id": 198,
@@ -10511,7 +10730,8 @@
       "plan_path": "docs/Proposals/CRP-198-RollingCalendar-New-Repository-Integration/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-198-RollingCalendar-New-Repository-Integration/Walkthrough.md",
       "pushed_at": "2026-10-13 13:17:01",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.2.0"
     },
     {
       "id": 199,
@@ -10532,7 +10752,8 @@
       "author": "rgbig",
       "details": "Remove redundant _CRP-nnn suffix from Live junction name (CRP already in parent dir). Add post-commit purge of entire BC_Review\\CRP-nnn\\ dir in Submit-ReviewResult. Fix stale-junction cleanup pattern in BCR.",
       "pushed_at": "2026-10-13 21:29:52",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.1.0"
     },
     {
       "id": 200,
@@ -10553,7 +10774,8 @@
       "author": "rgbig",
       "details": "Audit-BeyondCompareReviewStaging accessed Count on a scalar string when a baseline file contained one meaningful line under StrictMode.",
       "pushed_at": "2026-10-13 21:29:52",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.2.0"
     },
     {
       "id": 201,
@@ -10575,7 +10797,8 @@
       "progress_state": "pushed",
       "disposition": "completed",
       "priority": 0,
-      "pushed_at": "2026-11-06 10:44:45"
+      "pushed_at": "2026-11-06 10:44:45",
+      "lcm_version": "10.1.0"
     },
     {
       "id": 202,
@@ -10596,7 +10819,8 @@
       "author": "rgbig",
       "details": "Launch the saved BCompare session name instead of replaying the folder-comparison command line through the interactive desktop bridge.",
       "pushed_at": "2026-10-13 21:29:52",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.2.0"
     },
     {
       "id": 203,
@@ -10622,7 +10846,8 @@
       "disposition": "completed",
       "dates": {},
       "priority": 0,
-      "pushed_at": "2026-11-06 10:44:45"
+      "pushed_at": "2026-11-06 10:44:45",
+      "lcm_version": "10.1.0"
     },
     {
       "id": 204,
@@ -10634,15 +10859,33 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": [],
-      "state": "held",
-      "progress_state": "deferred",
+      "state": "completed",
+      "progress_state": "completed",
       "priority": 3,
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-204-LCM-Query-Index-Scenario-Adoption",
       "commit_sha": null,
       "github_url": null,
       "author": "rgbig",
-      "details": "Define indexed tool-research scenarios with es.exe preferred discovery and rg fallback when indexed coverage or query capability is insufficient."
+      "details": "Define indexed tool-research scenarios with es.exe preferred discovery and rg fallback when indexed coverage or query capability is insufficient.",
+      "lcm_version": "10.1.0",
+      "disposition": "completed",
+      "flow_mode": null,
+      "dates": {
+        "completed": "2026-11-12 17:25:00"
+      },
+      "state_history": [
+        {
+          "from_state": "held",
+          "state": "completed",
+          "timestamp": "2026-11-12 17:25:00",
+          "user": "rgbig",
+          "note": "Completed per operator verification: indexed research scenarios realized via RULE-EFF-007, Search-Everything.ps1 (es.exe primary, rg fallback) and SQLite indexed stores (CRP-322).",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ]
     },
     {
       "id": 205,
@@ -10663,7 +10906,8 @@
       "author": "rgbig",
       "details": "Normalize numeric and legacy letter priority values before Control Hub filtering, sorting, and rendering to prevent JavaScript toUpperCase failures.",
       "pushed_at": "2026-10-13 21:29:52",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.1.0"
     },
     {
       "id": 206,
@@ -10684,7 +10928,8 @@
       "author": "rgbig",
       "details": "Provide FixDocumentation <crp-scope> as a dry-run-capable, scoped, review-gated documentation reconciliation flow.",
       "pushed_at": "2026-10-13 21:29:52",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.1.0"
     },
     {
       "id": 207,
@@ -10705,7 +10950,8 @@
       "author": "rgbig",
       "details": "Prevent Submit-ReviewResult from producing a completed receipt or purging stale review scratch when no matching current review staging manifest exists.",
       "pushed_at": "2026-10-13 21:29:52",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.1.0"
     },
     {
       "id": 208,
@@ -10726,7 +10972,8 @@
       "author": "rgbig",
       "details": "Safely rename LCM_AI, LCM_Inventory, LCM_Supervision, and LCM_Shared to their LCM identities and update all live references across the governed cohort.",
       "pushed_at": "2026-10-13 21:29:52",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.1.0"
     },
     {
       "id": 209,
@@ -10747,7 +10994,8 @@
       "author": "rgbig",
       "details": "Comprehensive proposal and rule specification unifying HTML table dashboards, CSS design tokens, WPF modals, WinForms system tray, headless print-to-PDF, and desktop dispatch across all workspace repositories.",
       "pushed_at": "2026-10-13 21:29:52",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.1.0"
     },
     {
       "id": 210,
@@ -10768,7 +11016,8 @@
       "author": "rgbig",
       "details": "Standardized single-cycle Minimal Tests switch restricting test readiness to fast-tier AST/syntax checks, skipping heavy cascades with automatic ephemeral reset and explicit state representation.",
       "pushed_at": "2026-10-13 21:29:52",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.1.0"
     },
     {
       "id": 211,
@@ -10789,7 +11038,8 @@
       "author": "rgbig",
       "details": "Configurable locale formatting with German de-DE default, dynamic day/month localization, and tool version display compliance.",
       "pushed_at": "2026-10-13 21:29:52",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.1.0"
     },
     {
       "id": 212,
@@ -10810,7 +11060,8 @@
       "author": "rgbig",
       "details": "Establish JSON structured data in LCM_Inventory as the authoritative primary source of truth for LCM tracking policies and junction mappings; render .md presentations in Show-type displays; reinstate ShowTools as canonical primary command with ToolsExplorer degraded to alias; formally ratify .agents/ACTIVE_SESSION.md as tracked living history; and codify deferral handling for bulk lifecycle-action triggers.",
       "pushed_at": "2026-10-13 21:29:52",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.1.0"
     },
     {
       "id": 213,
@@ -10822,15 +11073,33 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": [],
-      "state": "held",
-      "progress_state": "deferred",
+      "state": "completed",
+      "progress_state": "completed",
       "priority": 2,
       "bundle_id": "CRP-213",
       "bundle_dir": "docs/Proposals/CRP-213-LCM-Index-Integration-for-NTFS-Queries-and-Action-Atoms",
       "commit_sha": null,
       "github_url": null,
       "author": "rgbig",
-      "details": "Integrate LCM indexed search (ES.exe) into internal handling, establishing the rule that NTFS folder/file and attribute queries use ES.exe where possible, gradually extending to research and action atoms and product tools."
+      "details": "Integrate LCM indexed search (ES.exe) into internal handling, establishing the rule that NTFS folder/file and attribute queries use ES.exe where possible, gradually extending to research and action atoms and product tools.",
+      "lcm_version": "10.1.0",
+      "disposition": "completed",
+      "flow_mode": null,
+      "dates": {
+        "completed": "2026-11-12 17:25:00"
+      },
+      "state_history": [
+        {
+          "from_state": "held",
+          "state": "completed",
+          "timestamp": "2026-11-12 17:25:00",
+          "user": "rgbig",
+          "note": "Completed per operator verification: ES.exe NTFS query rule codified in RULE-EFF-007 and supported by Search-Everything.ps1 and learned advice.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ]
     },
     {
       "id": 214,
@@ -10852,7 +11121,8 @@
       "details": "Codify rule that user-reported bugs initialize strictly in state suggested (unlike automated runtime test failures); analysis and document generation are suppressed while suggested; urgency keywords DO/DOIT activate execution, while FIX triggers emergency bypass.",
       "disposition": "published",
       "priority": 0,
-      "pushed_at": "2026-11-06 10:21:10"
+      "pushed_at": "2026-11-06 10:21:10",
+      "lcm_version": "10.1.0"
     },
     {
       "id": 215,
@@ -10906,7 +11176,8 @@
       "flow_mode": "doit",
       "always_proceed": true,
       "progress_state": "deferred",
-      "disposition": "superseded"
+      "disposition": "superseded",
+      "lcm_version": "10.1.0"
     },
     {
       "id": 216,
@@ -10957,7 +11228,8 @@
       "progress_state": "deferred",
       "disposition": "superseded",
       "superseded_by_id": 309,
-      "superseded_at": "2026-11-10 17:35:23"
+      "superseded_at": "2026-11-10 17:35:23",
+      "lcm_version": "10.2.0"
     },
     {
       "id": 217,
@@ -10981,7 +11253,8 @@
       "always_proceed": true,
       "disposition": "published",
       "priority": 0,
-      "pushed_at": "2026-11-06 10:21:10"
+      "pushed_at": "2026-11-06 10:21:10",
+      "lcm_version": "10.1.0"
     },
     {
       "id": 218,
@@ -10993,18 +11266,34 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": [],
-      "state": "held",
+      "state": "completed",
       "bundle_id": "CRP-218",
       "bundle_dir": "docs/Proposals/CRP-218-Diagnostic-Triage-Protocol-for-UI-to-Daemon-Execution",
       "commit_sha": null,
       "github_url": null,
       "author": "rgbig",
       "details": "Diagnostic Triage Protocol for UI-to-Daemon Execution | DEMOTED to held: Zero implementation artifacts exist; unstarted Gate 1 proposal stub. Demoted to held pending explicit design scheduling.",
-      "progress_state": "blocked",
-      "flow_mode": "doit",
-      "always_proceed": true,
-      "disposition": "held",
-      "priority": 8
+      "progress_state": "completed",
+      "flow_mode": "standard",
+      "always_proceed": false,
+      "disposition": "completed",
+      "priority": 8,
+      "lcm_version": "10.1.0",
+      "dates": {
+        "completed": "2026-11-12 17:25:00"
+      },
+      "state_history": [
+        {
+          "from_state": "held",
+          "state": "completed",
+          "timestamp": "2026-11-12 17:25:00",
+          "user": "rgbig",
+          "note": "Completed per operator verification: covered by LcmStandardDisplay daemon recovery, synchronous port 9876 REST back-channel, RULE-LCM-017 loop breaker and RULE-ANA-004 circuit breaker.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ]
     },
     {
       "id": 219,
@@ -11028,7 +11317,8 @@
       "always_proceed": true,
       "disposition": "published",
       "priority": 0,
-      "pushed_at": "2026-11-06 10:21:10"
+      "pushed_at": "2026-11-06 10:21:10",
+      "lcm_version": "10.1.0"
     },
     {
       "id": 220,
@@ -11059,7 +11349,8 @@
       "always_proceed": true,
       "disposition": "completed",
       "priority": 0,
-      "pushed_at": "2026-11-06 10:44:45"
+      "pushed_at": "2026-11-06 10:44:45",
+      "lcm_version": "10.2.0"
     },
     {
       "id": 221,
@@ -11090,7 +11381,8 @@
       "progress_state": "pushed",
       "disposition": "completed",
       "priority": 0,
-      "pushed_at": "2026-11-06 10:44:45"
+      "pushed_at": "2026-11-06 10:44:45",
+      "lcm_version": "10.1.0"
     },
     {
       "id": 243,
@@ -11118,7 +11410,8 @@
       "walkthrough_path": "docs/Proposals/CRP-243-Integration-of-Read-Only-Analysis-Protocol-Impleme/Walkthrough.md",
       "progress_state": "pushed",
       "priority": 0,
-      "pushed_at": "2026-11-06 10:44:45"
+      "pushed_at": "2026-11-06 10:44:45",
+      "lcm_version": "10.1.0"
     },
     {
       "id": 244,
@@ -11163,7 +11456,8 @@
         "superseded": "2026-10-16 20:56:10"
       },
       "superseded_by_id": 251,
-      "superseded_at": "2026-10-16 20:56:10"
+      "superseded_at": "2026-10-16 20:56:10",
+      "lcm_version": "10.1.0"
     },
     {
       "id": 245,
@@ -11191,7 +11485,8 @@
       "walkthrough_path": "docs/Proposals/BUG-245-BCR-Foreground-Console-Window-Hygiene-and-Prematur/Walkthrough.md",
       "progress_state": "pushed",
       "priority": 0,
-      "pushed_at": "2026-11-06 10:44:45"
+      "pushed_at": "2026-11-06 10:44:45",
+      "lcm_version": "10.2.0"
     },
     {
       "id": 246,
@@ -11221,7 +11516,8 @@
       "always_proceed": true,
       "progress_state": "pushed",
       "priority": 0,
-      "pushed_at": "2026-11-06 10:21:10"
+      "pushed_at": "2026-11-06 10:21:10",
+      "lcm_version": "10.1.0"
     },
     {
       "id": 256,
@@ -11267,7 +11563,8 @@
       "flow_mode": "doit",
       "always_proceed": false,
       "progress_state": "deferred",
-      "disposition": "withdrawn"
+      "disposition": "withdrawn",
+      "lcm_version": "10.2.0"
     },
     {
       "id": 262,
@@ -11334,7 +11631,8 @@
       "progress_state": "pushed",
       "disposition": "completed",
       "priority": 0,
-      "pushed_at": "2026-11-06 10:44:45"
+      "pushed_at": "2026-11-06 10:44:45",
+      "lcm_version": "10.2.0"
     },
     {
       "id": 263,
@@ -11442,7 +11740,8 @@
       "bcr_disposition": "COMPLETED",
       "progress_state": "pushed",
       "disposition": "published",
-      "pushed_at": "2026-11-10 20:51:45"
+      "pushed_at": "2026-11-10 20:51:45",
+      "lcm_version": "10.2.0"
     },
     {
       "id": 264,
@@ -11509,7 +11808,8 @@
       "progress_state": "pushed",
       "disposition": "completed",
       "priority": 0,
-      "pushed_at": "2026-11-06 10:44:45"
+      "pushed_at": "2026-11-06 10:44:45",
+      "lcm_version": "10.2.0"
     },
     {
       "id": 265,
@@ -11601,7 +11901,8 @@
       "progress_state": "pushed",
       "disposition": "completed",
       "priority": 0,
-      "pushed_at": "2026-11-06 10:44:45"
+      "pushed_at": "2026-11-06 10:44:45",
+      "lcm_version": "10.2.0"
     },
     {
       "id": 266,
@@ -11696,7 +11997,8 @@
       "progress_state": "pushed",
       "disposition": "completed",
       "priority": 0,
-      "pushed_at": "2026-11-06 10:44:45"
+      "pushed_at": "2026-11-06 10:44:45",
+      "lcm_version": "10.2.0"
     },
     {
       "id": 267,
@@ -11787,7 +12089,8 @@
       "bcr_disposition": "COMPLETED",
       "progress_state": "pushed",
       "disposition": "published",
-      "pushed_at": "2026-11-10 20:51:45"
+      "pushed_at": "2026-11-10 20:51:45",
+      "lcm_version": "10.2.0"
     },
     {
       "id": 268,
@@ -11834,7 +12137,8 @@
         "superseded": "2026-10-15 17:38:21"
       },
       "superseded_by_id": 277,
-      "superseded_at": "2026-10-15 17:38:21"
+      "superseded_at": "2026-10-15 17:38:21",
+      "lcm_version": "10.2.0"
     },
     {
       "id": 269,
@@ -11917,7 +12221,8 @@
       "bcr_scope": "COH-269",
       "progress_state": "deferred",
       "disposition": "rejected",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.2.0"
     },
     {
       "id": 270,
@@ -12025,7 +12330,8 @@
       ],
       "progress_state": "pushed",
       "disposition": "published",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.2.0"
     },
     {
       "id": 272,
@@ -12133,7 +12439,8 @@
       ],
       "progress_state": "pushed",
       "disposition": "published",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.2.0"
     },
     {
       "id": 273,
@@ -12241,7 +12548,8 @@
       ],
       "progress_state": "pushed",
       "disposition": "published",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.2.0"
     },
     {
       "id": 274,
@@ -12349,7 +12657,8 @@
       ],
       "progress_state": "pushed",
       "disposition": "published",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.2.0"
     },
     {
       "id": 275,
@@ -12447,7 +12756,8 @@
       "progress_state": "pushed",
       "disposition": "completed",
       "priority": 0,
-      "pushed_at": "2026-11-06 10:44:45"
+      "pushed_at": "2026-11-06 10:44:45",
+      "lcm_version": "10.2.0"
     },
     {
       "id": 276,
@@ -12575,7 +12885,8 @@
       "progress_state": "pushed",
       "disposition": "completed",
       "priority": 0,
-      "pushed_at": "2026-11-06 10:44:45"
+      "pushed_at": "2026-11-06 10:44:45",
+      "lcm_version": "10.2.0"
     },
     {
       "id": 277,
@@ -12787,7 +13098,8 @@
       "bcr_disposition_notes": "BCR accepted 2026-10-16: lifecycle review-state correction and Macrium baseline tooling updates.",
       "progress_state": "pushed",
       "disposition": "published",
-      "priority": 0
+      "priority": 0,
+      "lcm_version": "10.2.0"
     },
     {
       "id": 278,
@@ -12871,7 +13183,8 @@
       "progress_state": "pushed",
       "disposition": "completed",
       "priority": 0,
-      "pushed_at": "2026-11-06 10:44:45"
+      "pushed_at": "2026-11-06 10:44:45",
+      "lcm_version": "10.2.0"
     },
     {
       "id": 279,
@@ -12985,7 +13298,8 @@
       "progress_state": "pushed",
       "disposition": "completed",
       "priority": 0,
-      "pushed_at": "2026-11-06 10:44:45"
+      "pushed_at": "2026-11-06 10:44:45",
+      "lcm_version": "10.2.0"
     },
     {
       "id": 280,
@@ -13080,7 +13394,8 @@
       ],
       "progress_state": "pushed",
       "disposition": "published",
-      "pushed_at": "2026-11-10 20:51:45"
+      "pushed_at": "2026-11-10 20:51:45",
+      "lcm_version": "10.2.0"
     },
     {
       "id": 281,
@@ -13110,7 +13425,8 @@
       "flow_mode": "standard",
       "always_proceed": false,
       "plan_path": "docs/Proposals/CRP-281-Primary-Evidence-Based-Workspace-Readiness-and-Pas/Implementation_Plan.md",
-      "walkthrough_path": "docs/Proposals/CRP-281-Primary-Evidence-Based-Workspace-Readiness-and-Pas/Walkthrough.md"
+      "walkthrough_path": "docs/Proposals/CRP-281-Primary-Evidence-Based-Workspace-Readiness-and-Pas/Walkthrough.md",
+      "lcm_version": "10.2.0"
     },
     {
       "id": 282,
@@ -13122,7 +13438,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "in_progress",
+      "state": "completed",
       "bundle_id": "CRP-282",
       "bundle_dir": "docs/Proposals/CRP-282-GOAL-FIRST-Mode-Governance-and-Documentation-Adapt",
       "docs": {
@@ -13249,12 +13565,22 @@
           "cohort_id": "",
           "cohort_gate": "",
           "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "completed",
+          "timestamp": "2026-11-12 17:10:00",
+          "user": "rgbig",
+          "note": "Completed per operator verification: all Goal-First policy artifacts and rules were confirmed already committed (8ff4c46).",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "dates": {
         "verified": "2026-10-17 23:19:15",
         "in_review": "2026-10-18 17:58:36",
-        "completed": "2026-10-18 17:58:48",
+        "completed": "2026-11-12 17:10:00",
         "suggested": "2026-10-21 22:17:58",
         "in_progress": "2026-10-21 22:18:25"
       },
@@ -13271,11 +13597,12 @@
       "bcr_disposition_at": "2026-10-18 17:58:48",
       "bcr_disposition_notes": "",
       "priority": 0,
-      "state_reason": "Reinstated without concrete correction requests; awaiting revised proposal intent and plan approval.",
+      "state_reason": null,
       "reinstatement_revision": 1,
       "reinstatement_changes": "",
-      "progress_state": "in_progress",
-      "disposition": null
+      "progress_state": "completed",
+      "disposition": "completed",
+      "lcm_version": "10.2.1"
     },
     {
       "id": 283,
@@ -13324,7 +13651,8 @@
         "superseded": "2026-11-10 15:41:31"
       },
       "superseded_by_id": 313,
-      "superseded_at": "2026-11-10 15:41:31"
+      "superseded_at": "2026-11-10 15:41:31",
+      "lcm_version": "10.2.0"
     },
     {
       "id": 284,
@@ -13410,7 +13738,8 @@
       "progress_state": "pushed",
       "disposition": "completed",
       "priority": 0,
-      "pushed_at": "2026-11-06 10:44:45"
+      "pushed_at": "2026-11-06 10:44:45",
+      "lcm_version": "10.2.0"
     },
     {
       "id": 285,
@@ -13457,7 +13786,8 @@
         "superseded": "2026-10-17 20:24:09"
       },
       "superseded_by_id": 284,
-      "superseded_at": "2026-10-17 20:24:09"
+      "superseded_at": "2026-10-17 20:24:09",
+      "lcm_version": "10.2.0"
     },
     {
       "id": 286,
@@ -13571,7 +13901,8 @@
       "progress_state": "pushed",
       "disposition": "completed",
       "priority": 0,
-      "pushed_at": "2026-11-06 10:44:45"
+      "pushed_at": "2026-11-06 10:44:45",
+      "lcm_version": "10.2.0"
     },
     {
       "id": 287,
@@ -13822,7 +14153,8 @@
       "progress_state": "pushed",
       "disposition": "completed",
       "priority": 0,
-      "pushed_at": "2026-11-06 10:44:45"
+      "pushed_at": "2026-11-06 10:44:45",
+      "lcm_version": "10.2.0"
     },
     {
       "id": 288,
@@ -13969,7 +14301,8 @@
       "progress_state": "pushed",
       "disposition": "completed",
       "priority": 0,
-      "pushed_at": "2026-11-06 10:44:45"
+      "pushed_at": "2026-11-06 10:44:45",
+      "lcm_version": "10.2.0"
     },
     {
       "id": 289,
@@ -14016,7 +14349,8 @@
         "superseded": "2026-11-08 15:00:40"
       },
       "superseded_by_id": 309,
-      "superseded_at": "2026-11-08 15:00:40"
+      "superseded_at": "2026-11-08 15:00:40",
+      "lcm_version": "10.2.0"
     },
     {
       "id": 290,
@@ -14110,7 +14444,8 @@
       "bcr_disposition_notes": "Operator accepted the visual BCR review; focused OneDriveMaintenance safety tests passed 3/3 before the initial commit.",
       "priority": 0,
       "progress_state": "pushed",
-      "disposition": "published"
+      "disposition": "published",
+      "lcm_version": "10.2.1"
     },
     {
       "id": 291,
@@ -14214,7 +14549,8 @@
         "closure_control": "The proposal closes only after remediation evidence, accepted BCR, and commit. Future discrepancies require a new or linked proposal."
       },
       "priority": 0,
-      "pushed_at": "2026-11-06 10:44:45"
+      "pushed_at": "2026-11-06 10:44:45",
+      "lcm_version": "10.2.1"
     },
     {
       "id": 292,
@@ -14261,7 +14597,8 @@
         "superseded": "2026-11-08 14:58:08"
       },
       "superseded_by_id": 309,
-      "superseded_at": "2026-11-08 14:58:08"
+      "superseded_at": "2026-11-08 14:58:08",
+      "lcm_version": "10.2.1"
     },
     {
       "id": 293,
@@ -14308,7 +14645,8 @@
         "superseded": "2026-11-08 14:59:33"
       },
       "superseded_by_id": 309,
-      "superseded_at": "2026-11-08 14:59:33"
+      "superseded_at": "2026-11-08 14:59:33",
+      "lcm_version": "10.2.1"
     },
     {
       "id": 294,
@@ -14355,7 +14693,8 @@
         "superseded": "2026-11-08 14:59:34"
       },
       "superseded_by_id": 309,
-      "superseded_at": "2026-11-08 14:59:34"
+      "superseded_at": "2026-11-08 14:59:34",
+      "lcm_version": "10.2.1"
     },
     {
       "id": 295,
@@ -14402,7 +14741,8 @@
         "superseded": "2026-11-08 14:59:35"
       },
       "superseded_by_id": 309,
-      "superseded_at": "2026-11-08 14:59:35"
+      "superseded_at": "2026-11-08 14:59:35",
+      "lcm_version": "10.2.1"
     },
     {
       "id": 296,
@@ -14449,7 +14789,8 @@
         "superseded": "2026-11-08 14:59:36"
       },
       "superseded_by_id": 309,
-      "superseded_at": "2026-11-08 14:59:36"
+      "superseded_at": "2026-11-08 14:59:36",
+      "lcm_version": "10.2.1"
     },
     {
       "id": 297,
@@ -14496,7 +14837,8 @@
         "superseded": "2026-11-08 14:59:36"
       },
       "superseded_by_id": 309,
-      "superseded_at": "2026-11-08 14:59:36"
+      "superseded_at": "2026-11-08 14:59:36",
+      "lcm_version": "10.2.1"
     },
     {
       "id": 298,
@@ -14577,7 +14919,8 @@
       "disposition": "Held",
       "bcr_initiated_at": "2026-10-20 20:54:54",
       "bcr_disposition": null,
-      "bcr_scope": "CRP-298"
+      "bcr_scope": "CRP-298",
+      "lcm_version": "10.2.1"
     },
     {
       "id": 299,
@@ -14659,7 +15002,8 @@
       "bcr_disposition_notes": "DOIT Fix-299: bind dialog and detach deadlines to MountTimeoutSeconds, fallback to existing ReflectBin PIDs, and expand BC window detection to 60s",
       "progress_state": "pushed",
       "disposition": "completed",
-      "pushed_at": "2026-11-06 10:44:45"
+      "pushed_at": "2026-11-06 10:44:45",
+      "lcm_version": "10.2.1"
     },
     {
       "id": 300,
@@ -14743,7 +15087,8 @@
       "bcr_disposition_notes": "chore(lcm): finalize reviewed administrative and workspace catalog updates",
       "progress_state": "pushed",
       "disposition": "completed",
-      "pushed_at": "2026-11-06 10:44:45"
+      "pushed_at": "2026-11-06 10:44:45",
+      "lcm_version": "10.2.1"
     },
     {
       "id": 301,
@@ -14825,7 +15170,8 @@
       "bcr_disposition_notes": "",
       "progress_state": "pushed",
       "disposition": "completed",
-      "pushed_at": "2026-11-06 10:44:45"
+      "pushed_at": "2026-11-06 10:44:45",
+      "lcm_version": "10.2.1"
     },
     {
       "id": 302,
@@ -14907,7 +15253,8 @@
       "bcr_disposition_notes": "Accepted fix for backtick escape in ProposalManager.psm1 and repair of 18 damaged specifications",
       "progress_state": "pushed",
       "disposition": "completed",
-      "pushed_at": "2026-11-06 10:44:45"
+      "pushed_at": "2026-11-06 10:44:45",
+      "lcm_version": "10.2.1"
     },
     {
       "id": 303,
@@ -15041,7 +15388,8 @@
       "bcr_disposition_notes": "",
       "progress_state": "pushed",
       "disposition": "completed",
-      "pushed_at": "2026-11-06 10:44:45"
+      "pushed_at": "2026-11-06 10:44:45",
+      "lcm_version": "10.2.1"
     },
     {
       "id": 304,
@@ -15126,7 +15474,8 @@
       },
       "progress_state": "pushed",
       "disposition": "published",
-      "pushed_at": "2026-11-10 20:51:45"
+      "pushed_at": "2026-11-10 20:51:45",
+      "lcm_version": "10.2.1"
     },
     {
       "id": 305,
@@ -15211,7 +15560,8 @@
       },
       "progress_state": "pushed",
       "disposition": "published",
-      "pushed_at": "2026-11-10 20:51:45"
+      "pushed_at": "2026-11-10 20:51:45",
+      "lcm_version": "10.2.1"
     },
     {
       "id": 306,
@@ -15290,7 +15640,8 @@
       },
       "progress_state": "pushed",
       "disposition": "published",
-      "pushed_at": "2026-11-10 20:51:45"
+      "pushed_at": "2026-11-10 20:51:45",
+      "lcm_version": "10.2.1"
     },
     {
       "id": 307,
@@ -15395,7 +15746,8 @@
       "bcr_scope": "BUG-307",
       "progress_state": "pushed",
       "disposition": "published",
-      "pushed_at": "2026-11-10 20:51:45"
+      "pushed_at": "2026-11-10 20:51:45",
+      "lcm_version": "10.2.2"
     },
     {
       "id": 308,
@@ -15476,7 +15828,8 @@
       "supersedes_at": "2026-11-10 17:50:37",
       "progress_state": "pushed",
       "disposition": "published",
-      "pushed_at": "2026-11-10 20:51:45"
+      "pushed_at": "2026-11-10 20:51:45",
+      "lcm_version": "10.2.1"
     },
     {
       "id": 309,
@@ -15571,7 +15924,8 @@
       "supersedes_at": "2026-11-10 17:35:23",
       "progress_state": "pushed",
       "disposition": "published",
-      "pushed_at": "2026-11-10 20:51:45"
+      "pushed_at": "2026-11-10 20:51:45",
+      "lcm_version": "10.2.1"
     },
     {
       "id": 310,
@@ -15713,7 +16067,8 @@
       "bcr_disposition_notes": "",
       "progress_state": "pushed",
       "disposition": "published",
-      "pushed_at": "2026-11-10 20:51:45"
+      "pushed_at": "2026-11-10 20:51:45",
+      "lcm_version": "10.2.1"
     },
     {
       "id": 311,
@@ -15810,7 +16165,8 @@
       ],
       "progress_state": "pushed",
       "disposition": "published",
-      "pushed_at": "2026-11-10 20:51:45"
+      "pushed_at": "2026-11-10 20:51:45",
+      "lcm_version": "10.2.0"
     },
     {
       "id": 312,
@@ -15901,7 +16257,8 @@
       "bcr_disposition": "COMPLETED",
       "progress_state": "pushed",
       "disposition": "published",
-      "pushed_at": "2026-11-10 20:51:45"
+      "pushed_at": "2026-11-10 20:51:45",
+      "lcm_version": "10.2.0"
     },
     {
       "id": 313,
@@ -16005,7 +16362,8 @@
       "bcr_disposition": "COMPLETED",
       "progress_state": "pushed",
       "disposition": "published",
-      "pushed_at": "2026-11-10 20:51:45"
+      "pushed_at": "2026-11-10 20:51:45",
+      "lcm_version": "10.2.1"
     },
     {
       "id": 314,
@@ -16096,7 +16454,8 @@
       "bcr_disposition": "COMPLETED",
       "progress_state": "pushed",
       "disposition": "published",
-      "pushed_at": "2026-11-10 20:51:45"
+      "pushed_at": "2026-11-10 20:51:45",
+      "lcm_version": "10.2.1"
     },
     {
       "id": 315,
@@ -16191,7 +16550,8 @@
       ],
       "progress_state": "pushed",
       "disposition": "published",
-      "pushed_at": "2026-11-10 20:51:45"
+      "pushed_at": "2026-11-10 20:51:45",
+      "lcm_version": "10.2.1"
     },
     {
       "id": 316,
@@ -16282,7 +16642,8 @@
       "bcr_disposition": "COMPLETED",
       "progress_state": "pushed",
       "disposition": "published",
-      "pushed_at": "2026-11-10 20:51:45"
+      "pushed_at": "2026-11-10 20:51:45",
+      "lcm_version": "10.2.1"
     },
     {
       "id": 317,
@@ -16294,8 +16655,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "suggested",
-      "progress_state": "ready_for_implementation",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-317-Eliminate-Git-Root-Escape-Fallback-Logic-for-Multi",
       "docs": {
@@ -16307,14 +16667,80 @@
       "github_url": null,
       "author": "rgbig",
       "details": "Remove all hardcoded Git_Root fallback and escape logic (e.g. defaulting to D:\\Git_Repositories) from trampolines and scripts to ensure clean multi-workspace and HKLM sandbox isolation.",
-      "disposition": null,
-      "flow_mode": "standard",
-      "always_proceed": false,
       "plan_path": "docs/Proposals/CRP-317-Eliminate-Git-Root-Escape-Fallback-Logic-for-Multi/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-317-Eliminate-Git-Root-Escape-Fallback-Logic-for-Multi/Walkthrough.md",
       "priority": 8,
       "gate1_accepted": true,
-      "gate1_accepted_at": "2026-11-10 20:35:17"
+      "gate1_accepted_at": "2026-11-10 20:35:17",
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-11-12 07:52:47",
+          "user": "rgbig",
+          "note": "",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-11-12 07:57:32",
+          "user": "rgbig",
+          "note": "",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-11-12 08:28:07",
+          "user": "rgbig",
+          "note": "",
+          "cohort_id": "",
+          "cohort_gate": "BCR",
+          "synchronization_outcome": "synchronized"
+        },
+        {
+          "from_state": "in_review",
+          "state": "completed",
+          "timestamp": "2026-11-12 08:29:07",
+          "user": "rgbig",
+          "note": "Review completed and committed (6b08fc9).",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-12 09:44:55",
+          "user": "rgbig",
+          "note": "Promoted after upstream push of commit 6b08fc9",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "in_progress": "2026-11-12 07:52:47",
+        "verified": "2026-11-12 07:57:32",
+        "in_review": "2026-11-12 08:28:07",
+        "completed": "2026-11-12 08:29:07",
+        "pushed": "2026-11-12 09:44:55"
+      },
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "bcr_initiated_at": "2026-11-12 08:28:07",
+      "bcr_scope": "CRP-317",
+      "bcr_disposition": "Completed",
+      "bcr_disposition_at": "2026-11-12 08:29:06",
+      "bcr_disposition_notes": "",
+      "progress_state": "pushed",
+      "disposition": "published",
+      "lcm_version": "10.2.1"
     },
     {
       "id": 318,
@@ -16409,7 +16835,8 @@
       ],
       "progress_state": "pushed",
       "disposition": "published",
-      "pushed_at": "2026-11-10 20:51:45"
+      "pushed_at": "2026-11-10 20:51:45",
+      "lcm_version": "10.2.1"
     },
     {
       "id": 319,
@@ -16504,7 +16931,8 @@
       "minimal_tests": true,
       "progress_state": "pushed",
       "disposition": "published",
-      "pushed_at": "2026-11-11 21:58:47"
+      "pushed_at": "2026-11-11 21:58:47",
+      "lcm_version": "10.2.4"
     },
     {
       "id": 320,
@@ -16591,7 +17019,247 @@
       "minimal_tests": true,
       "progress_state": "pushed",
       "disposition": "published",
-      "pushed_at": "2026-11-11 21:58:47"
+      "pushed_at": "2026-11-11 21:58:47",
+      "lcm_version": "10.2.4"
+    },
+    {
+      "id": 321,
+      "crp_id": "CRP-321",
+      "timestamp": "2026-11-12 09:30:46",
+      "title": "System-1 Decision Cascade Governance, Gate 2A Documentation Checkpoint, Pre-Push Clean State, and Stepwise Requalification",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-321",
+      "app_id": "",
+      "primary_app": "LCM_AI",
+      "affected_apps": [],
+      "state": "completed",
+      "bundle_id": "CRP-321",
+      "bundle_dir": "docs/Proposals/CRP-321-Decision-Cascade-Governance-Gate2A-and-Push-Clean-State",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": "",
+      "github_url": "",
+      "author": "rgbig",
+      "details": "Establishes governance rule authority for System-1 Decision Cascade (RULE-DEC-001..005), Gate 2A Documentation Checkpoint, Pre-Push Clean State, and Stepwise Requalification with dynamic remediation step injection.",
+      "plan_path": "docs/Proposals/CRP-321-Decision-Cascade-Governance-Gate2A-and-Push-Clean-State/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-321-Decision-Cascade-Governance-Gate2A-and-Push-Clean-State/Walkthrough.md",
+      "priority": 8,
+      "dates": {
+        "created": "2026-11-12 09:30:46",
+        "suggested": "2026-11-12 09:30:46",
+        "in_review": "2026-11-12 16:02:46",
+        "completed": "2026-11-12 16:04:35"
+      },
+      "state_history": [
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-11-12 16:02:46",
+          "user": "rgbig",
+          "note": "",
+          "cohort_id": "COH-321",
+          "cohort_gate": "BCR",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_review",
+          "state": "completed",
+          "timestamp": "2026-11-12 16:04:35",
+          "user": "rgbig",
+          "note": "Review completed and committed (d40acd9).",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "flow_mode": "standard",
+      "always_proceed": false,
+      "lcm_version": "10.2.1",
+      "plan_state": "verified",
+      "bcr_disposition": "Completed",
+      "bcr_disposition_at": "2026-11-12 16:04:34",
+      "bcr_disposition_notes": "Operator accepted review COH-321 / CRP-321 in Beyond Compare",
+      "progress_state": "completed",
+      "disposition": "completed"
+    },
+    {
+      "id": 322,
+      "crp_id": "CRP-322",
+      "timestamp": "2026-11-12 09:58:00",
+      "title": "SQLite Proposals Ledger Engine and LCM Version Grouping",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-322",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "completed",
+      "bundle_id": "CRP-322",
+      "bundle_dir": "docs/Proposals/CRP-322-SQLite-Proposals-Ledger-Engine-and-LCM-Version-Grouping",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "author": "rgbig",
+      "details": "Integrates pure SQLite store (proposals.db) with LCM version partitioning under Dual-State Projection architecture, enabling sub-millisecond querying and automatic hiding of historical published proposals in ShowCM.",
+      "plan_path": "docs/Proposals/CRP-322-SQLite-Proposals-Ledger-Engine-and-LCM-Version-Grouping/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-322-SQLite-Proposals-Ledger-Engine-and-LCM-Version-Grouping/Walkthrough.md",
+      "priority": 8,
+      "gate1_accepted": true,
+      "gate1_accepted_at": "2026-11-12 09:57:20",
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-11-12 09:58:00",
+          "user": "rgbig",
+          "note": "Registered per operator instruction."
+        },
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-11-12 09:58:00",
+          "user": "rgbig",
+          "note": "DOIT flow activated per operator instruction.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-11-12 10:08:18",
+          "user": "rgbig",
+          "note": "",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-11-12 16:02:47",
+          "user": "rgbig",
+          "note": "",
+          "cohort_id": "COH-321",
+          "cohort_gate": "BCR",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_review",
+          "state": "completed",
+          "timestamp": "2026-11-12 16:05:40",
+          "user": "rgbig",
+          "note": "Review completed and committed (cc93168).",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "created": "2026-11-12 09:58:00",
+        "suggested": "2026-11-12 09:58:00",
+        "in_progress": "2026-11-12 09:58:00",
+        "verified": "2026-11-12 10:08:18",
+        "in_review": "2026-11-12 16:02:47",
+        "completed": "2026-11-12 16:05:40"
+      },
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "lcm_version": "10.2.3",
+      "bcr_disposition": "Completed",
+      "bcr_disposition_at": "2026-11-12 16:05:39",
+      "bcr_disposition_notes": "Operator accepted review COH-321 / CRP-322 in Beyond Compare",
+      "progress_state": "completed",
+      "disposition": "completed"
+    },
+    {
+      "id": 323,
+      "crp_id": "CRP-323",
+      "timestamp": "2026-11-12 15:15:00",
+      "title": "Orthogonal Tool Taxonomy: SubSystem Unification, Role Absorption into Category, and Explorer Filter Presets",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-323",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "suggested",
+      "bundle_id": "CRP-323",
+      "bundle_dir": "docs/Proposals/CRP-323-Orthogonal-Tool-Catalog-Taxonomy-and-Explorer-Filter-Presets",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "author": "rgbig",
+      "details": "Unifies host PC, LCM components, external targets, and Sandboxes into the SubSystem dimension (replacing Group), eliminates the superfluous Role column by absorbing its verbs into 9 enriched functional Categories, and adds one-click Filter Presets to Tool Explorer.",
+      "plan_path": "docs/Proposals/CRP-323-Orthogonal-Tool-Catalog-Taxonomy-and-Explorer-Filter-Presets/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-323-Orthogonal-Tool-Catalog-Taxonomy-and-Explorer-Filter-Presets/Walkthrough.md",
+      "priority": 8,
+      "gate1_accepted": false,
+      "gate1_accepted_at": null,
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-11-12 15:15:00",
+          "user": "rgbig",
+          "note": "Registered per operator request for orthogonal tool taxonomy restructuring."
+        }
+      ],
+      "dates": {
+        "created": "2026-11-12 15:15:00",
+        "suggested": "2026-11-12 15:15:00"
+      },
+      "flow_mode": "standard",
+      "always_proceed": false,
+      "lcm_version": "10.2.3",
+      "progress_state": "specification",
+      "disposition": null
+    },
+    {
+      "id": 324,
+      "crp_id": "CRP-324",
+      "timestamp": "2026-11-12 16:40:00",
+      "title": "Strategy Mapping Relational Engine, Referential Integrity Validation, and ShowStrategies UI",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-324",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "suggested",
+      "bundle_id": "CRP-324",
+      "bundle_dir": "docs/Proposals/CRP-324-Strategy-Mapping-Relational-Engine-Referential-Integrity-and-ShowStrategies-UI",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "author": "rgbig",
+      "details": "Establishes a relational Strategy mapping engine in proposals.db, referential consistency validation ensuring referenced CRPs exist and are not rejected or superseded, and the ShowStrategies UI dashboard accessible directly from ShowCM.",
+      "plan_path": "docs/Proposals/CRP-324-Strategy-Mapping-Relational-Engine-Referential-Integrity-and-ShowStrategies-UI/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-324-Strategy-Mapping-Relational-Engine-Referential-Integrity-and-ShowStrategies-UI/Walkthrough.md",
+      "priority": 8,
+      "gate1_accepted": false,
+      "gate1_accepted_at": null,
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-11-12 16:40:00",
+          "user": "rgbig",
+          "note": "Registered per operator request for Strategy mapping relational engine and ShowStrategies display."
+        }
+      ],
+      "dates": {
+        "created": "2026-11-12 16:40:00",
+        "suggested": "2026-11-12 16:40:00"
+      },
+      "flow_mode": "standard",
+      "always_proceed": false,
+      "lcm_version": "10.2.3",
+      "progress_state": "specification",
+      "disposition": null
     }
   ],
   "testing_mode": "active",
@@ -16910,6 +17578,22 @@
         ],
         "note": "Operator accepted COH-275 atomic completion after BCR."
       }
+    },
+    {
+      "id": "COH-321",
+      "state": "closed",
+      "prime_proposal_id": 321,
+      "proposal_ids": [
+        321,
+        322
+      ],
+      "repositories": [
+        "LCM_AI",
+        "LCM_Inventory"
+      ],
+      "created_at": "2026-11-12T12:55:35.9613195+01:00",
+      "updated_at": "2026-11-12T12:55:35.9627681+01:00",
+      "closed_at": "2026-11-12 16:05:45"
     }
   ],
   "review_obligation_ledger": {
@@ -17140,8 +17824,8 @@
       }
     ]
   },
-  "minimal_tests": true,
-  "test_scope": "minimal",
-  "flow_mode": "doit",
-  "always_proceed": true
+  "flow_mode": "standard",
+  "always_proceed": false,
+  "minimal_tests": false,
+  "test_scope": "full"
 }

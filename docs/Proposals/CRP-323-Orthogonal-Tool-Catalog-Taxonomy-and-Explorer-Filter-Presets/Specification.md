@@ -7,19 +7,23 @@
 - **Status**: Draft (Awaiting Gate 1 Operator Review)
 - **Date**: 2026-11-12
 - **Target Repository**: `LCM_Inventory`
-- **Impacted Subsystems**: `LCM_Inventory`, `LCM_Tools`, `SystemConfiguration`, `HaSSD06`, `ToolExplorer`
+- **Impacted Subsystems**: `LCM_Inventory`, `LCM_Tools`, `SystemConfiguration`, `HaSSD06`, `ShowTools` (`ToolExplorer`), `ShowCM` (`CM_CONTROL_HUB`), SQLite Ledger (`proposals.db`)
 
 ---
 
 ## 1. Executive Summary & Problem Statement
 
-The LCM Tool Catalog (`tool_catalog.json`) and Tool Explorer (`ToolExplorer.html` / `Show-ToolIntents.ps1`) suffer from dimensional entanglement and semantic inflation:
+The LCM Tool Catalog (`tool_catalog.json`), Tool Explorer (`ShowTools` / `ToolExplorer.html` / `Show-ToolIntents.ps1`), and Control Hub (`ShowCM` / `CM_CONTROL_HUB.html`) suffer from dimensional entanglement and semantic inflation:
 1. **Entangled Subsystem Boundaries**: The host PC (`SystemConfiguration`), external subsystems (`HaSSD06`), core infrastructure (`LCM`), and upcoming `Sandboxes` are fundamentally all **Subsystems** in architecture and documentation. Previously, some were placed in `Category` (e.g. `Subsystem - Home Assistant`, `System & Hardware`) while others were in `Group`. Groups are no longer needed; all targets belong in a single unified **`SubSystem`** dimension.
 2. **Superfluous `Role` Column**: The `Role` column (with values like `Diagnostics`, `QualityGate`, `Elevation`, `Recovery`, `Repair`, `Gateway`, `Utility`) is redundant with a well-modeled `Category`. By absorbing these functional actions directly into `Category`, the `Role` column becomes completely superfluous and is eliminated.
 3. **Misassigned Audiences vs. Presets**:
    - `Developer` is currently misclassified as an `Audience`. In practice, "Developer" is a composite filter preset that combines `User`, `Maintenance`, `Internal`, and subsystem manipulation tools.
    - `Internal` is strictly an **`Audience`** (tools invoked by the runtime, daemons, or background automation), not a filter preset.
    - `User` is the primary daily operator audience and must serve as the clean default view.
+4. **Tool Catalog SQLite Migration (`ShowTools` Backing Store)**:
+   - Just as `CRP-322` converted the proposals ledger (`proposals.json`) to SQLite, `tool_catalog.json` must be migrated to a dedicated SQLite engine (`tools.db` with table `tools`).
+   - The flat JSON file (~6000 lines) causes parsing overhead and memory churn in PowerShell. Backing `ShowTools` with SQLite enables sub-millisecond parameterized lookups, indexed preset filtering, and provides an immediate foundation for a high-performance Go CLI implementation.
+   - Operates under the Dual-State Projection Architecture: binary `tools.db` (git-ignored for zero repo bloat) paired with tracked `tools.sql` text export.
 
 ---
 
@@ -45,7 +49,7 @@ Every tool in `tool_catalog.json` must be classified across exactly three indepe
 3. **`Category`** (*What functional domain and resource is operated upon?* — Absorbs legacy `Role`):
    - **`File System & Search`** (File search, directory navigation, Explorer integration, integrity verification).
    - **`Backup & Recovery`** (Macrium baselines, restore points, disaster recovery snapshots).
-   - **`Governance & Proposals`** (CRPs, specifications, rules, review cohorts, RFCs, proposals ledger).
+   - **`Governance & Proposals`** (CRPs, specifications, rules, review cohorts, Strategies / RFCs, proposals ledger).
    - **`Review & Quality Gates`** (Beyond Compare visual diffs, BCR, drift inspection, AST/BOM readiness gates).
    - **`Elevation & Access`** (UAC privilege elevation, `do`, execution gateway, JIT credentials, ACL audits).
    - **`Diagnostics & Telemetry`** (Audit logs, performance metrics, health checks, AI reasoning traces, failure analysis).
@@ -67,6 +71,12 @@ When Tool Explorer opens, it defaults to:
 - **Preset `Developer`**: Unlocks subsystem tools and manipulation scripts across `User` and `Maintenance`, defaulting to **`NoInternals`** (`Audience in ['User', 'Maintenance']`). The orthogonal `Audience` column filter permits opting into `Internal` tools on demand.
 - **Preset `Maintenance`**: `Audience in ['Maintenance']` (System & subsystem parameters, invariant enforcers).
 - **Preset `All`**: Unfiltered catalog (`Audience in ['User', 'Maintenance', 'Internal']`).
+
+### Invariant 5: Strategy Orientation & Forward-Compatibility Demarcation
+While the formal Strategy relational mapping engine, consistency validator, and `ShowStrategies` dashboard are being introduced in **CRP-324**, CRP-323 serves as the foundational delivery slice of the upcoming strategic orientation:
+- **Strategic Direction**: *Tool Taxonomy, Fast Discovery & High-Performance Execution* (spanning CRP-323, CRP-204, CRP-213, and CRP-254).
+- **Forward-Compatibility Invariant**: CRP-323's category architecture (`Governance & Proposals`), options schema, and UI layouts MUST be forward-compatible with Strategy artifacts and navigation.
+- **Explicit Non-Goal**: Implementing the `strategies` database schema, referential integrity triggers, or `ShowStrategies` view is strictly out-of-scope for CRP-323 and is owned exclusively by **CRP-324** per `RULE-LCM-027`.
 
 ---
 
@@ -92,13 +102,16 @@ When Tool Explorer opens, it defaults to:
 ---
 
 ## 4. Acceptance Criteria (Gate 1 Gatepost)
-- [ ] No `Role` column or property exists in `tool_catalog.json` or Tool Explorer UI.
+- [ ] No `Role` column or property exists in `tool_catalog.json` or Tool Explorer (`ShowTools`) UI.
 - [ ] Obsolete `Group` property is replaced by `SubSystem`.
 - [ ] `SubSystem` includes `PC`, `LCM`, `LCM_Inventory`, `LCM_AI`, `LCM_Tools`, `HaSSD06`, and `Sandboxes`.
 - [ ] Neither subsystems nor PC hardware exist as Categories.
 - [ ] `Category = "Utility"` is completely eliminated.
 - [ ] `Audience = "Developer"` is eliminated; replaced by the `Developer` Filter Preset.
 - [ ] `Internal` is strictly an Audience, not a Filter Preset.
-- [ ] Tool Explorer UI defaults to `Audience: User`.
-- [ ] Tool Explorer UI provides one-click `User`, `Developer`, `Maintenance`, and `All` presets.
+- [ ] `ShowTools` UI defaults to `Audience: User`.
+- [ ] `ShowTools` UI provides one-click `User`, `Developer`, `Maintenance`, and `All` presets.
 - [ ] `Developer` preset defaults to `NoInternals` with orthogonal column filter support to include `Internal`.
+- [ ] `ShowCM` is redesigned to reflect the unified `SubSystem` taxonomy.
+- [ ] SQLite database migration rebuilds and re-populates tables without redundant `role` data.
+- [ ] General Readiness passes 6/6 gates across all governed repositories.

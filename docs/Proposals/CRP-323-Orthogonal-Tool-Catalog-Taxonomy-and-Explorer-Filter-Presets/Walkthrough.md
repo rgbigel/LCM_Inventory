@@ -29,11 +29,16 @@ Instead of 40 fragmented categories plus vague labels like "Utility", every tool
 8. `Environment & Runtimes`
 9. `Execution Gateway`
 
-#### 4. Focused Default View & Filter Presets
-When opening **Tool Explorer** (`ToolExplorer` or `tools`), the default view presents only `Audience: User`:
+#### 4. Focused Default View & Filter Presets in `ShowTools`
+When opening **`ShowTools`** (`ToolExplorer` or `tools`), the default view presents only `Audience: User`:
 - Clean list of the ~30 primary daily tools (`run`, `bcr`, `ShowRules`, `MountMacriumBaseline`, `RenameProposal`).
 - One-click presets at the top let you switch instantly:
   - **`User` (Default)**: Daily operations (`Audience: User`).
   - **`Developer`**: Engineering view across all subsystems (`User` + `Maintenance`), defaulting to **`NoInternals`**. Internal daemons and runtime atoms can be toggled on/off in the orthogonal Audience column filter.
   - **`Maintenance`**: Invariant enforcers, parameter checkers, and system repairs (`Audience: Maintenance`).
   - **`All`**: Complete, unfiltered catalog.
+
+#### 5. Unified Control Hub Experience in `ShowCM`
+When opening **`ShowCM`** (`CM_CONTROL_HUB.html` or `ShowCM`), the dashboard aligns proposals, change requests, and status views around the same unified `SubSystem` architecture (`PC`, `LCM`, `HaSSD06`, `Sandboxes`).
+- No stale or confusing role labels.
+- Clean database queries powered by the rebuilt SQLite ledger (`proposals.db`).
