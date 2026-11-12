@@ -4,9 +4,9 @@
 CRP-ID: CRP-213
 Priority: 2
 Scope: LCM Index Integration, ES.exe NTFS Queries, Action Atoms & Product Tools
-Status: Deferred
-Plan-State: deferred
-Progress-State: deferred
+Status: Pushed
+Plan-State: pushed
+Progress-State: pushed
 Affected-Repos:
   - LCM_AI
   - LCM_Inventory

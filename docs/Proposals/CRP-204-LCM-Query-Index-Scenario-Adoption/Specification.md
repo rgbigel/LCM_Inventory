@@ -4,9 +4,9 @@
 CRP-ID: CRP-204
 Priority: 3
 Scope: LCM tool query contracts and index-assisted scenarios
-Status: Suggested
-Plan-State: suggested
-Progress-State: undecided
+Status: Pushed
+Plan-State: pushed
+Progress-State: pushed
 Affected-Repos:
   - LCM_Inventory
   - Git_Repositories

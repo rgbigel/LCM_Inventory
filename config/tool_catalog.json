@@ -821,10 +821,15 @@
         "Type": "SwitchParameter",
         "Mandatory": false,
         "Default": "",
-        "Description": "Runs fast structural, governance, and static analysis gates without triggering extended test suites"
+        "Description": "Single-cycle minimal testing scope: fast syntax and AST validation only"
       }
     ],
-    "Dependencies": null
+    "Dependencies": [
+      "RepoQualityGates.psm1",
+      "Test-GeneralReadiness.ps1",
+      "Update-ToolCatalog.ps1",
+      "Module: (Resolve-Path $modulePath)"
+    ]
   },
   {
     "Name": "Show-SuperController.ps1",

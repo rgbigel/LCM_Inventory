@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-11-12T17:25:00+01:00",
+  "updated_at": "2026-11-12T18:35:09+01:00",
   "review_granularity": "tight",
   "lcm_mode": "active",
   "last_proposal_id": 324,
@@ -10859,8 +10859,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": [],
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
       "priority": 3,
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-204-LCM-Query-Index-Scenario-Adoption",
@@ -10869,10 +10868,10 @@
       "author": "rgbig",
       "details": "Define indexed tool-research scenarios with es.exe preferred discovery and rg fallback when indexed coverage or query capability is insufficient.",
       "lcm_version": "10.1.0",
-      "disposition": "completed",
       "flow_mode": null,
       "dates": {
-        "completed": "2026-11-12 17:25:00"
+        "completed": "2026-11-12 17:25:00",
+        "pushed": "2026-11-12 18:35:02"
       },
       "state_history": [
         {
@@ -10884,8 +10883,21 @@
           "cohort_id": "",
           "cohort_gate": "",
           "synchronization_outcome": ""
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-12 18:35:02",
+          "user": "rgbig",
+          "note": "Pushed to remote (LCM_AI, LCM_Inventory)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
-      ]
+      ],
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-12 18:35:02"
     },
     {
       "id": 205,
@@ -11073,8 +11085,7 @@
       "app_id": null,
       "primary_app": "LCM_AI",
       "affected_apps": [],
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
       "priority": 2,
       "bundle_id": "CRP-213",
       "bundle_dir": "docs/Proposals/CRP-213-LCM-Index-Integration-for-NTFS-Queries-and-Action-Atoms",
@@ -11083,10 +11094,10 @@
       "author": "rgbig",
       "details": "Integrate LCM indexed search (ES.exe) into internal handling, establishing the rule that NTFS folder/file and attribute queries use ES.exe where possible, gradually extending to research and action atoms and product tools.",
       "lcm_version": "10.1.0",
-      "disposition": "completed",
       "flow_mode": null,
       "dates": {
-        "completed": "2026-11-12 17:25:00"
+        "completed": "2026-11-12 17:25:00",
+        "pushed": "2026-11-12 18:35:03"
       },
       "state_history": [
         {
@@ -11098,8 +11109,24 @@
           "cohort_id": "",
           "cohort_gate": "",
           "synchronization_outcome": ""
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-12 18:35:03",
+          "user": "rgbig",
+          "note": "Pushed to remote (LCM_AI, LCM_Inventory)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
-      ]
+      ],
+      "affected_repos": [
+        "LCM_AI"
+      ],
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-12 18:35:02"
     },
     {
       "id": 214,
@@ -13425,7 +13452,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "CRP-282",
       "bundle_dir": "docs/Proposals/CRP-282-GOAL-FIRST-Mode-Governance-and-Documentation-Adapt",
       "docs": {
@@ -13562,6 +13589,16 @@
           "cohort_id": "",
           "cohort_gate": "",
           "synchronization_outcome": ""
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-12 18:35:04",
+          "user": "rgbig",
+          "note": "Pushed to remote (LCM_AI, LCM_Inventory)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "dates": {
@@ -13569,7 +13606,8 @@
         "in_review": "2026-10-18 17:58:36",
         "completed": "2026-11-12 17:10:00",
         "suggested": "2026-10-21 22:17:58",
-        "in_progress": "2026-10-21 22:18:25"
+        "in_progress": "2026-10-21 22:18:25",
+        "pushed": "2026-11-12 18:35:04"
       },
       "specification_acceptance": {
         "accepted_at": "2026-10-17T23:08:50.1311047+02:00",
@@ -13587,9 +13625,10 @@
       "state_reason": null,
       "reinstatement_revision": 1,
       "reinstatement_changes": "",
-      "progress_state": "completed",
-      "disposition": "completed",
-      "lcm_version": "10.2.1"
+      "lcm_version": "10.2.1",
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-12 18:35:02"
     },
     {
       "id": 283,
@@ -17019,7 +17058,7 @@
       "app_id": "",
       "primary_app": "LCM_AI",
       "affected_apps": [],
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "CRP-321",
       "bundle_dir": "docs/Proposals/CRP-321-Decision-Cascade-Governance-Gate2A-and-Push-Clean-State",
       "docs": {
@@ -17038,7 +17077,8 @@
         "created": "2026-11-12 09:30:46",
         "suggested": "2026-11-12 09:30:46",
         "in_review": "2026-11-12 16:02:46",
-        "completed": "2026-11-12 16:04:35"
+        "completed": "2026-11-12 16:04:35",
+        "pushed": "2026-11-12 18:35:05"
       },
       "state_history": [
         {
@@ -17060,6 +17100,16 @@
           "cohort_id": "",
           "cohort_gate": "",
           "synchronization_outcome": ""
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-12 18:35:05",
+          "user": "rgbig",
+          "note": "Pushed to remote (LCM_AI, LCM_Inventory)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "flow_mode": "standard",
@@ -17069,8 +17119,12 @@
       "bcr_disposition": "Completed",
       "bcr_disposition_at": "2026-11-12 16:04:34",
       "bcr_disposition_notes": "Operator accepted review COH-321 / CRP-321 in Beyond Compare",
-      "progress_state": "completed",
-      "disposition": "completed"
+      "affected_repos": [
+        "LCM_AI"
+      ],
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-12 18:35:02"
     },
     {
       "id": 322,
@@ -17082,7 +17136,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "CRP-322",
       "bundle_dir": "docs/Proposals/CRP-322-SQLite-Proposals-Ledger-Engine-and-LCM-Version-Grouping",
       "docs": {
@@ -17143,6 +17197,16 @@
           "cohort_id": "",
           "cohort_gate": "",
           "synchronization_outcome": ""
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-12 18:35:06",
+          "user": "rgbig",
+          "note": "Pushed to remote (LCM_AI, LCM_Inventory)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "dates": {
@@ -17151,7 +17215,8 @@
         "in_progress": "2026-11-12 09:58:00",
         "verified": "2026-11-12 10:08:18",
         "in_review": "2026-11-12 16:02:47",
-        "completed": "2026-11-12 16:05:40"
+        "completed": "2026-11-12 16:05:40",
+        "pushed": "2026-11-12 18:35:06"
       },
       "flow_mode": "doit",
       "always_proceed": true,
@@ -17159,8 +17224,9 @@
       "bcr_disposition": "Completed",
       "bcr_disposition_at": "2026-11-12 16:05:39",
       "bcr_disposition_notes": "Operator accepted review COH-321 / CRP-322 in Beyond Compare",
-      "progress_state": "completed",
-      "disposition": "completed"
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-12 18:35:02"
     },
     {
       "id": 323,
