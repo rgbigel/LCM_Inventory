@@ -119,7 +119,7 @@ Start-Process "$env:LOCALAPPDATA\PowerToys\PowerToys.exe" -ErrorAction SilentlyC
 
 # 5. Ensure LCM Tools in Machine Environment PATH
 Write-Host "`n[5/6] Enforcing LCM Tools in Machine PATH..." -ForegroundColor Yellow
-$toolsPath = 'D:\Git_Repositories\LCM_Inventory\Cmd'
+$toolsPath = 'D:\Git_Repositories\LCM_Inventory\DoT'
 try {
   $machinePath = [Environment]::GetEnvironmentVariable('Path', 'Machine')
   if ($machinePath -notmatch [regex]::Escape($toolsPath)) {

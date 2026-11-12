@@ -79,7 +79,7 @@ if ($Help) {
 # 1. Environment & Logging Setup
 # ------------------------------------------------------------------------------
 $workspaceRoot = if (-not [string]::IsNullOrWhiteSpace($env:Git_Root)) { $env:Git_Root.TrimEnd('\', '/') } else { 'D:\Git_Repositories' }
-$cmdDir = Join-Path $workspaceRoot 'LCM_Inventory\Cmd'
+$cmdDir = Join-Path $workspaceRoot 'LCM_Inventory\DoT'
 $logDir = Join-Path $workspaceRoot 'LCM_Inventory\data\logs\lcm'
 if (-not (Test-Path -LiteralPath $logDir)) {
   New-Item -Path $logDir -ItemType Directory -Force | Out-Null

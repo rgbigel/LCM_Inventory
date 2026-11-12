@@ -23,7 +23,7 @@ function Get-LcmDependencySourceFiles {
   $sourceRoots = @(
     (Join-Path $WorkspaceRoot 'LCM_Inventory\modules'),
     (Join-Path $WorkspaceRoot 'LCM_Inventory\tools'),
-    (Join-Path $WorkspaceRoot 'LCM_Inventory\Cmd'),
+    (Join-Path $WorkspaceRoot 'LCM_Inventory\DoT'),
     (Join-Path $WorkspaceRoot 'LCM_Inventory\assets'),
     (Join-Path $WorkspaceRoot 'LCM_Inventory\.githooks'),
     (Join-Path $WorkspaceRoot 'LCM_AI\modules'),

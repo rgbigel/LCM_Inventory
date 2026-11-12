@@ -4,7 +4,7 @@
 .DESCRIPTION
   Module: Set-GitRoot
   Purpose: Establishes the Git_Root environment variable (D:\Git_Repositories) at User,
-           Process, and Machine scopes, and ensures D:\Git_Repositories\LCM_Inventory\Cmd is present
+           Process, and Machine scopes, and ensures D:\Git_Repositories\LCM_Inventory\DoT is present
            in the Environment PATH ahead of legacy D:\OneDrive\cmd.
            Scrubs obsolete and deprecated tool paths from PATH.
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
@@ -127,11 +127,11 @@ function Write-ToolLog {
 Write-ToolLog -Message "==========================================================================" -Level INFO
 Write-ToolLog -Message " GIT ROOT & LCM PATH CONFIGURATION TOOL (v$($scriptVersion))" -Level INFO
 Write-ToolLog -Message " Git_Root Target: $workspaceRoot" -Level INFO
-Write-ToolLog -Message " Command Hub    : $workspaceRoot\LCM_Inventory\Cmd in PATH" -Level INFO
+Write-ToolLog -Message " Command Hub    : $workspaceRoot\LCM_Inventory\DoT in PATH" -Level INFO
 Write-ToolLog -Message " Audit Log      : $LogFile" -Level INFO
 Write-ToolLog -Message "==========================================================================" -Level INFO
 
-$lcmCmdPath = Join-Path $workspaceRoot 'LCM_Inventory\Cmd'
+$lcmCmdPath = Join-Path $workspaceRoot 'LCM_Inventory\DoT'
 $allLcmPaths = @($lcmCmdPath)
 $execStatus = "COMPLETED"
 
@@ -165,6 +165,7 @@ try {
     Write-ToolLog -Message "Scrubbing obsolete LCM/tools paths from User Environment PATH..." -Level INFO
     $userPath = [Environment]::GetEnvironmentVariable('Path', 'User')
     $legacyPaths = @(
+      'D:\Git_Repositories\LCM_Inventory\Cmd',
       'D:\Git_Repositories\LCM_Tools\Cmd',
       'D:\Git_Repositories\LCM_Tools',
       'D:\Git_Repositories\.tools\Cmd',

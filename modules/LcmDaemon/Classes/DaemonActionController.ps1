@@ -486,7 +486,7 @@ class DaemonActionController {
           if (Test-Path -LiteralPath $candidatePs1) {
             $scriptToRun = "& `"$candidatePs1`""
           } else {
-            $candidateCmd = [System.IO.Path]::Combine($wsRoot, "LCM_Inventory\Cmd", "$baseTarget.cmd")
+            $candidateCmd = [System.IO.Path]::Combine($wsRoot, "LCM_Inventory\DoT", "$baseTarget.cmd")
             if (Test-Path -LiteralPath $candidateCmd) {
               $scriptToRun = "& `"$candidateCmd`""
             } else {

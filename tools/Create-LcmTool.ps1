@@ -143,7 +143,7 @@ if ([string]::IsNullOrWhiteSpace($ShortName)) {
 $workspaceRoot = 'D:\Git_Repositories'
 $lcdRoot = Join-Path $workspaceRoot 'LCM_Inventory'
 $toolsDir = Join-Path $lcdRoot 'tools'
-$cmdDir = Join-Path $lcdRoot 'Cmd'
+$cmdDir = Join-Path $lcdRoot 'DoT'
 $logDir = Join-Path $lcdRoot 'data\logs\lcm'
 
 if (-not (Test-Path -Path $logDir)) { New-Item -Path $logDir -ItemType Directory -Force | Out-Null }

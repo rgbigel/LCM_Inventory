@@ -20,7 +20,6 @@ function Get-LcmToolScanLocations {
     @{ Group='LCM_Inventory'; Domain='LCM_Inventory'; Path='LCM_Inventory\tools'; Filter='*.py' }
     @{ Group='LCM_Tools'; Domain='LCM_Tools'; Path='LCM_Tools\tools'; Filter='*.ps1' }
     @{ Group='SystemConfiguration'; Domain='SystemConfiguration'; Path='SystemConfiguration\Source'; Filter='@*' }
-    @{ Group='SystemConfiguration'; Domain='SystemConfiguration'; Path='SystemConfiguration\Source'; Filter='$*' }
     @{ Group='SystemConfiguration'; Domain='SystemConfiguration'; Path='SystemConfiguration\Source'; Filter='*.ps1' }
     @{ Group='SystemConfiguration'; Domain='SystemConfiguration'; Path='SystemConfiguration\Source'; Filter='*.cmd' }
     @{ Group='SystemConfiguration'; Domain='SystemConfiguration'; Path='SystemConfiguration\Source\Invariants'; Filter='*.ps1' }

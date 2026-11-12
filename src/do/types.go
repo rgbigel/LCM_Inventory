@@ -57,7 +57,13 @@ type StatusResponse struct {
 
 // OpenRequest defines the input payload for the /open endpoint.
 type OpenRequest struct {
-	Target string `json:"target"`
+	Target     string `json:"target"`
+	URL        string `json:"url"`
+	FilePath   string `json:"filePath"`
+	Args       string `json:"args"`
+	Foreground bool   `json:"foreground"`
+	Title      string `json:"title"`
+	Pane       bool   `json:"pane"`
 }
 
 // ForegroundRequest defines the input payload for the /foreground endpoint.
@@ -76,3 +82,4 @@ type ActionLog struct {
 	Stdout     string `json:"stdout,omitempty"`
 	Stderr     string `json:"stderr,omitempty"`
 }
+

@@ -11,8 +11,8 @@
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
   Path: D:\Git_Repositories\LCM_Inventory\tools\Update-ToolCatalog.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.2.9
-  Date: 2026-11-11 21:25:00
+  Version: 10.2.8
+  Date: 2026-11-11 19:12:00
 .PARAMETER Silent
   Suppresses non-error terminal output (useful in automated pipelines).
 .PARAMETER ShowAll
@@ -78,7 +78,7 @@ if ($Help) {
 $workspaceRoot = 'D:\Git_Repositories'
 $inventoryRoot = Join-Path $workspaceRoot 'LCM_Inventory'
 $toolsDir = Join-Path $inventoryRoot 'tools'
-$cmdDir = Join-Path $inventoryRoot 'Cmd'
+$cmdDir = Join-Path $inventoryRoot 'DoT'
 $logDir = Join-Path $inventoryRoot 'data\logs\lcm'
 $configDir = Join-Path $inventoryRoot 'config'
 $docsDir = Join-Path $inventoryRoot 'docs'
@@ -232,6 +232,7 @@ $metadataOverrides = @{
   # System Customizations (@00- to @21-)
   "@00-RegKeyDefaultTypeSet.cmd" = @{
     ShortName   = "RegKeyDefaultTypeSet"
+    Aliases     = @("@00-RegKeyDefaultTypeSet", "@00-RegKey")
     Audience    = "User"
     Role        = "Customization"
     Admin       = $true
@@ -260,6 +261,7 @@ $metadataOverrides = @{
   }
   "@00-Skip_TPM_Check_on_Dynamic_Update.cmd" = @{
     ShortName   = "SkipTpmCheckDynamicUpdate"
+    Aliases     = @("@00-Skip_TPM_Check_on_Dynamic_Update", "@00-SkipTPM")
     Audience    = "User"
     Role        = "Customization"
     Admin       = $true
@@ -278,6 +280,7 @@ $metadataOverrides = @{
   }
   "@02-Set_the_date_and_time_format_(ADM_systemwide).ps1" = @{
     ShortName   = "SetDateTimeFormatAdm"
+    Aliases     = @("@02-SetDateTimeFormatAdm")
     Audience    = "User"
     Role        = "Customization"
     Admin       = $true
@@ -382,6 +385,7 @@ $metadataOverrides = @{
   }
   "@14-SecureDesktopOff.ps1" = @{
     ShortName   = "SecureDesktopOff"
+    Aliases     = @("@14-SecureDesktopOff")
     Audience    = "User"
     Role        = "Customization"
     Admin       = $true
@@ -392,6 +396,7 @@ $metadataOverrides = @{
   }
   "@15-PS7AppKiller.ps1" = @{
     ShortName   = "PS7AppKiller"
+    Aliases     = @("@15-PS7AppKiller")
     Audience    = "User"
     Role        = "Customization"
     Admin       = $true
@@ -402,6 +407,7 @@ $metadataOverrides = @{
   }
   "@16-GoAdm_changer.ps1" = @{
     ShortName   = "GoAdmChanger"
+    Aliases     = @("@16-GoAdm_changer")
     Audience    = "User"
     Role        = "Customization"
     Admin       = $true
@@ -412,6 +418,7 @@ $metadataOverrides = @{
   }
   "@17-FiraFonts.ps1" = @{
     ShortName   = "FiraFonts"
+    Aliases     = @("@17-FiraFonts")
     Audience    = "User"
     Role        = "Customization"
     Admin       = $true
@@ -422,6 +429,7 @@ $metadataOverrides = @{
   }
   "@18-ShellNewPS1.ps1" = @{
     ShortName   = "ShellNewPS1"
+    Aliases     = @("@18-ShellNewPS1")
     Audience    = "User"
     Role        = "Customization"
     Admin       = $true
@@ -432,6 +440,7 @@ $metadataOverrides = @{
   }
   "@19-DefineSecureD.ps1" = @{
     ShortName   = "DefineSecureD"
+    Aliases     = @("@19-DefineSecureD")
     Audience    = "User"
     Role        = "Customization"
     Admin       = $true
@@ -442,6 +451,7 @@ $metadataOverrides = @{
   }
   "@20-KillLogitechUpdateFull.ps1" = @{
     ShortName   = "KillLogitechUpdateFull"
+    Aliases     = @("@20-KillLogitechUpdateFull")
     Audience    = "User"
     Role        = "Invariants"
     Admin       = $true
@@ -452,6 +462,7 @@ $metadataOverrides = @{
   }
   "@21-FixMouseFlickerInvariants.ps1" = @{
     ShortName   = "FixMouseFlickerInvariants"
+    Aliases     = @("@21-FixMouseFlickerInvariants")
     Audience    = "User"
     Role        = "Invariants"
     Admin       = $true
@@ -460,8 +471,9 @@ $metadataOverrides = @{
     Description = "Enforces AMD Radeon RX 580 ULPS disabled, DWM MPO OverlayTestMode=5, and PowerToys hook locks."
     Example     = 'pwsh -File "SystemConfiguration\Source\@21-FixMouseFlickerInvariants.ps1"'
   }
-  "`$21-DesktopSubFoldersLauncher.cmd" = @{
+  "@21-DesktopSubFoldersLauncher.cmd" = @{
     ShortName   = "DesktopSubFoldersLauncher"
+    Aliases     = @("@21-DesktopSubFoldersLauncher")
     Audience    = "User"
     Role        = "Customization"
     Admin       = $true
@@ -899,7 +911,7 @@ try {
 
     $files = @(Get-ChildItem -Path $targetDir -Filter $sd.Filter -File -ErrorAction SilentlyContinue)
     foreach ($f in $files) {
-      if ($f.FullName.Contains("\scratch\") -or $f.FullName.Contains("\.venv\") -or $f.FullName.Contains("\__pycache__\") -or $f.FullName.Contains("\LCM_Inventory\Cmd\")) {
+      if ($f.FullName.Contains("\scratch\") -or $f.FullName.Contains("\.venv\") -or $f.FullName.Contains("\__pycache__\") -or $f.FullName.Contains("\LCM_Inventory\Cmd\") -or $f.FullName.Contains("\LCM_Inventory\DoT\")) {
         continue
       }
 
@@ -1221,7 +1233,7 @@ try {
       $targetRef = "%Git_Root%/$relPathForward"
       $noExitFlag = if ($t.NoExit) { "-NoExit " } else { "" }
 
-      $gitRootPreamble = "if not defined Git_Root set `"Git_Root=%~dp0..\..`"`r`nif not exist `"%Git_Root%\LCM_Inventory`" set `"Git_Root=D:\Git_Repositories`"`r`n"
+      $gitRootPreamble = "if not defined Git_Root set `"Git_Root=%~dp0..\..`"`r`nif not exist `"%Git_Root%\LCM_Inventory`" (`r`n  echo [ERROR] Target repository not found relative to Git_Root: %Git_Root%`r`n  exit /b 1`r`n)`r`n"
 
       $cleanGoal = if (-not [string]::IsNullOrWhiteSpace($t.Description)) {
         ($t.Description -split "`r?`n")[0].Trim()
@@ -1234,10 +1246,12 @@ try {
       $commentBanner = "echo # [LCM Launcher] %~nx0 - Goal: $cleanGoal`r`n"
 
       $elevationCheck = if ($t.Admin) {
-        "net session >nul 2>&1`r`nif %errorlevel% neq 0 (`r`n  call `"%Git_Root%/LCM_Inventory/Cmd/do.cmd`" -Command `"`& '$targetRef' %*`" -Elevated`r`n  exit /b`r`n)`r`n"
+        "net session >nul 2>&1`r`nif %errorlevel% neq 0 (`r`n  call `"%Git_Root%/LCM_Inventory/DoT/do.cmd`" -Command `"%~nx0 %*`" -Elevated`r`n  exit /b`r`n)`r`n"
       } else { "" }
 
-      $cmdBody = if ($t.Type -eq 'Python') {
+      $cmdBody = if ($sn -eq 'do') {
+        "@echo off`r`n`"%~dp0do.exe`" %*`r`n"
+      } elseif ($t.Type -eq 'Python') {
         "@echo off`r`n$generatedLauncherMarker`r`n${gitRootPreamble}${elevationCheck}${commentBanner}setlocal`r`npython `"$targetRef`" %*`r`nendlocal`r`n"
       } elseif ($t.Type -eq 'Batch') {
         "@echo off`r`n$generatedLauncherMarker`r`n${gitRootPreamble}${elevationCheck}${commentBanner}call `"$targetRef`" %*`r`n"

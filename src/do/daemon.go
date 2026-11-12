@@ -44,6 +44,12 @@ var (
 
 // RunDaemon starts the HTTP listener on the specified port.
 func RunDaemon(port int) error {
+	// Auto-hide console window immediately so no terminal window remains on desktop
+	hwnd, _, _ := procGetConsoleWindow.Call()
+	if hwnd != 0 {
+		procShowWindow.Call(hwnd, 0) // SW_HIDE = 0
+	}
+
 	daemonStartTime = time.Now()
 	addr := fmt.Sprintf("127.0.0.1:%d", port)
 
@@ -94,6 +100,32 @@ func RunDaemon(port int) error {
 
 	daemonMux.HandleFunc("/open_editor", handleOpenEditor)
 	daemonMux.HandleFunc("/edit", handleOpenEditor)
+
+	// Standard Displays & Assets (CRP-310 / CRP-309 / StandardDisplayFreshness)
+	daemonMux.HandleFunc("/displays/", handleDisplays)
+	daemonMux.HandleFunc("/assets/", handleAssets)
+
+	daemonMux.HandleFunc("/hub", handleDisplayPage("CM_CONTROL_HUB.html"))
+	daemonMux.HandleFunc("/control", handleDisplayPage("CM_CONTROL_HUB.html"))
+	daemonMux.HandleFunc("/control_hub", handleDisplayPage("CM_CONTROL_HUB.html"))
+	daemonMux.HandleFunc("/cm_control_hub.html", handleDisplayPage("CM_CONTROL_HUB.html"))
+
+	daemonMux.HandleFunc("/dates", handleDisplayPage("CM_CRP_DATES.html"))
+	daemonMux.HandleFunc("/cm_crp_dates", handleDisplayPage("CM_CRP_DATES.html"))
+	daemonMux.HandleFunc("/cm_crp_dates.html", handleDisplayPage("CM_CRP_DATES.html"))
+
+	daemonMux.HandleFunc("/tools", handleDisplayPage("SHOW_TOOLS.html"))
+	daemonMux.HandleFunc("/show_tools", handleDisplayPage("SHOW_TOOLS.html"))
+	daemonMux.HandleFunc("/show_tools.html", handleDisplayPage("SHOW_TOOLS.html"))
+
+	daemonMux.HandleFunc("/rules", handleDisplayPage("SHOW_RULES.html"))
+	daemonMux.HandleFunc("/show_rules", handleDisplayPage("SHOW_RULES.html"))
+	daemonMux.HandleFunc("/show_rules.html", handleDisplayPage("SHOW_RULES.html"))
+
+	daemonMux.HandleFunc("/inventory", handleDisplayPage("LCM_INVENTORY_VIEWER.html"))
+
+	daemonMux.HandleFunc("/failure-analysis/", handleSnapshots)
+	daemonMux.HandleFunc("/snapshots/", handleSnapshots)
 
 	daemonServer = &http.Server{
 		Handler:      daemonMux,
@@ -329,7 +361,11 @@ func executeAsynchronous(cmdStr string, elevated bool, noExit bool, windowStyle 
 		if noExit {
 			psArgs = append(psArgs, "-NoExit")
 		}
-		psArgs = append(psArgs, "-Command", trimmed)
+		cmdToRun := trimmed
+		if !noExit && !strings.Contains(strings.ToLower(cmdToRun), "exit") {
+			cmdToRun = cmdToRun + "; exit"
+		}
+		psArgs = append(psArgs, "-Command", cmdToRun)
 		cmd = exec.Command("pwsh.exe", psArgs...)
 	} else {
 		cmdFlag := "/c"
@@ -428,6 +464,13 @@ func handleOpen(w http.ResponseWriter, r *http.Request) {
 
 	target := strings.TrimSpace(req.Target)
 	if target == "" {
+		if strings.TrimSpace(req.URL) != "" {
+			target = strings.TrimSpace(req.URL)
+		} else if strings.TrimSpace(req.FilePath) != "" {
+			target = strings.TrimSpace(req.FilePath)
+		}
+	}
+	if target == "" {
 		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "Target cannot be empty"})
 		return
 	}
@@ -440,8 +483,15 @@ func handleOpen(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if req.Foreground && req.Title != "" {
+		go func(title string) {
+			time.Sleep(300 * time.Millisecond)
+			BringWindowToForeground(title)
+		}(req.Title)
+	}
+
 	writeJSON(w, http.StatusOK, map[string]interface{}{
-		"status": "OK",
+		"status": "OPENED",
 		"target": target,
 	})
 }
@@ -653,4 +703,232 @@ func recordActionLog(log ActionLog) {
 			log.Timestamp, log.Command, log.Status, log.ExitCode, log.DurationMs, log.Elevated)
 		_, _ = f.WriteString(line)
 	}
+}
+
+func handleDisplays(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Private-Network, X-Requested-With, X-LCM-Display-Revision")
+	w.Header().Set("Access-Control-Allow-Private-Network", "true")
+	w.Header().Set("Cache-Control", "no-store, no-cache, must-revalidate")
+
+	if r.Method == http.MethodOptions {
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
+
+	subPath := strings.TrimPrefix(r.URL.Path, "/displays/")
+	parts := strings.Split(strings.Trim(subPath, "/"), "/")
+	if len(parts) < 2 {
+		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "Invalid display endpoint"})
+		return
+	}
+
+	kind := strings.ToLower(parts[0])
+	id := strings.ToLower(parts[1])
+
+	gitRoot := GetGitRoot()
+	artifactMap := map[string]string{
+		"hub":       "CM_CONTROL_HUB.html",
+		"dates":     "CM_CRP_DATES.html",
+		"tools":     "SHOW_TOOLS.html",
+		"rules":     "SHOW_RULES.html",
+		"inventory": "LCM_INVENTORY_VIEWER.html",
+	}
+
+	artifactLeaf, ok := artifactMap[id]
+	if !ok {
+		writeJSON(w, http.StatusNotFound, map[string]string{"error": "Unknown display identity: " + id})
+		return
+	}
+
+	artifactPath := filepath.Join(gitRoot, "LCM_Inventory", "data", "artifacts", artifactLeaf)
+	var modTime int64
+	if fi, err := os.Stat(artifactPath); err == nil {
+		modTime = fi.ModTime().UnixNano()
+	} else {
+		modTime = time.Now().UnixNano()
+	}
+	revision := fmt.Sprintf("rev-%d", modTime)
+	presRev := fmt.Sprintf("pres-%d", modTime)
+
+	switch kind {
+	case "refresh", "status":
+		writeJSON(w, http.StatusOK, map[string]interface{}{
+			"state":                "Current",
+			"error":                "",
+			"revision":             revision,
+			"presentationRevision": presRev,
+			"statusUrl":            "/displays/status/" + id,
+			"publishedAt":          time.Now().Format("2006-01-02 15:04:05"),
+		})
+	case "data":
+		dataBytes, err := os.ReadFile(artifactPath)
+		if err != nil {
+			writeJSON(w, http.StatusNotFound, map[string]string{"error": "Artifact not found"})
+			return
+		}
+		content := string(dataBytes)
+		startTag := `<script id="lcm-display-data" type="application/json">`
+		endTag := `</script>`
+		startIdx := strings.Index(content, startTag)
+		if startIdx != -1 {
+			startIdx += len(startTag)
+			endIdx := strings.Index(content[startIdx:], endTag)
+			if endIdx != -1 {
+				jsonPayload := content[startIdx : startIdx+endIdx]
+				w.Header().Set("X-LCM-Display-Revision", revision)
+				w.Header().Set("Content-Type", "application/json; charset=utf-8")
+				w.WriteHeader(http.StatusOK)
+				w.Write([]byte(jsonPayload))
+				return
+			}
+		}
+		w.Header().Set("X-LCM-Display-Revision", revision)
+		writeJSON(w, http.StatusOK, map[string]interface{}{})
+	case "content":
+		dataBytes, err := os.ReadFile(artifactPath)
+		if err != nil {
+			writeJSON(w, http.StatusNotFound, map[string]string{"error": "Artifact not found"})
+			return
+		}
+		w.Header().Set("X-LCM-Display-Revision", revision)
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		w.WriteHeader(http.StatusOK)
+		w.Write(dataBytes)
+	default:
+		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "Unknown kind: " + kind})
+	}
+}
+
+func handleDisplayPage(artifactLeaf string) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Private-Network, X-Requested-With, X-LCM-Display-Revision")
+		w.Header().Set("Access-Control-Allow-Private-Network", "true")
+		w.Header().Set("Cache-Control", "no-store, no-cache, must-revalidate")
+		w.Header().Set("X-Content-Type-Options", "nosniff")
+		w.Header().Set("Content-Security-Policy", "default-src 'self' vscode-webview:; script-src 'self' 'unsafe-inline' vscode-webview:; style-src 'self' 'unsafe-inline' vscode-webview:; connect-src 'self' http://127.0.0.1:* http://localhost:* vscode-webview:; font-src 'self' data: vscode-webview:; img-src 'self' data: vscode-webview:; frame-src 'self' vscode-webview:; frame-ancestors 'self' vscode-webview:; object-src 'none'; base-uri 'self'")
+
+		if r.Method == http.MethodOptions {
+			w.WriteHeader(http.StatusNoContent)
+			return
+		}
+
+		gitRoot := GetGitRoot()
+		artifactPath := filepath.Join(gitRoot, "LCM_Inventory", "data", "artifacts", artifactLeaf)
+		dataBytes, err := os.ReadFile(artifactPath)
+		if err != nil {
+			writeJSON(w, http.StatusNotFound, map[string]string{"error": "Artifact not found: " + artifactLeaf})
+			return
+		}
+
+		var modTime int64
+		if fi, err := os.Stat(artifactPath); err == nil {
+			modTime = fi.ModTime().UnixNano()
+		} else {
+			modTime = time.Now().UnixNano()
+		}
+		presRev := fmt.Sprintf("pres-%d", modTime)
+		rev := fmt.Sprintf("rev-%d", modTime)
+		w.Header().Set("X-LCM-Display-Revision", rev)
+
+		htmlStr := string(dataBytes)
+		headIdx := strings.Index(strings.ToLower(htmlStr), "<head")
+		if headIdx != -1 {
+			closeHeadTag := strings.Index(htmlStr[headIdx:], ">")
+			if closeHeadTag != -1 {
+				insertPos := headIdx + closeHeadTag + 1
+				marker := fmt.Sprintf("\n  <meta name=\"lcm-presentation-revision\" content=\"%s\">", presRev)
+				htmlStr = htmlStr[:insertPos] + marker + htmlStr[insertPos:]
+			}
+		}
+
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(htmlStr))
+	}
+}
+
+func handleAssets(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Private-Network", "true")
+	w.Header().Set("Cache-Control", "no-store, no-cache, must-revalidate")
+
+	if r.Method == http.MethodOptions {
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
+
+	gitRoot := GetGitRoot()
+	leaf := filepath.Base(r.URL.Path)
+	assetPath := filepath.Join(gitRoot, "LCM_Inventory", "assets", leaf)
+
+	if _, err := os.Stat(assetPath); os.IsNotExist(err) {
+		if strings.EqualFold(leaf, "standard-table-display.css") || strings.EqualFold(leaf, "standardtabledisplay.css") {
+			assetPath = filepath.Join(gitRoot, "LCM_Inventory", "assets", "StandardTableDisplay.css")
+		}
+	}
+
+	data, err := os.ReadFile(assetPath)
+	if err != nil {
+		writeJSON(w, http.StatusNotFound, map[string]string{"error": "Asset not found: " + leaf})
+		return
+	}
+
+	ext := strings.ToLower(filepath.Ext(leaf))
+	switch ext {
+	case ".css":
+		w.Header().Set("Content-Type", "text/css; charset=utf-8")
+	case ".js":
+		w.Header().Set("Content-Type", "application/javascript; charset=utf-8")
+	case ".json":
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	case ".html":
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	default:
+		w.Header().Set("Content-Type", "application/octet-stream")
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write(data)
+}
+
+func handleSnapshots(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Private-Network", "true")
+	w.Header().Set("Cache-Control", "no-store, no-cache, must-revalidate")
+
+	if r.Method == http.MethodOptions {
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
+
+	gitRoot := GetGitRoot()
+	relPath := strings.TrimPrefix(r.URL.Path, "/")
+	filePath := filepath.Join(gitRoot, "LCM_Inventory", "data", "artifacts", filepath.FromSlash(relPath))
+
+	data, err := os.ReadFile(filePath)
+	if err != nil {
+		writeJSON(w, http.StatusNotFound, map[string]string{"error": "Snapshot file not found: " + relPath})
+		return
+	}
+
+	ext := strings.ToLower(filepath.Ext(filePath))
+	switch ext {
+	case ".html":
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	case ".json":
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	case ".css":
+		w.Header().Set("Content-Type", "text/css; charset=utf-8")
+	case ".js":
+		w.Header().Set("Content-Type", "application/javascript; charset=utf-8")
+	default:
+		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write(data)
 }

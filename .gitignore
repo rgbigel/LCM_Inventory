@@ -43,3 +43,8 @@ temp/
 
 data/guardrails/
 data/logs/guardrails.log
+
+__pycache__/
+*.pyc
+
+Cmd/

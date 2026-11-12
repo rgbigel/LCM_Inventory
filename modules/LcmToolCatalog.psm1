@@ -554,7 +554,7 @@ function Build-LcmToolIndexHtml {
                 <input type="text" id="rename-input-source" style="width: 100%; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 6px; padding: 8px 12px; color: var(--text-primary); font-family: 'JetBrains Mono', monospace; font-size: 12px;">
             </div>
             <div style="margin-bottom: 14px;">
-                <label style="font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 4px;">2. Primary Short-Name Command (LCM_Inventory/Cmd/&lt;ShortName&gt;.cmd)</label>
+                <label style="font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 4px;">2. Primary Short-Name Command (LCM_Inventory/DoT/&lt;ShortName&gt;.cmd)</label>
                 <input type="text" id="rename-input-short" style="width: 100%; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 6px; padding: 8px 12px; color: #7ee787; font-family: 'JetBrains Mono', monospace; font-size: 12px;">
             </div>
             <div style="margin-bottom: 16px; padding: 12px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px;">

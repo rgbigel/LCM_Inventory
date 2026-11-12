@@ -131,3 +131,4 @@ func IsProcessElevated() bool {
 func FormatExecutionError(context string, err error) error {
 	return fmt.Errorf("%s: %w", context, err)
 }
+

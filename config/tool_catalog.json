@@ -7170,6 +7170,7 @@
       "@19-DefineSecureD.ps1",
       "@20-KillLogitechUpdateFull.ps1",
       "@21-FixMouseFlickerInvariants.ps1",
+      "@21-DesktopSubFoldersLauncher.cmd",
       "Apply-AllCustomizations.ps1",
       "Set-SecureDVolume.ps1",
       "Initialize-SharedAiMemory.ps1",
@@ -7704,24 +7705,6 @@
     "Description": "AllowSecureWinaeroTweaker execution tool.",
     "Example": "AllowSecureWinaeroTweaker",
     "RelativePath": "LCM_Inventory\\tools\\AllowSecureWinaeroTweaker.ps1",
-    "Parameters": [],
-    "Dependencies": null
-  },
-  {
-    "Name": "asus-debloater.ps1",
-    "ShortName": "asusdebloater",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": true,
-    "NoExit": true,
-    "Group": "LCM_Tools",
-    "Domain": "LCM_Tools",
-    "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "asus-debloater execution tool.",
-    "Example": "asusdebloater",
-    "RelativePath": "LCM_Inventory\\tools\\asus-debloater.ps1",
     "Parameters": [],
     "Dependencies": null
   },
@@ -8671,32 +8654,6 @@
     ]
   },
   {
-    "Name": "GoAdm.ps1",
-    "ShortName": "GoAdm",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": true,
-    "NoExit": true,
-    "Group": "LCM_Tools",
-    "Domain": "LCM_Tools",
-    "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "GoAdm execution tool.",
-    "Example": "GoAdm",
-    "RelativePath": "LCM_Inventory\\tools\\GoAdm.ps1",
-    "Parameters": [
-      {
-        "Name": "t",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": ""
-      }
-    ],
-    "Dependencies": "profile.ps1"
-  },
-  {
     "Name": "InstallAutoDT_BG_Info.ps1",
     "ShortName": "InstallAutoDTBGInfo",
     "Aliases": null,
@@ -9447,42 +9404,6 @@
     "Dependencies": null
   },
   {
-    "Name": "search certificate stores for private key container Guids.ps1",
-    "ShortName": "search certificate stores for private key container Guids",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "LCM_Tools",
-    "Domain": "LCM_Tools",
-    "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "search certificate stores for private key container Guids execution tool.",
-    "Example": "search certificate stores for private key container Guids",
-    "RelativePath": "LCM_Inventory\\tools\\search certificate stores for private key container Guids.ps1",
-    "Parameters": [],
-    "Dependencies": null
-  },
-  {
-    "Name": "Set-MachineWideExecutionPolicy.ps1",
-    "ShortName": "SetMachineWideExecutionPolicy",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": true,
-    "NoExit": true,
-    "Group": "LCM_Tools",
-    "Domain": "LCM_Tools",
-    "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "Set-MachineWideExecutionPolicy execution tool.",
-    "Example": "SetMachineWideExecutionPolicy",
-    "RelativePath": "LCM_Inventory\\tools\\Set-MachineWideExecutionPolicy.ps1",
-    "Parameters": [],
-    "Dependencies": null
-  },
-  {
     "Name": "Set_PS_Env_Machine.ps1",
     "ShortName": "SetPSEnvMachine",
     "Aliases": null,
@@ -9644,6 +9565,221 @@
         "Mandatory": false,
         "Default": "",
         "Description": "Display verbose logging for each individual file mirrored"
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "asus-debloater.ps1",
+    "ShortName": "SystemConfigurationasusdebloater",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "asus-debloater execution tool.",
+    "Example": "asusdebloater",
+    "RelativePath": "SystemConfiguration\\Source\\asus-debloater.ps1",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "asus-debloater.ps1",
+    "ShortName": "SystemConfigurationasusdebloater",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "asus-debloater execution tool.",
+    "Example": "asusdebloater",
+    "RelativePath": "LCM_Inventory\\tools\\asus-debloater.ps1",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "GoAdm.ps1",
+    "ShortName": "SystemConfigurationGoAdm",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "GoAdm execution tool.",
+    "Example": "GoAdm",
+    "RelativePath": "SystemConfiguration\\Source\\GoAdm.ps1",
+    "Parameters": [
+      {
+        "Name": "Shell",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "pwsh",
+        "Description": "Target interactive shell to elevate: 'pwsh' (default), 'cmd', or 'powershell'."
+      },
+      {
+        "Name": "TraceMode",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Enables step-by-step trace mode (Alias: -t)."
+      },
+      {
+        "Name": "ShowAll",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Displays detailed elevation and profile telemetry."
+      }
+    ],
+    "Dependencies": "profile.ps1"
+  },
+  {
+    "Name": "GoAdm.ps1",
+    "ShortName": "SystemConfigurationGoAdm",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "GoAdm execution tool.",
+    "Example": "GoAdm",
+    "RelativePath": "LCM_Inventory\\tools\\GoAdm.ps1",
+    "Parameters": [
+      {
+        "Name": "t",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      }
+    ],
+    "Dependencies": "profile.ps1"
+  },
+  {
+    "Name": "search certificate stores for private key container Guids.ps1",
+    "ShortName": "SystemConfigurationsearch certificate stores for private key container Guids",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "search certificate stores for private key container Guids execution tool.",
+    "Example": "search certificate stores for private key container Guids",
+    "RelativePath": "SystemConfiguration\\Source\\search certificate stores for private key container Guids.ps1",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "search certificate stores for private key container Guids.ps1",
+    "ShortName": "SystemConfigurationsearch certificate stores for private key container Guids",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "search certificate stores for private key container Guids execution tool.",
+    "Example": "search certificate stores for private key container Guids",
+    "RelativePath": "LCM_Inventory\\tools\\search certificate stores for private key container Guids.ps1",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "Set-MachineWideExecutionPolicy.ps1",
+    "ShortName": "SystemConfigurationSetMachineWideExecutionPolicy",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Set-MachineWideExecutionPolicy execution tool.",
+    "Example": "SetMachineWideExecutionPolicy",
+    "RelativePath": "SystemConfiguration\\Source\\Set-MachineWideExecutionPolicy.ps1",
+    "Parameters": [
+      {
+        "Name": "Policy",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "Bypass",
+        "Description": "The execution policy to assign (Default: 'Bypass')."
+      },
+      {
+        "Name": "ShowAll",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Displays detailed registry modification logs."
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "Set-MachineWideExecutionPolicy.ps1",
+    "ShortName": "SystemConfigurationSetMachineWideExecutionPolicy",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Set-MachineWideExecutionPolicy execution tool.",
+    "Example": "SetMachineWideExecutionPolicy",
+    "RelativePath": "LCM_Inventory\\tools\\Set-MachineWideExecutionPolicy.ps1",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "Test-PowerShellHklmState.ps1",
+    "ShortName": "SystemConfigurationTestPowerShellHklmState",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Test-PowerShellHklmState execution tool.",
+    "Example": "TestPowerShellHklmState",
+    "RelativePath": "SystemConfiguration\\Source\\Test-PowerShellHklmState.ps1",
+    "Parameters": [
+      {
+        "Name": "ShowAll",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Displays full registry key properties and ACL details."
       }
     ],
     "Dependencies": null
@@ -9877,6 +10013,1805 @@
       "Module: (Join-Path $ModuleRoot \"ModeTools.psm1\")",
       "Module: (Join-Path $ModuleRoot \"SummaryTools.psm1\")",
       "Module: (Join-Path $ModuleRoot \"SetFlagsTool.psm1\")"
+    ]
+  },
+  {
+    "Name": "Apply-AllCustomizations.ps1",
+    "ShortName": "ApplyAllCustomizations",
+    "Aliases": [
+      "ApplyCustomizations",
+      "ApplyCustomization",
+      "ApplyAllCustomization"
+    ],
+    "Role": "Customization",
+    "Audience": "User",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "System Customization",
+    "Description": "Executes all @00- to @21- system customization scripts in numerical order.",
+    "Example": "ApplyCustomizations",
+    "RelativePath": "SystemConfiguration\\Source\\Apply-AllCustomizations.ps1",
+    "Parameters": [
+      {
+        "Name": "StartAt",
+        "Type": "Int32",
+        "Mandatory": false,
+        "Default": "0",
+        "Description": "The numeric index (@nn) to start customization from (e.g. -StartAt 14). Defaults to 1."
+      },
+      {
+        "Name": "TraceMode",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Enables step-by-step trace logging (Alias: -t)."
+      },
+      {
+        "Name": "ShowAll",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Displays detailed diagnostic logs for each executed step."
+      }
+    ],
+    "Dependencies": "Logging.psm1"
+  },
+  {
+    "Name": "@07-Autorun_Entry_for_RenderLockScreen.cmd",
+    "ShortName": "AutorunRenderLockScreen",
+    "Aliases": null,
+    "Role": "Customization",
+    "Audience": "User",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "Batch",
+    "Category": "Desktop Personalization",
+    "Description": "Configures autorun startup registry entry for lock screen rendering runner.",
+    "Example": "pwsh -File \"SystemConfiguration\\Source\\@07-Autorun_Entry_for_RenderLockScreen.cmd\"",
+    "RelativePath": "SystemConfiguration\\Source\\@07-Autorun_Entry_for_RenderLockScreen.cmd",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "@19-DefineSecureD.ps1",
+    "ShortName": "DefineSecureD",
+    "Aliases": "@19-DefineSecureD",
+    "Role": "Customization",
+    "Audience": "User",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "Volume Security",
+    "Description": "Sets secure NTFS ACLs, volume labels, and junction permissions on D: drive.",
+    "Example": "pwsh -File \"SystemConfiguration\\Source\\@19-DefineSecureD.ps1\"",
+    "RelativePath": "SystemConfiguration\\Source\\@19-DefineSecureD.ps1",
+    "Parameters": [
+      {
+        "Name": "Root",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\",
+        "Description": "The target volume or root directory to scan (Defaults to 'D:\\')."
+      },
+      {
+        "Name": "TraceMode",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Enables step-by-step debug tracing (Alias: -t)."
+      },
+      {
+        "Name": "ShowAll",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Displays detailed directory scanning and ACL repair telemetry."
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "@01-Use_GPEDIT.msc_to_disable_Encryption.txt",
+    "ShortName": "DisableEncryptionGuide",
+    "Aliases": null,
+    "Role": "Customization",
+    "Audience": "User",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "Instruction",
+    "Category": "System Security",
+    "Description": "Reference guide and instructions for disabling BitLocker and drive encryption via Group Policy.",
+    "Example": "notepad \"SystemConfiguration\\Source\\@01-Use_GPEDIT.msc_to_disable_Encryption.txt\"",
+    "RelativePath": "SystemConfiguration\\Source\\@01-Use_GPEDIT.msc_to_disable_Encryption.txt",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "@17-FiraFonts.ps1",
+    "ShortName": "FiraFonts",
+    "Aliases": "@17-FiraFonts",
+    "Role": "Customization",
+    "Audience": "User",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "System Fonts",
+    "Description": "Installs and registers Fira Code and Fira Sans fonts system-wide in Windows Font Table.",
+    "Example": "pwsh -File \"SystemConfiguration\\Source\\@17-FiraFonts.ps1\"",
+    "RelativePath": "SystemConfiguration\\Source\\@17-FiraFonts.ps1",
+    "Parameters": [
+      {
+        "Name": "TraceMode",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Enables step-by-step debug tracing (Alias: -t)."
+      },
+      {
+        "Name": "ShowAll",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Displays detailed font installation logs."
+      }
+    ],
+    "Dependencies": "InstallFonts.ps1"
+  },
+  {
+    "Name": "@16-GoAdm_changer.ps1",
+    "ShortName": "GoAdmChanger",
+    "Aliases": "@16-GoAdm_changer",
+    "Role": "Customization",
+    "Audience": "User",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "Administrative Privileges",
+    "Description": "Configures and switches GoAdm administrative privilege profiles.",
+    "Example": "pwsh -File \"SystemConfiguration\\Source\\@16-GoAdm_changer.ps1\"",
+    "RelativePath": "SystemConfiguration\\Source\\@16-GoAdm_changer.ps1",
+    "Parameters": [
+      {
+        "Name": "TraceMode",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Enables step-by-step debug tracing (Alias: -t)."
+      },
+      {
+        "Name": "ShowAll",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Displays detailed profile path and content telemetry."
+      }
+    ],
+    "Dependencies": "profile.ps1"
+  },
+  {
+    "Name": "@05-Kill_Explorer_showing_friendly_names.reg",
+    "ShortName": "KillExplorerFriendlyNames",
+    "Aliases": null,
+    "Role": "Customization",
+    "Audience": "User",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "Registry",
+    "Category": "Explorer Tweaks",
+    "Description": "Disables friendly dates and abstracted filenames in Windows Explorer for raw canonical names.",
+    "Example": "reg import \"SystemConfiguration\\Source\\@05-Kill_Explorer_showing_friendly_names.reg\"",
+    "RelativePath": "SystemConfiguration\\Source\\@05-Kill_Explorer_showing_friendly_names.reg",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "@10-More_Options_OFF.reg",
+    "ShortName": "MoreOptionsOff",
+    "Aliases": null,
+    "Role": "Customization",
+    "Audience": "User",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "Registry",
+    "Category": "Context Menus",
+    "Description": "Disables Windows 11 'Show more options' collapsed context menu to restore classic full menu.",
+    "Example": "reg import \"SystemConfiguration\\Source\\@10-More_Options_OFF.reg\"",
+    "RelativePath": "SystemConfiguration\\Source\\@10-More_Options_OFF.reg",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "@15-PS7AppKiller.ps1",
+    "ShortName": "PS7AppKiller",
+    "Aliases": "@15-PS7AppKiller",
+    "Role": "Customization",
+    "Audience": "User",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "Process Management",
+    "Description": "Terminates lingering or frozen background PowerShell 7 host processes.",
+    "Example": "pwsh -File \"SystemConfiguration\\Source\\@15-PS7AppKiller.ps1\"",
+    "RelativePath": "SystemConfiguration\\Source\\@15-PS7AppKiller.ps1",
+    "Parameters": [
+      {
+        "Name": "TraceMode",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Enables step-by-step debug tracing (Alias: -t)."
+      },
+      {
+        "Name": "ShowAll",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Displays detailed AppX removal and Terminal settings update telemetry."
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "@00-RegKeyDefaultTypeSet.cmd",
+    "ShortName": "RegKeyDefaultTypeSet",
+    "Aliases": [
+      "@00-RegKeyDefaultTypeSet",
+      "@00-RegKey"
+    ],
+    "Role": "Customization",
+    "Audience": "User",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "Batch",
+    "Category": "Registry Tweaks",
+    "Description": "Configures default registry key types, associations, and type safety flags.",
+    "Example": "pwsh -File \"SystemConfiguration\\Source\\@00-RegKeyDefaultTypeSet.cmd\"",
+    "RelativePath": "SystemConfiguration\\Source\\@00-RegKeyDefaultTypeSet.cmd",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "@04-Remove_Removable_Drive_Icon.reg",
+    "ShortName": "RemoveRemovableDriveIcon",
+    "Aliases": null,
+    "Role": "Customization",
+    "Audience": "User",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "Registry",
+    "Category": "Explorer Tweaks",
+    "Description": "Removes redundant removable drive duplicate icons from Explorer navigation tree.",
+    "Example": "reg import \"SystemConfiguration\\Source\\@04-Remove_Removable_Drive_Icon.reg\"",
+    "RelativePath": "SystemConfiguration\\Source\\@04-Remove_Removable_Drive_Icon.reg",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "@14-SecureDesktopOff.ps1",
+    "ShortName": "SecureDesktopOff",
+    "Aliases": "@14-SecureDesktopOff",
+    "Role": "Customization",
+    "Audience": "User",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "Security Tweaks",
+    "Description": "Disables UAC secure desktop dimming switch (PromptOnSecureDesktop=0) for automation workflows.",
+    "Example": "pwsh -File \"SystemConfiguration\\Source\\@14-SecureDesktopOff.ps1\"",
+    "RelativePath": "SystemConfiguration\\Source\\@14-SecureDesktopOff.ps1",
+    "Parameters": [
+      {
+        "Name": "TraceMode",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Enables step-by-step debug tracing (Alias: -t)."
+      },
+      {
+        "Name": "ShowAll",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Displays detailed registry modification telemetry."
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "@02-Set_the_date_and_time_format_(ADM_systemwide).ps1",
+    "ShortName": "SetDateTimeFormatAdm",
+    "Aliases": "@02-SetDateTimeFormatAdm",
+    "Role": "Customization",
+    "Audience": "User",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "Regional Settings",
+    "Description": "Configures ISO-standard date/time format (yyyy-MM-dd HH:mm:ss) system-wide across all user profiles.",
+    "Example": "pwsh -File \"SystemConfiguration\\Source\\@02-Set_the_date_and_time_format_(ADM_systemwide).ps1\"",
+    "RelativePath": "SystemConfiguration\\Source\\@02-Set_the_date_and_time_format_(ADM_systemwide).ps1",
+    "Parameters": [
+      {
+        "Name": "TraceMode",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Enables step-by-step debug tracing (Alias: -t)."
+      },
+      {
+        "Name": "ShowAll",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Displays detailed registry modification logs for every user SID."
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "@03-Set_the_date_and_time_format_(HKCU_and_Current).reg",
+    "ShortName": "SetDateTimeFormatHkcu",
+    "Aliases": null,
+    "Role": "Customization",
+    "Audience": "User",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "Registry",
+    "Category": "Regional Settings",
+    "Description": "Applies ISO date/time format registry overrides for current user (HKCU).",
+    "Example": "reg import \"SystemConfiguration\\Source\\@03-Set_the_date_and_time_format_(HKCU_and_Current).reg\"",
+    "RelativePath": "SystemConfiguration\\Source\\@03-Set_the_date_and_time_format_(HKCU_and_Current).reg",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "Set-SecureDVolume.ps1",
+    "ShortName": "SetSecureD",
+    "Aliases": null,
+    "Role": "Customization",
+    "Audience": "User",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "Volume Security",
+    "Description": "Configures and locks secure volume attributes and junctions for D: drive.",
+    "Example": "SetSecureD",
+    "RelativePath": "SystemConfiguration\\Source\\Set-SecureDVolume.ps1",
+    "Parameters": [
+      {
+        "Name": "Root",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\",
+        "Description": "The target volume or root directory to scan (Defaults to 'D:\\')."
+      },
+      {
+        "Name": "TraceMode",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Enables step-by-step debug tracing (Alias: -t)."
+      },
+      {
+        "Name": "ShowAll",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Displays detailed directory scanning and ACL repair telemetry."
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "@00-Set_System_Font_Verdana.reg",
+    "ShortName": "SetSystemFontVerdana",
+    "Aliases": null,
+    "Role": "Customization",
+    "Audience": "User",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "Registry",
+    "Category": "System Fonts",
+    "Description": "Sets system UI font to Verdana across all Windows desktop interface elements.",
+    "Example": "reg import \"SystemConfiguration\\Source\\@00-Set_System_Font_Verdana.reg\"",
+    "RelativePath": "SystemConfiguration\\Source\\@00-Set_System_Font_Verdana.reg",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "@00-Set_System_Font_Verdana-MedionPC.reg",
+    "ShortName": "SetSystemFontVerdanaMedion",
+    "Aliases": null,
+    "Role": "Customization",
+    "Audience": "User",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "Registry",
+    "Category": "System Fonts",
+    "Description": "Sets system UI font to Verdana (Medion PC hardware profile).",
+    "Example": "reg import \"SystemConfiguration\\Source\\@00-Set_System_Font_Verdana-MedionPC.reg\"",
+    "RelativePath": "SystemConfiguration\\Source\\@00-Set_System_Font_Verdana-MedionPC.reg",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "@18-ShellNewPS1.ps1",
+    "ShortName": "ShellNewPS1",
+    "Aliases": "@18-ShellNewPS1",
+    "Role": "Customization",
+    "Audience": "User",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "Explorer Tweaks",
+    "Description": "Registers PowerShell (.ps1) script creation entry in Windows Explorer 'New' context menu.",
+    "Example": "pwsh -File \"SystemConfiguration\\Source\\@18-ShellNewPS1.ps1\"",
+    "RelativePath": "SystemConfiguration\\Source\\@18-ShellNewPS1.ps1",
+    "Parameters": [
+      {
+        "Name": "TraceMode",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Enables step-by-step debug tracing (Alias: -t)."
+      },
+      {
+        "Name": "ShowAll",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Displays detailed registry modification telemetry."
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "@00-Skip_TPM_Check_on_Dynamic_Update.cmd",
+    "ShortName": "SkipTpmCheckDynamicUpdate",
+    "Aliases": [
+      "@00-Skip_TPM_Check_on_Dynamic_Update",
+      "@00-SkipTPM"
+    ],
+    "Role": "Customization",
+    "Audience": "User",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "Batch",
+    "Category": "System Setup",
+    "Description": "Applies bypass registry keys for TPM and CPU compatibility checks during dynamic updates.",
+    "Example": "pwsh -File \"SystemConfiguration\\Source\\@00-Skip_TPM_Check_on_Dynamic_Update.cmd\"",
+    "RelativePath": "SystemConfiguration\\Source\\@00-Skip_TPM_Check_on_Dynamic_Update.cmd",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "@09-Use_Stylefolder_for_Folder_Comments.txt",
+    "ShortName": "StylefolderCommentsGuide",
+    "Aliases": null,
+    "Role": "Customization",
+    "Audience": "User",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "Instruction",
+    "Category": "Explorer Tweaks",
+    "Description": "Instruction guide for configuring desktop.ini folder comments via Stylefolder.",
+    "Example": "notepad \"SystemConfiguration\\Source\\@09-Use_Stylefolder_for_Folder_Comments.txt\"",
+    "RelativePath": "SystemConfiguration\\Source\\@09-Use_Stylefolder_for_Folder_Comments.txt",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "@21-DesktopSubFoldersLauncher.cmd",
+    "ShortName": "SystemConfigurationDesktopSubFoldersLauncher",
+    "Aliases": "@21-DesktopSubFoldersLauncher",
+    "Role": "Customization",
+    "Audience": "User",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "Batch",
+    "Category": "Desktop Personalization",
+    "Description": "Launches master customization applicator with optional trace, pause, and hidden parameters.",
+    "Example": "DesktopSubFoldersLauncher",
+    "RelativePath": "SystemConfiguration\\Source\\@21-DesktopSubFoldersLauncher.cmd",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "ToggleSecure.ps1",
+    "ShortName": "ToggleSecure",
+    "Aliases": null,
+    "Role": "Customization",
+    "Audience": "User",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "Registry Tweaks",
+    "Description": "Toggles or sets Windows EnableSecureUIPaths (HKLM Policies\\System) with live confirmation.",
+    "Example": "ToggleSecure",
+    "RelativePath": "SystemConfiguration\\Source\\ToggleSecure.ps1",
+    "Parameters": [
+      {
+        "Name": "State",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Desired state or operation mode: - 'On' (or 'O', '1', 'Enable') : Sets EnableSecureUIPaths to 1 (Enabled). - 'oFf' (or 'F', '0', 'Disable') : Sets EnableSecureUIPaths to 0 (Disabled). - 'Toggle' (or empty / omitted) : Toggles current state (1 -> 0 or 0 -> 1). - 'View' (or 'v', 'Status') : Displays current state without modifying registry."
+      },
+      {
+        "Name": "View",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Inspects and displays the current confirmed setting without modifying registry (Aliases: -v, -Status, -Check)."
+      },
+      {
+        "Name": "ShowAll",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Displays detailed diagnostic logs."
+      },
+      {
+        "Name": "NoElevation",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Prevents interactive self-elevation popups in automated/unattended environments."
+      },
+      {
+        "Name": "FromDispatcher",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      }
+    ],
+    "Dependencies": "Invoke-InteractiveDesktop.ps1"
+  },
+  {
+    "Name": "Get-ChkdskBootLog.ps1",
+    "ShortName": "GetChkdskBootLog",
+    "Aliases": null,
+    "Role": "Diagnostics",
+    "Audience": "User",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "Disk Diagnostics",
+    "Description": "Extracts and parses the most recent CHKDSK boot log from the Windows Event Log.",
+    "Example": "pwsh -File \"SystemConfiguration\\Source\\Get-ChkdskBootLog.ps1\"",
+    "RelativePath": "SystemConfiguration\\Source\\Get-ChkdskBootLog.ps1",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "@21-FixMouseFlickerInvariants.ps1",
+    "ShortName": "FixMouseFlickerInvariants",
+    "Aliases": "@21-FixMouseFlickerInvariants",
+    "Role": "Invariants",
+    "Audience": "User",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "Hardware Stability",
+    "Description": "Enforces AMD Radeon RX 580 ULPS disabled, DWM MPO OverlayTestMode=5, and PowerToys hook locks.",
+    "Example": "pwsh -File \"SystemConfiguration\\Source\\@21-FixMouseFlickerInvariants.ps1\"",
+    "RelativePath": "SystemConfiguration\\Source\\@21-FixMouseFlickerInvariants.ps1",
+    "Parameters": [
+      {
+        "Name": "TraceMode",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Enables step-by-step debug tracing (Alias: -t)."
+      },
+      {
+        "Name": "ShowAll",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Displays detailed invariant enforcement telemetry."
+      }
+    ],
+    "Dependencies": "Set-MouseFlickerInvariants.ps1"
+  },
+  {
+    "Name": "Kill-LogitechUpdate.ps1",
+    "ShortName": "KillLogitech",
+    "Aliases": null,
+    "Role": "Invariants",
+    "Audience": "User",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "Hardware Stability",
+    "Description": "Enforces 54/54 Logitech updater suppressions across tasks, registry run keys, and services.",
+    "Example": "KillLogitech",
+    "RelativePath": "SystemConfiguration\\Source\\Kill-LogitechUpdate.ps1",
+    "Parameters": [
+      {
+        "Name": "TraceMode",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "ShowAll",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Displays detailed process termination, service disabling, and registry deletion logs."
+      }
+    ],
+    "Dependencies": "Logging.psm1"
+  },
+  {
+    "Name": "Set-MouseFlickerInvariants.ps1",
+    "ShortName": "SetMouseFlicker",
+    "Aliases": null,
+    "Role": "Invariants",
+    "Audience": "User",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "Hardware Stability",
+    "Description": "Enforces AMD Radeon RX 580 ULPS disabled, DWM MPO OverlayTestMode=5, and PowerToys hook locks.",
+    "Example": "SetMouseFlicker",
+    "RelativePath": "SystemConfiguration\\Source\\Set-MouseFlickerInvariants.ps1",
+    "Parameters": [
+      {
+        "Name": "TraceMode",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "ShowAll",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Displays detailed registry and policy modification telemetry."
+      }
+    ],
+    "Dependencies": "Logging.psm1"
+  },
+  {
+    "Name": "@20-KillLogitechUpdateFull.ps1",
+    "ShortName": "SystemConfigurationKillLogitechUpdateFull",
+    "Aliases": "@20-KillLogitechUpdateFull",
+    "Role": "Invariants",
+    "Audience": "User",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "Hardware Stability",
+    "Description": "Enforces 54/54 Logitech updater suppressions across scheduled tasks, registry run keys, and services.",
+    "Example": "pwsh -File \"SystemConfiguration\\Source\\@20-KillLogitechUpdateFull.ps1\"",
+    "RelativePath": "SystemConfiguration\\Source\\@20-KillLogitechUpdateFull.ps1",
+    "Parameters": [
+      {
+        "Name": "TraceMode",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Enables step-by-step debug tracing (Alias: -t)."
+      },
+      {
+        "Name": "ShowAll",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Displays detailed process termination, service disabling, and registry deletion logs."
+      }
+    ],
+    "Dependencies": "Kill-LogitechUpdate.ps1"
+  },
+  {
+    "Name": "Invoke-AsusDebloater.ps1",
+    "ShortName": "AsusDebloater",
+    "Aliases": null,
+    "Role": "Repair",
+    "Audience": "User",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "Hardware Stability",
+    "Description": "Suppresses unnecessary ASUS background services and scheduled updater tasks.",
+    "Example": "pwsh -File \"SystemConfiguration\\Source\\Invoke-AsusDebloater.ps1\"",
+    "RelativePath": "SystemConfiguration\\Source\\Invoke-AsusDebloater.ps1",
+    "Parameters": [
+      {
+        "Name": "SkipApps",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Skips UWP app package removal."
+      },
+      {
+        "Name": "SkipHosts",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Skips telemetry hosts file entries."
+      },
+      {
+        "Name": "ShowAll",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Displays detailed diagnostic logs for every modified service, task, and application."
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "AcronisMiniFilterCleanup.cmd",
+    "ShortName": "AcronisMiniFilterCleanup",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "Batch",
+    "Category": "Utility",
+    "Description": "AcronisMiniFilterCleanup execution tool.",
+    "Example": "AcronisMiniFilterCleanup",
+    "RelativePath": "SystemConfiguration\\Source\\AcronisMiniFilterCleanup.cmd",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "Invoke-BatchOcr.ps1",
+    "ShortName": "BatchOcr",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Invoke-BatchOcr execution tool.",
+    "Example": "BatchOcr",
+    "RelativePath": "SystemConfiguration\\Source\\Invoke-BatchOcr.ps1",
+    "Parameters": [
+      {
+        "Name": "Source",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "(Get-Location).Path",
+        "Description": "Root directory to scan for PDF files. Defaults to current directory."
+      },
+      {
+        "Name": "Target",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Destination directory for OCR processed PDFs."
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "Build-MacriumScheduleTemplate.ps1",
+    "ShortName": "BuildMacriumScheduleTemplate",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Build-MacriumScheduleTemplate execution tool.",
+    "Example": "BuildMacriumScheduleTemplate",
+    "RelativePath": "SystemConfiguration\\Source\\Build-MacriumScheduleTemplate.ps1",
+    "Parameters": [
+      {
+        "Name": "OutputFile",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "C:\\Temp\\Macrium_Schedule_Template.xml",
+        "Description": "Destination XML path for the generated schedule template. Defaults to C:\\Temp\\Macrium_Schedule_Template.xml."
+      },
+      {
+        "Name": "VolumeSet",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "$env:SystemDrive",
+        "Description": "Target volume drive letters or volume GUID list. Defaults to current system drive."
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "ConvertTo-WorkspaceUtf8.ps1",
+    "ShortName": "ConvertToWorkspaceUtf8",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "ConvertTo-WorkspaceUtf8 execution tool.",
+    "Example": "ConvertToWorkspaceUtf8",
+    "RelativePath": "SystemConfiguration\\Source\\ConvertTo-WorkspaceUtf8.ps1",
+    "Parameters": [
+      {
+        "Name": "SearchPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\Git_Repositories",
+        "Description": "Root path to convert. Defaults to D:\\Git_Repositories."
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "Diagnose-OneDriveSync.ps1",
+    "ShortName": "DiagnoseOneDriveSync",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Diagnose-OneDriveSync execution tool.",
+    "Example": "DiagnoseOneDriveSync",
+    "RelativePath": "SystemConfiguration\\Source\\Diagnose-OneDriveSync.ps1",
+    "Parameters": [
+      {
+        "Name": "FixAcl",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Repairs ownership and sets AuthorizeMasterUser ACLs on all inaccessible OneDrive target folders."
+      },
+      {
+        "Name": "Reconcile",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Flips stuck 0-byte download items (fileStatus=3) to Synced (fileStatus=2) for all files present locally."
+      },
+      {
+        "Name": "Reset",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Executes official Microsoft OneDrive cache reset and explicitly restarts the OneDrive tray process."
+      },
+      {
+        "Name": "PurgeGhosts",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Purges stale 0-byte ghost download intents from SQLite sync database by generating local placeholders."
+      },
+      {
+        "Name": "All",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Performs full automated repair: ACL fix, database reconciliation, ghost purge, and non-elevated restart."
+      },
+      {
+        "Name": "ShowAll",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Displays full detailed diagnostic flow, database table stats, and path evaluation logs."
+      }
+    ],
+    "Dependencies": [
+      "od_diag_runner.py",
+      "od_reconcile_runner.py"
+    ]
+  },
+  {
+    "Name": "DismItFromE.cmd",
+    "ShortName": "DismItFromE",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "Batch",
+    "Category": "Utility",
+    "Description": "DismItFromE execution tool.",
+    "Example": "DismItFromE",
+    "RelativePath": "SystemConfiguration\\Source\\DismItFromE.cmd",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "Enter-CmdAdmin.cmd",
+    "ShortName": "EnterCmdAdmin",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "Batch",
+    "Category": "Utility",
+    "Description": "Enter-CmdAdmin execution tool.",
+    "Example": "EnterCmdAdmin",
+    "RelativePath": "SystemConfiguration\\Source\\Enter-CmdAdmin.cmd",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "Enter-PSSystemPrivilege.cmd",
+    "ShortName": "EnterPSSystemPrivilege",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "Batch",
+    "Category": "Utility",
+    "Description": "Enter-PSSystemPrivilege execution tool.",
+    "Example": "EnterPSSystemPrivilege",
+    "RelativePath": "SystemConfiguration\\Source\\Enter-PSSystemPrivilege.cmd",
+    "Parameters": [],
+    "Dependencies": [
+      "PsExec.exe",
+      "PsExec"
+    ]
+  },
+  {
+    "Name": "Enter-XYSystemPrivilege.cmd",
+    "ShortName": "EnterXYSystemPrivilege",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "Batch",
+    "Category": "Utility",
+    "Description": "Enter-XYSystemPrivilege execution tool.",
+    "Example": "EnterXYSystemPrivilege",
+    "RelativePath": "SystemConfiguration\\Source\\Enter-XYSystemPrivilege.cmd",
+    "Parameters": [],
+    "Dependencies": [
+      "PsExec.exe",
+      "PsExec"
+    ]
+  },
+  {
+    "Name": "Fix-LocalizedNames.ps1",
+    "ShortName": "FixLocalizedNames",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Fix-LocalizedNames execution tool.",
+    "Example": "FixLocalizedNames",
+    "RelativePath": "SystemConfiguration\\Source\\Fix-LocalizedNames.ps1",
+    "Parameters": [
+      {
+        "Name": "TargetDrive",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "C:\\",
+        "Description": "Drive letter or root directory to clean. Defaults to C:\\."
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "Forced USO Unlock.cmd",
+    "ShortName": "Forced USO Unlock",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "Batch",
+    "Category": "Utility",
+    "Description": "Forced USO Unlock execution tool.",
+    "Example": "Forced USO Unlock",
+    "RelativePath": "SystemConfiguration\\Source\\Forced USO Unlock.cmd",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "Get-InternetConnectivityData.ps1",
+    "ShortName": "GetInternetConnectivityData",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Get-InternetConnectivityData execution tool.",
+    "Example": "GetInternetConnectivityData",
+    "RelativePath": "SystemConfiguration\\Source\\Get-InternetConnectivityData.ps1",
+    "Parameters": [
+      {
+        "Name": "ShowAll",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Displays full raw network interface and ping telemetry details in the console."
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "Get-SystemAclAudit.ps1",
+    "ShortName": "GetSystemAclAudit",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Get-SystemAclAudit execution tool.",
+    "Example": "GetSystemAclAudit",
+    "RelativePath": "SystemConfiguration\\Source\\Get-SystemAclAudit.ps1",
+    "Parameters": [
+      {
+        "Name": "Path",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "C:\\Users\\$env:USERNAME",
+        "Description": "Target directory or drive root to audit. Defaults to C:\\Users\\$env:USERNAME."
+      },
+      {
+        "Name": "Detailed",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Enables detailed rule-by-rule evaluation."
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "Get-vEthernetData.ps1",
+    "ShortName": "GetvEthernetData",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Get-vEthernetData execution tool.",
+    "Example": "GetvEthernetData",
+    "RelativePath": "SystemConfiguration\\Source\\Get-vEthernetData.ps1",
+    "Parameters": [
+      {
+        "Name": "TargetIP",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "192.168.208.1",
+        "Description": "The IPv4 address of the target virtual network interface to probe. Defaults to '192.168.208.1'."
+      },
+      {
+        "Name": "ShowAll",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Displays detailed socket connection and routing telemetry to the console."
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "Install-OCRTools.ps1",
+    "ShortName": "InstallOCRTools",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Install-OCRTools execution tool.",
+    "Example": "InstallOCRTools",
+    "RelativePath": "SystemConfiguration\\Source\\Install-OCRTools.ps1",
+    "Parameters": [
+      {
+        "Name": "ToolsRoot",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\Tools",
+        "Description": ""
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "Install-PowerShell7Runtime.ps1",
+    "ShortName": "InstallPowerShell7Runtime",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Install-PowerShell7Runtime execution tool.",
+    "Example": "InstallPowerShell7Runtime",
+    "RelativePath": "SystemConfiguration\\Source\\Install-PowerShell7Runtime.ps1",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "Install-Tesseract.ps1",
+    "ShortName": "InstallTesseract",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Install-Tesseract execution tool.",
+    "Example": "InstallTesseract",
+    "RelativePath": "SystemConfiguration\\Source\\Install-Tesseract.ps1",
+    "Parameters": [
+      {
+        "Name": "ToolsRoot",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\Tools",
+        "Description": ""
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "PS_SystemPrivilege.cmd",
+    "ShortName": "PSSystemPrivilege",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "Batch",
+    "Category": "Utility",
+    "Description": "PS_SystemPrivilege execution tool.",
+    "Example": "PSSystemPrivilege",
+    "RelativePath": "SystemConfiguration\\Source\\PS_SystemPrivilege.cmd",
+    "Parameters": [],
+    "Dependencies": [
+      "PsExec.exe",
+      "PsExec"
+    ]
+  },
+  {
+    "Name": "Repair-EdgeWebViewRuntime.ps1",
+    "ShortName": "RepairEdgeWebViewRuntime",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Repair-EdgeWebViewRuntime execution tool.",
+    "Example": "RepairEdgeWebViewRuntime",
+    "RelativePath": "SystemConfiguration\\Source\\Repair-EdgeWebViewRuntime.ps1",
+    "Parameters": [
+      {
+        "Name": "Force",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Forces removal of corrupted registry GUIDs without prompting."
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "Repair-SystemAcl.ps1",
+    "ShortName": "RepairSystemAcl",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Repair-SystemAcl execution tool.",
+    "Example": "RepairSystemAcl",
+    "RelativePath": "SystemConfiguration\\Source\\Repair-SystemAcl.ps1",
+    "Parameters": [
+      {
+        "Name": "TargetPath",
+        "Type": "String",
+        "Mandatory": true,
+        "Default": "",
+        "Description": "Directory path to repair. Required."
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "Repair-UserProfile.ps1",
+    "ShortName": "RepairUserProfile",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Repair-UserProfile execution tool.",
+    "Example": "RepairUserProfile",
+    "RelativePath": "SystemConfiguration\\Source\\Repair-UserProfile.ps1",
+    "Parameters": [
+      {
+        "Name": "UserName",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "$env:USERNAME",
+        "Description": "Specific username profile to inspect/repair."
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "Reset-RecycleBin.ps1",
+    "ShortName": "ResetRecycleBin",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Reset-RecycleBin execution tool.",
+    "Example": "ResetRecycleBin",
+    "RelativePath": "SystemConfiguration\\Source\\Reset-RecycleBin.ps1",
+    "Parameters": [
+      {
+        "Name": "DriveLetter",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Drive letter to reset (e.g. 'C', 'D'). If omitted, resets all fixed local volumes."
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "Restore-EnvironmentRegistryKeys.ps1",
+    "ShortName": "RestoreEnvironmentRegistryKeys",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Restore-EnvironmentRegistryKeys execution tool.",
+    "Example": "RestoreEnvironmentRegistryKeys",
+    "RelativePath": "SystemConfiguration\\Source\\Restore-EnvironmentRegistryKeys.ps1",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "Save-Clipboard.ps1",
+    "ShortName": "SaveClipboard",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Save-Clipboard execution tool.",
+    "Example": "SaveClipboard",
+    "RelativePath": "SystemConfiguration\\Source\\Save-Clipboard.ps1",
+    "Parameters": [
+      {
+        "Name": "TargetDirectory",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "(Get-Location).Path",
+        "Description": "Output directory for saved clipboard files (Alias: FolderPath). Defaults to current directory."
+      },
+      {
+        "Name": "InitialFilename",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Optional base name for the output file (Alias: FilePath)."
+      },
+      {
+        "Name": "DebugMode",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Enables verbose debug tracing (Aliases: -d, -TraceMode)."
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "Search-Everywhere.cmd",
+    "ShortName": "SearchEverywhere",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "Batch",
+    "Category": "Utility",
+    "Description": "Search-Everywhere execution tool.",
+    "Example": "SearchEverywhere",
+    "RelativePath": "SystemConfiguration\\Source\\Search-Everywhere.cmd",
+    "Parameters": [],
+    "Dependencies": [
+      "Everything",
+      "Everything.exe",
+      "es.exe"
+    ]
+  },
+  {
+    "Name": "Set-BluetoothAlwaysOn.ps1",
+    "ShortName": "SetBluetoothAlwaysOn",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Set-BluetoothAlwaysOn execution tool.",
+    "Example": "SetBluetoothAlwaysOn",
+    "RelativePath": "SystemConfiguration\\Source\\Set-BluetoothAlwaysOn.ps1",
+    "Parameters": [
+      {
+        "Name": "ShowAll",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Displays detailed adapter discovery and registry update logs."
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "Set-OneDriveGitExclusions.ps1",
+    "ShortName": "SetOneDriveGitExclusions",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Set-OneDriveGitExclusions execution tool.",
+    "Example": "SetOneDriveGitExclusions",
+    "RelativePath": "SystemConfiguration\\Source\\Set-OneDriveGitExclusions.ps1",
+    "Parameters": [
+      {
+        "Name": "OneDriveRoot",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\OneDrive",
+        "Description": "Path to OneDrive root. Defaults to D:\\OneDrive."
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "Set-WindowsSearchService.ps1",
+    "ShortName": "SetWindowsSearchService",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Set-WindowsSearchService execution tool.",
+    "Example": "SetWindowsSearchService",
+    "RelativePath": "SystemConfiguration\\Source\\Set-WindowsSearchService.ps1",
+    "Parameters": [
+      {
+        "Name": "State",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "Toggle",
+        "Description": "Desired state: 'Enable' (Automatic + Running), 'Disable' (Disabled + Stopped), or 'Toggle'."
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "Stop-StuckGitProcess.ps1",
+    "ShortName": "StopStuckGitProcess",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Stop-StuckGitProcess execution tool.",
+    "Example": "StopStuckGitProcess",
+    "RelativePath": "SystemConfiguration\\Source\\Stop-StuckGitProcess.ps1",
+    "Parameters": [],
+    "Dependencies": "git.exe"
+  },
+  {
+    "Name": "Invoke-AcronisMiniFilterCleanup.cmd",
+    "ShortName": "SystemConfigurationAcronisMiniFilterCleanup",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "Batch",
+    "Category": "Utility",
+    "Description": "Invoke-AcronisMiniFilterCleanup execution tool.",
+    "Example": "SystemConfigurationAcronisMiniFilterCleanup",
+    "RelativePath": "SystemConfiguration\\Source\\Invoke-AcronisMiniFilterCleanup.cmd",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "Get-DevicePathFromDeviceName.ps1",
+    "ShortName": "SystemConfigurationGetDevicePathFromDeviceName",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Get-DevicePathFromDeviceName execution tool.",
+    "Example": "SystemConfigurationGetDevicePathFromDeviceName",
+    "RelativePath": "SystemConfiguration\\Source\\Get-DevicePathFromDeviceName.ps1",
+    "Parameters": [
+      {
+        "Name": "DriveLetter",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "C:",
+        "Description": "Drive letter to query (e.g. 'C:')."
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "GetInternetConnectivityData.ps1",
+    "ShortName": "SystemConfigurationGetInternetConnectivityData",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "GetInternetConnectivityData execution tool.",
+    "Example": "SystemConfigurationGetInternetConnectivityData",
+    "RelativePath": "SystemConfiguration\\Source\\GetInternetConnectivityData.ps1",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "GetvEthernetData.ps1",
+    "ShortName": "SystemConfigurationGetvEthernetData",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "GetvEthernetData execution tool.",
+    "Example": "SystemConfigurationGetvEthernetData",
+    "RelativePath": "SystemConfiguration\\Source\\GetvEthernetData.ps1",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "SetBluetoothAlwaysOn.ps1",
+    "ShortName": "SystemConfigurationSetBluetoothAlwaysOn",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "SetBluetoothAlwaysOn execution tool.",
+    "Example": "SystemConfigurationSetBluetoothAlwaysOn",
+    "RelativePath": "SystemConfiguration\\Source\\SetBluetoothAlwaysOn.ps1",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "Test-OneDriveSync.ps1",
+    "ShortName": "TestOneDriveSync",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Test-OneDriveSync execution tool.",
+    "Example": "TestOneDriveSync",
+    "RelativePath": "SystemConfiguration\\Source\\Test-OneDriveSync.ps1",
+    "Parameters": [
+      {
+        "Name": "FixAcl",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Repairs ownership and sets AuthorizeMasterUser ACLs on all inaccessible OneDrive target folders."
+      },
+      {
+        "Name": "Reconcile",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Flips stuck 0-byte download items (fileStatus=3) to Synced (fileStatus=2) for all files present locally."
+      },
+      {
+        "Name": "Reset",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Executes official Microsoft OneDrive cache reset and explicitly restarts the OneDrive tray process."
+      },
+      {
+        "Name": "PurgeGhosts",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Purges stale 0-byte ghost download intents from SQLite sync database by generating local placeholders."
+      },
+      {
+        "Name": "All",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Performs full automated repair: ACL fix, database reconciliation, ghost purge, and non-elevated restart."
+      },
+      {
+        "Name": "ShowAll",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Displays full detailed diagnostic flow, database table stats, and path evaluation logs."
+      }
+    ],
+    "Dependencies": [
+      "od_diag_runner.py",
+      "od_reconcile_runner.py"
+    ]
+  },
+  {
+    "Name": "Test-UserProfileHealth.ps1",
+    "ShortName": "TestUserProfileHealth",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Test-UserProfileHealth execution tool.",
+    "Example": "TestUserProfileHealth",
+    "RelativePath": "SystemConfiguration\\Source\\Test-UserProfileHealth.ps1",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "Test-WorkspaceAsciiCompliance.ps1",
+    "ShortName": "TestWorkspaceAsciiCompliance",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Test-WorkspaceAsciiCompliance execution tool.",
+    "Example": "TestWorkspaceAsciiCompliance",
+    "RelativePath": "SystemConfiguration\\Source\\Test-WorkspaceAsciiCompliance.ps1",
+    "Parameters": [
+      {
+        "Name": "SearchPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\Git_Repositories",
+        "Description": "Root path to scan. Defaults to D:\\Git_Repositories."
+      },
+      {
+        "Name": "Fix",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Automatically sanitizes non-ASCII characters and converts mojibake sequences."
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "Unlock-ForcedUSO.cmd",
+    "ShortName": "UnlockForcedUSO",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "Batch",
+    "Category": "Utility",
+    "Description": "Unlock-ForcedUSO execution tool.",
+    "Example": "UnlockForcedUSO",
+    "RelativePath": "SystemConfiguration\\Source\\Unlock-ForcedUSO.cmd",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "XY_SystemPrivilege.cmd",
+    "ShortName": "XYSystemPrivilege",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "Batch",
+    "Category": "Utility",
+    "Description": "XY_SystemPrivilege execution tool.",
+    "Example": "XYSystemPrivilege",
+    "RelativePath": "SystemConfiguration\\Source\\XY_SystemPrivilege.cmd",
+    "Parameters": [],
+    "Dependencies": [
+      "PsExec.exe",
+      "PsExec"
     ]
   }
 ]
