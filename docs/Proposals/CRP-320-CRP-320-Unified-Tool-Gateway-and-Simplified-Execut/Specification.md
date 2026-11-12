@@ -115,3 +115,7 @@ graph TD
 
 ### Requirement 5: Zero Unbounded Disk Crawl Fallbacks
 - Under no circumstances may `Search-Everything.ps1` or any tool fall back to recursive filesystem crawls (`Get-ChildItem -Recurse`). Tools must fail fast with single-line diagnostics in 0 ms if services are unreachable.
+
+### Requirement 6: Permanent Retirement of `lcm.cmd` and Migration to `DoT/`
+- `lcm.cmd` is permanently retired and deleted; all execution routes through `run.cmd` or direct binary invocation via `do.exe`.
+- The legacy `LCM_Inventory/Cmd/` directory is deprecated and git-ignored in favor of `LCM_Inventory/DoT/` (Direct-on-Target trampolines) and native binary PATH resolution.

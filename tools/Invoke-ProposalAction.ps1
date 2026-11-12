@@ -11,7 +11,7 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $false, Position = 0, HelpMessage = 'Action to perform on proposals or governance settings')]
-    [ValidateSet('do', 'delete', 'defer', 'deferred', 'complete', 'completed', 'suggest', 'suggested', 'granularity', 'mode', 'testing-mode', 'testing', 'minimal-tests', 'doit-mode', 'list', 'progress', 'state', 'reject', 'rejected', 'approve', 'approved', 'bug', 'push', 'pushed', 'verify', 'bcr', 'cohort', 'priority', 'commit', 'committed', 'proceed', 'regression', 'regressions', 'check-regressions', 'generate-regression', 'workon', 'work-on', 'app', 'new-app', 'apps', 'list-apps', 'sync-apps', 'catalog', 'split-docs', 'splitdocs', 'doc', 'docs', 'show-doc', 'purge-bundle', 'hold', 'held', 'resume', 'continue', 'withdraw', 'retire', 'supersede', 'reopen', 'reinstate', 'reset', 'analyze', 'implement', 'operating-mode', 'analysis-mode', 'trip-breaker', 'circuit-breaker', 'reset-breaker', 'rename', 'title')]
+    [ValidateSet('do', 'delete', 'defer', 'deferred', 'complete', 'completed', 'suggest', 'suggested', 'granularity', 'mode', 'testing-mode', 'testing', 'minimal-tests', 'doit-mode', 'list', 'progress', 'state', 'reject', 'rejected', 'approve', 'approved', 'bug', 'push', 'pushed', 'verify', 'bcr', 'cohort', 'priority', 'commit', 'committed', 'proceed', 'regression', 'regressions', 'check-regressions', 'generate-regression', 'workon', 'work-on', 'app', 'new-app', 'apps', 'list-apps', 'sync-apps', 'catalog', 'split-docs', 'splitdocs', 'doc', 'docs', 'show-doc', 'purge-bundle', 'hold', 'held', 'resume', 'continue', 'withdraw', 'retire', 'supersede', 'superseded', 'superceeded', 'supersedes', 'reopen', 'reinstate', 'reset', 'analyze', 'implement', 'operating-mode', 'analysis-mode', 'trip-breaker', 'circuit-breaker', 'reset-breaker', 'rename', 'title')]
     [string]$Action = 'list',
 
     [Parameter(Mandatory = $false, Position = 1, HelpMessage = 'Target proposal expression (e.g. all, #1, 105, 100-105)')]
@@ -94,8 +94,8 @@ param(
     [ValidatePattern('^COH-\d+$')]
     [string]$CohortId = '',
 
-    [Parameter(Mandatory = $false, HelpMessage = 'Successor proposal ID required by the supersede action')]
-    [int]$SuccessorId,
+    [Parameter(Mandatory = $false, Position = 2, HelpMessage = 'Successor proposal ID required by the supersede action')]
+    [int]$SuccessorId = 0,
 
     [Parameter(Mandatory = $false, HelpMessage = 'Include unreviewed live paths during cohort completion')]
     [switch]$IncludeUnreviewed,
@@ -379,7 +379,10 @@ switch -Regex ($Action) {
         Format-ProposalsTable -Proposals @($updated)
         break
     }
-    '^supersede$' {
+    '^(supersede|superseded|superceeded|supersedes)$' {
+        if ($SuccessorId -le 0 -and $Details -match '\b(\d{1,4})\b') {
+            $SuccessorId = [int]$matches[1]
+        }
         if ([string]::IsNullOrWhiteSpace($TargetExpression) -or $SuccessorId -le 0) {
             throw "Supersede requires one CRP target and -SuccessorId <proposal ID>."
         }

@@ -45,10 +45,11 @@ A Strategy is valid IF AND ONLY IF all of its referenced CRPs satisfy:
 2. `state NOT IN ('rejected', 'superseded', 'cancelled')`.
 3. If a constituent CRP transitions to `rejected` or `cancelled`, the Strategy enters an `integrity_alert` state and visually surfaces the broken reference.
 
-### Invariant 3: Dual-State Projection Architecture
+### Invariant 3: Dual-State Projection Architecture & Git Hook Publishing
 Conforming to `CRP-322`, the strategy mapping engine supports dual-state projection:
 - **Binary Runtime Engine (`data/proposals/proposals.db`)**: High-performance SQLite tables loaded instantly by `ShowStrategies` and `ShowCM`.
 - **Canonical Text Projection (`data/proposals/strategies.json` / `strategies.sql`)**: Human-readable and diffable in Beyond Compare 5 (`bcr`).
+- **Pre-Push & Hydration Hooks**: Linked into `.githooks/pre-push` to guarantee `strategies.sql` is automatically dumped alongside `proposals.sql` before git push, and re-hydrated on pull.
 - Bidirectional synchronization managed via `Sync-LcmStrategiesDb.ps1`.
 
 ### Invariant 4: `ShowStrategies` Dashboard & `ShowCM` Navigation Integration
@@ -58,6 +59,10 @@ Conforming to `CRP-322`, the strategy mapping engine supports dual-state project
 - **`ShowCM` Integration**:
   - The `CM_CONTROL_HUB.html` Topbar / Status Rail gains a **`Strategies`** navigation pill.
   - The proposal inspector view displays the Strategy badge if the active CRP belongs to a strategy.
+
+### Invariant 5: Orphaned & Unmapped Proposals Triage Panel
+- `ShowStrategies` provides a dedicated **Unmapped / Orphaned Proposals** triage panel.
+- Displays all open and in-progress CRPs that are not currently associated with any strategic group, enabling operators to assign them to strategies or identify unaligned scope drift.
 
 ---
 

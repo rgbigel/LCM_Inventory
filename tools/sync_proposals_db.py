@@ -16,6 +16,7 @@ from datetime import datetime
 import json
 import os
 import sqlite3
+import subprocess
 import sys
 
 sys.stdout.reconfigure(encoding="utf-8")
@@ -87,6 +88,34 @@ def init_db(conn, workspace_root=None, workspace_role="LIVE", sandbox_id="", lcm
     cursor.execute("CREATE INDEX IF NOT EXISTS idx_proposals_priority ON proposals(priority)")
     cursor.execute("CREATE INDEX IF NOT EXISTS idx_proposals_origin_repo ON proposals(origin_repo)")
 
+    # CRP-324: Relational Strategies Mapping Engine
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS strategies (
+            strategy_id TEXT PRIMARY KEY,
+            title TEXT NOT NULL,
+            description TEXT,
+            state TEXT NOT NULL,
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL
+        )
+        """
+    )
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS strategy_crps (
+            strategy_id TEXT NOT NULL,
+            crp_id TEXT NOT NULL,
+            goal_role TEXT NOT NULL,
+            PRIMARY KEY (strategy_id, crp_id),
+            FOREIGN KEY (strategy_id) REFERENCES strategies(strategy_id),
+            FOREIGN KEY (crp_id) REFERENCES proposals(crp_id)
+        )
+        """
+    )
+    cursor.execute("CREATE INDEX IF NOT EXISTS idx_strategy_crps_strategy_id ON strategy_crps(strategy_id)")
+    cursor.execute("CREATE INDEX IF NOT EXISTS idx_strategy_crps_crp_id ON strategy_crps(crp_id)")
+
     # Update metadata
     now_iso = datetime.now().isoformat()
     meta_entries = [
@@ -122,7 +151,7 @@ def dump_db_to_sql(db_path, sql_path, silent=False):
     lines = [
         "-- ==========================================================================",
         "-- LCM Proposals Ledger Canonical SQL Dump (Git-Reviewable Text Projection)",
-        f"-- Generated: {datetime.now().isoformat()}",
+        "-- Schema Version: 1.0 (Deterministic SQL Projection)",
         f"-- Total Proposals: {len(proposal_rows)}",
         "-- ==========================================================================",
         "",
@@ -191,10 +220,114 @@ def dump_db_to_sql(db_path, sql_path, silent=False):
     with open(sql_path, "w", encoding="utf-8", newline="\n") as f:
         f.write("\n".join(lines))
 
+    # Also dump strategies.sql if strategies table exists
+    proposals_dir = os.path.dirname(sql_path)
+    strat_sql = os.path.join(proposals_dir, "strategies.sql")
+    dump_strategies_to_sql(db_path, strat_sql, silent=silent)
+
     if not silent:
         print(f"[DUMP] Emitted canonical SQL dump: {sql_path} ({len(proposal_rows)} proposals)")
 
     return len(proposal_rows)
+
+
+def dump_strategies_to_sql(db_path, sql_path, silent=False):
+    if not os.path.exists(db_path):
+        return 0
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='strategies'")
+    if not cursor.fetchone():
+        conn.close()
+        return 0
+
+    cursor.execute("SELECT strategy_id, title, description, state, created_at, updated_at FROM strategies ORDER BY strategy_id")
+    strat_rows = cursor.fetchall()
+    cursor.execute("SELECT strategy_id, crp_id, goal_role FROM strategy_crps ORDER BY strategy_id, crp_id")
+    crp_rows = cursor.fetchall()
+    conn.close()
+
+    lines = [
+        "-- ==========================================================================",
+        "-- LCM Strategies Ledger Canonical SQL Dump (Git-Reviewable Text Projection)",
+        "-- Schema Version: 1.0 (Deterministic SQL Projection)",
+        f"-- Total Strategies: {len(strat_rows)}",
+        "-- ==========================================================================",
+        "",
+        "BEGIN TRANSACTION;",
+        "",
+        "CREATE TABLE IF NOT EXISTS strategies (",
+        "    strategy_id TEXT PRIMARY KEY,",
+        "    title TEXT NOT NULL,",
+        "    description TEXT,",
+        "    state TEXT NOT NULL,",
+        "    created_at TEXT NOT NULL,",
+        "    updated_at TEXT NOT NULL",
+        ");",
+        "",
+        "CREATE TABLE IF NOT EXISTS strategy_crps (",
+        "    strategy_id TEXT NOT NULL,",
+        "    crp_id TEXT NOT NULL,",
+        "    goal_role TEXT NOT NULL,",
+        "    PRIMARY KEY (strategy_id, crp_id)",
+        ");",
+        "",
+        "DELETE FROM strategy_crps;",
+        "DELETE FROM strategies;",
+        ""
+    ]
+    for s in strat_rows:
+        val_strs = []
+        for v in s:
+            if v is None:
+                val_strs.append("NULL")
+            else:
+                escaped = str(v).replace("'", "''")
+                val_strs.append(f"'{escaped}'")
+        lines.append(f"INSERT INTO strategies (strategy_id, title, description, state, created_at, updated_at) VALUES ({', '.join(val_strs)});")
+    for r in crp_rows:
+        val_strs = []
+        for v in r:
+            if v is None:
+                val_strs.append("NULL")
+            else:
+                escaped = str(v).replace("'", "''")
+                val_strs.append(f"'{escaped}'")
+        lines.append(f"INSERT INTO strategy_crps (strategy_id, crp_id, goal_role) VALUES ({', '.join(val_strs)});")
+    lines.append("")
+    lines.append("COMMIT;")
+    lines.append("")
+
+    with open(sql_path, "w", encoding="utf-8", newline="\n") as f:
+        f.write("\n".join(lines))
+    if not silent:
+        print(f"[DUMP] Emitted canonical strategies SQL dump: {sql_path} ({len(strat_rows)} strategies)")
+    return len(strat_rows)
+
+
+def sync_strategies_json(conn, strategies_json_path, silent=False):
+    if not os.path.exists(strategies_json_path):
+        return 0
+    with open(strategies_json_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    strategies = data.get("strategies", [])
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM strategy_crps")
+    cursor.execute("DELETE FROM strategies")
+    for s in strategies:
+        cursor.execute(
+            "INSERT INTO strategies (strategy_id, title, description, state, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)",
+            (s["strategy_id"], s["title"], s.get("description", ""), s.get("state", "active"), s.get("created_at", ""), s.get("updated_at", ""))
+        )
+        for crp in s.get("crps", []):
+            cursor.execute(
+                "INSERT INTO strategy_crps (strategy_id, crp_id, goal_role) VALUES (?, ?, ?)",
+                (s["strategy_id"], crp["crp_id"], crp.get("goal_role", "delivers"))
+            )
+    conn.commit()
+    if not silent:
+        print(f"[STRATEGIES] Synced {len(strategies)} strategies from {strategies_json_path}")
+    return len(strategies)
 
 
 def hydrate_sql_to_db(sql_path, db_path, workspace_root=None, workspace_role="LIVE", sandbox_id="", silent=False):
@@ -307,6 +440,10 @@ def sync_json_to_db(json_path, db_path, sql_path=None, workspace_root=None, work
 
     cursor.execute("SELECT COUNT(*) FROM proposals")
     total_db_rows = cursor.fetchone()[0]
+
+    strat_json = os.path.join(os.path.dirname(json_path), "strategies.json")
+    sync_strategies_json(conn, strat_json, silent=silent)
+
     conn.close()
 
     if sql_path:
@@ -429,41 +566,73 @@ def verify_parity(json_path, db_path, sql_path=None):
 
 
 def install_git_hooks(repo_root, silent=False):
-    hooks_dir = os.path.join(repo_root, ".git", "hooks")
-    if not os.path.exists(hooks_dir):
-        # Could be worktree or submodule, check gitdir
-        git_file = os.path.join(repo_root, ".git")
-        if os.path.isfile(git_file):
-            with open(git_file, "r") as gf:
-                content = gf.read()
-            if content.startswith("gitdir:"):
-                hooks_dir = os.path.join(content.replace("gitdir:", "").strip(), "hooks")
+    hooks_dir = None
+    try:
+        res = subprocess.run(["git", "config", "core.hooksPath"], cwd=repo_root, capture_output=True, text=True)
+        configured_hooks = res.stdout.strip()
+        if configured_hooks:
+            hooks_dir = os.path.join(repo_root, configured_hooks)
+    except Exception:
+        pass
+
+    if not hooks_dir:
+        hooks_dir = os.path.join(repo_root, ".git", "hooks")
+        if not os.path.exists(hooks_dir):
+            git_file = os.path.join(repo_root, ".git")
+            if os.path.isfile(git_file):
+                with open(git_file, "r") as gf:
+                    content = gf.read()
+                if content.startswith("gitdir:"):
+                    hooks_dir = os.path.join(content.replace("gitdir:", "").strip(), "hooks")
 
     if not os.path.exists(hooks_dir):
         os.makedirs(hooks_dir, exist_ok=True)
 
+    pre_push_path = os.path.join(hooks_dir, "pre-push")
     post_merge_path = os.path.join(hooks_dir, "post-merge")
     post_checkout_path = os.path.join(hooks_dir, "post-checkout")
 
-    hook_script = """#!/bin/sh
+    pre_push_script = """#!/bin/sh
+# LCM Proposal Database Pre-Push Hook
+# Exports proposals.db to canonical proposals.sql before pushing upstream.
+python tools/sync_proposals_db.py --action dump --silent
+if [ $? -ne 0 ]; then
+    echo "[ERROR] Pre-push: Failed to export proposals.db to canonical proposals.sql." >&2
+    exit 1
+fi
+
+DIFF=$(git diff --name-only data/proposals/proposals.sql 2>/dev/null)
+if [ -n "$DIFF" ]; then
+    echo "[WARNING] Pre-push: data/proposals/proposals.sql was updated from proposals.db and has uncommitted changes." >&2
+    echo "          Please stage and commit proposals.sql before pushing to ensure GitHub is synchronized." >&2
+    exit 1
+fi
+exit 0
+"""
+
+    hydration_script = """#!/bin/sh
 # LCM Proposal Database Auto-Hydration Hook
-# Rebuilds local proposals.db whenever proposals.sql or proposals.json changes upon pull/merge/checkout.
-CHANGED=$(git diff-tree -r --name-only --no-commit-id HEAD@{1} HEAD 2>/dev/null | grep -E "proposals\\.(sql|json)")
+# Rebuilds local proposals.db whenever proposals.sql changes upon pull/merge/checkout.
+CHANGED=$(git diff-tree -r --name-only --no-commit-id HEAD@{1} HEAD 2>/dev/null | grep -E "proposals\\.sql")
 
 if [ -n "$CHANGED" ]; then
-    echo "[LCM] Pull/Checkout detected proposal ledger changes. Rebuilding proposals.db..."
-    python tools/sync_proposals_db.py --action hydrate --silent 2>/dev/null || python tools/sync_proposals_db.py --action sync --silent 2>/dev/null
+    echo "[LCM] Pull/Checkout detected proposals.sql change. Rebuilding proposals.db..."
+    python tools/sync_proposals_db.py --action hydrate --silent
 fi
 """
 
+    with open(pre_push_path, "w", encoding="utf-8", newline="\n") as f:
+        f.write(pre_push_script)
+
     with open(post_merge_path, "w", encoding="utf-8", newline="\n") as f:
-        f.write(hook_script)
+        f.write(hydration_script)
 
     with open(post_checkout_path, "w", encoding="utf-8", newline="\n") as f:
-        f.write(hook_script)
+        f.write(hydration_script)
 
     if not silent:
-        print("[HOOKS] Installed Git post-merge and post-checkout auto-hydration hooks:")
+        print(f"[HOOKS] Installed Git hooks in '{hooks_dir}':")
+        print(f"  - {pre_push_path}")
         print(f"  - {post_merge_path}")
         print(f"  - {post_checkout_path}")
 

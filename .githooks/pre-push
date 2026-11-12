@@ -1,0 +1,17 @@
+#!/bin/sh
+# LCM Proposal Database Pre-Push Hook
+# Exports proposals.db to canonical proposals.sql and strategies.sql before pushing upstream.
+python tools/sync_proposals_db.py --action dump --silent
+if [ $? -ne 0 ]; then
+    echo "[ERROR] Pre-push: Failed to export proposals.db to canonical SQL dumps." >&2
+    exit 1
+fi
+
+DIFF=$(git diff --name-only data/proposals/proposals.sql data/proposals/strategies.sql 2>/dev/null)
+if [ -n "$DIFF" ]; then
+    echo "[WARNING] Pre-push: Canonical SQL ledger files have uncommitted changes after database export:" >&2
+    echo "$DIFF" | sed 's/^/            - /' >&2
+    echo "          Please stage and commit SQL projections before pushing to ensure GitHub is synchronized." >&2
+    exit 1
+fi
+exit 0

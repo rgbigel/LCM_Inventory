@@ -448,7 +448,7 @@ function Test-LcmProposalLifecycleTransition {
         in_review = @('in_progress', 'completed', 'held', 'rejected')
         completed = @('pushed', 'held')
         pushed = @()
-        held = @('suggested', 'in_progress', 'verified', 'in_review', 'completed', 'withdrawn')
+        held = @('suggested', 'in_progress', 'verified', 'in_review', 'completed', 'withdrawn', 'superseded')
         withdrawn = @('superseded')
         rejected = @('superseded')
         superseded = @()
@@ -831,10 +831,10 @@ function Move-LcmProposalLifecycleState {
         in_review   = 'verification'
         completed   = 'completed'
         pushed      = 'pushed'
-        held        = 'blocked'
-        withdrawn   = 'deferred'
-        rejected    = 'deferred'
-        superseded  = 'deferred'
+        held        = 'held'
+        withdrawn   = 'withdrawn'
+        rejected    = 'rejected'
+        superseded  = 'superseded'
     }
     $legacyDisposition = @{
         completed   = 'completed'

@@ -24,7 +24,8 @@ CRP-322:
 1. Establishes an explicit **LCM Version** taxonomy across all proposals, hiding historical published releases by default in ShowCM (`CM_CONTROL_HUB.html`) and CLI queries.
 2. Implements a high-performance local SQLite database (`data/proposals/proposals.db`) equipped with a `_lcm_db_metadata` table for workspace and sandbox identity binding.
 3. Generates a deterministic, sorted canonical text dump (**`data/proposals/proposals.sql`**) tracked in Git for human-readable GitHub Pull Requests and Beyond Compare (BCR) diffs without binary repo bloat.
-4. Deploys Git **`post-merge`** and **`post-checkout`** auto-hydration hooks that automatically rebuild the local `proposals.db` in $\sim 20\text{ms}$ upon pull, checkout, or sandbox mount.
+4. Deploys Git **`pre-push`**, **`post-merge`**, and **`post-checkout`** hooks in `.githooks/` that guarantee deterministic export of `proposals.sql` before pushing upstream and auto-hydrate local `proposals.db` in $\sim 20\text{ms}$ upon pull or checkout.
+5. Establishes the authoritative retirement path for `proposals.json`, designating SQLite as the definitive ledger engine and `proposals.sql` as its Git text projection.
 
 ---
 
@@ -35,12 +36,12 @@ CRP-322:
 2. **Automatic Version Inheritance**: New proposals (`New-LCM_Proposal`, `Invoke-ProposalAction.ps1 -Action bug/suggest`) automatically inherit the active `GlobalLCMVersion` from `data/inventory.json`.
 3. **SQLite Proposals Database with Sandbox Isolation**: An indexed SQLite database (`LCM_Inventory/data/proposals/proposals.db`) containing a `_lcm_db_metadata` table (`workspace_root`, `workspace_role`, `sandbox_id`, `lcm_version`) that prevents cross-talk between live and sandbox workspaces.
 4. **Canonical SQL Text Projection (`proposals.sql`)**: Deterministic, sorted SQL text export tracked in Git, ensuring clean line-by-line diffs in PRs and BCR visual reviews while `.db` binaries remain git-ignored.
-5. **Git Auto-Hydration Hooks**: Native `.git/hooks/post-merge` and `post-checkout` hooks that automatically reconstruct local `proposals.db` when `proposals.sql` changes during `git pull` or branch checkout.
+5. **Git Publishing & Auto-Hydration Hooks**: Native `.githooks/pre-push`, `post-merge`, and `post-checkout` hooks. The `pre-push` hook guarantees deterministic export of `proposals.sql` before any push, while `post-merge` and `post-checkout` reconstruct local `proposals.db` when `proposals.sql` changes during pull or branch checkout.
 6. **ShowCM Release Horizon Filtering**: The Control Hub UI features a Release Horizon filter dropdown defaulting to `Active Horizon (Current 10.2.x)` that hides published historical proposals (`< 10.2.0`), while keeping all open/in-progress/held items visible across any release.
 7. **CLI & Module Filtering**: `Get-LCM_Proposals` and `Show-LcmControl.ps1` support `-Horizon` and `-LcmVersion` switches.
 
 ### Invariants and Exit Criteria
-- **Zero Loss / Comment Preservation Invariant**: `proposals.json` retains all existing fields, history, notes, and metadata; version injection is purely additive.
+- **JSON Retirement Roadmap Invariant**: `proposals.json` is retained strictly as a temporary compatibility bridge during initial SQLite verification. As soon as all tools (`ProposalManager.psm1`, `Invoke-LCM_Push.ps1`, `Show-LcmControl.ps1`) transition to direct SQLite queries, `proposals.json` will be permanently retired, leaving `proposals.db` (local binary engine) and `proposals.sql` (tracked Git text projection) as the sole ledger.
 - **3-Way Parity Invariant**: `Sync-LcmProposalsDb.ps1 -Action Verify` validates row count and checksum parity across JSON, SQLite DB, and SQL dump.
 - **Fail-Closed Sandbox Invariant**: Databases stamped with a sandbox identity fail closed if accessed by a conflicting workspace.
 - **Sub-10ms Query Performance**: SQLite index lookups execute in $< 5\text{ms}$.

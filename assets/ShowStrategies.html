@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>LCM Strategy Engine — Architectural Horizons</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --border: #e2e8f0;
+      --ink: #0f172a;
+      --muted: #64748b;
+      --blue: #0284c7;
+      --blue-soft: #e0f2fe;
+      --green: #16a34a;
+      --green-soft: #dcfce7;
+      --amber: #d97706;
+      --amber-soft: #fef3c7;
+      --violet: #7c3aed;
+      --violet-soft: #ede9fe;
+      --red: #dc2626;
+      --red-soft: #fee2e2;
+      --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: 'IBM Plex Mono', Menlo, Monaco, Consolas, monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      font-size: 13px;
+      line-height: 1.5;
+      padding: 24px;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .header-title h1 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .header-title p {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 4px;
+    }
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .btn {
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      color: var(--ink);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+    .btn:hover { background: #f1f5f9; border-color: #cbd5e1; }
+    .btn-primary {
+      background: var(--blue);
+      color: #ffffff;
+      border-color: var(--blue);
+    }
+    .btn-primary:hover { background: #0369a1; }
+    
+    /* Strategy Grid */
+    .strategy-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+    .strategy-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .strategy-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+    .strategy-id {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--blue);
+      background: var(--blue-soft);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .strategy-state {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .state-active { background: var(--green-soft); color: var(--green); border: 1px solid #bbf7d0; }
+    .state-completed { background: var(--blue-soft); color: var(--blue); border: 1px solid #bae6fd; }
+    .state-held { background: var(--amber-soft); color: var(--amber); border: 1px solid #fde68a; }
+
+    .strategy-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+    .strategy-desc {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.4;
+      margin-bottom: 16px;
+    }
+    
+    /* Progress Bar */
+    .progress-section {
+      margin-bottom: 16px;
+    }
+    .progress-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      font-family: var(--font-mono);
+      margin-bottom: 4px;
+      color: var(--muted);
+    }
+    .progress-bar-bg {
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--blue);
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+
+    /* CRP Chips */
+    .crp-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .crp-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 8px;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-decoration: none;
+      color: var(--ink);
+      cursor: pointer;
+    }
+    .crp-chip:hover {
+      background: #e2e8f0;
+      border-color: #94a3b8;
+    }
+    .chip-status {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+    }
+    .status-completed { background: var(--green); }
+    .status-pushed { background: var(--blue); }
+    .status-in_progress { background: var(--amber); }
+    .status-suggested { background: #94a3b8; }
+    .status-held { background: var(--violet); }
+    .status-superseded { background: #cbd5e1; }
+
+    /* Orphaned Section */
+    .orphan-section {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+    }
+    .orphan-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .orphan-title {
+      font-size: 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .orphan-count {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      background: #f1f5f9;
+      padding: 2px 8px;
+      border-radius: 12px;
+      color: var(--muted);
+    }
+    .orphan-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 10px;
+    }
+    .orphan-card {
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: #f8fafc;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .orphan-card-title {
+      font-weight: 600;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-title">
+      <h1>🗺️ LCM Strategy Engine</h1>
+      <p>Multi-CRP Architectural Horizons & Referential Consistency Governance (CRP-324)</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-primary" onclick="openControlHub()">Open ShowCM</button>
+      <button class="btn" onclick="refreshData()">↻ Refresh</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="strategy-grid" id="strategyGrid"></div>
+
+    <section class="orphan-section">
+      <div class="orphan-header">
+        <div class="orphan-title">
+          <span>📋 Unassigned / Orphaned Proposals</span>
+          <span class="orphan-count" id="orphanCount">0 proposals</span>
+        </div>
+        <p style="font-size: 11px; color: var(--muted);">Open and in-progress proposals not yet assigned to a strategic architectural horizon.</p>
+      </div>
+      <div class="orphan-grid" id="orphanGrid"></div>
+    </section>
+  </main>
+
+  <script id="lcm-strategies-data" type="application/json">{}</script>
+
+  <script>
+    let payload = {};
+    try {
+      const dataEl = document.getElementById("lcm-strategies-data");
+      payload = JSON.parse(dataEl.textContent || "{}");
+    } catch (e) {
+      console.error("Failed to parse strategies payload", e);
+    }
+
+    const strategies = payload.strategies || [];
+    const proposals = payload.proposals || [];
+
+    const proposalsMap = new Map();
+    proposals.forEach(p => {
+      proposalsMap.set(p.crp_id, p);
+      proposalsMap.set(String(p.id), p);
+    });
+
+    const assignedCrps = new Set();
+
+    function renderStrategies() {
+      const container = document.getElementById("strategyGrid");
+      container.innerHTML = "";
+
+      strategies.forEach(s => {
+        const crps = s.crps || [];
+        let doneCount = 0;
+        let totalCount = crps.length;
+
+        const chipsHtml = crps.map(item => {
+          const p = proposalsMap.get(item.crp_id) || {};
+          assignedCrps.add(item.crp_id);
+          const state = (p.state || "suggested").toLowerCase();
+          if (["completed", "pushed", "published"].includes(state)) {
+            doneCount++;
+          }
+          return `
+            <div class="crp-chip" onclick="viewCrpInHub('${item.crp_id}')" title="${escapeHtml(p.title || item.crp_id)} [${state}] (${item.goal_role})">
+              <span class="chip-status status-${state}"></span>
+              <strong>${item.crp_id}</strong>
+              <span style="font-size:10px; color:var(--muted);">${item.goal_role}</span>
+            </div>
+          `;
+        }).join("");
+
+        const pct = totalCount > 0 ? Math.round((doneCount / totalCount) * 100) : 0;
+
+        const card = document.createElement("div");
+        card.className = "strategy-card";
+        card.innerHTML = `
+          <div>
+            <div class="strategy-card-header">
+              <span class="strategy-id">${s.strategy_id}</span>
+              <span class="strategy-state state-${s.state}">${s.state}</span>
+            </div>
+            <div class="strategy-title">${escapeHtml(s.title)}</div>
+            <div class="strategy-desc">${escapeHtml(s.description)}</div>
+          </div>
+          <div>
+            <div class="progress-section">
+              <div class="progress-labels">
+                <span>Progress: ${doneCount} / ${totalCount} delivering</span>
+                <span>${pct}%</span>
+              </div>
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill" style="width: ${pct}%;"></div>
+              </div>
+            </div>
+            <div class="crp-chips">${chipsHtml}</div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function renderOrphans() {
+      const container = document.getElementById("orphanGrid");
+      container.innerHTML = "";
+      
+      const unassigned = proposals.filter(p => {
+        const state = (p.state || "").toLowerCase();
+        if (["completed", "pushed", "published", "withdrawn", "superseded", "rejected"].includes(state)) return false;
+        return !assignedCrps.has(p.crp_id) && !assignedCrps.has(String(p.id));
+      });
+
+      document.getElementById("orphanCount").innerText = `${unassigned.length} proposal${unassigned.length === 1 ? '' : 's'}`;
+
+      if (unassigned.length === 0) {
+        container.innerHTML = `<div style="grid-column: 1 / -1; padding: 12px; color: var(--muted); text-align: center;">All active proposals are assigned to architectural strategies!</div>`;
+        return;
+      }
+
+      unassigned.forEach(p => {
+        const card = document.createElement("div");
+        card.className = "orphan-card";
+        card.innerHTML = `
+          <div>
+            <div class="orphan-card-title">${p.crp_id}: ${escapeHtml(p.title)}</div>
+            <div style="font-size: 11px; color: var(--muted);">${p.origin_repo || 'LCM_Inventory'} · ${p.state}</div>
+          </div>
+          <button class="btn" style="padding: 2px 6px; font-size: 10px;" onclick="viewCrpInHub('${p.crp_id}')">View</button>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function viewCrpInHub(crpId) {
+      window.location.href = `CM_CONTROL_HUB.html?Target=${encodeURIComponent(crpId)}`;
+    }
+
+    function openControlHub() {
+      window.location.href = `CM_CONTROL_HUB.html`;
+    }
+
+    function refreshData() {
+      window.location.reload();
+    }
+
+    function escapeHtml(str) {
+      return String(str || "").replace(/[&<>"']/g, c => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      }[c]));
+    }
+
+    renderStrategies();
+    renderOrphans();
+  </script>
+</body>
+</html>

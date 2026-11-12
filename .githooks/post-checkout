@@ -1,0 +1,9 @@
+#!/bin/sh
+# LCM Proposal Database Auto-Hydration Hook
+# Rebuilds local proposals.db whenever proposals.sql changes upon pull/merge/checkout.
+CHANGED=$(git diff-tree -r --name-only --no-commit-id HEAD@{1} HEAD 2>/dev/null | grep -E "proposals\.sql")
+
+if [ -n "$CHANGED" ]; then
+    echo "[LCM] Pull/Checkout detected proposals.sql change. Rebuilding proposals.db..."
+    python tools/sync_proposals_db.py --action hydrate --silent
+fi

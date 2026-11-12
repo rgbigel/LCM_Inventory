@@ -402,6 +402,10 @@
     .state-held { background: var(--violet-soft); color: var(--violet); border: 1px solid var(--violet); }
     .state-open { background: #edf0f1; color: #506168; border: 1px solid #bccad0; }
     .state-published { background: #e7f3ea; color: #2e6930; border: 1px solid #95c599; }
+    .state-withdrawn { background: #f1f3f5; color: #6c757d; border: 1px solid #ced4da; }
+    .state-superseded { background: #eef2f7; color: #495057; border: 1px solid #adb5bd; }
+    .state-rejected { background: var(--red-soft); color: var(--red); border: 1px solid var(--red); }
+    .state-cancelled { background: var(--red-soft); color: var(--red); border: 1px solid var(--red); }
     .state-closed { background: var(--red-soft); color: var(--red); border: 1px solid var(--red); }
     .cohort-badge { display: inline-flex; align-items: center; margin: 3px 4px 0 0; padding: 1px 5px; border: 1px solid #7c3aed; border-radius: 3px; background: #f5f3ff; color: #6d28d9; font: 700 10px var(--mono); }
     .cohort-column { width: 110px; min-width: 110px; }
@@ -1084,6 +1088,7 @@
     </div>
     <div class="header-actions">
       <button class="top-button" id="btnRefresh" title="Re-query proposal ledger from daemon"><span class="btn-icon">🔄</span> Refresh</button>
+      <button class="top-button" id="btnStrategies" onclick="window.location.href='ShowStrategies.html'" title="Open LCM Strategy Engine dashboard (CRP-324)"><span class="btn-icon">🗺️</span> Strategies</button>
       <button class="top-button" id="btnActivityLogs" title="View the activity and audit log"><span class="btn-icon">📋</span> Activity / Audit Log</button>
       <button class="top-button" id="btnDatesLedger" title="Open CRP lifecycle dates ledger"><span class="btn-icon">📅</span> Dates</button>
       <button class="top-button" id="btnHelp" title="Show policy and keyboard shortcuts"><span class="btn-icon">❓</span> Help</button>
@@ -1127,10 +1132,10 @@
         <div class="control-group">
           <span class="control-label">Preset:</span>
           <select class="control-select" id="presetSelect" onchange="applyPresetFilter(this.value)">
-            <option value="all" selected>All Proposals</option>
+            <option value="unfinished" selected>Unfinished Business</option>
+            <option value="all">All Proposals</option>
             <option value="open">Open Business (All Open Work)</option>
             <option value="suggested">Suggested (Awaiting Gate 1)</option>
-            <option value="unfinished">Unfinished Business</option>
             <option value="inprogress">In Progress</option>
             <option value="review">Pending Review</option>
             <option value="complete">Ready to Push</option>
@@ -1175,9 +1180,13 @@
         <button class="action-result-close" type="button" onclick="dismissActionResult()" aria-label="Hide action result" title="Hide message output">×</button>
       </div>
 
-      <!-- Status Rail (All Proposals + 6 Focused Lifecycle States) -->
+      <!-- Status Rail (Unfinished Default + All + Focused Lifecycle States) -->
       <nav class="status-rail" aria-label="Visible proposal statuses">
-        <div class="rail-state active" id="rail-all" onclick="filterByRail('all')" title="All proposals without a lifecycle restriction">
+        <div class="rail-state active" id="rail-unfinished" onclick="filterByRail('unfinished')" title="All unfinished business across the active horizon">
+          <div class="rail-name">Unfinished <span class="rail-count" id="count-unfinished">0</span></div>
+          <span class="rail-detail">active backlog</span>
+        </div>
+        <div class="rail-state" id="rail-all" onclick="filterByRail('all')" title="All proposals without a lifecycle restriction">
           <div class="rail-name">All <span class="rail-count" id="count-all">0</span></div>
           <span class="rail-detail">all proposals</span>
         </div>
@@ -1649,7 +1658,7 @@
 
     let selectedIds = new Set();
     let activeItemTarget = "";
-    let activeRailFilter = "all";
+    let activeRailFilter = "unfinished";
     let launchFilters = { state: "", event: "", ids: [] };
     let activeSort = "id-desc"; // Highest CRP first by default (e.g. 211 at top)
     let pendingOverrideAction = null;
@@ -1679,7 +1688,10 @@
     function getVisibleStatus(p) {
       const state = getLifecycleState(p);
       if (state === "held") return "held";
-      if (["withdrawn", "rejected", "superseded"].includes(state)) return "cancelled";
+      if (state === "withdrawn") return "withdrawn";
+      if (state === "superseded") return "superseded";
+      if (state === "rejected") return "rejected";
+      if (state === "deleted" || state === "cancelled") return "cancelled";
       if (state === "pushed") return "published";
       if (state === "completed") return "complete";
       if (["verified", "in_review"].includes(state)) return "review";
@@ -2392,7 +2404,7 @@
 
         // Open Business: all uncompleted, non-terminal work (suggested, active, review, held)
         const isClosed = ["completed", "pushed", "published", "rejected", "deleted", "cancelled", "withdrawn", "superseded"].includes(status) ||
-                         ["complete", "published", "cancelled"].includes(vis);
+                         ["complete", "published", "cancelled", "withdrawn", "superseded", "rejected"].includes(vis);
         if (!isClosed) openCount++;
 
         // Suggested: intake awaiting Gate 1
@@ -2410,7 +2422,7 @@
         if (status === "pushed" || status === "published" || vis === "published") publishedCount++;
 
         const isFinishedOrDiscarded = ["pushed", "published", "rejected", "deleted", "cancelled", "withdrawn", "superseded"].includes(status) ||
-                                     ["published", "cancelled"].includes(vis);
+                                     ["published", "cancelled", "withdrawn", "superseded", "rejected"].includes(vis);
         if (!isFinishedOrDiscarded) unfinishedCount++;
       });
 
@@ -2519,10 +2531,10 @@
       $("filterQueryInput").value = "";
       $("scopeSelect").value = "";
       if ($("cohortSelect")) $("cohortSelect").value = "";
-      if ($("presetSelect")) $("presetSelect").value = "all";
+      if ($("presetSelect")) $("presetSelect").value = "unfinished";
       $("sortSelect").value = "id-desc";
       activeSort = "id-desc";
-      activeRailFilter = "all";
+      activeRailFilter = "unfinished";
       
       // Reset column dropdowns
       if ($("thStatusFilter")) $("thStatusFilter").value = "";
@@ -2607,13 +2619,13 @@
       // Rail filter check
       if (activeRailFilter === "open" || activeRailFilter === "openbusiness") {
         const isClosed = ["completed", "pushed", "published", "rejected", "deleted", "cancelled", "withdrawn", "superseded"].includes(state) ||
-                         ["complete", "published", "cancelled"].includes(vis);
+                         ["complete", "published", "cancelled", "withdrawn", "superseded", "rejected"].includes(vis);
         if (isClosed) return false;
       } else if (activeRailFilter === "suggested") {
         if (state !== "suggested" && vis !== "open") return false;
       } else if (activeRailFilter === "unfinished") {
         const isFinishedOrDiscarded = ["pushed", "published", "rejected", "deleted", "cancelled", "withdrawn", "superseded"].includes(state) ||
-                                     ["published", "cancelled"].includes(vis);
+                                     ["published", "cancelled", "withdrawn", "superseded", "rejected"].includes(vis);
         if (isFinishedOrDiscarded) return false;
       } else if (activeRailFilter === "inprogress") {
         if (state === "completed" || state === "pushed") return false;
@@ -2823,13 +2835,15 @@
       const proposalRows = sorted.map(p => {
         const isChecked = selectedIds.has(p.id);
         const visStatus = getVisibleStatus(p);
+        const lifecycleState = getLifecycleState(p);
         const crpTag = p.crp_id || p.cr_id || ("CR-" + p.id);
         const prio = normalizePriority(p.priority);
-        const progressNote = p.progress_state || "undecided";
+        const rawProgress = p.progress_state || "undecided";
+        const progressNote = (["withdrawn", "superseded", "rejected"].includes(visStatus)) ? visStatus :
+                             (rawProgress === "deferred" && ["withdrawn", "superseded", "rejected", "held"].includes(lifecycleState)) ? lifecycleState : rawProgress;
         const evidence = p.evidence_summary || p.verification_status || (p.bcr_status ? "BCR: " + p.bcr_status : "Baseline recorded");
         const planStateDetail = getDetailedPlanState(p);
         const statusNote = getUnresolvedReviewObligations(p).length ? "" : (p.status_note || "");
-        const lifecycleState = getLifecycleState(p);
         const lifecycleButton = (label, icon, enabled, onclick) => `
           <button class="show-dropdown-item" ${enabled ? `onclick="${onclick}"` : 'disabled aria-disabled="true"'}>
             <span class="btn-icon">${icon}</span> ${label}

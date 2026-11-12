@@ -1,0 +1,54 @@
+{
+  "strategies": [
+    {
+      "strategy_id": "STRAT-001",
+      "title": "Tool Taxonomy, Fast Discovery & High-Performance Execution",
+      "description": "Unify tool taxonomy across SubSystems, absorb redundant roles into enriched functional categories, provide high-speed index discovery, and establish native Go execution via LCM DO (do.exe).",
+      "state": "active",
+      "created_at": "2026-11-12 12:00:00",
+      "updated_at": "2026-11-12 19:20:00",
+      "crps": [
+        { "crp_id": "CRP-320", "goal_role": "delivers" },
+        { "crp_id": "CRP-323", "goal_role": "delivers" },
+        { "crp_id": "CRP-204", "goal_role": "aligns" },
+        { "crp_id": "CRP-213", "goal_role": "aligns" }
+      ]
+    },
+    {
+      "strategy_id": "STRAT-002",
+      "title": "SQLite Dual-State Ledgers & Version Isolation",
+      "description": "Modernize workspace catalogs and ledgers to high-performance SQLite engines (proposals.db, tools.db) with canonical Git SQL projections, automated hooks, and sandbox metadata binding.",
+      "state": "active",
+      "created_at": "2026-11-12 12:00:00",
+      "updated_at": "2026-11-12 19:20:00",
+      "crps": [
+        { "crp_id": "CRP-322", "goal_role": "delivers" },
+        { "crp_id": "CRP-324", "goal_role": "delivers" }
+      ]
+    },
+    {
+      "strategy_id": "STRAT-003",
+      "title": "System-1 Decision Cascade & Requalification Governance",
+      "description": "Establish multi-stage System-1 decision cascade governance, Gate 2A documentation stabilization checkpoint, and automated stepwise requalification with dynamic remediation injection.",
+      "state": "active",
+      "created_at": "2026-11-12 12:00:00",
+      "updated_at": "2026-11-12 19:20:00",
+      "crps": [
+        { "crp_id": "CRP-321", "goal_role": "delivers" },
+        { "crp_id": "CRP-252", "goal_role": "delivers" }
+      ]
+    },
+    {
+      "strategy_id": "STRAT-004",
+      "title": "Storage, Junctions & Workspace Mounting Architecture",
+      "description": "Architect flexible workspace boundaries, child repository junction management, hybrid Git World mounting, and read-only Macrium snapshot baseline review workflows.",
+      "state": "active",
+      "created_at": "2026-11-12 12:00:00",
+      "updated_at": "2026-11-12 19:20:00",
+      "crps": [
+        { "crp_id": "CRP-253", "goal_role": "delivers" },
+        { "crp_id": "CRP-268", "goal_role": "aligns" }
+      ]
+    }
+  ]
+}

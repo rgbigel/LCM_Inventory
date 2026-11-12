@@ -75,12 +75,12 @@ Describe 'CRP-322: SQLite Proposals Ledger Engine & Canonical SQL Projection' {
         Test-Path -LiteralPath $dbPath | Should -BeTrue
     }
 
-    It 'Should have Git post-merge and post-checkout auto-hydration hooks installed' {
-        $hooksDir = Join-Path $repoRoot '.git\hooks'
-        if (Test-Path -LiteralPath $hooksDir) {
-            Test-Path -LiteralPath (Join-Path $hooksDir 'post-merge')    | Should -BeTrue
-            Test-Path -LiteralPath (Join-Path $hooksDir 'post-checkout') | Should -BeTrue
-        }
+    It 'Should have Git pre-push, post-merge, and post-checkout auto-hydration hooks installed' {
+        $gitHooksConfig = (git -C $repoRoot config core.hooksPath 2>$null)
+        $hooksDir = if ($gitHooksConfig) { Join-Path $repoRoot $gitHooksConfig.Trim() } else { Join-Path $repoRoot '.git\hooks' }
+        Test-Path -LiteralPath (Join-Path $hooksDir 'pre-push')      | Should -BeTrue
+        Test-Path -LiteralPath (Join-Path $hooksDir 'post-merge')    | Should -BeTrue
+        Test-Path -LiteralPath (Join-Path $hooksDir 'post-checkout') | Should -BeTrue
     }
 
     It 'Should validate PowerShell AST syntax of all modified tools' {

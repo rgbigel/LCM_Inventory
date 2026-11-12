@@ -1,5 +1,19 @@
 # CRP-254: Go Implementation Path for Inefficient Scripts
 
+```yaml
+CRP-ID: CRP-254
+Title: Go Implementation Path for Inefficient Scripts
+Scope: LCM_Inventory, LCM_AI
+Baseline-Version: 10.1.0
+Author: rgbig
+Date: 2026-10-13
+Status: Superseded
+Plan-State: superseded
+Progress-State: deferred
+Priority: 5
+App-ID: None
+```
+
 | Metadata Field | Value |
 |---|---|
 | **Proposal ID** | `CRP-254` |
