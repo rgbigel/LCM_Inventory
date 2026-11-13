@@ -6,7 +6,7 @@ Path: LCM_Inventory/docs/README.md
 Authors: Rolf, LCM_AI Engine  
 Version: 10.0.1  
 Status: Authoritative Reference  
-Updated: 2026-11-12 18:34:52  
+Updated: 2026-11-13 21:35:16  
 
 ---
 
@@ -287,6 +287,7 @@ TestWorkspaceReadiness
 | **ShowPathPS** | [ShowPathPS.ps1](file:///LCM_Inventory/tools/ShowPathPS.ps1) | Utility | LCM_Tools | PowerShell | Utility | ShowPathPS execution tool. | ShowPathPS |
 | **ShowRepos** | [Show-Repos.ps1](file:///LCM_Inventory/tools/Show-Repos.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Show-Repos execution tool. | ShowRepos |
 | **ShowRules** | [Show-Rules.ps1](file:///LCM_Inventory/tools/Show-Rules.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Show-Rules execution tool. | ShowRules |
+| **ShowStrategies** | [Show-Strategies.ps1](file:///LCM_Inventory/tools/Show-Strategies.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Show-Strategies execution tool. | ShowStrategies |
 | **ShowSupervision** | [Show-Supervision.ps1](file:///LCM_Inventory/tools/Show-Supervision.ps1) | Utility | LCM_Supervision | PowerShell | Utility | Show-Supervision execution tool. | ShowSupervision |
 | **ShowToolIntents** | [Show-ToolIntents.ps1](file:///LCM_Inventory/tools/Show-ToolIntents.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Show-ToolIntents execution tool. | ShowToolIntents |
 | **SplitOneNoteExportDocxForGemini** | [Split-OneNoteExportDocxForGemini.ps1](file:///LCM_Inventory/tools/Split-OneNoteExportDocxForGemini.ps1) | Utility | LCM_Tools | PowerShell | Utility | Split-OneNoteExportDocxForGemini execution tool. | SplitOneNoteExportDocxForGemini |
@@ -301,7 +302,9 @@ TestWorkspaceReadiness
 | **SyncLcmModuleVersions** | [Sync-LcmModuleVersions.ps1](file:///LCM_Inventory/tools/Sync-LcmModuleVersions.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Sync-LcmModuleVersions execution tool. | SyncLcmModuleVersions |
 | **SyncLcmProposalsDb** | [Sync-LcmProposalsDb.ps1](file:///LCM_Inventory/tools/Sync-LcmProposalsDb.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Sync-LcmProposalsDb execution tool. | SyncLcmProposalsDb |
 | **SyncLCMResearchSnapshot** | [Sync-LCMResearchSnapshot.ps1](file:///LCM_Inventory/tools/Sync-LCMResearchSnapshot.ps1) | Utility | LCM_Tools | PowerShell | Research Snapshot | Mirrors selected LCM workspace research and governance files to a configured snapshot destination. | SyncLCMResearchSnapshot |
+| **SyncLcmToolCatalogDb** | [Sync-LcmToolCatalogDb.ps1](file:///LCM_Inventory/tools/Sync-LcmToolCatalogDb.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Sync-LcmToolCatalogDb execution tool. | SyncLcmToolCatalogDb |
 | **syncproposalsdb** | [sync_proposals_db.py](file:///LCM_Inventory/tools/sync_proposals_db.py) | Utility | LCM_Inventory | Python | Utility | sync_proposals_db execution tool. | syncproposalsdb |
+| **synctoolcatalogdb** | [sync_tool_catalog_db.py](file:///LCM_Inventory/tools/sync_tool_catalog_db.py) | Utility | LCM_Inventory | Python | Utility | sync_tool_catalog_db execution tool. | synctoolcatalogdb |
 | **SyncToolSymlinks** | [Sync-ToolSymlinks.ps1](file:///LCM_Inventory/tools/Sync-ToolSymlinks.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Sync-ToolSymlinks execution tool. | SyncToolSymlinks |
 | **SystemConfigurationAcronisMiniFilterCleanup** | [Invoke-AcronisMiniFilterCleanup.cmd](file:///SystemConfiguration/Source/Invoke-AcronisMiniFilterCleanup.cmd) | Utility | SystemConfiguration | Batch | Utility | Invoke-AcronisMiniFilterCleanup execution tool. | SystemConfigurationAcronisMiniFilterCleanup |
 | **SystemConfigurationasusdebloater** | [asus-debloater.ps1](file:///SystemConfiguration/Source/asus-debloater.ps1) | Utility | LCM_Tools | PowerShell | Utility | asus-debloater execution tool. | SystemConfigurationasusdebloater |
@@ -311,11 +314,11 @@ TestWorkspaceReadiness
 | **SystemConfigurationGetvEthernetData** | [GetvEthernetData.ps1](file:///SystemConfiguration/Source/GetvEthernetData.ps1) | Utility | SystemConfiguration | PowerShell | Utility | GetvEthernetData execution tool. | SystemConfigurationGetvEthernetData |
 | **SystemConfigurationGoAdm** | [GoAdm.ps1](file:///SystemConfiguration/Source/GoAdm.ps1) | Utility | LCM_Tools | PowerShell | Utility | GoAdm execution tool. | SystemConfigurationGoAdm |
 | **SystemConfigurationGoAdm** | [GoAdm.ps1](file:///LCM_Inventory/tools/GoAdm.ps1) | Utility | LCM_Tools | PowerShell | Utility | GoAdm execution tool. | SystemConfigurationGoAdm |
-| **SystemConfigurationsearch certificate stores for private key container Guids** | [search certificate stores for private key container Guids.ps1](file:///SystemConfiguration/Source/search certificate stores for private key container Guids.ps1) | Utility | LCM_Tools | PowerShell | Utility | search certificate stores for private key container Guids execution tool. | SystemConfigurationsearch certificate stores for private key container Guids |
 | **SystemConfigurationsearch certificate stores for private key container Guids** | [search certificate stores for private key container Guids.ps1](file:///LCM_Inventory/tools/search certificate stores for private key container Guids.ps1) | Utility | LCM_Tools | PowerShell | Utility | search certificate stores for private key container Guids execution tool. | SystemConfigurationsearch certificate stores for private key container Guids |
+| **SystemConfigurationsearch certificate stores for private key container Guids** | [search certificate stores for private key container Guids.ps1](file:///SystemConfiguration/Source/search certificate stores for private key container Guids.ps1) | Utility | LCM_Tools | PowerShell | Utility | search certificate stores for private key container Guids execution tool. | SystemConfigurationsearch certificate stores for private key container Guids |
 | **SystemConfigurationSetBluetoothAlwaysOn** | [SetBluetoothAlwaysOn.ps1](file:///SystemConfiguration/Source/SetBluetoothAlwaysOn.ps1) | Utility | SystemConfiguration | PowerShell | Utility | SetBluetoothAlwaysOn execution tool. | SystemConfigurationSetBluetoothAlwaysOn |
-| **SystemConfigurationSetMachineWideExecutionPolicy** | [Set-MachineWideExecutionPolicy.ps1](file:///SystemConfiguration/Source/Set-MachineWideExecutionPolicy.ps1) | Utility | LCM_Tools | PowerShell | Utility | Set-MachineWideExecutionPolicy execution tool. | SystemConfigurationSetMachineWideExecutionPolicy |
 | **SystemConfigurationSetMachineWideExecutionPolicy** | [Set-MachineWideExecutionPolicy.ps1](file:///LCM_Inventory/tools/Set-MachineWideExecutionPolicy.ps1) | Utility | LCM_Tools | PowerShell | Utility | Set-MachineWideExecutionPolicy execution tool. | SystemConfigurationSetMachineWideExecutionPolicy |
+| **SystemConfigurationSetMachineWideExecutionPolicy** | [Set-MachineWideExecutionPolicy.ps1](file:///SystemConfiguration/Source/Set-MachineWideExecutionPolicy.ps1) | Utility | LCM_Tools | PowerShell | Utility | Set-MachineWideExecutionPolicy execution tool. | SystemConfigurationSetMachineWideExecutionPolicy |
 | **SystemConfigurationTestPowerShellHklmState** | [Test-PowerShellHklmState.ps1](file:///SystemConfiguration/Source/Test-PowerShellHklmState.ps1) | Utility | LCM_Tools | PowerShell | Utility | Test-PowerShellHklmState execution tool. | SystemConfigurationTestPowerShellHklmState |
 | **TestDocumentationCompleteness** | [Test-DocumentationCompleteness.ps1](file:///LCM_Inventory/tools/Test-DocumentationCompleteness.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Test-DocumentationCompleteness execution tool. | TestDocumentationCompleteness |
 | **TestExternalTools** | [Test-ExternalTools.ps1](file:///LCM_Inventory/tools/Test-ExternalTools.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Test-ExternalTools execution tool. | TestExternalTools |
@@ -327,6 +330,7 @@ TestWorkspaceReadiness
 | **TestLCMDrift** | [Test-LCM_Drift.ps1](file:///LCM_Inventory/tools/Test-LCM_Drift.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Test-LCM_Drift execution tool. | TestLCMDrift |
 | **TestLCMIncrementalGovernance** | [Test-LCMIncrementalGovernance.ps1](file:///LCM_Inventory/tools/Test-LCMIncrementalGovernance.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Test-LCMIncrementalGovernance execution tool. | TestLCMIncrementalGovernance |
 | **TestLCMRuleHealth** | [Test-LCMRuleHealth.ps1](file:///LCM_Inventory/tools/Test-LCMRuleHealth.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Test-LCMRuleHealth execution tool. | TestLCMRuleHealth |
+| **TestLcmStrategyConsistency** | [Test-LcmStrategyConsistency.ps1](file:///LCM_Inventory/tools/Test-LcmStrategyConsistency.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Test-LcmStrategyConsistency execution tool. | TestLcmStrategyConsistency |
 | **TestOneDriveSync** | [Test-OneDriveSync.ps1](file:///SystemConfiguration/Source/Test-OneDriveSync.ps1) | Utility | SystemConfiguration | PowerShell | Utility | Test-OneDriveSync execution tool. | TestOneDriveSync |
 | **TestPowerShellHklmState** | [Test-PowerShellHklmState.ps1](file:///LCM_Inventory/tools/Test-PowerShellHklmState.ps1) | Utility | LCM_Tools | PowerShell | Utility | Test-PowerShellHklmState execution tool. | TestPowerShellHklmState |
 | **TestRealRepoProposalCleanup** | [Test-RealRepoProposalCleanup.ps1](file:///LCM_Inventory/tools/Test-RealRepoProposalCleanup.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Test-RealRepoProposalCleanup execution tool. | TestRealRepoProposalCleanup |

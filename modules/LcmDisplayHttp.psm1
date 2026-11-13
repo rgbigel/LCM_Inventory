@@ -42,7 +42,14 @@ function Invoke-LcmDisplayHttpRequest {
   $path = $Request.Url.AbsolutePath.ToLowerInvariant().TrimEnd('/')
   $method = $Request.HttpMethod
   $root = Join-Path $WorkspaceRoot 'LCM_Inventory'
-  $aliases = @{ '/tools'='tools'; '/rules'='rules'; '/inventory'='inventory'; '/hub'='hub'; '/control'='hub'; '/control_hub'='hub'; '/cm_control_hub.html'='hub'; '/dates'='dates'; '/cm_crp_dates'='dates'; '/cm_crp_dates.html'='dates' }
+  $aliases = @{
+    '/tools'='tools'; '/show_tools'='tools'; '/show_tools.html'='tools'
+    '/tool_intents'='tool_intents'; '/toolintents'='tool_intents'; '/intents'='tool_intents'; '/show_tool_intents'='tool_intents'; '/show_tool_intents.html'='tool_intents'
+    '/rules'='rules'; '/show_rules'='rules'; '/show_rules.html'='rules'
+    '/inventory'='inventory'
+    '/hub'='hub'; '/control'='hub'; '/control_hub'='hub'; '/cm_control_hub.html'='hub'
+    '/dates'='dates'; '/cm_crp_dates'='dates'; '/cm_crp_dates.html'='dates'
+  }
   $isDisplay = $aliases.ContainsKey($path) -or $path -like '/displays/*' -or $path -like '/assets/*' -or $path -like '/failure-analysis/*' -or $path -like '/snapshots/*'
   if (-not $isDisplay) { return $false }
   $bytes = $null; $contentType = 'application/json; charset=utf-8'; $code = 200
@@ -68,7 +75,7 @@ function Invoke-LcmDisplayHttpRequest {
     } else {
       $kind = 'page'; $id = ''
       if ($aliases.ContainsKey($path) -and $method -eq 'GET') { $id = $aliases[$path] }
-      elseif ($path -match '^/displays/(?<kind>status|content|data|refresh)/(?<id>tools|rules|inventory|hub|dates)$') {
+      elseif ($path -match '^/displays/(?<kind>status|content|data|refresh)/(?<id>tools|rules|inventory|hub|dates|tool_intents|intents)$') {
         $kind = $Matches.kind; $id = $Matches.id
         if (($kind -eq 'refresh' -and $method -ne 'POST') -or ($kind -ne 'refresh' -and $method -ne 'GET')) { throw 'Invalid display request method.' }
       } else { throw 'Unknown display route.' }

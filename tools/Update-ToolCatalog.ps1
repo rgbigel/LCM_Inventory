@@ -1430,9 +1430,12 @@ try {
     if (-not $intentsDict.Contains($cleanStem)) {
       $intentsDict[$cleanStem] = $entry
     }
-    $noDash = $cleanStem.Replace("-", "").Replace("_", "")
-    if (-not $intentsDict.Contains($noDash)) {
-      $intentsDict[$noDash] = $entry
+    # Preserve exact @nn- formatting: do not strip hyphens for @ tools to prevent duplicates
+    if (-not $cleanStem.StartsWith('@')) {
+      $noDash = $cleanStem.Replace("-", "").Replace("_", "")
+      if (-not $intentsDict.Contains($noDash)) {
+        $intentsDict[$noDash] = $entry
+      }
     }
     if ($t.ShortName) {
       $snLower = $t.ShortName.ToLowerInvariant()

@@ -10,8 +10,8 @@
   Purpose: Loads the governed tool catalog and generates the HTTP-backed Tool Explorer.
   Path: tools/modules/LcmToolCatalog.psm1
   Authors: Rolf, Copilot
-  Version: 10.2.1
-  Date: 2026-11-09 19:15:00
+  Version: 10.2.4
+  Date: 2026-11-13 13:12:00
 #>
 
 Set-StrictMode -Version Latest
@@ -94,7 +94,13 @@ function Measure-LcmToolCatalogMetrics {
   }
   $distinctToolsList.Sort([System.StringComparer]::OrdinalIgnoreCase)
   $distinctTools = @($distinctToolsList)
-  $distinctGroups = @('HaSSD06', 'LCM', 'LCM_AI', 'LCM_Inventory', 'SystemConfiguration') + @($Catalog | ForEach-Object { $_.Group } | Where-Object { $_ -ne 'LCD' -and -not [string]::IsNullOrWhiteSpace($_) } | Sort-Object -Unique) | Where-Object { $_ -ne 'LCD' } | Sort-Object -Unique
+  $distinctSubsystems = @('HaSSD06', 'LCM', 'LCM_AI', 'LCM_Inventory', 'SystemConfiguration') + @($Catalog | ForEach-Object {
+    if ($_.PSObject.Properties['SubSystem']) { $_.SubSystem }
+    elseif ($_.PSObject.Properties['Subsystem']) { $_.Subsystem }
+    elseif ($_.PSObject.Properties['Group']) { $_.Group }
+    else { $null }
+  } | Where-Object { $_ -ne 'LCD' -and -not [string]::IsNullOrWhiteSpace($_) } | Sort-Object -Unique) | Where-Object { $_ -ne 'LCD' } | Sort-Object -Unique
+  $distinctGroups = $distinctSubsystems
   $distinctRoles = @($Catalog | ForEach-Object { $_.Role } | Sort-Object -Unique)
   $distinctCategories = @($Catalog | Where-Object { $_.Category } | ForEach-Object { $_.Category } | Sort-Object -Unique)
   $distinctEnvs = @($Catalog | ForEach-Object { [System.IO.Path]::GetExtension($_.Name).ToUpper().TrimStart('.') } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Sort-Object -Unique)
@@ -109,9 +115,10 @@ function Measure-LcmToolCatalogMetrics {
     Customizations = $customizationsCount
     Repair         = $repairCount
     HaCount        = $haCount
-    DistinctTools  = $distinctTools
-    DistinctGroups = $distinctGroups
-    DistinctRoles  = $distinctRoles
+    DistinctTools      = $distinctTools
+    DistinctSubsystems = $distinctSubsystems
+    DistinctGroups     = $distinctSubsystems
+    DistinctRoles      = $distinctRoles
     DistinctCategories = $distinctCategories
     DistinctEnvs   = $distinctEnvs
   }
@@ -123,7 +130,8 @@ function Format-LcmToolCatalogCli {
     [Parameter(Mandatory = $true)]
     [array]$Catalog,
     [string]$Audience = 'User',
-    [string]$Group = 'All',
+    [Alias('Group')]
+    [string]$SubSystem = 'All',
     [string]$Role = 'All',
     [string]$Tool = 'All',
     [string]$Env = 'All',
@@ -145,8 +153,9 @@ function Format-LcmToolCatalogCli {
 
   $filtered = @($Catalog | Where-Object {
     $itemExt = [System.IO.Path]::GetExtension($_.Name).ToUpper().TrimStart('.')
+    $itemSub = if ($_.PSObject.Properties['SubSystem']) { $_.SubSystem } elseif ($_.PSObject.Properties['Subsystem']) { $_.Subsystem } elseif ($_.PSObject.Properties['Group']) { $_.Group } else { '' }
     ($Audience -eq 'All' -or ($Audience -eq 'User' -and $_.Audience -eq 'User') -or ($Audience -eq 'Dev' -and $_.Audience -eq 'Developer')) -and
-    ($Group -eq 'All' -or $_.Group -eq $Group) -and
+    ($SubSystem -eq 'All' -or $itemSub -eq $SubSystem) -and
     ($Tool -eq 'All' -or $_.Name -eq $Tool) -and
     ($Env -eq 'All' -or $itemExt -eq $Env.ToUpper()) -and
     ($Role -eq 'All' -or [string]::IsNullOrWhiteSpace($Role) -or $_.Role -eq $Role) -and
@@ -158,7 +167,8 @@ function Format-LcmToolCatalogCli {
     $admBadge = if ($t.Admin) { "[Admin:Yes]" } else { "[Admin:No]" }
     $noExitBadge = if ($t.NoExit) { "[NoExit:🔴]" } else { "[NoExit:🟢]" }
     $envTag = [System.IO.Path]::GetExtension($t.Name).ToUpper().TrimStart('.')
-    Write-Host "  $($t.Name) [$envTag] $($audBadge) $($admBadge) $($noExitBadge) [$($t.Group)] [$($t.Role)] - $($t.Category)" -ForegroundColor Cyan
+    $subSystemVal = if ($t.PSObject.Properties['SubSystem']) { $t.SubSystem } elseif ($t.PSObject.Properties['Subsystem']) { $t.Subsystem } elseif ($t.PSObject.Properties['Group']) { $t.Group } else { '' }
+    Write-Host "  $($t.Name) [$envTag] $($audBadge) $($admBadge) $($noExitBadge) [$subSystemVal] - $($t.Category)" -ForegroundColor Cyan
     Write-Host "    $($t.Description)" -ForegroundColor Gray
     Write-Host "    Run: $($t.Example)" -ForegroundColor DarkYellow
     Write-Host ""
@@ -175,12 +185,12 @@ function Build-LcmToolIndexHtml {
     [string]$WorkspaceRoot = 'D:\Git_Repositories',
     [string]$ToolsDir = 'D:\Git_Repositories\LCM_Inventory\tools',
     [string]$Audience = 'User',
-    [string]$Group = 'All',
+    [Alias('Group')]
+    [string]$SubSystem = 'All',
     [string]$Role = 'All',
     [string]$Tool = 'All',
     [string]$Env = 'All',
     [string]$Filter = '',
-    [string]$Subsystem = 'LCM',
     [ValidatePattern('^v?\d+\.\d+\.\d+$')]
     [string]$Version
   )
@@ -205,8 +215,7 @@ function Build-LcmToolIndexHtml {
   # Compile authoritative dropdown options from catalog and persist to LCM_Inventory/config/tool_explorer_options.json
   $optionsPath = Join-Path $inventoryRoot 'config\tool_explorer_options.json'
   $optionsObj = [PSCustomObject]@{
-    Subsystems = @($metrics.DistinctGroups)
-    Roles      = @($metrics.DistinctRoles)
+    Subsystems = @($metrics.DistinctSubsystems)
     Categories = @($metrics.DistinctCategories)
   }
   $optionsJson = $optionsObj | ConvertTo-Json -Depth 5
@@ -215,19 +224,19 @@ function Build-LcmToolIndexHtml {
   } catch {}
 
   $toolOptionsHtml = ($metrics.DistinctTools | ForEach-Object { "<option value='$_'>$_</option>" }) -join "`n"
-  $groupOptionsHtml = ($metrics.DistinctGroups | ForEach-Object { "<option value='$_'>$_</option>" }) -join "`n"
+  $subsystemOptionsHtml = ($metrics.DistinctSubsystems | ForEach-Object { "<option value='$_'>$_</option>" }) -join "`n"
+  $groupOptionsHtml = $subsystemOptionsHtml
   $roleOptionsHtml = ($metrics.DistinctRoles | ForEach-Object { "<option value='$_'>$_</option>" }) -join "`n"
   $categoryOptionsHtml = ($metrics.DistinctCategories | ForEach-Object { "<option value='$_'>$_</option>" }) -join "`n"
   $envOptionsHtml = ($metrics.DistinctEnvs | ForEach-Object { "<option value='$_'>$_</option>" }) -join "`n"
 
   $configJson = [PSCustomObject]@{
     Audience  = $Audience
-    Group     = $Group
-    Role      = $Role
+    Group     = $SubSystem
+    SubSystem = $SubSystem
     Tool      = $Tool
     Env       = $Env
     Filter    = $Filter
-    Subsystem = $Subsystem
     Version   = $displayVersion
     ToolVersion = $provenance.ToolVersion
     TemplateVersion = $provenance.TemplateVersion
@@ -388,8 +397,7 @@ function Build-LcmToolIndexHtml {
                         <th onclick="window.LcmTools.sortTable('Index')" style="width: 45px; text-align: center;" title="Persistent sequential tool index (001-max)"># <span class="sort-icon">⇅</span></th>
                         <th onclick="window.LcmTools.sortTable('Name')" style="min-width: 220px;" id="th-tool-name">Tool Name <span class="sort-icon">⇅</span></th>
                         <th style="width: 160px; text-align: center;">Actions & Modes</th>
-                        <th onclick="window.LcmTools.sortTable('Group')" style="width: 80px; min-width: 80px;" id="th-col-group">Group <span class="sort-icon">⇅</span></th>
-                        <th onclick="window.LcmTools.sortTable('Role')" style="width: 75px; min-width: 75px;" id="th-col-role">Role <span class="sort-icon">⇅</span></th>
+                        <th onclick="window.LcmTools.sortTable('SubSystem')" style="width: 80px; min-width: 80px;" id="th-col-subsystem">SubSystem <span class="sort-icon">⇅</span></th>
                         <th onclick="window.LcmTools.sortTable('Description')">Description <span class="sort-icon">⇅</span></th>
                         <th onclick="window.LcmTools.sortTable('Category')" style="width: 95px; min-width: 95px;" id="th-col-category">Category <span class="sort-icon">⇅</span></th>
                         <th onclick="window.LcmTools.sortTable('Audience')" style="width: 100px;" id="th-col-audience">Audience <span class="sort-icon">⇅</span></th>
@@ -413,16 +421,9 @@ function Build-LcmToolIndexHtml {
                             </div>
                         </th>
                         <th>
-                            <select class="col-filter-select" id="group-select" onchange="window.LcmTools.handleSelectFilterChange('Subsystems', this)">
-                                <option value="All">All Groups</option>
-                                $groupOptionsHtml
-                                <option value="__NEW__" style="color: #58a6ff; font-weight: 700;">+ New...</option>
-                            </select>
-                        </th>
-                        <th>
-                            <select class="col-filter-select" id="role-select" onchange="window.LcmTools.handleSelectFilterChange('Roles', this)">
-                                <option value="All">All Roles</option>
-                                $roleOptionsHtml
+                            <select class="col-filter-select" id="subsystem-select" onchange="window.LcmTools.handleSelectFilterChange('Subsystems', this)">
+                                <option value="All">All SubSystems</option>
+                                $subsystemOptionsHtml
                                 <option value="__NEW__" style="color: #58a6ff; font-weight: 700;">+ New...</option>
                             </select>
                         </th>
@@ -586,9 +587,8 @@ function Build-LcmToolIndexHtml {
             <div style="margin-bottom: 14px;">
                 <label style="font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--text-secondary); display: block; margin-bottom: 4px;">Target Column</label>
                 <select id="mass-edit-col" class="col-filter-select" style="width: 100%; height: 32px; font-size: 12px;" onchange="window.LcmTools.updateMassEditOptions()">
-                    <option value="Group">Group (Subsystem)</option>
+                    <option value="SubSystem">SubSystem</option>
                     <option value="Category">Category</option>
-                    <option value="Role">Role</option>
                     <option value="Audience">Audience</option>
                 </select>
             </div>
@@ -716,7 +716,7 @@ function Build-LcmToolIndexHtml {
                 <div class="modal-val" id="modal-path"></div>
             </div>
             <div class="modal-row">
-                <div class="modal-label">Role, Audience & Privilege</div>
+                <div class="modal-label">Category, Audience & Privilege</div>
                 <div class="modal-val" id="modal-role-cat"></div>
             </div>
             <div class="modal-row">
@@ -858,7 +858,7 @@ function Build-LcmToolIndexHtml {
     <!-- Toast Notification -->
     <div class="toast" id="toast">✓ Action completed!</div>
 
-    <script type="application/json" id="lcm-display-data">$displayPayload</script>
+    <script id="lcm-display-data" type="application/json">$displayPayload</script>
     <script src="$printAtomUri"></script>
     <script src="$tableEngineUri"></script>
     <script src="$jsAppUri"></script>

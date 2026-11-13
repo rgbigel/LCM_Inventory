@@ -15,7 +15,7 @@ $ErrorActionPreference = 'Stop'
 function Open-LcmStandardDisplay {
   [CmdletBinding()]
   param(
-    [Parameter(Mandatory)][ValidateSet('tools','rules','inventory','hub','dates','failure-analysis','snapshot')][string]$DisplayId,
+    [Parameter(Mandatory)][ValidateSet('tools','rules','inventory','hub','dates','failure-analysis','snapshot','tool_intents','intents')][string]$DisplayId,
     [ValidatePattern('^[a-f0-9]{32}$')][string]$SnapshotId,
     [hashtable]$Parameters = @{},
     [ValidateRange(1,300)][int]$TimeoutSeconds = 120,

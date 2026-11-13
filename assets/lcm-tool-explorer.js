@@ -266,7 +266,13 @@
             // Static sequence number assigned at compile time in Show-ToolsExplorer.ps1 (never dynamically browser-generated)
             const masterIdx = toolsData.findIndex(item => (item.RelativePath && t.RelativePath) ? (item.RelativePath === t.RelativePath) : (item.Name === t.Name));
             const safeIdx = masterIdx >= 0 ? masterIdx : 0;
-            const counter = String(t.Index != null ? t.Index : (safeIdx + 1)).padStart(3, '0');
+            const idxNum = t.Index != null ? t.Index : (safeIdx + 1);
+            let counter = String(idxNum);
+            if (idxNum < 0) {
+                counter = '-' + String(Math.abs(idxNum)).padStart(2, '0');
+            } else if (idxNum > 0) {
+                counter = String(idxNum).padStart(3, '0');
+            }
 
             const ext = getExtClass(t.Name);
             let audBadge = '<span class="badge badge-dev">Dev</span>';
@@ -360,8 +366,7 @@
                     '</div>' +
                 '</td>' +
                 '<td style="text-align: center;">' + actionButtonsHtml + '</td>' +
-                '<td class="cell-editable" onclick="window.LcmTools.openCellEditor(' + safeIdx + ', \'Group\', event)" title="Click to edit Group"><span class="badge badge-group">' + (t.Group || t.Subsystem || t.Domain || '') + '</span></td>' +
-                '<td class="cell-editable" onclick="window.LcmTools.openCellEditor(' + safeIdx + ', \'Role\', event)"><span class="badge badge-role">' + t.Role + '</span></td>' +
+                '<td class="cell-editable" onclick="window.LcmTools.openCellEditor(' + safeIdx + ', \'SubSystem\', event)" title="Click to edit SubSystem"><span class="badge badge-subsystem">' + (t.SubSystem || t.Subsystem || t.Group || t.Domain || '') + '</span></td>' +
                 '<td class="col-desc cell-editable" onclick="window.LcmTools.openCellEditor(' + safeIdx + ', \'Description\', event)" title="Click to edit Description" style="cursor: pointer;">' + (t.Description || '') + '</td>' +
                 '<td class="cell-editable" onclick="window.LcmTools.openCellEditor(' + safeIdx + ', \'Category\', event)" style="color: #c9d1d9;">' + (t.Category || 'General') + '</td>' +
                 '<td class="cell-editable" onclick="window.LcmTools.openCellEditor(' + safeIdx + ', \'Audience\', event)">' + audBadge + '</td>' +
@@ -426,8 +431,7 @@
             }
         };
 
-        adjustDropdownCol('th-col-group', 'group-select', 75, 190);
-        adjustDropdownCol('th-col-role', 'role-select', 70, 160);
+        adjustDropdownCol(document.getElementById('th-col-subsystem') ? 'th-col-subsystem' : 'th-col-group', document.getElementById('subsystem-select') ? 'subsystem-select' : 'group-select', 75, 190);
         adjustDropdownCol('th-col-category', 'category-select', 90, 200);
         adjustDropdownCol('th-col-audience', 'audience-select', 80, 140);
     }
@@ -1084,8 +1088,8 @@
         const search = (document.getElementById('search-input') ? document.getElementById('search-input').value : '').trim();
         const toolVal = document.getElementById('tool-select') ? document.getElementById('tool-select').value : 'All';
         const envVal = document.getElementById('env-select') ? document.getElementById('env-select').value : 'All';
-        const groupVal = document.getElementById('group-select') ? document.getElementById('group-select').value : 'All';
-        const roleVal = document.getElementById('role-select') ? document.getElementById('role-select').value : 'All';
+        const subSelect = document.getElementById('subsystem-select') || document.getElementById('group-select');
+        const groupVal = subSelect ? subSelect.value : 'All';
         const audVal = document.getElementById('audience-select') ? document.getElementById('audience-select').value : 'All';
         const adminVal = document.getElementById('admin-select') ? document.getElementById('admin-select').value : 'All';
         const noexitVal = document.getElementById('noexit-select') ? document.getElementById('noexit-select').value : 'All';
@@ -1096,8 +1100,8 @@
         sessionStorage.setItem('lcm_tools_search', search);
         sessionStorage.setItem('lcm_tools_tool', toolVal);
         sessionStorage.setItem('lcm_tools_env', envVal);
+        sessionStorage.setItem('lcm_tools_subsystem', groupVal);
         sessionStorage.setItem('lcm_tools_group', groupVal);
-        sessionStorage.setItem('lcm_tools_role', roleVal);
         sessionStorage.setItem('lcm_tools_admin', adminVal);
         sessionStorage.setItem('lcm_tools_noexit', noexitVal);
         sessionStorage.setItem('lcm_tools_category', catVal);
@@ -1118,14 +1122,13 @@
             const matchesIntern = (s) => typeof s === 'string' && s.trim().toLowerCase().startsWith('intern');
             const isItemInternal = matchesIntern(t.Audience) || 
                                    matchesIntern(t.Category) || 
-                                   matchesIntern(t.Role) || 
                                    matchesIntern(t.Group) || 
                                    matchesIntern(t.Domain);
 
             // 1. Internal Suppression Rule:
             // When isFilteringInternal is false (Int. button OFF), items with "Intern*"
             // are suppressed unless explicitly requested via specific filter dropdowns.
-            if (isItemInternal && !isFilteringInternal && audVal !== 'Internal' && !matchesIntern(catVal) && !matchesIntern(roleVal) && !matchesIntern(groupVal)) {
+            if (isItemInternal && !isFilteringInternal && audVal !== 'Internal' && !matchesIntern(catVal) && !matchesIntern(groupVal)) {
                 return false;
             }
 
@@ -1146,11 +1149,12 @@
             const matchTool = (toolVal === 'All') || (t.Name === toolVal) || (t.ShortName === toolVal);
             const matchEnv = (envVal === 'All') || (t.Env === envVal.toUpperCase());
             const matchGroup = (groupVal === 'All') || 
+                (t.SubSystem === groupVal) || 
+                (t.Subsystem === groupVal) || 
                 (t.Group === groupVal) || 
                 (t.Domain === groupVal) || 
-                (groupVal === 'HaSSD06' && (t.Group === 'HaSSD06' || (t.Domain && t.Domain.startsWith('HaSSD06'))));
+                (groupVal === 'HaSSD06' && ((t.SubSystem && t.SubSystem.startsWith('HaSSD06')) || (t.Group && t.Group.startsWith('HaSSD06')) || (t.Domain && t.Domain.startsWith('HaSSD06'))));
             
-            const matchRole = (roleVal === 'All') || (t.Role === roleVal);
             const matchAdmin = (adminVal === 'All') || (adminVal === 'Admin' && t.Admin) || (adminVal === 'User' && !t.Admin);
             const matchNoExit = (noexitVal === 'All') || (noexitVal === 'true' && t.NoExit) || (noexitVal === 'false' && !t.NoExit);
             const matchCat = (catVal === 'All') || (t.Category === catVal);
@@ -1161,7 +1165,7 @@
                 (t.ShortName && (t.ShortName.toLowerCase().startsWith('show-') || t.ShortName.toLowerCase().startsWith('show')))
             );
 
-            return matchAud && matchTool && matchEnv && matchGroup && matchRole && matchAdmin && matchNoExit && matchCat && matchDesc && matchSearch && matchShowFilter;
+            return matchAud && matchTool && matchEnv && matchGroup && matchAdmin && matchNoExit && matchCat && matchDesc && matchSearch && matchShowFilter;
         });
 
         filtered.sort((a, b) => {
@@ -1234,28 +1238,28 @@
         } else if (cardType === 'invariants') {
             document.getElementById('card-invariants').classList.add('active');
             resetColumnFilters(false);
-            const roleSel = document.getElementById('role-select');
-            if (roleSel) {
-                const opt = Array.from(roleSel.options).find(o => o.value === 'Invariants' || o.value === 'SystemInvariants');
-                if (opt) roleSel.value = opt.value;
+            const catSel = document.getElementById('category-select');
+            if (catSel) {
+                const opt = Array.from(catSel.options).find(o => /invariant/i.test(o.value));
+                if (opt) catSel.value = opt.value;
             }
             setAudienceTab('All');
         } else if (cardType === 'customizations') {
             document.getElementById('card-customizations').classList.add('active');
             resetColumnFilters(false);
-            const roleSel = document.getElementById('role-select');
-            if (roleSel) {
-                const opt = Array.from(roleSel.options).find(o => o.value === 'Customization' || o.value === 'SystemCustomization');
-                if (opt) roleSel.value = opt.value;
+            const catSel = document.getElementById('category-select');
+            if (catSel) {
+                const opt = Array.from(catSel.options).find(o => /customization/i.test(o.value));
+                if (opt) catSel.value = opt.value;
             }
             setAudienceTab('All');
         } else if (cardType === 'repair') {
             document.getElementById('card-repair').classList.add('active');
             resetColumnFilters(false);
-            const roleSel = document.getElementById('role-select');
-            if (roleSel) {
-                const opt = Array.from(roleSel.options).find(o => o.value === 'Repair' || o.value === 'SystemRepair');
-                if (opt) roleSel.value = opt.value;
+            const catSel = document.getElementById('category-select');
+            if (catSel) {
+                const opt = Array.from(catSel.options).find(o => /repair|recovery/i.test(o.value));
+                if (opt) catSel.value = opt.value;
             }
             setAudienceTab('All');
         }
@@ -1276,7 +1280,6 @@
         if (document.getElementById('tool-select')) document.getElementById('tool-select').value = 'All';
         if (document.getElementById('env-select')) document.getElementById('env-select').value = 'All';
         if (document.getElementById('group-select')) document.getElementById('group-select').value = 'All';
-        if (document.getElementById('role-select')) document.getElementById('role-select').value = 'All';
         if (document.getElementById('audience-select')) document.getElementById('audience-select').value = 'All';
         if (document.getElementById('admin-select')) document.getElementById('admin-select').value = 'All';
         if (document.getElementById('noexit-select')) document.getElementById('noexit-select').value = 'All';
@@ -1969,7 +1972,7 @@
         document.getElementById('modal-example').innerText = activeModalTool.Example;
         document.getElementById('modal-dispatch-cmd').innerText = getDispatcherCommand(activeModalTool);
         document.getElementById('modal-path').innerText = (activeModalTool.RelativePath || activeModalTool.Name) + ' (' + activeModalTool.Group + ')';
-        document.getElementById('modal-role-cat').innerText = activeModalTool.Role + ' • ' + (activeModalTool.Category || 'General') + ' • ' + activeModalTool.Audience + ' • Admin: ' + (activeModalTool.Admin ? 'Required' : 'No') + ' • NoExit: ' + (activeModalTool.NoExit ? '🔴 Yes (Keep Open)' : '🟢 No (Auto-Exit)');
+        document.getElementById('modal-role-cat').innerText = (activeModalTool.Category || 'General') + ' • ' + activeModalTool.Audience + ' • Admin: ' + (activeModalTool.Admin ? 'Required' : 'No') + ' • NoExit: ' + (activeModalTool.NoExit ? '🔴 Yes (Keep Open)' : '🟢 No (Auto-Exit)');
         document.getElementById('modal-desc').innerText = activeModalTool.Description || 'No detailed description available.';
         
         // Render AST Dependencies
@@ -2014,25 +2017,15 @@
         const container = document.getElementById('editor-control-container');
 
         let controlHtml = '';
-        if (field === 'Group') {
-            const curGroup = tool.Domain || tool.Group || 'General';
-            const opts = (window.__LCM_OPTIONS__ && window.__LCM_OPTIONS__.Subsystems) || Array.from(new Set(toolsData.map(t => t.Domain || t.Group).filter(Boolean)));
+        if (field === 'SubSystem' || field === 'Subsystem' || field === 'Group') {
+            const curGroup = tool.SubSystem || tool.Subsystem || tool.Domain || tool.Group || 'General';
+            const opts = (window.__LCM_OPTIONS__ && (window.__LCM_OPTIONS__.SubSystems || window.__LCM_OPTIONS__.Subsystems)) || Array.from(new Set(toolsData.map(t => t.SubSystem || t.Subsystem || t.Domain || t.Group).filter(Boolean)));
             const allGroups = Array.from(new Set(opts));
             if (!allGroups.includes('Needed?')) allGroups.push('Needed?');
             allGroups.sort();
-            controlHtml = '<label style="font-size: 11px; color: var(--text-secondary); font-weight: 600;">Edit Subsys / Group:</label>' +
+            controlHtml = '<label style="font-size: 11px; color: var(--text-secondary); font-weight: 600;">Edit SubSystem:</label>' +
                 '<select id="inline-edit-input" onchange="window.LcmTools.handleCellEditSelectChange(\'Subsystems\', this)">' +
                 allGroups.map(g => '<option value="' + g + '" ' + (g === curGroup ? 'selected' : '') + '>' + g + '</option>').join('') +
-                '<option value="__NEW__" style="color: #58a6ff; font-weight: 700;">+ New...</option>' +
-                '</select>';
-        } else if (field === 'Role') {
-            const curRole = tool.Role || 'Utility';
-            const opts = (window.__LCM_OPTIONS__ && window.__LCM_OPTIONS__.Roles) || roleChoices;
-            const allRoles = Array.from(new Set(opts));
-            allRoles.sort();
-            controlHtml = '<label style="font-size: 11px; color: var(--text-secondary); font-weight: 600;">Edit Role:</label>' +
-                '<select id="inline-edit-input" onchange="window.LcmTools.handleCellEditSelectChange(\'Roles\', this)">' +
-                allRoles.map(r => '<option value="' + r + '" ' + (r === curRole ? 'selected' : '') + '>' + r + '</option>').join('') +
                 '<option value="__NEW__" style="color: #58a6ff; font-weight: 700;">+ New...</option>' +
                 '</select>';
         } else if (field === 'Audience') {
@@ -2089,10 +2082,11 @@
 
         const oldVal = targetTool[activeEditCell.field];
         targetTool[activeEditCell.field] = parsedVal;
-        if (activeEditCell.field === 'Group' || activeEditCell.field === 'Domain' || activeEditCell.field === 'Subsystem') {
+        if (activeEditCell.field === 'SubSystem' || activeEditCell.field === 'Group' || activeEditCell.field === 'Domain' || activeEditCell.field === 'Subsystem') {
+            targetTool.SubSystem = parsedVal;
+            targetTool.Subsystem = parsedVal;
             targetTool.Group = parsedVal;
             targetTool.Domain = parsedVal;
-            targetTool.Subsystem = parsedVal;
         }
         targetTool._edited = true;
         
@@ -2102,20 +2096,22 @@
         stored[targetTool.Name] = stored[targetTool.Name] || {};
         stored[targetTool.Name][activeEditCell.field] = parsedVal;
 
-        if (activeEditCell.field === 'Group' || activeEditCell.field === 'Domain' || activeEditCell.field === 'Subsystem') {
+        if (activeEditCell.field === 'SubSystem' || activeEditCell.field === 'Group' || activeEditCell.field === 'Domain' || activeEditCell.field === 'Subsystem') {
+            stored[relKey].SubSystem = parsedVal;
             stored[relKey].Group = parsedVal;
             stored[relKey].Domain = parsedVal;
             stored[relKey].Subsystem = parsedVal;
+            stored[targetTool.Name].SubSystem = parsedVal;
             stored[targetTool.Name].Group = parsedVal;
             stored[targetTool.Name].Domain = parsedVal;
             stored[targetTool.Name].Subsystem = parsedVal;
         }
 
-        const pendingOld = (activeEditCell.field === 'Group' || activeEditCell.field === 'Domain' || activeEditCell.field === 'Subsystem')
-            ? { Group: oldVal, Domain: targetTool.Domain, Subsystem: targetTool.Subsystem }
+        const pendingOld = (activeEditCell.field === 'SubSystem' || activeEditCell.field === 'Group' || activeEditCell.field === 'Domain' || activeEditCell.field === 'Subsystem')
+            ? { SubSystem: targetTool.SubSystem, Group: oldVal, Domain: targetTool.Domain, Subsystem: targetTool.Subsystem }
             : { [activeEditCell.field]: oldVal };
-        const pendingNew = (activeEditCell.field === 'Group' || activeEditCell.field === 'Domain' || activeEditCell.field === 'Subsystem')
-            ? { Group: parsedVal, Domain: parsedVal, Subsystem: parsedVal }
+        const pendingNew = (activeEditCell.field === 'SubSystem' || activeEditCell.field === 'Group' || activeEditCell.field === 'Domain' || activeEditCell.field === 'Subsystem')
+            ? { SubSystem: parsedVal, Group: parsedVal, Domain: parsedVal, Subsystem: parsedVal }
             : { [activeEditCell.field]: parsedVal };
 
         markToolPending(targetTool, 'edit', pendingOld, pendingNew);
@@ -2436,7 +2432,7 @@
             selectEl.insertBefore(newOpt, selectEl.lastElementChild);
 
             // Also update the corresponding table column filter dropdown
-            const filterId = field === 'Subsystems' ? 'group-select' : (field === 'Roles' ? 'role-select' : 'category-select');
+            const filterId = field === 'Subsystems' ? 'group-select' : 'category-select';
             const filterEl = document.getElementById(filterId);
             if (filterEl) {
                 const optCopy = document.createElement('option');
@@ -2546,19 +2542,17 @@
     }
 
     function updateMassEditOptions() {
-        const col = document.getElementById('mass-edit-col')?.value || 'Group';
+        const col = document.getElementById('mass-edit-col')?.value || 'SubSystem';
         const select = document.getElementById('mass-edit-val-select');
         const customInput = document.getElementById('mass-edit-val-custom');
         if (!select) return;
         if (customInput) customInput.style.display = 'none';
 
         let options = [];
-        if (col === 'Group') {
-            options = (window.__LCM_OPTIONS__ && window.__LCM_OPTIONS__.Subsystems) || Array.from(new Set(toolsData.map(t => t.Group || t.Domain || t.Subsystem).filter(Boolean)));
+        if (col === 'SubSystem' || col === 'Group') {
+            options = (window.__LCM_OPTIONS__ && (window.__LCM_OPTIONS__.SubSystems || window.__LCM_OPTIONS__.Subsystems)) || Array.from(new Set(toolsData.map(t => t.SubSystem || t.Subsystem || t.Group || t.Domain).filter(Boolean)));
         } else if (col === 'Category') {
             options = (window.__LCM_OPTIONS__ && window.__LCM_OPTIONS__.Categories) || Array.from(new Set(toolsData.map(t => t.Category).filter(Boolean)));
-        } else if (col === 'Role') {
-            options = (window.__LCM_OPTIONS__ && window.__LCM_OPTIONS__.Roles) || Array.from(new Set(toolsData.map(t => t.Role).filter(Boolean)));
         } else if (col === 'Audience') {
             options = ['User', 'Developer', 'Internal'];
         }
@@ -2629,10 +2623,11 @@
             }
 
             t[col] = newVal;
-            if (col === 'Group') {
+            if (col === 'SubSystem' || col === 'Group') {
+                t.SubSystem = newVal;
+                t.Subsystem = newVal;
                 t.Group = newVal;
                 t.Domain = newVal;
-                t.Subsystem = newVal;
             }
             t._edited = true;
 
@@ -2641,13 +2636,15 @@
             stored[relKey][col] = newVal;
             stored[t.Name] = stored[t.Name] || {};
             stored[t.Name][col] = newVal;
-            if (col === 'Group') {
+            if (col === 'SubSystem' || col === 'Group') {
+                stored[relKey].SubSystem = newVal;
+                stored[relKey].Subsystem = newVal;
                 stored[relKey].Group = newVal;
                 stored[relKey].Domain = newVal;
-                stored[relKey].Subsystem = newVal;
+                stored[t.Name].SubSystem = newVal;
+                stored[t.Name].Subsystem = newVal;
                 stored[t.Name].Group = newVal;
                 stored[t.Name].Domain = newVal;
-                stored[t.Name].Subsystem = newVal;
             }
             updatedCount++;
         });
@@ -2812,10 +2809,6 @@
             const el = document.getElementById('env-select');
             if (el) el.value = preset.env;
         }
-        if (preset.role) {
-            const el = document.getElementById('role-select');
-            if (el) el.value = preset.role;
-        }
         if (preset.admin) {
             const el = document.getElementById('admin-select');
             if (el) el.value = preset.admin;
@@ -2865,7 +2858,6 @@
             audience: currentAudience,
             group: document.getElementById('group-select') ? document.getElementById('group-select').value : 'All',
             env: document.getElementById('env-select') ? document.getElementById('env-select').value : 'All',
-            role: document.getElementById('role-select') ? document.getElementById('role-select').value : 'All',
             admin: document.getElementById('admin-select') ? document.getElementById('admin-select').value : 'All',
             noexit: document.getElementById('noexit-select') ? document.getElementById('noexit-select').value : 'All',
             cat: document.getElementById('category-select') ? document.getElementById('category-select').value : 'All',
@@ -2890,7 +2882,6 @@
         presets[selectedId].audience = currentAudience;
         presets[selectedId].group = document.getElementById('group-select') ? document.getElementById('group-select').value : 'All';
         presets[selectedId].env = document.getElementById('env-select') ? document.getElementById('env-select').value : 'All';
-        presets[selectedId].role = document.getElementById('role-select') ? document.getElementById('role-select').value : 'All';
         presets[selectedId].admin = document.getElementById('admin-select') ? document.getElementById('admin-select').value : 'All';
         presets[selectedId].noexit = document.getElementById('noexit-select') ? document.getElementById('noexit-select').value : 'All';
         presets[selectedId].cat = document.getElementById('category-select') ? document.getElementById('category-select').value : 'All';
@@ -2930,21 +2921,7 @@
             window.location.href = 'SHOW_TOOL_INTENTS.html';
             return;
         }
-        fetch(DAEMON_URL + '/api/action', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                action: 'DO',
-                target: 'ShowToolIntents',
-                caller: 'WebUI'
-            })
-        }).then(r => r.json()).then(data => {
-            if (data.status === 'ERROR') {
-                window.open('SHOW_TOOL_INTENTS.html', '_blank');
-            }
-        }).catch(() => {
-            window.open('SHOW_TOOL_INTENTS.html', '_blank');
-        });
+        window.open('/tool_intents', '_blank');
     }
 
     function initTheme() {
@@ -3022,7 +2999,6 @@
             if (currentTool && currentTool !== 'All' && document.getElementById('tool-select')) document.getElementById('tool-select').value = currentTool;
             if (currentEnv && currentEnv !== 'All' && document.getElementById('env-select')) document.getElementById('env-select').value = currentEnv;
             if (currentGroup && currentGroup !== 'All' && document.getElementById('group-select')) document.getElementById('group-select').value = currentGroup;
-            if (currentRole && currentRole !== 'All' && document.getElementById('role-select')) document.getElementById('role-select').value = currentRole;
             if (currentAdmin && currentAdmin !== 'All' && document.getElementById('admin-select')) document.getElementById('admin-select').value = currentAdmin;
             let currentCat = sessionStorage.getItem('lcm_tools_category') || 'All';
             if (currentCat && currentCat !== 'All' && document.getElementById('category-select')) document.getElementById('category-select').value = currentCat;
@@ -3034,7 +3010,6 @@
             ['Audience', 'audience-select', value => value === 'Dev' ? 'Developer' : value],
             ['Group', 'group-select'],
             ['Subsystem', 'group-select'],
-            ['Role', 'role-select'],
             ['Tool', 'tool-select'],
             ['Env', 'env-select'],
             ['Filter', 'search-input']
@@ -3047,7 +3022,6 @@
             if (element) element.value = normalized;
             if (queryKey === 'Audience') currentAudience = normalized;
             else if (queryKey === 'Group' || queryKey === 'Subsystem') currentGroup = normalized;
-            else if (queryKey === 'Role') currentRole = normalized;
             else if (queryKey === 'Tool') currentTool = normalized;
             else if (queryKey === 'Env') currentEnv = normalized;
             else if (queryKey === 'Filter') searchFilter = normalized;
@@ -3073,11 +3047,9 @@
                 getFilterSummary: () => {
                     const searchVal = document.getElementById('search-input') ? document.getElementById('search-input').value.trim() : '';
                     const groupVal = document.getElementById('group-select') ? document.getElementById('group-select').value : 'All';
-                    const roleVal = document.getElementById('role-select') ? document.getElementById('role-select').value : 'All';
                     let filterParts = [];
                     if (searchVal) filterParts.push('Search: "' + searchVal + '"');
                     if (groupVal !== 'All') filterParts.push('Group: ' + groupVal);
-                    if (roleVal !== 'All') filterParts.push('Role: ' + roleVal);
                     return filterParts.length > 0 ? filterParts.join(' • ') : 'All Items in View';
                 }
             });
@@ -3189,6 +3161,7 @@
             const extMatch = tool.Name.match(/\.([a-zA-Z0-9]+)$/);
             tool.Env = extMatch ? extMatch[1].toUpperCase() : 'FILE';
             if (!tool.ShortName) tool.ShortName = tool.Name.replace(/\.[^/.]+$/, '');
+            tool.SubSystem = tool.SubSystem || tool.Subsystem || tool.Group || tool.Domain || '';
         });
         applyFilters();
     };

@@ -27,27 +27,18 @@ Stores all discovered executable tools, short-name trampolines, parameters, and 
 ```sql
 CREATE TABLE IF NOT EXISTS tools (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL UNIQUE,
+    intent_id INTEGER UNIQUE, -- Structured Block-Allocated Identifier (-99..-1, 1..99, 1000..9999)
+    name TEXT NOT NULL,
     short_name TEXT NOT NULL,
-    subsystem TEXT NOT NULL CHECK(subsystem IN ('PC', 'LCM', 'LCM_Inventory', 'LCM_AI', 'LCM_Tools', 'HaSSD06', 'Sandboxes')),
-    category TEXT NOT NULL CHECK(category IN (
-        'File System & Search',
-        'Backup & Recovery',
-        'Governance & Proposals',
-        'Review & Quality Gates',
-        'Elevation & Access',
-        'Diagnostics & Telemetry',
-        'Configuration & Customization',
-        'Environment & Runtimes',
-        'Execution Gateway'
-    )),
-    audience TEXT NOT NULL CHECK(audience IN ('User', 'Maintenance', 'Internal')),
+    subsystem TEXT NOT NULL,
+    category TEXT NOT NULL,
+    audience TEXT NOT NULL,
     admin INTEGER NOT NULL DEFAULT 0 CHECK(admin IN (0, 1)),
     no_exit INTEGER NOT NULL DEFAULT 0 CHECK(no_exit IN (0, 1)),
-    type TEXT NOT NULL CHECK(type IN ('PowerShell', 'Python', 'Batch', 'Executable')),
+    type TEXT NOT NULL,
     description TEXT NOT NULL,
     example TEXT,
-    relative_path TEXT NOT NULL,
+    relative_path TEXT NOT NULL UNIQUE,
     parameters_json TEXT,
     dependencies_json TEXT,
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -56,11 +47,12 @@ CREATE TABLE IF NOT EXISTS tools (
 ```
 
 #### Constraints & Data Integrity:
-- **`name` (UNIQUE)**: Canonical filename (e.g. `Search-Everything.ps1`, `run.cmd`).
+- **`intent_id` (UNIQUE)**: Structured integer block allocation (-99..-1 for catch-all, 1..99 for sequential run, 1000..9999 for categorized tiers).
+- **`relative_path` (UNIQUE)**: Canonical relative file path (e.g. `SystemConfiguration\Source\@00-RegKeyDefaultTypeSet.cmd`).
 - **`short_name` (NOT NULL)**: Clean short alias used for command trampoline generation in `DoT/`.
-- **`subsystem` (CHECK)**: Enforces assignment to one of the 7 authoritative Subsystems, eliminating arbitrary folder grouping.
-- **`category` (CHECK)**: Restricts categories to the 9 condensed functional domains; eliminates legacy non-categories (`Utility`, `Role`).
-- **`audience` (CHECK)**: Strictly partitioned into `User`, `Maintenance`, or `Internal`.
+- **`subsystem` (TEXT NOT NULL)**: Enforces assignment to authoritative Subsystem, eliminating arbitrary folder grouping.
+- **`category` (TEXT NOT NULL)**: Restricts categories to condensed functional domains; eliminates legacy non-categories (`Utility`, `Role`).
+- **`audience` (TEXT NOT NULL)**: Strictly partitioned into `User`, `Maintenance`, or `Internal`.
 - **`admin` (BOOLEAN CHECK)**: Declares whether execution requires Administrator UAC elevation (`RULE-ELEV-001`).
 
 ---

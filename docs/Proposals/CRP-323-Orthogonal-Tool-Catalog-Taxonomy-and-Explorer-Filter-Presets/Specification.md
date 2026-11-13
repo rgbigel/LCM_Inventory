@@ -72,11 +72,29 @@ When Tool Explorer opens, it defaults to:
 - **Preset `Maintenance`**: `Audience in ['Maintenance']` (System & subsystem parameters, invariant enforcers).
 - **Preset `All`**: Unfiltered catalog (`Audience in ['User', 'Maintenance', 'Internal']`).
 
-### Invariant 5: Strategy Orientation & Forward-Compatibility Demarcation
-While the formal Strategy relational mapping engine, consistency validator, and `ShowStrategies` dashboard are being introduced in **CRP-324**, CRP-323 serves as the foundational delivery slice of the upcoming strategic orientation:
-- **Strategic Direction**: *Tool Taxonomy, Fast Discovery & High-Performance Execution* (spanning CRP-323, CRP-204, CRP-213, and CRP-254).
-- **Forward-Compatibility Invariant**: CRP-323's category architecture (`Governance & Proposals`), options schema, and UI layouts MUST be forward-compatible with Strategy artifacts and navigation.
-- **Explicit Non-Goal**: Implementing the `strategies` database schema, referential integrity triggers, or `ShowStrategies` view is strictly out-of-scope for CRP-323 and is owned exclusively by **CRP-324** per `RULE-LCM-027`.
+### Invariant 6: Canonical Structured Intent IDs and Tiered Block Allocation
+To eliminate arbitrary and shifting line counter numbers in Tool Explorer, every operational tool and intent is anchored by a permanent **`intent_id`** utilizing a structured, non-contiguous integer block allocation scheme:
+1. **Host PC Catch-All Bucket (`-99 .. -1`)**:
+   - Sequential negative integers assigned to `@00-` catch-all / manual-only setup tools (e.g. `-4` for `@00-RegKeyDefaultTypeSet.cmd` up to `-1` for `@00-Skip_TPM_Check_on_Dynamic_Update.cmd`).
+   - Physical filenames remain untouched with `@00-`.
+   - Sorting by `intent_id` naturally keeps the entire catch-all bucket clustered at the very top of the table.
+2. **Host PC Sequential Invariants Suite (`1 .. 99`)**:
+   - Monotonic positive integers matching the step number of `@01-` through `@22-` (`1` through `22`).
+3. **User Daily Operations Tier (`1000 .. 1999`)**:
+   - Canonical IDs for daily operator tools (`User` audience; e.g. `1001` for `ToolExplorer`, `1010` for `BCR`).
+4. **Maintenance & Diagnostics Tier (`2000 .. 2999`)**:
+   - System maintenance, hardware interlocks, and subsystem repair tools (`Maintenance` audience).
+5. **Governance & CM Infrastructure Tier (`3000 .. 3999`)**:
+   - Change request ledgers, synchronization engines, and Git hooks.
+6. **Internal Runtime & Automation Tier (`9000 .. 9999`)**:
+   - Daemons, background dispatchers, and AST verification atoms (`Internal` audience).
+
+### Invariant 7: Strict Intent Key Formatting & Anti-Duplication
+The tool catalog generator (`Update-ToolCatalog.ps1`) strictly preserves the canonical `@nn-` naming format and is forbidden from generating duplicate unhyphenated variants (e.g. `@01usegpedit...` stripped keys are eliminated). Every intent key must preserve exact hyphen delimiters.
+
+### Invariant 8: Evolution Lineage for Intent Splits and Merges
+1. **Split Operations ($1 \rightarrow M$)**: The primary intent retains the original `intent_id`. New split-off actions are minted in the same block tier and record `predecessor_intent_id`.
+2. **Merge / Combination Operations ($M \rightarrow 1$)**: The unified tool adopts the leading `intent_id`. Absorbed intent IDs are marked `evolution_disposition = 'absorbed'` and reference the target ID without being destroyed.
 
 ---
 

@@ -80,3 +80,4 @@ Write-Host " Strategies: $($stratData.strategies.Count) registered" -ForegroundC
 if (-not $NoLaunch) {
     Start-Process $artifactPath
 }
+

@@ -10,8 +10,8 @@
            -Check exits with code 1 when candidates are pending (used as the push gate).
   Path: LCM_Inventory/tools/Invoke-LearnedAdviceReview.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.2.0
-  Date: 2026-10-13
+  Version: 10.2.1
+  Date: 2026-11-13 13:05:00
   Rule: RULE-CTX-005
 .PARAMETER Accept
   Candidate numbers (as listed) to accept.
@@ -33,9 +33,9 @@
 
 [CmdletBinding()]
 param(
-    [int[]]$Accept = @(),
-    [int[]]$Promote = @(),
-    [int[]]$Reject = @(),
+    [string[]]$Accept = @(),
+    [string[]]$Promote = @(),
+    [string[]]$Reject = @(),
     [Alias('PurgeResolved')]
     [switch]$RetireAccepted,
     [string]$TextMatch = '',
@@ -48,6 +48,25 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
+function Get-CandidateNumberList {
+    [CmdletBinding()]
+    param([string[]]$Items)
+    $list = [System.Collections.Generic.List[int]]::new()
+    foreach ($item in $Items) {
+        if ([string]::IsNullOrWhiteSpace($item)) { continue }
+        foreach ($token in ($item -split '[,;\s]+')) {
+            if ($token -match '^\d+$') {
+                $list.Add([int]$token)
+            }
+        }
+    }
+    return @($list)
+}
+
+$AcceptNums = Get-CandidateNumberList -Items $Accept
+$PromoteNums = Get-CandidateNumberList -Items $Promote
+$RejectNums = Get-CandidateNumberList -Items $Reject
+
 if ($Help) {
     Write-Host 'Invoke-LearnedAdviceReview.ps1 [-Accept <n,..>] [-Promote <n,..>] [-Reject <n,..> -ProposalId <CRP>] [-RetireAccepted -TextMatch <pattern> -ProposalId <CRP>] [-Check] [-h]'
     Write-Host '  Lists pending candidates of LEARNED_ADVICE.md, or applies the given decisions.'
@@ -55,7 +74,7 @@ if ($Help) {
     return
 }
 
-if (($Reject.Count -gt 0 -or $RetireAccepted) -and [string]::IsNullOrWhiteSpace($ProposalId)) {
+if ((@($RejectNums).Count -gt 0 -or $RetireAccepted) -and [string]::IsNullOrWhiteSpace($ProposalId)) {
     throw 'RULE-CTX-005 Invariant: Rejecting or retiring learned advice requires an active -ProposalId (CRP/BUG) documenting why the advice is retired or superseded.'
 }
 
@@ -107,16 +126,16 @@ if ($Check) {
     return
 }
 
-if (($Accept.Count + $Promote.Count + $Reject.Count) -eq 0) {
+if ((@($AcceptNums).Count + @($PromoteNums).Count + @($RejectNums).Count) -eq 0) {
     if ($pending.Count -eq 0) { Write-Host 'No pending candidates.'; return }
     for ($n = 0; $n -lt $pending.Count; $n++) { Write-Host ("{0,3}  {1}" -f ($n + 1), ($lines[$pending[$n]] -replace '^- \[ \] ', '')) }
     return
 }
 
 $decisions = @{}
-foreach ($n in $Accept) { $decisions[$n] = 'accept' }
-foreach ($n in $Promote) { $decisions[$n] = 'promote' }
-foreach ($n in $Reject) { $decisions[$n] = 'reject' }
+foreach ($n in $AcceptNums) { $decisions[$n] = 'accept' }
+foreach ($n in $PromoteNums) { $decisions[$n] = 'promote' }
+foreach ($n in $RejectNums) { $decisions[$n] = 'reject' }
 foreach ($n in $decisions.Keys) { if ($n -lt 1 -or $n -gt $pending.Count) { throw "No candidate number $n" } }
 
 $acceptedText = [System.Collections.Generic.List[string]]::new()

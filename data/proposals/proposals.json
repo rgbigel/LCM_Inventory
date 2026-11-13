@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-11-12T19:20:00+01:00",
+  "updated_at": "2026-11-13 21:28:31",
   "review_granularity": "tight",
   "lcm_mode": "active",
-  "last_proposal_id": 324,
+  "last_proposal_id": 326,
   "proposals": [
     {
       "id": 261,
@@ -11314,17 +11314,17 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": [],
-      "state": "completed",
+      "state": "held",
       "bundle_id": "CRP-218",
       "bundle_dir": "docs/Proposals/CRP-218-Diagnostic-Triage-Protocol-for-UI-to-Daemon-Execution",
       "commit_sha": null,
       "github_url": null,
       "author": "rgbig",
       "details": "Diagnostic Triage Protocol for UI-to-Daemon Execution | DEMOTED to held: Zero implementation artifacts exist; unstarted Gate 1 proposal stub. Demoted to held pending explicit design scheduling.",
-      "progress_state": "completed",
+      "progress_state": "blocked",
       "flow_mode": "standard",
       "always_proceed": false,
-      "disposition": "completed",
+      "disposition": "held",
       "priority": 8,
       "lcm_version": "10.1.0",
       "dates": {},
@@ -17336,6 +17336,106 @@
       "lcm_version": "10.2.3",
       "progress_state": "completed",
       "disposition": "completed"
+    },
+    {
+      "id": 325,
+      "crp_id": "BUG-325",
+      "lcm_version": "10.2.3",
+      "timestamp": "2026-11-13 12:38:22",
+      "title": "[BUG] Tool Explorer Published Payload Malformed Error Due to Attribute Order in Tag Parser",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "BUG-325",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "verified",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/BUG-325-BUG-Tool-Explorer-Published-Payload-Malformed-Erro",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig",
+      "details": "Fix attribute order sensitivity in do.exe daemon and standardize LcmToolCatalog.psm1 script tag declaration",
+      "priority": 5,
+      "plan_path": "docs/Proposals/BUG-325-BUG-Tool-Explorer-Published-Payload-Malformed-Erro/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/BUG-325-BUG-Tool-Explorer-Published-Payload-Malformed-Erro/Walkthrough.md",
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-11-13 12:39:39",
+          "user": "rgbig",
+          "note": "",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-11-13 12:39:46",
+          "user": "rgbig",
+          "note": "",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "in_progress": "2026-11-13 12:39:39",
+        "verified": "2026-11-13 12:39:46"
+      },
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "progress_state": "verification",
+      "disposition": null
+    },
+    {
+      "id": 326,
+      "crp_id": "CRP-326",
+      "timestamp": "2026-11-13 21:28:31",
+      "title": "Governance Rules Harmonization, Lifecycle Consistency, and Authoritative Version Alignment",
+      "origin_repo": "LCM_AI",
+      "cr_id": "CRP-326",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "in_progress",
+      "bundle_id": "CRP-326",
+      "bundle_dir": "docs/Proposals/CRP-326-Governance-Rules-Harmonization-and-Documentation-Alignment",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": null,
+        "walkthrough": null
+      },
+      "author": "Claude, Rolf & Antigravity",
+      "details": "Harmonizes conflicting governance rules, resolves GoodMorning session protocols, corrects corrupted SemVer increment examples, reconciles lifecycle state vocabularies, establishes .agents/version.json authority, resolves duplicate RULE-DOC-008, and codifies missing RULE-PS-025. Scope is strictly documentation/rules (zero production code changes).",
+      "plan_path": null,
+      "walkthrough_path": null,
+      "priority": 9,
+      "gate1_accepted": false,
+      "gate1_accepted_at": null,
+      "state_history": [
+        {
+          "state": "in_progress",
+          "timestamp": "2026-11-13 21:28:31",
+          "user": "rgbig",
+          "note": "Registered as open proposal for Claude & Antigravity governance rules harmonization."
+        }
+      ],
+      "dates": {
+        "created": "2026-11-13 21:28:31",
+        "suggested": "2026-11-13 21:28:31"
+      },
+      "flow_mode": "standard",
+      "always_proceed": false,
+      "lcm_version": "10.2.5",
+      "progress_state": "in_progress",
+      "disposition": "open"
     }
   ],
   "testing_mode": "active",

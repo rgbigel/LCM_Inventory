@@ -5,8 +5,8 @@ PACKAGE        : main
 DESCRIPTION    : HTTP daemon listener for Session 1 desktop execution and telemetry.
 AUTHOR         : Rolf
 DATE CREATED   : 2026-11-11
-LAST MODIFIED  : 2026-11-11
-VERSION        : 10.2.0
+LAST MODIFIED  : 2026-11-13
+VERSION        : 10.2.1
 GO VERSION     : 1.22+
 ENCODING       : ASCII (No BOM)
 ================================================================================
@@ -117,6 +117,12 @@ func RunDaemon(port int) error {
 	daemonMux.HandleFunc("/tools", handleDisplayPage("SHOW_TOOLS.html"))
 	daemonMux.HandleFunc("/show_tools", handleDisplayPage("SHOW_TOOLS.html"))
 	daemonMux.HandleFunc("/show_tools.html", handleDisplayPage("SHOW_TOOLS.html"))
+
+	daemonMux.HandleFunc("/tool_intents", handleDisplayPage("SHOW_TOOL_INTENTS.html"))
+	daemonMux.HandleFunc("/toolintents", handleDisplayPage("SHOW_TOOL_INTENTS.html"))
+	daemonMux.HandleFunc("/show_tool_intents", handleDisplayPage("SHOW_TOOL_INTENTS.html"))
+	daemonMux.HandleFunc("/show_tool_intents.html", handleDisplayPage("SHOW_TOOL_INTENTS.html"))
+	daemonMux.HandleFunc("/intents", handleDisplayPage("SHOW_TOOL_INTENTS.html"))
 
 	daemonMux.HandleFunc("/rules", handleDisplayPage("SHOW_RULES.html"))
 	daemonMux.HandleFunc("/show_rules", handleDisplayPage("SHOW_RULES.html"))
@@ -729,11 +735,13 @@ func handleDisplays(w http.ResponseWriter, r *http.Request) {
 
 	gitRoot := GetGitRoot()
 	artifactMap := map[string]string{
-		"hub":       "CM_CONTROL_HUB.html",
-		"dates":     "CM_CRP_DATES.html",
-		"tools":     "SHOW_TOOLS.html",
-		"rules":     "SHOW_RULES.html",
-		"inventory": "LCM_INVENTORY_VIEWER.html",
+		"hub":          "CM_CONTROL_HUB.html",
+		"dates":        "CM_CRP_DATES.html",
+		"tools":        "SHOW_TOOLS.html",
+		"tool_intents": "SHOW_TOOL_INTENTS.html",
+		"intents":      "SHOW_TOOL_INTENTS.html",
+		"rules":        "SHOW_RULES.html",
+		"inventory":    "LCM_INVENTORY_VIEWER.html",
 	}
 
 	artifactLeaf, ok := artifactMap[id]
@@ -770,10 +778,16 @@ func handleDisplays(w http.ResponseWriter, r *http.Request) {
 		}
 		content := string(dataBytes)
 		startTag := `<script id="lcm-display-data" type="application/json">`
-		endTag := `</script>`
+		tagLen := len(startTag)
 		startIdx := strings.Index(content, startTag)
+		if startIdx == -1 {
+			startTag = `<script type="application/json" id="lcm-display-data">`
+			tagLen = len(startTag)
+			startIdx = strings.Index(content, startTag)
+		}
+		endTag := `</script>`
 		if startIdx != -1 {
-			startIdx += len(startTag)
+			startIdx += tagLen
 			endIdx := strings.Index(content[startIdx:], endTag)
 			if endIdx != -1 {
 				jsonPayload := content[startIdx : startIdx+endIdx]

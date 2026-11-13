@@ -546,6 +546,7 @@ $htmlContent = @"
     <!-- Toast Notification Container -->
     <div class="toast" id="toast">✓ Copied command to clipboard!</div>
 
+    <script id="lcm-display-data" type="application/json">$intentsJsonEscaped</script>
     <script id="lcm-intents-data" type="application/json">$intentsJsonEscaped</script>
     <script>
         const store = JSON.parse(document.getElementById('lcm-intents-data').textContent);

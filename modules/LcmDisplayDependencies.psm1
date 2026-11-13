@@ -51,6 +51,16 @@ function Get-LcmDisplayDefinitions {
       Data = @('data\proposals\proposals.json')
       Presentation = @('tools\Show-LcmControl.ps1', 'assets\CM_CRP_DATES_READONLY.html', 'assets\CM_CONTROL_HUB.html')
     }
+    tool_intents = @{
+      Renderer = 'Show-ToolIntents.ps1'; Artifact = Join-Path $root 'data\artifacts\SHOW_TOOL_INTENTS.html'
+      Data = @('config\tool_intents.json', 'config\tool_catalog.json')
+      Presentation = @('tools\Show-ToolIntents.ps1')
+    }
+    intents = @{
+      Renderer = 'Show-ToolIntents.ps1'; Artifact = Join-Path $root 'data\artifacts\SHOW_TOOL_INTENTS.html'
+      Data = @('config\tool_intents.json', 'config\tool_catalog.json')
+      Presentation = @('tools\Show-ToolIntents.ps1')
+    }
   }
   foreach ($id in $definitions.Keys) {
     $definition = $definitions[$id]

@@ -8,23 +8,6 @@
     "LCM_Tools",
     "SystemConfiguration"
   ],
-  "Roles": [
-    "Auth",
-    "Customization",
-    "Diagnostics",
-    "Elevation",
-    "Gateway",
-    "GUI",
-    "Internal",
-    "Invariants",
-    "Management",
-    "QualityGate",
-    "Recovery",
-    "Repair",
-    "ReviewGate",
-    "Telemetry",
-    "Utility"
-  ],
   "Categories": [
     "Administrative Privileges",
     "Audit Logs",
@@ -59,6 +42,7 @@
     "System Customization",
     "System Fonts",
     "System Invariants",
+    "System Personalization",
     "System Security",
     "System Setup",
     "Tool Analysis",

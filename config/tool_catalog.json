@@ -4746,21 +4746,21 @@
     "Parameters": [
       {
         "Name": "Accept",
-        "Type": "Int32[]",
+        "Type": "String[]",
         "Mandatory": false,
         "Default": "@()",
         "Description": "Candidate numbers (as listed) to accept."
       },
       {
         "Name": "Promote",
-        "Type": "Int32[]",
+        "Type": "String[]",
         "Mandatory": false,
         "Default": "@()",
         "Description": "Candidate numbers to accept and tag for promotion into the rules."
       },
       {
         "Name": "Reject",
-        "Type": "Int32[]",
+        "Type": "String[]",
         "Mandatory": false,
         "Default": "@()",
         "Description": "Candidate numbers to delete (requires -ProposalId to document the active CRP correcting/retiring the entry)."
@@ -5355,7 +5355,7 @@
         "Name": "SuccessorId",
         "Type": "Int32",
         "Mandatory": false,
-        "Default": "",
+        "Default": "0",
         "Description": "Successor proposal ID required by the supersede action"
       },
       {
@@ -6381,6 +6381,24 @@
     ]
   },
   {
+    "Name": "Show-Strategies.ps1",
+    "ShortName": "ShowStrategies",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Show-Strategies execution tool.",
+    "Example": "ShowStrategies",
+    "RelativePath": "LCM_Inventory\\tools\\Show-Strategies.ps1",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
     "Name": "Show-ToolIntents.ps1",
     "ShortName": "ShowToolIntents",
     "Aliases": null,
@@ -7008,6 +7026,39 @@
     "Dependencies": "sync_proposals_db.py"
   },
   {
+    "Name": "Sync-LcmToolCatalogDb.ps1",
+    "ShortName": "SyncLcmToolCatalogDb",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Sync-LcmToolCatalogDb execution tool.",
+    "Example": "SyncLcmToolCatalogDb",
+    "RelativePath": "LCM_Inventory\\tools\\Sync-LcmToolCatalogDb.ps1",
+    "Parameters": [
+      {
+        "Name": "Action",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "Sync",
+        "Description": "Operation to perform: - 'Sync' : JSON -> SQLite DB + SQL text dump (default). - 'Dump' : SQLite DB -> Canonical tools.sql text dump. - 'Verify' : Parity check across JSON, SQLite DB, and SQL text dump."
+      },
+      {
+        "Name": "Silent",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      }
+    ],
+    "Dependencies": "sync_tool_catalog_db.py"
+  },
+  {
     "Name": "sync_proposals_db.py",
     "ShortName": "syncproposalsdb",
     "Aliases": null,
@@ -7022,6 +7073,24 @@
     "Description": "sync_proposals_db execution tool.",
     "Example": "syncproposalsdb",
     "RelativePath": "LCM_Inventory\\tools\\sync_proposals_db.py",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "sync_tool_catalog_db.py",
+    "ShortName": "synctoolcatalogdb",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "Python",
+    "Category": "Utility",
+    "Description": "sync_tool_catalog_db execution tool.",
+    "Example": "synctoolcatalogdb",
+    "RelativePath": "LCM_Inventory\\tools\\sync_tool_catalog_db.py",
     "Parameters": [],
     "Dependencies": null
   },
@@ -7396,6 +7465,32 @@
       }
     ],
     "Dependencies": "Repair-LCMRules.ps1"
+  },
+  {
+    "Name": "Test-LcmStrategyConsistency.ps1",
+    "ShortName": "TestLcmStrategyConsistency",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Test-LcmStrategyConsistency execution tool.",
+    "Example": "TestLcmStrategyConsistency",
+    "RelativePath": "LCM_Inventory\\tools\\Test-LcmStrategyConsistency.ps1",
+    "Parameters": [
+      {
+        "Name": "DbPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Optional path to SQLite proposals database."
+      }
+    ],
+    "Dependencies": null
   },
   {
     "Name": "Test-RealRepoProposalCleanup.ps1",
@@ -10123,7 +10218,7 @@
     "Category": "Utility",
     "Description": "search certificate stores for private key container Guids execution tool.",
     "Example": "search certificate stores for private key container Guids",
-    "RelativePath": "LCM_Inventory\\tools\\search certificate stores for private key container Guids.ps1",
+    "RelativePath": "SystemConfiguration\\Source\\search certificate stores for private key container Guids.ps1",
     "Parameters": [],
     "Dependencies": null
   },
@@ -10141,25 +10236,7 @@
     "Category": "Utility",
     "Description": "search certificate stores for private key container Guids execution tool.",
     "Example": "search certificate stores for private key container Guids",
-    "RelativePath": "SystemConfiguration\\Source\\search certificate stores for private key container Guids.ps1",
-    "Parameters": [],
-    "Dependencies": null
-  },
-  {
-    "Name": "Set-MachineWideExecutionPolicy.ps1",
-    "ShortName": "SystemConfigurationSetMachineWideExecutionPolicy",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": true,
-    "NoExit": true,
-    "Group": "LCM_Tools",
-    "Domain": "LCM_Tools",
-    "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "Set-MachineWideExecutionPolicy execution tool.",
-    "Example": "SetMachineWideExecutionPolicy",
-    "RelativePath": "LCM_Inventory\\tools\\Set-MachineWideExecutionPolicy.ps1",
+    "RelativePath": "LCM_Inventory\\tools\\search certificate stores for private key container Guids.ps1",
     "Parameters": [],
     "Dependencies": null
   },
@@ -10194,6 +10271,24 @@
         "Description": "Displays detailed registry modification logs."
       }
     ],
+    "Dependencies": null
+  },
+  {
+    "Name": "Set-MachineWideExecutionPolicy.ps1",
+    "ShortName": "SystemConfigurationSetMachineWideExecutionPolicy",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Set-MachineWideExecutionPolicy execution tool.",
+    "Example": "SetMachineWideExecutionPolicy",
+    "RelativePath": "LCM_Inventory\\tools\\Set-MachineWideExecutionPolicy.ps1",
+    "Parameters": [],
     "Dependencies": null
   },
   {

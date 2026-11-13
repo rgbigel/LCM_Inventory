@@ -452,7 +452,7 @@ body.light-theme .badge-info    { background: rgba(9, 105, 218, 0.12); color: #0
 body.light-theme .badge-purple  { background: rgba(130, 80, 223, 0.12); color: #8250df; border-color: rgba(130, 80, 223, 0.3); }
 body.light-theme .badge-muted, body.light-theme .badge-secondary { background: rgba(87, 96, 106, 0.12); color: #57606a; border-color: rgba(87, 96, 106, 0.25); }
 
-.badge-group { background: rgba(188, 140, 255, 0.15); color: #d2a8ff; border: 1px solid rgba(188, 140, 255, 0.3); }
+.badge-group, .badge-subsystem { background: rgba(188, 140, 255, 0.15); color: #d2a8ff; border: 1px solid rgba(188, 140, 255, 0.3); }
 .badge-role { background: rgba(56, 139, 253, 0.15); color: #79c0ff; border: 1px solid rgba(56, 139, 253, 0.3); }
 .badge-user { background: rgba(63, 185, 80, 0.15); color: #7ee787; border: 1px solid rgba(63, 185, 80, 0.3); }
 .badge-dev  { background: rgba(110, 118, 129, 0.2); color: #8b949e; border: 1px solid rgba(110, 118, 129, 0.3); }

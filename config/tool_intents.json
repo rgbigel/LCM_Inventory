@@ -1,24 +1,41 @@
 {
   "version": "1.0.0",
   "description": "Direct operational intents to executable commands ledger for AI pairs and operators",
-  "total_intents": 667,
-  "updated_at": "2026-11-12 18:34:52",
+  "total_intents": 649,
+  "updated_at": "2026-11-13 21:35:16",
   "intents": {
-    "rules": {
-      "goal": "Open LCM Rules and Governance Matrix dashboard",
+    "bcr": {
+      "goal": "Open Beyond Compare 5 review comparing workspace against today daily Macrium baseline",
       "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/Show-Rules.ps1",
+      "script": "LCM_Inventory/tools/Invoke-MacriumDailyBcrBaseline.ps1",
       "parameters": {},
-      "trampoline": "ShowRules.cmd",
+      "trampoline": "MacriumDailyBcrBaseline.cmd",
       "elevated": false,
       "group": "LCM_Inventory",
-      "category": "Utility",
+      "category": "Beyond Compare Review",
       "audience": "Developer",
-      "role": "Utility",
+      "role": "ReviewGate",
       "call_count": 1,
       "last_called_at": "2026-11-11 15:59:36.891",
       "last_duration_ms": 0.0,
       "total_duration_ms": 0.0,
+      "is_primary_intent": true
+    },
+    "dismount": {
+      "goal": "Dismount currently mounted Macrium virtual drive",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/Dismount-MacriumCurrentBaseline.ps1",
+      "parameters": {},
+      "trampoline": "DismountMacriumBaseline.cmd",
+      "elevated": true,
+      "group": "LCM_Inventory",
+      "category": "Macrium BCR Baseline",
+      "audience": "User",
+      "role": "Recovery",
+      "call_count": 3,
+      "last_called_at": "2026-11-11 18:19:56.462",
+      "last_duration_ms": 657.0,
+      "total_duration_ms": 11101.0,
       "is_primary_intent": true
     },
     "hub": {
@@ -38,55 +55,21 @@
       "total_duration_ms": 142.85,
       "is_primary_intent": true
     },
-    "showtoolintents": {
-      "goal": "Open LCM Tool Intents Explorer",
+    "controlhub": {
+      "goal": "Open Configuration Management Control Hub dashboard",
       "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/Show-ToolIntents.ps1",
+      "script": "LCM_Inventory/tools/Show-LcmControl.ps1",
       "parameters": {},
-      "trampoline": "ShowToolIntents.cmd",
+      "trampoline": "ShowCM.cmd",
       "elevated": false,
       "group": "LCM_Inventory",
-      "category": "Utility",
-      "audience": "Developer",
-      "role": "Utility",
+      "category": "Configuration Management",
+      "audience": "User",
+      "role": "GUI",
       "call_count": 2,
       "last_called_at": "2026-11-11 15:59:36.891",
       "last_duration_ms": 0.0,
-      "total_duration_ms": 88.5,
-      "is_primary_intent": true
-    },
-    "bcr": {
-      "goal": "Open Beyond Compare 5 review comparing workspace against today daily Macrium baseline",
-      "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/Invoke-MacriumDailyBcrBaseline.ps1",
-      "parameters": {},
-      "trampoline": "MacriumDailyBcrBaseline.cmd",
-      "elevated": false,
-      "group": "LCM_Inventory",
-      "category": "Beyond Compare Review",
-      "audience": "Developer",
-      "role": "ReviewGate",
-      "call_count": 1,
-      "last_called_at": "2026-11-11 15:59:36.891",
-      "last_duration_ms": 0.0,
-      "total_duration_ms": 0.0,
-      "is_primary_intent": true
-    },
-    "goodmorning": {
-      "goal": "Execute morning workspace synchronization and environment verification",
-      "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/Invoke-LCM_GoodMorning.ps1",
-      "parameters": {},
-      "trampoline": "LCMGoodMorning.cmd",
-      "elevated": false,
-      "group": "LCM_Inventory",
-      "category": "Utility",
-      "audience": "Developer",
-      "role": "Utility",
-      "call_count": 1,
-      "last_called_at": "2026-11-11 15:59:36.891",
-      "last_duration_ms": 0.0,
-      "total_duration_ms": 0.0,
+      "total_duration_ms": 142.85,
       "is_primary_intent": true
     },
     "tools": {
@@ -106,7 +89,7 @@
       "total_duration_ms": 0.0,
       "is_primary_intent": true
     },
-    "toolintents": {
+    "showtoolintents": {
       "goal": "Open LCM Tool Intents Explorer",
       "executable": "pwsh.exe",
       "script": "LCM_Inventory/tools/Show-ToolIntents.ps1",
@@ -140,29 +123,29 @@
       "total_duration_ms": 142.85,
       "is_primary_intent": true
     },
-    "push": {
-      "goal": "Push all ahead workspace repositories to remote Git repositories in lockstep",
+    "run": {
+      "goal": "Universal command execution gateway (run do, run progress, run action)",
       "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/Invoke-LCM_Push.ps1",
+      "script": "LCM_Inventory/tools/Invoke-LcmAction.ps1",
       "parameters": {},
-      "trampoline": "LCMPush.cmd",
+      "trampoline": "LcmAction.cmd",
       "elevated": false,
       "group": "LCM_Inventory",
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
-      "call_count": 1,
-      "last_called_at": "2026-11-11 15:59:36.891",
+      "call_count": 0,
+      "last_called_at": null,
       "last_duration_ms": 0.0,
       "total_duration_ms": 0.0,
       "is_primary_intent": true
     },
-    "readiness": {
-      "goal": "Open LCM Quality Gate and Subsystem Readiness Rollup dashboard",
+    "rules": {
+      "goal": "Open LCM Rules and Governance Matrix dashboard",
       "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/Show-LCM_Readiness.ps1",
+      "script": "LCM_Inventory/tools/Show-Rules.ps1",
       "parameters": {},
-      "trampoline": "ShowLCMReadiness.cmd",
+      "trampoline": "ShowRules.cmd",
       "elevated": false,
       "group": "LCM_Inventory",
       "category": "Utility",
@@ -191,55 +174,55 @@
       "total_duration_ms": 0.0,
       "is_primary_intent": true
     },
-    "run": {
-      "goal": "Universal command execution gateway (run do, run progress, run action)",
+    "toolintents": {
+      "goal": "Open LCM Tool Intents Explorer",
       "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/Invoke-LcmAction.ps1",
+      "script": "LCM_Inventory/tools/Show-ToolIntents.ps1",
       "parameters": {},
-      "trampoline": "LcmAction.cmd",
+      "trampoline": "ShowToolIntents.cmd",
       "elevated": false,
       "group": "LCM_Inventory",
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
-      "call_count": 0,
-      "last_called_at": null,
+      "call_count": 2,
+      "last_called_at": "2026-11-11 15:59:36.891",
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 88.5,
+      "is_primary_intent": true
+    },
+    "readiness": {
+      "goal": "Open LCM Quality Gate and Subsystem Readiness Rollup dashboard",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/Show-LCM_Readiness.ps1",
+      "parameters": {},
+      "trampoline": "ShowLCMReadiness.cmd",
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Utility",
+      "audience": "Developer",
+      "role": "Utility",
+      "call_count": 1,
+      "last_called_at": "2026-11-11 15:59:36.891",
       "last_duration_ms": 0.0,
       "total_duration_ms": 0.0,
       "is_primary_intent": true
     },
-    "dismount": {
-      "goal": "Dismount currently mounted Macrium virtual drive",
+    "push": {
+      "goal": "Push all ahead workspace repositories to remote Git repositories in lockstep",
       "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/Dismount-MacriumCurrentBaseline.ps1",
+      "script": "LCM_Inventory/tools/Invoke-LCM_Push.ps1",
       "parameters": {},
-      "trampoline": "DismountMacriumBaseline.cmd",
-      "elevated": true,
-      "group": "LCM_Inventory",
-      "category": "Macrium BCR Baseline",
-      "audience": "User",
-      "role": "Recovery",
-      "call_count": 3,
-      "last_called_at": "2026-11-11 18:19:56.462",
-      "last_duration_ms": 657.0,
-      "total_duration_ms": 11101.0,
-      "is_primary_intent": true
-    },
-    "controlhub": {
-      "goal": "Open Configuration Management Control Hub dashboard",
-      "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/Show-LcmControl.ps1",
-      "parameters": {},
-      "trampoline": "ShowCM.cmd",
+      "trampoline": "LCMPush.cmd",
       "elevated": false,
       "group": "LCM_Inventory",
-      "category": "Configuration Management",
-      "audience": "User",
-      "role": "GUI",
-      "call_count": 2,
+      "category": "Utility",
+      "audience": "Developer",
+      "role": "Utility",
+      "call_count": 1,
       "last_called_at": "2026-11-11 15:59:36.891",
       "last_duration_ms": 0.0,
-      "total_duration_ms": 142.85,
+      "total_duration_ms": 0.0,
       "is_primary_intent": true
     },
     "goodnight": {
@@ -248,6 +231,23 @@
       "script": "LCM_Inventory/tools/Invoke-LCM_GoodNight.ps1",
       "parameters": {},
       "trampoline": "LCMGoodNight.cmd",
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Utility",
+      "audience": "Developer",
+      "role": "Utility",
+      "call_count": 1,
+      "last_called_at": "2026-11-11 15:59:36.891",
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
+      "is_primary_intent": true
+    },
+    "goodmorning": {
+      "goal": "Execute morning workspace synchronization and environment verification",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/Invoke-LCM_GoodMorning.ps1",
+      "parameters": {},
+      "trampoline": "LCMGoodMorning.cmd",
       "elevated": false,
       "group": "LCM_Inventory",
       "category": "Utility",
@@ -5935,7 +5935,7 @@
         "-BaseCommit": "HEAD",
         "-CohortAction": "{OPTIONAL}",
         "-CohortId": "{OPTIONAL}",
-        "-SuccessorId": "{OPTIONAL}",
+        "-SuccessorId": "0",
         "-IncludeUnreviewed": "{OPTIONAL}",
         "-ReviewObligationId": "{OPTIONAL}"
       },
@@ -5979,7 +5979,7 @@
         "-BaseCommit": "HEAD",
         "-CohortAction": "{OPTIONAL}",
         "-CohortId": "{OPTIONAL}",
-        "-SuccessorId": "{OPTIONAL}",
+        "-SuccessorId": "0",
         "-IncludeUnreviewed": "{OPTIONAL}",
         "-ReviewObligationId": "{OPTIONAL}"
       },
@@ -6023,7 +6023,7 @@
         "-BaseCommit": "HEAD",
         "-CohortAction": "{OPTIONAL}",
         "-CohortId": "{OPTIONAL}",
-        "-SuccessorId": "{OPTIONAL}",
+        "-SuccessorId": "0",
         "-IncludeUnreviewed": "{OPTIONAL}",
         "-ReviewObligationId": "{OPTIONAL}"
       },
@@ -7023,6 +7023,40 @@
       "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
+    "show-strategies": {
+      "goal": "Show-Strategies execution tool.",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/Show-Strategies.ps1",
+      "parameters": {},
+      "trampoline": "ShowStrategies.cmd",
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Utility",
+      "audience": "Developer",
+      "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
+      "is_primary_intent": false
+    },
+    "showstrategies": {
+      "goal": "Show-Strategies execution tool.",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/Show-Strategies.ps1",
+      "parameters": {},
+      "trampoline": "ShowStrategies.cmd",
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Utility",
+      "audience": "Developer",
+      "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
+      "is_primary_intent": false
+    },
     "show-toolintents": {
       "goal": "Show-ToolIntents execution tool.",
       "executable": "pwsh.exe",
@@ -7485,6 +7519,46 @@
       "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
+    "sync-lcmtoolcatalogdb": {
+      "goal": "Sync-LcmToolCatalogDb execution tool.",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/Sync-LcmToolCatalogDb.ps1",
+      "parameters": {
+        "-Action": "Sync",
+        "-Silent": "{OPTIONAL}"
+      },
+      "trampoline": "SyncLcmToolCatalogDb.cmd",
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Utility",
+      "audience": "Developer",
+      "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
+      "is_primary_intent": false
+    },
+    "synclcmtoolcatalogdb": {
+      "goal": "Sync-LcmToolCatalogDb execution tool.",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/Sync-LcmToolCatalogDb.ps1",
+      "parameters": {
+        "-Action": "Sync",
+        "-Silent": "{OPTIONAL}"
+      },
+      "trampoline": "SyncLcmToolCatalogDb.cmd",
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Utility",
+      "audience": "Developer",
+      "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
+      "is_primary_intent": false
+    },
     "sync_proposals_db": {
       "goal": "sync_proposals_db execution tool.",
       "executable": "pwsh.exe",
@@ -7508,6 +7582,40 @@
       "script": "LCM_Inventory/tools/sync_proposals_db.py",
       "parameters": {},
       "trampoline": "syncproposalsdb.cmd",
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Utility",
+      "audience": "Developer",
+      "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
+      "is_primary_intent": false
+    },
+    "sync_tool_catalog_db": {
+      "goal": "sync_tool_catalog_db execution tool.",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/sync_tool_catalog_db.py",
+      "parameters": {},
+      "trampoline": "synctoolcatalogdb.cmd",
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Utility",
+      "audience": "Developer",
+      "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
+      "is_primary_intent": false
+    },
+    "synctoolcatalogdb": {
+      "goal": "sync_tool_catalog_db execution tool.",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/sync_tool_catalog_db.py",
+      "parameters": {},
+      "trampoline": "synctoolcatalogdb.cmd",
       "elevated": false,
       "group": "LCM_Inventory",
       "category": "Utility",
@@ -7887,6 +7995,44 @@
       "role": "Utility",
       "call_count": 1,
       "last_called_at": "2026-11-11 15:59:36.891",
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
+      "is_primary_intent": false
+    },
+    "test-lcmstrategyconsistency": {
+      "goal": "Test-LcmStrategyConsistency execution tool.",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/Test-LcmStrategyConsistency.ps1",
+      "parameters": {
+        "-DbPath": "{OPTIONAL}"
+      },
+      "trampoline": "TestLcmStrategyConsistency.cmd",
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Utility",
+      "audience": "Developer",
+      "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
+      "is_primary_intent": false
+    },
+    "testlcmstrategyconsistency": {
+      "goal": "Test-LcmStrategyConsistency execution tool.",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/Test-LcmStrategyConsistency.ps1",
+      "parameters": {
+        "-DbPath": "{OPTIONAL}"
+      },
+      "trampoline": "TestLcmStrategyConsistency.cmd",
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Utility",
+      "audience": "Developer",
+      "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
       "last_duration_ms": 0.0,
       "total_duration_ms": 0.0,
       "is_primary_intent": false
@@ -10318,7 +10464,7 @@
     "search certificate stores for private key container guids": {
       "goal": "search certificate stores for private key container Guids execution tool.",
       "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/search certificate stores for private key container Guids.ps1",
+      "script": "SystemConfiguration/Source/search certificate stores for private key container Guids.ps1",
       "parameters": {},
       "trampoline": "SystemConfigurationsearch certificate stores for private key container Guids.cmd",
       "elevated": false,
@@ -10335,7 +10481,7 @@
     "systemconfigurationsearch certificate stores for private key container guids": {
       "goal": "search certificate stores for private key container Guids execution tool.",
       "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/search certificate stores for private key container Guids.ps1",
+      "script": "SystemConfiguration/Source/search certificate stores for private key container Guids.ps1",
       "parameters": {},
       "trampoline": "SystemConfigurationsearch certificate stores for private key container Guids.cmd",
       "elevated": false,
@@ -10352,8 +10498,11 @@
     "set-machinewideexecutionpolicy": {
       "goal": "Set-MachineWideExecutionPolicy execution tool.",
       "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/Set-MachineWideExecutionPolicy.ps1",
-      "parameters": {},
+      "script": "SystemConfiguration/Source/Set-MachineWideExecutionPolicy.ps1",
+      "parameters": {
+        "-Policy": "Bypass",
+        "-ShowAll": "{OPTIONAL}"
+      },
       "trampoline": "SystemConfigurationSetMachineWideExecutionPolicy.cmd",
       "elevated": true,
       "group": "LCM_Tools",
@@ -10369,8 +10518,11 @@
     "setmachinewideexecutionpolicy": {
       "goal": "Set-MachineWideExecutionPolicy execution tool.",
       "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/Set-MachineWideExecutionPolicy.ps1",
-      "parameters": {},
+      "script": "SystemConfiguration/Source/Set-MachineWideExecutionPolicy.ps1",
+      "parameters": {
+        "-Policy": "Bypass",
+        "-ShowAll": "{OPTIONAL}"
+      },
       "trampoline": "SystemConfigurationSetMachineWideExecutionPolicy.cmd",
       "elevated": true,
       "group": "LCM_Tools",
@@ -10386,8 +10538,11 @@
     "systemconfigurationsetmachinewideexecutionpolicy": {
       "goal": "Set-MachineWideExecutionPolicy execution tool.",
       "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/Set-MachineWideExecutionPolicy.ps1",
-      "parameters": {},
+      "script": "SystemConfiguration/Source/Set-MachineWideExecutionPolicy.ps1",
+      "parameters": {
+        "-Policy": "Bypass",
+        "-ShowAll": "{OPTIONAL}"
+      },
       "trampoline": "SystemConfigurationSetMachineWideExecutionPolicy.cmd",
       "elevated": true,
       "group": "LCM_Tools",
@@ -10653,23 +10808,6 @@
       "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
-    "@07autorunentryforrenderlockscreen": {
-      "goal": "Configures autorun startup registry entry for lock screen rendering runner.",
-      "executable": "cmd.exe /c",
-      "script": "SystemConfiguration/Source/@07-Autorun_Entry_for_RenderLockScreen.cmd",
-      "parameters": {},
-      "trampoline": "AutorunRenderLockScreen.cmd",
-      "elevated": true,
-      "group": "SystemConfiguration",
-      "category": "Desktop Personalization",
-      "audience": "User",
-      "role": "Customization",
-      "call_count": 0,
-      "last_called_at": null,
-      "last_duration_ms": 0.0,
-      "total_duration_ms": 0.0,
-      "is_primary_intent": false
-    },
     "autorunrenderlockscreen": {
       "goal": "Configures autorun startup registry entry for lock screen rendering runner.",
       "executable": "cmd.exe /c",
@@ -10688,27 +10826,6 @@
       "is_primary_intent": false
     },
     "@19-definesecured": {
-      "goal": "Sets secure NTFS ACLs, volume labels, and junction permissions on D: drive.",
-      "executable": "pwsh.exe",
-      "script": "SystemConfiguration/Source/@19-DefineSecureD.ps1",
-      "parameters": {
-        "-Root": "D:\\",
-        "-TraceMode": "{OPTIONAL}",
-        "-ShowAll": "{OPTIONAL}"
-      },
-      "trampoline": "DefineSecureD.cmd",
-      "elevated": true,
-      "group": "SystemConfiguration",
-      "category": "Volume Security",
-      "audience": "User",
-      "role": "Customization",
-      "call_count": 0,
-      "last_called_at": null,
-      "last_duration_ms": 0.0,
-      "total_duration_ms": 0.0,
-      "is_primary_intent": false
-    },
-    "@19definesecured": {
       "goal": "Sets secure NTFS ACLs, volume labels, and junction permissions on D: drive.",
       "executable": "pwsh.exe",
       "script": "SystemConfiguration/Source/@19-DefineSecureD.ps1",
@@ -10767,23 +10884,6 @@
       "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
-    "@01usegpedit.msctodisableencryption": {
-      "goal": "Reference guide and instructions for disabling BitLocker and drive encryption via Group Policy.",
-      "executable": "pwsh.exe",
-      "script": "SystemConfiguration/Source/@01-Use_GPEDIT.msc_to_disable_Encryption.txt",
-      "parameters": {},
-      "trampoline": "DisableEncryptionGuide.cmd",
-      "elevated": false,
-      "group": "SystemConfiguration",
-      "category": "System Security",
-      "audience": "User",
-      "role": "Customization",
-      "call_count": 0,
-      "last_called_at": null,
-      "last_duration_ms": 0.0,
-      "total_duration_ms": 0.0,
-      "is_primary_intent": false
-    },
     "disableencryptionguide": {
       "goal": "Reference guide and instructions for disabling BitLocker and drive encryption via Group Policy.",
       "executable": "pwsh.exe",
@@ -10818,23 +10918,6 @@
       "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
-    "@11filemenutools": {
-      "goal": "Shortcut launcher for FileMenuTools context menu extension.",
-      "executable": "pwsh.exe",
-      "script": "SystemConfiguration/Source/@11-FileMenuTools.lnk",
-      "parameters": {},
-      "trampoline": "FileMenuTools.cmd",
-      "elevated": false,
-      "group": "SystemConfiguration",
-      "category": "Context Menus",
-      "audience": "User",
-      "role": "Customization",
-      "call_count": 0,
-      "last_called_at": null,
-      "last_duration_ms": 0.0,
-      "total_duration_ms": 0.0,
-      "is_primary_intent": false
-    },
     "filemenutools": {
       "goal": "Shortcut launcher for FileMenuTools context menu extension.",
       "executable": "pwsh.exe",
@@ -10853,26 +10936,6 @@
       "is_primary_intent": false
     },
     "@17-firafonts": {
-      "goal": "Installs and registers Fira Code and Fira Sans fonts system-wide in Windows Font Table.",
-      "executable": "pwsh.exe",
-      "script": "SystemConfiguration/Source/@17-FiraFonts.ps1",
-      "parameters": {
-        "-TraceMode": "{OPTIONAL}",
-        "-ShowAll": "{OPTIONAL}"
-      },
-      "trampoline": "FiraFonts.cmd",
-      "elevated": true,
-      "group": "SystemConfiguration",
-      "category": "System Fonts",
-      "audience": "User",
-      "role": "Customization",
-      "call_count": 0,
-      "last_called_at": null,
-      "last_duration_ms": 0.0,
-      "total_duration_ms": 0.0,
-      "is_primary_intent": false
-    },
-    "@17firafonts": {
       "goal": "Installs and registers Fira Code and Fira Sans fonts system-wide in Windows Font Table.",
       "executable": "pwsh.exe",
       "script": "SystemConfiguration/Source/@17-FiraFonts.ps1",
@@ -10932,26 +10995,6 @@
       "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
-    "@16goadmchanger": {
-      "goal": "Configures and switches GoAdm administrative privilege profiles.",
-      "executable": "pwsh.exe",
-      "script": "SystemConfiguration/Source/@16-GoAdm_changer.ps1",
-      "parameters": {
-        "-TraceMode": "{OPTIONAL}",
-        "-ShowAll": "{OPTIONAL}"
-      },
-      "trampoline": "GoAdmChanger.cmd",
-      "elevated": true,
-      "group": "SystemConfiguration",
-      "category": "Administrative Privileges",
-      "audience": "User",
-      "role": "Customization",
-      "call_count": 0,
-      "last_called_at": null,
-      "last_duration_ms": 0.0,
-      "total_duration_ms": 0.0,
-      "is_primary_intent": false
-    },
     "goadmchanger": {
       "goal": "Configures and switches GoAdm administrative privilege profiles.",
       "executable": "pwsh.exe",
@@ -10973,23 +11016,6 @@
       "is_primary_intent": false
     },
     "@05-kill_explorer_showing_friendly_names": {
-      "goal": "Disables friendly dates and abstracted filenames in Windows Explorer for raw canonical names.",
-      "executable": "pwsh.exe",
-      "script": "SystemConfiguration/Source/@05-Kill_Explorer_showing_friendly_names.reg",
-      "parameters": {},
-      "trampoline": "KillExplorerFriendlyNames.cmd",
-      "elevated": true,
-      "group": "SystemConfiguration",
-      "category": "Explorer Tweaks",
-      "audience": "User",
-      "role": "Customization",
-      "call_count": 0,
-      "last_called_at": null,
-      "last_duration_ms": 0.0,
-      "total_duration_ms": 0.0,
-      "is_primary_intent": false
-    },
-    "@05killexplorershowingfriendlynames": {
       "goal": "Disables friendly dates and abstracted filenames in Windows Explorer for raw canonical names.",
       "executable": "pwsh.exe",
       "script": "SystemConfiguration/Source/@05-Kill_Explorer_showing_friendly_names.reg",
@@ -11040,23 +11066,6 @@
       "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
-    "@10moreoptionsoff": {
-      "goal": "Disables Windows 11 'Show more options' collapsed context menu to restore classic full menu.",
-      "executable": "pwsh.exe",
-      "script": "SystemConfiguration/Source/@10-More_Options_OFF.reg",
-      "parameters": {},
-      "trampoline": "MoreOptionsOff.cmd",
-      "elevated": true,
-      "group": "SystemConfiguration",
-      "category": "Context Menus",
-      "audience": "User",
-      "role": "Customization",
-      "call_count": 0,
-      "last_called_at": null,
-      "last_duration_ms": 0.0,
-      "total_duration_ms": 0.0,
-      "is_primary_intent": false
-    },
     "moreoptionsoff": {
       "goal": "Disables Windows 11 'Show more options' collapsed context menu to restore classic full menu.",
       "executable": "pwsh.exe",
@@ -11091,23 +11100,6 @@
       "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
-    "@13powertoys": {
-      "goal": "Shortcut launcher for Microsoft PowerToys suite.",
-      "executable": "pwsh.exe",
-      "script": "SystemConfiguration/Source/@13-PowerToys.lnk",
-      "parameters": {},
-      "trampoline": "PowerToys.cmd",
-      "elevated": false,
-      "group": "SystemConfiguration",
-      "category": "System Personalization",
-      "audience": "User",
-      "role": "Customization",
-      "call_count": 0,
-      "last_called_at": null,
-      "last_duration_ms": 0.0,
-      "total_duration_ms": 0.0,
-      "is_primary_intent": false
-    },
     "powertoys": {
       "goal": "Shortcut launcher for Microsoft PowerToys suite.",
       "executable": "pwsh.exe",
@@ -11126,26 +11118,6 @@
       "is_primary_intent": false
     },
     "@15-ps7appkiller": {
-      "goal": "Terminates lingering or frozen background PowerShell 7 host processes.",
-      "executable": "pwsh.exe",
-      "script": "SystemConfiguration/Source/@15-PS7AppKiller.ps1",
-      "parameters": {
-        "-TraceMode": "{OPTIONAL}",
-        "-ShowAll": "{OPTIONAL}"
-      },
-      "trampoline": "PS7AppKiller.cmd",
-      "elevated": true,
-      "group": "SystemConfiguration",
-      "category": "Process Management",
-      "audience": "User",
-      "role": "Customization",
-      "call_count": 0,
-      "last_called_at": null,
-      "last_duration_ms": 0.0,
-      "total_duration_ms": 0.0,
-      "is_primary_intent": false
-    },
-    "@15ps7appkiller": {
       "goal": "Terminates lingering or frozen background PowerShell 7 host processes.",
       "executable": "pwsh.exe",
       "script": "SystemConfiguration/Source/@15-PS7AppKiller.ps1",
@@ -11202,23 +11174,6 @@
       "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
-    "@00regkeydefaulttypeset": {
-      "goal": "Configures default registry key types, associations, and type safety flags.",
-      "executable": "cmd.exe /c",
-      "script": "SystemConfiguration/Source/@00-RegKeyDefaultTypeSet.cmd",
-      "parameters": {},
-      "trampoline": "RegKeyDefaultTypeSet.cmd",
-      "elevated": true,
-      "group": "SystemConfiguration",
-      "category": "Registry Tweaks",
-      "audience": "User",
-      "role": "Customization",
-      "call_count": 0,
-      "last_called_at": null,
-      "last_duration_ms": 0.0,
-      "total_duration_ms": 0.0,
-      "is_primary_intent": false
-    },
     "regkeydefaulttypeset": {
       "goal": "Configures default registry key types, associations, and type safety flags.",
       "executable": "cmd.exe /c",
@@ -11253,23 +11208,6 @@
       "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
-    "@04removeremovabledriveicon": {
-      "goal": "Removes redundant removable drive duplicate icons from Explorer navigation tree.",
-      "executable": "pwsh.exe",
-      "script": "SystemConfiguration/Source/@04-Remove_Removable_Drive_Icon.reg",
-      "parameters": {},
-      "trampoline": "RemoveRemovableDriveIcon.cmd",
-      "elevated": true,
-      "group": "SystemConfiguration",
-      "category": "Explorer Tweaks",
-      "audience": "User",
-      "role": "Customization",
-      "call_count": 0,
-      "last_called_at": null,
-      "last_duration_ms": 0.0,
-      "total_duration_ms": 0.0,
-      "is_primary_intent": false
-    },
     "removeremovabledriveicon": {
       "goal": "Removes redundant removable drive duplicate icons from Explorer navigation tree.",
       "executable": "pwsh.exe",
@@ -11288,26 +11226,6 @@
       "is_primary_intent": false
     },
     "@14-securedesktopoff": {
-      "goal": "Disables UAC secure desktop dimming switch (PromptOnSecureDesktop=0) for automation workflows.",
-      "executable": "pwsh.exe",
-      "script": "SystemConfiguration/Source/@14-SecureDesktopOff.ps1",
-      "parameters": {
-        "-TraceMode": "{OPTIONAL}",
-        "-ShowAll": "{OPTIONAL}"
-      },
-      "trampoline": "SecureDesktopOff.cmd",
-      "elevated": true,
-      "group": "SystemConfiguration",
-      "category": "Security Tweaks",
-      "audience": "User",
-      "role": "Customization",
-      "call_count": 0,
-      "last_called_at": null,
-      "last_duration_ms": 0.0,
-      "total_duration_ms": 0.0,
-      "is_primary_intent": false
-    },
-    "@14securedesktopoff": {
       "goal": "Disables UAC secure desktop dimming switch (PromptOnSecureDesktop=0) for automation workflows.",
       "executable": "pwsh.exe",
       "script": "SystemConfiguration/Source/@14-SecureDesktopOff.ps1",
@@ -11367,26 +11285,6 @@
       "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
-    "@02setthedateandtimeformat(admsystemwide)": {
-      "goal": "Configures ISO-standard date/time format (yyyy-MM-dd HH:mm:ss) system-wide across all user profiles.",
-      "executable": "pwsh.exe",
-      "script": "SystemConfiguration/Source/@02-Set_the_date_and_time_format_(ADM_systemwide).ps1",
-      "parameters": {
-        "-TraceMode": "{OPTIONAL}",
-        "-ShowAll": "{OPTIONAL}"
-      },
-      "trampoline": "SetDateTimeFormatAdm.cmd",
-      "elevated": true,
-      "group": "SystemConfiguration",
-      "category": "Regional Settings",
-      "audience": "User",
-      "role": "Customization",
-      "call_count": 0,
-      "last_called_at": null,
-      "last_duration_ms": 0.0,
-      "total_duration_ms": 0.0,
-      "is_primary_intent": false
-    },
     "setdatetimeformatadm": {
       "goal": "Configures ISO-standard date/time format (yyyy-MM-dd HH:mm:ss) system-wide across all user profiles.",
       "executable": "pwsh.exe",
@@ -11408,23 +11306,6 @@
       "is_primary_intent": false
     },
     "@03-set_the_date_and_time_format_(hkcu_and_current)": {
-      "goal": "Applies ISO date/time format registry overrides for current user (HKCU).",
-      "executable": "pwsh.exe",
-      "script": "SystemConfiguration/Source/@03-Set_the_date_and_time_format_(HKCU_and_Current).reg",
-      "parameters": {},
-      "trampoline": "SetDateTimeFormatHkcu.cmd",
-      "elevated": false,
-      "group": "SystemConfiguration",
-      "category": "Regional Settings",
-      "audience": "User",
-      "role": "Customization",
-      "call_count": 0,
-      "last_called_at": null,
-      "last_duration_ms": 0.0,
-      "total_duration_ms": 0.0,
-      "is_primary_intent": false
-    },
-    "@03setthedateandtimeformat(hkcuandcurrent)": {
       "goal": "Applies ISO date/time format registry overrides for current user (HKCU).",
       "executable": "pwsh.exe",
       "script": "SystemConfiguration/Source/@03-Set_the_date_and_time_format_(HKCU_and_Current).reg",
@@ -11538,23 +11419,6 @@
       "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
-    "@00setsystemfontverdana": {
-      "goal": "Sets system UI font to Verdana across all Windows desktop interface elements.",
-      "executable": "pwsh.exe",
-      "script": "SystemConfiguration/Source/@00-Set_System_Font_Verdana.reg",
-      "parameters": {},
-      "trampoline": "SetSystemFontVerdana.cmd",
-      "elevated": true,
-      "group": "SystemConfiguration",
-      "category": "System Fonts",
-      "audience": "User",
-      "role": "Customization",
-      "call_count": 0,
-      "last_called_at": null,
-      "last_duration_ms": 0.0,
-      "total_duration_ms": 0.0,
-      "is_primary_intent": false
-    },
     "setsystemfontverdana": {
       "goal": "Sets system UI font to Verdana across all Windows desktop interface elements.",
       "executable": "pwsh.exe",
@@ -11589,23 +11453,6 @@
       "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
-    "@00setsystemfontverdanamedionpc": {
-      "goal": "Sets system UI font to Verdana (Medion PC hardware profile).",
-      "executable": "pwsh.exe",
-      "script": "SystemConfiguration/Source/@00-Set_System_Font_Verdana-MedionPC.reg",
-      "parameters": {},
-      "trampoline": "SetSystemFontVerdanaMedion.cmd",
-      "elevated": true,
-      "group": "SystemConfiguration",
-      "category": "System Fonts",
-      "audience": "User",
-      "role": "Customization",
-      "call_count": 0,
-      "last_called_at": null,
-      "last_duration_ms": 0.0,
-      "total_duration_ms": 0.0,
-      "is_primary_intent": false
-    },
     "setsystemfontverdanamedion": {
       "goal": "Sets system UI font to Verdana (Medion PC hardware profile).",
       "executable": "pwsh.exe",
@@ -11624,26 +11471,6 @@
       "is_primary_intent": false
     },
     "@18-shellnewps1": {
-      "goal": "Registers PowerShell (.ps1) script creation entry in Windows Explorer 'New' context menu.",
-      "executable": "pwsh.exe",
-      "script": "SystemConfiguration/Source/@18-ShellNewPS1.ps1",
-      "parameters": {
-        "-TraceMode": "{OPTIONAL}",
-        "-ShowAll": "{OPTIONAL}"
-      },
-      "trampoline": "ShellNewPS1.cmd",
-      "elevated": true,
-      "group": "SystemConfiguration",
-      "category": "Explorer Tweaks",
-      "audience": "User",
-      "role": "Customization",
-      "call_count": 0,
-      "last_called_at": null,
-      "last_duration_ms": 0.0,
-      "total_duration_ms": 0.0,
-      "is_primary_intent": false
-    },
-    "@18shellnewps1": {
       "goal": "Registers PowerShell (.ps1) script creation entry in Windows Explorer 'New' context menu.",
       "executable": "pwsh.exe",
       "script": "SystemConfiguration/Source/@18-ShellNewPS1.ps1",
@@ -11700,23 +11527,6 @@
       "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
-    "@00skiptpmcheckondynamicupdate": {
-      "goal": "Applies bypass registry keys for TPM and CPU compatibility checks during dynamic updates.",
-      "executable": "cmd.exe /c",
-      "script": "SystemConfiguration/Source/@00-Skip_TPM_Check_on_Dynamic_Update.cmd",
-      "parameters": {},
-      "trampoline": "SkipTpmCheckDynamicUpdate.cmd",
-      "elevated": true,
-      "group": "SystemConfiguration",
-      "category": "System Setup",
-      "audience": "User",
-      "role": "Customization",
-      "call_count": 0,
-      "last_called_at": null,
-      "last_duration_ms": 0.0,
-      "total_duration_ms": 0.0,
-      "is_primary_intent": false
-    },
     "skiptpmcheckdynamicupdate": {
       "goal": "Applies bypass registry keys for TPM and CPU compatibility checks during dynamic updates.",
       "executable": "cmd.exe /c",
@@ -11751,23 +11561,6 @@
       "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
-    "@09usestylefolderforfoldercomments": {
-      "goal": "Instruction guide for configuring desktop.ini folder comments via Stylefolder.",
-      "executable": "pwsh.exe",
-      "script": "SystemConfiguration/Source/@09-Use_Stylefolder_for_Folder_Comments.txt",
-      "parameters": {},
-      "trampoline": "StylefolderCommentsGuide.cmd",
-      "elevated": false,
-      "group": "SystemConfiguration",
-      "category": "Explorer Tweaks",
-      "audience": "User",
-      "role": "Customization",
-      "call_count": 0,
-      "last_called_at": null,
-      "last_duration_ms": 0.0,
-      "total_duration_ms": 0.0,
-      "is_primary_intent": false
-    },
     "stylefoldercommentsguide": {
       "goal": "Instruction guide for configuring desktop.ini folder comments via Stylefolder.",
       "executable": "pwsh.exe",
@@ -11786,23 +11579,6 @@
       "is_primary_intent": false
     },
     "@21-desktopsubfolderslauncher": {
-      "goal": "Launches master customization applicator with optional trace, pause, and hidden parameters.",
-      "executable": "cmd.exe /c",
-      "script": "SystemConfiguration/Source/@21-DesktopSubFoldersLauncher.cmd",
-      "parameters": {},
-      "trampoline": "SystemConfigurationDesktopSubFoldersLauncher.cmd",
-      "elevated": true,
-      "group": "SystemConfiguration",
-      "category": "Desktop Personalization",
-      "audience": "User",
-      "role": "Customization",
-      "call_count": 0,
-      "last_called_at": null,
-      "last_duration_ms": 0.0,
-      "total_duration_ms": 0.0,
-      "is_primary_intent": false
-    },
-    "@21desktopsubfolderslauncher": {
       "goal": "Launches master customization applicator with optional trace, pause, and hidden parameters.",
       "executable": "cmd.exe /c",
       "script": "SystemConfiguration/Source/@21-DesktopSubFoldersLauncher.cmd",
@@ -11876,23 +11652,6 @@
       "total_duration_ms": 0.0,
       "is_primary_intent": false
     },
-    "@08winsetview": {
-      "goal": "Shortcut launcher for WinSetView folder view preferences customizer.",
-      "executable": "pwsh.exe",
-      "script": "SystemConfiguration/Source/@08-WinSetView.lnk",
-      "parameters": {},
-      "trampoline": "WinSetView.cmd",
-      "elevated": false,
-      "group": "SystemConfiguration",
-      "category": "Explorer Tweaks",
-      "audience": "User",
-      "role": "Customization",
-      "call_count": 0,
-      "last_called_at": null,
-      "last_duration_ms": 0.0,
-      "total_duration_ms": 0.0,
-      "is_primary_intent": false
-    },
     "winsetview": {
       "goal": "Shortcut launcher for WinSetView folder view preferences customizer.",
       "executable": "pwsh.exe",
@@ -11945,26 +11704,6 @@
       "is_primary_intent": false
     },
     "@22-fixmouseflickerinvariants": {
-      "goal": "Enforces AMD Radeon RX 580 ULPS disabled, DWM MPO OverlayTestMode=5, and PowerToys hook locks.",
-      "executable": "pwsh.exe",
-      "script": "SystemConfiguration/Source/@22-FixMouseFlickerInvariants.ps1",
-      "parameters": {
-        "-TraceMode": "{OPTIONAL}",
-        "-ShowAll": "{OPTIONAL}"
-      },
-      "trampoline": "FixMouseFlickerInvariants.cmd",
-      "elevated": true,
-      "group": "SystemConfiguration",
-      "category": "Hardware Stability",
-      "audience": "User",
-      "role": "Invariants",
-      "call_count": 0,
-      "last_called_at": null,
-      "last_duration_ms": 0.0,
-      "total_duration_ms": 0.0,
-      "is_primary_intent": false
-    },
-    "@22fixmouseflickerinvariants": {
       "goal": "Enforces AMD Radeon RX 580 ULPS disabled, DWM MPO OverlayTestMode=5, and PowerToys hook locks.",
       "executable": "pwsh.exe",
       "script": "SystemConfiguration/Source/@22-FixMouseFlickerInvariants.ps1",
@@ -12125,26 +11864,6 @@
       "is_primary_intent": false
     },
     "@20-killlogitechupdatefull": {
-      "goal": "Enforces 54/54 Logitech updater suppressions across scheduled tasks, registry run keys, and services.",
-      "executable": "pwsh.exe",
-      "script": "SystemConfiguration/Source/@20-KillLogitechUpdateFull.ps1",
-      "parameters": {
-        "-TraceMode": "{OPTIONAL}",
-        "-ShowAll": "{OPTIONAL}"
-      },
-      "trampoline": "SystemConfigurationKillLogitechUpdateFull.cmd",
-      "elevated": true,
-      "group": "SystemConfiguration",
-      "category": "Hardware Stability",
-      "audience": "User",
-      "role": "Invariants",
-      "call_count": 0,
-      "last_called_at": null,
-      "last_duration_ms": 0.0,
-      "total_duration_ms": 0.0,
-      "is_primary_intent": false
-    },
-    "@20killlogitechupdatefull": {
       "goal": "Enforces 54/54 Logitech updater suppressions across scheduled tasks, registry run keys, and services.",
       "executable": "pwsh.exe",
       "script": "SystemConfiguration/Source/@20-KillLogitechUpdateFull.ps1",
@@ -12344,23 +12063,6 @@
       "is_primary_intent": false
     },
     "@06-configureeasycontextmenu": {
-      "goal": "@06-ConfigureEasyContextMenu execution tool.",
-      "executable": "pwsh.exe",
-      "script": "SystemConfiguration/Source/@06-ConfigureEasyContextMenu.lnk",
-      "parameters": {},
-      "trampoline": "ConfigureEasyContextMenu.cmd",
-      "elevated": false,
-      "group": "SystemConfiguration",
-      "category": "Utility",
-      "audience": "Developer",
-      "role": "Utility",
-      "call_count": 0,
-      "last_called_at": null,
-      "last_duration_ms": 0.0,
-      "total_duration_ms": 0.0,
-      "is_primary_intent": false
-    },
-    "@06configureeasycontextmenu": {
       "goal": "@06-ConfigureEasyContextMenu execution tool.",
       "executable": "pwsh.exe",
       "script": "SystemConfiguration/Source/@06-ConfigureEasyContextMenu.lnk",
@@ -13623,23 +13325,6 @@
       "is_primary_intent": false
     },
     "@12-winaerotweaker": {
-      "goal": "@12-WinaeroTweaker execution tool.",
-      "executable": "pwsh.exe",
-      "script": "SystemConfiguration/Source/@12-WinaeroTweaker.lnk",
-      "parameters": {},
-      "trampoline": "WinaeroTweaker.cmd",
-      "elevated": false,
-      "group": "SystemConfiguration",
-      "category": "Utility",
-      "audience": "Developer",
-      "role": "Utility",
-      "call_count": 0,
-      "last_called_at": null,
-      "last_duration_ms": 0.0,
-      "total_duration_ms": 0.0,
-      "is_primary_intent": false
-    },
-    "@12winaerotweaker": {
       "goal": "@12-WinaeroTweaker execution tool.",
       "executable": "pwsh.exe",
       "script": "SystemConfiguration/Source/@12-WinaeroTweaker.lnk",

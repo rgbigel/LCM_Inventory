@@ -11,7 +11,7 @@
 #>
 [CmdletBinding()]
 param(
-  [ValidateSet('tools','rules','inventory','hub','dates')][string]$DisplayId,
+  [ValidateSet('tools','rules','inventory','hub','dates','tool_intents','intents')][string]$DisplayId,
   [string]$LogPath,
   [switch]$ShowAll,
   [Alias('h','?')][switch]$Help

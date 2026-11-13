@@ -240,15 +240,48 @@ $catalog = @($catalog | Where-Object {
     $_.ShortName -notin @('ToolsExplorer', 'ToolExplorer')
 })
 
-# 1. Sort catalog by ShortName (falling back to Name)
-$sortedCatalog = @($catalog | Sort-Object {
+# 1. Partition into @00- catch-all items, @nn- sequential items, and standard tools
+$at00Tools = @($catalog | Where-Object { $_.Name -like '@00-*' } | Sort-Object Name)
+$atSeqTools = @($catalog | Where-Object { $_.Name -match '^@(\d+)-' -and $_.Name -notlike '@00-*' } | Sort-Object {
+    if ($_.Name -match '^@(\d+)-') { [int]$Matches[1] } else { 9999 }
+})
+$otherTools = @($catalog | Where-Object { $_.Name -notmatch '^@\d+-' } | Sort-Object {
     if (-not [string]::IsNullOrWhiteSpace($_.ShortName)) { $_.ShortName } else { $_.Name }
 })
-# 2. Assign static, monotonic 1..N index to each tool
-for ($i = 0; $i -lt $sortedCatalog.Count; $i++) {
-    $seq = $i + 1
-    $sortedCatalog[$i] | Add-Member -MemberType NoteProperty -Name 'Index' -Value $seq -Force
+
+# 2. Assign negative numeric indexes to @00- catch-all items: -count .. -1
+$totalAt00 = $at00Tools.Count
+for ($i = 0; $i -lt $totalAt00; $i++) {
+    $negSeq = -($totalAt00 - $i)
+    $at00Tools[$i] | Add-Member -MemberType NoteProperty -Name 'Index' -Value $negSeq -Force
 }
+
+# 3. Assign positive numeric indexes to @nn- sequential items matching their step number
+$maxSeq = 0
+for ($i = 0; $i -lt $atSeqTools.Count; $i++) {
+    $stepNum = if ($atSeqTools[$i].Name -match '^@(\d+)-') { [int]$Matches[1] } else { $i + 1 }
+    $atSeqTools[$i] | Add-Member -MemberType NoteProperty -Name 'Index' -Value $stepNum -Force
+    if ($stepNum -gt $maxSeq) { $maxSeq = $stepNum }
+}
+
+# 4. Partition remaining tools into User (1000s) and Developer/Plumbing (2000s)
+$userTools = @($otherTools | Where-Object { $_.Audience -eq 'User' })
+$devTools  = @($otherTools | Where-Object { $_.Audience -ne 'User' })
+
+$userSeq = 1001
+for ($i = 0; $i -lt $userTools.Count; $i++) {
+    $userTools[$i] | Add-Member -MemberType NoteProperty -Name 'Index' -Value $userSeq -Force
+    $userSeq++
+}
+
+$devSeq = 2001
+for ($i = 0; $i -lt $devTools.Count; $i++) {
+    $devTools[$i] | Add-Member -MemberType NoteProperty -Name 'Index' -Value $devSeq -Force
+    $devSeq++
+}
+
+# 5. Composite ordered catalog: negative catch-all (-4..-1), sequential run (1..22), user tools (1001..), dev tools (2001..)
+$sortedCatalog = @($at00Tools + $atSeqTools + $userTools + $devTools)
 $catalog = $sortedCatalog
 $rawJson = $sortedCatalog | ConvertTo-Json -Depth 10
 
@@ -270,7 +303,6 @@ if ($NoBrowser) {
 # ------------------------------------------------------------------------------
 # 5. Generate Interactive HTML Dashboard
 # ------------------------------------------------------------------------------
-$targetSubsystem = if ($Group -ne 'All') { $Group } else { 'LCM' }
 $generatedHtmlPath = Build-LcmToolIndexHtml `
   -RawJson $rawJson `
   -Catalog $catalog `
@@ -282,7 +314,6 @@ $generatedHtmlPath = Build-LcmToolIndexHtml `
   -Tool $Tool `
   -Env $Env `
   -Filter $Filter `
-  -Subsystem $targetSubsystem `
   -Version $scriptVersion
 
 Write-ToolLog -Message "Interactive HTML dashboard generated: $generatedHtmlPath" -Level ACTION
