@@ -142,6 +142,26 @@ if (-not [string]::IsNullOrWhiteSpace($lastPushStr)) {
     }
 }
 
+# --- 1a. Multi-Host Session Registry (RULE-LCM-030) --------------------------
+$sessionFile = Join-Path $agentsDir 'ACTIVE_SESSION.md'
+if (Test-Path -LiteralPath $sessionFile) {
+    $sessRaw = [System.IO.File]::ReadAllText($sessionFile)
+    Write-Host "`n[HOST SESSIONS] Registered AI Host Statuses (ACTIVE_SESSION.md)" -ForegroundColor Yellow
+    $hostMatches = [regex]::Matches($sessRaw, '(?ms)### Host:\s*([^\r\n]+)\r?\n-\s*\*\*Status\*\*:\s*([^\r\n]+)\r?\n-\s*\*\*(?:Conversation|Session) ID\*\*:\s*([^\r\n]+)\r?\n-\s*\*\*Last Activity\*\*:\s*([^\r\n]+)\r?\n(?:-\s*\*\*Current Task\*\*:\s*([^\r\n]+)\r?\n)?-\s*\*\*Next Step\*\*:\s*([^\r\n]+)')
+    foreach ($hm in $hostMatches) {
+        $hName = $hm.Groups[1].Value.Trim()
+        $hStat = $hm.Groups[2].Value.Trim()
+        $hLast = $hm.Groups[4].Value.Trim()
+        $hNext = $hm.Groups[6].Value.Trim()
+        $hGap = try {
+            $ht = [datetime]::Parse($hLast)
+            '{0:N1} h ago' -f ($now - $ht).TotalHours
+        } catch { 'unknown' }
+        Write-Host ("  * {0,-20}: [{1}] (Last: {2}, {3})" -f $hName, $hStat, $hLast, $hGap) -ForegroundColor Cyan
+        Write-Host ("    Next: {0}" -f $hNext) -ForegroundColor Gray
+    }
+}
+
 # --- 1b. Baseline Telemetry (Unconditional) -----------------------------------
 Write-Host "`n[BASELINE] Macrium BCR baseline telemetry & physical mount" -ForegroundColor Yellow
 $baselineState = if (Get-Command -Name Get-MacriumBaselineState -ErrorAction SilentlyContinue) {

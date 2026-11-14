@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-11-14T17:41:19+01:00",
+  "updated_at": "2026-11-14T21:17:07+01:00",
   "review_granularity": "tight",
   "lcm_mode": "active",
-  "last_proposal_id": 330,
+  "last_proposal_id": 331,
   "proposals": [
     {
       "id": 261,
@@ -18140,6 +18140,60 @@
       "progress_state": "pushed",
       "disposition": "published",
       "pushed_at": "2026-11-14 17:41:07"
+    },
+    {
+      "id": 331,
+      "crp_id": "CRP-331",
+      "lcm_version": "10.6.4",
+      "timestamp": "2026-11-14 19:40:52",
+      "title": "Claude Re-ingestion Findings and Rule Harmonization (Baseline 2bebbaa)",
+      "origin_repo": "LCM_AI",
+      "cr_id": "CRP-331",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": [],
+      "state": "in_progress",
+      "bundle_id": "CRP-331",
+      "bundle_dir": "docs/Proposals/CRP-331-Claude-Reingestion-Rule-Harmonization-Findings",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": null,
+        "walkthrough": null
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "Rolf, Claude",
+      "details": "Findings and change recommendations from Claude's re-ingestion of the canonical LCM rules at LCM_AI 2bebbaa, addressed to Antigravity for analysis and joint design of the corrections.",
+      "priority": 9,
+      "flow_mode": "standard",
+      "always_proceed": false,
+      "plan_path": null,
+      "walkthrough_path": null,
+      "dates": {
+        "created": "2026-11-14 19:40:52",
+        "suggested": "2026-11-14 19:40:52",
+        "in_progress": "2026-11-14 21:17:07"
+      },
+      "state_history": [
+        {
+          "state": "suggested",
+          "timestamp": "2026-11-14 19:40:52",
+          "user": "Claude",
+          "note": "Created by Claude with operator authorization (Option B, 2026-11-14)."
+        },
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-11-14 21:17:07",
+          "user": "rgbig",
+          "note": "Gate 1 Acceptance: Specification accepted by operator",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "progress_state": "in_progress",
+      "disposition": null
     }
   ],
   "testing_mode": "active",

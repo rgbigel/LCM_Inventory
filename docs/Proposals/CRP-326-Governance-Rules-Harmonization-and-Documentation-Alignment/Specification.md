@@ -222,6 +222,12 @@ F-17 (version increment semantics) is folded into Item 2 above.
 - **`AGENTS.md` & `LCM-Rules-Cross-Reference.md`**: Restructured Master Cross-Reference Table to mirror the 3 tiers (`process/`, `quality/`, `lang/`), cataloging all 21 rule files.
 - **`CLAUDE.md`**: Synchronized to SemVer `10.3.0` and Tri-Tier architecture.
 
+### 6.3 Reconciliation & Re-Ingestion Corrections (CRP-331)
+- **Version Baseline Parity**: `version.json` verified at `10.6.4` reflecting subsequent release iterations.
+- **Config.json Correction**: References to phantom `config.json` in `RULE-CTX-002`, `RULE-ELEV-001/003/004`, `RULE-SUB-001/003`, and `RULE-DOC-005.4` purged in favor of `.agents/rules/`, repo `docs/`, `data/inventory.json`, and `data/tools/tools.db` (`tools.admin`).
+- **Lifecycle Vocabulary & State Table (Item 4 / F-20)**: Reconciled across `ProposalReviewFlowPolicy.md`, `ReviewCommitGovernancePolicy.md`, and `DisplayStandardsPolicy.md` to use the authoritative flat states: `suggested`, `in_progress`, `verified`, `in_review`, `completed`, `pushed`, `held`, `withdrawn`, `rejected`, `superseded`.
+- **Database Authority (Item 5 / F-46)**: Replaced `proposals.json` direct authority with SQLite `proposals.db` accessed via governed tools, with JSON as transitional fallback.
+
 
 
 
