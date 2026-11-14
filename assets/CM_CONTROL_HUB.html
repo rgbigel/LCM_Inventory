@@ -1568,6 +1568,29 @@
     </div>
   </div>
 
+  <!-- High-Visibility Error & Lifecycle Failure Modal -->
+  <div class="modal" id="errorModal">
+    <div class="modal-card" style="max-width: 860px; border-color: var(--red); box-shadow: 0 20px 60px rgba(220, 38, 38, 0.25);">
+      <div class="modal-head" style="background: rgba(248, 81, 73, 0.12); border-bottom: 2px solid var(--red);">
+        <strong id="errorModalTitle" style="color: var(--red); font-size: 15px; display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 18px;">🚨</span> <span id="errorModalHeadingText">ERROR — Action Execution Failed</span>
+        </strong>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <button class="top-button" id="btnCopyErrorModal" onclick="copyErrorModalText()" style="color: var(--red); border-color: var(--red); font-weight: 600;" title="Copy error details to clipboard">📋 Copy Error</button>
+          <button class="mini-action" onclick="closeModal('errorModal')" title="Close">✕</button>
+        </div>
+      </div>
+      <div class="modal-body" style="padding: 16px 18px;">
+        <div id="errorModalBanner" style="margin-bottom: 12px; padding: 10px 14px; border-radius: 6px; background: var(--red-soft); border: 1px solid var(--red); color: var(--red); font-size: 12.5px; font-weight: 600;"></div>
+        <pre id="errorModalBody" style="font-family: var(--mono); font-size: 11.5px; line-height: 1.5; white-space: pre-wrap; word-break: break-word; background: #0d1117; color: #f0f6fc; padding: 14px; border-radius: 6px; border: 1px solid #30363d; max-height: 380px; overflow-y: auto; user-select: text; margin: 0;"></pre>
+      </div>
+      <div class="modal-footer" style="background: var(--surface-soft);">
+        <span id="errorModalHint" style="margin-right: auto; font-size: 11.5px; color: var(--muted); display: flex; align-items: center; gap: 6px;">ℹ️ This dialog remains open until explicitly dismissed.</span>
+        <button class="modal-btn modal-btn-cancel" onclick="closeModal('errorModal')">Close</button>
+      </div>
+    </div>
+  </div>
+
   <!-- LCM Execution Busy Overlay -->
   <div id="lcmBusyOverlay" class="busy-overlay" style="display: none;">
     <div class="busy-card">
@@ -2006,6 +2029,25 @@
       actionSelect.disabled = !target;
       actionSelect.options[0].text = target ? `Actions for ${getTargetActionLabel(target)}` : "Select ITEM first";
       label.innerText = target ? `ACTIONS: ${target.kind}` : "ACTIONS:";
+      if (!target || target.kind !== "CRP") {
+        for (let i = 1; i < actionSelect.options.length; i++) actionSelect.options[i].disabled = false;
+        return;
+      }
+      const state = getLifecycleState(target.item);
+      for (let i = 1; i < actionSelect.options.length; i++) {
+        const opt = actionSelect.options[i];
+        const val = opt.value;
+        if (val === "show_spec") { opt.disabled = false; continue; }
+        if (state === "completed" || state === "pushed") {
+          opt.disabled = ["advance", "complete", "do", "proceed", "verify", "bcr", "reopen"].includes(val);
+        } else if (state === "suggested") {
+          opt.disabled = ["complete", "verify", "bcr", "reopen", "push"].includes(val);
+        } else if (state === "held") {
+          opt.disabled = ["complete", "push"].includes(val);
+        } else {
+          opt.disabled = false;
+        }
+      }
     }
 
     function dispatchSelectedItemMenuAction(action) {
@@ -2146,6 +2188,21 @@
           return;
         }
       }
+      if (target.kind === "CRP") {
+        const state = getLifecycleState(target.item);
+        if (action === "advance" && ["completed", "pushed", "withdrawn", "rejected", "superseded"].includes(state)) {
+          showErrorModal("Advance Not Allowed", `Proposal #${target.item.id} is currently in state '${state.toUpperCase()}'.\n\nAdvancing is only valid for active lifecycle states (suggested, in_progress, verified, in_review, held).\n- To publish completed changes: use 'Push ITEM'.\n- To reopen for further edits: use 'Reinstate Revision'.`);
+          return;
+        }
+        if (action === "reopen" && state !== "held") {
+          showErrorModal("Reopen Not Allowed", `Proposal #${target.item.id} is currently in state '${state.toUpperCase()}'.\n\n'Reopen' applies only to proposals that are currently HELD.\n${state === "suggested" ? "• For a SUGGESTED proposal: use 'Do / Start ITEM' or 'Accept ITEM (Gate 1)' to start implementation." : state === "completed" ? "• For a COMPLETED proposal: use 'Reinstate Revision' to reopen." : ""}`);
+          return;
+        }
+        if (action === "complete" && ["suggested", "completed", "pushed"].includes(state)) {
+          showErrorModal("Complete Not Allowed", `Proposal #${target.item.id} cannot be completed from state '${state.toUpperCase()}'.\n\n${state === "completed" ? "This proposal is ALREADY completed." : "Proposals must pass Gate 1 acceptance, implementation, and review before completion."}`);
+          return;
+        }
+      }
       const expression = target.kind === "COH" ? target.item.id : String(target.item.id);
       const targetLabel = getTargetActionLabel(target);
       const effectiveAction = target.kind === "COH" && target.item.synthetic && ["do", "proceed"].includes(action)
@@ -2183,7 +2240,7 @@
     function openTargetActionModal(action) {
       const target = getActiveItemTarget();
       if (!target || target.kind !== "CRP") {
-        alert("FIX and terminal actions require one explicit CRP ITEM target.");
+        showErrorModal("Target Required", "FIX and terminal actions require one explicit CRP ITEM target.");
         return;
       }
       pendingTargetAction = action;
@@ -2213,8 +2270,8 @@
       const reason = $("targetActionReason").value.trim();
       const successor = $("targetActionSuccessorId").value.trim();
       const changes = $("targetActionChanges").value.trim();
-      if (["immediately", "retire"].includes(action) && !reason) { alert(`${action} requires a documented reason.`); return; }
-      if (action === "supersede" && (!/^\d+$/.test(successor) || Number(successor) === Number(target.item.id))) { alert("Supersede requires a distinct numeric successor CRP ID."); return; }
+      if (["immediately", "retire"].includes(action) && !reason) { showErrorModal("Reason Required", `${action.toUpperCase()} requires a documented reason.`); return; }
+      if (action === "supersede" && (!/^\d+$/.test(successor) || Number(successor) === Number(target.item.id))) { showErrorModal("Successor ID Required", "Supersede requires a distinct numeric successor CRP ID."); return; }
       closeModal("targetActionModal");
       pendingTargetAction = "";
       const id = target.item.id;
@@ -2319,7 +2376,10 @@
       const target = getActiveItemTarget();
       if (!target || target.kind !== "COH") return;
       const ids = (target.item.proposal_ids || []).map(Number);
-      if (action === "preview") { alert(`${target.item.id} preview\nHead / prime: #${target.item.prime_proposal_id || ids[0]}\nMembers (including head): ${ids.map(id => "#" + id).join(", ")}\nChanges remain atomic and use ProposalManager validation.`); return; }
+      if (action === "preview") {
+        showDocumentModal(`${target.item.id} Preview`, `Head / prime: #${target.item.prime_proposal_id || ids[0]}\nMembers (including head): ${ids.map(id => "#" + id).join(", ")}\nChanges remain atomic and use ProposalManager validation.`);
+        return;
+      }
       if (action !== "close") {
         openCohortMembershipModal(action, target.item.id);
         return;
@@ -2478,7 +2538,7 @@
     function manageReviewCohort(action) {
       const ids = Array.from(selectedIds);
       if (!["close", "hold", "reopen"].includes(action) && ids.length === 0) {
-        alert("Select proposal members first. For Create, select the prime proposal first; it determines the COH-nnn identity.");
+        showErrorModal("Selection Required", "Select proposal members first. For Create, select the prime proposal first; it determines the COH-nnn identity.");
         return;
       }
       const selected = ids.join(",");
@@ -2898,6 +2958,7 @@
                 }
                 ${lifecycleButton("Complete ITEM", "🏁", ["in_progress", "verified", "in_review"].includes(lifecycleState), "dispatchTargetAction('complete')")}
                 ${lifecycleButton("ReOpen ITEM", "↩️", lifecycleState === "held", "dispatchTargetAction('reopen')")}
+                ${["completed", "pushed"].includes(lifecycleState) ? lifecycleButton("Reinstate Revision", "↻", true, "openTargetActionModal('reinstate')") : ""}
                 ${lifecycleButton("Hold ITEM", "⏸️", !["completed", "pushed", "held", "withdrawn", "rejected", "superseded"].includes(lifecycleState), "dispatchTargetAction('hold')")}
                 <div style="border-top: 1px solid var(--line); margin: 4px 0;"></div>
                 <div class="show-dropdown-title">Cohort Head / Member Management</div>
@@ -3598,7 +3659,7 @@
           }
           renderSelectionPanel();
         } else {
-          alert("Please select at least one proposal from the table first.");
+          showErrorModal("Selection Required", "Please select at least one proposal from the table first.");
           return;
         }
       }
@@ -3696,7 +3757,7 @@
       }
 
       if (["reviewed", "complete"].includes(action) && ids.length !== 1) {
-        alert(`${action.toUpperCase()} requires exactly one proposal. Select one proposal and try again.`);
+        showErrorModal("Target Ambiguity", `${action.toUpperCase()} requires exactly one proposal. Select one proposal and try again.`);
         return;
       }
 
@@ -3816,7 +3877,7 @@
       isCommandExecuting = false;
       currentActiveAbortController = null;
       hideBusyIndicator();
-      alert("Execution aborted by operator.");
+      setActionResult("Execution aborted by operator.", "error", "ABORT");
       await refreshHubData();
     }
 
@@ -3941,7 +4002,7 @@
         return;
       }
       if (isCommandExecuting) {
-        alert("Another operation is already running. Click 'Abort' on the busy overlay if you wish to cancel it.");
+        showErrorModal("Operation in Progress", "Another operation is already running. Click 'Abort' on the busy overlay if you wish to cancel it.");
         return;
       }
       isCommandExecuting = true;
@@ -3973,9 +4034,9 @@
           hideBusyIndicator();
           const rawError = data.error || data.stderr || (data.stdout ? data.stdout : "Command exited with code " + data.exitCode);
           const errMsg = formatDaemonError(rawError);
-          await refreshHubData();
           setActionResult(errMsg, "error", actionLabel);
-          alert("Execution error:\n" + errMsg);
+          showErrorModal(`ERROR — ${actionLabel || "Action"} Failed`, errMsg, rawError);
+          refreshHubData().catch(() => {});
           return;
         }
         // Re-query data and update view
@@ -3999,7 +4060,7 @@
           return;
         }
         setActionResult("Daemon connection failed: " + err.message, "error", actionLabel);
-        alert("Failed to connect to REST Daemon on Port 9876: " + err.message);
+        showErrorModal("ERROR — Daemon Connection Failed", "Failed to connect to REST Daemon on Port 9876:\n" + err.message, err.stack || err.message);
       }
     }
 
@@ -4400,6 +4461,32 @@ REST DAEMON BRIDGE:
     function closeModal(id) {
       const el = $(id);
       if (el) el.classList.remove("open");
+    }
+
+    function showErrorModal(title, message, rawDetails = "") {
+      const modal = $("errorModal");
+      if (!modal) {
+        alert(title + "\n\n" + message);
+        return;
+      }
+      $("errorModalHeadingText").innerText = title || "ERROR — Action Failed";
+      const firstLine = (message || "").split("\n")[0] || "Action encountered an error.";
+      $("errorModalBanner").innerText = firstLine;
+      $("errorModalBody").innerText = message || rawDetails || "(No error output received)";
+      openModal("errorModal");
+    }
+
+    function copyErrorModalText() {
+      const text = $("errorModalBody")?.innerText || "";
+      if (text) {
+        navigator.clipboard.writeText(text).then(() => {
+          const btn = $("btnCopyErrorModal");
+          if (btn) {
+            btn.innerText = "✓ Copied";
+            setTimeout(() => { btn.innerText = "📋 Copy Error"; }, 2000);
+          }
+        }).catch(() => {});
+      }
     }
 
     function showToast(message, kind = "") {

@@ -779,6 +779,9 @@ public static class LcmMacriumMouse
     # Resilient UI Automation Fallback (only used when AHK atom is not installed)
     # candidateProcessIds tracked for BUG-299 process enumeration
     $candidateProcessIds = @(Get-Process -Name 'ReflectBin' -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Id)
+    if ($candidateProcessIds.Count -gt 0) {
+      Write-BaselineLog -Level INFO -Message "Enumerated existing ReflectBin process PID(s): $($candidateProcessIds -join ', ')."
+    }
     $deadline = (Get-Date).AddSeconds($MountTimeoutSeconds)
     $dialog = $null
     while ((Get-Date) -lt $deadline -and $null -eq $dialog) {

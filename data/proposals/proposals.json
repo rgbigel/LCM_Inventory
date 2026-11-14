@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-11-13 21:28:31",
+  "updated_at": "2026-11-14T17:37:46+01:00",
   "review_granularity": "tight",
   "lcm_mode": "active",
-  "last_proposal_id": 326,
+  "last_proposal_id": 330,
   "proposals": [
     {
       "id": 261,
@@ -567,7 +567,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "in_progress",
+      "state": "completed",
       "bundle_id": "CRP-252",
       "bundle_dir": "docs/Proposals/CRP-252-LEV-Model-Adaptation-Prototype-and-Evidence-Replay",
       "docs": {
@@ -585,7 +585,10 @@
       "dates": {
         "created": "2026-10-13 16:14:00",
         "suggested": "2026-10-13 16:14:00",
-        "in_progress": "2026-11-12 08:49:19"
+        "in_progress": "2026-11-12 08:49:19",
+        "verified": "2026-11-14 13:41:01",
+        "in_review": "2026-11-14 13:46:29",
+        "completed": "2026-11-14 13:46:36"
       },
       "state_history": [
         {
@@ -603,13 +606,48 @@
           "cohort_id": "",
           "cohort_gate": "",
           "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-11-14 13:41:01",
+          "user": "rgbig",
+          "note": "Advanced to verified by operator",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-11-14 13:46:29",
+          "user": "rgbig",
+          "note": "Auto-transitioned to in_review for Gate 2 acceptance",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_review",
+          "state": "completed",
+          "timestamp": "2026-11-14 13:46:36",
+          "user": "rgbig",
+          "note": "Review completed and committed (3780268).",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
-      "progress_state": "in_progress",
-      "disposition": null,
       "flow_mode": "doit",
       "always_proceed": true,
-      "lcm_version": "10.2.1"
+      "lcm_version": "10.2.1",
+      "bcr_disposition": "Completed",
+      "bcr_disposition_at": "2026-11-14 13:46:35",
+      "bcr_disposition_notes": "Gate 2 Acceptance: Operator accepted item",
+      "progress_state": "completed",
+      "disposition": "completed",
+      "test_scope": "minimal",
+      "minimal_tests": true
     },
     {
       "id": 251,
@@ -11314,21 +11352,81 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": [],
-      "state": "held",
+      "state": "completed",
       "bundle_id": "CRP-218",
       "bundle_dir": "docs/Proposals/CRP-218-Diagnostic-Triage-Protocol-for-UI-to-Daemon-Execution",
       "commit_sha": null,
       "github_url": null,
       "author": "rgbig",
       "details": "Diagnostic Triage Protocol for UI-to-Daemon Execution | DEMOTED to held: Zero implementation artifacts exist; unstarted Gate 1 proposal stub. Demoted to held pending explicit design scheduling.",
-      "progress_state": "blocked",
       "flow_mode": "standard",
       "always_proceed": false,
-      "disposition": "held",
       "priority": 8,
       "lcm_version": "10.1.0",
-      "dates": {},
-      "state_history": []
+      "dates": {
+        "suggested": "2026-11-14 13:56:16",
+        "in_progress": "2026-11-14 17:37:29",
+        "verified": "2026-11-14 17:37:33",
+        "in_review": "2026-11-14 17:37:38",
+        "completed": "2026-11-14 17:37:46"
+      },
+      "state_history": [
+        {
+          "from_state": "held",
+          "state": "suggested",
+          "timestamp": "2026-11-14 13:56:16",
+          "user": "rgbig",
+          "note": "",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-11-14 17:37:29",
+          "user": "rgbig",
+          "note": "Gate 1 Acceptance: Specification accepted by operator",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-11-14 17:37:33",
+          "user": "rgbig",
+          "note": "Advanced to verified by operator",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-11-14 17:37:38",
+          "user": "rgbig",
+          "note": "Advanced to in_review by operator",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_review",
+          "state": "completed",
+          "timestamp": "2026-11-14 17:37:46",
+          "user": "rgbig",
+          "note": "Review completed and committed (e8d3a0d).",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "bcr_disposition": "Completed",
+      "bcr_disposition_at": "2026-11-14 17:37:45",
+      "bcr_disposition_notes": "",
+      "progress_state": "completed",
+      "disposition": "completed"
     },
     {
       "id": 219,
@@ -13442,8 +13540,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
-      "progress_state": "completed",
+      "state": "pushed",
       "bundle_id": "CRP-281",
       "bundle_dir": "docs/Proposals/CRP-281-Primary-Evidence-Based-Workspace-Readiness-and-Pas",
       "docs": {
@@ -13456,12 +13553,29 @@
       "author": "rgbig",
       "details": "Design and implement a scoped evidence-based readiness model for documentation, rules, flow, and implementation detail; use it as the primary internal progress authority while broad legacy checks operate passively.",
       "priority": 5,
-      "disposition": "completed",
       "flow_mode": "standard",
       "always_proceed": false,
       "plan_path": "docs/Proposals/CRP-281-Primary-Evidence-Based-Workspace-Readiness-and-Pas/Implementation_Plan.md",
       "walkthrough_path": "docs/Proposals/CRP-281-Primary-Evidence-Based-Workspace-Readiness-and-Pas/Walkthrough.md",
-      "lcm_version": "10.2.0"
+      "lcm_version": "10.2.0",
+      "progress_state": "pushed",
+      "disposition": "published",
+      "state_history": [
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-13 21:37:31",
+          "user": "rgbig",
+          "note": "Pushed to remote (LCM_AI, LCM_Inventory)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "pushed": "2026-11-13 21:37:31"
+      },
+      "pushed_at": "2026-11-13 21:37:31"
     },
     {
       "id": 282,
@@ -14897,7 +15011,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-298-Formalize-LCM-Repository-and-App-Onboarding-Modes",
       "docs": {
@@ -14952,22 +15066,34 @@
           "cohort_id": "",
           "cohort_gate": "",
           "synchronization_outcome": ""
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-13 21:37:32",
+          "user": "rgbig",
+          "note": "Pushed to remote (LCM_AI, LCM_Inventory)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "dates": {
         "in_progress": "2026-10-20 20:52:00",
         "verified": "2026-10-20 20:54:48",
         "in_review": "2026-10-20 20:54:54",
-        "held": "2026-11-08 18:08:14"
+        "held": "2026-11-08 18:08:14",
+        "pushed": "2026-11-13 21:37:32"
       },
       "flow_mode": "doit",
       "always_proceed": true,
-      "progress_state": "completed",
-      "disposition": "completed",
       "bcr_initiated_at": "2026-10-20 20:54:54",
       "bcr_disposition": null,
       "bcr_scope": "CRP-298",
-      "lcm_version": "10.2.1"
+      "lcm_version": "10.2.1",
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-13 21:37:31"
     },
     {
       "id": 299,
@@ -17348,7 +17474,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "verified",
+      "state": "completed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/BUG-325-BUG-Tool-Explorer-Published-Payload-Malformed-Erro",
       "docs": {
@@ -17383,16 +17509,41 @@
           "cohort_id": "",
           "cohort_gate": "",
           "synchronization_outcome": ""
+        },
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-11-14 13:50:36",
+          "user": "rgbig",
+          "note": "Auto-transitioned to in_review for Gate 2 acceptance",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_review",
+          "state": "completed",
+          "timestamp": "2026-11-14 13:50:42",
+          "user": "rgbig",
+          "note": "Review completed and committed (706223d).",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "dates": {
         "in_progress": "2026-11-13 12:39:39",
-        "verified": "2026-11-13 12:39:46"
+        "verified": "2026-11-13 12:39:46",
+        "in_review": "2026-11-14 13:50:36",
+        "completed": "2026-11-14 13:50:42"
       },
       "flow_mode": "doit",
       "always_proceed": true,
-      "progress_state": "verification",
-      "disposition": null
+      "bcr_disposition": "Completed",
+      "bcr_disposition_at": "2026-11-14 13:50:41",
+      "bcr_disposition_notes": "Gate 2 Acceptance: Operator accepted item",
+      "progress_state": "completed",
+      "disposition": "completed"
     },
     {
       "id": 326,
@@ -17404,7 +17555,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "in_progress",
+      "state": "completed",
       "bundle_id": "CRP-326",
       "bundle_dir": "docs/Proposals/CRP-326-Governance-Rules-Harmonization-and-Documentation-Alignment",
       "docs": {
@@ -17425,17 +17576,450 @@
           "timestamp": "2026-11-13 21:28:31",
           "user": "rgbig",
           "note": "Registered as open proposal for Claude & Antigravity governance rules harmonization."
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-11-14 15:04:11",
+          "user": "rgbig",
+          "note": "Proceeded past Gate 0/1 to verification per operator instruction",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-11-14 15:05:28",
+          "user": "rgbig",
+          "note": "",
+          "cohort_id": "",
+          "cohort_gate": "BCR",
+          "synchronization_outcome": "synchronized"
+        },
+        {
+          "from_state": "in_review",
+          "state": "completed",
+          "timestamp": "2026-11-14 17:36:49",
+          "user": "rgbig",
+          "note": "Review completed and committed (2ec89c2).",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "dates": {
         "created": "2026-11-13 21:28:31",
-        "suggested": "2026-11-13 21:28:31"
+        "suggested": "2026-11-13 21:28:31",
+        "verified": "2026-11-14 15:04:11",
+        "in_review": "2026-11-14 15:05:28",
+        "completed": "2026-11-14 17:36:49"
       },
       "flow_mode": "standard",
       "always_proceed": false,
       "lcm_version": "10.2.5",
-      "progress_state": "in_progress",
-      "disposition": "open"
+      "bcr_initiated_at": "2026-11-14 15:05:29",
+      "bcr_scope": "CRP-326",
+      "bcr_disposition": "Completed",
+      "bcr_disposition_at": "2026-11-14 17:36:48",
+      "bcr_disposition_notes": "",
+      "progress_state": "completed",
+      "disposition": "completed"
+    },
+    {
+      "id": 327,
+      "crp_id": "BUG-327",
+      "timestamp": "2026-11-14 08:53:32",
+      "title": "[BUG] BCR and Macrium Baseline Admin Flag Alignment and Headless Elevation Hang Remediation",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "BUG-327",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "completed",
+      "bundle_id": "BUG-327",
+      "bundle_dir": "docs/Proposals/BUG-327-BCR-Macrium-Baseline-Admin-Flag-Alignment-and-Elevation-Hang",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "author": "Rolf & Antigravity",
+      "details": "Remediates Admin: false misclassification on Invoke-MacriumDailyBcrBaseline.ps1 and Invoke-MacriumBcrReview.ps1, regenerates DoT trampolines with elevation wrappers, and routes elevated worker execution through Port 9876 Desktop Daemon to eliminate headless UAC hangs.",
+      "plan_path": "docs/Proposals/BUG-327-BCR-Macrium-Baseline-Admin-Flag-Alignment-and-Elevation-Hang/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/BUG-327-BCR-Macrium-Baseline-Admin-Flag-Alignment-and-Elevation-Hang/Walkthrough.md",
+      "priority": 9,
+      "gate1_accepted": true,
+      "gate1_accepted_at": "2026-11-14 08:53:32",
+      "state_history": [
+        {
+          "state": "in_progress",
+          "timestamp": "2026-11-14 08:53:32",
+          "user": "rgbig",
+          "note": "Immediate BUG intake for BCR elevation hang and DoT admin flag alignment per RULE-LCM-017."
+        },
+        {
+          "state": "verified",
+          "timestamp": "2026-11-14 08:56:00",
+          "user": "rgbig",
+          "note": "Verified: Catalog Admin flags updated, DoT trampolines regenerated with do.cmd elevation wrappers, and worker mounting verified via Desktop Daemon."
+        },
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-11-14 14:06:11",
+          "user": "rgbig",
+          "note": "Auto-transitioned to in_review for completion",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_review",
+          "state": "completed",
+          "timestamp": "2026-11-14 14:06:17",
+          "user": "rgbig",
+          "note": "Review completed and committed (3d359d8).",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "created": "2026-11-14 08:53:32",
+        "suggested": "2026-11-14 08:53:32",
+        "verified": "2026-11-14 08:56:00",
+        "in_review": "2026-11-14 14:06:11",
+        "completed": "2026-11-14 14:06:17"
+      },
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "lcm_version": "10.2.5",
+      "type": "BUG",
+      "bcr_disposition": "Completed",
+      "bcr_disposition_at": "2026-11-14 14:06:16",
+      "bcr_disposition_notes": "",
+      "progress_state": "completed",
+      "disposition": "completed"
+    },
+    {
+      "id": 328,
+      "crp_id": "CRP-328",
+      "timestamp": "2026-11-14 12:23:25",
+      "title": "Macrium Reflect Baseline Image Filename Logging and Chat Telemetry",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-328",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "completed",
+      "bundle_id": "CRP-328",
+      "bundle_dir": "docs/Proposals/CRP-328-Macrium-Reflect-Baseline-Image-Filename-Logging-and-Chat-Telemetry",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "author": "Rolf & Antigravity",
+      "details": "Logs and surfaces the exact Macrium Reflect backup image (.mrimgx) filename and path across baseline mount tools, registry telemetry, GoodMorning, and mandates explicit agent chat disclosure.",
+      "plan_path": "docs/Proposals/CRP-328-Macrium-Reflect-Baseline-Image-Filename-Logging-and-Chat-Telemetry/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-328-Macrium-Reflect-Baseline-Image-Filename-Logging-and-Chat-Telemetry/Walkthrough.md",
+      "priority": 9,
+      "gate1_accepted": true,
+      "gate1_accepted_at": "2026-11-14 12:23:25",
+      "state_history": [
+        {
+          "state": "in_progress",
+          "timestamp": "2026-11-14 12:23:25",
+          "user": "rgbig",
+          "note": "Immediate CRP DOIT intake for Macrium baseline filename logging and chat disclosure per operator instruction."
+        },
+        {
+          "state": "verified",
+          "timestamp": "2026-11-14 12:26:58",
+          "user": "rgbig",
+          "note": "Verified: 16/16 Pester tests passed. Image filename and path logged, persisted to HKLM registry, returned on fast-path, and surfaced in GoodMorning and BCR console."
+        },
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-11-14 13:33:14",
+          "user": "rgbig",
+          "note": "Advanced to in_review by operator",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_review",
+          "state": "completed",
+          "timestamp": "2026-11-14 13:33:36",
+          "user": "rgbig",
+          "note": "Review completed and committed (5b260ff).",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "created": "2026-11-14 12:23:25",
+        "suggested": "2026-11-14 12:23:25",
+        "in_progress": "2026-11-14 12:23:25",
+        "verified": "2026-11-14 12:26:58",
+        "in_review": "2026-11-14 13:33:14",
+        "completed": "2026-11-14 13:33:36"
+      },
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "lcm_version": "10.2.5",
+      "type": "CRP",
+      "bcr_disposition": "Completed",
+      "bcr_disposition_at": "2026-11-14 13:33:35",
+      "bcr_disposition_notes": "Gate 2 Acceptance: Operator accepted item",
+      "progress_state": "completed",
+      "disposition": "completed",
+      "test_scope": "minimal",
+      "minimal_tests": true
+    },
+    {
+      "id": 329,
+      "crp_id": "CRP-329",
+      "timestamp": "2026-11-14 12:40:44",
+      "title": "Proposal Lifecycle Advance and Accept Harmonization, Switch Telemetry, and Daemon Action Alignment",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-329",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "completed",
+      "bundle_id": "CRP-329",
+      "bundle_dir": "docs/Proposals/CRP-329-Lifecycle-Advance-Accept-Harmonization-and-Switch-Telemetry",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "author": "Rolf & Antigravity",
+      "details": "Harmonizes lifecycle Advance and Accept operations across all active states, introduces systematic switch state telemetry logging, implements daemon /api/action endpoint support, and updates the canonical transition diagrams.",
+      "plan_path": "docs/Proposals/CRP-329-Lifecycle-Advance-Accept-Harmonization-and-Switch-Telemetry/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-329-Lifecycle-Advance-Accept-Harmonization-and-Switch-Telemetry/Walkthrough.md",
+      "gate1_accepted": true,
+      "gate1_accepted_at": "2026-11-14 12:40:44",
+      "state_history": [
+        {
+          "state": "in_progress",
+          "timestamp": "2026-11-14 12:40:44",
+          "user": "rgbig",
+          "note": "Immediate CRP DOIT intake for Advance/Accept harmonization, switch logging, and daemon action alignment."
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-11-14 12:45:03",
+          "user": "rgbig",
+          "note": "Advanced to verified by operator",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-11-14 12:45:09",
+          "user": "rgbig",
+          "note": "Advanced to in_review by operator",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_review",
+          "state": "held",
+          "timestamp": "2026-11-14 12:45:15",
+          "user": "rgbig",
+          "note": "",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "held",
+          "state": "in_review",
+          "timestamp": "2026-11-14 12:45:20",
+          "user": "rgbig",
+          "note": "Advanced to in_review by operator",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_review",
+          "state": "completed",
+          "timestamp": "2026-11-14 12:45:42",
+          "user": "rgbig",
+          "note": "Review completed and committed (40c75f0).",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "created": "2026-11-14 12:40:44",
+        "suggested": "2026-11-14 12:40:44",
+        "in_progress": "2026-11-14 12:40:44",
+        "verified": "2026-11-14 12:45:03",
+        "held": "2026-11-14 12:45:15",
+        "in_review": "2026-11-14 12:45:20",
+        "completed": "2026-11-14 12:45:42"
+      },
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "lcm_version": "10.2.5",
+      "type": "CRP",
+      "priority": 8,
+      "resume_state": "in_review",
+      "bcr_disposition": "Completed",
+      "bcr_disposition_at": "2026-11-14 12:45:42",
+      "bcr_disposition_notes": "Gate 2 Acceptance: Operator accepted item",
+      "progress_state": "completed",
+      "disposition": "completed"
+    },
+    {
+      "id": 330,
+      "crp_id": "CRP-330",
+      "lcm_version": "10.2.3",
+      "timestamp": "2026-11-14 13:09:46",
+      "title": "Tool Catalog Metadata Bleed Prevention and ExecutionPolicy Alignment",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-330",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "completed",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/CRP-330-Tool-Catalog-Metadata-Bleed-Prevention-and-Executi",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "rgbig",
+      "details": "Fix Update-ToolCatalog.ps1 to key authoritative cache by RelativePath, preventing cross-domain metadata bleed, and align Set-MachineWideExecutionPolicy to v1.1.0",
+      "priority": 5,
+      "plan_path": "docs/Proposals/CRP-330-Tool-Catalog-Metadata-Bleed-Prevention-and-Executi/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-330-Tool-Catalog-Metadata-Bleed-Prevention-and-Executi/Walkthrough.md",
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-11-14 13:46:19",
+          "user": "rgbig",
+          "note": "",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-11-14 13:52:03",
+          "user": "rgbig",
+          "note": "Auto-transitioned to verified for Gate 2 acceptance",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-11-14 13:52:04",
+          "user": "rgbig",
+          "note": "Auto-transitioned to in_review for Gate 2 acceptance",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_review",
+          "state": "completed",
+          "timestamp": "2026-11-14 13:52:09",
+          "user": "rgbig",
+          "note": "Review completed and committed (e830be8).",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "completed",
+          "state": "suggested",
+          "timestamp": "2026-11-14 13:56:49",
+          "user": "rgbig",
+          "note": "Reinstated for revised proposal intent.",
+          "revision": 1,
+          "reinstatement": true,
+          "concrete_change_requests": false,
+          "changes": ""
+        },
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-11-14 13:56:55",
+          "user": "rgbig",
+          "note": "",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-11-14 14:04:44",
+          "user": "rgbig",
+          "note": "Auto-transitioned to verified for completion",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-11-14 14:04:45",
+          "user": "rgbig",
+          "note": "Auto-transitioned to in_review for completion",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_review",
+          "state": "completed",
+          "timestamp": "2026-11-14 14:04:52",
+          "user": "rgbig",
+          "note": "Review completed and committed (591b8b3).",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "suggested": "2026-11-14 13:56:49",
+        "in_progress": "2026-11-14 13:56:55",
+        "verified": "2026-11-14 14:04:44",
+        "in_review": "2026-11-14 14:04:45",
+        "completed": "2026-11-14 14:04:52"
+      },
+      "state_reason": "Reinstated without concrete correction requests; awaiting revised proposal intent and plan approval.",
+      "reinstatement_revision": 1,
+      "reinstatement_changes": "",
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "bcr_disposition": "Completed",
+      "bcr_disposition_at": "2026-11-14 14:04:51",
+      "bcr_disposition_notes": "",
+      "progress_state": "completed",
+      "disposition": "completed"
     }
   ],
   "testing_mode": "active",

@@ -81,6 +81,10 @@
       show(applying ? 'Updating' : status.state, applying ? 'Applying published revision' : (status.error || status.publishedAt || 'Awaiting publication'));
       if (status.state !== 'Current' || !status.revision || status.revision === revision) return;
       if (presentation && status.presentationRevision !== presentation) {
+        if (document.querySelector('.modal.open, #lcm-global-error-banner, #errorModal.open')) {
+          show('Updating', 'Display update deferred while dialog or error is open.');
+          return;
+        }
         sessionStorage.setItem(key, JSON.stringify(capture()));
         location.reload(); // Only presentation transitions reload; data applies in place.
         return;

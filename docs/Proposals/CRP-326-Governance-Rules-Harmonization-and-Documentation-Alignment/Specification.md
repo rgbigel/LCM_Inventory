@@ -4,8 +4,8 @@
 - **Proposal ID**: `CRP-326`
 - **Title**: Governance Rules Harmonization, Lifecycle Consistency, and Authoritative Version Alignment
 - **Author**: Rolf & Antigravity (LCM Governance)
-- **Status**: Open / Draft (Awaiting Claude Amendment & Gate 1 Operator Review)
-- **Date**: 2026-11-13
+- **Status**: Completed (Gate 2 Accepted by Operator)
+- **Date**: 2026-11-14
 - **Target Repository**: `LCM_AI`, `LCM_Inventory`, Multi-Repository Workspace
 - **Impacted Subsystems**: `.agents/rules/`, `AGENTS.md`, `.agents/version.json`, `LCM_Inventory/data/proposals/`
 - **Scope Restriction**: Documentation and Governance Rules only (zero production code changes in this phase)
@@ -182,4 +182,30 @@ F-17 (version increment semantics) is folded into Item 2 above.
 
 - No DOX header and no YAML metadata block (`CRP-ID`, `Status`, `Plan-State`, `Progress-State`), unlike e.g. CRP-320. `LCM_Inventory/docs/Implementation.md` section 4.1 says `ProposalSpecificationState.psm1` projects state changes into exactly those header fields. Not tested.
 - The file uses LF line endings (`INVARIANT-RULES/newline-crlf`). Claude appended this section without converting the file, to keep the review diff limited to the amendment.
+
+---
+
+## 6. Gate 1 Acceptance & Harmonization Implementation Record
+
+### 6.1 Operator Decisions (2026-11-14)
+1. **Multi-Host Adapters Accepted**: Recognized host adapters are Antigravity, Claude Code, Gemini, VS Code, and Cursor (not just Claude/AGY). Derived adapters are authorized read-only projections of canonical rules.
+2. **Language Rules & Deference**: Language-specific standards (`PowerShellStandardsPolicy.md` / `PowerShellRules.md`, `PythonRules.md`, `GoRules.md`, `CMDRules.md`, `JsonRules.md`, `DisplayStandardsPolicy.md`) take precedence over generic quality defaults (`quality/`); any language may have a dedicated rule file.
+3. **Macro Waiver**: The standard datetime format (`YYYY-MM-DD HH:mm:ss[.fff]`) remains binding, but the `@tsr` macro is **permanently retired and dropped workspace-wide** due to VS Code changes.
+4. **Tri-Tier Rule Architecture (`RULE-AUTH-004`)**: Canonical rules in `.agents/rules/` and derived projections are classified into:
+   - **Process Governance (`process/`)** (10 files)
+   - **Solution Quality & Invariants (`quality/`)** (4 files)
+   - **Language-Specific Standards & Presentation (`lang/`)** (7 files)
+
+### 6.2 Executed Implementation Ledger
+- **Machine-Readable Baseline**: Created `LCM_AI/.agents/version.json` declaring SemVer `10.3.0`.
+- **`RuleAuthority.md`**: Codified `RULE-AUTH-001`, `002`, `004` (Multi-Host adapter legitimacy, Tri-Tier structure).
+- **`InvariantRules.md`**: Question-response invariant updated, language deference added to indent-2/newline-crlf, `@tsr` retired, SemVer arithmetic standardized.
+- **`ReviewCommitGovernancePolicy.md`**: Restored standard SemVer arithmetic (`+0.0.1` Patch, `+0.1.0` Minor, `+1.0.0` Major) in `RULE-REV-007`.
+- **`RepositoryContextPolicy.md`**: `RULE-CTX-006` updated for operator GoodMorning exclusivity; `RULE-CTX-001` headless fallback; `RULE-CTX-002` config.json location; `RULE-CTX-004` version.json link.
+- **`DocumentationStandardsPolicy.md`**: Duplicate `RULE-DOC-008` resolved by introducing `RULE-DOC-003.1`; SemVer examples fixed.
+- **`PowerShellStandardsPolicy.md`**: Codified `RULE-PS-025` (Model-Atom-Controller modular invariant).
+- **`ProposalReviewFlowPolicy.md`**: Codified transparent single-window junction review (`<FollowSymLinks Value="True"/>`); corrected file count to 21; eliminated trailing `.iew.` typo.
+- **`AGENTS.md` & `LCM-Rules-Cross-Reference.md`**: Restructured Master Cross-Reference Table to mirror the 3 tiers (`process/`, `quality/`, `lang/`), cataloging all 21 rule files.
+- **`CLAUDE.md`**: Synchronized to SemVer `10.3.0` and Tri-Tier architecture.
+
 

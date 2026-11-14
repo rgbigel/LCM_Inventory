@@ -106,13 +106,13 @@ App-ID: {10}
     $metadata = $header.Groups['metadata'].Value
     foreach ($key in $values.Keys) {
       $pattern = '(?m)^' + [regex]::Escape($key) + ':[^\r\n]*'
-      $matches = [regex]::Matches($metadata, $pattern)
-      if ($matches.Count -eq 0) {
+      $matchedKeys = [regex]::Matches($metadata, $pattern)
+      if ($matchedKeys.Count -eq 0) {
         $metadata = $metadata.TrimEnd("`r", "`n") + "`r`n$key`: $($values[$key])`r`n"
-      } elseif ($matches.Count -eq 1) {
+      } elseif ($matchedKeys.Count -eq 1) {
         $metadata = [regex]::Replace($metadata, $pattern, ($key + ': ' + $values[$key]))
       } else {
-        throw "Ambiguous metadata: expected one '$key' field in $path, but found $($matches.Count). Operator intervention required."
+        throw "Ambiguous metadata: expected one '$key' field in $path, but found $($matchedKeys.Count). Operator intervention required."
       }
     }
     $group = $header.Groups['metadata']
