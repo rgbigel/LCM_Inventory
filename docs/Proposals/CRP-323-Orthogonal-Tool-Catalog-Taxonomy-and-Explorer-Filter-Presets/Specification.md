@@ -1,5 +1,20 @@
 # Specification: CRP-323
 
+
+```yaml
+CRP-ID: CRP-323
+Title: Orthogonal Tool Taxonomy: SubSystem Unification, Role Absorption into Category, and Explorer Filter Presets
+Scope: LCM_Inventory
+Baseline-Version: 10.2.3
+Author: rgbig
+Date: 2026-11-12 15:15:00
+Status: Pushed
+Plan-State: pushed
+Progress-State: pushed
+Priority: 8
+App-ID: None
+```
+
 ## Document Information
 - **Proposal ID**: `CRP-323`
 - **Title**: Orthogonal Tool Taxonomy: SubSystem Unification, Role Absorption into Category, and Explorer Filter Presets

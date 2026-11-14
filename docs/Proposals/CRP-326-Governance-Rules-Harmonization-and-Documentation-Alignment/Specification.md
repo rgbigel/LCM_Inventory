@@ -10,6 +10,20 @@
 - **Impacted Subsystems**: `.agents/rules/`, `AGENTS.md`, `.agents/version.json`, `LCM_Inventory/data/proposals/`
 - **Scope Restriction**: Documentation and Governance Rules only (zero production code changes in this phase)
 
+```yaml
+CRP-ID: CRP-326
+Title: Governance Rules Harmonization, Lifecycle Consistency, and Authoritative Version Alignment
+Scope: LCM_AI
+Baseline-Version: 10.6.4
+Author: Claude, Rolf & Antigravity
+Date: 2026-11-13 21:28:31
+Status: Pushed
+Plan-State: pushed
+Progress-State: pushed
+Priority: 9
+App-ID: None
+```
+
 ---
 
 ## 1. Executive Summary & Problem Statement
@@ -207,5 +221,7 @@ F-17 (version increment semantics) is folded into Item 2 above.
 - **`ProposalReviewFlowPolicy.md`**: Codified transparent single-window junction review (`<FollowSymLinks Value="True"/>`); corrected file count to 21; eliminated trailing `.iew.` typo.
 - **`AGENTS.md` & `LCM-Rules-Cross-Reference.md`**: Restructured Master Cross-Reference Table to mirror the 3 tiers (`process/`, `quality/`, `lang/`), cataloging all 21 rule files.
 - **`CLAUDE.md`**: Synchronized to SemVer `10.3.0` and Tri-Tier architecture.
+
+
 
 

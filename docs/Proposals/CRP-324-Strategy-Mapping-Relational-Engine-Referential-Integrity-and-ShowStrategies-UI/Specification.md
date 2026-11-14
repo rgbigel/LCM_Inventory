@@ -1,5 +1,20 @@
 # Specification: CRP-324
 
+
+```yaml
+CRP-ID: CRP-324
+Title: Strategy Mapping Relational Engine, Referential Integrity Validation, and ShowStrategies UI
+Scope: LCM_Inventory
+Baseline-Version: 10.2.3
+Author: rgbig
+Date: 2026-11-12 16:40:00
+Status: Pushed
+Plan-State: pushed
+Progress-State: pushed
+Priority: 8
+App-ID: None
+```
+
 ## Document Information
 - **Proposal ID**: `CRP-324`
 - **Title**: Strategy Mapping Relational Engine, Referential Integrity Validation, and ShowStrategies UI

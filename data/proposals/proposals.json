@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-11-14T17:37:46+01:00",
+  "updated_at": "2026-11-14T17:41:19+01:00",
   "review_granularity": "tight",
   "lcm_mode": "active",
   "last_proposal_id": 330,
@@ -567,7 +567,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "CRP-252",
       "bundle_dir": "docs/Proposals/CRP-252-LEV-Model-Adaptation-Prototype-and-Evidence-Replay",
       "docs": {
@@ -588,7 +588,8 @@
         "in_progress": "2026-11-12 08:49:19",
         "verified": "2026-11-14 13:41:01",
         "in_review": "2026-11-14 13:46:29",
-        "completed": "2026-11-14 13:46:36"
+        "completed": "2026-11-14 13:46:36",
+        "pushed": "2026-11-14 17:41:07"
       },
       "state_history": [
         {
@@ -636,6 +637,16 @@
           "cohort_id": "",
           "cohort_gate": "",
           "synchronization_outcome": ""
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-14 17:41:07",
+          "user": "rgbig",
+          "note": "Pushed to remote (LCM_AI, LCM_Inventory)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "flow_mode": "doit",
@@ -644,10 +655,11 @@
       "bcr_disposition": "Completed",
       "bcr_disposition_at": "2026-11-14 13:46:35",
       "bcr_disposition_notes": "Gate 2 Acceptance: Operator accepted item",
-      "progress_state": "completed",
-      "disposition": "completed",
       "test_scope": "minimal",
-      "minimal_tests": true
+      "minimal_tests": true,
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-14 17:41:07"
     },
     {
       "id": 251,
@@ -11352,7 +11364,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": [],
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "CRP-218",
       "bundle_dir": "docs/Proposals/CRP-218-Diagnostic-Triage-Protocol-for-UI-to-Daemon-Execution",
       "commit_sha": null,
@@ -11368,7 +11380,8 @@
         "in_progress": "2026-11-14 17:37:29",
         "verified": "2026-11-14 17:37:33",
         "in_review": "2026-11-14 17:37:38",
-        "completed": "2026-11-14 17:37:46"
+        "completed": "2026-11-14 17:37:46",
+        "pushed": "2026-11-14 17:41:08"
       },
       "state_history": [
         {
@@ -11420,13 +11433,24 @@
           "cohort_id": "",
           "cohort_gate": "",
           "synchronization_outcome": ""
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-14 17:41:08",
+          "user": "rgbig",
+          "note": "Pushed to remote (LCM_AI, LCM_Inventory)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "bcr_disposition": "Completed",
       "bcr_disposition_at": "2026-11-14 17:37:45",
       "bcr_disposition_notes": "",
-      "progress_state": "completed",
-      "disposition": "completed"
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-14 17:41:07"
     },
     {
       "id": 219,
@@ -17387,7 +17411,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "CRP-323",
       "bundle_dir": "docs/Proposals/CRP-323-Orthogonal-Tool-Catalog-Taxonomy-and-Explorer-Filter-Presets",
       "docs": {
@@ -17408,17 +17432,29 @@
           "timestamp": "2026-11-12 15:15:00",
           "user": "rgbig",
           "note": "Registered per operator request for orthogonal tool taxonomy restructuring."
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-14 17:41:09",
+          "user": "rgbig",
+          "note": "Pushed to remote (LCM_AI, LCM_Inventory)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "dates": {
         "created": "2026-11-12 15:15:00",
-        "suggested": "2026-11-12 15:15:00"
+        "suggested": "2026-11-12 15:15:00",
+        "pushed": "2026-11-14 17:41:09"
       },
       "flow_mode": "standard",
       "always_proceed": false,
       "lcm_version": "10.2.3",
-      "progress_state": "completed",
-      "disposition": "completed"
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-14 17:41:07"
     },
     {
       "id": 324,
@@ -17430,7 +17466,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "CRP-324",
       "bundle_dir": "docs/Proposals/CRP-324-Strategy-Mapping-Relational-Engine-Referential-Integrity-and-ShowStrategies-UI",
       "docs": {
@@ -17451,17 +17487,29 @@
           "timestamp": "2026-11-12 16:40:00",
           "user": "rgbig",
           "note": "Registered per operator request for Strategy mapping relational engine and ShowStrategies display."
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-14 17:41:11",
+          "user": "rgbig",
+          "note": "Pushed to remote (LCM_AI, LCM_Inventory)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "dates": {
         "created": "2026-11-12 16:40:00",
-        "suggested": "2026-11-12 16:40:00"
+        "suggested": "2026-11-12 16:40:00",
+        "pushed": "2026-11-14 17:41:11"
       },
       "flow_mode": "standard",
       "always_proceed": false,
       "lcm_version": "10.2.3",
-      "progress_state": "completed",
-      "disposition": "completed"
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-14 17:41:07"
     },
     {
       "id": 325,
@@ -17474,7 +17522,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/BUG-325-BUG-Tool-Explorer-Published-Payload-Malformed-Erro",
       "docs": {
@@ -17529,21 +17577,33 @@
           "cohort_id": "",
           "cohort_gate": "",
           "synchronization_outcome": ""
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-14 17:41:12",
+          "user": "rgbig",
+          "note": "Pushed to remote (LCM_AI, LCM_Inventory)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "dates": {
         "in_progress": "2026-11-13 12:39:39",
         "verified": "2026-11-13 12:39:46",
         "in_review": "2026-11-14 13:50:36",
-        "completed": "2026-11-14 13:50:42"
+        "completed": "2026-11-14 13:50:42",
+        "pushed": "2026-11-14 17:41:12"
       },
       "flow_mode": "doit",
       "always_proceed": true,
       "bcr_disposition": "Completed",
       "bcr_disposition_at": "2026-11-14 13:50:41",
       "bcr_disposition_notes": "Gate 2 Acceptance: Operator accepted item",
-      "progress_state": "completed",
-      "disposition": "completed"
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-14 17:41:07"
     },
     {
       "id": 326,
@@ -17555,7 +17615,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "CRP-326",
       "bundle_dir": "docs/Proposals/CRP-326-Governance-Rules-Harmonization-and-Documentation-Alignment",
       "docs": {
@@ -17606,6 +17666,16 @@
           "cohort_id": "",
           "cohort_gate": "",
           "synchronization_outcome": ""
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-14 17:41:13",
+          "user": "rgbig",
+          "note": "Pushed to remote (LCM_AI, LCM_Inventory)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "dates": {
@@ -17613,7 +17683,8 @@
         "suggested": "2026-11-13 21:28:31",
         "verified": "2026-11-14 15:04:11",
         "in_review": "2026-11-14 15:05:28",
-        "completed": "2026-11-14 17:36:49"
+        "completed": "2026-11-14 17:36:49",
+        "pushed": "2026-11-14 17:41:13"
       },
       "flow_mode": "standard",
       "always_proceed": false,
@@ -17623,8 +17694,9 @@
       "bcr_disposition": "Completed",
       "bcr_disposition_at": "2026-11-14 17:36:48",
       "bcr_disposition_notes": "",
-      "progress_state": "completed",
-      "disposition": "completed"
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-14 17:41:07"
     },
     {
       "id": 327,
@@ -17636,7 +17708,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "BUG-327",
       "bundle_dir": "docs/Proposals/BUG-327-BCR-Macrium-Baseline-Admin-Flag-Alignment-and-Elevation-Hang",
       "docs": {
@@ -17683,6 +17755,16 @@
           "cohort_id": "",
           "cohort_gate": "",
           "synchronization_outcome": ""
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-14 17:41:14",
+          "user": "rgbig",
+          "note": "Pushed to remote (LCM_AI, LCM_Inventory)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "dates": {
@@ -17690,7 +17772,8 @@
         "suggested": "2026-11-14 08:53:32",
         "verified": "2026-11-14 08:56:00",
         "in_review": "2026-11-14 14:06:11",
-        "completed": "2026-11-14 14:06:17"
+        "completed": "2026-11-14 14:06:17",
+        "pushed": "2026-11-14 17:41:14"
       },
       "flow_mode": "doit",
       "always_proceed": true,
@@ -17699,8 +17782,9 @@
       "bcr_disposition": "Completed",
       "bcr_disposition_at": "2026-11-14 14:06:16",
       "bcr_disposition_notes": "",
-      "progress_state": "completed",
-      "disposition": "completed"
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-14 17:41:07"
     },
     {
       "id": 328,
@@ -17712,7 +17796,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "CRP-328",
       "bundle_dir": "docs/Proposals/CRP-328-Macrium-Reflect-Baseline-Image-Filename-Logging-and-Chat-Telemetry",
       "docs": {
@@ -17759,6 +17843,16 @@
           "cohort_id": "",
           "cohort_gate": "",
           "synchronization_outcome": ""
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-14 17:41:15",
+          "user": "rgbig",
+          "note": "Pushed to remote (LCM_AI, LCM_Inventory)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "dates": {
@@ -17767,7 +17861,8 @@
         "in_progress": "2026-11-14 12:23:25",
         "verified": "2026-11-14 12:26:58",
         "in_review": "2026-11-14 13:33:14",
-        "completed": "2026-11-14 13:33:36"
+        "completed": "2026-11-14 13:33:36",
+        "pushed": "2026-11-14 17:41:15"
       },
       "flow_mode": "doit",
       "always_proceed": true,
@@ -17776,10 +17871,11 @@
       "bcr_disposition": "Completed",
       "bcr_disposition_at": "2026-11-14 13:33:35",
       "bcr_disposition_notes": "Gate 2 Acceptance: Operator accepted item",
-      "progress_state": "completed",
-      "disposition": "completed",
       "test_scope": "minimal",
-      "minimal_tests": true
+      "minimal_tests": true,
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-14 17:41:07"
     },
     {
       "id": 329,
@@ -17791,7 +17887,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "CRP-329",
       "bundle_dir": "docs/Proposals/CRP-329-Lifecycle-Advance-Accept-Harmonization-and-Switch-Telemetry",
       "docs": {
@@ -17861,6 +17957,16 @@
           "cohort_id": "",
           "cohort_gate": "",
           "synchronization_outcome": ""
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-14 17:41:16",
+          "user": "rgbig",
+          "note": "Pushed to remote (LCM_AI, LCM_Inventory)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "dates": {
@@ -17870,7 +17976,8 @@
         "verified": "2026-11-14 12:45:03",
         "held": "2026-11-14 12:45:15",
         "in_review": "2026-11-14 12:45:20",
-        "completed": "2026-11-14 12:45:42"
+        "completed": "2026-11-14 12:45:42",
+        "pushed": "2026-11-14 17:41:16"
       },
       "flow_mode": "doit",
       "always_proceed": true,
@@ -17881,8 +17988,9 @@
       "bcr_disposition": "Completed",
       "bcr_disposition_at": "2026-11-14 12:45:42",
       "bcr_disposition_notes": "Gate 2 Acceptance: Operator accepted item",
-      "progress_state": "completed",
-      "disposition": "completed"
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-14 17:41:07"
     },
     {
       "id": 330,
@@ -17895,7 +18003,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-330-Tool-Catalog-Metadata-Bleed-Prevention-and-Executi",
       "docs": {
@@ -18001,6 +18109,16 @@
           "cohort_id": "",
           "cohort_gate": "",
           "synchronization_outcome": ""
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-14 17:41:17",
+          "user": "rgbig",
+          "note": "Pushed to remote (LCM_AI, LCM_Inventory)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "dates": {
@@ -18008,7 +18126,8 @@
         "in_progress": "2026-11-14 13:56:55",
         "verified": "2026-11-14 14:04:44",
         "in_review": "2026-11-14 14:04:45",
-        "completed": "2026-11-14 14:04:52"
+        "completed": "2026-11-14 14:04:52",
+        "pushed": "2026-11-14 17:41:17"
       },
       "state_reason": "Reinstated without concrete correction requests; awaiting revised proposal intent and plan approval.",
       "reinstatement_revision": 1,
@@ -18018,8 +18137,9 @@
       "bcr_disposition": "Completed",
       "bcr_disposition_at": "2026-11-14 14:04:51",
       "bcr_disposition_notes": "",
-      "progress_state": "completed",
-      "disposition": "completed"
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-14 17:41:07"
     }
   ],
   "testing_mode": "active",
