@@ -2896,6 +2896,7 @@
                   ? lifecycleButton("Accept Proposal", "✅", true, "dispatchTargetAction('accept')")
                   : lifecycleButton("Accept Review", "✅", ["in_progress", "verified", "in_review"].includes(lifecycleState), "dispatchTargetAction('accept')")
                 }
+                ${lifecycleButton("Complete ITEM", "🏁", ["in_progress", "verified", "in_review"].includes(lifecycleState), "dispatchTargetAction('complete')")}
                 ${lifecycleButton("ReOpen ITEM", "↩️", lifecycleState === "held", "dispatchTargetAction('reopen')")}
                 ${lifecycleButton("Hold ITEM", "⏸️", !["completed", "pushed", "held", "withdrawn", "rejected", "superseded"].includes(lifecycleState), "dispatchTargetAction('hold')")}
                 <div style="border-top: 1px solid var(--line); margin: 4px 0;"></div>
@@ -3558,10 +3559,12 @@
 
     const lifecycleActionStates = {
       do: ["suggested"],
-      proceed: ["suggested", "in_progress", "held"],
-      bcr: ["verified"],
-      reviewed: ["in_review"],
-      complete: ["in_review"],
+      advance: ["suggested", "in_progress", "verified", "in_review", "held"],
+      accept: ["suggested", "in_progress", "verified", "in_review", "held"],
+      proceed: ["suggested", "in_progress", "verified", "in_review", "held"],
+      bcr: ["in_progress", "verified"],
+      reviewed: ["in_progress", "verified", "in_review"],
+      complete: ["in_progress", "verified", "in_review"],
       push: ["completed"],
       hold: ["suggested", "in_progress", "verified", "in_review", "completed"],
       reopen: ["held"],

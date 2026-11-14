@@ -45,9 +45,18 @@ function Get-LcmSpecificationStateEdits {
     $leaf = if ($proposal.PSObject.Properties['docs'] -and $proposal.docs.PSObject.Properties['specification']) { $proposal.docs.specification } else { 'Specification.md' }
     if ([IO.Path]::GetFileName($leaf) -ne $leaf) { throw "Invalid specification filename for proposal #$($proposal.id)." }
     $path = Join-Path $bundle $leaf
-    $bytes = [IO.File]::ReadAllBytes($path)
-    $originalText = [Text.Encoding]::UTF8.GetString($bytes)
-    $text = $originalText
+    if (-not [IO.File]::Exists($path)) {
+      if (-not [IO.Directory]::Exists($bundle)) {
+        [IO.Directory]::CreateDirectory($bundle) | Out-Null
+      }
+      $bytes = [byte[]]@()
+      $originalText = ''
+      $text = ''
+    } else {
+      $bytes = [IO.File]::ReadAllBytes($path)
+      $originalText = [Text.Encoding]::UTF8.GetString($bytes)
+      $text = $originalText
+    }
     $header = [regex]::Match($text, '(?ms)^```yaml\r?\n(?<metadata>.*?)^```\s*\r?$')
     $values = [ordered]@{
       Status = [Globalization.CultureInfo]::InvariantCulture.TextInfo.ToTitleCase($state.Replace('_', ' '))

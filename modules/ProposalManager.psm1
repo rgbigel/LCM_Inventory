@@ -770,7 +770,7 @@ function Get-LcmProposalResumeState {
         }
     }
 
-    return ''
+    return 'suggested'
 }
 
 function Move-LcmProposalLifecycleState {
