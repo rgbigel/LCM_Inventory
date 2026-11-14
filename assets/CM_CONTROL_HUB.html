@@ -1112,6 +1112,8 @@
             <option value="">Select ITEM first</option>
             <option value="show_spec">📄 Show Specification</option>
             <option value="do">Do / Start ITEM</option>
+            <option value="advance">⚡ Advance ITEM</option>
+            <option value="accept">✅ Accept ITEM (Gate 1/2)</option>
             <option value="proceed">Proceed ITEM</option>
             <option value="verify">Verify ITEM</option>
             <option value="bcr">Open Review for ITEM</option>
@@ -2888,11 +2890,14 @@
                 <div class="show-dropdown-title">${crpTag} Lifecycle Actions</div>
                 <button class="show-dropdown-item" onclick="showProposalSpec(${p.id})"><span class="btn-icon">📄</span> Show Specification</button>
                 ${lifecycleButton("Do ITEM", "▶️", lifecycleState === "suggested", "dispatchTargetAction('do')")}
-                ${lifecycleButton("Proceed ITEM", "⚡", ["suggested", "in_progress"].includes(lifecycleState), "dispatchTargetAction('proceed')")}
-                ${lifecycleButton("Open Review", "🔍", lifecycleState === "verified", "dispatchTargetAction('bcr')")}
-                ${lifecycleButton("ACCEPTED: Item", "✅", lifecycleState === "in_review", "dispatchStandardAction('reviewed', [getActiveItemTarget()?.item?.id], '')")}
+                ${lifecycleButton("Advance ITEM", "⚡", !["completed", "pushed", "withdrawn", "rejected", "superseded"].includes(lifecycleState), "dispatchTargetAction('advance')")}
+                ${lifecycleButton("Open Review", "🔍", ["in_progress", "verified"].includes(lifecycleState), "dispatchTargetAction('bcr')")}
+                ${lifecycleState === "suggested"
+                  ? lifecycleButton("Accept Proposal", "✅", true, "dispatchTargetAction('accept')")
+                  : lifecycleButton("Accept Review", "✅", ["in_progress", "verified", "in_review"].includes(lifecycleState), "dispatchTargetAction('accept')")
+                }
                 ${lifecycleButton("ReOpen ITEM", "↩️", lifecycleState === "held", "dispatchTargetAction('reopen')")}
-                ${lifecycleButton("Hold ITEM", "⏸️", !["completed", "pushed", "held"].includes(lifecycleState), "dispatchTargetAction('hold')")}
+                ${lifecycleButton("Hold ITEM", "⏸️", !["completed", "pushed", "held", "withdrawn", "rejected", "superseded"].includes(lifecycleState), "dispatchTargetAction('hold')")}
                 <div style="border-top: 1px solid var(--line); margin: 4px 0;"></div>
                 <div class="show-dropdown-title">Cohort Head / Member Management</div>
                 <button class="show-dropdown-item" onclick="manageCrpCohort('create', ${p.id})"><span class="btn-icon">➕</span> Create Head Cohort</button>

@@ -10,7 +10,7 @@
     Path: LCM_Inventory/tools/Invoke-MacriumBcrReview.ps1
     Authors: Rolf, LCM_AI Engine
     Version: 10.2.7
-    Date: 2026-11-11 20:00:00
+    Date: 2026-11-14 12:25:00
 .PARAMETER CRP
     Identifier of the CRP or BUG proposal under review (e.g. CRP-309).
 .PARAMETER RepositoryName
@@ -158,6 +158,13 @@ $baselineImage = if (-not [string]::IsNullOrWhiteSpace([string]$baseline.ImagePa
   SessionStartedAt = (Get-Date).ToString('o')
 } | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath $metadataPath -Encoding UTF8
 
+if (-not [string]::IsNullOrWhiteSpace($baselineImage)) {
+  $imgLeaf = Split-Path $baselineImage -Leaf
+  Write-Host "`n[BCR] Macrium Baseline Image: $imgLeaf" -ForegroundColor Green
+  Write-Host "      Full Path             : $baselineImage" -ForegroundColor Green
+  Write-Host "      Mounted Drive         : $($baseline.MountedDrive)`n" -ForegroundColor Green
+}
+
 if (-not $LifecycleManaged -and -not $NoLaunch -and [string]$proposal.state -eq 'verified') {
   $store = Get-ProposalStore
   $reviewedProposal = Move-LcmProposalLifecycleState -Id $proposal.id -State 'in_review' `
@@ -174,6 +181,7 @@ if (-not $LifecycleManaged -and -not $NoLaunch -and [string]$proposal.state -eq 
   BaseCommit = $commit
   BaselineKind = 'MacriumReflect'
   BaselineImage = $baselineImage
+  BaselineImageFileName = if (-not [string]::IsNullOrWhiteSpace($baselineImage)) { Split-Path $baselineImage -Leaf } else { '' }
   MountedDrive = $baseline.MountedDrive
   Profile = '_LCM'
   ReviewMetadataPath = $metadataPath

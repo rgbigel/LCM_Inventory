@@ -14,7 +14,7 @@
   Path: LCM_Inventory/tools/Invoke-MacriumDailyBcrBaseline.ps1
   Authors: Rolf, LCM_AI Engine
   Version: 10.2.6
-  Date: 2026-11-11 20:30:00
+  Date: 2026-11-14 12:25:00
 .NOTES
   Caveats: Drive mounting requires administrative elevation (delegated to elevated worker via Invoke-ElevatedTest.ps1
   or Port 9876 daemon); Macrium Reflect UI automation requires Session 1 interactive desktop access. Mount operations
@@ -394,25 +394,16 @@ function Set-LcmRegistryValue {
 
   # Atomic delegation to Port 9876 Elevated Desktop Daemon
   $daemonPort = if ($env:LCM_DAEMON_PORT -match '^\d+$') { [int]$env:LCM_DAEMON_PORT } else { 9876 }
-  $daemonUrl = "http://127.0.0.1:$daemonPort/api/action"
+  $daemonUrl = "http://127.0.0.1:$daemonPort/execute"
   try {
+    $regCmd = "if (-not (Test-Path -LiteralPath '$KeyPath')) { New-Item -Path '$KeyPath' -Force | Out-Null }; Set-ItemProperty -Path '$KeyPath' -Name '$Name' -Value '$Value' -Force"
     $payload = @{
-      action     = "DO"
-      target     = "Set-LcmRegistryValue"
-      caller     = "Invoke-MacriumDailyBcrBaseline"
-      parameters = @{
-        KeyPath      = $KeyPath
-        Name         = $Name
-        Value        = [string]$Value
-        PropertyType = $PropertyType
-      }
-      options    = @{
-        sync     = $true
-        elevated = $true
-      }
-    } | ConvertTo-Json -Depth 3
+      command  = $regCmd
+      elevated = $true
+      sync     = $true
+    } | ConvertTo-Json
 
-    $res = Invoke-RestMethod -Uri $daemonUrl -Method Post -Body $payload -ContentType 'application/json' -TimeoutSec 3 -ErrorAction Stop
+    $res = Invoke-RestMethod -Uri $daemonUrl -Method Post -Body $payload -ContentType 'application/json' -TimeoutSec 5 -ErrorAction Stop
     if ($res.status -in @('COMPLETED', 'DISPATCHED') -or $res.exitCode -eq 0) {
       Write-BaselineLog -Level INFO -Message "Registry updated (atomic daemon delegation): $KeyPath\$Name = '$Value'"
       return
@@ -973,11 +964,25 @@ if ($NewBaseline) {
       }
 
       $mountedBaseline = $reuseCandidate
+      $resolvedImagePath = if ($null -ne $completedToday -and -not [string]::IsNullOrWhiteSpace($completedToday.ImagePath)) {
+        [string]$completedToday.ImagePath
+      } else {
+        $regImg = Get-LcmRegistryValue -KeyPath $MacriumRegistryKey -Name 'MRMImagePath'
+        if (-not [string]::IsNullOrWhiteSpace($regImg)) { $regImg } else { '' }
+      }
+      $resolvedImageLeaf = if (-not [string]::IsNullOrWhiteSpace($resolvedImagePath)) {
+        Split-Path $resolvedImagePath -Leaf
+      } else {
+        $regLeaf = Get-LcmRegistryValue -KeyPath $MacriumRegistryKey -Name 'MRMImageLeaf'
+        if (-not [string]::IsNullOrWhiteSpace($regLeaf)) { $regLeaf } else { 'Unknown' }
+      }
+
       if ($WhatIfPreference) {
-        Write-BaselineLog -Level INFO -Message "WhatIf: would reuse writable $($mountedBaseline.MountedDrive) Macrium baseline for '$((Resolve-BaselineReviewScope))' via fast-path."
+        Write-BaselineLog -Level INFO -Message "WhatIf: would reuse writable $($mountedBaseline.MountedDrive) Macrium baseline ($resolvedImageLeaf) for '$((Resolve-BaselineReviewScope))' via fast-path."
         return [pscustomobject]@{
-          ImagePath = ''
-          CompletionTime = $null
+          ImagePath = $resolvedImagePath
+          ImageFileName = $resolvedImageLeaf
+          CompletionTime = if ($null -ne $completedToday) { $completedToday.CompletionTime } else { $null }
           MountedDrive = $mountedBaseline.MountedDrive
           ReviewScope = Resolve-BaselineReviewScope
           Profile = $null
@@ -990,6 +995,21 @@ if ($NewBaseline) {
 
       Set-LcmRegistryValue -KeyPath $MacriumRegistryKey -Name 'ActMTimeStamp' -Value $reuseCandidate.NewestLogTimestamp
       Set-LcmRegistryValue -KeyPath $MacriumRegistryKey -Name 'actMdrive' -Value $reuseCandidate.MountedDrive
+      if (-not [string]::IsNullOrWhiteSpace($resolvedImagePath)) {
+        Set-LcmRegistryValue -KeyPath $MacriumRegistryKey -Name 'actMImagePath' -Value $resolvedImagePath
+        Set-LcmRegistryValue -KeyPath $MacriumRegistryKey -Name 'actMImageLeaf' -Value $resolvedImageLeaf
+        # Backfill MRMImagePath if absent
+        $currentMrmImg = Get-LcmRegistryValue -KeyPath $MacriumRegistryKey -Name 'MRMImagePath'
+        if ([string]::IsNullOrWhiteSpace($currentMrmImg)) {
+          Set-LcmRegistryValue -KeyPath $MacriumRegistryKey -Name 'MRMImagePath' -Value $resolvedImagePath
+          Set-LcmRegistryValue -KeyPath $MacriumRegistryKey -Name 'MRMImageLeaf' -Value $resolvedImageLeaf
+        }
+      }
+
+      Write-Host "`n[BASELINE] Reusing mounted Macrium baseline ($($mountedBaseline.MountedDrive)): $resolvedImageLeaf" -ForegroundColor Green
+      if (-not [string]::IsNullOrWhiteSpace($resolvedImagePath)) {
+        Write-Host "           Full Path: $resolvedImagePath`n" -ForegroundColor Green
+      }
 
       $profileContract = if ($NoLaunchReview) { $null } else { Test-LcmBcrProfile -MountedDriveLetter $mountedBaseline.DriveLetter }
       $launchedReviewWindow = $false
@@ -1026,8 +1046,9 @@ if ($NewBaseline) {
       $windowDisposition = if ($reusedReviewWindow) { 'reused the existing _LCM review window (fast-path)' } elseif ($launchedReviewWindow) { 'opened one _LCM review window (fast-path)' } else { 'did not launch a review window' }
       Write-BaselineLog -Level INFO -Message "Reused writable $($mountedBaseline.MountedDrive) Macrium baseline for '$((Resolve-BaselineReviewScope))' via fast-path; $windowDisposition."
       return [pscustomobject]@{
-        ImagePath = ''
-        CompletionTime = $null
+        ImagePath = $resolvedImagePath
+        ImageFileName = $resolvedImageLeaf
+        CompletionTime = if ($null -ne $completedToday) { $completedToday.CompletionTime } else { $null }
         MountedDrive = $mountedBaseline.MountedDrive
         ReviewScope = Resolve-BaselineReviewScope
         Profile = $profileContract
@@ -1105,18 +1126,47 @@ try {
     $completedImage.ImagePath
   )
   $isCurrentlyElevated = [System.Security.Principal.WindowsPrincipal]::new([System.Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([System.Security.Principal.WindowsBuiltInRole]::Administrator)
-  $startArgs = @{
-    FilePath     = $pwshPath
-    ArgumentList = $arguments
-    PassThru     = $true
-    Wait         = $true
-  }
+  $daemonDispatched = $false
+
   if (-not $isCurrentlyElevated) {
-    $startArgs.Verb = 'RunAs'
+    # Check if Port 9876 Session 1 Desktop Daemon is available
+    $daemonUrl = 'http://127.0.0.1:9876/execute'
+    try {
+      $ping = Invoke-RestMethod -Uri 'http://127.0.0.1:9876/ping' -TimeoutSec 1 -ErrorAction Stop
+      if ($ping.status -eq 'ONLINE') {
+        $argString = @($arguments | ForEach-Object { "`"$_`"" }) -join ' '
+        $workerCmd = "& `"$pwshPath`" $argString"
+        $body = @{
+          command  = $workerCmd
+          elevated = $true
+          sync     = $true
+        } | ConvertTo-Json
+        Write-BaselineLog -Level INFO -Message 'Dispatching elevated Macrium worker via Session 1 Desktop Daemon (Port 9876).'
+        $resp = Invoke-RestMethod -Uri $daemonUrl -Method Post -Body $body -ContentType 'application/json' -TimeoutSec ($MountTimeoutSeconds + 20) -ErrorAction Stop
+        if (Test-Path -LiteralPath $receiptPath) {
+          $daemonDispatched = $true
+          Write-BaselineLog -Level INFO -Message 'Elevated Macrium worker completed via Desktop Daemon.'
+        }
+      }
+    } catch {
+      Write-BaselineLog -Level WARN -Message "Desktop Daemon worker dispatch unavailable ($($_.Exception.Message)); falling back to RunAs."
+    }
   }
-  $worker = Start-Process @startArgs
-  if (-not (Test-Path -LiteralPath $receiptPath)) {
-    throw "The elevated Macrium worker exited with code $($worker.ExitCode) without a receipt."
+
+  if (-not $daemonDispatched) {
+    $startArgs = @{
+      FilePath     = $pwshPath
+      ArgumentList = $arguments
+      PassThru     = $true
+      Wait         = $true
+    }
+    if (-not $isCurrentlyElevated) {
+      $startArgs.Verb = 'RunAs'
+    }
+    $worker = Start-Process @startArgs
+    if (-not (Test-Path -LiteralPath $receiptPath)) {
+      throw "The elevated Macrium worker exited with code $($worker.ExitCode) without a receipt."
+    }
   }
   $receipt = Get-Content -LiteralPath $receiptPath -Raw | ConvertFrom-Json
   if (-not $receipt.Succeeded) {
@@ -1160,10 +1210,19 @@ $evidenceSummary = if ($null -eq $mountEvidence) {
 } else {
   "detached=$(@($mountEvidence.DetachedDrives) -join ','); reappeared=$($mountEvidence.ReappearedDrive); snapshotSaved=$($mountEvidence.SnapshotSavedAt); goodNightObserved=$($mountEvidence.GoodNightObserved)"
 }
-Write-BaselineLog -Level INFO -Message "Mounted '$($completedImage.ImagePath)' at $($receipt.MountedDrive); $evidenceSummary; selected RHS review scope '$reviewIdentity' without rewriting the _LCM profile."
+$completedLeaf = Split-Path $completedImage.ImagePath -Leaf
+Write-Host "`n[BASELINE] Mounted Macrium baseline image: $completedLeaf" -ForegroundColor Green
+Write-Host "           Full Path: $($completedImage.ImagePath)" -ForegroundColor Green
+Write-Host "           Drive    : $($receipt.MountedDrive)`n" -ForegroundColor Green
+
+Write-BaselineLog -Level INFO -Message "Mounted '$($completedImage.ImagePath)' ($completedLeaf) at $($receipt.MountedDrive); $evidenceSummary; selected RHS review scope '$reviewIdentity' without rewriting the _LCM profile."
 
 Set-LcmRegistryValue -KeyPath $MacriumRegistryKey -Name 'MRMTimeStamp' -Value ($completedImage.CompletionTime.ToString('yyyy-MM-dd HH:mm:ss'))
 Set-LcmRegistryValue -KeyPath $MacriumRegistryKey -Name 'MRMdrive' -Value $receipt.MountedDrive
+Set-LcmRegistryValue -KeyPath $MacriumRegistryKey -Name 'MRMImagePath' -Value $completedImage.ImagePath
+Set-LcmRegistryValue -KeyPath $MacriumRegistryKey -Name 'MRMImageLeaf' -Value $completedLeaf
+Set-LcmRegistryValue -KeyPath $MacriumRegistryKey -Name 'actMImagePath' -Value $completedImage.ImagePath
+Set-LcmRegistryValue -KeyPath $MacriumRegistryKey -Name 'actMImageLeaf' -Value $completedLeaf
 
 $freshCandidates = @(Find-MountedMacriumBaselineCandidates -Drives @($receipt.MountedDrive.TrimEnd(':')))
 if ($freshCandidates.Count -gt 0 -and -not [string]::IsNullOrWhiteSpace($freshCandidates[0].NewestLogTimestamp)) {
@@ -1173,6 +1232,7 @@ if ($freshCandidates.Count -gt 0 -and -not [string]::IsNullOrWhiteSpace($freshCa
 
 [pscustomobject]@{
   ImagePath = $completedImage.ImagePath
+  ImageFileName = $completedLeaf
   CompletionTime = $completedImage.CompletionTime
   MountedDrive = $receipt.MountedDrive
   ReviewScope = $reviewIdentity

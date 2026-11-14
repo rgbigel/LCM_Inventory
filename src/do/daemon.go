@@ -69,6 +69,8 @@ func RunDaemon(port int) error {
 
 	daemonMux.HandleFunc("/execute", handleExecute)
 	daemonMux.HandleFunc("/api/execute", handleExecute)
+	daemonMux.HandleFunc("/action", handleExecute)
+	daemonMux.HandleFunc("/api/action", handleExecute)
 
 	daemonMux.HandleFunc("/open", handleOpen)
 	daemonMux.HandleFunc("/api/open", handleOpen)
@@ -199,9 +201,31 @@ func handleExecute(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var req ExecuteRequest
-	if err := json.Unmarshal(body, &req); err != nil {
-		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "Invalid JSON payload: " + err.Error()})
-		return
+	if err := json.Unmarshal(body, &req); err == nil && strings.TrimSpace(req.Command) != "" {
+		// parsed directly as ExecuteRequest
+	} else {
+		// attempt parsing as ActionRequest (e.g. from ControlHub /api/action)
+		var act struct {
+			Action  string                 `json:"action"`
+			Target  string                 `json:"target"`
+			Command string                 `json:"command"`
+			Options map[string]interface{} `json:"options"`
+			Caller  string                 `json:"caller"`
+		}
+		if errAct := json.Unmarshal(body, &act); errAct == nil && strings.TrimSpace(act.Command) != "" {
+			req.Command = act.Command
+			if act.Options != nil {
+				if s, ok := act.Options["sync"].(bool); ok {
+					req.Sync = s
+				}
+				if e, ok := act.Options["elevated"].(bool); ok {
+					req.Elevated = e
+				}
+			}
+		} else {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "Missing or invalid command string"})
+			return
+		}
 	}
 
 	cmdStr := strings.TrimSpace(req.Command)

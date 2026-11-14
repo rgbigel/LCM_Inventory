@@ -8,7 +8,7 @@
   Path: LCM_Inventory/modules/LcmMacriumAtoms.psm1
   Authors: Rolf, LCM_AI Engine
   Version: 10.2.3
-  Date: 2026-11-10 20:30:00
+  Date: 2026-11-14 12:25:00
 .NOTES
   Caveats: Drive mounting and dismounting require administrative elevation and Session 1
   interactive desktop access when automated through Macrium UI Automation. Telemetry and
@@ -87,8 +87,12 @@ function Get-MacriumBaselineState {
 
   $mrmTimeStamp = ''
   $mrmDrive = ''
+  $mrmImagePath = ''
+  $mrmImageLeaf = ''
   $actMTimeStamp = ''
   $actMDrive = ''
+  $actMImagePath = ''
+  $actMImageLeaf = ''
   $mrPushTimeStamp = ''
 
   if (Test-Path -LiteralPath $regBaseKey) {
@@ -97,8 +101,12 @@ function Get-MacriumBaselineState {
       if ($null -ne $props) {
         if ($props.PSObject.Properties['MRMTimeStamp']) { $mrmTimeStamp = [string]$props.MRMTimeStamp }
         if ($props.PSObject.Properties['MRMdrive']) { $mrmDrive = [string]$props.MRMdrive }
+        if ($props.PSObject.Properties['MRMImagePath']) { $mrmImagePath = [string]$props.MRMImagePath }
+        if ($props.PSObject.Properties['MRMImageLeaf']) { $mrmImageLeaf = [string]$props.MRMImageLeaf }
         if ($props.PSObject.Properties['ActMTimeStamp']) { $actMTimeStamp = [string]$props.ActMTimeStamp }
         if ($props.PSObject.Properties['actMdrive']) { $actMDrive = [string]$props.actMdrive }
+        if ($props.PSObject.Properties['actMImagePath']) { $actMImagePath = [string]$props.actMImagePath }
+        if ($props.PSObject.Properties['actMImageLeaf']) { $actMImageLeaf = [string]$props.actMImageLeaf }
       }
     } catch { }
   }
@@ -112,6 +120,12 @@ function Get-MacriumBaselineState {
         }
         if ([string]::IsNullOrWhiteSpace($mrmDrive) -and $propsLcm.PSObject.Properties['MRMdrive']) {
           $mrmDrive = [string]$propsLcm.MRMdrive
+        }
+        if ([string]::IsNullOrWhiteSpace($mrmImagePath) -and $propsLcm.PSObject.Properties['MRMImagePath']) {
+          $mrmImagePath = [string]$propsLcm.MRMImagePath
+        }
+        if ([string]::IsNullOrWhiteSpace($mrmImageLeaf) -and $propsLcm.PSObject.Properties['MRMImageLeaf']) {
+          $mrmImageLeaf = [string]$propsLcm.MRMImageLeaf
         }
         if ($propsLcm.PSObject.Properties['MRPushTimeStamp']) {
           $mrPushTimeStamp = [string]$propsLcm.MRPushTimeStamp
@@ -170,8 +184,14 @@ function Get-MacriumBaselineState {
     GoodNightObserved = if ($null -ne $primaryMount) { $primaryMount.GoodNightObserved } else { $false }
     RegistryMRMTimeStamp = $mrmTimeStamp
     RegistryMRMdrive = $mrmDrive
+    RegistryMRMImagePath = $mrmImagePath
+    RegistryMRMImageLeaf = $mrmImageLeaf
     RegistryActMTimeStamp = $actMTimeStamp
     RegistryActMdrive = $actMDrive
+    RegistryActMImagePath = $actMImagePath
+    RegistryActMImageLeaf = $actMImageLeaf
+    ImagePath = if (-not [string]::IsNullOrWhiteSpace($actMImagePath)) { $actMImagePath } elseif (-not [string]::IsNullOrWhiteSpace($mrmImagePath)) { $mrmImagePath } else { '' }
+    ImageFileName = if (-not [string]::IsNullOrWhiteSpace($actMImageLeaf)) { $actMImageLeaf } elseif (-not [string]::IsNullOrWhiteSpace($mrmImageLeaf)) { $mrmImageLeaf } else { '' }
     RegistryMRPushTimeStamp = $mrPushTimeStamp
     CandidateDrives = @($normalizedDrives)
     CandidateCount = $mountedCandidates.Count

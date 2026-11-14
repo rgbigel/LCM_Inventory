@@ -144,4 +144,21 @@ Describe 'Macrium-backed lifecycle BCR review' {
     $pushScript | Should -Match 'HKLM:\\SOFTWARE\\LCM'
     $pushScript | Should -Match 'MRPushTimeStamp'
   }
+
+  It 'records, logs, and surfaces the Macrium image filename and full path (CRP-328)' {
+    $baselineScript = Get-Content -LiteralPath (Join-Path $repositoryRoot 'tools\Invoke-MacriumDailyBcrBaseline.ps1') -Raw -Encoding UTF8
+    $bcrScript = Get-Content -LiteralPath (Join-Path $repositoryRoot 'tools\Invoke-MacriumBcrReview.ps1') -Raw -Encoding UTF8
+    $morningScript = Get-Content -LiteralPath (Join-Path $repositoryRoot 'tools\Invoke-LCM_GoodMorning.ps1') -Raw -Encoding UTF8
+
+    $baselineScript | Should -Match 'MRMImagePath'
+    $baselineScript | Should -Match 'MRMImageLeaf'
+    $baselineScript | Should -Match 'ImageFileName = \$resolvedImageLeaf'
+    $baselineScript | Should -Match '\[BASELINE\] Reusing mounted Macrium baseline'
+    $baselineScript | Should -Match '\[BASELINE\] Mounted Macrium baseline image'
+
+    $bcrScript | Should -Match '\[BCR\] Macrium Baseline Image:'
+    $bcrScript | Should -Match 'BaselineImageFileName ='
+
+    $morningScript | Should -Match 'Baseline image file\s*:'
+  }
 }

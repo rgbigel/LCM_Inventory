@@ -18,7 +18,7 @@
   Path: LCM_Inventory/tools/Invoke-LCM_GoodMorning.ps1
   Authors: Rolf, LCM_AI Engine
   Version: 10.2.5
-  Date: 2026-11-10 11:30:00
+  Date: 2026-11-14 12:25:00
   Rule: RULE-CTX-006, RULE-LCM-030
 .PARAMETER Auto
   Session-start mode: silent (one line) when the gap is below -GapHours and -NoBaseline is specified.
@@ -153,6 +153,9 @@ $baselineState = if (Get-Command -Name Get-MacriumBaselineState -ErrorAction Sil
 if ($null -ne $baselineState) {
     if ($baselineState.Plausible) {
         Write-Host ("  Mounted baseline drive : {0} (Volume: {1})" -f $baselineState.MountedDrive, $baselineState.VolumeLabel) -ForegroundColor Green
+        if (-not [string]::IsNullOrWhiteSpace($baselineState.ImageFileName)) {
+            Write-Host ("  Baseline image file    : {0}" -f $baselineState.ImageFileName) -ForegroundColor Green
+        }
         Write-Host ("  Snapshot saved at      : {0}" -f $(if ($baselineState.SnapshotSavedAt) { $baselineState.SnapshotSavedAt } else { 'unknown' }))
         Write-Host ("  GoodNight observed     : {0}" -f $(if ($baselineState.GoodNightObserved) { 'Yes' } else { 'No' }))
     } else {
@@ -160,7 +163,8 @@ if ($null -ne $baselineState) {
     }
     $regStamp = if ($baselineState.RegistryMRMTimeStamp) { $baselineState.RegistryMRMTimeStamp } else { 'none' }
     $regDrive = if ($baselineState.RegistryMRMdrive) { $baselineState.RegistryMRMdrive } else { 'none' }
-    Write-Host ("  Registry registered    : {0} on {1}" -f $regStamp, $regDrive) -ForegroundColor Gray
+    $regLeaf = if ($baselineState.RegistryMRMImageLeaf) { " (" + $baselineState.RegistryMRMImageLeaf + ")" } else { '' }
+    Write-Host ("  Registry registered    : {0} on {1}{2}" -f $regStamp, $regDrive, $regLeaf) -ForegroundColor Gray
 } else {
     Write-Host '  Baseline telemetry module unavailable.' -ForegroundColor DarkYellow
 }

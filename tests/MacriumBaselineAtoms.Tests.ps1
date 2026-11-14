@@ -26,4 +26,12 @@ Describe 'Macrium baseline atomic tools' {
     $mountTool | Should -Match ([regex]::Escape('Invoke-MacriumDailyBcrBaseline.ps1'))
     $mountTool | Should -Match ([regex]::Escape('-WhatIf:$WhatIfPreference'))
   }
+
+  It 'inspects and returns ImagePath and ImageFileName in baseline telemetry (CRP-328)' {
+    $atomsModule = Get-Content -LiteralPath (Join-Path $repositoryRoot 'modules\LcmMacriumAtoms.psm1') -Raw -Encoding UTF8
+    $atomsModule | Should -Match 'MRMImagePath'
+    $atomsModule | Should -Match 'MRMImageLeaf'
+    $atomsModule | Should -Match 'ImagePath\s*='
+    $atomsModule | Should -Match 'ImageFileName\s*='
+  }
 }
