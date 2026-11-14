@@ -51,7 +51,7 @@ Write-Host "=================================================================" -
 $gateFailures = [System.Collections.Generic.List[string]]::new()
 
 # Gate 1: .agents/rules Reparse Point
-Write-Host "`n[Gate 1/6] Validating .agents/rules Reparse Point..." -ForegroundColor Yellow
+Write-Host "`n[Gate 1/7] Validating .agents/rules Reparse Point..." -ForegroundColor Yellow
 $rulesPath = Join-Path $repoPath '.agents\rules'
 if (-not (Test-Path -LiteralPath $rulesPath)) {
   $gateFailures.Add("Gate 1: .agents\rules path does not exist.")
@@ -70,7 +70,7 @@ if (-not (Test-Path -LiteralPath $rulesPath)) {
 }
 
 # Gate 2: UTF-8 without BOM on source files
-Write-Host "`n[Gate 2/6] Validating File Encodings (UTF-8 No-BOM)..." -ForegroundColor Yellow
+Write-Host "`n[Gate 2/7] Validating File Encodings (UTF-8 No-BOM)..." -ForegroundColor Yellow
 $bomFiles = [System.Collections.Generic.List[string]]::new()
 $codeFiles = @(Get-ChildItem -LiteralPath $repoPath -Include *.ps1,*.psm1,*.py,*.js,*.json -Recurse -File -ErrorAction SilentlyContinue |
   Where-Object { $_.FullName -notmatch '\\(\.git|\.venv|scratch|node_modules|logs|data|docs\\Proposals)\\' })
@@ -94,7 +94,7 @@ if ($bomFiles.Count -gt 0) {
 }
 
 # Gate 3: PowerShell AST Syntax Validation (RULE-PS-021)
-Write-Host "`n[Gate 3/6] Validating PowerShell AST Syntax..." -ForegroundColor Yellow
+Write-Host "`n[Gate 3/7] Validating PowerShell AST Syntax..." -ForegroundColor Yellow
 $psFiles = @(Get-ChildItem -LiteralPath $repoPath -Include *.ps1,*.psm1,*.psd1 -Recurse -File -ErrorAction SilentlyContinue |
   Where-Object { $_.FullName -notmatch '\\(\.git|\.venv|scratch|node_modules|logs|data)\\' })
 
@@ -133,7 +133,7 @@ if ($psErrors.Count -gt 0) {
 }
 
 # Gate 4: Python Compilation Syntax Check (RULE-PY-001)
-Write-Host "`n[Gate 4/6] Validating Python Source Syntax..." -ForegroundColor Yellow
+Write-Host "`n[Gate 4/7] Validating Python Source Syntax..." -ForegroundColor Yellow
 $pyFiles = @(Get-ChildItem -LiteralPath $repoPath -Filter *.py -Recurse -File -ErrorAction SilentlyContinue |
   Where-Object { $_.FullName -notmatch '\\(\.git|\.venv|scratch|node_modules|logs|data)\\' })
 
@@ -156,7 +156,7 @@ if ($pyFiles.Count -gt 0) {
 }
 
 # Gate 5: Git Secrets & Ignore Isolation Check
-Write-Host "`n[Gate 5/6] Validating Git Secrets & Ignore Isolation..." -ForegroundColor Yellow
+Write-Host "`n[Gate 5/7] Validating Git Secrets & Ignore Isolation..." -ForegroundColor Yellow
 $gitignorePath = Join-Path $repoPath '.gitignore'
 if (-not (Test-Path -LiteralPath $gitignorePath)) {
   $gateFailures.Add("Gate 5: Missing .gitignore file.")
@@ -172,7 +172,7 @@ if (-not (Test-Path -LiteralPath $gitignorePath)) {
 }
 
 # Gate 6: Elevated Operations & Immutability Governance (RULE-ELEV-007)
-Write-Host "`n[Gate 6/6] Validating Elevated Operations & Immutability Governance (RULE-ELEV-007)..." -ForegroundColor Yellow
+Write-Host "`n[Gate 6/7] Validating Elevated Operations & Immutability Governance (RULE-ELEV-007)..." -ForegroundColor Yellow
 $elevatedCheckFailures = [System.Collections.Generic.List[string]]::new()
 $catalogJsonPath = Join-Path $repoPath 'config\tool_catalog.json'
 if (-not (Test-Path -LiteralPath $catalogJsonPath)) {
@@ -222,6 +222,28 @@ if ($elevatedCheckFailures.Count -gt 0) {
   foreach ($f in ($elevatedCheckFailures | Select-Object -First 5)) { Write-Host "    - $f" -ForegroundColor DarkYellow }
 } else {
   Write-Host "  Passed: Elevated operations immutability and catalog parity verified (RULE-ELEV-007)." -ForegroundColor Green
+}
+
+# Gate 7: Validating LCM Inventory Exclusivity & Non-Duplication (RULE-SUB-008, RULE-LCM-034)
+Write-Host "`n[Gate 7/7] Validating LCM Inventory Exclusivity (Proposals, DoT, scratch)..." -ForegroundColor Yellow
+if ($repoName -like 'LCM_*' -and $repoName -ne 'LCM_Inventory') {
+  $exclusivityFailures = [System.Collections.Generic.List[string]]::new()
+  $prohibitedDirs = @('docs\Proposals', 'Proposals', 'DoT', 'scratch')
+  foreach ($pdir in $prohibitedDirs) {
+    $fullPDir = Join-Path $repoPath $pdir
+    if (Test-Path -LiteralPath $fullPDir) {
+      $exclusivityFailures.Add("Found prohibited directory '$pdir' in '$repoName'. All proposals, DoT, and scratch must reside exclusively in LCM_Inventory (RULE-SUB-008, RULE-LCM-034).")
+    }
+  }
+  if ($exclusivityFailures.Count -gt 0) {
+    $gateFailures.Add("Gate 7: LCM Inventory Exclusivity check failed for $($exclusivityFailures.Count) prohibited path(s).")
+    Write-Host "  FAILED: Prohibited directory found in governed LCM_* repository." -ForegroundColor Red
+    foreach ($ef in $exclusivityFailures) { Write-Host "    - $ef" -ForegroundColor DarkYellow }
+  } else {
+    Write-Host "  Passed: LCM Inventory exclusivity verified (zero rogue Proposals/DoT/scratch in $repoName)." -ForegroundColor Green
+  }
+} else {
+  Write-Host "  Passed: LCM Inventory exclusivity check satisfied." -ForegroundColor Green
 }
 
 Write-Host "`n=================================================================" -ForegroundColor Cyan

@@ -251,7 +251,7 @@ function New-LCM_Proposal {
     $bundleDirName = "{0}-{1}" -f $canonicalId, $cleanSlug
     $bundleRelPath = "docs/Proposals/$bundleDirName"
 
-    $targetRepoDir = if ($OriginRepo -and (Test-Path (Join-Path $WorkspaceRoot $OriginRepo))) {
+    $targetRepoDir = if ($OriginRepo -and ($OriginRepo -notlike 'LCM_*') -and (Test-Path (Join-Path $WorkspaceRoot $OriginRepo))) {
         Join-Path $WorkspaceRoot $OriginRepo
     } else {
         Join-Path $WorkspaceRoot 'LCM_Inventory'
@@ -2428,7 +2428,7 @@ function Get-LcmProposalDocument {
         return $null
     }
 
-    $repoName = if ($proposal.origin_repo -and (Test-Path (Join-Path $WorkspaceRoot $proposal.origin_repo))) {
+    $repoName = if ($proposal.origin_repo -and ($proposal.origin_repo -notlike 'LCM_*') -and (Test-Path (Join-Path $WorkspaceRoot $proposal.origin_repo))) {
         $proposal.origin_repo
     } else {
         'LCM_Inventory'
@@ -2548,7 +2548,7 @@ function Remove-LcmProposalBundle {
         return $null
     }
 
-    $repoName = if ($proposal.origin_repo -and (Test-Path (Join-Path $WorkspaceRoot $proposal.origin_repo))) {
+    $repoName = if ($proposal.origin_repo -and ($proposal.origin_repo -notlike 'LCM_*') -and (Test-Path (Join-Path $WorkspaceRoot $proposal.origin_repo))) {
         $proposal.origin_repo
     } else {
         'LCM_Inventory'

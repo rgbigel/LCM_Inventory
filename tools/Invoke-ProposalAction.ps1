@@ -446,7 +446,7 @@ switch -Regex ($Action) {
                 Write-Host "Renamed Proposal #$id : '$oldTitle' -> '$Title'" -ForegroundColor Green
 
                 if ($p.PSObject.Properties['bundle_dir'] -and $p.bundle_dir) {
-                    $originRepo = if ($p.PSObject.Properties['origin_repo'] -and $p.origin_repo) { $p.origin_repo } else { 'LCM_Inventory' }
+                    $originRepo = if ($p.PSObject.Properties['origin_repo'] -and $p.origin_repo -and ($p.origin_repo -notlike 'LCM_*')) { $p.origin_repo } else { 'LCM_Inventory' }
                     $bundleSpec = Join-Path $workspaceRoot (Join-Path $originRepo (Join-Path $p.bundle_dir 'Specification.md'))
                     if (Test-Path -LiteralPath $bundleSpec) {
                         $content = Get-Content -LiteralPath $bundleSpec -Raw

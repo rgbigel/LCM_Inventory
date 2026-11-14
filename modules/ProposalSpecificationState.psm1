@@ -32,7 +32,7 @@ function Get-LcmSpecificationStateEdits {
     if ($old.Count -eq 1 -and $old[0].state -eq $proposal.state) { continue }
     $state = [string]$proposal.state
     if (-not $progress.ContainsKey($state)) { throw "Cannot mirror unsupported proposal state '$state' for #$($proposal.id)." }
-    $repo = if ($proposal.PSObject.Properties['origin_repo'] -and $proposal.origin_repo) { [string]$proposal.origin_repo } else { 'LCM_Inventory' }
+    $repo = if ($proposal.PSObject.Properties['origin_repo'] -and $proposal.origin_repo -and ($proposal.origin_repo -notlike 'LCM_*')) { [string]$proposal.origin_repo } else { 'LCM_Inventory' }
     if ($repo -in @('.', '..') -or [IO.Path]::GetFileName($repo) -ne $repo) {
       throw "Invalid repository name for proposal #$($proposal.id)."
     }
