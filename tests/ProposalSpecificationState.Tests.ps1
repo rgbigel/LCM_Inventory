@@ -51,11 +51,21 @@ Describe 'Persisted specification lifecycle mirrors' {
     foreach ($path in $specs) { [IO.File]::ReadAllText($path) | Should -Match 'Plan-State: in_progress' }
   }
 
-  It 'prevalidates all metadata before changing any documents or the ledger' {
-    [IO.File]::WriteAllText($specs[1], 'Missing metadata fence')
+  It 'silently inserts a missing YAML metadata fence when missing from specification' {
+    [IO.File]::WriteAllText($specs[1], "# CRP-2`r`n`r`nBody content without YAML fence")
+    Move-LcmProposalLifecycleState -Id 2 -State in_progress | Out-Null
+    $text = [IO.File]::ReadAllText($specs[1])
+    $text | Should -Match '```yaml'
+    $text | Should -Match 'Plan-State: in_progress'
+    $text | Should -Match 'Body content without YAML fence'
+  }
+
+  It 'prevalidates all metadata and halts for operator intervention when metadata is ambiguous' {
+    $ambigText = "# CRP-2`r`n`r`n" + '```yaml' + "`r`nStatus: One`r`nStatus: Two`r`nPlan-State: suggested`r`nProgress-State: undecided`r`n" + '```'
+    [IO.File]::WriteAllText($specs[1], $ambigText)
     $before = [IO.File]::ReadAllText($env:LCM_PROPOSAL_STORE_PATH)
     foreach ($p in $store.proposals) { $p.state='in_progress' }
-    { Set-ProposalStore $store } | Should -Throw '*metadata fence missing*'
+    { Set-ProposalStore $store } | Should -Throw '*Ambiguous metadata*'
     [IO.File]::ReadAllText($specs[0]) | Should -Match 'Plan-State: suggested'
     [IO.File]::ReadAllText($env:LCM_PROPOSAL_STORE_PATH) | Should -BeExactly $before
   }

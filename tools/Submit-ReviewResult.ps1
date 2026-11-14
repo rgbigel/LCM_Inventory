@@ -200,7 +200,16 @@ $crossRepositoryObligation = @(Get-LcmProposalReviewObligations -Proposal $match
 }) | Select-Object -First 1
 $unresolvedCrossRepositoryObligations = @(Get-LcmProposalReviewObligations -Proposal $matchingProposals[0] -UnresolvedOnly)
 if ($matchingProposals[0].state -ne 'in_review' -and $null -eq $crossRepositoryObligation) {
-    throw "Review result for $CRP requires lifecycle state 'in_review'; found '$($matchingProposals[0].state)'."
+    if ($matchingProposals[0].state -in @('verified', 'in_progress')) {
+        Write-Host "Auto-transitioning '$CRP' from '$($matchingProposals[0].state)' to 'in_review' for review completion..." -ForegroundColor DarkCyan
+        if ($matchingProposals[0].state -eq 'in_progress') {
+            Move-LcmProposalLifecycleState -Id $matchingProposals[0].id -State 'verified' -Details "Auto-transitioned to verified for review submission" | Out-Null
+        }
+        Move-LcmProposalLifecycleState -Id $matchingProposals[0].id -State 'in_review' -Details "Auto-transitioned to in_review for review submission" | Out-Null
+        $matchingProposals = @(Get-ProposalStore | ForEach-Object { @($_.proposals | Where-Object { $_.id -eq $matchingProposals[0].id })[0] })
+    } else {
+        throw "Review result for $CRP requires lifecycle state 'in_review'; found '$($matchingProposals[0].state)'."
+    }
 }
 if ($null -eq $crossRepositoryObligation -and $unresolvedCrossRepositoryObligations.Count -gt 0) {
     $blockingComponents = @($unresolvedCrossRepositoryObligations | ForEach-Object {

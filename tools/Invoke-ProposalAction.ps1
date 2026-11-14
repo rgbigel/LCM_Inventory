@@ -593,6 +593,14 @@ switch -Regex ($Action) {
             $store = Get-ProposalStore
             $proposal = @($store.proposals | Where-Object { $_.id -eq $id })[0]
             if ($null -eq $proposal) { throw "Proposal #$Id was not found." }
+            if ($proposal.state -in @('verified', 'in_progress')) {
+                if ($proposal.state -eq 'in_progress') {
+                    Move-LcmProposalLifecycleState -Id $id -State 'verified' -Details "Auto-transitioned to verified for completion" | Out-Null
+                }
+                Move-LcmProposalLifecycleState -Id $id -State 'in_review' -Details "Auto-transitioned to in_review for completion" | Out-Null
+                $store = Get-ProposalStore
+                $proposal = @($store.proposals | Where-Object { $_.id -eq $id })[0]
+            }
             $repo = if ($proposal.origin_repo) { $proposal.origin_repo } else { 'LCM_Inventory' }
             $crpTag = if ($proposal.crp_id) { $proposal.crp_id } elseif ($proposal.cr_id) { $proposal.cr_id } else { "CRP-$id" }
             $reviewResultArgs = @{
@@ -700,6 +708,14 @@ switch -Regex ($Action) {
                 }
                 default {
                     # Gate 2 Acceptance: Accept implementation/review -> complete
+                    if ($cur -in @('verified', 'in_progress')) {
+                        if ($cur -eq 'in_progress') {
+                            Move-LcmProposalLifecycleState -Id $id -State 'verified' -Details "Auto-transitioned to verified for Gate 2 acceptance" | Out-Null
+                        }
+                        Move-LcmProposalLifecycleState -Id $id -State 'in_review' -Details "Auto-transitioned to in_review for Gate 2 acceptance" | Out-Null
+                        $store = Get-ProposalStore
+                        $existing = $store.proposals | Where-Object { $_.id -eq $id } | Select-Object -First 1
+                    }
                     $repo = if ($existing.origin_repo) { $existing.origin_repo } else { 'LCM_Inventory' }
                     $crpTag = if ($existing.crp_id) { $existing.crp_id } elseif ($existing.cr_id) { $existing.cr_id } else { "CRP-$id" }
                     $reviewResultArgs = @{
