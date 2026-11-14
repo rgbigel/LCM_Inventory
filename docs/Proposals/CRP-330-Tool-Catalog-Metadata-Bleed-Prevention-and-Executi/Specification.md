@@ -7,9 +7,9 @@ Scope: LCM_Inventory, LCM_Tools
 Baseline-Version: 10.2.1
 Author: rgbig
 Date: 2026-11-14 13:10:00
-Status: In Progress
-Plan-State: in_progress
-Progress-State: in_progress
+Status: In Review
+Plan-State: in_review
+Progress-State: verification
 Priority: High
 App-ID: None
 ```
