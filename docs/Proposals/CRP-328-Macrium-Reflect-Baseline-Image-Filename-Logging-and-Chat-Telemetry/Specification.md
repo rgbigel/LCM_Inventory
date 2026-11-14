@@ -1,5 +1,19 @@
 # Specification: Macrium Reflect Baseline Image Filename Logging and Chat Telemetry
 
+```yaml
+CRP-ID: CRP-328
+Title: Macrium Reflect Baseline Image Filename Logging and Chat Telemetry
+Scope: LCM_Inventory
+Baseline-Version: 10.2.1
+Author: Rolf & Antigravity
+Date: 2026-11-14 12:23:25
+Status: In Review
+Plan-State: in_review
+Progress-State: verification
+Priority: High
+App-ID: None
+```
+
 **Document Information**
 - **Proposal ID**: CRP-328
 - **Title**: Macrium Reflect Baseline Image Filename Logging and Chat Telemetry

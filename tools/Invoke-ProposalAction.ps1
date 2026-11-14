@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     Executes proposal lifecycle actions and configures lifecycle governance settings.
 .DESCRIPTION
