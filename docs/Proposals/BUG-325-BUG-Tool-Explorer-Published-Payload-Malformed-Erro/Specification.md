@@ -7,8 +7,8 @@ Scope: LCM_Inventory
 Baseline-Version: 10.2.1
 Author: rgbig
 Date: 2026-11-13 12:38:22
-Status: Verified
-Plan-State: verified
+Status: In Review
+Plan-State: in_review
 Progress-State: verification
 Priority: High
 App-ID: None
