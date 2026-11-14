@@ -1,5 +1,20 @@
 # Specification: BUG-327
 
+
+```yaml
+CRP-ID: BUG-327
+Title: [BUG] BCR and Macrium Baseline Admin Flag Alignment and Headless Elevation Hang Remediation
+Scope: LCM_Inventory
+Baseline-Version: 10.2.5
+Author: Rolf & Antigravity
+Date: 2026-11-14 08:53:32
+Status: In Review
+Plan-State: in_review
+Progress-State: verification
+Priority: 9
+App-ID: None
+```
+
 ## Document Information
 - **Proposal ID**: `BUG-327`
 - **Title**: BCR and Macrium Baseline Admin Flag Alignment and Headless Elevation Hang Remediation
