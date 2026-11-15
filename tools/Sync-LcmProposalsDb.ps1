@@ -8,10 +8,11 @@
              parity verification, and release-horizon querying for the LCM Proposals ledger.
              Equipped with sandbox identity tagging and Git pull/checkout auto-hydration hooks.
              Implements CRP-322.
+             Implementation Choices (CRP-333): -Help/-h/-? use Get-Help -Name (was -Path, which showed the generic help topic).
     Path: LCM_Inventory/tools/Sync-LcmProposalsDb.ps1
-    Authors: Rolf, LCM_AI Engine
-    Version: 10.2.3
-    Date: 2026-11-12 12:15:00
+    Authors: Rolf, Claude, LCM_AI Engine
+    Version: 10.2.4
+    Date: 2026-11-15
 
 .PARAMETER Action
     Operation to perform:
@@ -111,7 +112,7 @@ param(
     [switch]$Silent,
 
     [Parameter()]
-    [Alias('h')]
+    [Alias('h', '?')]
     [switch]$Help
 )
 
@@ -119,7 +120,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 if ($Help) {
-    Get-Help -Path $PSCommandPath -Detailed
+    Get-Help -Name $PSCommandPath -Detailed
     return
 }
 

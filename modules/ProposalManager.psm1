@@ -5,9 +5,14 @@
 # Purpose: Manages LCM proposal lifecycle (suggested -> processed -> deferred / completed / deleted),
 #          batch operations, review granularity ('coarse' | 'tight'), repo review queue inspection,
 #          and persistent ledger storage in LCM_Inventory.
-# Authors: Rolf, LCM_AI Engine
-# Version: 10.2.3
-# Date: 2026-11-12 10:00:00
+# Authors: Rolf, Claude, LCM_AI Engine
+# Version: 10.2.4
+# Date: 2026-11-15 16:40:00
+# Implementation Choices (CRP-334): New-LCM_Proposal resolves the LCM version before scaffolding
+#          (inventory.json, then LCM_AI/.agents/version.json, else fail), writes it and -Priority
+#          into the Specification template (with DOX header) and the ledger row consistently.
+# Implementation Choices (BUG-336): Set-ProposalStore skips the live DB sync while LCM_PROPOSAL_STORE_PATH
+#          redirects the store (the sync always reads the live JSON).
 # =====================================================================
 
 Set-StrictMode -Version Latest
@@ -97,7 +102,8 @@ function Set-ProposalStore {
         }
         [IO.File]::Move($temporaryPath, $path, $true)
         $syncScript = Join-Path (Split-Path -Path $PSScriptRoot -Parent) 'tools\Sync-LcmProposalsDb.ps1'
-        if (Test-Path -LiteralPath $syncScript) {
+        # BUG-336: the sync always projects the live JSON; skip it while the store is redirected (tests, sandboxes).
+        if ([string]::IsNullOrWhiteSpace($env:LCM_PROPOSAL_STORE_PATH) -and (Test-Path -LiteralPath $syncScript)) {
             try { & $syncScript -Silent -ErrorAction SilentlyContinue } catch { }
         }
     } catch {
@@ -226,6 +232,8 @@ function New-LCM_Proposal {
         [string]$AppId = '',
         [string]$PrimaryApp = '',
         [string[]]$AffectedApps = @(),
+        [ValidateRange(0, 10)]
+        [int]$Priority = 5,
         [string]$WorkspaceRoot = 'D:\Git_Repositories'
     )
 
@@ -243,6 +251,31 @@ function New-LCM_Proposal {
     $activeCtx = Get-ActiveAppContext
     if ([string]::IsNullOrWhiteSpace($AppId) -and $activeCtx -and $activeCtx.app_id -and $activeCtx.app_id -ne 'Architecture') {
         $AppId = $activeCtx.app_id
+    }
+
+    # CRP-334: resolve the LCM version before any scaffolding; inventory first, then LCM_AI/.agents/version.json.
+    $currentLcmVersion = ''
+    $invPath = Join-Path (Join-Path $WorkspaceRoot 'LCM_Inventory') 'data\inventory.json'
+    if (Test-Path -LiteralPath $invPath) {
+        try {
+            $inv = Get-Content -LiteralPath $invPath -Raw | ConvertFrom-Json
+            if ($inv.workspace_ai_baseline -and $inv.workspace_ai_baseline.GlobalLCMVersion) {
+                $currentLcmVersion = [string]$inv.workspace_ai_baseline.GlobalLCMVersion
+            }
+        } catch { }
+    }
+    if ([string]::IsNullOrWhiteSpace($currentLcmVersion)) {
+        $versionPath = Join-Path $WorkspaceRoot 'LCM_AI\.agents\version.json'
+        if (-not (Test-Path -LiteralPath $versionPath)) {
+            # Module-relative fallback: the workspace this module belongs to (WorkspaceRoot may be a sandbox).
+            $versionPath = Join-Path $PSScriptRoot '..\..\LCM_AI\.agents\version.json'
+        }
+        if (Test-Path -LiteralPath $versionPath) {
+            try { $currentLcmVersion = [string](Get-Content -LiteralPath $versionPath -Raw | ConvertFrom-Json).version } catch { }
+        }
+    }
+    if ([string]::IsNullOrWhiteSpace($currentLcmVersion)) {
+        throw 'LCM version unresolved: neither inventory.json GlobalLCMVersion nor LCM_AI/.agents/version.json is readable.'
     }
 
     # CRP-162 Proposal Bundle Directory Standard
@@ -263,25 +296,34 @@ function New-LCM_Proposal {
     }
 
     # 1. Specification.md
+    $repoLeaf = Split-Path -Path $targetRepoDir -Leaf
     $specPath = Join-Path $bundleFullPath 'Specification.md'
     if (-not (Test-Path $specPath)) {
         $appDisplay = if ($AppId) { $AppId } else { "None" }
         # In an expandable here-string the backtick is the escape character; the markdown fence must come from a variable (BUG-302).
         $fence = '```'
         $specContent = @"
-# Change Request Proposal: $canonicalId
+# Specification: $canonicalId
+
+Module: $bundleRelPath/Specification.md  
+Purpose: $Title  
+Path: $repoLeaf/$bundleRelPath/Specification.md  
+Authors: $Author  
+Version: $currentLcmVersion
+Status: Suggested  
+Date: $timestamp
 
 ${fence}yaml
 CRP-ID: $canonicalId
 Title: $Title
 Scope: $OriginRepo
-Baseline-Version: 10.2.1
+Baseline-Version: $currentLcmVersion
 Author: $Author
 Date: $timestamp
 Status: Suggested
 Plan-State: suggested
 Progress-State: undecided
-Priority: High
+Priority: $Priority
 App-ID: $appDisplay
 ${fence}
 
@@ -355,16 +397,6 @@ Implementation and verification records for $canonicalId.
         $WalkthroughPath = "$bundleRelPath/Walkthrough.md"
     }
 
-    $invPath = Join-Path (Join-Path $WorkspaceRoot 'LCM_Inventory') 'data\inventory.json'
-    $currentLcmVersion = '10.2.3'
-    if (Test-Path -LiteralPath $invPath) {
-        try {
-            $inv = Get-Content -LiteralPath $invPath -Raw | ConvertFrom-Json
-            if ($inv.workspace_ai_baseline -and $inv.workspace_ai_baseline.GlobalLCMVersion) {
-                $currentLcmVersion = [string]$inv.workspace_ai_baseline.GlobalLCMVersion
-            }
-        } catch { }
-    }
 
     $proposal = [ordered]@{
         id               = $newId
@@ -390,7 +422,7 @@ Implementation and verification records for $canonicalId.
         github_url       = $null
         author           = if ($Author) { $Author } else { 'Rolf' }
         details          = $Details
-        priority         = 5
+        priority         = $Priority
         disposition      = $null
         flow_mode        = if ($isBug) { 'doit' } else { 'standard' }
         always_proceed   = if ($isBug) { $true } else { $false }

@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-11-14T21:17:07+01:00",
+  "updated_at": "2026-11-15T17:04:10+01:00",
   "review_granularity": "tight",
   "lcm_mode": "active",
-  "last_proposal_id": 331,
+  "last_proposal_id": 337,
   "proposals": [
     {
       "id": 261,
@@ -18152,7 +18152,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": [],
-      "state": "in_progress",
+      "state": "in_review",
       "bundle_id": "CRP-331",
       "bundle_dir": "docs/Proposals/CRP-331-Claude-Reingestion-Rule-Harmonization-Findings",
       "docs": {
@@ -18172,7 +18172,9 @@
       "dates": {
         "created": "2026-11-14 19:40:52",
         "suggested": "2026-11-14 19:40:52",
-        "in_progress": "2026-11-14 21:17:07"
+        "in_progress": "2026-11-14 21:17:07",
+        "verified": "2026-11-15 14:35:06",
+        "in_review": "2026-11-15 14:37:05"
       },
       "state_history": [
         {
@@ -18190,10 +18192,349 @@
           "cohort_id": "",
           "cohort_gate": "",
           "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-11-15 14:35:06",
+          "user": "rgbig",
+          "note": "",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-11-15 14:37:05",
+          "user": "rgbig",
+          "note": "Macrium BCR review reused for CRP-331.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
-      "progress_state": "in_progress",
+      "progress_state": "verification",
+      "disposition": null,
+      "bcr_initiated_at": "2026-11-15 14:37:05",
+      "bcr_disposition": null,
+      "bcr_scope": "CRP-331"
+    },
+    {
+      "id": 332,
+      "crp_id": "CRP-332",
+      "lcm_version": "10.6.4",
+      "timestamp": "2026-11-15 15:41:57",
+      "title": "Workspace CRLF Line-Ending Enforcement",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-332",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "verified",
+      "bundle_id": "CRP-332",
+      "bundle_dir": "docs/Proposals/CRP-332-Workspace-CRLF-Line-Ending-Enforcement",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "Rolf, Claude",
+      "details": "Enforce the operator line-ending decision (Option A: CRLF everywhere, no mixed setup) across all governed LCM_* repositories and the workspace root; created by Claude, addressed to Antigravity.",
+      "priority": 5,
+      "plan_path": "docs/Proposals/CRP-332-Workspace-CRLF-Line-Ending-Enforcement/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-332-Workspace-CRLF-Line-Ending-Enforcement/Walkthrough.md",
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-11-15 15:51:02",
+          "user": "rgbig",
+          "note": "Operator: ACCEPT 332, DOIT (2026-11-15); implemented by Claude; D-17 amendment part of this CRP.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-11-15 15:57:31",
+          "user": "rgbig",
+          "note": "Claude DOIT: parse 0 errors, Pester 23/23, conversion 419 files 0 failed, recheck 0 LF; Walkthrough section 2.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "in_progress": "2026-11-15 15:51:02",
+        "verified": "2026-11-15 15:57:31"
+      },
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "progress_state": "verification",
       "disposition": null
+    },
+    {
+      "id": 333,
+      "crp_id": "CRP-333",
+      "lcm_version": "10.6.4",
+      "timestamp": "2026-11-15 15:45:35",
+      "title": "Sync-LcmProposalsDb Help Switch Compliance",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-333",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "verified",
+      "bundle_id": "CRP-333",
+      "bundle_dir": "docs/Proposals/CRP-333-Sync-LcmProposalsDb-Help-Switch-Compliance",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "Rolf, Claude",
+      "details": "Make Sync-LcmProposalsDb.ps1 print its own usage for -Help / -h / -? (RULE-PS-010); created by Claude.",
+      "priority": 5,
+      "plan_path": "docs/Proposals/CRP-333-Sync-LcmProposalsDb-Help-Switch-Compliance/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-333-Sync-LcmProposalsDb-Help-Switch-Compliance/Walkthrough.md",
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-11-15 16:31:24",
+          "user": "rgbig",
+          "note": "Operator: DOIT for all 331+ CRPs (2026-11-15); implemented by Claude.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-11-15 16:32:19",
+          "user": "rgbig",
+          "note": "Claude DOIT: parse 0, help switches OK, Pester 10/10.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "in_progress": "2026-11-15 16:31:24",
+        "verified": "2026-11-15 16:32:19"
+      },
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "progress_state": "verification",
+      "disposition": null
+    },
+    {
+      "id": 334,
+      "crp_id": "CRP-334",
+      "lcm_version": "10.6.4",
+      "timestamp": "2026-11-15 15:45:36",
+      "title": "New-LCM_Proposal Specification Template Currency",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-334",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "verified",
+      "bundle_id": "CRP-334",
+      "bundle_dir": "docs/Proposals/CRP-334-New-LCM-Proposal-Specification-Template-Currency",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "Rolf, Claude",
+      "details": "Make New-LCM_Proposal write current, ledger-consistent metadata (LCM version, priority, DOX header) into new Specification files; created by Claude.",
+      "priority": 5,
+      "plan_path": "docs/Proposals/CRP-334-New-LCM-Proposal-Specification-Template-Currency/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-334-New-LCM-Proposal-Specification-Template-Currency/Walkthrough.md",
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-11-15 16:31:26",
+          "user": "rgbig",
+          "note": "Operator: DOIT for all 331+ CRPs (2026-11-15); implemented by Claude.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-11-15 16:43:09",
+          "user": "rgbig",
+          "note": "Claude DOIT: sandbox + Pester 39/39; see Walkthrough.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "in_progress": "2026-11-15 16:31:26",
+        "verified": "2026-11-15 16:43:09"
+      },
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "progress_state": "verification",
+      "disposition": null
+    },
+    {
+      "id": 335,
+      "crp_id": "CRP-335",
+      "lcm_version": "10.6.4",
+      "timestamp": "2026-11-15 16:30:04",
+      "title": "CM Control Hub Refresh Shows Stale Page",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-335",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "verified",
+      "bundle_id": "CRP-335",
+      "bundle_dir": "docs/Proposals/CRP-335-CM-Control-Hub-Refresh-Shows-Stale-Page",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "Rolf, Claude",
+      "details": "Hub refresh can show a stale CM_CONTROL_HUB.html after ledger changes; observation only, analysis deferred (operator 2026-11-15).",
+      "priority": 5,
+      "plan_path": "docs/Proposals/CRP-335-CM-Control-Hub-Refresh-Shows-Stale-Page/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-335-CM-Control-Hub-Refresh-Shows-Stale-Page/Walkthrough.md",
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-11-15 16:31:28",
+          "user": "rgbig",
+          "note": "Operator: DOIT for all 331+ CRPs (2026-11-15); implemented by Claude.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-11-15 16:49:10",
+          "user": "rgbig",
+          "note": "Claude DOIT: daemon refresh re-renders; tested on port 9877; redeploy needed for live test.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "in_progress": "2026-11-15 16:31:28",
+        "verified": "2026-11-15 16:49:10"
+      },
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "progress_state": "verification",
+      "disposition": null
+    },
+    {
+      "id": 336,
+      "crp_id": "BUG-336",
+      "lcm_version": "10.6.4",
+      "timestamp": "2026-11-15 16:39:18",
+      "title": "ProposalManager Tests Write Into Live Workspace",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "BUG-336",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "verified",
+      "bundle_id": "BUG-336",
+      "bundle_dir": "docs/Proposals/BUG-336-ProposalManager-Tests-Write-Into-Live-Workspace",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "Rolf, Claude",
+      "details": "ProposalManager.Tests.ps1 writes into the live ledger, DB, bundles, session registers and App catalog; isolate it.",
+      "priority": 5,
+      "plan_path": "docs/Proposals/BUG-336-ProposalManager-Tests-Write-Into-Live-Workspace/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/BUG-336-ProposalManager-Tests-Write-Into-Live-Workspace/Walkthrough.md",
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-11-15 16:39:20",
+          "user": "rgbig",
+          "note": "BUG found during CRP-334 verification; DOIT per operator rule 2026-11-15.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-11-15 16:43:12",
+          "user": "rgbig",
+          "note": "Claude DOIT: live hashes unchanged, Pester 39/39, parity 310.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "in_progress": "2026-11-15 16:39:20",
+        "verified": "2026-11-15 16:43:12"
+      },
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "progress_state": "verification",
+      "disposition": null
+    },
+    {
+      "id": 337,
+      "crp_id": "CRP-337",
+      "lcm_version": "10.6.4",
+      "timestamp": "2026-11-15 17:04:10",
+      "title": "DO Gateway Elevation Permits per Tool Admin State",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-337",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "suggested",
+      "progress_state": "undecided",
+      "bundle_id": "CRP-337",
+      "bundle_dir": "docs/Proposals/CRP-337-DO-Gateway-Elevation-Permits-per-Tool-Admin-State",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "Rolf, Claude",
+      "details": "DO daemon runs every command elevated; align with tools.admin + Administrators group model. No code change yet (operator 2026-11-15).",
+      "priority": 7,
+      "disposition": null,
+      "flow_mode": "standard",
+      "always_proceed": false,
+      "plan_path": "docs/Proposals/CRP-337-DO-Gateway-Elevation-Permits-per-Tool-Admin-State/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-337-DO-Gateway-Elevation-Permits-per-Tool-Admin-State/Walkthrough.md"
     }
   ],
   "testing_mode": "active",

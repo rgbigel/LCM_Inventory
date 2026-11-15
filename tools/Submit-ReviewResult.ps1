@@ -46,9 +46,13 @@ param(
     Purpose: Records operator review acceptance from Beyond Compare and commits the accepted live working tree
              through the exact-CRP review gate.
     Path: tools/Submit-ReviewResult.ps1
-    Authors: Rolf, LCM_AI Engine
-    Version: 10.2.1
-    Date: 2026-10-18
+    Authors: Rolf, Claude, LCM_AI Engine
+    Version: 10.2.2
+    Date: 2026-11-15
+
+    Implementation Choices (CRP-332): before staging, every committable or already staged path is normalized to CRLF
+    (LcmLineEndingAtoms.psm1, byte level). This is the completion-time line-ending enforcement; a CRLF correction is not
+    a review-relevant change, so it runs after the BCR disposition and adds no review candidate.
 #>
 
 Set-StrictMode -Version Latest
@@ -230,6 +234,24 @@ $actionsExecuted.Add("Accepted live worktree through BCR disposition '$Result'."
 $existingStagedPaths = @(git -C $targetRepoPath diff --cached --name-only)
 if ($existingStagedPaths.Count -gt 0) {
     Write-Host "Continuing reviewed manifest with $($existingStagedPaths.Count) existing staged path(s) in '$repoName'." -ForegroundColor DarkYellow
+}
+
+# CRP-332: completion-time CRLF normalization of the live files that this completion commits.
+Import-Module -Name (Join-Path $PSScriptRoot '..\modules\LcmLineEndingAtoms.psm1') -Force
+$crlfCandidatePaths = @(
+    $existingStagedPaths
+    git -C $targetRepoPath diff --name-only
+    git -C $targetRepoPath ls-files --others --exclude-standard
+) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Sort-Object -Unique
+$crlfConverted = 0
+foreach ($crlfRelativePath in $crlfCandidatePaths) {
+    $crlfFullPath = Join-Path $targetRepoPath $crlfRelativePath
+    $crlfResult = Repair-LcmLineEnding -Path $crlfFullPath
+    if ('Converted' -eq $crlfResult.Status) { $crlfConverted++ }
+    if ('Failed' -eq $crlfResult.Status) { Write-Warning ('CRLF normalization failed for {0}: {1}' -f $crlfRelativePath, $crlfResult.Reason) }
+}
+if ($crlfConverted -gt 0) {
+    $actionsExecuted.Add("Normalized $crlfConverted file(s) to CRLF before staging (CRP-332).")
 }
 
 if ($StagedOnly) {

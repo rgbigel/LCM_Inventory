@@ -1,3 +1,4 @@
+# BUG-336 (2026-11-15, Rolf, Claude): looks up New-LCM_Proposal (New-WorkspaceProposal is its alias) and the CRP-334 template heading.
 Describe 'New-WorkspaceProposal Specification template fences (BUG-302)' {
   BeforeAll {
     $modulePath = Join-Path $PSScriptRoot '..\modules\ProposalManager.psm1'
@@ -7,7 +8,7 @@ Describe 'New-WorkspaceProposal Specification template fences (BUG-302)' {
     $ast = [System.Management.Automation.Language.Parser]::ParseInput($script:source, [ref]$tokens, [ref]$errors)
     $function = $ast.Find({
         param($node)
-        $node -is [System.Management.Automation.Language.FunctionDefinitionAst] -and $node.Name -eq 'New-WorkspaceProposal'
+        $node -is [System.Management.Automation.Language.FunctionDefinitionAst] -and $node.Name -eq 'New-LCM_Proposal'
       }, $true)
     $script:functionText = $function.Extent.Text
     # The expandable here-strings of the function, as the parser sees their literal source text.
@@ -18,7 +19,7 @@ Describe 'New-WorkspaceProposal Specification template fences (BUG-302)' {
 
   It 'finds the Specification template inside New-WorkspaceProposal' {
     $script:functionText | Should -Not -BeNullOrEmpty
-    @($script:hereStrings | Where-Object { $_.Text -match 'Change Request Proposal' }).Count | Should -BeGreaterThan 0
+    @($script:hereStrings | Where-Object { $_.Text -match 'Specification: \$canonicalId' }).Count | Should -BeGreaterThan 0
   }
 
   It 'does not write a backtick directly before text in an expandable here-string (escape character)' {
@@ -31,14 +32,14 @@ Describe 'New-WorkspaceProposal Specification template fences (BUG-302)' {
 
   It 'expands the yaml fence from a variable that holds three backticks' {
     $script:functionText | Should -Match ([regex]::Escape('$fence = ''```'''))
-    $spec = @($script:hereStrings | Where-Object { $_.Text -match 'Change Request Proposal' })[0]
+    $spec = @($script:hereStrings | Where-Object { $_.Text -match 'Specification: \$canonicalId' })[0]
     $spec.Text | Should -Match ([regex]::Escape('${fence}yaml'))
   }
 
   It 'expands the template into an intact yaml block' {
     $fence = '```'
     $canonicalId = 'CRP-999'
-    $expanded = $ExecutionContext.InvokeCommand.ExpandString((@($script:hereStrings | Where-Object { $_.Text -match 'Change Request Proposal' })[0].Value))
+    $expanded = $ExecutionContext.InvokeCommand.ExpandString((@($script:hereStrings | Where-Object { $_.Text -match 'Specification: \$canonicalId' })[0].Value))
     $lines = $expanded -split "`r?`n"
     ($lines -contains '```yaml') | Should -BeTrue
     ($lines | Where-Object { $_ -eq '```' }).Count | Should -BeGreaterOrEqual 1

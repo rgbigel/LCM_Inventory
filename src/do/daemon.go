@@ -5,13 +5,15 @@ PACKAGE        : main
 DESCRIPTION    : HTTP daemon listener for Session 1 desktop execution and telemetry.
 AUTHOR         : Rolf
 DATE CREATED   : 2026-11-11
-LAST MODIFIED  : 2026-11-13
-VERSION        : 10.2.1
+LAST MODIFIED  : 2026-11-15
+VERSION        : 10.2.2
 GO VERSION     : 1.22+
 ENCODING       : ASCII (No BOM)
 ================================================================================
 CHANGE LOG:
 2026-11-11 - 10.0.0: Initial implementation.
+2026-11-15 - 10.2.2: CRP-335 POST /displays/refresh/<id> re-renders the display (Invoke-LcmDisplayRender.ps1)
+                     before reporting its revision; previously it only echoed the artifact timestamp.
 ================================================================================
 */
 
@@ -775,6 +777,23 @@ func handleDisplays(w http.ResponseWriter, r *http.Request) {
 	}
 
 	artifactPath := filepath.Join(gitRoot, "LCM_Inventory", "data", "artifacts", artifactLeaf)
+
+	// CRP-335: a refresh request rebuilds the display from its current data before the revision is computed.
+	if kind == "refresh" {
+		if r.Method != http.MethodPost {
+			writeJSON(w, http.StatusMethodNotAllowed, map[string]string{"error": "Display refresh requires POST"})
+			return
+		}
+		if err := renderDisplay(gitRoot, id); err != nil {
+			writeJSON(w, http.StatusOK, map[string]interface{}{
+				"state":     "Failed",
+				"error":     err.Error(),
+				"statusUrl": "/displays/status/" + id,
+			})
+			return
+		}
+	}
+
 	var modTime int64
 	if fi, err := os.Stat(artifactPath); err == nil {
 		modTime = fi.ModTime().UnixNano()
@@ -969,4 +988,36 @@ func handleSnapshots(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(data)
+}
+
+// displayRenderLock serializes display renders (CRP-335): one renderer process at a time.
+var displayRenderLock sync.Mutex
+
+// renderableDisplays lists the display identities supported by Invoke-LcmDisplayRender.ps1.
+var renderableDisplays = map[string]bool{"tools": true, "rules": true, "inventory": true, "hub": true, "dates": true}
+
+// renderDisplay runs the shared PowerShell display renderer synchronously (timeout 120 s, CRP-335).
+// Identities the renderer does not support are left as they are (no error).
+func renderDisplay(gitRoot string, id string) error {
+	if !renderableDisplays[id] {
+		return nil
+	}
+	displayRenderLock.Lock()
+	defer displayRenderLock.Unlock()
+
+	logDir := filepath.Join(gitRoot, "LCM_Inventory", "data", "logs", "lcm", "displays")
+	if err := os.MkdirAll(logDir, 0o755); err != nil {
+		return fmt.Errorf("create display log directory: %w", err)
+	}
+	logPath := filepath.Join(logDir, fmt.Sprintf("%s-%s-daemon.log", id, time.Now().Format("20060102_150405")))
+	worker := filepath.Join(gitRoot, "LCM_Inventory", "tools", "Invoke-LcmDisplayRender.ps1")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 120*time.Second)
+	defer cancel()
+	cmd := exec.CommandContext(ctx, "pwsh.exe", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", worker, "-DisplayId", id, "-LogPath", logPath)
+	cmd.Dir = gitRoot
+	if output, err := cmd.CombinedOutput(); err != nil {
+		return fmt.Errorf("render display %s failed (log %s): %w: %s", id, logPath, err, strings.TrimSpace(string(output)))
+	}
+	return nil
 }

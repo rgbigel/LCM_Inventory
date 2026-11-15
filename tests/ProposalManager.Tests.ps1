@@ -1,5 +1,7 @@
 # =====================================================================
 # ProposalManager.Tests.ps1 - Pester Tests for Proposal Governance
+# BUG-336 (2026-11-15, Rolf, Claude): fully isolated in TestDrive via LCM_PROPOSAL_STORE_PATH
+# and -WorkspaceRoot; the live ledger, bundles, session registers and App catalog are never written.
 # =====================================================================
 
 Describe 'ProposalManager Core Functions' {
@@ -7,24 +9,28 @@ Describe 'ProposalManager Core Functions' {
         $script:modulePath = Join-Path $PSScriptRoot '..\modules\ProposalManager.psm1'
         Import-Module $script:modulePath -Force
 
-        $script:testBackupPath = Join-Path $PSScriptRoot '..\data\proposals\proposals.backup.json'
-        $script:livePath = Join-Path $PSScriptRoot '..\data\proposals\proposals.json'
-
-        if (Test-Path $script:livePath) {
-            Copy-Item -LiteralPath $script:livePath -Destination $script:testBackupPath -Force
+        # BUG-336: redirect the store into TestDrive (seeded read-only from the live ledger) instead of backup/restore of the live file.
+        $script:originalStorePath = $env:LCM_PROPOSAL_STORE_PATH
+        $script:testStorePath = Join-Path $TestDrive 'LCM_Inventory\data\proposals\proposals.json'
+        $null = New-Item -ItemType Directory -Path (Split-Path -Path $script:testStorePath -Parent) -Force
+        $livePath = Join-Path $PSScriptRoot '..\data\proposals\proposals.json'
+        if (Test-Path -LiteralPath $livePath) {
+            Copy-Item -LiteralPath $livePath -Destination $script:testStorePath -Force
         }
+        $env:LCM_PROPOSAL_STORE_PATH = $script:testStorePath
     }
 
     AfterAll {
-        if (Test-Path $script:testBackupPath) {
-            Copy-Item -LiteralPath $script:testBackupPath -Destination $script:livePath -Force
-            Remove-Item -LiteralPath $script:testBackupPath -Force -ErrorAction SilentlyContinue
+        if ([string]::IsNullOrEmpty($script:originalStorePath)) {
+            Remove-Item Env:LCM_PROPOSAL_STORE_PATH -ErrorAction SilentlyContinue
+        } else {
+            $env:LCM_PROPOSAL_STORE_PATH = $script:originalStorePath
         }
     }
 
     Context 'Proposal Creation & Retrieval' {
         It 'Creates a new proposal with state "suggested"' {
-            $p = New-WorkspaceProposal -Title 'Test Feature Proposal' -OriginRepo 'TestRepo' -Details 'Test details'
+            $p = New-WorkspaceProposal -Title 'Test Feature Proposal' -OriginRepo 'TestRepo' -Details 'Test details' -WorkspaceRoot $TestDrive
             $p.id | Should -BeGreaterThan 0
             $p.title | Should -Be 'Test Feature Proposal'
             $p.state | Should -Be 'suggested'
@@ -48,7 +54,7 @@ Describe 'ProposalManager Core Functions' {
         }
 
         It 'Updates state and progress to "in_progress" on "do" action' {
-            $p = New-WorkspaceProposal -Title 'Batch Action Test' -OriginRepo 'TestRepo'
+            $p = New-WorkspaceProposal -Title 'Batch Action Test' -OriginRepo 'TestRepo' -WorkspaceRoot $TestDrive
             $res = @(Invoke-ProposalBatchAction -Action 'do' -TargetExpression "$($p.id)")
             $res.Count | Should -Be 1
             $res[0].state | Should -Be 'in_progress'
@@ -60,13 +66,13 @@ Describe 'ProposalManager Core Functions' {
         }
 
         It 'Updates state to "held" on "defer" action' {
-            $p = New-WorkspaceProposal -Title 'Defer Test' -OriginRepo 'TestRepo'
+            $p = New-WorkspaceProposal -Title 'Defer Test' -OriginRepo 'TestRepo' -WorkspaceRoot $TestDrive
             $res = @(Invoke-ProposalBatchAction -Action 'defer' -TargetExpression "$($p.id)")
             $res[0].state | Should -Be 'held'
         }
 
         It 'Updates state to "held" on "delete" action' {
-            $p = New-WorkspaceProposal -Title 'Delete Test' -OriginRepo 'TestRepo'
+            $p = New-WorkspaceProposal -Title 'Delete Test' -OriginRepo 'TestRepo' -WorkspaceRoot $TestDrive
             $res = @(Invoke-ProposalBatchAction -Action 'delete' -TargetExpression "$($p.id)")
             $res[0].state | Should -Be 'held'
         }
@@ -140,7 +146,7 @@ Describe 'ProposalManager Core Functions' {
         }
 
         It 'Synchronizes the machine-readable catalog with Sync-LcmAppCatalog' {
-            $cat = Sync-LcmAppCatalog -Repo 'LCM_AI'
+            $cat = Sync-LcmAppCatalog -Repo 'LCM_AI' -WorkspaceRoot $TestDrive
             $cat | Should -Not -BeNullOrEmpty
             $cat.title | Should -Be 'LCM Workspace App-Centric Architecture Catalog'
             $cat.updated_at | Should -Not -BeNullOrEmpty
