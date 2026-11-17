@@ -460,7 +460,101 @@ function Test-LcmBaselineModifications {
   }
 }
 
+# --- Shared baseline discovery helpers (moved from Invoke-MacriumDailyBcrBaseline.ps1, CRP-343) ---
+function Find-MountedMacriumBaselineCandidates {
+  param(
+    [string[]]$Drives = @('F', 'G', 'H', 'I'),
+
+    [string]$ExpectedVolumeLabel = 'D4P3-WDB850-D'
+  )
+  $candidates = [System.Collections.Generic.List[PSCustomObject]]::new()
+  foreach ($letter in $Drives) {
+    $disk = Get-CimInstance Win32_LogicalDisk -Filter "DeviceID='$letter`:'" -ErrorAction SilentlyContinue
+    if ($null -eq $disk -or $disk.DriveType -ne 3 -or $disk.VolumeName -ne $ExpectedVolumeLabel) {
+      continue
+    }
+    $workspacePath = "$letter`:\Git_Repositories"
+    if (-not (Test-Path -LiteralPath $workspacePath -PathType Container)) {
+      continue
+    }
+    $newestLogTime = $null
+    $newestLogStr = ''
+    $internalLogDir = Join-Path $workspacePath 'LCM_Inventory\data\logs\lcm-internal'
+    if (Test-Path -LiteralPath $internalLogDir -PathType Container) {
+      $logFiles = @(Get-ChildItem -LiteralPath $internalLogDir -Filter '*.log' -File -ErrorAction SilentlyContinue |
+        Sort-Object LastWriteTime -Descending)
+      if ($logFiles.Count -gt 0) {
+        $newestLogTime = $logFiles[0].LastWriteTime
+        $newestLogStr = $newestLogTime.ToString('yyyy-MM-dd HH:mm:ss')
+      }
+    }
+    $candidates.Add([pscustomobject]@{
+      DriveLetter = $letter
+      MountedDrive = "$letter`:"
+      WorkspacePath = $workspacePath
+      NewestLogTimestamp = $newestLogStr
+      NewestLogDate = $newestLogTime
+    })
+  }
+  return @($candidates)
+}
+
+function Find-MountedMacriumBaseline {
+  param(
+    [string[]]$Drives = @('F', 'G', 'H', 'I'),
+    [string[]]$ExcludeDrives = @(),
+
+    [string]$ExpectedVolumeLabel = 'D4P3-WDB850-D'
+  )
+  $all = @(Find-MountedMacriumBaselineCandidates -Drives $Drives -ExpectedVolumeLabel $ExpectedVolumeLabel)
+  $filtered = @($all | Where-Object { $_.MountedDrive -notin $ExcludeDrives -and "$($_.DriveLetter):" -notin $ExcludeDrives })
+  if ($filtered.Count -gt 0) {
+    $sorted = @($filtered | Sort-Object { if ($null -ne $_.NewestLogDate) { $_.NewestLogDate } else { [datetime]::MinValue } } -Descending)
+    return $sorted[0]
+  }
+  return $null
+}
+
+function Get-MountedBaselineEvidence {
+  param(
+    [Parameter(Mandatory)]
+    [PSCustomObject]$MountedBaseline,
+
+    [string[]]$DetachedDrives = @()
+  )
+
+  $contextPath = Join-Path $MountedBaseline.WorkspacePath 'LCM_AI\.agents\ACTIVE_CONTEXT.md'
+  $activityPath = Join-Path $MountedBaseline.WorkspacePath 'LCM_Inventory\logs\cm_activity.log'
+  $savedAt = ''
+  $goodNightObserved = $false
+
+  if (Test-Path -LiteralPath $contextPath -PathType Leaf) {
+    $context = Get-Content -LiteralPath $contextPath -Raw -Encoding utf8
+    if (-not [string]::IsNullOrWhiteSpace($context)) {
+      $savedMatch = [regex]::Match($context, '(?m)^Saved:\s*(.+)$')
+      if ($savedMatch.Success) {
+        $savedAt = $savedMatch.Groups[1].Value.Trim()
+      }
+    }
+  }
+
+  if (Test-Path -LiteralPath $activityPath -PathType Leaf) {
+    $goodNightObserved = Select-String -LiteralPath $activityPath -Pattern '\[GOOD_NIGHT\].*SAVE_ALL_AND_GOOD_NIGHT' -Quiet
+  }
+
+  return [pscustomobject]@{
+    DetachedDrives = @($DetachedDrives)
+    ReappearedDrive = $MountedBaseline.MountedDrive
+    WorkspacePath = $MountedBaseline.WorkspacePath
+    SnapshotSavedAt = $savedAt
+    GoodNightObserved = $goodNightObserved
+  }
+}
+
 Export-ModuleMember -Function @(
+  'Find-MountedMacriumBaselineCandidates',
+  'Find-MountedMacriumBaseline',
+  'Get-MountedBaselineEvidence',
   'ConvertTo-LcmCandidateDrives',
   'Get-MacriumBaselineState',
   'Get-MacriumBackupStatus',

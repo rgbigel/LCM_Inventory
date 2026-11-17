@@ -6,7 +6,7 @@ Path: LCM_Inventory/docs/Proposals/CRP-343-Intent-Level-Elevation-Driven-By-Tool
 Authors: Rolf, Claude  
 Version: 10.6.4
 Status: Suggested  
-Date: 2026-11-17 13:40:12
+Date: 2026-11-17 20:22:52
 
 ```yaml
 CRP-ID: CRP-343
@@ -14,10 +14,10 @@ Title: Intent-Level Elevation Driven By Tool Intents Table
 Scope: LCM_Inventory
 Baseline-Version: 10.6.4
 Author: Rolf, Claude
-Date: 2026-11-17 13:40:12
-Status: Suggested
-Plan-State: suggested
-Progress-State: undecided
+Date: 2026-11-17 20:22:52
+Status: In Progress
+Plan-State: in_progress
+Progress-State: in_progress
 Priority: 7
 App-ID: None
 ```
@@ -38,7 +38,8 @@ Two fields with distinct semantics (operator correction 2026-11-17, Section "Abs
 - Context (2026-11-17): `tool_intents` has 649 rows with an `elevated` column; `tools` has 320 rows, 85 with `admin = 1`; RULE-ELEV-006 routes on `tools.admin` today. Current data already conflicts with the consistency invariant: `Invoke-MacriumBcrReview.ps1` has `admin = 0` but uses the elevated mount/unmount atoms (`Mount-MacriumLatestBaseline.ps1` / `Dismount-MacriumCurrentBaseline.ps1`, `admin = 1`).
 
 ### Invariants and Exit Criteria
-- Consistency invariant: an `elevated` atom may only be called from a tool with `admin = 1`; any elevated atom reachable from a non-admin tool is a governance error (no meaning in the LCM security context) and fails the consistency check.
+- Status (2026-11-17 19:48:36): refined by section 9 (tri-state tool privilege); the text below is the previous version.
+- Consistency invariant (confirmed by the operator 2026-11-17, option A, see Absorbed Operator Remarks): an `elevated` atom must belong to a tool with `admin = 1`, and its **direct caller** must be a tool with `admin = 1`. A non-admin tool may call an admin tool; it reaches elevated atoms only through an admin tool. Example: `Invoke-MacriumDailyBcrBaseline.ps1` (admin 0) -> `Mount-MacriumLatestBaseline.ps1` (admin 1) -> elevated mount-worker atom. `tools.admin` is the tool property "admin", not the user's Administrators membership; the BCR tools stay `admin = 0`. No user-group check now; hiding admin tools from non-administrators is later polish.
 - No privileged command (RULE-ELEV-003 list) runs without an `elevated` atom that declares it; `Assert-RepoElevationConsistency` checks both levels (atom elevation, tool admin restriction).
 - Non-interactive runners are never blocked by UAC (RULE-ELEV-002); elevated consoles keep `-NoExit` (RULE-ELEV-005).
 - Exit: catalog query lists every elevated atom with its owning tool and that tool's `admin` value, with zero consistency violations; a tool with mixed atoms runs its non-elevated steps unelevated (logged); rules and adapters synced (RULE-AUTH-002).
@@ -53,7 +54,7 @@ Two fields with distinct semantics (operator correction 2026-11-17, Section "Abs
 
 ## 4. Corollary Scope (operator, 2026-11-17)
 
-1. **Consistency-check atom**: one atom verifies (a) every `tool_intents.elevated = 1` atom is owned by and called only from tools with `tools.admin = 1`; (b) every privileged command (RULE-ELEV-003 list) inside a tool sits in an `elevated` atom. Violations fail the check; it runs in the readiness gates and at good morning.
+1. **Consistency-check atom**: one atom verifies (a) every `tool_intents.elevated = 1` atom is owned by a tool with `tools.admin = 1` and is invoked directly only by tools with `tools.admin = 1` (real invocations only: `&`, `-File`, `do.exe`, `Start-Process`; a mere mention is not a call); (b) every privileged command (RULE-ELEV-003 list) inside a tool sits in an `elevated` atom. Violations fail the check; it runs in the readiness gates and at good morning.
 2. **Temporary cleanup tool**: one-off tool that reports the current violations (first known case: `Invoke-MacriumBcrReview.ps1` `admin = 0` calling the `admin = 1` mount/unmount tools) and applies the operator-accepted corrections to `tools.db` (structural DB changes only after CRP acceptance, WORKPLAN D-22); retired after the clean state is reached.
 3. **Atoms inside tools**: elevated steps are cut out of tools into separately dispatched atoms (registered intents), so a tool's non-elevated steps never run elevated.
 4. **DO front-end / back-end elevation flow**: operator review of which component checks elevation and by which method (current state: section 5); target: decided in this CRP before implementation.
@@ -85,6 +86,73 @@ Target state additions:
 3. Authorization uses the authenticated caller plus the two catalog fields: `tools.admin` (may this caller run the tool) and `tool_intents.elevated` (does this atom run elevated).
 4. The BUG-347 guard stays in place as the first layer.
 5. Exit criterion addition: an unauthenticated request with a forged `caller` and no secret is refused for every non-read route; refusals are logged with the claimed caller.
+## 7. Design Decisions (operator, 2026-11-17, chain A DOIT)
+
+- Governing specification: `LCM_Inventory/docs/Implementation of Security in LCM.md` (10.2.0): atomic elevation, anti-GUI-poisoning invariant, security gateway in the daemon, namespace gate, transparent UAC fallback. CRP-343 implements it in the Go daemon (`src/do`), with `tool_intents.elevated` as the atom-level authority and `tools.admin` as the tool-level access restriction.
+- D1 Non-elevated launch: the daemon duplicates the token of the operator's `explorer.exe` (same session) and starts `elevated = 0` atoms with `CreateProcessWithTokenW` (medium integrity, Session 1 desktop); fallback: the linked (filtered) token.
+- D3 Dispatch during the transition: every command runs non-elevated unless it resolves to a registered intent with `elevated = 1` whose owning tool has `admin = 1` and the caller is authenticated; `-elevated` alone grants nothing; refusals are logged.
+- D2 Caller authentication (operator option A): the security specification's "token credentials" are a per-boot key in `%LOCALAPPDATA%\LCM\do.key`; `do.exe` and governed tools send it as `X-LCM-Key`; the daemon injects it into the pages it serves (no `Access-Control-Allow-Origin` on those); browser requests without it are refused; `do.exe` sends it only to a listener that is the same `do.exe` binary (port-squatting guard). Transition: non-browser callers without the key are accepted but never elevated until migrated (`LCM_DO_REQUIRE_KEY=1` ends the transition).
+- D4 Verify-legal-elevation helper in the back end (operator 2026-11-17): fast path = intent table only; slow path only when the fast path is inconclusive.
+  - Conclusive (fast path): no registered atom named -> non-elevated; atom with `elevated = 0` -> non-elevated; atom with `elevated = 1`, owning tool `admin = 1`, caller authenticated -> elevated; unauthenticated request for an elevated atom -> non-elevated.
+  - Inconclusive (slow path): one command naming atoms with conflicting flags; an intent narrowed by `parameters` whose switch is absent or ambiguous; `-elevated` requested for a command with no atom.
+  - An atom with `elevated = 1` whose owning tool has `admin = 0` is a catalog error: never elevated, reported by the consistency check (not a slow-path case).
+  - Slow path: identify the calling process (loopback TCP table -> PID -> image and command line) and from it the direct caller tool; elevate only when that tool has `admin = 1`; result allow/deny with the failed rule named in the log.
+  - Read-only dry-run route `GET /api/elevation/verify?command=...` returns the same decision without executing.
+
+## 8. Deferred: Integrity of the Intent Table (operator 2026-11-17, "later")
+
+- Exposure: the elevation decision trusts `tool_intents.elevated` and `tools.admin` (`data/tools/tools.db`) and the generated `data/tools/elevation_policy.json`. Both are writable by the operator account, so any local process of that account could grant itself elevation by adding or flipping a row. Until protected, the key (D2) and the fast/slow path (D4) limit who may ask, not what is registered.
+- Candidate measures (to decide later): write access to `tools.db` and the policy limited to Administrators (ACL), changes only through a governed elevated atom; the daemon generates or verifies the policy itself (hash/signature recorded at catalog update) and refuses a policy that does not verify; every change to an `elevated` or `admin` value is logged and appears in BCR / Gate 2.
+- Not part of the current CRP-343 implementation segment.
+
+## 9. Revised Contract: Tri-State Tool Privilege (operator 2026-11-17, option A)
+
+Refines the consistency invariant of section 2 and D3/D4 of section 7.
+
+### 9.1 Levels of `tools.admin`
+
+Stored as integer (internal coding); Show* pages display the text.
+
+| Code | Text | Runs at | May call elevated atoms |
+|:---|:---|:---|:---|
+| 1 | `none` | Medium | never |
+| 2 | `controlled` | Medium | only through the DO (port 9876), and only the atoms in its declared atom list |
+| 3 | `admin` | High, when dispatched as an elevated intent | other `admin` atoms directly (child inherits High) |
+
+- `tool_intents.elevated` stays the atom-level authority: an `elevated = 1` intent must belong to a tool with code 3.
+- Declared atom list: every `controlled` tool lists the elevated atoms it may call (catalog entry, projected into `tools.db`; script header `ADMIN DEPENDENCIES` per RULE-ELEV-007). These entries are the first "calls directly" edges of the tool-call xref table. Schema detail goes into the data design document during implementation.
+- Comparisons use the ascending order: "may reach elevated atoms" = code >= 2.
+
+### 9.2 Elevation borders (operator confirmed 2026-11-17)
+
+| Caller -> callee | Allowed path |
+|:---|:---|
+| Medium -> Medium | direct |
+| High -> High | direct, only when the caller is an `admin` (3) tool |
+| Medium -> High | only through the DO (port 9876) or a visible operator UAC prompt |
+| High -> Medium | only through the DO (non-elevated launch with the explorer token); never as a direct child, which would inherit High |
+
+- The only gates to High are port 9876 and a visible operator UAC prompt.
+- UIPI: a Medium process cannot drive an elevated window; AHK atoms exist in both variants, or one atom is elevated only for the parameter set that needs it (intent `parameters`).
+
+### 9.3 Migration and first cases
+
+- Data: `admin` 0 -> 1, 1 -> 3; then the reclassifications below. Catalog JSON (transition fallback) carries the same integer.
+- `Invoke-MacriumBcrReview.ps1`, `Invoke-MacriumDailyBcrBaseline.ps1`, `Mount-MacriumLatestBaseline.ps1` -> 2 (`controlled`), atom lists: mount worker `Invoke-MacriumMountWorker.ps1`, `Set-LcmMachineRegistry.ps1`, `Dismount-MacriumCurrentBaseline.ps1` as each tool actually calls them.
+- Consequences: the BCR baseline tool dispatches the mount worker and the registry atom through the DO itself; the `Mount-MacriumLatestBaseline.ps1 -ImagePath` hop stays only as the operator's manual mount entry if it is not a duplicate; the legacy `-ElevatedWorker` entry of `Invoke-MacriumDailyBcrBaseline.ps1` is removed; further legacy duplicates found on the way are removed and listed (operator 2026-11-17, "carefully kill legacy").
+- Rules: RULE-ELEV-001 / 003 / 006 / 007 state the three levels and the border table (RULE-AUTH-002 sync).
+
+### 9.4 Point O-1 (decided: B, operator 2026-11-17)
+
+- Decision B: D4 stays as decided; the fast path checks the atom only; the caller rule is enforced by the consistency check (static) and on the slow path. Candidate A below is not implemented.
+
+- D4 fast path checks only the atom; the caller rule is enforced statically (consistency check) and at runtime only on the slow path. Candidate: run the caller check (direct caller tool code >= 2 and atom in its list) on every request that would elevate; elevated requests are rare (mount, registry, dismount), so the cost is small.
+
+### 9.5 Exit criteria additions
+
+- Consistency check with the three levels: zero violations.
+- Show* pages display `none` / `controlled` / `admin`.
+- Diagrams: call chains and the elevation decision in `LCM_Inventory/docs/Implementation.md`; use cases in `docs/Requirements.md` (operator 2026-11-17).
 ## Absorbed Operator Remarks
 
 > Actually, i think the problem to decide all this can be fully relaxed as follows:
@@ -119,3 +187,22 @@ Target state additions:
 > - is it mentioned in the list of external tools? we must check that all tools we used are documented.
 
 (Operator, 2026-11-17; amends CRP-343 section 6 and CRP-345 section 4.)
+
+> no, these are only "outer tool controls". however, if an elevated atom is called now, but its caller is admin, that would be ok. Getting complicated here. but i do not think there is anything wrong with a tool that is not admin to call a tool that is
+
+(Operator, 2026-11-17; answer to "BCR tools tools.admin = 1?".)
+
+> i did mean admin, not administrator. Non-administrators would possibly not even be shown admin tools by default. but that's just polish for later
+
+(Operator, 2026-11-17; then option A: the direct caller of an elevated atom must be an admin tool; non-admin tools reach elevated atoms only through admin tools.)
+
+> here is another choice that could make things easier: we currently haver admin (or not). how about a tri state choice: admin, controlled, (none). controlled would allow elevated atoms to be used. BCR would use that
+
+(Operator, 2026-11-17; then option A inside CRP-343: tri-state plus declared atom list per controlled tool; "1,2,3 interna coding, text as visual equivalents on Show..."; encoding option A: 1 = none, 2 = controlled, 3 = admin.)
+
+> 2 - ok, and also understood, including the (new) rule Medium->high. For High->medium that detour is unavoidable, and so is the rule
+> 3 - Put such diagrams into the Implementation Docs!!! and similarly do this for the Requirements to illustrate the use cases.
+> 3.2 - "carefully kill" legacy where you see it. In particular, if it is essentially doing the same thing with minimal differences.
+> 6 - [...] port 9876 (or operator prompting) are the only gates to elevation -- that can always be accepted, provided the interactions are not UIUI (you know what i mean)
+
+(Operator, 2026-11-17; source of sections 9.2 and 9.3.)

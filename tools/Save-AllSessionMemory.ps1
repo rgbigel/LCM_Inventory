@@ -11,9 +11,12 @@
            The narrative parts of ACTIVE_CONTEXT.md are written by the agent, not by this script.
   Path: LCM_Inventory/tools/Save-AllSessionMemory.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.2.1
-  Date: 2026-11-10
-  Rule: RULE-PS-001 - RULE-PS-021, RULE-LCM-030
+  Version: 10.2.2
+  Date: 2026-11-17
+  Rule: RULE-PS-001 - RULE-PS-021, RULE-LCM-030 (5)
+  Implementation Choices (CRP-350): ACTIVE_SESSION.md fields are written only inside section 1 through
+           LcmSessionStateAtoms.psm1 (no "first match in the file"). Without -Quiescent only "Last Updated"
+           (a save event) changes; "Status" and "GoodNight Timestamp" change only with -Quiescent.
 .PARAMETER Learn
   New lines for LEARNED_ADVICE.md; they enter as candidates (/learn) and need a review.
 .PARAMETER Quiescent
@@ -36,8 +39,9 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 if ($Help) {
-    Write-Host 'Save-AllSessionMemory.ps1 [-Learn <string[]>] [-Author <name>] [-DryRun] [-h]'
+    Write-Host 'Save-AllSessionMemory.ps1 [-Learn <string[]>] [-Author <name>] [-Quiescent] [-DryRun] [-h]'
     Write-Host '  Updates ACTIVE_CONTEXT.md (stamp + Session Snapshot) and adds -Learn lines as candidates to LEARNED_ADVICE.md.'
+    Write-Host '  -Quiescent (GoodNight only): sets section 1 Status and GoodNight Timestamp in ACTIVE_SESSION.md.'
     Write-Host '  Never commits or pushes.'
     return
 }
@@ -118,19 +122,12 @@ if ($DryRun) {
 # --- ACTIVE_SESSION.md status update ------------------------------------------
 $sessionFile = Join-Path $agentsDir 'ACTIVE_SESSION.md'
 if (Test-Path -LiteralPath $sessionFile) {
+    Import-Module -Name (Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\LcmSessionStateAtoms.psm1') -Force
     $sessContent = [System.IO.File]::ReadAllText($sessionFile)
-    $sessContent = [regex]::Replace($sessContent, '(?m)^\- \*\*Last Updated\*\*:\s*.*$', "- **Last Updated**: $stamp", 1)
+    $sessContent = Set-LcmSessionWorkspaceField -Content $sessContent -Name 'Last Updated' -Value $stamp
     if ($Quiescent) {
-        if ($sessContent -match '(?m)^\- \*\*Status\*\*:\s*.*$') {
-            $sessContent = [regex]::Replace($sessContent, '(?m)^\- \*\*Status\*\*:\s*.*$', "- **Status**: Quiescent (GoodNight completed at $stamp)", 1)
-        } else {
-            $sessContent = [regex]::Replace($sessContent, '(?m)^(\- \*\*Last Updated\*\*:\s*.*)$', "`$1`r`n- **Status**: Quiescent (GoodNight completed at $stamp)", 1)
-        }
-        if ($sessContent -match '(?m)^\- \*\*GoodNight Timestamp\*\*:\s*.*$') {
-            $sessContent = [regex]::Replace($sessContent, '(?m)^\- \*\*GoodNight Timestamp\*\*:\s*.*$', "- **GoodNight Timestamp**: $stamp", 1)
-        } else {
-            $sessContent = [regex]::Replace($sessContent, '(?m)^(\- \*\*Status\*\*:\s*.*)$', "`$1`r`n- **GoodNight Timestamp**: $stamp", 1)
-        }
+        $sessContent = Set-LcmSessionWorkspaceField -Content $sessContent -Name 'Status' -Value ('Quiescent (GoodNight completed at {0})' -f $stamp) -After 'Last Updated'
+        $sessContent = Set-LcmSessionWorkspaceField -Content $sessContent -Name 'GoodNight Timestamp' -Value $stamp -After 'Status'
     }
     [System.IO.File]::WriteAllText($sessionFile, $sessContent, $utf8)
 }

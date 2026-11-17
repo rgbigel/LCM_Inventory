@@ -6,4 +6,4 @@ if %errorlevel% neq 0 (
   exit /b
 )
 echo # [LCM Launcher] %~nx0 - Goal: KillLogitechUpdateFull execution tool.
-pwsh.exe -NoExit -NoProfile -ExecutionPolicy Bypass -File "%~dp0..\..\LCM_Inventory\tools\KillLogitechUpdateFull.ps1" %*
+pwsh.exe -NoExit -NoProfile -ExecutionPolicy Bypass -File "%~dp0..\..\LCM_Tools\tools\KillLogitechUpdateFull.ps1" %*

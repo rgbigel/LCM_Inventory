@@ -2363,6 +2363,64 @@
     ]
   },
   {
+    "Name": "Invoke-MacriumMountWorker.ps1",
+    "ShortName": "MacriumMountWorker",
+    "Aliases": null,
+    "Role": "Recovery",
+    "Audience": "User",
+    "Admin": true,
+    "NoExit": false,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Macrium BCR Baseline",
+    "Description": "Elevated atom (CRP-343): mounts one completed Macrium image as the writable BCR baseline; dispatched by Mount-MacriumLatestBaseline.ps1.",
+    "Example": "MacriumMountWorker",
+    "RelativePath": "LCM_Inventory\\tools\\Invoke-MacriumMountWorker.ps1",
+    "Parameters": [
+      {
+        "Name": "ImagePath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Full path of the completed .mrimgx image to mount."
+      },
+      {
+        "Name": "CandidateDrives",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "F;G;H;I",
+        "Description": "Candidate drive letters, e.g. 'F;G;H;I'."
+      },
+      {
+        "Name": "ExpectedVolumeLabel",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D4P3-WDB850-D",
+        "Description": "Volume label of the baseline partition."
+      },
+      {
+        "Name": "MountTimeoutSeconds",
+        "Type": "Int32",
+        "Mandatory": false,
+        "Default": "120",
+        "Description": "Timeout for the mount dialog and drive appearance."
+      },
+      {
+        "Name": "ReceiptPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "JSON receipt written for the caller (Succeeded, Message, MountedDrive, MountEvidence)."
+      }
+    ],
+    "Dependencies": [
+      "LcmMacriumAtoms.psm1",
+      "LcmAhkAtoms.psm1",
+      "Module: (Join-Path $inventoryRoot 'modules\\LcmMacriumAtoms.psm1')"
+    ]
+  },
+  {
     "Name": "Mount-MacriumLatestBaseline.ps1",
     "ShortName": "MountMacriumBaseline",
     "Aliases": null,
@@ -2412,9 +2470,37 @@
         "Mandatory": false,
         "Default": "",
         "Description": ""
+      },
+      {
+        "Name": "ImagePath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "ExpectedVolumeLabel",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D4P3-WDB850-D",
+        "Description": ""
+      },
+      {
+        "Name": "ReceiptPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
       }
     ],
-    "Dependencies": "Invoke-MacriumDailyBcrBaseline.ps1"
+    "Dependencies": [
+      "Invoke-MacriumDailyBcrBaseline.ps1",
+      "LcmMacriumAtoms.psm1",
+      "LcmDoClient.psm1",
+      "Invoke-MacriumMountWorker.ps1",
+      "Module: (Join-Path $inventoryRoot 'modules\\LcmMacriumAtoms.psm1')",
+      "Module: (Join-Path $inventoryRoot 'modules\\LcmDoClient.psm1')"
+    ]
   },
   {
     "Name": "Invoke-MacriumBcrReview.ps1",
@@ -2422,7 +2508,7 @@
     "Aliases": "MacriumBcrReview",
     "Role": "ReviewGate",
     "Audience": "User",
-    "Admin": true,
+    "Admin": false,
     "NoExit": false,
     "Group": "LCM_Inventory",
     "Domain": "LCM_Inventory",
@@ -2905,7 +2991,7 @@
     "Aliases": null,
     "Role": "ReviewGate",
     "Audience": "Developer",
-    "Admin": true,
+    "Admin": false,
     "NoExit": false,
     "Group": "LCM_Inventory",
     "Domain": "LCM_Inventory",
@@ -3022,10 +3108,17 @@
       }
     ],
     "Dependencies": [
+      "LcmMacriumAtoms.psm1",
+      "LcmDoClient.psm1",
       "LcmAhkAtoms.psm1",
+      "Set-LcmMachineRegistry.ps1",
+      "Invoke-MacriumMountWorker.ps1",
+      "Mount-MacriumLatestBaseline.ps1",
       "bcompare",
       "BCompare.exe",
-      "BCompare"
+      "BCompare",
+      "Module: (Join-Path $inventoryRoot 'modules\\LcmMacriumAtoms.psm1')",
+      "Module: (Join-Path $inventoryRoot 'modules\\LcmDoClient.psm1')"
     ]
   },
   {
@@ -3870,6 +3963,24 @@
       }
     ],
     "Dependencies": "Module: Pester"
+  },
+  {
+    "Name": "Export-LcmElevationPolicy.py",
+    "ShortName": "ExportLcmElevationPolicy",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "Python",
+    "Category": "Utility",
+    "Description": "Export-LcmElevationPolicy execution tool.",
+    "Example": "ExportLcmElevationPolicy",
+    "RelativePath": "LCM_Inventory\\tools\\Export-LcmElevationPolicy.py",
+    "Parameters": [],
+    "Dependencies": null
   },
   {
     "Name": "Export-LcmKnowledgeBase.ps1",
@@ -4935,8 +5046,10 @@
     "Dependencies": [
       "LCM_Context.psm1",
       "LcmMacriumAtoms.psm1",
+      "LcmSessionStateAtoms.psm1",
       "Test-Guardrail.ps1",
-      "Invoke-MacriumDailyBcrBaseline.ps1"
+      "Invoke-MacriumDailyBcrBaseline.ps1",
+      "Module: (Join-Path $inventoryRoot 'modules\\LcmSessionStateAtoms.psm1')"
     ]
   },
   {
@@ -5223,6 +5336,7 @@
       "Invoke-LCM_Maintenance.ps1",
       "Update-Gemini.ps1",
       "Update-ToolCatalog.ps1",
+      "sync_proposals_db.py",
       "Clear-BCReviewTemp.ps1",
       "Module: (Join-Path $workspaceRoot 'LCM_Inventory\\modules\\ProposalManager.psm1')"
     ]
@@ -6472,7 +6586,11 @@
         "Description": "Report what would be written, change nothing."
       }
     ],
-    "Dependencies": "LCM_Context.psm1"
+    "Dependencies": [
+      "LCM_Context.psm1",
+      "LcmSessionStateAtoms.psm1",
+      "Module: (Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\\LcmSessionStateAtoms.psm1')"
+    ]
   },
   {
     "Name": "Save-LCMRules.ps1",
@@ -10345,7 +10463,7 @@
     "Category": "Utility",
     "Description": "KillLogitechUpdateFull execution tool.",
     "Example": "KillLogitechUpdateFull",
-    "RelativePath": "LCM_Inventory\\tools\\KillLogitechUpdateFull.ps1",
+    "RelativePath": "LCM_Tools\\tools\\KillLogitechUpdateFull.ps1",
     "Parameters": [],
     "Dependencies": null
   },
@@ -10363,7 +10481,7 @@
     "Category": "Utility",
     "Description": "KillLogitechUpdateFull execution tool.",
     "Example": "KillLogitechUpdateFull",
-    "RelativePath": "LCM_Tools\\tools\\KillLogitechUpdateFull.ps1",
+    "RelativePath": "LCM_Inventory\\tools\\KillLogitechUpdateFull.ps1",
     "Parameters": [],
     "Dependencies": null
   },
@@ -11332,6 +11450,32 @@
     "Category": "Utility",
     "Description": "GoAdm execution tool.",
     "Example": "GoAdm",
+    "RelativePath": "LCM_Inventory\\tools\\GoAdm.ps1",
+    "Parameters": [
+      {
+        "Name": "t",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      }
+    ],
+    "Dependencies": "profile.ps1"
+  },
+  {
+    "Name": "GoAdm.ps1",
+    "ShortName": "SystemConfigurationGoAdm",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "GoAdm execution tool.",
+    "Example": "GoAdm",
     "RelativePath": "SystemConfiguration\\Source\\GoAdm.ps1",
     "Parameters": [
       {
@@ -11354,32 +11498,6 @@
         "Mandatory": false,
         "Default": "",
         "Description": "Displays detailed elevation and profile telemetry."
-      }
-    ],
-    "Dependencies": "profile.ps1"
-  },
-  {
-    "Name": "GoAdm.ps1",
-    "ShortName": "SystemConfigurationGoAdm",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": true,
-    "NoExit": true,
-    "Group": "LCM_Tools",
-    "Domain": "LCM_Tools",
-    "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "GoAdm execution tool.",
-    "Example": "GoAdm",
-    "RelativePath": "LCM_Inventory\\tools\\GoAdm.ps1",
-    "Parameters": [
-      {
-        "Name": "t",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": ""
       }
     ],
     "Dependencies": "profile.ps1"

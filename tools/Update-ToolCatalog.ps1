@@ -1333,6 +1333,8 @@ try {
         foreach ($prop in $existingRaw.intents.PSObject.Properties) {
           $val = $prop.Value
           $existingMetricsMap[$prop.Name] = @{
+            # CRP-343: intent elevation is its own decision (atom level), never derived from tools.admin.
+            elevated          = if ($null -ne $val.PSObject.Properties['elevated'] -and $null -ne $val.elevated) { [bool]$val.elevated } else { $null }
             call_count        = if ($null -ne $val.call_count) { [int]$val.call_count } else { 0 }
             last_called_at    = if ($val.last_called_at) { [string]$val.last_called_at } else { $null }
             last_duration_ms  = if ($null -ne $val.last_duration_ms) { [double]$val.last_duration_ms } else { 0.0 }
@@ -1375,7 +1377,7 @@ try {
         script            = $t.RelativePath.Replace("\", "/")
         parameters        = [ordered]@{}
         trampoline        = $trampoline
-        elevated          = [bool]$t.Admin
+        elevated          = if ($m -and $null -ne $m.elevated) { [bool]$m.elevated } else { $false } # CRP-343: preserved; new intents non-elevated
         group             = $t.Group
         category          = $t.Category
         audience          = $t.Audience
@@ -1415,7 +1417,7 @@ try {
       script            = $t.RelativePath.Replace("\", "/")
       parameters        = $params
       trampoline        = $trampoline
-      elevated          = [bool]$t.Admin
+      elevated          = if ($m -and $null -ne $m.elevated) { [bool]$m.elevated } else { $false } # CRP-343: preserved; new intents non-elevated
       group             = $t.Group
       category          = $t.Category
       audience          = $t.Audience

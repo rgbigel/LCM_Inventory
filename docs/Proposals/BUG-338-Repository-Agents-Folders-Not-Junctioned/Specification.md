@@ -15,10 +15,10 @@ Scope: Git_Repositories
 Version: 10.7.4
 Affected-Repos: [LCM_Inventory, LCM_Shared, LCM_Supervision, LCM_Tools, AuthorizeMasterUser, BackgroundModifier, BGMSAMVInv, BootEntryManager, HaSSD06, HaSSD06_Inventory, InstallFonts, MacriumTemplateUpdater, MSG file conversion, NextBootTray, OneDriveMaintenance, OutlookVBAConversion, ReEnableRadeonRx580, RollingCalendar, SystemConfiguration, TimeStamper, VolumeInventory]
 Severity: Medium
-Status: Completed
+Status: Pushed
 Root-Cause: Repositories were scaffolded with a real `.agents` folder containing only a `rules` junction instead of a junction of the whole folder; LCM_Inventory additionally tracks a stale `.agents/ACTIVE_SESSION.md` (CRP-164 era, 2026-10-13) and ignores only `.agents/rules/`.
-Plan-State: completed
-Progress-State: completed
+Plan-State: pushed
+Progress-State: pushed
 ```
 
 ---

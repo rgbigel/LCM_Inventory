@@ -33,14 +33,14 @@ Describe 'Macrium-backed lifecycle BCR review' {
   }
 
   It 'captures the Macrium detach exit code without assuming LASTEXITCODE exists' {
-    $baselineScript = Get-Content -LiteralPath (Join-Path $repositoryRoot 'tools\Invoke-MacriumDailyBcrBaseline.ps1') -Raw -Encoding UTF8
+    $baselineScript = (@('tools\Invoke-MacriumDailyBcrBaseline.ps1', 'tools\Invoke-MacriumMountWorker.ps1', 'modules\LcmMacriumAtoms.psm1') | ForEach-Object { Get-Content -LiteralPath (Join-Path $repositoryRoot $_) -Raw -Encoding UTF8 }) -join "`n" # CRP-343: worker moved to the mount atom, helpers to the shared module
 
     $baselineScript | Should -Match ([regex]::Escape('$detachExitCode = if (Test-Path variable:global:LASTEXITCODE)'))
     $baselineScript | Should -Not -Match 'if \(\$LASTEXITCODE -ne 0\)'
   }
 
   It 'records detach, reappearance, and snapshot corroboration as mount evidence' {
-    $baselineScript = Get-Content -LiteralPath (Join-Path $repositoryRoot 'tools\Invoke-MacriumDailyBcrBaseline.ps1') -Raw -Encoding UTF8
+    $baselineScript = (@('tools\Invoke-MacriumDailyBcrBaseline.ps1', 'tools\Invoke-MacriumMountWorker.ps1', 'modules\LcmMacriumAtoms.psm1') | ForEach-Object { Get-Content -LiteralPath (Join-Path $repositoryRoot $_) -Raw -Encoding UTF8 }) -join "`n" # CRP-343: worker moved to the mount atom, helpers to the shared module
 
     $baselineScript | Should -Match ([regex]::Escape('[int]$MountTimeoutSeconds = 120'))
     $baselineScript | Should -Match ([regex]::Escape('$detachedDrives.Add("$letter`:")'))
@@ -51,7 +51,7 @@ Describe 'Macrium-backed lifecycle BCR review' {
   }
 
   It 'opens the completed image directly in Macrium browse mode' {
-    $baselineScript = Get-Content -LiteralPath (Join-Path $repositoryRoot 'tools\Invoke-MacriumDailyBcrBaseline.ps1') -Raw -Encoding UTF8
+    $baselineScript = (@('tools\Invoke-MacriumDailyBcrBaseline.ps1', 'tools\Invoke-MacriumMountWorker.ps1', 'modules\LcmMacriumAtoms.psm1') | ForEach-Object { Get-Content -LiteralPath (Join-Path $repositoryRoot $_) -Raw -Encoding UTF8 }) -join "`n" # CRP-343: worker moved to the mount atom, helpers to the shared module
 
     $baselineScript | Should -Match ([regex]::Escape("Start-Process -FilePath `$reflectPath -ArgumentList @('-b', `$ImagePath)"))
     $baselineScript | Should -Not -Match ([regex]::Escape("ArgumentList @(`$ImagePath, '-b')"))
@@ -75,7 +75,7 @@ Describe 'Macrium-backed lifecycle BCR review' {
   }
 
   It 'reuses the mounted writable baseline for BCR and defers automatic workday replacement' {
-    $baselineScript = Get-Content -LiteralPath (Join-Path $repositoryRoot 'tools\Invoke-MacriumDailyBcrBaseline.ps1') -Raw -Encoding UTF8
+    $baselineScript = (@('tools\Invoke-MacriumDailyBcrBaseline.ps1', 'tools\Invoke-MacriumMountWorker.ps1', 'modules\LcmMacriumAtoms.psm1') | ForEach-Object { Get-Content -LiteralPath (Join-Path $repositoryRoot $_) -Raw -Encoding UTF8 }) -join "`n" # CRP-343: worker moved to the mount atom, helpers to the shared module
     $morningScript = Get-Content -LiteralPath (Join-Path $repositoryRoot 'tools\Invoke-LCM_GoodMorning.ps1') -Raw -Encoding UTF8
 
     $baselineScript | Should -Match ([regex]::Escape('[switch]$NewBaseline'))
@@ -110,13 +110,23 @@ Describe 'Macrium-backed lifecycle BCR review' {
     $morningScript | Should -Match ([regex]::Escape('writable baseline is not replaced automatically during the workday'))
   }
 
+  It 'confines the elevated mount to the atom dispatched by the admin tool (CRP-343)' {
+    $bcr = Get-Content -LiteralPath (Join-Path $repositoryRoot 'tools\Invoke-MacriumDailyBcrBaseline.ps1') -Raw -Encoding UTF8
+    $mount = Get-Content -LiteralPath (Join-Path $repositoryRoot 'tools\Mount-MacriumLatestBaseline.ps1') -Raw -Encoding UTF8
+    $bcr | Should -Not -Match 'function Invoke-ElevatedBaselineWorker'
+    $bcr | Should -Match ([regex]::Escape('$mountTool = Join-Path $PSScriptRoot ''Mount-MacriumLatestBaseline.ps1'''))
+    $bcr | Should -Match ([regex]::Escape('Set-LcmMachineRegistry.ps1'))
+    $mount | Should -Match ([regex]::Escape('Invoke-LcmDaemonCommand -Command $command -Sync -Elevated'))
+    Test-Path -LiteralPath (Join-Path $repositoryRoot 'tools\Invoke-MacriumMountWorker.ps1') | Should -BeTrue
+  }
+
   It 'routes lifecycle BCR actions to the canonical Macrium review wrapper' {
     $actionScript | Should -Match ([regex]::Escape("Invoke-MacriumBcrReview.ps1"))
     $actionScript | Should -Not -Match ([regex]::Escape("Invoke-BeyondCompareReview.ps1"))
   }
 
   It 'binds Macrium dialog and detach deadlines to MountTimeoutSeconds and expands Beyond Compare launch window detection (BUG-299)' {
-    $baselineScript = Get-Content -LiteralPath (Join-Path $repositoryRoot 'tools\Invoke-MacriumDailyBcrBaseline.ps1') -Raw -Encoding UTF8
+    $baselineScript = (@('tools\Invoke-MacriumDailyBcrBaseline.ps1', 'tools\Invoke-MacriumMountWorker.ps1', 'modules\LcmMacriumAtoms.psm1') | ForEach-Object { Get-Content -LiteralPath (Join-Path $repositoryRoot $_) -Raw -Encoding UTF8 }) -join "`n" # CRP-343: worker moved to the mount atom, helpers to the shared module
 
     $baselineScript | Should -Not -Match 'did not become ready within 30 seconds'
     $baselineScript | Should -Not -Match 'did not detach \$\{letter\}: within 30 seconds'

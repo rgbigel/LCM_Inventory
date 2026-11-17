@@ -5,13 +5,15 @@ PACKAGE        : main
 DESCRIPTION    : CLI Client dispatcher connecting to the Port 9876 LCM Desktop Daemon.
 AUTHOR         : Rolf
 DATE CREATED   : 2026-11-11
-LAST MODIFIED  : 2026-11-11
-VERSION        : 10.2.0
+LAST MODIFIED  : 2026-11-17
+VERSION        : 10.2.4
 GO VERSION     : 1.22+
 ENCODING       : ASCII (No BOM)
 ================================================================================
 CHANGE LOG:
 2026-11-11 - 10.0.0: Initial implementation.
+2026-11-17 - 10.2.4: CRP-343 sends the daemon key (X-LCM-Key) after verifying that the
+                     port listener is this same do.exe binary (serverid.go).
 ================================================================================
 */
 
@@ -37,11 +39,11 @@ func RunClient(args []string) (int, error) {
 	daemonURL := fmt.Sprintf("http://127.0.0.1:%d", port)
 
 	var (
-		elevated  bool
-		syncMode  bool
-		noExit    bool
+		elevated   bool
+		syncMode   bool
+		noExit     bool
 		timeoutSec int = 30
-		cmdParts  []string
+		cmdParts   []string
 	)
 
 	// Custom flag parsing to allow natural syntax: do "es.exe query" -sync or do -sync Get-Date
@@ -113,6 +115,13 @@ func RunClient(args []string) (int, error) {
 		return 1, fmt.Errorf("failed to create HTTP request: %w", err)
 	}
 	httpReq.Header.Set("Content-Type", "application/json")
+	if genuine, why := daemonIsGenuine(port); genuine { // CRP-343
+		if k := readClientKey(); k != "" {
+			httpReq.Header.Set(keyHeader, k)
+		}
+	} else {
+		fmt.Fprintf(os.Stderr, "[DO] daemon key withheld: %s\n", why)
+	}
 
 	resp, err := client.Do(httpReq)
 	if err != nil {
@@ -279,4 +288,3 @@ func PrintUsage() {
 	fmt.Println("  -timeout, -t   : Execution timeout in seconds (default: 30).")
 	fmt.Println("==========================================================================")
 }
-

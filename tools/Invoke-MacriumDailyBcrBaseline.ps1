@@ -126,6 +126,10 @@ $bcomparePath = @($bcompareCandidates | Where-Object { Test-Path -LiteralPath $_
 $MacriumRegistryKey = 'HKLM:\SOFTWARE\LCM\MacriumBaseline'
 $LcmRootRegistryKey = 'HKLM:\SOFTWARE\LCM'
 
+# Shared Macrium discovery helpers and DO client (CRP-343)
+Import-Module -Name (Join-Path $inventoryRoot 'modules\LcmMacriumAtoms.psm1') -Force
+Import-Module -Name (Join-Path $inventoryRoot 'modules\LcmDoClient.psm1') -Force
+
 $ahkModulePath = Join-Path $inventoryRoot 'modules\LcmAhkAtoms.psm1'
 if (Test-Path -LiteralPath $ahkModulePath -PathType Leaf) {
   Import-Module -Name $ahkModulePath -Force -ErrorAction SilentlyContinue
@@ -403,14 +407,12 @@ function Set-LcmRegistryValue {
   $daemonPort = if ($env:LCM_DAEMON_PORT -match '^\d+$') { [int]$env:LCM_DAEMON_PORT } else { 9876 }
   $daemonUrl = "http://127.0.0.1:$daemonPort/execute"
   try {
-    $regCmd = "if (-not (Test-Path -LiteralPath '$KeyPath')) { New-Item -Path '$KeyPath' -Force | Out-Null }; Set-ItemProperty -Path '$KeyPath' -Name '$Name' -Value '$Value' -Force"
-    $payload = @{
-      command  = $regCmd
-      elevated = $true
-      sync     = $true
-    } | ConvertTo-Json
-
-    $res = Invoke-RestMethod -Uri $daemonUrl -Method Post -Body $payload -ContentType 'application/json' -TimeoutSec 5 -ErrorAction Stop
+    # CRP-343: the write runs in the registered elevated atom Set-LcmMachineRegistry.ps1 (admin tool),
+    # authenticated with the daemon key (LcmDoClient.psm1); an inline command is never elevated.
+    $registryAtom = Join-Path $PSScriptRoot 'Set-LcmMachineRegistry.ps1'
+    $regCmd = "& pwsh -NoProfile -ExecutionPolicy Bypass -File '$registryAtom' -KeyPath '$KeyPath' -Name '$Name' -Value '$Value' -PropertyType '$PropertyType'"
+    Write-Verbose ('Registry atom via daemon {0}' -f $daemonUrl)
+    $res = Invoke-LcmDaemonCommand -Command $regCmd -Sync -Elevated -TimeoutSeconds 30
     if ($res.status -in @('COMPLETED', 'DISPATCHED') -or $res.exitCode -eq 0) {
       Write-BaselineLog -Level INFO -Message "Registry updated (atomic daemon delegation): $KeyPath\$Name = '$Value'"
       return
@@ -465,55 +467,9 @@ function ConvertTo-LcmCandidateDrives {
 Set-Alias -Name Normalize-LcmCandidateDrives -Value ConvertTo-LcmCandidateDrives
 Set-Alias -Name ConvertTo-LcmCandidateDrive -Value ConvertTo-LcmCandidateDrives
 
-function Find-MountedMacriumBaselineCandidates {
-  param(
-    [string[]]$Drives = @('F', 'G', 'H', 'I')
-  )
-  $candidates = [System.Collections.Generic.List[PSCustomObject]]::new()
-  foreach ($letter in $Drives) {
-    $disk = Get-CimInstance Win32_LogicalDisk -Filter "DeviceID='$letter`:'" -ErrorAction SilentlyContinue
-    if ($null -eq $disk -or $disk.DriveType -ne 3 -or $disk.VolumeName -ne $ExpectedVolumeLabel) {
-      continue
-    }
-    $workspacePath = "$letter`:\Git_Repositories"
-    if (-not (Test-Path -LiteralPath $workspacePath -PathType Container)) {
-      continue
-    }
-    $newestLogTime = $null
-    $newestLogStr = ''
-    $internalLogDir = Join-Path $workspacePath 'LCM_Inventory\data\logs\lcm-internal'
-    if (Test-Path -LiteralPath $internalLogDir -PathType Container) {
-      $logFiles = @(Get-ChildItem -LiteralPath $internalLogDir -Filter '*.log' -File -ErrorAction SilentlyContinue |
-        Sort-Object LastWriteTime -Descending)
-      if ($logFiles.Count -gt 0) {
-        $newestLogTime = $logFiles[0].LastWriteTime
-        $newestLogStr = $newestLogTime.ToString('yyyy-MM-dd HH:mm:ss')
-      }
-    }
-    $candidates.Add([pscustomobject]@{
-      DriveLetter = $letter
-      MountedDrive = "$letter`:"
-      WorkspacePath = $workspacePath
-      NewestLogTimestamp = $newestLogStr
-      NewestLogDate = $newestLogTime
-    })
-  }
-  return @($candidates)
-}
+# Find-MountedMacriumBaselineCandidates: moved (CRP-343) - shared helper in modules/LcmMacriumAtoms.psm1
 
-function Find-MountedMacriumBaseline {
-  param(
-    [string[]]$Drives = @('F', 'G', 'H', 'I'),
-    [string[]]$ExcludeDrives = @()
-  )
-  $all = @(Find-MountedMacriumBaselineCandidates -Drives $Drives)
-  $filtered = @($all | Where-Object { $_.MountedDrive -notin $ExcludeDrives -and "$($_.DriveLetter):" -notin $ExcludeDrives })
-  if ($filtered.Count -gt 0) {
-    $sorted = @($filtered | Sort-Object { if ($null -ne $_.NewestLogDate) { $_.NewestLogDate } else { [datetime]::MinValue } } -Descending)
-    return $sorted[0]
-  }
-  return $null
-}
+# Find-MountedMacriumBaseline: moved (CRP-343) - shared helper in modules/LcmMacriumAtoms.psm1
 
 function Get-LcmReviewWindows {
   return @(Get-Process -Name 'BCompare' -ErrorAction SilentlyContinue | Where-Object {
@@ -562,41 +518,7 @@ function Remove-OrphanedBCompareProcesses {
   # RULE-REV-012 Window Non-Interference: Automated tools must not kill initializing or existing BCompare instances.
 }
 
-function Get-MountedBaselineEvidence {
-  param(
-    [Parameter(Mandatory)]
-    [PSCustomObject]$MountedBaseline,
-
-    [string[]]$DetachedDrives = @()
-  )
-
-  $contextPath = Join-Path $MountedBaseline.WorkspacePath 'LCM_AI\.agents\ACTIVE_CONTEXT.md'
-  $activityPath = Join-Path $MountedBaseline.WorkspacePath 'LCM_Inventory\logs\cm_activity.log'
-  $savedAt = ''
-  $goodNightObserved = $false
-
-  if (Test-Path -LiteralPath $contextPath -PathType Leaf) {
-    $context = Get-Content -LiteralPath $contextPath -Raw -Encoding utf8
-    if (-not [string]::IsNullOrWhiteSpace($context)) {
-      $savedMatch = [regex]::Match($context, '(?m)^Saved:\s*(.+)$')
-      if ($savedMatch.Success) {
-        $savedAt = $savedMatch.Groups[1].Value.Trim()
-      }
-    }
-  }
-
-  if (Test-Path -LiteralPath $activityPath -PathType Leaf) {
-    $goodNightObserved = Select-String -LiteralPath $activityPath -Pattern '\[GOOD_NIGHT\].*SAVE_ALL_AND_GOOD_NIGHT' -Quiet
-  }
-
-  return [pscustomobject]@{
-    DetachedDrives = @($DetachedDrives)
-    ReappearedDrive = $MountedBaseline.MountedDrive
-    WorkspacePath = $MountedBaseline.WorkspacePath
-    SnapshotSavedAt = $savedAt
-    GoodNightObserved = $goodNightObserved
-  }
-}
+# Get-MountedBaselineEvidence: moved (CRP-343) - shared helper in modules/LcmMacriumAtoms.psm1
 
 function Close-MountedImageReview {
   # RULE-REV-012: Non-interference with operator BC windows. Do not forcefully close operator sessions.
@@ -659,231 +581,7 @@ function Test-LcmBcrProfile {
   }
 }
 
-function Invoke-ElevatedBaselineWorker {
-  param(
-    [Parameter(Mandatory = $true)]
-    [string]$ImagePath
-  )
-
-  if (-not (Test-Path -LiteralPath $ImagePath -PathType Leaf)) {
-    throw "The specified Macrium image file was not found: $ImagePath"
-  }
-
-  Add-Type -TypeDefinition @'
-using System;
-using System.Runtime.InteropServices;
-
-public static class LcmMacriumMouse
-{
-    [DllImport("user32.dll")]
-    public static extern bool SetCursorPos(int x, int y);
-
-    [DllImport("user32.dll")]
-    public static extern void mouse_event(uint dwFlags, int dx, int dy, uint dwData, UIntPtr dwExtraInfo);
-}
-'@
-
-  Add-Type -AssemblyName UIAutomationClient
-  Add-Type -AssemblyName UIAutomationTypes
-
-  $workerDrives = ConvertTo-LcmCandidateDrives -Drives $CandidateDrives
-  $detachedDrives = [System.Collections.Generic.List[string]]::new()
-  $busyDrives = [System.Collections.Generic.List[string]]::new()
-  foreach ($letter in $workerDrives) {
-    $disk = Get-CimInstance Win32_LogicalDisk -Filter "DeviceID='$letter`:'" -ErrorAction SilentlyContinue
-    if ($null -eq $disk) {
-      continue
-    }
-    if ($disk.DriveType -ne 3 -or $disk.VolumeName -ne $ExpectedVolumeLabel) {
-      continue
-    }
-    Write-BaselineLog -Level INFO -Message "Detaching existing volume at ${letter}: before mounting '$ImagePath'."
-    $detachProcess = Start-Process -FilePath $reflectPath -ArgumentList @("$letter`:", '-u') -PassThru -Wait
-    $detachExitCode = if (Test-Path variable:global:LASTEXITCODE) {
-      if ($null -ne $detachProcess -and $null -ne $detachProcess.ExitCode) {
-        $detachProcess.ExitCode
-      } else {
-        $global:LASTEXITCODE
-      }
-    } else {
-      if ($null -ne $detachProcess -and $null -ne $detachProcess.ExitCode) { $detachProcess.ExitCode } else { 0 }
-    }
-    $deadline = (Get-Date).AddSeconds([Math]::Min(15, $MountTimeoutSeconds))
-    do {
-      Start-Sleep -Milliseconds 250
-      $disk = Get-CimInstance Win32_LogicalDisk -Filter "DeviceID='$letter`:'" -ErrorAction SilentlyContinue
-    } while ($null -ne $disk -and (Get-Date) -lt $deadline)
-    if ($null -ne $disk -or $detachExitCode -ne 0) {
-      Write-BaselineLog -Level WARN -Message "Drive ${letter}: could not be detached (likely open in other applications, exitCode=$detachExitCode). Retaining ${letter}: and falling back to alternative candidate drive."
-      $busyDrives.Add("$letter`:")
-    } else {
-      $detachedDrives.Add("$letter`:")
-    }
-  }
-
-  # Verify that at least one candidate drive is available for mounting
-  $availableCandidateLetters = [System.Collections.Generic.List[string]]::new()
-  foreach ($letter in $workerDrives) {
-    if ("$letter`:" -in $busyDrives) {
-      continue
-    }
-    $existingDisk = Get-CimInstance Win32_LogicalDisk -Filter "DeviceID='$letter`:'" -ErrorAction SilentlyContinue
-    if ($null -eq $existingDisk) {
-      $availableCandidateLetters.Add($letter)
-    }
-  }
-  if ($availableCandidateLetters.Count -eq 0 -and $busyDrives.Count -gt 0) {
-    throw "All candidate drives ($($workerDrives -join ', ')) are in use, and busy baseline drive(s) ($($busyDrives -join ', ')) could not be detached."
-  }
-  if ($busyDrives.Count -gt 0) {
-    Write-BaselineLog -Level INFO -Message "Fallback drive candidate(s) available for mounting: $($availableCandidateLetters -join ', '). Proceeding with mount."
-  }
-
-  $ahkAutomationScript = Join-Path $inventoryRoot 'tools\automation\Mount-MacriumBrowseDialog.ahk'
-  $ahkHandled = $false
-
-  Start-Process -FilePath $reflectPath -ArgumentList @('-b', $ImagePath) | Out-Null
-
-  if ((Test-Path -LiteralPath $ahkAutomationScript -PathType Leaf) -and (Get-Command -Name 'Invoke-LcmAhkScript' -ErrorAction SilentlyContinue)) {
-    Write-BaselineLog -Level INFO -Message 'Macrium Reflect Browse Image launched. Delegating dialog interaction to AHK atom.'
-    try {
-      $ahkResult = Invoke-LcmAhkScript -ScriptPath $ahkAutomationScript -ArgumentList @([string]$MountTimeoutSeconds) -TimeoutSeconds ($MountTimeoutSeconds + 5)
-      
-      # Log structured AHK output lines
-      if (-not [string]::IsNullOrWhiteSpace($ahkResult.Output)) {
-        foreach ($line in ($ahkResult.Output -split "`r?`n")) {
-          if (-not [string]::IsNullOrWhiteSpace($line)) {
-            Write-BaselineLog -Level INFO -Message "[AHK] $line"
-          }
-        }
-      }
-
-      $outputContainsSuccess = $ahkResult.Output -match 'STATUS:\s*SUCCESS'
-      $outputContainsRestricted = $ahkResult.Output -match 'STEP_RESTRICTED_FOLDERS:\s*(?:CHECKED|CLICKED)'
-      $outputContainsWritable = $ahkResult.Output -match 'STEP_WRITABLE:\s*(?:CHECKED|CLICKED)'
-      $outputContainsPartition = $ahkResult.Output -match 'STEP_PARTITION_SELECT:\s*(?:CHECKED|CLICKED)'
-      $allBoxesChecked = $outputContainsRestricted -and $outputContainsWritable -and $outputContainsPartition
-
-      if ($ahkResult.Succeeded -and $outputContainsSuccess -and $allBoxesChecked) {
-        Write-BaselineLog -Level INFO -Message 'AHK atom verified: all checkboxes set (Restricted, Writable, Partition) and OK button clicked successfully.'
-        $ahkHandled = $true
-      } else {
-        $failedReason = if (-not $allBoxesChecked) {
-          "Not all required checkboxes were confirmed checked (Restricted: $outputContainsRestricted, Writable: $outputContainsWritable, Partition: $outputContainsPartition)"
-        } elseif (-not $outputContainsSuccess) {
-          "AHK output did not signal STATUS: SUCCESS"
-        } else {
-          "AHK exited with code $($ahkResult.ExitCode)"
-        }
-        throw "AHK automation atom failed: $failedReason. Error: $($ahkResult.Error). Output: $($ahkResult.Output)"
-      }
-    } catch {
-      throw "AHK automation atom failed: $($_.Exception.Message)"
-    }
-  }
-
-  if (-not $ahkHandled) {
-    # Resilient UI Automation Fallback (only used when AHK atom is not installed)
-    # candidateProcessIds tracked for BUG-299 process enumeration
-    $candidateProcessIds = @(Get-Process -Name 'ReflectBin' -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Id)
-    if ($candidateProcessIds.Count -gt 0) {
-      Write-BaselineLog -Level INFO -Message "Enumerated existing ReflectBin process PID(s): $($candidateProcessIds -join ', ')."
-    }
-    $deadline = (Get-Date).AddSeconds($MountTimeoutSeconds)
-    $dialog = $null
-    while ((Get-Date) -lt $deadline -and $null -eq $dialog) {
-      $root = [System.Windows.Automation.AutomationElement]::RootElement
-      $topWindows = @($root.FindAll([System.Windows.Automation.TreeScope]::Children, [System.Windows.Automation.Condition]::TrueCondition))
-      foreach ($w in $topWindows) {
-        $chk = $w.FindFirst(
-          [System.Windows.Automation.TreeScope]::Descendants,
-          (New-Object System.Windows.Automation.PropertyCondition(
-            [System.Windows.Automation.AutomationElement]::NameProperty,
-            'Enable access to restricted folders'
-          ))
-        )
-        if ($null -ne $chk) {
-          $dialog = $w
-          break
-        }
-      }
-      if ($null -eq $dialog) {
-        Start-Sleep -Milliseconds 250
-      }
-    }
-    if ($null -eq $dialog) {
-      throw "Macrium Browse Image dialog did not become ready within $MountTimeoutSeconds seconds."
-    }
-
-    $part = $dialog.FindFirst(
-      [System.Windows.Automation.TreeScope]::Descendants,
-      (New-Object System.Windows.Automation.PropertyCondition(
-        [System.Windows.Automation.AutomationElement]::NameProperty,
-        'D4P3-WDB850-D (D:)'
-      ))
-    )
-    if ($null -ne $part) {
-      $pRect = $part.Current.BoundingRectangle
-      [LcmMacriumMouse]::SetCursorPos([int]($pRect.Left + 12), [int]($pRect.Top + ($pRect.Height / 2))) | Out-Null
-    } else {
-      $bounds = $dialog.Current.BoundingRectangle
-      [LcmMacriumMouse]::SetCursorPos([int]($bounds.Left + 37), [int]($bounds.Top + 236)) | Out-Null
-    }
-    [LcmMacriumMouse]::mouse_event(0x0002, 0, 0, 0, [UIntPtr]::Zero)
-    [LcmMacriumMouse]::mouse_event(0x0004, 0, 0, 0, [UIntPtr]::Zero)
-    Start-Sleep -Milliseconds 250
-
-    foreach ($optionName in @(
-      'Enable access to restricted folders',
-      'Make writable. Note: Changes are temporary and will be discarded.'
-    )) {
-      $option = $dialog.FindFirst(
-        [System.Windows.Automation.TreeScope]::Descendants,
-        (New-Object System.Windows.Automation.PropertyCondition(
-          [System.Windows.Automation.AutomationElement]::NameProperty,
-          $optionName
-        ))
-      )
-      if ($null -eq $option) {
-        throw "Macrium mount option was not found: $optionName"
-      }
-      $toggle = [System.Windows.Automation.TogglePattern]$option.GetCurrentPattern(
-        [System.Windows.Automation.TogglePattern]::Pattern
-      )
-      if ($toggle.Current.ToggleState -ne [System.Windows.Automation.ToggleState]::On) {
-        $toggle.Toggle()
-      }
-      if ($toggle.Current.ToggleState -ne [System.Windows.Automation.ToggleState]::On) {
-        throw "Macrium mount option was not enabled: $optionName"
-      }
-    }
-
-    $ok = $dialog.FindFirst(
-      [System.Windows.Automation.TreeScope]::Descendants,
-      (New-Object System.Windows.Automation.PropertyCondition(
-        [System.Windows.Automation.AutomationElement]::NameProperty,
-        'OK'
-      ))
-    )
-    if ($null -eq $ok -or -not $ok.Current.IsEnabled) {
-      throw 'Macrium mount confirmation is not available.'
-    }
-    ([System.Windows.Automation.InvokePattern]$ok.GetCurrentPattern(
-      [System.Windows.Automation.InvokePattern]::Pattern
-    )).Invoke()
-  }
-
-  $deadline = (Get-Date).AddSeconds($MountTimeoutSeconds)
-  do {
-    Start-Sleep -Milliseconds 250
-    $mountedBaseline = Find-MountedMacriumBaseline -Drives $workerDrives -ExcludeDrives $busyDrives
-  } while ($null -eq $mountedBaseline -and (Get-Date) -lt $deadline)
-  if ($null -eq $mountedBaseline) {
-    throw "Macrium accepted the mount dialog, but no matching '$ExpectedVolumeLabel' volume appeared in the candidate drives ($($workerDrives -join ', ')) within $MountTimeoutSeconds seconds."
-  }
-  $mountEvidence = Get-MountedBaselineEvidence -MountedBaseline $mountedBaseline -DetachedDrives @($detachedDrives)
-  Write-WorkerReceipt -Succeeded $true -Message 'Macrium baseline mounted.' -ImagePath $ImagePath -MountedDrive $mountedBaseline.MountedDrive -MountEvidence $mountEvidence
-}
+# Invoke-ElevatedBaselineWorker: moved (CRP-343) - now the elevated atom tools/Invoke-MacriumMountWorker.ps1
 
 if ($Help) {
   Write-Host "==========================================================================" -ForegroundColor Cyan
@@ -926,7 +624,7 @@ if ($NewBaseline) {
   Write-BaselineLog -Level INFO -Message "-NewBaseline specified. Will detach existing baseline and mount fresh image via elevated worker."
   $candidateList = @()
 } else {
-  $candidateList = @(Find-MountedMacriumBaselineCandidates -Drives $normalizedDrives)
+  $candidateList = @(Find-MountedMacriumBaselineCandidates -Drives $normalizedDrives -ExpectedVolumeLabel $ExpectedVolumeLabel)
   if ($candidateList.Count -gt 0) {
     $sortedCandidates = @($candidateList | Sort-Object { if ($null -ne $_.NewestLogDate) { $_.NewestLogDate } else { [datetime]::MinValue } } -Descending)
     $chosen = $sortedCandidates[0]
@@ -1082,14 +780,10 @@ if ($NewBaseline) {
 }
 
 if ($ElevatedWorker) {
-  try {
-    Invoke-ElevatedBaselineWorker -ImagePath $ImagePath
-    exit 0
-  }
-  catch {
-    Write-WorkerReceipt -Succeeded $false -Message $_.Exception.Message
-    exit 1
-  }
+  # CRP-343: legacy entry point; the elevated worker is the atom tools/Invoke-MacriumMountWorker.ps1.
+  $legacyDrives = (@(ConvertTo-LcmCandidateDrives -Drives $CandidateDrives) -join ';')
+  & (Join-Path $PSScriptRoot 'Invoke-MacriumMountWorker.ps1') -ImagePath $ImagePath -CandidateDrives $legacyDrives -ExpectedVolumeLabel $ExpectedVolumeLabel -MountTimeoutSeconds $MountTimeoutSeconds -ReceiptPath $ReceiptPath
+  exit $LASTEXITCODE
 }
 
 $completedImage = if ($ForceNewBackup) {
@@ -1123,70 +817,15 @@ Close-MountedImageReview
 $receiptPath = Join-Path $env:TEMP ('{0}-{1}.json' -f $toolName, [guid]::NewGuid().ToString('N'))
 try {
   $pwshPath = (Get-Command pwsh -ErrorAction Stop).Source
-  $arguments = @(
-    '-NoProfile',
-    '-ExecutionPolicy',
-    'Bypass',
-    '-File',
-    $PSCommandPath,
-    '-ElevatedWorker',
-    '-BackupDefinitionPath',
-    $BackupDefinitionPath,
-    '-BackupDirectory',
-    $BackupDirectory,
-    '-ExpectedVolumeLabel',
-    $ExpectedVolumeLabel,
-    '-CandidateDrives',
-    ($normalizedDrives -join ';'),
-    '-MountTimeoutSeconds',
-    $MountTimeoutSeconds,
-    '-ReceiptPath',
-    $receiptPath,
-    '-ImagePath',
-    $completedImage.ImagePath
-  )
-  $isCurrentlyElevated = [System.Security.Principal.WindowsPrincipal]::new([System.Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([System.Security.Principal.WindowsBuiltInRole]::Administrator)
-  $daemonDispatched = $false
-
-  if (-not $isCurrentlyElevated) {
-    # Check if Port 9876 Session 1 Desktop Daemon is available
-    $daemonUrl = 'http://127.0.0.1:9876/execute'
-    try {
-      $ping = Invoke-RestMethod -Uri 'http://127.0.0.1:9876/ping' -TimeoutSec 1 -ErrorAction Stop
-      if ($ping.status -eq 'ONLINE') {
-        $argString = @($arguments | ForEach-Object { "`"$_`"" }) -join ' '
-        $workerCmd = "& `"$pwshPath`" $argString"
-        $body = @{
-          command  = $workerCmd
-          elevated = $true
-          sync     = $true
-        } | ConvertTo-Json
-        Write-BaselineLog -Level INFO -Message 'Dispatching elevated Macrium worker via Session 1 Desktop Daemon (Port 9876).'
-        $resp = Invoke-RestMethod -Uri $daemonUrl -Method Post -Body $body -ContentType 'application/json' -TimeoutSec ($MountTimeoutSeconds + 20) -ErrorAction Stop
-        if (Test-Path -LiteralPath $receiptPath) {
-          $daemonDispatched = $true
-          Write-BaselineLog -Level INFO -Message 'Elevated Macrium worker completed via Desktop Daemon.'
-        }
-      }
-    } catch {
-      Write-BaselineLog -Level WARN -Message "Desktop Daemon worker dispatch unavailable ($($_.Exception.Message)); falling back to RunAs."
-    }
-  }
-
-  if (-not $daemonDispatched) {
-    $startArgs = @{
-      FilePath     = $pwshPath
-      ArgumentList = $arguments
-      PassThru     = $true
-      Wait         = $true
-    }
-    if (-not $isCurrentlyElevated) {
-      $startArgs.Verb = 'RunAs'
-    }
-    $worker = Start-Process @startArgs
-    if (-not (Test-Path -LiteralPath $receiptPath)) {
-      throw "The elevated Macrium worker exited with code $($worker.ExitCode) without a receipt."
-    }
+  # CRP-343: the elevated mount runs only in the atom Invoke-MacriumMountWorker.ps1, dispatched through
+  # the DO daemon by the admin tool Mount-MacriumLatestBaseline.ps1, started here as a child process
+  # (non-admin tool -> admin tool -> elevated atom). This tool and Beyond Compare stay non-elevated.
+  $mountTool = Join-Path $PSScriptRoot 'Mount-MacriumLatestBaseline.ps1'
+  Write-BaselineLog -Level INFO -Message "Mounting '$($completedImage.ImagePath)' through $mountTool (elevated atom Invoke-MacriumMountWorker.ps1)."
+  & $pwshPath -NoProfile -ExecutionPolicy Bypass -File $mountTool -ConfirmMount -ImagePath $completedImage.ImagePath -CandidateDrives ($normalizedDrives -join ';') -ExpectedVolumeLabel $ExpectedVolumeLabel -MountTimeoutSeconds $MountTimeoutSeconds -ReceiptPath $receiptPath
+  $mountExit = $LASTEXITCODE
+  if (-not (Test-Path -LiteralPath $receiptPath)) {
+    throw "The Macrium mount atom exited with code $mountExit without a receipt."
   }
   $receipt = Get-Content -LiteralPath $receiptPath -Raw | ConvertFrom-Json
   if (-not $receipt.Succeeded) {
@@ -1244,7 +883,7 @@ Set-LcmRegistryValue -KeyPath $MacriumRegistryKey -Name 'MRMImageLeaf' -Value $c
 Set-LcmRegistryValue -KeyPath $MacriumRegistryKey -Name 'actMImagePath' -Value $completedImage.ImagePath
 Set-LcmRegistryValue -KeyPath $MacriumRegistryKey -Name 'actMImageLeaf' -Value $completedLeaf
 
-$freshCandidates = @(Find-MountedMacriumBaselineCandidates -Drives @($receipt.MountedDrive.TrimEnd(':')))
+$freshCandidates = @(Find-MountedMacriumBaselineCandidates -Drives @($receipt.MountedDrive.TrimEnd(':')) -ExpectedVolumeLabel $ExpectedVolumeLabel)
 if ($freshCandidates.Count -gt 0 -and -not [string]::IsNullOrWhiteSpace($freshCandidates[0].NewestLogTimestamp)) {
   Set-LcmRegistryValue -KeyPath $MacriumRegistryKey -Name 'ActMTimeStamp' -Value $freshCandidates[0].NewestLogTimestamp
   Set-LcmRegistryValue -KeyPath $MacriumRegistryKey -Name 'actMdrive' -Value $freshCandidates[0].MountedDrive

@@ -15,10 +15,10 @@ Scope: LCM_Inventory
 Version: 10.6.4
 Affected-Repos: [LCM_Inventory]
 Severity: High
-Status: Completed
+Status: Pushed
 Root-Cause: The suite backs up and restores the live proposals.json instead of redirecting the store (LCM_PROPOSAL_STORE_PATH); four New-WorkspaceProposal calls and one Sync-LcmAppCatalog call omit -WorkspaceRoot $TestDrive. Store saves trigger Sync-LcmProposalsDb against the live DB; session registers and the App catalog are written next to the live store.
-Plan-State: completed
-Progress-State: completed
+Plan-State: pushed
+Progress-State: pushed
 ```
 
 ---

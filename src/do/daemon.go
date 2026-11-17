@@ -6,7 +6,7 @@ DESCRIPTION    : HTTP daemon listener for Session 1 desktop execution and teleme
 AUTHOR         : Rolf, Claude
 DATE CREATED   : 2026-11-11
 LAST MODIFIED  : 2026-11-17
-VERSION        : 10.2.3
+VERSION        : 10.2.4
 GO VERSION     : 1.22+
 ENCODING       : ASCII (No BOM)
 ================================================================================
@@ -16,6 +16,11 @@ CHANGE LOG:
                      before reporting its revision; previously it only echoed the artifact timestamp.
 2026-11-17 - 10.2.3: BUG-347 every non-GET/HEAD/OPTIONS request passes guardMutations (guard.go):
                      foreign browser origins and non-JSON bodies are refused and logged.
+2026-11-17 - 10.2.4: CRP-343 caller key (auth.go) on every state-changing route; /execute runs
+                     elevated only for authenticated requests naming an elevated atom of an
+                     admin tool (elevation.go); everything else, /open, /open_editor and display
+                     rendering run with the explorer token (non-elevated); pages served by the
+                     daemon carry the key shim and no Access-Control-Allow-Origin.
 ================================================================================
 */
 
@@ -57,6 +62,9 @@ func RunDaemon(port int) error {
 	daemonStartTime = time.Now()
 	daemonPort = port
 	addr := fmt.Sprintf("127.0.0.1:%d", port)
+	if err := initDaemonKey(); err != nil { // CRP-343
+		return err
+	}
 
 	listener, err := net.Listen("tcp", addr)
 	if err != nil {
@@ -76,6 +84,9 @@ func RunDaemon(port int) error {
 	daemonMux.HandleFunc("/api/execute", handleExecute)
 	daemonMux.HandleFunc("/action", handleExecute)
 	daemonMux.HandleFunc("/api/action", handleExecute)
+
+	daemonMux.HandleFunc("/elevation/verify", handleElevationVerify) // CRP-343 D4 dry run
+	daemonMux.HandleFunc("/api/elevation/verify", handleElevationVerify)
 
 	daemonMux.HandleFunc("/open", handleOpen)
 	daemonMux.HandleFunc("/api/open", handleOpen)
@@ -141,7 +152,7 @@ func RunDaemon(port int) error {
 	daemonMux.HandleFunc("/snapshots/", handleSnapshots)
 
 	daemonServer = &http.Server{
-		Handler:      guardMutations(daemonMux), // BUG-347
+		Handler:      guardMutations(requireCaller(daemonMux)), // BUG-347, CRP-343
 		ReadTimeout:  120 * time.Second,
 		WriteTimeout: 600 * time.Second,
 	}
@@ -240,6 +251,8 @@ func handleExecute(w http.ResponseWriter, r *http.Request) {
 	}
 
 	gitRoot := GetGitRoot()
+	verdict := verifyLegalElevation(elevationRequest{Command: cmdStr, Authenticated: isAuthenticated(r), AskedElevated: req.Elevated, RemoteAddr: r.RemoteAddr}, gitRoot) // CRP-343 D3/D4
+	elevate, decision := verdict.Elevate, verdict.Path+" path: "+verdict.Reason
 
 	// Synchronous execution branch
 	if req.Sync {
@@ -251,7 +264,7 @@ func handleExecute(w http.ResponseWriter, r *http.Request) {
 		ctx, cancel := context.WithTimeout(context.Background(), timeout)
 		defer cancel()
 
-		exitCode, stdout, stderr, durMs := executeSynchronous(ctx, cmdStr, gitRoot)
+		exitCode, stdout, stderr, durMs := executeSynchronous(ctx, cmdStr, gitRoot, elevate, timeout)
 
 		status := "COMPLETED"
 		if exitCode != 0 {
@@ -259,25 +272,26 @@ func handleExecute(w http.ResponseWriter, r *http.Request) {
 		}
 
 		resp := ExecuteResponse{
-			Status:      status,
-			ExitCode:    exitCode,
-			Stdout:      stdout,
-			Stderr:      stderr,
-			DurationMs:  durMs,
-			Command:     cmdStr,
-			Elevated:    req.Elevated,
-			NoExit:      req.NoExit,
-			WindowStyle: req.WindowStyle,
+			Status:            status,
+			ExitCode:          exitCode,
+			Stdout:            stdout,
+			Stderr:            stderr,
+			DurationMs:        durMs,
+			Command:           cmdStr,
+			Elevated:          elevate,
+			NoExit:            req.NoExit,
+			WindowStyle:       req.WindowStyle,
+			ElevationDecision: decision,
 		}
 
 		// Record persistent log
 		recordActionLog(ActionLog{
 			Timestamp:  time.Now().Format("2006-01-02 15:04:05"),
-			Command:    cmdStr,
+			Command:    cmdStr + " [CRP-343: " + decision + "]",
 			ExitCode:   exitCode,
 			DurationMs: durMs,
 			Status:     status,
-			Elevated:   req.Elevated,
+			Elevated:   elevate,
 			Stdout:     stdout,
 			Stderr:     stderr,
 		})
@@ -287,60 +301,66 @@ func handleExecute(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Asynchronous dispatch branch
-	directExe, err := executeAsynchronous(cmdStr, req.Elevated, req.NoExit, req.WindowStyle, gitRoot)
+	directExe, err := executeAsynchronous(cmdStr, elevate, req.NoExit, req.WindowStyle, gitRoot)
 	if err != nil {
 		writeJSON(w, http.StatusInternalServerError, map[string]string{"error": err.Error()})
 		return
 	}
 
 	resp := ExecuteResponse{
-		Status:      "DISPATCHED",
-		ExitCode:    0,
-		Command:     cmdStr,
-		Elevated:    req.Elevated,
-		NoExit:      req.NoExit,
-		WindowStyle: req.WindowStyle,
-		DirectExe:   directExe,
+		Status:            "DISPATCHED",
+		ExitCode:          0,
+		Command:           cmdStr,
+		Elevated:          elevate,
+		NoExit:            req.NoExit,
+		WindowStyle:       req.WindowStyle,
+		DirectExe:         directExe,
+		ElevationDecision: decision,
 	}
 
 	recordActionLog(ActionLog{
 		Timestamp:  time.Now().Format("2006-01-02 15:04:05"),
-		Command:    cmdStr,
+		Command:    cmdStr + " [CRP-343: " + decision + "]",
 		ExitCode:   0,
 		DurationMs: 0,
 		Status:     "DISPATCHED",
-		Elevated:   req.Elevated,
+		Elevated:   elevate,
 	})
 
 	writeJSON(w, http.StatusOK, resp)
 }
 
-func executeSynchronous(ctx context.Context, cmdStr string, wsRoot string) (int, string, string, int64) {
-	start := time.Now()
-
-	var cmd *exec.Cmd
-	trimmed := strings.TrimSpace(cmdStr)
-
-	// Determine execution method:
-	// If it contains PowerShell syntax, scripts, or variables:
+// resolveProgram maps a command string to program and arguments (unchanged routing rules).
+func resolveProgram(trimmed string, psArgs []string) (string, []string) {
 	if isPowerShellCommand(trimmed) {
-		cmd = exec.CommandContext(ctx, "pwsh.exe", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-Command", trimmed)
-	} else {
-		tokens := splitCommandLine(trimmed)
-		if len(tokens) > 0 {
-			exePath, err := exec.LookPath(tokens[0])
-			if err == nil && !strings.ContainsAny(trimmed, "|&><") {
-				// Direct execution for native executables without shell operators
-				cmd = exec.CommandContext(ctx, exePath, tokens[1:]...)
-			} else {
-				// Use cmd.exe /c for built-ins, shell redirects, pipes
-				cmd = exec.CommandContext(ctx, "cmd.exe", "/c", trimmed)
-			}
-		} else {
-			cmd = exec.CommandContext(ctx, "cmd.exe", "/c", trimmed)
+		return "pwsh.exe", append(psArgs, "-Command", trimmed)
+	}
+	tokens := splitCommandLine(trimmed)
+	if len(tokens) > 0 && !strings.ContainsAny(trimmed, "|&><") {
+		if exePath, err := exec.LookPath(tokens[0]); err == nil {
+			return exePath, tokens[1:]
 		}
 	}
+	return "cmd.exe", []string{"/c", trimmed}
+}
 
+func executeSynchronous(ctx context.Context, cmdStr string, wsRoot string, elevate bool, timeout time.Duration) (int, string, string, int64) {
+	start := time.Now()
+	trimmed := strings.TrimSpace(cmdStr)
+	program, args := resolveProgram(trimmed, []string{"-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass"})
+
+	if !elevate { // CRP-343 D1: explorer token, medium integrity
+		if p, err := exec.LookPath(program); err == nil {
+			program = p
+		}
+		code, stdout, stderr, err := startUnelevated(program, args, wsRoot, createNoWindow, true, timeout)
+		if err != nil {
+			return 1, "", err.Error(), time.Since(start).Milliseconds()
+		}
+		return code, stdout, stderr, time.Since(start).Milliseconds()
+	}
+
+	cmd := exec.CommandContext(ctx, program, args...)
 	cmd.Dir = wsRoot
 	cmd.SysProcAttr = &syscall.SysProcAttr{
 		CreationFlags: createNoWindow,
@@ -368,60 +388,60 @@ func executeSynchronous(ctx context.Context, cmdStr string, wsRoot string) (int,
 	return exitCode, stdoutBuf.String(), stderrBuf.String(), dur
 }
 
-func executeAsynchronous(cmdStr string, elevated bool, noExit bool, windowStyle string, wsRoot string) (string, error) {
+func executeAsynchronous(cmdStr string, elevate bool, noExit bool, windowStyle string, wsRoot string) (string, error) {
 	trimmed := strings.TrimSpace(cmdStr)
 
-	// If direct executable execution without shell wrapping
+	var program string
+	var args []string
+	directExe := ""
 	tokens := splitCommandLine(trimmed)
-	if len(tokens) > 0 && strings.HasSuffix(strings.ToLower(tokens[0]), ".exe") && !elevated && !noExit {
-		exePath, err := exec.LookPath(tokens[0])
-		if err == nil {
-			cmd := exec.Command(exePath, tokens[1:]...)
-			cmd.Dir = wsRoot
-			var flags uint32 = createNewConsole
-			if strings.EqualFold(windowStyle, "Hidden") {
-				flags = createNoWindow
+	if len(tokens) > 0 && strings.HasSuffix(strings.ToLower(tokens[0]), ".exe") && !noExit {
+		if exePath, err := exec.LookPath(tokens[0]); err == nil {
+			program, args, directExe = exePath, tokens[1:], exePath
+		}
+	}
+	if program == "" {
+		if isPowerShellCommand(trimmed) {
+			psArgs := []string{"-NoProfile", "-ExecutionPolicy", "Bypass"}
+			if noExit {
+				psArgs = append(psArgs, "-NoExit")
 			}
-			cmd.SysProcAttr = &syscall.SysProcAttr{CreationFlags: flags}
-			if err := cmd.Start(); err != nil {
-				return "", fmt.Errorf("failed starting %s: %w", exePath, err)
+			cmdToRun := trimmed
+			if !noExit && !strings.Contains(strings.ToLower(cmdToRun), "exit") {
+				cmdToRun = cmdToRun + "; exit"
 			}
-			return exePath, nil
+			program, args = "pwsh.exe", append(psArgs, "-Command", cmdToRun)
+		} else {
+			cmdFlag := "/c"
+			if noExit {
+				cmdFlag = "/k"
+			}
+			program, args = "cmd.exe", []string{cmdFlag, trimmed}
 		}
 	}
 
-	var cmd *exec.Cmd
-	if isPowerShellCommand(trimmed) {
-		psArgs := []string{"-NoProfile", "-ExecutionPolicy", "Bypass"}
-		if noExit {
-			psArgs = append(psArgs, "-NoExit")
-		}
-		cmdToRun := trimmed
-		if !noExit && !strings.Contains(strings.ToLower(cmdToRun), "exit") {
-			cmdToRun = cmdToRun + "; exit"
-		}
-		psArgs = append(psArgs, "-Command", cmdToRun)
-		cmd = exec.Command("pwsh.exe", psArgs...)
-	} else {
-		cmdFlag := "/c"
-		if noExit {
-			cmdFlag = "/k"
-		}
-		cmd = exec.Command("cmd.exe", cmdFlag, trimmed)
-	}
-
-	cmd.Dir = wsRoot
 	var flags uint32 = createNewConsole
 	if strings.EqualFold(windowStyle, "Hidden") && !noExit {
 		flags = createNoWindow
 	}
-	cmd.SysProcAttr = &syscall.SysProcAttr{CreationFlags: flags}
 
+	if !elevate { // CRP-343 D1: explorer token, medium integrity
+		if p, err := exec.LookPath(program); err == nil {
+			program = p
+		}
+		if _, _, _, err := startUnelevated(program, args, wsRoot, flags, false, 0); err != nil {
+			return "", fmt.Errorf("failed non-elevated dispatch: %w", err)
+		}
+		return directExe, nil
+	}
+
+	cmd := exec.Command(program, args...)
+	cmd.Dir = wsRoot
+	cmd.SysProcAttr = &syscall.SysProcAttr{CreationFlags: flags}
 	if err := cmd.Start(); err != nil {
 		return "", fmt.Errorf("failed asynchronous dispatch: %w", err)
 	}
-
-	return "", nil
+	return directExe, nil
 }
 
 func isPowerShellCommand(cmd string) bool {
@@ -510,10 +530,8 @@ func handleOpen(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Launch target using Windows Shell
-	cmd := exec.Command("cmd.exe", "/c", "start", "", target)
-	cmd.SysProcAttr = &syscall.SysProcAttr{CreationFlags: createNoWindow}
-	if err := cmd.Start(); err != nil {
+	// Launch target using Windows Shell, non-elevated (CRP-343, anti-GUI-poisoning invariant)
+	if _, _, _, err := startUnelevated("C:\\Windows\\System32\\cmd.exe", []string{"/c", "start", "", target}, "", createNoWindow, false, 0); err != nil {
 		writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "Failed to launch target: " + err.Error()})
 		return
 	}
@@ -708,9 +726,11 @@ func handleOpenEditor(w http.ResponseWriter, r *http.Request) {
 		target = fmt.Sprintf("%s:%d", target, req.Line)
 	}
 
-	cmd := exec.Command("cmd.exe", "/c", "code", "-g", target)
-	cmd.SysProcAttr = &syscall.SysProcAttr{CreationFlags: createNoWindow}
-	_ = cmd.Start()
+	// Editor starts non-elevated (CRP-343, anti-GUI-poisoning invariant)
+	if _, _, _, err := startUnelevated("C:\\Windows\\System32\\cmd.exe", []string{"/c", "code", "-g", target}, "", createNoWindow, false, 0); err != nil {
+		writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "Failed to launch editor: " + err.Error()})
+		return
+	}
 
 	writeJSON(w, http.StatusOK, map[string]string{"status": "OK", "target": target})
 }
@@ -894,7 +914,8 @@ func handleDisplayPage(artifactLeaf string) http.HandlerFunc {
 		rev := fmt.Sprintf("rev-%d", modTime)
 		w.Header().Set("X-LCM-Display-Revision", rev)
 
-		htmlStr := string(dataBytes)
+		htmlStr := injectKeyScript(string(dataBytes)) // CRP-343
+		stripCORS(w)
 		headIdx := strings.Index(strings.ToLower(htmlStr), "<head")
 		if headIdx != -1 {
 			closeHeadTag := strings.Index(htmlStr[headIdx:], ">")
@@ -947,6 +968,8 @@ func handleAssets(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	case ".html":
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		data = []byte(injectKeyScript(string(data))) // CRP-343
+		stripCORS(w)
 	default:
 		w.Header().Set("Content-Type", "application/octet-stream")
 	}
@@ -979,6 +1002,8 @@ func handleSnapshots(w http.ResponseWriter, r *http.Request) {
 	switch ext {
 	case ".html":
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		data = []byte(injectKeyScript(string(data))) // CRP-343
+		stripCORS(w)
 	case ".json":
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	case ".css":
@@ -1015,12 +1040,17 @@ func renderDisplay(gitRoot string, id string) error {
 	logPath := filepath.Join(logDir, fmt.Sprintf("%s-%s-daemon.log", id, time.Now().Format("20060102_150405")))
 	worker := filepath.Join(gitRoot, "LCM_Inventory", "tools", "Invoke-LcmDisplayRender.ps1")
 
-	ctx, cancel := context.WithTimeout(context.Background(), 120*time.Second)
-	defer cancel()
-	cmd := exec.CommandContext(ctx, "pwsh.exe", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", worker, "-DisplayId", id, "-LogPath", logPath)
-	cmd.Dir = gitRoot
-	if output, err := cmd.CombinedOutput(); err != nil {
-		return fmt.Errorf("render display %s failed (log %s): %w: %s", id, logPath, err, strings.TrimSpace(string(output)))
+	// Renderer runs non-elevated (CRP-343): artifacts stay owned by the operator account.
+	pwsh, err := exec.LookPath("pwsh.exe")
+	if err != nil {
+		return fmt.Errorf("render display %s: pwsh.exe not found: %w", id, err)
+	}
+	code, stdout, stderr, err := startUnelevated(pwsh, []string{"-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", worker, "-DisplayId", id, "-LogPath", logPath}, gitRoot, createNoWindow, true, 120*time.Second)
+	if err != nil {
+		return fmt.Errorf("render display %s failed (log %s): %w", id, logPath, err)
+	}
+	if code != 0 {
+		return fmt.Errorf("render display %s failed (log %s): exit %d: %s", id, logPath, code, strings.TrimSpace(stdout+" "+stderr))
 	}
 	return nil
 }

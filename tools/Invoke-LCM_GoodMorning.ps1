@@ -1,13 +1,15 @@
 <#
 .SYNOPSIS
-  GoodMorning: read-only start-of-session check (time gap, work in between, versions, context).
+  GoodMorning: start-of-session check (time gap, work in between, versions, context, host blocks, DO front-end).
 .DESCRIPTION
   Module: tools/Invoke-LCM_GoodMorning.ps1
-  Purpose: Gives a fresh AI session facts instead of guesses. Its default path
-           changes nothing; the explicit -PrepareBcrBaseline option delegates
-           daily Macrium baseline preparation to a separate tool.
-           1. Time gap: since the last activity (Save-All stamp or newest commit). With -Auto the
-              check stays silent unless the gap exceeds -GapHours (default 7), which implies a good morning.
+  Purpose: Gives a fresh AI session facts instead of guesses. Its default path changes only what
+           RULE-LCM-030 (5) allows: section 1 Status / Resumption Timestamp of ACTIVE_SESSION.md and,
+           if needed, the start of the DO front-end; the -PrepareBcrBaseline option delegates daily
+           Macrium baseline preparation to a separate tool.
+           1. Time gap: the workspace gap is measured from the section 1 GoodNight Timestamp of
+              ACTIVE_SESSION.md (fallback: last save, then newest commit, each labelled). With -Auto the
+              check stays silent unless the activity gap exceeds -GapHours (default 7).
            2. Work in between: compares every repository with the Session Snapshot saved by
               Save-AllSessionMemory.ps1 (new commits, branch moves, uncommitted changes, behind upstream,
               new or missing repositories). The operator MUST be told about it.
@@ -17,9 +19,13 @@
            5. Prints the confirmation the AI must give before working.
   Path: LCM_Inventory/tools/Invoke-LCM_GoodMorning.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.2.5
-  Date: 2026-11-14 12:25:00
-  Rule: RULE-CTX-006, RULE-LCM-030
+  Version: 10.2.6
+  Date: 2026-11-17 15:40:19
+  Rule: RULE-CTX-006, RULE-LCM-030 (4)-(6)
+  Implementation Choices (CRP-350): one GoodNight source (section 1 GoodNight Timestamp) for every host;
+           host blocks parsed with the full field list by LcmSessionStateAtoms.psm1 and checked against the
+           schema vocabulary; DO front-end checked on /health and started via the LCM_DesktopDaemon_<user>
+           logon task; the run records Status Active and Resumption Timestamp in section 1 (not with -WhatIf).
 .PARAMETER Auto
   Session-start mode: silent (one line) when the gap is below -GapHours and -NoBaseline is specified.
 .PARAMETER GapHours
@@ -40,6 +46,8 @@
   Displays this parameter documentation and usage syntax.
 .NOTES
   Exit code 0 = nothing needing attention, 3 = attention items found (the AI must report them).
+  Caveats: may be run by the operator or, on explicit operator instruction, by an AI host (RULE-CTX-006).
+           Starting the DO front-end needs no elevation (own logon task).
 #>
 
 [CmdletBinding()]
@@ -67,7 +75,8 @@ if ($NoBaseline) {
 
 if ($Help) {
     Write-Host 'Invoke-LCM_GoodMorning.ps1 [-Auto] [-GapHours <n>] [-Force] [-PrepareBcrBaseline] [-NoBaseline] [-ReviewScope <CRP|BUG>] [-WhatIf] [-h]'
-    Write-Host '  Read-only session-start check; exit code 3 when attention items exist.'
+    Write-Host '  Session-start check; writes only section 1 Status / Resumption Timestamp of ACTIVE_SESSION.md'
+    Write-Host '  and starts the DO front-end when it does not answer (not with -WhatIf); exit code 3 when attention items exist.'
     return
 }
 
@@ -83,8 +92,26 @@ $gitRoot = Get-LcmMachineGitRoot
 $agentsDir = Join-Path $gitRoot 'LCM_AI\.agents'
 $contextFile = Join-Path $agentsDir 'ACTIVE_CONTEXT.md'
 $learnFile = Join-Path $agentsDir 'LEARNED_ADVICE.md'
+$sessionFile = Join-Path $agentsDir 'ACTIVE_SESSION.md'
+Import-Module -Name (Join-Path $inventoryRoot 'modules\LcmSessionStateAtoms.psm1') -Force
 $now = Get-Date
 $attention = [System.Collections.Generic.List[string]]::new()
+
+function Get-ShortText {
+    param([AllowNull()][string]$Text, [int]$Max = 220)
+    if ($null -eq $Text) { return '' }
+    if ($Text.Length -le $Max) { return $Text }
+    $Text.Substring(0, $Max) + ' ...'
+}
+
+function Test-LcmDoFrontEnd {
+    try {
+        $resp = Invoke-WebRequest -Uri 'http://127.0.0.1:9876/health' -TimeoutSec 3 -UseBasicParsing -ErrorAction Stop
+        return (200 -eq [int]$resp.StatusCode)
+    } catch {
+        return $false
+    }
+}
 
 function Get-RepoList {
     $dirs = @($gitRoot) + @(Get-ChildItem -LiteralPath $gitRoot -Directory -Force | Where-Object { $_.Name -notlike '.*' } | ForEach-Object { $_.FullName })
@@ -119,12 +146,27 @@ if ($Auto -and -not $Force -and -not $PrepareBcrBaseline -and $gap -lt $GapHours
 }
 
 Write-Host '==========================================================================' -ForegroundColor Cyan
-Write-Host ' LCM GOODMORNING (read-only)' -ForegroundColor Cyan
+Write-Host ' LCM GOODMORNING' -ForegroundColor Cyan
 Write-Host '==========================================================================' -ForegroundColor Cyan
-$goodNightDisplay = if ($savedAt) { $savedAt.ToString('yyyy-MM-dd HH:mm:ss') } elseif ($lastActivity) { $lastActivity.ToString('yyyy-MM-dd HH:mm:ss') } else { 'unknown' }
-$gapDisplay = if ([double]::IsInfinity($gap)) { 'unknown' } else { '{0:N1} h' -f $gap }
-Write-Host ("Now: {0:yyyy-MM-dd HH:mm:ss}   Last GoodNight: {1}   Gap: {2}" -f $now, $goodNightDisplay, $gapDisplay)
-Write-Host ("☀️ Good Morning! Resuming from Good Night at {0} (Gap: {1})." -f $goodNightDisplay, $gapDisplay) -ForegroundColor Green
+$sessRaw = if (Test-Path -LiteralPath $sessionFile) { [System.IO.File]::ReadAllText($sessionFile) } else { '' }
+$goodNightAt = ConvertTo-LcmSessionTimestamp -Text (Get-LcmSessionWorkspaceField -Content $sessRaw -Name 'GoodNight Timestamp')
+$refAt = $null
+$refLabel = 'Good Night'
+if ($null -ne $goodNightAt) {
+    $refAt = $goodNightAt
+} elseif ($null -ne $savedAt) {
+    $refAt = $savedAt
+    $refLabel = 'last save (no GoodNight recorded)'
+} elseif ($null -ne $lastCommit) {
+    $refAt = $lastCommit
+    $refLabel = 'last commit (no GoodNight recorded)'
+}
+$goodNightDisplay = if ($null -ne $refAt) { $refAt.ToString('yyyy-MM-dd HH:mm:ss') } else { 'unknown' }
+$gapDisplay = if ($null -ne $refAt) { '{0:N1} h' -f ($now - $refAt).TotalHours } else { 'unknown' }
+$savedDisplay = if ($null -ne $savedAt) { $savedAt.ToString('yyyy-MM-dd HH:mm:ss') } else { 'none' }
+Write-Host ("Now: {0:yyyy-MM-dd HH:mm:ss}   Last GoodNight: {1}   Workspace gap: {2}   Last save: {3}" -f $now, $goodNightDisplay, $gapDisplay, $savedDisplay)
+Write-Host ("☀️ Good Morning! Resuming from {0} at {1} (Gap: {2})." -f $refLabel, $goodNightDisplay, $gapDisplay) -ForegroundColor Green
+if ($null -eq $goodNightAt) { $attention.Add('ACTIVE_SESSION.md section 1 has no GoodNight Timestamp; the gap is measured from the last save or commit instead.') }
 if ($null -eq $savedAt) { $attention.Add('No Session Snapshot in ACTIVE_CONTEXT.md; "work in between" cannot be determined. Run Save-AllSessionMemory.ps1 at the end of each day.') }
 
 # Remote Push Synchronization Telemetry check
@@ -142,23 +184,51 @@ if (-not [string]::IsNullOrWhiteSpace($lastPushStr)) {
     }
 }
 
-# --- 1a. Multi-Host Session Registry (RULE-LCM-030) --------------------------
-$sessionFile = Join-Path $agentsDir 'ACTIVE_SESSION.md'
-if (Test-Path -LiteralPath $sessionFile) {
-    $sessRaw = [System.IO.File]::ReadAllText($sessionFile)
-    Write-Host "`n[HOST SESSIONS] Registered AI Host Statuses (ACTIVE_SESSION.md)" -ForegroundColor Yellow
-    $hostMatches = [regex]::Matches($sessRaw, '(?ms)### Host:\s*([^\r\n]+)\r?\n-\s*\*\*Status\*\*:\s*([^\r\n]+)\r?\n-\s*\*\*(?:Conversation|Session) ID\*\*:\s*([^\r\n]+)\r?\n-\s*\*\*Last Activity\*\*:\s*([^\r\n]+)\r?\n(?:-\s*\*\*Current Task\*\*:\s*([^\r\n]+)\r?\n)?-\s*\*\*Next Step\*\*:\s*([^\r\n]+)')
-    foreach ($hm in $hostMatches) {
-        $hName = $hm.Groups[1].Value.Trim()
-        $hStat = $hm.Groups[2].Value.Trim()
-        $hLast = $hm.Groups[4].Value.Trim()
-        $hNext = $hm.Groups[6].Value.Trim()
-        $hGap = try {
-            $ht = [datetime]::Parse($hLast)
-            '{0:N1} h ago' -f ($now - $ht).TotalHours
-        } catch { 'unknown' }
-        Write-Host ("  * {0,-20}: [{1}] (Last: {2}, {3})" -f $hName, $hStat, $hLast, $hGap) -ForegroundColor Cyan
-        Write-Host ("    Next: {0}" -f $hNext) -ForegroundColor Gray
+# --- 1a. Multi-Host Session Registry (RULE-LCM-030 (5)) ----------------------
+if (-not [string]::IsNullOrEmpty($sessRaw)) {
+    Write-Host "`n[HOST SESSIONS] Registered AI host blocks (ACTIVE_SESSION.md section 2)" -ForegroundColor Yellow
+    $hostBlocks = Get-LcmSessionHostBlocks -Content $sessRaw
+    foreach ($hb in $hostBlocks) {
+        $hStat = if ($hb.Fields.Contains('Status')) { $hb.Fields['Status'] } else { 'missing' }
+        $hLast = if ($hb.Fields.Contains('Last Activity')) { $hb.Fields['Last Activity'] } else { 'missing' }
+        $hGap = if ($null -ne $hb.LastActivity) { '{0:N1} h' -f ($now - $hb.LastActivity).TotalHours } else { 'unknown' }
+        Write-Host ("  * {0,-20}: [{1}] (Last Activity: {2}, host gap {3})" -f $hb.Name, $hStat, $hLast, $hGap) -ForegroundColor Cyan
+        foreach ($fn in 'Current Task', 'Next Step', 'Open Operator Decisions') {
+            if ($hb.Fields.Contains($fn)) { Write-Host ("    {0}: {1}" -f $fn, (Get-ShortText -Text $hb.Fields[$fn])) -ForegroundColor Gray }
+        }
+        $aItems = @(if ($hb.Items.ContainsKey('Attention Items')) { $hb.Items['Attention Items'] })
+        $aInline = if ($hb.Fields.Contains('Attention Items')) { [string]$hb.Fields['Attention Items'] } else { '' }
+        Write-Host ("    Attention Items: {0}{1}" -f $aItems.Count, $(if ($aInline) { ' (' + $aInline + ')' } else { '' })) -ForegroundColor Gray
+        foreach ($ai in $aItems) { Write-Host ("      - {0}" -f (Get-ShortText -Text $ai -Max 200)) -ForegroundColor Gray }
+        foreach ($finding in @(Get-LcmSessionHostFinding -HostBlock $hb -GoodNight $goodNightAt)) {
+            $attention.Add(("Host block '{0}': {1}." -f $hb.Name, $finding))
+        }
+    }
+}
+
+# --- 1c. DO front-end liveness (RULE-LCM-030 (5)) ----------------------------
+Write-Host "`n[DO FRONT-END] daemon on 127.0.0.1:9876" -ForegroundColor Yellow
+$doTask = 'LCM_DesktopDaemon_{0}' -f $env:USERNAME
+if (Test-LcmDoFrontEnd) {
+    Write-Host '  Running (health 200).' -ForegroundColor Green
+} elseif ($WhatIf -or $WhatIfPreference) {
+    Write-Host ('  Not answering; would start logon task {0} (WhatIf).' -f $doTask) -ForegroundColor DarkYellow
+} else {
+    Write-Host ('  Not answering; starting logon task {0} ...' -f $doTask) -ForegroundColor DarkYellow
+    $doStarted = $false
+    try {
+        Start-ScheduledTask -TaskName $doTask -ErrorAction Stop
+        for ($i = 0; $i -lt 10 -and -not $doStarted; $i++) {
+            Start-Sleep -Seconds 1
+            $doStarted = Test-LcmDoFrontEnd
+        }
+    } catch {
+        Write-Host ('  Start failed: {0}' -f $_.Exception.Message) -ForegroundColor Red
+    }
+    if ($doStarted) {
+        Write-Host '  Started (health 200).' -ForegroundColor Green
+    } else {
+        $attention.Add(('DO front-end does not answer on 127.0.0.1:9876 and could not be started via task {0}.' -f $doTask))
     }
 }
 
@@ -313,6 +383,17 @@ Write-Host '     name anything in them that is unclear, contradictory or stale (
 Write-Host '  2. Work in between and version findings, summarised for the operator.'
 Write-Host '  3. Where I will start (the last Next/open item) and what I will not touch.'
 Write-Host '==========================================================================' -ForegroundColor Cyan
+
+# --- 6. Section 1 resumption record (RULE-LCM-030 (5)) -------------------------
+if (-not [string]::IsNullOrEmpty($sessRaw) -and -not ($WhatIf -or $WhatIfPreference)) {
+    $resumeStamp = $now.ToString('yyyy-MM-dd HH:mm:ss')
+    $gnText = if ($null -ne $goodNightAt) { $goodNightAt.ToString('yyyy-MM-dd HH:mm:ss') } else { 'none recorded' }
+    $fresh = [System.IO.File]::ReadAllText($sessionFile)
+    $fresh = Set-LcmSessionWorkspaceField -Content $fresh -Name 'Status' -Value ('Active (resumed at {0}; last GoodNight {1})' -f $resumeStamp, $gnText) -After 'Last Updated'
+    $fresh = Set-LcmSessionWorkspaceField -Content $fresh -Name 'Resumption Timestamp' -Value $resumeStamp -After 'GoodNight Timestamp'
+    [System.IO.File]::WriteAllText($sessionFile, $fresh, [System.Text.UTF8Encoding]::new($false))
+    Write-Host ('ACTIVE_SESSION.md section 1: Status Active, Resumption Timestamp {0}.' -f $resumeStamp) -ForegroundColor Gray
+}
 if ($PrepareBcrBaseline) {
     $baselineTool = Join-Path $PSScriptRoot 'Invoke-MacriumDailyBcrBaseline.ps1'
     if (-not (Test-Path -LiteralPath $baselineTool)) {

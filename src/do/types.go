@@ -5,13 +5,14 @@ PACKAGE        : main
 DESCRIPTION    : Data transfer objects and request/response models for LCM DO.
 AUTHOR         : Rolf
 DATE CREATED   : 2026-11-11
-LAST MODIFIED  : 2026-11-11
-VERSION        : 10.2.0
+LAST MODIFIED  : 2026-11-17
+VERSION        : 10.2.4
 GO VERSION     : 1.22+
 ENCODING       : ASCII (No BOM)
 ================================================================================
 CHANGE LOG:
 2026-11-11 - 10.0.0: Initial implementation.
+2026-11-17 - 10.2.4: CRP-343 ExecuteResponse.ElevationDecision (why the command ran elevated or not).
 ================================================================================
 */
 
@@ -39,6 +40,8 @@ type ExecuteResponse struct {
 	NoExit      bool   `json:"noExit"`
 	WindowStyle string `json:"windowStyle"`
 	DirectExe   string `json:"directExe,omitempty"`
+	// ElevationDecision states why the command ran elevated or non-elevated (CRP-343).
+	ElevationDecision string `json:"elevationDecision,omitempty"`
 }
 
 // StatusResponse defines daemon telemetry and runtime metrics.
@@ -82,4 +85,3 @@ type ActionLog struct {
 	Stdout     string `json:"stdout,omitempty"`
 	Stderr     string `json:"stderr,omitempty"`
 }
-

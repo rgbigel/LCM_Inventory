@@ -6,7 +6,7 @@ Path: LCM_Inventory/docs/Proposals/CRP-346-BCR-Window-Ownership-And-Tab-Refresh-
 Authors: Rolf, Claude  
 Version: 10.6.4
 Status: Suggested  
-Date: 2026-11-17 13:40:15
+Date: 2026-11-17 15:51:38
 
 ```yaml
 CRP-ID: CRP-346
@@ -14,10 +14,10 @@ Title: BCR Window Ownership And Tab Refresh Instead Of Relaunch
 Scope: LCM_Inventory
 Baseline-Version: 10.6.4
 Author: Rolf, Claude
-Date: 2026-11-17 13:40:15
-Status: Suggested
-Plan-State: suggested
-Progress-State: undecided
+Date: 2026-11-17 15:51:38
+Status: In Progress
+Plan-State: in_progress
+Progress-State: in_progress
 Priority: 6
 App-ID: None
 ```
@@ -46,5 +46,7 @@ Operator 2026-11-17: BCR recognises the BC window it started, locates the _LCM t
 - Invariant 1: Must conform to LCM governance standards.
 
 ## Absorbed Operator Remarks
+
+- 2026-11-17 15:51:38 (operator, CRP-350 Gate 2): "the bcr opened again instead of refresh" - Gate 2 of CRP-350 postponed. Evidence: `Invoke-ProposalAction.ps1 -Action bcr 350` at 15:48:25 reused the mounted F: baseline (no remount) but logged "Dispatched Beyond Compare 5 to Session 1 via Desktop Daemon" and reported `Launched: False`, `ReusedExistingReviewWindow: False`; a new BC window opened although one was already open. Receipt: `LCM_Inventory/scratch/BC_Review/BCR-Cohort-5392076e20dd/BCR-Cohort-5392076e20dd.json`.
 
 Shared operator remark of 2026-11-17, quoted verbatim in CRP-343 `Specification.md`.

@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-11-17T15:08:45+01:00",
+  "updated_at": "2026-11-17T20:22:21+01:00",
   "review_granularity": "tight",
   "lcm_mode": "active",
-  "last_proposal_id": 349,
+  "last_proposal_id": 350,
   "proposals": [
     {
       "id": 261,
@@ -18152,7 +18152,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": [],
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "CRP-331",
       "bundle_dir": "docs/Proposals/CRP-331-Claude-Reingestion-Rule-Harmonization-Findings",
       "docs": {
@@ -18175,7 +18175,8 @@
         "in_progress": "2026-11-14 21:17:07",
         "verified": "2026-11-15 14:35:06",
         "in_review": "2026-11-15 14:37:05",
-        "completed": "2026-11-17 12:28:34"
+        "completed": "2026-11-17 12:28:34",
+        "pushed": "2026-11-17 15:17:54"
       },
       "state_history": [
         {
@@ -18223,6 +18224,16 @@
           "cohort_id": "COH-331",
           "cohort_gate": "Completion",
           "synchronization_outcome": "synchronized"
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-17 15:17:54",
+          "user": "rgbig",
+          "note": "Pushed to remote (LCM_AI, LCM_Inventory)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "cohort_gate_last_outcome": "no_op",
@@ -18244,8 +18255,9 @@
           "note": "Operator 2026-11-17: Accept 341, complete 341, COMPLETE COH-331; DOIT 342 = Complete 342 (version-alignment exemption codified as RULE-REV-007 item 4 / RULE-LCM-010 item 4). Baseline B:\\Backups\\D4P3+4-WDB850-AD\\0BFC8B1DF80AFC5F-@B_D4P3+4-WDB850-AD-08-08.mrimgx."
         }
       ],
-      "progress_state": "completed",
-      "disposition": "completed"
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-17 15:17:53"
     },
     {
       "id": 332,
@@ -18315,7 +18327,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "CRP-333",
       "bundle_dir": "docs/Proposals/CRP-333-Sync-LcmProposalsDb-Help-Switch-Compliance",
       "docs": {
@@ -18370,13 +18382,24 @@
           "cohort_id": "COH-331",
           "cohort_gate": "Completion",
           "synchronization_outcome": "synchronized"
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-17 15:17:55",
+          "user": "rgbig",
+          "note": "Pushed to remote (LCM_AI, LCM_Inventory)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "dates": {
         "in_progress": "2026-11-15 16:31:24",
         "verified": "2026-11-15 16:32:19",
         "in_review": "2026-11-17 12:07:20",
-        "completed": "2026-11-17 12:28:34"
+        "completed": "2026-11-17 12:28:34",
+        "pushed": "2026-11-17 15:17:55"
       },
       "flow_mode": "doit",
       "always_proceed": true,
@@ -18399,8 +18422,9 @@
           "note": "Operator 2026-11-17: Accept 341, complete 341, COMPLETE COH-331; DOIT 342 = Complete 342 (version-alignment exemption codified as RULE-REV-007 item 4 / RULE-LCM-010 item 4). Baseline B:\\Backups\\D4P3+4-WDB850-AD\\0BFC8B1DF80AFC5F-@B_D4P3+4-WDB850-AD-08-08.mrimgx."
         }
       ],
-      "progress_state": "completed",
-      "disposition": "completed"
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-17 15:17:53"
     },
     {
       "id": 334,
@@ -18413,7 +18437,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "CRP-334",
       "bundle_dir": "docs/Proposals/CRP-334-New-LCM-Proposal-Specification-Template-Currency",
       "docs": {
@@ -18468,13 +18492,24 @@
           "cohort_id": "COH-331",
           "cohort_gate": "Completion",
           "synchronization_outcome": "synchronized"
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-17 15:17:57",
+          "user": "rgbig",
+          "note": "Pushed to remote (LCM_AI, LCM_Inventory)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "dates": {
         "in_progress": "2026-11-15 16:31:26",
         "verified": "2026-11-15 16:43:09",
         "in_review": "2026-11-17 12:07:20",
-        "completed": "2026-11-17 12:28:34"
+        "completed": "2026-11-17 12:28:34",
+        "pushed": "2026-11-17 15:17:57"
       },
       "flow_mode": "doit",
       "always_proceed": true,
@@ -18497,8 +18532,9 @@
           "note": "Operator 2026-11-17: Accept 341, complete 341, COMPLETE COH-331; DOIT 342 = Complete 342 (version-alignment exemption codified as RULE-REV-007 item 4 / RULE-LCM-010 item 4). Baseline B:\\Backups\\D4P3+4-WDB850-AD\\0BFC8B1DF80AFC5F-@B_D4P3+4-WDB850-AD-08-08.mrimgx."
         }
       ],
-      "progress_state": "completed",
-      "disposition": "completed"
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-17 15:17:53"
     },
     {
       "id": 335,
@@ -18511,7 +18547,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "CRP-335",
       "bundle_dir": "docs/Proposals/CRP-335-CM-Control-Hub-Refresh-Shows-Stale-Page",
       "docs": {
@@ -18566,13 +18602,24 @@
           "cohort_id": "COH-331",
           "cohort_gate": "Completion",
           "synchronization_outcome": "synchronized"
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-17 15:17:58",
+          "user": "rgbig",
+          "note": "Pushed to remote (LCM_AI, LCM_Inventory)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "dates": {
         "in_progress": "2026-11-15 16:31:28",
         "verified": "2026-11-15 16:49:10",
         "in_review": "2026-11-17 12:07:20",
-        "completed": "2026-11-17 12:28:34"
+        "completed": "2026-11-17 12:28:34",
+        "pushed": "2026-11-17 15:17:58"
       },
       "flow_mode": "doit",
       "always_proceed": true,
@@ -18595,8 +18642,9 @@
           "note": "Operator 2026-11-17: Accept 341, complete 341, COMPLETE COH-331; DOIT 342 = Complete 342 (version-alignment exemption codified as RULE-REV-007 item 4 / RULE-LCM-010 item 4). Baseline B:\\Backups\\D4P3+4-WDB850-AD\\0BFC8B1DF80AFC5F-@B_D4P3+4-WDB850-AD-08-08.mrimgx."
         }
       ],
-      "progress_state": "completed",
-      "disposition": "completed"
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-17 15:17:53"
     },
     {
       "id": 336,
@@ -18609,7 +18657,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "BUG-336",
       "bundle_dir": "docs/Proposals/BUG-336-ProposalManager-Tests-Write-Into-Live-Workspace",
       "docs": {
@@ -18664,13 +18712,24 @@
           "cohort_id": "COH-331",
           "cohort_gate": "Completion",
           "synchronization_outcome": "synchronized"
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-17 15:17:59",
+          "user": "rgbig",
+          "note": "Pushed to remote (LCM_AI, LCM_Inventory)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "dates": {
         "in_progress": "2026-11-15 16:39:20",
         "verified": "2026-11-15 16:43:12",
         "in_review": "2026-11-17 12:07:20",
-        "completed": "2026-11-17 12:28:34"
+        "completed": "2026-11-17 12:28:34",
+        "pushed": "2026-11-17 15:17:59"
       },
       "flow_mode": "doit",
       "always_proceed": true,
@@ -18693,8 +18752,9 @@
           "note": "Operator 2026-11-17: Accept 341, complete 341, COMPLETE COH-331; DOIT 342 = Complete 342 (version-alignment exemption codified as RULE-REV-007 item 4 / RULE-LCM-010 item 4). Baseline B:\\Backups\\D4P3+4-WDB850-AD\\0BFC8B1DF80AFC5F-@B_D4P3+4-WDB850-AD-08-08.mrimgx."
         }
       ],
-      "progress_state": "completed",
-      "disposition": "completed"
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-17 15:17:53"
     },
     {
       "id": 337,
@@ -18707,8 +18767,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "suggested",
-      "progress_state": "undecided",
+      "state": "superseded",
       "bundle_id": "CRP-337",
       "bundle_dir": "docs/Proposals/CRP-337-DO-Gateway-Elevation-Permits-per-Tool-Admin-State",
       "docs": {
@@ -18721,11 +18780,29 @@
       "author": "Rolf, Claude",
       "details": "DO daemon runs every command elevated; align with tools.admin + Administrators group model. No code change yet (operator 2026-11-15).",
       "priority": 7,
-      "disposition": null,
       "flow_mode": "standard",
       "always_proceed": false,
       "plan_path": "docs/Proposals/CRP-337-DO-Gateway-Elevation-Permits-per-Tool-Admin-State/Implementation_Plan.md",
-      "walkthrough_path": "docs/Proposals/CRP-337-DO-Gateway-Elevation-Permits-per-Tool-Admin-State/Walkthrough.md"
+      "walkthrough_path": "docs/Proposals/CRP-337-DO-Gateway-Elevation-Permits-per-Tool-Admin-State/Walkthrough.md",
+      "progress_state": "superseded",
+      "disposition": "superseded",
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "superseded",
+          "timestamp": "2026-11-17 15:53:07",
+          "user": "rgbig",
+          "note": "Operator 2026-11-17 (chain A, DOIT): CRP-337 consolidated into CRP-343 (same topic: DO elevation per catalog state; 343 refines it to tool admin vs intent elevated). 337 findings stay referenced from 343.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "superseded": "2026-11-17 15:53:07"
+      },
+      "superseded_by_id": 343,
+      "superseded_at": "2026-11-17 15:53:07"
     },
     {
       "id": 338,
@@ -18738,7 +18815,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "BUG-338",
       "bundle_dir": "docs/Proposals/BUG-338-Repository-Agents-Folders-Not-Junctioned",
       "docs": {
@@ -18793,13 +18870,24 @@
           "cohort_id": "COH-331",
           "cohort_gate": "Completion",
           "synchronization_outcome": "synchronized"
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-17 15:18:00",
+          "user": "rgbig",
+          "note": "Pushed to remote (LCM_AI, LCM_Inventory)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "dates": {
         "in_progress": "2026-11-16 16:29:16",
         "verified": "2026-11-16 16:29:19",
         "in_review": "2026-11-17 12:07:20",
-        "completed": "2026-11-17 12:28:35"
+        "completed": "2026-11-17 12:28:35",
+        "pushed": "2026-11-17 15:18:00"
       },
       "flow_mode": "doit",
       "always_proceed": true,
@@ -18822,8 +18910,9 @@
           "note": "Operator 2026-11-17: Accept 341, complete 341, COMPLETE COH-331; DOIT 342 = Complete 342 (version-alignment exemption codified as RULE-REV-007 item 4 / RULE-LCM-010 item 4). Baseline B:\\Backups\\D4P3+4-WDB850-AD\\0BFC8B1DF80AFC5F-@B_D4P3+4-WDB850-AD-08-08.mrimgx."
         }
       ],
-      "progress_state": "completed",
-      "disposition": "completed"
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-17 15:17:53"
     },
     {
       "id": 339,
@@ -18898,7 +18987,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/BUG-341-Cohort-BCR-Launches-Per-Member-With-Stale-Remount",
       "docs": {
@@ -18953,13 +19042,24 @@
           "cohort_id": "COH-331",
           "cohort_gate": "Completion",
           "synchronization_outcome": "synchronized"
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-17 15:18:02",
+          "user": "rgbig",
+          "note": "Pushed to remote (LCM_AI, LCM_Inventory)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "dates": {
         "in_progress": "2026-11-17 11:59:59",
         "verified": "2026-11-17 12:04:52",
         "in_review": "2026-11-17 12:07:20",
-        "completed": "2026-11-17 12:28:35"
+        "completed": "2026-11-17 12:28:35",
+        "pushed": "2026-11-17 15:18:02"
       },
       "flow_mode": "doit",
       "always_proceed": true,
@@ -18982,8 +19082,9 @@
           "note": "Operator 2026-11-17: Accept 341, complete 341, COMPLETE COH-331; DOIT 342 = Complete 342 (version-alignment exemption codified as RULE-REV-007 item 4 / RULE-LCM-010 item 4). Baseline B:\\Backups\\D4P3+4-WDB850-AD\\0BFC8B1DF80AFC5F-@B_D4P3+4-WDB850-AD-08-08.mrimgx."
         }
       ],
-      "progress_state": "completed",
-      "disposition": "completed"
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-17 15:17:53"
     },
     {
       "id": 342,
@@ -18996,7 +19097,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/BUG-342-LCM-AI-Package-Docs-Version-Not-Aligned-To-10-7-4",
       "docs": {
@@ -19051,13 +19152,24 @@
           "cohort_id": "COH-331",
           "cohort_gate": "Completion",
           "synchronization_outcome": "synchronized"
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-17 15:18:03",
+          "user": "rgbig",
+          "note": "Pushed to remote (LCM_AI, LCM_Inventory)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "dates": {
         "in_progress": "2026-11-17 12:16:10",
         "verified": "2026-11-17 12:17:17",
         "in_review": "2026-11-17 12:18:33",
-        "completed": "2026-11-17 12:28:34"
+        "completed": "2026-11-17 12:28:34",
+        "pushed": "2026-11-17 15:18:03"
       },
       "flow_mode": "doit",
       "always_proceed": true,
@@ -19080,8 +19192,9 @@
           "note": "Operator 2026-11-17: Accept 341, complete 341, COMPLETE COH-331; DOIT 342 = Complete 342 (version-alignment exemption codified as RULE-REV-007 item 4 / RULE-LCM-010 item 4). Baseline B:\\Backups\\D4P3+4-WDB850-AD\\0BFC8B1DF80AFC5F-@B_D4P3+4-WDB850-AD-08-08.mrimgx."
         }
       ],
-      "progress_state": "completed",
-      "disposition": "completed"
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-17 15:17:53"
     },
     {
       "id": 343,
@@ -19094,8 +19207,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "suggested",
-      "progress_state": "undecided",
+      "state": "in_progress",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-343-Intent-Level-Elevation-Driven-By-Tool-Intents-Tabl",
       "docs": {
@@ -19108,11 +19220,29 @@
       "author": "Rolf, Claude",
       "details": "Operator 2026-11-17: elevation is checked and enforced per atom/intent (tool_intents.elevated), not per tool (tools.admin). First of four CRPs; prerequisite for the other three.",
       "priority": 7,
-      "disposition": null,
-      "flow_mode": "standard",
-      "always_proceed": false,
       "plan_path": "docs/Proposals/CRP-343-Intent-Level-Elevation-Driven-By-Tool-Intents-Tabl/Implementation_Plan.md",
-      "walkthrough_path": "docs/Proposals/CRP-343-Intent-Level-Elevation-Driven-By-Tool-Intents-Tabl/Walkthrough.md"
+      "walkthrough_path": "docs/Proposals/CRP-343-Intent-Level-Elevation-Driven-By-Tool-Intents-Tabl/Walkthrough.md",
+      "supersedes_id": 337,
+      "supersedes_at": "2026-11-17 15:53:07",
+      "progress_state": "in_progress",
+      "disposition": null,
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-11-17 15:53:09",
+          "user": "rgbig",
+          "note": "Operator 2026-11-17: chain A, DOIT (Gate 1 accepted).",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "in_progress": "2026-11-17 15:53:09"
+      },
+      "flow_mode": "doit",
+      "always_proceed": true
     },
     {
       "id": 344,
@@ -19125,8 +19255,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "suggested",
-      "progress_state": "undecided",
+      "state": "in_progress",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-344-Run-Beyond-Compare-Non-Elevated-In-BCR",
       "docs": {
@@ -19139,11 +19268,27 @@
       "author": "Rolf, Claude",
       "details": "Operator 2026-11-17: only the Macrium mount/unmount atoms need elevation; Beyond Compare must run non-elevated. Depends on the intent-level elevation CRP.",
       "priority": 7,
-      "disposition": null,
-      "flow_mode": "standard",
-      "always_proceed": false,
       "plan_path": "docs/Proposals/CRP-344-Run-Beyond-Compare-Non-Elevated-In-BCR/Implementation_Plan.md",
-      "walkthrough_path": "docs/Proposals/CRP-344-Run-Beyond-Compare-Non-Elevated-In-BCR/Walkthrough.md"
+      "walkthrough_path": "docs/Proposals/CRP-344-Run-Beyond-Compare-Non-Elevated-In-BCR/Walkthrough.md",
+      "progress_state": "in_progress",
+      "disposition": null,
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-11-17 15:53:11",
+          "user": "rgbig",
+          "note": "Operator 2026-11-17: chain A, DOIT (Gate 1 accepted).",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "in_progress": "2026-11-17 15:53:11"
+      },
+      "flow_mode": "doit",
+      "always_proceed": true
     },
     {
       "id": 345,
@@ -19156,8 +19301,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "suggested",
-      "progress_state": "undecided",
+      "state": "in_progress",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-345-AHK-Atoms-As-Registered-Intents-Only",
       "docs": {
@@ -19170,11 +19314,27 @@
       "author": "Rolf, Claude",
       "details": "Operator 2026-11-17: AHK actions only through registered AHK atoms (intents, each with its own elevation flag); undefined AHK intents are refused. Depends on the intent-level elevation CRP.",
       "priority": 6,
-      "disposition": null,
-      "flow_mode": "standard",
-      "always_proceed": false,
       "plan_path": "docs/Proposals/CRP-345-AHK-Atoms-As-Registered-Intents-Only/Implementation_Plan.md",
-      "walkthrough_path": "docs/Proposals/CRP-345-AHK-Atoms-As-Registered-Intents-Only/Walkthrough.md"
+      "walkthrough_path": "docs/Proposals/CRP-345-AHK-Atoms-As-Registered-Intents-Only/Walkthrough.md",
+      "progress_state": "in_progress",
+      "disposition": null,
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-11-17 15:53:12",
+          "user": "rgbig",
+          "note": "Operator 2026-11-17: chain A, DOIT (Gate 1 accepted).",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "in_progress": "2026-11-17 15:53:12"
+      },
+      "flow_mode": "doit",
+      "always_proceed": true
     },
     {
       "id": 346,
@@ -19187,8 +19347,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "suggested",
-      "progress_state": "undecided",
+      "state": "in_progress",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/CRP-346-BCR-Window-Ownership-And-Tab-Refresh-Instead-Of-Re",
       "docs": {
@@ -19201,11 +19360,27 @@
       "author": "Rolf, Claude",
       "details": "Operator 2026-11-17: BCR recognises the BC window it started, locates the _LCM tab (AHK atom) and refreshes it instead of opening another window. Depends on the non-elevated BC and AHK atom CRPs.",
       "priority": 6,
-      "disposition": null,
-      "flow_mode": "standard",
-      "always_proceed": false,
       "plan_path": "docs/Proposals/CRP-346-BCR-Window-Ownership-And-Tab-Refresh-Instead-Of-Re/Implementation_Plan.md",
-      "walkthrough_path": "docs/Proposals/CRP-346-BCR-Window-Ownership-And-Tab-Refresh-Instead-Of-Re/Walkthrough.md"
+      "walkthrough_path": "docs/Proposals/CRP-346-BCR-Window-Ownership-And-Tab-Refresh-Instead-Of-Re/Walkthrough.md",
+      "progress_state": "in_progress",
+      "disposition": null,
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-11-17 15:53:14",
+          "user": "rgbig",
+          "note": "Operator 2026-11-17: chain A, DOIT (Gate 1 accepted).",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "in_progress": "2026-11-17 15:53:14"
+      },
+      "flow_mode": "doit",
+      "always_proceed": true
     },
     {
       "id": 347,
@@ -19218,7 +19393,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/BUG-347-DO-Go-Daemon-Accepts-Browser-Commands-Without-CRP",
       "docs": {
@@ -19273,21 +19448,33 @@
           "cohort_id": "",
           "cohort_gate": "",
           "synchronization_outcome": ""
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-17 15:18:04",
+          "user": "rgbig",
+          "note": "Pushed to remote (LCM_AI, LCM_Inventory)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "dates": {
         "in_progress": "2026-11-17 14:14:09",
         "verified": "2026-11-17 14:18:08",
         "in_review": "2026-11-17 14:43:40",
-        "completed": "2026-11-17 14:44:05"
+        "completed": "2026-11-17 14:44:05",
+        "pushed": "2026-11-17 15:18:04"
       },
       "flow_mode": "doit",
       "always_proceed": true,
       "bcr_disposition": "Completed",
       "bcr_disposition_at": "2026-11-17 14:44:05",
       "bcr_disposition_notes": "Operator 2026-11-17 Gate 2: Control Hub / Tool Explorer items work; full baseline refresh reviewed (incl. 13:26 Update-ToolCatalog trampoline regeneration: 17 deleted, 16 changed). BUG-347: Go daemon guard (foreign origin 403, non-JSON 415); DoT/do.exe redeployed. Baseline B:\\Backups\\D4P3+4-WDB850-AD\\0BFC8B1DF80AFC5F-@B_D4P3+4-WDB850-AD-08-08.mrimgx.",
-      "progress_state": "completed",
-      "disposition": "completed"
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-17 15:17:53"
     },
     {
       "id": 348,
@@ -19331,7 +19518,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/BUG-349-Push-Bundle-Check-Ignores-LCM-Inventory-Bundle-Hom",
       "docs": {
@@ -19386,19 +19573,115 @@
           "cohort_id": "",
           "cohort_gate": "",
           "synchronization_outcome": ""
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-17 15:18:05",
+          "user": "rgbig",
+          "note": "Pushed to remote (LCM_AI, LCM_Inventory)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "dates": {
         "in_progress": "2026-11-17 14:53:52",
         "verified": "2026-11-17 15:06:12",
         "in_review": "2026-11-17 15:08:33",
-        "completed": "2026-11-17 15:08:45"
+        "completed": "2026-11-17 15:08:45",
+        "pushed": "2026-11-17 15:18:05"
       },
       "flow_mode": "doit",
       "always_proceed": true,
       "bcr_disposition": "Completed",
       "bcr_disposition_at": "2026-11-17 15:08:44",
       "bcr_disposition_notes": "Operator 2026-11-17: complete 349. Push bundle check uses LCM_Inventory for governed LCM_* bundles and only warns; push commits SQL ledger projections before pushing; RULE-EFF-001/002 amended (bookkeeping never aborts).",
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-17 15:17:53"
+    },
+    {
+      "id": 350,
+      "crp_id": "CRP-350",
+      "lcm_version": "10.6.4",
+      "timestamp": "2026-11-17 15:27:58",
+      "title": "Session Continuity Schema Convergence",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-350",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "completed",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/CRP-350-Session-Continuity-Schema-Convergence",
+      "docs": {
+        "specification": "Specification.md",
+        "plan": "Implementation_Plan.md",
+        "walkthrough": "Walkthrough.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "Rolf, Claude",
+      "details": "One schema for .agents/ACTIVE_SESSION.md (workspace GoodNight vs host close, section ownership, gaps, host-block fields, DO liveness); on acceptance AI hosts may run GoodMorning/GoodNight (operator 2026-11-17, option A); no host-exclusive open items.",
+      "priority": 9,
+      "flow_mode": "standard",
+      "always_proceed": false,
+      "plan_path": "docs/Proposals/CRP-350-Session-Continuity-Schema-Convergence/Implementation_Plan.md",
+      "walkthrough_path": "docs/Proposals/CRP-350-Session-Continuity-Schema-Convergence/Walkthrough.md",
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-11-17 15:34:01",
+          "user": "rgbig",
+          "note": "Gate 1 accepted by operator (Rolf) 2026-11-17: Specification.md CRP-350 accepted via \"proceed\" in Claude session.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-11-17 15:48:17",
+          "user": "rgbig",
+          "note": "DOIT implementation complete: parse 0 errors, Pester LcmSessionStateAtoms 9/9, GoodMorning -WhatIf live run OK (see Walkthrough).",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-11-17 15:49:25",
+          "user": "rgbig",
+          "note": "",
+          "cohort_id": "",
+          "cohort_gate": "BCR",
+          "synchronization_outcome": "synchronized"
+        },
+        {
+          "from_state": "in_review",
+          "state": "completed",
+          "timestamp": "2026-11-17 20:22:21",
+          "user": "rgbig",
+          "note": "Review completed and committed (578a478).",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "in_progress": "2026-11-17 15:34:01",
+        "verified": "2026-11-17 15:48:17",
+        "in_review": "2026-11-17 15:49:25",
+        "completed": "2026-11-17 20:22:21"
+      },
+      "bcr_initiated_at": "2026-11-17 20:09:04",
+      "bcr_scope": "CRP-350",
+      "bcr_disposition": "Completed",
+      "bcr_disposition_at": "2026-11-17 20:22:20",
+      "bcr_disposition_notes": "Operator Gate 2 2026-11-17: CRP-350 accepted with amendments; live worktree reviewed in BCR [CRP-350] also carries the first CRP-343 segment (DO daemon key/elevation, mount worker atom, LcmDoClient, catalog, policy export, BCR tools) as work in progress; CRP-343..346 remain in_progress.",
       "progress_state": "completed",
       "disposition": "completed"
     }

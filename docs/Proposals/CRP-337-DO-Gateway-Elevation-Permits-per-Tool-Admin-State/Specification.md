@@ -18,9 +18,9 @@ Impacted Repositories: [LCM_Inventory]
 Baseline-Version: 10.6.4
 Author: Rolf, Claude
 Date: 2026-11-15 17:47:30
-Status: Suggested
-Plan-State: suggested
-Progress-State: suggested
+Status: Superseded
+Plan-State: superseded
+Progress-State: deferred
 Priority: 7
 App-ID: None
 ```

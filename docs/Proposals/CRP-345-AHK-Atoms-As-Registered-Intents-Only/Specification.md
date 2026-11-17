@@ -15,9 +15,9 @@ Scope: LCM_Inventory
 Baseline-Version: 10.6.4
 Author: Rolf, Claude
 Date: 2026-11-17 13:40:14
-Status: Suggested
-Plan-State: suggested
-Progress-State: undecided
+Status: In Progress
+Plan-State: in_progress
+Progress-State: in_progress
 Priority: 6
 App-ID: None
 ```
