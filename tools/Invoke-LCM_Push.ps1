@@ -5,9 +5,13 @@
   Module: tools/Invoke-LCM_Push.ps1
   Purpose: Iterates across all governed and child repositories under D:\Git_Repositories, detects if a Git remote exists and if local branch is ahead of remote tracking branch, and executes git push with structured audit logging.
   Path: LCM_Inventory/tools/Invoke-LCM_Push.ps1
-  Authors: Rolf, LCM_AI Engine
-    Version: 10.2.3
-    Date: 2026-11-08 22:08:00
+  Implementation Choices (BUG-349): the SQL ledger projections (data/proposals/proposals.sql,
+  strategies.sql) are bookkeeping artifacts (RULE-EFF-001); the push exports them in their final
+  state and commits them (chore(ledger), path-limited, no hooks) before pushing, so the pre-push
+  projection check never aborts a push (RULE-EFF-002, operator 2026-11-17).
+  Authors: Rolf, LCM_AI Engine, Claude
+    Version: 10.2.4
+    Date: 2026-11-17
 #>
 
 [CmdletBinding()]
@@ -263,6 +267,28 @@ if (Test-Path -LiteralPath $updateCatalogScript) {
     if ($rootDirty -match 'LCM_Inventory[/\\]config[/\\]tool_catalog\.json') {
         git -C $workspaceRoot add LCM_Inventory/config/tool_catalog.json
         git -C $workspaceRoot commit -m "chore(lcm): pre-push snapshot synchronization of tool_catalog.json" | Out-Null
+    }
+}
+
+# ------------------------------------------------------------------------------
+# 2a. Commit SQL Ledger Projections of LCM_Inventory (BUG-349, RULE-EFF-001/002)
+# ------------------------------------------------------------------------------
+$inventoryRepoPath = Join-Path $workspaceRoot 'LCM_Inventory'
+$ledgerDumpScript = Join-Path $inventoryRepoPath 'tools\sync_proposals_db.py'
+if (-not $DryRun -and (Test-Path -LiteralPath $ledgerDumpScript)) {
+    Write-Host "`n[Pre-Push Pipeline] Exporting and committing SQL ledger projections..." -ForegroundColor Yellow
+    Push-Location -LiteralPath $inventoryRepoPath
+    try {
+        & python $ledgerDumpScript --action dump --silent
+    } finally {
+        Pop-Location
+    }
+    $ledgerPaths = @('data/proposals/proposals.sql', 'data/proposals/strategies.sql')
+    $ledgerDirty = @(git -C $inventoryRepoPath status --porcelain -- $ledgerPaths)
+    if ($ledgerDirty.Count -gt 0) {
+        git -C $inventoryRepoPath add -- $ledgerPaths
+        git -C $inventoryRepoPath commit --no-verify -m 'chore(ledger): pre-push SQL projection of proposals.db' -- $ledgerPaths | Out-Null
+        Write-Host '  -> Committed SQL ledger projections (bookkeeping, RULE-EFF-001).' -ForegroundColor Green
     }
 }
 

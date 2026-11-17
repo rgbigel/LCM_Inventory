@@ -79,6 +79,19 @@ Describe 'Workspace push eligibility' {
     { Test-WorkspacePushCohort -PushPlan $plan -RepositoryStates $repositoryStates } | Should -Throw '*LCM_Inventory*ahead*'
   }
 
+  It 'resolves the bundle repository of governed LCM_* proposals to LCM_Inventory (BUG-349)' {
+    $proposals = @(
+      [pscustomobject]@{ id = 331; origin_repo = 'LCM_AI'; state = 'completed'; progress_state = 'completed'; bundle_dir = 'docs/Proposals/CRP-331-Example' },
+      [pscustomobject]@{ id = 110; origin_repo = 'ExampleRepo'; state = 'completed'; progress_state = 'completed'; bundle_dir = 'docs/Proposals/CRP-110-Example' }
+    )
+    $plan = Resolve-LCM_PushPlan -Proposals $proposals
+    $governed = @($plan.CompletedProposals | Where-Object { $_.Id -eq 331 })[0]
+    $foreign = @($plan.CompletedProposals | Where-Object { $_.Id -eq 110 })[0]
+    $governed.Repository | Should -Be 'LCM_AI'
+    $governed.BundleRepository | Should -Be 'LCM_Inventory'
+    $foreign.BundleRepository | Should -Be 'ExampleRepo'
+  }
+
   It 'requires a completed proposal bundle to exist in repository HEAD' {
     $repoPath = Join-Path $TestDrive 'ExampleRepo'
     New-Item -ItemType Directory -Path (Join-Path $repoPath 'docs\Proposals\CRP-104-Example') -Force | Out-Null
@@ -96,6 +109,10 @@ Describe 'Workspace push eligibility' {
 
     Test-WorkspaceProposalBundlesInHead -PushPlan $pushPlan -RepositoryStates $repositoryStates | Should -BeTrue
     $pushPlan.CompletedProposals[0].BundlePath = 'docs/Proposals/Missing'
-    { Test-WorkspaceProposalBundlesInHead -PushPlan $pushPlan -RepositoryStates $repositoryStates } | Should -Throw '*not present*HEAD*'
+    # BUG-349: a missing bundle is bookkeeping; it warns and returns false, never throws (RULE-EFF-002).
+    $warnings = $null
+    $result = Test-WorkspaceProposalBundlesInHead -PushPlan $pushPlan -RepositoryStates $repositoryStates -WarningVariable warnings -WarningAction SilentlyContinue
+    $result | Should -BeFalse
+    ($warnings -join ' ') | Should -Match 'not present.*HEAD'
   }
 }

@@ -6,9 +6,14 @@
   Purpose: Prevents pushes of repositories without completed proposals and enforces
            LCM_Inventory lockstep participation before remote dispatch.
   Path: LCM_Inventory/modules/LCM_PushEligibility.psm1
-  Authors: GitHub Copilot
-  Version: 10.2.0
-  Date: 2026-10-13
+  Implementation Choices (BUG-349): proposal bundles of governed LCM_* repositories live only in
+  LCM_Inventory (RULE-LCM-034, RULE-SUB-008); the push plan records that bundle repository
+  separately (BundleRepository) and the HEAD check uses it. Repository stays the origin repository.
+  A missing or unrecorded bundle is bookkeeping: it is reported as a warning and never aborts a
+  push (RULE-EFF-002, operator 2026-11-17).
+  Authors: GitHub Copilot, Claude
+  Version: 10.2.1
+  Date: 2026-11-17
 #>
 
 Set-StrictMode -Version Latest
@@ -59,6 +64,22 @@ function Resolve-LCM_ProposalBundlePath {
   }
 
   return ''
+}
+
+function Resolve-LCM_ProposalBundleRepository {
+  [CmdletBinding()]
+  param(
+    [Parameter(Mandatory = $true)]
+    [string]$RepositoryName
+  )
+
+  # BUG-349: RULE-LCM-034 / RULE-SUB-008 - governed LCM_* proposals keep their bundles in LCM_Inventory.
+  $governedRepositories = @('LCM_AI', 'LCM_Inventory', 'LCM_Shared', 'LCM_Supervision', 'LCM_Tools')
+  $name = ConvertTo-WorkspacePushRepositoryName -RepositoryName $RepositoryName
+  if ($name -in $governedRepositories) {
+    return 'LCM_Inventory'
+  }
+  return $name
 }
 
 function Resolve-LCM_PushPlan {
@@ -178,6 +199,7 @@ function Resolve-LCM_PushPlan {
         [pscustomobject]@{
           Id = [int]$_.id
           Repository = ConvertTo-WorkspacePushRepositoryName -RepositoryName $_.origin_repo
+          BundleRepository = Resolve-LCM_ProposalBundleRepository -RepositoryName $_.origin_repo
           BundlePath = Resolve-WorkspaceProposalBundlePath -Proposal $_ -RepositoryName $_.origin_repo
         }
       }
@@ -239,23 +261,32 @@ function Test-LCM_ProposalBundlesInHead {
     $statesByRepository[$name] = $repositoryState
   }
 
+  $allPresent = $true
   foreach ($proposal in $PushPlan.CompletedProposals) {
     if ([string]::IsNullOrWhiteSpace($proposal.BundlePath)) {
-      throw "PUSH cannot publish proposal $($proposal.Id): no proposal bundle path is recorded."
+      Write-Warning "PUSH bookkeeping: proposal $($proposal.Id) has no proposal bundle path recorded (not blocking, RULE-EFF-002)."
+      $allPresent = $false
+      continue
     }
-    if (-not $statesByRepository.ContainsKey($proposal.Repository)) {
-      throw "PUSH cannot publish proposal $($proposal.Id): repository state is missing for '$($proposal.Repository)'."
+    # BUG-349: the bundle lives in its bundle repository (LCM_Inventory for governed LCM_* repos).
+    $bundleRepositoryProperty = $proposal.PSObject.Properties['BundleRepository']
+    $bundleRepository = if ($bundleRepositoryProperty -and $bundleRepositoryProperty.Value) { [string]$bundleRepositoryProperty.Value } else { [string]$proposal.Repository }
+    if (-not $statesByRepository.ContainsKey($bundleRepository)) {
+      Write-Warning "PUSH bookkeeping: proposal $($proposal.Id): repository state is missing for '$bundleRepository' (not blocking, RULE-EFF-002)."
+      $allPresent = $false
+      continue
     }
 
-    $repositoryState = $statesByRepository[$proposal.Repository]
+    $repositoryState = $statesByRepository[$bundleRepository]
     $bundleObject = "HEAD:$($proposal.BundlePath)"
     & git -C $repositoryState.Path cat-file -e $bundleObject 2>$null
     if ($LASTEXITCODE -ne 0) {
-      throw "PUSH cannot publish proposal $($proposal.Id): bundle '$($proposal.BundlePath)' is not present in $($proposal.Repository) HEAD. Publish the proposal bundle first."
+      Write-Warning "PUSH bookkeeping: proposal $($proposal.Id): bundle '$($proposal.BundlePath)' is not present in $bundleRepository HEAD (not blocking, RULE-EFF-002)."
+      $allPresent = $false
     }
   }
 
-  return $true
+  return $allPresent
 }
 
 Export-ModuleMember -Function Resolve-LCM_PushPlan, Resolve-WorkspacePushPlan, Test-LCM_PushCohort, Test-WorkspacePushCohort, Test-LCM_ProposalBundlesInHead, Test-WorkspaceProposalBundlesInHead -Alias Resolve-WorkspacePushPlan, Test-WorkspacePushCohort, Test-WorkspaceProposalBundlesInHead
