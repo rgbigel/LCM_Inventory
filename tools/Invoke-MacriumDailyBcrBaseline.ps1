@@ -11,14 +11,21 @@
   Implementation Choices (CRP-307 / CRP-308): Uses dynamic CandidateDrives evaluation instead of hardcoded
   drive ranges; persists baseline telemetry in registry (MRMdrive, MRMTimeStamp, actMdrive, ActMTimeStamp);
   reuses existing healthy baseline to eliminate redundant unmount/remount cycles.
+  Implementation Choices (BUG-341): baseline currency is decided by the mounted image identity
+  (registry MRMImagePath equals today's completed image and MRMdrive equals the candidate drive);
+  the newest lcm-internal log date inside the image is only the fallback heuristic. Before, an image
+  whose internal logs predate its completion by more than 36 h was judged stale on every call and
+  remounted again (6 remounts for one cohort BCR on 2026-11-16).
   Path: LCM_Inventory/tools/Invoke-MacriumDailyBcrBaseline.ps1
-  Authors: Rolf, LCM_AI Engine
-  Version: 10.2.6
-  Date: 2026-11-14 12:25:00
+  Authors: Rolf, LCM_AI Engine, Claude
+  Version: 10.2.7
+  Date: 2026-11-17
 .NOTES
   Caveats: Drive mounting requires administrative elevation (delegated to elevated worker via Invoke-ElevatedTest.ps1
   or Port 9876 daemon); Macrium Reflect UI automation requires Session 1 interactive desktop access. Mount operations
   time out after MountTimeoutSeconds (default: 120s).
+  BUG-341: the identity check trusts the registry written by this tool's own mount; an image mounted
+  manually on the same drive letter outside this tool is not detected (use -NewBaseline).
   Elevated Operations:
     - Set-LcmRegistryValue: Persists baseline telemetry to HKLM:\SOFTWARE\LCM\MacriumBaseline.
     - Mount-MacriumBaseline: Mounts completed Macrium backup image via elevated worker or daemon.
@@ -926,7 +933,17 @@ if ($NewBaseline) {
 
     # Verify baseline currency against today's backup
     $isCandidateCurrent = $false
-    if ($null -ne $completedToday -and $null -ne $chosen.NewestLogDate) {
+    # BUG-341: the mounted image identity decides currency; the newest internal log date is only a fallback.
+    $mountedImagePath = [string](Get-LcmRegistryValue -KeyPath $MacriumRegistryKey -Name 'MRMImagePath')
+    $mountedImageDrive = [string](Get-LcmRegistryValue -KeyPath $MacriumRegistryKey -Name 'MRMdrive')
+    $isSameImage = $null -ne $completedToday -and
+      -not [string]::IsNullOrWhiteSpace($mountedImagePath) -and
+      [string]::Equals($mountedImagePath, [string]$completedToday.ImagePath, [System.StringComparison]::OrdinalIgnoreCase) -and
+      [string]::Equals($mountedImageDrive, [string]$chosen.MountedDrive, [System.StringComparison]::OrdinalIgnoreCase)
+    if ($isSameImage) {
+      $isCandidateCurrent = $true
+      Write-BaselineLog -Level INFO -Message "Mounted image at $($chosen.MountedDrive) is today's completed image '$mountedImagePath' (registry identity); no remount."
+    } elseif ($null -ne $completedToday -and $null -ne $chosen.NewestLogDate) {
       if ($chosen.NewestLogDate.Date -eq $completedToday.CompletionTime.Date) {
         $isCandidateCurrent = $true
       } elseif ($chosen.NewestLogDate -le $completedToday.CompletionTime -and ($completedToday.CompletionTime - $chosen.NewestLogDate).TotalHours -le 36) {

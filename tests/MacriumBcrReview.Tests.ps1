@@ -5,9 +5,9 @@
     Module: MacriumBcrReview.Tests
     Purpose: Verifies the governed Macrium BCR wrapper, baseline reuse, and lifecycle routing contracts.
     Path: LCM_Inventory/tests/MacriumBcrReview.Tests.ps1
-    Authors: Rolf, LCM_AI Engine
-    Version: 10.2.1
-    Date: 2026-10-17
+    Authors: Rolf, LCM_AI Engine, Claude
+    Version: 10.2.2
+    Date: 2026-11-17
 #>
 
 Describe 'Macrium-backed lifecycle BCR review' {
@@ -160,5 +160,23 @@ Describe 'Macrium-backed lifecycle BCR review' {
     $bcrScript | Should -Match 'BaselineImageFileName ='
 
     $morningScript | Should -Match 'Baseline image file\s*:'
+  }
+
+  It 'decides baseline currency by mounted image identity before the log-date heuristic (BUG-341)' {
+    $baselineScript = Get-Content -LiteralPath (Join-Path $repositoryRoot 'tools\Invoke-MacriumDailyBcrBaseline.ps1') -Raw -Encoding UTF8
+
+    $baselineScript | Should -Match ([regex]::Escape("`$mountedImagePath = [string](Get-LcmRegistryValue -KeyPath `$MacriumRegistryKey -Name 'MRMImagePath')"))
+    $baselineScript | Should -Match ([regex]::Escape("`$mountedImageDrive = [string](Get-LcmRegistryValue -KeyPath `$MacriumRegistryKey -Name 'MRMdrive')"))
+    $identityIndex = $baselineScript.IndexOf('if ($isSameImage) {')
+    $heuristicIndex = $baselineScript.IndexOf('} elseif ($null -ne $completedToday -and $null -ne $chosen.NewestLogDate) {')
+    $identityIndex | Should -BeGreaterThan 0
+    $heuristicIndex | Should -BeGreaterThan $identityIndex
+  }
+
+  It 'launches exactly one joint BCR for a declared cohort (BUG-341)' {
+    $actionScript | Should -Match ([regex]::Escape('$isDeclaredCohort = -not [string]::IsNullOrWhiteSpace($resolution.DeclaredCohortId)'))
+    $actionScript | Should -Match ([regex]::Escape('$launchReview = -not $cohortLaunchDone'))
+    $actionScript | Should -Match ([regex]::Escape('if ($isDeclaredCohort -and $cohortLaunchDone) { $reviewArgs.NoLaunch = $true }'))
+    $actionScript | Should -Not -Match ([regex]::Escape("-RepositoryName `$member.Repository -CRP `$member.Identity -BaseCommit `$BaseCommit -LifecycleManaged"))
   }
 }

@@ -5,8 +5,8 @@ Purpose: Enforce the operator's line-ending decision (Option A: CRLF everywhere,
 Path: LCM_Inventory/docs/Proposals/CRP-332-Workspace-CRLF-Line-Ending-Enforcement/Specification.md  
 Authors: Rolf, Claude (Anthropic)  
 Version: 10.6.4
-Status: Draft (awaiting operator review before Antigravity instruction)  
-Date: 2026-11-15 15:56:40
+Status: Draft (revised 2026-11-16: Option B)  
+Date: 2026-11-16 16:29:36
 
 ```yaml
 CRP-ID: CRP-332
@@ -17,7 +17,7 @@ Affected Version Range: 10.6.4
 Impacted Repositories: [LCM_AI, LCM_Inventory, LCM_Shared, LCM_Supervision, LCM_Tools, Git_Repositories]
 Baseline-Version: 10.6.4
 Author: Rolf, Claude
-Date: 2026-11-15 15:56:40
+Date: 2026-11-16 16:29:36
 Status: Verified
 Plan-State: verified
 Progress-State: verification
@@ -30,6 +30,16 @@ App-ID: None
 ## 0. Registration Note
 
 Created and registered by Claude with the operator's authorization (2026-11-15, WORKPLAN D-29): ledger id 332 via `New-LCM_Proposal`. Id 332 was the next free id in `proposals.db` at creation (read-only check). `Implementation_Plan.md` and `Walkthrough.md` are tool placeholders, to be filled by Antigravity.
+
+## 0a. Revision 2026-11-16 (operator, baseline review): Option B
+
+- **Decision**: Option B of `NOTE-LineEndings.md`: **LF for every text file, CRLF only for `*.cmd` / `*.bat`** (`cmd.exe` mis-parses LF). No exception for `*.md`. Existing files are converted in both directions (LF/mixed -> CRLF for CMD/BAT; CRLF/mixed -> LF for all other text).
+- **Revised Target State**: on disk, `*.cmd` / `*.bat` are CRLF, every other text file is LF, no file is mixed; new or rewritten files follow this regardless of host or tool.
+- **Revised Exit Criteria**: (1) one `.gitattributes` block in all six repositories (`* text=auto eol=lf`, `*.cmd` / `*.bat` `eol=crlf`, binaries `-text`); (2) scan of the LCM_* working trees: 0 violations, 0 mixed; (3) LCM writers (25 files hard-coding CRLF, `Set-Content` defaults for generated text) emit LF, trampoline generators CRLF; (4) shared checker flipped (`NEWLINE-CRLF` -> per-type check); (5) Claude PostToolUse hook flipped to LF except CMD/BAT; (6) conversion in its own commit per repository, after the operator confirms the BCR `_LCM` profile treats line-ending differences as unimportant.
+- **Rule change** (canonical, Antigravity, ADMINMODE): INVARIANT-RULES `newline-crlf` -> LF default with CMD/BAT CRLF exception; JsonRules / PowerShellRules `newline-crlf`; CMDRules keeps CRLF explicitly; RULE-LCM-023 minimal-test hygiene check; DOX template text mentioning CRLF. The Claude adapter follows at convergence.
+- **Enforcement mechanism** (operator 2026-11-16, replaces exit criteria (5) and (6) above): host-neutral, not host-specific. Normalization runs **incrementally at commit** on the committed paths (`Submit-ReviewResult.ps1` normalization step, flipped to Option B); no one-time mass conversion, no BCR flood. The Claude PostToolUse CRLF hook is removed. Once the workspace scan is clean, the commit hook is kept or removed by experience (a stray tool may keep flipping line endings).
+- **Superseded**: the Option A contract in sections 1-2 and the non-goals "no change of the rule `newline-crlf`" and "no switch to LF" (kept below for traceability, RULE-DOC-008).
+- **Lifecycle**: semantic specification change (RULE-LCM-025): the CRP leaves `verified` and is re-run in DOIT (operator item 7, 2026-11-16) to Gate 2; title and bundle slug stay unchanged.
 
 ## 1. Gate 0 Contract (RULE-GOAL-002)
 

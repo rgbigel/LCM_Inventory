@@ -3,9 +3,12 @@
     Executes proposal lifecycle actions and configures lifecycle governance settings.
 .DESCRIPTION
     Module: tools/Invoke-ProposalAction.ps1
-    Authors: Rolf, LCM_AI Engine
-    Version: 10.2.1
-    Date: 2026-10-18
+    Implementation Choices (BUG-341): the bcr action launches exactly one joint BCR for a declared
+    cohort (RULE-LCM-002); all other members only record their review metadata (-NoLaunch). Before,
+    tight granularity launched one review per member (6 BC windows for COH-331 on 2026-11-16).
+    Authors: Rolf, LCM_AI Engine, Claude
+    Version: 10.2.2
+    Date: 2026-11-17
 #>
 
 [CmdletBinding()]
@@ -512,6 +515,9 @@ switch -Regex ($Action) {
         $reviewReady = @($resolution.Members | Where-Object { $_.Classification -eq 'review_ready' })
         $alreadyInReview = @($resolution.Members | Where-Object { $_.Classification -eq 'already_in_review' })
         $granularity = Get-ReviewGranularity
+        # BUG-341: a declared cohort gets exactly one joint BCR launch (RULE-LCM-002), independent of granularity.
+        $isDeclaredCohort = -not [string]::IsNullOrWhiteSpace($resolution.DeclaredCohortId)
+        $cohortLaunchDone = $false
 
         foreach ($reviewGroup in @($reviewReady | Group-Object Repository)) {
             $groupMembers = @($reviewGroup.Group)
@@ -519,6 +525,9 @@ switch -Regex ($Action) {
                 $member = $groupMembers[$index]
                 $id = $member.Id
                 $launchReview = $granularity -eq 'tight' -or $index -eq 0
+                if ($isDeclaredCohort) {
+                    $launchReview = -not $cohortLaunchDone
+                }
                 $reviewArgs = @{
                     RepositoryName = $member.Repository
                     CRP = $member.Identity
@@ -527,11 +536,20 @@ switch -Regex ($Action) {
                 }
                 if (-not $launchReview) { $reviewArgs.NoLaunch = $true }
                 & (Join-Path $PSScriptRoot 'Invoke-MacriumBcrReview.ps1') @reviewArgs
+                if ($launchReview) { $cohortLaunchDone = $true }
             }
         }
 
         foreach ($member in $alreadyInReview) {
-            & (Join-Path $PSScriptRoot 'Invoke-MacriumBcrReview.ps1') -RepositoryName $member.Repository -CRP $member.Identity -BaseCommit $BaseCommit -LifecycleManaged
+            $reviewArgs = @{
+                RepositoryName = $member.Repository
+                CRP = $member.Identity
+                BaseCommit = $BaseCommit
+                LifecycleManaged = $true
+            }
+            if ($isDeclaredCohort -and $cohortLaunchDone) { $reviewArgs.NoLaunch = $true }
+            & (Join-Path $PSScriptRoot 'Invoke-MacriumBcrReview.ps1') @reviewArgs
+            if (-not $reviewArgs.ContainsKey('NoLaunch')) { $cohortLaunchDone = $true }
         }
 
         $store = Get-ProposalStore

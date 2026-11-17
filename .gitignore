@@ -36,7 +36,7 @@ logs/*.jsonl
 !.vscode/tasks.json
 
 # Canonical LCM rules are owned and tracked by Workspace_AI.
-.agents/rules/
+.agents/
 
 temp/
 
