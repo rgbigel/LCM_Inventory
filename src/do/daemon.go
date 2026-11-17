@@ -3,10 +3,10 @@
 FILE NAME      : daemon.go
 PACKAGE        : main
 DESCRIPTION    : HTTP daemon listener for Session 1 desktop execution and telemetry.
-AUTHOR         : Rolf
+AUTHOR         : Rolf, Claude
 DATE CREATED   : 2026-11-11
-LAST MODIFIED  : 2026-11-15
-VERSION        : 10.2.2
+LAST MODIFIED  : 2026-11-17
+VERSION        : 10.2.3
 GO VERSION     : 1.22+
 ENCODING       : ASCII (No BOM)
 ================================================================================
@@ -14,6 +14,8 @@ CHANGE LOG:
 2026-11-11 - 10.0.0: Initial implementation.
 2026-11-15 - 10.2.2: CRP-335 POST /displays/refresh/<id> re-renders the display (Invoke-LcmDisplayRender.ps1)
                      before reporting its revision; previously it only echoed the artifact timestamp.
+2026-11-17 - 10.2.3: BUG-347 every non-GET/HEAD/OPTIONS request passes guardMutations (guard.go):
+                     foreign browser origins and non-JSON bodies are refused and logged.
 ================================================================================
 */
 
@@ -53,6 +55,7 @@ func RunDaemon(port int) error {
 	}
 
 	daemonStartTime = time.Now()
+	daemonPort = port
 	addr := fmt.Sprintf("127.0.0.1:%d", port)
 
 	listener, err := net.Listen("tcp", addr)
@@ -138,7 +141,7 @@ func RunDaemon(port int) error {
 	daemonMux.HandleFunc("/snapshots/", handleSnapshots)
 
 	daemonServer = &http.Server{
-		Handler:      daemonMux,
+		Handler:      guardMutations(daemonMux), // BUG-347
 		ReadTimeout:  120 * time.Second,
 		WriteTimeout: 600 * time.Second,
 	}

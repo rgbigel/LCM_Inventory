@@ -222,61 +222,6 @@
     ]
   },
   {
-    "Name": "analyze_lcm_components.py",
-    "ShortName": "analyzelcmcomponents",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "HaSSD06",
-    "Domain": "HaSSD06",
-    "Type": "Python",
-    "Category": "Utility",
-    "Description": "analyze_lcm_components execution tool.",
-    "Example": "analyzelcmcomponents",
-    "RelativePath": "LCM_Inventory\\tools\\analyze_lcm_components.py",
-    "Parameters": [],
-    "Dependencies": null
-  },
-  {
-    "Name": "Build-HaInventoryViewer.ps1",
-    "ShortName": "BuildHaInventoryViewer",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": false,
-    "Group": "HaSSD06",
-    "Domain": "HaSSD06_Inventory",
-    "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "Build-HaInventoryViewer execution tool.",
-    "Example": "BuildHaInventoryViewer",
-    "RelativePath": "LCM_Inventory\\tools\\Build-HaInventoryViewer.ps1",
-    "Parameters": [
-      {
-        "Name": "Instance",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "HaSSD06",
-        "Description": "Target Home Assistant instance or subsystem identifier (default: HaSSD06)."
-      },
-      {
-        "Name": "SkipSync",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Skips fetching live telemetry from Home Assistant OS and uses cached inventory."
-      }
-    ],
-    "Dependencies": [
-      "Update-HaInventory.ps1",
-      "Show-HaInventoryApp.ps1",
-      "Invoke-InteractiveDesktop.ps1"
-    ]
-  },
-  {
     "Name": "build_matrix.py",
     "ShortName": "buildmatrix",
     "Aliases": null,
@@ -291,24 +236,6 @@
     "Description": "build_matrix execution tool.",
     "Example": "buildmatrix",
     "RelativePath": "LCM_Inventory\\tools\\build_matrix.py",
-    "Parameters": [],
-    "Dependencies": null
-  },
-  {
-    "Name": "check_specific.py",
-    "ShortName": "checkspecific",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "HaSSD06",
-    "Domain": "HaSSD06",
-    "Type": "Python",
-    "Category": "Utility",
-    "Description": "check_specific execution tool.",
-    "Example": "checkspecific",
-    "RelativePath": "LCM_Inventory\\tools\\check_specific.py",
     "Parameters": [],
     "Dependencies": null
   },
@@ -331,24 +258,6 @@
     "Dependencies": null
   },
   {
-    "Name": "deep_device_scan.py",
-    "ShortName": "deepdevicescan",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "HaSSD06",
-    "Domain": "HaSSD06",
-    "Type": "Python",
-    "Category": "Utility",
-    "Description": "deep_device_scan execution tool.",
-    "Example": "deepdevicescan",
-    "RelativePath": "LCM_Inventory\\tools\\deep_device_scan.py",
-    "Parameters": [],
-    "Dependencies": null
-  },
-  {
     "Name": "deep_tuya_scan.py",
     "ShortName": "deeptuyascan",
     "Aliases": null,
@@ -363,42 +272,6 @@
     "Description": "deep_tuya_scan execution tool.",
     "Example": "deeptuyascan",
     "RelativePath": "LCM_Inventory\\tools\\deep_tuya_scan.py",
-    "Parameters": [],
-    "Dependencies": null
-  },
-  {
-    "Name": "extract_ha_central_registry.py",
-    "ShortName": "extracthacentralregistry",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "HaSSD06",
-    "Domain": "HaSSD06_Inventory",
-    "Type": "Python",
-    "Category": "Utility",
-    "Description": "extract_ha_central_registry execution tool.",
-    "Example": "extracthacentralregistry",
-    "RelativePath": "LCM_Inventory\\tools\\extract_ha_central_registry.py",
-    "Parameters": [],
-    "Dependencies": null
-  },
-  {
-    "Name": "extract_ha_update_crps.py",
-    "ShortName": "extracthaupdatecrps",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "HaSSD06",
-    "Domain": "HaSSD06",
-    "Type": "Python",
-    "Category": "Utility",
-    "Description": "extract_ha_update_crps execution tool.",
-    "Example": "extracthaupdatecrps",
-    "RelativePath": "LCM_Inventory\\tools\\extract_ha_update_crps.py",
     "Parameters": [],
     "Dependencies": null
   },
@@ -439,42 +312,6 @@
     "Dependencies": null
   },
   {
-    "Name": "invoke_ha_backup.py",
-    "ShortName": "habackup",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "HaSSD06",
-    "Domain": "HaSSD06",
-    "Type": "Python",
-    "Category": "Utility",
-    "Description": "invoke_ha_backup execution tool.",
-    "Example": "habackup",
-    "RelativePath": "LCM_Inventory\\tools\\invoke_ha_backup.py",
-    "Parameters": [],
-    "Dependencies": null
-  },
-  {
-    "Name": "invoke_ha_core_update.py",
-    "ShortName": "hacoreupdate",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "HaSSD06",
-    "Domain": "HaSSD06",
-    "Type": "Python",
-    "Category": "Utility",
-    "Description": "invoke_ha_core_update execution tool.",
-    "Example": "hacoreupdate",
-    "RelativePath": "LCM_Inventory\\tools\\invoke_ha_core_update.py",
-    "Parameters": [],
-    "Dependencies": null
-  },
-  {
     "Name": "ha_inventory_collector.py",
     "ShortName": "hainventorycollector",
     "Aliases": null,
@@ -493,8 +330,242 @@
     "Dependencies": null
   },
   {
+    "Name": "analyze_lcm_components.py",
+    "ShortName": "HaSSD06analyzelcmcomponents",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "HaSSD06",
+    "Domain": "HaSSD06",
+    "Type": "Python",
+    "Category": "Utility",
+    "Description": "analyze_lcm_components execution tool.",
+    "Example": "analyzelcmcomponents",
+    "RelativePath": "HaSSD06\\analyze_lcm_components.py",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "analyze_lcm_components.py",
+    "ShortName": "HaSSD06analyzelcmcomponents",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "HaSSD06",
+    "Domain": "HaSSD06",
+    "Type": "Python",
+    "Category": "Utility",
+    "Description": "analyze_lcm_components execution tool.",
+    "Example": "analyzelcmcomponents",
+    "RelativePath": "LCM_Inventory\\tools\\analyze_lcm_components.py",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "check_specific.py",
+    "ShortName": "HaSSD06checkspecific",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "HaSSD06",
+    "Domain": "HaSSD06",
+    "Type": "Python",
+    "Category": "Utility",
+    "Description": "check_specific execution tool.",
+    "Example": "checkspecific",
+    "RelativePath": "HaSSD06\\check_specific.py",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "check_specific.py",
+    "ShortName": "HaSSD06checkspecific",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "HaSSD06",
+    "Domain": "HaSSD06",
+    "Type": "Python",
+    "Category": "Utility",
+    "Description": "check_specific execution tool.",
+    "Example": "checkspecific",
+    "RelativePath": "LCM_Inventory\\tools\\check_specific.py",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "deep_device_scan.py",
+    "ShortName": "HaSSD06deepdevicescan",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "HaSSD06",
+    "Domain": "HaSSD06",
+    "Type": "Python",
+    "Category": "Utility",
+    "Description": "deep_device_scan execution tool.",
+    "Example": "deepdevicescan",
+    "RelativePath": "LCM_Inventory\\tools\\deep_device_scan.py",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "deep_device_scan.py",
+    "ShortName": "HaSSD06deepdevicescan",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "HaSSD06",
+    "Domain": "HaSSD06",
+    "Type": "Python",
+    "Category": "Utility",
+    "Description": "deep_device_scan execution tool.",
+    "Example": "deepdevicescan",
+    "RelativePath": "HaSSD06\\deep_device_scan.py",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "extract_ha_update_crps.py",
+    "ShortName": "HaSSD06extracthaupdatecrps",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "HaSSD06",
+    "Domain": "HaSSD06",
+    "Type": "Python",
+    "Category": "Utility",
+    "Description": "extract_ha_update_crps execution tool.",
+    "Example": "extracthaupdatecrps",
+    "RelativePath": "LCM_Inventory\\tools\\extract_ha_update_crps.py",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "extract_ha_update_crps.py",
+    "ShortName": "HaSSD06extracthaupdatecrps",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "HaSSD06",
+    "Domain": "HaSSD06",
+    "Type": "Python",
+    "Category": "Utility",
+    "Description": "extract_ha_update_crps execution tool.",
+    "Example": "extracthaupdatecrps",
+    "RelativePath": "HaSSD06\\extract_ha_update_crps.py",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "invoke_ha_backup.py",
+    "ShortName": "HaSSD06habackup",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "HaSSD06",
+    "Domain": "HaSSD06",
+    "Type": "Python",
+    "Category": "Utility",
+    "Description": "invoke_ha_backup execution tool.",
+    "Example": "habackup",
+    "RelativePath": "LCM_Inventory\\tools\\invoke_ha_backup.py",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "invoke_ha_backup.py",
+    "ShortName": "HaSSD06habackup",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "HaSSD06",
+    "Domain": "HaSSD06",
+    "Type": "Python",
+    "Category": "Utility",
+    "Description": "invoke_ha_backup execution tool.",
+    "Example": "habackup",
+    "RelativePath": "HaSSD06\\tools\\invoke_ha_backup.py",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "invoke_ha_core_update.py",
+    "ShortName": "HaSSD06hacoreupdate",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "HaSSD06",
+    "Domain": "HaSSD06",
+    "Type": "Python",
+    "Category": "Utility",
+    "Description": "invoke_ha_core_update execution tool.",
+    "Example": "hacoreupdate",
+    "RelativePath": "HaSSD06\\tools\\invoke_ha_core_update.py",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "invoke_ha_core_update.py",
+    "ShortName": "HaSSD06hacoreupdate",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "HaSSD06",
+    "Domain": "HaSSD06",
+    "Type": "Python",
+    "Category": "Utility",
+    "Description": "invoke_ha_core_update execution tool.",
+    "Example": "hacoreupdate",
+    "RelativePath": "LCM_Inventory\\tools\\invoke_ha_core_update.py",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
     "Name": "list_all_updates.py",
-    "ShortName": "HaListUpdates",
+    "ShortName": "HaSSD06HaListUpdates",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "HaSSD06",
+    "Domain": "HaSSD06",
+    "Type": "Python",
+    "Category": "Utility",
+    "Description": "list_all_updates execution tool.",
+    "Example": "HaListUpdates",
+    "RelativePath": "HaSSD06\\list_all_updates.py",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "list_all_updates.py",
+    "ShortName": "HaSSD06HaListUpdates",
     "Aliases": null,
     "Role": "Utility",
     "Audience": "Developer",
@@ -512,7 +583,7 @@
   },
   {
     "Name": "inspect_ha_logs.py",
-    "ShortName": "HaLogs",
+    "ShortName": "HaSSD06HaLogs",
     "Aliases": null,
     "Role": "Utility",
     "Audience": "Developer",
@@ -529,8 +600,136 @@
     "Dependencies": null
   },
   {
+    "Name": "inspect_ha_logs.py",
+    "ShortName": "HaSSD06HaLogs",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "HaSSD06",
+    "Domain": "HaSSD06",
+    "Type": "Python",
+    "Category": "Utility",
+    "Description": "inspect_ha_logs execution tool.",
+    "Example": "HaLogs",
+    "RelativePath": "HaSSD06\\inspect_ha_logs.py",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "Build-HaInventoryViewer.ps1",
+    "ShortName": "HaSSD06InventoryBuildHaInventoryViewer",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": false,
+    "Group": "HaSSD06",
+    "Domain": "HaSSD06_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Build-HaInventoryViewer execution tool.",
+    "Example": "BuildHaInventoryViewer",
+    "RelativePath": "LCM_Inventory\\tools\\Build-HaInventoryViewer.ps1",
+    "Parameters": [
+      {
+        "Name": "Instance",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "HaSSD06",
+        "Description": "Target Home Assistant instance or subsystem identifier (default: HaSSD06)."
+      },
+      {
+        "Name": "SkipSync",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Skips fetching live telemetry from Home Assistant OS and uses cached inventory."
+      }
+    ],
+    "Dependencies": [
+      "Update-HaInventory.ps1",
+      "Show-HaInventoryApp.ps1",
+      "Invoke-InteractiveDesktop.ps1"
+    ]
+  },
+  {
+    "Name": "Build-HaInventoryViewer.ps1",
+    "ShortName": "HaSSD06InventoryBuildHaInventoryViewer",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": false,
+    "Group": "HaSSD06",
+    "Domain": "HaSSD06_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Build-HaInventoryViewer execution tool.",
+    "Example": "BuildHaInventoryViewer",
+    "RelativePath": "HaSSD06_Inventory\\tools\\Build-HaInventoryViewer.ps1",
+    "Parameters": [
+      {
+        "Name": "Instance",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "HaSSD06",
+        "Description": "Target Home Assistant instance or subsystem identifier (default: HaSSD06)."
+      },
+      {
+        "Name": "SkipSync",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Skips fetching live telemetry from Home Assistant OS and uses cached inventory."
+      }
+    ],
+    "Dependencies": [
+      "Update-HaInventory.ps1",
+      "Show-HaInventoryApp.ps1",
+      "Invoke-InteractiveDesktop.ps1"
+    ]
+  },
+  {
+    "Name": "extract_ha_central_registry.py",
+    "ShortName": "HaSSD06Inventoryextracthacentralregistry",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "HaSSD06",
+    "Domain": "HaSSD06_Inventory",
+    "Type": "Python",
+    "Category": "Utility",
+    "Description": "extract_ha_central_registry execution tool.",
+    "Example": "extracthacentralregistry",
+    "RelativePath": "LCM_Inventory\\tools\\extract_ha_central_registry.py",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
+    "Name": "extract_ha_central_registry.py",
+    "ShortName": "HaSSD06Inventoryextracthacentralregistry",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "HaSSD06",
+    "Domain": "HaSSD06_Inventory",
+    "Type": "Python",
+    "Category": "Utility",
+    "Description": "extract_ha_central_registry execution tool.",
+    "Example": "extracthacentralregistry",
+    "RelativePath": "HaSSD06_Inventory\\tools\\extract_ha_central_registry.py",
+    "Parameters": [],
+    "Dependencies": null
+  },
+  {
     "Name": "Invoke-HaRenameCascade.ps1",
-    "ShortName": "HaRenameCascade",
+    "ShortName": "HaSSD06InventoryHaRenameCascade",
     "Aliases": null,
     "Role": "Utility",
     "Audience": "Developer",
@@ -630,259 +829,6 @@
       }
     ],
     "Dependencies": "Show-HaInventoryApp.ps1"
-  },
-  {
-    "Name": "Invoke-HaService.ps1",
-    "ShortName": "HaService",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "HaSSD06",
-    "Domain": "HaSSD06_Inventory",
-    "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "Invoke-HaService execution tool.",
-    "Example": "HaService",
-    "RelativePath": "LCM_Inventory\\tools\\Invoke-HaService.ps1",
-    "Parameters": [
-      {
-        "Name": "Domain",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Target service domain (e.g. 'automation', 'script', 'switch', 'light')."
-      },
-      {
-        "Name": "Service",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "toggle",
-        "Description": "Target service action (e.g. 'turn_on', 'turn_off', 'toggle', 'reload')."
-      },
-      {
-        "Name": "EntityId",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Target entity ID (e.g. 'automation.bewegungsalarm_wz')."
-      },
-      {
-        "Name": "PayloadJson",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Optional custom JSON payload string to pass to the service endpoint."
-      },
-      {
-        "Name": "Instance",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "HaSSD06",
-        "Description": "Target Home Assistant instance name (Default: 'HaSSD06')."
-      }
-    ],
-    "Dependencies": null
-  },
-  {
-    "Name": "analyze_lcm_components.py",
-    "ShortName": "HaSSD06analyzelcmcomponents",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "HaSSD06",
-    "Domain": "HaSSD06",
-    "Type": "Python",
-    "Category": "Utility",
-    "Description": "analyze_lcm_components execution tool.",
-    "Example": "analyzelcmcomponents",
-    "RelativePath": "HaSSD06\\analyze_lcm_components.py",
-    "Parameters": [],
-    "Dependencies": null
-  },
-  {
-    "Name": "check_specific.py",
-    "ShortName": "HaSSD06checkspecific",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "HaSSD06",
-    "Domain": "HaSSD06",
-    "Type": "Python",
-    "Category": "Utility",
-    "Description": "check_specific execution tool.",
-    "Example": "checkspecific",
-    "RelativePath": "HaSSD06\\check_specific.py",
-    "Parameters": [],
-    "Dependencies": null
-  },
-  {
-    "Name": "deep_device_scan.py",
-    "ShortName": "HaSSD06deepdevicescan",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "HaSSD06",
-    "Domain": "HaSSD06",
-    "Type": "Python",
-    "Category": "Utility",
-    "Description": "deep_device_scan execution tool.",
-    "Example": "deepdevicescan",
-    "RelativePath": "HaSSD06\\deep_device_scan.py",
-    "Parameters": [],
-    "Dependencies": null
-  },
-  {
-    "Name": "extract_ha_update_crps.py",
-    "ShortName": "HaSSD06extracthaupdatecrps",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "HaSSD06",
-    "Domain": "HaSSD06",
-    "Type": "Python",
-    "Category": "Utility",
-    "Description": "extract_ha_update_crps execution tool.",
-    "Example": "extracthaupdatecrps",
-    "RelativePath": "HaSSD06\\extract_ha_update_crps.py",
-    "Parameters": [],
-    "Dependencies": null
-  },
-  {
-    "Name": "invoke_ha_backup.py",
-    "ShortName": "HaSSD06habackup",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "HaSSD06",
-    "Domain": "HaSSD06",
-    "Type": "Python",
-    "Category": "Utility",
-    "Description": "invoke_ha_backup execution tool.",
-    "Example": "habackup",
-    "RelativePath": "HaSSD06\\tools\\invoke_ha_backup.py",
-    "Parameters": [],
-    "Dependencies": null
-  },
-  {
-    "Name": "invoke_ha_core_update.py",
-    "ShortName": "HaSSD06hacoreupdate",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "HaSSD06",
-    "Domain": "HaSSD06",
-    "Type": "Python",
-    "Category": "Utility",
-    "Description": "invoke_ha_core_update execution tool.",
-    "Example": "hacoreupdate",
-    "RelativePath": "HaSSD06\\tools\\invoke_ha_core_update.py",
-    "Parameters": [],
-    "Dependencies": null
-  },
-  {
-    "Name": "list_all_updates.py",
-    "ShortName": "HaSSD06HaListUpdates",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "HaSSD06",
-    "Domain": "HaSSD06",
-    "Type": "Python",
-    "Category": "Utility",
-    "Description": "list_all_updates execution tool.",
-    "Example": "HaListUpdates",
-    "RelativePath": "HaSSD06\\list_all_updates.py",
-    "Parameters": [],
-    "Dependencies": null
-  },
-  {
-    "Name": "inspect_ha_logs.py",
-    "ShortName": "HaSSD06HaLogs",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "HaSSD06",
-    "Domain": "HaSSD06",
-    "Type": "Python",
-    "Category": "Utility",
-    "Description": "inspect_ha_logs execution tool.",
-    "Example": "HaLogs",
-    "RelativePath": "HaSSD06\\inspect_ha_logs.py",
-    "Parameters": [],
-    "Dependencies": null
-  },
-  {
-    "Name": "Build-HaInventoryViewer.ps1",
-    "ShortName": "HaSSD06InventoryBuildHaInventoryViewer",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": false,
-    "Group": "HaSSD06",
-    "Domain": "HaSSD06_Inventory",
-    "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "Build-HaInventoryViewer execution tool.",
-    "Example": "BuildHaInventoryViewer",
-    "RelativePath": "HaSSD06_Inventory\\tools\\Build-HaInventoryViewer.ps1",
-    "Parameters": [
-      {
-        "Name": "Instance",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "HaSSD06",
-        "Description": "Target Home Assistant instance or subsystem identifier (default: HaSSD06)."
-      },
-      {
-        "Name": "SkipSync",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Skips fetching live telemetry from Home Assistant OS and uses cached inventory."
-      }
-    ],
-    "Dependencies": [
-      "Update-HaInventory.ps1",
-      "Show-HaInventoryApp.ps1",
-      "Invoke-InteractiveDesktop.ps1"
-    ]
-  },
-  {
-    "Name": "extract_ha_central_registry.py",
-    "ShortName": "HaSSD06Inventoryextracthacentralregistry",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "HaSSD06",
-    "Domain": "HaSSD06_Inventory",
-    "Type": "Python",
-    "Category": "Utility",
-    "Description": "extract_ha_central_registry execution tool.",
-    "Example": "extracthacentralregistry",
-    "RelativePath": "HaSSD06_Inventory\\tools\\extract_ha_central_registry.py",
-    "Parameters": [],
-    "Dependencies": null
   },
   {
     "Name": "Invoke-HaRenameCascade.ps1",
@@ -1002,6 +948,60 @@
     "Description": "Invoke-HaService execution tool.",
     "Example": "HaService",
     "RelativePath": "HaSSD06_Inventory\\tools\\Invoke-HaService.ps1",
+    "Parameters": [
+      {
+        "Name": "Domain",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Target service domain (e.g. 'automation', 'script', 'switch', 'light')."
+      },
+      {
+        "Name": "Service",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "toggle",
+        "Description": "Target service action (e.g. 'turn_on', 'turn_off', 'toggle', 'reload')."
+      },
+      {
+        "Name": "EntityId",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Target entity ID (e.g. 'automation.bewegungsalarm_wz')."
+      },
+      {
+        "Name": "PayloadJson",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Optional custom JSON payload string to pass to the service endpoint."
+      },
+      {
+        "Name": "Instance",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "HaSSD06",
+        "Description": "Target Home Assistant instance name (Default: 'HaSSD06')."
+      }
+    ],
+    "Dependencies": null
+  },
+  {
+    "Name": "Invoke-HaService.ps1",
+    "ShortName": "HaSSD06InventoryHaService",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "HaSSD06",
+    "Domain": "HaSSD06_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Invoke-HaService execution tool.",
+    "Example": "HaService",
+    "RelativePath": "LCM_Inventory\\tools\\Invoke-HaService.ps1",
     "Parameters": [
       {
         "Name": "Domain",
@@ -8614,7 +8614,7 @@
     "Category": "Utility",
     "Description": "Updates folder modified timestamps based on newest contained child elements.",
     "Example": "FolderTimeUpdate",
-    "RelativePath": "LCM_Inventory\\tools\\FolderTimeUpdate.ps1",
+    "RelativePath": "LCM_Tools\\tools\\FolderTimeUpdate.ps1",
     "Parameters": [
       {
         "Name": "Path",
@@ -8640,7 +8640,7 @@
     "Category": "Utility",
     "Description": "Updates folder modified timestamps based on newest contained child elements.",
     "Example": "FolderTimeUpdate",
-    "RelativePath": "LCM_Tools\\tools\\FolderTimeUpdate.ps1",
+    "RelativePath": "LCM_Inventory\\tools\\FolderTimeUpdate.ps1",
     "Parameters": [
       {
         "Name": "Path",
@@ -8651,134 +8651,6 @@
       }
     ],
     "Dependencies": null
-  },
-  {
-    "Name": "@Repair_Diagnose-OneDriveSync.ps1",
-    "ShortName": "@RepairDiagnoseOneDriveSync",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": true,
-    "NoExit": true,
-    "Group": "LCM_Tools",
-    "Domain": "LCM_Tools",
-    "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "@Repair_Diagnose-OneDriveSync execution tool.",
-    "Example": "@RepairDiagnoseOneDriveSync",
-    "RelativePath": "LCM_Inventory\\tools\\@Repair_Diagnose-OneDriveSync.ps1",
-    "Parameters": [
-      {
-        "Name": "FixAcl",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Repairs ownership and sets AuthorizeMasterUser ACLs on all inaccessible OneDrive target folders."
-      },
-      {
-        "Name": "Reconcile",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Flips stuck 0-byte download items (fileStatus=3) to Synced (fileStatus=2) and resets postponed change locks."
-      },
-      {
-        "Name": "Reset",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Executes official Microsoft OneDrive cache reset and explicitly restarts the OneDrive tray process."
-      },
-      {
-        "Name": "PurgeGhosts",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Purges stale 0-byte ghost download intents from SQLite sync database by generating local placeholders."
-      },
-      {
-        "Name": "All",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Performs full automated repair: ACL fix, database reconciliation, ghost purge, and non-elevated restart."
-      },
-      {
-        "Name": "ShowAll",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Displays full detailed diagnostic flow, database table stats, postponed changes, and path evaluations."
-      }
-    ],
-    "Dependencies": [
-      "od_diag_runner.py",
-      "od_reconcile_runner.py"
-    ]
-  },
-  {
-    "Name": "@Repair_Test-OneDriveSync.ps1",
-    "ShortName": "@RepairTestOneDriveSync",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": true,
-    "NoExit": true,
-    "Group": "LCM_Tools",
-    "Domain": "LCM_Tools",
-    "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "@Repair_Test-OneDriveSync execution tool.",
-    "Example": "@RepairTestOneDriveSync",
-    "RelativePath": "LCM_Inventory\\tools\\@Repair_Test-OneDriveSync.ps1",
-    "Parameters": [
-      {
-        "Name": "FixAcl",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Repairs ownership and sets AuthorizeMasterUser ACLs on all inaccessible OneDrive target folders."
-      },
-      {
-        "Name": "Reconcile",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Flips stuck 0-byte download items (fileStatus=3) to Synced (fileStatus=2) and resets postponed change locks."
-      },
-      {
-        "Name": "Reset",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Executes official Microsoft OneDrive cache reset and explicitly restarts the OneDrive tray process."
-      },
-      {
-        "Name": "PurgeGhosts",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Purges stale 0-byte ghost download intents from SQLite sync database by generating local placeholders."
-      },
-      {
-        "Name": "All",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Performs full automated repair: ACL fix, database reconciliation, ghost purge, and non-elevated restart."
-      },
-      {
-        "Name": "ShowAll",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Displays full detailed diagnostic flow, database table stats, postponed changes, and path evaluations."
-      }
-    ],
-    "Dependencies": [
-      "od_diag_runner.py",
-      "od_reconcile_runner.py"
-    ]
   },
   {
     "Name": "Activate.ps1",
@@ -9274,74 +9146,6 @@
     "Dependencies": null
   },
   {
-    "Name": "Create-LCM-CRP.ps1",
-    "ShortName": "CreateLCMCRP",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "LCM_Tools",
-    "Domain": "LCM_Tools",
-    "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "Create-LCM-CRP execution tool.",
-    "Example": "CreateLCMCRP",
-    "RelativePath": "LCM_Inventory\\tools\\Create-LCM-CRP.ps1",
-    "Parameters": [
-      {
-        "Name": "AnalysisRange",
-        "Type": "String",
-        "Mandatory": true,
-        "Default": "",
-        "Description": "Analysis number or range (e.g. 01, 1, 01-02)"
-      },
-      {
-        "Name": "ProposalId",
-        "Type": "String",
-        "Mandatory": true,
-        "Default": "",
-        "Description": "Proposal ID (e.g. 005, 5, CRP-005)"
-      },
-      {
-        "Name": "Title",
-        "Type": "String",
-        "Mandatory": true,
-        "Default": "",
-        "Description": "Short descriptive title"
-      },
-      {
-        "Name": "Purpose",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "LCM architectural convergence and rule standardization.",
-        "Description": "Purpose statement for the change request."
-      },
-      {
-        "Name": "ProposedChanges",
-        "Type": "String[]",
-        "Mandatory": false,
-        "Default": "@('Automated proposal generation from analysis.')",
-        "Description": "Array of change bullet points."
-      },
-      {
-        "Name": "DriveRoot",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "D:\\GDrive",
-        "Description": "Root drive for Google Drive synchronization. Defaults to D:\\GDrive."
-      },
-      {
-        "Name": "StagingSubPath",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "LCM_ConvergenceProposals",
-        "Description": "Subdirectory within DriveRoot for proposal staging. Defaults to LCM_ConvergenceProposals."
-      }
-    ],
-    "Dependencies": null
-  },
-  {
     "Name": "deactivate.ps1",
     "ShortName": "deactivate",
     "Aliases": null,
@@ -9532,46 +9336,6 @@
       "InstallerTools.psm1",
       "Module: (Join-Path $ModuleRoot \"InstallerTools.psm1\")"
     ]
-  },
-  {
-    "Name": "Export-AntigravityReasoningTranscript.ps1",
-    "ShortName": "ExportAntigravityReasoningTranscript",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "LCM_Tools",
-    "Domain": "LCM_Tools",
-    "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "Export-AntigravityReasoningTranscript execution tool.",
-    "Example": "ExportAntigravityReasoningTranscript",
-    "RelativePath": "LCM_Inventory\\tools\\Export-AntigravityReasoningTranscript.ps1",
-    "Parameters": [
-      {
-        "Name": "SessionId",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "$env:ANTIGRAVITY_CONVERSATION_ID",
-        "Description": "Active Antigravity conversation identifier. Defaults to ANTIGRAVITY_CONVERSATION_ID."
-      },
-      {
-        "Name": "OutputPath",
-        "Type": "String",
-        "Mandatory": true,
-        "Default": "",
-        "Description": "Normalized JSONL destination."
-      },
-      {
-        "Name": "DatabasePath",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Test-only or explicit override for an Antigravity SQLite database path or JSON/JSONL event file."
-      }
-    ],
-    "Dependencies": "Export-AntigravityExtractor.py"
   },
   {
     "Name": "Export-CopilotReasoningTranscript.ps1",
@@ -9966,24 +9730,6 @@
     "Dependencies": null
   },
   {
-    "Name": "KillLogitechUpdateFull.ps1",
-    "ShortName": "KillLogitechUpdateFull",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": true,
-    "NoExit": true,
-    "Group": "LCM_Tools",
-    "Domain": "LCM_Tools",
-    "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "KillLogitechUpdateFull execution tool.",
-    "Example": "KillLogitechUpdateFull",
-    "RelativePath": "LCM_Inventory\\tools\\KillLogitechUpdateFull.ps1",
-    "Parameters": [],
-    "Dependencies": null
-  },
-  {
     "Name": "LcmJunctionFixer.ps1",
     "ShortName": "LcmJunctionFixer",
     "Aliases": null,
@@ -10178,6 +9924,134 @@
     ]
   },
   {
+    "Name": "@Repair_Diagnose-OneDriveSync.ps1",
+    "ShortName": "LCMTools@RepairDiagnoseOneDriveSync",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "@Repair_Diagnose-OneDriveSync execution tool.",
+    "Example": "@RepairDiagnoseOneDriveSync",
+    "RelativePath": "LCM_Inventory\\tools\\@Repair_Diagnose-OneDriveSync.ps1",
+    "Parameters": [
+      {
+        "Name": "FixAcl",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Repairs ownership and sets AuthorizeMasterUser ACLs on all inaccessible OneDrive target folders."
+      },
+      {
+        "Name": "Reconcile",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Flips stuck 0-byte download items (fileStatus=3) to Synced (fileStatus=2) and resets postponed change locks."
+      },
+      {
+        "Name": "Reset",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Executes official Microsoft OneDrive cache reset and explicitly restarts the OneDrive tray process."
+      },
+      {
+        "Name": "PurgeGhosts",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Purges stale 0-byte ghost download intents from SQLite sync database by generating local placeholders."
+      },
+      {
+        "Name": "All",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Performs full automated repair: ACL fix, database reconciliation, ghost purge, and non-elevated restart."
+      },
+      {
+        "Name": "ShowAll",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Displays full detailed diagnostic flow, database table stats, postponed changes, and path evaluations."
+      }
+    ],
+    "Dependencies": [
+      "od_diag_runner.py",
+      "od_reconcile_runner.py"
+    ]
+  },
+  {
+    "Name": "@Repair_Test-OneDriveSync.ps1",
+    "ShortName": "LCMTools@RepairTestOneDriveSync",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "@Repair_Test-OneDriveSync execution tool.",
+    "Example": "@RepairTestOneDriveSync",
+    "RelativePath": "LCM_Inventory\\tools\\@Repair_Test-OneDriveSync.ps1",
+    "Parameters": [
+      {
+        "Name": "FixAcl",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Repairs ownership and sets AuthorizeMasterUser ACLs on all inaccessible OneDrive target folders."
+      },
+      {
+        "Name": "Reconcile",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Flips stuck 0-byte download items (fileStatus=3) to Synced (fileStatus=2) and resets postponed change locks."
+      },
+      {
+        "Name": "Reset",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Executes official Microsoft OneDrive cache reset and explicitly restarts the OneDrive tray process."
+      },
+      {
+        "Name": "PurgeGhosts",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Purges stale 0-byte ghost download intents from SQLite sync database by generating local placeholders."
+      },
+      {
+        "Name": "All",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Performs full automated repair: ACL fix, database reconciliation, ghost purge, and non-elevated restart."
+      },
+      {
+        "Name": "ShowAll",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Displays full detailed diagnostic flow, database table stats, postponed changes, and path evaluations."
+      }
+    ],
+    "Dependencies": [
+      "od_diag_runner.py",
+      "od_reconcile_runner.py"
+    ]
+  },
+  {
     "Name": "@Repair_Test-OneDriveSync.ps1",
     "ShortName": "LCMTools@RepairTestOneDriveSync",
     "Aliases": null,
@@ -10240,6 +10114,74 @@
       "od_diag_runner.py",
       "od_reconcile_runner.py"
     ]
+  },
+  {
+    "Name": "Create-LCM-CRP.ps1",
+    "ShortName": "LCMToolsCreateLCMCRP",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Create-LCM-CRP execution tool.",
+    "Example": "CreateLCMCRP",
+    "RelativePath": "LCM_Inventory\\tools\\Create-LCM-CRP.ps1",
+    "Parameters": [
+      {
+        "Name": "AnalysisRange",
+        "Type": "String",
+        "Mandatory": true,
+        "Default": "",
+        "Description": "Analysis number or range (e.g. 01, 1, 01-02)"
+      },
+      {
+        "Name": "ProposalId",
+        "Type": "String",
+        "Mandatory": true,
+        "Default": "",
+        "Description": "Proposal ID (e.g. 005, 5, CRP-005)"
+      },
+      {
+        "Name": "Title",
+        "Type": "String",
+        "Mandatory": true,
+        "Default": "",
+        "Description": "Short descriptive title"
+      },
+      {
+        "Name": "Purpose",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "LCM architectural convergence and rule standardization.",
+        "Description": "Purpose statement for the change request."
+      },
+      {
+        "Name": "ProposedChanges",
+        "Type": "String[]",
+        "Mandatory": false,
+        "Default": "@('Automated proposal generation from analysis.')",
+        "Description": "Array of change bullet points."
+      },
+      {
+        "Name": "DriveRoot",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "D:\\GDrive",
+        "Description": "Root drive for Google Drive synchronization. Defaults to D:\\GDrive."
+      },
+      {
+        "Name": "StagingSubPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "LCM_ConvergenceProposals",
+        "Description": "Subdirectory within DriveRoot for proposal staging. Defaults to LCM_ConvergenceProposals."
+      }
+    ],
+    "Dependencies": null
   },
   {
     "Name": "Create-LCM-CRP.ps1",
@@ -10323,6 +10265,46 @@
     "Category": "Utility",
     "Description": "Export-AntigravityReasoningTranscript execution tool.",
     "Example": "ExportAntigravityReasoningTranscript",
+    "RelativePath": "LCM_Inventory\\tools\\Export-AntigravityReasoningTranscript.ps1",
+    "Parameters": [
+      {
+        "Name": "SessionId",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "$env:ANTIGRAVITY_CONVERSATION_ID",
+        "Description": "Active Antigravity conversation identifier. Defaults to ANTIGRAVITY_CONVERSATION_ID."
+      },
+      {
+        "Name": "OutputPath",
+        "Type": "String",
+        "Mandatory": true,
+        "Default": "",
+        "Description": "Normalized JSONL destination."
+      },
+      {
+        "Name": "DatabasePath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Test-only or explicit override for an Antigravity SQLite database path or JSON/JSONL event file."
+      }
+    ],
+    "Dependencies": "Export-AntigravityExtractor.py"
+  },
+  {
+    "Name": "Export-AntigravityReasoningTranscript.ps1",
+    "ShortName": "LCMToolsExportAntigravityReasoningTranscript",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Export-AntigravityReasoningTranscript execution tool.",
+    "Example": "ExportAntigravityReasoningTranscript",
     "RelativePath": "LCM_Tools\\tools\\Export-AntigravityReasoningTranscript.ps1",
     "Parameters": [
       {
@@ -10348,6 +10330,24 @@
       }
     ],
     "Dependencies": "Export-AntigravityExtractor.py"
+  },
+  {
+    "Name": "KillLogitechUpdateFull.ps1",
+    "ShortName": "LCMToolsKillLogitechUpdateFull",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "KillLogitechUpdateFull execution tool.",
+    "Example": "KillLogitechUpdateFull",
+    "RelativePath": "LCM_Inventory\\tools\\KillLogitechUpdateFull.ps1",
+    "Parameters": [],
+    "Dependencies": null
   },
   {
     "Name": "KillLogitechUpdateFull.ps1",
@@ -11296,7 +11296,7 @@
     "Category": "Utility",
     "Description": "asus-debloater execution tool.",
     "Example": "asusdebloater",
-    "RelativePath": "LCM_Inventory\\tools\\asus-debloater.ps1",
+    "RelativePath": "SystemConfiguration\\Source\\asus-debloater.ps1",
     "Parameters": [],
     "Dependencies": null
   },
@@ -11314,7 +11314,7 @@
     "Category": "Utility",
     "Description": "asus-debloater execution tool.",
     "Example": "asusdebloater",
-    "RelativePath": "SystemConfiguration\\Source\\asus-debloater.ps1",
+    "RelativePath": "LCM_Inventory\\tools\\asus-debloater.ps1",
     "Parameters": [],
     "Dependencies": null
   },
@@ -11434,24 +11434,6 @@
     "Category": "Utility",
     "Description": "Set-MachineWideExecutionPolicy execution tool.",
     "Example": "SetMachineWideExecutionPolicy",
-    "RelativePath": "LCM_Inventory\\tools\\Set-MachineWideExecutionPolicy.ps1",
-    "Parameters": [],
-    "Dependencies": null
-  },
-  {
-    "Name": "Set-MachineWideExecutionPolicy.ps1",
-    "ShortName": "SystemConfigurationSetMachineWideExecutionPolicy",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": true,
-    "NoExit": true,
-    "Group": "LCM_Tools",
-    "Domain": "LCM_Tools",
-    "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "Set-MachineWideExecutionPolicy execution tool.",
-    "Example": "SetMachineWideExecutionPolicy",
     "RelativePath": "SystemConfiguration\\Source\\Set-MachineWideExecutionPolicy.ps1",
     "Parameters": [
       {
@@ -11469,6 +11451,24 @@
         "Description": "Displays detailed registry modification logs."
       }
     ],
+    "Dependencies": null
+  },
+  {
+    "Name": "Set-MachineWideExecutionPolicy.ps1",
+    "ShortName": "SystemConfigurationSetMachineWideExecutionPolicy",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Set-MachineWideExecutionPolicy execution tool.",
+    "Example": "SetMachineWideExecutionPolicy",
+    "RelativePath": "LCM_Inventory\\tools\\Set-MachineWideExecutionPolicy.ps1",
+    "Parameters": [],
     "Dependencies": null
   },
   {
@@ -12465,6 +12465,39 @@
     "Dependencies": "Logging.psm1"
   },
   {
+    "Name": "@20-KillLogitechUpdateFull.ps1",
+    "ShortName": "KillLogitechUpdateFull",
+    "Aliases": "@20-KillLogitechUpdateFull",
+    "Role": "Invariants",
+    "Audience": "User",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "SystemConfiguration",
+    "Domain": "SystemConfiguration",
+    "Type": "PowerShell",
+    "Category": "Hardware Stability",
+    "Description": "Enforces 54/54 Logitech updater suppressions across scheduled tasks, registry run keys, and services.",
+    "Example": "pwsh -File \"SystemConfiguration\\Source\\@20-KillLogitechUpdateFull.ps1\"",
+    "RelativePath": "SystemConfiguration\\Source\\@20-KillLogitechUpdateFull.ps1",
+    "Parameters": [
+      {
+        "Name": "TraceMode",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Enables step-by-step debug tracing (Alias: -t)."
+      },
+      {
+        "Name": "ShowAll",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Displays detailed process termination, service disabling, and registry deletion logs."
+      }
+    ],
+    "Dependencies": "Kill-LogitechUpdate.ps1"
+  },
+  {
     "Name": "Set-MouseFlickerInvariants.ps1",
     "ShortName": "SetMouseFlicker",
     "Aliases": null,
@@ -12496,39 +12529,6 @@
       }
     ],
     "Dependencies": "Logging.psm1"
-  },
-  {
-    "Name": "@20-KillLogitechUpdateFull.ps1",
-    "ShortName": "SystemConfigurationKillLogitechUpdateFull",
-    "Aliases": "@20-KillLogitechUpdateFull",
-    "Role": "Invariants",
-    "Audience": "User",
-    "Admin": true,
-    "NoExit": true,
-    "Group": "SystemConfiguration",
-    "Domain": "SystemConfiguration",
-    "Type": "PowerShell",
-    "Category": "Hardware Stability",
-    "Description": "Enforces 54/54 Logitech updater suppressions across scheduled tasks, registry run keys, and services.",
-    "Example": "pwsh -File \"SystemConfiguration\\Source\\@20-KillLogitechUpdateFull.ps1\"",
-    "RelativePath": "SystemConfiguration\\Source\\@20-KillLogitechUpdateFull.ps1",
-    "Parameters": [
-      {
-        "Name": "TraceMode",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Enables step-by-step debug tracing (Alias: -t)."
-      },
-      {
-        "Name": "ShowAll",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Displays detailed process termination, service disabling, and registry deletion logs."
-      }
-    ],
-    "Dependencies": "Kill-LogitechUpdate.ps1"
   },
   {
     "Name": "Invoke-AsusDebloater.ps1",
