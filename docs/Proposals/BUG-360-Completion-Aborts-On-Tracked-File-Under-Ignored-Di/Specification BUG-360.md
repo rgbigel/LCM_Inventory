@@ -15,8 +15,8 @@ Scope: LCM_Inventory
 Baseline-Version: 10.7.4
 Author: Rolf
 Date: 2026-11-18 18:35:11
-Status: Verified
-Plan-State: verified
+Status: In Review
+Plan-State: in_review
 Progress-State: verification
 Priority: 5
 App-ID: None
