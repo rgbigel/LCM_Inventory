@@ -6,7 +6,7 @@ Path: LCM_Inventory/docs/README.md
 Authors: Rolf, LCM_AI Engine  
 Version: 10.0.1  
 Status: Authoritative Reference  
-Updated: 2026-11-17 19:55:52  
+Updated: 2026-11-18 14:18:50  
 
 ---
 
@@ -90,6 +90,8 @@ TestWorkspaceReadiness
 
 | Short Name | Source Tool | Role | Group | Type | Category | Description | Command |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **BeyondCompareTabAtom** | [Select-BeyondCompareTab.ahk](file:///LCM_Inventory/tools/automation/Select-BeyondCompareTab.ahk) | Atom | LCM_Inventory | AutoHotkey | Beyond Compare Review | AHK atom: lists the tabs of one Beyond Compare window, activates the tab with a title prefix, or activates and refreshes it (CRP-346). | BeyondCompareTabAtom |
+| **MacriumBrowseDialogAtom** | [Mount-MacriumBrowseDialog.ahk](file:///LCM_Inventory/tools/automation/Mount-MacriumBrowseDialog.ahk) | Atom | LCM_Inventory | AutoHotkey | Macrium BCR Baseline | AHK atom: completes the Macrium Reflect Browse Image dialog (writable mount); elevated, called by Invoke-MacriumMountWorker.ps1. | MacriumBrowseDialogAtom |
 | **LcmDaemon** | [LcmDesktopDaemon.ps1](file:///LCM_Inventory/tools/LcmDesktopDaemon.ps1) | Elevation | LCM_Inventory | PowerShell | Desktop Bridge | Lightweight high-performance HTTP/REST bridge daemon running in Session 1 for cross-session GUI dispatch. | LcmDaemon |
 | **RegisterDaemon** | [Register-LcmDesktopDaemon.ps1](file:///LCM_Inventory/tools/Register-LcmDesktopDaemon.ps1) | Elevation | LCM_Inventory | PowerShell | Desktop Bridge | Registers the persistent LCM Desktop REST Bridge Daemon in Task Scheduler with automatic startup. | RegisterDaemon |
 | **ShowToolIndex** | [Show-ToolIndex.ps1](file:///LCM_Inventory/tools/Show-ToolIndex.ps1) | GUI | LCM_Inventory | PowerShell | Tool Discovery | Underlying generation engine for the interactive LCM Tool Explorer HTML application. | ShowToolIndex |
@@ -179,8 +181,8 @@ TestWorkspaceReadiness
 | **GitRestoreHubToLocalAll** | [Git_Restore_HubToLocal_All.ps1](file:///LCM_Inventory/tools/Git_Restore_HubToLocal_All.ps1) | Utility | LCM_Tools | PowerShell | Utility | Git_Restore_HubToLocal_All execution tool. | GitRestoreHubToLocalAll |
 | **HaAudit** | [run_audit.py](file:///LCM_Inventory/tools/run_audit.py) | Utility | HaSSD06 | Python | Utility | run_audit execution tool. | HaAudit |
 | **hainventorycollector** | [ha_inventory_collector.py](file:///LCM_Inventory/tools/ha_inventory_collector.py) | Utility | HaSSD06 | Python | Utility | ha_inventory_collector execution tool. | hainventorycollector |
-| **HaSSD06analyzelcmcomponents** | [analyze_lcm_components.py](file:///LCM_Inventory/tools/analyze_lcm_components.py) | Utility | HaSSD06 | Python | Utility | analyze_lcm_components execution tool. | HaSSD06analyzelcmcomponents |
 | **HaSSD06analyzelcmcomponents** | [analyze_lcm_components.py](file:///HaSSD06/analyze_lcm_components.py) | Utility | HaSSD06 | Python | Utility | analyze_lcm_components execution tool. | HaSSD06analyzelcmcomponents |
+| **HaSSD06analyzelcmcomponents** | [analyze_lcm_components.py](file:///LCM_Inventory/tools/analyze_lcm_components.py) | Utility | HaSSD06 | Python | Utility | analyze_lcm_components execution tool. | HaSSD06analyzelcmcomponents |
 | **HaSSD06checkspecific** | [check_specific.py](file:///LCM_Inventory/tools/check_specific.py) | Utility | HaSSD06 | Python | Utility | check_specific execution tool. | HaSSD06checkspecific |
 | **HaSSD06checkspecific** | [check_specific.py](file:///HaSSD06/check_specific.py) | Utility | HaSSD06 | Python | Utility | check_specific execution tool. | HaSSD06checkspecific |
 | **HaSSD06deepdevicescan** | [deep_device_scan.py](file:///HaSSD06/deep_device_scan.py) | Utility | HaSSD06 | Python | Utility | deep_device_scan execution tool. | HaSSD06deepdevicescan |
@@ -193,8 +195,8 @@ TestWorkspaceReadiness
 | **HaSSD06hacoreupdate** | [invoke_ha_core_update.py](file:///LCM_Inventory/tools/invoke_ha_core_update.py) | Utility | HaSSD06 | Python | Utility | invoke_ha_core_update execution tool. | HaSSD06hacoreupdate |
 | **HaSSD06HaListUpdates** | [list_all_updates.py](file:///HaSSD06/list_all_updates.py) | Utility | HaSSD06 | Python | Utility | list_all_updates execution tool. | HaSSD06HaListUpdates |
 | **HaSSD06HaListUpdates** | [list_all_updates.py](file:///LCM_Inventory/tools/list_all_updates.py) | Utility | HaSSD06 | Python | Utility | list_all_updates execution tool. | HaSSD06HaListUpdates |
-| **HaSSD06HaLogs** | [inspect_ha_logs.py](file:///LCM_Inventory/tools/inspect_ha_logs.py) | Utility | HaSSD06 | Python | Utility | inspect_ha_logs execution tool. | HaSSD06HaLogs |
 | **HaSSD06HaLogs** | [inspect_ha_logs.py](file:///HaSSD06/inspect_ha_logs.py) | Utility | HaSSD06 | Python | Utility | inspect_ha_logs execution tool. | HaSSD06HaLogs |
+| **HaSSD06HaLogs** | [inspect_ha_logs.py](file:///LCM_Inventory/tools/inspect_ha_logs.py) | Utility | HaSSD06 | Python | Utility | inspect_ha_logs execution tool. | HaSSD06HaLogs |
 | **HaSSD06InventoryBuildHaInventoryViewer** | [Build-HaInventoryViewer.ps1](file:///HaSSD06_Inventory/tools/Build-HaInventoryViewer.ps1) | Utility | HaSSD06 | PowerShell | Utility | Build-HaInventoryViewer execution tool. | HaSSD06InventoryBuildHaInventoryViewer |
 | **HaSSD06InventoryBuildHaInventoryViewer** | [Build-HaInventoryViewer.ps1](file:///LCM_Inventory/tools/Build-HaInventoryViewer.ps1) | Utility | HaSSD06 | PowerShell | Utility | Build-HaInventoryViewer execution tool. | HaSSD06InventoryBuildHaInventoryViewer |
 | **HaSSD06Inventoryextracthacentralregistry** | [extract_ha_central_registry.py](file:///HaSSD06_Inventory/tools/extract_ha_central_registry.py) | Utility | HaSSD06 | Python | Utility | extract_ha_central_registry execution tool. | HaSSD06Inventoryextracthacentralregistry |
@@ -234,16 +236,16 @@ TestWorkspaceReadiness
 | **LCMStructureFixPostcleanup** | [LCM_StructureFix-Post-cleanup.ps1](file:///LCM_Inventory/tools/LCM_StructureFix-Post-cleanup.ps1) | Utility | LCM_Tools | PowerShell | Utility | LCM_StructureFix-Post-cleanup execution tool. | LCMStructureFixPostcleanup |
 | **LCMSupervisionTestRepoReadiness** | [Test-RepoReadiness.ps1](file:///LCM_Supervision/tools/Test-RepoReadiness.ps1) | Utility | HaSSD06 | PowerShell | Utility | Test-RepoReadiness execution tool. | LCMSupervisionTestRepoReadiness |
 | **LcmSystemOneClient** | [Invoke-LcmSystemOneClient.ps1](file:///LCM_Inventory/tools/Invoke-LcmSystemOneClient.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-LcmSystemOneClient execution tool. | LcmSystemOneClient |
-| **LCMTools@RepairDiagnoseOneDriveSync** | [@Repair_Diagnose-OneDriveSync.ps1](file:///LCM_Tools/tools/@Repair_Diagnose-OneDriveSync.ps1) | Utility | LCM_Tools | PowerShell | Utility | @Repair_Diagnose-OneDriveSync execution tool. | LCMTools@RepairDiagnoseOneDriveSync |
 | **LCMTools@RepairDiagnoseOneDriveSync** | [@Repair_Diagnose-OneDriveSync.ps1](file:///LCM_Inventory/tools/@Repair_Diagnose-OneDriveSync.ps1) | Utility | LCM_Tools | PowerShell | Utility | @Repair_Diagnose-OneDriveSync execution tool. | LCMTools@RepairDiagnoseOneDriveSync |
-| **LCMTools@RepairTestOneDriveSync** | [@Repair_Test-OneDriveSync.ps1](file:///LCM_Inventory/tools/@Repair_Test-OneDriveSync.ps1) | Utility | LCM_Tools | PowerShell | Utility | @Repair_Test-OneDriveSync execution tool. | LCMTools@RepairTestOneDriveSync |
+| **LCMTools@RepairDiagnoseOneDriveSync** | [@Repair_Diagnose-OneDriveSync.ps1](file:///LCM_Tools/tools/@Repair_Diagnose-OneDriveSync.ps1) | Utility | LCM_Tools | PowerShell | Utility | @Repair_Diagnose-OneDriveSync execution tool. | LCMTools@RepairDiagnoseOneDriveSync |
 | **LCMTools@RepairTestOneDriveSync** | [@Repair_Test-OneDriveSync.ps1](file:///LCM_Tools/tools/@Repair_Test-OneDriveSync.ps1) | Utility | LCM_Tools | PowerShell | Utility | @Repair_Test-OneDriveSync execution tool. | LCMTools@RepairTestOneDriveSync |
-| **LCMToolsCreateLCMCRP** | [Create-LCM-CRP.ps1](file:///LCM_Tools/tools/Create-LCM-CRP.ps1) | Utility | LCM_Tools | PowerShell | Utility | Create-LCM-CRP execution tool. | LCMToolsCreateLCMCRP |
+| **LCMTools@RepairTestOneDriveSync** | [@Repair_Test-OneDriveSync.ps1](file:///LCM_Inventory/tools/@Repair_Test-OneDriveSync.ps1) | Utility | LCM_Tools | PowerShell | Utility | @Repair_Test-OneDriveSync execution tool. | LCMTools@RepairTestOneDriveSync |
 | **LCMToolsCreateLCMCRP** | [Create-LCM-CRP.ps1](file:///LCM_Inventory/tools/Create-LCM-CRP.ps1) | Utility | LCM_Tools | PowerShell | Utility | Create-LCM-CRP execution tool. | LCMToolsCreateLCMCRP |
+| **LCMToolsCreateLCMCRP** | [Create-LCM-CRP.ps1](file:///LCM_Tools/tools/Create-LCM-CRP.ps1) | Utility | LCM_Tools | PowerShell | Utility | Create-LCM-CRP execution tool. | LCMToolsCreateLCMCRP |
 | **LCMToolsExportAntigravityReasoningTranscript** | [Export-AntigravityReasoningTranscript.ps1](file:///LCM_Inventory/tools/Export-AntigravityReasoningTranscript.ps1) | Utility | LCM_Tools | PowerShell | Utility | Export-AntigravityReasoningTranscript execution tool. | LCMToolsExportAntigravityReasoningTranscript |
 | **LCMToolsExportAntigravityReasoningTranscript** | [Export-AntigravityReasoningTranscript.ps1](file:///LCM_Tools/tools/Export-AntigravityReasoningTranscript.ps1) | Utility | LCM_Tools | PowerShell | Utility | Export-AntigravityReasoningTranscript execution tool. | LCMToolsExportAntigravityReasoningTranscript |
-| **LCMToolsKillLogitechUpdateFull** | [KillLogitechUpdateFull.ps1](file:///LCM_Tools/tools/KillLogitechUpdateFull.ps1) | Utility | LCM_Tools | PowerShell | Utility | KillLogitechUpdateFull execution tool. | LCMToolsKillLogitechUpdateFull |
 | **LCMToolsKillLogitechUpdateFull** | [KillLogitechUpdateFull.ps1](file:///LCM_Inventory/tools/KillLogitechUpdateFull.ps1) | Utility | LCM_Tools | PowerShell | Utility | KillLogitechUpdateFull execution tool. | LCMToolsKillLogitechUpdateFull |
+| **LCMToolsKillLogitechUpdateFull** | [KillLogitechUpdateFull.ps1](file:///LCM_Tools/tools/KillLogitechUpdateFull.ps1) | Utility | LCM_Tools | PowerShell | Utility | KillLogitechUpdateFull execution tool. | LCMToolsKillLogitechUpdateFull |
 | **LCMToolsMigrateWorkspaceCO ** | [Migrate-Workspace_CO .ps1](file:///LCM_Tools/tools/Migrate-Workspace_CO .ps1) | Utility | LCM_Tools | PowerShell | Utility | Migrate-Workspace_CO  execution tool. | LCMToolsMigrateWorkspaceCO  |
 | **LCMToolsReasoningAnalysisAuto** | [Invoke-ReasoningAnalysisAuto.ps1](file:///LCM_Tools/tools/Invoke-ReasoningAnalysisAuto.ps1) | Utility | LCM_Tools | PowerShell | Utility | Invoke-ReasoningAnalysisAuto execution tool. | LCMToolsReasoningAnalysisAuto |
 | **LCMToolsReplaceByJunction** | [ReplaceByJunction.ps1](file:///LCM_Tools/tools/ReplaceByJunction.ps1) | Utility | LCM_Tools | PowerShell | Utility | ReplaceByJunction execution tool. | LCMToolsReplaceByJunction |
@@ -345,8 +347,8 @@ TestWorkspaceReadiness
 | **SystemConfigurationGetDevicePathFromDeviceName** | [Get-DevicePathFromDeviceName.ps1](file:///SystemConfiguration/Source/Get-DevicePathFromDeviceName.ps1) | Utility | SystemConfiguration | PowerShell | Utility | Get-DevicePathFromDeviceName execution tool. | SystemConfigurationGetDevicePathFromDeviceName |
 | **SystemConfigurationGetInternetConnectivityData** | [GetInternetConnectivityData.ps1](file:///SystemConfiguration/Source/GetInternetConnectivityData.ps1) | Utility | SystemConfiguration | PowerShell | Utility | GetInternetConnectivityData execution tool. | SystemConfigurationGetInternetConnectivityData |
 | **SystemConfigurationGetvEthernetData** | [GetvEthernetData.ps1](file:///SystemConfiguration/Source/GetvEthernetData.ps1) | Utility | SystemConfiguration | PowerShell | Utility | GetvEthernetData execution tool. | SystemConfigurationGetvEthernetData |
-| **SystemConfigurationGoAdm** | [GoAdm.ps1](file:///SystemConfiguration/Source/GoAdm.ps1) | Utility | LCM_Tools | PowerShell | Utility | GoAdm execution tool. | SystemConfigurationGoAdm |
 | **SystemConfigurationGoAdm** | [GoAdm.ps1](file:///LCM_Inventory/tools/GoAdm.ps1) | Utility | LCM_Tools | PowerShell | Utility | GoAdm execution tool. | SystemConfigurationGoAdm |
+| **SystemConfigurationGoAdm** | [GoAdm.ps1](file:///SystemConfiguration/Source/GoAdm.ps1) | Utility | LCM_Tools | PowerShell | Utility | GoAdm execution tool. | SystemConfigurationGoAdm |
 | **SystemConfigurationsearch certificate stores for private key container Guids** | [search certificate stores for private key container Guids.ps1](file:///LCM_Inventory/tools/search certificate stores for private key container Guids.ps1) | Utility | LCM_Tools | PowerShell | Utility | search certificate stores for private key container Guids execution tool. | SystemConfigurationsearch certificate stores for private key container Guids |
 | **SystemConfigurationsearch certificate stores for private key container Guids** | [search certificate stores for private key container Guids.ps1](file:///SystemConfiguration/Source/search certificate stores for private key container Guids.ps1) | Utility | LCM_Tools | PowerShell | Utility | search certificate stores for private key container Guids execution tool. | SystemConfigurationsearch certificate stores for private key container Guids |
 | **SystemConfigurationSetBluetoothAlwaysOn** | [SetBluetoothAlwaysOn.ps1](file:///SystemConfiguration/Source/SetBluetoothAlwaysOn.ps1) | Utility | SystemConfiguration | PowerShell | Utility | SetBluetoothAlwaysOn execution tool. | SystemConfigurationSetBluetoothAlwaysOn |
@@ -358,10 +360,11 @@ TestWorkspaceReadiness
 | **TestFileReadIntegrity** | [Test-FileReadIntegrity.ps1](file:///LCM_Inventory/tools/Test-FileReadIntegrity.ps1) | Utility | LCM_Tools | PowerShell | Utility | Test-FileReadIntegrity execution tool. | TestFileReadIntegrity |
 | **TestGeneralReadiness** | [Test-GeneralReadiness.ps1](file:///LCM_Inventory/tools/Test-GeneralReadiness.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Test-GeneralReadiness execution tool. | TestGeneralReadiness |
 | **TestGuardrail** | [Test-Guardrail.ps1](file:///LCM_Inventory/tools/Test-Guardrail.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Test-Guardrail execution tool. | TestGuardrail |
-| **TestHaRepoReady** | [Test-RepoReadiness.ps1](file:///HaSSD06/tools/Test-RepoReadiness.ps1) | Utility | HaSSD06 | PowerShell | Utility | Test-RepoReadiness execution tool. | TestHaRepoReady |
 | **TestHaRepoReady** | [Test-RepoReadiness.ps1](file:///HaSSD06_Inventory/tools/Test-RepoReadiness.ps1) | Utility | HaSSD06 | PowerShell | Utility | Test-RepoReadiness execution tool. | TestHaRepoReady |
+| **TestHaRepoReady** | [Test-RepoReadiness.ps1](file:///HaSSD06/tools/Test-RepoReadiness.ps1) | Utility | HaSSD06 | PowerShell | Utility | Test-RepoReadiness execution tool. | TestHaRepoReady |
 | **TestLcmDeterministicGate** | [Test-LcmDeterministicGate.ps1](file:///LCM_Inventory/tools/Test-LcmDeterministicGate.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Test-LcmDeterministicGate execution tool. | TestLcmDeterministicGate |
 | **TestLCMDrift** | [Test-LCM_Drift.ps1](file:///LCM_Inventory/tools/Test-LCM_Drift.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Test-LCM_Drift execution tool. | TestLCMDrift |
+| **TestLcmExternalToolDocumentation** | [Test-LcmExternalToolDocumentation.ps1](file:///LCM_Inventory/tools/Test-LcmExternalToolDocumentation.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Test-LcmExternalToolDocumentation execution tool. | TestLcmExternalToolDocumentation |
 | **TestLCMIncrementalGovernance** | [Test-LCMIncrementalGovernance.ps1](file:///LCM_Inventory/tools/Test-LCMIncrementalGovernance.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Test-LCMIncrementalGovernance execution tool. | TestLCMIncrementalGovernance |
 | **TestLCMRuleHealth** | [Test-LCMRuleHealth.ps1](file:///LCM_Inventory/tools/Test-LCMRuleHealth.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Test-LCMRuleHealth execution tool. | TestLCMRuleHealth |
 | **TestLcmStrategyConsistency** | [Test-LcmStrategyConsistency.ps1](file:///LCM_Inventory/tools/Test-LcmStrategyConsistency.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Test-LcmStrategyConsistency execution tool. | TestLcmStrategyConsistency |

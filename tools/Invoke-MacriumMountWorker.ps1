@@ -9,14 +9,16 @@
            no review window, no registry write) runs here.
   Path: LCM_Inventory/tools/Invoke-MacriumMountWorker.ps1
   Authors: Rolf, Claude
-  Version: 10.7.4
-  Date: 2026-11-17
+  Version: 10.7.5
+  Date: 2026-11-18
   Rule: RULE-ELEV-001, RULE-ELEV-007, RULE-PS-025
   Implementation Choices (CRP-343): extracted unchanged from Invoke-MacriumDailyBcrBaseline.ps1
            (Invoke-ElevatedBaselineWorker, -ElevatedWorker mode) so elevation is confined to this
            process; shared discovery helpers come from modules/LcmMacriumAtoms.psm1. Registered as an
            elevated intent of an admin tool; dispatched by Mount-MacriumLatestBaseline.ps1 (admin tool)
            through the DO daemon.
+  Implementation Choices (CRP-345): the Browse Image dialog runs as the registered elevated AHK atom
+           (Invoke-LcmAhkAtom -Intent mount-macriumbrowsedialog), no longer by script path.
 .PARAMETER ImagePath
   Full path of the completed .mrimgx image to mount.
 .PARAMETER CandidateDrives
@@ -189,10 +191,11 @@ public static class LcmMacriumMouse
 
   Start-Process -FilePath $reflectPath -ArgumentList @('-b', $ImagePath) | Out-Null
 
-  if ((Test-Path -LiteralPath $ahkAutomationScript -PathType Leaf) -and (Get-Command -Name 'Invoke-LcmAhkScript' -ErrorAction SilentlyContinue)) {
+  if ((Test-Path -LiteralPath $ahkAutomationScript -PathType Leaf) -and (Get-Command -Name 'Invoke-LcmAhkAtom' -ErrorAction SilentlyContinue)) {
     Write-BaselineLog -Level INFO -Message 'Macrium Reflect Browse Image launched. Delegating dialog interaction to AHK atom.'
     try {
-      $ahkResult = Invoke-LcmAhkScript -ScriptPath $ahkAutomationScript -ArgumentList @([string]$MountTimeoutSeconds) -TimeoutSeconds ($MountTimeoutSeconds + 5)
+      # CRP-345: the dialog automation runs as the registered (elevated) AHK atom.
+      $ahkResult = Invoke-LcmAhkAtom -Intent 'mount-macriumbrowsedialog' -ArgumentList @([string]$MountTimeoutSeconds) -TimeoutSeconds ($MountTimeoutSeconds + 5)
       
       # Log structured AHK output lines
       if (-not [string]::IsNullOrWhiteSpace($ahkResult.Output)) {

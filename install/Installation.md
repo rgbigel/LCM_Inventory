@@ -3,10 +3,10 @@
 Module: install/Installation.md  
 Purpose: Authoritative 7-phase operational installation, configuration, health verification, update, and rollback runbook for LCM_Inventory.  
 Path: LCM_Inventory/install/Installation.md  
-Authors: Rolf, LCM_AI Engine  
-Version: 10.2.0  
+Authors: Rolf, LCM_AI Engine, Claude  
+Version: 10.2.1  
 Status: Authoritative Standard  
-Date: 2026-11-10  
+Date: 2026-11-18 14:17:57  
 
 ---
 
@@ -37,6 +37,61 @@ Before deploying or initializing `LCM_Inventory`, verify the following host and 
 5. **Beyond Compare 5**: Beyond Compare 5 installed at `C:\Program Files\Beyond Compare 5\BCompare.exe` (required for BCR review gating).
 6. **Network & Daemon Port**: Local loopback TCP port `9876` unblocked for the LCM Desktop REST Bridge Daemon.
 7. **Optional Cloud Ingress**: Google Drive for Desktop mapped to `D:\GDrive` for external Gemini Cloud Inbox intake (`D:\GDrive\LCM\INBOX`).
+
+### External Tools (CRP-345)
+
+Every external executable that LCM code invokes is listed here. `tools/Test-LcmExternalToolDocumentation.ps1` compares the executables named in LCM code (`LCM_*` repositories) and in `config/tool_intents.json` with the four tables below and reports every name that appears in none of them. Paths and versions were read on 2026-11-18.
+
+Third-party and LCM tools:
+
+| Executable | Path | Version | Purpose / used by |
+|:---|:---|:---|:---|
+| `AutoHotkey64.exe` (`AutoHotkey.exe`) | `D:\Tools\AutoHotkey\v2\AutoHotkey64.exe` | 2.0.26 | Registered AHK atoms only (`Invoke-LcmAhkAtom`): Macrium Browse Image dialog, Beyond Compare tab atom |
+| `BCompare.exe` | `C:\Program Files\Beyond Compare 5\BCompare.exe` | 5.2 | BCR visual review (`_LCM` profile) |
+| `Reflect.exe` | `C:\Program Files\Macrium\Reflect\Reflect.exe` | 10.0.8989 | Mounting the daily baseline image (elevated mount worker) |
+| `Everything.exe` (`Everything64.exe`) | `D:\Tools\Everything 1.5a\Everything.exe` | 1.5.0.1424b | File index for `es.exe` |
+| `es.exe` | `D:\Tools\Everything 1.5a\es.exe` | 1.1.0.30 | File-name and content search (`Search-Everything.ps1`, RULE-EFF-007) |
+| `notepad++.exe` | `C:\Program Files\Notepad++\notepad++.exe` | 8.9.8.1 | Document editing from the Control Hub (CRP-354) |
+| `pwsh.exe` | `D:\Tools\PowerShell\7\pwsh.exe` | 7.7.0 | All PowerShell tools |
+| `git.exe` | `D:\Tools\SCOOP\shims\git.exe` (Scoop shim) | 2.40+ | Version control |
+| `python.exe` | `D:\Git_Repositories\.venv\Scripts\python.exe` | 3.14 | Python tools (catalog and ledger sync) |
+| `code.exe` (`code.cmd`) | `D:\Tools\Microsoft.VisualStudioCode\bin\code.cmd` | current | Editor launch (`/open_editor`) |
+| `gh.exe` | `C:\Program Files\GitHub CLI\gh.exe` | current | GitHub CLI |
+| `PsExec.exe` | `D:\WSCC4\SysInternals Suite\PsExec.exe` | 2.43 | Sysinternals |
+| `accesschk.exe` | `D:\WSCC4\SysInternals Suite\accesschk.exe` | 6.15 | Sysinternals, ACL checks |
+| `do.exe` | `LCM_Inventory\DoT\do.exe` | LCM build | DO gateway client and daemon (port 9876) |
+
+Windows components (part of Windows 11, no separate installation):
+
+| Executable | Purpose |
+|:---|:---|
+| `cmd.exe` | Batch launchers |
+| `powershell.exe` | Legacy launcher shims only |
+| `explorer.exe` | Shell, non-elevated token source |
+| `notepad.exe` | Legacy help display |
+| `icacls.exe`, `takeown.exe` | ACL repair |
+| `reg.exe`, `setx.exe` | Registry and environment |
+| `runas.exe` | Elevation helper |
+| `robocopy.exe` | File copy |
+| `reagentc.exe`, `bcdedit.exe`, `diskpart.exe`, `powercfg.exe` | System configuration |
+| `msiexec.exe`, `wmic.exe`, `schtasks.exe` | Installation, inventory, scheduled tasks |
+| `wt.exe` | Windows Terminal |
+| `msedge.exe` | Headless printing (RULE-DSP-007) |
+
+Referenced, not invoked (process names that code matches or reports, never starts):
+
+| Executable | Reference |
+|:---|:---|
+| `ntoskrnl.exe` | Kernel image named in diagnostics |
+| `vdsldr.exe` | Virtual Disk Service loader process |
+
+Registered for documentation (named in LCM code; whether each is invoked or only referenced, and its path and version, are still to be recorded):
+
+| Executable | Status |
+|:---|:---|
+| `onedrive.exe`, `setuphost.exe`, `windowsupdatebox.exe` | to classify |
+| `foldertimeupdate.exe`, `rainmeter.exe`, `winaerotweaker.exe`, `nircmd.exe`, `powertoys.exe`, `xyplorer.exe`, `ntfslinksview.exe`, `lnkanalyser.exe`, `volumeid.exe` | to classify and document |
+| `chrome.exe`, `firefox.exe`, `zen.exe`, `agy.exe`, `insiders.exe`, `ide.exe` | to classify |
 
 ---
 

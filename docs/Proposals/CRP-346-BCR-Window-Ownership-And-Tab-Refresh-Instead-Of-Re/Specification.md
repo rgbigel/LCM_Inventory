@@ -6,7 +6,7 @@ Path: LCM_Inventory/docs/Proposals/CRP-346-BCR-Window-Ownership-And-Tab-Refresh-
 Authors: Rolf, Claude  
 Version: 10.6.4
 Status: Suggested  
-Date: 2026-11-18 13:33:58
+Date: 2026-11-18 13:41:35
 
 ```yaml
 CRP-ID: CRP-346
@@ -14,7 +14,7 @@ Title: BCR Window Ownership And Tab Refresh Instead Of Relaunch
 Scope: LCM_Inventory
 Baseline-Version: 10.6.4
 Author: Rolf, Claude
-Date: 2026-11-18 13:33:58
+Date: 2026-11-18 13:41:35
 Status: In Progress
 Plan-State: in_progress
 Progress-State: in_progress
@@ -25,6 +25,7 @@ App-ID: None
 ---
 
 ## 1. Executive Summary & Intent
+- Specification accepted by the operator on 2026-11-18 13:41:35 (Gate 1, including section 4 and the 2026-11-18 evidence).
 Operator 2026-11-17: BCR recognises the BC window it started, locates the _LCM tab (AHK atom) and refreshes it instead of opening another window. Depends on the non-elevated BC and AHK atom CRPs.
 - Since 2026-11-18 it also carries the rule clarifications for review completion and implied cohorts (section 4, R1-R5).
 - Review: this Specification only. The Implementation Plan and Walkthrough are not written yet (implementation has not started).

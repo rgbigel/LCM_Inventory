@@ -11,8 +11,8 @@
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
   Path: D:\Git_Repositories\LCM_Inventory\tools\Update-ToolCatalog.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.2.9
-  Date: 2026-11-12 14:36:00
+  Version: 10.2.10  Date: 2026-11-18 14:10:00
+  Implementation Choices (CRP-345): tools/automation/*.ahk are scanned as type AutoHotkey and registered as intents with executable AutoHotkey64.exe and the declared IntentElevated flag; they get no .cmd trampoline (run only through Invoke-LcmAhkAtom).
 .PARAMETER Silent
   Suppresses non-error terminal output (useful in automated pipelines).
 .PARAMETER ShowAll
@@ -184,6 +184,33 @@ $metadataOverrides = @{
     Description = "Mirrors selected LCM workspace research and governance files to a configured snapshot destination."
   }
   # System Invariants & Hardware Stability
+  # CRP-345: AHK atoms - registered intents only, run through Invoke-LcmAhkAtom (no .cmd trampoline).
+  "Mount-MacriumBrowseDialog.ahk" = @{
+    ShortName      = "MacriumBrowseDialogAtom"
+    Group          = "LCM_Inventory"
+    Domain         = "LCM_Inventory"
+    Audience       = "Developer"
+    Role           = "Atom"
+    Admin          = $true
+    IntentElevated = $true
+    NoExit         = $false
+    Category       = "Macrium BCR Baseline"
+    Description    = "AHK atom: completes the Macrium Reflect Browse Image dialog (writable mount); elevated, called by Invoke-MacriumMountWorker.ps1."
+    Example        = "Invoke-LcmAhkAtom -Intent mount-macriumbrowsedialog -ArgumentList 60"
+  }
+  "Select-BeyondCompareTab.ahk" = @{
+    ShortName      = "BeyondCompareTabAtom"
+    Group          = "LCM_Inventory"
+    Domain         = "LCM_Inventory"
+    Audience       = "Developer"
+    Role           = "Atom"
+    Admin          = $false
+    IntentElevated = $false
+    NoExit         = $false
+    Category       = "Beyond Compare Review"
+    Description    = "AHK atom: lists the tabs of one Beyond Compare window, activates the tab with a title prefix, or activates and refreshes it (CRP-346)."
+    Example        = "Invoke-LcmAhkAtom -Intent select-beyondcomparetab -ArgumentList <hwnd>, refresh, _LCM"
+  }
   "Invoke-MacriumDailyBcrBaseline.ps1" = @{
     ShortName   = "MacriumDailyBcrBaseline"
     Audience    = "Developer"
@@ -942,7 +969,7 @@ try {
 
       $fileName = $f.Name
       $ext = $f.Extension.ToLowerInvariant()
-      $lang = if ($ext -eq '.ps1') { 'PowerShell' } elseif ($ext -eq '.py') { 'Python' } elseif ($ext -in @('.cmd', '.bat')) { 'Batch' } elseif ($ext -eq '.exe') { 'Executable' } elseif ($ext -eq '.reg') { 'Registry' } elseif ($ext -eq '.lnk') { 'Shortcut' } elseif ($ext -eq '.txt') { 'Instruction' } else { 'Script' }
+      $lang = if ($ext -eq '.ps1') { 'PowerShell' } elseif ($ext -eq '.py') { 'Python' } elseif ($ext -in @('.cmd', '.bat')) { 'Batch' } elseif ($ext -eq '.exe') { 'Executable' } elseif ($ext -eq '.reg') { 'Registry' } elseif ($ext -eq '.lnk') { 'Shortcut' } elseif ($ext -eq '.txt') { 'Instruction' } elseif ($ext -eq '.ahk') { 'AutoHotkey' } else { 'Script' }
 
       $relPath = $f.FullName.Substring($workspaceRoot.Length).TrimStart('\', '/')
       $baseStem = [System.IO.Path]::GetFileNameWithoutExtension($fileName)
@@ -1178,6 +1205,7 @@ try {
         RelativePath= $relPath
         Parameters  = $paramsList
         Dependencies= $depsList
+        IntentElevated = if ($meta.ContainsKey('IntentElevated')) { [bool]$meta.IntentElevated } else { $null }  # CRP-345: declared atom elevation
       }
 
       $toolsList.Add($toolEntry)
@@ -1203,6 +1231,7 @@ try {
   $distinctShortNames = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
 
   foreach ($t in $sortedTools) {
+    if ($t.Type -eq 'AutoHotkey') { continue }  # CRP-345: AHK atoms run only through Invoke-LcmAhkAtom
     $namesToGenerate = [System.Collections.Generic.List[string]]::new()
     if (-not [string]::IsNullOrWhiteSpace($t.ShortName)) {
       $namesToGenerate.Add($t.ShortName.Trim())
@@ -1413,11 +1442,12 @@ try {
 
     $entry = [ordered]@{
       goal              = $t.Description
-      executable        = if ($t.Type -eq "Batch") { "cmd.exe /c" } else { "pwsh.exe" }
+      executable        = if ($t.Type -eq "Batch") { "cmd.exe /c" } elseif ($t.Type -eq "AutoHotkey") { "AutoHotkey64.exe" } else { "pwsh.exe" }
       script            = $t.RelativePath.Replace("\", "/")
       parameters        = $params
       trampoline        = $trampoline
-      elevated          = if ($m -and $null -ne $m.elevated) { [bool]$m.elevated } else { $false } # CRP-343: preserved; new intents non-elevated
+      # CRP-343: preserved; new intents non-elevated unless the atom declares IntentElevated (CRP-345)
+      elevated          = if ($m -and $null -ne $m.elevated) { [bool]$m.elevated } elseif ($t.PSObject.Properties['IntentElevated'] -and $null -ne $t.IntentElevated) { [bool]$t.IntentElevated } else { $false }
       group             = $t.Group
       category          = $t.Category
       audience          = $t.Audience

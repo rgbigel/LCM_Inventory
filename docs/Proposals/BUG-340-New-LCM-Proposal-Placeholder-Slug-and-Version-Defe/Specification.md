@@ -15,10 +15,10 @@ Scope: LCM_Inventory
 Version: 10.7.4
 Affected-Repos: [LCM_Inventory]
 Severity: Medium
-Status: In Review
+Status: Completed
 Root-Cause: (1) Implementation_Plan.md / Walkthrough.md are scaffolded with generic text that reads like content and carries no placeholder marker, so no gate or reviewer can tell an empty plan from a real one; (2) ProposalManager.psm1 line 283 cuts the slug at 50 characters without notice, so a bundle folder created beforehand under the full title slug is not found and a second folder with a placeholder spec is created; (3) lcm_version is read from LCM_Inventory/data/inventory.json (workspace_ai_baseline.GlobalLCMVersion, refreshed only by an audit) instead of the authority LCM_AI/.agents/version.json.
-Plan-State: in_review
-Progress-State: verification
+Plan-State: completed
+Progress-State: completed
 ```
 
 ---

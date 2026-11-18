@@ -4,12 +4,17 @@
 .DESCRIPTION
   Module: LcmAhkAtoms
   Purpose: Provides reusable, governed automation atoms to discover the AutoHotkey v2
-  runtime, locate Window Spy, execute standalone or inline AHK scripts with timeout
-  safeguards, and surface structured execution results.
+  runtime, locate Window Spy, execute registered AHK atoms with timeout safeguards,
+  and surface structured execution results.
   Path: LCM_Inventory/modules/LcmAhkAtoms.psm1
-  Authors: Rolf, LCM_AI Engine
-  Version: 10.2.0
-  Date: 2026-11-10 14:25:00
+  Authors: Rolf, LCM_AI Engine, Claude
+  Version: 10.2.1
+  Date: 2026-11-18
+  Implementation Choices (CRP-345): AHK runs only as registered atoms. Invoke-LcmAhkAtom resolves
+  the intent in config/tool_intents.json (executable AutoHotkey64.exe, script *.ahk) and refuses
+  anything else with a log line; it also refuses an intent whose elevated flag differs from the
+  caller's elevation (CRP-343 border rule: change elevation only through the DO). Inline AHK code
+  is no longer accepted, and the file runner Invoke-LcmAhkScript is module-internal.
 .NOTES
   Part of BUG-313 / LCM UI Automation Architecture.
 #>
@@ -143,11 +148,9 @@ function Start-LcmWindowSpy {
 function Invoke-LcmAhkScript {
   <#
   .SYNOPSIS
-    Executes an AutoHotkey script file or inline code with timeout and exit-code validation.
+    Executes an AutoHotkey script file with timeout and exit-code validation (module-internal; CRP-345).
   .PARAMETER ScriptPath
-    Path to an existing .ahk script file.
-  .PARAMETER InlineScript
-    Inline AutoHotkey script content to execute via a temporary file.
+    Path to an existing .ahk script file of a registered atom.
   .PARAMETER ArgumentList
     Optional arguments passed to the AutoHotkey script.
   .PARAMETER TimeoutSeconds
@@ -157,11 +160,8 @@ function Invoke-LcmAhkScript {
   #>
   [CmdletBinding()]
   param(
-    [Parameter(Mandatory = $false)]
-    [string]$ScriptPath = '',
-
-    [Parameter(Mandatory = $false)]
-    [string]$InlineScript = '',
+    [Parameter(Mandatory = $true)]
+    [string]$ScriptPath,
 
     [Parameter(Mandatory = $false)]
     [string[]]$ArgumentList = @(),
@@ -176,17 +176,8 @@ function Invoke-LcmAhkScript {
     throw 'AutoHotkey executable was not found. Cannot execute AHK automation.'
   }
 
-  $tempFile = $null
   $targetPath = $ScriptPath
-
-  if ([string]::IsNullOrWhiteSpace($targetPath)) {
-    if ([string]::IsNullOrWhiteSpace($InlineScript)) {
-      throw 'Either -ScriptPath or -InlineScript must be provided to Invoke-LcmAhkScript.'
-    }
-    $tempFile = Join-Path $env:TEMP ('lcm_ahk_{0}.ahk' -f [guid]::NewGuid().ToString('N'))
-    Set-Content -LiteralPath $tempFile -Value $InlineScript -Encoding utf8
-    $targetPath = $tempFile
-  } elseif (-not (Test-Path -LiteralPath $targetPath -PathType Leaf)) {
+  if (-not (Test-Path -LiteralPath $targetPath -PathType Leaf)) {
     throw "The specified AutoHotkey script file was not found: $targetPath"
   }
 
@@ -201,6 +192,8 @@ function Invoke-LcmAhkScript {
 
     $outTemp = Join-Path $env:TEMP ('lcm_ahk_out_{0}.txt' -f [guid]::NewGuid().ToString('N'))
     $errTemp = Join-Path $env:TEMP ('lcm_ahk_err_{0}.txt' -f [guid]::NewGuid().ToString('N'))
+    # CRP-345: LCM_AHK_OUT gets its own file; sharing the stdout redirect file locked it (AHK error 32).
+    $atomTemp = Join-Path $env:TEMP ('lcm_ahk_atom_{0}.txt' -f [guid]::NewGuid().ToString('N'))
 
     $startInfo = @{
       FilePath               = $ahkPath
@@ -210,7 +203,7 @@ function Invoke-LcmAhkScript {
       RedirectStandardError  = $errTemp
     }
 
-    $env:LCM_AHK_OUT = $outTemp
+    $env:LCM_AHK_OUT = $atomTemp
     try {
       $process = Start-Process @startInfo
       $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
@@ -231,6 +224,8 @@ function Invoke-LcmAhkScript {
 
       $exitCode = if ($timedOut) { -1 } else { $process.ExitCode }
       $stdout = if (Test-Path -LiteralPath $outTemp) { Get-Content -LiteralPath $outTemp -Raw -ErrorAction SilentlyContinue } else { '' }
+      $atomOut = if (Test-Path -LiteralPath $atomTemp) { Get-Content -LiteralPath $atomTemp -Raw -ErrorAction SilentlyContinue } else { '' }
+      if (-not [string]::IsNullOrWhiteSpace($atomOut)) { $stdout = ("$stdout".TrimEnd() + "`n" + $atomOut).Trim() }
       $stderr = if (Test-Path -LiteralPath $errTemp) { Get-Content -LiteralPath $errTemp -Raw -ErrorAction SilentlyContinue } else { '' }
     } finally {
       Remove-Item env:LCM_AHK_OUT -ErrorAction SilentlyContinue
@@ -249,8 +244,8 @@ function Invoke-LcmAhkScript {
     }
   }
   finally {
-    if ($null -ne $tempFile -and (Test-Path -LiteralPath $tempFile)) {
-      Remove-Item -LiteralPath $tempFile -Force -ErrorAction SilentlyContinue
+    if (Test-Path -LiteralPath $atomTemp) {
+      Remove-Item -LiteralPath $atomTemp -Force -ErrorAction SilentlyContinue
     }
     if (Test-Path -LiteralPath $outTemp) {
       Remove-Item -LiteralPath $outTemp -Force -ErrorAction SilentlyContinue
@@ -261,11 +256,93 @@ function Invoke-LcmAhkScript {
   }
 }
 
+function Write-LcmAhkRefusal {
+  [CmdletBinding()]
+  param(
+    [Parameter(Mandatory = $true)]
+    [string]$Message
+  )
+
+  $logDir = Join-Path $PSScriptRoot '..\logs'
+  if (Test-Path -LiteralPath $logDir) {
+    $line = '[{0}] [WARN] {1}' -f (Get-Date -Format 'yyyy-MM-dd HH:mm:ss'), $Message
+    Add-Content -LiteralPath (Join-Path $logDir ('LcmAhkAtoms-{0}.log' -f (Get-Date -Format 'yyyyMMdd'))) -Value $line -Encoding UTF8
+  }
+}
+
+function Get-LcmAhkAtomIntents {
+  <#
+  .SYNOPSIS
+    Lists the registered AHK atoms (intents with an AutoHotkey executable and an .ahk script).
+  .PARAMETER IntentsPath
+    Path to tool_intents.json (default: LCM_Inventory/config/tool_intents.json).
+  #>
+  [CmdletBinding()]
+  param(
+    [string]$IntentsPath = (Join-Path $PSScriptRoot '..\config\tool_intents.json')
+  )
+
+  $registry = Get-Content -LiteralPath $IntentsPath -Raw -Encoding UTF8 | ConvertFrom-Json
+  $atoms = foreach ($property in $registry.intents.PSObject.Properties) {
+    $value = $property.Value
+    if ([string]$value.executable -match '(?i)autohotkey' -and [string]$value.script -match '(?i)\.ahk$') {
+      [pscustomobject]@{ Intent = $property.Name; Script = [string]$value.script; Elevated = [bool]$value.elevated; Goal = [string]$value.goal }
+    }
+  }
+  return @($atoms)
+}
+
+function Invoke-LcmAhkAtom {
+  <#
+  .SYNOPSIS
+    Runs one registered AHK atom by its intent name (CRP-345); unregistered AHK requests are refused and logged.
+  .PARAMETER Intent
+    Intent key of the atom in tool_intents.json (e.g. select-beyondcomparetab).
+  .PARAMETER ArgumentList
+    Arguments passed to the atom.
+  .PARAMETER TimeoutSeconds
+    Maximum wait time in seconds (default: 60).
+  .PARAMETER IntentsPath
+    Path to tool_intents.json (default: LCM_Inventory/config/tool_intents.json).
+  #>
+  [CmdletBinding()]
+  param(
+    [Parameter(Mandatory = $true)]
+    [string]$Intent,
+
+    [string[]]$ArgumentList = @(),
+
+    [ValidateRange(1, 600)]
+    [int]$TimeoutSeconds = 60,
+
+    [string]$IntentsPath = (Join-Path $PSScriptRoot '..\config\tool_intents.json')
+  )
+
+  $key = $Intent.ToLowerInvariant()
+  $atom = @(Get-LcmAhkAtomIntents -IntentsPath $IntentsPath | Where-Object { $_.Intent -eq $key }) | Select-Object -First 1
+  if ($null -eq $atom) {
+    Write-LcmAhkRefusal -Message "Refused AHK intent '$Intent': not a registered AHK atom (CRP-345)."
+    throw "AHK intent '$Intent' is not a registered AHK atom; refused (CRP-345)."
+  }
+
+  $principal = [Security.Principal.WindowsPrincipal]::new([Security.Principal.WindowsIdentity]::GetCurrent())
+  $callerElevated = $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+  if ($atom.Elevated -ne $callerElevated) {
+    Write-LcmAhkRefusal -Message "Refused AHK intent '$Intent': atom elevated=$($atom.Elevated), caller elevated=$callerElevated (CRP-343 border rule)."
+    throw "AHK intent '$Intent' runs with elevated=$($atom.Elevated) but the caller has elevated=$callerElevated; change elevation only through the DO (CRP-343)."
+  }
+
+  $workspaceRoot = (Resolve-Path -LiteralPath (Join-Path (Split-Path -Parent $IntentsPath) '..\..')).Path
+  $scriptPath = Join-Path $workspaceRoot $atom.Script.Replace('/', '\')
+  return Invoke-LcmAhkScript -ScriptPath $scriptPath -ArgumentList $ArgumentList -TimeoutSeconds $TimeoutSeconds
+}
+
 Export-ModuleMember -Function @(
   'Get-LcmAhkPath',
   'Test-LcmAhkAvailable',
   'Get-LcmWindowSpyPath',
   'Start-LcmWindowSpy',
-  'Invoke-LcmAhkScript'
+  'Get-LcmAhkAtomIntents',
+  'Invoke-LcmAhkAtom'
 )
 

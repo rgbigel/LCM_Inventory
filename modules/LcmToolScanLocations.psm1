@@ -6,8 +6,8 @@
   Purpose: Share canonical discovery locations between generation and invalidation.
   Path: modules/LcmToolScanLocations.psm1
   Authors: Rolf, Copilot
-  Version: 10.2.1
-  Date: 2026-10-21
+  Version: 10.2.2
+  Date: 2026-11-18
 #>
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
@@ -18,6 +18,7 @@ function Get-LcmToolScanLocations {
   @(
     @{ Group='LCM_Inventory'; Domain='LCM_Inventory'; Path='LCM_Inventory\tools'; Filter='*.ps1' }
     @{ Group='LCM_Inventory'; Domain='LCM_Inventory'; Path='LCM_Inventory\tools'; Filter='*.py' }
+    @{ Group='LCM_Inventory'; Domain='LCM_Inventory'; Path='LCM_Inventory\tools\automation'; Filter='*.ahk' }  # CRP-345: AHK atoms
     @{ Group='LCM_Tools'; Domain='LCM_Tools'; Path='LCM_Tools\tools'; Filter='*.ps1' }
     @{ Group='SystemConfiguration'; Domain='SystemConfiguration'; Path='SystemConfiguration\Source'; Filter='@*' }
     @{ Group='SystemConfiguration'; Domain='SystemConfiguration'; Path='SystemConfiguration\Source'; Filter='*.ps1' }

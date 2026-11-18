@@ -44,7 +44,8 @@
         "Description": "Text diff or command preview of the mutation."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Show-HaAuthDialog.ps1",
@@ -91,7 +92,8 @@
         "Description": "Text diff or command preview of the mutation."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-HaUpdateGate.ps1",
@@ -120,7 +122,8 @@
     "Dependencies": [
       "extract_ha_update_crps.py",
       "Show-HaAuthDialog.ps1"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-HaUpdateGate.ps1",
@@ -149,7 +152,8 @@
     "Dependencies": [
       "extract_ha_update_crps.py",
       "Show-HaAuthDialog.ps1"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Update-HaInventory.ps1",
@@ -184,7 +188,8 @@
       "build_offline_docs.py",
       "Show-LcmActiveLauncher.ps1",
       "Show-HaInventoryApp.ps1"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Update-HaInventory.ps1",
@@ -219,7 +224,8 @@
       "build_offline_docs.py",
       "Show-LcmActiveLauncher.ps1",
       "Show-HaInventoryApp.ps1"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "build_matrix.py",
@@ -237,7 +243,8 @@
     "Example": "buildmatrix",
     "RelativePath": "LCM_Inventory\\tools\\build_matrix.py",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "compare_tuya_integrations.py",
@@ -255,7 +262,8 @@
     "Example": "comparetuyaintegrations",
     "RelativePath": "LCM_Inventory\\tools\\compare_tuya_integrations.py",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "deep_tuya_scan.py",
@@ -273,7 +281,8 @@
     "Example": "deeptuyascan",
     "RelativePath": "LCM_Inventory\\tools\\deep_tuya_scan.py",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "generate_system_docs.py",
@@ -291,7 +300,8 @@
     "Example": "generatesystemdocs",
     "RelativePath": "LCM_Inventory\\tools\\generate_system_docs.py",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "run_audit.py",
@@ -309,7 +319,8 @@
     "Example": "HaAudit",
     "RelativePath": "LCM_Inventory\\tools\\run_audit.py",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "ha_inventory_collector.py",
@@ -327,25 +338,8 @@
     "Example": "hainventorycollector",
     "RelativePath": "LCM_Inventory\\tools\\ha_inventory_collector.py",
     "Parameters": [],
-    "Dependencies": null
-  },
-  {
-    "Name": "analyze_lcm_components.py",
-    "ShortName": "HaSSD06analyzelcmcomponents",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "HaSSD06",
-    "Domain": "HaSSD06",
-    "Type": "Python",
-    "Category": "Utility",
-    "Description": "analyze_lcm_components execution tool.",
-    "Example": "analyzelcmcomponents",
-    "RelativePath": "HaSSD06\\analyze_lcm_components.py",
-    "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "analyze_lcm_components.py",
@@ -363,7 +357,27 @@
     "Example": "analyzelcmcomponents",
     "RelativePath": "LCM_Inventory\\tools\\analyze_lcm_components.py",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
+  },
+  {
+    "Name": "analyze_lcm_components.py",
+    "ShortName": "HaSSD06analyzelcmcomponents",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "HaSSD06",
+    "Domain": "HaSSD06",
+    "Type": "Python",
+    "Category": "Utility",
+    "Description": "analyze_lcm_components execution tool.",
+    "Example": "analyzelcmcomponents",
+    "RelativePath": "HaSSD06\\analyze_lcm_components.py",
+    "Parameters": [],
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "check_specific.py",
@@ -381,7 +395,8 @@
     "Example": "checkspecific",
     "RelativePath": "HaSSD06\\check_specific.py",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "check_specific.py",
@@ -399,25 +414,8 @@
     "Example": "checkspecific",
     "RelativePath": "LCM_Inventory\\tools\\check_specific.py",
     "Parameters": [],
-    "Dependencies": null
-  },
-  {
-    "Name": "deep_device_scan.py",
-    "ShortName": "HaSSD06deepdevicescan",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "HaSSD06",
-    "Domain": "HaSSD06",
-    "Type": "Python",
-    "Category": "Utility",
-    "Description": "deep_device_scan execution tool.",
-    "Example": "deepdevicescan",
-    "RelativePath": "LCM_Inventory\\tools\\deep_device_scan.py",
-    "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "deep_device_scan.py",
@@ -435,7 +433,27 @@
     "Example": "deepdevicescan",
     "RelativePath": "HaSSD06\\deep_device_scan.py",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
+  },
+  {
+    "Name": "deep_device_scan.py",
+    "ShortName": "HaSSD06deepdevicescan",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "HaSSD06",
+    "Domain": "HaSSD06",
+    "Type": "Python",
+    "Category": "Utility",
+    "Description": "deep_device_scan execution tool.",
+    "Example": "deepdevicescan",
+    "RelativePath": "LCM_Inventory\\tools\\deep_device_scan.py",
+    "Parameters": [],
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "extract_ha_update_crps.py",
@@ -453,7 +471,8 @@
     "Example": "extracthaupdatecrps",
     "RelativePath": "LCM_Inventory\\tools\\extract_ha_update_crps.py",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "extract_ha_update_crps.py",
@@ -471,25 +490,8 @@
     "Example": "extracthaupdatecrps",
     "RelativePath": "HaSSD06\\extract_ha_update_crps.py",
     "Parameters": [],
-    "Dependencies": null
-  },
-  {
-    "Name": "invoke_ha_backup.py",
-    "ShortName": "HaSSD06habackup",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "HaSSD06",
-    "Domain": "HaSSD06",
-    "Type": "Python",
-    "Category": "Utility",
-    "Description": "invoke_ha_backup execution tool.",
-    "Example": "habackup",
-    "RelativePath": "LCM_Inventory\\tools\\invoke_ha_backup.py",
-    "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "invoke_ha_backup.py",
@@ -507,11 +509,12 @@
     "Example": "habackup",
     "RelativePath": "HaSSD06\\tools\\invoke_ha_backup.py",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
-    "Name": "invoke_ha_core_update.py",
-    "ShortName": "HaSSD06hacoreupdate",
+    "Name": "invoke_ha_backup.py",
+    "ShortName": "HaSSD06habackup",
     "Aliases": null,
     "Role": "Utility",
     "Audience": "Developer",
@@ -521,11 +524,12 @@
     "Domain": "HaSSD06",
     "Type": "Python",
     "Category": "Utility",
-    "Description": "invoke_ha_core_update execution tool.",
-    "Example": "hacoreupdate",
-    "RelativePath": "HaSSD06\\tools\\invoke_ha_core_update.py",
+    "Description": "invoke_ha_backup execution tool.",
+    "Example": "habackup",
+    "RelativePath": "LCM_Inventory\\tools\\invoke_ha_backup.py",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "invoke_ha_core_update.py",
@@ -543,7 +547,27 @@
     "Example": "hacoreupdate",
     "RelativePath": "LCM_Inventory\\tools\\invoke_ha_core_update.py",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
+  },
+  {
+    "Name": "invoke_ha_core_update.py",
+    "ShortName": "HaSSD06hacoreupdate",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "HaSSD06",
+    "Domain": "HaSSD06",
+    "Type": "Python",
+    "Category": "Utility",
+    "Description": "invoke_ha_core_update execution tool.",
+    "Example": "hacoreupdate",
+    "RelativePath": "HaSSD06\\tools\\invoke_ha_core_update.py",
+    "Parameters": [],
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "list_all_updates.py",
@@ -561,7 +585,8 @@
     "Example": "HaListUpdates",
     "RelativePath": "HaSSD06\\list_all_updates.py",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "list_all_updates.py",
@@ -579,7 +604,8 @@
     "Example": "HaListUpdates",
     "RelativePath": "LCM_Inventory\\tools\\list_all_updates.py",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "inspect_ha_logs.py",
@@ -597,7 +623,8 @@
     "Example": "HaLogs",
     "RelativePath": "LCM_Inventory\\tools\\inspect_ha_logs.py",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "inspect_ha_logs.py",
@@ -615,7 +642,8 @@
     "Example": "HaLogs",
     "RelativePath": "HaSSD06\\inspect_ha_logs.py",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Build-HaInventoryViewer.ps1",
@@ -652,7 +680,8 @@
       "Update-HaInventory.ps1",
       "Show-HaInventoryApp.ps1",
       "Invoke-InteractiveDesktop.ps1"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Build-HaInventoryViewer.ps1",
@@ -689,25 +718,8 @@
       "Update-HaInventory.ps1",
       "Show-HaInventoryApp.ps1",
       "Invoke-InteractiveDesktop.ps1"
-    ]
-  },
-  {
-    "Name": "extract_ha_central_registry.py",
-    "ShortName": "HaSSD06Inventoryextracthacentralregistry",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "HaSSD06",
-    "Domain": "HaSSD06_Inventory",
-    "Type": "Python",
-    "Category": "Utility",
-    "Description": "extract_ha_central_registry execution tool.",
-    "Example": "extracthacentralregistry",
-    "RelativePath": "LCM_Inventory\\tools\\extract_ha_central_registry.py",
-    "Parameters": [],
-    "Dependencies": null
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "extract_ha_central_registry.py",
@@ -725,11 +737,12 @@
     "Example": "extracthacentralregistry",
     "RelativePath": "HaSSD06_Inventory\\tools\\extract_ha_central_registry.py",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
-    "Name": "Invoke-HaRenameCascade.ps1",
-    "ShortName": "HaSSD06InventoryHaRenameCascade",
+    "Name": "extract_ha_central_registry.py",
+    "ShortName": "HaSSD06Inventoryextracthacentralregistry",
     "Aliases": null,
     "Role": "Utility",
     "Audience": "Developer",
@@ -737,98 +750,14 @@
     "NoExit": true,
     "Group": "HaSSD06",
     "Domain": "HaSSD06_Inventory",
-    "Type": "PowerShell",
+    "Type": "Python",
     "Category": "Utility",
-    "Description": "Invoke-HaRenameCascade execution tool.",
-    "Example": "HaRenameCascade",
-    "RelativePath": "LCM_Inventory\\tools\\Invoke-HaRenameCascade.ps1",
-    "Parameters": [
-      {
-        "Name": "DeviceId",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Target Home Assistant device ID to rename."
-      },
-      {
-        "Name": "EntityId",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Target Home Assistant entity ID to rename."
-      },
-      {
-        "Name": "NewName",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "New friendly name for the target device or entity."
-      },
-      {
-        "Name": "NewEntityId",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "New entity ID (e.g. 'switch.kueche_sh1_relay') when renaming an entity directly."
-      },
-      {
-        "Name": "Pattern",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Pattern template used for generation (e.g. '<Area> <Device>', '<Area> <Manufacturer> <Model>')."
-      },
-      {
-        "Name": "CascadeChildren",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "When specified with -DeviceId, cascades renaming to all child entities belonging to the device."
-      },
-      {
-        "Name": "StagingFile",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Path to a pre-staged transaction JSON file created by the Subsystem Inventory Explorer UI."
-      },
-      {
-        "Name": "BackupId",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Verified pre-change Home Assistant backup snapshot identifier."
-      },
-      {
-        "Name": "DryRun",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Simulates the cascade and displays diff without modifying any inventory files or registries."
-      },
-      {
-        "Name": "Rollback",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Rolls back a previously staged or executed transaction using its TransactionId."
-      },
-      {
-        "Name": "TransactionId",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "The unique transaction ID to apply, verify, or rollback."
-      },
-      {
-        "Name": "Instance",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "HaSSD06",
-        "Description": "Target Home Assistant instance name (Default: 'HaSSD06')."
-      }
-    ],
-    "Dependencies": "Show-HaInventoryApp.ps1"
+    "Description": "extract_ha_central_registry execution tool.",
+    "Example": "extracthacentralregistry",
+    "RelativePath": "LCM_Inventory\\tools\\extract_ha_central_registry.py",
+    "Parameters": [],
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-HaRenameCascade.ps1",
@@ -931,7 +860,112 @@
         "Description": "Target Home Assistant instance name (Default: 'HaSSD06')."
       }
     ],
-    "Dependencies": "Show-HaInventoryApp.ps1"
+    "Dependencies": "Show-HaInventoryApp.ps1",
+    "IntentElevated": null
+  },
+  {
+    "Name": "Invoke-HaRenameCascade.ps1",
+    "ShortName": "HaSSD06InventoryHaRenameCascade",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "HaSSD06",
+    "Domain": "HaSSD06_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Invoke-HaRenameCascade execution tool.",
+    "Example": "HaRenameCascade",
+    "RelativePath": "LCM_Inventory\\tools\\Invoke-HaRenameCascade.ps1",
+    "Parameters": [
+      {
+        "Name": "DeviceId",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Target Home Assistant device ID to rename."
+      },
+      {
+        "Name": "EntityId",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Target Home Assistant entity ID to rename."
+      },
+      {
+        "Name": "NewName",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "New friendly name for the target device or entity."
+      },
+      {
+        "Name": "NewEntityId",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "New entity ID (e.g. 'switch.kueche_sh1_relay') when renaming an entity directly."
+      },
+      {
+        "Name": "Pattern",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Pattern template used for generation (e.g. '<Area> <Device>', '<Area> <Manufacturer> <Model>')."
+      },
+      {
+        "Name": "CascadeChildren",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "When specified with -DeviceId, cascades renaming to all child entities belonging to the device."
+      },
+      {
+        "Name": "StagingFile",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Path to a pre-staged transaction JSON file created by the Subsystem Inventory Explorer UI."
+      },
+      {
+        "Name": "BackupId",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Verified pre-change Home Assistant backup snapshot identifier."
+      },
+      {
+        "Name": "DryRun",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Simulates the cascade and displays diff without modifying any inventory files or registries."
+      },
+      {
+        "Name": "Rollback",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Rolls back a previously staged or executed transaction using its TransactionId."
+      },
+      {
+        "Name": "TransactionId",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "The unique transaction ID to apply, verify, or rollback."
+      },
+      {
+        "Name": "Instance",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "HaSSD06",
+        "Description": "Target Home Assistant instance name (Default: 'HaSSD06')."
+      }
+    ],
+    "Dependencies": "Show-HaInventoryApp.ps1",
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-HaService.ps1",
@@ -985,7 +1019,8 @@
         "Description": "Target Home Assistant instance name (Default: 'HaSSD06')."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-HaService.ps1",
@@ -1039,7 +1074,8 @@
         "Description": "Target Home Assistant instance name (Default: 'HaSSD06')."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Show-HaInventoryApp.ps1",
@@ -1097,7 +1133,8 @@
       "build_offline_docs.py",
       "Show-LcmActiveLauncher.ps1",
       "Invoke-InteractiveDesktop.ps1"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Register-BleSupervisionTask.ps1",
@@ -1137,7 +1174,8 @@
         "Description": "Root directory of the LCM multi-repository workspace."
       }
     ],
-    "Dependencies": "verify_ble_stability.py"
+    "Dependencies": "verify_ble_stability.py",
+    "IntentElevated": null
   },
   {
     "Name": "scan_community_issues.py",
@@ -1155,7 +1193,8 @@
     "Example": "scancommunityissues",
     "RelativePath": "HaSSD06\\scan_community_issues.py",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "search_sys_sensors.py",
@@ -1173,7 +1212,8 @@
     "Example": "searchsyssensors",
     "RelativePath": "HaSSD06\\search_sys_sensors.py",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Test-RepoReadiness.ps1",
@@ -1199,7 +1239,8 @@
         "Description": "Runs fast structural, governance, and static analysis gates without triggering extended test suites"
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Test-RepoReadiness.ps1",
@@ -1225,7 +1266,8 @@
         "Description": "Runs fast structural, governance, and static analysis gates without triggering extended test suites"
       }
     ],
-    "Dependencies": "Sync-LCMResearchSnapshot.ps1"
+    "Dependencies": "Sync-LCMResearchSnapshot.ps1",
+    "IntentElevated": null
   },
   {
     "Name": "mcp_ha_readonly.py",
@@ -1243,7 +1285,8 @@
     "Example": "mcphareadonly",
     "RelativePath": "LCM_Inventory\\tools\\mcp_ha_readonly.py",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Register-BleSupervisionTask.ps1",
@@ -1283,7 +1326,8 @@
         "Description": "Root directory of the LCM multi-repository workspace."
       }
     ],
-    "Dependencies": "verify_ble_stability.py"
+    "Dependencies": "verify_ble_stability.py",
+    "IntentElevated": null
   },
   {
     "Name": "scan_community_issues.py",
@@ -1301,7 +1345,8 @@
     "Example": "scancommunityissues",
     "RelativePath": "LCM_Inventory\\tools\\scan_community_issues.py",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "search_sys_sensors.py",
@@ -1319,7 +1364,8 @@
     "Example": "searchsyssensors",
     "RelativePath": "LCM_Inventory\\tools\\search_sys_sensors.py",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Show-HaInventoryApp.ps1",
@@ -1377,7 +1423,31 @@
       "build_offline_docs.py",
       "Show-LcmActiveLauncher.ps1",
       "Invoke-InteractiveDesktop.ps1"
-    ]
+    ],
+    "IntentElevated": null
+  },
+  {
+    "Name": "Test-RepoReadiness.ps1",
+    "ShortName": "TestHaRepoReady",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "HaSSD06",
+    "Domain": "HaSSD06",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Test-RepoReadiness execution tool.",
+    "Example": "TestRepoReadiness",
+    "RelativePath": "HaSSD06_Inventory\\tools\\Test-RepoReadiness.ps1",
+    "Parameters": [],
+    "Dependencies": [
+      "RepoQualityGates.psm1",
+      "Test-GeneralReadiness.ps1",
+      "Module: (Resolve-Path $modulePath)"
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Test-RepoReadiness.ps1",
@@ -1408,29 +1478,8 @@
       "Test-GeneralReadiness.ps1",
       "Update-ToolCatalog.ps1",
       "Module: (Resolve-Path $modulePath)"
-    ]
-  },
-  {
-    "Name": "Test-RepoReadiness.ps1",
-    "ShortName": "TestHaRepoReady",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "HaSSD06",
-    "Domain": "HaSSD06",
-    "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "Test-RepoReadiness execution tool.",
-    "Example": "TestRepoReadiness",
-    "RelativePath": "HaSSD06_Inventory\\tools\\Test-RepoReadiness.ps1",
-    "Parameters": [],
-    "Dependencies": [
-      "RepoQualityGates.psm1",
-      "Test-GeneralReadiness.ps1",
-      "Module: (Resolve-Path $modulePath)"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Test-RepoReadiness.ps1",
@@ -1461,7 +1510,8 @@
       "Test-GeneralReadiness.ps1",
       "Update-ToolCatalog.ps1",
       "Module: (Resolve-Path $modulePath)"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Show-SuperController.ps1",
@@ -1504,7 +1554,8 @@
     "Dependencies": [
       "Show-ToolsExplorer.ps1",
       "Show-LcmControl.ps1"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-FailureModeAnalysis.ps1",
@@ -1594,7 +1645,8 @@
       "Show-FailureAnalysis.ps1",
       "Module: (Join-Path $inventoryRoot 'modules\\FailureModeAnalysis.psm1')",
       "Module: (Join-Path $inventoryRoot 'modules\\ProposalManager.psm1')"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Get-SystemPortInventory.ps1",
@@ -1641,7 +1693,8 @@
         "Description": "Displays extended process command line arguments and module paths."
       }
     ],
-    "Dependencies": "Everything"
+    "Dependencies": "Everything",
+    "IntentElevated": null
   },
   {
     "Name": "Show-LcmDaemon.ps1",
@@ -1730,7 +1783,8 @@
         "Description": "Safely stops and restarts the background daemon."
       }
     ],
-    "Dependencies": "LcmDesktopDaemon.ps1"
+    "Dependencies": "LcmDesktopDaemon.ps1",
+    "IntentElevated": null
   },
   {
     "Name": "Show-FailureAnalysis.ps1",
@@ -1783,7 +1837,8 @@
       "LcmStandardDisplay.psm1",
       "Module: (Join-Path $inventoryRoot 'modules\\LcmDisplayVersion.psm1')",
       "Module: (Join-Path $inventoryRoot 'modules\\FailureAnalysisHtml.psm1')"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Show-LastLog.ps1",
@@ -1856,7 +1911,8 @@
       "Search-Everything.ps1",
       "Everything",
       "es.exe"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Test-MacriumCurrentBaseline.ps1",
@@ -1889,7 +1945,8 @@
         "Description": ""
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-LcmDo.ps1",
@@ -1956,7 +2013,8 @@
     "Dependencies": [
       "KillLogitechUpdateFull.ps1",
       "es.exe"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Show-LcmControl.ps1",
@@ -2076,7 +2134,8 @@
     "Dependencies": [
       "LcmStandardDisplay.psm1",
       "Module: (Join-Path $PSScriptRoot '..\\modules\\LcmDisplayVersion.psm1')"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Show-CmdFolderAnalysis.ps1",
@@ -2122,7 +2181,8 @@
       "DoShell.cmd",
       "Invoke-InteractiveDesktop.ps1",
       "git.exe"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Show-HaInventory.ps1",
@@ -2155,7 +2215,8 @@
         "Description": "Queries live Home Assistant API to refresh data/subsystem_inventory.json before rendering."
       }
     ],
-    "Dependencies": "Show-HaInventoryApp.ps1"
+    "Dependencies": "Show-HaInventoryApp.ps1",
+    "IntentElevated": null
   },
   {
     "Name": "Show-ToolsExplorer.ps1",
@@ -2261,7 +2322,8 @@
       "LcmToolCatalog.psm1",
       "LcmStandardDisplay.psm1",
       "Module: (Join-Path $PSScriptRoot '..\\modules\\LcmDisplayVersion.psm1')"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Restore-SystemSettings.ps1",
@@ -2282,7 +2344,8 @@
     "Dependencies": [
       "Everything",
       "Everything.exe"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Test-LCM_Readiness.ps1",
@@ -2303,7 +2366,8 @@
     "Dependencies": [
       "LCM_QualityGates.psm1",
       "Update-ToolCatalog.ps1"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Dismount-MacriumCurrentBaseline.ps1",
@@ -2360,7 +2424,8 @@
     "Dependencies": [
       "run.cmd",
       "LcmMacriumAtoms.psm1"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-MacriumMountWorker.ps1",
@@ -2418,7 +2483,8 @@
       "LcmMacriumAtoms.psm1",
       "LcmAhkAtoms.psm1",
       "Module: (Join-Path $inventoryRoot 'modules\\LcmMacriumAtoms.psm1')"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Mount-MacriumLatestBaseline.ps1",
@@ -2500,7 +2566,8 @@
       "Invoke-MacriumMountWorker.ps1",
       "Module: (Join-Path $inventoryRoot 'modules\\LcmMacriumAtoms.psm1')",
       "Module: (Join-Path $inventoryRoot 'modules\\LcmDoClient.psm1')"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-MacriumBcrReview.ps1",
@@ -2571,7 +2638,8 @@
     "Dependencies": [
       "ProposalManager.psm1",
       "Invoke-MacriumDailyBcrBaseline.ps1"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Show-Actions.ps1",
@@ -2625,7 +2693,8 @@
         "Description": "Opens the latest action log in Notepad on Session 1 interactive desktop."
       }
     ],
-    "Dependencies": "Invoke-InteractiveDesktop.ps1"
+    "Dependencies": "Invoke-InteractiveDesktop.ps1",
+    "IntentElevated": null
   },
   {
     "Name": "Search-Everything.ps1",
@@ -2712,7 +2781,46 @@
       "Everything",
       "es.exe",
       "EVERYTHING"
-    ]
+    ],
+    "IntentElevated": null
+  },
+  {
+    "Name": "Select-BeyondCompareTab.ahk",
+    "ShortName": "BeyondCompareTabAtom",
+    "Aliases": null,
+    "Role": "Atom",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": false,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "AutoHotkey",
+    "Category": "Beyond Compare Review",
+    "Description": "AHK atom: lists the tabs of one Beyond Compare window, activates the tab with a title prefix, or activates and refreshes it (CRP-346).",
+    "Example": "Invoke-LcmAhkAtom -Intent select-beyondcomparetab -ArgumentList <hwnd>, refresh, _LCM",
+    "RelativePath": "LCM_Inventory\\tools\\automation\\Select-BeyondCompareTab.ahk",
+    "Parameters": [],
+    "Dependencies": "BCompare.exe",
+    "IntentElevated": false
+  },
+  {
+    "Name": "Mount-MacriumBrowseDialog.ahk",
+    "ShortName": "MacriumBrowseDialogAtom",
+    "Aliases": null,
+    "Role": "Atom",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": false,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "AutoHotkey",
+    "Category": "Macrium BCR Baseline",
+    "Description": "AHK atom: completes the Macrium Reflect Browse Image dialog (writable mount); elevated, called by Invoke-MacriumMountWorker.ps1.",
+    "Example": "Invoke-LcmAhkAtom -Intent mount-macriumbrowsedialog -ArgumentList 60",
+    "RelativePath": "LCM_Inventory\\tools\\automation\\Mount-MacriumBrowseDialog.ahk",
+    "Parameters": [],
+    "Dependencies": null,
+    "IntentElevated": true
   },
   {
     "Name": "LcmDesktopDaemon.ps1",
@@ -2775,7 +2883,8 @@
       "LcmDisplayHttp.psm1",
       "Remove-LcmShortName.ps1",
       "Module: (Join-Path $lcdRoot 'modules\\LcmDisplayHttp.psm1')"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Register-LcmDesktopDaemon.ps1",
@@ -2836,7 +2945,8 @@
         "Description": "Configures the target port (Default: 9876)."
       }
     ],
-    "Dependencies": "LcmDesktopDaemon.ps1"
+    "Dependencies": "LcmDesktopDaemon.ps1",
+    "IntentElevated": null
   },
   {
     "Name": "Show-ToolIndex.ps1",
@@ -2939,7 +3049,8 @@
         "Description": "Filter to Developer / maintenance tools"
       }
     ],
-    "Dependencies": "Show-Tools.ps1"
+    "Dependencies": "Show-Tools.ps1",
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-LcmDisplayRender.ps1",
@@ -2983,7 +3094,8 @@
       "LcmDisplayDependencies.psm1",
       "Update-ToolCatalog.ps1",
       "Module: (Join-Path $root 'modules\\LcmDisplayDependencies.psm1')"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-MacriumDailyBcrBaseline.ps1",
@@ -3119,7 +3231,8 @@
       "BCompare",
       "Module: (Join-Path $inventoryRoot 'modules\\LcmMacriumAtoms.psm1')",
       "Module: (Join-Path $inventoryRoot 'modules\\LcmDoClient.psm1')"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Absorb-LcmContextRemark.ps1",
@@ -3166,7 +3279,8 @@
         "Description": "Performs contradiction analysis between the remark and the target CRP specification without mutating files."
       }
     ],
-    "Dependencies": "ProposalManager.psm1"
+    "Dependencies": "ProposalManager.psm1",
+    "IntentElevated": null
   },
   {
     "Name": "Advance-Governance.ps1",
@@ -3234,7 +3348,8 @@
         "Description": "Custom path to the real-repository test plan file"
       }
     ],
-    "Dependencies": "LCM_QualityGates.psm1"
+    "Dependencies": "LCM_QualityGates.psm1",
+    "IntentElevated": null
   },
   {
     "Name": "APPLY.ps1",
@@ -3267,7 +3382,8 @@
         "Description": "Suppresses writing audit telemetry logs."
       }
     ],
-    "Dependencies": "LoadFixes.ps1"
+    "Dependencies": "LoadFixes.ps1",
+    "IntentElevated": null
   },
   {
     "Name": "Archive-Clean.ps1",
@@ -3321,7 +3437,8 @@
         "Description": "Displays detailed information for each evaluated archived conversation."
       }
     ],
-    "Dependencies": "Python 3.x (with built-in sqlite3)"
+    "Dependencies": "Python 3.x (with built-in sqlite3)",
+    "IntentElevated": null
   },
   {
     "Name": "Archive-Conversations.ps1",
@@ -3375,7 +3492,8 @@
         "Description": ""
       }
     ],
-    "Dependencies": "Python 3.x (with built-in sqlite3)"
+    "Dependencies": "Python 3.x (with built-in sqlite3)",
+    "IntentElevated": null
   },
   {
     "Name": "Archive-LcmDaemonLogs.ps1",
@@ -3408,7 +3526,8 @@
         "Description": "Report archive actions without writing files."
       }
     ],
-    "Dependencies": "LCM_Context.psm1"
+    "Dependencies": "LCM_Context.psm1",
+    "IntentElevated": null
   },
   {
     "Name": "AuthorizeMasterUser.ps1",
@@ -3469,7 +3588,8 @@
         "Description": "Suppress automatic UAC elevation check"
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-BcrDispatcher.ps1",
@@ -3509,7 +3629,8 @@
         "Description": "Resolve and display the BCR cohort without launching review"
       }
     ],
-    "Dependencies": "Invoke-ProposalAction.ps1"
+    "Dependencies": "Invoke-ProposalAction.ps1",
+    "IntentElevated": null
   },
   {
     "Name": "build_offline_docs.py",
@@ -3527,7 +3648,8 @@
     "Example": "buildofflinedocs",
     "RelativePath": "LCM_Inventory\\tools\\build_offline_docs.py",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-CallerIntentReconciliation.ps1",
@@ -3574,7 +3696,8 @@
         "Description": ""
       }
     ],
-    "Dependencies": "BCompare"
+    "Dependencies": "BCompare",
+    "IntentElevated": null
   },
   {
     "Name": "Clear-BCReviewTemp.ps1",
@@ -3621,7 +3744,8 @@
         "Description": "Suppress automatically opening Windows File Explorer"
       }
     ],
-    "Dependencies": "BCompare.exe"
+    "Dependencies": "BCompare.exe",
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-CompactBCompareReview.ps1",
@@ -3681,7 +3805,8 @@
       "BCompare",
       "bcompare",
       "BCompare.exe"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Complete-ReviewCohort.ps1",
@@ -3724,7 +3849,8 @@
     "Dependencies": [
       "ProposalManager.psm1",
       "Submit-ReviewResult.ps1"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Complete-ToolDocumentation.ps1",
@@ -3778,7 +3904,8 @@
         "Description": ""
       }
     ],
-    "Dependencies": "LcmDependencyIndex.psm1"
+    "Dependencies": "LcmDependencyIndex.psm1",
+    "IntentElevated": null
   },
   {
     "Name": "Create-LCM_Baseline.ps1",
@@ -3811,7 +3938,8 @@
         "Description": "Description of baseline release"
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Create-LcmTool.ps1",
@@ -3904,7 +4032,8 @@
       "None",
       "Test-NetworkAdapter.ps1",
       "Update-ToolCatalog.ps1"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Disable-WakeDevices.ps1",
@@ -3922,7 +4051,8 @@
     "Example": "DisableWakeDevices",
     "RelativePath": "LCM_Inventory\\tools\\Disable-WakeDevices.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-ElevatedTest.ps1",
@@ -3962,7 +4092,8 @@
         "Description": "Runs tests in-process even if elevated privileges are requested."
       }
     ],
-    "Dependencies": "Module: Pester"
+    "Dependencies": "Module: Pester",
+    "IntentElevated": null
   },
   {
     "Name": "Export-LcmElevationPolicy.py",
@@ -3980,7 +4111,8 @@
     "Example": "ExportLcmElevationPolicy",
     "RelativePath": "LCM_Inventory\\tools\\Export-LcmElevationPolicy.py",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Export-LcmKnowledgeBase.ps1",
@@ -4027,7 +4159,8 @@
         "Description": "Accepted for backward compatibility."
       }
     ],
-    "Dependencies": "Sync-LCMResearchSnapshot.ps1"
+    "Dependencies": "Sync-LCMResearchSnapshot.ps1",
+    "IntentElevated": null
   },
   {
     "Name": "Export-LCMRules.ps1",
@@ -4067,7 +4200,8 @@
         "Description": "Optional mirror directory path (e.g. Google Drive sync folder)."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Find-ChangeRequest.ps1",
@@ -4121,7 +4255,8 @@
         "Description": "Filter by author"
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Fix-Documentation.ps1",
@@ -4189,7 +4324,8 @@
         "Description": "Emit selected scopes and proposed changes"
       }
     ],
-    "Dependencies": "Invoke-MacriumBcrReview.ps1"
+    "Dependencies": "Invoke-MacriumBcrReview.ps1",
+    "IntentElevated": null
   },
   {
     "Name": "Format-LcmMarkdownDiagrams.ps1",
@@ -4264,7 +4400,8 @@
         "Description": "Applies diagram formatting and font-size rule enforcement in-place"
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Generate-Log.ps1",
@@ -4311,7 +4448,8 @@
         "Description": "Path to authoritative Proposals.json ledger."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Get-GeminiInboxStatus.ps1",
@@ -4372,7 +4510,8 @@
         "Description": "Emits acknowledgement objects to pipeline."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Get-LCM_Repositories.ps1",
@@ -4419,7 +4558,8 @@
         "Description": "Output discovered repositories as JSON."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Get-LcmTablePrintAtom.ps1",
@@ -4459,7 +4599,8 @@
         "Description": "Returns an HTML <script src=\"...\"> tag referencing the asset path."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Get-OpenProposals.ps1",
@@ -4499,7 +4640,8 @@
         "Description": "Filter by origin repository name"
       }
     ],
-    "Dependencies": "ProposalManager.psm1"
+    "Dependencies": "ProposalManager.psm1",
+    "IntentElevated": null
   },
   {
     "Name": "Get-RealRepoActionPlan.ps1",
@@ -4528,7 +4670,8 @@
     "Dependencies": [
       "LCM_QualityGates.psm1",
       "Get-RealRepoTargetProfile.ps1"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Get-RealRepoTargetProfile.ps1",
@@ -4554,7 +4697,8 @@
         "Description": "Output the profile in JSON format."
       }
     ],
-    "Dependencies": "LCM_QualityGates.psm1"
+    "Dependencies": "LCM_QualityGates.psm1",
+    "IntentElevated": null
   },
   {
     "Name": "Get-RealRepoTestPlan.ps1",
@@ -4580,7 +4724,8 @@
         "Description": "Output the test plan state in JSON format."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Get-ReposUnderReview.ps1",
@@ -4606,7 +4751,8 @@
         "Description": "Root workspace directory to inspect for repositories under review"
       }
     ],
-    "Dependencies": "ProposalManager.psm1"
+    "Dependencies": "ProposalManager.psm1",
+    "IntentElevated": null
   },
   {
     "Name": "Initialize-AdminMode.ps1",
@@ -4624,7 +4770,8 @@
     "Example": "InitializeAdminMode",
     "RelativePath": "LCM_Inventory\\tools\\Initialize-AdminMode.ps1",
     "Parameters": [],
-    "Dependencies": "AdminMode.psm1"
+    "Dependencies": "AdminMode.psm1",
+    "IntentElevated": null
   },
   {
     "Name": "Initialize-GitWorld.ps1",
@@ -4678,7 +4825,8 @@
         "Description": "Simulate actions without modifying files or junctions"
       }
     ],
-    "Dependencies": "LCM_Context.psm1"
+    "Dependencies": "LCM_Context.psm1",
+    "IntentElevated": null
   },
   {
     "Name": "Initialize-RealRepoMethodInstance.ps1",
@@ -4725,7 +4873,8 @@
         "Description": "Output initialization result as JSON."
       }
     ],
-    "Dependencies": "LCM_QualityGates.psm1"
+    "Dependencies": "LCM_QualityGates.psm1",
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-InteractiveDesktop.ps1",
@@ -4798,7 +4947,8 @@
       "BCompare.exe",
       "bcompare.exe",
       "bcompare"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-LcmAction.ps1",
@@ -4880,7 +5030,8 @@
         "Description": "Additional command-line parameters and arguments passed directly to the target tool"
       }
     ],
-    "Dependencies": "Register-LcmDesktopDaemon.ps1"
+    "Dependencies": "Register-LcmDesktopDaemon.ps1",
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-LCM_Audit.ps1",
@@ -4898,7 +5049,8 @@
     "Example": "LCMAudit",
     "RelativePath": "LCM_Inventory\\tools\\Invoke-LCM_Audit.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-LcmDecisionGate.ps1",
@@ -4964,7 +5116,8 @@
       "Show-LcmFailureDiagnostic.ps1",
       "Invoke-LcmSystemOneClient.ps1",
       "Invoke-LcmStageTwoFallback.ps1"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-LcmGiantReview.ps1",
@@ -4982,7 +5135,8 @@
     "Example": "LcmGiantReview",
     "RelativePath": "LCM_Inventory\\tools\\Invoke-LcmGiantReview.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-LCM_GoodMorning.ps1",
@@ -5050,7 +5204,8 @@
       "Test-Guardrail.ps1",
       "Invoke-MacriumDailyBcrBaseline.ps1",
       "Module: (Join-Path $inventoryRoot 'modules\\LcmSessionStateAtoms.psm1')"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-LCM_GoodNight.ps1",
@@ -5126,7 +5281,8 @@
       "Show-LcmControl.ps1",
       "Test-Guardrail.ps1",
       "Invoke-LCM_Push.ps1"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-LCM_Maintenance.ps1",
@@ -5180,7 +5336,8 @@
         "Description": "Execute cleanup in dry-run simulation mode without modifying or deleting files"
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-LcmPathMigration.ps1",
@@ -5220,7 +5377,8 @@
         "Description": "Write changes. Without it, only a report is printed."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-LcmProtocol.ps1",
@@ -5246,7 +5404,8 @@
         "Description": "The incoming lcm:// URI string (e.g. lcm://run?tool=Kill-LogitechUpdate.ps1&elevated=true)."
       }
     ],
-    "Dependencies": "Invoke-InteractiveDesktop.ps1"
+    "Dependencies": "Invoke-InteractiveDesktop.ps1",
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-LCM_Push.ps1",
@@ -5339,7 +5498,8 @@
       "sync_proposals_db.py",
       "Clear-BCReviewTemp.ps1",
       "Module: (Join-Path $workspaceRoot 'LCM_Inventory\\modules\\ProposalManager.psm1')"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-LcmPushRequalification.ps1",
@@ -5382,7 +5542,8 @@
     "Dependencies": [
       "LCM_PushEligibility.psm1",
       "LcmPushRequalification.psm1"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-LcmStageTwoFallback.ps1",
@@ -5418,7 +5579,8 @@
     "Dependencies": [
       "Test-RepoReadiness.ps1",
       "Test-GeneralReadiness.ps1"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-LcmSystemOneClient.ps1",
@@ -5472,7 +5634,8 @@
         "Description": "Maximum request timeout in milliseconds."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-LearnedAdviceReview.ps1",
@@ -5540,7 +5703,8 @@
         "Description": "Only report; exit 1 if candidates are pending."
       }
     ],
-    "Dependencies": "LCM_Context.psm1"
+    "Dependencies": "LCM_Context.psm1",
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-Level1AnalysisRefinement.ps1",
@@ -5580,7 +5744,8 @@
         "Description": ""
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Link-LcmLearnedAdvice.ps1",
@@ -5634,7 +5799,8 @@
         "Description": "Previews mutations without updating files."
       }
     ],
-    "Dependencies": "ProposalManager.psm1"
+    "Dependencies": "ProposalManager.psm1",
+    "IntentElevated": null
   },
   {
     "Name": "LoadAtoms.ps1",
@@ -5652,7 +5818,8 @@
     "Example": "LoadAtoms",
     "RelativePath": "LCM_Inventory\\tools\\LoadAtoms.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "LoadFixes.ps1",
@@ -5670,7 +5837,8 @@
     "Example": "LoadFixes",
     "RelativePath": "LCM_Inventory\\tools\\LoadFixes.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "LoadMethods.ps1",
@@ -5688,7 +5856,8 @@
     "Example": "LoadMethods",
     "RelativePath": "LCM_Inventory\\tools\\LoadMethods.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "LoadRules.ps1",
@@ -5706,7 +5875,8 @@
     "Example": "LoadRules",
     "RelativePath": "LCM_Inventory\\tools\\LoadRules.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Make-Admin.ps1",
@@ -5732,7 +5902,8 @@
         "Description": ""
       }
     ],
-    "Dependencies": "AdminMode.psm1"
+    "Dependencies": "AdminMode.psm1",
+    "IntentElevated": null
   },
   {
     "Name": "New-RepositoryDocumentation.ps1",
@@ -5793,7 +5964,8 @@
         "Description": "Overwrites existing documentation files if they already exist."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-PrivilegedTool.ps1",
@@ -5850,7 +6022,8 @@
     "Dependencies": [
       "Restore-SystemSettings.ps1",
       "Invoke-InteractiveDesktop.ps1"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Process-LcmInbox.ps1",
@@ -5918,7 +6091,8 @@
         "Description": "Simulates intake and Phase 1 receipt ACK without modifying the proposal ledger or moving files."
       }
     ],
-    "Dependencies": "InboxWatcher.psm1"
+    "Dependencies": "InboxWatcher.psm1",
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-ProposalAction.ps1",
@@ -6120,11 +6294,12 @@
       }
     ],
     "Dependencies": [
+      "Submit-ReviewResult.ps1",
       "sync_proposals_db.py",
       "Invoke-MacriumBcrReview.ps1",
-      "Complete-ReviewCohort.ps1",
-      "Submit-ReviewResult.ps1"
-    ]
+      "Complete-ReviewCohort.ps1"
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Publish-LCM_ProposalBundles.ps1",
@@ -6178,7 +6353,8 @@
         "Description": ""
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-RealRepoDryRun.ps1",
@@ -6208,7 +6384,8 @@
       "LCM_QualityGates.psm1",
       "Get-RealRepoTargetProfile.ps1",
       "Get-RealRepoActionPlan.ps1"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-ReasoningAnalysis.ps1",
@@ -6290,7 +6467,8 @@
         "Description": ""
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Remove-LcmShortName.ps1",
@@ -6330,7 +6508,8 @@
         "Description": "Suppresses interactive confirmation in terminal mode."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Repair-LcmLineEndings.ps1",
@@ -6384,7 +6563,8 @@
         "Description": "Do not write a log file (for per-file hook calls)."
       }
     ],
-    "Dependencies": "Module: (Join-Path $PSScriptRoot '..\\modules\\LcmLineEndingAtoms.psm1')"
+    "Dependencies": "Module: (Join-Path $PSScriptRoot '..\\modules\\LcmLineEndingAtoms.psm1')",
+    "IntentElevated": null
   },
   {
     "Name": "Repair-LCMRules.ps1",
@@ -6438,7 +6618,8 @@
         "Description": "Force replacement or re-creation of invalid junctions"
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Repair-VolumeAcl.ps1",
@@ -6492,7 +6673,8 @@
         "Description": "Internal switch indicating execution dispatched from elevated worker."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Safe-Copy.ps1",
@@ -6539,7 +6721,8 @@
         "Description": "Enables verbose step tracing (Aliases: -t, -Trace)."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Save-AllSessionMemory.ps1",
@@ -6590,7 +6773,8 @@
       "LCM_Context.psm1",
       "LcmSessionStateAtoms.psm1",
       "Module: (Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\\LcmSessionStateAtoms.psm1')"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Save-LCMRules.ps1",
@@ -6616,7 +6800,8 @@
         "Description": "Arguments forwarded directly to Export-LCMRules.ps1"
       }
     ],
-    "Dependencies": "Export-LCMRules.ps1"
+    "Dependencies": "Export-LCMRules.ps1",
+    "IntentElevated": null
   },
   {
     "Name": "Set-GitRoot.ps1",
@@ -6656,7 +6841,8 @@
         "Description": "Displays full detailed registry and environment evaluation logs."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Set-LcmActionProgress.ps1",
@@ -6731,7 +6917,8 @@
         "Description": "Error details if marking an item as failed"
       }
     ],
-    "Dependencies": "LcmProgressAtom.psm1"
+    "Dependencies": "LcmProgressAtom.psm1",
+    "IntentElevated": null
   },
   {
     "Name": "Set-LcmMachineRegistry.ps1",
@@ -6778,7 +6965,8 @@
         "Description": "Registry property type"
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Set-LcmReliefMode.ps1",
@@ -6825,7 +7013,8 @@
         "Description": "Toggles the current relief mode between On and Off."
       }
     ],
-    "Dependencies": "ProposalManager.psm1"
+    "Dependencies": "ProposalManager.psm1",
+    "IntentElevated": null
   },
   {
     "Name": "Set-RealRepoTestPlan.ps1",
@@ -6886,7 +7075,8 @@
         "Description": "Output updated test plan in JSON format."
       }
     ],
-    "Dependencies": "LCM_QualityGates.psm1"
+    "Dependencies": "LCM_QualityGates.psm1",
+    "IntentElevated": null
   },
   {
     "Name": "Show-LcmFailureDiagnostic.ps1",
@@ -6919,7 +7109,8 @@
         "Description": "Exact CRP or BUG target expression to diagnose."
       }
     ],
-    "Dependencies": "ProposalManager.psm1"
+    "Dependencies": "ProposalManager.psm1",
+    "IntentElevated": null
   },
   {
     "Name": "Show-LcmActiveLauncher.ps1",
@@ -6945,7 +7136,8 @@
       "Invoke-LCM_Audit.ps1",
       "Show-LCM_InventoryApp.ps1",
       "Test-LCMRuleHealth.ps1"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Show-LcmAnalysisViewer.ps1",
@@ -7003,7 +7195,8 @@
       "LcmStandardDisplay.psm1",
       "Module: (Join-Path $PSScriptRoot '..\\modules\\LcmDisplayVersion.psm1')",
       "Module: (Join-Path $repositoryRoot 'modules\\LcmStandardDisplay.psm1')"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Show-LCM_InventoryApp.ps1",
@@ -7032,7 +7225,8 @@
     "Dependencies": [
       "LcmStandardDisplay.psm1",
       "Module: (Join-Path $PSScriptRoot '..\\modules\\LcmDisplayVersion.psm1')"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Show-LCM_Readiness.ps1",
@@ -7092,7 +7286,8 @@
       "Everything",
       "Module: (Join-Path $PSScriptRoot '..\\modules\\LcmDisplayVersion.psm1')",
       "Module: (Join-Path $PSScriptRoot '..\\modules\\LcmStandardDisplay.psm1')"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Show-Repos.ps1",
@@ -7132,7 +7327,8 @@
         "Description": ""
       }
     ],
-    "Dependencies": "RepositoryIndexManager.psm1"
+    "Dependencies": "RepositoryIndexManager.psm1",
+    "IntentElevated": null
   },
   {
     "Name": "Show-Rules.ps1",
@@ -7182,7 +7378,8 @@
     "Dependencies": [
       "LcmStandardDisplay.psm1",
       "Module: (Join-Path $PSScriptRoot '..\\modules\\LcmDisplayVersion.psm1')"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Show-Strategies.ps1",
@@ -7200,7 +7397,8 @@
     "Example": "ShowStrategies",
     "RelativePath": "LCM_Inventory\\tools\\Show-Strategies.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Show-ToolIntents.ps1",
@@ -7233,7 +7431,8 @@
         "Description": "Outputs the intent table directly to terminal without launching browser (Aliases: -Text, -Console)."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Split-TextFile.ps1",
@@ -7266,7 +7465,8 @@
         "Description": ""
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Start-MacriumDailyBackup.ps1",
@@ -7358,7 +7558,8 @@
     "Dependencies": [
       "Set-LcmMachineRegistry.ps1",
       "Mount-MacriumLatestBaseline.ps1"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Start-RemoteBridge.ps1",
@@ -7405,7 +7606,8 @@
         "Description": "Accepts suggested candidate port automatically without interactive prompt."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Submit-ReviewResult.ps1",
@@ -7499,7 +7701,8 @@
       "ProposalManager.psm1",
       "Module: (Join-Path $PSScriptRoot '..\\modules\\LcmLineEndingAtoms.psm1')",
       "Module: (Join-Path $PSScriptRoot '..\\modules\\LcmPackageVersion.psm1')"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Sync-GeminiInbox.ps1",
@@ -7549,7 +7752,8 @@
     "Dependencies": [
       "ProposalManager.psm1",
       "InboxWatcher.psm1"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Sync-LcmAppCatalog.ps1",
@@ -7582,7 +7786,8 @@
         "Description": "Workspace root directory"
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Sync-LcmCatalogMacros.ps1",
@@ -7671,7 +7876,8 @@
         "Description": "Array of specific rule strings for Add or Update operations."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Sync-LcmModuleVersions.ps1",
@@ -7732,7 +7938,8 @@
         "Description": "Normalize all LCM-owned semantic versions to TargetBaseline and metadata dates to the release date."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Sync-LcmProposalsDb.ps1",
@@ -7828,7 +8035,8 @@
         "Description": "Suppresses informational console banners."
       }
     ],
-    "Dependencies": "sync_proposals_db.py"
+    "Dependencies": "sync_proposals_db.py",
+    "IntentElevated": null
   },
   {
     "Name": "Sync-LcmToolCatalogDb.ps1",
@@ -7861,7 +8069,8 @@
         "Description": ""
       }
     ],
-    "Dependencies": "sync_tool_catalog_db.py"
+    "Dependencies": "sync_tool_catalog_db.py",
+    "IntentElevated": null
   },
   {
     "Name": "sync_proposals_db.py",
@@ -7879,7 +8088,8 @@
     "Example": "syncproposalsdb",
     "RelativePath": "LCM_Inventory\\tools\\sync_proposals_db.py",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "sync_tool_catalog_db.py",
@@ -7897,7 +8107,8 @@
     "Example": "synctoolcatalogdb",
     "RelativePath": "LCM_Inventory\\tools\\sync_tool_catalog_db.py",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Sync-ToolSymlinks.ps1",
@@ -7933,7 +8144,8 @@
     "Dependencies": [
       "LcmToolCatalog.psm1",
       "Update-ToolCatalog.ps1"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Test-DocumentationCompleteness.ps1",
@@ -7994,7 +8206,8 @@
         "Description": "Returns structured audit result objects to the PowerShell pipeline."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Test-ExternalTools.ps1",
@@ -8016,7 +8229,8 @@
       "Everything",
       "es.exe",
       "everything"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Test-GeneralReadiness.ps1",
@@ -8049,7 +8263,8 @@
       "LcmSecurityGateway.ps1",
       "DaemonActionController.ps1",
       "BCompare"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Test-Guardrail.ps1",
@@ -8117,7 +8332,8 @@
         "Description": "Grant lifetime."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Test-LcmDeterministicGate.ps1",
@@ -8150,7 +8366,8 @@
         "Description": "Path to repository being evaluated."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Test-LCM_Drift.ps1",
@@ -8168,7 +8385,42 @@
     "Example": "TestLCMDrift",
     "RelativePath": "LCM_Inventory\\tools\\Test-LCM_Drift.ps1",
     "Parameters": [],
-    "Dependencies": "LCM_CM.psm1"
+    "Dependencies": "LCM_CM.psm1",
+    "IntentElevated": null
+  },
+  {
+    "Name": "Test-LcmExternalToolDocumentation.ps1",
+    "ShortName": "TestLcmExternalToolDocumentation",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Test-LcmExternalToolDocumentation execution tool.",
+    "Example": "TestLcmExternalToolDocumentation",
+    "RelativePath": "LCM_Inventory\\tools\\Test-LcmExternalToolDocumentation.ps1",
+    "Parameters": [
+      {
+        "Name": "WorkspaceRoot",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Workspace root (default: parent of LCM_Inventory)"
+      },
+      {
+        "Name": "ShowAll",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Lists every executable with its documentation table"
+      }
+    ],
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Test-LCMIncrementalGovernance.ps1",
@@ -8222,7 +8474,8 @@
       "LcmSecurityGateway.ps1",
       "DaemonActionController.ps1",
       "Module: PSScriptAnalyzer"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Test-LCMRuleHealth.ps1",
@@ -8269,7 +8522,8 @@
         "Description": "Show detailed diagnostic messages for every checked file and rule"
       }
     ],
-    "Dependencies": "Repair-LCMRules.ps1"
+    "Dependencies": "Repair-LCMRules.ps1",
+    "IntentElevated": null
   },
   {
     "Name": "Test-LcmStrategyConsistency.ps1",
@@ -8295,7 +8549,8 @@
         "Description": "Optional path to SQLite proposals database."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Test-RealRepoProposalCleanup.ps1",
@@ -8335,7 +8590,8 @@
         "Description": "Output cleanup scan report in JSON format."
       }
     ],
-    "Dependencies": "LCM_QualityGates.psm1"
+    "Dependencies": "LCM_QualityGates.psm1",
+    "IntentElevated": null
   },
   {
     "Name": "Test-ReviewCommitGate.ps1",
@@ -8361,7 +8617,8 @@
         "Description": ""
       }
     ],
-    "Dependencies": "Module: (Join-Path $PSScriptRoot '..\\modules\\LcmPackageVersion.psm1')"
+    "Dependencies": "Module: (Join-Path $PSScriptRoot '..\\modules\\LcmPackageVersion.psm1')",
+    "IntentElevated": null
   },
   {
     "Name": "Update-Gemini.ps1",
@@ -8398,7 +8655,8 @@
       "Export-LCMRules.ps1",
       "Sync-LCMResearchSnapshot.ps1",
       "Sync-GeminiInbox.ps1"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Update-Proposal.ps1",
@@ -8452,7 +8710,8 @@
         "Description": "Path to authoritative Proposals.json ledger."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Update-ToolCatalog.ps1",
@@ -8553,7 +8812,8 @@
       "PsExec",
       "BCompare",
       "Module: (Join-Path $inventoryRoot 'modules\\LcmToolScanLocations.psm1')"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Validate-CopilotProfile.ps1",
@@ -8571,7 +8831,8 @@
     "Example": "ValidateCopilotProfile",
     "RelativePath": "LCM_Inventory\\tools\\Validate-CopilotProfile.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "ValidateRules.ps1",
@@ -8597,7 +8858,8 @@
         "Description": "Hashtable of rule sets returned by LoadRules.ps1."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Manage-SupervisionTask.ps1",
@@ -8651,7 +8913,8 @@
         "Description": "Root directory of the LCM multi-repository workspace."
       }
     ],
-    "Dependencies": "Invoke-SupervisionRunner.ps1"
+    "Dependencies": "Invoke-SupervisionRunner.ps1",
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-SupervisionRunner.ps1",
@@ -8698,7 +8961,8 @@
         "Description": "Root directory of the LCM multi-repository workspace."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Show-Supervision.ps1",
@@ -8716,7 +8980,8 @@
     "Example": "ShowSupervision",
     "RelativePath": "LCM_Inventory\\tools\\Show-Supervision.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "FolderTimeUpdate.ps1",
@@ -8742,7 +9007,8 @@
         "Description": "Base directory path to process with FolderTimeUpdate."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "FolderTimeUpdate.ps1",
@@ -8768,7 +9034,8 @@
         "Description": "Base directory path to process with FolderTimeUpdate."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Activate.ps1",
@@ -8801,7 +9068,8 @@
         "Description": "The prompt prefix to display when this virtual environment is activated. By default, this prompt is the name of the virtual environment folder (VenvDir) surrounded by parentheses and followed by a single space (ie. '(.venv) ')."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Activate_py.ps1",
@@ -8834,7 +9102,8 @@
         "Description": "The prompt prefix to display when this virtual environment is activated. By default, this prompt is the name of the virtual environment folder (VenvDir) surrounded by parentheses and followed by a single space (ie. '(.venv) ')."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Add2Path.ps1",
@@ -8867,7 +9136,8 @@
         "Description": ""
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "AdminShell.ps1",
@@ -8924,7 +9194,8 @@
       "BackgroundModifier-ApplyTest.ps1",
       "BackgroundModifier-LogonStage.ps1",
       "Module: (Join-Path $ModuleRoot \"InstallerTools.psm1\")"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "AllowSecureWinaeroTweaker.ps1",
@@ -8942,7 +9213,8 @@
     "Example": "AllowSecureWinaeroTweaker",
     "RelativePath": "LCM_Inventory\\tools\\AllowSecureWinaeroTweaker.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "BackgroundApply.ps1",
@@ -8991,7 +9263,8 @@
       "Module: (Join-Path $ModuleRoot \"SummaryTools.psm1\")",
       "Module: (Join-Path $ModuleRoot \"SetFlagsTool.psm1\")",
       "Module: (Join-Path $ModuleRoot \"BackgroundNoBlurReg.psm1\")"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Bad Copy-JunctionsOnly.ps1",
@@ -9009,7 +9282,8 @@
     "Example": "Bad CopyJunctionsOnly",
     "RelativePath": "LCM_Inventory\\tools\\Bad Copy-JunctionsOnly.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "BootIdentity.ps1",
@@ -9042,7 +9316,8 @@
       "Module: (Join-Path $ModuleRoot \"BackgroundStateMgr.psm1\")",
       "Module: (Join-Path $ModuleRoot \"SystemTools.psm1\")",
       "Module: (Join-Path $ModuleRoot \"ErrorTools.psm1\")"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Cleanup.ps1",
@@ -9086,7 +9361,8 @@
       "InstallerTools.psm1",
       "CleanupTools.psm1",
       "Module: (Join-Path $ModuleRoot \"InstallerTools.psm1\")"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "CleanWindowsUpdates.ps1",
@@ -9104,7 +9380,8 @@
     "Example": "CleanWindowsUpdates",
     "RelativePath": "LCM_Inventory\\tools\\CleanWindowsUpdates.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-CopilotReasoningAnalysis.ps1",
@@ -9196,7 +9473,8 @@
     "Dependencies": [
       "Invoke-ReasoningAnalysis.ps1",
       "Export-CopilotReasoningTranscript.ps1"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Create-ContextSnapshot.ps1",
@@ -9243,7 +9521,8 @@
         "Description": "Lookback window in hours for detecting recently edited workspace files. Defaults to 2."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Create_DesktopBGInfo.ps1",
@@ -9261,7 +9540,8 @@
     "Example": "CreateDesktopBGInfo",
     "RelativePath": "LCM_Inventory\\tools\\Create_DesktopBGInfo.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "deactivate.ps1",
@@ -9279,7 +9559,8 @@
     "Example": "deactivate",
     "RelativePath": "LCM_Inventory\\tools\\deactivate.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "DesktopSubFoldersLauncher.ps1",
@@ -9297,7 +9578,8 @@
     "Example": "DesktopSubFoldersLauncher",
     "RelativePath": "LCM_Inventory\\tools\\DesktopSubFoldersLauncher.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Disable.ps1",
@@ -9326,7 +9608,8 @@
     "Dependencies": [
       "InstallerTools.psm1",
       "Module: (Join-Path $ModuleRoot \"InstallerTools.psm1\")"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "DiskAssignmentStatus.ps1",
@@ -9373,7 +9656,8 @@
         "Description": "Enable file logging using a timestamped log file in C:\\Temp. Aliases: l, log"
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "DiskState.ps1",
@@ -9391,7 +9675,8 @@
     "Example": "DiskState",
     "RelativePath": "LCM_Inventory\\tools\\DiskState.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "EFIChecker.ps1",
@@ -9424,7 +9709,8 @@
         "Description": ""
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Enable.ps1",
@@ -9453,7 +9739,8 @@
     "Dependencies": [
       "InstallerTools.psm1",
       "Module: (Join-Path $ModuleRoot \"InstallerTools.psm1\")"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Export-CopilotReasoningTranscript.ps1",
@@ -9493,7 +9780,8 @@
         "Description": "Test-only override for a specific Copilot event log."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Export-CopilotSessionHandoff.ps1",
@@ -9547,7 +9835,8 @@
         "Description": "Include a chronological index of user directives."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Export-OneNoteSectionToMarkdown.ps1",
@@ -9587,7 +9876,8 @@
         "Description": ""
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Get-DevicePath-from-DeviceName.ps1",
@@ -9605,7 +9895,8 @@
     "Example": "GetDevicePathfromDeviceName",
     "RelativePath": "LCM_Inventory\\tools\\Get-DevicePath-from-DeviceName.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "GetPartialFileContent.ps1",
@@ -9623,7 +9914,8 @@
     "Example": "GetPartialFileContent",
     "RelativePath": "LCM_Inventory\\tools\\GetPartialFileContent.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Get-RecoveryVolume.ps1",
@@ -9656,7 +9948,8 @@
         "Description": "Enables trace/diagnostic output."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Get_SamurizeInfo.ps1",
@@ -9674,7 +9967,8 @@
     "Example": "GetSamurizeInfo",
     "RelativePath": "LCM_Inventory\\tools\\Get_SamurizeInfo.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "GetTailFileContent.ps1",
@@ -9707,7 +10001,8 @@
         "Description": ""
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Git_Restore_HubToLocal_All.ps1",
@@ -9779,7 +10074,8 @@
       "Setup.ps1",
       "Verifyer.ps1",
       "git.exe"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "InstallAutoDT_BG_Info.ps1",
@@ -9805,7 +10101,8 @@
         "Description": ""
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Install-GoEnvironment.ps1",
@@ -9845,7 +10142,8 @@
         "Description": ""
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "LcmJunctionFixer.ps1",
@@ -9863,7 +10161,8 @@
     "Example": "LcmJunctionFixer",
     "RelativePath": "LCM_Inventory\\tools\\LcmJunctionFixer.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-LcmRepositoryNamingMigrationStaged.ps1",
@@ -9917,7 +10216,8 @@
         "Description": ""
       }
     ],
-    "Dependencies": ".ps1"
+    "Dependencies": ".ps1",
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-LCMReviewIntake.ps1",
@@ -9957,7 +10257,8 @@
         "Description": ""
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "LCM_StructureFix-Post-cleanup.ps1",
@@ -9975,7 +10276,8 @@
     "Example": "LCMStructureFixPostcleanup",
     "RelativePath": "LCM_Inventory\\tools\\LCM_StructureFix-Post-cleanup.ps1",
     "Parameters": [],
-    "Dependencies": "Migrate-Workspace_AI.ps1"
+    "Dependencies": "Migrate-Workspace_AI.ps1",
+    "IntentElevated": null
   },
   {
     "Name": "@Repair_Diagnose-OneDriveSync.ps1",
@@ -10039,7 +10341,8 @@
     "Dependencies": [
       "od_diag_runner.py",
       "od_reconcile_runner.py"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "@Repair_Diagnose-OneDriveSync.ps1",
@@ -10103,71 +10406,8 @@
     "Dependencies": [
       "od_diag_runner.py",
       "od_reconcile_runner.py"
-    ]
-  },
-  {
-    "Name": "@Repair_Test-OneDriveSync.ps1",
-    "ShortName": "LCMTools@RepairTestOneDriveSync",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": true,
-    "NoExit": true,
-    "Group": "LCM_Tools",
-    "Domain": "LCM_Tools",
-    "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "@Repair_Test-OneDriveSync execution tool.",
-    "Example": "@RepairTestOneDriveSync",
-    "RelativePath": "LCM_Inventory\\tools\\@Repair_Test-OneDriveSync.ps1",
-    "Parameters": [
-      {
-        "Name": "FixAcl",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Repairs ownership and sets AuthorizeMasterUser ACLs on all inaccessible OneDrive target folders."
-      },
-      {
-        "Name": "Reconcile",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Flips stuck 0-byte download items (fileStatus=3) to Synced (fileStatus=2) and resets postponed change locks."
-      },
-      {
-        "Name": "Reset",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Executes official Microsoft OneDrive cache reset and explicitly restarts the OneDrive tray process."
-      },
-      {
-        "Name": "PurgeGhosts",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Purges stale 0-byte ghost download intents from SQLite sync database by generating local placeholders."
-      },
-      {
-        "Name": "All",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Performs full automated repair: ACL fix, database reconciliation, ghost purge, and non-elevated restart."
-      },
-      {
-        "Name": "ShowAll",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Displays full detailed diagnostic flow, database table stats, postponed changes, and path evaluations."
-      }
     ],
-    "Dependencies": [
-      "od_diag_runner.py",
-      "od_reconcile_runner.py"
-    ]
+    "IntentElevated": null
   },
   {
     "Name": "@Repair_Test-OneDriveSync.ps1",
@@ -10231,7 +10471,73 @@
     "Dependencies": [
       "od_diag_runner.py",
       "od_reconcile_runner.py"
-    ]
+    ],
+    "IntentElevated": null
+  },
+  {
+    "Name": "@Repair_Test-OneDriveSync.ps1",
+    "ShortName": "LCMTools@RepairTestOneDriveSync",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "@Repair_Test-OneDriveSync execution tool.",
+    "Example": "@RepairTestOneDriveSync",
+    "RelativePath": "LCM_Inventory\\tools\\@Repair_Test-OneDriveSync.ps1",
+    "Parameters": [
+      {
+        "Name": "FixAcl",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Repairs ownership and sets AuthorizeMasterUser ACLs on all inaccessible OneDrive target folders."
+      },
+      {
+        "Name": "Reconcile",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Flips stuck 0-byte download items (fileStatus=3) to Synced (fileStatus=2) and resets postponed change locks."
+      },
+      {
+        "Name": "Reset",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Executes official Microsoft OneDrive cache reset and explicitly restarts the OneDrive tray process."
+      },
+      {
+        "Name": "PurgeGhosts",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Purges stale 0-byte ghost download intents from SQLite sync database by generating local placeholders."
+      },
+      {
+        "Name": "All",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Performs full automated repair: ACL fix, database reconciliation, ghost purge, and non-elevated restart."
+      },
+      {
+        "Name": "ShowAll",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Displays full detailed diagnostic flow, database table stats, postponed changes, and path evaluations."
+      }
+    ],
+    "Dependencies": [
+      "od_diag_runner.py",
+      "od_reconcile_runner.py"
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Create-LCM-CRP.ps1",
@@ -10299,7 +10605,8 @@
         "Description": "Subdirectory within DriveRoot for proposal staging. Defaults to LCM_ConvergenceProposals."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Create-LCM-CRP.ps1",
@@ -10367,7 +10674,8 @@
         "Description": "Subdirectory within DriveRoot for proposal staging. Defaults to LCM_ConvergenceProposals."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Export-AntigravityReasoningTranscript.ps1",
@@ -10407,7 +10715,8 @@
         "Description": "Test-only or explicit override for an Antigravity SQLite database path or JSON/JSONL event file."
       }
     ],
-    "Dependencies": "Export-AntigravityExtractor.py"
+    "Dependencies": "Export-AntigravityExtractor.py",
+    "IntentElevated": null
   },
   {
     "Name": "Export-AntigravityReasoningTranscript.ps1",
@@ -10447,7 +10756,8 @@
         "Description": "Test-only or explicit override for an Antigravity SQLite database path or JSON/JSONL event file."
       }
     ],
-    "Dependencies": "Export-AntigravityExtractor.py"
+    "Dependencies": "Export-AntigravityExtractor.py",
+    "IntentElevated": null
   },
   {
     "Name": "KillLogitechUpdateFull.ps1",
@@ -10465,7 +10775,8 @@
     "Example": "KillLogitechUpdateFull",
     "RelativePath": "LCM_Tools\\tools\\KillLogitechUpdateFull.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "KillLogitechUpdateFull.ps1",
@@ -10483,7 +10794,8 @@
     "Example": "KillLogitechUpdateFull",
     "RelativePath": "LCM_Inventory\\tools\\KillLogitechUpdateFull.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Migrate-Workspace_CO .ps1",
@@ -10523,7 +10835,8 @@
         "Description": ""
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-ReasoningAnalysisAuto.ps1",
@@ -10612,7 +10925,8 @@
         "Description": ""
       }
     ],
-    "Dependencies": "Invoke-ReasoningAnalysis.ps1"
+    "Dependencies": "Invoke-ReasoningAnalysis.ps1",
+    "IntentElevated": null
   },
   {
     "Name": "ReplaceByJunction.ps1",
@@ -10652,7 +10966,8 @@
         "Description": "Optional compatibility mode. \"IsChild\" appends the source folder name only when the supplied target path has a different name. \"Direct\" is the default exact-target behavior."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "SafeCopy.ps1",
@@ -10692,7 +11007,8 @@
         "Description": ""
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "asus-debloater.ps1",
@@ -10710,7 +11026,8 @@
     "Example": "asusdebloater",
     "RelativePath": "LCM_Tools\\tools\\asus-debloater.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Test-FileReadIntegrity.ps1",
@@ -10736,7 +11053,8 @@
         "Description": ""
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "List-Device-Name-and-Path.ps1",
@@ -10754,7 +11072,8 @@
     "Example": "ListDeviceNameandPath",
     "RelativePath": "LCM_Inventory\\tools\\List-Device-Name-and-Path.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Migrate-Workspace_CO .ps1",
@@ -10794,7 +11113,8 @@
         "Description": ""
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "OneNoteCOM_DiagnosticHierarchyProbe.ps1",
@@ -10812,7 +11132,8 @@
     "Example": "OneNoteCOMDiagnosticHierarchyProbe",
     "RelativePath": "LCM_Inventory\\tools\\OneNoteCOM_DiagnosticHierarchyProbe.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "OneNoteHierarchyDiscovery.ps1",
@@ -10845,7 +11166,8 @@
         "Description": ""
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "PostCompute.ps1",
@@ -10871,7 +11193,8 @@
         "Description": ""
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "PostWrite.ps1",
@@ -10897,7 +11220,8 @@
         "Description": ""
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "PreCompute.ps1",
@@ -10923,7 +11247,8 @@
         "Description": ""
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "ProfileModify.ps1",
@@ -10991,7 +11316,8 @@
         "Description": ""
       }
     ],
-    "Dependencies": "Module: PSReadLine"
+    "Dependencies": "Module: PSReadLine",
+    "IntentElevated": null
   },
   {
     "Name": "ProfileRecoveryToolkit.ps1",
@@ -11009,7 +11335,8 @@
     "Example": "ProfileRecoveryToolkit",
     "RelativePath": "LCM_Inventory\\tools\\ProfileRecoveryToolkit.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-ReasoningAnalysisAuto.ps1",
@@ -11098,7 +11425,8 @@
         "Description": ""
       }
     ],
-    "Dependencies": "Invoke-ReasoningAnalysis.ps1"
+    "Dependencies": "Invoke-ReasoningAnalysis.ps1",
+    "IntentElevated": null
   },
   {
     "Name": "RelocateJunctions.ps1",
@@ -11116,7 +11444,8 @@
     "Example": "RelocateJunctions",
     "RelativePath": "LCM_Inventory\\tools\\RelocateJunctions.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "RenameTestFolders.ps1",
@@ -11156,7 +11485,8 @@
         "Description": ""
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "ReplaceByJunction.ps1",
@@ -11196,7 +11526,8 @@
         "Description": "Optional compatibility mode. \"IsChild\" appends the source folder name only when the supplied target path has a different name. \"Direct\" is the default exact-target behavior."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "RunShell.ps1",
@@ -11214,7 +11545,8 @@
     "Example": "RunShell",
     "RelativePath": "LCM_Inventory\\tools\\RunShell.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "SafelyRepairUserProfile.ps1",
@@ -11232,7 +11564,8 @@
     "Example": "SafelyRepairUserProfile",
     "RelativePath": "LCM_Inventory\\tools\\SafelyRepairUserProfile.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Set_PS_Env_Machine.ps1",
@@ -11250,7 +11583,8 @@
     "Example": "SetPSEnvMachine",
     "RelativePath": "LCM_Inventory\\tools\\Set_PS_Env_Machine.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "SetUser_Env.ps1",
@@ -11268,7 +11602,8 @@
     "Example": "SetUserEnv",
     "RelativePath": "LCM_Inventory\\tools\\SetUser_Env.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "ShortPromptPS.ps1",
@@ -11286,7 +11621,8 @@
     "Example": "ShortPromptPS",
     "RelativePath": "LCM_Inventory\\tools\\ShortPromptPS.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "ShowPathPS.ps1",
@@ -11304,7 +11640,8 @@
     "Example": "ShowPathPS",
     "RelativePath": "LCM_Inventory\\tools\\ShowPathPS.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Split-OneNoteExportDocxForGemini.ps1",
@@ -11344,7 +11681,8 @@
         "Description": "Maximum character threshold before a file is split at a conversational boundary."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Sync-LCMResearchSnapshot.ps1",
@@ -11398,25 +11736,8 @@
         "Description": "Display verbose logging for each individual file mirrored"
       }
     ],
-    "Dependencies": null
-  },
-  {
-    "Name": "asus-debloater.ps1",
-    "ShortName": "SystemConfigurationasusdebloater",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": true,
-    "NoExit": true,
-    "Group": "LCM_Tools",
-    "Domain": "LCM_Tools",
-    "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "asus-debloater execution tool.",
-    "Example": "asusdebloater",
-    "RelativePath": "SystemConfiguration\\Source\\asus-debloater.ps1",
-    "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "asus-debloater.ps1",
@@ -11434,11 +11755,12 @@
     "Example": "asusdebloater",
     "RelativePath": "LCM_Inventory\\tools\\asus-debloater.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
-    "Name": "GoAdm.ps1",
-    "ShortName": "SystemConfigurationGoAdm",
+    "Name": "asus-debloater.ps1",
+    "ShortName": "SystemConfigurationasusdebloater",
     "Aliases": null,
     "Role": "Utility",
     "Audience": "Developer",
@@ -11448,19 +11770,12 @@
     "Domain": "LCM_Tools",
     "Type": "PowerShell",
     "Category": "Utility",
-    "Description": "GoAdm execution tool.",
-    "Example": "GoAdm",
-    "RelativePath": "LCM_Inventory\\tools\\GoAdm.ps1",
-    "Parameters": [
-      {
-        "Name": "t",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": ""
-      }
-    ],
-    "Dependencies": "profile.ps1"
+    "Description": "asus-debloater execution tool.",
+    "Example": "asusdebloater",
+    "RelativePath": "SystemConfiguration\\Source\\asus-debloater.ps1",
+    "Parameters": [],
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "GoAdm.ps1",
@@ -11500,7 +11815,35 @@
         "Description": "Displays detailed elevation and profile telemetry."
       }
     ],
-    "Dependencies": "profile.ps1"
+    "Dependencies": "profile.ps1",
+    "IntentElevated": null
+  },
+  {
+    "Name": "GoAdm.ps1",
+    "ShortName": "SystemConfigurationGoAdm",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "GoAdm execution tool.",
+    "Example": "GoAdm",
+    "RelativePath": "LCM_Inventory\\tools\\GoAdm.ps1",
+    "Parameters": [
+      {
+        "Name": "t",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      }
+    ],
+    "Dependencies": "profile.ps1",
+    "IntentElevated": null
   },
   {
     "Name": "search certificate stores for private key container Guids.ps1",
@@ -11518,7 +11861,8 @@
     "Example": "search certificate stores for private key container Guids",
     "RelativePath": "LCM_Inventory\\tools\\search certificate stores for private key container Guids.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "search certificate stores for private key container Guids.ps1",
@@ -11536,7 +11880,8 @@
     "Example": "search certificate stores for private key container Guids",
     "RelativePath": "SystemConfiguration\\Source\\search certificate stores for private key container Guids.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Set-MachineWideExecutionPolicy.ps1",
@@ -11569,7 +11914,8 @@
         "Description": "Displays detailed registry modification logs."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Set-MachineWideExecutionPolicy.ps1",
@@ -11587,7 +11933,8 @@
     "Example": "SetMachineWideExecutionPolicy",
     "RelativePath": "LCM_Inventory\\tools\\Set-MachineWideExecutionPolicy.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Test-PowerShellHklmState.ps1",
@@ -11613,7 +11960,8 @@
         "Description": "Displays full registry key properties and ACL details."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Test-FileReadIntegrity.ps1",
@@ -11639,7 +11987,8 @@
         "Description": ""
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Test-PowerShellHklmState.ps1",
@@ -11657,7 +12006,8 @@
     "Example": "TestPowerShellHklmState",
     "RelativePath": "LCM_Inventory\\tools\\Test-PowerShellHklmState.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Toggle Windows Search on off.ps1",
@@ -11675,7 +12025,8 @@
     "Example": "Toggle Windows Search on off",
     "RelativePath": "LCM_Inventory\\tools\\Toggle Windows Search on off.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Uninstall.ps1",
@@ -11729,7 +12080,8 @@
       "BackgroundModifier.cmd",
       "Module: (Join-Path $ModuleRoot \"InstallerTools.psm1\")",
       "Module: (Join-Path $ModuleRoot \"BackgroundNoBlurReg.psm1\")"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "UninstallAutoDT_BG_Info.ps1",
@@ -11755,7 +12107,8 @@
         "Description": ""
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Verifyer.ps1",
@@ -11844,7 +12197,8 @@
       "Module: (Join-Path $ModuleRoot \"ModeTools.psm1\")",
       "Module: (Join-Path $ModuleRoot \"SummaryTools.psm1\")",
       "Module: (Join-Path $ModuleRoot \"SetFlagsTool.psm1\")"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Apply-AllCustomizations.ps1",
@@ -11888,7 +12242,8 @@
         "Description": "Displays detailed diagnostic logs for each executed step."
       }
     ],
-    "Dependencies": "Logging.psm1"
+    "Dependencies": "Logging.psm1",
+    "IntentElevated": null
   },
   {
     "Name": "@07-Autorun_Entry_for_RenderLockScreen.cmd",
@@ -11906,7 +12261,8 @@
     "Example": "pwsh -File \"SystemConfiguration\\Source\\@07-Autorun_Entry_for_RenderLockScreen.cmd\"",
     "RelativePath": "SystemConfiguration\\Source\\@07-Autorun_Entry_for_RenderLockScreen.cmd",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "@19-DefineSecureD.ps1",
@@ -11946,7 +12302,8 @@
         "Description": "Displays detailed directory scanning and ACL repair telemetry."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "@01-Use_GPEDIT.msc_to_disable_Encryption.txt",
@@ -11964,7 +12321,8 @@
     "Example": "notepad \"SystemConfiguration\\Source\\@01-Use_GPEDIT.msc_to_disable_Encryption.txt\"",
     "RelativePath": "SystemConfiguration\\Source\\@01-Use_GPEDIT.msc_to_disable_Encryption.txt",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "@11-FileMenuTools.lnk",
@@ -11982,7 +12340,8 @@
     "Example": "start \"SystemConfiguration\\Source\\@11-FileMenuTools.lnk\"",
     "RelativePath": "SystemConfiguration\\Source\\@11-FileMenuTools.lnk",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "@17-FiraFonts.ps1",
@@ -12015,7 +12374,8 @@
         "Description": "Displays detailed font installation logs."
       }
     ],
-    "Dependencies": "InstallFonts.ps1"
+    "Dependencies": "InstallFonts.ps1",
+    "IntentElevated": null
   },
   {
     "Name": "@16-GoAdm_changer.ps1",
@@ -12048,7 +12408,8 @@
         "Description": "Displays detailed profile path and content telemetry."
       }
     ],
-    "Dependencies": "profile.ps1"
+    "Dependencies": "profile.ps1",
+    "IntentElevated": null
   },
   {
     "Name": "@05-Kill_Explorer_showing_friendly_names.reg",
@@ -12066,7 +12427,8 @@
     "Example": "reg import \"SystemConfiguration\\Source\\@05-Kill_Explorer_showing_friendly_names.reg\"",
     "RelativePath": "SystemConfiguration\\Source\\@05-Kill_Explorer_showing_friendly_names.reg",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "@10-More_Options_OFF.reg",
@@ -12084,7 +12446,8 @@
     "Example": "reg import \"SystemConfiguration\\Source\\@10-More_Options_OFF.reg\"",
     "RelativePath": "SystemConfiguration\\Source\\@10-More_Options_OFF.reg",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "@13-PowerToys.lnk",
@@ -12102,7 +12465,8 @@
     "Example": "start \"SystemConfiguration\\Source\\@13-PowerToys.lnk\"",
     "RelativePath": "SystemConfiguration\\Source\\@13-PowerToys.lnk",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "@15-PS7AppKiller.ps1",
@@ -12135,7 +12499,8 @@
         "Description": "Displays detailed AppX removal and Terminal settings update telemetry."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "@00-RegKeyDefaultTypeSet.cmd",
@@ -12156,7 +12521,8 @@
     "Example": "pwsh -File \"SystemConfiguration\\Source\\@00-RegKeyDefaultTypeSet.cmd\"",
     "RelativePath": "SystemConfiguration\\Source\\@00-RegKeyDefaultTypeSet.cmd",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "@04-Remove_Removable_Drive_Icon.reg",
@@ -12174,7 +12540,8 @@
     "Example": "reg import \"SystemConfiguration\\Source\\@04-Remove_Removable_Drive_Icon.reg\"",
     "RelativePath": "SystemConfiguration\\Source\\@04-Remove_Removable_Drive_Icon.reg",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "@14-SecureDesktopOff.ps1",
@@ -12207,7 +12574,8 @@
         "Description": "Displays detailed registry modification telemetry."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "@02-Set_the_date_and_time_format_(ADM_systemwide).ps1",
@@ -12240,7 +12608,8 @@
         "Description": "Displays detailed registry modification logs for every user SID."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "@03-Set_the_date_and_time_format_(HKCU_and_Current).reg",
@@ -12258,7 +12627,8 @@
     "Example": "reg import \"SystemConfiguration\\Source\\@03-Set_the_date_and_time_format_(HKCU_and_Current).reg\"",
     "RelativePath": "SystemConfiguration\\Source\\@03-Set_the_date_and_time_format_(HKCU_and_Current).reg",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Set-SecureDVolume.ps1",
@@ -12298,7 +12668,8 @@
         "Description": "Displays detailed directory scanning and ACL repair telemetry."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "@00-Set_System_Font_Verdana.reg",
@@ -12316,7 +12687,8 @@
     "Example": "reg import \"SystemConfiguration\\Source\\@00-Set_System_Font_Verdana.reg\"",
     "RelativePath": "SystemConfiguration\\Source\\@00-Set_System_Font_Verdana.reg",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "@00-Set_System_Font_Verdana-MedionPC.reg",
@@ -12334,7 +12706,8 @@
     "Example": "reg import \"SystemConfiguration\\Source\\@00-Set_System_Font_Verdana-MedionPC.reg\"",
     "RelativePath": "SystemConfiguration\\Source\\@00-Set_System_Font_Verdana-MedionPC.reg",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "@18-ShellNewPS1.ps1",
@@ -12367,7 +12740,8 @@
         "Description": "Displays detailed registry modification telemetry."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "@00-Skip_TPM_Check_on_Dynamic_Update.cmd",
@@ -12388,7 +12762,8 @@
     "Example": "pwsh -File \"SystemConfiguration\\Source\\@00-Skip_TPM_Check_on_Dynamic_Update.cmd\"",
     "RelativePath": "SystemConfiguration\\Source\\@00-Skip_TPM_Check_on_Dynamic_Update.cmd",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "@09-Use_Stylefolder_for_Folder_Comments.txt",
@@ -12406,7 +12781,8 @@
     "Example": "notepad \"SystemConfiguration\\Source\\@09-Use_Stylefolder_for_Folder_Comments.txt\"",
     "RelativePath": "SystemConfiguration\\Source\\@09-Use_Stylefolder_for_Folder_Comments.txt",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "@21-DesktopSubFoldersLauncher.cmd",
@@ -12424,7 +12800,8 @@
     "Example": "DesktopSubFoldersLauncher",
     "RelativePath": "SystemConfiguration\\Source\\@21-DesktopSubFoldersLauncher.cmd",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "ToggleSecure.ps1",
@@ -12478,7 +12855,8 @@
         "Description": ""
       }
     ],
-    "Dependencies": "Invoke-InteractiveDesktop.ps1"
+    "Dependencies": "Invoke-InteractiveDesktop.ps1",
+    "IntentElevated": null
   },
   {
     "Name": "@08-WinSetView.lnk",
@@ -12496,7 +12874,8 @@
     "Example": "start \"SystemConfiguration\\Source\\@08-WinSetView.lnk\"",
     "RelativePath": "SystemConfiguration\\Source\\@08-WinSetView.lnk",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Get-ChkdskBootLog.ps1",
@@ -12514,7 +12893,8 @@
     "Example": "pwsh -File \"SystemConfiguration\\Source\\Get-ChkdskBootLog.ps1\"",
     "RelativePath": "SystemConfiguration\\Source\\Get-ChkdskBootLog.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "@22-FixMouseFlickerInvariants.ps1",
@@ -12547,7 +12927,8 @@
         "Description": "Displays detailed invariant enforcement telemetry."
       }
     ],
-    "Dependencies": "Set-MouseFlickerInvariants.ps1"
+    "Dependencies": "Set-MouseFlickerInvariants.ps1",
+    "IntentElevated": null
   },
   {
     "Name": "Kill-LogitechUpdate.ps1",
@@ -12580,7 +12961,8 @@
         "Description": "Displays detailed process termination, service disabling, and registry deletion logs."
       }
     ],
-    "Dependencies": "Logging.psm1"
+    "Dependencies": "Logging.psm1",
+    "IntentElevated": null
   },
   {
     "Name": "@20-KillLogitechUpdateFull.ps1",
@@ -12613,7 +12995,8 @@
         "Description": "Displays detailed process termination, service disabling, and registry deletion logs."
       }
     ],
-    "Dependencies": "Kill-LogitechUpdate.ps1"
+    "Dependencies": "Kill-LogitechUpdate.ps1",
+    "IntentElevated": null
   },
   {
     "Name": "Set-MouseFlickerInvariants.ps1",
@@ -12646,7 +13029,8 @@
         "Description": "Displays detailed registry and policy modification telemetry."
       }
     ],
-    "Dependencies": "Logging.psm1"
+    "Dependencies": "Logging.psm1",
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-AsusDebloater.ps1",
@@ -12686,7 +13070,8 @@
         "Description": "Displays detailed diagnostic logs for every modified service, task, and application."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "AcronisMiniFilterCleanup.cmd",
@@ -12704,7 +13089,8 @@
     "Example": "AcronisMiniFilterCleanup",
     "RelativePath": "SystemConfiguration\\Source\\AcronisMiniFilterCleanup.cmd",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-BatchOcr.ps1",
@@ -12737,7 +13123,8 @@
         "Description": "Destination directory for OCR processed PDFs."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Build-MacriumScheduleTemplate.ps1",
@@ -12770,7 +13157,8 @@
         "Description": "Target volume drive letters or volume GUID list. Defaults to current system drive."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "@06-ConfigureEasyContextMenu.lnk",
@@ -12788,7 +13176,8 @@
     "Example": "ConfigureEasyContextMenu",
     "RelativePath": "SystemConfiguration\\Source\\@06-ConfigureEasyContextMenu.lnk",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "ConvertTo-WorkspaceUtf8.ps1",
@@ -12814,7 +13203,8 @@
         "Description": "Root path to convert. Defaults to D:\\Git_Repositories."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Diagnose-OneDriveSync.ps1",
@@ -12878,7 +13268,8 @@
     "Dependencies": [
       "od_diag_runner.py",
       "od_reconcile_runner.py"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "DismItFromE.cmd",
@@ -12896,7 +13287,8 @@
     "Example": "DismItFromE",
     "RelativePath": "SystemConfiguration\\Source\\DismItFromE.cmd",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Enter-CmdAdmin.cmd",
@@ -12914,7 +13306,8 @@
     "Example": "EnterCmdAdmin",
     "RelativePath": "SystemConfiguration\\Source\\Enter-CmdAdmin.cmd",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Enter-PSSystemPrivilege.cmd",
@@ -12935,7 +13328,8 @@
     "Dependencies": [
       "PsExec.exe",
       "PsExec"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Enter-XYSystemPrivilege.cmd",
@@ -12956,7 +13350,8 @@
     "Dependencies": [
       "PsExec.exe",
       "PsExec"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Fix-LocalizedNames.ps1",
@@ -12982,7 +13377,8 @@
         "Description": "Drive letter or root directory to clean. Defaults to C:\\."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Forced USO Unlock.cmd",
@@ -13000,7 +13396,8 @@
     "Example": "Forced USO Unlock",
     "RelativePath": "SystemConfiguration\\Source\\Forced USO Unlock.cmd",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Get-InternetConnectivityData.ps1",
@@ -13026,7 +13423,8 @@
         "Description": "Displays full raw network interface and ping telemetry details in the console."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Get-SystemAclAudit.ps1",
@@ -13059,7 +13457,8 @@
         "Description": "Enables detailed rule-by-rule evaluation."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Get-vEthernetData.ps1",
@@ -13092,7 +13491,8 @@
         "Description": "Displays detailed socket connection and routing telemetry to the console."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Install-OCRTools.ps1",
@@ -13118,7 +13518,8 @@
         "Description": ""
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Install-PowerShell7Runtime.ps1",
@@ -13136,7 +13537,8 @@
     "Example": "InstallPowerShell7Runtime",
     "RelativePath": "SystemConfiguration\\Source\\Install-PowerShell7Runtime.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Install-Tesseract.ps1",
@@ -13162,7 +13564,8 @@
         "Description": ""
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "PS_SystemPrivilege.cmd",
@@ -13183,7 +13586,8 @@
     "Dependencies": [
       "PsExec.exe",
       "PsExec"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Repair-EdgeWebViewRuntime.ps1",
@@ -13209,7 +13613,8 @@
         "Description": "Forces removal of corrupted registry GUIDs without prompting."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Repair-SystemAcl.ps1",
@@ -13235,7 +13640,8 @@
         "Description": "Directory path to repair. Required."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Repair-UserProfile.ps1",
@@ -13261,7 +13667,8 @@
         "Description": "Specific username profile to inspect/repair."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Reset-RecycleBin.ps1",
@@ -13287,7 +13694,8 @@
         "Description": "Drive letter to reset (e.g. 'C', 'D'). If omitted, resets all fixed local volumes."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Restore-EnvironmentRegistryKeys.ps1",
@@ -13305,7 +13713,8 @@
     "Example": "RestoreEnvironmentRegistryKeys",
     "RelativePath": "SystemConfiguration\\Source\\Restore-EnvironmentRegistryKeys.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Save-Clipboard.ps1",
@@ -13345,7 +13754,8 @@
         "Description": "Enables verbose debug tracing (Aliases: -d, -TraceMode)."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Search-Everywhere.cmd",
@@ -13367,7 +13777,8 @@
       "Everything",
       "Everything.exe",
       "es.exe"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Set-BluetoothAlwaysOn.ps1",
@@ -13393,7 +13804,8 @@
         "Description": "Displays detailed adapter discovery and registry update logs."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Set-OneDriveGitExclusions.ps1",
@@ -13419,7 +13831,8 @@
         "Description": "Path to OneDrive root. Defaults to D:\\OneDrive."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Set-WindowsSearchService.ps1",
@@ -13445,7 +13858,8 @@
         "Description": "Desired state: 'Enable' (Automatic + Running), 'Disable' (Disabled + Stopped), or 'Toggle'."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Stop-StuckGitProcess.ps1",
@@ -13463,7 +13877,8 @@
     "Example": "StopStuckGitProcess",
     "RelativePath": "SystemConfiguration\\Source\\Stop-StuckGitProcess.ps1",
     "Parameters": [],
-    "Dependencies": "git.exe"
+    "Dependencies": "git.exe",
+    "IntentElevated": null
   },
   {
     "Name": "Invoke-AcronisMiniFilterCleanup.cmd",
@@ -13481,7 +13896,8 @@
     "Example": "SystemConfigurationAcronisMiniFilterCleanup",
     "RelativePath": "SystemConfiguration\\Source\\Invoke-AcronisMiniFilterCleanup.cmd",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Get-DevicePathFromDeviceName.ps1",
@@ -13507,7 +13923,8 @@
         "Description": "Drive letter to query (e.g. 'C:')."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "GetInternetConnectivityData.ps1",
@@ -13525,7 +13942,8 @@
     "Example": "SystemConfigurationGetInternetConnectivityData",
     "RelativePath": "SystemConfiguration\\Source\\GetInternetConnectivityData.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "GetvEthernetData.ps1",
@@ -13543,7 +13961,8 @@
     "Example": "SystemConfigurationGetvEthernetData",
     "RelativePath": "SystemConfiguration\\Source\\GetvEthernetData.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "SetBluetoothAlwaysOn.ps1",
@@ -13561,7 +13980,8 @@
     "Example": "SystemConfigurationSetBluetoothAlwaysOn",
     "RelativePath": "SystemConfiguration\\Source\\SetBluetoothAlwaysOn.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Test-OneDriveSync.ps1",
@@ -13625,7 +14045,8 @@
     "Dependencies": [
       "od_diag_runner.py",
       "od_reconcile_runner.py"
-    ]
+    ],
+    "IntentElevated": null
   },
   {
     "Name": "Test-UserProfileHealth.ps1",
@@ -13643,7 +14064,8 @@
     "Example": "TestUserProfileHealth",
     "RelativePath": "SystemConfiguration\\Source\\Test-UserProfileHealth.ps1",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Test-WorkspaceAsciiCompliance.ps1",
@@ -13676,7 +14098,8 @@
         "Description": "Automatically sanitizes non-ASCII characters and converts mojibake sequences."
       }
     ],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "Unlock-ForcedUSO.cmd",
@@ -13694,7 +14117,8 @@
     "Example": "UnlockForcedUSO",
     "RelativePath": "SystemConfiguration\\Source\\Unlock-ForcedUSO.cmd",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "@12-WinaeroTweaker.lnk",
@@ -13712,7 +14136,8 @@
     "Example": "WinaeroTweaker",
     "RelativePath": "SystemConfiguration\\Source\\@12-WinaeroTweaker.lnk",
     "Parameters": [],
-    "Dependencies": null
+    "Dependencies": null,
+    "IntentElevated": null
   },
   {
     "Name": "XY_SystemPrivilege.cmd",
@@ -13733,6 +14158,7 @@
     "Dependencies": [
       "PsExec.exe",
       "PsExec"
-    ]
+    ],
+    "IntentElevated": null
   }
 ]

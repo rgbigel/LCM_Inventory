@@ -4,9 +4,9 @@ Module: docs/Proposals/CRP-345-AHK-Atoms-As-Registered-Intents-Only/Specificatio
 Purpose: AHK Atoms As Registered Intents Only  
 Path: LCM_Inventory/docs/Proposals/CRP-345-AHK-Atoms-As-Registered-Intents-Only/Specification.md  
 Authors: Rolf, Claude  
-Version: 10.6.4
-Status: Suggested  
-Date: 2026-11-17 13:40:14
+Version: 10.7.4
+Status: In Progress  
+Date: 2026-11-18 14:19:34
 
 ```yaml
 CRP-ID: CRP-345
@@ -15,9 +15,9 @@ Scope: LCM_Inventory
 Baseline-Version: 10.6.4
 Author: Rolf, Claude
 Date: 2026-11-17 13:40:14
-Status: In Progress
-Plan-State: in_progress
-Progress-State: in_progress
+Status: In Review
+Plan-State: in_review
+Progress-State: verification
 Priority: 6
 App-ID: None
 ```
@@ -26,6 +26,7 @@ App-ID: None
 
 ## 1. Executive Summary & Intent
 Operator 2026-11-17: AHK actions only through registered AHK atoms (intents, each with its own elevation flag); undefined AHK intents are refused. Depends on the intent-level elevation CRP.
+- Review: this Specification and the Walkthrough. The Walkthrough holds two choices made without the operator (external tool list in `install/Installation.md` instead of the legacy `.copilot/CopilotTools.md`; the tab atom activates the BC window and cycles its tabs, it is not purely read-only), a defect found in the existing runner, and one exit criterion that can only be checked at the next new baseline image.
 
 ## 2. Gate 0 Contract
 ### Target State
