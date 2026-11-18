@@ -1,6 +1,5 @@
 # Implementation Plan: CRP-362 - Macrium Backup Type Parameter Defaulting To Differential
 
-Status: Placeholder
-Date: 2026-11-18 21:54:41
+Date: 2026-11-18 23:12:53
 
-Not written yet: filled with the concrete changes per file when implementation starts, or replaced by "Nothing beyond the Specification."
+- Nothing beyond the Specification: `tools/Start-MacriumDailyBackup.ps1` 10.2.0 -> 10.2.1, test `tests/MacriumBackupType.Tests.ps1` (new).

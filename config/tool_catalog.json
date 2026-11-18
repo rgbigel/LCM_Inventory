@@ -355,7 +355,7 @@
     "Category": "Utility",
     "Description": "analyze_lcm_components execution tool.",
     "Example": "analyzelcmcomponents",
-    "RelativePath": "LCM_Inventory\\tools\\analyze_lcm_components.py",
+    "RelativePath": "HaSSD06\\analyze_lcm_components.py",
     "Parameters": [],
     "Dependencies": null,
     "IntentElevated": null
@@ -374,26 +374,7 @@
     "Category": "Utility",
     "Description": "analyze_lcm_components execution tool.",
     "Example": "analyzelcmcomponents",
-    "RelativePath": "HaSSD06\\analyze_lcm_components.py",
-    "Parameters": [],
-    "Dependencies": null,
-    "IntentElevated": null
-  },
-  {
-    "Name": "check_specific.py",
-    "ShortName": "HaSSD06checkspecific",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "HaSSD06",
-    "Domain": "HaSSD06",
-    "Type": "Python",
-    "Category": "Utility",
-    "Description": "check_specific execution tool.",
-    "Example": "checkspecific",
-    "RelativePath": "LCM_Inventory\\tools\\check_specific.py",
+    "RelativePath": "LCM_Inventory\\tools\\analyze_lcm_components.py",
     "Parameters": [],
     "Dependencies": null,
     "IntentElevated": null
@@ -418,8 +399,8 @@
     "IntentElevated": null
   },
   {
-    "Name": "deep_device_scan.py",
-    "ShortName": "HaSSD06deepdevicescan",
+    "Name": "check_specific.py",
+    "ShortName": "HaSSD06checkspecific",
     "Aliases": null,
     "Role": "Utility",
     "Audience": "Developer",
@@ -429,9 +410,9 @@
     "Domain": "HaSSD06",
     "Type": "Python",
     "Category": "Utility",
-    "Description": "deep_device_scan execution tool.",
-    "Example": "deepdevicescan",
-    "RelativePath": "LCM_Inventory\\tools\\deep_device_scan.py",
+    "Description": "check_specific execution tool.",
+    "Example": "checkspecific",
+    "RelativePath": "LCM_Inventory\\tools\\check_specific.py",
     "Parameters": [],
     "Dependencies": null,
     "IntentElevated": null
@@ -456,8 +437,8 @@
     "IntentElevated": null
   },
   {
-    "Name": "extract_ha_update_crps.py",
-    "ShortName": "HaSSD06extracthaupdatecrps",
+    "Name": "deep_device_scan.py",
+    "ShortName": "HaSSD06deepdevicescan",
     "Aliases": null,
     "Role": "Utility",
     "Audience": "Developer",
@@ -467,9 +448,9 @@
     "Domain": "HaSSD06",
     "Type": "Python",
     "Category": "Utility",
-    "Description": "extract_ha_update_crps execution tool.",
-    "Example": "extracthaupdatecrps",
-    "RelativePath": "HaSSD06\\extract_ha_update_crps.py",
+    "Description": "deep_device_scan execution tool.",
+    "Example": "deepdevicescan",
+    "RelativePath": "LCM_Inventory\\tools\\deep_device_scan.py",
     "Parameters": [],
     "Dependencies": null,
     "IntentElevated": null
@@ -494,8 +475,8 @@
     "IntentElevated": null
   },
   {
-    "Name": "invoke_ha_backup.py",
-    "ShortName": "HaSSD06habackup",
+    "Name": "extract_ha_update_crps.py",
+    "ShortName": "HaSSD06extracthaupdatecrps",
     "Aliases": null,
     "Role": "Utility",
     "Audience": "Developer",
@@ -505,9 +486,9 @@
     "Domain": "HaSSD06",
     "Type": "Python",
     "Category": "Utility",
-    "Description": "invoke_ha_backup execution tool.",
-    "Example": "habackup",
-    "RelativePath": "LCM_Inventory\\tools\\invoke_ha_backup.py",
+    "Description": "extract_ha_update_crps execution tool.",
+    "Example": "extracthaupdatecrps",
+    "RelativePath": "HaSSD06\\extract_ha_update_crps.py",
     "Parameters": [],
     "Dependencies": null,
     "IntentElevated": null
@@ -527,6 +508,25 @@
     "Description": "invoke_ha_backup execution tool.",
     "Example": "habackup",
     "RelativePath": "HaSSD06\\tools\\invoke_ha_backup.py",
+    "Parameters": [],
+    "Dependencies": null,
+    "IntentElevated": null
+  },
+  {
+    "Name": "invoke_ha_backup.py",
+    "ShortName": "HaSSD06habackup",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "HaSSD06",
+    "Domain": "HaSSD06",
+    "Type": "Python",
+    "Category": "Utility",
+    "Description": "invoke_ha_backup execution tool.",
+    "Example": "habackup",
+    "RelativePath": "LCM_Inventory\\tools\\invoke_ha_backup.py",
     "Parameters": [],
     "Dependencies": null,
     "IntentElevated": null
@@ -659,7 +659,7 @@
     "Category": "Utility",
     "Description": "Build-HaInventoryViewer execution tool.",
     "Example": "BuildHaInventoryViewer",
-    "RelativePath": "HaSSD06_Inventory\\tools\\Build-HaInventoryViewer.ps1",
+    "RelativePath": "LCM_Inventory\\tools\\Build-HaInventoryViewer.ps1",
     "Parameters": [
       {
         "Name": "Instance",
@@ -697,7 +697,7 @@
     "Category": "Utility",
     "Description": "Build-HaInventoryViewer execution tool.",
     "Example": "BuildHaInventoryViewer",
-    "RelativePath": "LCM_Inventory\\tools\\Build-HaInventoryViewer.ps1",
+    "RelativePath": "HaSSD06_Inventory\\tools\\Build-HaInventoryViewer.ps1",
     "Parameters": [
       {
         "Name": "Instance",
@@ -735,7 +735,7 @@
     "Category": "Utility",
     "Description": "extract_ha_central_registry execution tool.",
     "Example": "extracthacentralregistry",
-    "RelativePath": "LCM_Inventory\\tools\\extract_ha_central_registry.py",
+    "RelativePath": "HaSSD06_Inventory\\tools\\extract_ha_central_registry.py",
     "Parameters": [],
     "Dependencies": null,
     "IntentElevated": null
@@ -754,7 +754,7 @@
     "Category": "Utility",
     "Description": "extract_ha_central_registry execution tool.",
     "Example": "extracthacentralregistry",
-    "RelativePath": "HaSSD06_Inventory\\tools\\extract_ha_central_registry.py",
+    "RelativePath": "LCM_Inventory\\tools\\extract_ha_central_registry.py",
     "Parameters": [],
     "Dependencies": null,
     "IntentElevated": null
@@ -773,7 +773,7 @@
     "Category": "Utility",
     "Description": "Invoke-HaRenameCascade execution tool.",
     "Example": "HaRenameCascade",
-    "RelativePath": "LCM_Inventory\\tools\\Invoke-HaRenameCascade.ps1",
+    "RelativePath": "HaSSD06_Inventory\\tools\\Invoke-HaRenameCascade.ps1",
     "Parameters": [
       {
         "Name": "DeviceId",
@@ -877,7 +877,7 @@
     "Category": "Utility",
     "Description": "Invoke-HaRenameCascade execution tool.",
     "Example": "HaRenameCascade",
-    "RelativePath": "HaSSD06_Inventory\\tools\\Invoke-HaRenameCascade.ps1",
+    "RelativePath": "LCM_Inventory\\tools\\Invoke-HaRenameCascade.ps1",
     "Parameters": [
       {
         "Name": "DeviceId",
@@ -1440,11 +1440,20 @@
     "Category": "Utility",
     "Description": "Test-RepoReadiness execution tool.",
     "Example": "TestRepoReadiness",
-    "RelativePath": "HaSSD06_Inventory\\tools\\Test-RepoReadiness.ps1",
-    "Parameters": [],
+    "RelativePath": "HaSSD06\\tools\\Test-RepoReadiness.ps1",
+    "Parameters": [
+      {
+        "Name": "MinimalTests",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Single-cycle minimal testing scope: fast syntax and AST validation only"
+      }
+    ],
     "Dependencies": [
       "RepoQualityGates.psm1",
       "Test-GeneralReadiness.ps1",
+      "Update-ToolCatalog.ps1",
       "Module: (Resolve-Path $modulePath)"
     ],
     "IntentElevated": null
@@ -1463,20 +1472,11 @@
     "Category": "Utility",
     "Description": "Test-RepoReadiness execution tool.",
     "Example": "TestRepoReadiness",
-    "RelativePath": "HaSSD06\\tools\\Test-RepoReadiness.ps1",
-    "Parameters": [
-      {
-        "Name": "MinimalTests",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Single-cycle minimal testing scope: fast syntax and AST validation only"
-      }
-    ],
+    "RelativePath": "HaSSD06_Inventory\\tools\\Test-RepoReadiness.ps1",
+    "Parameters": [],
     "Dependencies": [
       "RepoQualityGates.psm1",
       "Test-GeneralReadiness.ps1",
-      "Update-ToolCatalog.ps1",
       "Module: (Resolve-Path $modulePath)"
     ],
     "IntentElevated": null
@@ -3813,6 +3813,86 @@
     "IntentElevated": null
   },
   {
+    "Name": "Complete-Review.ps1",
+    "ShortName": "CompleteReview",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Complete-Review execution tool.",
+    "Example": "CompleteReview",
+    "RelativePath": "LCM_Inventory\\tools\\Complete-Review.ps1",
+    "Parameters": [
+      {
+        "Name": "Target",
+        "Type": "String[]",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "One or more item IDs (CRP-346, BUG-356, 346) or one cohort ID (COH-nnn)."
+      },
+      {
+        "Name": "Details",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Commit message text (the member IDs are prefixed when there is more than one member)."
+      },
+      {
+        "Name": "Result",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "Completed",
+        "Description": ""
+      },
+      {
+        "Name": "MinimalTests",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "Force",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      },
+      {
+        "Name": "Plan",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Prints the resolved members and repositories and changes nothing."
+      },
+      {
+        "Name": "SubmitScriptPath",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "(Join-Path $PSScriptRoot 'Submit-ReviewResult.ps1')",
+        "Description": "Per-repository commit step (default: Submit-ReviewResult.ps1 next to this script; tests inject a stub)."
+      },
+      {
+        "Name": "WorkspaceRoot",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "(Split-Path (Split-Path $PSScriptRoot -Parent) -Parent)",
+        "Description": ""
+      }
+    ],
+    "Dependencies": [
+      "Submit-ReviewResult.ps1",
+      "Module: (Join-Path $PSScriptRoot '..\\modules\\ProposalManager.psm1')",
+      "Module: (Join-Path $PSScriptRoot '..\\modules\\LcmReviewCompletionAtoms.psm1')"
+    ],
+    "IntentElevated": null
+  },
+  {
     "Name": "Complete-ReviewCohort.ps1",
     "ShortName": "CompleteReviewCohort",
     "Aliases": null,
@@ -3850,10 +3930,7 @@
         "Description": ""
       }
     ],
-    "Dependencies": [
-      "ProposalManager.psm1",
-      "Submit-ReviewResult.ps1"
-    ],
+    "Dependencies": "Complete-Review.ps1",
     "IntentElevated": null
   },
   {
@@ -6376,9 +6453,9 @@
     ],
     "Dependencies": [
       "Submit-ReviewResult.ps1",
+      "Complete-Review.ps1",
       "sync_proposals_db.py",
       "Invoke-MacriumBcrReview.ps1",
-      "Complete-ReviewCohort.ps1",
       "Module: (Join-Path $PSScriptRoot '..\\modules\\LcmReviewCompletionAtoms.psm1')",
       "Module: (Join-Path $PSScriptRoot '..\\modules\\ProposalSpecificationState.psm1')"
     ],
@@ -7580,6 +7657,13 @@
         "Mandatory": false,
         "Default": "",
         "Description": "Forces execution of a fresh backup definition even if a completed image exists for today."
+      },
+      {
+        "Name": "BackupType",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "Diff",
+        "Description": "Backup type passed to Macrium Reflect: Full, Diff (default) or Inc."
       },
       {
         "Name": "ReviewScope",

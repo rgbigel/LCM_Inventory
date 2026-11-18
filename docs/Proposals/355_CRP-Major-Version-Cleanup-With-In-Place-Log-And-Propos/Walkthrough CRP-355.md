@@ -1,6 +1,6 @@
 # Walkthrough: CRP-355 - Major Version Cleanup With In-Place Log And Proposal Ledger
 
-Date: 2026-11-18 22:10:04
+Date: 2026-11-18 23:30:27
 
 ## 1. Path taken and issues on the way
 - Deviation (T1): the release register is the Markdown table in the rollup only; the `releases` table in `proposals.db` was not added, to avoid a schema change ahead of CRP-358.
@@ -44,3 +44,30 @@ Date: 2026-11-18 22:10:04
 | Review receipts left                      | 174                                              |
 | `LcmMajorCleanup.Tests.ps1`               | 5/5                                              |
 | Live report after the apply               | 0 selected, 0 ledger rows                        |
+
+## 5. Revision: compacted rows keep the common fields (2026-11-18 23:22:39)
+
+- Found by the CRP-357 regression run: the 149 compacted rows lacked `origin_repo`, `bundle_id`, `author`, `progress_state`, `priority`; `ProposalManager.psm1` reads `origin_repo` on every row and failed under StrictMode (cohort and repository resolution).
+- Ledger: the five fields restored from the last committed `proposals.json` (745 values, 16 neutral defaults where HEAD had none); `details` kept as an empty field.
+- Tool: compaction keeps these fields and empties `details`; test asserts `origin_repo` on a compacted row.
+
+| Check                                   | Result                                   |
+|:----------------------------------------|:-----------------------------------------|
+| Ledger parity after restore             | PASS (336)                               |
+| `LcmMajorCleanup.Tests.ps1`             | 5/5                                      |
+| `ProposalLifecycle.Tests.ps1`           | COH routing case passes again; 1 failure = pre-existing transition-table case (BUG-348) |
+
+## 6. Revision A/B/C: no field is ever removed (2026-11-18 23:30:27)
+
+- A: the 149 archived rows restored in full from the last committed `proposals.json`; markers (`origin_major`, `completed_at`, `pushed_at`, `archived_at`, `archive_run`) kept on the full row. Comparison with HEAD: 0 fields missing or differing.
+- B: the cleanup tool archives by adding markers only; the completed-proposal list reads fields guarded (a full row may lack one).
+- C: `Set-ProposalStore` refuses a write in which an existing row would lose a field (only the transient `status_note` may go); `ProposalManager.psm1` 10.2.10.
+- How the defect arose (operator question): my first design whitelisted 10 fields per archived row; `Set-ProposalStore` accepted any row shape; the parity check compares values, not completeness; my test only checked that `details` disappeared.
+
+| Check                                           | Result                                    |
+|:------------------------------------------------|:------------------------------------------|
+| Restore vs HEAD (149 rows, every HEAD field)    | 0 missing, 0 differing                    |
+| Ledger parity                                   | PASS (336)                                |
+| `ProposalStoreFieldGuard.Tests.ps1` (new)       | 2/2                                       |
+| `LcmMajorCleanup.Tests.ps1`                     | 5/5 (asserts details and history kept)    |
+| Lifecycle, Manager, Completion, Scaffold tests  | pass; 1 failure = pre-existing transition-table case (BUG-348) |

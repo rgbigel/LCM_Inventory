@@ -6,7 +6,7 @@ Path: LCM_Inventory/docs/Proposals/355_CRP-Major-Version-Cleanup-With-In-Place-L
 Authors: Rolf, Claude  
 Version: 10.7.4
 Status: Suggested  
-Date: 2026-11-18 22:10:04
+Date: 2026-11-18 23:30:27
 
 ```yaml
 CRP-ID: CRP-355
@@ -14,10 +14,10 @@ Title: Major Version Cleanup With In-Place Log And Proposal Ledger
 Scope: LCM_Inventory
 Baseline-Version: 10.7.4
 Author: Rolf
-Date: 2026-11-18 22:10:04
-Status: Completed
-Plan-State: completed
-Progress-State: completed
+Date: 2026-11-18 23:30:27
+Status: In Review
+Plan-State: in_review
+Progress-State: verification
 Priority: 5
 App-ID: None
 ```
@@ -87,3 +87,11 @@ Phase 2 - the cleanup:
 > but the code for the temp deletes is not meant as being permanent in the tool. And, since we are at V 10, it would not touch anything older than 8.x.x anyway. So in my mind we can "let it rip".
 
 (Operator, 2026-11-18.)
+
+> how is this even possible? dropping fields on a table is absolutely unforgivable.
+
+> A, B and C, doit
+
+> new rule: another safeguard: when restructuring any table, preceede it with a dump so we have a .sql backup before you start. Only after completion checks those dumps may be and should be deleted. Apply this for future crps, not the current run.
+
+(Operator, 2026-11-18; source of revision A/B/C. The dump rule applies from the next CRP on.)

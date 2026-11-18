@@ -6,7 +6,9 @@
 #          batch operations, review granularity ('coarse' | 'tight'), repo review queue inspection,
 #          and persistent ledger storage in LCM_Inventory.
 # Authors: Rolf, Claude, LCM_AI Engine
-# Version: 10.2.9
+# Version: 10.2.10
+# Implementation Choices (CRP-355 revision C): Set-ProposalStore refuses a write in which a ledger row would lose a field it
+#          has in the stored version (only the transient status_note may go); archiving marks, never drops.
 # Date: 2026-11-18 22:28:25
 # Implementation Choices (CRP-359 revision 3): bundle folders are named '<nnn>_<Kind>-<Slug>' (e.g. 333_CRP-Slug), so they
 #          sort by number across CRPs and BUGs (shared counter); an existing folder of the old form is still reused.
@@ -95,6 +97,35 @@ function Get-ProposalStore {
     return ($json | ConvertFrom-Json)
 }
 
+function Assert-LcmNoDroppedProposalFields {
+    # CRP-355 revision C: a ledger write must never remove a field from an existing row (operator 2026-11-18).
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)] [PSCustomObject]$Store,
+        [Parameter(Mandatory = $true)] [string]$StorePath
+    )
+    if (-not (Test-Path -LiteralPath $StorePath -PathType Leaf)) { return }
+    $transient = @('status_note')
+    try { $stored = Get-Content -LiteralPath $StorePath -Raw -Encoding UTF8 | ConvertFrom-Json } catch { return }
+    if ($null -eq $stored -or -not $stored.PSObject.Properties['proposals']) { return }
+    $before = @{}
+    foreach ($row in @($stored.proposals)) {
+        if ($null -ne $row -and $row.PSObject.Properties['id']) { $before[[string]$row.id] = @($row.PSObject.Properties.Name) }
+    }
+    $violations = [System.Collections.Generic.List[string]]::new()
+    foreach ($row in @($Store.proposals)) {
+        if ($null -eq $row -or -not $row.PSObject.Properties['id']) { continue }
+        $key = [string]$row.id
+        if (-not $before.ContainsKey($key)) { continue }
+        $now = @($row.PSObject.Properties.Name)
+        $lost = @($before[$key] | Where-Object { $_ -notin $now -and $_ -notin $transient })
+        if ($lost.Count -gt 0) { $violations.Add(('#{0}: {1}' -f $key, ($lost -join ', '))) }
+    }
+    if ($violations.Count -gt 0) {
+        throw ("Refused ledger write: it would remove field(s) from existing row(s) - {0}. Archive by marking; never drop fields (CRP-355)." -f ($violations -join '; '))
+    }
+}
+
 function Set-ProposalStore {
     [CmdletBinding()]
     param(
@@ -103,6 +134,7 @@ function Set-ProposalStore {
     )
 
     $path = Get-ProposalStorePath
+    Assert-LcmNoDroppedProposalFields -Store $Store -StorePath $path  # CRP-355 revision C
     $Store.updated_at = (Get-Date).ToString('yyyy-MM-ddTHH:mm:sszzz')
     $edits = @(Get-LcmSpecificationStateEdits -Store $Store -StorePath $path)
     $json = $Store | ConvertTo-Json -Depth 10

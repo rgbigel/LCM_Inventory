@@ -91,7 +91,8 @@ Describe 'Major-version cleanup (CRP-355)' {
     $row = @($store.proposals | Where-Object id -eq 1)[0]
     $row.archived_at | Should -Not -BeNullOrEmpty
     $row.pushed_at | Should -Be '2026-09-01 10:00:00'
-    $row.PSObject.Properties['details'] | Should -BeNullOrEmpty
+    $row.details | Should -Be 'long text'  # CRP-355 revision B: archiving never removes a field
+    $row.state_history | Should -Not -BeNullOrEmpty
     [IO.File]::ReadAllText((Join-Path $script:ws 'LCM_Inventory\docs\Proposals\LEDGER_COMPLETED.md')) | Should -Match '\| CRP-001 \| Old pushed \| pushed \| 8 \|'
     [IO.File]::ReadAllText($script:rollup) | Should -Match '### Cleanup run CLEANUP-'
   }

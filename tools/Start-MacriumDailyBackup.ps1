@@ -8,15 +8,19 @@
   Carries over LCM baseline telemetry (MRMTimeStamp) and optionally delegates to the
   baseline mounting atom (-Mount) to mount the newly generated backup as the writable BCR baseline.
   Path: LCM_Inventory/tools/Start-MacriumDailyBackup.ps1
-  Authors: Rolf, LCM_AI Engine
-  Version: 10.2.0
-  Date: 2026-11-09 17:15:00
+  Authors: Rolf, LCM_AI Engine, Claude
+  Version: 10.2.1
+  Date: 2026-11-18
+  Implementation Choices (CRP-362): -BackupType Full|Diff|Inc (default Diff) is passed to Reflect as -full / -diff / -inc;
+  before, no type was passed and Reflect made a full backup (many hours).
 .NOTES
   Elevated Operations:
     - Set-LcmRegistryValue: Persists baseline telemetry to HKLM:\SOFTWARE\LCM\MacriumBaseline.
     - Mount-MacriumBaseline: Mounts completed Macrium backup image via elevated worker or daemon.
 .PARAMETER Mount
   Mounts the newly created backup image as the writable BCR baseline partition upon completion.
+.PARAMETER BackupType
+  Backup type passed to Macrium Reflect: Full, Diff (default) or Inc.
 .PARAMETER ForceNewBackup
   Forces execution of a fresh backup definition even if a completed image exists for today.
 .PARAMETER ReviewScope
@@ -45,6 +49,9 @@ param(
   [switch]$Mount,
 
   [switch]$ForceNewBackup,
+
+  [ValidateSet('Full', 'Diff', 'Inc')]
+  [string]$BackupType = 'Diff',
 
   [string]$ReviewScope = '',
 
@@ -90,10 +97,11 @@ if ($Help) {
   Write-Host "  optional mounting as writable BCR baseline partition."
   Write-Host ""
   Write-Host "USAGE:" -ForegroundColor Yellow
-  Write-Host "  pwsh tools/Start-MacriumDailyBackup.ps1 [-Mount] [-ForceNewBackup] [-ReviewScope <CRP|BUG>] [-h]"
+  Write-Host "  pwsh tools/Start-MacriumDailyBackup.ps1 [-BackupType Full|Diff|Inc] [-Mount] [-ForceNewBackup] [-ReviewScope <CRP|BUG>] [-h]"
   Write-Host ""
   Write-Host "PARAMETERS:" -ForegroundColor Yellow
   Write-Host "  -Mount                 : Mounts the newly generated backup immediately as BCR baseline."
+  Write-Host "  -BackupType <type>     : Full, Diff (default) or Inc; passed to Reflect as -full / -diff / -inc."
   Write-Host "  -ForceNewBackup        : Initiates a new backup even if one already completed today."
   Write-Host "  -ReviewScope <CRP|BUG> : Sets the proposal review scope in Beyond Compare window title."
   Write-Host "  -NoLaunchReview        : Suppresses opening Beyond Compare when -Mount is specified."
@@ -106,6 +114,12 @@ if ($Help) {
 $inventoryRoot = Split-Path $PSScriptRoot -Parent
 $reflectPath = 'C:\Program Files\Macrium\Reflect\Reflect.exe'
 $MacriumRegistryKey = 'HKLM:\SOFTWARE\LCM\MacriumBaseline'
+
+function Get-ReflectArgumentList {
+  # CRP-362: Reflect command line for one definition run of the given type.
+  param([Parameter(Mandatory = $true)] [ValidateSet('Full', 'Diff', 'Inc')] [string]$Type, [Parameter(Mandatory = $true)] [string]$DefinitionPath)
+  return @('-e', ('-' + $Type.ToLowerInvariant()), $DefinitionPath)
+}
 
 function Write-BackupLog {
   param(
@@ -207,7 +221,7 @@ if ($null -ne $existingImage -and -not $ForceNewBackup) {
   }
 
   if ($WhatIfPreference) {
-    Write-BackupLog -Level INFO -Message "WhatIf: would execute Macrium definition '$BackupDefinitionPath' and await completion in '$BackupDirectory'."
+    Write-BackupLog -Level INFO -Message "WhatIf: would execute Macrium definition '$BackupDefinitionPath' ($BackupType) and await completion in '$BackupDirectory'."
     $imageToUse = [pscustomobject]@{
       ImagePath = (Join-Path $BackupDirectory 'SIMULATED-BACKUP.mrimgx')
       ReportPath = 'SIMULATED-REPORT.html'
@@ -215,9 +229,9 @@ if ($null -ne $existingImage -and -not $ForceNewBackup) {
     }
   } else {
     $requestedAt = Get-Date
-    Write-BackupLog -Level INFO -Message "Initiating Macrium Reflect backup: '$BackupDefinitionPath'..."
+    Write-BackupLog -Level INFO -Message "Initiating Macrium Reflect $BackupType backup: '$BackupDefinitionPath'..."
     Write-Host "`n[INFO] Starting Macrium Reflect backup execution..." -ForegroundColor Cyan
-    Start-Process -FilePath $reflectPath -ArgumentList @('-e', $BackupDefinitionPath) | Out-Null
+    Start-Process -FilePath $reflectPath -ArgumentList (Get-ReflectArgumentList -Type $BackupType -DefinitionPath $BackupDefinitionPath) | Out-Null
 
     $deadline = $requestedAt.AddMinutes($TimeoutMinutes)
     $completed = $null

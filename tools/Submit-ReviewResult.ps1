@@ -50,7 +50,7 @@ param(
     Implementation Choices (BUG-360): a tracked path under an ignored directory counts as staged when git add exits 1
     but leaves no unstaged change for it; an untracked ignored path still fails.
     Implementation Choices (BUG-352): the BCR exclusion rule comes from modules/LcmReviewCompletionAtoms.psm1.
-    Version: 10.2.5
+    Version: 10.2.6
     Date: 2026-11-18
 
     Implementation Choices (CRP-332): before staging, every committable or already staged path is normalized to CRLF
@@ -350,9 +350,11 @@ if ($LASTEXITCODE -ne 0) {
     $reviewRecord | ConvertTo-Json -Depth 3 | Set-Content -LiteralPath $finalReviewFile -Encoding UTF8
 
     # Append to active CM activity ledger
+    # CRP-357: the log line carries the workspace version (was a fixed 10.0.0).
+    $lcmLogVersion = try { [string](Get-Content -LiteralPath (Join-Path $workspaceRoot 'LCM_AI\.agents\version.json') -Raw | ConvertFrom-Json).version } catch { 'unknown' }
     $cmLogFile = Join-Path $workspaceRoot "LCM_Inventory\logs\cm_activity.log"
     if (Test-Path -LiteralPath (Split-Path $cmLogFile -Parent)) {
-        $cmLogEntry = "[$timestamp] [REVIEW_SUBMITTED] [Target: $repoName] [Version: 10.0.0] [PushDate: $timestamp] [AffectedRepos: $repoName, LCM_Inventory] [TestScope: $testScopeVal] REVIEW_COMPLETED - Committed review completion ($newCommitSha): $commitMsg"
+        $cmLogEntry = "[$timestamp] [REVIEW_SUBMITTED] [Target: $repoName] [Version: $lcmLogVersion] [PushDate: $timestamp] [AffectedRepos: $repoName, LCM_Inventory] [TestScope: $testScopeVal] REVIEW_COMPLETED - Committed review completion ($newCommitSha): $commitMsg"
         Add-Content -LiteralPath $cmLogFile -Value $cmLogEntry -Encoding UTF8
     }
 

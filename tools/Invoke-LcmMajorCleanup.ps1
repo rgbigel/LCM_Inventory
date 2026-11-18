@@ -47,6 +47,9 @@ param(
   Implementation Choices (CRP-355, operator Q1-Q3 2026-11-18): review receipts git does not track are deleted like
            the others. A one-time rule (ids below 150 counted as major 8, because the 10.0.0 migration overwrote their
            version and dates) was used for the run CLEANUP-20261118_220338 and removed afterwards.
+           Archiving only adds markers (origin_major, completed_at, pushed_at, archived_at, archive_run) to the full
+           row; no field is ever removed (operator 2026-11-18: dropping fields on a table is unforgivable). The first
+           run had removed fields; they were restored from git the same day.
 .NOTES
   Caveats: deleted files that git does not track (logs, data/reviews) cannot be recovered; the manifest marks them.
            Reparse points are removed as links only (RULE-PS-018).
@@ -273,7 +276,7 @@ foreach ($e in @($data.entries | Where-Object { $_.selected })) {
   $deleted.Add($e)
 }
 
-# ledger compaction: rows stay, details go
+# ledger archiving (CRP-355 revision B): rows stay complete; archiving only adds markers, no field is ever removed
 $store = Get-ProposalStore
 $stamp = (Get-Date).ToString('yyyy-MM-dd HH:mm:ss')
 $ledgerIds = @($data.ledger | ForEach-Object { [int]$_.id })
@@ -284,17 +287,17 @@ foreach ($p in @($store.proposals)) {
     $history = @(if ($p.PSObject.Properties['state_history'] -and $p.state_history) { $p.state_history })
     $pushedAt = @($history | Where-Object { [string]$_.state -eq 'pushed' } | Select-Object -Last 1 | ForEach-Object { [string]$_.timestamp })
     $completedAt = @($history | Where-Object { [string]$_.state -eq 'completed' } | Select-Object -Last 1 | ForEach-Object { [string]$_.timestamp })
-    $row = [ordered]@{}
-    foreach ($key in 'id', 'crp_id', 'cr_id', 'title', 'state', 'lcm_version', 'timestamp', 'commit_sha', 'github_url', 'bundle_dir') {
-      $row[$key] = if ($p.PSObject.Properties[$key]) { $p.$key } else { $null }
+    $markers = [ordered]@{
+      origin_major = (@($data.ledger | Where-Object { [int]$_.id -eq [int]$p.id })[0]).origin_major
+      completed_at = if ($completedAt.Count -gt 0) { $completedAt[0] } else { $null }
+      pushed_at    = if ($pushedAt.Count -gt 0) { $pushedAt[0] } else { $null }
+      archived_at  = $stamp
+      archive_run  = [string]$data.run_id
     }
-    $row['origin_major'] = (@($data.ledger | Where-Object { [int]$_.id -eq [int]$p.id })[0]).origin_major
-    $row['completed_at'] = if ($completedAt.Count -gt 0) { $completedAt[0] } else { $null }
-    $row['pushed_at'] = if ($pushedAt.Count -gt 0) { $pushedAt[0] } else { $null }
-    if ([string]::IsNullOrWhiteSpace([string]$row['commit_sha'])) { $row['commit_sha'] = 'unknown' }
-    $row['archived_at'] = $stamp
-    $row['archive_run'] = [string]$data.run_id
-    $list.Add([pscustomobject]$row); $compacted++
+    foreach ($k in $markers.Keys) {
+      if (-not $p.PSObject.Properties[$k]) { $p | Add-Member -NotePropertyName $k -NotePropertyValue $markers[$k] -Force }
+    }
+    $list.Add($p); $compacted++
   } else { $list.Add($p) }
 }
 $store.proposals = @($list)
@@ -307,7 +310,8 @@ $ledgerMd.Add('Module: docs/Proposals/LEDGER_COMPLETED.md  '); $ledgerMd.Add('Pu
 $ledgerMd.Add('Path: LCM_Inventory/docs/Proposals/LEDGER_COMPLETED.md  '); $ledgerMd.Add('Authors: Rolf, Claude  '); $ledgerMd.Add('Version: 10.7.4  '); $ledgerMd.Add("Date: $stamp"); $ledgerMd.Add('')
 $ledgerMd.Add('| ID | Title | Final state | Major | Completed | Pushed | Commit | Run |'); $ledgerMd.Add('|:---|:---|:---|:---|:---|:---|:---|:---|')
 foreach ($r in @($store.proposals | Where-Object { $_.PSObject.Properties['archived_at'] -and $_.archived_at } | Sort-Object { [int]$_.id })) {
-  $ledgerMd.Add(('| {0} | {1} | {2} | {3} | {4} | {5} | {6} | {7} |' -f $r.crp_id, ([string]$r.title).Replace('|', '/'), $r.state, $r.origin_major, $r.completed_at, $r.pushed_at, $r.commit_sha, $r.archive_run))
+  $fv = { param($row, [string]$name) if ($row.PSObject.Properties[$name] -and $null -ne $row.$name -and [string]$row.$name -ne '') { [string]$row.$name } else { '-' } }  # full rows (CRP-355 revision B): a field may be absent
+  $ledgerMd.Add(('| {0} | {1} | {2} | {3} | {4} | {5} | {6} | {7} |' -f (& $fv $r 'crp_id'), (& $fv $r 'title').Replace('|', '/'), (& $fv $r 'state'), (& $fv $r 'origin_major'), (& $fv $r 'completed_at'), (& $fv $r 'pushed_at'), (& $fv $r 'commit_sha'), (& $fv $r 'archive_run')))
 }
 $ledgerPath = Join-Path $invRoot 'docs\Proposals\LEDGER_COMPLETED.md'
 $ledgerMd | Set-Content -LiteralPath $ledgerPath -Encoding UTF8

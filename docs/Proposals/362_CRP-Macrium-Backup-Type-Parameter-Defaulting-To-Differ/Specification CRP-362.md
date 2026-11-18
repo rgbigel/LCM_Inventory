@@ -6,7 +6,7 @@ Path: LCM_Inventory/docs/Proposals/362_CRP-Macrium-Backup-Type-Parameter-Default
 Authors: Rolf, Claude  
 Version: 10.7.4
 Status: Suggested  
-Date: 2026-11-18 21:54:58
+Date: 2026-11-18 23:12:53
 
 ```yaml
 CRP-ID: CRP-362
@@ -14,10 +14,10 @@ Title: Macrium Backup Type Parameter Defaulting To Differential
 Scope: LCM_Inventory
 Baseline-Version: 10.7.4
 Author: Rolf
-Date: 2026-11-18 21:54:58
-Status: Suggested
-Plan-State: suggested
-Progress-State: undecided
+Date: 2026-11-18 23:12:53
+Status: In Review
+Plan-State: in_review
+Progress-State: verification
 Priority: 5
 App-ID: None
 ```
@@ -26,7 +26,7 @@ App-ID: None
 
 ## 1. Executive Summary & Intent
 Operator 2026-11-18: Start-MacriumDailyBackup.ps1 runs Reflect.exe -e <definition> without a backup type, so Reflect makes a full backup (many hours). New optional parameter -BackupType Full|Diff|Inc, default Diff, passed to Reflect as -full / -diff / -inc.
-- Review: this Specification only (Plan and Walkthrough not written yet).
+- DOIT by operator instruction 2026-11-18 ("doit for all"). Review: this Specification and the Walkthrough. Plan: none beyond this Specification.
 
 ## 2. Gate 0 Contract
 ### Target State

@@ -48,3 +48,5 @@ Segment 2 (Go daemon, with the operator present, because the daemon is rebuilt a
 ## Merged Findings
 
 - [merged 2026-11-18 15:53:44] From the CRP-355 analysis 2026-11-18 (operator choice 1.1): (a) Invoke-LCM_Push.ps1 calls Invoke-LCM_Maintenance a second time (around line 301, "-TailLines 100") without the -DryRun/-LogOnly guard, so a push dry run deletes script logs and junk (cause of the 186 deleted logs); (b) Invoke-LCM_Push does not purge pushed bundles (Remove-LcmProposalBundle is only reachable via purge-bundle), contrary to RULE-LCM-020, 130 pushed bundles remain; (c) the Control Hub Maintenance button calls Invoke-WorkspaceMaintenance.ps1, which does not exist.
+
+- [merged 2026-11-18 23:11:44] Found 2026-11-18 23:05 (BCR for CRP-332 refused): Invoke-MacriumDailyBcrBaseline.ps1 rejects the _LCM profile when its folder handling is dirShowAll; the operator's new _LCM session uses dirShowAll and is the one that shows baseline orphans (the old tab with the implicit default hid deleted files on F:). Accept dirShowAll as well.

@@ -3,6 +3,8 @@
     Executes proposal lifecycle actions and configures lifecycle governance settings.
 .DESCRIPTION
     Module: tools/Invoke-ProposalAction.ps1
+    Implementation Choices (CRP-357): accept / complete / proceed hand all Gate 2 targets of one call to
+    Complete-Review.ps1 together (one commit per repository, lifecycle once); cohorts as well.
     Implementation Choices (BUG-341): the bcr action launches exactly one joint BCR for a declared
     cohort (RULE-LCM-002); all other members only record their review metadata (-NoLaunch). Before,
     tight granularity launched one review per member (6 BC windows for COH-331 on 2026-11-16).
@@ -20,7 +22,7 @@
     repositories as obligations without a lifecycle change (R1).
     Implementation Choices (BUG-352): the BCR exclusion rule comes from modules/LcmReviewCompletionAtoms.psm1.
     Implementation Choices (CRP-359): bundle Specification paths come from Resolve-LcmBundleDocumentPath.
-    Version: 10.2.6
+    Version: 10.2.7
     Date: 2026-11-18
 #>
 
@@ -201,80 +203,27 @@ function Convert-LegacyProposalStateToLifecycleState {
 $script:LcmGovernedCompletionRepositories = @('Git_Repositories', 'LCM_AI', 'LCM_Inventory', 'LCM_Shared', 'LCM_Supervision', 'LCM_Tools')
 $script:LcmSubmitReviewResultPath = Join-Path $PSScriptRoot 'Submit-ReviewResult.ps1'
 
-function Get-LcmChangedGovernedRepositories {
-    [CmdletBinding()]
-    param()
+$script:LcmCompleteReviewPath = Join-Path $PSScriptRoot 'Complete-Review.ps1'
 
-    $changed = [System.Collections.Generic.List[string]]::new()
-    foreach ($name in $script:LcmGovernedCompletionRepositories) {
-        $repoPath = if ('Git_Repositories' -eq $name) { $workspaceRoot } else { Join-Path $workspaceRoot $name }
-        if (-not (Test-Path -LiteralPath (Join-Path $repoPath '.git'))) { continue }
-        $paths = @(
-            git -C $repoPath diff --name-only
-            git -C $repoPath diff --cached --name-only
-            git -C $repoPath ls-files --others --exclude-standard
-        ) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
-        $committable = @($paths | Where-Object { -not (Test-LcmBcrExcludedPath -RelativePath $_) })
-        if ($committable.Count -gt 0) { $changed.Add($name) }
-    }
-    return @($changed)
-}
-
-function Invoke-LcmItemReviewCompletion {
+function Invoke-LcmReviewCompletion {
+    # CRP-357: single completion entry point for one or more items (Complete-Review.ps1).
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
-        [int]$ProposalId,
+        [string[]]$Identity,
 
-        [Parameter(Mandatory = $true)]
-        [hashtable]$ReviewResultArgs
+        [string]$Details = '',
+
+        [switch]$MinimalTests,
+
+        [switch]$Force
     )
 
-    $submitPath = $script:LcmSubmitReviewResultPath
-    $store = Get-ProposalStore
-    $proposal = @($store.proposals | Where-Object { [int]$_.id -eq $ProposalId })[0]
-    $origin = [string]$ReviewResultArgs.RepositoryPath
-    $changed = @(Get-LcmChangedGovernedRepositories)
-    if ([string]$proposal.state -eq 'completed') {
-        # CRP-346 R1: completed confirms the completion; repositories still uncommitted are committed as
-        # obligations without changing the lifecycle. Changes in the origin repository belong to a new revision.
-        $remaining = @($changed | Where-Object { $_ -ne $origin })
-        if ($changed -contains $origin) {
-            Write-Host "Origin repository '$origin' has changes; they belong to a new revision (reinstate), not to this completed item." -ForegroundColor Yellow
-        }
-        if ($remaining.Count -eq 0) {
-            Write-Host 'Item is completed; no other governed repository has uncommitted changes.' -ForegroundColor Cyan
-            return
-        }
-        Write-Host ("Completed item: committing remaining repository(ies): {0}." -f ($remaining -join ', ')) -ForegroundColor Cyan
-        foreach ($repository in $remaining) {
-            $null = Register-LcmCrossRepositoryReviewObligation -Id $ProposalId -Repository $repository -Reason 'Remaining repository of a completed item (CRP-346 R1).'
-            $repositoryArgs = $ReviewResultArgs.Clone()
-            $repositoryArgs.RepositoryPath = $repository
-            & $submitPath @repositoryArgs
-        }
-        return
-    }
-    $openObligationRepositories = @(Get-LcmProposalReviewObligations -Proposal $proposal -UnresolvedOnly | ForEach-Object { [string]$_.repository })
-    if ($changed.Count -eq 0 -and $openObligationRepositories.Count -eq 0) {
-        & $submitPath @ReviewResultArgs
-        return
-    }
-
-    $primary = if ($changed -contains $origin -or $changed.Count -eq 0) { $origin } else { $changed[-1] }
-    $secondary = @(@($changed) + @($openObligationRepositories) | Where-Object { $_ -ne $primary } | Sort-Object -Unique)
-    Write-Host ("Completion covers {0} repository(ies): {1}; primary (lifecycle) repository: {2}." -f ($secondary.Count + 1), ((@($secondary) + @($primary)) -join ', '), $primary) -ForegroundColor Cyan
-    foreach ($repository in $secondary) {
-        $null = Register-LcmCrossRepositoryReviewObligation -Id $ProposalId -Repository $repository -Reason 'Covered by the workspace-wide BCR review; committed during item completion (BUG-351).'
-        $repositoryArgs = $ReviewResultArgs.Clone()
-        $repositoryArgs.RepositoryPath = $repository
-        & $submitPath @repositoryArgs
-    }
-    $primaryArgs = $ReviewResultArgs.Clone()
-    $primaryArgs.RepositoryPath = $primary
-    & $submitPath @primaryArgs
+    $completeArgs = @{ Target = $Identity; Details = $Details; SubmitScriptPath = $script:LcmSubmitReviewResultPath; WorkspaceRoot = $workspaceRoot }
+    if ($MinimalTests) { $completeArgs.MinimalTests = $true }
+    if ($Force) { $completeArgs.Force = $true }
+    & $script:LcmCompleteReviewPath @completeArgs
 }
-
 function Add-LcmBugMergedFinding {
     [CmdletBinding()]
     param(
@@ -766,37 +715,19 @@ switch -Regex ($Action) {
                 Notes = $Details
             }
             if ($IncludeUnreviewed) { $cohortArgs.IncludeUnreviewed = $true }
-            & (Join-Path $PSScriptRoot 'Complete-ReviewCohort.ps1') @cohortArgs
+            & $script:LcmCompleteReviewPath -Target $targetCohortId -Details $Details  # CRP-357
             break
         }
         $targetIds = @(Resolve-ProposalIdExpression -Expression $TargetExpression)
-        $updated = @()
-        foreach ($id in $targetIds) {
-            $store = Get-ProposalStore
-            $proposal = @($store.proposals | Where-Object { $_.id -eq $id })[0]
-            if ($null -eq $proposal) { throw "Proposal #$Id was not found." }
-            if ($proposal.state -in @('verified', 'in_progress')) {
-                if ($proposal.state -eq 'in_progress') {
-                    Move-LcmProposalLifecycleState -Id $id -State 'verified' -Details "Auto-transitioned to verified for completion" | Out-Null
-                }
-                Move-LcmProposalLifecycleState -Id $id -State 'in_review' -Details "Auto-transitioned to in_review for completion" | Out-Null
-                $store = Get-ProposalStore
+        $store = Get-ProposalStore
+        $identities = @(foreach ($id in $targetIds) {
                 $proposal = @($store.proposals | Where-Object { $_.id -eq $id })[0]
-            }
-            $repo = if ($proposal.origin_repo) { $proposal.origin_repo } else { 'LCM_Inventory' }
-            $crpTag = if ($proposal.crp_id) { $proposal.crp_id } elseif ($proposal.cr_id) { $proposal.cr_id } else { "CRP-$id" }
-            $reviewResultArgs = @{
-                RepositoryPath = $repo
-                CRP = $crpTag
-                Result = 'Completed'
-                Notes = $Details
-            }
-            if ($MinimalTests) { $reviewResultArgs.MinimalTests = $true }
-            if ($Force) { $reviewResultArgs.Force = $true }
-            Invoke-LcmItemReviewCompletion -ProposalId $id -ReviewResultArgs $reviewResultArgs
-            $p = Get-ProposalStore | ForEach-Object { @($_.proposals | Where-Object { $_.id -eq $id })[0] }
-            if ($p) { $updated += $p }
-        }
+                if ($null -eq $proposal) { throw "Proposal #$id was not found." }
+                if ($proposal.crp_id) { [string]$proposal.crp_id } else { [string]$id }
+            })
+        Invoke-LcmReviewCompletion -Identity $identities -Details $Details -MinimalTests:$MinimalTests -Force:$Force  # CRP-357: together
+        $store = Get-ProposalStore
+        $updated = @($store.proposals | Where-Object { $_.id -in $targetIds })
         Write-Host "`nCompleted Proposal(s) through the exact-CRP review result path:" -ForegroundColor Cyan
         Format-ProposalsTable -Proposals $updated
         break
@@ -832,17 +763,9 @@ switch -Regex ($Action) {
                 }
             }
             if ($targetProg -eq 'completed') {
-                $repo = if ($existing.origin_repo) { $existing.origin_repo } else { 'LCM_Inventory' }
                 $crpTag = if ($existing.crp_id) { $existing.crp_id } elseif ($existing.cr_id) { $existing.cr_id } else { "CRP-$id" }
-                $reviewResultArgs = @{
-                    RepositoryPath = $repo
-                    CRP = $crpTag
-                    Result = 'Completed'
-                    Notes = if ($Details) { $Details } else { "Advanced to completed by operator" }
-                }
-                if ($MinimalTests) { $reviewResultArgs.MinimalTests = $true }
-                if ($Force) { $reviewResultArgs.Force = $true }
-                Invoke-LcmItemReviewCompletion -ProposalId $id -ReviewResultArgs $reviewResultArgs
+                $proceedDetails = if ($Details) { $Details } else { "Advanced to completed by operator" }
+                Invoke-LcmReviewCompletion -Identity @($crpTag) -Details $proceedDetails -MinimalTests:$MinimalTests -Force:$Force  # CRP-357
             } else {
                 $effectiveDetails = if ($Details) { $Details } else { "Advanced to $targetProg by operator" }
                 Move-LcmProposalLifecycleState -Id $id -State $targetProg -Details $effectiveDetails | Out-Null
@@ -872,6 +795,7 @@ switch -Regex ($Action) {
         }
         $targetIds = @(Resolve-ProposalIdExpression -Expression $TargetExpression)
         $updated = @()
+        $gate2Identities = [System.Collections.Generic.List[string]]::new()
         $store = Get-ProposalStore
         foreach ($id in $targetIds) {
             $existing = $store.proposals | Where-Object { $_.id -eq $id } | Select-Object -First 1
@@ -898,17 +822,8 @@ switch -Regex ($Action) {
                         $store = Get-ProposalStore
                         $existing = $store.proposals | Where-Object { $_.id -eq $id } | Select-Object -First 1
                     }
-                    $repo = if ($existing.origin_repo) { $existing.origin_repo } else { 'LCM_Inventory' }
                     $crpTag = if ($existing.crp_id) { $existing.crp_id } elseif ($existing.cr_id) { $existing.cr_id } else { "CRP-$id" }
-                    $reviewResultArgs = @{
-                        RepositoryPath = $repo
-                        CRP = $crpTag
-                        Result = 'Completed'
-                        Notes = if ($Details) { $Details } else { "Gate 2 Acceptance: Operator accepted item" }
-                    }
-                    if ($MinimalTests) { $reviewResultArgs.MinimalTests = $true }
-                    if ($Force) { $reviewResultArgs.Force = $true }
-                    Invoke-LcmItemReviewCompletion -ProposalId $id -ReviewResultArgs $reviewResultArgs
+                    $gate2Identities.Add([string]$crpTag)  # CRP-357: completed together after the loop
                 }
             }
             if ($MinimalTests) {
@@ -925,6 +840,11 @@ switch -Regex ($Action) {
             if ($p) {
                 $updated += $p
             }
+        }
+        if ($gate2Identities.Count -gt 0) {
+            $gate2Details = if ($Details) { $Details } else { 'Gate 2 Acceptance: Operator accepted item' }
+            Invoke-LcmReviewCompletion -Identity @($gate2Identities) -Details $gate2Details -MinimalTests:$MinimalTests -Force:$Force  # CRP-357: together
+            $updated = @(Get-ProposalStore | ForEach-Object { $_.proposals } | Where-Object { $_.id -in $targetIds })
         }
         Write-Host "`nAccepted Proposal(s):" -ForegroundColor Cyan
         Format-ProposalsTable -Proposals $updated
