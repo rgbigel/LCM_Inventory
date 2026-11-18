@@ -88,6 +88,19 @@ Add-Content -LiteralPath $env:BUG351_SUBMIT_LOG -Value $RepositoryPath
     $script:registered.Count | Should -Be 0
   }
 
+  It 'commits only the remaining repositories of a completed item (CRP-346 R1)' {
+    Set-Content -LiteralPath (Join-Path $script:workspaceRoot 'LCM_AI\rule.md') -Value 'x'
+    Set-Content -LiteralPath (Join-Path $script:workspaceRoot 'LCM_Inventory\tool.ps1') -Value 'x'
+    $script:testStore.proposals[0].state = 'completed'
+    try {
+      Invoke-LcmItemReviewCompletion -ProposalId 1 -ReviewResultArgs @{ RepositoryPath = 'LCM_Inventory'; CRP = 'BUG-001'; Result = 'Completed'; Notes = 'n' }
+      @(Get-Content -LiteralPath $script:submitLog) | Should -BeExactly @('LCM_AI')
+      @($script:registered) | Should -BeExactly @('LCM_AI')
+    } finally {
+      $script:testStore.proposals[0].state = 'in_review'
+    }
+  }
+
   It 'merges a finding into an existing BUG ledger entry and its specification' {
     $bundle = Join-Path $script:workspaceRoot 'LCM_Inventory\docs\Proposals\BUG-001-Test'
     $null = New-Item -ItemType Directory -Path $bundle -Force

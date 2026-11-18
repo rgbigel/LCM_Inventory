@@ -6,8 +6,8 @@
 #          batch operations, review granularity ('coarse' | 'tight'), repo review queue inspection,
 #          and persistent ledger storage in LCM_Inventory.
 # Authors: Rolf, Claude, LCM_AI Engine
-# Version: 10.2.5
-# Date: 2026-11-18 13:40:00
+# Version: 10.2.6
+# Date: 2026-11-18 14:40:00
 # Implementation Choices (CRP-334): New-LCM_Proposal resolves the LCM version before scaffolding
 #          (inventory.json, then LCM_AI/.agents/version.json, else fail), writes it and -Priority
 #          into the Specification template (with DOX header) and the ledger row consistently.
@@ -19,6 +19,10 @@
 #          version from LCM_AI/.agents/version.json first (inventory.json is refreshed only by an audit).
 #          Moving to verified while Plan or Walkthrough is still a placeholder warns; it does not block
 #          (bookkeeping never aborts a lifecycle step, RULE-EFF-002).
+# Implementation Choices (CRP-346): an implied review cohort (scope omitted or a repository) contains only items
+#          that can accept a review (verified, in_review); in_progress items are returned as NotReady for the
+#          operator question (do / ride as WIP / hold) and never block. A bare bcr needs no selection or
+#          confirmation (R5); explicit and declared scopes are unchanged.
 # =====================================================================
 
 Set-StrictMode -Version Latest
@@ -1531,6 +1535,22 @@ function Get-LcmReviewCohortResolution {
         }
     }
 
+    # CRP-346 R2-R4: an implied cohort takes only items that can accept a review; in_progress items are reported.
+    $isImplied = $resolutionKind -in @('computed', 'repository')
+    $notReady = @(
+        if ($isImplied) {
+            foreach ($proposal in @($candidates | Where-Object { [string]$_.state -eq 'in_progress' } | Sort-Object id)) {
+                [PSCustomObject]@{
+                    Id       = [int]$proposal.id
+                    Identity = if ($proposal.PSObject.Properties['crp_id'] -and $proposal.crp_id) { [string]$proposal.crp_id } else { "CRP-$($proposal.id)" }
+                    State    = 'in_progress'
+                }
+            }
+        }
+    )
+    if ($isImplied) {
+        $candidates = @($candidates | Where-Object { [string]$_.state -in @('verified', 'in_review') })
+    }
     $members = @(
         foreach ($proposal in $candidates | Sort-Object id) {
             $state = [string]$proposal.state
@@ -1558,10 +1578,11 @@ function Get-LcmReviewCohortResolution {
     if ($repositories.Count -gt $MaxRepositoryCount) { $broadeningReasons.Add("repository limit $MaxRepositoryCount exceeded") }
 
     $needsSelection = $members.Count -eq 0 -or (
-        $resolutionKind -ne 'declared' -and
+        $resolutionKind -notin @('declared', 'computed') -and
         ($members.Count -gt $MaxProposalCount -or $repositories.Count -gt $MaxRepositoryCount)
     )
-    $requiresConfirmation = $resolutionKind -ne 'declared' -and $broadeningReasons.Count -gt 0
+    # CRP-346 R5: a bare bcr (computed) is the primary form and needs no confirmation.
+    $requiresConfirmation = $resolutionKind -notin @('declared', 'computed') -and $broadeningReasons.Count -gt 0
     $receiptPayload = [ordered]@{
         resolution_kind     = $resolutionKind
         declared_cohort_id  = $cohortId
@@ -1584,6 +1605,7 @@ function Get-LcmReviewCohortResolution {
         BroadeningReasons   = @($broadeningReasons)
         RequiresConfirmation = $requiresConfirmation
         NeedsSelection      = $needsSelection
+        NotReady            = $notReady
         Fingerprint         = $fingerprint
     }
 }

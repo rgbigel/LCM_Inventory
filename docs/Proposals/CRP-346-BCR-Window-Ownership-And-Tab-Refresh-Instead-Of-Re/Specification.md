@@ -6,7 +6,7 @@ Path: LCM_Inventory/docs/Proposals/CRP-346-BCR-Window-Ownership-And-Tab-Refresh-
 Authors: Rolf, Claude  
 Version: 10.6.4
 Status: Suggested  
-Date: 2026-11-18 13:41:35
+Date: 2026-11-18 14:32:27
 
 ```yaml
 CRP-ID: CRP-346
@@ -14,10 +14,10 @@ Title: BCR Window Ownership And Tab Refresh Instead Of Relaunch
 Scope: LCM_Inventory
 Baseline-Version: 10.6.4
 Author: Rolf, Claude
-Date: 2026-11-18 13:41:35
-Status: In Progress
-Plan-State: in_progress
-Progress-State: in_progress
+Date: 2026-11-18 14:32:27
+Status: In Review
+Plan-State: in_review
+Progress-State: verification
 Priority: 6
 App-ID: None
 ```
@@ -28,7 +28,7 @@ App-ID: None
 - Specification accepted by the operator on 2026-11-18 13:41:35 (Gate 1, including section 4 and the 2026-11-18 evidence).
 Operator 2026-11-17: BCR recognises the BC window it started, locates the _LCM tab (AHK atom) and refreshes it instead of opening another window. Depends on the non-elevated BC and AHK atom CRPs.
 - Since 2026-11-18 it also carries the rule clarifications for review completion and implied cohorts (section 4, R1-R5).
-- Review: this Specification only. The Implementation Plan and Walkthrough are not written yet (implementation has not started).
+- Review: this Specification (new section 5: the exact rule texts to apply, operator option B) and the Walkthrough (choices made without the operator, untested paths).
 
 ## 2. Gate 0 Contract
 ### Target State
@@ -68,6 +68,35 @@ Source: meta analysis of the stalled CRP-350 completion (2026-11-18). Tool defec
 ### 4.3 Explicit Non-Goals
 - Tool fixes (obligation registration, proposal creation/merge, Tool Explorer): BUG-351.
 - Ledger store consolidation (proposals.db sole store, decision B) and path-to-item attribution.
+## 5. Rule Texts To Apply (operator option B, 2026-11-18)
+
+To be applied to `LCM_AI/.agents/rules` by the operator or Antigravity (ADMINMODE), with the RULE-AUTH-002 sync (`AGENTS.md` quick reference, `LCM_AI/docs/LCM-Rules-Cross-Reference.md`, Claude adapter `.claude/rules/`). Each entry names the place and the exact text.
+
+### 5.1 `ProposalReviewFlowPolicy.md`, RULE-LCM-002, end of "Automatic BCR Gate Invariant" (R2-R4)
+Append:
+> An implied review scope (scope omitted, or a repository) forms a temporary cohort only from items whose state allows review acceptance (`verified`, `in_review`); their cross-repository review obligations are registered before the item completes. This implied cohort is the sanctioned form of the bare `bcr`; it does not fall back to rows or selections. An `in_progress` item whose changes lie inside the reviewed area is not a member and never blocks: the operator is asked to `do <ID>` (finish to `verified`, then include), to let its changes ride as WIP, or to `hold <ID>`; before asking, the agent checks whether the item's intent blocks the target at all. A `DOIT` item joins an implied cohort only once it is `verified`.
+
+### 5.2 `ProposalReviewFlowPolicy.md`, RULE-LCM-016 item 3 (`COMPLETE`), new bullets after "Never invokes a remote push." (R1, BUG-351)
+> - One accepted workspace review covers every governed repository. `COMPLETE <ID>` commits each governed repository with committable changes: the other repositories first, each as a resolved cross-repository review obligation, the primary (origin) repository last, which moves the item to `completed`.
+> - `completed` confirms the completion and is no boundary: `COMPLETE` on a `completed` item commits the governed repositories that are still uncommitted, as obligations, without a lifecycle change. Changes in the item's origin repository belong to a new revision (`reinstate`).
+
+### 5.3 `ReviewCommitGovernancePolicy.md`, RULE-REV-012 (R6, window identity)
+Item 2, replace the first sentence by:
+> The launcher appends the review scope (`[CRP-xxx]`) only to the window it started or reuses, identified by its record (process ID, start time, window handle, mounted drive), never by a title search.
+
+Item 4, replace the first bullet by:
+> - Automation and AI agents `MUST NEVER` re-launch a Beyond Compare review session while their recorded review window is open; they refresh its `_LCM` tab instead, also after a newer image was remounted on the same drive. A baseline is remounted only when the underlying image has physically changed. A window is the same review when its compare roots are `<drive>:\Git_Repositories` and `D:\Git_Repositories`; the folder focused below the roots is irrelevant.
+
+### 5.4 `macro-definitions.md`, MACRO: BCR (R5)
+Replace the rules bullets 2 and 4 by:
+> - when scope is omitted (the primary form), the dispatcher resolves exactly one declared open cohort; if none exists, it forms the implied cohort of all `verified` and `in_review` items (RULE-LCM-002). `in_progress` items are named with the choices `do`, ride as WIP, or `hold`, and never block.
+> - the bare form needs no confirmation. Explicit repository scopes beyond the configured proposal or repository limits still require explicit operator selection. An item parameter otherwise only labels the window title.
+
+### 5.5 `macro-definitions.md`, MACRO: COMPLETE (R1)
+Add after the first rules bullet:
+> - a single item commits every governed repository with changes, the other repositories first as obligations and its origin repository last; a `completed` item commits only its remaining repositories, without a lifecycle change (RULE-LCM-016).
+
+Observation, not changed here: the bullet "automatically closes matching Beyond Compare review window" contradicts RULE-REV-012 item 1 and the window reuse of this CRP; the code does not close windows.
 ## Evidence: BCR test 2026-11-18 13:23 (BUG-340)
 - BCR remounted F: from the 2026-11-14 image to today's image (10:35) and launched a new BC window (pid 40376, 13:23:55) although the review window of 2026-11-17 (pid 33268, 20:09:02) was open. The tool then exited with code 1 (cause unknown, see BUG-340 report).
 - The review tag was set on the wrong window: the old window's title now ends in `[BUG-340]`, the new window has no tag (title set by window search, not by the recorded process).

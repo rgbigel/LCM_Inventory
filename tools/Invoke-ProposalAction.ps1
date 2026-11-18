@@ -15,7 +15,10 @@
     continuation does not open one BCR per repository. (b) bug/suggest without a target create a new BUG/CRP
     (-Title, -Details); bug with a BUG target and -Details merges the finding into that BUG.
     Authors: Rolf, LCM_AI Engine, Claude
-    Version: 10.2.3
+    Implementation Choices (CRP-346): bcr names the in_progress items an implied cohort leaves out, with the
+    choices do / ride as WIP / hold (R3); complete on a completed item commits its remaining governed
+    repositories as obligations without a lifecycle change (R1).
+    Version: 10.2.4
     Date: 2026-11-18
 #>
 
@@ -241,6 +244,26 @@ function Invoke-LcmItemReviewCompletion {
     $proposal = @($store.proposals | Where-Object { [int]$_.id -eq $ProposalId })[0]
     $origin = [string]$ReviewResultArgs.RepositoryPath
     $changed = @(Get-LcmChangedGovernedRepositories)
+    if ([string]$proposal.state -eq 'completed') {
+        # CRP-346 R1: completed confirms the completion; repositories still uncommitted are committed as
+        # obligations without changing the lifecycle. Changes in the origin repository belong to a new revision.
+        $remaining = @($changed | Where-Object { $_ -ne $origin })
+        if ($changed -contains $origin) {
+            Write-Host "Origin repository '$origin' has changes; they belong to a new revision (reinstate), not to this completed item." -ForegroundColor Yellow
+        }
+        if ($remaining.Count -eq 0) {
+            Write-Host 'Item is completed; no other governed repository has uncommitted changes.' -ForegroundColor Cyan
+            return
+        }
+        Write-Host ("Completed item: committing remaining repository(ies): {0}." -f ($remaining -join ', ')) -ForegroundColor Cyan
+        foreach ($repository in $remaining) {
+            $null = Register-LcmCrossRepositoryReviewObligation -Id $ProposalId -Repository $repository -Reason 'Remaining repository of a completed item (CRP-346 R1).'
+            $repositoryArgs = $ReviewResultArgs.Clone()
+            $repositoryArgs.RepositoryPath = $repository
+            & $submitPath @repositoryArgs
+        }
+        return
+    }
     $openObligationRepositories = @(Get-LcmProposalReviewObligations -Proposal $proposal -UnresolvedOnly | ForEach-Object { [string]$_.repository })
     if ($changed.Count -eq 0 -and $openObligationRepositories.Count -eq 0) {
         & $submitPath @ReviewResultArgs
@@ -646,6 +669,10 @@ switch -Regex ($Action) {
         Write-Host "`nResolved BCR Cohort ($($resolution.ResolutionKind)):" -ForegroundColor Cyan
         $resolution.Members | Format-Table Identity, Repository, State, Classification -AutoSize
         Write-Host "Resolution receipt: $receiptPath" -ForegroundColor DarkGray
+        # CRP-346 R3: items not ready for review are named with the operator's choices; they never block.
+        foreach ($pending in @($resolution.NotReady)) {
+            Write-Host ("Not in this review: {0} is {1}. Choose: 'do {2}' (finish to verified, then review), let its changes ride as WIP (default), or 'hold {2}'." -f $pending.Identity, $pending.State, $pending.Id) -ForegroundColor Yellow
+        }
 
         if ($Preview) {
             break

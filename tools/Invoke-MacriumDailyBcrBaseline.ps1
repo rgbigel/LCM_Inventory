@@ -18,8 +18,13 @@
   remounted again (6 remounts for one cohort BCR on 2026-11-16).
   Path: LCM_Inventory/tools/Invoke-MacriumDailyBcrBaseline.ps1
   Authors: Rolf, LCM_AI Engine, Claude
-  Version: 10.2.7
-  Date: 2026-11-17
+  Implementation Choices (CRP-346): BCR records the review window it starts (process ID, start time, handle,
+  mounted drive) in scratch/BC_Review/review-window.json and tags only that window. A later run - also after
+  a remount of a newer image on the same drive - refreshes its _LCM tab through the registered AHK tab atom
+  instead of launching; a new window is launched only when no reusable window or no _LCM tab exists. Windows
+  started before CRP-346 are adopted when exactly one window shows the _LCM tab.
+  Version: 10.2.8
+  Date: 2026-11-18
 .NOTES
   Caveats: Drive mounting requires administrative elevation (delegated to elevated worker via Invoke-ElevatedTest.ps1
   or Port 9876 daemon); Macrium Reflect UI automation requires Session 1 interactive desktop access. Mount operations
@@ -478,6 +483,107 @@ function Get-LcmReviewWindows {
   })
 }
 
+# CRP-346: BCR owns the review window it starts. The record identifies it by process ID, process start time and
+# window handle (not by title, which shows only the active tab); the mounted drive is the compare root of the
+# _LCM session (F:\Git_Repositories against D:\Git_Repositories); the folder focused below the roots is irrelevant.
+$script:ReviewWindowRecordPath = Join-Path $PSScriptRoot '..\scratch\BC_Review\review-window.json'
+
+function Save-LcmReviewWindowRecord {
+  param(
+    [Parameter(Mandatory = $true)] [System.Diagnostics.Process]$Window,
+    [Parameter(Mandatory = $true)] [string]$MountedDrive,
+    [string]$Scope = ''
+  )
+  $record = [ordered]@{
+    ProcessId    = $Window.Id
+    StartTime    = $Window.StartTime.ToString('o')
+    Handle       = [int64]$Window.MainWindowHandle
+    MountedDrive = $MountedDrive.TrimEnd(':').ToUpperInvariant() + ':'
+    ReviewScope  = $Scope
+    RecordedAt   = (Get-Date).ToString('yyyy-MM-dd HH:mm:ss')
+  }
+  $dir = Split-Path $script:ReviewWindowRecordPath -Parent
+  if (-not (Test-Path -LiteralPath $dir)) { $null = New-Item -ItemType Directory -Path $dir -Force }
+  $record | ConvertTo-Json | Set-Content -LiteralPath $script:ReviewWindowRecordPath -Encoding UTF8
+}
+
+function Find-LcmReusableReviewWindow {
+  param([Parameter(Mandatory = $true)] [string]$MountedDrive)
+  $drive = $MountedDrive.TrimEnd(':').ToUpperInvariant() + ':'
+  if (Test-Path -LiteralPath $script:ReviewWindowRecordPath) {
+    try {
+      $record = Get-Content -LiteralPath $script:ReviewWindowRecordPath -Raw | ConvertFrom-Json
+      $window = Get-Process -Id ([int]$record.ProcessId) -ErrorAction SilentlyContinue
+      if ($null -ne $window -and $window.ProcessName -eq 'BCompare' -and $window.MainWindowHandle -ne 0 -and
+          $window.StartTime.ToString('o') -eq [string]$record.StartTime) {
+        if ([string]$record.MountedDrive -eq $drive) { return $window }
+        Write-BaselineLog -Level INFO -Message "Recorded review window (PID $($window.Id)) compares $($record.MountedDrive), not $drive; a new window is needed."
+        return $null
+      }
+    } catch {
+      Write-BaselineLog -Level WARN -Message "Review window record unreadable ($($_.Exception.Message)); falling back to title search."
+    }
+  }
+  # Windows started before CRP-346 have no record: adopt exactly one window whose active tab is _LCM.
+  $legacy = @(Get-LcmReviewWindows)
+  if ($legacy.Count -eq 1) { return $legacy[0] }
+  return $null
+}
+
+function Invoke-LcmReviewWindowRefresh {
+  param([Parameter(Mandatory = $true)] [System.Diagnostics.Process]$Window)
+  try {
+    Import-Module -Name (Join-Path $PSScriptRoot '..\modules\LcmAhkAtoms.psm1') -Force
+    $result = Invoke-LcmAhkAtom -Intent 'select-beyondcomparetab' -ArgumentList @([string][int64]$Window.MainWindowHandle, 'refresh', '_LCM') -TimeoutSeconds 30
+    foreach ($line in @(([string]$result.Output) -split "`r?`n" | Where-Object { $_ })) { Write-BaselineLog -Level INFO -Message "[AHK] $line" }
+    # CRP-346: 0 refreshed, 3 no _LCM tab (launch allowed); anything else is a failure that must not cause a relaunch.
+    return $(if ($result.ExitCode -eq 0) { 'Refreshed' } elseif ($result.ExitCode -eq 3) { 'NoLcmTab' } else { 'Failed' })
+  } catch {
+    Write-BaselineLog -Level WARN -Message "Tab refresh atom failed ($($_.Exception.Message))."
+    return 'Failed'
+  }
+}
+
+function Open-LcmReviewWindow {
+  param(
+    [Parameter(Mandatory = $true)] [string]$BComparePath,
+    [Parameter(Mandatory = $true)] [string]$MountedDrive,
+    [string]$Scope = ''
+  )
+  $existing = Find-LcmReusableReviewWindow -MountedDrive $MountedDrive
+  if ($null -ne $existing) {
+    $refreshStatus = Invoke-LcmReviewWindowRefresh -Window $existing
+    if ($refreshStatus -eq 'Failed') {
+      Write-BaselineLog -Level WARN -Message "Could not refresh the review window (PID $($existing.Id)); no new window is launched. Press Ctrl+F5 (Full Refresh) in its _LCM tab."
+      return [pscustomobject]@{ Launched = $false; Reused = $true }
+    }
+    if ($refreshStatus -eq 'Refreshed') {
+      $existing.Refresh()
+      Save-LcmReviewWindowRecord -Window $existing -MountedDrive $MountedDrive -Scope $Scope
+      $reviewTitle = Set-LcmReviewWindowTitle -Window $existing -Scope $Scope
+      Write-BaselineLog -Level INFO -Message "Refreshed the _LCM tab of the existing review window (PID $($existing.Id)) instead of launching; title '$reviewTitle'."
+      return [pscustomobject]@{ Launched = $false; Reused = $true }
+    }
+    Write-BaselineLog -Level INFO -Message "Existing review window (PID $($existing.Id)) has no _LCM tab; launching a new review window."
+  }
+  $before = @(Get-Process -Name 'BCompare' -ErrorAction SilentlyContinue | ForEach-Object { $_.Id })
+  Start-LcmBCompareProcess -BComparePath $BComparePath -Arguments @('/solo', '_LCM')
+  $deadline = (Get-Date).AddSeconds(60)
+  $window = $null
+  do {
+    Start-Sleep -Milliseconds 250
+    $window = @(Get-Process -Name 'BCompare' -ErrorAction SilentlyContinue | Where-Object { $_.Id -notin $before -and $_.MainWindowHandle -ne 0 -and $_.MainWindowTitle -match '^_LCM' }) | Select-Object -First 1
+  } while ($null -eq $window -and (Get-Date) -lt $deadline)
+  if ($null -ne $window) {
+    Save-LcmReviewWindowRecord -Window $window -MountedDrive $MountedDrive -Scope $Scope
+    $reviewTitle = Set-LcmReviewWindowTitle -Window $window -Scope $Scope
+    Write-BaselineLog -Level INFO -Message "Set Beyond Compare review title to '$reviewTitle' (own window, PID $($window.Id))."
+  } else {
+    Write-BaselineLog -Level INFO -Message 'Beyond Compare launched; the new window did not appear within 60 s, so it was not recorded or tagged.'
+  }
+  return [pscustomobject]@{ Launched = $true; Reused = $false }
+}
+
 function Start-LcmBCompareProcess {
   param(
     [Parameter(Mandatory = $true)]
@@ -736,30 +842,10 @@ if ($NewBaseline) {
         if ([string]::IsNullOrWhiteSpace($bcomparePath)) {
           throw 'Beyond Compare 5 executable was not found.'
         }
-        # RULE-REV-012: Non-interfering window resolution without process termination
-        $reviewWindows = @(Get-LcmReviewWindows)
-        if ($reviewWindows.Count -gt 1) {
-          Write-BaselineLog -Level INFO -Message "Multiple _LCM Folder Compare windows are open (PID(s): $($reviewWindows.Id -join ', ')); reusing primary window without interference."
-          $reusedReviewWindow = $true
-        } elseif ($reviewWindows.Count -eq 1) {
-          $reusedReviewWindow = $true
-        } else {
-          Start-LcmBCompareProcess -BComparePath $bcomparePath -Arguments @('/solo', '_LCM')
-          $deadline = (Get-Date).AddSeconds(60)
-          do {
-            Start-Sleep -Milliseconds 250
-            $reviewWindows = @(Get-LcmReviewWindows)
-          } while ($reviewWindows.Count -eq 0 -and (Get-Date) -lt $deadline)
-          if ($reviewWindows.Count -ge 1) {
-            $launchedReviewWindow = $true
-          } else {
-            Write-BaselineLog -Level INFO -Message "Beyond Compare launched; window title discovery continuing asynchronously on desktop."
-          }
-        }
-        if ($reviewWindows.Count -ge 1) {
-          $reviewTitle = Set-LcmReviewWindowTitle -Window $reviewWindows[0] -Scope (Resolve-BaselineReviewScope)
-          Write-BaselineLog -Level INFO -Message "Set Beyond Compare review title to '$reviewTitle'."
-        }
+        # RULE-REV-012 / CRP-346: refresh the own review window; launch only when none is reusable.
+        $windowResult = Open-LcmReviewWindow -BComparePath $bcomparePath -MountedDrive $mountedBaseline.MountedDrive -Scope (Resolve-BaselineReviewScope)
+        $launchedReviewWindow = $windowResult.Launched
+        $reusedReviewWindow = $windowResult.Reused
       }
       $windowDisposition = if ($reusedReviewWindow) { 'reused the existing _LCM review window (fast-path)' } elseif ($launchedReviewWindow) { 'opened one _LCM review window (fast-path)' } else { 'did not launch a review window' }
       Write-BaselineLog -Level INFO -Message "Reused writable $($mountedBaseline.MountedDrive) Macrium baseline for '$((Resolve-BaselineReviewScope))' via fast-path; $windowDisposition."
@@ -847,20 +933,9 @@ if (-not $NoLaunchReview) {
   if (-not (Test-Path -LiteralPath $baselineWorkspacePath -PathType Container)) {
     throw "Mounted baseline at $($receipt.MountedDrive) does not contain a verified Git_Repositories container. Aborting Beyond Compare launch to prevent review locks."
   }
-  # RULE-REV-012: Non-interfering window resolution without process termination
+  # RULE-REV-012 / CRP-346 R6: after a remount the own review window is refreshed; launch only when none is reusable.
   $profileContract = Test-LcmBcrProfile -MountedDriveLetter $receipt.MountedDrive.TrimEnd(':')
-  Start-LcmBCompareProcess -BComparePath $bcomparePath -Arguments @('/solo', '_LCM')
-  $deadline = (Get-Date).AddSeconds(60)
-  do {
-    Start-Sleep -Milliseconds 250
-    $reviewWindows = @(Get-LcmReviewWindows)
-  } while ($reviewWindows.Count -eq 0 -and (Get-Date) -lt $deadline)
-  if ($reviewWindows.Count -ge 1) {
-    $reviewTitle = Set-LcmReviewWindowTitle -Window $reviewWindows[0] -Scope $reviewIdentity
-    Write-BaselineLog -Level INFO -Message "Set Beyond Compare review title to '$reviewTitle'."
-  } else {
-    Write-BaselineLog -Level INFO -Message "Beyond Compare launched; window title discovery continuing asynchronously on desktop."
-  }
+  $freshWindowResult = Open-LcmReviewWindow -BComparePath $bcomparePath -MountedDrive $receipt.MountedDrive -Scope $reviewIdentity
 }
 
 $mountEvidence = $receipt.MountEvidence
@@ -896,7 +971,7 @@ if ($freshCandidates.Count -gt 0 -and -not [string]::IsNullOrWhiteSpace($freshCa
   MountedDrive = $receipt.MountedDrive
   ReviewScope = $reviewIdentity
   Profile = if ($NoLaunchReview) { $null } else { $profileContract }
-  Launched = (-not $NoLaunchReview)
-  ReusedExistingReviewWindow = $false
+  Launched = if ($NoLaunchReview) { $false } else { [bool]$freshWindowResult.Launched }
+  ReusedExistingReviewWindow = if ($NoLaunchReview) { $false } else { [bool]$freshWindowResult.Reused }
   MountEvidence = $mountEvidence
 }

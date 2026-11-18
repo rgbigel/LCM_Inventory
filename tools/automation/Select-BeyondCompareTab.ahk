@@ -2,10 +2,10 @@
 ; Select-BeyondCompareTab.ahk - Beyond Compare Tab Atom (CRP-345, for CRP-346)
 ; Module: tools/automation/Select-BeyondCompareTab.ahk
 ; Purpose: Lists the tabs of one Beyond Compare window, activates the tab whose
-;          title starts with a given prefix, or activates it and refreshes it.
+;          title starts with a given prefix, or activates it and runs a Full Refresh (Ctrl+F5).
 ; Path: LCM_Inventory/tools/automation/Select-BeyondCompareTab.ahk
 ; Authors: Rolf, Claude
-; Version: 10.7.4
+; Version: 10.7.5
 ; Date: 2026-11-18
 ; Usage: AutoHotkey64.exe Select-BeyondCompareTab.ahk <hwnd> <list|activate|refresh> [titlePrefix]
 ;        Run only through Invoke-LcmAhkAtom (registered intent, non-elevated).
@@ -17,7 +17,7 @@
 ;        foreground window.
 ; Output: one line per item on stdout (or the file named by LCM_AHK_OUT):
 ;        TAB: <n>: <title>   STATUS: SUCCESS|NOT_FOUND|NO_WINDOW|BAD_ARGS
-; Exit codes: 0 success, 2 bad arguments or no window, 3 tab not found.
+; Exit codes: 0 success, 2 bad arguments or no window, 3 tab not found, 4 window not activated.
 ; ==============================================================================
 #Requires AutoHotkey v2.0
 #SingleInstance Off
@@ -54,10 +54,20 @@ for ctl in WinGetControls(target) {
 if (tabCount < 1)
   tabCount := 1
 
-WinActivate(target)
-if !WinWaitActive(target, , 5) {
-  Out("STATUS: NO_WINDOW (not activated)")
-  ExitApp(2)
+; Windows may refuse a foreground change (foreground lock); retry, restore a minimized window first.
+activated := false
+Loop 3 {
+  if (WinGetMinMax(target) = -1)
+    WinRestore(target)
+  WinActivate(target)
+  if WinWaitActive(target, , 2) {
+    activated := true
+    break
+  }
+}
+if !activated {
+  Out("STATUS: NOT_ACTIVATED (Windows refused the foreground change)")
+  ExitApp(4)
 }
 Sleep(300)
 
@@ -94,8 +104,8 @@ if !found {
 }
 Out("TAB: active: " title)
 if (mode = "refresh") {
-  Send("{F5}")
-  Out("REFRESH: F5 sent")
+  Send("^{F5}")
+  Out("REFRESH: Full Refresh (Ctrl+F5) sent")
 }
 Out("STATUS: SUCCESS")
 ExitApp(0)

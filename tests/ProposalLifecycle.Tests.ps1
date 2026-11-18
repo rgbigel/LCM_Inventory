@@ -256,7 +256,7 @@ Describe 'Proposal lifecycle authority' {
     $source | Should -Match ([regex]::Escape("'bcr_scope' -NotePropertyValue $(if ($resolution.DeclaredCohortId) { $resolution.DeclaredCohortId } else { $member.Identity })"))
   }
 
-  It 'classifies a computed BCR cohort without advancing lifecycle state' {
+  It 'classifies a computed BCR cohort without advancing lifecycle state (CRP-346: in_progress is reported, not a member)' {
     InModuleScope ProposalManager {
       $script:testProposalStore = [PSCustomObject]@{
         proposals = @(
@@ -270,10 +270,11 @@ Describe 'Proposal lifecycle authority' {
       $resolution = Get-LcmReviewCohortResolution
 
       $resolution.ResolutionKind | Should -Be 'computed'
-      $resolution.RequiresConfirmation | Should -BeTrue
+      $resolution.RequiresConfirmation | Should -BeFalse
       $resolution.NeedsSelection | Should -BeFalse
       @($resolution.Members | Where-Object Classification -eq 'review_ready').Id | Should -Be 9102
-      @($resolution.Members | Where-Object Classification -eq 'pending_verification').Id | Should -Be 9101
+      @($resolution.Members | Where-Object Classification -eq 'pending_verification').Count | Should -Be 0
+      @($resolution.NotReady).Id | Should -Be 9101
       @($resolution.Members | Where-Object Classification -eq 'already_in_review').Id | Should -Be 9103
       $script:testProposalStore.proposals[1].state | Should -Be 'verified'
     }
