@@ -6,13 +6,19 @@
 #          batch operations, review granularity ('coarse' | 'tight'), repo review queue inspection,
 #          and persistent ledger storage in LCM_Inventory.
 # Authors: Rolf, Claude, LCM_AI Engine
-# Version: 10.2.4
-# Date: 2026-11-15 16:40:00
+# Version: 10.2.5
+# Date: 2026-11-18 13:40:00
 # Implementation Choices (CRP-334): New-LCM_Proposal resolves the LCM version before scaffolding
 #          (inventory.json, then LCM_AI/.agents/version.json, else fail), writes it and -Priority
 #          into the Specification template (with DOX header) and the ledger row consistently.
 # Implementation Choices (BUG-336): Set-ProposalStore skips the live DB sync while LCM_PROPOSAL_STORE_PATH
 #          redirects the store (the sync always reads the live JSON).
+# Implementation Choices (BUG-340): New-LCM_Proposal scaffolds per REQ-WINV-014 (Specification = intake,
+#          review statement, Gate 0 skeleton; Plan and Walkthrough = one-line note with Status: Placeholder),
+#          reuses an existing bundle folder of the same ID, reports a shortened slug, and takes the LCM
+#          version from LCM_AI/.agents/version.json first (inventory.json is refreshed only by an audit).
+#          Moving to verified while Plan or Walkthrough is still a placeholder warns; it does not block
+#          (bookkeeping never aborts a lifecycle step, RULE-EFF-002).
 # =====================================================================
 
 Set-StrictMode -Version Latest
@@ -253,42 +259,59 @@ function New-LCM_Proposal {
         $AppId = $activeCtx.app_id
     }
 
-    # CRP-334: resolve the LCM version before any scaffolding; inventory first, then LCM_AI/.agents/version.json.
+    # CRP-334 / BUG-340: resolve the LCM version before any scaffolding; LCM_AI/.agents/version.json is the
+    # authority, inventory.json (refreshed only by an audit) is the fallback.
     $currentLcmVersion = ''
-    $invPath = Join-Path (Join-Path $WorkspaceRoot 'LCM_Inventory') 'data\inventory.json'
-    if (Test-Path -LiteralPath $invPath) {
-        try {
-            $inv = Get-Content -LiteralPath $invPath -Raw | ConvertFrom-Json
-            if ($inv.workspace_ai_baseline -and $inv.workspace_ai_baseline.GlobalLCMVersion) {
-                $currentLcmVersion = [string]$inv.workspace_ai_baseline.GlobalLCMVersion
-            }
-        } catch { }
+    $versionPath = Join-Path $WorkspaceRoot 'LCM_AI\.agents\version.json'
+    if (-not (Test-Path -LiteralPath $versionPath)) {
+        # Module-relative fallback: the workspace this module belongs to (WorkspaceRoot may be a sandbox).
+        $versionPath = Join-Path $PSScriptRoot '..\..\LCM_AI\.agents\version.json'
+    }
+    if (Test-Path -LiteralPath $versionPath) {
+        try { $currentLcmVersion = [string](Get-Content -LiteralPath $versionPath -Raw | ConvertFrom-Json).version } catch { }
     }
     if ([string]::IsNullOrWhiteSpace($currentLcmVersion)) {
-        $versionPath = Join-Path $WorkspaceRoot 'LCM_AI\.agents\version.json'
-        if (-not (Test-Path -LiteralPath $versionPath)) {
-            # Module-relative fallback: the workspace this module belongs to (WorkspaceRoot may be a sandbox).
-            $versionPath = Join-Path $PSScriptRoot '..\..\LCM_AI\.agents\version.json'
-        }
-        if (Test-Path -LiteralPath $versionPath) {
-            try { $currentLcmVersion = [string](Get-Content -LiteralPath $versionPath -Raw | ConvertFrom-Json).version } catch { }
+        $invPath = Join-Path (Join-Path $WorkspaceRoot 'LCM_Inventory') 'data\inventory.json'
+        if (Test-Path -LiteralPath $invPath) {
+            try {
+                $inv = Get-Content -LiteralPath $invPath -Raw | ConvertFrom-Json
+                if ($inv.workspace_ai_baseline -and $inv.workspace_ai_baseline.GlobalLCMVersion) {
+                    $currentLcmVersion = [string]$inv.workspace_ai_baseline.GlobalLCMVersion
+                }
+            } catch { }
         }
     }
     if ([string]::IsNullOrWhiteSpace($currentLcmVersion)) {
-        throw 'LCM version unresolved: neither inventory.json GlobalLCMVersion nor LCM_AI/.agents/version.json is readable.'
+        throw 'LCM version unresolved: neither LCM_AI/.agents/version.json nor inventory.json GlobalLCMVersion is readable.'
     }
 
     # CRP-162 Proposal Bundle Directory Standard
     $cleanSlug = ($Title -replace '[^a-zA-Z0-9]', '-') -replace '-+', '-' -replace '^-|-$', ''
-    if ($cleanSlug.Length -gt 50) { $cleanSlug = $cleanSlug.Substring(0, 50).TrimEnd('-') }
+    if ($cleanSlug.Length -gt 50) {
+        $fullSlug = $cleanSlug
+        $cleanSlug = $cleanSlug.Substring(0, 50).TrimEnd('-')
+        Write-Host ("Bundle folder name shortened to 50 characters: '{0}' (full: '{1}')." -f $cleanSlug, $fullSlug) -ForegroundColor Yellow
+    }
     $bundleDirName = "{0}-{1}" -f $canonicalId, $cleanSlug
-    $bundleRelPath = "docs/Proposals/$bundleDirName"
 
     $targetRepoDir = if ($OriginRepo -and ($OriginRepo -notlike 'LCM_*') -and (Test-Path (Join-Path $WorkspaceRoot $OriginRepo))) {
         Join-Path $WorkspaceRoot $OriginRepo
     } else {
         Join-Path $WorkspaceRoot 'LCM_Inventory'
     }
+
+    # BUG-340: an existing bundle folder of the same ID (e.g. created beforehand under the full title) is reused.
+    $proposalsDir = Join-Path $targetRepoDir 'docs\Proposals'
+    if (Test-Path -LiteralPath $proposalsDir) {
+        $existingBundle = @(Get-ChildItem -LiteralPath $proposalsDir -Directory -Filter "$canonicalId-*")
+        if ($existingBundle.Count -eq 1) {
+            $bundleDirName = $existingBundle[0].Name
+            Write-Host "Reusing existing bundle folder '$bundleDirName'." -ForegroundColor Yellow
+        } elseif ($existingBundle.Count -gt 1) {
+            throw "More than one bundle folder exists for ${canonicalId}: $(@($existingBundle.Name) -join ', ')."
+        }
+    }
+    $bundleRelPath = "docs/Proposals/$bundleDirName"
 
     $bundleFullPath = Join-Path $targetRepoDir "docs\Proposals\$bundleDirName"
     if (-not (Test-Path $bundleFullPath)) {
@@ -331,6 +354,7 @@ ${fence}
 
 ## 1. Executive Summary & Intent
 $Details
+- Review: this Specification only (Plan and Walkthrough not written yet).
 
 ## 2. Gate 0 Contract
 ### Target State
@@ -344,9 +368,6 @@ Define work intentionally excluded from this proposal. When this is ordinary,
 evidently scoped work, the default Non-Goal applies: Cause no havoc; ask rather
 than invent or infer, and avoid unnecessary complexity.
 
-## 3. Technical Requirements & Invariants
-- Invariant 1: Must conform to LCM governance standards.
-
 "@
         Set-Content -Path $specPath -Value $specContent.Trim() -Encoding UTF8
     }
@@ -357,18 +378,10 @@ than invent or infer, and avoid unnecessary complexity.
         $planContent = @"
 # Implementation Plan: $canonicalId - $Title
 
-## 1. Executive Summary & Problem Context
-$Details
+Status: Placeholder
+Date: $timestamp
 
-## 2. Gate 0 Traceability
-- Map each implementation component and verification activity to the accepted Gate 0 target-state clause.
-
-## 3. Proposed Changes
-### Component 1: Initial Implementation
-- Scaffolding baseline implementation for $Title.
-
-## 4. Verification Plan
-- Automated Pester tests and readiness quality gates.
+Not written yet: filled with the concrete changes per file when implementation starts, or replaced by "Nothing beyond the Specification."
 
 "@
         Set-Content -Path $planFilePath -Value $planContent.Trim() -Encoding UTF8
@@ -380,11 +393,10 @@ $Details
         $walkContent = @"
 # Walkthrough: $canonicalId - $Title
 
-## 1. Executive Summary
-Implementation and verification records for $canonicalId.
+Status: Placeholder
+Date: $timestamp
 
-## 2. Verification Evidence
-- Pending implementation execution.
+Not written yet: records the path taken (deviations, decisions made without the operator, issues on the way) and the test evidence during implementation.
 
 "@
         Set-Content -Path $walkFilePath -Value $walkContent.Trim() -Encoding UTF8
@@ -805,6 +817,26 @@ function Get-LcmProposalResumeState {
     return 'suggested'
 }
 
+function Get-LcmProposalPlaceholderDocuments {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [psobject]$Proposal,
+
+        [string]$WorkspaceRoot = 'D:\Git_Repositories'
+    )
+
+    # BUG-340: bundle documents that still carry the scaffold marker 'Status: Placeholder'.
+    if (-not $Proposal.PSObject.Properties['bundle_dir'] -or [string]::IsNullOrWhiteSpace([string]$Proposal.bundle_dir)) { return @() }
+    $originRepo = if ($Proposal.PSObject.Properties['origin_repo'] -and $Proposal.origin_repo -and ([string]$Proposal.origin_repo -notlike 'LCM_*') -and (Test-Path -LiteralPath (Join-Path $WorkspaceRoot ([string]$Proposal.origin_repo)))) { [string]$Proposal.origin_repo } else { 'LCM_Inventory' }
+    $bundlePath = Join-Path (Join-Path $WorkspaceRoot $originRepo) ([string]$Proposal.bundle_dir)
+    $placeholders = foreach ($name in @('Implementation_Plan.md', 'Walkthrough.md')) {
+        $docPath = Join-Path $bundlePath $name
+        if ((Test-Path -LiteralPath $docPath) -and ([System.IO.File]::ReadAllText($docPath) -match '(?m)^Status: Placeholder\s*$')) { $name }
+    }
+    return @($placeholders)
+}
+
 function Move-LcmProposalLifecycleState {
     [CmdletBinding()]
     param(
@@ -839,6 +871,12 @@ function Move-LcmProposalLifecycleState {
     }
     if (-not (Test-LcmProposalLifecycleTransition -FromState $fromState -ToState $State)) {
         throw "Invalid lifecycle transition for proposal #$($Id): $fromState -> $State"
+    }
+    if ($State -eq 'verified') {
+        $placeholderDocs = @(Get-LcmProposalPlaceholderDocuments -Proposal $proposal)
+        if ($placeholderDocs.Count -gt 0) {
+            Write-Warning "Proposal #$Id moves to verified while bundle document(s) are still placeholders: $($placeholderDocs -join ', ') (REQ-WINV-014)."
+        }
     }
     if ($State -eq 'completed') {
         $unresolvedObligations = @(Get-LcmProposalReviewObligations -Proposal $proposal -UnresolvedOnly)

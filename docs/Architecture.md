@@ -3,10 +3,10 @@
 Module: docs/Architecture.md  
 Purpose: Authoritative architectural specification for LCM_Inventory, the central Configuration Management (CM), proposal ledger, and review-gating engine of the Lifecycle Model (LCM).  
 Path: D:/Git_Repositories/LCM_Inventory/docs/Architecture.md  
-Authors: Rolf, LCM_AI Engine  
-Version: 10.2.1
+Authors: Rolf, LCM_AI Engine, Claude  
+Version: 10.2.2
 Status: Authoritative Architecture  
-Date: 2026-10-18
+Date: 2026-11-18 12:51:40
 
 ---
 
@@ -50,6 +50,12 @@ Each proposal bundle retains its operator-authored intake in
 proposal wording, while those lifecycle documents capture subsequently approved
 requirements, implementation, and verification. ShowCM's **Edit Original CRP**
 action resolves this file only; it must not substitute a lifecycle document.
+
+The three lifecycle documents divide the work: the Specification says what and
+why, the Implementation Plan lists the concrete changes, and the Walkthrough
+records the path actually taken and the test evidence. The Specification's
+Executive Summary tells the reviewer whether the other two need reading
+(REQ-WINV-014).
 
 For historical proposals whose original intake was not retained, restoration
 must be explicitly identified and limited to the authoritative ledger intake

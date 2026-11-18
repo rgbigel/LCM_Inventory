@@ -3,10 +3,10 @@
 Module: docs/Requirements.md  
 Purpose: Normative technical requirements, environmental prerequisites, safety boundaries, and compliance constraints for LCM_Inventory.  
 Path: D:/Git_Repositories/LCM_Inventory/docs/Requirements.md  
-Authors: Rolf, LCM_AI Engine  
-Version: 10.2.0
+Authors: Rolf, LCM_AI Engine, Claude  
+Version: 10.2.1
 Status: Authoritative Requirements  
-Date: 2026-10-13
+Date: 2026-11-18 12:51:40
 
 ---
 
@@ -153,3 +153,18 @@ commit.
   row's Item kind and state, disable or refuse invalid actions, and show the
   resolved target, member dispositions, synchronization/no-op result, BCR
   result, and failure reason in both result UI and append-only audit evidence.
+
+### REQ-WINV-014: Proposal Bundle Document Roles (operator 2026-11-18)
+
+- Each bundle document MUST have its own content and MUST NOT repeat the text
+  of another bundle document:
+  - `Specification.md`: what and why (intent, Gate 0 Contract).
+  - `Implementation_Plan.md`: the concrete planned changes per file and
+    function, only where they go beyond the Specification; otherwise a one-line
+    "not written yet" or "nothing beyond the Specification" note.
+  - `Walkthrough.md`: the path actually taken (deviations, decisions made
+    without the operator, issues on the way) and the test evidence.
+- The Executive Summary of `Specification.md` MUST state briefly whether, and
+  why, the Implementation Plan or the Walkthrough needs review. Without such a
+  statement the operator reviews only the Specification.
+- Rule candidate: RULE-LCM-009 (learned advice, accepted 2026-11-18).
