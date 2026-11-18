@@ -1,6 +1,6 @@
 # Walkthrough: CRP-354 - Show CRP Opens All Bundle Documents In Notepad Plus Plus Tabs
 
-Date: 2026-11-18 15:27:39
+Date: 2026-11-18 20:51:16
 
 ## 1. Path taken and issues on the way
 - Correction of Specification section 4 / T3: the rendered preview is not only reached through the removed actions; "Show Repo Docs" (Architecture diagrams) uses the same document window. Because the other document items are not part of this CRP (Q1), the preview and the window stay; "Show CRP" does not use them. The window's "Edit in Notepad++" button still opens VS Code (`/open_editor` runs `code -g`); left for a separate decision.
@@ -18,3 +18,28 @@ Date: 2026-11-18 15:27:39
 - Hidden test dependencies found and updated: `tests/ControlHubSafety.Tests.ps1` (row menu order looked for `showProposalSpec`; label "Committed - Ready to Push") and `tests/ProposalLifecycle.Tests.ps1` (label "2 - REVIEW"). Result: `ControlHubSafety` + `ProposalLifecycle` 53 passed, 8 failed; all 8 are pre-existing (3 lifecycle module cases as before; 5 ControlHubSafety cases whose expected texts do not match the committed HEAD template either, test file unchanged since 2026-11-10).
 - Operator decision 2026-11-18 on the legacy-document gap: B, history stays unchanged (no fallback search for closed items without `bundle_dir`).
 - Not yet clicked in the browser: the button itself (operator live test at Gate 2; refresh the Control Hub page first).
+
+## 3. Revision 2 (2026-11-18 20:03:51)
+
+- Operator live test: "Show CRP" works; "Edit Original CRP" opened an empty VS Code window.
+- Cause: its fallback picked any bundle file not named `Specification.md` / `Implementation_Plan.md` / `Walkthrough.md`; since CRP-359 that is `Specification <ID>.md`, which went to `/open_editor` (VS Code) instead of an original CRP that no longer exists.
+- Change: button, `openOriginalProposalInEditor` and `getOriginalProposalDocumentKey` removed (template 10.2.7 -> 10.2.8); `openProposalDocInNotepad` stays (used by the document modal). Test `ControlHubSafety.Tests.ps1` now asserts the absence.
+- Evidence: `node --check` both inline scripts OK; no doubled CR; no remaining caller; `ControlHubSafety` 6 passed, 5 failed - the same 5 pre-existing cases (the edited case fails only on its old `prio === 0` assertion).
+- Not changed: the document modal's "Edit in Notepad++" button calls `/open_editor`, which opens VS Code (label and behaviour differ); outside this revision, noted for the operator.
+
+## 4. Operator changes at Gate 2 (2026-11-18 20:51:16)
+
+- Kept: rendered preview, Show Repo Docs, Show Review Receipt, Show State History (nothing removed).
+- Editor buttons: `openProposalDocInNotepad` and the activity-log button no longer call `/open_editor` (VS Code); all three editor paths and "Show CRP" send `pwsh -NoProfile -File LCM_Inventory\tools\Open-LcmNotepadPlusPlus.ps1 <files>` through the DO (template 10.2.8).
+- Foreground: the new tool opens the files, then runs the new registered AHK atom `activate-window` (`tools/automation/Activate-Window.ahk`, non-elevated): Windows does not let a program started by the background daemon take the foreground by itself.
+- Catalog: `Update-ToolCatalog.ps1` + `Sync-LcmToolCatalogDb.ps1`: intents `open-lcmnotepadplusplus`, `activate-window` (both `elevated = false`).
+
+| Check                                   | Result                                              |
+|:----------------------------------------|:----------------------------------------------------|
+| Parse gate (tool, tests)                | 0 errors                                            |
+| `node --check` both inline scripts     | OK; no doubled CR                                   |
+| `OpenLcmNotepadPlusPlus.Tests.ps1`      | 5/5 (paths, registration, atom exits 2 and 3)       |
+| `ControlHubSafety.Tests.ps1`            | 6 passed, 5 failed: the same 5 pre-existing cases   |
+| Live, through `do.exe -sync`            | 3 CRP-354 documents opened; foreground VS Code -> Notepad++ |
+
+- Operator check at Gate 2: refresh the Control Hub page, then "Show CRP" and "Show Review Receipt" -> "Edit in Notepad++".

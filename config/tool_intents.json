@@ -1,60 +1,9 @@
 {
   "version": "1.0.0",
   "description": "Direct operational intents to executable commands ledger for AI pairs and operators",
-  "total_intents": 688,
-  "updated_at": "2026-11-18 16:15:38",
+  "total_intents": 692,
+  "updated_at": "2026-11-18 20:49:01",
   "intents": {
-    "showcm": {
-      "goal": "Open Configuration Management Control Hub dashboard",
-      "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/Show-LcmControl.ps1",
-      "parameters": {},
-      "trampoline": "ShowCM.cmd",
-      "elevated": false,
-      "group": "LCM_Inventory",
-      "category": "Configuration Management",
-      "audience": "User",
-      "role": "GUI",
-      "call_count": 2,
-      "last_called_at": "2026-11-11 15:59:36.891",
-      "last_duration_ms": 0.0,
-      "total_duration_ms": 142.85,
-      "is_primary_intent": true
-    },
-    "rules": {
-      "goal": "Open LCM Rules and Governance Matrix dashboard",
-      "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/Show-Rules.ps1",
-      "parameters": {},
-      "trampoline": "ShowRules.cmd",
-      "elevated": false,
-      "group": "LCM_Inventory",
-      "category": "Utility",
-      "audience": "Developer",
-      "role": "Utility",
-      "call_count": 1,
-      "last_called_at": "2026-11-11 15:59:36.891",
-      "last_duration_ms": 0.0,
-      "total_duration_ms": 0.0,
-      "is_primary_intent": true
-    },
-    "controlhub": {
-      "goal": "Open Configuration Management Control Hub dashboard",
-      "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/Show-LcmControl.ps1",
-      "parameters": {},
-      "trampoline": "ShowCM.cmd",
-      "elevated": false,
-      "group": "LCM_Inventory",
-      "category": "Configuration Management",
-      "audience": "User",
-      "role": "GUI",
-      "call_count": 2,
-      "last_called_at": "2026-11-11 15:59:36.891",
-      "last_duration_ms": 0.0,
-      "total_duration_ms": 142.85,
-      "is_primary_intent": true
-    },
     "goodnight": {
       "goal": "Execute evening session archive and memory preservation",
       "executable": "pwsh.exe",
@@ -66,40 +15,6 @@
       "category": "Utility",
       "audience": "Developer",
       "role": "Utility",
-      "call_count": 1,
-      "last_called_at": "2026-11-11 15:59:36.891",
-      "last_duration_ms": 0.0,
-      "total_duration_ms": 0.0,
-      "is_primary_intent": true
-    },
-    "bcr": {
-      "goal": "Open Beyond Compare 5 review comparing workspace against today daily Macrium baseline",
-      "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/Invoke-MacriumDailyBcrBaseline.ps1",
-      "parameters": {},
-      "trampoline": "MacriumDailyBcrBaseline.cmd",
-      "elevated": false,
-      "group": "LCM_Inventory",
-      "category": "Beyond Compare Review",
-      "audience": "Developer",
-      "role": "ReviewGate",
-      "call_count": 1,
-      "last_called_at": "2026-11-11 15:59:36.891",
-      "last_duration_ms": 0.0,
-      "total_duration_ms": 0.0,
-      "is_primary_intent": true
-    },
-    "tools": {
-      "goal": "Open LCM Tool Explorer dashboard",
-      "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/Show-ToolsExplorer.ps1",
-      "parameters": {},
-      "trampoline": "ToolsExplorer.cmd",
-      "elevated": false,
-      "group": "LCM_Inventory",
-      "category": "Tool Discovery",
-      "audience": "User",
-      "role": "GUI",
       "call_count": 1,
       "last_called_at": "2026-11-11 15:59:36.891",
       "last_duration_ms": 0.0,
@@ -123,12 +38,12 @@
       "total_duration_ms": 0.0,
       "is_primary_intent": true
     },
-    "push": {
-      "goal": "Push all ahead workspace repositories to remote Git repositories in lockstep",
+    "rules": {
+      "goal": "Open LCM Rules and Governance Matrix dashboard",
       "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/Invoke-LCM_Push.ps1",
+      "script": "LCM_Inventory/tools/Show-Rules.ps1",
       "parameters": {},
-      "trampoline": "LCMPush.cmd",
+      "trampoline": "ShowRules.cmd",
       "elevated": false,
       "group": "LCM_Inventory",
       "category": "Utility",
@@ -138,6 +53,23 @@
       "last_called_at": "2026-11-11 15:59:36.891",
       "last_duration_ms": 0.0,
       "total_duration_ms": 0.0,
+      "is_primary_intent": true
+    },
+    "showcm": {
+      "goal": "Open Configuration Management Control Hub dashboard",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/Show-LcmControl.ps1",
+      "parameters": {},
+      "trampoline": "ShowCM.cmd",
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Configuration Management",
+      "audience": "User",
+      "role": "GUI",
+      "call_count": 2,
+      "last_called_at": "2026-11-11 15:59:36.891",
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 142.85,
       "is_primary_intent": true
     },
     "toolintents": {
@@ -157,6 +89,23 @@
       "total_duration_ms": 88.5,
       "is_primary_intent": true
     },
+    "push": {
+      "goal": "Push all ahead workspace repositories to remote Git repositories in lockstep",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/Invoke-LCM_Push.ps1",
+      "parameters": {},
+      "trampoline": "LCMPush.cmd",
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Utility",
+      "audience": "Developer",
+      "role": "Utility",
+      "call_count": 1,
+      "last_called_at": "2026-11-11 15:59:36.891",
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
+      "is_primary_intent": true
+    },
     "showtoolintents": {
       "goal": "Open LCM Tool Intents Explorer",
       "executable": "pwsh.exe",
@@ -174,21 +123,38 @@
       "total_duration_ms": 88.5,
       "is_primary_intent": true
     },
-    "hub": {
-      "goal": "Open Configuration Management Control Hub dashboard",
+    "goodmorning": {
+      "goal": "Execute morning workspace synchronization and environment verification",
       "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/Show-LcmControl.ps1",
+      "script": "LCM_Inventory/tools/Invoke-LCM_GoodMorning.ps1",
       "parameters": {},
-      "trampoline": "ShowCM.cmd",
+      "trampoline": "LCMGoodMorning.cmd",
       "elevated": false,
       "group": "LCM_Inventory",
-      "category": "Configuration Management",
-      "audience": "User",
-      "role": "GUI",
-      "call_count": 2,
+      "category": "Utility",
+      "audience": "Developer",
+      "role": "Utility",
+      "call_count": 1,
       "last_called_at": "2026-11-11 15:59:36.891",
       "last_duration_ms": 0.0,
-      "total_duration_ms": 142.85,
+      "total_duration_ms": 0.0,
+      "is_primary_intent": true
+    },
+    "tools": {
+      "goal": "Open LCM Tool Explorer dashboard",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/Show-ToolsExplorer.ps1",
+      "parameters": {},
+      "trampoline": "ToolsExplorer.cmd",
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Tool Discovery",
+      "audience": "User",
+      "role": "GUI",
+      "call_count": 1,
+      "last_called_at": "2026-11-11 15:59:36.891",
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": true
     },
     "readiness": {
@@ -225,21 +191,21 @@
       "total_duration_ms": 0.0,
       "is_primary_intent": true
     },
-    "goodmorning": {
-      "goal": "Execute morning workspace synchronization and environment verification",
+    "controlhub": {
+      "goal": "Open Configuration Management Control Hub dashboard",
       "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/Invoke-LCM_GoodMorning.ps1",
+      "script": "LCM_Inventory/tools/Show-LcmControl.ps1",
       "parameters": {},
-      "trampoline": "LCMGoodMorning.cmd",
+      "trampoline": "ShowCM.cmd",
       "elevated": false,
       "group": "LCM_Inventory",
-      "category": "Utility",
-      "audience": "Developer",
-      "role": "Utility",
-      "call_count": 1,
+      "category": "Configuration Management",
+      "audience": "User",
+      "role": "GUI",
+      "call_count": 2,
       "last_called_at": "2026-11-11 15:59:36.891",
       "last_duration_ms": 0.0,
-      "total_duration_ms": 0.0,
+      "total_duration_ms": 142.85,
       "is_primary_intent": true
     },
     "dismount": {
@@ -257,6 +223,40 @@
       "last_called_at": "2026-11-11 18:19:56.462",
       "last_duration_ms": 657.0,
       "total_duration_ms": 11101.0,
+      "is_primary_intent": true
+    },
+    "hub": {
+      "goal": "Open Configuration Management Control Hub dashboard",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/Show-LcmControl.ps1",
+      "parameters": {},
+      "trampoline": "ShowCM.cmd",
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Configuration Management",
+      "audience": "User",
+      "role": "GUI",
+      "call_count": 2,
+      "last_called_at": "2026-11-11 15:59:36.891",
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 142.85,
+      "is_primary_intent": true
+    },
+    "bcr": {
+      "goal": "Open Beyond Compare 5 review comparing workspace against today daily Macrium baseline",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/Invoke-MacriumDailyBcrBaseline.ps1",
+      "parameters": {},
+      "trampoline": "MacriumDailyBcrBaseline.cmd",
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Beyond Compare Review",
+      "audience": "Developer",
+      "role": "ReviewGate",
+      "call_count": 1,
+      "last_called_at": "2026-11-11 15:59:36.891",
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
       "is_primary_intent": true
     },
     "show-haauthdialog": {
@@ -676,7 +676,7 @@
     "analyze_lcm_components": {
       "goal": "analyze_lcm_components execution tool.",
       "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/analyze_lcm_components.py",
+      "script": "HaSSD06/analyze_lcm_components.py",
       "parameters": {},
       "trampoline": "HaSSD06analyzelcmcomponents.cmd",
       "elevated": false,
@@ -693,7 +693,7 @@
     "analyzelcmcomponents": {
       "goal": "analyze_lcm_components execution tool.",
       "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/analyze_lcm_components.py",
+      "script": "HaSSD06/analyze_lcm_components.py",
       "parameters": {},
       "trampoline": "HaSSD06analyzelcmcomponents.cmd",
       "elevated": false,
@@ -710,7 +710,7 @@
     "hassd06analyzelcmcomponents": {
       "goal": "analyze_lcm_components execution tool.",
       "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/analyze_lcm_components.py",
+      "script": "HaSSD06/analyze_lcm_components.py",
       "parameters": {},
       "trampoline": "HaSSD06analyzelcmcomponents.cmd",
       "elevated": false,
@@ -880,7 +880,7 @@
     "invoke_ha_backup": {
       "goal": "invoke_ha_backup execution tool.",
       "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/invoke_ha_backup.py",
+      "script": "HaSSD06/tools/invoke_ha_backup.py",
       "parameters": {},
       "trampoline": "HaSSD06habackup.cmd",
       "elevated": false,
@@ -897,7 +897,7 @@
     "invokehabackup": {
       "goal": "invoke_ha_backup execution tool.",
       "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/invoke_ha_backup.py",
+      "script": "HaSSD06/tools/invoke_ha_backup.py",
       "parameters": {},
       "trampoline": "HaSSD06habackup.cmd",
       "elevated": false,
@@ -914,7 +914,7 @@
     "hassd06habackup": {
       "goal": "invoke_ha_backup execution tool.",
       "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/invoke_ha_backup.py",
+      "script": "HaSSD06/tools/invoke_ha_backup.py",
       "parameters": {},
       "trampoline": "HaSSD06habackup.cmd",
       "elevated": false,
@@ -931,7 +931,7 @@
     "invoke_ha_core_update": {
       "goal": "invoke_ha_core_update execution tool.",
       "executable": "pwsh.exe",
-      "script": "HaSSD06/tools/invoke_ha_core_update.py",
+      "script": "LCM_Inventory/tools/invoke_ha_core_update.py",
       "parameters": {},
       "trampoline": "HaSSD06hacoreupdate.cmd",
       "elevated": false,
@@ -948,7 +948,7 @@
     "invokehacoreupdate": {
       "goal": "invoke_ha_core_update execution tool.",
       "executable": "pwsh.exe",
-      "script": "HaSSD06/tools/invoke_ha_core_update.py",
+      "script": "LCM_Inventory/tools/invoke_ha_core_update.py",
       "parameters": {},
       "trampoline": "HaSSD06hacoreupdate.cmd",
       "elevated": false,
@@ -965,7 +965,7 @@
     "hassd06hacoreupdate": {
       "goal": "invoke_ha_core_update execution tool.",
       "executable": "pwsh.exe",
-      "script": "HaSSD06/tools/invoke_ha_core_update.py",
+      "script": "LCM_Inventory/tools/invoke_ha_core_update.py",
       "parameters": {},
       "trampoline": "HaSSD06hacoreupdate.cmd",
       "elevated": false,
@@ -982,7 +982,7 @@
     "list_all_updates": {
       "goal": "list_all_updates execution tool.",
       "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/list_all_updates.py",
+      "script": "HaSSD06/list_all_updates.py",
       "parameters": {},
       "trampoline": "HaSSD06HaListUpdates.cmd",
       "elevated": false,
@@ -999,7 +999,7 @@
     "listallupdates": {
       "goal": "list_all_updates execution tool.",
       "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/list_all_updates.py",
+      "script": "HaSSD06/list_all_updates.py",
       "parameters": {},
       "trampoline": "HaSSD06HaListUpdates.cmd",
       "elevated": false,
@@ -1016,7 +1016,7 @@
     "hassd06halistupdates": {
       "goal": "list_all_updates execution tool.",
       "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/list_all_updates.py",
+      "script": "HaSSD06/list_all_updates.py",
       "parameters": {},
       "trampoline": "HaSSD06HaListUpdates.cmd",
       "elevated": false,
@@ -1195,7 +1195,7 @@
     "invoke-harenamecascade": {
       "goal": "Invoke-HaRenameCascade execution tool.",
       "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/Invoke-HaRenameCascade.ps1",
+      "script": "HaSSD06_Inventory/tools/Invoke-HaRenameCascade.ps1",
       "parameters": {
         "-DeviceId": "{OPTIONAL}",
         "-EntityId": "{OPTIONAL}",
@@ -1225,7 +1225,7 @@
     "invokeharenamecascade": {
       "goal": "Invoke-HaRenameCascade execution tool.",
       "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/Invoke-HaRenameCascade.ps1",
+      "script": "HaSSD06_Inventory/tools/Invoke-HaRenameCascade.ps1",
       "parameters": {
         "-DeviceId": "{OPTIONAL}",
         "-EntityId": "{OPTIONAL}",
@@ -1255,7 +1255,7 @@
     "hassd06inventoryharenamecascade": {
       "goal": "Invoke-HaRenameCascade execution tool.",
       "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/Invoke-HaRenameCascade.ps1",
+      "script": "HaSSD06_Inventory/tools/Invoke-HaRenameCascade.ps1",
       "parameters": {
         "-DeviceId": "{OPTIONAL}",
         "-EntityId": "{OPTIONAL}",
@@ -1692,8 +1692,10 @@
     "testharepoready": {
       "goal": "Test-RepoReadiness execution tool.",
       "executable": "pwsh.exe",
-      "script": "HaSSD06_Inventory/tools/Test-RepoReadiness.ps1",
-      "parameters": {},
+      "script": "HaSSD06/tools/Test-RepoReadiness.ps1",
+      "parameters": {
+        "-MinimalTests": "{OPTIONAL}"
+      },
       "trampoline": "TestHaRepoReady.cmd",
       "elevated": false,
       "group": "HaSSD06",
@@ -3385,6 +3387,40 @@
       "role": "Utility",
       "call_count": 1,
       "last_called_at": "2026-11-11 15:59:36.891",
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
+      "is_primary_intent": false
+    },
+    "activate-window": {
+      "goal": "Activate-Window execution tool.",
+      "executable": "AutoHotkey64.exe",
+      "script": "LCM_Inventory/tools/automation/Activate-Window.ahk",
+      "parameters": {},
+      "trampoline": null,
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Utility",
+      "audience": "Developer",
+      "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
+      "is_primary_intent": false
+    },
+    "activatewindow": {
+      "goal": "Activate-Window execution tool.",
+      "executable": "AutoHotkey64.exe",
+      "script": "LCM_Inventory/tools/automation/Activate-Window.ahk",
+      "parameters": {},
+      "trampoline": null,
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Utility",
+      "audience": "Developer",
+      "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
       "last_duration_ms": 0.0,
       "total_duration_ms": 0.0,
       "is_primary_intent": false
@@ -6309,6 +6345,46 @@
       "role": "Utility",
       "call_count": 1,
       "last_called_at": "2026-11-11 15:59:36.891",
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
+      "is_primary_intent": false
+    },
+    "open-lcmnotepadplusplus": {
+      "goal": "Open-LcmNotepadPlusPlus execution tool.",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/Open-LcmNotepadPlusPlus.ps1",
+      "parameters": {
+        "-Path": "{OPTIONAL}",
+        "-DryRun": "{OPTIONAL}"
+      },
+      "trampoline": "OpenLcmNotepadPlusPlus.cmd",
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Utility",
+      "audience": "Developer",
+      "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
+      "last_duration_ms": 0.0,
+      "total_duration_ms": 0.0,
+      "is_primary_intent": false
+    },
+    "openlcmnotepadplusplus": {
+      "goal": "Open-LcmNotepadPlusPlus execution tool.",
+      "executable": "pwsh.exe",
+      "script": "LCM_Inventory/tools/Open-LcmNotepadPlusPlus.ps1",
+      "parameters": {
+        "-Path": "{OPTIONAL}",
+        "-DryRun": "{OPTIONAL}"
+      },
+      "trampoline": "OpenLcmNotepadPlusPlus.cmd",
+      "elevated": false,
+      "group": "LCM_Inventory",
+      "category": "Utility",
+      "audience": "Developer",
+      "role": "Utility",
+      "call_count": 0,
+      "last_called_at": null,
       "last_duration_ms": 0.0,
       "total_duration_ms": 0.0,
       "is_primary_intent": false
@@ -10227,7 +10303,7 @@
     "@repair_test-onedrivesync": {
       "goal": "@Repair_Test-OneDriveSync execution tool.",
       "executable": "pwsh.exe",
-      "script": "LCM_Tools/tools/@Repair_Test-OneDriveSync.ps1",
+      "script": "LCM_Inventory/tools/@Repair_Test-OneDriveSync.ps1",
       "parameters": {
         "-FixAcl": "{OPTIONAL}",
         "-Reconcile": "{OPTIONAL}",
@@ -10251,7 +10327,7 @@
     "lcmtools@repairtestonedrivesync": {
       "goal": "@Repair_Test-OneDriveSync execution tool.",
       "executable": "pwsh.exe",
-      "script": "LCM_Tools/tools/@Repair_Test-OneDriveSync.ps1",
+      "script": "LCM_Inventory/tools/@Repair_Test-OneDriveSync.ps1",
       "parameters": {
         "-FixAcl": "{OPTIONAL}",
         "-Reconcile": "{OPTIONAL}",
@@ -10350,7 +10426,7 @@
     "export-antigravityreasoningtranscript": {
       "goal": "Export-AntigravityReasoningTranscript execution tool.",
       "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/Export-AntigravityReasoningTranscript.ps1",
+      "script": "LCM_Tools/tools/Export-AntigravityReasoningTranscript.ps1",
       "parameters": {
         "-SessionId": "$env:ANTIGRAVITY_CONVERSATION_ID",
         "-OutputPath": "{REQUIRED}",
@@ -10371,7 +10447,7 @@
     "exportantigravityreasoningtranscript": {
       "goal": "Export-AntigravityReasoningTranscript execution tool.",
       "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/Export-AntigravityReasoningTranscript.ps1",
+      "script": "LCM_Tools/tools/Export-AntigravityReasoningTranscript.ps1",
       "parameters": {
         "-SessionId": "$env:ANTIGRAVITY_CONVERSATION_ID",
         "-OutputPath": "{REQUIRED}",
@@ -10392,7 +10468,7 @@
     "lcmtoolsexportantigravityreasoningtranscript": {
       "goal": "Export-AntigravityReasoningTranscript execution tool.",
       "executable": "pwsh.exe",
-      "script": "LCM_Inventory/tools/Export-AntigravityReasoningTranscript.ps1",
+      "script": "LCM_Tools/tools/Export-AntigravityReasoningTranscript.ps1",
       "parameters": {
         "-SessionId": "$env:ANTIGRAVITY_CONVERSATION_ID",
         "-OutputPath": "{REQUIRED}",
@@ -10413,7 +10489,7 @@
     "killlogitechupdatefull": {
       "goal": "KillLogitechUpdateFull execution tool.",
       "executable": "pwsh.exe",
-      "script": "LCM_Tools/tools/KillLogitechUpdateFull.ps1",
+      "script": "LCM_Inventory/tools/KillLogitechUpdateFull.ps1",
       "parameters": {},
       "trampoline": "LCMToolsKillLogitechUpdateFull.cmd",
       "elevated": true,
@@ -10430,7 +10506,7 @@
     "lcmtoolskilllogitechupdatefull": {
       "goal": "KillLogitechUpdateFull execution tool.",
       "executable": "pwsh.exe",
-      "script": "LCM_Tools/tools/KillLogitechUpdateFull.ps1",
+      "script": "LCM_Inventory/tools/KillLogitechUpdateFull.ps1",
       "parameters": {},
       "trampoline": "LCMToolsKillLogitechUpdateFull.cmd",
       "elevated": true,
@@ -11242,7 +11318,7 @@
     "systemconfigurationasusdebloater": {
       "goal": "asus-debloater execution tool.",
       "executable": "pwsh.exe",
-      "script": "SystemConfiguration/Source/asus-debloater.ps1",
+      "script": "LCM_Inventory/tools/asus-debloater.ps1",
       "parameters": {},
       "trampoline": "SystemConfigurationasusdebloater.cmd",
       "elevated": true,
@@ -11259,11 +11335,9 @@
     "goadm": {
       "goal": "GoAdm execution tool.",
       "executable": "pwsh.exe",
-      "script": "SystemConfiguration/Source/GoAdm.ps1",
+      "script": "LCM_Inventory/tools/GoAdm.ps1",
       "parameters": {
-        "-Shell": "pwsh",
-        "-TraceMode": "{OPTIONAL}",
-        "-ShowAll": "{OPTIONAL}"
+        "-t": "{OPTIONAL}"
       },
       "trampoline": "SystemConfigurationGoAdm.cmd",
       "elevated": true,
@@ -11280,11 +11354,9 @@
     "systemconfigurationgoadm": {
       "goal": "GoAdm execution tool.",
       "executable": "pwsh.exe",
-      "script": "SystemConfiguration/Source/GoAdm.ps1",
+      "script": "LCM_Inventory/tools/GoAdm.ps1",
       "parameters": {
-        "-Shell": "pwsh",
-        "-TraceMode": "{OPTIONAL}",
-        "-ShowAll": "{OPTIONAL}"
+        "-t": "{OPTIONAL}"
       },
       "trampoline": "SystemConfigurationGoAdm.cmd",
       "elevated": true,
@@ -11301,7 +11373,7 @@
     "search certificate stores for private key container guids": {
       "goal": "search certificate stores for private key container Guids execution tool.",
       "executable": "pwsh.exe",
-      "script": "SystemConfiguration/Source/search certificate stores for private key container Guids.ps1",
+      "script": "LCM_Inventory/tools/search certificate stores for private key container Guids.ps1",
       "parameters": {},
       "trampoline": "SystemConfigurationsearch certificate stores for private key container Guids.cmd",
       "elevated": false,
@@ -11318,7 +11390,7 @@
     "systemconfigurationsearch certificate stores for private key container guids": {
       "goal": "search certificate stores for private key container Guids execution tool.",
       "executable": "pwsh.exe",
-      "script": "SystemConfiguration/Source/search certificate stores for private key container Guids.ps1",
+      "script": "LCM_Inventory/tools/search certificate stores for private key container Guids.ps1",
       "parameters": {},
       "trampoline": "SystemConfigurationsearch certificate stores for private key container Guids.cmd",
       "elevated": false,

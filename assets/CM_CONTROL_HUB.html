@@ -1,7 +1,12 @@
 <!--
   Template: CM_CONTROL_HUB.html
-  Version: 10.2.7
-  Date: 2026-11-18 15:40:00
+  Version: 10.2.8
+  Date: 2026-11-18 20:46:43
+  Implementation Choices (CRP-354, operator Gate 2 changes 2026-11-18): the document window's "Edit in Notepad++" button starts
+  Notepad++ through the DO like "Show CRP" (no /open_editor, which opened another VS Code window); both use
+  tools/Open-LcmNotepadPlusPlus.ps1, which also brings Notepad++ to the foreground; preview kept.
+  Implementation Choices (CRP-354 revision 2): "Edit Original CRP" removed with its helpers; a bundle holds only
+  "Specification <ID>.md", so there is no original CRP to edit; "Show CRP" is the single Documents entry for it.
   Implementation Choices (CRP-354): "Show CRP" opens Specification, Implementation Plan and Walkthrough as
   Notepad++ tabs through a direct DO call; Show Specification / Plan / Walkthrough / Diff removed; plan-state
   labels shortened to "Committed", "Verified", "2 - Review" (operator 2026-11-18).
@@ -2973,7 +2978,6 @@
                 <div style="border-top: 1px solid var(--line); margin: 4px 0;"></div>
                 <div class="show-dropdown-title">Documents (#${p.id})</div>
                 <button class="show-dropdown-item" onclick="showProposalBundle(${p.id})"><span class="btn-icon">📂</span> Show CRP</button>
-                <button class="show-dropdown-item" onclick="openOriginalProposalInEditor(${p.id})"><span class="btn-icon">📝</span> Edit Original CRP</button>
                 <button class="show-dropdown-item" onclick="showRepoDocs('${esc(p.origin_repo || "")}')"><span class="btn-icon">📁</span> Show Repo Docs</button>
                 <button class="show-dropdown-item" onclick="showReviewReceipt(${p.id})"><span class="btn-icon">🧾</span> Show Review Receipt</button>
                 <button class="show-dropdown-item" onclick="showStateHistory(${p.id})"><span class="btn-icon">📜</span> Show State History</button>
@@ -4235,14 +4239,6 @@
       });
     }
 
-    function getOriginalProposalDocumentKey(proposal) {
-      const tag = proposal?.crp_id || proposal?.cr_id || `CRP-${proposal?.id}`;
-      const keys = getProposalDocumentKeys(proposal);
-      const originalFileName = `${tag}.md`.toLowerCase();
-      return keys.find(key => key.toLowerCase().endsWith(`/${originalFileName}`)) ||
-        keys.find(key => !/(specification|implementation_plan|walkthrough)\.md$/i.test(key)) ||
-        null;
-    }
 
     function hasVisualDocumentContent(content) {
       return /```mermaid\b/i.test(content || "") || /!\[[^\]]*\]\([^)]+\)/.test(content || "");
@@ -4315,7 +4311,8 @@
       if (files.length === 0) {
         showToast(`No bundle documents found for ${tag}.`);
         return;
-      }      const command = `"C:\\Program Files\\Notepad++\\notepad++.exe" ${files.map(name => `"${(base + "/" + name).replace(/\//g, "\\")}"`).join(" ")}`;
+      }
+      const command = notepadToolCommand(files.map(name => base + "/" + name));
       if (!IS_RENDERED_CONTROL_HUB) {
         showToast("Developer template is not executable; no daemon command was sent.");
         return;
@@ -4339,11 +4336,31 @@
         showToast(`No editable proposal source is available for #${id}.`);
         return;
       }
-      fetch(DAEMON_URL + "/open_editor", {
+      openFileInNotepadPlusPlus(docKey);
+    }
+
+    // CRP-354: editor buttons start Notepad++ directly through the DO (same path as "Show CRP"); a relative path
+    // resolves against the workspace root (daemon working directory). No /open_editor (VS Code) detour.
+    // Open-LcmNotepadPlusPlus.ps1 opens the files as tabs and brings Notepad++ to the foreground (AHK atom
+    // activate-window), which a program started by the background daemon cannot do by itself.
+    function notepadToolCommand(paths) {
+      const quoted = paths.map(path => `"${String(path).replace(/\//g, "\\")}"`).join(" ");
+      return `pwsh -NoProfile -File "LCM_Inventory\\tools\\Open-LcmNotepadPlusPlus.ps1" ${quoted}`;
+    }
+
+    function openFileInNotepadPlusPlus(filePath) {
+      if (!IS_RENDERED_CONTROL_HUB) {
+        showToast("Developer template is not executable; no daemon command was sent.");
+        return;
+      }
+      const command = notepadToolCommand([filePath]);
+      fetch(DAEMON_URL + "/api/action", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ filePath: docKey })
-      });
+        body: JSON.stringify({ action: "DO", target: command, command: command, options: { sync: false }, caller: "ControlHub" })
+      }).then(res => res.json()).then(data => {
+        if (data.error || data.status === "ERROR") showToast(`Notepad++ failed: ${data.error || data.stderr || "daemon error"}`);
+      }).catch(err => showToast(`Notepad++ failed: ${err}`));
     }
 
     function showReviewReceipt(id) {
@@ -4387,15 +4404,6 @@
       openModal("docModal");
     }
 
-    function openOriginalProposalInEditor(id) {
-      const p = (proposalsData.proposals || []).find(x => x.id === id);
-      const originalKey = getOriginalProposalDocumentKey(p);
-      if (!originalKey) {
-        showToast(`No original CRP source is retained for #${id}; Specification.md is not used as a substitute.`);
-        return;
-      }
-      openProposalDocInNotepad(id, originalKey);
-    }
 
     function showRepoDocs(repoName) {
       const docKey = Object.keys(docsCache).find(k => k.startsWith(repoName + "/Architecture.md") || k.startsWith(repoName + "/README.md"));
@@ -4407,13 +4415,7 @@
     function showActivityLogs() {
       $("docModalTitle").innerText = `📋 Activity Log: cm_activity.log`;
       $("docModalBody").innerText = activeLog || "Activity log is empty.";
-      $("btnEditNotepad").onclick = () => {
-        fetch(DAEMON_URL + "/open_editor", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ filePath: "LCM_Inventory/logs/cm_activity.log" })
-        });
-      };
+      $("btnEditNotepad").onclick = () => openFileInNotepadPlusPlus("LCM_Inventory/logs/cm_activity.log");
       $("btnEditNotepad").style.display = "inline-flex";
       openModal("docModal");
     }

@@ -6,7 +6,7 @@ Path: LCM_Inventory/docs/Proposals/CRP-343-Intent-Level-Elevation-Driven-By-Tool
 Authors: Rolf, Claude  
 Version: 10.7.4
 Status: In Progress  
-Date: 2026-11-17 17:00:34
+Date: 2026-11-18 20:03:23
 
 ---
 
@@ -14,22 +14,29 @@ Date: 2026-11-17 17:00:34
 
 Implemented by Claude in DOIT (chain A, operator 2026-11-17). The DO daemon (`DoT/do.exe`, Go 10.2.4) now decides elevation per atom from the intent table. It authenticates callers with a per-boot key and starts everything that is not a legal elevated atom with the operator's explorer token (Medium integrity). Rollback copy of the previous binary: `LCM_Inventory/scratch/do-before-crp343.exe`.
 
-## 2. Changes
+## 2. Changes (segment 1)
 
-| Area | Files | Decision |
-|:---|:---|:---|
-| Caller key, page shim, CORS removal on key-carrying pages | `src/do/auth.go`, `daemon.go` | D2 |
-| Port-squatting guard (client sends key only to the genuine `do.exe` listener) | `src/do/serverid.go`, `client.go`; PowerShell: `modules/LcmDoClient.psm1` | D2 |
-| Verify-legal-elevation helper: fast path (intents), slow path (caller chain, direct caller tool admin), dry run `GET /api/elevation/verify` | `src/do/elevation.go`, `callerid.go` | D3, D4 |
-| Composite commands never elevated (atom confinement) | `src/do/elevation.go` (`isCompositeCommand`) | D4 |
-| Non-elevated launch: explorer token + `CreateProcessWithTokenW` for `/execute`, `/open`, `/open_editor`, display rendering | `src/do/elevation.go`, `daemon.go` | D1 |
-| Elevation policy + consistency check from `tools.db` (read-only) | `tools/Export-LcmElevationPolicy.py` -> `data/tools/elevation_policy.json` | corollary 1, 2 |
-| Mount worker as external atom (unchanged code) | `tools/Invoke-MacriumMountWorker.ps1`; shared helpers moved to `modules/LcmMacriumAtoms.psm1` | corollary 3 |
-| Admin dispatcher | `tools/Mount-MacriumLatestBaseline.ps1` 10.2.3 (`-ImagePath` mode) | confirmed invariant |
-| BCR: mount via child process of the admin tool; registry write via `Set-LcmMachineRegistry.ps1` atom | `tools/Invoke-MacriumDailyBcrBaseline.ps1` | confirmed invariant |
-| Catalog: generator no longer derives `elevated` from `Admin` (preserved, new intents non-elevated); BCR tools `Admin = false`, their 6 intents `elevated = false`; mount intents `elevated = false`; new worker tool (admin) + intent (elevated) | `tools/Update-ToolCatalog.ps1`, `config/tool_intents.json`, `config/tool_catalog.json`, `Sync-LcmToolCatalogDb.ps1 -Action Sync` | admin != elevated |
-| Tests | `src/do/auth_test.go` (key, shim, CORS, decision table, composite commands); `tests/MacriumBcrReview.Tests.ps1` (5 assertions read the BCR implementation set; new structure test) | - |
+| No | Area                              | Files                                               | Decision      |
+|:--:|:----------------------------------|:----------------------------------------------------|:--------------|
+| 1  | Caller key, page shim, no CORS    | `src/do/auth.go`, `daemon.go`                       | D2            |
+| 2  | Port-squatting guard              | `src/do/serverid.go`, `client.go`, `LcmDoClient.psm1` | D2          |
+| 3  | Elevation decision, dry run       | `src/do/elevation.go`, `callerid.go`                | D3, D4        |
+| 4  | Composite commands not elevated   | `src/do/elevation.go`                               | D4            |
+| 5  | Non-elevated launch               | `src/do/elevation.go`, `daemon.go`                  | D1            |
+| 6  | Policy and consistency check      | `tools/Export-LcmElevationPolicy.py`                | corollary 1-2 |
+| 7  | Mount worker as atom              | `Invoke-MacriumMountWorker.ps1`, `LcmMacriumAtoms.psm1` | corollary 3 |
+| 8  | Admin dispatcher                  | `Mount-MacriumLatestBaseline.ps1` 10.2.3            | invariant     |
+| 9  | BCR mount and registry atoms      | `Invoke-MacriumDailyBcrBaseline.ps1`                | invariant     |
+| 10 | Catalog: admin != elevated        | `Update-ToolCatalog.ps1`, `config/*.json`, sync     | T1            |
+| 11 | Tests                             | `src/do/auth_test.go`, `MacriumBcrReview.Tests.ps1` | -             |
 
+Details:
+- 1: per-boot key `%LOCALAPPDATA%\LCM\do.key`, sent as `X-LCM-Key`; served pages get the key injected and no `Access-Control-Allow-Origin`.
+- 2: `do.exe` sends the key only to a listener that is the same binary.
+- 3: fast path = intent table; slow path = caller chain and the direct caller tool's admin value; `GET /api/elevation/verify` returns the decision without executing.
+- 5: explorer token + `CreateProcessWithTokenW` for `/execute`, `/open`, `/open_editor`, display rendering.
+- 10: the generator no longer derives `elevated` from `Admin`; BCR tools `Admin = false`, their 6 intents `elevated = false`; mount intents `elevated = false`; new worker tool (admin) with an elevated intent.
+- 11: `auth_test.go` covers key, shim, CORS, decision table, composite commands; `MacriumBcrReview.Tests.ps1` 5 assertions on the BCR implementation set plus one structure test.
 ## 3. Verification Evidence (2026-11-17)
 
 - Probe (scratch): `CreateProcessAsUser` with the explorer token fails (privilege not held); the linked token cannot be made primary; `CreateProcessWithTokenW` with the explorer token yields `Medium Mandatory Level`.

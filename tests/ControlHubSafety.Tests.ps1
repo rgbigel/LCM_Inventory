@@ -120,10 +120,12 @@ Describe 'Control Hub rendered-artifact safety' {
     $documentsIndex | Should -BeGreaterThan $cohortIndex
     $switchesIndex | Should -BeGreaterThan -1
     $template | Should -Not -Match '<div class="show-dropdown-title">Flow Switches</div>'
-    $template | Should -Match 'openOriginalProposalInEditor\(\$\{p\.id\}\)'
+    $template | Should -Not -Match 'Edit Original CRP</button>|openOriginalProposalInEditor\('  # CRP-354 revision 2
     $template | Should -Match 'function showReviewReceipt'
-    $template | Should -Match 'function getOriginalProposalDocumentKey'
+    $template | Should -Not -Match 'function getOriginalProposalDocumentKey'
     $template | Should -Match 'function renderMermaidPreviews'
+    $template | Should -Not -Match 'DAEMON_URL \+ "/open_editor"'  # CRP-354: editor buttons start Notepad++ through the DO
+    $template | Should -Match 'function openFileInNotepadPlusPlus'
     $template | Should -Match 'openTargetActionModal\(''reinstate''\)'
     $template | Should -Match 'id="targetActionChanges"'
     $template | Should -Match '-Action reinstate -TargetExpression'
