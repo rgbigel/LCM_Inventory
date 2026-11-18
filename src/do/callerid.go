@@ -6,8 +6,8 @@ DESCRIPTION    : Slow-path caller identification for the verify-legal-elevation 
                  (CRP-343 D4): loopback connection -> PID -> command line -> parent chain.
 AUTHOR         : Rolf, Claude
 DATE CREATED   : 2026-11-17
-LAST MODIFIED  : 2026-11-17
-VERSION        : 10.2.4
+LAST MODIFIED  : 2026-11-19
+VERSION        : 10.2.7
 GO VERSION     : 1.22+
 ENCODING       : UTF-8 (No BOM)
 ================================================================================
@@ -21,6 +21,7 @@ Implementation Choices (CRP-343 D4): used only when the intent-table fast path i
   the direct caller tool.
 Caveats: in-process calls (pwsh "& script") are invisible at process level; the slow path
   sees the process that opened the connection.
+2026-11-19 - 10.2.7: CRP-343 segment 2: directCallerTool returns the caller tool's admin level 0..3.
 ================================================================================
 */
 
@@ -160,19 +161,19 @@ func callerChain(remoteAddr string, serverPort int) ([]callerProcess, error) {
 }
 
 // directCallerTool returns the first catalogued tool named on the chain's command lines.
-func directCallerTool(chain []callerProcess, gitRoot string, tools map[string]bool) (string, bool) {
+func directCallerTool(chain []callerProcess, gitRoot string, tools map[string]int) (string, int) {
 	for i := range chain {
 		for _, tok := range splitCommandLine(chain[i].CommandLine) {
 			key := normalizeAtomPath(tok, gitRoot)
 			if key == "" {
 				continue
 			}
-			if admin, ok := tools[key]; ok {
-				return key, admin
+			if level, ok := tools[key]; ok {
+				return key, level
 			}
 		}
 	}
-	return "", false
+	return "", adminTBD
 }
 
 // describeChain renders the chain for the log.

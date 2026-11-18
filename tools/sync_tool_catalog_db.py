@@ -5,10 +5,13 @@ Module: tools/sync_tool_catalog_db.py
 Purpose: High-speed SQLite synchronization, canonical SQL text projection, and query engine
          for LCM Tool Catalog and Tool Intents under Dual-State Projection architecture.
 Path: LCM_Inventory/tools/sync_tool_catalog_db.py
-Authors: Rolf, LCM_AI Engine
-Version: 10.2.4
+Authors: Rolf, LCM_AI Engine, Claude
+Version: 10.2.5
 Status: Production Engine
-Date: 2026-11-13 13:30:00
+Date: 2026-11-18 23:50:00
+Implementation Choices (CRP-343 segment 2): tools.admin is a level 0 = TBD, 1 = granted, 2 = controlled, 3 = admin
+(legacy JSON booleans: true -> 3, false -> 1); table tool_atom_permissions holds the elevated atoms a controlled tool
+may call (catalog field AllowedAtoms).
 """
 
 import argparse
@@ -19,6 +22,19 @@ import sqlite3
 import sys
 
 sys.stdout.reconfigure(encoding="utf-8")
+
+
+def admin_level(value):
+    """CRP-343: tools.admin level 0..3; legacy booleans true -> 3, false -> 1; anything else -> 0 (TBD)."""
+    if value is True:
+        return 3
+    if value is False:
+        return 1
+    try:
+        level = int(value)
+    except (TypeError, ValueError):
+        return 0
+    return level if 0 <= level <= 3 else 0
 
 
 def get_default_paths():
@@ -136,6 +152,18 @@ def init_db(conn, workspace_root=None, workspace_role="LIVE", lcm_version="10.2.
     cursor.execute("CREATE INDEX IF NOT EXISTS idx_intents_audience ON tool_intents(audience)")
     cursor.execute("CREATE INDEX IF NOT EXISTS idx_intents_trampoline ON tool_intents(trampoline)")
 
+    # Table: tool_atom_permissions (CRP-343: elevated atoms a controlled tool may call through the DO)
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS tool_atom_permissions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            tool_relative_path TEXT NOT NULL,
+            intent_key TEXT NOT NULL,
+            UNIQUE (tool_relative_path, intent_key)
+        )
+        """
+    )
+
     # Standard Views
     cursor.execute(
         """
@@ -194,7 +222,7 @@ def sync_json_to_db(tools_json_path, intents_json_path, db_path, sql_path=None, 
         subsystem = t.get("SubSystem") or t.get("Subsystem") or t.get("Group") or "LCM"
         category = t.get("Category") or "Utility"
         audience = t.get("Audience") or "User"
-        admin = 1 if t.get("Admin") is True else 0
+        admin = admin_level(t.get("Admin"))  # CRP-343
         no_exit = 1 if t.get("NoExit") is True else 0
         tool_type = t.get("Type") or "PowerShell"
         desc = t.get("Description") or ""
@@ -218,6 +246,22 @@ def sync_json_to_db(tools_json_path, intents_json_path, db_path, sql_path=None, 
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         tools_rows
+    )
+
+    # 1b. Sync atom permissions of controlled tools (CRP-343)
+    cursor.execute("DELETE FROM tool_atom_permissions")
+    atom_rows = []
+    for t in tools_list:
+        rel_path = t.get("RelativePath") or ""
+        atoms = t.get("AllowedAtoms") or []
+        if isinstance(atoms, str):  # a single atom may arrive as a string
+            atoms = [atoms]
+        for intent_key in atoms:
+            if rel_path and intent_key:
+                atom_rows.append((rel_path, str(intent_key).lower()))
+    cursor.executemany(
+        "INSERT OR IGNORE INTO tool_atom_permissions (tool_relative_path, intent_key) VALUES (?, ?)",
+        atom_rows
     )
 
     # 2. Sync Tool Intents Table
@@ -354,6 +398,19 @@ def dump_db_to_sql(db_path, sql_path, silent=False):
             else:
                 escaped.append("'" + str(val).replace("'", "''") + "'")
         lines.append(f"INSERT INTO tool_intents (intent_key, goal, executable, script, parameters, trampoline, elevated, subsystem, category, audience, role, call_count, last_called_at, last_duration_ms, total_duration_ms, is_primary_intent, updated_at) VALUES ({', '.join(escaped)});")
+
+    lines.append("")
+    lines.append("-- Table: tool_atom_permissions (CRP-343)")
+    lines.append("""CREATE TABLE IF NOT EXISTS tool_atom_permissions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    tool_relative_path TEXT NOT NULL,
+    intent_key TEXT NOT NULL,
+    UNIQUE (tool_relative_path, intent_key)
+);""")
+    cursor.execute("SELECT tool_relative_path, intent_key FROM tool_atom_permissions ORDER BY tool_relative_path, intent_key")
+    for rel_path, intent_key in cursor.fetchall():
+        lines.append("INSERT INTO tool_atom_permissions (tool_relative_path, intent_key) VALUES ('"
+                     + str(rel_path).replace("'", "''") + "', '" + str(intent_key).replace("'", "''") + "');")
 
     lines.append("")
     lines.append("COMMIT;")

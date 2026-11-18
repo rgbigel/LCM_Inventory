@@ -96,7 +96,7 @@ try {
       if (-not (Test-Path -LiteralPath $toolPath)) {
         $toolPath = Join-Path $workspaceRoot $item.RelativePath
       }
-      if ($item.Admin) { $elevated = $true }
+      $X = $item; if ([int]$(if ($X.Admin -is [bool]) { if ($X.Admin) { 3 } else { 1 } } elseif ($null -ne $X.Admin -and "$($X.Admin)" -match '^[0-3]$') { [int]"$($X.Admin)" } else { 0 }) -eq 3) { $elevated = $true }  # CRP-343: level 3 only
       if ($null -eq $noExit -and $null -ne $item.NoExit) {
         $noExit = [bool]$item.NoExit
       }

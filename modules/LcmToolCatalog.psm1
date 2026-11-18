@@ -10,8 +10,10 @@
   Purpose: Loads the governed tool catalog and generates the HTTP-backed Tool Explorer.
   Path: tools/modules/LcmToolCatalog.psm1
   Authors: Rolf, Copilot
-  Version: 10.2.4
-  Date: 2026-11-13 13:12:00
+  Version: 10.2.5
+  Date: 2026-11-18 23:55:00
+  Implementation Choices (CRP-343 segment 2): Admin is a level 0..3 (TBD / granted / controlled / admin); the admin
+  metric counts level 3; the filter offers the four words.
 #>
 
 Set-StrictMode -Version Latest
@@ -79,7 +81,7 @@ function Measure-LcmToolCatalogMetrics {
   $totalCount = $Catalog.Count
   $userCount = @($Catalog | Where-Object { $_.Audience -eq 'User' }).Count
   $devCount = @($Catalog | Where-Object { $_.Audience -eq 'Developer' }).Count
-  $adminCount = @($Catalog | Where-Object { $_.Admin -eq $true }).Count
+  $adminCount = @($Catalog | Where-Object { $X = $_; [int]$(if ($X.Admin -is [bool]) { if ($X.Admin) { 3 } else { 1 } } elseif ($null -ne $X.Admin -and "$($X.Admin)" -match '^[0-3]$') { [int]"$($X.Admin)" } else { 0 }) -eq 3 }).Count  # CRP-343
   $noExitCount = @($Catalog | Where-Object { $_.NoExit -eq $true }).Count
   $invariantsCount = @($Catalog | Where-Object { $_.Role -in @('Invariants', 'SystemInvariants') }).Count
   $customizationsCount = @($Catalog | Where-Object { $_.Role -in @('Customization', 'SystemCustomization') }).Count
@@ -164,7 +166,7 @@ function Format-LcmToolCatalogCli {
 
   foreach ($t in $filtered) {
     $audBadge = if ($t.Audience -eq 'User') { "[User]" } else { "[Dev]" }
-    $admBadge = if ($t.Admin) { "[Admin:Yes]" } else { "[Admin:No]" }
+    $X = $t; $admBadge = "[Permission:" + @('TBD', 'granted', 'controlled', 'admin')[[int]$(if ($X.Admin -is [bool]) { if ($X.Admin) { 3 } else { 1 } } elseif ($null -ne $X.Admin -and "$($X.Admin)" -match '^[0-3]$') { [int]"$($X.Admin)" } else { 0 })] + "]"  # CRP-343
     $noExitBadge = if ($t.NoExit) { "[NoExit:🔴]" } else { "[NoExit:🟢]" }
     $envTag = [System.IO.Path]::GetExtension($t.Name).ToUpper().TrimStart('.')
     $subSystemVal = if ($t.PSObject.Properties['SubSystem']) { $t.SubSystem } elseif ($t.PSObject.Properties['Subsystem']) { $t.Subsystem } elseif ($t.PSObject.Properties['Group']) { $t.Group } else { '' }
@@ -454,8 +456,10 @@ function Build-LcmToolIndexHtml {
                         <th>
                             <select class="col-filter-select" id="admin-select" onchange="window.LcmTools.applyFilters()">
                                 <option value="All">All Privileges</option>
-                                <option value="true">Admin Required</option>
-                                <option value="false">Standard User</option>
+                                <option value="admin">admin</option>
+                                <option value="controlled">controlled</option>
+                                <option value="granted">granted</option>
+                                <option value="TBD">TBD</option>
                             </select>
                         </th>
                         <th>

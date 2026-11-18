@@ -65,7 +65,7 @@ class LcmSecurityGateway {
           $_.ShortName -eq ($normTarget -replace '[^A-Za-z0-9]', '')
         })[0]
         if ($null -ne $matchedTool) {
-          if ($matchedTool.Admin -or $matchedTool.Elevated) {
+          $X = $matchedTool; if (([int]$(if ($X.Admin -is [bool]) { if ($X.Admin) { 3 } else { 1 } } elseif ($null -ne $X.Admin -and "$($X.Admin)" -match '^[0-3]$') { [int]"$($X.Admin)" } else { 0 }) -eq 3) -or $matchedTool.Elevated) {  # CRP-343
             return 3
           }
           if ($matchedTool.Role -in @('Diagnostic', 'Telemetry', 'Readiness', 'Audit', 'Discovery', 'Viewer')) {

@@ -9,9 +9,9 @@
   baseline mounting atom (-Mount) to mount the newly generated backup as the writable BCR baseline.
   Path: LCM_Inventory/tools/Start-MacriumDailyBackup.ps1
   Authors: Rolf, LCM_AI Engine, Claude
-  Version: 10.2.1
+  Version: 10.2.2
   Date: 2026-11-18
-  Implementation Choices (CRP-362): -BackupType Full|Diff|Inc (default Diff) is passed to Reflect as -full / -diff / -inc;
+  Implementation Choices (CRP-362): -BackupType Full|Diff|Inc (default Inc, operator 2026-11-19) is passed to Reflect as -full / -diff / -inc;
   before, no type was passed and Reflect made a full backup (many hours).
 .NOTES
   Elevated Operations:
@@ -20,7 +20,7 @@
 .PARAMETER Mount
   Mounts the newly created backup image as the writable BCR baseline partition upon completion.
 .PARAMETER BackupType
-  Backup type passed to Macrium Reflect: Full, Diff (default) or Inc.
+  Backup type passed to Macrium Reflect: Full, Diff or Inc (default).
 .PARAMETER ForceNewBackup
   Forces execution of a fresh backup definition even if a completed image exists for today.
 .PARAMETER ReviewScope
@@ -51,7 +51,7 @@ param(
   [switch]$ForceNewBackup,
 
   [ValidateSet('Full', 'Diff', 'Inc')]
-  [string]$BackupType = 'Diff',
+  [string]$BackupType = 'Inc',
 
   [string]$ReviewScope = '',
 
@@ -101,7 +101,7 @@ if ($Help) {
   Write-Host ""
   Write-Host "PARAMETERS:" -ForegroundColor Yellow
   Write-Host "  -Mount                 : Mounts the newly generated backup immediately as BCR baseline."
-  Write-Host "  -BackupType <type>     : Full, Diff (default) or Inc; passed to Reflect as -full / -diff / -inc."
+  Write-Host "  -BackupType <type>     : Full, Diff or Inc (default); passed to Reflect as -full / -diff / -inc."
   Write-Host "  -ForceNewBackup        : Initiates a new backup even if one already completed today."
   Write-Host "  -ReviewScope <CRP|BUG> : Sets the proposal review scope in Beyond Compare window title."
   Write-Host "  -NoLaunchReview        : Suppresses opening Beyond Compare when -Mount is specified."

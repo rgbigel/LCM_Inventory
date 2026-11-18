@@ -7,8 +7,8 @@ DESCRIPTION    : Atom-level elevation decision (CRP-343, decision D3 A) and the
                  CreateProcessWithTokenW).
 AUTHOR         : Rolf, Claude
 DATE CREATED   : 2026-11-17
-LAST MODIFIED  : 2026-11-17
-VERSION        : 10.2.4
+LAST MODIFIED  : 2026-11-19
+VERSION        : 10.2.7
 GO VERSION     : 1.22+
 ENCODING       : UTF-8 (No BOM)
 ================================================================================
@@ -28,6 +28,7 @@ Implementation Choices (CRP-343):
 Caveats: verified 2026-11-17 by probe: CreateProcessAsUser with the explorer token fails
   (privilege not held) and the linked token cannot be made primary; CreateProcessWithTokenW
   works and yields Medium Mandatory Level.
+2026-11-19 - 10.2.7: CRP-343 segment 2: tools.admin levels 0..3; an atom is legal only for an owner of level 3; slow-path caller decision (callerDecision): level 3, or level 2 with every requested atom in its list.
 ================================================================================
 */
 
@@ -55,15 +56,29 @@ type policyAtom struct {
 }
 
 type elevationPolicy struct {
-	GeneratedAt   string         `json:"generated_at"`
-	ElevatedAtoms []policyAtom   `json:"elevated_atoms"`
-	Tools         map[string]int `json:"tools"`
+	GeneratedAt   string              `json:"generated_at"`
+	ElevatedAtoms []policyAtom        `json:"elevated_atoms"`
+	Tools         map[string]int      `json:"tools"`
+	AllowedAtoms  map[string][]string `json:"allowed_atoms"`
 }
+
+// Admin levels of tools.admin (CRP-343 segment 2).
+const (
+	adminTBD        = 0
+	adminGranted    = 1
+	adminControlled = 2
+	adminFull       = 3
+)
 
 // loadedPolicy is the normalized view of elevation_policy.json.
 type loadedPolicy struct {
-	Atoms map[string]string // normalized script -> required parameter switch ("" = none)
-	Tools map[string]bool   // normalized tool path -> admin
+	Atoms   map[string]string          // normalized script -> required parameter switch ("" = none)
+	Tools   map[string]int             // normalized tool path -> admin level 0..3
+	Allowed map[string]map[string]bool // normalized controlled tool path -> normalized atom scripts it may call
+}
+
+func newLoadedPolicy() *loadedPolicy {
+	return &loadedPolicy{Atoms: map[string]string{}, Tools: map[string]int{}, Allowed: map[string]map[string]bool{}}
 }
 
 var (
@@ -97,29 +112,46 @@ func loadPolicy(gitRoot string) *loadedPolicy {
 	defer policyLock.Unlock()
 	fi, err := os.Stat(path)
 	if err != nil {
-		policyCache = &loadedPolicy{Atoms: map[string]string{}, Tools: map[string]bool{}}
+		policyCache = newLoadedPolicy()
 		return policyCache
 	}
 	if policyCache != nil && fi.ModTime().Equal(policyModTime) {
 		return policyCache
 	}
-	lp := &loadedPolicy{Atoms: map[string]string{}, Tools: map[string]bool{}}
+	lp := newLoadedPolicy()
 	if data, err := os.ReadFile(path); err == nil {
 		var pol elevationPolicy
 		if err := json.Unmarshal(data, &pol); err == nil {
+			byIntent := map[string]string{}
 			for i := range pol.ElevatedAtoms {
 				a := &pol.ElevatedAtoms[i]
-				if a.ToolAdmin != 1 { // catalog error: an elevated atom of a non-admin tool is never elevated
+				if a.ToolAdmin != adminFull { // catalog error: an elevated atom of a tool below level 3 is never elevated
 					continue
 				}
 				if key := normalizeAtomPath(a.Script, gitRoot); key != "" {
 					lp.Atoms[key] = strings.ToLower(strings.TrimSpace(a.Parameters))
+					for _, ik := range a.IntentKeys {
+						byIntent[strings.ToLower(ik)] = key
+					}
 				}
 			}
-			for t, admin := range pol.Tools {
+			for t, level := range pol.Tools {
 				if key := normalizeAtomPath(t, gitRoot); key != "" {
-					lp.Tools[key] = admin == 1
+					lp.Tools[key] = level
 				}
+			}
+			for t, intents := range pol.AllowedAtoms {
+				key := normalizeAtomPath(t, gitRoot)
+				if key == "" {
+					continue
+				}
+				set := map[string]bool{}
+				for _, ik := range intents {
+					if script, ok := byIntent[strings.ToLower(ik)]; ok {
+						set[script] = true
+					}
+				}
+				lp.Allowed[key] = set
 			}
 		}
 	}
@@ -170,7 +202,7 @@ func namedAtoms(cmdStr string, gitRoot string, pol *loadedPolicy) ([]string, boo
 
 // resolveElevatedAtom returns the first elevated atom the command names (fast-path helper, tests).
 func resolveElevatedAtom(cmdStr string, gitRoot string, policy map[string]string) (string, bool) {
-	atoms, _ := namedAtoms(cmdStr, gitRoot, &loadedPolicy{Atoms: policy, Tools: map[string]bool{}})
+	atoms, _ := namedAtoms(cmdStr, gitRoot, &loadedPolicy{Atoms: policy, Tools: map[string]int{}, Allowed: map[string]map[string]bool{}})
 	if len(atoms) == 0 {
 		return "", false
 	}
@@ -236,20 +268,34 @@ func verifyLegalElevation(req elevationRequest, gitRoot string) elevationVerdict
 		return v
 	}
 	v.Chain = describeChain(chain)
-	tool, admin := directCallerTool(chain, gitRoot, pol.Tools)
+	tool, level := directCallerTool(chain, gitRoot, pol.Tools)
 	v.CallerTool = tool
+	elevate, why := callerDecision(tool, level, pol.Allowed[tool], atoms, switchMissing)
+	v.Elevate = elevate
+	v.Reason += "; " + why
+	return v
+}
+
+// callerDecision applies the CRP-343 call table to the direct caller tool: level 3 may use any legal
+// elevated atom; level 2 only atoms of its list; levels 0 and 1 none. Pure, so the table is unit-tested.
+func callerDecision(tool string, level int, allowed map[string]bool, atoms []string, switchMissing bool) (bool, string) {
 	switch {
 	case tool == "":
-		v.Reason += "; no catalogued caller tool on the process chain: runs non-elevated"
-	case !admin:
-		v.Reason += "; direct caller tool " + tool + " has admin = 0: runs non-elevated"
+		return false, "no catalogued caller tool on the process chain: runs non-elevated"
 	case len(atoms) == 0 || switchMissing:
-		v.Reason += "; caller tool " + tool + " is admin, but no legal elevated atom is requested: runs non-elevated"
+		return false, "caller tool " + tool + " requests no legal elevated atom: runs non-elevated"
+	case level == adminFull:
+		return true, "direct caller tool " + tool + " has level 3 (admin): elevated"
+	case level == adminControlled:
+		for _, a := range atoms {
+			if !allowed[a] {
+				return false, "direct caller tool " + tool + " is controlled and " + a + " is not in its atom list: runs non-elevated"
+			}
+		}
+		return true, "direct caller tool " + tool + " is controlled and every requested atom is in its list: elevated"
 	default:
-		v.Elevate = true
-		v.Reason += "; direct caller tool " + tool + " has admin = 1: elevated"
+		return false, fmt.Sprintf("direct caller tool %s has level %d: runs non-elevated", tool, level)
 	}
-	return v
 }
 
 var (

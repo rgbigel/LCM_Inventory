@@ -6,7 +6,7 @@ Path: LCM_Inventory/docs/Proposals/343_CRP-Intent-Level-Elevation-Driven-By-Tool
 Authors: Rolf, Claude  
 Version: 10.7.4
 Status: In Progress  
-Date: 2026-11-18 21:10:07
+Date: 2026-11-18 23:44:31
 
 ---
 
@@ -36,6 +36,22 @@ Notes per step:
 - Step 7 callers found 2026-11-18: `Invoke-InteractiveDesktop.ps1`, `Invoke-LcmAction.ps1`, `Register-LcmDesktopDaemon.ps1`, `Show-LcmDaemon.ps1`, `Test-GeneralReadiness.ps1`, `Test-LCMIncrementalGovernance.ps1`, `Update-ToolCatalog.ps1`, `modules/LcmStandardDisplay.psm1`, `Cmd/LcmDaemon.cmd`; each is migrated to the DO or removed, and listed in the Walkthrough. Tools posting to the daemon without `LcmDoClient.psm1` move to it (key); `Dismount-MacriumCurrentBaseline.ps1` delegation and `Invoke-LcmAction.ps1` reach elevated steps through registered atoms; last: `LCM_DO_REQUIRE_KEY=1`.
 - BUG-348 segment 2 (daemon routes, CORS, task path, image identity, `gofmt`, version string) rides in the same daemon build.
 
+### Step status (2026-11-18 23:44:31)
+
+| Step | State                                                                                   |
+|:----:|:----------------------------------------------------------------------------------------|
+| 1    | replaced: the generator converts the levels itself (no separate migration tool needed)  |
+| 2    | done: AllowedAtoms in the catalog, table `tool_atom_permissions` in tools.db            |
+| 3    | done: policy export with levels and lists; open: export run by the catalog sync         |
+| 4    | done: daemon 10.2.7 deployed (owner level 3, `callerDecision`)                          |
+| 5    | done: generator 10.2.11, sync 10.2.5                                                    |
+| 6    | done: Tool Explorer 10.0.3, catalog module 10.2.5; Control Hub shows no Admin column    |
+| 7    | open: legacy daemon retirement and the 9 callers; key transition (`LCM_DO_REQUIRE_KEY`) |
+| 8    | open: RULE-ELEV-001/003/006/007 (ADMINMODE)                                             |
+| 9    | open: diagrams in `docs/Implementation.md`, use cases in `docs/Requirements.md`         |
+| 10   | done for the core: Go call-table test, Pester levels/policy test; open: live tests per T2 row through the DO |
+- Open as well: the 31 conflicts of the consistency check (`data/tools/elevation_policy.json`, `violations`) await the operator's decision per case (Specification T4); BUG-348 daemon items; then CRP-361.
+- Backups (operator rule 2026-11-18): `scratch/db-dumps/tools_db_before_CRP-343-s2_20261118_233300.sql`, `scratch/db-dumps/elevation_policy_before_CRP-343-s2.json`, `scratch/do-before-crp343-s2.exe`; deleted after the completion checks.
 ## 3. Deployment Order
 
 1. All tests of Specification section 3 green on fixtures; rollback copy `scratch/do-before-crp343-s2.exe`.

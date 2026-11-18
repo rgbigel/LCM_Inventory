@@ -25,9 +25,9 @@ Describe 'Macrium backup type (CRP-362)' {
     Get-ReflectArgumentList -Type Inc -DefinitionPath 'X.xml' | Should -Be @('-e', '-inc', 'X.xml')
   }
 
-  It 'defaults to Diff and accepts only Full, Diff, Inc' {
+  It 'defaults to Inc and accepts only Full, Diff, Inc' {
     $param = $script:ast.ParamBlock.Parameters | Where-Object { $_.Name.VariablePath.UserPath -eq 'BackupType' }
-    $param.DefaultValue.Value | Should -Be 'Diff'
+    $param.DefaultValue.Value | Should -Be 'Inc'
     $set = $param.Attributes | Where-Object { $_.TypeName.Name -eq 'ValidateSet' }
     @($set.PositionalArguments.Value) | Should -Be @('Full', 'Diff', 'Inc')
   }

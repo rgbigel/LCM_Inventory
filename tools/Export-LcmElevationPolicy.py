@@ -5,8 +5,8 @@ Purpose: Reads LCM_Inventory/data/tools/tools.db read-only and (1) exports the a
          (2) checks the CRP-343 consistency invariant and reports violations.
 Path: LCM_Inventory/tools/Export-LcmElevationPolicy.py
 Authors: Rolf, Claude
-Version: 10.7.4
-Date: 2026-11-17
+Version: 10.7.5
+Date: 2026-11-18
 Rule: RULE-ELEV-001, RULE-ELEV-003, RULE-ELEV-006 (CRP-343)
 Implementation Choices (CRP-343):
   - tool_intents.elevated is the atom-level authority (runs elevated); tools.admin is the
@@ -18,6 +18,10 @@ Implementation Choices (CRP-343):
     directly only by admin tools; a non-admin tool may call admin tools. Only real invocation
     lines count (&, -File, do.exe/do.cmd, Start-Process, Join-Path building the path);
     comment lines and mere mentions (e.g. catalog data) are ignored.
+Implementation Choices (CRP-343 segment 2): tools.admin is a level 0 = TBD, 1 = granted, 2 = controlled, 3 = admin.
+  An elevated atom is legal only when its owning tool has level 3; a controlled tool may call the elevated atoms of
+  its list (table tool_atom_permissions) through the DO; levels 0 and 1 call no elevated atom. The policy carries the
+  levels and the lists for the daemon's caller check.
 Caveats: the database is opened with mode=ro; this tool never writes tools.db.
 """
 
@@ -52,7 +56,14 @@ def load(db_path):
     try:
         tools = {}
         for rel, admin, name in con.execute('SELECT relative_path, admin, name FROM tools'):
-            tools[norm(rel)] = {'relative_path': rel, 'admin': int(admin), 'name': name}
+            tools[norm(rel)] = {'relative_path': rel, 'admin': int(admin), 'name': name, 'allowed_atoms': []}
+        has_permissions = con.execute(
+            "SELECT count(*) FROM sqlite_master WHERE type = 'table' AND name = 'tool_atom_permissions'").fetchone()[0]
+        if has_permissions:
+            for rel, intent_key in con.execute('SELECT tool_relative_path, intent_key FROM tool_atom_permissions'):
+                tool = tools.get(norm(rel))
+                if tool is not None:
+                    tool['allowed_atoms'].append(str(intent_key).lower())
         atoms = {}
         for key, exe, script, params in con.execute(
                 'SELECT intent_key, executable, script, parameters FROM tool_intents WHERE elevated = 1 ORDER BY intent_key'):
@@ -75,12 +86,13 @@ def check(atoms, tools):
         if owner is None:
             violations.append({'kind': 'elevated-atom-without-tool', 'atom': atom['script'] or atom['executable'],
                                'detail': 'no tools row for the elevated atom'})
-        elif owner['admin'] != 1:
+        elif owner['admin'] != 3:
             violations.append({'kind': 'elevated-atom-in-non-admin-tool', 'atom': atom['script'],
-                               'detail': 'owning tool has admin = 0'})
+                               'detail': 'owning tool has admin level {0} (3 required)'.format(owner['admin'])})
     leaves = {os.path.basename(k): atom['script'] for k, atom in atoms.items() if k}
+    keys_by_leaf = {os.path.basename(k): set(a['intent_keys']) for k, a in atoms.items() if k}
     for k, tool in sorted(tools.items()):
-        if tool['admin'] == 1 or not k.endswith(SOURCE_EXT):
+        if tool['admin'] == 3 or not k.endswith(SOURCE_EXT):
             continue
         path = os.path.join(GIT_ROOT, tool['relative_path'].replace('\\', os.sep))
         try:
@@ -95,8 +107,11 @@ def check(atoms, tools):
             for no, line in enumerate(lines, 1):
                 s = line.strip()
                 if leaf in s and not s.startswith(('#', 'rem ', '::', '//')) and CALL_MARKERS.search(s):
-                    violations.append({'kind': 'non-admin-tool-invokes-elevated-atom', 'tool': tool['relative_path'],
-                                       'atom': script, 'detail': 'line {0}: {1}'.format(no, s[:160])})
+                    if tool['admin'] == 2 and keys_by_leaf.get(leaf, set()) & set(tool['allowed_atoms']):
+                        break  # controlled tool, atom in its list (CRP-343): allowed through the DO
+                    kind = 'controlled-tool-invokes-unlisted-atom' if tool['admin'] == 2 else 'non-admin-tool-invokes-elevated-atom'
+                    violations.append({'kind': kind, 'tool': tool['relative_path'], 'atom': script,
+                                       'detail': 'admin level {0}; line {1}: {2}'.format(tool['admin'], no, s[:160])})
                     break
     return violations
 
@@ -120,13 +135,15 @@ def main(argv):
         'generated_at': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
         'generator': 'LCM_Inventory/tools/Export-LcmElevationPolicy.py',
         'source': 'LCM_Inventory/data/tools/tools.db',
-        'rule': 'CRP-343: elevated only for atoms with tool_intents.elevated = 1 whose owning tool has tools.admin = 1',
+        'rule': 'CRP-343: elevated only for atoms with tool_intents.elevated = 1 whose owning tool has admin level 3; callers: level 3, or level 2 with the atom in its list',
+        'levels': {'0': 'TBD', '1': 'granted', '2': 'controlled', '3': 'admin'},
         'elevated_atoms': [
             {'script': a['script'], 'executable': a['executable'], 'intent_keys': a['intent_keys'],
              'parameters': a['parameters'], 'tool_admin': (tools.get(k) or {}).get('admin', 0)}
             for k, a in sorted(atoms.items())
         ],
         'tools': {t['relative_path']: t['admin'] for t in sorted(tools.values(), key=lambda v: v['relative_path'])},
+        'allowed_atoms': {t['relative_path']: sorted(t['allowed_atoms']) for t in sorted(tools.values(), key=lambda v: v['relative_path']) if t['allowed_atoms']},
         'violations': violations,
     }
     tmp = args.out + '.tmp'

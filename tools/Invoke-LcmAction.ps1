@@ -154,7 +154,7 @@ if (-not $requiresElevation -and -not [string]::IsNullOrWhiteSpace($Target)) {
         $_.ShortName -eq $cleanTarget -or
         ($_.RelativePath -and ($cleanTarget -like "*$($_.RelativePath)*" -or $cleanTarget -like "*$($_.Name)*"))
       })[0]
-      if ($null -ne $match -and ($match.Admin -or $match.Elevated)) {
+      $X = $match; if ($null -ne $match -and (([int]$(if ($X.Admin -is [bool]) { if ($X.Admin) { 3 } else { 1 } } elseif ($null -ne $X.Admin -and "$($X.Admin)" -match '^[0-3]$') { [int]"$($X.Admin)" } else { 0 }) -eq 3) -or $match.Elevated)) {  # CRP-343: level 3 only
         $requiresElevation = $true
       }
     } catch {}

@@ -6,7 +6,7 @@ Path: LCM_Inventory/docs/Proposals/343_CRP-Intent-Level-Elevation-Driven-By-Tool
 Authors: Rolf, Claude  
 Version: 10.7.4
 Status: In Progress  
-Date: 2026-11-18 20:59:37
+Date: 2026-11-18 23:44:31
 
 ---
 
@@ -60,3 +60,23 @@ Details:
 | 2026-11-18 | Beyond Compare launched by BCR                  | non-elevated, one window (PID 40376)                        |
 
 - Items still open moved to the Specification (T3 key transition, T4 cross-reference basis) and the Implementation Plan (steps 3 and 7), 2026-11-18 (operator: open items are specified, not walked through).
+
+## 5. Segment 2, core (2026-11-18 23:44:31)
+
+- Deviation: no separate migration tool; the catalog generator converts legacy booleans (true -> 3, false -> 1) and its override table now holds the levels; new tools land at 0 (TBD) unless admin code is found.
+- Deviation: `Invoke-MacriumBcrReview.ps1` is `granted` (1), not `controlled`: it calls no elevated atom itself (Specification: lists follow the real calls).
+- Found on the way: a one-atom list was unrolled to a string by PowerShell and split into letters by the sync; fixed in both places. One lone CR in the generator header normalized.
+- Order kept: readers first, then generator and sync, then daemon and policy in one deployment.
+
+| Check                                              | Result                                               |
+|:---------------------------------------------------|:-----------------------------------------------------|
+| tools.db levels after sync                         | 1 = 267, 2 = 2, 3 = 90; 3 atom permissions           |
+| `go vet`, `go test` (incl. `TestCallerDecision`, 9 rows) | clean, ok                                 |
+| `ToolPermissionLevels.Tests.ps1` (new)              | 4/4                                                  |
+| Related Pester files (10)                          | 90 passed, 2 failed in FailureModeAnalysis (tool not touched) |
+| Live dry run: mount / registry atom with key       | elevated (fast path)                                 |
+| Live dry run: same without key                     | not elevated                                         |
+| Live dry run: BCR tool, plain command              | not elevated                                         |
+| Live: DO command level                             | Medium                                               |
+| Tool Explorer screenshot                           | badges `granted` / `admin`; admin card 90           |
+| Running Macrium backup during the redeploy         | unaffected                                           |

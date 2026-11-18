@@ -449,7 +449,7 @@ class DaemonActionController {
           $_.ShortName -eq ($normTarget -replace '[^A-Za-z0-9]', '') -or
           ($_.RelativePath -and ($baseTarget -like "*$($_.RelativePath)*" -or $baseTarget -like "*$($_.Name)*"))
         })[0]
-        if ($null -ne $matchedCatalogTool -and ($matchedCatalogTool.Admin -or $matchedCatalogTool.Elevated)) {
+        $X = $matchedCatalogTool; if ($null -ne $matchedCatalogTool -and (([int]$(if ($X.Admin -is [bool]) { if ($X.Admin) { 3 } else { 1 } } elseif ($null -ne $X.Admin -and "$($X.Admin)" -match '^[0-3]$') { [int]"$($X.Admin)" } else { 0 }) -eq 3) -or $matchedCatalogTool.Elevated)) {  # CRP-343
           $isElevated = $true
         }
       } catch {}

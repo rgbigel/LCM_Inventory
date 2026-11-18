@@ -6,7 +6,7 @@ Path: LCM_Inventory/docs/Proposals/362_CRP-Macrium-Backup-Type-Parameter-Default
 Authors: Rolf, Claude  
 Version: 10.7.4
 Status: Suggested  
-Date: 2026-11-18 23:12:53
+Date: 2026-11-18 23:49:34
 
 ```yaml
 CRP-ID: CRP-362
@@ -14,7 +14,7 @@ Title: Macrium Backup Type Parameter Defaulting To Differential
 Scope: LCM_Inventory
 Baseline-Version: 10.7.4
 Author: Rolf
-Date: 2026-11-18 23:12:53
+Date: 2026-11-18 23:49:34
 Status: In Review
 Plan-State: in_review
 Progress-State: verification
@@ -30,11 +30,11 @@ Operator 2026-11-18: Start-MacriumDailyBackup.ps1 runs Reflect.exe -e <definitio
 
 ## 2. Gate 0 Contract
 ### Target State
-- T1 `Start-MacriumDailyBackup.ps1` has an optional parameter `-BackupType Full|Diff|Inc`, default `Diff`; it is passed to Reflect as `-full`, `-diff` or `-inc`.
+- T1 `Start-MacriumDailyBackup.ps1` has an optional parameter `-BackupType Full|Diff|Inc`, default `Inc` (operator 2026-11-19; first `Diff`); it is passed to Reflect as `-full`, `-diff` or `-inc`.
 - T2 Help (`-h`) and header name the parameter and the default.
 
 ### Invariants and Exit Criteria
-- Callers without the parameter get a differential backup; `-BackupType Full` restores the previous behaviour.
+- Callers without the parameter get an incremental backup; `-BackupType Full` restores the previous behaviour.
 - Exit: parse gate; test of the built Reflect argument list per type; one live differential run.
 
 ### Explicit Non-Goals
@@ -47,3 +47,7 @@ Operator 2026-11-18: Start-MacriumDailyBackup.ps1 runs Reflect.exe -e <definitio
 > the tool you called should get that as an optional parameter defaulting to diff. This is a low prio new CRP
 
 (Operator, 2026-11-18.)
+
+> a minor, probaly just a text change: in crp 362, i used the wrong default . Modify this from Differential to Incremental for more speed. Do not test, IMMEDIATE, I accept  the result with all consequences
+
+(Operator, 2026-11-19; default Inc; Gate 2 exception RULE-REV-001 (1).)

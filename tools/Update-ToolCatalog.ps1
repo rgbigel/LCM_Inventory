@@ -11,7 +11,10 @@
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
   Path: D:\Git_Repositories\LCM_Inventory\tools\Update-ToolCatalog.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.2.10  Date: 2026-11-18 14:10:00
+  Version: 10.2.11
+  Implementation Choices (CRP-343 segment 2): Admin is a level 0..3 (TBD / granted / controlled / admin; legacy
+  true -> 3, false -> 1); controlled tools carry AllowedAtoms; new tools land at 0 unless admin code is found.
+  Date: 2026-11-18 14:10:00
   Implementation Choices (CRP-345): tools/automation/*.ahk are scanned as type AutoHotkey and registered as intents with executable AutoHotkey64.exe and the declared IntentElevated flag; they get no .cmd trampoline (run only through Invoke-LcmAhkAtom).
 .PARAMETER Silent
   Suppresses non-error terminal output (useful in automated pipelines).
@@ -156,7 +159,7 @@ $metadataOverrides = @{
     Domain      = "LCM_Inventory"
     Audience    = "User"
     Role        = "Gateway"
-    Admin       = $false
+    Admin       = 1
     NoExit      = $false
     Category    = "Execution Gateway"
     Description = "Dispatches commands through the LCM Desktop Daemon on port 9876 for elevated or sandbox-free user desktop execution."
@@ -191,7 +194,7 @@ $metadataOverrides = @{
     Domain         = "LCM_Inventory"
     Audience       = "Developer"
     Role           = "Atom"
-    Admin          = $true
+    Admin          = 3
     IntentElevated = $true
     NoExit         = $false
     Category       = "Macrium BCR Baseline"
@@ -204,7 +207,7 @@ $metadataOverrides = @{
     Domain         = "LCM_Inventory"
     Audience       = "Developer"
     Role           = "Atom"
-    Admin          = $false
+    Admin          = 1
     IntentElevated = $false
     NoExit         = $false
     Category       = "Beyond Compare Review"
@@ -213,6 +216,8 @@ $metadataOverrides = @{
   }
   "Invoke-MacriumDailyBcrBaseline.ps1" = @{
     ShortName   = "MacriumDailyBcrBaseline"
+    Admin       = 2  # CRP-343: controlled
+    AllowedAtoms = @("invoke-macriummountworker", "set-lcmmachineregistry")
     Audience    = "Developer"
     Role        = "ReviewGate"
     Category    = "Beyond Compare Review"
@@ -270,7 +275,7 @@ $metadataOverrides = @{
     Aliases     = @("@00-RegKeyDefaultTypeSet", "@00-RegKey")
     Audience    = "User"
     Role        = "Customization"
-    Admin       = $true
+    Admin       = 3
     NoExit      = $true
     Category    = "Registry Tweaks"
     Description = "Configures default registry key types, associations, and type safety flags."
@@ -280,7 +285,7 @@ $metadataOverrides = @{
     ShortName   = "SetSystemFontVerdanaMedion"
     Audience    = "User"
     Role        = "Customization"
-    Admin       = $true
+    Admin       = 3
     Category    = "System Fonts"
     Description = "Sets system UI font to Verdana (Medion PC hardware profile)."
     Example     = 'reg import "SystemConfiguration\Source\@00-Set_System_Font_Verdana-MedionPC.reg"'
@@ -289,7 +294,7 @@ $metadataOverrides = @{
     ShortName   = "SetSystemFontVerdana"
     Audience    = "User"
     Role        = "Customization"
-    Admin       = $true
+    Admin       = 3
     Category    = "System Fonts"
     Description = "Sets system UI font to Verdana across all Windows desktop interface elements."
     Example     = 'reg import "SystemConfiguration\Source\@00-Set_System_Font_Verdana.reg"'
@@ -299,7 +304,7 @@ $metadataOverrides = @{
     Aliases     = @("@00-Skip_TPM_Check_on_Dynamic_Update", "@00-SkipTPM")
     Audience    = "User"
     Role        = "Customization"
-    Admin       = $true
+    Admin       = 3
     NoExit      = $true
     Category    = "System Setup"
     Description = "Applies bypass registry keys for TPM and CPU compatibility checks during dynamic updates."
@@ -318,7 +323,7 @@ $metadataOverrides = @{
     Aliases     = @("@02-SetDateTimeFormatAdm")
     Audience    = "User"
     Role        = "Customization"
-    Admin       = $true
+    Admin       = 3
     NoExit      = $true
     Category    = "Regional Settings"
     Description = "Configures ISO-standard date/time format (yyyy-MM-dd HH:mm:ss) system-wide across all user profiles."
@@ -328,7 +333,7 @@ $metadataOverrides = @{
     ShortName   = "SetDateTimeFormatHkcu"
     Audience    = "User"
     Role        = "Customization"
-    Admin       = $false
+    Admin       = 1
     Category    = "Regional Settings"
     Description = "Applies ISO date/time format registry overrides for current user (HKCU)."
     Example     = 'reg import "SystemConfiguration\Source\@03-Set_the_date_and_time_format_(HKCU_and_Current).reg"'
@@ -337,7 +342,7 @@ $metadataOverrides = @{
     ShortName   = "RemoveRemovableDriveIcon"
     Audience    = "User"
     Role        = "Customization"
-    Admin       = $true
+    Admin       = 3
     Category    = "Explorer Tweaks"
     Description = "Removes redundant removable drive duplicate icons from Explorer navigation tree."
     Example     = 'reg import "SystemConfiguration\Source\@04-Remove_Removable_Drive_Icon.reg"'
@@ -346,7 +351,7 @@ $metadataOverrides = @{
     ShortName   = "KillExplorerFriendlyNames"
     Audience    = "User"
     Role        = "Customization"
-    Admin       = $true
+    Admin       = 3
     Category    = "Explorer Tweaks"
     Description = "Disables friendly dates and abstracted filenames in Windows Explorer for raw canonical names."
     Example     = 'reg import "SystemConfiguration\Source\@05-Kill_Explorer_showing_friendly_names.reg"'
@@ -363,7 +368,7 @@ $metadataOverrides = @{
     ShortName   = "AutorunRenderLockScreen"
     Audience    = "User"
     Role        = "Customization"
-    Admin       = $true
+    Admin       = 3
     NoExit      = $true
     Category    = "Desktop Personalization"
     Description = "Configures autorun startup registry entry for lock screen rendering runner."
@@ -389,7 +394,7 @@ $metadataOverrides = @{
     ShortName   = "MoreOptionsOff"
     Audience    = "User"
     Role        = "Customization"
-    Admin       = $true
+    Admin       = 3
     Category    = "Context Menus"
     Description = "Disables Windows 11 'Show more options' collapsed context menu to restore classic full menu."
     Example     = 'reg import "SystemConfiguration\Source\@10-More_Options_OFF.reg"'
@@ -423,7 +428,7 @@ $metadataOverrides = @{
     Aliases     = @("@14-SecureDesktopOff")
     Audience    = "User"
     Role        = "Customization"
-    Admin       = $true
+    Admin       = 3
     NoExit      = $true
     Category    = "Security Tweaks"
     Description = "Disables UAC secure desktop dimming switch (PromptOnSecureDesktop=0) for automation workflows."
@@ -434,7 +439,7 @@ $metadataOverrides = @{
     Aliases     = @("@15-PS7AppKiller")
     Audience    = "User"
     Role        = "Customization"
-    Admin       = $true
+    Admin       = 3
     NoExit      = $true
     Category    = "Process Management"
     Description = "Terminates lingering or frozen background PowerShell 7 host processes."
@@ -445,7 +450,7 @@ $metadataOverrides = @{
     Aliases     = @("@16-GoAdm_changer")
     Audience    = "User"
     Role        = "Customization"
-    Admin       = $true
+    Admin       = 3
     NoExit      = $true
     Category    = "Administrative Privileges"
     Description = "Configures and switches GoAdm administrative privilege profiles."
@@ -456,7 +461,7 @@ $metadataOverrides = @{
     Aliases     = @("@17-FiraFonts")
     Audience    = "User"
     Role        = "Customization"
-    Admin       = $true
+    Admin       = 3
     NoExit      = $true
     Category    = "System Fonts"
     Description = "Installs and registers Fira Code and Fira Sans fonts system-wide in Windows Font Table."
@@ -467,7 +472,7 @@ $metadataOverrides = @{
     Aliases     = @("@18-ShellNewPS1")
     Audience    = "User"
     Role        = "Customization"
-    Admin       = $true
+    Admin       = 3
     NoExit      = $true
     Category    = "Explorer Tweaks"
     Description = "Registers PowerShell (.ps1) script creation entry in Windows Explorer 'New' context menu."
@@ -478,7 +483,7 @@ $metadataOverrides = @{
     Aliases     = @("@19-DefineSecureD")
     Audience    = "User"
     Role        = "Customization"
-    Admin       = $true
+    Admin       = 3
     NoExit      = $true
     Category    = "Volume Security"
     Description = "Sets secure NTFS ACLs, volume labels, and junction permissions on D: drive."
@@ -489,7 +494,7 @@ $metadataOverrides = @{
     Aliases     = @("@20-KillLogitechUpdateFull")
     Audience    = "User"
     Role        = "Invariants"
-    Admin       = $true
+    Admin       = 3
     NoExit      = $true
     Category    = "Hardware Stability"
     Description = "Enforces 54/54 Logitech updater suppressions across scheduled tasks, registry run keys, and services."
@@ -500,7 +505,7 @@ $metadataOverrides = @{
     Aliases     = @("@21-FixMouseFlickerInvariants")
     Audience    = "User"
     Role        = "Invariants"
-    Admin       = $true
+    Admin       = 3
     NoExit      = $true
     Category    = "Hardware Stability"
     Description = "Enforces AMD Radeon RX 580 ULPS disabled, DWM MPO OverlayTestMode=5, and PowerToys hook locks."
@@ -511,7 +516,7 @@ $metadataOverrides = @{
     Aliases     = @("@21-DesktopSubFoldersLauncher")
     Audience    = "User"
     Role        = "Customization"
-    Admin       = $true
+    Admin       = 3
     NoExit      = $true
     Category    = "Desktop Personalization"
     Description = "Launches master customization applicator with optional trace, pause, and hidden parameters."
@@ -524,7 +529,7 @@ $metadataOverrides = @{
     Aliases     = @("ApplyCustomizations", "ApplyCustomization", "ApplyAllCustomization")
     Audience    = "User"
     Role        = "Customization"
-    Admin       = $true
+    Admin       = 3
     NoExit      = $true
     Category    = "System Customization"
     Description = "Executes all @00- to @21- system customization scripts in numerical order."
@@ -550,7 +555,7 @@ $metadataOverrides = @{
     ShortName   = "ToggleSecure"
     Audience    = "User"
     Role        = "Customization"
-    Admin       = $true
+    Admin       = 3
     NoExit      = $true
     Category    = "Registry Tweaks"
     Description = "Toggles or sets Windows EnableSecureUIPaths (HKLM Policies\System) with live confirmation."
@@ -601,8 +606,13 @@ $metadataOverrides = @{
     Category    = "Tool Analysis"
     Description = "Interactive HTML viewer analyzing all legacy batch scripts and modern PowerShell tool equivalents."
   }
+  "Mount-MacriumLatestBaseline.ps1" = @{
+    Admin       = 2  # CRP-343: controlled (manual mount entry; dispatches the mount worker atom through the DO)
+    AllowedAtoms = @("invoke-macriummountworker")
+  }
   "Invoke-MacriumBcrReview.ps1" = @{
     ShortName   = "BCR"
+    Admin       = 1  # CRP-343: granted (calls no elevated atom itself)
     Aliases     = @("MacriumBcrReview")
     Audience    = "User"
     Role        = "ReviewGate"
@@ -788,6 +798,15 @@ if (Test-Path -LiteralPath $overridesFile) {
 # ------------------------------------------------------------------------------
 # 3. Helper Functions: Taxonomy Short-Name Derivation & AST Dependency Parsing
 # ------------------------------------------------------------------------------
+function ConvertTo-LcmAdminLevel {
+  # CRP-343: tools.admin levels 0 = TBD, 1 = granted, 2 = controlled, 3 = admin; legacy booleans map true -> 3, false -> 1.
+  param($Value)
+  if ($Value -is [bool]) { return $(if ($Value) { 3 } else { 1 }) }
+  $n = 0
+  if ($null -ne $Value -and [int]::TryParse([string]$Value, [ref]$n) -and $n -ge 0 -and $n -le 3) { return $n }
+  return 0
+}
+
 function Get-LcmToolShortName {
   param(
     [string]$FileName,
@@ -999,7 +1018,8 @@ try {
         if ($existing.PSObject.Properties['Example'] -and -not [string]::IsNullOrWhiteSpace($existing.Example)) { $meta['Example'] = $existing.Example }
         if ($existing.PSObject.Properties['Group'] -and -not [string]::IsNullOrWhiteSpace($existing.Group)) { $meta['Group'] = $existing.Group }
         if ($existing.PSObject.Properties['Domain'] -and -not [string]::IsNullOrWhiteSpace($existing.Domain)) { $meta['Domain'] = $existing.Domain }
-        if ($null -ne $existing.PSObject.Properties['Admin']) { $meta['Admin'] = [bool]$existing.Admin }
+        if ($null -ne $existing.PSObject.Properties['Admin']) { $meta['Admin'] = ConvertTo-LcmAdminLevel $existing.Admin }  # CRP-343
+        if ($existing.PSObject.Properties['AllowedAtoms'] -and $null -ne $existing.AllowedAtoms) { $meta['AllowedAtoms'] = @($existing.AllowedAtoms) }
         if ($null -ne $existing.PSObject.Properties['NoExit']) { $meta['NoExit'] = [bool]$existing.NoExit }
       } else {
         $meta['Audience'] = "Developer"
@@ -1077,10 +1097,10 @@ try {
       $catVal  = if ($meta.ContainsKey('Category')) { $meta.Category } else { 'Utility' }
       $descVal = if ($meta.ContainsKey('Description')) { $meta.Description } else { "$baseStem execution tool." }
 
-      # Admin requirement heuristic
-      $adminRequired = $false
+      # Admin level (CRP-343): declared/existing level first; a new tool is 3 when the heuristic finds admin code, else 0 (TBD)
+      $adminLevel = 0
       if ($meta.ContainsKey('Admin')) {
-        $adminRequired = [bool]$meta.Admin
+        $adminLevel = ConvertTo-LcmAdminLevel $meta.Admin
       } else {
         $contentPreview = ""
         try { $contentPreview = (Get-Content -LiteralPath $f.FullName -TotalCount 250 -ErrorAction SilentlyContinue) -join "`n" } catch {}
@@ -1088,7 +1108,7 @@ try {
             $roleVal -in @('Invariants', 'Repair', 'SystemInvariants', 'SystemRepair') -or
             $baseStem -in @('GoAdm', 'Set-MachineWideExecutionPolicy', 'Set-SecureDVolume', 'Kill-LogitechUpdate', 'Set-MouseFlickerInvariants', 'Invoke-AsusDebloater', 'Set-BluetoothAlwaysOn', 'Enter-PSSystemPrivilege', 'Enter-XYSystemPrivilege', 'PS_SystemPrivilege', 'SystemPrivilege_XY', 'Unlock-ForcedUSO', 'Invoke-AcronisMiniFilterCleanup', '@14-SecureDesktopOff', '@15-PS7AppKiller', '@16-GoAdm_changer', '@17-FiraFonts', '@18-ShellNewPS1', '@19-DefineSecureD', '@20-KillLogitechUpdateFull', '@21-FixMouseFlickerInvariants', '@00-RegKeyDefaultTypeSet', '@00-Skip_TPM_Check_on_Dynamic_Update', '@02-Set_the_date_and_time_format_(ADM_systemwide)', 'Apply-AllCustomizations', 'Set-GitRoot', 'Repair-VolumeAcl', 'Repair-SystemAcl', 'Get-SystemAclAudit', 'Forced USO Unlock', 'AcronisMiniFilterCleanup') -or
             $baseStem -match 'SystemPrivilege|SystemPriviledge|PsExec') {
-          $adminRequired = $true
+          $adminLevel = 3
         }
       }
 
@@ -1102,7 +1122,7 @@ try {
           $script:RepoElevationCache[$repoName] = (Test-Path -LiteralPath $agentsFile) -and
             [bool](Select-String -LiteralPath $agentsFile -Pattern '^\s*Elevation:\s*Administrator\s*$' -Quiet)
         }
-        if ($script:RepoElevationCache[$repoName]) { $adminRequired = $true }
+        if ($script:RepoElevationCache[$repoName] -and $adminLevel -ne 2) { $adminLevel = 3 }
       }
 
       # Compute accurate environment-specific Example command (preferring ShortName)
@@ -1183,7 +1203,7 @@ try {
       } else {
         if ($baseStem -in @('Show-ToolsExplorer', 'ToolsExplorer', 'Show-Tools', 'ShowTools', 'Show-ToolIndex', 'Show-HaInventory', 'ShowHaInventory', 'Show-HaInventoryApp', 'Build-HaInventoryViewer', 'Update-ToolCatalog', 'Sync-ToolSymlinks', 'Show-WorkspaceInventoryApp', 'Show-LCM_InventoryApp', 'Update-HaInventory') -or
             $roleVal -in @('DesktopGUI', 'SubsystemGUI', 'GUI') -or
-            ($roleVal -in @('QualityGate', 'InventoryTelemetry', 'SubsystemTelemetry', 'ReviewCommit') -and -not $adminRequired -and $audVal -eq 'Developer')) {
+            ($roleVal -in @('QualityGate', 'InventoryTelemetry', 'SubsystemTelemetry', 'ReviewCommit') -and $adminLevel -lt 3 -and $audVal -eq 'Developer')) {
           $noExitRequired = $false
         }
       }
@@ -1194,7 +1214,8 @@ try {
         Aliases     = if ($meta.ContainsKey('Aliases')) { @($meta.Aliases) } else { @() }
         Role        = $roleVal
         Audience    = $audVal
-        Admin       = $adminRequired
+        Admin       = $adminLevel
+      AllowedAtoms = if ($meta.ContainsKey('AllowedAtoms')) { ,[string[]]@($meta.AllowedAtoms) } else { $null }  # keep an array for one atom
         NoExit      = $noExitRequired
         Group       = if ($meta.ContainsKey('Group')) { $meta.Group } elseif ($meta.ContainsKey('Subsystem')) { $meta.Subsystem } elseif ($meta.ContainsKey('Domain')) { $meta.Domain } else { $sd.Group }
         Domain      = if ($meta.ContainsKey('Domain')) { $meta.Domain } elseif ($meta.ContainsKey('Subsystem')) { $meta.Subsystem } elseif ($meta.ContainsKey('Group')) { $meta.Group } else { $sd.Domain }
@@ -1209,7 +1230,7 @@ try {
       }
 
       $toolsList.Add($toolEntry)
-      Write-ToolLog -Message "Scanned: $fileName [ShortName: $finalShortName] ($roleVal - $($audVal) - Admin: $adminRequired - NoExit: $noExitRequired)" -Level DEBUG
+      Write-ToolLog -Message "Scanned: $fileName [ShortName: $finalShortName] ($roleVal - $($audVal) - Admin: $adminLevel - NoExit: $noExitRequired)" -Level DEBUG
     }
   }
 
@@ -1280,7 +1301,7 @@ try {
       $cleanGoal = $cleanGoal.Replace('^', '^^').Replace('&', '^&').Replace('|', '^|').Replace('<', '^<').Replace('>', '^>').Replace('%', '%%')
       $commentBanner = "echo # [LCM Launcher] %~nx0 - Goal: $cleanGoal`r`n"
 
-      $elevationCheck = if ($t.Admin) {
+      $elevationCheck = if ((ConvertTo-LcmAdminLevel $t.Admin) -ge 3) {
         "net session >nul 2>&1`r`nif %errorlevel% neq 0 (`r`n  call `"%~dp0do.cmd`" -Command `"%~nx0 %*`" -Elevated`r`n  exit /b`r`n)`r`n"
       } else { "" }
 

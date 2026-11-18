@@ -143,9 +143,9 @@ func TestVerifyLegalElevationFastPath(t *testing.T) {
 	if err := os.MkdirAll(dir, 0o755); err != nil {
 		t.Fatal(err)
 	}
-	pol := `{"elevated_atoms":[{"script":"LCM_Inventory/tools/Mount-MacriumLatestBaseline.ps1","tool_admin":1,"parameters":""},` +
-		`{"script":"LCM_Inventory/tools/Worker.ps1","tool_admin":1,"parameters":"-ElevatedWorker"},` +
-		`{"script":"LCM_Inventory/tools/Bad.ps1","tool_admin":0,"parameters":""}],"tools":{"LCM_Inventory\\tools\\Mount-MacriumLatestBaseline.ps1":1}}`
+	pol := `{"elevated_atoms":[{"script":"LCM_Inventory/tools/Mount-MacriumLatestBaseline.ps1","tool_admin":3,"parameters":""},` +
+		`{"script":"LCM_Inventory/tools/Worker.ps1","tool_admin":3,"parameters":"-ElevatedWorker"},` +
+		`{"script":"LCM_Inventory/tools/Bad.ps1","tool_admin":1,"parameters":""}],"tools":{"LCM_Inventory\\tools\\Mount-MacriumLatestBaseline.ps1":3}}`
 	if err := os.WriteFile(filepath.Join(dir, "elevation_policy.json"), []byte(pol), 0o644); err != nil {
 		t.Fatal(err)
 	}
@@ -160,7 +160,7 @@ func TestVerifyLegalElevationFastPath(t *testing.T) {
 		{"atom+auth", elevationRequest{Command: "pwsh -File " + mount, Authenticated: true}, true, "fast"},
 		{"atom no auth", elevationRequest{Command: "pwsh -File " + mount}, false, "fast"},
 		{"no atom", elevationRequest{Command: "whoami /groups", Authenticated: true}, false, "fast"},
-		{"catalog error tool admin 0", elevationRequest{Command: "pwsh -File LCM_Inventory\\tools\\Bad.ps1", Authenticated: true}, false, "fast"},
+		{"catalog error owner below level 3", elevationRequest{Command: "pwsh -File LCM_Inventory\\tools\\Bad.ps1", Authenticated: true}, false, "fast"},
 		{"switch missing", elevationRequest{Command: "pwsh -File LCM_Inventory\\tools\\Worker.ps1", Authenticated: false}, false, "slow"},
 		{"switch present", elevationRequest{Command: "pwsh -File LCM_Inventory\\tools\\Worker.ps1 -ElevatedWorker", Authenticated: true}, true, "fast"},
 		{"elevated flag no atom", elevationRequest{Command: "whoami", AskedElevated: true}, false, "slow"},
@@ -172,6 +172,38 @@ func TestVerifyLegalElevationFastPath(t *testing.T) {
 		}
 	}
 	policyCache = nil
+}
+
+// TestCallerDecision covers the CRP-343 call table (Specification T2) row by row.
+func TestCallerDecision(t *testing.T) {
+	list := map[string]bool{"lcm_inventory/tools/invoke-macriummountworker.ps1": true}
+	worker := []string{"lcm_inventory/tools/invoke-macriummountworker.ps1"}
+	registry := []string{"lcm_inventory/tools/set-lcmmachineregistry.ps1"}
+	cases := []struct {
+		name          string
+		tool          string
+		level         int
+		allowed       map[string]bool
+		atoms         []string
+		switchMissing bool
+		want          bool
+	}{
+		{"admin caller, legal atom", "t", adminFull, nil, worker, false, true},
+		{"controlled caller, listed atom", "t", adminControlled, list, worker, false, true},
+		{"controlled caller, unlisted atom", "t", adminControlled, list, registry, false, false},
+		{"controlled caller, listed and unlisted", "t", adminControlled, list, append(append([]string{}, worker...), registry...), false, false},
+		{"granted caller", "t", adminGranted, nil, worker, false, false},
+		{"TBD caller", "t", adminTBD, nil, worker, false, false},
+		{"no caller tool", "", adminFull, nil, worker, false, false},
+		{"admin caller, no atom", "t", adminFull, nil, nil, false, false},
+		{"admin caller, switch missing", "t", adminFull, nil, worker, true, false},
+	}
+	for _, c := range cases {
+		got, why := callerDecision(c.tool, c.level, c.allowed, c.atoms, c.switchMissing)
+		if got != c.want {
+			t.Errorf("%s: want %t, got %t (%s)", c.name, c.want, got, why)
+		}
+	}
 }
 
 func TestIsCompositeCommand(t *testing.T) {

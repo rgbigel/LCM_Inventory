@@ -1,6 +1,9 @@
 /**
- * LCM Tool Explorer Client Application (10.0.2)
- * Date: 2026-11-18 16:10:00
+ * LCM Tool Explorer Client Application (10.0.3)
+ * Date: 2026-11-18 23:55:00
+ * Implementation Choices (CRP-343 segment 2): Admin is a level 0..3 shown as TBD / granted / controlled / admin
+ *   (legacy booleans: true = admin, false = granted); filter, badge, editor and modal use the words; a run never adds
+ *   -Elevated by itself, the DO decides per atom.
  * Implementation Choices (BUG-352): DO requests carry the full command line (Run Selection); Admin filter accepts
  *   the dropdown values true/false; ToolHelp writes all output streams to a help file opened in Notepad++.
  * Modern dashboard controller supporting:
@@ -199,6 +202,15 @@
     let currentTool = sessionStorage.getItem('lcm_tools_tool') || initialConfig.Tool || 'All';
     let currentEnv = sessionStorage.getItem('lcm_tools_env') || initialConfig.Env || 'All';
     let currentAdmin = sessionStorage.getItem('lcm_tools_admin') || 'All';
+    // CRP-343: tools.admin level 0 = TBD, 1 = granted, 2 = controlled, 3 = admin (legacy true -> 3, false -> 1)
+    const ADMIN_WORDS = ['TBD', 'granted', 'controlled', 'admin'];
+    function adminLevel(v) {
+        if (v === true) return 3;
+        if (v === false) return 1;
+        const n = Number(v);
+        return (Number.isInteger(n) && n >= 0 && n <= 3) ? n : 0;
+    }
+    function adminWord(v) { return ADMIN_WORDS[adminLevel(v)]; }
     let searchFilter = sessionStorage.getItem('lcm_tools_search') || initialConfig.Filter || '';
     
     // View Mode: false = Short-Names (default), true = Source Files (Dev mode)
@@ -283,7 +295,8 @@
             } else if (t.Audience === 'Internal') {
                 audBadge = '<span class="badge badge-internal" style="background: #8957e5; color: #fff; font-weight: 600;">Internal</span>';
             }
-            const admBadge = t.Admin ? '<span class="badge badge-admin-yes" title="ADMINMODE design criterion: elevation required">🛡️ Admin</span>' : '<span class="badge badge-admin-no" title="ADMINMODE design criterion: elevation not required">👤 User</span>';
+            const admLevel = adminLevel(t.Admin); // CRP-343
+            const admBadge = '<span class="badge ' + (admLevel === 3 ? 'badge-admin-yes' : 'badge-admin-no') + '" title="Tool permission (CRP-343): ' + adminWord(t.Admin) + '">' + ['❔', '👤', '🔐', '🛡️'][admLevel] + ' ' + adminWord(t.Admin) + '</span>';
             const editedMarker = t._edited ? '<span class="edited-tag" title="Cell overridden client-side">✏️</span>' : '';
 
             const extDisplay = '<span class="tool-ext-badge ' + ext.cls + '">' + ext.label + '</span>';
@@ -359,7 +372,7 @@
                 '<td>' +
                     '<div class="tool-name-cell" style="display: flex; flex-direction: column; align-items: flex-start;">' +
                         '<div style="display: flex; align-items: center; gap: 4px;">' +
-                            '<a href="javascript:void(0)" class="tool-name-link" onclick="window.LcmTools.runToolSmart(' + safeIdx + ')" title="Run ' + displayName + ' with defaults (' + (t.Admin ? '🛡️ Elevated Admin' : '👤 Standard User') + ')">' +
+                            '<a href="javascript:void(0)" class="tool-name-link" onclick="window.LcmTools.runToolSmart(' + safeIdx + ')" title="Run ' + displayName + ' with defaults (' + ('permission: ' + adminWord(t.Admin)) + ')">' +
                                 displayName +
                             '</a>' +
                             editedMarker +
@@ -1037,7 +1050,7 @@
                             fieldVal = tool.Audience || '';
                             break;
                         case 'admin':
-                            fieldVal = String(Boolean(tool.Admin));
+                            fieldVal = adminWord(tool.Admin); // CRP-343
                             break;
                         case 'noexit':
                             fieldVal = String(Boolean(tool.NoExit));
@@ -1157,7 +1170,8 @@
                 (t.Domain === groupVal) || 
                 (groupVal === 'HaSSD06' && ((t.SubSystem && t.SubSystem.startsWith('HaSSD06')) || (t.Group && t.Group.startsWith('HaSSD06')) || (t.Domain && t.Domain.startsWith('HaSSD06'))));
             
-            const matchAdmin = (adminVal === 'All') || ((adminVal === 'Admin' || adminVal === 'true') && t.Admin) || ((adminVal === 'User' || adminVal === 'false') && !t.Admin); // BUG-352: dropdown values are true/false
+            const legacyAdminVal = { 'Admin': 'admin', 'true': 'admin' }[adminVal] || adminVal; // CRP-343: words; legacy values mapped
+            const matchAdmin = (legacyAdminVal === 'All') || ((legacyAdminVal === 'User' || legacyAdminVal === 'false') ? adminLevel(t.Admin) < 3 : adminWord(t.Admin) === legacyAdminVal);
             const matchNoExit = (noexitVal === 'All') || (noexitVal === 'true' && t.NoExit) || (noexitVal === 'false' && !t.NoExit);
             const matchCat = (catVal === 'All') || (t.Category === catVal);
             const matchDesc = matchQuery(t.Description, descFilter);
@@ -1230,7 +1244,7 @@
         } else if (cardType === 'admin') {
             document.getElementById('card-admin').classList.add('active');
             resetColumnFilters(false);
-            document.getElementById('admin-select').value = 'Admin';
+            document.getElementById('admin-select').value = 'admin';
             setAudienceTab('All');
         } else if (cardType === 'noexit') {
             const c = document.getElementById('card-noexit'); if (c) c.classList.add('active');
@@ -1812,7 +1826,7 @@
     }
 
     function getDispatcherCommand(tool) {
-        const elevatedFlag = tool.Admin ? ' -Elevated' : '';
+        const elevatedFlag = ''; // CRP-343: the page never asks for elevation; the DO decides per atom
         return 'pwsh -File "D:\\Git_Repositories\\LCM_Inventory\\tools\\internal\\Invoke-InteractiveDesktop.ps1" -Command "' + tool.Example.replace(/"/g, '\\"') + '"' + elevatedFlag;
     }
 
@@ -1979,7 +1993,7 @@
         document.getElementById('modal-example').innerText = activeModalTool.Example;
         document.getElementById('modal-dispatch-cmd').innerText = getDispatcherCommand(activeModalTool);
         document.getElementById('modal-path').innerText = (activeModalTool.RelativePath || activeModalTool.Name) + ' (' + activeModalTool.Group + ')';
-        document.getElementById('modal-role-cat').innerText = (activeModalTool.Category || 'General') + ' • ' + activeModalTool.Audience + ' • Admin: ' + (activeModalTool.Admin ? 'Required' : 'No') + ' • NoExit: ' + (activeModalTool.NoExit ? '🔴 Yes (Keep Open)' : '🟢 No (Auto-Exit)');
+        document.getElementById('modal-role-cat').innerText = (activeModalTool.Category || 'General') + ' • ' + activeModalTool.Audience + ' • Permission: ' + adminWord(activeModalTool.Admin) + ' • NoExit: ' + (activeModalTool.NoExit ? '🔴 Yes (Keep Open)' : '🟢 No (Auto-Exit)');
         document.getElementById('modal-desc').innerText = activeModalTool.Description || 'No detailed description available.';
         
         // Render AST Dependencies
@@ -2044,8 +2058,7 @@
         } else if (field === 'Admin') {
             controlHtml = '<label style="font-size: 11px; color: var(--text-secondary); font-weight: 600;">ADMINMODE Design Criterion:</label>' +
                 '<select id="inline-edit-input">' +
-                '<option value="true" ' + (tool.Admin ? 'selected' : '') + '>🛡️ Elevation required by design</option>' +
-                '<option value="false" ' + (!tool.Admin ? 'selected' : '') + '>👤 Elevation no longer required by redesign</option>' +
+                ADMIN_WORDS.map((w, i) => '<option value="' + i + '" ' + (adminLevel(tool.Admin) === i ? 'selected' : '') + '>' + i + ' - ' + w + '</option>').join('') +
                 '</select>';
         } else if (field === 'Category') {
             const curCat = tool.Category || 'General';
@@ -2082,7 +2095,7 @@
         const targetTool = toolsData[activeEditCell.idx];
         if (!targetTool) return;
         const baseStem = targetTool.Name.replace(/\.[^/.]+$/, "");
-        const parsedVal = activeEditCell.field === 'Admin' ? (val === 'true') : val;
+        const parsedVal = activeEditCell.field === 'Admin' ? adminLevel(parseInt(val, 10)) : val; // CRP-343: level 0..3
 
         let stored = {};
         try { stored = JSON.parse(localStorage.getItem('lcm_tools_overrides') || '{}'); } catch(e) {}
@@ -2144,7 +2157,7 @@
         closeCellEditor();
         applyFilters();
         const editSummary = activeEditCell.field === 'Admin'
-            ? ('ADMINMODE staged as ' + (parsedVal ? 'elevation required' : 'elevation no longer required by redesign'))
+            ? ('Permission staged as ' + adminWord(parsedVal)) // CRP-343
             : ('Staged ' + activeEditCell.field);
         showToast('✓ ' + editSummary + ' for ' + (targetTool.ShortName || baseStem) + ' (Blocked pending Finalize/Revert)');
     }
