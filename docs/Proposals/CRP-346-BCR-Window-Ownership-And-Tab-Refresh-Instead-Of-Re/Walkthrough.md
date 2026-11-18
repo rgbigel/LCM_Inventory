@@ -1,7 +1,5 @@
 # Walkthrough: CRP-346 - BCR Window Ownership And Tab Refresh Instead Of Relaunch
 
-## 1. Executive Summary
-Implementation and verification records for CRP-346.
+Date: 2026-11-18 12:21:44
 
-## 2. Verification Evidence
-- Pending implementation execution.
+Not written yet: records the path taken and the test evidence during implementation.

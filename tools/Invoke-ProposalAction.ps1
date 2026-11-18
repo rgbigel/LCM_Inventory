@@ -6,9 +6,17 @@
     Implementation Choices (BUG-341): the bcr action launches exactly one joint BCR for a declared
     cohort (RULE-LCM-002); all other members only record their review metadata (-NoLaunch). Before,
     tight granularity launched one review per member (6 BC windows for COH-331 on 2026-11-16).
+    Implementation Choices (BUG-351): (a) completion (complete, proceed to completed, Gate 2 accept) commits
+    every governed repository with committable changes, because the BCR review covers the whole workspace;
+    each non-primary repository is registered and resolved as a cross-repository review obligation, the primary
+    repository (origin, else the last changed one) runs last and moves the item to completed. Before, only the
+    origin repository was committed and the item became completed with the other repositories left behind
+    (CRP-350, 2026-11-17). Obligations are registered at completion, not at BCR launch, so that the do/proceed
+    continuation does not open one BCR per repository. (b) bug/suggest without a target create a new BUG/CRP
+    (-Title, -Details); bug with a BUG target and -Details merges the finding into that BUG.
     Authors: Rolf, LCM_AI Engine, Claude
-    Version: 10.2.2
-    Date: 2026-11-17
+    Version: 10.2.3
+    Date: 2026-11-18
 #>
 
 [CmdletBinding()]
@@ -180,6 +188,113 @@ function Convert-LegacyProposalStateToLifecycleState {
         throw "Legacy $Source value '$Value' has no lifecycle transition equivalent."
     }
     return $map[$Value]
+}
+
+# BUG-351: governed repositories that one workspace-wide BCR review covers (RULE-LCM-034).
+$script:LcmGovernedCompletionRepositories = @('Git_Repositories', 'LCM_AI', 'LCM_Inventory', 'LCM_Shared', 'LCM_Supervision', 'LCM_Tools')
+$script:LcmSubmitReviewResultPath = Join-Path $PSScriptRoot 'Submit-ReviewResult.ps1'
+
+function Test-LcmCompletionExcludedPath {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$RelativePath
+    )
+
+    # Same exclusion as Test-StandardBcrExcludedPath in Submit-ReviewResult.ps1 (paths that are never committed).
+    $normalizedPath = $RelativePath.Replace('/', '\').TrimStart('\')
+    $lcmDirectory = [regex]::Escape('.' + 'lcm')
+    return $normalizedPath -match "^(?i)(?:\.git|\.venv|venv|\.env|__pycache__|scratch|logs|work|data|node_modules|bin|obj)(?:\\|$)|(?:^|\\)$lcmDirectory\\(?:logs|scratch|archive|tools\\links)(?:\\|$)|(?i)\.(?:pyc|pyo|inventory|log|tmp|bak|swp|lock)$"
+}
+
+function Get-LcmChangedGovernedRepositories {
+    [CmdletBinding()]
+    param()
+
+    $changed = [System.Collections.Generic.List[string]]::new()
+    foreach ($name in $script:LcmGovernedCompletionRepositories) {
+        $repoPath = if ('Git_Repositories' -eq $name) { $workspaceRoot } else { Join-Path $workspaceRoot $name }
+        if (-not (Test-Path -LiteralPath (Join-Path $repoPath '.git'))) { continue }
+        $paths = @(
+            git -C $repoPath diff --name-only
+            git -C $repoPath diff --cached --name-only
+            git -C $repoPath ls-files --others --exclude-standard
+        ) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
+        $committable = @($paths | Where-Object { -not (Test-LcmCompletionExcludedPath -RelativePath $_) })
+        if ($committable.Count -gt 0) { $changed.Add($name) }
+    }
+    return @($changed)
+}
+
+function Invoke-LcmItemReviewCompletion {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [int]$ProposalId,
+
+        [Parameter(Mandatory = $true)]
+        [hashtable]$ReviewResultArgs
+    )
+
+    $submitPath = $script:LcmSubmitReviewResultPath
+    $store = Get-ProposalStore
+    $proposal = @($store.proposals | Where-Object { [int]$_.id -eq $ProposalId })[0]
+    $origin = [string]$ReviewResultArgs.RepositoryPath
+    $changed = @(Get-LcmChangedGovernedRepositories)
+    $openObligationRepositories = @(Get-LcmProposalReviewObligations -Proposal $proposal -UnresolvedOnly | ForEach-Object { [string]$_.repository })
+    if ($changed.Count -eq 0 -and $openObligationRepositories.Count -eq 0) {
+        & $submitPath @ReviewResultArgs
+        return
+    }
+
+    $primary = if ($changed -contains $origin -or $changed.Count -eq 0) { $origin } else { $changed[-1] }
+    $secondary = @(@($changed) + @($openObligationRepositories) | Where-Object { $_ -ne $primary } | Sort-Object -Unique)
+    Write-Host ("Completion covers {0} repository(ies): {1}; primary (lifecycle) repository: {2}." -f ($secondary.Count + 1), ((@($secondary) + @($primary)) -join ', '), $primary) -ForegroundColor Cyan
+    foreach ($repository in $secondary) {
+        $null = Register-LcmCrossRepositoryReviewObligation -Id $ProposalId -Repository $repository -Reason 'Covered by the workspace-wide BCR review; committed during item completion (BUG-351).'
+        $repositoryArgs = $ReviewResultArgs.Clone()
+        $repositoryArgs.RepositoryPath = $repository
+        & $submitPath @repositoryArgs
+    }
+    $primaryArgs = $ReviewResultArgs.Clone()
+    $primaryArgs.RepositoryPath = $primary
+    & $submitPath @primaryArgs
+}
+
+function Add-LcmBugMergedFinding {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [int]$ProposalId,
+
+        [Parameter(Mandatory = $true)]
+        [string]$Finding
+    )
+
+    $store = Get-ProposalStore
+    $target = @($store.proposals | Where-Object { [int]$_.id -eq $ProposalId })[0]
+    if ($null -eq $target) { throw "Proposal #$ProposalId was not found." }
+    $targetIdentity = if ($target.crp_id) { [string]$target.crp_id } else { "#$ProposalId" }
+    if ($targetIdentity -notmatch '^BUG-') { throw "Merging a finding requires a BUG target; $targetIdentity is not a BUG." }
+    $stamp = (Get-Date).ToString('yyyy-MM-dd HH:mm:ss')
+    $mergedText = '[merged {0}] {1}' -f $stamp, $Finding
+    $previousDetails = if ($target.PSObject.Properties['details'] -and $target.details) { [string]$target.details + [Environment]::NewLine } else { '' }
+    $target | Add-Member -NotePropertyName 'details' -NotePropertyValue ($previousDetails + $mergedText) -Force
+    Set-ProposalStore -Store $store
+
+    if ($target.PSObject.Properties['bundle_dir'] -and $target.bundle_dir) {
+        $originRepo = if ($target.PSObject.Properties['origin_repo'] -and $target.origin_repo -and ($target.origin_repo -notlike 'LCM_*')) { $target.origin_repo } else { 'LCM_Inventory' }
+        $bundleSpec = Join-Path $workspaceRoot (Join-Path $originRepo (Join-Path $target.bundle_dir 'Specification.md'))
+        if (Test-Path -LiteralPath $bundleSpec) {
+            $content = [System.IO.File]::ReadAllText($bundleSpec)
+            $lineBreak = if ($content.Contains("`r`n")) { "`r`n" } else { "`n" }
+            $section = if ($content.Contains('## Merged Findings')) { '' } else { $lineBreak + '## Merged Findings' + $lineBreak }
+            $content = $content.TrimEnd("`r", "`n") + $lineBreak + $section + $lineBreak + '- ' + $mergedText + $lineBreak
+            [System.IO.File]::WriteAllText($bundleSpec, $content, [System.Text.UTF8Encoding]::new($false))
+        }
+    }
+    Write-Host "Merged finding into $targetIdentity." -ForegroundColor Green
+    return $target
 }
 
 # Assert implementation allowed for modifying actions unless -Force is specified
@@ -468,6 +583,37 @@ switch -Regex ($Action) {
         Format-ProposalsTable -Proposals $updated
         break
     }
+    '^(bug|suggest|suggested)$' {
+        # BUG-351 (b): without a target a new item is created; a BUG target with -Details merges the finding.
+        $isBugAction = $Action -eq 'bug'
+        if ([string]::IsNullOrWhiteSpace($TargetExpression)) {
+            if ([string]::IsNullOrWhiteSpace($Title)) {
+                throw "-Title <string> is required to create a new item with action '$Action' (or give -TargetExpression for an existing item)."
+            }
+            $createArgs = @{
+                Title = $Title
+                Details = $Details
+                Author = 'Rolf'
+            }
+            if ($isBugAction) { $createArgs.CrId = 'BUG-' }
+            $created = New-LCM_Proposal @createArgs
+            Format-ProposalsTable -Proposals @($created)
+            break
+        }
+        $targetIds = @(Resolve-ProposalIdExpression -Expression $TargetExpression)
+        if ($isBugAction -and -not [string]::IsNullOrWhiteSpace($Details)) {
+            if ($targetIds.Count -ne 1) { throw 'Merging a finding requires exactly one BUG target.' }
+            $merged = Add-LcmBugMergedFinding -ProposalId $targetIds[0] -Finding $Details
+            if ([string]$merged.state -ne 'suggested') {
+                Format-ProposalsTable -Proposals @($merged)
+                break
+            }
+        }
+        $updated = @(Invoke-ProposalBatchAction -Action $Action -TargetExpression $TargetExpression -Details $Details -Changes $Changes)
+        Write-Host "`nUpdated Proposal(s):" -ForegroundColor Cyan
+        Format-ProposalsTable -Proposals $updated
+        break
+    }
     '^bcr$' {
         if (-not [string]::IsNullOrWhiteSpace($ReviewObligationId)) {
             $store = Get-ProposalStore
@@ -629,7 +775,7 @@ switch -Regex ($Action) {
             }
             if ($MinimalTests) { $reviewResultArgs.MinimalTests = $true }
             if ($Force) { $reviewResultArgs.Force = $true }
-            & (Join-Path $PSScriptRoot 'Submit-ReviewResult.ps1') @reviewResultArgs
+            Invoke-LcmItemReviewCompletion -ProposalId $id -ReviewResultArgs $reviewResultArgs
             $p = Get-ProposalStore | ForEach-Object { @($_.proposals | Where-Object { $_.id -eq $id })[0] }
             if ($p) { $updated += $p }
         }
@@ -678,7 +824,7 @@ switch -Regex ($Action) {
                 }
                 if ($MinimalTests) { $reviewResultArgs.MinimalTests = $true }
                 if ($Force) { $reviewResultArgs.Force = $true }
-                & (Join-Path $PSScriptRoot 'Submit-ReviewResult.ps1') @reviewResultArgs
+                Invoke-LcmItemReviewCompletion -ProposalId $id -ReviewResultArgs $reviewResultArgs
             } else {
                 $effectiveDetails = if ($Details) { $Details } else { "Advanced to $targetProg by operator" }
                 Move-LcmProposalLifecycleState -Id $id -State $targetProg -Details $effectiveDetails | Out-Null
@@ -744,7 +890,7 @@ switch -Regex ($Action) {
                     }
                     if ($MinimalTests) { $reviewResultArgs.MinimalTests = $true }
                     if ($Force) { $reviewResultArgs.Force = $true }
-                    & (Join-Path $PSScriptRoot 'Submit-ReviewResult.ps1') @reviewResultArgs
+                    Invoke-LcmItemReviewCompletion -ProposalId $id -ReviewResultArgs $reviewResultArgs
                 }
             }
             if ($MinimalTests) {

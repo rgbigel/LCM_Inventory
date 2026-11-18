@@ -47,12 +47,17 @@ param(
              through the exact-CRP review gate.
     Path: tools/Submit-ReviewResult.ps1
     Authors: Rolf, Claude, LCM_AI Engine
-    Version: 10.2.2
-    Date: 2026-11-15
+    Version: 10.2.3
+    Date: 2026-11-18
 
     Implementation Choices (CRP-332): before staging, every committable or already staged path is normalized to CRLF
     (LcmLineEndingAtoms.psm1, byte level). This is the completion-time line-ending enforcement; a CRLF correction is not
     a review-relevant change, so it runs after the BCR disposition and adds no review candidate.
+
+    Implementation Choices (BUG-351): this script records one repository per call; -RepositoryPath is now
+    required. Before, an omitted path silently targeted the workspace root and completed the item after that
+    single commit (CRP-350, 2026-11-17). Item completion across all reviewed repositories is
+    Invoke-ProposalAction.ps1 -Action complete <ID> (COMPLETE).
 #>
 
 Set-StrictMode -Version Latest
@@ -115,10 +120,10 @@ if ($Help) {
     Write-Host "  Records an accepted Beyond Compare review and commits the reviewed live worktree."
     Write-Host ""
     Write-Host "USAGE:" -ForegroundColor Yellow
-    Write-Host "  pwsh LCM_Inventory/tools/Submit-ReviewResult.ps1 -CRP <CRP-ID> [[-RepositoryPath] <str>] [-Result <str>] [-Notes <str>] [-All] [-StagedOnly] [-MinimalTests] [-Force] [-h]"
+    Write-Host "  pwsh LCM_Inventory/tools/Submit-ReviewResult.ps1 -CRP <CRP-ID> -RepositoryPath <str> [-Result <str>] [-Notes <str>] [-All] [-StagedOnly] [-MinimalTests] [-Force] [-h]"
     Write-Host ""
     Write-Host "PARAMETERS:" -ForegroundColor Yellow
-    Write-Host "  -RepositoryPath  : Name or path of the repository"
+    Write-Host "  -RepositoryPath  : Name or path of the repository (required; root = 'root')"
     Write-Host "  -Result          : Review disposition (Completed, CompleteAll, CompleteWithEdits, Rejected, Deferred)"
     Write-Host "  -Notes           : Review notes or rationale"
     Write-Host "  -All             : Legacy compatibility switch; accepted reviews commit the live worktree"
@@ -165,7 +170,7 @@ if (-not [string]::IsNullOrWhiteSpace($RepositoryPath)) {
         if (Test-Path -LiteralPath $candidatePath) { $targetRepoPath = $candidatePath }
     }
 } else {
-    $targetRepoPath = $workspaceRoot
+    throw '-RepositoryPath is required: this tool records one repository. Complete an item across all reviewed repositories with Invoke-ProposalAction.ps1 -Action complete <ID> (COMPLETE).'
 }
 
 $repoName = Split-Path $targetRepoPath -Leaf
