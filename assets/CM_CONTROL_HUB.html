@@ -1,7 +1,9 @@
 <!--
   Template: CM_CONTROL_HUB.html
-  Version: 10.2.9
+  Version: 10.2.10
   Date: 2026-11-18 21:25:38
+  Implementation Choices (CRP-359 revision 3): the proposal table shows item IDs as <nnn>_<Kind> (e.g. 365_BUG), like the
+  bundle folders; ledger IDs, commands and document names keep CRP-nnn / BUG-nnn.
   Implementation Choices (CRP-354, operator Gate 2 changes 2026-11-18): the document window's "Edit in Notepad++" button starts
   Notepad++ through the DO like "Show CRP" (no /open_editor, which opened another VS Code window); both use
   a direct DO call of notepad++.exe, then the daemon's /foreground (waits for the window, passes the Windows
@@ -2924,7 +2926,7 @@
         return `
           <tr id="row-${p.id}" onclick="selectItemTarget('CRP:${p.id}')" style="cursor: pointer;" title="${esc(evidence)}">
             <td>
-              <span class="proposal-id">${crpTag}</span>
+              <span class="proposal-id">${esc(displayItemId(crpTag))}</span>
               <span class="proposal-title">${esc(getProposalDisplayTitle(p))}</span>
               <span class="repo-sub">${esc(p.origin_repo || "LCM_Inventory")} · <span style="font-weight:600; color:var(--blue);">${esc(p.lcm_version || "Legacy")}</span></span>
             </td>
@@ -4289,6 +4291,12 @@
     // CRP-354: one click opens Specification, Implementation Plan and Walkthrough as three Notepad++ tabs.
     // Direct DO call (daemon runs it non-elevated, working directory = workspace root); fire-and-forget,
     // because a newly started Notepad++ stays open. Missing documents are skipped and named.
+    // CRP-359 revision 3: table display <nnn>_<Kind> (BUG-365 -> 365_BUG); other IDs unchanged.
+    function displayItemId(tag) {
+      const m = /^(CRP|BUG)-(\d+)$/i.exec(String(tag || ""));
+      return m ? `${m[2]}_${m[1].toUpperCase()}` : String(tag || "");
+    }
+
     function showProposalBundle(id) {
       const p = (proposalsData.proposals || []).find(x => Number(x.id) === Number(id));
       const tag = p?.crp_id || p?.cr_id || ("#" + id);

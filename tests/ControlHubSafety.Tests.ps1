@@ -126,6 +126,7 @@ Describe 'Control Hub rendered-artifact safety' {
     $template | Should -Match 'function renderMermaidPreviews'
     $template | Should -Not -Match 'DAEMON_URL \+ "/open_editor"'  # CRP-354: editor buttons start Notepad++ through the DO
     $template | Should -Match 'function openInNotepadPlusPlus'
+    $template | Should -Match 'displayItemId\(crpTag\)'  # CRP-359 revision 3: <nnn>_<Kind> in the table
     ([regex]::Matches($template, [regex]::Escape('onclick="showProposalBundle(${p.id})"'))).Count | Should -Be 1  # CRP-354: top entry only
     $template | Should -Not -Match 'Open-LcmNotepadPlusPlus\.ps1'  # CRP-354: direct DO calls, no pwsh console window
     $template | Should -Not -Match 'Activate-Window\.ahk'  # CRP-354: daemon /foreground, no AHK

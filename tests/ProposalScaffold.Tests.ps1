@@ -54,11 +54,11 @@ Describe 'Proposal bundle scaffold (BUG-340)' {
 
   It 'reuses an existing bundle folder of the same ID' {
     $nextId = [int]((Get-Content -LiteralPath $script:storePath -Raw | ConvertFrom-Json).last_proposal_id) + 1
-    $existing = Join-Path $script:ws ('LCM_Inventory\docs\Proposals\CRP-{0:D3}-Created-Beforehand-Under-The-Full-Title' -f $nextId)
+    $existing = Join-Path $script:ws ('LCM_Inventory\docs\Proposals\{0:D3}_CRP-Created-Beforehand-Under-The-Full-Title' -f $nextId)
     $null = New-Item -ItemType Directory -Path $existing -Force
     $p = New-LCM_Proposal -Title 'Other Title' -Details 'x' -WorkspaceRoot $script:ws
     $p.bundle_dir | Should -Be ('docs/Proposals/' + (Split-Path $existing -Leaf))
-    @(Get-ChildItem -LiteralPath (Join-Path $script:ws 'LCM_Inventory\docs\Proposals') -Directory -Filter ('CRP-{0:D3}-*' -f $nextId)).Count | Should -Be 1
+    @(Get-ChildItem -LiteralPath (Join-Path $script:ws 'LCM_Inventory\docs\Proposals') -Directory -Filter ('{0:D3}_CRP-*' -f $nextId)).Count | Should -Be 1
   }
 
   It 'reports a shortened bundle folder name' {

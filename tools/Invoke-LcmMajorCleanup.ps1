@@ -35,7 +35,7 @@ param(
            LCM_AI/docs/Logs/03_Propagation-and-Continuous-History/Major_Version_Milestone_Rollup.md.
   Path: LCM_Inventory/tools/Invoke-LcmMajorCleanup.ps1
   Authors: Rolf, Claude
-  Version: 10.7.4
+  Version: 10.7.5
   Date: 2026-11-18
   Implementation Choices (CRP-355): the release register is the Markdown table in Major_Version_Milestone_Rollup.md
            (no database table before CRP-358); the origin major of a proposal is derived from lcm_version
@@ -44,6 +44,9 @@ param(
            Logs and review receipts are selected by date (before the first release of a major above M-2).
            Permanent evolution history (LCM_AI/docs/Logs) is never selected. -Apply refuses a manifest whose hash
            differs from -ManifestHash; there is no unguarded second call.
+  Implementation Choices (CRP-355, operator Q1-Q3 2026-11-18): review receipts git does not track are deleted like
+           the others. A one-time rule (ids below 150 counted as major 8, because the 10.0.0 migration overwrote their
+           version and dates) was used for the run CLEANUP-20261118_220338 and removed afterwards.
 .NOTES
   Caveats: deleted files that git does not track (logs, data/reviews) cannot be recovered; the manifest marks them.
            Reparse points are removed as links only (RULE-PS-018).
@@ -93,6 +96,13 @@ function Get-CleanupOriginMajor([psobject]$Proposal) {
   return $null
 }
 
+# CRP-355: sum of a property that also works for an empty list (Measure-Object then has no Sum under StrictMode).
+function Get-CleanupSum($Items, [string]$Property) {
+  $total = [int64]0
+  foreach ($item in @($Items)) { $total += [int64]$item.$Property }
+  return $total
+}
+
 function Get-TrackedSet([string]$RepoPath) {
   $set = [System.Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
   if (Test-Path -LiteralPath (Join-Path $RepoPath '.git')) {
@@ -105,7 +115,7 @@ function Get-EntryStats([string]$FullPath) {
   $item = Get-Item -LiteralPath $FullPath -Force
   if ($item.PSIsContainer -and -not $item.Attributes.HasFlag([IO.FileAttributes]::ReparsePoint)) {
     $files = @(Get-ChildItem -LiteralPath $FullPath -Recurse -File -Force -ErrorAction SilentlyContinue)
-    return [pscustomobject]@{ Files = $files.Count; Bytes = [int64](($files | Measure-Object Length -Sum).Sum) }
+    return [pscustomobject]@{ Files = $files.Count; Bytes = [int64](Get-CleanupSum $files 'Length') }
   }
   $len = if ($item.PSIsContainer) { 0 } else { [int64]$item.Length }
   return [pscustomobject]@{ Files = 1; Bytes = $len }
@@ -202,7 +212,7 @@ if ($Report) {
   )
   foreach ($c in $candidates) { Add-CleanupEntry 'candidate' $c[0] (Join-Path (Join-Path $WorkspaceRoot $c[0]) $c[1]) $c[2] ([bool]$IncludeCandidates) }
   foreach ($f in @(if (Test-Path -LiteralPath (Join-Path $invRoot 'data\proposals')) { Get-ChildItem -LiteralPath (Join-Path $invRoot 'data\proposals') -File -Filter 'CRP-2026*.json' })) { Add-CleanupEntry 'candidate' 'LCM_Inventory' $f.FullName 'stray proposal JSON' ([bool]$IncludeCandidates) }
-  foreach ($d in @(if (Test-Path -LiteralPath $proposalsDir) { Get-ChildItem -LiteralPath $proposalsDir -Directory | Where-Object { $_.Name -match '^CRP-24[3-6]-.*Test' } })) { Add-CleanupEntry 'candidate' 'LCM_Inventory' $d.FullName 'test residue bundle' ([bool]$IncludeCandidates) }
+  foreach ($d in @(if (Test-Path -LiteralPath $proposalsDir) { Get-ChildItem -LiteralPath $proposalsDir -Directory | Where-Object { $_.Name -match '^(CRP-24[3-6]|24[3-6]_CRP)-.*Test' } })) { Add-CleanupEntry 'candidate' 'LCM_Inventory' $d.FullName 'test residue bundle' ([bool]$IncludeCandidates) }
 
   # reconciliation JSON vs database (T3, read-only)
   $reconciliation = 'not run'
@@ -229,12 +239,12 @@ if ($Report) {
   $md.Add("Major $currentMajor, items of major $cutoffMajor and older, date cutoff $($dateCutoff.ToString('yyyy-MM-dd')). Reconciliation: $reconciliation"); $md.Add('')
   $md.Add('| Kind | Selected | Entries | Files | Bytes | Untracked |'); $md.Add('|:---|:---|---:|---:|---:|---:|')
   foreach ($g in @($entries | Group-Object kind, selected)) {
-    $grp = @($g.Group); $md.Add(('| {0} | {1} | {2} | {3} | {4} | {5} |' -f $grp[0].kind, $grp[0].selected, $grp.Count, (($grp | Measure-Object files -Sum).Sum), (($grp | Measure-Object bytes -Sum).Sum), @($grp | Where-Object { -not $_.tracked }).Count))
+    $grp = @($g.Group); $md.Add(('| {0} | {1} | {2} | {3} | {4} | {5} |' -f $grp[0].kind, $grp[0].selected, $grp.Count, (Get-CleanupSum $grp 'files'), (Get-CleanupSum $grp 'bytes'), @($grp | Where-Object { -not $_.tracked }).Count))
   }
   $md.Add(''); $md.Add("Ledger rows compacted: $($ledger.Count). Protected and kept: $($kept.Count)."); $md.Add(''); $md.Add("Manifest hash: $hash")
   $mdPath = Join-Path $outDir "$runId.md"
   $md | Set-Content -LiteralPath $mdPath -Encoding UTF8
-  Write-CleanupLog 'SUMMARY' ("Report {0}: {1} selected entries ({2} files, {3} bytes), {4} ledger rows, {5} protected kept, {6} candidates listed. Manifest {7}; hash {8}" -f $runId, $sel.Count, (($sel | Measure-Object files -Sum).Sum), (($sel | Measure-Object bytes -Sum).Sum), $ledger.Count, $kept.Count, @($entries | Where-Object { $_.kind -eq 'candidate' }).Count, $jsonPath, $hash)
+  Write-CleanupLog 'SUMMARY' ("Report {0}: {1} selected entries ({2} files, {3} bytes), {4} ledger rows, {5} protected kept, {6} candidates listed. Manifest {7}; hash {8}" -f $runId, $sel.Count, (Get-CleanupSum $sel 'files'), (Get-CleanupSum $sel 'bytes'), $ledger.Count, $kept.Count, @($entries | Where-Object { $_.kind -eq 'candidate' }).Count, $jsonPath, $hash)
   [pscustomobject]@{ Manifest = $jsonPath; Summary = $mdPath; ManifestHash = $hash; Selected = $sel.Count; LedgerRows = $ledger.Count }
   return
 }
@@ -308,7 +318,7 @@ $block.Add(''); $block.Add("### Cleanup run $($data.run_id) ($stamp)"); $block.A
 $block.Add("* **Scope**: current major $($data.current_major); items of major $($data.cutoff_major) and older; logs and review receipts before $($data.date_cutoff).")
 foreach ($g in @($deleted | Group-Object kind)) {
   $grp = @($g.Group)
-  $block.Add(('* **{0}**: {1} entries, {2} files, {3} bytes deleted; {4} not tracked by git (not recoverable).' -f $grp[0].kind, $grp.Count, (($grp | Measure-Object files -Sum).Sum), (($grp | Measure-Object bytes -Sum).Sum), @($grp | Where-Object { -not $_.tracked }).Count))
+  $block.Add(('* **{0}**: {1} entries, {2} files, {3} bytes deleted; {4} not tracked by git (not recoverable).' -f $grp[0].kind, $grp.Count, (Get-CleanupSum $grp 'files'), (Get-CleanupSum $grp 'bytes'), @($grp | Where-Object { -not $_.tracked }).Count))
 }
 $block.Add("* **Ledger**: $compacted proposals compacted to rows (see LCM_Inventory/docs/Proposals/LEDGER_COMPLETED.md).")
 $block.Add('* **Retrieval anchors (HEAD before deletion)**: ' + (($shas.Keys | ForEach-Object { '{0} {1}' -f $_, $shas[$_] }) -join ', ') + '.')

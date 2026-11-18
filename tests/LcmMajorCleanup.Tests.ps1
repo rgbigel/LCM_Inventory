@@ -8,7 +8,7 @@
              deletion of exactly the manifest, ledger compaction, completed-proposal ledger and in-place log.
     Path: LCM_Inventory/tests/LcmMajorCleanup.Tests.ps1
     Authors: Rolf, Claude
-    Version: 10.7.4
+    Version: 10.7.5
     Date: 2026-11-18
 #>
 
@@ -40,7 +40,7 @@ Describe 'Major-version cleanup (CRP-355)' {
     $proposals = @(
       [ordered]@{ id = 1; crp_id = 'CRP-001'; title = 'Old pushed'; state = 'pushed'; lcm_version = 'Legacy (<10.0)'; bundle_dir = (New-Bundle 'CRP-001-Old'); details = 'long text'; state_history = @([ordered]@{ state = 'pushed'; timestamp = '2026-09-01 10:00:00' }) }
       [ordered]@{ id = 2; crp_id = 'CRP-002'; title = 'Old held'; state = 'held'; lcm_version = 'Legacy (<10.0)'; bundle_dir = (New-Bundle 'CRP-002-Held') }
-      [ordered]@{ id = 3; crp_id = 'CRP-003'; title = 'New pushed'; state = 'pushed'; lcm_version = '10.2.0'; bundle_dir = (New-Bundle 'CRP-003-New') }
+      [ordered]@{ id = 203; crp_id = 'CRP-203'; title = 'New pushed'; state = 'pushed'; lcm_version = '10.2.0'; bundle_dir = (New-Bundle 'CRP-203-New') }
       [ordered]@{ id = 4; crp_id = 'BUG-004'; title = 'Old cited'; state = 'pushed'; lcm_version = 'Legacy (<10.0)'; bundle_dir = (New-Bundle 'BUG-004-Cited') }
     )
     Set-Content -LiteralPath (Join-Path $inv 'docs\Proposals\CRP-001-Legacy-Flat.md') -Value 'flat'
@@ -49,7 +49,7 @@ Describe 'Major-version cleanup (CRP-355)' {
     $oldLog = Join-Path $inv 'logs\Tool-20260901_100000.log'; Set-Content -LiteralPath $oldLog -Value 'old'; (Get-Item $oldLog).LastWriteTime = [datetime]'2026-09-01'
     Set-Content -LiteralPath (Join-Path $inv 'logs\Tool-20261117_100000.log') -Value 'new'
     $script:storePath = Join-Path $TestDrive 'proposals.json'
-    ([ordered]@{ last_proposal_id = 4; updated_at = ''; proposals = $proposals } | ConvertTo-Json -Depth 6) | Set-Content -LiteralPath $script:storePath -Encoding UTF8
+    ([ordered]@{ last_proposal_id = 203; updated_at = ''; proposals = $proposals } | ConvertTo-Json -Depth 6) | Set-Content -LiteralPath $script:storePath -Encoding UTF8
     $script:previousStore = $env:LCM_PROPOSAL_STORE_PATH
     $env:LCM_PROPOSAL_STORE_PATH = $script:storePath
     $script:report = & $script:tool -Report -WorkspaceRoot $script:ws 6>$null | Select-Object -Last 1
@@ -72,7 +72,7 @@ Describe 'Major-version cleanup (CRP-355)' {
   It 'keeps held, newer and cited items' {
     @($script:manifest.protected_kept) | Should -Contain 'CRP-002 (held)'
     @($script:manifest.protected_kept) | Should -Contain 'BUG-004 (cited in continuity files)'
-    @($script:manifest.entries.path) | Should -Not -Contain 'LCM_Inventory\docs\Proposals\CRP-003-New'
+    @($script:manifest.entries.path) | Should -Not -Contain 'LCM_Inventory\docs\Proposals\CRP-203-New'
   }
 
   It 'refuses a manifest whose confirmed hash differs and deletes nothing' {
@@ -94,5 +94,11 @@ Describe 'Major-version cleanup (CRP-355)' {
     $row.PSObject.Properties['details'] | Should -BeNullOrEmpty
     [IO.File]::ReadAllText((Join-Path $script:ws 'LCM_Inventory\docs\Proposals\LEDGER_COMPLETED.md')) | Should -Match '\| CRP-001 \| Old pushed \| pushed \| 8 \|'
     [IO.File]::ReadAllText($script:rollup) | Should -Match '### Cleanup run CLEANUP-'
+  }
+
+  It 'reports cleanly when nothing is left to select (after the apply)' {
+    $again = & $script:tool -Report -WorkspaceRoot $script:ws 6>$null | Select-Object -Last 1
+    $again.Selected | Should -Be 0
+    $again.LedgerRows | Should -Be 0
   }
 }

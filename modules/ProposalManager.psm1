@@ -6,8 +6,10 @@
 #          batch operations, review granularity ('coarse' | 'tight'), repo review queue inspection,
 #          and persistent ledger storage in LCM_Inventory.
 # Authors: Rolf, Claude, LCM_AI Engine
-# Version: 10.2.8
-# Date: 2026-11-18 16:05:00
+# Version: 10.2.9
+# Date: 2026-11-18 22:28:25
+# Implementation Choices (CRP-359 revision 3): bundle folders are named '<nnn>_<Kind>-<Slug>' (e.g. 333_CRP-Slug), so they
+#          sort by number across CRPs and BUGs (shared counter); an existing folder of the old form is still reused.
 # Implementation Choices (BUG-348): a held item gets the valid legacy progress value 'blocked' (was 'held').
 # Implementation Choices (CRP-359): bundle documents are created and resolved as '<Kind> <ID>.md' (Resolve-LcmBundleDocumentPath, legacy names as fallback).
 # Implementation Choices (CRP-334): New-LCM_Proposal resolves the LCM version before scaffolding
@@ -298,7 +300,7 @@ function New-LCM_Proposal {
         $cleanSlug = $cleanSlug.Substring(0, 50).TrimEnd('-')
         Write-Host ("Bundle folder name shortened to 50 characters: '{0}' (full: '{1}')." -f $cleanSlug, $fullSlug) -ForegroundColor Yellow
     }
-    $bundleDirName = "{0}-{1}" -f $canonicalId, $cleanSlug
+    $bundleDirName = "{0:D3}_{1}-{2}" -f $newId, $prefix, $cleanSlug  # CRP-359 revision 3
 
     $targetRepoDir = if ($OriginRepo -and ($OriginRepo -notlike 'LCM_*') -and (Test-Path (Join-Path $WorkspaceRoot $OriginRepo))) {
         Join-Path $WorkspaceRoot $OriginRepo
@@ -309,7 +311,7 @@ function New-LCM_Proposal {
     # BUG-340: an existing bundle folder of the same ID (e.g. created beforehand under the full title) is reused.
     $proposalsDir = Join-Path $targetRepoDir 'docs\Proposals'
     if (Test-Path -LiteralPath $proposalsDir) {
-        $existingBundle = @(Get-ChildItem -LiteralPath $proposalsDir -Directory -Filter "$canonicalId-*")
+        $existingBundle = @(Get-ChildItem -LiteralPath $proposalsDir -Directory | Where-Object { $_.Name -like ("{0:D3}_{1}-*" -f $newId, $prefix) -or $_.Name -like "$canonicalId-*" })
         if ($existingBundle.Count -eq 1) {
             $bundleDirName = $existingBundle[0].Name
             Write-Host "Reusing existing bundle folder '$bundleDirName'." -ForegroundColor Yellow

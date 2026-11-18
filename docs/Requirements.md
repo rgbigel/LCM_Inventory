@@ -6,7 +6,7 @@ Path: D:/Git_Repositories/LCM_Inventory/docs/Requirements.md
 Authors: Rolf, LCM_AI Engine, Claude  
 Version: 10.2.3
 Status: Authoritative Requirements  
-Date: 2026-11-18 21:05:57
+Date: 2026-11-18 22:29:49
 
 ---
 
@@ -172,6 +172,8 @@ commit.
 - Design material (analysis, design decisions, rationale) does not belong in
   the Specification; it goes to the end of the Implementation Plan ("Design
   considerations") for later absorption into the Implementation "Rationale".
+- Bundle folders are named `<nnn>_<Kind>-<Slug>` (e.g. `333_CRP-Slug`; CRP-359 revision 3),
+  so they sort by number; displays show items as `<nnn>_<Kind>` (e.g. `365_BUG`).
 - File names carry the item ID (CRP-359): `Specification <ID>.md`,
   `Implementation Plan <ID>.md`, `Walkthrough <ID>.md`; bundles closed before
   CRP-359 keep the names above.

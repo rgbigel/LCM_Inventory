@@ -254,7 +254,7 @@ Root implementation.
             $p = New-WorkspaceProposal -Title 'Live Metrics Streaming Engine' -OriginRepo $testRepo -Details 'Streaming metrics to dashboard' -WorkspaceRoot $TestDrive
 
             $p | Should -Not -BeNullOrEmpty
-            $p.bundle_dir | Should -Match '^docs/Proposals/CRP-\d+-Live-Metrics-Streaming-Engine'
+            $p.bundle_dir | Should -Match '^docs/Proposals/\d{3,}_CRP-Live-Metrics-Streaming-Engine'  # CRP-359 revision 3
             $p.docs.specification | Should -Be "Specification $($p.crp_id).md"  # CRP-359
             $p.docs.plan | Should -Be "Implementation Plan $($p.crp_id).md"
             $p.docs.walkthrough | Should -Be "Walkthrough $($p.crp_id).md"
