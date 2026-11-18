@@ -1,0 +1,122 @@
+{
+  "run_id": "CLEANUP-20261118_220908",
+  "created": "2026-11-18 22:09:08",
+  "workspace": "D:\\Git_Repositories",
+  "current_major": 10,
+  "cutoff_major": 8,
+  "date_cutoff": "2026-10-13",
+  "reconciliation": "[PASS] 100% Dual-State Parity Verified across 336 proposals (JSON <-> DB <-> SQL).",
+  "protected_kept": [],
+  "entries": [
+    {
+      "kind": "candidate",
+      "path": "LCM_Inventory\\tools\\Invoke-PrivilegedTool.ps1",
+      "files": 1,
+      "bytes": 16596,
+      "tracked": true,
+      "reason": "retired by RULE-ELEV-006, only PrivilegedTool.cmd refers to it",
+      "selected": false
+    },
+    {
+      "kind": "candidate",
+      "path": "LCM_Inventory\\Cmd\\PrivilegedTool.cmd",
+      "files": 1,
+      "bytes": 243,
+      "tracked": false,
+      "reason": "launcher of the retired Invoke-PrivilegedTool.ps1",
+      "selected": false
+    },
+    {
+      "kind": "candidate",
+      "path": "LCM_Inventory\\Cmd\\RunShell.cmd",
+      "files": 1,
+      "bytes": 217,
+      "tracked": false,
+      "reason": "unreferenced",
+      "selected": false
+    },
+    {
+      "kind": "candidate",
+      "path": "LCM_Inventory\\tools\\RunShell.ps1",
+      "files": 1,
+      "bytes": 0,
+      "tracked": true,
+      "reason": "unreferenced (link into LCM_Tools)",
+      "selected": false
+    },
+    {
+      "kind": "candidate",
+      "path": "LCM_Inventory\\data\\proposals\\proposals.json.bak",
+      "files": 1,
+      "bytes": 112238,
+      "tracked": true,
+      "reason": "stale backup",
+      "selected": false
+    },
+    {
+      "kind": "candidate",
+      "path": "LCM_Inventory\\Cmd\\archive-Clean.cmd",
+      "files": 1,
+      "bytes": 116,
+      "tracked": false,
+      "reason": "duplicate of ArchiveClean.cmd",
+      "selected": false
+    },
+    {
+      "kind": "candidate",
+      "path": "LCM_Inventory\\data\\proposals\\CRP-20260825-Shared-AI-Memory-Junction-Swap.json",
+      "files": 1,
+      "bytes": 938,
+      "tracked": true,
+      "reason": "stray proposal JSON",
+      "selected": false
+    },
+    {
+      "kind": "candidate",
+      "path": "LCM_Inventory\\data\\proposals\\CRP-20260825-Subsystem-Template-D5P0-SSD980-Z-Macrium-Reflect.json",
+      "files": 1,
+      "bytes": 954,
+      "tracked": true,
+      "reason": "stray proposal JSON",
+      "selected": false
+    },
+    {
+      "kind": "candidate",
+      "path": "LCM_Inventory\\docs\\Proposals\\CRP-243-Test-Feature-Proposal",
+      "files": 3,
+      "bytes": 970,
+      "tracked": true,
+      "reason": "test residue bundle",
+      "selected": false
+    },
+    {
+      "kind": "candidate",
+      "path": "LCM_Inventory\\docs\\Proposals\\CRP-244-Batch-Action-Test",
+      "files": 3,
+      "bytes": 2213,
+      "tracked": true,
+      "reason": "test residue bundle",
+      "selected": false
+    },
+    {
+      "kind": "candidate",
+      "path": "LCM_Inventory\\docs\\Proposals\\CRP-245-Defer-Test",
+      "files": 3,
+      "bytes": 902,
+      "tracked": true,
+      "reason": "test residue bundle",
+      "selected": false
+    },
+    {
+      "kind": "candidate",
+      "path": "LCM_Inventory\\docs\\Proposals\\CRP-246-Delete-Test",
+      "files": 3,
+      "bytes": 906,
+      "tracked": true,
+      "reason": "test residue bundle",
+      "selected": false
+    }
+  ],
+  "ledger": [],
+  "manifest_hash": "56925efabaf039ca076b2d39eaa2c7526d613715ebc3b13e8f2ddae3d06e2001"
+}

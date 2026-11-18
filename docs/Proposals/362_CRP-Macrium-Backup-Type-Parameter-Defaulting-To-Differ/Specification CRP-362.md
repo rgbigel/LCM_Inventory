@@ -1,7 +1,7 @@
 # Specification: CRP-362
 
 Module: docs/Proposals/362_CRP-Macrium-Backup-Type-Parameter-Defaulting-To-Differ/Specification CRP-362.md  
-Purpose: Macrium Backup Type Parameter Defaulting To Differential  
+Purpose: Macrium Backup Type Parameter Defaulting To Incremental  
 Path: LCM_Inventory/docs/Proposals/362_CRP-Macrium-Backup-Type-Parameter-Defaulting-To-Differ/Specification CRP-362.md  
 Authors: Rolf, Claude  
 Version: 10.7.4
@@ -10,14 +10,14 @@ Date: 2026-11-18 23:49:34
 
 ```yaml
 CRP-ID: CRP-362
-Title: Macrium Backup Type Parameter Defaulting To Differential
+Title: Macrium Backup Type Parameter Defaulting To Incremental
 Scope: LCM_Inventory
 Baseline-Version: 10.7.4
 Author: Rolf
 Date: 2026-11-18 23:49:34
-Status: In Review
-Plan-State: in_review
-Progress-State: verification
+Status: Completed
+Plan-State: completed
+Progress-State: completed
 Priority: 5
 App-ID: None
 ```

@@ -1,4 +1,4 @@
-# Walkthrough: CRP-362 - Macrium Backup Type Parameter Defaulting To Differential
+# Walkthrough: CRP-362 - Macrium Backup Type Parameter Defaulting To Incremental
 
 Date: 2026-11-18 23:49:34
 

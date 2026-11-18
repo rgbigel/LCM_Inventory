@@ -1,0 +1,2967 @@
+{
+  "run_id": "CLEANUP-20261118_161519",
+  "created": "2026-11-18 16:15:19",
+  "workspace": "D:\\Git_Repositories",
+  "current_major": 10,
+  "cutoff_major": 8,
+  "date_cutoff": "2026-10-13",
+  "reconciliation": "[PASS] 100% Dual-State Parity Verified across 333 proposals (JSON <-> DB <-> SQL).",
+  "protected_kept": [],
+  "entries": [
+    {
+      "kind": "flat-proposal",
+      "path": "LCM_Inventory\\docs\\Proposals\\CRP-018-LCM-v7.0.0-Lightweight-Bug-Reporting.md",
+      "files": 1,
+      "bytes": 2798,
+      "tracked": true,
+      "reason": "CRP-018 legacy flat file",
+      "selected": true
+    },
+    {
+      "kind": "flat-proposal",
+      "path": "LCM_Inventory\\docs\\Proposals\\CRP-019-LCM-v7.1.0-CM-Control-Hub.md",
+      "files": 1,
+      "bytes": 6619,
+      "tracked": true,
+      "reason": "CRP-019 legacy flat file",
+      "selected": true
+    },
+    {
+      "kind": "flat-proposal",
+      "path": "LCM_Inventory\\docs\\Proposals\\CRP-021-Workspace_AI-v2.0.0-Gemini-Inbox-Watcher.md",
+      "files": 1,
+      "bytes": 2929,
+      "tracked": true,
+      "reason": "CRP-021 legacy flat file",
+      "selected": true
+    },
+    {
+      "kind": "flat-proposal",
+      "path": "LCM_Inventory\\docs\\Proposals\\CRP-022-LCM-v7.0.0-Review-Stop-Turn-Termination-Invariant.md",
+      "files": 1,
+      "bytes": 2515,
+      "tracked": true,
+      "reason": "CRP-022 legacy flat file",
+      "selected": true
+    },
+    {
+      "kind": "flat-proposal",
+      "path": "LCM_Inventory\\docs\\Proposals\\CRP-023-LCM-v7.0.0-Scope-And-Version-Explicit-Naming.md",
+      "files": 1,
+      "bytes": 2955,
+      "tracked": true,
+      "reason": "CRP-023 legacy flat file",
+      "selected": true
+    },
+    {
+      "kind": "flat-proposal",
+      "path": "LCM_Inventory\\docs\\Proposals\\BUG-024-Workspace_Inventory-v7.1.0-Regex-Interpolation-Spill.md",
+      "files": 1,
+      "bytes": 1999,
+      "tracked": true,
+      "reason": "BUG-024 legacy flat file",
+      "selected": true
+    },
+    {
+      "kind": "flat-proposal",
+      "path": "LCM_Inventory\\docs\\Proposals\\CRP-025-Workspace_Inventory-v7.1.0-Single-Instance-Dashboard-Tab-Coordination.md",
+      "files": 1,
+      "bytes": 3219,
+      "tracked": true,
+      "reason": "CRP-025 legacy flat file",
+      "selected": true
+    },
+    {
+      "kind": "flat-proposal",
+      "path": "LCM_Inventory\\docs\\Proposals\\CRP-026-Workspace_Inventory-v7.1.1-Inventory-Viewer-Interactive-Actions-and-Data-Versioning-Exemption.md",
+      "files": 1,
+      "bytes": 3635,
+      "tracked": true,
+      "reason": "CRP-026 legacy flat file",
+      "selected": true
+    },
+    {
+      "kind": "flat-proposal",
+      "path": "LCM_Inventory\\docs\\Proposals\\BUG-045-Workspace_AI-v6.2.0-LCM-Platform-Crash-Context-Loss-And-Recovery.md",
+      "files": 1,
+      "bytes": 4654,
+      "tracked": true,
+      "reason": "BUG-045 legacy flat file",
+      "selected": true
+    },
+    {
+      "kind": "flat-proposal",
+      "path": "LCM_Inventory\\docs\\Proposals\\CRP-048-LCM-v7.5.0-App-Centric-Architecture-Engine.md",
+      "files": 1,
+      "bytes": 7132,
+      "tracked": true,
+      "reason": "CRP-048 legacy flat file",
+      "selected": true
+    },
+    {
+      "kind": "flat-proposal",
+      "path": "LCM_Inventory\\docs\\Proposals\\CRP-048-Workspace_Inventory-v7.1.0-CM-Control-Hub-Prio-Column-Engine.md",
+      "files": 1,
+      "bytes": 3876,
+      "tracked": true,
+      "reason": "CRP-048 legacy flat file",
+      "selected": true
+    },
+    {
+      "kind": "flat-proposal",
+      "path": "LCM_Inventory\\docs\\Proposals\\CRP-054-LCM-v7.4.2-Workspace-Inventory-Tool-Governance-Scope-And-Data-Exemption-Split.md",
+      "files": 1,
+      "bytes": 3145,
+      "tracked": true,
+      "reason": "CRP-054 legacy flat file",
+      "selected": true
+    },
+    {
+      "kind": "flat-proposal",
+      "path": "LCM_Inventory\\docs\\Proposals\\BUG-067-LCM-v6.2.1-LCD-Browser-Table-Port-9876-Channel-Compliance.md",
+      "files": 1,
+      "bytes": 2850,
+      "tracked": true,
+      "reason": "BUG-067 legacy flat file",
+      "selected": true
+    },
+    {
+      "kind": "flat-proposal",
+      "path": "LCM_Inventory\\docs\\Proposals\\CRP-076-LCM-v7.3.0-Bug-Crp-Intake-Proceed-Trigger-and-Batch-Bounds.md",
+      "files": 1,
+      "bytes": 10022,
+      "tracked": true,
+      "reason": "CRP-076 legacy flat file",
+      "selected": true
+    },
+    {
+      "kind": "flat-proposal",
+      "path": "LCM_Inventory\\docs\\Proposals\\CRP-088-HaSSD06-v5.1.0-Spook-Homie-Integration-Update.md",
+      "files": 1,
+      "bytes": 1160,
+      "tracked": true,
+      "reason": "CRP-088 legacy flat file",
+      "selected": true
+    },
+    {
+      "kind": "flat-proposal",
+      "path": "LCM_Inventory\\docs\\Proposals\\CRP-089-HaSSD06-v2.0.0-Shelly-Blu-Gateway-Firmware-Stabilization.md",
+      "files": 1,
+      "bytes": 1148,
+      "tracked": true,
+      "reason": "CRP-089 legacy flat file",
+      "selected": true
+    },
+    {
+      "kind": "flat-proposal",
+      "path": "LCM_Inventory\\docs\\Proposals\\CRP-090-HaSSD06-v2026.11.0-FritzBox-Deprecated-Button-Entities-Removal.md",
+      "files": 1,
+      "bytes": 1438,
+      "tracked": true,
+      "reason": "CRP-090 legacy flat file",
+      "selected": true
+    },
+    {
+      "kind": "flat-proposal",
+      "path": "LCM_Inventory\\docs\\Proposals\\CRP-091-HaSSD06-v7.1.1-Active-Notification-Count-Template-Filter-Fix.md",
+      "files": 1,
+      "bytes": 1287,
+      "tracked": true,
+      "reason": "CRP-091 legacy flat file",
+      "selected": true
+    },
+    {
+      "kind": "flat-proposal",
+      "path": "LCM_Inventory\\docs\\Proposals\\BUG-092-HaSSD06-v2026.8.3-Alexa-Devices-DNS-Timeout-During-HTTP2-Push.md",
+      "files": 1,
+      "bytes": 1650,
+      "tracked": true,
+      "reason": "BUG-092 legacy flat file",
+      "selected": true
+    },
+    {
+      "kind": "flat-proposal",
+      "path": "LCM_Inventory\\docs\\Proposals\\BUG-093-HaSSD06-v2026.8.3-Tuya-Device-Handlers-Relay-Status-Enum-Mismatch.md",
+      "files": 1,
+      "bytes": 1378,
+      "tracked": true,
+      "reason": "BUG-093 legacy flat file",
+      "selected": true
+    },
+    {
+      "kind": "flat-proposal",
+      "path": "LCM_Inventory\\docs\\Proposals\\BUG-094-HaSSD06-v2026.8.3-Tuya-Local-Unregistered-Product-ID-SmartPlug.md",
+      "files": 1,
+      "bytes": 1583,
+      "tracked": true,
+      "reason": "BUG-094 legacy flat file",
+      "selected": true
+    },
+    {
+      "kind": "flat-proposal",
+      "path": "LCM_Inventory\\docs\\Proposals\\BUG-097-LCM-v2.2.1-Tool-Explorer-AtPrefix-Filter-Exclusion.md",
+      "files": 1,
+      "bytes": 1383,
+      "tracked": true,
+      "reason": "BUG-097 legacy flat file",
+      "selected": true
+    },
+    {
+      "kind": "flat-proposal",
+      "path": "LCM_Inventory\\docs\\Proposals\\BUG-098-Workspace_AI-v7.1.2-Windows-Notification-Spam-Suppression.md",
+      "files": 1,
+      "bytes": 948,
+      "tracked": true,
+      "reason": "BUG-098 legacy flat file",
+      "selected": true
+    },
+    {
+      "kind": "flat-proposal",
+      "path": "LCM_Inventory\\docs\\Proposals\\CRP-099-LCM-v2.2.1-Tool-Explorer-Asset-Path-Resolution-and-Multi-Tab-Launch-Repair.md",
+      "files": 1,
+      "bytes": 7490,
+      "tracked": true,
+      "reason": "CRP-099 legacy flat file",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260830_144958.json",
+      "files": 1,
+      "bytes": 17809,
+      "tracked": true,
+      "reason": "dated 20260830",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260906_111915.json",
+      "files": 1,
+      "bytes": 102383,
+      "tracked": true,
+      "reason": "dated 20260906",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260907_205358.json",
+      "files": 1,
+      "bytes": 169861,
+      "tracked": true,
+      "reason": "dated 20260907",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260907_205500.json",
+      "files": 1,
+      "bytes": 169860,
+      "tracked": true,
+      "reason": "dated 20260907",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260920_222938.json",
+      "files": 1,
+      "bytes": 506,
+      "tracked": false,
+      "reason": "dated 20260920",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260925_012734.json",
+      "files": 1,
+      "bytes": 457,
+      "tracked": false,
+      "reason": "dated 20260925",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260925_021327.json",
+      "files": 1,
+      "bytes": 268933,
+      "tracked": false,
+      "reason": "dated 20260925",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260925_022053.json",
+      "files": 1,
+      "bytes": 268933,
+      "tracked": false,
+      "reason": "dated 20260925",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260925_175842.json",
+      "files": 1,
+      "bytes": 273908,
+      "tracked": false,
+      "reason": "dated 20260925",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260926_192805.json",
+      "files": 1,
+      "bytes": 574,
+      "tracked": false,
+      "reason": "dated 20260926",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260926_211052.json",
+      "files": 1,
+      "bytes": 612,
+      "tracked": false,
+      "reason": "dated 20260926",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260926_211130.json",
+      "files": 1,
+      "bytes": 655,
+      "tracked": false,
+      "reason": "dated 20260926",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260926_211145.json",
+      "files": 1,
+      "bytes": 697,
+      "tracked": false,
+      "reason": "dated 20260926",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260926_211251.json",
+      "files": 1,
+      "bytes": 659,
+      "tracked": false,
+      "reason": "dated 20260926",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260926_211255.json",
+      "files": 1,
+      "bytes": 617,
+      "tracked": false,
+      "reason": "dated 20260926",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260926_220320.json",
+      "files": 1,
+      "bytes": 574,
+      "tracked": false,
+      "reason": "dated 20260926",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260926_221531.json",
+      "files": 1,
+      "bytes": 614,
+      "tracked": false,
+      "reason": "dated 20260926",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260926_221547.json",
+      "files": 1,
+      "bytes": 628,
+      "tracked": false,
+      "reason": "dated 20260926",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260926_221600.json",
+      "files": 1,
+      "bytes": 671,
+      "tracked": false,
+      "reason": "dated 20260926",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260926_221614.json",
+      "files": 1,
+      "bytes": 717,
+      "tracked": false,
+      "reason": "dated 20260926",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260926_221633.json",
+      "files": 1,
+      "bytes": 762,
+      "tracked": false,
+      "reason": "dated 20260926",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260926_221653.json",
+      "files": 1,
+      "bytes": 800,
+      "tracked": false,
+      "reason": "dated 20260926",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260926_221720.json",
+      "files": 1,
+      "bytes": 838,
+      "tracked": false,
+      "reason": "dated 20260926",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260926_221849.json",
+      "files": 1,
+      "bytes": 880,
+      "tracked": false,
+      "reason": "dated 20260926",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260926_225230.json",
+      "files": 1,
+      "bytes": 894,
+      "tracked": false,
+      "reason": "dated 20260926",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260926_225238.json",
+      "files": 1,
+      "bytes": 939,
+      "tracked": false,
+      "reason": "dated 20260926",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260926_225247.json",
+      "files": 1,
+      "bytes": 939,
+      "tracked": false,
+      "reason": "dated 20260926",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260926_225303.json",
+      "files": 1,
+      "bytes": 939,
+      "tracked": false,
+      "reason": "dated 20260926",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260926_225307.json",
+      "files": 1,
+      "bytes": 946,
+      "tracked": false,
+      "reason": "dated 20260926",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260926_225320.json",
+      "files": 1,
+      "bytes": 939,
+      "tracked": false,
+      "reason": "dated 20260926",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260926_225330.json",
+      "files": 1,
+      "bytes": 978,
+      "tracked": false,
+      "reason": "dated 20260926",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260926_225343.json",
+      "files": 1,
+      "bytes": 1024,
+      "tracked": false,
+      "reason": "dated 20260926",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260926_225409.json",
+      "files": 1,
+      "bytes": 1024,
+      "tracked": false,
+      "reason": "dated 20260926",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260926_225416.json",
+      "files": 1,
+      "bytes": 1024,
+      "tracked": false,
+      "reason": "dated 20260926",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260926_234550.json",
+      "files": 1,
+      "bytes": 1024,
+      "tracked": false,
+      "reason": "dated 20260926",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260926_234607.json",
+      "files": 1,
+      "bytes": 1092,
+      "tracked": false,
+      "reason": "dated 20260926",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260926_234621.json",
+      "files": 1,
+      "bytes": 1161,
+      "tracked": false,
+      "reason": "dated 20260926",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260926_234633.json",
+      "files": 1,
+      "bytes": 1223,
+      "tracked": false,
+      "reason": "dated 20260926",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260926_234655.json",
+      "files": 1,
+      "bytes": 1301,
+      "tracked": false,
+      "reason": "dated 20260926",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260926_234736.json",
+      "files": 1,
+      "bytes": 1281,
+      "tracked": false,
+      "reason": "dated 20260926",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260926_234747.json",
+      "files": 1,
+      "bytes": 1341,
+      "tracked": false,
+      "reason": "dated 20260926",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260926_234755.json",
+      "files": 1,
+      "bytes": 1404,
+      "tracked": false,
+      "reason": "dated 20260926",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260926_234758.json",
+      "files": 1,
+      "bytes": 1471,
+      "tracked": false,
+      "reason": "dated 20260926",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260926_234807.json",
+      "files": 1,
+      "bytes": 1465,
+      "tracked": false,
+      "reason": "dated 20260926",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260926_234942.json",
+      "files": 1,
+      "bytes": 1465,
+      "tracked": false,
+      "reason": "dated 20260926",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260926_235008.json",
+      "files": 1,
+      "bytes": 1540,
+      "tracked": false,
+      "reason": "dated 20260926",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260926_235048.json",
+      "files": 1,
+      "bytes": 1540,
+      "tracked": false,
+      "reason": "dated 20260926",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260926_235930.json",
+      "files": 1,
+      "bytes": 1540,
+      "tracked": false,
+      "reason": "dated 20260926",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260926_235938.json",
+      "files": 1,
+      "bytes": 1540,
+      "tracked": false,
+      "reason": "dated 20260926",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260926_235949.json",
+      "files": 1,
+      "bytes": 1540,
+      "tracked": false,
+      "reason": "dated 20260926",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260926_235958.json",
+      "files": 1,
+      "bytes": 1540,
+      "tracked": false,
+      "reason": "dated 20260926",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_000002.json",
+      "files": 1,
+      "bytes": 1540,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_000651.json",
+      "files": 1,
+      "bytes": 1540,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_000701.json",
+      "files": 1,
+      "bytes": 1540,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_000718.json",
+      "files": 1,
+      "bytes": 1540,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_000729.json",
+      "files": 1,
+      "bytes": 1540,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_000741.json",
+      "files": 1,
+      "bytes": 1540,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_000747.json",
+      "files": 1,
+      "bytes": 1540,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_012739.json",
+      "files": 1,
+      "bytes": 1540,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_012750.json",
+      "files": 1,
+      "bytes": 1540,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_012805.json",
+      "files": 1,
+      "bytes": 1540,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_012817.json",
+      "files": 1,
+      "bytes": 1540,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_012838.json",
+      "files": 1,
+      "bytes": 1540,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_022448.json",
+      "files": 1,
+      "bytes": 179,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_023837.json",
+      "files": 1,
+      "bytes": 1540,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_023845.json",
+      "files": 1,
+      "bytes": 1540,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_023851.json",
+      "files": 1,
+      "bytes": 1540,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_024209.json",
+      "files": 1,
+      "bytes": 1660,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_024219.json",
+      "files": 1,
+      "bytes": 1774,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_024224.json",
+      "files": 1,
+      "bytes": 1774,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_024332.json",
+      "files": 1,
+      "bytes": 1853,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_024348.json",
+      "files": 1,
+      "bytes": 1954,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_024444.json",
+      "files": 1,
+      "bytes": 2033,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_024531.json",
+      "files": 1,
+      "bytes": 2059,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_024853.json",
+      "files": 1,
+      "bytes": 2059,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_024910.json",
+      "files": 1,
+      "bytes": 2177,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_024915.json",
+      "files": 1,
+      "bytes": 2293,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_024922.json",
+      "files": 1,
+      "bytes": 2419,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_024927.json",
+      "files": 1,
+      "bytes": 2551,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_024933.json",
+      "files": 1,
+      "bytes": 2675,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_024938.json",
+      "files": 1,
+      "bytes": 2787,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_025037.json",
+      "files": 1,
+      "bytes": 2948,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_025046.json",
+      "files": 1,
+      "bytes": 3095,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_025058.json",
+      "files": 1,
+      "bytes": 3214,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_025127.json",
+      "files": 1,
+      "bytes": 3214,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_173818.json",
+      "files": 1,
+      "bytes": 3214,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_173837.json",
+      "files": 1,
+      "bytes": 3214,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_174307.json",
+      "files": 1,
+      "bytes": 3445,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_174349.json",
+      "files": 1,
+      "bytes": 3445,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_174448.json",
+      "files": 1,
+      "bytes": 9207,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_174522.json",
+      "files": 1,
+      "bytes": 9447,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_184310.json",
+      "files": 1,
+      "bytes": 17225,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_184433.json",
+      "files": 1,
+      "bytes": 27290,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_184502.json",
+      "files": 1,
+      "bytes": 28214,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_184524.json",
+      "files": 1,
+      "bytes": 27650,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_200016.json",
+      "files": 1,
+      "bytes": 209,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_200044.json",
+      "files": 1,
+      "bytes": 349,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_200329.json",
+      "files": 1,
+      "bytes": 481,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_200405.json",
+      "files": 1,
+      "bytes": 481,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_200410.json",
+      "files": 1,
+      "bytes": 481,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_200416.json",
+      "files": 1,
+      "bytes": 481,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_202427.json",
+      "files": 1,
+      "bytes": 302260,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_203827.json",
+      "files": 1,
+      "bytes": 302268,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_210528.json",
+      "files": 1,
+      "bytes": 302289,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\overrides_sync_20260927_210721.json",
+      "files": 1,
+      "bytes": 302268,
+      "tracked": false,
+      "reason": "dated 20260927",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_AuthorizeMasterUser_20260829_190410.json",
+      "files": 1,
+      "bytes": 325,
+      "tracked": true,
+      "reason": "dated 20260829",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_BackgroundModifier_20260829_190410.json",
+      "files": 1,
+      "bytes": 323,
+      "tracked": true,
+      "reason": "dated 20260829",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_BGMSAMVInv_20260829_190411.json",
+      "files": 1,
+      "bytes": 307,
+      "tracked": true,
+      "reason": "dated 20260829",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_BootEntryManager_20260829_190411.json",
+      "files": 1,
+      "bytes": 319,
+      "tracked": true,
+      "reason": "dated 20260829",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_ElevationPolicy_20260829_145042.json",
+      "files": 1,
+      "bytes": 286,
+      "tracked": true,
+      "reason": "dated 20260829",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Git_Repositories_20260829_172951.json",
+      "files": 1,
+      "bytes": 299,
+      "tracked": true,
+      "reason": "dated 20260829",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Git_Repositories_20260829_185817.json",
+      "files": 1,
+      "bytes": 347,
+      "tracked": true,
+      "reason": "dated 20260829",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Git_Repositories_20260829_190414.json",
+      "files": 1,
+      "bytes": 323,
+      "tracked": true,
+      "reason": "dated 20260829",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Git_Repositories_20260904_200610.json",
+      "files": 1,
+      "bytes": 345,
+      "tracked": true,
+      "reason": "dated 20260904",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Git_Repositories_20260904_205621.json",
+      "files": 1,
+      "bytes": 342,
+      "tracked": true,
+      "reason": "dated 20260904",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Git_Repositories_20260904_215137.json",
+      "files": 1,
+      "bytes": 364,
+      "tracked": true,
+      "reason": "dated 20260904",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Git_Repositories_20260905_223121.json",
+      "files": 1,
+      "bytes": 345,
+      "tracked": true,
+      "reason": "dated 20260905",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Git_Repositories_20260906_111358.json",
+      "files": 1,
+      "bytes": 336,
+      "tracked": true,
+      "reason": "dated 20260906",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Git_Repositories_20260906_225815.json",
+      "files": 1,
+      "bytes": 350,
+      "tracked": true,
+      "reason": "dated 20260906",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Git_Repositories_20260907_005345.json",
+      "files": 1,
+      "bytes": 837,
+      "tracked": true,
+      "reason": "dated 20260907",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Git_Repositories_20260907_125822.json",
+      "files": 1,
+      "bytes": 353,
+      "tracked": true,
+      "reason": "dated 20260907",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Git_Repositories_20260909_223518.json",
+      "files": 1,
+      "bytes": 411,
+      "tracked": true,
+      "reason": "dated 20260909",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Git_Repositories_20260910_144400.json",
+      "files": 1,
+      "bytes": 398,
+      "tracked": true,
+      "reason": "dated 20260910",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Git_Repositories_20260911_162434.json",
+      "files": 1,
+      "bytes": 354,
+      "tracked": true,
+      "reason": "dated 20260911",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Git_Repositories_20260919_174335.json",
+      "files": 1,
+      "bytes": 438,
+      "tracked": false,
+      "reason": "dated 20260919",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Git_Repositories_20260919_205737.json",
+      "files": 1,
+      "bytes": 428,
+      "tracked": false,
+      "reason": "dated 20260919",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Git_Repositories_20260919_212913.json",
+      "files": 1,
+      "bytes": 331,
+      "tracked": false,
+      "reason": "dated 20260919",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Git_Repositories_20260919_213016.json",
+      "files": 1,
+      "bytes": 303,
+      "tracked": false,
+      "reason": "dated 20260919",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Git_Repositories_20260919_215303.json",
+      "files": 1,
+      "bytes": 299,
+      "tracked": false,
+      "reason": "dated 20260919",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Git_Repositories_20260919_221135.json",
+      "files": 1,
+      "bytes": 299,
+      "tracked": false,
+      "reason": "dated 20260919",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Git_Repositories_20260924_220444.json",
+      "files": 1,
+      "bytes": 345,
+      "tracked": false,
+      "reason": "dated 20260924",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Git_Repositories_20261002_212503.json",
+      "files": 1,
+      "bytes": 350,
+      "tracked": false,
+      "reason": "dated 20261002",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Git_Repositories_20261004_161918.json",
+      "files": 1,
+      "bytes": 372,
+      "tracked": false,
+      "reason": "dated 20261004",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Git_Repositories_20261004_162744.json",
+      "files": 1,
+      "bytes": 359,
+      "tracked": false,
+      "reason": "dated 20261004",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Git_Repositories_20261004_171730.json",
+      "files": 1,
+      "bytes": 323,
+      "tracked": false,
+      "reason": "dated 20261004",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Git_Repositories_20261005_173810.json",
+      "files": 1,
+      "bytes": 521,
+      "tracked": false,
+      "reason": "dated 20261005",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Git_Repositories_20261005_203618.json",
+      "files": 1,
+      "bytes": 339,
+      "tracked": false,
+      "reason": "dated 20261005",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_HaSSD06_20260829_190412.json",
+      "files": 1,
+      "bytes": 301,
+      "tracked": true,
+      "reason": "dated 20260829",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_HaSSD06_Inventory_20260829_173437.json",
+      "files": 1,
+      "bytes": 297,
+      "tracked": true,
+      "reason": "dated 20260829",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_HaSSD06_Inventory_20260829_190412.json",
+      "files": 1,
+      "bytes": 321,
+      "tracked": true,
+      "reason": "dated 20260829",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_HaSSD06_Inventory_20260906_111404.json",
+      "files": 1,
+      "bytes": 377,
+      "tracked": true,
+      "reason": "dated 20260906",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_HaSSD06_Inventory_20260919_174335.json",
+      "files": 1,
+      "bytes": 480,
+      "tracked": false,
+      "reason": "dated 20260919",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Installation_LCD_20260829_185816.json",
+      "files": 1,
+      "bytes": 345,
+      "tracked": true,
+      "reason": "dated 20260829",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Installation_LCD_20260829_190409.json",
+      "files": 1,
+      "bytes": 319,
+      "tracked": true,
+      "reason": "dated 20260829",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Installation_LCD_20260829_193654.json",
+      "files": 1,
+      "bytes": 339,
+      "tracked": true,
+      "reason": "dated 20260829",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_LCM_AI_20261002_212531.json",
+      "files": 1,
+      "bytes": 366,
+      "tracked": false,
+      "reason": "dated 20261002",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_LCM_AI_20261002_215341.json",
+      "files": 1,
+      "bytes": 356,
+      "tracked": false,
+      "reason": "dated 20261002",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_LCM_AI_20261004_161812.json",
+      "files": 1,
+      "bytes": 360,
+      "tracked": false,
+      "reason": "dated 20261004",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_LCM_AI_20261005_173729.json",
+      "files": 1,
+      "bytes": 526,
+      "tracked": false,
+      "reason": "dated 20261005",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_LCM_AI_20261005_203630.json",
+      "files": 1,
+      "bytes": 326,
+      "tracked": false,
+      "reason": "dated 20261005",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_LCM_AI_20261007_162140.json",
+      "files": 1,
+      "bytes": 395,
+      "tracked": false,
+      "reason": "dated 20261007",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_LCM_AI_20261010_153422.json",
+      "files": 1,
+      "bytes": 347,
+      "tracked": false,
+      "reason": "dated 20261010",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_LCM_AI_20261012_185439.json",
+      "files": 1,
+      "bytes": 368,
+      "tracked": false,
+      "reason": "dated 20261012",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_LCM_Inventory_20261002_212438.json",
+      "files": 1,
+      "bytes": 367,
+      "tracked": false,
+      "reason": "dated 20261002",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_LCM_Inventory_20261002_212816.json",
+      "files": 1,
+      "bytes": 362,
+      "tracked": false,
+      "reason": "dated 20261002",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_LCM_Inventory_20261002_213050.json",
+      "files": 1,
+      "bytes": 374,
+      "tracked": false,
+      "reason": "dated 20261002",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_LCM_Inventory_20261004_161855.json",
+      "files": 1,
+      "bytes": 358,
+      "tracked": false,
+      "reason": "dated 20261004",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_LCM_Inventory_20261004_162718.json",
+      "files": 1,
+      "bytes": 367,
+      "tracked": false,
+      "reason": "dated 20261004",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_LCM_Inventory_20261004_171716.json",
+      "files": 1,
+      "bytes": 313,
+      "tracked": false,
+      "reason": "dated 20261004",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_LCM_Inventory_20261005_170931.json",
+      "files": 1,
+      "bytes": 543,
+      "tracked": false,
+      "reason": "dated 20261005",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_LCM_Inventory_20261005_173129.json",
+      "files": 1,
+      "bytes": 489,
+      "tracked": false,
+      "reason": "dated 20261005",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_LCM_Inventory_20261005_203629.json",
+      "files": 1,
+      "bytes": 350,
+      "tracked": false,
+      "reason": "dated 20261005",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_LCM_Inventory_20261007_162120.json",
+      "files": 1,
+      "bytes": 420,
+      "tracked": false,
+      "reason": "dated 20261007",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_LCM_Inventory_20261010_153511.json",
+      "files": 1,
+      "bytes": 388,
+      "tracked": false,
+      "reason": "dated 20261010",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_LCM_Inventory_20261010_194858.json",
+      "files": 1,
+      "bytes": 485,
+      "tracked": false,
+      "reason": "dated 20261010",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_LCM_Inventory_20261012_190650.json",
+      "files": 1,
+      "bytes": 382,
+      "tracked": false,
+      "reason": "dated 20261012",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_RollingCalendar_20261002_212701.json",
+      "files": 1,
+      "bytes": 394,
+      "tracked": false,
+      "reason": "dated 20261002",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_RollingCalendar_20261002_212758.json",
+      "files": 1,
+      "bytes": 369,
+      "tracked": false,
+      "reason": "dated 20261002",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_SharedModules_20260829_185815.json",
+      "files": 1,
+      "bytes": 312,
+      "tracked": true,
+      "reason": "dated 20260829",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_SharedModules_20260829_190409.json",
+      "files": 1,
+      "bytes": 307,
+      "tracked": true,
+      "reason": "dated 20260829",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_SystemConfiguration_20260829_190413.json",
+      "files": 1,
+      "bytes": 325,
+      "tracked": true,
+      "reason": "dated 20260829",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_SystemConfiguration_20260925_203848.json",
+      "files": 1,
+      "bytes": 357,
+      "tracked": false,
+      "reason": "dated 20260925",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_VolumeInventory_20260829_190413.json",
+      "files": 1,
+      "bytes": 317,
+      "tracked": true,
+      "reason": "dated 20260829",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Workspace_AI_20260829_173441.json",
+      "files": 1,
+      "bytes": 275,
+      "tracked": true,
+      "reason": "dated 20260829",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Workspace_AI_20260829_185815.json",
+      "files": 1,
+      "bytes": 328,
+      "tracked": true,
+      "reason": "dated 20260829",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Workspace_AI_20260829_190409.json",
+      "files": 1,
+      "bytes": 299,
+      "tracked": true,
+      "reason": "dated 20260829",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Workspace_AI_20260830_112721.json",
+      "files": 1,
+      "bytes": 332,
+      "tracked": true,
+      "reason": "dated 20260830",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Workspace_AI_20260830_113450.json",
+      "files": 1,
+      "bytes": 320,
+      "tracked": true,
+      "reason": "dated 20260830",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Workspace_AI_20260830_120517.json",
+      "files": 1,
+      "bytes": 317,
+      "tracked": true,
+      "reason": "dated 20260830",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Workspace_AI_20260905_223107.json",
+      "files": 1,
+      "bytes": 336,
+      "tracked": true,
+      "reason": "dated 20260905",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Workspace_AI_20260907_125836.json",
+      "files": 1,
+      "bytes": 317,
+      "tracked": true,
+      "reason": "dated 20260907",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Workspace_AI_20260910_144400.json",
+      "files": 1,
+      "bytes": 341,
+      "tracked": true,
+      "reason": "dated 20260910",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Workspace_AI_20260919_212927.json",
+      "files": 1,
+      "bytes": 305,
+      "tracked": false,
+      "reason": "dated 20260919",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Workspace_AI_20260924_220451.json",
+      "files": 1,
+      "bytes": 302,
+      "tracked": false,
+      "reason": "dated 20260924",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Workspace_AI_20260925_203857.json",
+      "files": 1,
+      "bytes": 328,
+      "tracked": false,
+      "reason": "dated 20260925",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Workspace_AI_20261001_133551.json",
+      "files": 1,
+      "bytes": 313,
+      "tracked": false,
+      "reason": "dated 20261001",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Workspace_Inventory_20260829_173433.json",
+      "files": 1,
+      "bytes": 289,
+      "tracked": true,
+      "reason": "dated 20260829",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Workspace_Inventory_20260829_185820.json",
+      "files": 1,
+      "bytes": 327,
+      "tracked": true,
+      "reason": "dated 20260829",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Workspace_Inventory_20260829_190423.json",
+      "files": 1,
+      "bytes": 315,
+      "tracked": true,
+      "reason": "dated 20260829",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Workspace_Inventory_20260829_193655.json",
+      "files": 1,
+      "bytes": 311,
+      "tracked": true,
+      "reason": "dated 20260829",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Workspace_Inventory_20260830_134958.json",
+      "files": 1,
+      "bytes": 416,
+      "tracked": true,
+      "reason": "dated 20260830",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Workspace_Inventory_20260830_152647.json",
+      "files": 1,
+      "bytes": 391,
+      "tracked": true,
+      "reason": "dated 20260830",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Workspace_Inventory_20260830_163413.json",
+      "files": 1,
+      "bytes": 375,
+      "tracked": true,
+      "reason": "dated 20260830",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Workspace_Inventory_20260901_155136.json",
+      "files": 1,
+      "bytes": 356,
+      "tracked": true,
+      "reason": "dated 20260901",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Workspace_Inventory_20260904_205631.json",
+      "files": 1,
+      "bytes": 339,
+      "tracked": true,
+      "reason": "dated 20260904",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Workspace_Inventory_20260904_215141.json",
+      "files": 1,
+      "bytes": 328,
+      "tracked": true,
+      "reason": "dated 20260904",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Workspace_Inventory_20260906_225808.json",
+      "files": 1,
+      "bytes": 344,
+      "tracked": true,
+      "reason": "dated 20260906",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Workspace_Inventory_20260906_231925.json",
+      "files": 1,
+      "bytes": 324,
+      "tracked": true,
+      "reason": "dated 20260906",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Workspace_Inventory_20260907_005345.json",
+      "files": 1,
+      "bytes": 463,
+      "tracked": true,
+      "reason": "dated 20260907",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Workspace_Inventory_20260907_125827.json",
+      "files": 1,
+      "bytes": 330,
+      "tracked": true,
+      "reason": "dated 20260907",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Workspace_Inventory_20260909_223512.json",
+      "files": 1,
+      "bytes": 422,
+      "tracked": true,
+      "reason": "dated 20260909",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Workspace_Inventory_20260910_144400.json",
+      "files": 1,
+      "bytes": 400,
+      "tracked": true,
+      "reason": "dated 20260910",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Workspace_Inventory_20260911_162403.json",
+      "files": 1,
+      "bytes": 309,
+      "tracked": true,
+      "reason": "dated 20260911",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Workspace_Inventory_20260919_174335.json",
+      "files": 1,
+      "bytes": 481,
+      "tracked": false,
+      "reason": "dated 20260919",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Workspace_Inventory_20260919_205737.json",
+      "files": 1,
+      "bytes": 462,
+      "tracked": false,
+      "reason": "dated 20260919",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Workspace_Inventory_20260919_212920.json",
+      "files": 1,
+      "bytes": 332,
+      "tracked": false,
+      "reason": "dated 20260919",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Workspace_Inventory_20260919_213021.json",
+      "files": 1,
+      "bytes": 311,
+      "tracked": false,
+      "reason": "dated 20260919",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Workspace_Inventory_20260919_215258.json",
+      "files": 1,
+      "bytes": 289,
+      "tracked": false,
+      "reason": "dated 20260919",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Workspace_Inventory_20260919_221130.json",
+      "files": 1,
+      "bytes": 289,
+      "tracked": false,
+      "reason": "dated 20260919",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Workspace_Inventory_20260924_220526.json",
+      "files": 1,
+      "bytes": 345,
+      "tracked": false,
+      "reason": "dated 20260924",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Workspace_Inventory_20260925_023654.json",
+      "files": 1,
+      "bytes": 348,
+      "tracked": false,
+      "reason": "dated 20260925",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Workspace_Inventory_20260925_203909.json",
+      "files": 1,
+      "bytes": 376,
+      "tracked": false,
+      "reason": "dated 20260925",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Workspace_Inventory_20261001_131816.json",
+      "files": 1,
+      "bytes": 330,
+      "tracked": false,
+      "reason": "dated 20261001",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Workspace_Inventory_20261001_133553.json",
+      "files": 1,
+      "bytes": 339,
+      "tracked": false,
+      "reason": "dated 20261001",
+      "selected": true
+    },
+    {
+      "kind": "review-receipt",
+      "path": "LCM_Inventory\\data\\reviews\\review_Workspace_Supervision_20260919_174335.json",
+      "files": 1,
+      "bytes": 457,
+      "tracked": false,
+      "reason": "dated 20260919",
+      "selected": true
+    },
+    {
+      "kind": "candidate",
+      "path": "LCM_Inventory\\tools\\Invoke-PrivilegedTool.ps1",
+      "files": 1,
+      "bytes": 16596,
+      "tracked": true,
+      "reason": "retired by RULE-ELEV-006, only PrivilegedTool.cmd refers to it",
+      "selected": false
+    },
+    {
+      "kind": "candidate",
+      "path": "LCM_Inventory\\Cmd\\PrivilegedTool.cmd",
+      "files": 1,
+      "bytes": 243,
+      "tracked": false,
+      "reason": "launcher of the retired Invoke-PrivilegedTool.ps1",
+      "selected": false
+    },
+    {
+      "kind": "candidate",
+      "path": "LCM_Inventory\\Cmd\\RunShell.cmd",
+      "files": 1,
+      "bytes": 217,
+      "tracked": false,
+      "reason": "unreferenced",
+      "selected": false
+    },
+    {
+      "kind": "candidate",
+      "path": "LCM_Inventory\\tools\\RunShell.ps1",
+      "files": 1,
+      "bytes": 0,
+      "tracked": true,
+      "reason": "unreferenced (link into LCM_Tools)",
+      "selected": false
+    },
+    {
+      "kind": "candidate",
+      "path": "LCM_Inventory\\data\\proposals\\proposals.json.bak",
+      "files": 1,
+      "bytes": 112238,
+      "tracked": true,
+      "reason": "stale backup",
+      "selected": false
+    },
+    {
+      "kind": "candidate",
+      "path": "LCM_Inventory\\Cmd\\archive-Clean.cmd",
+      "files": 1,
+      "bytes": 116,
+      "tracked": false,
+      "reason": "duplicate of ArchiveClean.cmd",
+      "selected": false
+    },
+    {
+      "kind": "candidate",
+      "path": "LCM_Inventory\\data\\proposals\\CRP-20260825-Shared-AI-Memory-Junction-Swap.json",
+      "files": 1,
+      "bytes": 938,
+      "tracked": true,
+      "reason": "stray proposal JSON",
+      "selected": false
+    },
+    {
+      "kind": "candidate",
+      "path": "LCM_Inventory\\data\\proposals\\CRP-20260825-Subsystem-Template-D5P0-SSD980-Z-Macrium-Reflect.json",
+      "files": 1,
+      "bytes": 954,
+      "tracked": true,
+      "reason": "stray proposal JSON",
+      "selected": false
+    },
+    {
+      "kind": "candidate",
+      "path": "LCM_Inventory\\docs\\Proposals\\CRP-243-Test-Feature-Proposal",
+      "files": 3,
+      "bytes": 970,
+      "tracked": true,
+      "reason": "test residue bundle",
+      "selected": false
+    },
+    {
+      "kind": "candidate",
+      "path": "LCM_Inventory\\docs\\Proposals\\CRP-244-Batch-Action-Test",
+      "files": 3,
+      "bytes": 2213,
+      "tracked": true,
+      "reason": "test residue bundle",
+      "selected": false
+    },
+    {
+      "kind": "candidate",
+      "path": "LCM_Inventory\\docs\\Proposals\\CRP-245-Defer-Test",
+      "files": 3,
+      "bytes": 902,
+      "tracked": true,
+      "reason": "test residue bundle",
+      "selected": false
+    },
+    {
+      "kind": "candidate",
+      "path": "LCM_Inventory\\docs\\Proposals\\CRP-246-Delete-Test",
+      "files": 3,
+      "bytes": 906,
+      "tracked": true,
+      "reason": "test residue bundle",
+      "selected": false
+    }
+  ],
+  "ledger": [
+    {
+      "id": 1,
+      "crp_id": "CRP-001",
+      "title": "Implement LCM Two-Tier Proposal and Review Governance Engine",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 2,
+      "crp_id": "CRP-002",
+      "title": "Implement Automated LCM Rule Health Diagnostics and Repair Engine",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 3,
+      "crp_id": "CRP-003",
+      "title": "Mandate Tripartite Repository Documentation Standard (Architecture, Requirements, Implementation)",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 4,
+      "crp_id": "CRP-004",
+      "title": "Mandate Universal install/ Directory and Installation.md Lifecycle Runbook Standard",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 5,
+      "crp_id": "CRP-005",
+      "title": "Enable Configurable Target Path Parameter in Show-CmdFolderAnalysis.ps1",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 6,
+      "crp_id": "CRP-006",
+      "title": "Merge Enter-CmdAdmin UAC Elevation Functionality into GoAdm.cmd",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 7,
+      "crp_id": "CRP-007",
+      "title": "Add Deduplicated Chat Short-Name View Toggle to Show-Tools (TOOLS_VIEWER)",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 8,
+      "crp_id": "CRP-008",
+      "title": "Modernize BackgroundModifier Architecture via Dynamic Rainmeter Skin Engine",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 9,
+      "crp_id": "CRP-009",
+      "title": "Implement Export-LCMRules (SaveLCMRules) Governance Exporter and Gemini Sync Tool",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 10,
+      "crp_id": "CRP-010",
+      "title": "Align LCM Module and Documentation Versioning with Major Baseline Invariant (10.0.0 / M.Y.Z)",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 11,
+      "crp_id": "CRP-011",
+      "title": "Establish Major Release Retention Horizon Policy and Standardized History Log Naming Scheme",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 12,
+      "crp_id": "CRP-012",
+      "title": "Design and Implement LCM Universal Installation Path, Packaging Agent, Preflight Engine, and UX Verification Suite",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 13,
+      "crp_id": "CRP-013",
+      "title": "Enhance Pre-Installation Check with Modular Tool Selection & Conditional Deployment Engine",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 14,
+      "crp_id": "CRP-014",
+      "title": "Establish Dual-State Proposal Lifecycle (Plan State & Implementation Progress State) and CM Plan Archive",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 15,
+      "crp_id": "CRP-015",
+      "title": "Establish Dedicated Installation_LCD Governed Repository for LCM Platform Packaging & Deployment",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 16,
+      "crp_id": "CRP-016",
+      "title": "Design and Author Comprehensive Tripartite Specifications and Normative Runbook for Installation_LCD",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 17,
+      "crp_id": "CRP-017",
+      "title": "Resolve Broken Path Delegation in Numbered Legacy Alias Wrappers (@21-FixMouseFlickerInvariants.ps1 & @20-KillLogitechUpdateFull.ps1)",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 18,
+      "crp_id": "CRP-018",
+      "title": "Default to Lightweight BUG Report on Error/Unwanted Behavior Feedback",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 19,
+      "crp_id": "CRP-019",
+      "title": "Configuration Management (CM) Control Hub Web Dashboard & Batch Review Engine (Show-CmControlHub / CmHub / DOR)",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 20,
+      "crp_id": "CRP-020",
+      "title": "Consolidate LCD Platform Engine into Encapsulated .lcd Structure with .tools/internal and tools/links Separation",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 21,
+      "crp_id": "CRP-021",
+      "title": "Google Drive Gemini Inbox Watcher, Mandatory Timestamping, and Security Intake Queue",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 22,
+      "crp_id": "CRP-022",
+      "title": "Codify RULE-REV-006 Mandatory Review Stop and Turn Termination Invariant in Governance Rules",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 23,
+      "crp_id": "CRP-023",
+      "title": "Scope and Version-Explicit Naming Standard for Change Request Proposals (CRPs)",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 24,
+      "crp_id": "BUG-024",
+      "title": "Fix .NET Regex String Interpolation Backreference Corruption in CM Control Hub HTML Data Injector",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 25,
+      "crp_id": "CRP-025",
+      "title": "Single-Instance Control Hub Tab Lifecycle Coordination, Auto-Retirement, and Quiet Render Engine",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 26,
+      "crp_id": "CRP-026",
+      "title": "Workspace Inventory Viewer Interactive Actions Suite, Non-Git Visibility, and Data Versioning Exemption",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 27,
+      "crp_id": "CRP-027",
+      "title": "Unescaped $timestamp Variable Interpolation in Show-HaInventoryApp.ps1",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 28,
+      "crp_id": "CRP-028",
+      "title": "Spook ðŸ‘» Your Homie Custom Integration Update (10.0.0 -> 10.0.0)",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 29,
+      "crp_id": "CRP-029",
+      "title": "Shelly BLU Gateway Firmware Stabilization (10.0.0-beta1 -> 10.0.0 Stable)",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 30,
+      "crp_id": "CRP-030",
+      "title": "FRITZ!Box Deprecated Button Entities Cleanup (Breaks in HA 10.0.0)",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 31,
+      "crp_id": "CRP-031",
+      "title": "Active Notification Count Template Sensor Default Value Fix",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 32,
+      "crp_id": "CRP-032",
+      "title": "Alexa Devices HTTP/2 Push DNS Resolution Timeout (ClientConnectorDNSError)",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 33,
+      "crp_id": "CRP-033",
+      "title": "Tuya Device Handlers Invalid Enum Value for Datapoint relay_status",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 34,
+      "crp_id": "CRP-034",
+      "title": "Tuya Local Unregistered Product IDs in Smart Plug Device Profiles",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 35,
+      "crp_id": "CRP-035",
+      "title": "Workspace Artifact Deduplication, Archive Consolidation & .lcd Junction Removal",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 36,
+      "crp_id": "CRP-036",
+      "title": "Disable Raspberry Pi Onboard Bluetooth Adapter & Consolidate BLE to Shelly Gateway",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 37,
+      "crp_id": "BUG-037",
+      "title": "Tool Explorer '@nn-' Prefix Tool Disappearance on Filter Reset",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 38,
+      "crp_id": "BUG-038",
+      "title": "Excessive Repetitive Windows Notifications during Project Rule Access",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 39,
+      "crp_id": "CRP-039",
+      "title": "Tool Explorer Asset Path Resolution, Draggable Help Modal, and Catalog Sync",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 40,
+      "crp_id": "CRP-040",
+      "title": "Prevent BLE Packet Collisions via Selective Single-Receiver Ingestion",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 41,
+      "crp_id": "CRP-041",
+      "title": "Universal Light/Dark Theme Standardization & High-Contrast Design Hardening",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 42,
+      "crp_id": "CRP-042",
+      "title": "CM Control Hub Navigation Hardening, Filter Reconciliation, and Action Engine",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 43,
+      "crp_id": "CRP-043",
+      "title": "Universal LCM Table UI/UX Standard & Standardized Interactive Document Viewer",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 44,
+      "crp_id": "CRP-044",
+      "title": "LCM Deterministic Hook Engine & Zero-Trust Tool Execution Boundary",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 45,
+      "crp_id": "BUG-045",
+      "title": "LCM Platform Crash During ShowCmControlHub Development â€” Context Loss and Recovery",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 46,
+      "crp_id": "CRP-046",
+      "title": "Complete and Stabilize ShowCmControlHub as LCM Navigation Root with Full Dashboard Tree",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 47,
+      "crp_id": "CRP-047",
+      "title": "Formalize CRM (Change Request Management) as Named Acceptance Stage in LCM Lifecycle Chain",
+      "state": "rejected",
+      "origin_major": 8
+    },
+    {
+      "id": 48,
+      "crp_id": "CRP-048",
+      "title": "App-Centric Architectural Synthesis, Active Context Engine & High-Order Decomposition Tooling",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 49,
+      "crp_id": "CRP-049",
+      "title": "Tiered Governance Model (T0-T3) - Event-Proportional Review Ceremony",
+      "state": "rejected",
+      "origin_major": 8
+    },
+    {
+      "id": 50,
+      "crp_id": "CRP-050",
+      "title": "Formalize HaSSD06 Subsystem BC5 Exemption in ReviewCommitGovernancePolicy.md",
+      "state": "rejected",
+      "origin_major": 8
+    },
+    {
+      "id": 51,
+      "crp_id": "CRP-051",
+      "title": "Formalize implementation_plan.md as Mandatory CRP Sub-Artifact for T2 and T3 Proposals",
+      "state": "rejected",
+      "origin_major": 8
+    },
+    {
+      "id": 52,
+      "crp_id": "CRP-052",
+      "title": "Bidirectional LCM Lifecycle Chain - Formal Entry-Point Governance and Bottom-Up Cycles",
+      "state": "rejected",
+      "origin_major": 8
+    },
+    {
+      "id": 53,
+      "crp_id": "CRP-053",
+      "title": "Resolve processed State Inconsistency Between RULE-LCM-002 and RULE-LCM-007 Canonical State Enum",
+      "state": "rejected",
+      "origin_major": 8
+    },
+    {
+      "id": 54,
+      "crp_id": "CRP-054",
+      "title": "Clarify LCM_Inventory Tool Governance Scope - Privileged Subsystem Not Exempt from Tool Scrutiny",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 55,
+      "crp_id": "CRP-055",
+      "title": "Close RULE-LCM-013 Gap - Extend Pre-Push Gemini Sync to Single-Repo Direct Pushes",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 56,
+      "crp_id": "CRP-056",
+      "title": "Autonomous Loop-Fencing, Execution Boundaries, and T0 State Recovery Engine",
+      "state": "rejected",
+      "origin_major": 8
+    },
+    {
+      "id": 57,
+      "crp_id": "CRP-057",
+      "title": "Canonical Single-Hop NTFS Junction Architecture for Subsystem Rules",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 58,
+      "crp_id": "CRP-058",
+      "title": "Fix BCR Baseline Resolution, Path Mangling, and Agent Execution Invariants",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 59,
+      "crp_id": "CRP-059",
+      "title": "Automated Ripgrep Provisioning, System Path Provisioning, and LCM Tool Registration",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 60,
+      "crp_id": "CRP-060",
+      "title": "LCM Subsystem Architecture Formalization: .lcm Whitelisting, Submodule Isolation, and Inventory Log Routing",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 61,
+      "crp_id": "CRP-061",
+      "title": "Codification of Tool Traces, Execution Logging & Headless BRC Review Gates",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 62,
+      "crp_id": "CRP-062",
+      "title": "[TASK] Change Request Proposal: Analysis #01 â€“ Corpus-Structural-Extraction-And-Invariants",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 63,
+      "crp_id": "CRP-063",
+      "title": "[TASK] Change Request Proposal: Analysis #01 â€“ Persistence-Architecture-And-Staging-Boundary",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 64,
+      "crp_id": "CRP-064",
+      "title": "[TASK] Change Request Proposal: Analysis #01-ff â€“ Consolidated-Alignment-And-Governance",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 65,
+      "crp_id": "CRP-065",
+      "title": "[TASK] Change Request Proposal: Analysis #02 â€“ Command-Elimination-And-Runtime-Rule-Alignment",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 66,
+      "crp_id": "CRP-066",
+      "title": "[TASK] Change Request Proposal: Analysis #02 â€“ Corpus-Pattern-Synthesis-And-Rule-Convergence",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 67,
+      "crp_id": "BUG-067",
+      "title": "[BUG] LCD Browser Display Table Port 9876 Channel Compliance & Print/PDF Bridge",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 68,
+      "crp_id": "CRP-068",
+      "title": "[CRP] CM Control Hub Display Standard Completion & HTML Parser Stabilization",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 69,
+      "crp_id": "CRP-069",
+      "title": "[CRP] LCM Tool Explorer Modal Ergonomics & Esc Key Handler",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 70,
+      "crp_id": "BUG-070",
+      "title": "[BUG] IDE Code Launcher Configuration (code.cmd vs Notepad++)",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 71,
+      "crp_id": "BUG-071",
+      "title": "[BUG] Command Renaming Overrides Persistence & Trampoline Regeneration",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 72,
+      "crp_id": "BUG-072",
+      "title": "[BUG] SystemPrivilege Local Administrator Self-Elevation Interlock",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 73,
+      "crp_id": "BUG-073",
+      "title": "[BUG] Anti-Flicker Group AST Dependency Extraction & Path Resolution",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 74,
+      "crp_id": "BUG-074",
+      "title": "[BUG] LCM Daemon Log Cleaner Multi-Directory Scan Fix",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 75,
+      "crp_id": "BUG-075",
+      "title": "[BUG] GUI Role CLI Output Suppression & ShowTools / ShowToolIndex Convergence",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 76,
+      "crp_id": "CRP-076",
+      "title": "Bug/CRP Intake Gate, PROCEED Trigger Invariants, and Batch Execution Granularity",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 77,
+      "crp_id": "CRP-077",
+      "title": "Fix JavaScript Syntax Error and Stale Atom Path in Show-HaInventoryApp.ps1",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 78,
+      "crp_id": "CRP-078",
+      "title": "CM Control Hub Display Standard Conformance and Console Command Engine",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 79,
+      "crp_id": "CRP-079",
+      "title": "CM Control Hub Architectural Overhaul, Unified CRP Identifier, Silent Daemon & Status Engine",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 80,
+      "crp_id": "CRP-080",
+      "title": "Modernize BackgroundModifier Architecture via Dynamic Rainmeter Skin Engine",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 81,
+      "crp_id": "CRP-081",
+      "title": "Design and Implement LCM Universal Installation Path, Packaging Agent, Preflight Engine, and UX Verification Suite",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 82,
+      "crp_id": "CRP-082",
+      "title": "Enhance Pre-Installation Check with Modular Tool Selection & Conditional Deployment Engine",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 83,
+      "crp_id": "CRP-083",
+      "title": "Design and Author Comprehensive Tripartite Specifications and Normative Runbook for Installation_LCD",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 84,
+      "crp_id": "CRP-084",
+      "title": "Default to Lightweight BUG Report on Error/Unwanted Behavior Feedback",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 85,
+      "crp_id": "CRP-085",
+      "title": "Scope and Version-Explicit Naming Standard for Change Request Proposals (CRPs)",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 86,
+      "crp_id": "CRP-086",
+      "title": "Workspace Inventory Viewer Interactive Actions Suite, Non-Git Visibility, and Data Versioning Exemption",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 87,
+      "crp_id": "CRP-087",
+      "title": "Unescaped $timestamp Variable Interpolation in Show-HaInventoryApp.ps1",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 88,
+      "crp_id": "CRP-088",
+      "title": "Spook ðŸ‘» Your Homie Custom Integration Update (10.0.0 -> 10.0.0)",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 89,
+      "crp_id": "CRP-089",
+      "title": "Shelly BLU Gateway Firmware Stabilization (10.0.0-beta1 -> 10.0.0 Stable)",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 90,
+      "crp_id": "CRP-090",
+      "title": "FRITZ!Box Deprecated Button Entities Cleanup (Breaks in HA 10.0.0)",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 91,
+      "crp_id": "CRP-091",
+      "title": "Active Notification Count Template Sensor Default Value Fix",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 92,
+      "crp_id": "BUG-092",
+      "title": "Alexa Devices HTTP/2 Push DNS Resolution Timeout (ClientConnectorDNSError)",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 93,
+      "crp_id": "BUG-093",
+      "title": "Tuya Device Handlers Invalid Enum Value for Datapoint relay_status",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 94,
+      "crp_id": "BUG-094",
+      "title": "Tuya Local Unregistered Product IDs in Smart Plug Device Profiles",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 95,
+      "crp_id": "CRP-095",
+      "title": "Workspace Artifact Deduplication, Archive Consolidation & .lcd Junction Removal",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 96,
+      "crp_id": "CRP-096",
+      "title": "Disable Raspberry Pi Onboard Bluetooth Adapter & Consolidate BLE to Shelly Gateway",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 97,
+      "crp_id": "BUG-097",
+      "title": "Tool Explorer '@nn-' Prefix Tool Disappearance on Filter Reset",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 98,
+      "crp_id": "BUG-098",
+      "title": "Excessive Repetitive Windows Notifications during Project Rule Access",
+      "state": "pushed",
+      "origin_major": 8
+    },
+    {
+      "id": 99,
+      "crp_id": "CRP-099",
+      "title": "Tool Explorer Asset Path Resolution, Draggable Help Modal, and Catalog Sync",
+      "state": "pushed",
+      "origin_major": 8
+    }
+  ],
+  "manifest_hash": "94df374e185de3196631e5ecabe04963dbc0e665adb346a606ad675025a9cb32"
+}

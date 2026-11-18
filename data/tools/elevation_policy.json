@@ -1,19 +1,15 @@
 {
-  "generated_at": "2026-11-17 16:57:28",
+  "generated_at": "2026-11-18 23:41:31",
   "generator": "LCM_Inventory/tools/Export-LcmElevationPolicy.py",
   "source": "LCM_Inventory/data/tools/tools.db",
-  "rule": "CRP-343: elevated only for atoms with tool_intents.elevated = 1 whose owning tool has tools.admin = 1",
+  "rule": "CRP-343: elevated only for atoms with tool_intents.elevated = 1 whose owning tool has admin level 3; callers: level 3, or level 2 with the atom in its list",
+  "levels": {
+    "0": "TBD",
+    "1": "granted",
+    "2": "controlled",
+    "3": "admin"
+  },
   "elevated_atoms": [
-    {
-      "script": "LCM_Inventory/tools/@Repair_Test-OneDriveSync.ps1",
-      "executable": "pwsh.exe",
-      "intent_keys": [
-        "@repair_test-onedrivesync",
-        "lcmtools@repairtestonedrivesync"
-      ],
-      "parameters": "",
-      "tool_admin": 1
-    },
     {
       "script": "LCM_Inventory/tools/AuthorizeMasterUser.ps1",
       "executable": "pwsh.exe",
@@ -21,7 +17,18 @@
         "authorizemasteruser"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
+    },
+    {
+      "script": "LCM_Inventory/tools/automation/Mount-MacriumBrowseDialog.ahk",
+      "executable": "AutoHotkey64.exe",
+      "intent_keys": [
+        "macriumbrowsedialogatom",
+        "mount-macriumbrowsedialog",
+        "mountmacriumbrowsedialog"
+      ],
+      "parameters": "",
+      "tool_admin": 3
     },
     {
       "script": "LCM_Inventory/tools/CleanWindowsUpdates.ps1",
@@ -30,7 +37,7 @@
         "cleanwindowsupdates"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "LCM_Inventory/tools/Create-LcmTool.ps1",
@@ -41,7 +48,7 @@
         "createtool"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "LCM_Inventory/tools/Disable-WakeDevices.ps1",
@@ -51,7 +58,7 @@
         "disablewakedevices"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "LCM_Inventory/tools/Disable.ps1",
@@ -60,7 +67,7 @@
         "disable"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "LCM_Inventory/tools/DiskAssignmentStatus.ps1",
@@ -69,7 +76,7 @@
         "diskassignmentstatus"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "LCM_Inventory/tools/Dismount-MacriumCurrentBaseline.ps1",
@@ -81,7 +88,7 @@
         "dismountmacriumcurrentbaseline"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "LCM_Inventory/tools/Enable.ps1",
@@ -90,7 +97,7 @@
         "enable"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "LCM_Inventory/tools/Initialize-AdminMode.ps1",
@@ -100,7 +107,7 @@
         "initializeadminmode"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "LCM_Inventory/tools/Install-GoEnvironment.ps1",
@@ -110,7 +117,7 @@
         "installgoenvironment"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "LCM_Inventory/tools/InstallAutoDT_BG_Info.ps1",
@@ -120,7 +127,7 @@
         "installautodtbginfo"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "LCM_Inventory/tools/Invoke-ElevatedTest.ps1",
@@ -131,7 +138,7 @@
         "invokeelevatedtest"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "LCM_Inventory/tools/Invoke-InteractiveDesktop.ps1",
@@ -142,26 +149,18 @@
         "invokeinteractivedesktop"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "LCM_Inventory/tools/Invoke-MacriumMountWorker.ps1",
       "executable": "pwsh.exe",
       "intent_keys": [
-        "invoke-macriummountworker"
+        "invoke-macriummountworker",
+        "invokemacriummountworker",
+        "macriummountworker"
       ],
       "parameters": "",
-      "tool_admin": 1
-    },
-    {
-      "script": "LCM_Inventory/tools/KillLogitechUpdateFull.ps1",
-      "executable": "pwsh.exe",
-      "intent_keys": [
-        "killlogitechupdatefull",
-        "lcmtoolskilllogitechupdatefull"
-      ],
-      "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "LCM_Inventory/tools/LcmDesktopDaemon.ps1",
@@ -171,7 +170,7 @@
         "lcmdesktopdaemon"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "LCM_Inventory/tools/Make-Admin.ps1",
@@ -181,7 +180,7 @@
         "makeadmin"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "LCM_Inventory/tools/ProfileRecoveryToolkit.ps1",
@@ -190,7 +189,7 @@
         "profilerecoverytoolkit"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "LCM_Inventory/tools/Register-LcmDesktopDaemon.ps1",
@@ -201,7 +200,7 @@
         "registerlcmdesktopdaemon"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "LCM_Inventory/tools/RenameTestFolders.ps1",
@@ -210,7 +209,7 @@
         "renametestfolders"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "LCM_Inventory/tools/Repair-VolumeAcl.ps1",
@@ -220,7 +219,7 @@
         "repairvolumeacl"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "LCM_Inventory/tools/Restore-SystemSettings.ps1",
@@ -230,7 +229,7 @@
         "restoresystemsettings"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "LCM_Inventory/tools/Set-GitRoot.ps1",
@@ -240,7 +239,7 @@
         "setgitroot"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "LCM_Inventory/tools/Set-LcmMachineRegistry.ps1",
@@ -250,7 +249,7 @@
         "setlcmmachineregistry"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "LCM_Inventory/tools/Show-CmdFolderAnalysis.ps1",
@@ -261,7 +260,7 @@
         "showcmdfolderanalysis"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "LCM_Inventory/tools/Start-MacriumDailyBackup.ps1",
@@ -271,7 +270,7 @@
         "startmacriumdailybackup"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "LCM_Inventory/tools/Test-ExternalTools.ps1",
@@ -281,7 +280,7 @@
         "testexternaltools"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "LCM_Inventory/tools/Test-LcmDeterministicGate.ps1",
@@ -291,7 +290,7 @@
         "testlcmdeterministicgate"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "LCM_Inventory/tools/Toggle Windows Search on off.ps1",
@@ -300,7 +299,7 @@
         "toggle windows search on off"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "LCM_Inventory/tools/Uninstall.ps1",
@@ -309,7 +308,7 @@
         "uninstall"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "LCM_Inventory/tools/UninstallAutoDT_BG_Info.ps1",
@@ -319,7 +318,7 @@
         "uninstallautodtbginfo"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "LCM_Tools/tools/@Repair_Diagnose-OneDriveSync.ps1",
@@ -329,7 +328,17 @@
         "lcmtools@repairdiagnoseonedrivesync"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
+    },
+    {
+      "script": "LCM_Tools/tools/@Repair_Test-OneDriveSync.ps1",
+      "executable": "pwsh.exe",
+      "intent_keys": [
+        "@repair_test-onedrivesync",
+        "lcmtools@repairtestonedrivesync"
+      ],
+      "parameters": "",
+      "tool_admin": 3
     },
     {
       "script": "LCM_Tools/tools/asus-debloater.ps1",
@@ -340,7 +349,17 @@
         "lcmtoolssystemconfigurationasusdebloater"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
+    },
+    {
+      "script": "LCM_Tools/tools/KillLogitechUpdateFull.ps1",
+      "executable": "pwsh.exe",
+      "intent_keys": [
+        "killlogitechupdatefull",
+        "lcmtoolskilllogitechupdatefull"
+      ],
+      "parameters": "",
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/@00-RegKeyDefaultTypeSet.cmd",
@@ -350,7 +369,7 @@
         "regkeydefaulttypeset"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/@00-Set_System_Font_Verdana-MedionPC.reg",
@@ -360,7 +379,7 @@
         "setsystemfontverdanamedion"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/@00-Set_System_Font_Verdana.reg",
@@ -370,7 +389,7 @@
         "setsystemfontverdana"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/@00-Skip_TPM_Check_on_Dynamic_Update.cmd",
@@ -380,7 +399,7 @@
         "skiptpmcheckdynamicupdate"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/@02-Set_the_date_and_time_format_(ADM_systemwide).ps1",
@@ -390,7 +409,7 @@
         "setdatetimeformatadm"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/@04-Remove_Removable_Drive_Icon.reg",
@@ -400,7 +419,7 @@
         "removeremovabledriveicon"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/@05-Kill_Explorer_showing_friendly_names.reg",
@@ -410,7 +429,7 @@
         "killexplorerfriendlynames"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/@07-Autorun_Entry_for_RenderLockScreen.cmd",
@@ -420,7 +439,7 @@
         "autorunrenderlockscreen"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/@10-More_Options_OFF.reg",
@@ -430,7 +449,7 @@
         "moreoptionsoff"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/@14-SecureDesktopOff.ps1",
@@ -440,7 +459,7 @@
         "securedesktopoff"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/@15-PS7AppKiller.ps1",
@@ -450,7 +469,7 @@
         "ps7appkiller"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/@16-GoAdm_changer.ps1",
@@ -460,7 +479,7 @@
         "goadmchanger"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/@17-FiraFonts.ps1",
@@ -470,7 +489,7 @@
         "firafonts"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/@18-ShellNewPS1.ps1",
@@ -480,7 +499,7 @@
         "shellnewps1"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/@19-DefineSecureD.ps1",
@@ -490,7 +509,7 @@
         "definesecured"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/@20-KillLogitechUpdateFull.ps1",
@@ -499,7 +518,7 @@
         "@20-killlogitechupdatefull"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/@21-DesktopSubFoldersLauncher.cmd",
@@ -509,7 +528,7 @@
         "systemconfigurationdesktopsubfolderslauncher"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/@22-FixMouseFlickerInvariants.ps1",
@@ -519,7 +538,7 @@
         "fixmouseflickerinvariants"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/AcronisMiniFilterCleanup.cmd",
@@ -528,7 +547,7 @@
         "acronisminifiltercleanup"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/Apply-AllCustomizations.ps1",
@@ -538,7 +557,7 @@
         "applyallcustomizations"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/asus-debloater.ps1",
@@ -547,7 +566,7 @@
         "systemconfigurationasusdebloater"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/Diagnose-OneDriveSync.ps1",
@@ -557,7 +576,7 @@
         "diagnoseonedrivesync"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/Enter-PSSystemPrivilege.cmd",
@@ -567,7 +586,7 @@
         "enterpssystemprivilege"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/Enter-XYSystemPrivilege.cmd",
@@ -577,7 +596,7 @@
         "enterxysystemprivilege"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/Forced USO Unlock.cmd",
@@ -586,7 +605,7 @@
         "forced uso unlock"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/Get-SystemAclAudit.ps1",
@@ -596,7 +615,7 @@
         "getsystemaclaudit"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/GoAdm.ps1",
@@ -606,7 +625,7 @@
         "systemconfigurationgoadm"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/Invoke-AcronisMiniFilterCleanup.cmd",
@@ -617,7 +636,7 @@
         "systemconfigurationacronisminifiltercleanup"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/Invoke-AsusDebloater.ps1",
@@ -627,7 +646,7 @@
         "invokeasusdebloater"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/Kill-LogitechUpdate.ps1",
@@ -638,7 +657,7 @@
         "killlogitechupdate"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/PS_SystemPrivilege.cmd",
@@ -648,7 +667,7 @@
         "pssystemprivilege"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/Repair-EdgeWebViewRuntime.ps1",
@@ -658,7 +677,7 @@
         "repairedgewebviewruntime"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/Repair-SystemAcl.ps1",
@@ -668,7 +687,7 @@
         "repairsystemacl"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/Repair-UserProfile.ps1",
@@ -678,7 +697,7 @@
         "repairuserprofile"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/Reset-RecycleBin.ps1",
@@ -688,7 +707,7 @@
         "resetrecyclebin"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/Restore-EnvironmentRegistryKeys.ps1",
@@ -698,7 +717,7 @@
         "restoreenvironmentregistrykeys"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/Set-BluetoothAlwaysOn.ps1",
@@ -708,7 +727,7 @@
         "setbluetoothalwayson"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/Set-MachineWideExecutionPolicy.ps1",
@@ -719,7 +738,7 @@
         "systemconfigurationsetmachinewideexecutionpolicy"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/Set-MouseFlickerInvariants.ps1",
@@ -730,7 +749,7 @@
         "setmouseflickerinvariants"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/Set-SecureDVolume.ps1",
@@ -741,7 +760,7 @@
         "setsecuredvolume"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/Set-WindowsSearchService.ps1",
@@ -751,7 +770,7 @@
         "setwindowssearchservice"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/SetBluetoothAlwaysOn.ps1",
@@ -760,7 +779,7 @@
         "systemconfigurationsetbluetoothalwayson"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/Test-OneDriveSync.ps1",
@@ -770,7 +789,7 @@
         "testonedrivesync"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/Test-PowerShellHklmState.ps1",
@@ -781,7 +800,7 @@
         "testpowershellhklmstate"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/Test-UserProfileHealth.ps1",
@@ -791,7 +810,7 @@
         "testuserprofilehealth"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/ToggleSecure.ps1",
@@ -800,7 +819,7 @@
         "togglesecure"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/Unlock-ForcedUSO.cmd",
@@ -810,7 +829,7 @@
         "unlockforceduso"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     },
     {
       "script": "SystemConfiguration/Source/XY_SystemPrivilege.cmd",
@@ -820,562 +839,565 @@
         "xysystemprivilege"
       ],
       "parameters": "",
-      "tool_admin": 1
+      "tool_admin": 3
     }
   ],
   "tools": {
-    "HaSSD06\\analyze_lcm_components.py": 0,
-    "HaSSD06\\check_specific.py": 0,
-    "HaSSD06\\deep_device_scan.py": 0,
-    "HaSSD06\\extract_ha_update_crps.py": 0,
-    "HaSSD06\\inspect_ha_logs.py": 0,
-    "HaSSD06\\list_all_updates.py": 0,
-    "HaSSD06\\scan_community_issues.py": 0,
-    "HaSSD06\\search_sys_sensors.py": 0,
-    "HaSSD06\\tools\\Register-BleSupervisionTask.ps1": 0,
-    "HaSSD06\\tools\\Test-RepoReadiness.ps1": 0,
-    "HaSSD06\\tools\\invoke_ha_backup.py": 0,
-    "HaSSD06\\tools\\invoke_ha_core_update.py": 0,
-    "HaSSD06\\tools\\subsystem\\Show-HaAuthDialog.ps1": 0,
-    "HaSSD06_Inventory\\tools\\Build-HaInventoryViewer.ps1": 0,
-    "HaSSD06_Inventory\\tools\\Invoke-HaRenameCascade.ps1": 0,
-    "HaSSD06_Inventory\\tools\\Invoke-HaService.ps1": 0,
-    "HaSSD06_Inventory\\tools\\Invoke-HaUpdateGate.ps1": 0,
-    "HaSSD06_Inventory\\tools\\Show-HaInventoryApp.ps1": 0,
-    "HaSSD06_Inventory\\tools\\Test-RepoReadiness.ps1": 0,
-    "HaSSD06_Inventory\\tools\\Update-HaInventory.ps1": 0,
-    "HaSSD06_Inventory\\tools\\extract_ha_central_registry.py": 0,
-    "LCM_Inventory\\tools\\@Repair_Diagnose-OneDriveSync.ps1": 1,
-    "LCM_Inventory\\tools\\@Repair_Test-OneDriveSync.ps1": 1,
-    "LCM_Inventory\\tools\\APPLY.ps1": 0,
-    "LCM_Inventory\\tools\\Absorb-LcmContextRemark.ps1": 0,
-    "LCM_Inventory\\tools\\Activate.ps1": 0,
-    "LCM_Inventory\\tools\\Activate_py.ps1": 0,
-    "LCM_Inventory\\tools\\Add2Path.ps1": 0,
-    "LCM_Inventory\\tools\\AdminShell.ps1": 0,
-    "LCM_Inventory\\tools\\Advance-Governance.ps1": 0,
-    "LCM_Inventory\\tools\\AllowSecureWinaeroTweaker.ps1": 0,
-    "LCM_Inventory\\tools\\Archive-Clean.ps1": 0,
-    "LCM_Inventory\\tools\\Archive-Conversations.ps1": 0,
-    "LCM_Inventory\\tools\\Archive-LcmDaemonLogs.ps1": 0,
-    "LCM_Inventory\\tools\\AuthorizeMasterUser.ps1": 1,
-    "LCM_Inventory\\tools\\BackgroundApply.ps1": 0,
-    "LCM_Inventory\\tools\\Bad Copy-JunctionsOnly.ps1": 0,
-    "LCM_Inventory\\tools\\BootIdentity.ps1": 0,
-    "LCM_Inventory\\tools\\Build-HaInventoryViewer.ps1": 0,
-    "LCM_Inventory\\tools\\CleanWindowsUpdates.ps1": 1,
-    "LCM_Inventory\\tools\\Cleanup.ps1": 0,
-    "LCM_Inventory\\tools\\Clear-BCReviewTemp.ps1": 0,
-    "LCM_Inventory\\tools\\Complete-ReviewCohort.ps1": 0,
-    "LCM_Inventory\\tools\\Complete-ToolDocumentation.ps1": 0,
-    "LCM_Inventory\\tools\\Create-ContextSnapshot.ps1": 0,
-    "LCM_Inventory\\tools\\Create-LCM-CRP.ps1": 0,
-    "LCM_Inventory\\tools\\Create-LCM_Baseline.ps1": 0,
-    "LCM_Inventory\\tools\\Create-LcmTool.ps1": 1,
-    "LCM_Inventory\\tools\\Create_DesktopBGInfo.ps1": 0,
-    "LCM_Inventory\\tools\\DesktopSubFoldersLauncher.ps1": 0,
-    "LCM_Inventory\\tools\\Disable-WakeDevices.ps1": 1,
-    "LCM_Inventory\\tools\\Disable.ps1": 1,
-    "LCM_Inventory\\tools\\DiskAssignmentStatus.ps1": 1,
-    "LCM_Inventory\\tools\\DiskState.ps1": 0,
-    "LCM_Inventory\\tools\\Dismount-MacriumCurrentBaseline.ps1": 1,
-    "LCM_Inventory\\tools\\EFIChecker.ps1": 0,
-    "LCM_Inventory\\tools\\Enable.ps1": 1,
-    "LCM_Inventory\\tools\\Export-AntigravityReasoningTranscript.ps1": 0,
-    "LCM_Inventory\\tools\\Export-CopilotReasoningTranscript.ps1": 0,
-    "LCM_Inventory\\tools\\Export-CopilotSessionHandoff.ps1": 0,
-    "LCM_Inventory\\tools\\Export-LCMRules.ps1": 0,
-    "LCM_Inventory\\tools\\Export-LcmKnowledgeBase.ps1": 0,
-    "LCM_Inventory\\tools\\Export-OneNoteSectionToMarkdown.ps1": 0,
-    "LCM_Inventory\\tools\\Find-ChangeRequest.ps1": 0,
-    "LCM_Inventory\\tools\\Fix-Documentation.ps1": 0,
-    "LCM_Inventory\\tools\\FolderTimeUpdate.ps1": 0,
-    "LCM_Inventory\\tools\\Format-LcmMarkdownDiagrams.ps1": 0,
-    "LCM_Inventory\\tools\\Generate-Log.ps1": 0,
-    "LCM_Inventory\\tools\\Get-DevicePath-from-DeviceName.ps1": 0,
-    "LCM_Inventory\\tools\\Get-GeminiInboxStatus.ps1": 0,
-    "LCM_Inventory\\tools\\Get-LCM_Repositories.ps1": 0,
-    "LCM_Inventory\\tools\\Get-LcmTablePrintAtom.ps1": 0,
-    "LCM_Inventory\\tools\\Get-OpenProposals.ps1": 0,
-    "LCM_Inventory\\tools\\Get-RealRepoActionPlan.ps1": 0,
-    "LCM_Inventory\\tools\\Get-RealRepoTargetProfile.ps1": 0,
-    "LCM_Inventory\\tools\\Get-RealRepoTestPlan.ps1": 0,
-    "LCM_Inventory\\tools\\Get-RecoveryVolume.ps1": 0,
-    "LCM_Inventory\\tools\\Get-ReposUnderReview.ps1": 0,
-    "LCM_Inventory\\tools\\Get-SystemPortInventory.ps1": 0,
-    "LCM_Inventory\\tools\\GetPartialFileContent.ps1": 0,
-    "LCM_Inventory\\tools\\GetTailFileContent.ps1": 0,
-    "LCM_Inventory\\tools\\Get_SamurizeInfo.ps1": 0,
-    "LCM_Inventory\\tools\\Git_Restore_HubToLocal_All.ps1": 0,
-    "LCM_Inventory\\tools\\GoAdm.ps1": 1,
-    "LCM_Inventory\\tools\\Initialize-AdminMode.ps1": 1,
-    "LCM_Inventory\\tools\\Initialize-GitWorld.ps1": 0,
-    "LCM_Inventory\\tools\\Initialize-RealRepoMethodInstance.ps1": 0,
-    "LCM_Inventory\\tools\\Install-GoEnvironment.ps1": 1,
-    "LCM_Inventory\\tools\\InstallAutoDT_BG_Info.ps1": 1,
-    "LCM_Inventory\\tools\\Invoke-BcrDispatcher.ps1": 0,
-    "LCM_Inventory\\tools\\Invoke-CallerIntentReconciliation.ps1": 0,
-    "LCM_Inventory\\tools\\Invoke-CompactBCompareReview.ps1": 0,
-    "LCM_Inventory\\tools\\Invoke-CopilotReasoningAnalysis.ps1": 0,
-    "LCM_Inventory\\tools\\Invoke-ElevatedTest.ps1": 1,
-    "LCM_Inventory\\tools\\Invoke-FailureModeAnalysis.ps1": 0,
-    "LCM_Inventory\\tools\\Invoke-HaRenameCascade.ps1": 0,
-    "LCM_Inventory\\tools\\Invoke-HaService.ps1": 0,
-    "LCM_Inventory\\tools\\Invoke-HaUpdateGate.ps1": 0,
-    "LCM_Inventory\\tools\\Invoke-InteractiveDesktop.ps1": 1,
-    "LCM_Inventory\\tools\\Invoke-LCMReviewIntake.ps1": 0,
-    "LCM_Inventory\\tools\\Invoke-LCM_Audit.ps1": 0,
-    "LCM_Inventory\\tools\\Invoke-LCM_GoodMorning.ps1": 0,
-    "LCM_Inventory\\tools\\Invoke-LCM_GoodNight.ps1": 0,
-    "LCM_Inventory\\tools\\Invoke-LCM_Maintenance.ps1": 0,
-    "LCM_Inventory\\tools\\Invoke-LCM_Push.ps1": 0,
-    "LCM_Inventory\\tools\\Invoke-LcmAction.ps1": 0,
-    "LCM_Inventory\\tools\\Invoke-LcmDecisionGate.ps1": 0,
-    "LCM_Inventory\\tools\\Invoke-LcmDisplayRender.ps1": 0,
-    "LCM_Inventory\\tools\\Invoke-LcmDo.ps1": 0,
-    "LCM_Inventory\\tools\\Invoke-LcmGiantReview.ps1": 0,
-    "LCM_Inventory\\tools\\Invoke-LcmPathMigration.ps1": 0,
-    "LCM_Inventory\\tools\\Invoke-LcmProtocol.ps1": 0,
-    "LCM_Inventory\\tools\\Invoke-LcmPushRequalification.ps1": 0,
-    "LCM_Inventory\\tools\\Invoke-LcmRepositoryNamingMigrationStaged.ps1": 0,
-    "LCM_Inventory\\tools\\Invoke-LcmStageTwoFallback.ps1": 0,
-    "LCM_Inventory\\tools\\Invoke-LcmSystemOneClient.ps1": 0,
-    "LCM_Inventory\\tools\\Invoke-LearnedAdviceReview.ps1": 0,
-    "LCM_Inventory\\tools\\Invoke-Level1AnalysisRefinement.ps1": 0,
-    "LCM_Inventory\\tools\\Invoke-MacriumBcrReview.ps1": 0,
-    "LCM_Inventory\\tools\\Invoke-MacriumDailyBcrBaseline.ps1": 0,
-    "LCM_Inventory\\tools\\Invoke-MacriumMountWorker.ps1": 1,
-    "LCM_Inventory\\tools\\Invoke-PrivilegedTool.ps1": 0,
-    "LCM_Inventory\\tools\\Invoke-ProposalAction.ps1": 0,
-    "LCM_Inventory\\tools\\Invoke-RealRepoDryRun.ps1": 0,
-    "LCM_Inventory\\tools\\Invoke-ReasoningAnalysis.ps1": 0,
-    "LCM_Inventory\\tools\\Invoke-ReasoningAnalysisAuto.ps1": 0,
-    "LCM_Inventory\\tools\\Invoke-SupervisionRunner.ps1": 0,
-    "LCM_Inventory\\tools\\KillLogitechUpdateFull.ps1": 1,
-    "LCM_Inventory\\tools\\LCM_StructureFix-Post-cleanup.ps1": 0,
-    "LCM_Inventory\\tools\\LcmDesktopDaemon.ps1": 1,
-    "LCM_Inventory\\tools\\LcmJunctionFixer.ps1": 0,
-    "LCM_Inventory\\tools\\Link-LcmLearnedAdvice.ps1": 0,
-    "LCM_Inventory\\tools\\List-Device-Name-and-Path.ps1": 0,
-    "LCM_Inventory\\tools\\LoadAtoms.ps1": 0,
-    "LCM_Inventory\\tools\\LoadFixes.ps1": 0,
-    "LCM_Inventory\\tools\\LoadMethods.ps1": 0,
-    "LCM_Inventory\\tools\\LoadRules.ps1": 0,
-    "LCM_Inventory\\tools\\Make-Admin.ps1": 1,
-    "LCM_Inventory\\tools\\Manage-SupervisionTask.ps1": 0,
-    "LCM_Inventory\\tools\\Migrate-Workspace_CO .ps1": 0,
-    "LCM_Inventory\\tools\\Mount-MacriumLatestBaseline.ps1": 1,
-    "LCM_Inventory\\tools\\New-RepositoryDocumentation.ps1": 0,
-    "LCM_Inventory\\tools\\OneNoteCOM_DiagnosticHierarchyProbe.ps1": 0,
-    "LCM_Inventory\\tools\\OneNoteHierarchyDiscovery.ps1": 0,
-    "LCM_Inventory\\tools\\PostCompute.ps1": 0,
-    "LCM_Inventory\\tools\\PostWrite.ps1": 0,
-    "LCM_Inventory\\tools\\PreCompute.ps1": 0,
-    "LCM_Inventory\\tools\\Process-LcmInbox.ps1": 0,
-    "LCM_Inventory\\tools\\ProfileModify.ps1": 0,
-    "LCM_Inventory\\tools\\ProfileRecoveryToolkit.ps1": 1,
-    "LCM_Inventory\\tools\\Publish-LCM_ProposalBundles.ps1": 0,
-    "LCM_Inventory\\tools\\Register-BleSupervisionTask.ps1": 0,
-    "LCM_Inventory\\tools\\Register-LcmDesktopDaemon.ps1": 1,
-    "LCM_Inventory\\tools\\RelocateJunctions.ps1": 0,
-    "LCM_Inventory\\tools\\Remove-LcmShortName.ps1": 0,
-    "LCM_Inventory\\tools\\RenameTestFolders.ps1": 1,
-    "LCM_Inventory\\tools\\Repair-LCMRules.ps1": 0,
-    "LCM_Inventory\\tools\\Repair-LcmLineEndings.ps1": 0,
-    "LCM_Inventory\\tools\\Repair-VolumeAcl.ps1": 1,
-    "LCM_Inventory\\tools\\ReplaceByJunction.ps1": 0,
-    "LCM_Inventory\\tools\\Restore-SystemSettings.ps1": 1,
-    "LCM_Inventory\\tools\\RunShell.ps1": 0,
-    "LCM_Inventory\\tools\\Safe-Copy.ps1": 0,
-    "LCM_Inventory\\tools\\SafeCopy.ps1": 0,
-    "LCM_Inventory\\tools\\SafelyRepairUserProfile.ps1": 0,
-    "LCM_Inventory\\tools\\Save-AllSessionMemory.ps1": 0,
-    "LCM_Inventory\\tools\\Save-LCMRules.ps1": 0,
-    "LCM_Inventory\\tools\\Search-Everything.ps1": 0,
-    "LCM_Inventory\\tools\\Set-GitRoot.ps1": 1,
-    "LCM_Inventory\\tools\\Set-LcmActionProgress.ps1": 0,
-    "LCM_Inventory\\tools\\Set-LcmMachineRegistry.ps1": 1,
-    "LCM_Inventory\\tools\\Set-LcmReliefMode.ps1": 0,
-    "LCM_Inventory\\tools\\Set-MachineWideExecutionPolicy.ps1": 1,
-    "LCM_Inventory\\tools\\Set-RealRepoTestPlan.ps1": 0,
-    "LCM_Inventory\\tools\\SetUser_Env.ps1": 0,
-    "LCM_Inventory\\tools\\Set_PS_Env_Machine.ps1": 0,
-    "LCM_Inventory\\tools\\ShortPromptPS.ps1": 0,
-    "LCM_Inventory\\tools\\Show-Actions.ps1": 0,
-    "LCM_Inventory\\tools\\Show-CmdFolderAnalysis.ps1": 1,
-    "LCM_Inventory\\tools\\Show-FailureAnalysis.ps1": 0,
-    "LCM_Inventory\\tools\\Show-HaAuthDialog.ps1": 0,
-    "LCM_Inventory\\tools\\Show-HaInventory.ps1": 0,
-    "LCM_Inventory\\tools\\Show-HaInventoryApp.ps1": 0,
-    "LCM_Inventory\\tools\\Show-LCM_InventoryApp.ps1": 0,
-    "LCM_Inventory\\tools\\Show-LCM_Readiness.ps1": 0,
-    "LCM_Inventory\\tools\\Show-LastLog.ps1": 0,
-    "LCM_Inventory\\tools\\Show-LcmActiveLauncher.ps1": 0,
-    "LCM_Inventory\\tools\\Show-LcmAnalysisViewer.ps1": 0,
-    "LCM_Inventory\\tools\\Show-LcmControl.ps1": 0,
-    "LCM_Inventory\\tools\\Show-LcmDaemon.ps1": 0,
-    "LCM_Inventory\\tools\\Show-LcmFailureDiagnostic.ps1": 0,
-    "LCM_Inventory\\tools\\Show-Repos.ps1": 0,
-    "LCM_Inventory\\tools\\Show-Rules.ps1": 0,
-    "LCM_Inventory\\tools\\Show-Strategies.ps1": 0,
-    "LCM_Inventory\\tools\\Show-SuperController.ps1": 0,
-    "LCM_Inventory\\tools\\Show-Supervision.ps1": 0,
-    "LCM_Inventory\\tools\\Show-ToolIndex.ps1": 0,
-    "LCM_Inventory\\tools\\Show-ToolIntents.ps1": 0,
-    "LCM_Inventory\\tools\\Show-ToolsExplorer.ps1": 0,
-    "LCM_Inventory\\tools\\ShowPathPS.ps1": 0,
-    "LCM_Inventory\\tools\\Split-OneNoteExportDocxForGemini.ps1": 0,
-    "LCM_Inventory\\tools\\Split-TextFile.ps1": 0,
-    "LCM_Inventory\\tools\\Start-MacriumDailyBackup.ps1": 1,
-    "LCM_Inventory\\tools\\Start-RemoteBridge.ps1": 0,
-    "LCM_Inventory\\tools\\Submit-ReviewResult.ps1": 0,
-    "LCM_Inventory\\tools\\Sync-GeminiInbox.ps1": 0,
-    "LCM_Inventory\\tools\\Sync-LCMResearchSnapshot.ps1": 0,
-    "LCM_Inventory\\tools\\Sync-LcmAppCatalog.ps1": 0,
-    "LCM_Inventory\\tools\\Sync-LcmCatalogMacros.ps1": 0,
-    "LCM_Inventory\\tools\\Sync-LcmModuleVersions.ps1": 0,
-    "LCM_Inventory\\tools\\Sync-LcmProposalsDb.ps1": 0,
-    "LCM_Inventory\\tools\\Sync-LcmToolCatalogDb.ps1": 0,
-    "LCM_Inventory\\tools\\Sync-ToolSymlinks.ps1": 0,
-    "LCM_Inventory\\tools\\Test-DocumentationCompleteness.ps1": 0,
-    "LCM_Inventory\\tools\\Test-ExternalTools.ps1": 1,
-    "LCM_Inventory\\tools\\Test-FileReadIntegrity.ps1": 0,
-    "LCM_Inventory\\tools\\Test-GeneralReadiness.ps1": 0,
-    "LCM_Inventory\\tools\\Test-Guardrail.ps1": 0,
-    "LCM_Inventory\\tools\\Test-LCMIncrementalGovernance.ps1": 0,
-    "LCM_Inventory\\tools\\Test-LCMRuleHealth.ps1": 0,
-    "LCM_Inventory\\tools\\Test-LCM_Drift.ps1": 0,
-    "LCM_Inventory\\tools\\Test-LCM_Readiness.ps1": 0,
-    "LCM_Inventory\\tools\\Test-LcmDeterministicGate.ps1": 1,
-    "LCM_Inventory\\tools\\Test-LcmStrategyConsistency.ps1": 0,
-    "LCM_Inventory\\tools\\Test-MacriumCurrentBaseline.ps1": 0,
-    "LCM_Inventory\\tools\\Test-PowerShellHklmState.ps1": 1,
-    "LCM_Inventory\\tools\\Test-RealRepoProposalCleanup.ps1": 0,
-    "LCM_Inventory\\tools\\Test-RepoReadiness.ps1": 0,
-    "LCM_Inventory\\tools\\Test-ReviewCommitGate.ps1": 0,
-    "LCM_Inventory\\tools\\Toggle Windows Search on off.ps1": 1,
-    "LCM_Inventory\\tools\\Uninstall.ps1": 1,
-    "LCM_Inventory\\tools\\UninstallAutoDT_BG_Info.ps1": 1,
-    "LCM_Inventory\\tools\\Update-Gemini.ps1": 0,
-    "LCM_Inventory\\tools\\Update-HaInventory.ps1": 0,
-    "LCM_Inventory\\tools\\Update-Proposal.ps1": 0,
-    "LCM_Inventory\\tools\\Update-ToolCatalog.ps1": 0,
-    "LCM_Inventory\\tools\\Validate-CopilotProfile.ps1": 0,
-    "LCM_Inventory\\tools\\ValidateRules.ps1": 0,
-    "LCM_Inventory\\tools\\Verifyer.ps1": 0,
-    "LCM_Inventory\\tools\\analyze_lcm_components.py": 0,
-    "LCM_Inventory\\tools\\asus-debloater.ps1": 1,
-    "LCM_Inventory\\tools\\build_matrix.py": 0,
-    "LCM_Inventory\\tools\\build_offline_docs.py": 0,
-    "LCM_Inventory\\tools\\check_specific.py": 0,
-    "LCM_Inventory\\tools\\compare_tuya_integrations.py": 0,
-    "LCM_Inventory\\tools\\deactivate.ps1": 0,
-    "LCM_Inventory\\tools\\deep_device_scan.py": 0,
-    "LCM_Inventory\\tools\\deep_tuya_scan.py": 0,
-    "LCM_Inventory\\tools\\extract_ha_central_registry.py": 0,
-    "LCM_Inventory\\tools\\extract_ha_update_crps.py": 0,
-    "LCM_Inventory\\tools\\generate_system_docs.py": 0,
-    "LCM_Inventory\\tools\\ha_inventory_collector.py": 0,
-    "LCM_Inventory\\tools\\inspect_ha_logs.py": 0,
-    "LCM_Inventory\\tools\\invoke_ha_backup.py": 0,
-    "LCM_Inventory\\tools\\invoke_ha_core_update.py": 0,
-    "LCM_Inventory\\tools\\list_all_updates.py": 0,
-    "LCM_Inventory\\tools\\mcp_ha_readonly.py": 0,
-    "LCM_Inventory\\tools\\run_audit.py": 0,
-    "LCM_Inventory\\tools\\scan_community_issues.py": 0,
-    "LCM_Inventory\\tools\\search certificate stores for private key container Guids.ps1": 0,
-    "LCM_Inventory\\tools\\search_sys_sensors.py": 0,
-    "LCM_Inventory\\tools\\sync_proposals_db.py": 0,
-    "LCM_Inventory\\tools\\sync_tool_catalog_db.py": 0,
-    "LCM_Supervision\\tools\\Test-RepoReadiness.ps1": 0,
-    "LCM_Tools\\tools\\@Repair_Diagnose-OneDriveSync.ps1": 1,
-    "LCM_Tools\\tools\\@Repair_Test-OneDriveSync.ps1": 1,
-    "LCM_Tools\\tools\\Create-LCM-CRP.ps1": 0,
-    "LCM_Tools\\tools\\Export-AntigravityReasoningTranscript.ps1": 0,
-    "LCM_Tools\\tools\\FolderTimeUpdate.ps1": 0,
-    "LCM_Tools\\tools\\Invoke-ReasoningAnalysisAuto.ps1": 0,
-    "LCM_Tools\\tools\\KillLogitechUpdateFull.ps1": 1,
-    "LCM_Tools\\tools\\Migrate-Workspace_CO .ps1": 0,
-    "LCM_Tools\\tools\\ReplaceByJunction.ps1": 0,
-    "LCM_Tools\\tools\\Test-FileReadIntegrity.ps1": 0,
-    "LCM_Tools\\tools\\Test-RepoReadiness.ps1": 0,
-    "LCM_Tools\\tools\\asus-debloater.ps1": 1,
-    "SystemConfiguration\\Source\\@00-RegKeyDefaultTypeSet.cmd": 1,
-    "SystemConfiguration\\Source\\@00-Set_System_Font_Verdana-MedionPC.reg": 1,
-    "SystemConfiguration\\Source\\@00-Set_System_Font_Verdana.reg": 1,
-    "SystemConfiguration\\Source\\@00-Skip_TPM_Check_on_Dynamic_Update.cmd": 1,
-    "SystemConfiguration\\Source\\@01-Use_GPEDIT.msc_to_disable_Encryption.txt": 0,
-    "SystemConfiguration\\Source\\@02-Set_the_date_and_time_format_(ADM_systemwide).ps1": 1,
-    "SystemConfiguration\\Source\\@03-Set_the_date_and_time_format_(HKCU_and_Current).reg": 0,
-    "SystemConfiguration\\Source\\@04-Remove_Removable_Drive_Icon.reg": 1,
-    "SystemConfiguration\\Source\\@05-Kill_Explorer_showing_friendly_names.reg": 1,
-    "SystemConfiguration\\Source\\@06-ConfigureEasyContextMenu.lnk": 0,
-    "SystemConfiguration\\Source\\@07-Autorun_Entry_for_RenderLockScreen.cmd": 1,
-    "SystemConfiguration\\Source\\@08-WinSetView.lnk": 0,
-    "SystemConfiguration\\Source\\@09-Use_Stylefolder_for_Folder_Comments.txt": 0,
-    "SystemConfiguration\\Source\\@10-More_Options_OFF.reg": 1,
-    "SystemConfiguration\\Source\\@11-FileMenuTools.lnk": 0,
-    "SystemConfiguration\\Source\\@12-WinaeroTweaker.lnk": 0,
-    "SystemConfiguration\\Source\\@13-PowerToys.lnk": 0,
-    "SystemConfiguration\\Source\\@14-SecureDesktopOff.ps1": 1,
-    "SystemConfiguration\\Source\\@15-PS7AppKiller.ps1": 1,
-    "SystemConfiguration\\Source\\@16-GoAdm_changer.ps1": 1,
-    "SystemConfiguration\\Source\\@17-FiraFonts.ps1": 1,
-    "SystemConfiguration\\Source\\@18-ShellNewPS1.ps1": 1,
-    "SystemConfiguration\\Source\\@19-DefineSecureD.ps1": 1,
-    "SystemConfiguration\\Source\\@20-KillLogitechUpdateFull.ps1": 1,
-    "SystemConfiguration\\Source\\@21-DesktopSubFoldersLauncher.cmd": 1,
-    "SystemConfiguration\\Source\\@22-FixMouseFlickerInvariants.ps1": 1,
-    "SystemConfiguration\\Source\\AcronisMiniFilterCleanup.cmd": 1,
-    "SystemConfiguration\\Source\\Apply-AllCustomizations.ps1": 1,
-    "SystemConfiguration\\Source\\Build-MacriumScheduleTemplate.ps1": 0,
-    "SystemConfiguration\\Source\\ConvertTo-WorkspaceUtf8.ps1": 0,
-    "SystemConfiguration\\Source\\Diagnose-OneDriveSync.ps1": 1,
-    "SystemConfiguration\\Source\\DismItFromE.cmd": 0,
-    "SystemConfiguration\\Source\\Enter-CmdAdmin.cmd": 0,
-    "SystemConfiguration\\Source\\Enter-PSSystemPrivilege.cmd": 1,
-    "SystemConfiguration\\Source\\Enter-XYSystemPrivilege.cmd": 1,
-    "SystemConfiguration\\Source\\Fix-LocalizedNames.ps1": 0,
-    "SystemConfiguration\\Source\\Forced USO Unlock.cmd": 1,
-    "SystemConfiguration\\Source\\Get-ChkdskBootLog.ps1": 0,
-    "SystemConfiguration\\Source\\Get-DevicePathFromDeviceName.ps1": 0,
-    "SystemConfiguration\\Source\\Get-InternetConnectivityData.ps1": 0,
-    "SystemConfiguration\\Source\\Get-SystemAclAudit.ps1": 1,
-    "SystemConfiguration\\Source\\Get-vEthernetData.ps1": 0,
-    "SystemConfiguration\\Source\\GetInternetConnectivityData.ps1": 0,
-    "SystemConfiguration\\Source\\GetvEthernetData.ps1": 0,
-    "SystemConfiguration\\Source\\GoAdm.ps1": 1,
-    "SystemConfiguration\\Source\\Install-OCRTools.ps1": 0,
-    "SystemConfiguration\\Source\\Install-PowerShell7Runtime.ps1": 0,
-    "SystemConfiguration\\Source\\Install-Tesseract.ps1": 0,
-    "SystemConfiguration\\Source\\Invoke-AcronisMiniFilterCleanup.cmd": 1,
-    "SystemConfiguration\\Source\\Invoke-AsusDebloater.ps1": 1,
-    "SystemConfiguration\\Source\\Invoke-BatchOcr.ps1": 0,
-    "SystemConfiguration\\Source\\Kill-LogitechUpdate.ps1": 1,
-    "SystemConfiguration\\Source\\PS_SystemPrivilege.cmd": 1,
-    "SystemConfiguration\\Source\\Repair-EdgeWebViewRuntime.ps1": 1,
-    "SystemConfiguration\\Source\\Repair-SystemAcl.ps1": 1,
-    "SystemConfiguration\\Source\\Repair-UserProfile.ps1": 1,
-    "SystemConfiguration\\Source\\Reset-RecycleBin.ps1": 1,
-    "SystemConfiguration\\Source\\Restore-EnvironmentRegistryKeys.ps1": 1,
-    "SystemConfiguration\\Source\\Save-Clipboard.ps1": 0,
-    "SystemConfiguration\\Source\\Search-Everywhere.cmd": 0,
-    "SystemConfiguration\\Source\\Set-BluetoothAlwaysOn.ps1": 1,
-    "SystemConfiguration\\Source\\Set-MachineWideExecutionPolicy.ps1": 1,
-    "SystemConfiguration\\Source\\Set-MouseFlickerInvariants.ps1": 1,
-    "SystemConfiguration\\Source\\Set-OneDriveGitExclusions.ps1": 0,
-    "SystemConfiguration\\Source\\Set-SecureDVolume.ps1": 1,
-    "SystemConfiguration\\Source\\Set-WindowsSearchService.ps1": 1,
-    "SystemConfiguration\\Source\\SetBluetoothAlwaysOn.ps1": 1,
-    "SystemConfiguration\\Source\\Stop-StuckGitProcess.ps1": 0,
-    "SystemConfiguration\\Source\\Test-OneDriveSync.ps1": 1,
-    "SystemConfiguration\\Source\\Test-PowerShellHklmState.ps1": 1,
-    "SystemConfiguration\\Source\\Test-UserProfileHealth.ps1": 1,
-    "SystemConfiguration\\Source\\Test-WorkspaceAsciiCompliance.ps1": 0,
-    "SystemConfiguration\\Source\\ToggleSecure.ps1": 1,
-    "SystemConfiguration\\Source\\Unlock-ForcedUSO.cmd": 1,
-    "SystemConfiguration\\Source\\XY_SystemPrivilege.cmd": 1,
-    "SystemConfiguration\\Source\\asus-debloater.ps1": 1,
-    "SystemConfiguration\\Source\\search certificate stores for private key container Guids.ps1": 0
+    "HaSSD06\\analyze_lcm_components.py": 1,
+    "HaSSD06\\check_specific.py": 1,
+    "HaSSD06\\deep_device_scan.py": 1,
+    "HaSSD06\\extract_ha_update_crps.py": 1,
+    "HaSSD06\\inspect_ha_logs.py": 1,
+    "HaSSD06\\list_all_updates.py": 1,
+    "HaSSD06\\scan_community_issues.py": 1,
+    "HaSSD06\\search_sys_sensors.py": 1,
+    "HaSSD06\\tools\\Register-BleSupervisionTask.ps1": 1,
+    "HaSSD06\\tools\\Test-RepoReadiness.ps1": 1,
+    "HaSSD06\\tools\\invoke_ha_backup.py": 1,
+    "HaSSD06\\tools\\invoke_ha_core_update.py": 1,
+    "HaSSD06\\tools\\subsystem\\Show-HaAuthDialog.ps1": 1,
+    "HaSSD06_Inventory\\tools\\Build-HaInventoryViewer.ps1": 1,
+    "HaSSD06_Inventory\\tools\\Invoke-HaRenameCascade.ps1": 1,
+    "HaSSD06_Inventory\\tools\\Invoke-HaService.ps1": 1,
+    "HaSSD06_Inventory\\tools\\Invoke-HaUpdateGate.ps1": 1,
+    "HaSSD06_Inventory\\tools\\Show-HaInventoryApp.ps1": 1,
+    "HaSSD06_Inventory\\tools\\Test-RepoReadiness.ps1": 1,
+    "HaSSD06_Inventory\\tools\\Update-HaInventory.ps1": 1,
+    "HaSSD06_Inventory\\tools\\extract_ha_central_registry.py": 1,
+    "LCM_Inventory\\tools\\@Repair_Diagnose-OneDriveSync.ps1": 3,
+    "LCM_Inventory\\tools\\@Repair_Test-OneDriveSync.ps1": 3,
+    "LCM_Inventory\\tools\\APPLY.ps1": 1,
+    "LCM_Inventory\\tools\\Absorb-LcmContextRemark.ps1": 1,
+    "LCM_Inventory\\tools\\Activate.ps1": 1,
+    "LCM_Inventory\\tools\\Activate_py.ps1": 1,
+    "LCM_Inventory\\tools\\Add2Path.ps1": 1,
+    "LCM_Inventory\\tools\\AdminShell.ps1": 1,
+    "LCM_Inventory\\tools\\Advance-Governance.ps1": 1,
+    "LCM_Inventory\\tools\\AllowSecureWinaeroTweaker.ps1": 1,
+    "LCM_Inventory\\tools\\Archive-Clean.ps1": 1,
+    "LCM_Inventory\\tools\\Archive-Conversations.ps1": 1,
+    "LCM_Inventory\\tools\\Archive-LcmDaemonLogs.ps1": 1,
+    "LCM_Inventory\\tools\\AuthorizeMasterUser.ps1": 3,
+    "LCM_Inventory\\tools\\BackgroundApply.ps1": 1,
+    "LCM_Inventory\\tools\\Bad Copy-JunctionsOnly.ps1": 1,
+    "LCM_Inventory\\tools\\BootIdentity.ps1": 1,
+    "LCM_Inventory\\tools\\Build-HaInventoryViewer.ps1": 1,
+    "LCM_Inventory\\tools\\CleanWindowsUpdates.ps1": 3,
+    "LCM_Inventory\\tools\\Cleanup.ps1": 1,
+    "LCM_Inventory\\tools\\Clear-BCReviewTemp.ps1": 1,
+    "LCM_Inventory\\tools\\Complete-Review.ps1": 1,
+    "LCM_Inventory\\tools\\Complete-ReviewCohort.ps1": 1,
+    "LCM_Inventory\\tools\\Complete-ToolDocumentation.ps1": 1,
+    "LCM_Inventory\\tools\\Create-ContextSnapshot.ps1": 1,
+    "LCM_Inventory\\tools\\Create-LCM-CRP.ps1": 1,
+    "LCM_Inventory\\tools\\Create-LCM_Baseline.ps1": 1,
+    "LCM_Inventory\\tools\\Create-LcmTool.ps1": 3,
+    "LCM_Inventory\\tools\\Create_DesktopBGInfo.ps1": 1,
+    "LCM_Inventory\\tools\\DesktopSubFoldersLauncher.ps1": 1,
+    "LCM_Inventory\\tools\\Disable-WakeDevices.ps1": 3,
+    "LCM_Inventory\\tools\\Disable.ps1": 3,
+    "LCM_Inventory\\tools\\DiskAssignmentStatus.ps1": 3,
+    "LCM_Inventory\\tools\\DiskState.ps1": 1,
+    "LCM_Inventory\\tools\\Dismount-MacriumCurrentBaseline.ps1": 3,
+    "LCM_Inventory\\tools\\EFIChecker.ps1": 1,
+    "LCM_Inventory\\tools\\Enable.ps1": 3,
+    "LCM_Inventory\\tools\\Export-AntigravityReasoningTranscript.ps1": 1,
+    "LCM_Inventory\\tools\\Export-CopilotReasoningTranscript.ps1": 1,
+    "LCM_Inventory\\tools\\Export-CopilotSessionHandoff.ps1": 1,
+    "LCM_Inventory\\tools\\Export-LCMRules.ps1": 1,
+    "LCM_Inventory\\tools\\Export-LcmElevationPolicy.py": 1,
+    "LCM_Inventory\\tools\\Export-LcmKnowledgeBase.ps1": 1,
+    "LCM_Inventory\\tools\\Export-OneNoteSectionToMarkdown.ps1": 1,
+    "LCM_Inventory\\tools\\Find-ChangeRequest.ps1": 1,
+    "LCM_Inventory\\tools\\Fix-Documentation.ps1": 1,
+    "LCM_Inventory\\tools\\FolderTimeUpdate.ps1": 1,
+    "LCM_Inventory\\tools\\Format-LcmMarkdownDiagrams.ps1": 1,
+    "LCM_Inventory\\tools\\Generate-Log.ps1": 1,
+    "LCM_Inventory\\tools\\Get-DevicePath-from-DeviceName.ps1": 1,
+    "LCM_Inventory\\tools\\Get-GeminiInboxStatus.ps1": 1,
+    "LCM_Inventory\\tools\\Get-LCM_Repositories.ps1": 1,
+    "LCM_Inventory\\tools\\Get-LcmTablePrintAtom.ps1": 1,
+    "LCM_Inventory\\tools\\Get-OpenProposals.ps1": 1,
+    "LCM_Inventory\\tools\\Get-RealRepoActionPlan.ps1": 1,
+    "LCM_Inventory\\tools\\Get-RealRepoTargetProfile.ps1": 1,
+    "LCM_Inventory\\tools\\Get-RealRepoTestPlan.ps1": 1,
+    "LCM_Inventory\\tools\\Get-RecoveryVolume.ps1": 1,
+    "LCM_Inventory\\tools\\Get-ReposUnderReview.ps1": 1,
+    "LCM_Inventory\\tools\\Get-SystemPortInventory.ps1": 1,
+    "LCM_Inventory\\tools\\GetPartialFileContent.ps1": 1,
+    "LCM_Inventory\\tools\\GetTailFileContent.ps1": 1,
+    "LCM_Inventory\\tools\\Get_SamurizeInfo.ps1": 1,
+    "LCM_Inventory\\tools\\Git_Restore_HubToLocal_All.ps1": 1,
+    "LCM_Inventory\\tools\\GoAdm.ps1": 3,
+    "LCM_Inventory\\tools\\Initialize-AdminMode.ps1": 3,
+    "LCM_Inventory\\tools\\Initialize-GitWorld.ps1": 1,
+    "LCM_Inventory\\tools\\Initialize-RealRepoMethodInstance.ps1": 1,
+    "LCM_Inventory\\tools\\Install-GoEnvironment.ps1": 3,
+    "LCM_Inventory\\tools\\InstallAutoDT_BG_Info.ps1": 3,
+    "LCM_Inventory\\tools\\Invoke-BcrDispatcher.ps1": 1,
+    "LCM_Inventory\\tools\\Invoke-CallerIntentReconciliation.ps1": 1,
+    "LCM_Inventory\\tools\\Invoke-CompactBCompareReview.ps1": 1,
+    "LCM_Inventory\\tools\\Invoke-CopilotReasoningAnalysis.ps1": 1,
+    "LCM_Inventory\\tools\\Invoke-ElevatedTest.ps1": 3,
+    "LCM_Inventory\\tools\\Invoke-FailureModeAnalysis.ps1": 1,
+    "LCM_Inventory\\tools\\Invoke-HaRenameCascade.ps1": 1,
+    "LCM_Inventory\\tools\\Invoke-HaService.ps1": 1,
+    "LCM_Inventory\\tools\\Invoke-HaUpdateGate.ps1": 1,
+    "LCM_Inventory\\tools\\Invoke-InteractiveDesktop.ps1": 3,
+    "LCM_Inventory\\tools\\Invoke-LCMReviewIntake.ps1": 1,
+    "LCM_Inventory\\tools\\Invoke-LCM_Audit.ps1": 1,
+    "LCM_Inventory\\tools\\Invoke-LCM_GoodMorning.ps1": 1,
+    "LCM_Inventory\\tools\\Invoke-LCM_GoodNight.ps1": 1,
+    "LCM_Inventory\\tools\\Invoke-LCM_Maintenance.ps1": 1,
+    "LCM_Inventory\\tools\\Invoke-LCM_Push.ps1": 1,
+    "LCM_Inventory\\tools\\Invoke-LcmAction.ps1": 1,
+    "LCM_Inventory\\tools\\Invoke-LcmDecisionGate.ps1": 1,
+    "LCM_Inventory\\tools\\Invoke-LcmDisplayRender.ps1": 1,
+    "LCM_Inventory\\tools\\Invoke-LcmDo.ps1": 1,
+    "LCM_Inventory\\tools\\Invoke-LcmGiantReview.ps1": 1,
+    "LCM_Inventory\\tools\\Invoke-LcmMajorCleanup.ps1": 1,
+    "LCM_Inventory\\tools\\Invoke-LcmPathMigration.ps1": 1,
+    "LCM_Inventory\\tools\\Invoke-LcmProtocol.ps1": 1,
+    "LCM_Inventory\\tools\\Invoke-LcmPushRequalification.ps1": 1,
+    "LCM_Inventory\\tools\\Invoke-LcmRepositoryNamingMigrationStaged.ps1": 1,
+    "LCM_Inventory\\tools\\Invoke-LcmStageTwoFallback.ps1": 1,
+    "LCM_Inventory\\tools\\Invoke-LcmSystemOneClient.ps1": 1,
+    "LCM_Inventory\\tools\\Invoke-LearnedAdviceReview.ps1": 1,
+    "LCM_Inventory\\tools\\Invoke-Level1AnalysisRefinement.ps1": 1,
+    "LCM_Inventory\\tools\\Invoke-MacriumBcrReview.ps1": 1,
+    "LCM_Inventory\\tools\\Invoke-MacriumDailyBcrBaseline.ps1": 2,
+    "LCM_Inventory\\tools\\Invoke-MacriumMountWorker.ps1": 3,
+    "LCM_Inventory\\tools\\Invoke-PrivilegedTool.ps1": 1,
+    "LCM_Inventory\\tools\\Invoke-ProposalAction.ps1": 1,
+    "LCM_Inventory\\tools\\Invoke-RealRepoDryRun.ps1": 1,
+    "LCM_Inventory\\tools\\Invoke-ReasoningAnalysis.ps1": 1,
+    "LCM_Inventory\\tools\\Invoke-ReasoningAnalysisAuto.ps1": 1,
+    "LCM_Inventory\\tools\\Invoke-SupervisionRunner.ps1": 1,
+    "LCM_Inventory\\tools\\KillLogitechUpdateFull.ps1": 3,
+    "LCM_Inventory\\tools\\LCM_StructureFix-Post-cleanup.ps1": 1,
+    "LCM_Inventory\\tools\\LcmDesktopDaemon.ps1": 3,
+    "LCM_Inventory\\tools\\LcmJunctionFixer.ps1": 1,
+    "LCM_Inventory\\tools\\Link-LcmLearnedAdvice.ps1": 1,
+    "LCM_Inventory\\tools\\List-Device-Name-and-Path.ps1": 1,
+    "LCM_Inventory\\tools\\LoadAtoms.ps1": 1,
+    "LCM_Inventory\\tools\\LoadFixes.ps1": 1,
+    "LCM_Inventory\\tools\\LoadMethods.ps1": 1,
+    "LCM_Inventory\\tools\\LoadRules.ps1": 1,
+    "LCM_Inventory\\tools\\Make-Admin.ps1": 3,
+    "LCM_Inventory\\tools\\Manage-SupervisionTask.ps1": 1,
+    "LCM_Inventory\\tools\\Migrate-Workspace_CO .ps1": 1,
+    "LCM_Inventory\\tools\\Mount-MacriumLatestBaseline.ps1": 2,
+    "LCM_Inventory\\tools\\New-RepositoryDocumentation.ps1": 1,
+    "LCM_Inventory\\tools\\OneNoteCOM_DiagnosticHierarchyProbe.ps1": 1,
+    "LCM_Inventory\\tools\\OneNoteHierarchyDiscovery.ps1": 1,
+    "LCM_Inventory\\tools\\PostCompute.ps1": 1,
+    "LCM_Inventory\\tools\\PostWrite.ps1": 1,
+    "LCM_Inventory\\tools\\PreCompute.ps1": 1,
+    "LCM_Inventory\\tools\\Process-LcmInbox.ps1": 1,
+    "LCM_Inventory\\tools\\ProfileModify.ps1": 1,
+    "LCM_Inventory\\tools\\ProfileRecoveryToolkit.ps1": 3,
+    "LCM_Inventory\\tools\\Publish-LCM_ProposalBundles.ps1": 1,
+    "LCM_Inventory\\tools\\Register-BleSupervisionTask.ps1": 1,
+    "LCM_Inventory\\tools\\Register-LcmDesktopDaemon.ps1": 3,
+    "LCM_Inventory\\tools\\RelocateJunctions.ps1": 1,
+    "LCM_Inventory\\tools\\Remove-LcmShortName.ps1": 1,
+    "LCM_Inventory\\tools\\RenameTestFolders.ps1": 3,
+    "LCM_Inventory\\tools\\Repair-LCMRules.ps1": 1,
+    "LCM_Inventory\\tools\\Repair-LcmLineEndings.ps1": 1,
+    "LCM_Inventory\\tools\\Repair-VolumeAcl.ps1": 3,
+    "LCM_Inventory\\tools\\ReplaceByJunction.ps1": 1,
+    "LCM_Inventory\\tools\\Restore-SystemSettings.ps1": 3,
+    "LCM_Inventory\\tools\\RunShell.ps1": 1,
+    "LCM_Inventory\\tools\\Safe-Copy.ps1": 1,
+    "LCM_Inventory\\tools\\SafeCopy.ps1": 1,
+    "LCM_Inventory\\tools\\SafelyRepairUserProfile.ps1": 1,
+    "LCM_Inventory\\tools\\Save-AllSessionMemory.ps1": 1,
+    "LCM_Inventory\\tools\\Save-LCMRules.ps1": 1,
+    "LCM_Inventory\\tools\\Search-Everything.ps1": 1,
+    "LCM_Inventory\\tools\\Set-GitRoot.ps1": 3,
+    "LCM_Inventory\\tools\\Set-LcmActionProgress.ps1": 1,
+    "LCM_Inventory\\tools\\Set-LcmMachineRegistry.ps1": 3,
+    "LCM_Inventory\\tools\\Set-LcmReliefMode.ps1": 1,
+    "LCM_Inventory\\tools\\Set-MachineWideExecutionPolicy.ps1": 3,
+    "LCM_Inventory\\tools\\Set-RealRepoTestPlan.ps1": 1,
+    "LCM_Inventory\\tools\\SetUser_Env.ps1": 1,
+    "LCM_Inventory\\tools\\Set_PS_Env_Machine.ps1": 1,
+    "LCM_Inventory\\tools\\ShortPromptPS.ps1": 1,
+    "LCM_Inventory\\tools\\Show-Actions.ps1": 1,
+    "LCM_Inventory\\tools\\Show-CmdFolderAnalysis.ps1": 3,
+    "LCM_Inventory\\tools\\Show-FailureAnalysis.ps1": 1,
+    "LCM_Inventory\\tools\\Show-HaAuthDialog.ps1": 1,
+    "LCM_Inventory\\tools\\Show-HaInventory.ps1": 1,
+    "LCM_Inventory\\tools\\Show-HaInventoryApp.ps1": 1,
+    "LCM_Inventory\\tools\\Show-LCM_InventoryApp.ps1": 1,
+    "LCM_Inventory\\tools\\Show-LCM_Readiness.ps1": 1,
+    "LCM_Inventory\\tools\\Show-LastLog.ps1": 1,
+    "LCM_Inventory\\tools\\Show-LcmActiveLauncher.ps1": 1,
+    "LCM_Inventory\\tools\\Show-LcmAnalysisViewer.ps1": 1,
+    "LCM_Inventory\\tools\\Show-LcmControl.ps1": 1,
+    "LCM_Inventory\\tools\\Show-LcmDaemon.ps1": 1,
+    "LCM_Inventory\\tools\\Show-LcmFailureDiagnostic.ps1": 1,
+    "LCM_Inventory\\tools\\Show-Repos.ps1": 1,
+    "LCM_Inventory\\tools\\Show-Rules.ps1": 1,
+    "LCM_Inventory\\tools\\Show-Strategies.ps1": 1,
+    "LCM_Inventory\\tools\\Show-SuperController.ps1": 1,
+    "LCM_Inventory\\tools\\Show-Supervision.ps1": 1,
+    "LCM_Inventory\\tools\\Show-ToolIndex.ps1": 1,
+    "LCM_Inventory\\tools\\Show-ToolIntents.ps1": 1,
+    "LCM_Inventory\\tools\\Show-ToolsExplorer.ps1": 1,
+    "LCM_Inventory\\tools\\ShowPathPS.ps1": 1,
+    "LCM_Inventory\\tools\\Split-OneNoteExportDocxForGemini.ps1": 1,
+    "LCM_Inventory\\tools\\Split-TextFile.ps1": 1,
+    "LCM_Inventory\\tools\\Start-MacriumDailyBackup.ps1": 3,
+    "LCM_Inventory\\tools\\Start-RemoteBridge.ps1": 1,
+    "LCM_Inventory\\tools\\Submit-ReviewResult.ps1": 1,
+    "LCM_Inventory\\tools\\Sync-GeminiInbox.ps1": 1,
+    "LCM_Inventory\\tools\\Sync-LCMResearchSnapshot.ps1": 1,
+    "LCM_Inventory\\tools\\Sync-LcmAppCatalog.ps1": 1,
+    "LCM_Inventory\\tools\\Sync-LcmCatalogMacros.ps1": 1,
+    "LCM_Inventory\\tools\\Sync-LcmModuleVersions.ps1": 1,
+    "LCM_Inventory\\tools\\Sync-LcmProposalsDb.ps1": 1,
+    "LCM_Inventory\\tools\\Sync-LcmToolCatalogDb.ps1": 1,
+    "LCM_Inventory\\tools\\Sync-ToolSymlinks.ps1": 1,
+    "LCM_Inventory\\tools\\Test-DocumentationCompleteness.ps1": 1,
+    "LCM_Inventory\\tools\\Test-ExternalTools.ps1": 3,
+    "LCM_Inventory\\tools\\Test-FileReadIntegrity.ps1": 1,
+    "LCM_Inventory\\tools\\Test-GeneralReadiness.ps1": 1,
+    "LCM_Inventory\\tools\\Test-Guardrail.ps1": 1,
+    "LCM_Inventory\\tools\\Test-LCMIncrementalGovernance.ps1": 1,
+    "LCM_Inventory\\tools\\Test-LCMRuleHealth.ps1": 1,
+    "LCM_Inventory\\tools\\Test-LCM_Drift.ps1": 1,
+    "LCM_Inventory\\tools\\Test-LCM_Readiness.ps1": 1,
+    "LCM_Inventory\\tools\\Test-LcmDeterministicGate.ps1": 3,
+    "LCM_Inventory\\tools\\Test-LcmExternalToolDocumentation.ps1": 1,
+    "LCM_Inventory\\tools\\Test-LcmStrategyConsistency.ps1": 1,
+    "LCM_Inventory\\tools\\Test-MacriumCurrentBaseline.ps1": 1,
+    "LCM_Inventory\\tools\\Test-PowerShellHklmState.ps1": 3,
+    "LCM_Inventory\\tools\\Test-RealRepoProposalCleanup.ps1": 1,
+    "LCM_Inventory\\tools\\Test-RepoReadiness.ps1": 1,
+    "LCM_Inventory\\tools\\Test-ReviewCommitGate.ps1": 1,
+    "LCM_Inventory\\tools\\Toggle Windows Search on off.ps1": 3,
+    "LCM_Inventory\\tools\\Uninstall.ps1": 3,
+    "LCM_Inventory\\tools\\UninstallAutoDT_BG_Info.ps1": 3,
+    "LCM_Inventory\\tools\\Update-Gemini.ps1": 1,
+    "LCM_Inventory\\tools\\Update-HaInventory.ps1": 1,
+    "LCM_Inventory\\tools\\Update-Proposal.ps1": 1,
+    "LCM_Inventory\\tools\\Update-ToolCatalog.ps1": 1,
+    "LCM_Inventory\\tools\\Validate-CopilotProfile.ps1": 1,
+    "LCM_Inventory\\tools\\ValidateRules.ps1": 1,
+    "LCM_Inventory\\tools\\Verifyer.ps1": 1,
+    "LCM_Inventory\\tools\\analyze_lcm_components.py": 1,
+    "LCM_Inventory\\tools\\asus-debloater.ps1": 3,
+    "LCM_Inventory\\tools\\automation\\Mount-MacriumBrowseDialog.ahk": 3,
+    "LCM_Inventory\\tools\\automation\\Select-BeyondCompareTab.ahk": 1,
+    "LCM_Inventory\\tools\\build_matrix.py": 1,
+    "LCM_Inventory\\tools\\build_offline_docs.py": 1,
+    "LCM_Inventory\\tools\\check_specific.py": 1,
+    "LCM_Inventory\\tools\\compare_tuya_integrations.py": 1,
+    "LCM_Inventory\\tools\\deactivate.ps1": 1,
+    "LCM_Inventory\\tools\\deep_device_scan.py": 1,
+    "LCM_Inventory\\tools\\deep_tuya_scan.py": 1,
+    "LCM_Inventory\\tools\\extract_ha_central_registry.py": 1,
+    "LCM_Inventory\\tools\\extract_ha_update_crps.py": 1,
+    "LCM_Inventory\\tools\\generate_system_docs.py": 1,
+    "LCM_Inventory\\tools\\ha_inventory_collector.py": 1,
+    "LCM_Inventory\\tools\\inspect_ha_logs.py": 1,
+    "LCM_Inventory\\tools\\invoke_ha_backup.py": 1,
+    "LCM_Inventory\\tools\\invoke_ha_core_update.py": 1,
+    "LCM_Inventory\\tools\\list_all_updates.py": 1,
+    "LCM_Inventory\\tools\\mcp_ha_readonly.py": 1,
+    "LCM_Inventory\\tools\\run_audit.py": 1,
+    "LCM_Inventory\\tools\\scan_community_issues.py": 1,
+    "LCM_Inventory\\tools\\search certificate stores for private key container Guids.ps1": 1,
+    "LCM_Inventory\\tools\\search_sys_sensors.py": 1,
+    "LCM_Inventory\\tools\\sync_proposals_db.py": 1,
+    "LCM_Inventory\\tools\\sync_tool_catalog_db.py": 1,
+    "LCM_Supervision\\tools\\Test-RepoReadiness.ps1": 1,
+    "LCM_Tools\\tools\\@Repair_Diagnose-OneDriveSync.ps1": 3,
+    "LCM_Tools\\tools\\@Repair_Test-OneDriveSync.ps1": 3,
+    "LCM_Tools\\tools\\Create-LCM-CRP.ps1": 1,
+    "LCM_Tools\\tools\\Export-AntigravityReasoningTranscript.ps1": 1,
+    "LCM_Tools\\tools\\FolderTimeUpdate.ps1": 1,
+    "LCM_Tools\\tools\\Invoke-ReasoningAnalysisAuto.ps1": 1,
+    "LCM_Tools\\tools\\KillLogitechUpdateFull.ps1": 3,
+    "LCM_Tools\\tools\\Migrate-Workspace_CO .ps1": 1,
+    "LCM_Tools\\tools\\ReplaceByJunction.ps1": 1,
+    "LCM_Tools\\tools\\Test-FileReadIntegrity.ps1": 1,
+    "LCM_Tools\\tools\\Test-RepoReadiness.ps1": 1,
+    "LCM_Tools\\tools\\asus-debloater.ps1": 3,
+    "SystemConfiguration\\Source\\@00-RegKeyDefaultTypeSet.cmd": 3,
+    "SystemConfiguration\\Source\\@00-Set_System_Font_Verdana-MedionPC.reg": 3,
+    "SystemConfiguration\\Source\\@00-Set_System_Font_Verdana.reg": 3,
+    "SystemConfiguration\\Source\\@00-Skip_TPM_Check_on_Dynamic_Update.cmd": 3,
+    "SystemConfiguration\\Source\\@01-Use_GPEDIT.msc_to_disable_Encryption.txt": 1,
+    "SystemConfiguration\\Source\\@02-Set_the_date_and_time_format_(ADM_systemwide).ps1": 3,
+    "SystemConfiguration\\Source\\@03-Set_the_date_and_time_format_(HKCU_and_Current).reg": 1,
+    "SystemConfiguration\\Source\\@04-Remove_Removable_Drive_Icon.reg": 3,
+    "SystemConfiguration\\Source\\@05-Kill_Explorer_showing_friendly_names.reg": 3,
+    "SystemConfiguration\\Source\\@06-ConfigureEasyContextMenu.lnk": 1,
+    "SystemConfiguration\\Source\\@07-Autorun_Entry_for_RenderLockScreen.cmd": 3,
+    "SystemConfiguration\\Source\\@08-WinSetView.lnk": 1,
+    "SystemConfiguration\\Source\\@09-Use_Stylefolder_for_Folder_Comments.txt": 1,
+    "SystemConfiguration\\Source\\@10-More_Options_OFF.reg": 3,
+    "SystemConfiguration\\Source\\@11-FileMenuTools.lnk": 1,
+    "SystemConfiguration\\Source\\@12-WinaeroTweaker.lnk": 1,
+    "SystemConfiguration\\Source\\@13-PowerToys.lnk": 1,
+    "SystemConfiguration\\Source\\@14-SecureDesktopOff.ps1": 3,
+    "SystemConfiguration\\Source\\@15-PS7AppKiller.ps1": 3,
+    "SystemConfiguration\\Source\\@16-GoAdm_changer.ps1": 3,
+    "SystemConfiguration\\Source\\@17-FiraFonts.ps1": 3,
+    "SystemConfiguration\\Source\\@18-ShellNewPS1.ps1": 3,
+    "SystemConfiguration\\Source\\@19-DefineSecureD.ps1": 3,
+    "SystemConfiguration\\Source\\@20-KillLogitechUpdateFull.ps1": 3,
+    "SystemConfiguration\\Source\\@21-DesktopSubFoldersLauncher.cmd": 3,
+    "SystemConfiguration\\Source\\@22-FixMouseFlickerInvariants.ps1": 3,
+    "SystemConfiguration\\Source\\AcronisMiniFilterCleanup.cmd": 3,
+    "SystemConfiguration\\Source\\Apply-AllCustomizations.ps1": 3,
+    "SystemConfiguration\\Source\\Build-MacriumScheduleTemplate.ps1": 1,
+    "SystemConfiguration\\Source\\ConvertTo-WorkspaceUtf8.ps1": 1,
+    "SystemConfiguration\\Source\\Diagnose-OneDriveSync.ps1": 3,
+    "SystemConfiguration\\Source\\DismItFromE.cmd": 1,
+    "SystemConfiguration\\Source\\Enter-CmdAdmin.cmd": 1,
+    "SystemConfiguration\\Source\\Enter-PSSystemPrivilege.cmd": 3,
+    "SystemConfiguration\\Source\\Enter-XYSystemPrivilege.cmd": 3,
+    "SystemConfiguration\\Source\\Fix-LocalizedNames.ps1": 1,
+    "SystemConfiguration\\Source\\Forced USO Unlock.cmd": 3,
+    "SystemConfiguration\\Source\\Get-ChkdskBootLog.ps1": 1,
+    "SystemConfiguration\\Source\\Get-DevicePathFromDeviceName.ps1": 1,
+    "SystemConfiguration\\Source\\Get-InternetConnectivityData.ps1": 1,
+    "SystemConfiguration\\Source\\Get-SystemAclAudit.ps1": 3,
+    "SystemConfiguration\\Source\\Get-vEthernetData.ps1": 1,
+    "SystemConfiguration\\Source\\GetInternetConnectivityData.ps1": 1,
+    "SystemConfiguration\\Source\\GetvEthernetData.ps1": 1,
+    "SystemConfiguration\\Source\\GoAdm.ps1": 3,
+    "SystemConfiguration\\Source\\Install-OCRTools.ps1": 1,
+    "SystemConfiguration\\Source\\Install-PowerShell7Runtime.ps1": 1,
+    "SystemConfiguration\\Source\\Install-Tesseract.ps1": 1,
+    "SystemConfiguration\\Source\\Invoke-AcronisMiniFilterCleanup.cmd": 3,
+    "SystemConfiguration\\Source\\Invoke-AsusDebloater.ps1": 3,
+    "SystemConfiguration\\Source\\Invoke-BatchOcr.ps1": 1,
+    "SystemConfiguration\\Source\\Kill-LogitechUpdate.ps1": 3,
+    "SystemConfiguration\\Source\\PS_SystemPrivilege.cmd": 3,
+    "SystemConfiguration\\Source\\Repair-EdgeWebViewRuntime.ps1": 3,
+    "SystemConfiguration\\Source\\Repair-SystemAcl.ps1": 3,
+    "SystemConfiguration\\Source\\Repair-UserProfile.ps1": 3,
+    "SystemConfiguration\\Source\\Reset-RecycleBin.ps1": 3,
+    "SystemConfiguration\\Source\\Restore-EnvironmentRegistryKeys.ps1": 3,
+    "SystemConfiguration\\Source\\Save-Clipboard.ps1": 1,
+    "SystemConfiguration\\Source\\Search-Everywhere.cmd": 1,
+    "SystemConfiguration\\Source\\Set-BluetoothAlwaysOn.ps1": 3,
+    "SystemConfiguration\\Source\\Set-MachineWideExecutionPolicy.ps1": 3,
+    "SystemConfiguration\\Source\\Set-MouseFlickerInvariants.ps1": 3,
+    "SystemConfiguration\\Source\\Set-OneDriveGitExclusions.ps1": 1,
+    "SystemConfiguration\\Source\\Set-SecureDVolume.ps1": 3,
+    "SystemConfiguration\\Source\\Set-WindowsSearchService.ps1": 3,
+    "SystemConfiguration\\Source\\SetBluetoothAlwaysOn.ps1": 3,
+    "SystemConfiguration\\Source\\Stop-StuckGitProcess.ps1": 1,
+    "SystemConfiguration\\Source\\Test-OneDriveSync.ps1": 3,
+    "SystemConfiguration\\Source\\Test-PowerShellHklmState.ps1": 3,
+    "SystemConfiguration\\Source\\Test-UserProfileHealth.ps1": 3,
+    "SystemConfiguration\\Source\\Test-WorkspaceAsciiCompliance.ps1": 1,
+    "SystemConfiguration\\Source\\ToggleSecure.ps1": 3,
+    "SystemConfiguration\\Source\\Unlock-ForcedUSO.cmd": 3,
+    "SystemConfiguration\\Source\\XY_SystemPrivilege.cmd": 3,
+    "SystemConfiguration\\Source\\asus-debloater.ps1": 3,
+    "SystemConfiguration\\Source\\search certificate stores for private key container Guids.ps1": 1
+  },
+  "allowed_atoms": {
+    "LCM_Inventory\\tools\\Invoke-MacriumDailyBcrBaseline.ps1": [
+      "invoke-macriummountworker",
+      "set-lcmmachineregistry"
+    ],
+    "LCM_Inventory\\tools\\Mount-MacriumLatestBaseline.ps1": [
+      "invoke-macriummountworker"
+    ]
   },
   "violations": [
     {
       "kind": "non-admin-tool-invokes-elevated-atom",
       "tool": "HaSSD06_Inventory\\tools\\Build-HaInventoryViewer.ps1",
       "atom": "LCM_Inventory/tools/Invoke-InteractiveDesktop.ps1",
-      "detail": "line 87: $dispatcher = join-path $workspaceroot 'lcm_inventory\\tools\\invoke-interactivedesktop.ps1'"
+      "detail": "admin level 1; line 87: $dispatcher = join-path $workspaceroot 'lcm_inventory\\tools\\invoke-interactivedesktop.ps1'"
     },
     {
       "kind": "non-admin-tool-invokes-elevated-atom",
       "tool": "HaSSD06_Inventory\\tools\\Show-HaInventoryApp.ps1",
       "atom": "LCM_Inventory/tools/Invoke-InteractiveDesktop.ps1",
-      "detail": "line 3883: $dispatcher = join-path $workspaceroot 'lcm_inventory\\tools\\invoke-interactivedesktop.ps1'"
+      "detail": "admin level 1; line 3883: $dispatcher = join-path $workspaceroot 'lcm_inventory\\tools\\invoke-interactivedesktop.ps1'"
     },
     {
       "kind": "non-admin-tool-invokes-elevated-atom",
       "tool": "LCM_Inventory\\tools\\AdminShell.ps1",
       "atom": "LCM_Inventory/tools/Disable.ps1",
-      "detail": "line 62: \"d\" = @{ name = \"disable\"; path = (join-path $scriptrootresolved \"disable.ps1\"); passtrace = $true }"
+      "detail": "admin level 1; line 62: \"d\" = @{ name = \"disable\"; path = (join-path $scriptrootresolved \"disable.ps1\"); passtrace = $true }"
     },
     {
       "kind": "non-admin-tool-invokes-elevated-atom",
       "tool": "LCM_Inventory\\tools\\AdminShell.ps1",
       "atom": "LCM_Inventory/tools/Enable.ps1",
-      "detail": "line 63: \"e\" = @{ name = \"enable\"; path = (join-path $scriptrootresolved \"enable.ps1\"); passtrace = $true }"
+      "detail": "admin level 1; line 63: \"e\" = @{ name = \"enable\"; path = (join-path $scriptrootresolved \"enable.ps1\"); passtrace = $true }"
     },
     {
       "kind": "non-admin-tool-invokes-elevated-atom",
       "tool": "LCM_Inventory\\tools\\AdminShell.ps1",
       "atom": "LCM_Inventory/tools/Uninstall.ps1",
-      "detail": "line 64: \"u\" = @{ name = \"uninstall\"; path = (join-path $scriptrootresolved \"uninstall.ps1\"); passtrace = $true }"
+      "detail": "admin level 1; line 64: \"u\" = @{ name = \"uninstall\"; path = (join-path $scriptrootresolved \"uninstall.ps1\"); passtrace = $true }"
     },
     {
       "kind": "non-admin-tool-invokes-elevated-atom",
       "tool": "LCM_Inventory\\tools\\Build-HaInventoryViewer.ps1",
       "atom": "LCM_Inventory/tools/Invoke-InteractiveDesktop.ps1",
-      "detail": "line 87: $dispatcher = join-path $workspaceroot 'lcm_inventory\\tools\\invoke-interactivedesktop.ps1'"
+      "detail": "admin level 1; line 87: $dispatcher = join-path $workspaceroot 'lcm_inventory\\tools\\invoke-interactivedesktop.ps1'"
     },
     {
       "kind": "non-admin-tool-invokes-elevated-atom",
       "tool": "LCM_Inventory\\tools\\Invoke-CompactBCompareReview.ps1",
       "atom": "LCM_Inventory/tools/Invoke-InteractiveDesktop.ps1",
-      "detail": "line 54: (join-path $psscriptroot 'invoke-interactivedesktop.ps1'),"
+      "detail": "admin level 1; line 54: (join-path $psscriptroot 'invoke-interactivedesktop.ps1'),"
     },
     {
       "kind": "non-admin-tool-invokes-elevated-atom",
       "tool": "LCM_Inventory\\tools\\Invoke-LcmAction.ps1",
       "atom": "LCM_Inventory/tools/LcmDesktopDaemon.ps1",
-      "detail": "line 91: $regscript = join-path $workspaceroot 'lcm_inventory\\tools\\register-lcmdesktopdaemon.ps1'"
+      "detail": "admin level 1; line 91: $regscript = join-path $workspaceroot 'lcm_inventory\\tools\\register-lcmdesktopdaemon.ps1'"
     },
     {
       "kind": "non-admin-tool-invokes-elevated-atom",
       "tool": "LCM_Inventory\\tools\\Invoke-LcmAction.ps1",
       "atom": "LCM_Inventory/tools/Register-LcmDesktopDaemon.ps1",
-      "detail": "line 91: $regscript = join-path $workspaceroot 'lcm_inventory\\tools\\register-lcmdesktopdaemon.ps1'"
+      "detail": "admin level 1; line 91: $regscript = join-path $workspaceroot 'lcm_inventory\\tools\\register-lcmdesktopdaemon.ps1'"
     },
     {
       "kind": "non-admin-tool-invokes-elevated-atom",
       "tool": "LCM_Inventory\\tools\\Invoke-LcmDecisionGate.ps1",
       "atom": "LCM_Inventory/tools/Test-LcmDeterministicGate.ps1",
-      "detail": "line 62: $stage0script = join-path $scriptdir 'test-lcmdeterministicgate.ps1'"
+      "detail": "admin level 1; line 62: $stage0script = join-path $scriptdir 'test-lcmdeterministicgate.ps1'"
     },
     {
       "kind": "non-admin-tool-invokes-elevated-atom",
       "tool": "LCM_Inventory\\tools\\Invoke-LcmProtocol.ps1",
       "atom": "LCM_Inventory/tools/Invoke-InteractiveDesktop.ps1",
-      "detail": "line 132: $dispatcher = join-path $toolsdir 'invoke-interactivedesktop.ps1'"
-    },
-    {
-      "kind": "non-admin-tool-invokes-elevated-atom",
-      "tool": "LCM_Inventory\\tools\\Invoke-MacriumDailyBcrBaseline.ps1",
-      "atom": "LCM_Inventory/tools/Invoke-MacriumMountWorker.ps1",
-      "detail": "line 785: & (join-path $psscriptroot 'invoke-macriummountworker.ps1') -imagepath $imagepath -candidatedrives $legacydrives -expectedvolumelabel $expectedvolumelabel -moun"
-    },
-    {
-      "kind": "non-admin-tool-invokes-elevated-atom",
-      "tool": "LCM_Inventory\\tools\\Invoke-MacriumDailyBcrBaseline.ps1",
-      "atom": "LCM_Inventory/tools/Set-LcmMachineRegistry.ps1",
-      "detail": "line 412: $registryatom = join-path $psscriptroot 'set-lcmmachineregistry.ps1'"
+      "detail": "admin level 1; line 132: $dispatcher = join-path $toolsdir 'invoke-interactivedesktop.ps1'"
     },
     {
       "kind": "non-admin-tool-invokes-elevated-atom",
       "tool": "LCM_Inventory\\tools\\Invoke-PrivilegedTool.ps1",
       "atom": "LCM_Inventory/tools/Invoke-InteractiveDesktop.ps1",
-      "detail": "line 353: $desktopdispatcher = join-path $workspaceroot \"lcm_inventory\\tools\\invoke-interactivedesktop.ps1\""
+      "detail": "admin level 1; line 353: $desktopdispatcher = join-path $workspaceroot \"lcm_inventory\\tools\\invoke-interactivedesktop.ps1\""
     },
     {
       "kind": "non-admin-tool-invokes-elevated-atom",
       "tool": "LCM_Inventory\\tools\\Show-Actions.ps1",
       "atom": "LCM_Inventory/tools/Invoke-InteractiveDesktop.ps1",
-      "detail": "line 150: $dispatcher = join-path $toolsdir \"invoke-interactivedesktop.ps1\""
+      "detail": "admin level 1; line 150: $dispatcher = join-path $toolsdir \"invoke-interactivedesktop.ps1\""
     },
     {
       "kind": "non-admin-tool-invokes-elevated-atom",
       "tool": "LCM_Inventory\\tools\\Show-HaInventoryApp.ps1",
       "atom": "LCM_Inventory/tools/Invoke-InteractiveDesktop.ps1",
-      "detail": "line 3883: $dispatcher = join-path $workspaceroot 'lcm_inventory\\tools\\invoke-interactivedesktop.ps1'"
+      "detail": "admin level 1; line 3883: $dispatcher = join-path $workspaceroot 'lcm_inventory\\tools\\invoke-interactivedesktop.ps1'"
     },
     {
       "kind": "non-admin-tool-invokes-elevated-atom",
       "tool": "LCM_Inventory\\tools\\Show-LastLog.ps1",
       "atom": "LCM_Inventory/tools/Invoke-InteractiveDesktop.ps1",
-      "detail": "line 117: $interactivedesktopscript = join-path $toolsdir 'invoke-interactivedesktop.ps1'"
+      "detail": "admin level 1; line 117: $interactivedesktopscript = join-path $toolsdir 'invoke-interactivedesktop.ps1'"
     },
     {
       "kind": "non-admin-tool-invokes-elevated-atom",
       "tool": "LCM_Inventory\\tools\\Show-LCM_Readiness.ps1",
       "atom": "LCM_Inventory/tools/Test-ExternalTools.ps1",
-      "detail": "line 113: $externaltoolscheck = join-path $psscriptroot 'test-externaltools.ps1'"
+      "detail": "admin level 1; line 113: $externaltoolscheck = join-path $psscriptroot 'test-externaltools.ps1'"
     },
     {
       "kind": "non-admin-tool-invokes-elevated-atom",
       "tool": "LCM_Inventory\\tools\\Show-LcmDaemon.ps1",
       "atom": "LCM_Inventory/tools/LcmDesktopDaemon.ps1",
-      "detail": "line 100: $daemonscript = join-path $toolsdir 'lcmdesktopdaemon.ps1'"
+      "detail": "admin level 1; line 100: $daemonscript = join-path $toolsdir 'lcmdesktopdaemon.ps1'"
     },
     {
       "kind": "non-admin-tool-invokes-elevated-atom",
       "tool": "LCM_Inventory\\tools\\Start-RemoteBridge.ps1",
       "atom": "LCM_Inventory/tools/Restore-SystemSettings.ps1",
-      "detail": "line 312: <button class=\"btn-quick\" onclick=\"runcmd('pwsh -file tools/restore-systemsettings.ps1')\">\ud83d\udee1\ufe0f restore settings</button>"
+      "detail": "admin level 1; line 312: <button class=\"btn-quick\" onclick=\"runcmd('pwsh -file tools/restore-systemsettings.ps1')\">\ud83d\udee1\ufe0f restore settings</button>"
     },
     {
       "kind": "non-admin-tool-invokes-elevated-atom",
       "tool": "LCM_Inventory\\tools\\Update-ToolCatalog.ps1",
       "atom": "SystemConfiguration/Source/@00-RegKeyDefaultTypeSet.cmd",
-      "detail": "line 250: example     = 'pwsh -file \"systemconfiguration\\source\\@00-regkeydefaulttypeset.cmd\"'"
+      "detail": "admin level 1; line 282: example     = 'pwsh -file \"systemconfiguration\\source\\@00-regkeydefaulttypeset.cmd\"'"
     },
     {
       "kind": "non-admin-tool-invokes-elevated-atom",
       "tool": "LCM_Inventory\\tools\\Update-ToolCatalog.ps1",
       "atom": "SystemConfiguration/Source/@00-Skip_TPM_Check_on_Dynamic_Update.cmd",
-      "detail": "line 279: example     = 'pwsh -file \"systemconfiguration\\source\\@00-skip_tpm_check_on_dynamic_update.cmd\"'"
+      "detail": "admin level 1; line 311: example     = 'pwsh -file \"systemconfiguration\\source\\@00-skip_tpm_check_on_dynamic_update.cmd\"'"
     },
     {
       "kind": "non-admin-tool-invokes-elevated-atom",
       "tool": "LCM_Inventory\\tools\\Update-ToolCatalog.ps1",
       "atom": "SystemConfiguration/Source/@02-Set_the_date_and_time_format_(ADM_systemwide).ps1",
-      "detail": "line 298: example     = 'pwsh -file \"systemconfiguration\\source\\@02-set_the_date_and_time_format_(adm_systemwide).ps1\"'"
+      "detail": "admin level 1; line 330: example     = 'pwsh -file \"systemconfiguration\\source\\@02-set_the_date_and_time_format_(adm_systemwide).ps1\"'"
     },
     {
       "kind": "non-admin-tool-invokes-elevated-atom",
       "tool": "LCM_Inventory\\tools\\Update-ToolCatalog.ps1",
       "atom": "SystemConfiguration/Source/@07-Autorun_Entry_for_RenderLockScreen.cmd",
-      "detail": "line 343: example     = 'pwsh -file \"systemconfiguration\\source\\@07-autorun_entry_for_renderlockscreen.cmd\"'"
+      "detail": "admin level 1; line 375: example     = 'pwsh -file \"systemconfiguration\\source\\@07-autorun_entry_for_renderlockscreen.cmd\"'"
     },
     {
       "kind": "non-admin-tool-invokes-elevated-atom",
       "tool": "LCM_Inventory\\tools\\Update-ToolCatalog.ps1",
       "atom": "SystemConfiguration/Source/@14-SecureDesktopOff.ps1",
-      "detail": "line 403: example     = 'pwsh -file \"systemconfiguration\\source\\@14-securedesktopoff.ps1\"'"
+      "detail": "admin level 1; line 435: example     = 'pwsh -file \"systemconfiguration\\source\\@14-securedesktopoff.ps1\"'"
     },
     {
       "kind": "non-admin-tool-invokes-elevated-atom",
       "tool": "LCM_Inventory\\tools\\Update-ToolCatalog.ps1",
       "atom": "SystemConfiguration/Source/@15-PS7AppKiller.ps1",
-      "detail": "line 414: example     = 'pwsh -file \"systemconfiguration\\source\\@15-ps7appkiller.ps1\"'"
+      "detail": "admin level 1; line 446: example     = 'pwsh -file \"systemconfiguration\\source\\@15-ps7appkiller.ps1\"'"
     },
     {
       "kind": "non-admin-tool-invokes-elevated-atom",
       "tool": "LCM_Inventory\\tools\\Update-ToolCatalog.ps1",
       "atom": "SystemConfiguration/Source/@16-GoAdm_changer.ps1",
-      "detail": "line 425: example     = 'pwsh -file \"systemconfiguration\\source\\@16-goadm_changer.ps1\"'"
+      "detail": "admin level 1; line 457: example     = 'pwsh -file \"systemconfiguration\\source\\@16-goadm_changer.ps1\"'"
     },
     {
       "kind": "non-admin-tool-invokes-elevated-atom",
       "tool": "LCM_Inventory\\tools\\Update-ToolCatalog.ps1",
       "atom": "SystemConfiguration/Source/@17-FiraFonts.ps1",
-      "detail": "line 436: example     = 'pwsh -file \"systemconfiguration\\source\\@17-firafonts.ps1\"'"
+      "detail": "admin level 1; line 468: example     = 'pwsh -file \"systemconfiguration\\source\\@17-firafonts.ps1\"'"
     },
     {
       "kind": "non-admin-tool-invokes-elevated-atom",
       "tool": "LCM_Inventory\\tools\\Update-ToolCatalog.ps1",
       "atom": "SystemConfiguration/Source/@18-ShellNewPS1.ps1",
-      "detail": "line 447: example     = 'pwsh -file \"systemconfiguration\\source\\@18-shellnewps1.ps1\"'"
+      "detail": "admin level 1; line 479: example     = 'pwsh -file \"systemconfiguration\\source\\@18-shellnewps1.ps1\"'"
     },
     {
       "kind": "non-admin-tool-invokes-elevated-atom",
       "tool": "LCM_Inventory\\tools\\Update-ToolCatalog.ps1",
       "atom": "SystemConfiguration/Source/@19-DefineSecureD.ps1",
-      "detail": "line 458: example     = 'pwsh -file \"systemconfiguration\\source\\@19-definesecured.ps1\"'"
+      "detail": "admin level 1; line 490: example     = 'pwsh -file \"systemconfiguration\\source\\@19-definesecured.ps1\"'"
     },
     {
       "kind": "non-admin-tool-invokes-elevated-atom",
       "tool": "LCM_Inventory\\tools\\Update-ToolCatalog.ps1",
       "atom": "SystemConfiguration/Source/@20-KillLogitechUpdateFull.ps1",
-      "detail": "line 469: example     = 'pwsh -file \"systemconfiguration\\source\\@20-killlogitechupdatefull.ps1\"'"
+      "detail": "admin level 1; line 501: example     = 'pwsh -file \"systemconfiguration\\source\\@20-killlogitechupdatefull.ps1\"'"
     },
     {
       "kind": "non-admin-tool-invokes-elevated-atom",
       "tool": "LCM_Inventory\\tools\\Update-ToolCatalog.ps1",
       "atom": "SystemConfiguration/Source/Invoke-AsusDebloater.ps1",
-      "detail": "line 593: example     = 'pwsh -file \"systemconfiguration\\source\\invoke-asusdebloater.ps1\"'"
+      "detail": "admin level 1; line 630: example     = 'pwsh -file \"systemconfiguration\\source\\invoke-asusdebloater.ps1\"'"
     },
     {
       "kind": "non-admin-tool-invokes-elevated-atom",
       "tool": "LCM_Inventory\\tools\\Update-ToolCatalog.ps1",
-      "atom": "LCM_Inventory/tools/KillLogitechUpdateFull.ps1",
-      "detail": "line 469: example     = 'pwsh -file \"systemconfiguration\\source\\@20-killlogitechupdatefull.ps1\"'"
+      "atom": "LCM_Tools/tools/KillLogitechUpdateFull.ps1",
+      "detail": "admin level 1; line 501: example     = 'pwsh -file \"systemconfiguration\\source\\@20-killlogitechupdatefull.ps1\"'"
     }
   ]
 }
