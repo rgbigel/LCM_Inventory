@@ -255,14 +255,14 @@ Root implementation.
 
             $p | Should -Not -BeNullOrEmpty
             $p.bundle_dir | Should -Match '^docs/Proposals/CRP-\d+-Live-Metrics-Streaming-Engine'
-            $p.docs.specification | Should -Be 'Specification.md'
-            $p.docs.plan | Should -Be 'Implementation_Plan.md'
-            $p.docs.walkthrough | Should -Be 'Walkthrough.md'
+            $p.docs.specification | Should -Be "Specification $($p.crp_id).md"  # CRP-359
+            $p.docs.plan | Should -Be "Implementation Plan $($p.crp_id).md"
+            $p.docs.walkthrough | Should -Be "Walkthrough $($p.crp_id).md"
 
             $bundlePath = Join-Path $testRepoDir $p.bundle_dir
-            Test-Path (Join-Path $bundlePath 'Specification.md') | Should -Be $true
-            Test-Path (Join-Path $bundlePath 'Implementation_Plan.md') | Should -Be $true
-            Test-Path (Join-Path $bundlePath 'Walkthrough.md') | Should -Be $true
+            Test-Path -LiteralPath (Join-Path $bundlePath "Specification $($p.crp_id).md") | Should -Be $true
+            Test-Path -LiteralPath (Join-Path $bundlePath "Implementation Plan $($p.crp_id).md") | Should -Be $true
+            Test-Path -LiteralPath (Join-Path $bundlePath "Walkthrough $($p.crp_id).md") | Should -Be $true
         }
 
         It 'Retrieves live proposal documents from disk via Get-LcmProposalDocument' {

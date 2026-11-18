@@ -34,15 +34,15 @@ Describe 'Proposal bundle scaffold (BUG-340)' {
   It 'takes the version from LCM_AI/.agents/version.json, not from inventory.json' {
     $p = New-LCM_Proposal -Title 'Version Check' -Details 'intake text' -WorkspaceRoot $script:ws
     $p.lcm_version | Should -Be '9.9.9'
-    [System.IO.File]::ReadAllText((Join-Path (Get-BundlePath $p) 'Specification.md')) | Should -Match 'Version: 9\.9\.9'
+    [System.IO.File]::ReadAllText((Join-Path (Get-BundlePath $p) "Specification $($p.crp_id).md")) | Should -Match 'Version: 9\.9\.9'
   }
 
   It 'gives each bundle document its own role (REQ-WINV-014)' {
     $p = New-LCM_Proposal -Title 'Roles Check' -Details 'UNIQUE-INTAKE-TEXT' -WorkspaceRoot $script:ws
     $bundle = Get-BundlePath $p
-    $spec = [System.IO.File]::ReadAllText((Join-Path $bundle 'Specification.md'))
-    $plan = [System.IO.File]::ReadAllText((Join-Path $bundle 'Implementation_Plan.md'))
-    $walk = [System.IO.File]::ReadAllText((Join-Path $bundle 'Walkthrough.md'))
+    $spec = [System.IO.File]::ReadAllText((Join-Path $bundle "Specification $($p.crp_id).md"))
+    $plan = [System.IO.File]::ReadAllText((Join-Path $bundle "Implementation Plan $($p.crp_id).md"))
+    $walk = [System.IO.File]::ReadAllText((Join-Path $bundle "Walkthrough $($p.crp_id).md"))
     $spec | Should -Match 'UNIQUE-INTAKE-TEXT'
     $spec | Should -Match '- Review: this Specification only'
     $spec | Should -Not -Match 'Invariant 1: Must conform'
@@ -71,10 +71,10 @@ Describe 'Proposal bundle scaffold (BUG-340)' {
     $p = New-LCM_Proposal -Title 'Placeholder Check' -Details 'x' -WorkspaceRoot $script:ws
     InModuleScope ProposalManager -Parameters @{ Proposal = $p; Ws = $script:ws } {
       param($Proposal, $Ws)
-      @(Get-LcmProposalPlaceholderDocuments -Proposal $Proposal -WorkspaceRoot $Ws) | Should -BeExactly @('Implementation_Plan.md', 'Walkthrough.md')
-      $planPath = Join-Path (Join-Path (Join-Path $Ws 'LCM_Inventory') $Proposal.bundle_dir) 'Implementation_Plan.md'
+      @(Get-LcmProposalPlaceholderDocuments -Proposal $Proposal -WorkspaceRoot $Ws) | Should -BeExactly @("Implementation Plan $($Proposal.crp_id).md", "Walkthrough $($Proposal.crp_id).md")  # CRP-359 names
+      $planPath = Join-Path (Join-Path (Join-Path $Ws 'LCM_Inventory') $Proposal.bundle_dir) "Implementation Plan $($Proposal.crp_id).md"
       [System.IO.File]::WriteAllText($planPath, "# Implementation Plan`r`n`r`nNothing beyond the Specification.`r`n")
-      @(Get-LcmProposalPlaceholderDocuments -Proposal $Proposal -WorkspaceRoot $Ws) | Should -BeExactly @('Walkthrough.md')
+      @(Get-LcmProposalPlaceholderDocuments -Proposal $Proposal -WorkspaceRoot $Ws) | Should -BeExactly @("Walkthrough $($Proposal.crp_id).md")
     }
     Move-LcmProposalLifecycleState -Id $p.id -State in_progress -Details 'test' | Out-Null
     $warnings = $null

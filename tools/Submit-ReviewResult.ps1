@@ -47,7 +47,10 @@ param(
              through the exact-CRP review gate.
     Path: tools/Submit-ReviewResult.ps1
     Authors: Rolf, Claude, LCM_AI Engine
-    Version: 10.2.3
+    Implementation Choices (BUG-360): a tracked path under an ignored directory counts as staged when git add exits 1
+    but leaves no unstaged change for it; an untracked ignored path still fails.
+    Implementation Choices (BUG-352): the BCR exclusion rule comes from modules/LcmReviewCompletionAtoms.psm1.
+    Version: 10.2.5
     Date: 2026-11-18
 
     Implementation Choices (CRP-332): before staging, every committable or already staged path is normalized to CRLF
@@ -62,18 +65,7 @@ param(
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
-
-function Test-StandardBcrExcludedPath {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory = $true)]
-        [string]$RelativePath
-    )
-
-    $normalizedPath = $RelativePath.Replace('/', '\').TrimStart('\')
-    $lcmDirectory = [regex]::Escape('.' + 'lcm')
-    return $normalizedPath -match "^(?i)(?:\.git|\.venv|venv|\.env|__pycache__|scratch|logs|work|data|node_modules|bin|obj)(?:\\|$)|(?:^|\\)$lcmDirectory\\(?:logs|scratch|archive|tools\\links)(?:\\|$)|(?i)\.(?:pyc|pyo|inventory|log|tmp|bak|swp|lock)$"
-}
+Import-Module -Name (Join-Path $PSScriptRoot '..\modules\LcmReviewCompletionAtoms.psm1') -Force  # BUG-352: shared BCR exclusion rule
 
 function Get-StagedDiffSha256 {
     [CmdletBinding()]
@@ -266,7 +258,7 @@ if ($StagedOnly) {
     $excludedStagedPaths = @(
         $existingStagedPaths | Where-Object {
             $_ -ne 'data/proposals/proposals.json' -and
-            (Test-StandardBcrExcludedPath -RelativePath $_)
+            (Test-LcmBcrExcludedPath -RelativePath $_)
         }
     )
     if ($excludedStagedPaths.Count -gt 0) {
@@ -278,13 +270,20 @@ if ($StagedOnly) {
         git -C $targetRepoPath diff --name-only
         git -C $targetRepoPath ls-files --others --exclude-standard
     ) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Sort-Object -Unique
-    $committablePaths = @($rhsPaths | Where-Object { -not (Test-StandardBcrExcludedPath -RelativePath $_) })
+    $committablePaths = @($rhsPaths | Where-Object { -not (Test-LcmBcrExcludedPath -RelativePath $_) })
     if ($committablePaths.Count -eq 0 -and $null -eq $crossRepositoryObligation) {
         throw "The accepted review for '$repoName' has no committable RHS worktree changes."
     }
     foreach ($relativePath in $committablePaths) {
-        git -C $targetRepoPath add -A -- $relativePath
-        if ($LASTEXITCODE -ne 0) { throw "Unable to stage reviewed RHS path '$relativePath'." }
+        git -C $targetRepoPath add -A -- $relativePath 2>$null
+        if ($LASTEXITCODE -ne 0) {
+            # BUG-360: git exits 1 for a tracked path under an ignored directory (e.g. "logs/" matching docs/Logs
+            # case-insensitively) although it staged the change; accept when nothing unstaged is left for the path.
+            $unstaged = @(git -C $targetRepoPath diff --name-only -- $relativePath)
+            $tracked = @(git -C $targetRepoPath ls-files -- $relativePath)
+            if ($unstaged.Count -gt 0 -or $tracked.Count -eq 0) { throw "Unable to stage reviewed RHS path '$relativePath'." }
+            $actionsExecuted.Add("Staged tracked path '$relativePath' under an ignored directory (git add exit 1 tolerated, BUG-360).")
+        }
     }
 }
 

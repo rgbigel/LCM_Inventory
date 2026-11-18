@@ -3,8 +3,8 @@ Module: ProposalSpecificationState
 Purpose: Prepare specification-header mirrors for persisted lifecycle changes.
 Path: modules/ProposalSpecificationState.psm1
 Authors: Rolf, Copilot
-Version: 10.2.2
-Date: 2026-11-14
+Version: 10.2.3
+Date: 2026-11-18
 #>
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
@@ -42,7 +42,8 @@ function Get-LcmSpecificationStateEdits {
     if (-not $bundle.StartsWith($repoRoot.TrimEnd('\') + '\', [StringComparison]::OrdinalIgnoreCase)) {
       throw "Proposal #$($proposal.id) bundle escapes its repository."
     }
-    $leaf = if ($proposal.PSObject.Properties['docs'] -and $proposal.docs.PSObject.Properties['specification']) { $proposal.docs.specification } else { 'Specification.md' }
+    $identity = if ($proposal.PSObject.Properties['crp_id'] -and $proposal.crp_id) { [string]$proposal.crp_id } else { '' }
+    $leaf = if ($proposal.PSObject.Properties['docs'] -and $proposal.docs.PSObject.Properties['specification']) { $proposal.docs.specification } else { Split-Path -Leaf (Resolve-LcmBundleDocumentPath -BundlePath $bundle -Kind Specification -Identity $identity) }  # CRP-359
     if ([IO.Path]::GetFileName($leaf) -ne $leaf) { throw "Invalid specification filename for proposal #$($proposal.id)." }
     $path = Join-Path $bundle $leaf
     if (-not [IO.File]::Exists($path)) {
@@ -123,4 +124,42 @@ App-ID: {10}
   }
 }
 
-Export-ModuleMember -Function Get-LcmSpecificationStateEdits
+# CRP-359: bundle document file names carry the item ID ("Specification BUG-344.md"), so editor tabs identify the
+# item. Bundles created before CRP-359 keep the legacy names; the resolver prefers the new name and falls back.
+$script:LcmBundleDocumentKinds = @{
+  Specification = @{ Prefix = 'Specification'; Legacy = 'Specification.md' }
+  Plan          = @{ Prefix = 'Implementation Plan'; Legacy = 'Implementation_Plan.md' }
+  Walkthrough   = @{ Prefix = 'Walkthrough'; Legacy = 'Walkthrough.md' }
+}
+
+function Get-LcmBundleDocumentName {
+  [CmdletBinding()]
+  param(
+    [Parameter(Mandatory = $true)] [ValidateSet('Specification', 'Plan', 'Walkthrough')] [string]$Kind,
+    [Parameter(Mandatory = $true)] [string]$Identity
+  )
+  return ('{0} {1}.md' -f $script:LcmBundleDocumentKinds[$Kind].Prefix, $Identity)
+}
+
+function Resolve-LcmBundleDocumentPath {
+  [CmdletBinding()]
+  param(
+    [Parameter(Mandatory = $true)] [string]$BundlePath,
+    [Parameter(Mandatory = $true)] [ValidateSet('Specification', 'Plan', 'Walkthrough')] [string]$Kind,
+    [string]$Identity = ''
+  )
+  if (-not [string]::IsNullOrWhiteSpace($Identity)) {
+    $newPath = Join-Path $BundlePath (Get-LcmBundleDocumentName -Kind $Kind -Identity $Identity)
+    if ([IO.File]::Exists($newPath)) { return $newPath }
+  }
+  $legacyPath = Join-Path $BundlePath $script:LcmBundleDocumentKinds[$Kind].Legacy
+  if ([IO.File]::Exists($legacyPath)) { return $legacyPath }
+  if ([string]::IsNullOrWhiteSpace($Identity)) {
+    # Without an identity: the single "<Prefix> <ID>.md" file of the bundle, else the legacy name.
+    $candidates = @(if ([IO.Directory]::Exists($BundlePath)) { Get-ChildItem -LiteralPath $BundlePath -File -Filter ('{0} *.md' -f $script:LcmBundleDocumentKinds[$Kind].Prefix) })
+    if ($candidates.Count -eq 1) { return $candidates[0].FullName }
+    return $legacyPath
+  }
+  return $newPath
+}
+Export-ModuleMember -Function Get-LcmSpecificationStateEdits, Get-LcmBundleDocumentName, Resolve-LcmBundleDocumentPath

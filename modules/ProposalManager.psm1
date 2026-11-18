@@ -6,8 +6,10 @@
 #          batch operations, review granularity ('coarse' | 'tight'), repo review queue inspection,
 #          and persistent ledger storage in LCM_Inventory.
 # Authors: Rolf, Claude, LCM_AI Engine
-# Version: 10.2.6
-# Date: 2026-11-18 14:40:00
+# Version: 10.2.8
+# Date: 2026-11-18 16:05:00
+# Implementation Choices (BUG-348): a held item gets the valid legacy progress value 'blocked' (was 'held').
+# Implementation Choices (CRP-359): bundle documents are created and resolved as '<Kind> <ID>.md' (Resolve-LcmBundleDocumentPath, legacy names as fallback).
 # Implementation Choices (CRP-334): New-LCM_Proposal resolves the LCM version before scaffolding
 #          (inventory.json, then LCM_AI/.agents/version.json, else fail), writes it and -Priority
 #          into the Specification template (with DOX header) and the ledger row consistently.
@@ -324,7 +326,11 @@ function New-LCM_Proposal {
 
     # 1. Specification.md
     $repoLeaf = Split-Path -Path $targetRepoDir -Leaf
-    $specPath = Join-Path $bundleFullPath 'Specification.md'
+    # CRP-359: document names carry the item ID; an existing legacy-named document of a reused folder is kept.
+    $specPath = Resolve-LcmBundleDocumentPath -BundlePath $bundleFullPath -Kind Specification -Identity $canonicalId
+    $specName = Split-Path -Leaf $specPath
+    $planName = Split-Path -Leaf (Resolve-LcmBundleDocumentPath -BundlePath $bundleFullPath -Kind Plan -Identity $canonicalId)
+    $walkName = Split-Path -Leaf (Resolve-LcmBundleDocumentPath -BundlePath $bundleFullPath -Kind Walkthrough -Identity $canonicalId)
     if (-not (Test-Path $specPath)) {
         $appDisplay = if ($AppId) { $AppId } else { "None" }
         # In an expandable here-string the backtick is the escape character; the markdown fence must come from a variable (BUG-302).
@@ -332,9 +338,9 @@ function New-LCM_Proposal {
         $specContent = @"
 # Specification: $canonicalId
 
-Module: $bundleRelPath/Specification.md  
+Module: $bundleRelPath/$specName  
 Purpose: $Title  
-Path: $repoLeaf/$bundleRelPath/Specification.md  
+Path: $repoLeaf/$bundleRelPath/$specName  
 Authors: $Author  
 Version: $currentLcmVersion
 Status: Suggested  
@@ -377,7 +383,7 @@ than invent or infer, and avoid unnecessary complexity.
     }
 
     # 2. Implementation_Plan.md
-    $planFilePath = Join-Path $bundleFullPath 'Implementation_Plan.md'
+    $planFilePath = Join-Path $bundleFullPath $planName
     if (-not (Test-Path $planFilePath)) {
         $planContent = @"
 # Implementation Plan: $canonicalId - $Title
@@ -392,7 +398,7 @@ Not written yet: filled with the concrete changes per file when implementation s
     }
 
     # 3. Walkthrough.md
-    $walkFilePath = Join-Path $bundleFullPath 'Walkthrough.md'
+    $walkFilePath = Join-Path $bundleFullPath $walkName
     if (-not (Test-Path $walkFilePath)) {
         $walkContent = @"
 # Walkthrough: $canonicalId - $Title
@@ -407,10 +413,10 @@ Not written yet: records the path taken (deviations, decisions made without the 
     }
 
     if ([string]::IsNullOrWhiteSpace($PlanPath)) {
-        $PlanPath = "$bundleRelPath/Implementation_Plan.md"
+        $PlanPath = "$bundleRelPath/$planName"
     }
     if ([string]::IsNullOrWhiteSpace($WalkthroughPath)) {
-        $WalkthroughPath = "$bundleRelPath/Walkthrough.md"
+        $WalkthroughPath = "$bundleRelPath/$walkName"
     }
 
 
@@ -430,9 +436,9 @@ Not written yet: records the path taken (deviations, decisions made without the 
         bundle_id        = $BundleId
         bundle_dir       = $bundleRelPath
         docs             = [ordered]@{
-            specification = 'Specification.md'
-            plan          = 'Implementation_Plan.md'
-            walkthrough   = 'Walkthrough.md'
+            specification = $specName
+            plan          = $planName
+            walkthrough   = $walkName
         }
         commit_sha       = $null
         github_url       = $null
@@ -834,9 +840,10 @@ function Get-LcmProposalPlaceholderDocuments {
     if (-not $Proposal.PSObject.Properties['bundle_dir'] -or [string]::IsNullOrWhiteSpace([string]$Proposal.bundle_dir)) { return @() }
     $originRepo = if ($Proposal.PSObject.Properties['origin_repo'] -and $Proposal.origin_repo -and ([string]$Proposal.origin_repo -notlike 'LCM_*') -and (Test-Path -LiteralPath (Join-Path $WorkspaceRoot ([string]$Proposal.origin_repo)))) { [string]$Proposal.origin_repo } else { 'LCM_Inventory' }
     $bundlePath = Join-Path (Join-Path $WorkspaceRoot $originRepo) ([string]$Proposal.bundle_dir)
-    $placeholders = foreach ($name in @('Implementation_Plan.md', 'Walkthrough.md')) {
-        $docPath = Join-Path $bundlePath $name
-        if ((Test-Path -LiteralPath $docPath) -and ([System.IO.File]::ReadAllText($docPath) -match '(?m)^Status: Placeholder\s*$')) { $name }
+    $identity = if ($Proposal.PSObject.Properties['crp_id'] -and $Proposal.crp_id) { [string]$Proposal.crp_id } else { '' }
+    $placeholders = foreach ($kind in @('Plan', 'Walkthrough')) {
+        $docPath = Resolve-LcmBundleDocumentPath -BundlePath $bundlePath -Kind $kind -Identity $identity  # CRP-359
+        if ((Test-Path -LiteralPath $docPath) -and ([System.IO.File]::ReadAllText($docPath) -match '(?m)^Status: Placeholder\s*$')) { Split-Path -Leaf $docPath }
     }
     return @($placeholders)
 }
@@ -910,7 +917,7 @@ function Move-LcmProposalLifecycleState {
         in_review   = 'verification'
         completed   = 'completed'
         pushed      = 'pushed'
-        held        = 'held'
+        held        = 'blocked'  # BUG-348: valid legacy progress value (was 'held')
         withdrawn   = 'withdrawn'
         rejected    = 'rejected'
         superseded  = 'superseded'
@@ -2532,6 +2539,14 @@ function Get-LcmProposalDocument {
         'Plan'          = 'Implementation_Plan.md'
         'Walkthrough'   = 'Walkthrough.md'
     }
+    # CRP-359: resolve the item-ID names when the bundle exists on disk (legacy names stay the fallback).
+    if ($proposal.PSObject.Properties['bundle_dir'] -and $proposal.bundle_dir) {
+        $docIdentity = if ($proposal.PSObject.Properties['crp_id'] -and $proposal.crp_id) { [string]$proposal.crp_id } else { '' }
+        $docBundle = Join-Path $repoDir $proposal.bundle_dir
+        foreach ($docKind in @('Specification', 'Plan', 'Walkthrough')) {
+            $docFileMap[$docKind] = Split-Path -Leaf (Resolve-LcmBundleDocumentPath -BundlePath $docBundle -Kind $docKind -Identity $docIdentity)
+        }
+    }
 
     $filesToFetch = if ($DocumentType -eq 'All') {
         @('Specification', 'Plan', 'Walkthrough')
@@ -3175,7 +3190,7 @@ function Assert-LcmProposalImplementationEligibility {
         throw "GOVERNANCE BLOCK: Proposal #$ProposalId has no proposal bundle. Create its specification before structural implementation."
     }
 
-    $specificationPath = Join-Path -Path (Join-Path -Path $WorkspaceRoot -ChildPath $Repository) -ChildPath (Join-Path -Path $bundlePath -ChildPath 'Specification.md')
+    $specificationPath = Resolve-LcmBundleDocumentPath -BundlePath (Join-Path -Path (Join-Path -Path $WorkspaceRoot -ChildPath $Repository) -ChildPath $bundlePath) -Kind Specification  # CRP-359
     if (-not (Test-Path -LiteralPath $specificationPath -PathType Leaf)) {
         throw "GOVERNANCE BLOCK: Proposal #$ProposalId does not have a specification at '$specificationPath'. Create the bundle before structural implementation."
     }

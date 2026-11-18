@@ -18,7 +18,9 @@
     Implementation Choices (CRP-346): bcr names the in_progress items an implied cohort leaves out, with the
     choices do / ride as WIP / hold (R3); complete on a completed item commits its remaining governed
     repositories as obligations without a lifecycle change (R1).
-    Version: 10.2.4
+    Implementation Choices (BUG-352): the BCR exclusion rule comes from modules/LcmReviewCompletionAtoms.psm1.
+    Implementation Choices (CRP-359): bundle Specification paths come from Resolve-LcmBundleDocumentPath.
+    Version: 10.2.6
     Date: 2026-11-18
 #>
 
@@ -157,6 +159,8 @@ if ($Help) {
 $modulePath = Join-Path $PSScriptRoot '..\modules\ProposalManager.psm1'
 Import-Module $modulePath -Force
 
+Import-Module -Name (Join-Path $PSScriptRoot '..\modules\LcmReviewCompletionAtoms.psm1') -Force  # BUG-352: shared BCR exclusion rule
+Import-Module -Name (Join-Path $PSScriptRoot '..\modules\ProposalSpecificationState.psm1') -Force  # CRP-359: bundle document names
 $analysisModulePath = Join-Path $PSScriptRoot '..\modules\AnalysisGovernance.psm1'
 Import-Module $analysisModulePath -Force
 
@@ -197,19 +201,6 @@ function Convert-LegacyProposalStateToLifecycleState {
 $script:LcmGovernedCompletionRepositories = @('Git_Repositories', 'LCM_AI', 'LCM_Inventory', 'LCM_Shared', 'LCM_Supervision', 'LCM_Tools')
 $script:LcmSubmitReviewResultPath = Join-Path $PSScriptRoot 'Submit-ReviewResult.ps1'
 
-function Test-LcmCompletionExcludedPath {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory = $true)]
-        [string]$RelativePath
-    )
-
-    # Same exclusion as Test-StandardBcrExcludedPath in Submit-ReviewResult.ps1 (paths that are never committed).
-    $normalizedPath = $RelativePath.Replace('/', '\').TrimStart('\')
-    $lcmDirectory = [regex]::Escape('.' + 'lcm')
-    return $normalizedPath -match "^(?i)(?:\.git|\.venv|venv|\.env|__pycache__|scratch|logs|work|data|node_modules|bin|obj)(?:\\|$)|(?:^|\\)$lcmDirectory\\(?:logs|scratch|archive|tools\\links)(?:\\|$)|(?i)\.(?:pyc|pyo|inventory|log|tmp|bak|swp|lock)$"
-}
-
 function Get-LcmChangedGovernedRepositories {
     [CmdletBinding()]
     param()
@@ -223,7 +214,7 @@ function Get-LcmChangedGovernedRepositories {
             git -C $repoPath diff --cached --name-only
             git -C $repoPath ls-files --others --exclude-standard
         ) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
-        $committable = @($paths | Where-Object { -not (Test-LcmCompletionExcludedPath -RelativePath $_) })
+        $committable = @($paths | Where-Object { -not (Test-LcmBcrExcludedPath -RelativePath $_) })
         if ($committable.Count -gt 0) { $changed.Add($name) }
     }
     return @($changed)
@@ -307,7 +298,7 @@ function Add-LcmBugMergedFinding {
 
     if ($target.PSObject.Properties['bundle_dir'] -and $target.bundle_dir) {
         $originRepo = if ($target.PSObject.Properties['origin_repo'] -and $target.origin_repo -and ($target.origin_repo -notlike 'LCM_*')) { $target.origin_repo } else { 'LCM_Inventory' }
-        $bundleSpec = Join-Path $workspaceRoot (Join-Path $originRepo (Join-Path $target.bundle_dir 'Specification.md'))
+        $bundleSpec = Resolve-LcmBundleDocumentPath -BundlePath (Join-Path $workspaceRoot (Join-Path $originRepo $target.bundle_dir)) -Kind Specification -Identity ([string]$target.crp_id)  # CRP-359
         if (Test-Path -LiteralPath $bundleSpec) {
             $content = [System.IO.File]::ReadAllText($bundleSpec)
             $lineBreak = if ($content.Contains("`r`n")) { "`r`n" } else { "`n" }
@@ -588,7 +579,7 @@ switch -Regex ($Action) {
 
                 if ($p.PSObject.Properties['bundle_dir'] -and $p.bundle_dir) {
                     $originRepo = if ($p.PSObject.Properties['origin_repo'] -and $p.origin_repo -and ($p.origin_repo -notlike 'LCM_*')) { $p.origin_repo } else { 'LCM_Inventory' }
-                    $bundleSpec = Join-Path $workspaceRoot (Join-Path $originRepo (Join-Path $p.bundle_dir 'Specification.md'))
+                    $bundleSpec = Resolve-LcmBundleDocumentPath -BundlePath (Join-Path $workspaceRoot (Join-Path $originRepo $p.bundle_dir)) -Kind Specification -Identity ([string]$p.crp_id)  # CRP-359
                     if (Test-Path -LiteralPath $bundleSpec) {
                         $content = Get-Content -LiteralPath $bundleSpec -Raw
                         $newContent = [regex]::Replace($content, '(?m)^Title:\s+.*$', "Title: $Title")

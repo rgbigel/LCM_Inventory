@@ -6,7 +6,7 @@ Path: LCM_Inventory/docs/README.md
 Authors: Rolf, LCM_AI Engine  
 Version: 10.0.1  
 Status: Authoritative Reference  
-Updated: 2026-11-18 14:18:50  
+Updated: 2026-11-18 16:15:38  
 
 ---
 
@@ -183,28 +183,28 @@ TestWorkspaceReadiness
 | **hainventorycollector** | [ha_inventory_collector.py](file:///LCM_Inventory/tools/ha_inventory_collector.py) | Utility | HaSSD06 | Python | Utility | ha_inventory_collector execution tool. | hainventorycollector |
 | **HaSSD06analyzelcmcomponents** | [analyze_lcm_components.py](file:///HaSSD06/analyze_lcm_components.py) | Utility | HaSSD06 | Python | Utility | analyze_lcm_components execution tool. | HaSSD06analyzelcmcomponents |
 | **HaSSD06analyzelcmcomponents** | [analyze_lcm_components.py](file:///LCM_Inventory/tools/analyze_lcm_components.py) | Utility | HaSSD06 | Python | Utility | analyze_lcm_components execution tool. | HaSSD06analyzelcmcomponents |
-| **HaSSD06checkspecific** | [check_specific.py](file:///LCM_Inventory/tools/check_specific.py) | Utility | HaSSD06 | Python | Utility | check_specific execution tool. | HaSSD06checkspecific |
 | **HaSSD06checkspecific** | [check_specific.py](file:///HaSSD06/check_specific.py) | Utility | HaSSD06 | Python | Utility | check_specific execution tool. | HaSSD06checkspecific |
-| **HaSSD06deepdevicescan** | [deep_device_scan.py](file:///HaSSD06/deep_device_scan.py) | Utility | HaSSD06 | Python | Utility | deep_device_scan execution tool. | HaSSD06deepdevicescan |
+| **HaSSD06checkspecific** | [check_specific.py](file:///LCM_Inventory/tools/check_specific.py) | Utility | HaSSD06 | Python | Utility | check_specific execution tool. | HaSSD06checkspecific |
 | **HaSSD06deepdevicescan** | [deep_device_scan.py](file:///LCM_Inventory/tools/deep_device_scan.py) | Utility | HaSSD06 | Python | Utility | deep_device_scan execution tool. | HaSSD06deepdevicescan |
-| **HaSSD06extracthaupdatecrps** | [extract_ha_update_crps.py](file:///LCM_Inventory/tools/extract_ha_update_crps.py) | Utility | HaSSD06 | Python | Utility | extract_ha_update_crps execution tool. | HaSSD06extracthaupdatecrps |
+| **HaSSD06deepdevicescan** | [deep_device_scan.py](file:///HaSSD06/deep_device_scan.py) | Utility | HaSSD06 | Python | Utility | deep_device_scan execution tool. | HaSSD06deepdevicescan |
 | **HaSSD06extracthaupdatecrps** | [extract_ha_update_crps.py](file:///HaSSD06/extract_ha_update_crps.py) | Utility | HaSSD06 | Python | Utility | extract_ha_update_crps execution tool. | HaSSD06extracthaupdatecrps |
-| **HaSSD06habackup** | [invoke_ha_backup.py](file:///LCM_Inventory/tools/invoke_ha_backup.py) | Utility | HaSSD06 | Python | Utility | invoke_ha_backup execution tool. | HaSSD06habackup |
+| **HaSSD06extracthaupdatecrps** | [extract_ha_update_crps.py](file:///LCM_Inventory/tools/extract_ha_update_crps.py) | Utility | HaSSD06 | Python | Utility | extract_ha_update_crps execution tool. | HaSSD06extracthaupdatecrps |
 | **HaSSD06habackup** | [invoke_ha_backup.py](file:///HaSSD06/tools/invoke_ha_backup.py) | Utility | HaSSD06 | Python | Utility | invoke_ha_backup execution tool. | HaSSD06habackup |
-| **HaSSD06hacoreupdate** | [invoke_ha_core_update.py](file:///HaSSD06/tools/invoke_ha_core_update.py) | Utility | HaSSD06 | Python | Utility | invoke_ha_core_update execution tool. | HaSSD06hacoreupdate |
+| **HaSSD06habackup** | [invoke_ha_backup.py](file:///LCM_Inventory/tools/invoke_ha_backup.py) | Utility | HaSSD06 | Python | Utility | invoke_ha_backup execution tool. | HaSSD06habackup |
 | **HaSSD06hacoreupdate** | [invoke_ha_core_update.py](file:///LCM_Inventory/tools/invoke_ha_core_update.py) | Utility | HaSSD06 | Python | Utility | invoke_ha_core_update execution tool. | HaSSD06hacoreupdate |
-| **HaSSD06HaListUpdates** | [list_all_updates.py](file:///HaSSD06/list_all_updates.py) | Utility | HaSSD06 | Python | Utility | list_all_updates execution tool. | HaSSD06HaListUpdates |
+| **HaSSD06hacoreupdate** | [invoke_ha_core_update.py](file:///HaSSD06/tools/invoke_ha_core_update.py) | Utility | HaSSD06 | Python | Utility | invoke_ha_core_update execution tool. | HaSSD06hacoreupdate |
 | **HaSSD06HaListUpdates** | [list_all_updates.py](file:///LCM_Inventory/tools/list_all_updates.py) | Utility | HaSSD06 | Python | Utility | list_all_updates execution tool. | HaSSD06HaListUpdates |
+| **HaSSD06HaListUpdates** | [list_all_updates.py](file:///HaSSD06/list_all_updates.py) | Utility | HaSSD06 | Python | Utility | list_all_updates execution tool. | HaSSD06HaListUpdates |
 | **HaSSD06HaLogs** | [inspect_ha_logs.py](file:///HaSSD06/inspect_ha_logs.py) | Utility | HaSSD06 | Python | Utility | inspect_ha_logs execution tool. | HaSSD06HaLogs |
 | **HaSSD06HaLogs** | [inspect_ha_logs.py](file:///LCM_Inventory/tools/inspect_ha_logs.py) | Utility | HaSSD06 | Python | Utility | inspect_ha_logs execution tool. | HaSSD06HaLogs |
-| **HaSSD06InventoryBuildHaInventoryViewer** | [Build-HaInventoryViewer.ps1](file:///HaSSD06_Inventory/tools/Build-HaInventoryViewer.ps1) | Utility | HaSSD06 | PowerShell | Utility | Build-HaInventoryViewer execution tool. | HaSSD06InventoryBuildHaInventoryViewer |
 | **HaSSD06InventoryBuildHaInventoryViewer** | [Build-HaInventoryViewer.ps1](file:///LCM_Inventory/tools/Build-HaInventoryViewer.ps1) | Utility | HaSSD06 | PowerShell | Utility | Build-HaInventoryViewer execution tool. | HaSSD06InventoryBuildHaInventoryViewer |
-| **HaSSD06Inventoryextracthacentralregistry** | [extract_ha_central_registry.py](file:///HaSSD06_Inventory/tools/extract_ha_central_registry.py) | Utility | HaSSD06 | Python | Utility | extract_ha_central_registry execution tool. | HaSSD06Inventoryextracthacentralregistry |
+| **HaSSD06InventoryBuildHaInventoryViewer** | [Build-HaInventoryViewer.ps1](file:///HaSSD06_Inventory/tools/Build-HaInventoryViewer.ps1) | Utility | HaSSD06 | PowerShell | Utility | Build-HaInventoryViewer execution tool. | HaSSD06InventoryBuildHaInventoryViewer |
 | **HaSSD06Inventoryextracthacentralregistry** | [extract_ha_central_registry.py](file:///LCM_Inventory/tools/extract_ha_central_registry.py) | Utility | HaSSD06 | Python | Utility | extract_ha_central_registry execution tool. | HaSSD06Inventoryextracthacentralregistry |
-| **HaSSD06InventoryHaRenameCascade** | [Invoke-HaRenameCascade.ps1](file:///HaSSD06_Inventory/tools/Invoke-HaRenameCascade.ps1) | Utility | HaSSD06 | PowerShell | Utility | Invoke-HaRenameCascade execution tool. | HaSSD06InventoryHaRenameCascade |
+| **HaSSD06Inventoryextracthacentralregistry** | [extract_ha_central_registry.py](file:///HaSSD06_Inventory/tools/extract_ha_central_registry.py) | Utility | HaSSD06 | Python | Utility | extract_ha_central_registry execution tool. | HaSSD06Inventoryextracthacentralregistry |
 | **HaSSD06InventoryHaRenameCascade** | [Invoke-HaRenameCascade.ps1](file:///LCM_Inventory/tools/Invoke-HaRenameCascade.ps1) | Utility | HaSSD06 | PowerShell | Utility | Invoke-HaRenameCascade execution tool. | HaSSD06InventoryHaRenameCascade |
-| **HaSSD06InventoryHaService** | [Invoke-HaService.ps1](file:///LCM_Inventory/tools/Invoke-HaService.ps1) | Utility | HaSSD06 | PowerShell | Utility | Invoke-HaService execution tool. | HaSSD06InventoryHaService |
+| **HaSSD06InventoryHaRenameCascade** | [Invoke-HaRenameCascade.ps1](file:///HaSSD06_Inventory/tools/Invoke-HaRenameCascade.ps1) | Utility | HaSSD06 | PowerShell | Utility | Invoke-HaRenameCascade execution tool. | HaSSD06InventoryHaRenameCascade |
 | **HaSSD06InventoryHaService** | [Invoke-HaService.ps1](file:///HaSSD06_Inventory/tools/Invoke-HaService.ps1) | Utility | HaSSD06 | PowerShell | Utility | Invoke-HaService execution tool. | HaSSD06InventoryHaService |
+| **HaSSD06InventoryHaService** | [Invoke-HaService.ps1](file:///LCM_Inventory/tools/Invoke-HaService.ps1) | Utility | HaSSD06 | PowerShell | Utility | Invoke-HaService execution tool. | HaSSD06InventoryHaService |
 | **HaSSD06InventoryShowHaInventoryApp** | [Show-HaInventoryApp.ps1](file:///HaSSD06_Inventory/tools/Show-HaInventoryApp.ps1) | Utility | HaSSD06 | PowerShell | Utility | Show-HaInventoryApp execution tool. | HaSSD06InventoryShowHaInventoryApp |
 | **HaSSD06RegisterBleSupervisionTask** | [Register-BleSupervisionTask.ps1](file:///HaSSD06/tools/Register-BleSupervisionTask.ps1) | Utility | HaSSD06 | PowerShell | Utility | Register-BleSupervisionTask execution tool. | HaSSD06RegisterBleSupervisionTask |
 | **HaSSD06scancommunityissues** | [scan_community_issues.py](file:///HaSSD06/scan_community_issues.py) | Utility | HaSSD06 | Python | Utility | scan_community_issues execution tool. | HaSSD06scancommunityissues |
@@ -226,6 +226,7 @@ TestWorkspaceReadiness
 | **LCMGoodNight** | [Invoke-LCM_GoodNight.ps1](file:///LCM_Inventory/tools/Invoke-LCM_GoodNight.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-LCM_GoodNight execution tool. | LCMGoodNight |
 | **LcmJunctionFixer** | [LcmJunctionFixer.ps1](file:///LCM_Inventory/tools/LcmJunctionFixer.ps1) | Utility | LCM_Tools | PowerShell | Utility | LcmJunctionFixer execution tool. | LcmJunctionFixer |
 | **LCMMaintenance** | [Invoke-LCM_Maintenance.ps1](file:///LCM_Inventory/tools/Invoke-LCM_Maintenance.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-LCM_Maintenance execution tool. | LCMMaintenance |
+| **LcmMajorCleanup** | [Invoke-LcmMajorCleanup.ps1](file:///LCM_Inventory/tools/Invoke-LcmMajorCleanup.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-LcmMajorCleanup execution tool. | LcmMajorCleanup |
 | **LcmPathMigration** | [Invoke-LcmPathMigration.ps1](file:///LCM_Inventory/tools/Invoke-LcmPathMigration.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-LcmPathMigration execution tool. | LcmPathMigration |
 | **LcmProtocol** | [Invoke-LcmProtocol.ps1](file:///LCM_Inventory/tools/Invoke-LcmProtocol.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-LcmProtocol execution tool. | LcmProtocol |
 | **LCMPush** | [Invoke-LCM_Push.ps1](file:///LCM_Inventory/tools/Invoke-LCM_Push.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Invoke-LCM_Push execution tool. | LCMPush |
@@ -242,8 +243,8 @@ TestWorkspaceReadiness
 | **LCMTools@RepairTestOneDriveSync** | [@Repair_Test-OneDriveSync.ps1](file:///LCM_Inventory/tools/@Repair_Test-OneDriveSync.ps1) | Utility | LCM_Tools | PowerShell | Utility | @Repair_Test-OneDriveSync execution tool. | LCMTools@RepairTestOneDriveSync |
 | **LCMToolsCreateLCMCRP** | [Create-LCM-CRP.ps1](file:///LCM_Inventory/tools/Create-LCM-CRP.ps1) | Utility | LCM_Tools | PowerShell | Utility | Create-LCM-CRP execution tool. | LCMToolsCreateLCMCRP |
 | **LCMToolsCreateLCMCRP** | [Create-LCM-CRP.ps1](file:///LCM_Tools/tools/Create-LCM-CRP.ps1) | Utility | LCM_Tools | PowerShell | Utility | Create-LCM-CRP execution tool. | LCMToolsCreateLCMCRP |
-| **LCMToolsExportAntigravityReasoningTranscript** | [Export-AntigravityReasoningTranscript.ps1](file:///LCM_Inventory/tools/Export-AntigravityReasoningTranscript.ps1) | Utility | LCM_Tools | PowerShell | Utility | Export-AntigravityReasoningTranscript execution tool. | LCMToolsExportAntigravityReasoningTranscript |
 | **LCMToolsExportAntigravityReasoningTranscript** | [Export-AntigravityReasoningTranscript.ps1](file:///LCM_Tools/tools/Export-AntigravityReasoningTranscript.ps1) | Utility | LCM_Tools | PowerShell | Utility | Export-AntigravityReasoningTranscript execution tool. | LCMToolsExportAntigravityReasoningTranscript |
+| **LCMToolsExportAntigravityReasoningTranscript** | [Export-AntigravityReasoningTranscript.ps1](file:///LCM_Inventory/tools/Export-AntigravityReasoningTranscript.ps1) | Utility | LCM_Tools | PowerShell | Utility | Export-AntigravityReasoningTranscript execution tool. | LCMToolsExportAntigravityReasoningTranscript |
 | **LCMToolsKillLogitechUpdateFull** | [KillLogitechUpdateFull.ps1](file:///LCM_Inventory/tools/KillLogitechUpdateFull.ps1) | Utility | LCM_Tools | PowerShell | Utility | KillLogitechUpdateFull execution tool. | LCMToolsKillLogitechUpdateFull |
 | **LCMToolsKillLogitechUpdateFull** | [KillLogitechUpdateFull.ps1](file:///LCM_Tools/tools/KillLogitechUpdateFull.ps1) | Utility | LCM_Tools | PowerShell | Utility | KillLogitechUpdateFull execution tool. | LCMToolsKillLogitechUpdateFull |
 | **LCMToolsMigrateWorkspaceCO ** | [Migrate-Workspace_CO .ps1](file:///LCM_Tools/tools/Migrate-Workspace_CO .ps1) | Utility | LCM_Tools | PowerShell | Utility | Migrate-Workspace_CO  execution tool. | LCMToolsMigrateWorkspaceCO  |

@@ -1,6 +1,6 @@
 <!--
   Template: CM_CONTROL_HUB.html
-  Version: 10.2.5
+  Version: 10.2.7
   Date: 2026-11-18 15:40:00
   Implementation Choices (CRP-354): "Show CRP" opens Specification, Implementation Plan and Walkthrough as
   Notepad++ tabs through a direct DO call; Show Specification / Plan / Walkthrough / Diff removed; plan-state
@@ -2155,7 +2155,7 @@
     }
 
     function runWorkspaceMaintenance() {
-      const cmd = "pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-WorkspaceMaintenance.ps1";
+      const cmd = "pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-LCM_Maintenance.ps1"; // BUG-348: Invoke-WorkspaceMaintenance.ps1 does not exist
       setActionResult("Maintenance confirmed; executing workspace-wide hygiene.", "");
       executeDaemonCommand(cmd, "Running workspace maintenance...", cmd);
     }
@@ -2218,7 +2218,7 @@
       const headId = (target.item && target.item.head_identity) || (target.item && target.item.crp_id) || (target.item && target.item.cr_id) || `CRP-${target.item?.prime_proposal_id || target.item?.id || ""}`;
       const repoPath = (target.item && target.item.repositories && target.item.repositories[0]) || "LCM_Inventory";
       const cmd = target.kind === "COH" && target.item.synthetic && action === "complete"
-        ? `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Submit-ReviewResult.ps1 -RepositoryPath "${repoPath}" -CRP "${headId}" -Result Complete -IncludeUnreviewed -Notes "Operator accepted ${target.item.id}"`
+        ? `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action complete -TargetExpression "${target.item.prime_proposal_id || target.item.id}" -Details "Operator accepted ${target.item.id}"` /* BUG-352: through the multi-repository completion, not Submit-ReviewResult directly */
         : `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action ${effectiveAction} -TargetExpression "${expression}"${obligationSwitch}`;
       if (target.kind === "COH" && ["do", "proceed", "verify", "bcr", "complete"].includes(action)) {
         const continuation = target.item.synthetic && ["do", "proceed"].includes(action)
@@ -3792,7 +3792,7 @@
           const p = (proposalsData.proposals || []).find(x => Number(x.id) === Number(ids[0]));
           const repo = p?.origin_repo || "LCM_Inventory";
           const crpTag = p?.crp_id || p?.cr_id || ("CRP-" + ids[0]);
-          cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Submit-ReviewResult.ps1 -RepositoryPath "${repo}" -CRP "${crpTag}" -Result Completed${sw}`;
+          cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-ProposalAction.ps1 -Action complete -TargetExpression "${ids[0]}"${sw}`; // BUG-352: multi-repository completion (was Submit-ReviewResult.ps1 for ${repo} / ${crpTag})
           break;
         }
         case "complete":
@@ -4301,11 +4301,21 @@
       }
       const repo = (p.origin_repo && !String(p.origin_repo).startsWith("LCM_")) ? p.origin_repo : "LCM_Inventory";
       const base = `${repo}/${p.bundle_dir}`.replace(/\\/g, "/");
-      const names = ["Specification.md", "Implementation_Plan.md", "Walkthrough.md"];
-      const present = names.filter(name => Object.keys(docsCache).some(k => k.replace(/\\/g, "/").endsWith(`${p.bundle_dir}/${name}`)));
-      const files = present.length > 0 ? present : names;
-      const missing = names.filter(name => !files.includes(name));
-      const command = `"C:\\Program Files\\Notepad++\\notepad++.exe" ${files.map(name => `"${(base + "/" + name).replace(/\//g, "\\")}"`).join(" ")}`;
+      // CRP-359: "<Kind> <ID>.md" first, legacy names as fallback.
+      const keys = Object.keys(docsCache).map(k => k.replace(/\\/g, "/"));
+      const kinds = [["Specification", "Specification.md"], ["Implementation Plan", "Implementation_Plan.md"], ["Walkthrough", "Walkthrough.md"]];
+      const resolved = kinds.map(([prefix, legacy]) => {
+        const named = `${prefix} ${tag}.md`;
+        if (keys.some(k => k.endsWith(`${p.bundle_dir}/${named}`))) return named;
+        if (keys.some(k => k.endsWith(`${p.bundle_dir}/${legacy}`))) return legacy;
+        return null;
+      });
+      const files = resolved.filter(Boolean);
+      const missing = kinds.filter((_, i) => !resolved[i]).map(k => k[0]);
+      if (files.length === 0) {
+        showToast(`No bundle documents found for ${tag}.`);
+        return;
+      }      const command = `"C:\\Program Files\\Notepad++\\notepad++.exe" ${files.map(name => `"${(base + "/" + name).replace(/\//g, "\\")}"`).join(" ")}`;
       if (!IS_RENDERED_CONTROL_HUB) {
         showToast("Developer template is not executable; no daemon command was sent.");
         return;

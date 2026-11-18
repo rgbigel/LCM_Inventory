@@ -32,7 +32,7 @@ param(
     Reconciles explicit CRP and BUG documentation payloads into tripartite LCM documents.
 .DESCRIPTION
     Module: tools/Fix-Documentation.ps1
-    Version: 10.2.0
+    Version: 10.2.1
     Purpose: Provides the review-gated FixDocumentation <crp-scope> workflow.
     Caller Contract: Bundles must declare updates in a Documentation Updates section.
 #>
@@ -98,7 +98,8 @@ function Get-BundleDocumentationUpdates {
     )
 
     $updates = [System.Collections.Generic.List[object]]::new()
-    foreach ($fileName in @('Specification.md', 'Implementation_Plan.md', 'Walkthrough.md')) {
+    Import-Module -Name (Join-Path $PSScriptRoot '..\modules\ProposalSpecificationState.psm1')  # CRP-359: bundle document names
+    foreach ($fileName in @(foreach ($docKind in 'Specification', 'Plan', 'Walkthrough') { Split-Path -Leaf (Resolve-LcmBundleDocumentPath -BundlePath $BundlePath -Kind $docKind) })) {
         $sourcePath = Join-Path $BundlePath $fileName
         if (-not (Test-Path -LiteralPath $sourcePath)) {
             continue

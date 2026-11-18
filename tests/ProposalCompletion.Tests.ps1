@@ -16,7 +16,8 @@ Describe 'Item completion across reviewed repositories (BUG-351)' {
     $actionScript = Join-Path $PSScriptRoot '..\tools\Invoke-ProposalAction.ps1'
     $tokens = $null; $errors = $null
     $ast = [System.Management.Automation.Language.Parser]::ParseFile($actionScript, [ref]$tokens, [ref]$errors)
-    $names = @('Test-LcmCompletionExcludedPath', 'Get-LcmChangedGovernedRepositories', 'Invoke-LcmItemReviewCompletion', 'Add-LcmBugMergedFinding')
+    Import-Module -Name (Join-Path $PSScriptRoot '..\modules\LcmReviewCompletionAtoms.psm1') -Force  # BUG-352
+    $names = @('Get-LcmChangedGovernedRepositories', 'Invoke-LcmItemReviewCompletion', 'Add-LcmBugMergedFinding')
     $definitions = @($ast.FindAll({ param($node) $node -is [System.Management.Automation.Language.FunctionDefinitionAst] -and $node.Name -in $names }, $false))
     $definitions.Count | Should -Be $names.Count
     foreach ($definition in $definitions) { . ([scriptblock]::Create($definition.Extent.Text)) }

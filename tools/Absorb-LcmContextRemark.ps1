@@ -8,8 +8,8 @@
            CRP's Specification.md under '## Absorbed Operator Remarks', and immediately removed from ACTIVE_CONTEXT.md.
   Path: LCM_Inventory/tools/Absorb-LcmContextRemark.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.2.0
-  Date: 2026-11-10 18:48:00
+  Version: 10.2.1
+  Date: 2026-11-18 16:20:00
   Rule: RULE-LCM-031, RULE-DOC-003, RULE-PS-001 - RULE-PS-025
 .PARAMETER Id
   Proposal ID number (e.g. 280, 267) or CRP identifier (e.g. CRP-280, BUG-311).
@@ -76,6 +76,7 @@ if (-not (Test-Path -LiteralPath $proposalModule)) {
   throw "ProposalManager module missing at: $proposalModule"
 }
 Import-Module -Name $proposalModule -Force
+Import-Module -Name (Join-Path $PSScriptRoot '..\modules\ProposalSpecificationState.psm1') -Force  # CRP-359: bundle document names
 
 $numId = 0
 if ($Id -match '^(?:CRP-|BUG-)?(\d+)$') {
@@ -93,7 +94,7 @@ $targetProposal = $proposal[0]
 
 # Locate proposal specification file
 $specRelative = if ($targetProposal.bundle_dir) {
-  Join-Path $targetProposal.bundle_dir "Specification.md"
+  Join-Path $targetProposal.bundle_dir (Split-Path -Leaf (Resolve-LcmBundleDocumentPath -BundlePath (Join-Path $workspaceRoot $targetProposal.bundle_dir) -Kind Specification -Identity ([string]$targetProposal.crp_id)))  # CRP-359
 } else {
   "docs/Proposals/CRP-$numId/Specification.md"
 }

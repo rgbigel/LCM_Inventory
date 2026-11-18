@@ -28,18 +28,6 @@ $modulePath = Join-Path $workspaceRoot 'LCM_Inventory\modules\ProposalManager.ps
 Import-Module -Name $modulePath -Force
 $plan = Get-LcmReviewCohortCompletionPlan -CohortId $CohortId
 
-function Test-StandardBcrExcludedPath {
-  [CmdletBinding()]
-  param(
-    [Parameter(Mandatory = $true)]
-    [string]$RelativePath
-  )
-
-  $normalizedPath = $RelativePath.Replace('/', '\').TrimStart('\')
-  $lcmDirectory = [regex]::Escape('.' + 'lcm')
-  return $normalizedPath -match "^(?i)(?:\.git|\.venv|venv|\.env|__pycache__|scratch|logs|work|data|node_modules|bin|obj)(?:\\|$)|(?:^|\\)$lcmDirectory\\(?:logs|scratch|archive|tools\\links)(?:\\|$)|(?i)\.(?:pyc|pyo|inventory|log|tmp|bak|swp|lock)$"
-}
-
 # Validate every repository's current BCR staging evidence before any repository
 # is committed. This preserves the exact unreviewed-path disclosure and prevents
 # a partial cohort from being accepted.

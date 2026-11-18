@@ -1,6 +1,8 @@
 /**
- * LCM Tool Explorer Client Application (10.0.1)
- * Date: 2026-11-08 15:30:00
+ * LCM Tool Explorer Client Application (10.0.2)
+ * Date: 2026-11-18 16:10:00
+ * Implementation Choices (BUG-352): DO requests carry the full command line (Run Selection); Admin filter accepts
+ *   the dropdown values true/false; ToolHelp writes all output streams to a help file opened in Notepad++.
  * Modern dashboard controller supporting:
  * - Switched Short-Names default column with source-file toggle mode
  * - Unified 8-mode action dropdown (Run, Help, Run with parms, Code editor, Rename, Archive, Delete, Cleanup)
@@ -1155,7 +1157,7 @@
                 (t.Domain === groupVal) || 
                 (groupVal === 'HaSSD06' && ((t.SubSystem && t.SubSystem.startsWith('HaSSD06')) || (t.Group && t.Group.startsWith('HaSSD06')) || (t.Domain && t.Domain.startsWith('HaSSD06'))));
             
-            const matchAdmin = (adminVal === 'All') || (adminVal === 'Admin' && t.Admin) || (adminVal === 'User' && !t.Admin);
+            const matchAdmin = (adminVal === 'All') || ((adminVal === 'Admin' || adminVal === 'true') && t.Admin) || ((adminVal === 'User' || adminVal === 'false') && !t.Admin); // BUG-352: dropdown values are true/false
             const matchNoExit = (noexitVal === 'All') || (noexitVal === 'true' && t.NoExit) || (noexitVal === 'false' && !t.NoExit);
             const matchCat = (catVal === 'All') || (t.Category === catVal);
             const matchDesc = matchQuery(t.Description, descFilter);
@@ -1743,6 +1745,27 @@
         return dict;
     }
 
+    // BUG-352: the Go daemon executes a command string; the DO request carries the full command line.
+    function buildToolCommandFromParams(tool, dict) {
+        let baseCmd = resolveToolExecutionCommand(tool, isSourceMode);
+        const matchFile = baseCmd.match(/^(pwsh(?:\.exe)?\s+-File\s+"[^"]+"|\S+)/i);
+        if (matchFile) {
+            baseCmd = matchFile[0];
+        } else if (baseCmd.includes(' -')) {
+            baseCmd = baseCmd.substring(0, baseCmd.indexOf(' -')).trim();
+        }
+        const argParts = [];
+        Object.keys(dict || {}).forEach(name => {
+            const value = dict[name];
+            if (value === true) {
+                argParts.push('-' + name);
+            } else if (value !== false && value !== null && value !== undefined && String(value) !== '') {
+                argParts.push('-' + name + ' "' + String(value).replace(/"/g, '`"') + '"');
+            }
+        });
+        return argParts.length > 0 ? baseCmd + ' ' + argParts.join(' ') : baseCmd;
+    }
+
     function executeConfiguredTool() {
         if (!activeRunningTool) return;
         const targetName = activeRunningTool.ShortName || activeRunningTool.Name;
@@ -1756,6 +1779,7 @@
             body: JSON.stringify({
                 action: 'DO',
                 target: targetName,
+                command: buildToolCommandFromParams(activeRunningTool, paramsDict),
                 parameters: paramsDict,
                 caller: 'WebUI',
                 options: {
@@ -1832,49 +1856,31 @@
         }
     }
 
+    // BUG-352: the daemon has no /tool_help route. The help text is written with all output streams (*>&1, so
+    // Write-Host output is included) and opened in Notepad++ (a new window comes to the foreground; Win11 Notepad
+    // opened a background tab in an existing window).
     function openToolHelp(tool) {
         if (!tool) return;
-        const relPath = tool.RelativePath || ('tools/' + tool.Name);
-        showToast('❓ Opening Help in Notepad for ' + (tool.ShortName || tool.Name) + '...');
-        
-        fetch(DAEMON_URL + '/tool_help', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                relativePath: relPath,
-                filePath: relPath
-            })
-        }).then(r => r.json()).then(data => {
-            if (data.error) {
-                fallbackToolHelp(tool, relPath);
-            } else {
-                showToast('✓ Opened help in Notepad (' + (data.helpFile ? data.helpFile.split(/[\\/]/).pop() : 'help.txt') + ')');
-            }
-        }).catch(() => {
-            fallbackToolHelp(tool, relPath);
-        });
-    }
-
-    function fallbackToolHelp(tool, relPath) {
-        const toolStem = (tool.ShortName || tool.Name).replace(/\.[^/.]+$/, "");
-        const fallbackCmd = 'pwsh.exe -NoProfile -ExecutionPolicy Bypass -Command "$ws = \'D:\\Git_Repositories\'; $p = Join-Path $ws (\'LCM_Inventory\\scratch\\help_' + toolStem + '.txt\'); $h = & (Join-Path $ws \'' + relPath + '\') -h 2>&1 | Out-String; Set-Content -LiteralPath $p -Value $h -Encoding UTF8; Start-Process notepad.exe -ArgumentList $p"';
+        const relPath = (tool.RelativePath || ('LCM_Inventory/tools/' + tool.Name)).replace(/\//g, '\\');
+        const toolStem = (tool.ShortName || tool.Name).replace(/\.[^/.]+$/, '').replace(/[^A-Za-z0-9_.-]/g, '_');
+        const helpCmd = 'pwsh.exe -NoProfile -ExecutionPolicy Bypass -Command "$ws = \'D:\\Git_Repositories\'; $p = Join-Path $ws (\'LCM_Inventory\\scratch\\help_' + toolStem + '.txt\'); $h = & (Join-Path $ws \'' + relPath + '\') -h *>&1 | Out-String; Set-Content -LiteralPath $p -Value $h -Encoding UTF8; Start-Process -FilePath \'C:\\Program Files\\Notepad++\\notepad++.exe\' -ArgumentList (\'-multiInst -nosession \' + [char]34 + $p + [char]34)"';
+        showToast('❓ Opening help for ' + (tool.ShortName || tool.Name) + '...');
         fetch(DAEMON_URL + '/execute', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                command: fallbackCmd,
+                command: helpCmd,
                 elevated: false,
                 noExit: false,
                 windowStyle: 'Hidden'
             })
         }).then(() => {
-            showToast('✓ Dispatched help to Notepad');
+            showToast('✓ Help opened in Notepad++');
         }).catch(() => {
             const masterIdx = toolsData.findIndex(t => t.Name === tool.Name);
             if (masterIdx >= 0) openDetails(masterIdx);
         });
     }
-
     function buildToolCommandWithSavedParams(tool) {
         let baseCmd = resolveToolExecutionCommand(tool, isSourceMode);
         const matchFile = baseCmd.match(/^(pwsh(?:\.exe)?\s+-File\s+"[^"]+"|\S+)/i);
@@ -1930,6 +1936,7 @@
             body: JSON.stringify({
                 action: 'DO',
                 target: targetName,
+                command: buildToolCommandFromParams(tool, savedParams),
                 parameters: savedParams,
                 caller: 'WebUI',
                 options: {

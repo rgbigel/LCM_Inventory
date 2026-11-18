@@ -4,8 +4,10 @@
 .DESCRIPTION
     Module: tools/Test-LCMRuleHealth.ps1
     Authors: Rolf, LCM_AI Engine
-    Version: 10.2.0
-    Date: 2026-10-13
+    Implementation Choices (BUG-348): a child repository whose .agents folder is a junction to LCM_AI\.agents (BUG-338)
+    counts as validly linked; its .agents\rules is no static copy.
+    Version: 10.2.1
+    Date: 2026-11-18
 #>
 
 [CmdletBinding()]
@@ -137,10 +139,22 @@ foreach ($dir in $childDirs) {
                 $junctionTarget = 'Canonical Hub'
             }
         } else {
+            # BUG-348: since BUG-338 the junction is <repo>\.agents itself; .agents\rules is then a plain folder
+            # inside the canonical LCM_AI\.agents and must not count as a static copy.
+            $agentsItem = Get-Item -LiteralPath (Join-Path $repoPath '.agents') -Force
+            $canonicalAgents = (Get-Item -LiteralPath (Join-Path $WorkspaceRoot 'LCM_AI\.agents') -Force).FullName.TrimEnd('\')
+            $agentsIsJunction = $agentsItem.LinkType -eq 'Junction' -or $agentsItem.Attributes.HasFlag([System.IO.FileAttributes]::ReparsePoint)
+            $agentsTarget = if ($agentsIsJunction -and $agentsItem.Target) { ([string]@($agentsItem.Target)[0]).TrimEnd('\') } else { '' }
+            if ($agentsIsJunction -and $agentsTarget -eq $canonicalAgents) {
+                $isJunction = $true
+                $junctionState = 'Junction Valid'
+                $junctionTarget = 'Canonical Hub (.agents junction)'
+            } else {
             $isJunction = $false
             $junctionState = 'Physical Folder'
             $files = @(Get-ChildItem -Path $agentRulesPath -File -Recurse -ErrorAction SilentlyContinue)
             $duplicateCount = $files.Count
+            }
         }
     }
     

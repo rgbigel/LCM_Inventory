@@ -348,6 +348,7 @@ Describe 'Proposal lifecycle authority' {
       Mock Get-ProposalStore { $script:testProposalStore }
       Mock Get-LcmReviewCohortCompletionPlan { $plan }
       Mock Test-Path { $true }
+      Mock Update-LcmControlHubAfterCompletion {}  # BUG-348: the Test-Path mock must not reach the real Control Hub render
       Mock Set-ProposalStore {}
 
       $updated = @(Complete-LcmReviewCohortAcceptance -CohortId 'COH-9117' -ResolutionReceiptPath $plan.ReceiptPath -ReviewReceiptPaths @{ LCM_Inventory = 'D:\evidence\review.json' } -Details 'Accepted cohort review.')

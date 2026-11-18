@@ -10,8 +10,11 @@
   state and commits them (chore(ledger), path-limited, no hooks) before pushing, so the pre-push
   projection check never aborts a push (RULE-EFF-002, operator 2026-11-17).
   Authors: Rolf, LCM_AI Engine, Claude
-    Version: 10.2.4
-    Date: 2026-11-17
+    Implementation Choices (BUG-348): -DryRun skips every mutating pre-push step (Update-Gemini export commit,
+    tool catalog snapshot commit, the second full maintenance run); before, a dry run committed and deleted
+    186 script logs.
+    Version: 10.2.5
+    Date: 2026-11-18
 #>
 
 [CmdletBinding()]
@@ -240,7 +243,11 @@ if ($LASTEXITCODE -ne 0) {
 # ------------------------------------------------------------------------------
 # 1. Synchronize Gemini AI & Knowledge Base Mirror (RULE-LCM-013)
 # ------------------------------------------------------------------------------
-if (-not $SkipGemini) {
+# BUG-348: a dry run never runs a mutating pre-push step (export commits, catalog commit, maintenance deletions).
+if ($DryRun) {
+    Write-Host "`n[Pre-Push Pipeline] DryRun: skipping Update-Gemini export, tool catalog snapshot commit and workspace maintenance (they would change or delete files)." -ForegroundColor Yellow
+}
+if (-not $SkipGemini -and -not $DryRun) {
     Write-Host "`n[Pre-Push Pipeline] Executing Update-Gemini Context & Knowledge Base Synchronization..." -ForegroundColor Yellow
     $updateGeminiScript = Join-Path $workspaceRoot "LCM_Inventory\tools\Update-Gemini.ps1"
     if (Test-Path -LiteralPath $updateGeminiScript) {
@@ -260,7 +267,7 @@ if (-not $SkipGemini) {
 # 2. Synchronize Tool Catalog & CM Metadata Snapshot for Root Container
 # ------------------------------------------------------------------------------
 $updateCatalogScript = Join-Path $workspaceRoot "LCM_Inventory\tools\Update-ToolCatalog.ps1"
-if (Test-Path -LiteralPath $updateCatalogScript) {
+if (-not $DryRun -and (Test-Path -LiteralPath $updateCatalogScript)) {
     Write-Host "`n[Pre-Push Pipeline] Synchronizing Tool Catalog snapshot..." -ForegroundColor Yellow
     & pwsh -File $updateCatalogScript -Silent
     $rootDirty = git -C $workspaceRoot status --porcelain
@@ -296,7 +303,7 @@ if (-not $DryRun -and (Test-Path -LiteralPath $ledgerDumpScript)) {
 # 3. Workspace Maintenance & Daemon Log Truncation
 # ------------------------------------------------------------------------------
 $maintenanceScript = Join-Path $workspaceRoot "LCM_Inventory\tools\Invoke-LCM_Maintenance.ps1"
-if (Test-Path -LiteralPath $maintenanceScript) {
+if (-not $DryRun -and (Test-Path -LiteralPath $maintenanceScript)) {
     Write-Host "`n[Pre-Push Pipeline] Executing Workspace Maintenance & Daemon Log Truncation..." -ForegroundColor Yellow
     & pwsh -File $maintenanceScript -TailLines 100
 }

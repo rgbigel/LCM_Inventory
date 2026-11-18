@@ -393,7 +393,7 @@
     "Category": "Utility",
     "Description": "check_specific execution tool.",
     "Example": "checkspecific",
-    "RelativePath": "HaSSD06\\check_specific.py",
+    "RelativePath": "LCM_Inventory\\tools\\check_specific.py",
     "Parameters": [],
     "Dependencies": null,
     "IntentElevated": null
@@ -412,26 +412,7 @@
     "Category": "Utility",
     "Description": "check_specific execution tool.",
     "Example": "checkspecific",
-    "RelativePath": "LCM_Inventory\\tools\\check_specific.py",
-    "Parameters": [],
-    "Dependencies": null,
-    "IntentElevated": null
-  },
-  {
-    "Name": "deep_device_scan.py",
-    "ShortName": "HaSSD06deepdevicescan",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "HaSSD06",
-    "Domain": "HaSSD06",
-    "Type": "Python",
-    "Category": "Utility",
-    "Description": "deep_device_scan execution tool.",
-    "Example": "deepdevicescan",
-    "RelativePath": "HaSSD06\\deep_device_scan.py",
+    "RelativePath": "HaSSD06\\check_specific.py",
     "Parameters": [],
     "Dependencies": null,
     "IntentElevated": null
@@ -456,8 +437,8 @@
     "IntentElevated": null
   },
   {
-    "Name": "extract_ha_update_crps.py",
-    "ShortName": "HaSSD06extracthaupdatecrps",
+    "Name": "deep_device_scan.py",
+    "ShortName": "HaSSD06deepdevicescan",
     "Aliases": null,
     "Role": "Utility",
     "Audience": "Developer",
@@ -467,9 +448,9 @@
     "Domain": "HaSSD06",
     "Type": "Python",
     "Category": "Utility",
-    "Description": "extract_ha_update_crps execution tool.",
-    "Example": "extracthaupdatecrps",
-    "RelativePath": "LCM_Inventory\\tools\\extract_ha_update_crps.py",
+    "Description": "deep_device_scan execution tool.",
+    "Example": "deepdevicescan",
+    "RelativePath": "HaSSD06\\deep_device_scan.py",
     "Parameters": [],
     "Dependencies": null,
     "IntentElevated": null
@@ -494,8 +475,8 @@
     "IntentElevated": null
   },
   {
-    "Name": "invoke_ha_backup.py",
-    "ShortName": "HaSSD06habackup",
+    "Name": "extract_ha_update_crps.py",
+    "ShortName": "HaSSD06extracthaupdatecrps",
     "Aliases": null,
     "Role": "Utility",
     "Audience": "Developer",
@@ -505,9 +486,9 @@
     "Domain": "HaSSD06",
     "Type": "Python",
     "Category": "Utility",
-    "Description": "invoke_ha_backup execution tool.",
-    "Example": "habackup",
-    "RelativePath": "HaSSD06\\tools\\invoke_ha_backup.py",
+    "Description": "extract_ha_update_crps execution tool.",
+    "Example": "extracthaupdatecrps",
+    "RelativePath": "LCM_Inventory\\tools\\extract_ha_update_crps.py",
     "Parameters": [],
     "Dependencies": null,
     "IntentElevated": null
@@ -532,8 +513,8 @@
     "IntentElevated": null
   },
   {
-    "Name": "invoke_ha_core_update.py",
-    "ShortName": "HaSSD06hacoreupdate",
+    "Name": "invoke_ha_backup.py",
+    "ShortName": "HaSSD06habackup",
     "Aliases": null,
     "Role": "Utility",
     "Audience": "Developer",
@@ -543,9 +524,9 @@
     "Domain": "HaSSD06",
     "Type": "Python",
     "Category": "Utility",
-    "Description": "invoke_ha_core_update execution tool.",
-    "Example": "hacoreupdate",
-    "RelativePath": "LCM_Inventory\\tools\\invoke_ha_core_update.py",
+    "Description": "invoke_ha_backup execution tool.",
+    "Example": "habackup",
+    "RelativePath": "HaSSD06\\tools\\invoke_ha_backup.py",
     "Parameters": [],
     "Dependencies": null,
     "IntentElevated": null
@@ -570,8 +551,8 @@
     "IntentElevated": null
   },
   {
-    "Name": "list_all_updates.py",
-    "ShortName": "HaSSD06HaListUpdates",
+    "Name": "invoke_ha_core_update.py",
+    "ShortName": "HaSSD06hacoreupdate",
     "Aliases": null,
     "Role": "Utility",
     "Audience": "Developer",
@@ -581,9 +562,9 @@
     "Domain": "HaSSD06",
     "Type": "Python",
     "Category": "Utility",
-    "Description": "list_all_updates execution tool.",
-    "Example": "HaListUpdates",
-    "RelativePath": "HaSSD06\\list_all_updates.py",
+    "Description": "invoke_ha_core_update execution tool.",
+    "Example": "hacoreupdate",
+    "RelativePath": "LCM_Inventory\\tools\\invoke_ha_core_update.py",
     "Parameters": [],
     "Dependencies": null,
     "IntentElevated": null
@@ -603,6 +584,25 @@
     "Description": "list_all_updates execution tool.",
     "Example": "HaListUpdates",
     "RelativePath": "LCM_Inventory\\tools\\list_all_updates.py",
+    "Parameters": [],
+    "Dependencies": null,
+    "IntentElevated": null
+  },
+  {
+    "Name": "list_all_updates.py",
+    "ShortName": "HaSSD06HaListUpdates",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "HaSSD06",
+    "Domain": "HaSSD06",
+    "Type": "Python",
+    "Category": "Utility",
+    "Description": "list_all_updates execution tool.",
+    "Example": "HaListUpdates",
+    "RelativePath": "HaSSD06\\list_all_updates.py",
     "Parameters": [],
     "Dependencies": null,
     "IntentElevated": null
@@ -659,7 +659,7 @@
     "Category": "Utility",
     "Description": "Build-HaInventoryViewer execution tool.",
     "Example": "BuildHaInventoryViewer",
-    "RelativePath": "LCM_Inventory\\tools\\Build-HaInventoryViewer.ps1",
+    "RelativePath": "HaSSD06_Inventory\\tools\\Build-HaInventoryViewer.ps1",
     "Parameters": [
       {
         "Name": "Instance",
@@ -697,7 +697,7 @@
     "Category": "Utility",
     "Description": "Build-HaInventoryViewer execution tool.",
     "Example": "BuildHaInventoryViewer",
-    "RelativePath": "HaSSD06_Inventory\\tools\\Build-HaInventoryViewer.ps1",
+    "RelativePath": "LCM_Inventory\\tools\\Build-HaInventoryViewer.ps1",
     "Parameters": [
       {
         "Name": "Instance",
@@ -735,7 +735,7 @@
     "Category": "Utility",
     "Description": "extract_ha_central_registry execution tool.",
     "Example": "extracthacentralregistry",
-    "RelativePath": "HaSSD06_Inventory\\tools\\extract_ha_central_registry.py",
+    "RelativePath": "LCM_Inventory\\tools\\extract_ha_central_registry.py",
     "Parameters": [],
     "Dependencies": null,
     "IntentElevated": null
@@ -754,113 +754,9 @@
     "Category": "Utility",
     "Description": "extract_ha_central_registry execution tool.",
     "Example": "extracthacentralregistry",
-    "RelativePath": "LCM_Inventory\\tools\\extract_ha_central_registry.py",
+    "RelativePath": "HaSSD06_Inventory\\tools\\extract_ha_central_registry.py",
     "Parameters": [],
     "Dependencies": null,
-    "IntentElevated": null
-  },
-  {
-    "Name": "Invoke-HaRenameCascade.ps1",
-    "ShortName": "HaSSD06InventoryHaRenameCascade",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "HaSSD06",
-    "Domain": "HaSSD06_Inventory",
-    "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "Invoke-HaRenameCascade execution tool.",
-    "Example": "HaRenameCascade",
-    "RelativePath": "HaSSD06_Inventory\\tools\\Invoke-HaRenameCascade.ps1",
-    "Parameters": [
-      {
-        "Name": "DeviceId",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Target Home Assistant device ID to rename."
-      },
-      {
-        "Name": "EntityId",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Target Home Assistant entity ID to rename."
-      },
-      {
-        "Name": "NewName",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "New friendly name for the target device or entity."
-      },
-      {
-        "Name": "NewEntityId",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "New entity ID (e.g. 'switch.kueche_sh1_relay') when renaming an entity directly."
-      },
-      {
-        "Name": "Pattern",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Pattern template used for generation (e.g. '<Area> <Device>', '<Area> <Manufacturer> <Model>')."
-      },
-      {
-        "Name": "CascadeChildren",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "When specified with -DeviceId, cascades renaming to all child entities belonging to the device."
-      },
-      {
-        "Name": "StagingFile",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Path to a pre-staged transaction JSON file created by the Subsystem Inventory Explorer UI."
-      },
-      {
-        "Name": "BackupId",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Verified pre-change Home Assistant backup snapshot identifier."
-      },
-      {
-        "Name": "DryRun",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Simulates the cascade and displays diff without modifying any inventory files or registries."
-      },
-      {
-        "Name": "Rollback",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Rolls back a previously staged or executed transaction using its TransactionId."
-      },
-      {
-        "Name": "TransactionId",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "The unique transaction ID to apply, verify, or rollback."
-      },
-      {
-        "Name": "Instance",
-        "Type": "String",
-        "Mandatory": false,
-        "Default": "HaSSD06",
-        "Description": "Target Home Assistant instance name (Default: 'HaSSD06')."
-      }
-    ],
-    "Dependencies": "Show-HaInventoryApp.ps1",
     "IntentElevated": null
   },
   {
@@ -968,6 +864,110 @@
     "IntentElevated": null
   },
   {
+    "Name": "Invoke-HaRenameCascade.ps1",
+    "ShortName": "HaSSD06InventoryHaRenameCascade",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "HaSSD06",
+    "Domain": "HaSSD06_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Invoke-HaRenameCascade execution tool.",
+    "Example": "HaRenameCascade",
+    "RelativePath": "HaSSD06_Inventory\\tools\\Invoke-HaRenameCascade.ps1",
+    "Parameters": [
+      {
+        "Name": "DeviceId",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Target Home Assistant device ID to rename."
+      },
+      {
+        "Name": "EntityId",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Target Home Assistant entity ID to rename."
+      },
+      {
+        "Name": "NewName",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "New friendly name for the target device or entity."
+      },
+      {
+        "Name": "NewEntityId",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "New entity ID (e.g. 'switch.kueche_sh1_relay') when renaming an entity directly."
+      },
+      {
+        "Name": "Pattern",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Pattern template used for generation (e.g. '<Area> <Device>', '<Area> <Manufacturer> <Model>')."
+      },
+      {
+        "Name": "CascadeChildren",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "When specified with -DeviceId, cascades renaming to all child entities belonging to the device."
+      },
+      {
+        "Name": "StagingFile",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Path to a pre-staged transaction JSON file created by the Subsystem Inventory Explorer UI."
+      },
+      {
+        "Name": "BackupId",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Verified pre-change Home Assistant backup snapshot identifier."
+      },
+      {
+        "Name": "DryRun",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Simulates the cascade and displays diff without modifying any inventory files or registries."
+      },
+      {
+        "Name": "Rollback",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Rolls back a previously staged or executed transaction using its TransactionId."
+      },
+      {
+        "Name": "TransactionId",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "The unique transaction ID to apply, verify, or rollback."
+      },
+      {
+        "Name": "Instance",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "HaSSD06",
+        "Description": "Target Home Assistant instance name (Default: 'HaSSD06')."
+      }
+    ],
+    "Dependencies": "Show-HaInventoryApp.ps1",
+    "IntentElevated": null
+  },
+  {
     "Name": "Invoke-HaService.ps1",
     "ShortName": "HaSSD06InventoryHaService",
     "Aliases": null,
@@ -981,7 +981,7 @@
     "Category": "Utility",
     "Description": "Invoke-HaService execution tool.",
     "Example": "HaService",
-    "RelativePath": "HaSSD06_Inventory\\tools\\Invoke-HaService.ps1",
+    "RelativePath": "LCM_Inventory\\tools\\Invoke-HaService.ps1",
     "Parameters": [
       {
         "Name": "Domain",
@@ -1036,7 +1036,7 @@
     "Category": "Utility",
     "Description": "Invoke-HaService execution tool.",
     "Example": "HaService",
-    "RelativePath": "LCM_Inventory\\tools\\Invoke-HaService.ps1",
+    "RelativePath": "HaSSD06_Inventory\\tools\\Invoke-HaService.ps1",
     "Parameters": [
       {
         "Name": "Domain",
@@ -3230,7 +3230,8 @@
       "BCompare.exe",
       "BCompare",
       "Module: (Join-Path $inventoryRoot 'modules\\LcmMacriumAtoms.psm1')",
-      "Module: (Join-Path $inventoryRoot 'modules\\LcmDoClient.psm1')"
+      "Module: (Join-Path $inventoryRoot 'modules\\LcmDoClient.psm1')",
+      "Module: (Join-Path $PSScriptRoot '..\\modules\\LcmAhkAtoms.psm1')"
     ],
     "IntentElevated": null
   },
@@ -3279,7 +3280,10 @@
         "Description": "Performs contradiction analysis between the remark and the target CRP specification without mutating files."
       }
     ],
-    "Dependencies": "ProposalManager.psm1",
+    "Dependencies": [
+      "ProposalManager.psm1",
+      "Module: (Join-Path $PSScriptRoot '..\\modules\\ProposalSpecificationState.psm1')"
+    ],
     "IntentElevated": null
   },
   {
@@ -4324,7 +4328,10 @@
         "Description": "Emit selected scopes and proposed changes"
       }
     ],
-    "Dependencies": "Invoke-MacriumBcrReview.ps1",
+    "Dependencies": [
+      "Invoke-MacriumBcrReview.ps1",
+      "Module: (Join-Path $PSScriptRoot '..\\modules\\ProposalSpecificationState.psm1')"
+    ],
     "IntentElevated": null
   },
   {
@@ -5340,6 +5347,77 @@
     "IntentElevated": null
   },
   {
+    "Name": "Invoke-LcmMajorCleanup.ps1",
+    "ShortName": "LcmMajorCleanup",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "Invoke-LcmMajorCleanup execution tool.",
+    "Example": "LcmMajorCleanup",
+    "RelativePath": "LCM_Inventory\\tools\\Invoke-LcmMajorCleanup.ps1",
+    "Parameters": [
+      {
+        "Name": "Report",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Write a dry-run manifest of everything the cleanup would delete"
+      },
+      {
+        "Name": "Apply",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Delete exactly the entries of a confirmed manifest"
+      },
+      {
+        "Name": "Manifest",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Manifest JSON written by -Report (required with -Apply)"
+      },
+      {
+        "Name": "ManifestHash",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Manifest hash printed by -Report; confirms the operator reviewed this manifest"
+      },
+      {
+        "Name": "IncludeCandidates",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Also select the further deletion candidates in the manifest (-Report)"
+      },
+      {
+        "Name": "WorkspaceRoot",
+        "Type": "String",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Workspace root (default: parent of LCM_Inventory)"
+      }
+    ],
+    "Dependencies": [
+      "Invoke-PrivilegedTool.ps1",
+      "PrivilegedTool.cmd",
+      "RunShell.cmd",
+      "RunShell.ps1",
+      "archive-Clean.cmd",
+      "Sync-LcmProposalsDb.ps1",
+      "everything",
+      "Module: (Join-Path $PSScriptRoot '..\\modules\\ProposalManager.psm1')"
+    ],
+    "IntentElevated": null
+  },
+  {
     "Name": "Invoke-LcmPathMigration.ps1",
     "ShortName": "LcmPathMigration",
     "Aliases": null,
@@ -5799,7 +5877,10 @@
         "Description": "Previews mutations without updating files."
       }
     ],
-    "Dependencies": "ProposalManager.psm1",
+    "Dependencies": [
+      "ProposalManager.psm1",
+      "Module: (Join-Path $PSScriptRoot '..\\modules\\ProposalSpecificationState.psm1')"
+    ],
     "IntentElevated": null
   },
   {
@@ -6297,7 +6378,9 @@
       "Submit-ReviewResult.ps1",
       "sync_proposals_db.py",
       "Invoke-MacriumBcrReview.ps1",
-      "Complete-ReviewCohort.ps1"
+      "Complete-ReviewCohort.ps1",
+      "Module: (Join-Path $PSScriptRoot '..\\modules\\LcmReviewCompletionAtoms.psm1')",
+      "Module: (Join-Path $PSScriptRoot '..\\modules\\ProposalSpecificationState.psm1')"
     ],
     "IntentElevated": null
   },
@@ -7699,6 +7782,7 @@
     "Dependencies": [
       "AdminMode.psm1",
       "ProposalManager.psm1",
+      "Module: (Join-Path $PSScriptRoot '..\\modules\\LcmReviewCompletionAtoms.psm1')",
       "Module: (Join-Path $PSScriptRoot '..\\modules\\LcmLineEndingAtoms.psm1')",
       "Module: (Join-Path $PSScriptRoot '..\\modules\\LcmPackageVersion.psm1')"
     ],
@@ -11753,7 +11837,7 @@
     "Category": "Utility",
     "Description": "asus-debloater execution tool.",
     "Example": "asusdebloater",
-    "RelativePath": "LCM_Inventory\\tools\\asus-debloater.ps1",
+    "RelativePath": "SystemConfiguration\\Source\\asus-debloater.ps1",
     "Parameters": [],
     "Dependencies": null,
     "IntentElevated": null
@@ -11772,7 +11856,7 @@
     "Category": "Utility",
     "Description": "asus-debloater execution tool.",
     "Example": "asusdebloater",
-    "RelativePath": "SystemConfiguration\\Source\\asus-debloater.ps1",
+    "RelativePath": "LCM_Inventory\\tools\\asus-debloater.ps1",
     "Parameters": [],
     "Dependencies": null,
     "IntentElevated": null
@@ -11859,7 +11943,7 @@
     "Category": "Utility",
     "Description": "search certificate stores for private key container Guids execution tool.",
     "Example": "search certificate stores for private key container Guids",
-    "RelativePath": "LCM_Inventory\\tools\\search certificate stores for private key container Guids.ps1",
+    "RelativePath": "SystemConfiguration\\Source\\search certificate stores for private key container Guids.ps1",
     "Parameters": [],
     "Dependencies": null,
     "IntentElevated": null
@@ -11878,7 +11962,7 @@
     "Category": "Utility",
     "Description": "search certificate stores for private key container Guids execution tool.",
     "Example": "search certificate stores for private key container Guids",
-    "RelativePath": "SystemConfiguration\\Source\\search certificate stores for private key container Guids.ps1",
+    "RelativePath": "LCM_Inventory\\tools\\search certificate stores for private key container Guids.ps1",
     "Parameters": [],
     "Dependencies": null,
     "IntentElevated": null
