@@ -5,8 +5,8 @@ PACKAGE        : main
 DESCRIPTION    : HTTP daemon listener for Session 1 desktop execution and telemetry.
 AUTHOR         : Rolf, Claude
 DATE CREATED   : 2026-11-11
-LAST MODIFIED  : 2026-11-17
-VERSION        : 10.2.4
+LAST MODIFIED  : 2026-11-18
+VERSION        : 10.2.6
 GO VERSION     : 1.22+
 ENCODING       : ASCII (No BOM)
 ================================================================================
@@ -21,6 +21,9 @@ CHANGE LOG:
                      admin tool (elevation.go); everything else, /open, /open_editor and display
                      rendering run with the explorer token (non-elevated); pages served by the
                      daemon carry the key shim and no Access-Control-Allow-Origin.
+2026-11-18 - 10.2.5: CRP-354 /foreground waits up to waitMs and reports whether the window is active.
+2026-11-18 - 10.2.6: BUG-356 /displays/status publishedAt is the publication time of the revision (artifact
+                     time), not the time of the query; the page badge changes only with the displayed data.
 ================================================================================
 */
 
@@ -567,11 +570,18 @@ func handleForeground(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	found := BringWindowToForeground(req.Title)
+	waitMs := req.WaitMs
+	if waitMs < 0 {
+		waitMs = 0
+	} else if waitMs > 30000 {
+		waitMs = 30000
+	}
+	found, active := WaitForWindowForeground(req.Title, waitMs)
 	writeJSON(w, http.StatusOK, map[string]interface{}{
 		"status": "OK",
 		"title":  req.Title,
 		"found":  found,
+		"active": active,
 	})
 }
 
@@ -818,10 +828,12 @@ func handleDisplays(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var modTime int64
+	publishedAt := time.Now()
 	if fi, err := os.Stat(artifactPath); err == nil {
 		modTime = fi.ModTime().UnixNano()
+		publishedAt = fi.ModTime()
 	} else {
-		modTime = time.Now().UnixNano()
+		modTime = publishedAt.UnixNano()
 	}
 	revision := fmt.Sprintf("rev-%d", modTime)
 	presRev := fmt.Sprintf("pres-%d", modTime)
@@ -834,7 +846,7 @@ func handleDisplays(w http.ResponseWriter, r *http.Request) {
 			"revision":             revision,
 			"presentationRevision": presRev,
 			"statusUrl":            "/displays/status/" + id,
-			"publishedAt":          time.Now().Format("2006-01-02 15:04:05"),
+			"publishedAt":          publishedAt.Format("2006-01-02 15:04:05"),
 		})
 	case "data":
 		dataBytes, err := os.ReadFile(artifactPath)

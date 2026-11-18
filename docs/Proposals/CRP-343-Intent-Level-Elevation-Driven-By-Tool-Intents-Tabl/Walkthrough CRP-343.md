@@ -6,7 +6,7 @@ Path: LCM_Inventory/docs/Proposals/CRP-343-Intent-Level-Elevation-Driven-By-Tool
 Authors: Rolf, Claude  
 Version: 10.7.4
 Status: In Progress  
-Date: 2026-11-18 20:03:23
+Date: 2026-11-18 20:59:37
 
 ---
 
@@ -51,11 +51,12 @@ Details:
   5. `/hub` page carries the key shim and no `Access-Control-Allow-Origin`.
   6. Composite command naming an atom (`...Set-LcmMachineRegistry.ps1 -Help; whoami /groups`) -> not elevated (found during verification, fixed and redeployed).
 
-## 4. Open (not yet verified or not in this segment)
+## 4. Results After Segment 1
 
-- Live BCR mount through the new atom: only on the next real new baseline (today's image is mounted; a remount would destroy review markers, RULE-REV-012).
-- Operator live test: Control Hub / Tool Explorer buttons (pages now send the key; launched programs run non-elevated unless they are elevated atoms).
-- Transition: PowerShell tools that post to the daemon without `LcmDoClient.psm1` run non-elevated; tools that relied on daemon elevation must be migrated (e.g. `Dismount-MacriumCurrentBaseline.ps1` delegation, `Invoke-LcmAction.ps1`). `LCM_DO_REQUIRE_KEY` is not set.
-- Policy regeneration after catalog changes is a manual step (`Export-LcmElevationPolicy.py`) until wired into `Sync-LcmToolCatalogDb.ps1`.
-- Consistency check: 33 findings (heuristic; `Update-ToolCatalog.ps1` hits likely false) -> input for the temporary cleanup tool; to be based on the tool-call xref table (learned-advice candidate 2026-11-17).
-- Section 8 (integrity of the intent table) deferred by the operator.
+| Date       | Check                                          | Result                                                      |
+|:-----------|:-----------------------------------------------|:------------------------------------------------------------|
+| 2026-11-17 | Operator live test, Control Hub / Tool Explorer | buttons work; defects found -> BUG-352 (completed)          |
+| 2026-11-18 | BCR mount through the elevated worker atom     | F: remounted, browse-dialog atom SUCCESS (CRP-344 evidence) |
+| 2026-11-18 | Beyond Compare launched by BCR                  | non-elevated, one window (PID 40376)                        |
+
+- Items still open moved to the Specification (T3 key transition, T4 cross-reference basis) and the Implementation Plan (steps 3 and 7), 2026-11-18 (operator: open items are specified, not walked through).

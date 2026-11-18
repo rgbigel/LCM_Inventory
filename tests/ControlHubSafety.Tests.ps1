@@ -125,7 +125,11 @@ Describe 'Control Hub rendered-artifact safety' {
     $template | Should -Not -Match 'function getOriginalProposalDocumentKey'
     $template | Should -Match 'function renderMermaidPreviews'
     $template | Should -Not -Match 'DAEMON_URL \+ "/open_editor"'  # CRP-354: editor buttons start Notepad++ through the DO
-    $template | Should -Match 'function openFileInNotepadPlusPlus'
+    $template | Should -Match 'function openInNotepadPlusPlus'
+    ([regex]::Matches($template, [regex]::Escape('onclick="showProposalBundle(${p.id})"'))).Count | Should -Be 1  # CRP-354: top entry only
+    $template | Should -Not -Match 'Open-LcmNotepadPlusPlus\.ps1'  # CRP-354: direct DO calls, no pwsh console window
+    $template | Should -Not -Match 'Activate-Window\.ahk'  # CRP-354: daemon /foreground, no AHK
+    $template | Should -Match 'DAEMON_URL \+ "/foreground"'
     $template | Should -Match 'openTargetActionModal\(''reinstate''\)'
     $template | Should -Match 'id="targetActionChanges"'
     $template | Should -Match '-Action reinstate -TargetExpression'

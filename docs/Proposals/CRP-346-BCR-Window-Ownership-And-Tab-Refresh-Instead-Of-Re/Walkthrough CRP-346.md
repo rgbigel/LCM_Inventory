@@ -1,6 +1,6 @@
 # Walkthrough: CRP-346 - BCR Window Ownership And Tab Refresh Instead Of Relaunch
 
-Date: 2026-11-18 14:32:27
+Date: 2026-11-18 21:29:36
 
 ## 1. Path taken and issues on the way
 - Sequence (operator option C): CRP-345 first (tab atom), then this CRP; rule texts drafted, not applied (option B).
@@ -25,3 +25,17 @@ Date: 2026-11-18 14:32:27
 - `AGENTS.md` and `LCM_AI/docs/LCM-Rules-Cross-Reference.md` list rules by file and ID range only; no IDs changed, no update needed. `Test-LCMRuleHealth.ps1`: all repositories in compliance.
 - The COMPLETE macro bullet "automatically closes matching Beyond Compare review window" remains (observation in Specification section 5, not part of the texts).
 - Commit requires ADMINMODE (rule paths staged).
+
+## Revision: review window record never matched (2026-11-18 21:29:36)
+
+- Found while refreshing BCR for CRP-354: your window 40376 had a Text Compare tab in front and BCR launched a second window (PID 28876); I closed nothing.
+- Cause: `ConvertFrom-Json` returns the recorded `StartTime` as a DateTime, `[string]` cut it to seconds, so the record comparison was never true; reuse only worked through the fallback "exactly one window whose active tab is _LCM".
+- Fix: `Test-LcmSameProcessStart` compares both as instants (UTC, 1 ms) (`tools/Invoke-MacriumDailyBcrBaseline.ps1` 10.2.8 -> 10.2.9).
+- Also: `tests/MacriumBcrReview.Tests.ps1` still asserted four texts that the CRP-346 change of the morning had replaced (it failed since commit cb45b81, unnoticed in my report); updated to the current code.
+
+| Check                                        | Result                           |
+|:---------------------------------------------|:---------------------------------|
+| Parse gate (tool, tests)                     | 0 errors                         |
+| `BcrReviewWindowRecord.Tests.ps1` (new)      | 3/3                              |
+| `MacriumBcrReview.Tests.ps1`                 | 15/15                            |
+| Live: record of PID 28876 vs its start time  | match                            |

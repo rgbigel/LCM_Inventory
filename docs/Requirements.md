@@ -4,9 +4,9 @@ Module: docs/Requirements.md
 Purpose: Normative technical requirements, environmental prerequisites, safety boundaries, and compliance constraints for LCM_Inventory.  
 Path: D:/Git_Repositories/LCM_Inventory/docs/Requirements.md  
 Authors: Rolf, LCM_AI Engine, Claude  
-Version: 10.2.2
+Version: 10.2.3
 Status: Authoritative Requirements  
-Date: 2026-11-18 16:11:02
+Date: 2026-11-18 21:05:57
 
 ---
 
@@ -164,6 +164,14 @@ commit.
     "not written yet" or "nothing beyond the Specification" note.
   - `Walkthrough.md`: the path actually taken (deviations, decisions made
     without the operator, issues on the way) and the test evidence.
+- Open items MUST be specified (Specification target state or Implementation
+  Plan step), never left in the Walkthrough (operator 2026-11-18).
+- Operator live tests are guided step by step in the chat; they are not part of
+  the bundle documents. The Walkthrough records their results (date, check,
+  result).
+- Design material (analysis, design decisions, rationale) does not belong in
+  the Specification; it goes to the end of the Implementation Plan ("Design
+  considerations") for later absorption into the Implementation "Rationale".
 - File names carry the item ID (CRP-359): `Specification <ID>.md`,
   `Implementation Plan <ID>.md`, `Walkthrough <ID>.md`; bundles closed before
   CRP-359 keep the names above.

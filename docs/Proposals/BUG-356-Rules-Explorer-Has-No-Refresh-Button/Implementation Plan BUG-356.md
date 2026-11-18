@@ -1,6 +1,5 @@
 # Implementation Plan: BUG-356 - Rules Explorer Has No Refresh Button
 
-Status: Placeholder
-Date: 2026-11-18 15:40:57
+Date: 2026-11-18 21:32:48
 
-Not written yet: filled with the concrete changes per file when implementation starts, or replaced by "Nothing beyond the Specification."
+- Nothing beyond the Specification: `tools/Show-Rules.ps1` 10.2.2 -> 10.2.3 (button), `assets/lcm-display-freshness.js` 10.0.2 -> 10.0.3 (badge placement).

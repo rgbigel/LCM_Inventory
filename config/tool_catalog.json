@@ -355,7 +355,7 @@
     "Category": "Utility",
     "Description": "analyze_lcm_components execution tool.",
     "Example": "analyzelcmcomponents",
-    "RelativePath": "HaSSD06\\analyze_lcm_components.py",
+    "RelativePath": "LCM_Inventory\\tools\\analyze_lcm_components.py",
     "Parameters": [],
     "Dependencies": null,
     "IntentElevated": null
@@ -374,7 +374,7 @@
     "Category": "Utility",
     "Description": "analyze_lcm_components execution tool.",
     "Example": "analyzelcmcomponents",
-    "RelativePath": "LCM_Inventory\\tools\\analyze_lcm_components.py",
+    "RelativePath": "HaSSD06\\analyze_lcm_components.py",
     "Parameters": [],
     "Dependencies": null,
     "IntentElevated": null
@@ -507,7 +507,7 @@
     "Category": "Utility",
     "Description": "invoke_ha_backup execution tool.",
     "Example": "habackup",
-    "RelativePath": "HaSSD06\\tools\\invoke_ha_backup.py",
+    "RelativePath": "LCM_Inventory\\tools\\invoke_ha_backup.py",
     "Parameters": [],
     "Dependencies": null,
     "IntentElevated": null
@@ -526,26 +526,7 @@
     "Category": "Utility",
     "Description": "invoke_ha_backup execution tool.",
     "Example": "habackup",
-    "RelativePath": "LCM_Inventory\\tools\\invoke_ha_backup.py",
-    "Parameters": [],
-    "Dependencies": null,
-    "IntentElevated": null
-  },
-  {
-    "Name": "invoke_ha_core_update.py",
-    "ShortName": "HaSSD06hacoreupdate",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "HaSSD06",
-    "Domain": "HaSSD06",
-    "Type": "Python",
-    "Category": "Utility",
-    "Description": "invoke_ha_core_update execution tool.",
-    "Example": "hacoreupdate",
-    "RelativePath": "LCM_Inventory\\tools\\invoke_ha_core_update.py",
+    "RelativePath": "HaSSD06\\tools\\invoke_ha_backup.py",
     "Parameters": [],
     "Dependencies": null,
     "IntentElevated": null
@@ -570,8 +551,8 @@
     "IntentElevated": null
   },
   {
-    "Name": "list_all_updates.py",
-    "ShortName": "HaSSD06HaListUpdates",
+    "Name": "invoke_ha_core_update.py",
+    "ShortName": "HaSSD06hacoreupdate",
     "Aliases": null,
     "Role": "Utility",
     "Audience": "Developer",
@@ -581,9 +562,9 @@
     "Domain": "HaSSD06",
     "Type": "Python",
     "Category": "Utility",
-    "Description": "list_all_updates execution tool.",
-    "Example": "HaListUpdates",
-    "RelativePath": "HaSSD06\\list_all_updates.py",
+    "Description": "invoke_ha_core_update execution tool.",
+    "Example": "hacoreupdate",
+    "RelativePath": "LCM_Inventory\\tools\\invoke_ha_core_update.py",
     "Parameters": [],
     "Dependencies": null,
     "IntentElevated": null
@@ -603,6 +584,25 @@
     "Description": "list_all_updates execution tool.",
     "Example": "HaListUpdates",
     "RelativePath": "LCM_Inventory\\tools\\list_all_updates.py",
+    "Parameters": [],
+    "Dependencies": null,
+    "IntentElevated": null
+  },
+  {
+    "Name": "list_all_updates.py",
+    "ShortName": "HaSSD06HaListUpdates",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": false,
+    "NoExit": true,
+    "Group": "HaSSD06",
+    "Domain": "HaSSD06",
+    "Type": "Python",
+    "Category": "Utility",
+    "Description": "list_all_updates execution tool.",
+    "Example": "HaListUpdates",
+    "RelativePath": "HaSSD06\\list_all_updates.py",
     "Parameters": [],
     "Dependencies": null,
     "IntentElevated": null
@@ -773,7 +773,7 @@
     "Category": "Utility",
     "Description": "Invoke-HaRenameCascade execution tool.",
     "Example": "HaRenameCascade",
-    "RelativePath": "HaSSD06_Inventory\\tools\\Invoke-HaRenameCascade.ps1",
+    "RelativePath": "LCM_Inventory\\tools\\Invoke-HaRenameCascade.ps1",
     "Parameters": [
       {
         "Name": "DeviceId",
@@ -877,7 +877,7 @@
     "Category": "Utility",
     "Description": "Invoke-HaRenameCascade execution tool.",
     "Example": "HaRenameCascade",
-    "RelativePath": "LCM_Inventory\\tools\\Invoke-HaRenameCascade.ps1",
+    "RelativePath": "HaSSD06_Inventory\\tools\\Invoke-HaRenameCascade.ps1",
     "Parameters": [
       {
         "Name": "DeviceId",
@@ -1440,20 +1440,11 @@
     "Category": "Utility",
     "Description": "Test-RepoReadiness execution tool.",
     "Example": "TestRepoReadiness",
-    "RelativePath": "HaSSD06\\tools\\Test-RepoReadiness.ps1",
-    "Parameters": [
-      {
-        "Name": "MinimalTests",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Single-cycle minimal testing scope: fast syntax and AST validation only"
-      }
-    ],
+    "RelativePath": "HaSSD06_Inventory\\tools\\Test-RepoReadiness.ps1",
+    "Parameters": [],
     "Dependencies": [
       "RepoQualityGates.psm1",
       "Test-GeneralReadiness.ps1",
-      "Update-ToolCatalog.ps1",
       "Module: (Resolve-Path $modulePath)"
     ],
     "IntentElevated": null
@@ -1472,11 +1463,20 @@
     "Category": "Utility",
     "Description": "Test-RepoReadiness execution tool.",
     "Example": "TestRepoReadiness",
-    "RelativePath": "HaSSD06_Inventory\\tools\\Test-RepoReadiness.ps1",
-    "Parameters": [],
+    "RelativePath": "HaSSD06\\tools\\Test-RepoReadiness.ps1",
+    "Parameters": [
+      {
+        "Name": "MinimalTests",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": "Single-cycle minimal testing scope: fast syntax and AST validation only"
+      }
+    ],
     "Dependencies": [
       "RepoQualityGates.psm1",
       "Test-GeneralReadiness.ps1",
+      "Update-ToolCatalog.ps1",
       "Module: (Resolve-Path $modulePath)"
     ],
     "IntentElevated": null
@@ -3284,25 +3284,6 @@
       "ProposalManager.psm1",
       "Module: (Join-Path $PSScriptRoot '..\\modules\\ProposalSpecificationState.psm1')"
     ],
-    "IntentElevated": null
-  },
-  {
-    "Name": "Activate-Window.ahk",
-    "ShortName": "ActivateWindow",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "LCM_Inventory",
-    "Domain": "LCM_Inventory",
-    "Type": "AutoHotkey",
-    "Category": "Utility",
-    "Description": "Activate-Window execution tool.",
-    "Example": "ActivateWindow",
-    "RelativePath": "LCM_Inventory\\tools\\automation\\Activate-Window.ahk",
-    "Parameters": [],
-    "Dependencies": null,
     "IntentElevated": null
   },
   {
@@ -6065,40 +6046,6 @@
       }
     ],
     "Dependencies": null,
-    "IntentElevated": null
-  },
-  {
-    "Name": "Open-LcmNotepadPlusPlus.ps1",
-    "ShortName": "OpenLcmNotepadPlusPlus",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": false,
-    "NoExit": true,
-    "Group": "LCM_Inventory",
-    "Domain": "LCM_Inventory",
-    "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "Open-LcmNotepadPlusPlus execution tool.",
-    "Example": "OpenLcmNotepadPlusPlus",
-    "RelativePath": "LCM_Inventory\\tools\\Open-LcmNotepadPlusPlus.ps1",
-    "Parameters": [
-      {
-        "Name": "Path",
-        "Type": "String[]",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "One or more file paths (absolute, or relative to the workspace root). Remaining arguments are paths."
-      },
-      {
-        "Name": "DryRun",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": "Resolves the paths and returns the plan without starting anything."
-      }
-    ],
-    "Dependencies": "Module: (Join-Path $PSScriptRoot '..\\modules\\LcmAhkAtoms.psm1')",
     "IntentElevated": null
   },
   {
@@ -10560,7 +10507,7 @@
     "Category": "Utility",
     "Description": "@Repair_Test-OneDriveSync execution tool.",
     "Example": "@RepairTestOneDriveSync",
-    "RelativePath": "LCM_Inventory\\tools\\@Repair_Test-OneDriveSync.ps1",
+    "RelativePath": "LCM_Tools\\tools\\@Repair_Test-OneDriveSync.ps1",
     "Parameters": [
       {
         "Name": "FixAcl",
@@ -10625,7 +10572,7 @@
     "Category": "Utility",
     "Description": "@Repair_Test-OneDriveSync execution tool.",
     "Example": "@RepairTestOneDriveSync",
-    "RelativePath": "LCM_Tools\\tools\\@Repair_Test-OneDriveSync.ps1",
+    "RelativePath": "LCM_Inventory\\tools\\@Repair_Test-OneDriveSync.ps1",
     "Parameters": [
       {
         "Name": "FixAcl",
@@ -10828,7 +10775,7 @@
     "Category": "Utility",
     "Description": "Export-AntigravityReasoningTranscript execution tool.",
     "Example": "ExportAntigravityReasoningTranscript",
-    "RelativePath": "LCM_Tools\\tools\\Export-AntigravityReasoningTranscript.ps1",
+    "RelativePath": "LCM_Inventory\\tools\\Export-AntigravityReasoningTranscript.ps1",
     "Parameters": [
       {
         "Name": "SessionId",
@@ -10869,7 +10816,7 @@
     "Category": "Utility",
     "Description": "Export-AntigravityReasoningTranscript execution tool.",
     "Example": "ExportAntigravityReasoningTranscript",
-    "RelativePath": "LCM_Inventory\\tools\\Export-AntigravityReasoningTranscript.ps1",
+    "RelativePath": "LCM_Tools\\tools\\Export-AntigravityReasoningTranscript.ps1",
     "Parameters": [
       {
         "Name": "SessionId",
@@ -10910,7 +10857,7 @@
     "Category": "Utility",
     "Description": "KillLogitechUpdateFull execution tool.",
     "Example": "KillLogitechUpdateFull",
-    "RelativePath": "LCM_Inventory\\tools\\KillLogitechUpdateFull.ps1",
+    "RelativePath": "LCM_Tools\\tools\\KillLogitechUpdateFull.ps1",
     "Parameters": [],
     "Dependencies": null,
     "IntentElevated": null
@@ -10929,7 +10876,7 @@
     "Category": "Utility",
     "Description": "KillLogitechUpdateFull execution tool.",
     "Example": "KillLogitechUpdateFull",
-    "RelativePath": "LCM_Tools\\tools\\KillLogitechUpdateFull.ps1",
+    "RelativePath": "LCM_Inventory\\tools\\KillLogitechUpdateFull.ps1",
     "Parameters": [],
     "Dependencies": null,
     "IntentElevated": null
@@ -11890,7 +11837,7 @@
     "Category": "Utility",
     "Description": "asus-debloater execution tool.",
     "Example": "asusdebloater",
-    "RelativePath": "LCM_Inventory\\tools\\asus-debloater.ps1",
+    "RelativePath": "SystemConfiguration\\Source\\asus-debloater.ps1",
     "Parameters": [],
     "Dependencies": null,
     "IntentElevated": null
@@ -11909,36 +11856,9 @@
     "Category": "Utility",
     "Description": "asus-debloater execution tool.",
     "Example": "asusdebloater",
-    "RelativePath": "SystemConfiguration\\Source\\asus-debloater.ps1",
+    "RelativePath": "LCM_Inventory\\tools\\asus-debloater.ps1",
     "Parameters": [],
     "Dependencies": null,
-    "IntentElevated": null
-  },
-  {
-    "Name": "GoAdm.ps1",
-    "ShortName": "SystemConfigurationGoAdm",
-    "Aliases": null,
-    "Role": "Utility",
-    "Audience": "Developer",
-    "Admin": true,
-    "NoExit": true,
-    "Group": "LCM_Tools",
-    "Domain": "LCM_Tools",
-    "Type": "PowerShell",
-    "Category": "Utility",
-    "Description": "GoAdm execution tool.",
-    "Example": "GoAdm",
-    "RelativePath": "LCM_Inventory\\tools\\GoAdm.ps1",
-    "Parameters": [
-      {
-        "Name": "t",
-        "Type": "SwitchParameter",
-        "Mandatory": false,
-        "Default": "",
-        "Description": ""
-      }
-    ],
-    "Dependencies": "profile.ps1",
     "IntentElevated": null
   },
   {
@@ -11983,6 +11903,33 @@
     "IntentElevated": null
   },
   {
+    "Name": "GoAdm.ps1",
+    "ShortName": "SystemConfigurationGoAdm",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": true,
+    "NoExit": true,
+    "Group": "LCM_Tools",
+    "Domain": "LCM_Tools",
+    "Type": "PowerShell",
+    "Category": "Utility",
+    "Description": "GoAdm execution tool.",
+    "Example": "GoAdm",
+    "RelativePath": "LCM_Inventory\\tools\\GoAdm.ps1",
+    "Parameters": [
+      {
+        "Name": "t",
+        "Type": "SwitchParameter",
+        "Mandatory": false,
+        "Default": "",
+        "Description": ""
+      }
+    ],
+    "Dependencies": "profile.ps1",
+    "IntentElevated": null
+  },
+  {
     "Name": "search certificate stores for private key container Guids.ps1",
     "ShortName": "SystemConfigurationsearch certificate stores for private key container Guids",
     "Aliases": null,
@@ -11996,7 +11943,7 @@
     "Category": "Utility",
     "Description": "search certificate stores for private key container Guids execution tool.",
     "Example": "search certificate stores for private key container Guids",
-    "RelativePath": "LCM_Inventory\\tools\\search certificate stores for private key container Guids.ps1",
+    "RelativePath": "SystemConfiguration\\Source\\search certificate stores for private key container Guids.ps1",
     "Parameters": [],
     "Dependencies": null,
     "IntentElevated": null
@@ -12015,7 +11962,7 @@
     "Category": "Utility",
     "Description": "search certificate stores for private key container Guids execution tool.",
     "Example": "search certificate stores for private key container Guids",
-    "RelativePath": "SystemConfiguration\\Source\\search certificate stores for private key container Guids.ps1",
+    "RelativePath": "LCM_Inventory\\tools\\search certificate stores for private key container Guids.ps1",
     "Parameters": [],
     "Dependencies": null,
     "IntentElevated": null

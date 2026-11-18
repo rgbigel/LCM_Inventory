@@ -5,14 +5,15 @@ PACKAGE        : main
 DESCRIPTION    : Data transfer objects and request/response models for LCM DO.
 AUTHOR         : Rolf
 DATE CREATED   : 2026-11-11
-LAST MODIFIED  : 2026-11-17
-VERSION        : 10.2.4
+LAST MODIFIED  : 2026-11-18
+VERSION        : 10.2.5
 GO VERSION     : 1.22+
 ENCODING       : ASCII (No BOM)
 ================================================================================
 CHANGE LOG:
 2026-11-11 - 10.0.0: Initial implementation.
 2026-11-17 - 10.2.4: CRP-343 ExecuteResponse.ElevationDecision (why the command ran elevated or not).
+2026-11-18 - 10.2.5: CRP-354 ForegroundRequest.WaitMs.
 ================================================================================
 */
 
@@ -72,6 +73,8 @@ type OpenRequest struct {
 // ForegroundRequest defines the input payload for the /foreground endpoint.
 type ForegroundRequest struct {
 	Title string `json:"title"`
+	// WaitMs waits up to this long for the window to appear (0 = look once; capped at 30000) (CRP-354).
+	WaitMs int `json:"waitMs"`
 }
 
 // ActionLog represents a persistent execution receipt.

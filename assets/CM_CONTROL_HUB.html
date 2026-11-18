@@ -1,10 +1,12 @@
 <!--
   Template: CM_CONTROL_HUB.html
-  Version: 10.2.8
-  Date: 2026-11-18 20:46:43
+  Version: 10.2.9
+  Date: 2026-11-18 21:25:38
   Implementation Choices (CRP-354, operator Gate 2 changes 2026-11-18): the document window's "Edit in Notepad++" button starts
   Notepad++ through the DO like "Show CRP" (no /open_editor, which opened another VS Code window); both use
-  tools/Open-LcmNotepadPlusPlus.ps1, which also brings Notepad++ to the foreground; preview kept.
+  a direct DO call of notepad++.exe, then the daemon's /foreground (waits for the window, passes the Windows
+  foreground lock); no PowerShell step, no AHK (operator 2026-11-18); preview kept; "Show CRP" only at the top of
+  the CRP row dropdown, not again in its Documents section.
   Implementation Choices (CRP-354 revision 2): "Edit Original CRP" removed with its helpers; a bundle holds only
   "Specification <ID>.md", so there is no original CRP to edit; "Show CRP" is the single Documents entry for it.
   Implementation Choices (CRP-354): "Show CRP" opens Specification, Implementation Plan and Walkthrough as
@@ -2977,7 +2979,6 @@
                 ${getObligationWorkQueueCohorts().filter(cohort => Number(cohort.prime_proposal_id) === Number(p.id) && !cohort.resolved).map(cohort => `<button class="show-dropdown-item" onclick="dispatchCohortAction('${esc(cohort.id)}', 'bcr')"><span class="btn-icon">🔍</span> Open BCR ${esc(cohort.id)}</button>`).join("")}
                 <div style="border-top: 1px solid var(--line); margin: 4px 0;"></div>
                 <div class="show-dropdown-title">Documents (#${p.id})</div>
-                <button class="show-dropdown-item" onclick="showProposalBundle(${p.id})"><span class="btn-icon">📂</span> Show CRP</button>
                 <button class="show-dropdown-item" onclick="showRepoDocs('${esc(p.origin_repo || "")}')"><span class="btn-icon">📁</span> Show Repo Docs</button>
                 <button class="show-dropdown-item" onclick="showReviewReceipt(${p.id})"><span class="btn-icon">🧾</span> Show Review Receipt</button>
                 <button class="show-dropdown-item" onclick="showStateHistory(${p.id})"><span class="btn-icon">📜</span> Show State History</button>
@@ -4312,24 +4313,8 @@
         showToast(`No bundle documents found for ${tag}.`);
         return;
       }
-      const command = notepadToolCommand(files.map(name => base + "/" + name));
-      if (!IS_RENDERED_CONTROL_HUB) {
-        showToast("Developer template is not executable; no daemon command was sent.");
-        return;
-      }
-      fetch(DAEMON_URL + "/api/action", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "DO", target: command, command: command, options: { sync: false }, caller: "ControlHub" })
-      }).then(res => res.json()).then(data => {
-        if (data.error || data.status === "ERROR") {
-          showToast(`Show CRP ${tag} failed: ${data.error || data.stderr || "daemon error"}`);
-        } else if (missing.length > 0) {
-          showToast(`Show CRP ${tag}: opened ${files.length} document(s); missing: ${missing.join(", ")}`);
-        } else {
-          showToast(`Show CRP ${tag}: opened in Notepad++.`);
-        }
-      }).catch(err => showToast(`Show CRP ${tag} failed: ${err}`));
+      openInNotepadPlusPlus(files.map(name => base + "/" + name), `Show CRP ${tag}`,
+        missing.length > 0 ? `opened ${files.length} document(s); missing: ${missing.join(", ")}` : "opened in Notepad++.");
     }
     function openProposalDocInNotepad(id, docKey) {
       if (!docKey) {
@@ -4341,26 +4326,41 @@
 
     // CRP-354: editor buttons start Notepad++ directly through the DO (same path as "Show CRP"); a relative path
     // resolves against the workspace root (daemon working directory). No /open_editor (VS Code) detour.
-    // Open-LcmNotepadPlusPlus.ps1 opens the files as tabs and brings Notepad++ to the foreground (AHK atom
-    // activate-window), which a program started by the background daemon cannot do by itself.
-    function notepadToolCommand(paths) {
-      const quoted = paths.map(path => `"${String(path).replace(/\//g, "\\")}"`).join(" ");
-      return `pwsh -NoProfile -File "LCM_Inventory\\tools\\Open-LcmNotepadPlusPlus.ps1" ${quoted}`;
-    }
+    // CRP-354: notepad++.exe is started directly through the DO (tabs; relative paths resolve against the workspace
+    // root), then the daemon's /foreground waits for its window and brings it to the front, which a program started
+    // by the background daemon cannot do by itself. No PowerShell step (no console window), no AHK.
+    const NOTEPAD_EXE = "C:\\Program Files\\Notepad++\\notepad++.exe";
 
-    function openFileInNotepadPlusPlus(filePath) {
-      if (!IS_RENDERED_CONTROL_HUB) {
-        showToast("Developer template is not executable; no daemon command was sent.");
-        return;
-      }
-      const command = notepadToolCommand([filePath]);
-      fetch(DAEMON_URL + "/api/action", {
+    function postDoCommand(command) {
+      return fetch(DAEMON_URL + "/api/action", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action: "DO", target: command, command: command, options: { sync: false }, caller: "ControlHub" })
       }).then(res => res.json()).then(data => {
-        if (data.error || data.status === "ERROR") showToast(`Notepad++ failed: ${data.error || data.stderr || "daemon error"}`);
-      }).catch(err => showToast(`Notepad++ failed: ${err}`));
+        if (data.error || data.status === "ERROR") throw new Error(data.error || data.stderr || "daemon error");
+        return data;
+      });
+    }
+
+    function openInNotepadPlusPlus(paths, label, successText) {
+      if (!IS_RENDERED_CONTROL_HUB) {
+        showToast("Developer template is not executable; no daemon command was sent.");
+        return;
+      }
+      const windowsPaths = paths.map(path => String(path).replace(/\//g, "\\"));
+      const lastLeaf = windowsPaths[windowsPaths.length - 1].split("\\").pop();
+      postDoCommand(`"${NOTEPAD_EXE}" ${windowsPaths.map(path => `"${path}"`).join(" ")}`)
+        .then(() => fetch(DAEMON_URL + "/foreground", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ title: lastLeaf, waitMs: 10000 })
+        }))
+        .then(() => showToast(`${label}: ${successText}`))
+        .catch(err => showToast(`${label} failed: ${err.message || err}`));
+    }
+
+    function openFileInNotepadPlusPlus(filePath) {
+      openInNotepadPlusPlus([filePath], "Notepad++", "opened.");
     }
 
     function showReviewReceipt(id) {

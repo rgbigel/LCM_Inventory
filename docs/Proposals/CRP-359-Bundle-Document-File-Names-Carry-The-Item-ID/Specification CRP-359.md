@@ -6,7 +6,7 @@ Path: LCM_Inventory/docs/Proposals/CRP-359-Bundle-Document-File-Names-Carry-The-
 Authors: Rolf, Claude  
 Version: 10.7.4
 Status: Suggested  
-Date: 2026-11-18 16:11:42
+Date: 2026-11-18 21:05:57
 
 ```yaml
 CRP-ID: CRP-359
@@ -14,10 +14,10 @@ Title: Bundle Document File Names Carry The Item ID
 Scope: LCM_Inventory
 Baseline-Version: 10.7.4
 Author: Rolf
-Date: 2026-11-18 16:11:42
-Status: Completed
-Plan-State: completed
-Progress-State: completed
+Date: 2026-11-18 21:05:57
+Status: In Review
+Plan-State: in_review
+Progress-State: verification
 Priority: 5
 App-ID: None
 ```
@@ -34,6 +34,7 @@ Operator 2026-11-18 after the CRP-354 live test: "show crp button works, but sho
 - T2 One resolver (`Resolve-LcmBundleDocumentPath`, `modules/ProposalSpecificationState.psm1`) returns the new name if present, else the legacy name; every tool that opened a bundle document by its fixed name uses it (ProposalManager, ProposalSpecificationState, Invoke-ProposalAction, Absorb-LcmContextRemark, Link-LcmLearnedAdvice, Fix-Documentation, Control Hub "Show CRP").
 - T3 The bundles of all open items are renamed once; closed bundles keep the legacy names (history unchanged).
 - T4 RULE-LCM-009 / RULE-LCM-011 (canonical and Claude adapter) and REQ-WINV-014 state the naming.
+- T5 (revision 2, operator 2026-11-18): REQ-WINV-014 also states where open items, operator live tests and design material belong (Specification / Plan / chat; the Walkthrough records results only).
 
 ### Invariants and Exit Criteria
 - No document becomes unreachable: legacy bundles resolve through the fallback.
@@ -49,3 +50,9 @@ Operator 2026-11-18 after the CRP-354 live test: "show crp button works, but sho
 > We need to append the CRP number to the file name ("Specification BUG-344")
 
 (Operator, 2026-11-18; decisions 2.1 and 3.1 the same day.)
+
+> on the pending questions and the 343 walkthrough: you really hid matters into the Walkthrough, and i want to not to do that: Open items must be specified, not "walked through".  And the operator live tests i do should be guided in the chat window rather than mentioned in the walkthrough, and they are not part of the specs. The walkthrough, in turn, shoud document the (guided) live test results
+
+> as long as no other "hidden" actions on my side are not brought to my attention, the question you posed  on REQ-WINV.014 is YES.
+
+(Operator, 2026-11-18; source of T5. The design-material sentence comes from the CRP-343 review the same day.)

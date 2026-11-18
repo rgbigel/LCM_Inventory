@@ -8,6 +8,8 @@
   mounts D: within candidate drive letters with AutoHotkey (AHK) UI automation for restricted folders
   and temporary write permissions, and opens the operator-owned _LCM Beyond Compare profile.
   Reuses an existing mounted baseline by default unless -NewBaseline is set.
+  Implementation Choices (CRP-346 revision): the review window record is matched by start time as an instant
+  (Test-LcmSameProcessStart); before, the JSON date conversion made it never match.
   Implementation Choices (CRP-307 / CRP-308): Uses dynamic CandidateDrives evaluation instead of hardcoded
   drive ranges; persists baseline telemetry in registry (MRMdrive, MRMTimeStamp, actMdrive, ActMTimeStamp);
   reuses existing healthy baseline to eliminate redundant unmount/remount cycles.
@@ -23,7 +25,7 @@
   a remount of a newer image on the same drive - refreshes its _LCM tab through the registered AHK tab atom
   instead of launching; a new window is launched only when no reusable window or no _LCM tab exists. Windows
   started before CRP-346 are adopted when exactly one window shows the _LCM tab.
-  Version: 10.2.8
+  Version: 10.2.9
   Date: 2026-11-18
 .NOTES
   Caveats: Drive mounting requires administrative elevation (delegated to elevated worker via Invoke-ElevatedTest.ps1
@@ -507,6 +509,18 @@ function Save-LcmReviewWindowRecord {
   $record | ConvertTo-Json | Set-Content -LiteralPath $script:ReviewWindowRecordPath -Encoding UTF8
 }
 
+function Test-LcmSameProcessStart {
+  # CRP-346: ConvertFrom-Json returns the recorded ISO start time as a DateTime; [string] cut it to seconds, so the
+  # record never matched and reuse depended on the active-tab fallback. Compare both as instants (UTC, 1 ms).
+  param([Parameter(Mandatory = $true)] $Recorded, [Parameter(Mandatory = $true)] [datetime]$Actual)
+  try {
+    $recordedUtc = if ($Recorded -is [datetime]) { ([datetime]$Recorded).ToUniversalTime() } else { [datetimeoffset]::Parse([string]$Recorded, [Globalization.CultureInfo]::InvariantCulture).UtcDateTime }
+  } catch {
+    return $false
+  }
+  return [math]::Abs(($recordedUtc - $Actual.ToUniversalTime()).TotalMilliseconds) -lt 1
+}
+
 function Find-LcmReusableReviewWindow {
   param([Parameter(Mandatory = $true)] [string]$MountedDrive)
   $drive = $MountedDrive.TrimEnd(':').ToUpperInvariant() + ':'
@@ -515,7 +529,7 @@ function Find-LcmReusableReviewWindow {
       $record = Get-Content -LiteralPath $script:ReviewWindowRecordPath -Raw | ConvertFrom-Json
       $window = Get-Process -Id ([int]$record.ProcessId) -ErrorAction SilentlyContinue
       if ($null -ne $window -and $window.ProcessName -eq 'BCompare' -and $window.MainWindowHandle -ne 0 -and
-          $window.StartTime.ToString('o') -eq [string]$record.StartTime) {
+          (Test-LcmSameProcessStart -Recorded $record.StartTime -Actual $window.StartTime)) {
         if ([string]$record.MountedDrive -eq $drive) { return $window }
         Write-BaselineLog -Level INFO -Message "Recorded review window (PID $($window.Id)) compares $($record.MountedDrive), not $drive; a new window is needed."
         return $null

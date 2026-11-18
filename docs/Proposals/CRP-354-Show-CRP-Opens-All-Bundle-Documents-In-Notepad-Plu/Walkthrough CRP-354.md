@@ -1,6 +1,6 @@
 # Walkthrough: CRP-354 - Show CRP Opens All Bundle Documents In Notepad Plus Plus Tabs
 
-Date: 2026-11-18 20:51:16
+Date: 2026-11-18 21:26:32
 
 ## 1. Path taken and issues on the way
 - Correction of Specification section 4 / T3: the rendered preview is not only reached through the removed actions; "Show Repo Docs" (Architecture diagrams) uses the same document window. Because the other document items are not part of this CRP (Q1), the preview and the window stay; "Show CRP" does not use them. The window's "Edit in Notepad++" button still opens VS Code (`/open_editor` runs `code -g`); left for a separate decision.
@@ -42,4 +42,31 @@ Date: 2026-11-18 20:51:16
 | `ControlHubSafety.Tests.ps1`            | 6 passed, 5 failed: the same 5 pre-existing cases   |
 | Live, through `do.exe -sync`            | 3 CRP-354 documents opened; foreground VS Code -> Notepad++ |
 
-- Operator check at Gate 2: refresh the Control Hub page, then "Show CRP" and "Show Review Receipt" -> "Edit in Notepad++".
+
+## 5. Direct launch and daemon foreground (2026-11-18 21:19:21)
+
+- Path taken: the PowerShell launcher of section 4 opened a console window and the AHK atom was an indirection; both removed (`tools/Open-LcmNotepadPlusPlus.ps1`, `tools/automation/Activate-Window.ahk`, their test file; catalog regenerated).
+- The daemon already had `/foreground`; its plain `SetForegroundWindow` was refused by the Windows foreground lock (live: window found, VS Code stayed in front). Now it attaches to the input thread of the current foreground window, then `BringWindowToTop` + `SetForegroundWindow`, and checks the result; `waitMs` waits for a window that is still starting (`src/do/winutil.go`, `types.go`, `daemon.go` 10.2.5).
+- Control Hub (template 10.2.9): `notepad++.exe` through `/api/action`, then `/foreground` with the file name and `waitMs: 10000`.
+- Daemon redeployed; rollback copy `scratch/do-before-crp354.exe`.
+
+| Check                                          | Result                                         |
+|:-----------------------------------------------|:-----------------------------------------------|
+| `gofmt` (changed files), `go vet`, `go test` | clean, clean, ok (`main.go` gofmt: BUG-348)   |
+| `node --check` both inline scripts            | OK; no doubled CR                              |
+| `ControlHubSafety.Tests.ps1`                   | 6 passed, 5 failed: same 5 pre-existing cases  |
+| Live, old daemon: launch + `/foreground`       | found, not activated (VS Code stayed in front) |
+| Live, new daemon: launch + `/foreground`       | found, active: VS Code -> Notepad++ (twice)    |
+| Live, new daemon: `/foreground` VS Code         | VS Code back in front                          |
+| Console windows during launch                  | none                                           |
+
+## 6. Guided live test results (2026-11-18 21:26:32)
+
+| No | Check                                              | Result                                                  |
+|:--:|:---------------------------------------------------|:--------------------------------------------------------|
+| 1  | Wizard menu entries                                | "Show CRP" twice (top and Documents) -> Documents entry removed |
+| 2  | "Show CRP" (CRP-361)                               | working                                                 |
+| 3  | Show Review Receipt -> Edit in Notepad++           | worked as expected                                      |
+
+- Cause of 1: the operator's earlier remark ("the documentation section should not have a duplicate+1 action any longer; the top element is a good choice") was read as "Edit Original CRP" only; T2 had kept the second "Show CRP" by design. Template still 10.2.9 (same uncommitted cycle); `ControlHubSafety` asserts exactly one row entry.
+- Found on the way: appended text from my patch scripts carried CR CR LF line ends into four bundle documents (CRP-354 Specification and Walkthrough, CRP-343 Walkthrough, CRP-361 Specification; the last two already in commit f828dba); repaired, patch helper now normalizes after every edit; scan of all bundle documents changed today: no lone CR left.

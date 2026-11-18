@@ -11,8 +11,10 @@
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
   Path: LCM_Inventory/tools/Show-Rules.ps1
   Authors: Rolf, LCM_AI Governance
-  Version: 10.2.2
-  Date: 2026-11-12 14:35:00
+  Version: 10.2.3
+  Date: 2026-11-18
+  Implementation Choices (BUG-356): toolbar button "Refresh" calls refreshRules() (re-render through the display
+  daemon, same as F5); RULE-DSP-003 refresh control.
 .PARAMETER Domain
   Pre-filter by governance domain (e.g. 'Proposal & Review Flow', 'PowerShell Standards', 'Security', 'All'). Defaults to 'All'.
 .PARAMETER Filter
@@ -1159,6 +1161,9 @@ $htmlTemplate = @'
         <input type="text" id="searchInput" placeholder="Global search across all fields (supports !term negation)..." oninput="applyFilters()" autofocus>
       </div>
       <div class="toolbar-actions">
+        <button class="btn btn-reset" id="btn-refresh-rules" onclick="refreshRules()" title="Re-read the rule files and re-render this display (F5)">
+          <span>🔄</span> <span>Refresh</span>
+        </button>
         <button class="btn btn-export" id="btn-theme-toggle" onclick="toggleTheme()" title="Switch between Dark and Light display modes">
           <span id="theme-icon">☀️</span> <span id="theme-label">Light Mode</span>
         </button>

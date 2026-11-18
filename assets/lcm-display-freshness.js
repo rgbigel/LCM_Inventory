@@ -1,6 +1,8 @@
 /**
  * Standard Display revision delivery, port 9876 and IDE webview hosting.
- * Authors: Rolf, Copilot. Version: 10.0.2. Date: 2026-11-08 15:07:36.
+ * Authors: Rolf, Copilot, Claude. Version: 10.0.3. Date: 2026-11-18 21:31:29.
+ * Implementation Choices (BUG-356): the status badge sits inside the page header (header.topbar or the first
+ * header), so it covers no page content; without a header it is fixed at the top right.
  */
 (function () {
   'use strict';
@@ -22,11 +24,20 @@
   badge.id = 'lcm-display-status';
   badge.setAttribute('role', 'status');
   Object.assign(badge.style, {
-    position: 'fixed', bottom: '6px', right: '8px', zIndex: '100000',
-    background: '#fff', color: '#333', border: '1px solid #888',
-    borderRadius: '4px', padding: '5px 10px', font: '12px sans-serif',
-    maxWidth: '75vw', whiteSpace: 'pre-wrap'
+    border: '1px solid currentColor', borderRadius: '4px', padding: '2px 8px', font: '11px sans-serif',
+    opacity: '0.8', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '40vw'
   });
+  // BUG-356: inside the page header (part of its layout, covers nothing); else fixed at the top right.
+  function placeBadge() {
+    const header = document.querySelector('header.topbar') || document.querySelector('header');
+    if (header) {
+      Object.assign(badge.style, { position: 'static', marginLeft: '8px', alignSelf: 'center', flexShrink: '0', background: 'transparent', color: 'inherit' });
+      header.appendChild(badge);
+    } else {
+      Object.assign(badge.style, { position: 'fixed', top: '4px', right: '8px', zIndex: '100000', background: '#fff', color: '#333' });
+      document.body.appendChild(badge);
+    }
+  }
   function show(state, detail) {
     badge.dataset.state = state;
     badge.textContent = state + (detail ? ' - ' + detail : '');
@@ -118,7 +129,7 @@
   }
   window.LcmDisplay = { refresh: () => reconcile(true), reconcile: () => reconcile(), capture, restore };
   function start() {
-    document.body.appendChild(badge);
+    placeBadge();
     show('Stale', 'Checking published revision');
     reconcile();
   }
