@@ -81,7 +81,7 @@ Describe 'Proposal lifecycle authority' {
     $controlHub | Should -Match ([regex]::Escape('{ key: "suggested", label: "1 - REVIEW" }'))
     $controlHub | Should -Match ([regex]::Escape('{ key: "in_review", label: "2 - REVIEW" }'))
     $controlHub | Should -Match ([regex]::Escape('return "1 - REVIEW";'))
-    $controlHub | Should -Match ([regex]::Escape('return "2 - REVIEW";'))
+    $controlHub | Should -Match ([regex]::Escape('return "2 - Review";'))  # CRP-354: label (operator 2026-11-18)
     $implementation | Should -Match '```mermaid'
     $implementation | Should -Match ([regex]::Escape('1 - REVIEW accepted'))
     $implementation | Should -Match ([regex]::Escape('2 - REVIEW opened'))

@@ -107,7 +107,7 @@ Describe 'Control Hub rendered-artifact safety' {
     $renderer = Get-Content -LiteralPath $script:rendererPath -Raw -Encoding UTF8
 
     $actionsIndex = $template.IndexOf('<div class="show-dropdown-title">${crpTag} Lifecycle Actions</div>')
-    $specificationIndex = $template.IndexOf('onclick="showProposalSpec(${p.id})"')
+    $specificationIndex = $template.IndexOf('onclick="showProposalBundle(${p.id})"')  # CRP-354: Show CRP replaces Show Specification
     $doIndex = $template.IndexOf('${lifecycleButton("Do ITEM"')
     $cohortIndex = $template.IndexOf('<div class="show-dropdown-title">Cohort Head / Member Management</div>')
     $documentsIndex = $template.IndexOf('<div class="show-dropdown-title">Documents (#${p.id})</div>')
@@ -179,7 +179,7 @@ Describe 'Control Hub rendered-artifact safety' {
     $template | Should -Match '"prio-desc": "Priority high \\u2192 low"'
     $template | Should -Match 'getActiveSortLabel\(\)'
     $template | Should -Not -Match 'innerText = `\$\{workQueueCount\} result\$\{workQueueCount === 1 \? "" : "s"\} / CRP ID order`'
-    $template | Should -Match 'Committed -\\nReady to Push'
+    $template | Should -Match 'return "Committed";'  # CRP-354: label shortened (operator 2026-11-18)
     $template | Should -Match '\.plan-state-text \{ white-space: pre-line; \}'
     $renderer | Should -Match 'reviewReceipts\s*=\s*@\(\$reviewReceipts\)'
     $renderer | Should -Match 'LCM_Inventory\\data\\reviews'

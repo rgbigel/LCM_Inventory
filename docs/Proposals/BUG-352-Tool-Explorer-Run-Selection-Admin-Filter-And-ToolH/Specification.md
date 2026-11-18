@@ -15,9 +15,9 @@ Scope: LCM_Inventory
 Baseline-Version: 10.6.4
 Author: Rolf
 Date: 2026-11-18 12:20:01
-Status: Suggested
-Plan-State: suggested
-Progress-State: undecided
+Status: In Progress
+Plan-State: in_progress
+Progress-State: in_progress
 Priority: 5
 App-ID: None
 ```
@@ -44,3 +44,7 @@ than invent or infer, and avoid unnecessary complexity.
 
 ## 3. Technical Requirements & Invariants
 - Invariant 1: Must conform to LCM governance standards.
+
+## Merged Findings
+
+- [merged 2026-11-18 15:41:05] From analysis 2026-11-18 (topic B, operator option B): the BCR exclusion regex is copied in Submit-ReviewResult.ps1, Invoke-ProposalAction.ps1 and Complete-ReviewCohort.ps1 (the last copy is dead code) - keep one shared copy; the Control Hub calls Submit-ReviewResult.ps1 directly in two places (synthetic COH complete, "reviewed" action), bypassing the multi-repository completion of BUG-351 - route both through Invoke-ProposalAction.

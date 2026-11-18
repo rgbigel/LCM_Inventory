@@ -6,7 +6,7 @@ Path: LCM_Inventory/docs/Proposals/CRP-354-Show-CRP-Opens-All-Bundle-Documents-I
 Authors: Rolf, Claude
 Version: 10.7.4
 Status: Suggested
-Date: 2026-11-18 13:19:08
+Date: 2026-11-18 15:27:39
 
 ```yaml
 CRP-ID: CRP-354
@@ -14,10 +14,10 @@ Title: Show CRP Opens All Bundle Documents In Notepad Plus Plus Tabs
 Scope: LCM_Inventory
 Baseline-Version: 10.7.4
 Author: Rolf, Claude
-Date: 2026-11-18 13:19:08
-Status: Suggested
-Plan-State: suggested
-Progress-State: undecided
+Date: 2026-11-18 15:27:39
+Status: In Review
+Plan-State: in_review
+Progress-State: verification
 Priority: 5
 App-ID: None
 ```
@@ -25,14 +25,16 @@ App-ID: None
 ---
 
 ## 1. Executive Summary & Intent
+- Specification accepted by the operator on 2026-11-18 15:24:00 (Gate 1, 'ACCEPT 354 specification, do it').
 Reviewing a CRP from the Control Hub takes several dropdown actions, one document at a time. One action, "Show CRP", opens all three bundle documents at once as tabs in Notepad++, which notices when a file changes later. The single-document actions go away.
-- Review: this Specification only (Plan and Walkthrough not written yet). Open points Q1 and Q2 are decided (section 3).
+- Review: this Specification and the Walkthrough (one correction of section 4: the rendered preview stays, because "Show Repo Docs" also uses it). Scope amendment: three plan-state labels shortened (T5).
 
 ## 2. Gate 0 Contract
 ### Target State
 - T1: the top item of the CRP row's wizard (🧙) dropdown reads "Show CRP". One click opens `Specification.md`, `Implementation_Plan.md` and `Walkthrough.md` of that item as three tabs, in this order, in one Notepad++ window, in the foreground.
 - T2: the same "Show CRP" replaces "Show Specification" everywhere it appears: the CRP row dropdown (top and in its Documents section), the cohort row dropdown (opens the head item's documents), the ACTIONS select of the control row, and the per-item select of the bulk panel.
 - T3: the actions "Show Specification", "Show Plan", "Show Walkthrough" and "Show Diff / BC Review" are removed, together with their functions and the in-browser rendered preview (Mermaid diagrams, images) that only they open.
+- T5 (scope amendment, operator 2026-11-18 during implementation): the plan-state labels of the Control Hub read "Committed" (was "Committed - Ready to Push"), "Verified" (was "Verified: ready for 2 - REVIEW") and "2 - Review" (was "2 - REVIEW").
 - T4: the DO daemon starts `notepad++.exe` itself, directly and non-elevated (CRP-343 border rule); no detour through VS Code (`code`), which would open another VS Code window. A missing document is skipped and named in a toast, not an error.
 
 ### Invariants and Exit Criteria
@@ -57,3 +59,9 @@ Reviewing a CRP from the Control Hub takes several dropdown actions, one documen
 > Q2: This probably only affects the Specification.md, but all three should be open in VSCode Editor anyway (but unfortunately, often it's not working when using Claude code, it works in Antigravity) . Normally, changed items are open in the editors of VSCode? So the answer to Q2 is: Show the items as plain text. (The review tool is still BCR, which also can display each item as plain text only)
 
 (Operator, 2026-11-18; source of T3, T4 and section 3.)
+
+> in lcm control hub (showCM) the plan state "Committed - Ready to Push" is too long, shorten to "Committed"
+> same for "Verified..."
+> the latter should be "2 - Review"
+
+(Operator, 2026-11-18, during the CRP-354 implementation; source of T5. Read as: the in_review label becomes "2 - Review"; "Verified" stays.)

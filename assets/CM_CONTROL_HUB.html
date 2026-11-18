@@ -1,7 +1,10 @@
 <!--
   Template: CM_CONTROL_HUB.html
-  Version: 10.2.4
-  Date: 2026-11-12 08:58:00
+  Version: 10.2.5
+  Date: 2026-11-18 15:40:00
+  Implementation Choices (CRP-354): "Show CRP" opens Specification, Implementation Plan and Walkthrough as
+  Notepad++ tabs through a direct DO call; Show Specification / Plan / Walkthrough / Diff removed; plan-state
+  labels shortened to "Committed", "Verified", "2 - Review" (operator 2026-11-18).
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -1110,7 +1113,7 @@
           <span class="control-label" id="itemActionLabel">ACTIONS:</span>
           <select class="control-select" id="itemActionSelect" onchange="dispatchSelectedItemMenuAction(this.value); this.value='';" disabled title="Lifecycle actions always apply to the explicit ITEM">
             <option value="">Select ITEM first</option>
-            <option value="show_spec">📄 Show Specification</option>
+            <option value="show_crp">📂 Show CRP</option>
             <option value="do">Do / Start ITEM</option>
             <option value="advance">⚡ Advance ITEM</option>
             <option value="accept">✅ Accept ITEM (Gate 1/2)</option>
@@ -1796,14 +1799,14 @@
         return "Tests failed";
       }
       if (state === "in_review") {
-        return "2 - REVIEW";
+        return "2 - Review"; // operator 2026-11-18 (CRP-354)
       }
       if (state === "verified") {
         if (testStatus === "in_progress" || testStatus === "running") return "Tests running";
-        return "Verified: ready for 2 - REVIEW";
+        return "Verified"; // operator 2026-11-18 (CRP-354): shortened from "Verified: ready for 2 - REVIEW"
       }
       if (state === "completed") {
-        return "Committed -\nReady to Push";
+        return "Committed"; // operator 2026-11-18 (CRP-354): shortened from "Committed - Ready to Push"
       }
       if (state === "pushed") {
         return "Pushed";
@@ -2037,7 +2040,7 @@
       for (let i = 1; i < actionSelect.options.length; i++) {
         const opt = actionSelect.options[i];
         const val = opt.value;
-        if (val === "show_spec") { opt.disabled = false; continue; }
+        if (val === "show_crp") { opt.disabled = false; continue; }
         if (state === "completed" || state === "pushed") {
           opt.disabled = ["advance", "complete", "do", "proceed", "verify", "bcr", "reopen"].includes(val);
         } else if (state === "suggested") {
@@ -2057,11 +2060,11 @@
         setActionResult("Select an explicit CRP or COH ITEM before choosing an action; no daemon command was sent.", "error");
         return;
       }
-      if (action === "show_spec" || action === "spec") {
+      if (action === "show_crp" || action === "crp") {
         if (target.kind === "CRP") {
-          showProposalSpec(Number(target.item.id));
+          showProposalBundle(Number(target.item.id));
         } else if (target.kind === "COH") {
-          showProposalSpec(Number(target.item.prime_proposal_id || target.item.id));
+          showProposalBundle(Number(target.item.prime_proposal_id || target.item.id));
         } else {
           showToast("Specification view is only available for proposals.");
         }
@@ -2163,11 +2166,11 @@
         reconcileActiveItemTarget();
         return;
       }
-      if (action === "show_spec" || action === "spec") {
+      if (action === "show_crp" || action === "crp") {
         if (target.kind === "CRP") {
-          showProposalSpec(Number(target.item.id));
+          showProposalBundle(Number(target.item.id));
         } else if (target.kind === "COH") {
-          showProposalSpec(Number(target.item.prime_proposal_id || target.item.id));
+          showProposalBundle(Number(target.item.prime_proposal_id || target.item.id));
         } else {
           showToast("Specification view is only available for proposals.");
         }
@@ -2948,7 +2951,7 @@
               </button>
               <div class="show-dropdown-menu" id="dropdown-${p.id}">
                 <div class="show-dropdown-title">${crpTag} Lifecycle Actions</div>
-                <button class="show-dropdown-item" onclick="showProposalSpec(${p.id})"><span class="btn-icon">📄</span> Show Specification</button>
+                <button class="show-dropdown-item" onclick="showProposalBundle(${p.id})"><span class="btn-icon">📂</span> Show CRP</button>
                 ${lifecycleButton("Do ITEM", "▶️", lifecycleState === "suggested", "dispatchTargetAction('do')")}
                 ${lifecycleButton("Advance ITEM", "⚡", !["completed", "pushed", "withdrawn", "rejected", "superseded"].includes(lifecycleState), "dispatchTargetAction('advance')")}
                 ${lifecycleButton("Open Review", "🔍", ["in_progress", "verified"].includes(lifecycleState), "dispatchTargetAction('bcr')")}
@@ -2969,12 +2972,9 @@
                 ${getObligationWorkQueueCohorts().filter(cohort => Number(cohort.prime_proposal_id) === Number(p.id) && !cohort.resolved).map(cohort => `<button class="show-dropdown-item" onclick="dispatchCohortAction('${esc(cohort.id)}', 'bcr')"><span class="btn-icon">🔍</span> Open BCR ${esc(cohort.id)}</button>`).join("")}
                 <div style="border-top: 1px solid var(--line); margin: 4px 0;"></div>
                 <div class="show-dropdown-title">Documents (#${p.id})</div>
-                <button class="show-dropdown-item" onclick="showProposalSpec(${p.id})"><span class="btn-icon">📄</span> Show Specification</button>
+                <button class="show-dropdown-item" onclick="showProposalBundle(${p.id})"><span class="btn-icon">📂</span> Show CRP</button>
                 <button class="show-dropdown-item" onclick="openOriginalProposalInEditor(${p.id})"><span class="btn-icon">📝</span> Edit Original CRP</button>
                 <button class="show-dropdown-item" onclick="showRepoDocs('${esc(p.origin_repo || "")}')"><span class="btn-icon">📁</span> Show Repo Docs</button>
-                <button class="show-dropdown-item" onclick="showProposalPlan(${p.id})"><span class="btn-icon">📋</span> Show Plan</button>
-                <button class="show-dropdown-item" onclick="showProposalWalkthrough(${p.id})"><span class="btn-icon">🚶</span> Show Walkthrough</button>
-                <button class="show-dropdown-item" onclick="showProposalDiff(${p.id})"><span class="btn-icon">🔍</span> Show Diff / BC Review</button>
                 <button class="show-dropdown-item" onclick="showReviewReceipt(${p.id})"><span class="btn-icon">🧾</span> Show Review Receipt</button>
                 <button class="show-dropdown-item" onclick="showStateHistory(${p.id})"><span class="btn-icon">📜</span> Show State History</button>
                 <div style="border-top: 1px solid var(--line); margin: 4px 0;"></div>
@@ -3003,7 +3003,7 @@
               <div class="show-dropdown-menu" id="dropdown-cohort-${esc(cohort.id)}">
                 <div class="show-dropdown-title">ACTIONS: ${esc(cohort.id)}</div>
                 <div class="show-dropdown-title">Lifecycle</div>
-                <button class="show-dropdown-item" onclick="showProposalSpec(${Number(cohort.prime_proposal_id || p.id)})"><span class="btn-icon">📄</span> Show Specification</button>
+                <button class="show-dropdown-item" onclick="showProposalBundle(${Number(cohort.prime_proposal_id || p.id)})"><span class="btn-icon">📂</span> Show CRP</button>
                 <button class="show-dropdown-item" onclick="dispatchCohortAction('${esc(cohort.id)}', 'proceed')"><span class="btn-icon">⚡</span> Proceed ITEM</button>
                 <button class="show-dropdown-item" onclick="dispatchCohortAction('${esc(cohort.id)}', 'bcr')"><span class="btn-icon">🔍</span> Open Review</button>
                 <button class="show-dropdown-item" onclick="dispatchCohortAction('${esc(cohort.id)}', 'complete')"><span class="btn-icon">✅</span> ACCEPTED: COH</button>
@@ -3571,7 +3571,7 @@
             </div>
             <select class="item-action-select" onchange="handleSingleItemAction(${p.id}, this.value); this.value='';">
               <option value="">Actions...</option>
-              <option value="show_spec">📄 Show Specification</option>
+              <option value="show_crp">📂 Show CRP</option>
               <option value="do">▶️ Do / Start</option>
               <option value="proceed">⚡ Proceed</option>
               <option value="bcr">🔍 Open Review</option>
@@ -3687,8 +3687,8 @@
     function handleSingleItemAction(id, action) {
       if (!action) return;
       selectItemTarget(`CRP:${id}`);
-      if (action === "show_spec" || action === "spec") {
-        showProposalSpec(Number(id));
+      if (action === "show_crp" || action === "crp") {
+        showProposalBundle(Number(id));
         return;
       }
       if (action === "hold") {
@@ -4289,35 +4289,41 @@
       openModal("docModal");
     }
 
-    function showProposalSpec(id) {
-      const p = (proposalsData.proposals || []).find(x => x.id === id);
+    // CRP-354: one click opens Specification, Implementation Plan and Walkthrough as three Notepad++ tabs.
+    // Direct DO call (daemon runs it non-elevated, working directory = workspace root); fire-and-forget,
+    // because a newly started Notepad++ stays open. Missing documents are skipped and named.
+    function showProposalBundle(id) {
+      const p = (proposalsData.proposals || []).find(x => Number(x.id) === Number(id));
       const tag = p?.crp_id || p?.cr_id || ("#" + id);
-      const specKey = Object.keys(docsCache).find(k => (k.includes(`Proposals/${tag}`) || k.includes(`CRP-${id}`) || k.includes(`BUG-${id}`) || k.includes(`Proposals/CRP-${id}`) || k.includes(`Proposals/BUG-${id}`)) && k.toLowerCase().includes("specification"));
-      const fallbackKey = Object.keys(docsCache).find(k => (k.includes(`${id}`) || k.includes(tag)) && k.toLowerCase().includes("specification"));
-      const finalKey = specKey || fallbackKey;
-      const content = finalKey ? docsCache[finalKey] : `No compiled markdown specification file found in cache for ${tag}.`;
-
-      showDocumentModal(`📄 Specification: ${tag} — ${p?.title || ""}`, content, id, finalKey);
+      if (!p || !p.bundle_dir) {
+        showToast(`No bundle folder is recorded for ${tag}.`);
+        return;
+      }
+      const repo = (p.origin_repo && !String(p.origin_repo).startsWith("LCM_")) ? p.origin_repo : "LCM_Inventory";
+      const base = `${repo}/${p.bundle_dir}`.replace(/\\/g, "/");
+      const names = ["Specification.md", "Implementation_Plan.md", "Walkthrough.md"];
+      const present = names.filter(name => Object.keys(docsCache).some(k => k.replace(/\\/g, "/").endsWith(`${p.bundle_dir}/${name}`)));
+      const files = present.length > 0 ? present : names;
+      const missing = names.filter(name => !files.includes(name));
+      const command = `"C:\\Program Files\\Notepad++\\notepad++.exe" ${files.map(name => `"${(base + "/" + name).replace(/\//g, "\\")}"`).join(" ")}`;
+      if (!IS_RENDERED_CONTROL_HUB) {
+        showToast("Developer template is not executable; no daemon command was sent.");
+        return;
+      }
+      fetch(DAEMON_URL + "/api/action", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "DO", target: command, command: command, options: { sync: false }, caller: "ControlHub" })
+      }).then(res => res.json()).then(data => {
+        if (data.error || data.status === "ERROR") {
+          showToast(`Show CRP ${tag} failed: ${data.error || data.stderr || "daemon error"}`);
+        } else if (missing.length > 0) {
+          showToast(`Show CRP ${tag}: opened ${files.length} document(s); missing: ${missing.join(", ")}`);
+        } else {
+          showToast(`Show CRP ${tag}: opened in Notepad++.`);
+        }
+      }).catch(err => showToast(`Show CRP ${tag} failed: ${err}`));
     }
-
-    function showProposalPlan(id) {
-      const p = (proposalsData.proposals || []).find(x => x.id === id);
-      const tag = p?.crp_id || p?.cr_id || ("#" + id);
-      const planKey = Object.keys(docsCache).find(k => (k.includes(`plans/`) || k.includes(`Proposals/`)) && (k.includes(`${id}`) || k.includes(tag)) && k.toLowerCase().includes("plan") && !k.toLowerCase().includes("walkthrough") && !k.toLowerCase().includes("specification"));
-      const content = planKey ? docsCache[planKey] : `No compiled plan file found in cache for ${tag}.`;
-
-      showDocumentModal(`📋 Plan: ${tag} — ${p?.title || ""}`, content, id, planKey);
-    }
-
-    function showProposalWalkthrough(id) {
-      const p = (proposalsData.proposals || []).find(x => x.id === id);
-      const tag = p?.crp_id || p?.cr_id || ("#" + id);
-      const wtKey = Object.keys(docsCache).find(k => (k.includes(`plans/`) || k.includes(`Proposals/`)) && (k.includes(`${id}`) || k.includes(tag)) && k.toLowerCase().includes("walkthrough"));
-      const content = wtKey ? docsCache[wtKey] : `No compiled walkthrough file found in cache for ${tag}.`;
-
-      showDocumentModal(`🚶 Walkthrough: ${tag} — ${p?.title || ""}`, content, id, wtKey);
-    }
-
     function openProposalDocInNotepad(id, docKey) {
       if (!docKey) {
         showToast(`No editable proposal source is available for #${id}.`);
@@ -4328,14 +4334,6 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ filePath: docKey })
       });
-    }
-
-    function showProposalDiff(id) {
-      const p = (proposalsData.proposals || []).find(x => x.id === id);
-      const repo = p?.origin_repo || "LCM_Inventory";
-      const crpTag = p?.crp_id || p?.cr_id || `CRP-${id}`;
-      const cmd = `pwsh -NoProfile -ExecutionPolicy Bypass -File LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1 -RepositoryName ${repo} -CRP ${crpTag}`;
-      executeDaemonCommand(cmd);
     }
 
     function showReviewReceipt(id) {
