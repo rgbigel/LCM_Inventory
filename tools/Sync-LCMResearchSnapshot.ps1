@@ -1,1 +1,0 @@
-D:/Git_Repositories/LCM_Tools/tools/Sync-LCMResearchSnapshot.ps1

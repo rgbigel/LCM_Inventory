@@ -4,7 +4,8 @@ Purpose: Verify automatic lifecycle metadata mirroring and failed-write safeguar
 Path: tests/ProposalSpecificationState.Tests.ps1
 Authors: Rolf, Copilot
 Version: 10.2.1
-Date: 2026-10-21
+Date: 2026-11-19
+Implementation Choices (BUG-364): the cross-repository case uses a disjunct subsystem (HaSSD06, RULE-SUB-008); bundles of LCM_* repositories live only in LCM_Inventory (RULE-LCM-034).
 #>
 BeforeAll {
   Import-Module (Join-Path $PSScriptRoot '..\modules\ProposalManager.psm1') -Force
@@ -108,11 +109,11 @@ Describe 'Persisted specification lifecycle mirrors' {
     }
   }
 
-  It 'mirrors cross-repository bundles using their owner rather than Inventory' {
-    $target = Join-Path $workspace 'LCM_AI\docs\Proposals\CRP-1\Specification.md'
+  It 'mirrors bundles of a disjunct subsystem in their owner repository rather than Inventory' {
+    $target = Join-Path $workspace 'HaSSD06\docs\Proposals\CRP-1\Specification.md'
     $null = New-Item -ItemType Directory -Path (Split-Path $target -Parent) -Force
     Move-Item -LiteralPath $specs[0] -Destination $target
-    $store.proposals[0].origin_repo='LCM_AI'
+    $store.proposals[0].origin_repo='HaSSD06'
     $store.proposals[0].state='verified'
     Set-ProposalStore $store
     [IO.File]::ReadAllText($target) | Should -Match 'Status: Verified\r\nPlan-State: verified\r\nProgress-State: verification'

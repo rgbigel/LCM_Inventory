@@ -1,1 +1,0 @@
-D:/Git_Repositories/HaSSD06/compare_tuya_integrations.py

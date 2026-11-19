@@ -50,12 +50,16 @@ param(
     Implementation Choices (BUG-360): a tracked path under an ignored directory counts as staged when git add exits 1
     but leaves no unstaged change for it; an untracked ignored path still fails.
     Implementation Choices (BUG-352): the BCR exclusion rule comes from modules/LcmReviewCompletionAtoms.psm1.
-    Version: 10.2.6
-    Date: 2026-11-18
+    Version: 10.2.7
+    Implementation Choices (CRP-366): the line-ending tool runs on the registered interpreter (RULE-PY-010).
+    Date: 2026-11-19
 
-    Implementation Choices (CRP-332): before staging, every committable or already staged path is normalized to CRLF
-    (LcmLineEndingAtoms.psm1, byte level). This is the completion-time line-ending enforcement; a CRLF correction is not
+    Implementation Choices (CRP-332): before staging, every committable or already staged path is normalized to the
+    line-ending policy (byte level). This is the completion-time line-ending enforcement; a line-ending correction is not
     a review-relevant change, so it runs after the BCR disposition and adds no review candidate.
+    Implementation Choices (BUG-365): the policy is LF, CRLF only for Windows-native types (*.cmd, *.bat, *.reg, VBA
+    exports); it lives only in tools/Repair-LcmLineEndings.py, which replaces LcmLineEndingAtoms.psm1 and receives the
+    paths on stdin (no command-line length limit).
 
     Implementation Choices (BUG-351): this script records one repository per call; -RepositoryPath is now
     required. Before, an omitted path silently targeted the workspace root and completed the item after that
@@ -233,22 +237,35 @@ if ($existingStagedPaths.Count -gt 0) {
     Write-Host "Continuing reviewed manifest with $($existingStagedPaths.Count) existing staged path(s) in '$repoName'." -ForegroundColor DarkYellow
 }
 
-# CRP-332: completion-time CRLF normalization of the live files that this completion commits.
-Import-Module -Name (Join-Path $PSScriptRoot '..\modules\LcmLineEndingAtoms.psm1') -Force
-$crlfCandidatePaths = @(
+# CRP-332 / BUG-365: completion-time line-ending normalization of the live files that this completion commits.
+$eolCandidatePaths = @(
     $existingStagedPaths
     git -C $targetRepoPath diff --name-only
     git -C $targetRepoPath ls-files --others --exclude-standard
 ) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Sort-Object -Unique
-$crlfConverted = 0
-foreach ($crlfRelativePath in $crlfCandidatePaths) {
-    $crlfFullPath = Join-Path $targetRepoPath $crlfRelativePath
-    $crlfResult = Repair-LcmLineEnding -Path $crlfFullPath
-    if ('Converted' -eq $crlfResult.Status) { $crlfConverted++ }
-    if ('Failed' -eq $crlfResult.Status) { Write-Warning ('CRLF normalization failed for {0}: {1}' -f $crlfRelativePath, $crlfResult.Reason) }
+$eolConverted = 0
+$eolFullPaths = @(foreach ($eolRelativePath in $eolCandidatePaths) {
+        $eolFullPath = Join-Path $targetRepoPath $eolRelativePath
+        if (Test-Path -LiteralPath $eolFullPath -PathType Leaf) { $eolFullPath }
+    })
+if ($eolFullPaths.Count -gt 0) {
+    Import-Module -Name (Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\LcmRuntimeAtoms.psm1') -Force
+    $eolPython = try { Get-LcmRuntimePath -Key 'python' } catch { '' }
+    $eolTool = Join-Path $PSScriptRoot 'Repair-LcmLineEndings.py'
+    if ([string]::IsNullOrWhiteSpace($eolPython)) {
+        Write-Warning 'Line-ending normalization skipped: no Python interpreter found.'
+    } else {
+        $eolLines = @($eolFullPaths | & $eolPython -I $eolTool --apply --no-recurse --json --stdin)
+        foreach ($eolLine in $eolLines) {
+            if (-not ([string]$eolLine).StartsWith('{')) { continue }
+            $eolResult = $eolLine | ConvertFrom-Json
+            if ('converted' -eq $eolResult.status) { $eolConverted++ }
+            if ('failed' -eq $eolResult.status) { Write-Warning ('Line-ending normalization failed for {0}: {1}' -f $eolResult.path, $eolResult.reason) }
+        }
+    }
 }
-if ($crlfConverted -gt 0) {
-    $actionsExecuted.Add("Normalized $crlfConverted file(s) to CRLF before staging (CRP-332).")
+if ($eolConverted -gt 0) {
+    $actionsExecuted.Add("Normalized line endings of $eolConverted file(s) before staging (BUG-365).")
 }
 
 if ($StagedOnly) {

@@ -9,7 +9,8 @@
   Path: LCM_Inventory/tools/Absorb-LcmContextRemark.ps1
   Authors: Rolf, LCM_AI Engine
   Version: 10.2.1
-  Date: 2026-11-18 16:20:00
+  Date: 2026-11-19 10:45:00
+  Implementation Choices (BUG-364): bundle_dir is LCM_Inventory-relative; the bundle folder is resolved (workspace root, else LCM_Inventory) before the document name, so legacy bundles keep Specification.md.
   Rule: RULE-LCM-031, RULE-DOC-003, RULE-PS-001 - RULE-PS-025
 .PARAMETER Id
   Proposal ID number (e.g. 280, 267) or CRP identifier (e.g. CRP-280, BUG-311).
@@ -94,7 +95,7 @@ $targetProposal = $proposal[0]
 
 # Locate proposal specification file
 $specRelative = if ($targetProposal.bundle_dir) {
-  Join-Path $targetProposal.bundle_dir (Split-Path -Leaf (Resolve-LcmBundleDocumentPath -BundlePath (Join-Path $workspaceRoot $targetProposal.bundle_dir) -Kind Specification -Identity ([string]$targetProposal.crp_id)))  # CRP-359
+  Join-Path $targetProposal.bundle_dir (Split-Path -Leaf (Resolve-LcmBundleDocumentPath -BundlePath $(if (Test-Path -LiteralPath (Join-Path $workspaceRoot $targetProposal.bundle_dir)) { Join-Path $workspaceRoot $targetProposal.bundle_dir } else { Join-Path (Join-Path $workspaceRoot 'LCM_Inventory') $targetProposal.bundle_dir }) -Kind Specification -Identity ([string]$targetProposal.crp_id)))  # CRP-359
 } else {
   "docs/Proposals/CRP-$numId/Specification.md"
 }

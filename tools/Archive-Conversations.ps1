@@ -9,8 +9,9 @@
            Ensures that all N newest conversations are active (unarchived if needed).
   Path: LCM_Inventory\tools\Archive-Conversations.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.2.2
-  Date: 2026-11-11
+  Version: 10.2.3
+  Date: 2026-11-19
+  Implementation Choices (CRP-366): Python runs on the registered interpreter (Get-LcmRuntimePath, RULE-PY-010).
 .PARAMETER Older
   Number of newest conversations to preserve active (not archived). Default is 1 (leaves latest active).
   Can be passed positionally or with standard flag formats: -Older 5, 5, or -5.
@@ -177,7 +178,8 @@ for r in c.fetchall():
 print(json.dumps(rows))
 "@
 
-  $jsonOutput = python -c $pyQuery
+  Import-Module -Name (Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\LcmRuntimeAtoms.psm1')
+  $jsonOutput = & (Get-LcmRuntimePath -Key 'python') -c $pyQuery
   $convList = @()
   if ($null -ne $jsonOutput -and -not [string]::IsNullOrWhiteSpace($jsonOutput)) {
     $convList = @($jsonOutput | ConvertFrom-Json)
@@ -301,7 +303,8 @@ if os.path.exists(db):
     conn.commit()
     conn.close()
 "@
-    python -c $pyUpdate
+    Import-Module -Name (Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\LcmRuntimeAtoms.psm1')
+    & (Get-LcmRuntimePath -Key 'python') -c $pyUpdate
 
     # Notify running Antigravity Hub via Connect-RPC for instant live UI update
     Write-ToolLog -Message "Broadcasting state to live Antigravity daemon..." -Level INFO
@@ -337,7 +340,8 @@ try:
 except Exception:
     pass
 "@
-    python -c $pySyncHub
+    Import-Module -Name (Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\LcmRuntimeAtoms.psm1')
+    & (Get-LcmRuntimePath -Key 'python') -c $pySyncHub
   }
 
   $statusStr = if ($DryRun) { "DRY_RUN" } else { "COMPLETED" }

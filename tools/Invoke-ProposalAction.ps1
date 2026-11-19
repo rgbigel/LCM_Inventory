@@ -22,8 +22,9 @@
     repositories as obligations without a lifecycle change (R1).
     Implementation Choices (BUG-352): the BCR exclusion rule comes from modules/LcmReviewCompletionAtoms.psm1.
     Implementation Choices (CRP-359): bundle Specification paths come from Resolve-LcmBundleDocumentPath.
-    Version: 10.2.7
-    Date: 2026-11-18
+    Version: 10.2.8
+    Date: 2026-11-19
+    Implementation Choices (CRP-366): the ledger sync runs on the registered interpreter (RULE-PY-010).
 #>
 
 [CmdletBinding()]
@@ -540,8 +541,10 @@ switch -Regex ($Action) {
         Set-ProposalStore -Store $store
         $syncDbScript = Join-Path $inventoryRoot 'tools\sync_proposals_db.py'
         if (Test-Path -LiteralPath $syncDbScript) {
-            python $syncDbScript --action sync | Out-Null
-            python $syncDbScript --action dump | Out-Null
+            Import-Module -Name (Join-Path $inventoryRoot 'modules\LcmRuntimeAtoms.psm1') -Force
+            $ledgerPython = Get-LcmRuntimePath -Key 'python'
+            & $ledgerPython $syncDbScript --action sync | Out-Null
+            & $ledgerPython $syncDbScript --action dump | Out-Null
         }
         Format-ProposalsTable -Proposals $updated
         break

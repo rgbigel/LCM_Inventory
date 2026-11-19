@@ -4,9 +4,9 @@ Module: docs/DataDesign-Tools.md
 Purpose: Authoritative data architecture, SQLite schema, constraints, views, and dual-state projection invariants for the LCM Tool Catalog.  
 Path: D:/Git_Repositories/LCM_Inventory/docs/DataDesign-Tools.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.2.3  
+Version: 10.2.4  
 Status: Authoritative Data Specification  
-Date: 2026-11-12  
+Date: 2026-11-19 12:04:28  
 
 ---
 
@@ -56,6 +56,26 @@ CREATE TABLE IF NOT EXISTS tools (
 - **`admin` (BOOLEAN CHECK)**: Declares whether execution requires Administrator UAC elevation (`RULE-ELEV-001`).
 
 ---
+
+### 2.2 Table: `runtimes` (CRP-366, RULE-PY-010)
+
+Interpreter registry: the one place that names which executable runs LCM code. Owned by the database, not by the JSON catalog: the catalog sync never deletes it; `ensure_runtimes()` in `tools/sync_tool_catalog_db.py` creates it and inserts missing seed rows; the SQL dump (`data/tools/tools.sql`) carries the current rows as `INSERT OR REPLACE`.
+
+```sql
+CREATE TABLE IF NOT EXISTS runtimes (
+    runtime_key TEXT PRIMARY KEY,
+    executable_path TEXT NOT NULL,
+    purpose TEXT NOT NULL,
+    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+| runtime_key | executable_path (seed) | Purpose |
+|:---|:---|:---|
+| `python` | `D:\Tools\Python314\python.exe` | LCM tools, gates, DoT trampolines and AI ad-hoc scripts |
+| `python-venv` | `D:\Git_Repositories\.venv\Scripts\python.exe` | Only code that needs the workspace venv packages; always named explicitly |
+
+Tooling: `tools/Get-LcmRuntime.py get <key>` / `list` / `set <key> <path> --purpose` (set only on operator instruction); PowerShell callers `Get-LcmRuntimePath` (`modules/LcmRuntimeAtoms.psm1`); `Update-ToolCatalog.ps1` writes the resolved path into every Python trampoline.
 
 ## 3. Indexing Strategy
 

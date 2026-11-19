@@ -8,8 +8,9 @@
              granted tools against a fixture tools.db; the live catalog carries the Macrium BCR levels and atom lists.
     Path: LCM_Inventory/tests/ToolPermissionLevels.Tests.ps1
     Authors: Rolf, Claude
-    Version: 10.7.5
+    Version: 10.7.6
     Date: 2026-11-19
+    Implementation Choices (CRP-366): Python runs on the registered interpreter (Get-LcmRuntimePath, RULE-PY-010).
 #>
 
 Describe 'Tool permission levels (CRP-343 segment 2)' {
@@ -32,7 +33,8 @@ Describe 'Tool permission levels (CRP-343 segment 2)' {
 
   It 'maps legacy booleans and levels in the sync script' {
     $code = "import importlib.util,sys; s=importlib.util.spec_from_file_location('s', r'$($script:root)\tools\sync_tool_catalog_db.py'); m=importlib.util.module_from_spec(s); s.loader.exec_module(m); print([m.admin_level(v) for v in (True, False, 2, '3', 9, None)])"
-    (python -c $code) | Should -Be '[3, 1, 2, 3, 0, 0]'
+    Import-Module -Name (Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\LcmRuntimeAtoms.psm1')
+    (& (Get-LcmRuntimePath -Key 'python') -c $code) | Should -Be '[3, 1, 2, 3, 0, 0]'
   }
 
   It 'reports owners below level 3 and callers outside the call table' {
@@ -54,7 +56,8 @@ c.commit()
 "@
     $py | python -
     $code = "import importlib.util,json; s=importlib.util.spec_from_file_location('p', r'$($script:root)\tools\Export-LcmElevationPolicy.py'); m=importlib.util.module_from_spec(s); s.loader.exec_module(m); m.GIT_ROOT=r'$ws'; a,t=m.load(r'$db'); print(json.dumps(sorted((v['kind'], v.get('tool',''), v['atom']) for v in m.check(a,t))))"
-    $kinds = (python -c $code) | ConvertFrom-Json
+    Import-Module -Name (Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\LcmRuntimeAtoms.psm1')
+    $kinds = (& (Get-LcmRuntimePath -Key 'python') -c $code) | ConvertFrom-Json
     $flat = @($kinds | ForEach-Object { $_ -join '|' })
     $flat | Should -Contain 'elevated-atom-in-non-admin-tool||T/Other.ps1'
     $flat | Should -Contain 'controlled-tool-invokes-unlisted-atom|T\Controlled.ps1|T/Other.ps1'

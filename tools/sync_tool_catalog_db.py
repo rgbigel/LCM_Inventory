@@ -6,12 +6,15 @@ Purpose: High-speed SQLite synchronization, canonical SQL text projection, and q
          for LCM Tool Catalog and Tool Intents under Dual-State Projection architecture.
 Path: LCM_Inventory/tools/sync_tool_catalog_db.py
 Authors: Rolf, LCM_AI Engine, Claude
-Version: 10.2.5
+Version: 10.2.6
 Status: Production Engine
-Date: 2026-11-18 23:50:00
+Date: 2026-11-19 12:04:28
 Implementation Choices (CRP-343 segment 2): tools.admin is a level 0 = TBD, 1 = granted, 2 = controlled, 3 = admin
 (legacy JSON booleans: true -> 3, false -> 1); table tool_atom_permissions holds the elevated atoms a controlled tool
 may call (catalog field AllowedAtoms).
+Implementation Choices (CRP-366): table runtimes is the interpreter registry (RULE-PY-010). It is owned by the
+database, not by the JSON catalog: the sync never deletes it, seed rows are inserted only when missing
+(ensure_runtimes), and the SQL dump carries the current rows.
 """
 
 import argparse
@@ -64,6 +67,32 @@ def get_lcm_version(repo_root):
         except Exception:
             pass
     return "10.2.4"
+
+
+RUNTIME_SEED = [
+    ("python", "D:\\Tools\\Python314\\python.exe",
+     "LCM tools, gates, DoT trampolines and AI ad-hoc scripts"),
+    ("python-venv", "D:\\Git_Repositories\\.venv\\Scripts\\python.exe",
+     "only code that needs the workspace venv packages (google-antigravity SDK); always named explicitly"),
+]
+
+
+def ensure_runtimes(conn):
+    """CRP-366: creates the interpreter registry if missing and inserts the seed rows that are not there yet."""
+    conn.execute(
+        """
+        CREATE TABLE IF NOT EXISTS runtimes (
+            runtime_key TEXT PRIMARY KEY,
+            executable_path TEXT NOT NULL,
+            purpose TEXT NOT NULL,
+            updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+        )
+        """
+    )
+    conn.executemany(
+        "INSERT OR IGNORE INTO runtimes (runtime_key, executable_path, purpose) VALUES (?, ?, ?)", RUNTIME_SEED
+    )
+    conn.commit()
 
 
 def init_db(conn, workspace_root=None, workspace_role="LIVE", lcm_version="10.2.4"):
@@ -192,6 +221,7 @@ def init_db(conn, workspace_root=None, workspace_role="LIVE", lcm_version="10.2.
         """
     )
     conn.commit()
+    ensure_runtimes(conn)
 
 
 def sync_json_to_db(tools_json_path, intents_json_path, db_path, sql_path=None, workspace_root=None, silent=False):
@@ -411,6 +441,21 @@ def dump_db_to_sql(db_path, sql_path, silent=False):
     for rel_path, intent_key in cursor.fetchall():
         lines.append("INSERT INTO tool_atom_permissions (tool_relative_path, intent_key) VALUES ('"
                      + str(rel_path).replace("'", "''") + "', '" + str(intent_key).replace("'", "''") + "');")
+
+    # CRP-366: interpreter registry
+    lines.append("")
+    lines.append("-- Table: runtimes (CRP-366, RULE-PY-010)")
+    lines.append("""CREATE TABLE IF NOT EXISTS runtimes (
+    runtime_key TEXT PRIMARY KEY,
+    executable_path TEXT NOT NULL,
+    purpose TEXT NOT NULL,
+    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);""")
+    ensure_runtimes(conn)
+    cursor.execute("SELECT runtime_key, executable_path, purpose, updated_at FROM runtimes ORDER BY runtime_key")
+    for row in cursor.fetchall():
+        lines.append("INSERT OR REPLACE INTO runtimes (runtime_key, executable_path, purpose, updated_at) VALUES ("
+                     + ", ".join("'" + str(v).replace("'", "''") + "'" for v in row) + ");")
 
     lines.append("")
     lines.append("COMMIT;")

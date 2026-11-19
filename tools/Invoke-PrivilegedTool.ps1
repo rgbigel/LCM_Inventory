@@ -10,8 +10,9 @@
            preventing Session 0 hangs and silent invariant failures.
   Path: LCM_Inventory/tools/Invoke-PrivilegedTool.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.2.0
-  Date: 2026-10-13
+  Version: 10.2.1
+  Date: 2026-11-19
+  Implementation Choices (CRP-366): Python runs on the registered interpreter (Get-LcmRuntimePath, RULE-PY-010).
 .PARAMETER Tool
   The tool Name, ShortName, or relative path to execute (e.g., 'RestoreSettings', 'Restore-SystemSettings.ps1', 'SetGitRoot').
 .PARAMETER Arguments
@@ -299,7 +300,8 @@ if ($isElevated -or (-not $requiresAdmin)) {
   } elseif ($toolType -eq 'Batch') {
     & cmd.exe /c "$scriptFullPath $forwardedArgs"
   } elseif ($toolType -eq 'Python') {
-    & python "$scriptFullPath" ($forwardedArgs -split '\s+')
+    Import-Module -Name (Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\LcmRuntimeAtoms.psm1')
+    & (Get-LcmRuntimePath -Key 'python') "$scriptFullPath" ($forwardedArgs -split '\s+')
   } else {
     & "$scriptFullPath" ($forwardedArgs -split '\s+')
   }

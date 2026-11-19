@@ -1,1 +1,0 @@
-D:/Git_Repositories/HaSSD06/mcp_ha_readonly.py

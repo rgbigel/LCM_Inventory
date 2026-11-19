@@ -5,5 +5,5 @@ if %errorlevel% neq 0 (
   call "%~dp0do.cmd" -Command "%~nx0 %*" -Elevated
   exit /b
 )
-echo # [LCM Launcher] %~nx0 - Goal: Suppresses unnecessary ASUS background services and scheduled updater tasks.
-pwsh.exe -NoExit -NoProfile -ExecutionPolicy Bypass -File "%~dp0..\..\SystemConfiguration\Source\Invoke-AsusDebloater.ps1" %*
+echo # [LCM Launcher] %~nx0 - Goal: asus-debloater execution tool.
+pwsh.exe -NoExit -NoProfile -ExecutionPolicy Bypass -File "%~dp0..\..\LCM_Tools\tools\asus-debloater.ps1" %*

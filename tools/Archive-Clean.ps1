@@ -6,8 +6,9 @@
   Purpose: Permanently deletes archived conversations older than a specified age threshold (e.g. 1m, 3d).
   Path: LCM_Inventory\tools\Archive-Clean.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.2.0
-  Date: 2026-11-11
+  Version: 10.2.1
+  Date: 2026-11-19
+  Implementation Choices (CRP-366): Python runs on the registered interpreter (Get-LcmRuntimePath, RULE-PY-010).
 .PARAMETER Older
   Age threshold for archived conversations to delete. Default is '1m' (older than 1 month).
   Supported units: d (days), w (weeks), m (months), y (years), h (hours). Examples: '3d', '2w', '1m', '6m'.
@@ -194,7 +195,8 @@ for r in c.fetchall():
 print(json.dumps(rows))
 "@
 
-  $jsonOutput = python -c $pyQuery
+  Import-Module -Name (Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\LcmRuntimeAtoms.psm1')
+  $jsonOutput = & (Get-LcmRuntimePath -Key 'python') -c $pyQuery
   $convList = @()
   if ($null -ne $jsonOutput -and -not [string]::IsNullOrWhiteSpace($jsonOutput)) {
     $convList = @($jsonOutput | ConvertFrom-Json)
@@ -347,7 +349,8 @@ if os.path.exists(db) and len(ids) > 0:
     conn.commit()
     conn.close()
 "@
-    python -c $pyPurge
+    Import-Module -Name (Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\LcmRuntimeAtoms.psm1')
+    & (Get-LcmRuntimePath -Key 'python') -c $pyPurge
   }
 
   $mbFreed = [Math]::Round($freedBytes / 1MB, 2)

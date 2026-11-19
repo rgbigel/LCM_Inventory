@@ -3,8 +3,9 @@ Module: LcmDaemon/Classes/DaemonActionController.ps1
 Purpose: Object-Oriented controller routing and executing daemon REST operations.
 Path: LCM_Inventory/modules/LcmDaemon/Classes/DaemonActionController.ps1
 Authors: Rolf, LCM_AI Engine
-Version: 10.2.2
-Date: 2026-11-09 19:05:00
+Version: 10.2.3
+Date: 2026-11-19
+Implementation Choices (CRP-366): Python runs on the registered interpreter (Get-LcmRuntimePath, RULE-PY-010).
 #>
 
 Set-StrictMode -Version Latest
@@ -734,7 +735,8 @@ public static class LcmFgDetect {
     if ($ext -in @('.ps1', '.psm1')) {
       $helpContent = & pwsh.exe -NoProfile -ExecutionPolicy Bypass -Command "& '$fullPath' -h" 2>&1 | Out-String
     } elseif ($ext -eq '.py') {
-      $helpContent = & python "$fullPath" -h 2>&1 | Out-String
+      Import-Module -Name (Join-Path (Join-Path $PSScriptRoot '..\..\..') 'modules\LcmRuntimeAtoms.psm1')
+      $helpContent = & (Get-LcmRuntimePath -Key 'python') "$fullPath" -h 2>&1 | Out-String
     } elseif ($ext -in @('.cmd', '.bat')) {
       $helpContent = & cmd.exe /c "`"$fullPath`" /?" 2>&1 | Out-String
     } else {

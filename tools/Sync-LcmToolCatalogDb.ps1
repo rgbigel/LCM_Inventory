@@ -7,8 +7,9 @@
              and parity verification between config/tool_catalog.json, config/tool_intents.json,
              data/tools/tools.db, and data/tools/tools.sql.
     Authors: Rolf, LCM_AI Engine
-    Version: 10.2.4
-    Date: 2026-11-13 13:30:00
+    Version: 10.2.5
+    Date: 2026-11-19 12:04:28
+    Implementation Choices (CRP-366): the engine runs on the registered interpreter (RULE-PY-010).
 .PARAMETER Action
     Operation to perform:
     - 'Sync'   : JSON -> SQLite DB + SQL text dump (default).
@@ -30,7 +31,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$scriptVersion = "10.2.4"
+$scriptVersion = "10.2.5"
 $scriptName = "Sync-LcmToolCatalogDb"
 
 if ($Help) {
@@ -57,7 +58,8 @@ if ($Silent) {
     $argsList += "--silent"
 }
 
-$proc = Start-Process -FilePath "python" -ArgumentList $argsList -NoNewWindow -PassThru -Wait
+Import-Module -Name (Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\LcmRuntimeAtoms.psm1') -Force
+$proc = Start-Process -FilePath (Get-LcmRuntimePath -Key 'python') -ArgumentList $argsList -NoNewWindow -PassThru -Wait
 if ($proc.ExitCode -ne 0) {
     throw "SQLite tool catalog action '$Action' failed with exit code $($proc.ExitCode)"
 }

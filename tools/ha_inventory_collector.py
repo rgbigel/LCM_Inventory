@@ -1,1 +1,0 @@
-D:/Git_Repositories/HaSSD06/ha_inventory_collector.py

@@ -11,10 +11,13 @@
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
   Path: D:\Git_Repositories\LCM_Inventory\tools\Update-ToolCatalog.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.2.11
+  Version: 10.2.12
   Implementation Choices (CRP-343 segment 2): Admin is a level 0..3 (TBD / granted / controlled / admin; legacy
   true -> 3, false -> 1); controlled tools carry AllowedAtoms; new tools land at 0 unless admin code is found.
-  Date: 2026-11-18 14:10:00
+  Date: 2026-11-19 12:04:28
+  Implementation Choices (CRP-366): Python launchers and examples name the registered interpreter
+  (tools.db table runtimes via LcmRuntimeAtoms, RULE-PY-010) instead of a bare 'python' resolved through PATH;
+  if the registry cannot be read, a warning is shown and the launchers keep 'python' (bookkeeping never aborts).
   Implementation Choices (CRP-345): tools/automation/*.ahk are scanned as type AutoHotkey and registered as intents with executable AutoHotkey64.exe and the declared IntentElevated flag; they get no .cmd trampoline (run only through Invoke-LcmAhkAtom).
 .PARAMETER Silent
   Suppresses non-error terminal output (useful in automated pipelines).
@@ -606,6 +609,10 @@ $metadataOverrides = @{
     Category    = "Tool Analysis"
     Description = "Interactive HTML viewer analyzing all legacy batch scripts and modern PowerShell tool equivalents."
   }
+  "AdminShell.ps1" = @{
+    Admin       = 2  # CRP-343: controlled (operator 2026-11-19, case C: menu calls the elevated Disable / Enable / Uninstall atoms through the DO)
+    AllowedAtoms = @("disable", "enable", "uninstall")
+  }
   "Mount-MacriumLatestBaseline.ps1" = @{
     Admin       = 2  # CRP-343: controlled (manual mount entry; dispatches the mount worker atom through the DO)
     AllowedAtoms = @("invoke-macriummountworker")
@@ -758,11 +765,15 @@ $metadataOverrides = @{
 # 2. Authoritative Tool Catalog Baseline (LCM_Inventory/config/tool_catalog.json)
 # ------------------------------------------------------------------------------
 $authoritativeCatalog = @{}
+$authoritativeByPath = @{}  # CRP-343 (2026-11-19): metadata is inherited by path; a name match counts only for a moved file
 if (Test-Path -LiteralPath $catalogJsonPath) {
   try {
     $existingCatalogList = Get-Content -LiteralPath $catalogJsonPath -Raw -Encoding UTF8 | ConvertFrom-Json
     foreach ($entry in $existingCatalogList) {
       if (-not [string]::IsNullOrWhiteSpace($entry.Name)) {
+        if ($entry.PSObject.Properties['RelativePath'] -and -not [string]::IsNullOrWhiteSpace($entry.RelativePath)) {
+          $authoritativeByPath[$entry.RelativePath.Replace('/', '\').ToLowerInvariant()] = $entry
+        }
         $authoritativeCatalog[$entry.Name] = $entry
         $stem = [System.IO.Path]::GetFileNameWithoutExtension($entry.Name)
         if (-not $authoritativeCatalog.ContainsKey($stem)) {
@@ -949,6 +960,14 @@ function Get-LcmToolDependencies {
 # 4. Scan Locations
 # ------------------------------------------------------------------------------
 Import-Module -Name (Join-Path $inventoryRoot 'modules\LcmToolScanLocations.psm1')
+# CRP-366: Python launchers name the registered interpreter (RULE-PY-010).
+Import-Module -Name (Join-Path $inventoryRoot 'modules\LcmRuntimeAtoms.psm1') -Force
+try {
+  $script:LcmPythonExe = Get-LcmRuntimePath -Key 'python'
+} catch {
+  Write-Warning ('CRP-366: {0} Python launchers keep python on PATH.' -f $_.Exception.Message)
+  $script:LcmPythonExe = 'python'
+}
 $scanDefinitions = @(Get-LcmToolScanLocations)
 
 $toolsList = [System.Collections.Generic.List[PSCustomObject]]::new()
@@ -995,7 +1014,10 @@ try {
 
       # Resolve metadata from authoritative catalog or derive defaults
       $existing = $null
-      if ($authoritativeCatalog.ContainsKey($fileName)) {
+      $pathKey = $relPath.Replace('/', '\').ToLowerInvariant()
+      if ($authoritativeByPath.ContainsKey($pathKey)) {
+        $existing = $authoritativeByPath[$pathKey]
+      } elseif ($authoritativeCatalog.ContainsKey($fileName)) {
         $existing = $authoritativeCatalog[$fileName]
       } elseif ($authoritativeCatalog.ContainsKey("$baseStem.ps1")) {
         $existing = $authoritativeCatalog["$baseStem.ps1"]
@@ -1005,6 +1027,10 @@ try {
         $existing = $authoritativeCatalog["$baseStem.py"]
       } elseif ($authoritativeCatalog.ContainsKey($baseStem)) {
         $existing = $authoritativeCatalog[$baseStem]
+      }
+      # A name-only match belongs to another file unless that file no longer exists at its recorded path (moved file)
+      if ($existing -and -not $authoritativeByPath.ContainsKey($pathKey) -and $existing.PSObject.Properties['RelativePath'] -and -not [string]::IsNullOrWhiteSpace($existing.RelativePath)) {
+        if (Test-Path -LiteralPath (Join-Path $workspaceRoot $existing.RelativePath)) { $existing = $null }
       }
 
       $meta = @{}
@@ -1063,6 +1089,18 @@ try {
             $prefix = ($sd.Domain -replace '[^a-zA-Z0-9]', '')
             $cleanBase = $rawShortName -replace "^($prefix)+", ""
             $finalShortName = "$prefix$cleanBase"
+          }
+          # CRP-343 (2026-11-19): the disambiguated name must itself be free (repository prefix, then a counter)
+          if ($usedShortNames.ContainsKey($finalShortName) -and $usedShortNames[$finalShortName].ToLowerInvariant() -ne $targetCanonical.ToLowerInvariant()) {
+            $repoPrefix = (($relPath -split '[\\/]')[0] -replace '[^a-zA-Z0-9]', '')
+            $repoBase = $repoPrefix + ($baseStem -replace '[^a-zA-Z0-9]', '')
+            $candidate = $repoBase
+            $counter = 2
+            while ($usedShortNames.ContainsKey($candidate) -and $usedShortNames[$candidate].ToLowerInvariant() -ne $targetCanonical.ToLowerInvariant()) {
+              $candidate = $repoBase + $counter
+              $counter++
+            }
+            $finalShortName = $candidate
           }
           Write-ToolLog -Message "Disambiguated ShortName collision for $fileName -> $finalShortName" -Level WARN
         }
@@ -1131,7 +1169,7 @@ try {
       } elseif (-not [string]::IsNullOrWhiteSpace($finalShortName)) {
         $finalShortName
       } elseif ($lang -eq 'Python') {
-        "python `"$relPath`""
+        "`"$script:LcmPythonExe`" `"$relPath`""
       } elseif ($lang -eq 'Batch') {
         "cmd /c `"$relPath`""
       } elseif ($lang -eq 'Executable') {
@@ -1310,7 +1348,7 @@ try {
       } elseif ($sn -eq 'run') {
         "@echo off`r`nrem ==============================================================================`r`nrem  LCM UNIVERSAL COMMAND GATEWAY (run do / run progress / run action)`r`nrem ==============================================================================`r`nsetlocal`r`npwsh.exe -NoProfile -ExecutionPolicy Bypass -File `"%~dp0..\tools\Invoke-LcmAction.ps1`" %*`r`nexit /b %ERRORLEVEL%`r`n"
       } elseif ($t.Type -eq 'Python') {
-        "@echo off`r`n$generatedLauncherMarker`r`n${elevationCheck}${commentBanner}setlocal`r`npython `"$targetRef`" %*`r`nendlocal`r`n"
+        "@echo off`r`n$generatedLauncherMarker`r`n${elevationCheck}${commentBanner}setlocal`r`n`"$script:LcmPythonExe`" `"$targetRef`" %*`r`nendlocal`r`n"
       } elseif ($t.Type -eq 'Batch') {
         "@echo off`r`n$generatedLauncherMarker`r`n${elevationCheck}${commentBanner}call `"$targetRef`" %*`r`n"
       } elseif ($t.Type -eq 'Executable') {

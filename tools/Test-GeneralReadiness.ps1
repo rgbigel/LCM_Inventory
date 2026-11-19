@@ -8,8 +8,9 @@
   reparse points, source file encoding, AST parser syntax, and secrets isolation.
   Path: LCM_Inventory/tools/Test-GeneralReadiness.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.2.1
-  Date: 2026-11-09 12:30:00
+  Version: 10.2.2
+  Date: 2026-11-19
+  Implementation Choices (CRP-366): Python runs on the registered interpreter (Get-LcmRuntimePath, RULE-PY-010).
 .PARAMETER RepositoryPath
   Target repository root path to audit. Defaults to current working directory.
 .PARAMETER Help
@@ -59,10 +60,15 @@ if (-not (Test-Path -LiteralPath $rulesPath)) {
 } else {
   $item = Get-Item -LiteralPath $rulesPath -Force
   $isJunction = ($item.Attributes -band [System.IO.FileAttributes]::ReparsePoint) -ne 0
+  # CRP-343 (2026-11-19): the whole .agents folder may be the junction into LCM_AI\.agents; rules are then reached through it
+  $agentsItem = Get-Item -LiteralPath (Join-Path $repoPath '.agents') -Force
+  $isParentJunction = ($agentsItem.Attributes -band [System.IO.FileAttributes]::ReparsePoint) -ne 0
   if ($repoName -eq 'LCM_AI') {
     Write-Host "  Passed: Canonical rule authority hub." -ForegroundColor Green
   } elseif ($isJunction) {
     Write-Host "  Passed: Reparse point active -> $($item.Target)" -ForegroundColor Green
+  } elseif ($isParentJunction) {
+    Write-Host "  Passed: .agents junction active -> $($agentsItem.Target)" -ForegroundColor Green
   } else {
     $gateFailures.Add("Gate 1: .agents\rules is a physical directory instead of a junction.")
     Write-Host "  FAILED: .agents\rules is not a junction." -ForegroundColor Red
@@ -140,7 +146,8 @@ $pyFiles = @(Get-ChildItem -LiteralPath $repoPath -Filter *.py -Recurse -File -E
 if ($pyFiles.Count -gt 0) {
   $pyFailures = [System.Collections.Generic.List[string]]::new()
   foreach ($pyf in $pyFiles) {
-    $out = python -m py_compile $pyf.FullName 2>&1
+    Import-Module -Name (Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\LcmRuntimeAtoms.psm1')
+    $out = & (Get-LcmRuntimePath -Key 'python') -m py_compile $pyf.FullName 2>&1
     if ($LASTEXITCODE -ne 0) {
       $pyFailures.Add("$($pyf.Name): $out")
     }

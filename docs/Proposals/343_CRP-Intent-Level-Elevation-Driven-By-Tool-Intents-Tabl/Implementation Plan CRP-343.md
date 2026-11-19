@@ -6,7 +6,7 @@ Path: LCM_Inventory/docs/Proposals/343_CRP-Intent-Level-Elevation-Driven-By-Tool
 Authors: Rolf, Claude  
 Version: 10.7.4
 Status: In Progress  
-Date: 2026-11-18 23:44:31
+Date: 2026-11-19 10:14:39
 
 ---
 
@@ -50,7 +50,8 @@ Notes per step:
 | 8    | open: RULE-ELEV-001/003/006/007 (ADMINMODE)                                             |
 | 9    | open: diagrams in `docs/Implementation.md`, use cases in `docs/Requirements.md`         |
 | 10   | done for the core: Go call-table test, Pester levels/policy test; open: live tests per T2 row through the DO |
-- Open as well: the 31 conflicts of the consistency check (`data/tools/elevation_policy.json`, `violations`) await the operator's decision per case (Specification T4); BUG-348 daemon items; then CRP-361.
+- Open (2026-11-19): retire candidates `LCM_Tools\tools\asus-debloater.ps1` and `SystemConfiguration\Source\asus-debloater.ps1` (kept: `SystemConfiguration\Source\Invoke-AsusDebloater.ps1`); 19 failing unit test cases surfaced by the new LCM_Inventory readiness gate; the remaining conflicts are 11 (Walkthrough section 11).
+- Open as well: the 13 remaining conflicts of the consistency check (`data/tools/elevation_policy.json`, `violations`; 31 before 2026-11-19, Walkthrough sections 6 and 7) await step 7 (9 callers of the retired `Invoke-InteractiveDesktop.ps1`) and the keyless-caller migration (4 daemon lifecycle callers); the 5 individual cases are decided (Specification T4); BUG-348 daemon items; then CRP-361.
 - Backups (operator rule 2026-11-18): `scratch/db-dumps/tools_db_before_CRP-343-s2_20261118_233300.sql`, `scratch/db-dumps/elevation_policy_before_CRP-343-s2.json`, `scratch/do-before-crp343-s2.exe`; deleted after the completion checks.
 ## 3. Deployment Order
 

@@ -8,8 +8,9 @@
            and automated proposal state upgrades per RULE-DEC-005.
   Path: LCM_Inventory/modules/LcmPushRequalification.psm1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.2.1
-  Date: 2026-11-12 12:45:00
+  Version: 10.2.2
+  Date: 2026-11-19
+  Implementation Choices (CRP-366): Python runs on the registered interpreter (Get-LcmRuntimePath, RULE-PY-010).
 #>
 
 Set-StrictMode -Version Latest
@@ -421,8 +422,10 @@ function Invoke-LcmStepwiseRequalification {
     # Sync SQLite DB and export SQL text dump
     $syncDbScript = Join-Path $WorkspaceRoot "LCM_Inventory\tools\sync_proposals_db.py"
     if (Test-Path -LiteralPath $syncDbScript) {
-      python $syncDbScript --action sync | Out-Null
-      python $syncDbScript --action dump | Out-Null
+      Import-Module -Name (Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\LcmRuntimeAtoms.psm1')
+      & (Get-LcmRuntimePath -Key 'python') $syncDbScript --action sync | Out-Null
+      Import-Module -Name (Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\LcmRuntimeAtoms.psm1')
+      & (Get-LcmRuntimePath -Key 'python') $syncDbScript --action dump | Out-Null
       Write-Host "  -> Synchronized proposals.db and exported data/proposals/proposals.sql." -ForegroundColor Green
     }
   } else {

@@ -93,7 +93,9 @@ print(f"[PASS] 100% Referential Integrity Verified across {len(strategies)} stra
 conn.close()
 "@
 
-$result = & python -c $pythonScript
+# CRP-366: registered interpreter (RULE-PY-010); the inline script is a Python-rewrite candidate.
+Import-Module -Name (Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\LcmRuntimeAtoms.psm1') -Force
+$result = & (Get-LcmRuntimePath -Key 'python') -c $pythonScript
 $exitCode = $LASTEXITCODE
 
 $result | ForEach-Object { Write-Host $_ }

@@ -6,7 +6,7 @@ Purpose: Reads LCM_Inventory/data/tools/tools.db read-only and (1) exports the a
 Path: LCM_Inventory/tools/Export-LcmElevationPolicy.py
 Authors: Rolf, Claude
 Version: 10.7.5
-Date: 2026-11-18
+Date: 2026-11-19
 Rule: RULE-ELEV-001, RULE-ELEV-003, RULE-ELEV-006 (CRP-343)
 Implementation Choices (CRP-343):
   - tool_intents.elevated is the atom-level authority (runs elevated); tools.admin is the
@@ -22,6 +22,9 @@ Implementation Choices (CRP-343 segment 2): tools.admin is a level 0 = TBD, 1 = 
   An elevated atom is legal only when its owning tool has level 3; a controlled tool may call the elevated atoms of
   its list (table tool_atom_permissions) through the DO; levels 0 and 1 call no elevated atom. The policy carries the
   levels and the lists for the daemon's caller check.
+Implementation Choices (CRP-343, 2026-11-19, operator option C): property assignments of a string literal
+  (catalog seed data such as Example = 'pwsh -File ...') are mentions, not calls (DATA_LITERAL); so are HTML markup
+  lines such as a button's onclick command string (MARKUP_LINE; operator case 18, 2026-11-19).
 Caveats: the database is opened with mode=ro; this tool never writes tools.db.
 """
 
@@ -37,6 +40,8 @@ sys.stdout.reconfigure(encoding='utf-8')
 
 GIT_ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
 CALL_MARKERS = re.compile(r'(^|\s)&\s|-file\s|\bdo(\.exe|\.cmd)?\s|start-process|join-path', re.IGNORECASE)
+DATA_LITERAL = re.compile(r'^[a-z_][a-z0-9_]*\s*=\s*[\x27"]')  # Name = '...': catalog data, not a call
+MARKUP_LINE = re.compile(r'^<[a-z!/]')  # <button onclick=...>: HTML markup, not a call
 SOURCE_EXT = ('.ps1', '.psm1', '.cmd', '.bat', '.py')
 DB_PATH = os.path.join(GIT_ROOT, 'LCM_Inventory', 'data', 'tools', 'tools.db')
 OUT_PATH = os.path.join(GIT_ROOT, 'LCM_Inventory', 'data', 'tools', 'elevation_policy.json')
@@ -106,7 +111,8 @@ def check(atoms, tools):
                 continue
             for no, line in enumerate(lines, 1):
                 s = line.strip()
-                if leaf in s and not s.startswith(('#', 'rem ', '::', '//')) and CALL_MARKERS.search(s):
+                if (leaf in s and not s.startswith(('#', 'rem ', '::', '//')) and not DATA_LITERAL.match(s) and not MARKUP_LINE.match(s)
+                        and CALL_MARKERS.search(s)):
                     if tool['admin'] == 2 and keys_by_leaf.get(leaf, set()) & set(tool['allowed_atoms']):
                         break  # controlled tool, atom in its list (CRP-343): allowed through the DO
                     kind = 'controlled-tool-invokes-unlisted-atom' if tool['admin'] == 2 else 'non-admin-tool-invokes-elevated-atom'

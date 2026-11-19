@@ -6,4 +6,4 @@ if %errorlevel% neq 0 (
   exit /b
 )
 echo # [LCM Launcher] %~nx0 - Goal: Toggle Windows Search on off execution tool.
-pwsh.exe -NoExit -NoProfile -ExecutionPolicy Bypass -File "%~dp0..\..\LCM_Inventory\tools\Toggle Windows Search on off.ps1" %*
+pwsh.exe -NoExit -NoProfile -ExecutionPolicy Bypass -File "%~dp0..\..\LCM_Tools\tools\Toggle Windows Search on off.ps1" %*

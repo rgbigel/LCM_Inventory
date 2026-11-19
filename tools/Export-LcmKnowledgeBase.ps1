@@ -8,7 +8,7 @@
     Path: LCM_Inventory/tools/Export-LcmKnowledgeBase.ps1
     Authors: Rolf, Antigravity AI
     Version: 10.0.0-DEPRECATED
-    Date: 2026-10-13
+    Date: 2026-11-19
 .PARAMETER DestinationPath
     Mapped to TargetRoot for backward compatibility.
 .PARAMETER SourcePath
@@ -40,7 +40,7 @@ Write-Warning "The legacy implementation is archived at: LCM_Inventory\data\arch
 
 $targetScript = Join-Path $PSScriptRoot "Sync-LCMResearchSnapshot.ps1"
 if (-not (Test-Path $targetScript)) {
-    $targetScript = "D:\Git_Repositories\LCM_Tools\Sync-LCMResearchSnapshot.ps1"
+    $targetScript = Join-Path $PSScriptRoot '..\..\LCM_Tools\tools\Sync-LCMResearchSnapshot.ps1'  # physical home; link removed 2026-11-19
 }
 
 $forwardArgs = @{}

@@ -13,8 +13,9 @@
     Implementation Choices (BUG-348): -DryRun skips every mutating pre-push step (Update-Gemini export commit,
     tool catalog snapshot commit, the second full maintenance run); before, a dry run committed and deleted
     186 script logs.
-    Version: 10.2.5
-    Date: 2026-11-18
+    Version: 10.2.6
+    Date: 2026-11-19
+    Implementation Choices (CRP-366): the ledger dump runs on the registered interpreter (RULE-PY-010).
 #>
 
 [CmdletBinding()]
@@ -286,7 +287,8 @@ if (-not $DryRun -and (Test-Path -LiteralPath $ledgerDumpScript)) {
     Write-Host "`n[Pre-Push Pipeline] Exporting and committing SQL ledger projections..." -ForegroundColor Yellow
     Push-Location -LiteralPath $inventoryRepoPath
     try {
-        & python $ledgerDumpScript --action dump --silent
+        Import-Module -Name (Join-Path $inventoryRepoPath 'modules\LcmRuntimeAtoms.psm1') -Force
+        & (Get-LcmRuntimePath -Key 'python') $ledgerDumpScript --action dump --silent
     } finally {
         Pop-Location
     }

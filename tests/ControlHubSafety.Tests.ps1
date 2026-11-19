@@ -9,7 +9,8 @@
   Path: tests/ControlHubSafety.Tests.ps1
   Authors: Rolf, Copilot
   Version: 10.2.1
-  Date: 2026-10-21
+  Date: 2026-11-19
+  Implementation Choices (BUG-364): expectations follow the operator-accepted template (daemon endpoint /api/action, -Pane on Open-LcmStandardDisplay, Proceed via the ITEM selector, open rail without the prio 0 exclusion); live-ledger checks accept completed or pushed.
 #>
 
 Describe 'Control Hub rendered-artifact safety' {
@@ -27,7 +28,7 @@ Describe 'Control Hub rendered-artifact safety' {
     $template | Should -Match 'Developer template detected'
     $template | Should -Match 'const IS_RENDERED_CONTROL_HUB = !!displayPayload\.proposals'
     $template | Should -Match 'Developer template is not executable; no daemon command was sent'
-    $template | Should -Match '(?s)async function executeDaemonCommand.*?if \(!IS_RENDERED_CONTROL_HUB\).*?return;.*?fetch\(DAEMON_URL \+ "/execute"'
+    $template | Should -Match '(?s)async function executeDaemonCommand.*?if \(!IS_RENDERED_CONTROL_HUB\).*?return;.*?fetch\(DAEMON_URL \+ "/api/action"'
   }
 
   It 'launches Control Hub only through the shared HTTP Standard Display' {
@@ -35,7 +36,7 @@ Describe 'Control Hub rendered-artifact safety' {
 
     $renderer | Should -Match '\[switch\]\$StartDaemon'
     $renderer | Should -Match "modules\\LcmStandardDisplay\.psm1"
-    $renderer | Should -Match 'Open-LcmStandardDisplay -DisplayId \$displayId -Parameters \$displayParameters'
+    $renderer | Should -Match 'Open-LcmStandardDisplay -DisplayId \$displayId( -Pane:\$Pane)? -Parameters \$displayParameters'
     $renderer | Should -Not -Match 'local fallback|AbsoluteUri|Start-Process -FilePath \$browserPath'
   }
 
@@ -95,7 +96,7 @@ Describe 'Control Hub rendered-artifact safety' {
     $template | Should -Match 'lifecycleButton\("Do ITEM"'
     $template | Should -Not -Match 'Do ITEM \(Doit\)'
     $template | Should -Match 'dispatchTargetAction\(''do''\)'
-    $template | Should -Match 'dispatchTargetAction\(''proceed''\)'
+    $template | Should -Match '<option value="proceed">Proceed ITEM</option>'
     $template | Should -Match 'dispatchTargetAction\(''bcr''\)'
     $template | Should -Match 'COH ITEM to act on its full membership'
     $template | Should -Not -Match 'onclick="dispatchStandardAction\(''do'', \[\$\{p\.id\}\], ''''\)"'
@@ -154,12 +155,13 @@ Describe 'Control Hub rendered-artifact safety' {
     $template | Should -Match 'function applyOpenWorkPresetSort\(preset\)'
     $template | Should -Match 'if \(preset !== "open"\) return;'
     $template | Should -Match 'activeSort = "prio-desc";'
-    $template | Should -Match 'if \(prio === 0\) return false;'
+    $template | Should -Match 'if \(activeRailFilter === "open" \|\| activeRailFilter === "openbusiness"\)'
+    $template | Should -Not -Match 'if \(prio === 0\) return false;'
     $template | Should -Match '\.proposal-table \{ width: 100%; table-layout: fixed;'
     $template | Should -Match 'const workspaceSwitchAtoms = Object\.freeze\('
     $template | Should -Match 'function invokeWorkspaceSwitchAtom\(atomName\)'
     $template | Should -Match 'function dispatchWorkspaceSwitch\('
-    $template | Should -Match 'JSON\.stringify\(\{ command, sync: false, noExit: false \}\)'
+    $template | Should -Match 'options: \{ sync: false, noExit: false \}'
     $template | Should -Match 'confirmed by the refreshed ledger'
     $template | Should -Match 'workspace-switch-button\.switch-pending'
     $template | Should -Match 'const confirmationDeadline = Date\.now\(\) \+ 15000'
@@ -247,7 +249,7 @@ Describe 'Control Hub rendered-artifact safety' {
     $ledger = Get-Content -LiteralPath $ledgerPath -Raw -Encoding UTF8 | ConvertFrom-Json
     $bug = @($ledger.proposals | Where-Object { $_.id -eq 276 })[0]
 
-    $bug.state | Should -Be 'completed'
+    $bug.state | Should -BeIn @('completed', 'pushed')
     $bug.status_note | Should -BeNullOrEmpty
     @($ledger.review_obligation_ledger.entries | Where-Object { $_.proposal_id -eq 276 -and $_.status -ne 'completed' }).Count | Should -Be 0
     $template = Get-Content -LiteralPath $script:templatePath -Raw -Encoding UTF8

@@ -4,7 +4,8 @@ Purpose: Verify HTTP launch arguments, daemon readiness and explicit failure beh
 Path: tests/LcmStandardDisplay.Tests.ps1
 Authors: Rolf, Copilot
 Version: 10.2.1
-Date: 2026-10-21
+Date: 2026-11-19
+  Implementation Choices (BUG-364): the desktop fast path is asserted at the daemon /open call (mocked), not at Start-Process.
 #>
 BeforeAll {
   $fixture = Join-Path $TestDrive 'display-opener'
@@ -69,15 +70,19 @@ Describe 'Standard Display HTTP opener' {
   }
 
   It 'dispatches the HTTP URL itself through the real interactive-desktop fast path' {
+    # BUG-364: the fast path posts the URL to the DO daemon (/open, RULE-PS-011); mocked so the test never opens a live browser tab
     Mock Start-Process {}
+    Mock Invoke-RestMethod { [pscustomobject]@{ status = 'OPENED' } } -ParameterFilter { $Uri -like '*/open' }
+    Mock Invoke-RestMethod { [pscustomobject]@{ status = 'ONLINE' } } -ParameterFilter { $Uri -notlike '*/open' }
     $dispatcher = Join-Path (Split-Path $PSScriptRoot -Parent) 'tools\Invoke-InteractiveDesktop.ps1'
     if ([Diagnostics.Process]::GetCurrentProcess().SessionId -eq 0) {
       Set-ItResult -Skipped -Because 'Requires an interactive Windows session.'
       return
     }
     & $dispatcher -FilePath 'http://127.0.0.1:9876/tools?Audience=User&Filter=a%26b' -LogFile (Join-Path $TestDrive 'desktop.log')
-    Should -Invoke Start-Process -Times 1 -Exactly -ParameterFilter {
-      $FilePath -eq 'http://127.0.0.1:9876/tools?Audience=User&Filter=a%26b' -and -not $ArgumentList
+    Should -Invoke Invoke-RestMethod -Times 1 -Exactly -ParameterFilter {
+      $Uri -like '*/open' -and ($Body | ConvertFrom-Json).url -eq 'http://127.0.0.1:9876/tools?Audience=User&Filter=a%26b' -and [string]::IsNullOrEmpty(($Body | ConvertFrom-Json).args)
     }
+    Should -Invoke Start-Process -Times 0 -Exactly
   }
 }

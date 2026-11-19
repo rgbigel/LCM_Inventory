@@ -9,8 +9,9 @@
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
   Path: tools/Invoke-LcmProtocol.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.2.0
-  Date: 2026-10-13
+  Version: 10.2.1
+  Date: 2026-11-19
+  Implementation Choices (CRP-366): .py targets start on the registered interpreter (RULE-PY-010).
 .PARAMETER Uri
   The incoming lcm:// URI string (e.g. lcm://run?tool=Kill-LogitechUpdate.ps1&elevated=true).
 .PARAMETER Help
@@ -122,7 +123,9 @@ try {
     $execCmd = "start `"$toolName`" cmd.exe $kFlag `"$toolPath`""
   } elseif ($ext -eq '.py') {
     $kFlag = if ($noExit) { "/k" } else { "/c" }
-    $execCmd = "start `"$toolName`" cmd.exe $kFlag python `"$toolPath`""
+    Import-Module -Name (Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\LcmRuntimeAtoms.psm1') -Force
+    $protocolPython = Get-LcmRuntimePath -Key 'python'
+    $execCmd = "start `"$toolName`" cmd.exe $kFlag `"`"$protocolPython`" `"$toolPath`"`""
   } else {
     $execCmd = "start `"$toolName`" `"$toolPath`""
   }

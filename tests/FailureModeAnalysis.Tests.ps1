@@ -7,12 +7,15 @@
   Path: LCM_Inventory/tests/FailureModeAnalysis.Tests.ps1
   Authors: Rolf, Copilot
   Version: 10.2.1
-  Date: 2026-10-21
+  Date: 2026-11-19
+  Implementation Choices (BUG-364): expected producer versions are read from the tool header (Get-LcmDisplaySourceVersion) instead of a hard-coded 10.0.1.
 #>
 Describe 'Session failure mode analysis' {
   BeforeAll {
     $root = Split-Path $PSScriptRoot -Parent
     $tool = Join-Path $root 'tools\Invoke-FailureModeAnalysis.ps1'
+    Import-Module -Name (Join-Path $root 'modules\LcmDisplayVersion.psm1') -Force
+    $expectedVersion = Get-LcmDisplaySourceVersion -Path $tool
     Import-Module -Name (Join-Path $root 'modules\FailureModeAnalysis.psm1') -Force
     Import-Module -Name (Join-Path $root 'modules\ProposalManager.psm1') -Force
     $diagnostic = Join-Path $root 'tools\Show-LcmFailureDiagnostic.ps1'
@@ -128,7 +131,7 @@ Describe 'Session failure mode analysis' {
     $selection = Select-FailureEvidence -Events $events -From 'again'
     $text = New-FailureMarkdown -Selection $selection -Findings @() -HostName Offline -SessionId fixture -Source fixture -Lifecycle @('valid') -Actions @('none') -Limitations @('limited') -GeneratedAt ([DateTimeOffset]'2026-10-21T19:20:30+02:00')
     $text | Should -Match 'Generator: Invoke-FailureModeAnalysis.ps1'
-    $text | Should -Match 'Version: 10.0.1'
+    $text | Should -Match ('Version: ' + [regex]::Escape($expectedVersion))
     $text | Should -Match '## Summary'
     $text | Should -Match '2026-10-21 19:20:30 \+02:00'
     $text | Should -Match 'Anchor: Literal user input: again'
@@ -153,7 +156,7 @@ Describe 'Session failure mode analysis' {
     $roundTrip.ExecutionFlow[0].Arguments.command | Should -Be $toolArguments.command
     $roundTrip.Events[0].Text | Should -Be "inspect CRP-304`nsecond line"
     $roundTrip.Producer | Should -Be 'Invoke-FailureModeAnalysis.ps1'
-    $roundTrip.ProducerVersion | Should -Be '10.0.1'
+    $roundTrip.ProducerVersion | Should -Be $expectedVersion
   }
 
   It 'writes a Markdown and JSON sibling pair without a BOM or evidence loss' {
@@ -281,7 +284,7 @@ Describe 'Session failure mode analysis' {
     $path = Join-Path $root 'data\proposals\proposals.json'
     $before = (Get-FileHash $path).Hash
     $store = Get-ProposalStore
-    $proposal = @($store.proposals | Where-Object state -EQ 'completed' | Select-Object -First 1)[0]
+    $proposal = @($store.proposals | Where-Object { $_.state -in @('completed', 'pushed') } | Select-Object -First 1)[0]  # BUG-364: 'do' is invalid in both states; the live ledger may hold no completed item
     $text = @(Get-FailureLifecycleSection -Number $proposal.id -Store $store -Action do -DiagnosticPath $diagnostic)
     ($text -join ' ') | Should -Match 'LIFECYCLE STATUS FAILURE REPORT'
     (Get-FileHash $path).Hash | Should -Be $before

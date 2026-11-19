@@ -25,8 +25,10 @@
   a remount of a newer image on the same drive - refreshes its _LCM tab through the registered AHK tab atom
   instead of launching; a new window is launched only when no reusable window or no _LCM tab exists. Windows
   started before CRP-346 are adopted when exactly one window shows the _LCM tab.
-  Version: 10.2.9
-  Date: 2026-11-18
+  Version: 10.2.10
+  Date: 2026-11-19
+  Implementation Choices (BUG-367): the directory handling of the _LCM profile (e.g. dirShowAll) is the operator's view
+  choice; it is logged, never enforced (operator 2026-11-19). Left path, right path and content comparison stay checked.
 .NOTES
   Caveats: Drive mounting requires administrative elevation (delegated to elevated worker via Invoke-ElevatedTest.ps1
   or Port 9876 daemon); Macrium Reflect UI automation requires Session 1 interactive desktop access. Mount operations
@@ -688,8 +690,9 @@ function Test-LcmBcrProfile {
   if ($contentComparison -ne 'True') {
     throw "The _LCM Beyond Compare profile requires content comparison enabled; actual value is '$contentComparison'."
   }
+  # BUG-367: directory handling is the operator's view choice; reported, never enforced.
   if ($null -ne $directoryHandlingNode -and $directoryHandling -ne 'dirCompareFilesOnly') {
-    throw "The _LCM Beyond Compare profile specifies directory handling '$directoryHandling'; expected 'dirCompareFilesOnly' or omitted default."
+    Write-BaselineLog -Level INFO -Message "_LCM Beyond Compare profile directory handling is '$directoryHandling' (operator choice, BUG-367)."
   }
 
   return [pscustomobject]@{

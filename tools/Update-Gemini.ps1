@@ -12,7 +12,7 @@
   Path: LCM_Inventory/tools/Update-Gemini.ps1
   Authors: Rolf, LCM_AI Engine
   Version: 10.2.0
-  Date: 2026-10-13
+  Date: 2026-11-19
 .PARAMETER Force
   Forces a full clean export of knowledge base files.
 .PARAMETER ToClipboard
@@ -87,7 +87,7 @@ if (Test-Path -LiteralPath $exportRulesScript) {
 Write-Host "`n[2/3] Mirroring Workspace Knowledge Base Snapshot to Google Drive (D:\GDrive\LCM)..." -ForegroundColor Yellow
 $syncSnapshotScript = Join-Path $lcdInternal 'Sync-LCMResearchSnapshot.ps1'
 if (-not (Test-Path -LiteralPath $syncSnapshotScript)) {
-  $syncSnapshotScript = Join-Path $workspaceRoot 'tools\Sync-LCMResearchSnapshot.ps1'
+  $syncSnapshotScript = Join-Path $workspaceRoot 'LCM_Tools\tools\Sync-LCMResearchSnapshot.ps1'  # physical home; the LCM_Inventory\tools link was removed 2026-11-19
 }
 
 if (Test-Path -LiteralPath $syncSnapshotScript) {
@@ -97,7 +97,7 @@ if (Test-Path -LiteralPath $syncSnapshotScript) {
     & $syncSnapshotScript
   }
 } else {
-  Write-Warning "Sync-LCMResearchSnapshot.ps1 not found in $lcdInternal or tools"
+  Write-Warning "Sync-LCMResearchSnapshot.ps1 not found in $lcdInternal or LCM_Tools\tools"
 }
 
 # ------------------------------------------------------------------------------

@@ -1,1 +1,0 @@
-D:/Git_Repositories/LCM_Tools/tools/UninstallAutoDT_BG_Info.ps1
