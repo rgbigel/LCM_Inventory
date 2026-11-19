@@ -5,7 +5,7 @@ Purpose: Single Source For VS Code Settings
 Path: LCM_Inventory/docs/Proposals/369_CRP-Single-Source-For-VS-Code-Settings/Specification CRP-369.md  
 Authors: Rolf, Claude  
 Version: 10.7.4  
-Status: Verified  
+Status: In Review  
 Date: 2026-11-19 16:19:56
 
 ```yaml
@@ -15,8 +15,8 @@ Scope: LCM_Inventory
 Baseline-Version: 10.7.4
 Author: Rolf
 Date: 2026-11-19 16:19:38
-Status: Verified
-Plan-State: verified
+Status: In Review
+Plan-State: in_review
 Progress-State: verification
 Priority: 5
 App-ID: None
