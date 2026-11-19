@@ -5,7 +5,7 @@ Purpose: Tests Write Intent Statistics Into The Live Store
 Path: LCM_Inventory/docs/Proposals/375_BUG-Tests-Write-Intent-Statistics-Into-The-Live-Store/Specification BUG-375.md  
 Authors: Claude  
 Version: 10.7.4  
-Status: Verified  
+Status: In Review  
 Date: 2026-11-19 17:54:33
 
 ```yaml
@@ -15,8 +15,8 @@ Scope: LCM_Inventory
 Baseline-Version: 10.7.4
 Author: Claude
 Date: 2026-11-19 17:29:17
-Status: Verified
-Plan-State: verified
+Status: In Review
+Plan-State: in_review
 Progress-State: verification
 Priority: 5
 App-ID: None

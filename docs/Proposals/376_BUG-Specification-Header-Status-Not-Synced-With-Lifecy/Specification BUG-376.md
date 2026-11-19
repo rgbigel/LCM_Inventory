@@ -5,7 +5,7 @@ Purpose: Specification Header Status Not Synced With Lifecycle
 Path: LCM_Inventory/docs/Proposals/376_BUG-Specification-Header-Status-Not-Synced-With-Lifecy/Specification BUG-376.md  
 Authors: Claude  
 Version: 10.7.4  
-Status: Verified  
+Status: In Review  
 Date: 2026-11-19 17:56:58
 
 ```yaml
@@ -15,8 +15,8 @@ Scope: LCM_Inventory
 Baseline-Version: 10.7.4
 Author: Claude
 Date: 2026-11-19 17:44:11
-Status: Verified
-Plan-State: verified
+Status: In Review
+Plan-State: in_review
 Progress-State: verification
 Priority: 5
 App-ID: None
