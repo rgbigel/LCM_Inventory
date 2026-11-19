@@ -8,15 +8,12 @@
   Authors: Rolf, Copilot
   Version: 10.2.1
   Date: 2026-11-19
-  Implementation Choices (BUG-364): expected viewer and template versions are read from their headers (Get-LcmDisplayProvenance) instead of a hard-coded 10.0.1.
 #>
 Describe 'Retained failure-analysis viewer' {
   BeforeAll {
     $root = Split-Path $PSScriptRoot -Parent
     $viewer = Join-Path $root 'tools\Show-FailureAnalysis.ps1'
     Import-Module -Name (Join-Path $root 'modules\FailureAnalysisHtml.psm1') -Force
-    Import-Module -Name (Join-Path $root 'modules\LcmDisplayVersion.psm1') -Force
-    $provenance = Get-LcmDisplayProvenance -ScriptPath $viewer -TemplatePath (Join-Path $root 'modules\FailureAnalysisHtml.psm1')
   }
 
   It 'creates a retained snapshot from an exact JSON report without launching' {
@@ -51,8 +48,8 @@ Describe 'Retained failure-analysis viewer' {
     (Get-Content -LiteralPath $result.MarkdownPath -Raw).Trim() | Should -Be 'retained markdown'
     $html = Get-Content -LiteralPath (Join-Path $result.SnapshotPath 'index.html') -Raw
     $html | Should -Match 'data-has-json="true"'
-    $html | Should -Match ('<title>Failure analysis snapshot ' + [regex]::Escape($provenance.Label) + '</title>')
-    $html | Should -Match ('<p class="snapshot">' + [regex]::Escape($provenance.Label) + '</p>')
+    $html | Should -Match '<title>Failure analysis snapshot LCM-Show: v10.0.1 Template: v10.0.1</title>'
+    $html | Should -Match '<p class="snapshot">LCM-Show: v10.0.1 Template: v10.0.1</p>'
     $html | Should -Match 'http://127\.0\.0\.1:9876/failure-analysis/[a-f0-9]{32}/report\.json'
     $html | Should -Match 'http://127\.0\.0\.1:9876/assets/failure-analysis\.css'
     $html | Should -Match 'http://127\.0\.0\.1:9876/assets/failure-analysis\.js'
@@ -67,7 +64,7 @@ Describe 'Retained failure-analysis viewer' {
     $records.Count | Should -Be 2
     $records[-1].Status | Should -Be 'Succeeded'
     $records[-1].Tool | Should -Be 'Show-FailureAnalysis.ps1'
-    $records[-1].Version | Should -Be $provenance.ToolVersion.TrimStart('v')
+    $records[-1].Version | Should -Be '10.0.1'
     $records[-1].SnapshotId | Should -Be $result.SnapshotId
   }
 

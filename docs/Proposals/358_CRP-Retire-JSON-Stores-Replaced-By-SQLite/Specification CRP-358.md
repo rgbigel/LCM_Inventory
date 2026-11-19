@@ -42,7 +42,7 @@ T3 After the reconciliation no tool reads or writes the JSON file again, and it 
 - Exit: none of the four JSON files exists; a search finds no code reading or writing them.
 
 ### Explicit Non-Goals
-- Generated presentation artifacts that merely embed data (displays); the policy export elevation_policy.json for the daemon (no SQLite driver in Go) unless decided otherwise.
+- Generated presentation artifacts that merely embed data (displays); they move to live data with CRP-382.
 - Default Non-Goal: Cause no havoc; ask rather than invent or infer, and avoid unnecessary complexity.
 
 ### Dependents
@@ -63,3 +63,8 @@ T3 After the reconciliation no tool reads or writes the JSON file again, and it 
    `Aliases`, `Role`, `Domain`, `IntentElevated` (read-only draft under `data/analysis/CRP-358/`).
 3. Intent call statistics: the writer `Update-LcmToolIntentCall` (`modules/LcmToolCatalog.psm1`) moves to the table with
    the tool stores; tests writing into the live store are BUG-375.
+
+## Operator Decision (2026-11-20 00:34:22)
+
+- "We must eliminate all" JSON stores: also `data/tools/elevation_policy.json` (generated from tools.db for the Go daemon, which has no SQLite driver); it goes when the daemon reads SQLite itself (CRP-382 driver decision).
+- Verified write direction (2026-11-20): JSON first, table copied from it - `Set-ProposalStore` writes proposals.json and syncs JSON to proposals.db; `Update-ToolCatalog.ps1` writes tool_catalog.json / tool_intents.json and `sync_tool_catalog_db.py` copies them into tools.db. CRP-358 reverses this: writers write the tables, the JSON files are deleted.

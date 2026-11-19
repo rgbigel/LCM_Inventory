@@ -62,6 +62,7 @@ Describe 'CRP-322: SQLite Proposals Ledger Engine & Canonical SQL Projection' {
         $allItems    = & $syncTool -Action Query -Horizon all @storeArgs
 
         $allItems.Count | Should -BeGreaterThan 290
+        $activeItems.Count | Should -BeLessThan 100
         $activeItems.Count | Should -BeLessThan $allItems.Count
 
         foreach ($p in $activeItems) {

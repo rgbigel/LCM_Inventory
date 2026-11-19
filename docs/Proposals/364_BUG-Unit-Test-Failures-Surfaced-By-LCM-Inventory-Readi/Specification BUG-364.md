@@ -87,4 +87,4 @@ follow the flat state table of ProposalReviewFlowPolicy (CRP-261); the test asse
 | withdrawn / rejected -> suggested / in_progress / superseded | allowed | not allowed (terminal, view) |
 | action `supersede` on withdrawn / rejected | offered | removed (terminal); `create-linked-bug` on rejected kept: it creates a new item |
 | completed -> suggested, pushed -> suggested / in_progress | not allowed | allowed (reinstate / reinstate -Changes, next state "revision") |
-| completed -> in_progress | allowed | allowed (the earlier summary in section 3 called it table-forbidden; the table allows it via reinstate -Changes) |
+| completed -> in_progress | allowed | allowed (the table allows it via reinstate -Changes, as section 3 states) |

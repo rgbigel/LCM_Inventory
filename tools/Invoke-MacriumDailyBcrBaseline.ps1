@@ -27,8 +27,9 @@
   started before CRP-346 are adopted when exactly one window shows the _LCM tab.
   Version: 10.2.10
   Date: 2026-11-19
-  Implementation Choices (BUG-367): the directory handling of the _LCM profile (e.g. dirShowAll) is the operator's view
-  choice; it is logged, never enforced (operator 2026-11-19). Left path, right path and content comparison stay checked.
+  Implementation Choices (BUG-367): the check that required directory handling dirCompareFilesOnly in the _LCM profile
+  was removed on operator instruction 2026-11-19 ("this check is not rq'd"); the value is only logged. The original
+  purpose of the check is not documented. Left path, right path and content comparison stay checked.
 .NOTES
   Caveats: Drive mounting requires administrative elevation (delegated to elevated worker via Invoke-ElevatedTest.ps1
   or Port 9876 daemon); Macrium Reflect UI automation requires Session 1 interactive desktop access. Mount operations
@@ -690,7 +691,7 @@ function Test-LcmBcrProfile {
   if ($contentComparison -ne 'True') {
     throw "The _LCM Beyond Compare profile requires content comparison enabled; actual value is '$contentComparison'."
   }
-  # BUG-367: directory handling is the operator's view choice; reported, never enforced.
+  # BUG-367: check removed on operator instruction 2026-11-19; the value is logged only.
   if ($null -ne $directoryHandlingNode -and $directoryHandling -ne 'dirCompareFilesOnly') {
     Write-BaselineLog -Level INFO -Message "_LCM Beyond Compare profile directory handling is '$directoryHandling' (operator choice, BUG-367)."
   }

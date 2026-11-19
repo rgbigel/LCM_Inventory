@@ -31,3 +31,8 @@ Date: 2026-11-19 16:01:23
 
 - Asynchronously started Python tools: the starting process watches the started process; its exit code goes into the DO log; on failure the window stays open (exit code and error, closes on a key press) and a Windows notification appears; on success the window closes as before.
 - `-noexit` stays the PowerShell debugging switch, unchanged; GUI programs unchanged.
+
+## 4. Possible Extension (operator live test 2026-11-19 23:48:45)
+
+- `Set-LcmWindowZone.py --activate`: bring the placed window to the foreground; through the daemon's `/foreground` route
+  (Windows limits foreground changes by background programs). Not part of T6; operator decision.

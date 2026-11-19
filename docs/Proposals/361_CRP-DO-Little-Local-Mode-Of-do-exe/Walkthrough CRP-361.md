@@ -30,3 +30,19 @@ Date: 2026-11-19 16:01:23
 - References inside the git root are relative to it (CRP-253 sandboxing): `GetGitRoot()` derives the root from the binary location (`<root>/LCM_Inventory/DoT/do.exe`) instead of a fixed `D:` path; rebuilt, `go test` ok, deployed (rollback `scratch/do-before-crp361-seg3.exe`), local and daemon path answer.
 - Runtime `python-venv` stored relative (`.venv\Scripts\python.exe`) and resolved by `Get-LcmRuntime.py`; `python` (machine tool outside the root) stays absolute; `tools.sql` dumped; Pester LcmRuntimeAtoms 3/3.
 - DOX header Markdown line breaks fixed in 137 files and in the bundle template (`ProposalManager.psm1`).
+
+## 3. Operator Live Test (2026-11-19 23:48:45, VS Code terminal)
+
+| # | Step | Result |
+|:---|:---|:---|
+| 1 | `do.exe "whoami" -sync -explain` | route local: passed |
+| 2 | `do.exe "whoami" -sync -elevated -explain` | route daemon: passed |
+| 3 | `do.exe "whoami /groups" -sync` | local run, Medium integrity: passed |
+| 4 | `do.exe "whoami" -sync -daemon` | daemon run: passed |
+| 5 | `do_activity.log` last two lines | same form, Path local / daemon: passed |
+| 6 | `SetLcmWindowZone --process notepad++.exe --zone beside:"Visual Studio Code"` | Notepad++ moved to the right half and enlarged (fallback: less than 400 px right of VS Code); not brought to the foreground, as specified (placement only, `SWP_NOACTIVATE`): passed |
+
+Note: in PowerShell `do` is a keyword; the launcher is called as `do.exe`.
+| 7 | Control Hub, action selector at the top: "Show CRP" (Notepad++ through the DO, T5 path) | works (operator 2026-11-19 23:58:24) |
+| 8 | Tool Explorer start (`Show-ToolsExplorer.ps1`) | started from my background shell it did not open (refresh 7 s, `Open-LcmStandardDisplay` waits 5 s); on the operator's side it opened very quickly; operator: the 5 s timeout stays, no BUG |
+| 9 | Inventory Viewer, Docs of LCM_AI, "Edit" (Notepad++ through the DO, T5 path) | works; Show, document type selection and Close work too; findings about the viewer itself in BUG-380 (operator 2026-11-20 00:20:32) |
