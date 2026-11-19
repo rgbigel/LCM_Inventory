@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-11-20T00:30:23+01:00",
+  "updated_at": "2026-11-20T00:40:14+01:00",
   "review_granularity": "tight",
   "lcm_mode": "active",
-  "last_proposal_id": 382,
+  "last_proposal_id": 383,
   "proposals": [
     {
       "id": 261,
@@ -23630,6 +23630,37 @@
       "always_proceed": false,
       "plan_path": "docs/Proposals/382_CRP-Live-Data-For-Standard-Displays-From-SQLite-Views/Implementation Plan CRP-382.md",
       "walkthrough_path": "docs/Proposals/382_CRP-Live-Data-For-Standard-Displays-From-SQLite-Views/Walkthrough CRP-382.md"
+    },
+    {
+      "id": 383,
+      "crp_id": "BUG-383",
+      "lcm_version": "10.7.4",
+      "timestamp": "2026-11-20 00:40:14",
+      "title": "Learned Advice Review Blocks Push Although Never Reviewed",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "BUG-383",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "suggested",
+      "progress_state": "undecided",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/383_BUG-Learned-Advice-Review-Blocks-Push-Although-Never-R",
+      "docs": {
+        "specification": "Specification BUG-383.md",
+        "plan": "Implementation Plan BUG-383.md",
+        "walkthrough": "Walkthrough BUG-383.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "Rolf",
+      "details": "Operator 2026-11-20: learned advice is administrative data / an artifact and is never reviewed; the push gate in Invoke-LCM_Push.ps1 (RULE-CTX-005 \"review candidates before publish\") refused the GoodNight push because one candidate was pending. Target: candidates no longer block a push and need no operator review (accepted by the contributing host); RULE-CTX-005 and the gate changed accordingly (rule change: ADMINMODE, RULE-AUTH-002 sync).",
+      "priority": 5,
+      "disposition": null,
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "plan_path": "docs/Proposals/383_BUG-Learned-Advice-Review-Blocks-Push-Although-Never-R/Implementation Plan BUG-383.md",
+      "walkthrough_path": "docs/Proposals/383_BUG-Learned-Advice-Review-Blocks-Push-Although-Never-R/Walkthrough BUG-383.md"
     }
   ],
   "testing_mode": "active",
