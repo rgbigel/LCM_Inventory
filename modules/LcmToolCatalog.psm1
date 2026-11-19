@@ -10,8 +10,10 @@
   Purpose: Loads the governed tool catalog and generates the HTTP-backed Tool Explorer.
   Path: tools/modules/LcmToolCatalog.psm1
   Authors: Rolf, Copilot
-  Version: 10.2.5
-  Date: 2026-11-18 23:55:00
+  Version: 10.2.6
+  Date: 2026-11-19 17:53:45
+  Implementation Choices (BUG-375): Update-LcmToolIntentCall writes to LCM_TOOL_INTENTS_PATH when it is set (tests use
+  an isolated copy, never the live store); otherwise to config/tool_intents.json relative to this module.
   Implementation Choices (CRP-343 segment 2): Admin is a level 0..3 (TBD / granted / controlled / admin); the admin
   metric counts level 3; the filter offers the four words.
 #>
@@ -950,8 +952,12 @@ function Update-LcmToolIntentCall {
   )
 
   try {
-    $wsRoot = 'D:\Git_Repositories'
-    $intentsPath = Join-Path $wsRoot 'LCM_Inventory\config\tool_intents.json'
+    # BUG-375: LCM_TOOL_INTENTS_PATH redirects the store (tests); default relative to the module, no fixed drive path.
+    $intentsPath = if (-not [string]::IsNullOrWhiteSpace($env:LCM_TOOL_INTENTS_PATH)) {
+      $env:LCM_TOOL_INTENTS_PATH
+    } else {
+      Join-Path (Split-Path -Path $PSScriptRoot -Parent) 'config\tool_intents.json'
+    }
     if (-not (Test-Path -LiteralPath $intentsPath)) { return }
 
     $jsonRaw = [System.IO.File]::ReadAllText($intentsPath)

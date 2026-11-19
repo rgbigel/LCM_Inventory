@@ -14,7 +14,8 @@ Implementation Choices (CRP-343 segment 2): tools.admin is a level 0 = TBD, 1 = 
 may call (catalog field AllowedAtoms).
 Implementation Choices (CRP-366): table runtimes is the interpreter registry (RULE-PY-010). It is owned by the
 database, not by the JSON catalog: the sync never deletes it, seed rows are inserted only when missing
-(ensure_runtimes), and the SQL dump carries the current rows.
+(ensure_runtimes), and the SQL dump carries the current rows. Paths inside the git root are stored relative to it
+(operator 2026-11-19, CRP-253 sandboxing); machine tools outside the root stay absolute.
 """
 
 import argparse
@@ -72,7 +73,7 @@ def get_lcm_version(repo_root):
 RUNTIME_SEED = [
     ("python", "D:\\Tools\\Python314\\python.exe",
      "LCM tools, gates, DoT trampolines and AI ad-hoc scripts"),
-    ("python-venv", "D:\\Git_Repositories\\.venv\\Scripts\\python.exe",
+    ("python-venv", ".venv\\Scripts\\python.exe",  # inside the git root: relative to it
      "only code that needs the workspace venv packages (google-antigravity SDK); always named explicitly"),
 ]
 

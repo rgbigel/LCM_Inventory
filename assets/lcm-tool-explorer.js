@@ -1,6 +1,7 @@
 /**
- * LCM Tool Explorer Client Application (10.0.3)
- * Date: 2026-11-18 23:55:00
+ * LCM Tool Explorer Client Application (10.0.4)
+ * Date: 2026-11-19 12:45:45
+ * Implementation Choices (CRP-361): "Code editor" starts VS Code as itself through the DO (no /open_editor).
  * Implementation Choices (CRP-343 segment 2): Admin is a level 0..3 shown as TBD / granted / controlled / admin
  *   (legacy booleans: true = admin, false = granted); filter, badge, editor and modal use the words; a run never adds
  *   -Elevated by itself, the DO decides per atom.
@@ -540,16 +541,19 @@
     // -------------------------------------------------------------------------
     // Privileged Actions: Code Editor, Rename, Cleanup, Archive
     // -------------------------------------------------------------------------
+    // CRP-361 T5: VS Code is started as itself through the DO ("code -g <file>:1", no console window); the daemon
+    // route /open_editor is gone. Relative paths resolve against the workspace root (daemon working directory).
     function openInCodeEditor(tool) {
-        showToast('💻 Launching code editor for ' + tool.Name + '...');
-        fetch(DAEMON_URL + '/open_editor', {
+        const winPath = (tool.RelativePath || ('tools/' + tool.Name)).replace(/\//g, '\\');
+        showToast('💻 Launching VS Code for ' + tool.Name + '...');
+        fetch(DAEMON_URL + '/api/action', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ filePath: tool.RelativePath || ('tools/' + tool.Name), line: 1 })
+            body: JSON.stringify({ action: 'DO', target: winPath, command: 'code -g "' + winPath + ':1"', options: { sync: false, windowStyle: 'Hidden' }, caller: 'WebUI' })
         }).then(async response => {
             const data = await response.json();
-            if (!response.ok || data.error) throw new Error(data.error || `HTTP ${response.status}`);
-            showToast('✓ Opened in ' + (data.editor || 'IDE'));
+            if (!response.ok || data.error || data.status === 'ERROR') throw new Error(data.error || data.stderr || `HTTP ${response.status}`);
+            showToast('✓ Opened in VS Code');
         }).catch(error => {
             showToast('Editor dispatch failed: ' + error.message);
         });

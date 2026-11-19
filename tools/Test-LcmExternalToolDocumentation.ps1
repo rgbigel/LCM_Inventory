@@ -22,8 +22,10 @@ param(
            Exit code 0 when every name is covered, 1 when undocumented names remain.
   Path: LCM_Inventory/tools/Test-LcmExternalToolDocumentation.ps1
   Authors: Rolf, Claude
-  Version: 10.7.4
-  Date: 2026-11-18
+  Version: 10.7.5
+  Date: 2026-11-19
+  Implementation Choices (BUG-368): an intent executable is compared by its file name (the registered Python
+           interpreter is recorded as a full path).
   Implementation Choices (CRP-345): a name counts as covered when it appears in any of the four tables;
            "registered for documentation" rows are counted separately so open documentation work stays visible.
            Names inside test, scratch, data, log and archive folders are ignored.
@@ -91,7 +93,7 @@ foreach ($root in $codeRoots) {
 $intentsPath = Join-Path $inventoryRoot 'config\tool_intents.json'
 $registry = Get-Content -LiteralPath $intentsPath -Raw -Encoding UTF8 | ConvertFrom-Json
 foreach ($property in $registry.intents.PSObject.Properties) {
-  $exe = ([string]$property.Value.executable -split '\s+')[0].ToLowerInvariant()
+  $exe = [System.IO.Path]::GetFileName(([string]$property.Value.executable -split '\s+')[0]).ToLowerInvariant()  # BUG-368: full paths
   if ($exe -match '\.exe$' -and -not $used.ContainsKey($exe)) { $used[$exe] = "config/tool_intents.json ($($property.Name))" }
 }
 

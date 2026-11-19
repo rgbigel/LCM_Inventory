@@ -1,7 +1,8 @@
 <!--
   Template: LCM_INVENTORY_VIEWER.html
-  Version: 10.2.1
-  Date: 2026-10-21
+  Version: 10.2.2
+  Date: 2026-11-19 12:45:45
+  Implementation Choices (CRP-361): "Edit" starts Notepad++ through the DO (no /open_editor).
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -758,17 +759,27 @@
             win.print();
         }
 
+        // CRP-361 T5: Notepad++ is started as itself through the DO (no /open_editor, which opened VS Code), then
+        // the daemon's /foreground brings its window to the front (same path as the Control Hub, CRP-354).
+        const NOTEPAD_EXE = "C:\\Program Files\\Notepad++\\notepad++.exe";
         async function editDocInNotepad(docName) {
-            const relPath = `${currentDocsRepo}/${docName}`;
+            const winPath = `${currentDocsRepo}/${docName}`.replace(/\//g, "\\");
             try {
-                await fetch(`http://127.0.0.1:${DAEMON_PORT}/open_editor`, {
+                const res = await fetch(`http://127.0.0.1:${DAEMON_PORT}/api/action`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ filePath: relPath, line: 1 })
+                    body: JSON.stringify({ action: "DO", target: winPath, command: `"${NOTEPAD_EXE}" "${winPath}"`, options: { sync: false }, caller: "InventoryViewer" })
                 });
-                showToast(`✏️ Opened in Notepad++: ${relPath}`);
+                const data = await res.json();
+                if (!res.ok || data.error || data.status === "ERROR") throw new Error(data.error || data.stderr || `HTTP ${res.status}`);
+                await fetch(`http://127.0.0.1:${DAEMON_PORT}/foreground`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ title: winPath.split("\\").pop(), waitMs: 10000 })
+                });
+                showToast(`✏️ Opened in Notepad++: ${winPath}`);
             } catch(e) {
-                alert(`Daemon offline. File: ${relPath}`);
+                alert(`Notepad++ start failed (${e.message || e}). File: ${winPath}`);
             }
         }
 

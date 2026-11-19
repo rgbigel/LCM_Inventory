@@ -4,8 +4,8 @@ Module: docs/Proposals/359_CRP-Bundle-Document-File-Names-Carry-The-Item-ID/Spec
 Purpose: Bundle Document File Names Carry The Item ID  
 Path: LCM_Inventory/docs/Proposals/359_CRP-Bundle-Document-File-Names-Carry-The-Item-ID/Specification CRP-359.md  
 Authors: Rolf, Claude  
-Version: 10.7.4
-Status: Suggested  
+Version: 10.7.4  
+Status: Pushed  
 Date: 2026-11-18 22:30:54
 
 ```yaml

@@ -12,6 +12,7 @@ Implementation Choices (CRP-366):
     tool also works under python -I.
   - Any interpreter may run this reader (bootstrap): the answer comes from the table, so it is the same whichever
     Python reads it.
+  - Entries inside the git root are stored relative to it and resolved here (operator 2026-11-19, CRP-253).
   - 'get' fails (exit 2) when the key is unknown or the registered executable does not exist; callers never fall
     back silently to a PATH lookup.
 Caveats: 'set' writes tools.db; the committed projection tools.sql is refreshed by the next catalog dump.
@@ -27,6 +28,7 @@ sys.stdout.reconfigure(encoding='utf-8')
 
 TOOLS_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(TOOLS_DIR, '..', 'data', 'tools', 'tools.db')
+GIT_ROOT = os.path.abspath(os.path.join(TOOLS_DIR, '..', '..'))
 
 
 def load_sync_module():
@@ -43,14 +45,19 @@ def connect(db_path):
     return conn
 
 
+def resolve(path):
+    """A relative registry entry lies inside the git root (operator 2026-11-19); absolute entries are machine tools."""
+    return path if os.path.isabs(path) else os.path.normpath(os.path.join(GIT_ROOT, path))
+
+
 def get_runtime(key, db_path=DB_PATH):
-    """Returns the registered executable path for key, or None."""
+    """Returns the registered executable path for key (resolved), or None."""
     conn = connect(db_path)
     try:
         row = conn.execute('SELECT executable_path FROM runtimes WHERE runtime_key = ?', (key,)).fetchone()
     finally:
         conn.close()
-    return row[0] if row else None
+    return resolve(row[0]) if row else None
 
 
 def main(argv=None):
@@ -87,7 +94,7 @@ def main(argv=None):
             conn.commit()
         for key, path, purpose, updated in conn.execute(
                 'SELECT runtime_key, executable_path, purpose, updated_at FROM runtimes ORDER BY runtime_key'):
-            exists = 'ok' if os.path.isfile(path) else 'MISSING'
+            exists = 'ok' if os.path.isfile(resolve(path)) else 'MISSING'
             print(key + ' | ' + path + ' | ' + exists + ' | ' + purpose + ' | ' + updated)
     finally:
         conn.close()

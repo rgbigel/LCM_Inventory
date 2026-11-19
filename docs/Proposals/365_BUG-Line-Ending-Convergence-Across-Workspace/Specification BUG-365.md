@@ -4,22 +4,22 @@ Module: docs/Proposals/365_BUG-Line-Ending-Convergence-Across-Workspace/Specific
 Purpose: Line Ending Convergence Across Workspace  
 Path: LCM_Inventory/docs/Proposals/365_BUG-Line-Ending-Convergence-Across-Workspace/Specification BUG-365.md  
 Authors: Rolf, Claude  
-Version: 10.7.4
-Status: In Progress  
+Version: 10.7.4  
+Status: Completed  
 Date: 2026-11-19 11:47:30
 
 ```yaml
 Bug-ID: BUG-365
 CRP-ID: BUG-365
 Title: Line Ending Convergence Across Workspace
-Scope: Workspace (all repositories under D:\Git_Repositories)
+Scope: Workspace (all repositories under the git root)
 Version: 10.7.4
 Affected-Repos: LCM_Inventory, LCM_AI, Git_Repositories, AuthorizeMasterUser, BGMSAMVInv, BackgroundModifier, BootEntryManager, HaSSD06, HaSSD06_Inventory, InstallFonts, LCM_Shared, LCM_Supervision, LCM_Tools, MSG file conversion, MacriumTemplateUpdater, NextBootTray, OneDriveMaintenance, OutlookVBAConversion, ReEnableRadeonRx580, RollingCalendar, SystemConfiguration, TimeStamper, VolumeInventory
 Author: Claude
 Date: 2026-11-19 11:47:30
-Status: In Review
-Plan-State: in_review
-Progress-State: verification
+Status: Completed
+Plan-State: completed
+Progress-State: completed
 Severity: High
 Root-Cause: The operator decision Option B (2026-11-16) never reached the canonical rule; six enforcers applied three different policies.
 Priority: 5

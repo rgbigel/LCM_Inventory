@@ -4,7 +4,7 @@ Module: docs/Proposals/338_BUG-Repository-Agents-Folders-Not-Junctioned/Implemen
 Purpose: Steps taken to replace the real `.agents` folders by junctions to `LCM_AI\.agents` (DOIT, executed 2026-11-16).  
 Path: LCM_Inventory/docs/Proposals/338_BUG-Repository-Agents-Folders-Not-Junctioned/Implementation_Plan.md  
 Authors: Rolf, Claude (Anthropic)  
-Version: 10.7.4
+Version: 10.7.4  
 Status: Executed  
 Date: 2026-11-16 17:16:26
 

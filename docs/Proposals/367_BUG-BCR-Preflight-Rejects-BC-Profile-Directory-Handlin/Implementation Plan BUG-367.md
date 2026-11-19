@@ -4,7 +4,7 @@ Module: docs/Proposals/367_BUG-BCR-Preflight-Rejects-BC-Profile-Directory-Handli
 Purpose: Concrete changes per file for BUG-367.  
 Path: LCM_Inventory/docs/Proposals/367_BUG-BCR-Preflight-Rejects-BC-Profile-Directory-Handlin/Implementation Plan BUG-367.md  
 Authors: Rolf, Claude  
-Version: 10.7.4
+Version: 10.7.4  
 Status: In Progress  
 Date: 2026-11-19 12:16:42
 

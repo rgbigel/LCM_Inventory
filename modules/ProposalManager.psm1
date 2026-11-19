@@ -6,10 +6,17 @@
 #          batch operations, review granularity ('coarse' | 'tight'), repo review queue inspection,
 #          and persistent ledger storage in LCM_Inventory.
 # Authors: Rolf, Claude, LCM_AI Engine
-# Version: 10.2.10
+# Version: 10.2.11
 # Implementation Choices (CRP-355 revision C): Set-ProposalStore refuses a write in which a ledger row would lose a field it
 #          has in the stored version (only the transient status_note may go); archiving marks, never drops.
-# Date: 2026-11-18 22:28:25
+# Implementation Choices (operator Gate 2 review 2026-11-19): the Specification header ends every line with the Markdown
+#          line break (two spaces), also 'Version:'.
+# Date: 2026-11-19 12:35:45
+# Implementation Choices (BUG-364): transitions and actions follow the flat state table of ProposalReviewFlowPolicy
+#          (CRP-261): Gate 2 acceptance walks verified -> in_review step by step (no direct in_progress/verified ->
+#          completed, no in_review -> verified); held resumes or is withdrawn (no supersede); withdrawn and rejected
+#          are terminal (view; rejected keeps create-linked-bug, which creates a new item); completed and pushed
+#          may be reinstated to suggested or in_progress (reinstate / reinstate -Changes).
 # Implementation Choices (CRP-359 revision 3): bundle folders are named '<nnn>_<Kind>-<Slug>' (e.g. 333_CRP-Slug), so they
 #          sort by number across CRPs and BUGs (shared counter); an existing folder of the old form is still reused.
 # Implementation Choices (BUG-348): a held item gets the valid legacy progress value 'blocked' (was 'held').
@@ -376,7 +383,7 @@ Module: $bundleRelPath/$specName
 Purpose: $Title  
 Path: $repoLeaf/$bundleRelPath/$specName  
 Authors: $Author  
-Version: $currentLcmVersion
+Version: $currentLcmVersion  
 Status: Suggested  
 Date: $timestamp
 
@@ -512,8 +519,8 @@ function Get-LcmProposalLifecycleActions {
         completed = @('push', 'hold', 'reinstate')
         pushed = @('view', 'reinstate')
         held = @('reopen', 'edit', 'withdraw')
-        withdrawn = @('view', 'supersede')
-        rejected = @('view', 'supersede', 'create-linked-bug')
+        withdrawn = @('view')
+        rejected = @('view', 'create-linked-bug')
         superseded = @('view')
     }
     return @($actions[$State])
@@ -531,14 +538,14 @@ function Test-LcmProposalLifecycleTransition {
 
     $allowed = @{
         suggested   = @('in_progress', 'held', 'withdrawn', 'superseded')
-        in_progress = @('suggested', 'verified', 'in_review', 'completed', 'held', 'withdrawn', 'superseded')
-        verified    = @('in_progress', 'in_review', 'completed', 'held', 'superseded')
-        in_review   = @('in_progress', 'verified', 'completed', 'held', 'rejected')
-        completed   = @('pushed', 'held', 'in_progress')
-        pushed      = @()
-        held        = @('suggested', 'in_progress', 'verified', 'in_review', 'completed', 'withdrawn', 'superseded')
-        withdrawn   = @('suggested', 'in_progress', 'superseded')
-        rejected    = @('suggested', 'in_progress', 'superseded')
+        in_progress = @('suggested', 'verified', 'held', 'withdrawn', 'superseded')
+        verified    = @('in_progress', 'in_review', 'held', 'superseded')
+        in_review   = @('in_progress', 'completed', 'held', 'rejected')
+        completed   = @('pushed', 'held', 'suggested', 'in_progress')
+        pushed      = @('suggested', 'in_progress')
+        held        = @('suggested', 'in_progress', 'verified', 'in_review', 'completed', 'withdrawn')
+        withdrawn   = @()
+        rejected    = @()
         superseded  = @()
     }
     return $ToState -in @($allowed[$FromState])

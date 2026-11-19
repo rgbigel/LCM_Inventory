@@ -4,8 +4,8 @@ Module: docs/Proposals/346_CRP-BCR-Window-Ownership-And-Tab-Refresh-Instead-Of-R
 Purpose: BCR Window Ownership And Tab Refresh Instead Of Relaunch  
 Path: LCM_Inventory/docs/Proposals/346_CRP-BCR-Window-Ownership-And-Tab-Refresh-Instead-Of-Re/Specification CRP-346.md  
 Authors: Rolf, Claude  
-Version: 10.6.4
-Status: Suggested  
+Version: 10.6.4  
+Status: Pushed  
 Date: 2026-11-18 14:32:27
 
 ```yaml

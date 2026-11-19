@@ -3,8 +3,10 @@ Module: ProposalSpecificationState
 Purpose: Prepare specification-header mirrors for persisted lifecycle changes.
 Path: modules/ProposalSpecificationState.psm1
 Authors: Rolf, Copilot
-Version: 10.2.3
-Date: 2026-11-18
+Version: 10.2.4
+Date: 2026-11-19
+Implementation Choices (BUG-376): the DOX header line "Status:" above the YAML fence follows the YAML
+Status on every sync; its Markdown line break (two trailing spaces) is kept; body lines are never touched.
 #>
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
@@ -118,6 +120,17 @@ App-ID: {10}
     }
     $group = $header.Groups['metadata']
     $updated = $text.Substring(0, $group.Index) + $metadata + $text.Substring($group.Index + $group.Length)
+    # BUG-376: the DOX header line 'Status:' above the fence mirrors the YAML Status (line break kept).
+    $fenceStart = $updated.IndexOf('```yaml')
+    if ($fenceStart -gt 0) {
+      $prefix = $updated.Substring(0, $fenceStart)
+      $statusLine = [regex]::Match($prefix, '(?m)^Status:[^\r\n]*')
+      if ($statusLine.Success) {
+        $lineBreak = if ($statusLine.Value.EndsWith('  ')) { '  ' } else { '' }
+        $prefix = $prefix.Substring(0, $statusLine.Index) + 'Status: ' + $values['Status'] + $lineBreak + $prefix.Substring($statusLine.Index + $statusLine.Length)
+        $updated = $prefix + $updated.Substring($fenceStart)
+      }
+    }
     if ($updated -ne $originalText) {
       [pscustomobject]@{ Path=$path; Original=$bytes; Content=$updated }
     }

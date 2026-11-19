@@ -4,7 +4,7 @@ Module: docs/Proposals/334_CRP-New-LCM-Proposal-Specification-Template-Currency/
 Purpose: Verification evidence for CRP-334 before Gate 2.  
 Path: LCM_Inventory/docs/Proposals/334_CRP-New-LCM-Proposal-Specification-Template-Currency/Walkthrough.md  
 Authors: Rolf, Claude (Anthropic)  
-Version: 10.6.4
+Version: 10.6.4  
 Status: Verified by automated pre-tests (Gate 2 pending)  
 Date: 2026-11-15 16:42:43
 

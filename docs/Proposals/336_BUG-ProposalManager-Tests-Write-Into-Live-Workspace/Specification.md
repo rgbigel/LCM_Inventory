@@ -4,8 +4,8 @@ Module: docs/Proposals/336_BUG-ProposalManager-Tests-Write-Into-Live-Workspace/S
 Purpose: ProposalManager.Tests.ps1 writes into the live workspace (ledger JSON, SQLite DB, SQL dump, proposal bundles, session registers, App catalog); isolate it completely.  
 Path: LCM_Inventory/docs/Proposals/336_BUG-ProposalManager-Tests-Write-Into-Live-Workspace/Specification.md  
 Authors: Rolf, Claude (Anthropic)  
-Version: 10.6.4
-Status: Registered (DOIT)  
+Version: 10.6.4  
+Status: Pushed  
 Date: 2026-11-16 16:08:46
 
 ```yaml

@@ -4,8 +4,8 @@ Module: docs/Proposals/349_BUG-Push-Bundle-Check-Ignores-LCM-Inventory-Bundle-Ho
 Purpose: Push Bundle Check Ignores LCM Inventory Bundle Home  
 Path: LCM_Inventory/docs/Proposals/349_BUG-Push-Bundle-Check-Ignores-LCM-Inventory-Bundle-Hom/Specification.md  
 Authors: Rolf, Claude  
-Version: 10.6.4
-Status: Suggested  
+Version: 10.6.4  
+Status: Pushed  
 Date: 2026-11-17 14:53:49
 
 ```yaml

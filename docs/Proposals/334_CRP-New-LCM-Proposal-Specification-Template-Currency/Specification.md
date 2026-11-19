@@ -4,8 +4,8 @@ Module: docs/Proposals/334_CRP-New-LCM-Proposal-Specification-Template-Currency/
 Purpose: Make the bundle scaffolding of New-LCM_Proposal write current, ledger-consistent metadata into new Specification files.  
 Path: LCM_Inventory/docs/Proposals/334_CRP-New-LCM-Proposal-Specification-Template-Currency/Specification.md  
 Authors: Rolf, Claude (Anthropic)  
-Version: 10.6.4
-Status: Suggested (registered)  
+Version: 10.6.4  
+Status: Pushed  
 Date: 2026-11-15 15:44:55
 
 ```yaml

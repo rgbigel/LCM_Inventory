@@ -4,7 +4,7 @@ Module: docs/Proposals/336_BUG-ProposalManager-Tests-Write-Into-Live-Workspace/I
 Purpose: Changes and Gate 0 traceability for BUG-336 (Claude, DOIT).  
 Path: LCM_Inventory/docs/Proposals/336_BUG-ProposalManager-Tests-Write-Into-Live-Workspace/Implementation_Plan.md  
 Authors: Rolf, Claude (Anthropic)  
-Version: 10.6.4
+Version: 10.6.4  
 Status: Implemented (DOIT, awaiting Gate 2)  
 Date: 2026-11-15 16:42:43
 

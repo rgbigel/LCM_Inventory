@@ -4,8 +4,8 @@ Module: docs/Proposals/345_CRP-AHK-Atoms-As-Registered-Intents-Only/Specificatio
 Purpose: AHK Atoms As Registered Intents Only  
 Path: LCM_Inventory/docs/Proposals/345_CRP-AHK-Atoms-As-Registered-Intents-Only/Specification CRP-345.md  
 Authors: Rolf, Claude  
-Version: 10.7.4
-Status: In Progress  
+Version: 10.7.4  
+Status: Pushed  
 Date: 2026-11-18 14:19:34
 
 ```yaml

@@ -4,8 +4,8 @@ Module: docs/Proposals/364_BUG-Unit-Test-Failures-Surfaced-By-LCM-Inventory-Read
 Purpose: Unit Test Failures Surfaced By LCM_Inventory Readiness Gate  
 Path: LCM_Inventory/docs/Proposals/364_BUG-Unit-Test-Failures-Surfaced-By-LCM-Inventory-Readi/Specification BUG-364.md  
 Authors: Rolf, Claude  
-Version: 10.7.4
-Status: In Progress  
+Version: 10.7.4  
+Status: In Review  
 Date: 2026-11-19 11:05:00
 
 ```yaml
@@ -15,9 +15,9 @@ Scope: LCM_Inventory
 Baseline-Version: 10.7.4
 Author: Claude
 Date: 2026-11-19 11:05:00
-Status: In Progress
-Plan-State: in_progress
-Progress-State: in_progress
+Status: In Review
+Plan-State: in_review
+Progress-State: verification
 Priority: 5
 App-ID: None
 Severity: Medium
@@ -72,3 +72,19 @@ T4 The readiness gate runs the unit tests in a clean process.
 | withdrawn / rejected -> superseded | forbidden | allowed | terminal (view) |
 
 Options: A module follows the rule table (test adjusted to the table); B the rule table is extended to the module's behaviour (rule change, ADMINMODE, RULE-AUTH-002); C case by case.
+
+## 4. Decision (2026-11-19 12:38:33)
+
+Operator 2026-11-19: test code is an artifact; when code, test and rule table disagree, the rule decides and no
+operator question is needed. Applied option A: `Test-LcmProposalLifecycleTransition` and `Get-LcmProposalLifecycleActions`
+follow the flat state table of ProposalReviewFlowPolicy (CRP-261); the test asserts the same table.
+
+| Transition / action | Before | Now (rule table) |
+|:---|:---|:---|
+| in_progress -> in_review / completed, verified -> completed | allowed | not allowed: Gate 2 acceptance walks verified -> in_review step by step (all completion paths already do) |
+| in_review -> verified | allowed | not allowed (not in the table) |
+| held -> superseded | allowed | not allowed (held: continue / edit / withdraw) |
+| withdrawn / rejected -> suggested / in_progress / superseded | allowed | not allowed (terminal, view) |
+| action `supersede` on withdrawn / rejected | offered | removed (terminal); `create-linked-bug` on rejected kept: it creates a new item |
+| completed -> suggested, pushed -> suggested / in_progress | not allowed | allowed (reinstate / reinstate -Changes, next state "revision") |
+| completed -> in_progress | allowed | allowed (the earlier summary in section 3 called it table-forbidden; the table allows it via reinstate -Changes) |

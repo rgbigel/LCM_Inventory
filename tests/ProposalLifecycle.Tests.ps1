@@ -41,8 +41,8 @@ Describe 'Proposal lifecycle authority' {
       completed = @('push', 'hold', 'reinstate')
       pushed = @('view', 'reinstate')
       held = @('reopen', 'edit', 'withdraw')
-      withdrawn = @('view', 'supersede')
-      rejected = @('view', 'supersede', 'create-linked-bug')
+      withdrawn = @('view')
+      rejected = @('view', 'create-linked-bug')
       superseded = @('view')
     }
 
@@ -52,16 +52,17 @@ Describe 'Proposal lifecycle authority' {
   }
 
   It 'enforces every allowed and disallowed lifecycle transition' {
+    # BUG-364: the flat state table of ProposalReviewFlowPolicy (CRP-261) is the expectation.
     $expectedTransitions = @{
       suggested = @('in_progress', 'held', 'withdrawn', 'superseded')
       in_progress = @('suggested', 'verified', 'held', 'withdrawn', 'superseded')
       verified = @('in_progress', 'in_review', 'held', 'superseded')
       in_review = @('in_progress', 'completed', 'held', 'rejected')
-      completed = @('pushed', 'held')
-      pushed = @()
+      completed = @('pushed', 'held', 'suggested', 'in_progress')
+      pushed = @('suggested', 'in_progress')
       held = @('suggested', 'in_progress', 'verified', 'in_review', 'completed', 'withdrawn')
-      withdrawn = @('superseded')
-      rejected = @('superseded')
+      withdrawn = @()
+      rejected = @()
       superseded = @()
     }
 
@@ -536,8 +537,8 @@ Describe 'Proposal lifecycle authority' {
       completed = @('push', 'hold', 'reinstate')
       pushed = @('view', 'reinstate')
       held = @('reopen', 'edit', 'withdraw')
-      withdrawn = @('view', 'supersede')
-      rejected = @('view', 'supersede', 'create-linked-bug')
+      withdrawn = @('view')
+      rejected = @('view', 'create-linked-bug')
       superseded = @('view')
     }
 

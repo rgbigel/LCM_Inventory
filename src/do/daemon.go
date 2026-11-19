@@ -5,8 +5,8 @@ PACKAGE        : main
 DESCRIPTION    : HTTP daemon listener for Session 1 desktop execution and telemetry.
 AUTHOR         : Rolf, Claude
 DATE CREATED   : 2026-11-11
-LAST MODIFIED  : 2026-11-18
-VERSION        : 10.2.6
+LAST MODIFIED  : 2026-11-19
+VERSION        : 10.2.8
 GO VERSION     : 1.22+
 ENCODING       : ASCII (No BOM)
 ================================================================================
@@ -24,6 +24,12 @@ CHANGE LOG:
 2026-11-18 - 10.2.5: CRP-354 /foreground waits up to waitMs and reports whether the window is active.
 2026-11-18 - 10.2.6: BUG-356 /displays/status publishedAt is the publication time of the revision (artifact
                      time), not the time of the query; the page badge changes only with the displayed data.
+2026-11-19 - 10.2.8: CRP-361 /execute logs path, caller and decision like the client's local path
+                     (one format); execute helpers take ownToken (the daemon passes its elevation decision);
+                     /open_editor and /edit removed (T5: external tools start as themselves through /api/action,
+                     which now accepts options.windowStyle).
+2026-11-19 - 10.2.8: BUG-348 the Access-Control-Allow-Origin wildcard is removed from the display,
+                     display-page, asset and snapshot routes (operator: only daemon pages read them).
 ================================================================================
 */
 
@@ -119,9 +125,6 @@ func RunDaemon(port int) error {
 	daemonMux.HandleFunc("/action_logs", handleGetLogs)
 	daemonMux.HandleFunc("/actions", handleGetLogs)
 
-	daemonMux.HandleFunc("/open_editor", handleOpenEditor)
-	daemonMux.HandleFunc("/edit", handleOpenEditor)
-
 	// Standard Displays & Assets (CRP-310 / CRP-309 / StandardDisplayFreshness)
 	daemonMux.HandleFunc("/displays/", handleDisplays)
 	daemonMux.HandleFunc("/assets/", handleAssets)
@@ -198,7 +201,7 @@ func handleStatusOrPing(w http.ResponseWriter, r *http.Request) {
 		StandardDisplays: 1,
 		User:             GetCurrentUsername(),
 		WorkingSetMB:     workingSetMB,
-		Version:          "10.2.0",
+		Version:          "10.2.8",
 		SessionID:        GetCurrentSessionID(),
 		LogFile:          logPath,
 		Port:             GetDaemonPort(),
@@ -239,6 +242,9 @@ func handleExecute(w http.ResponseWriter, r *http.Request) {
 				}
 				if e, ok := act.Options["elevated"].(bool); ok {
 					req.Elevated = e
+				}
+				if ws, ok := act.Options["windowStyle"].(string); ok { // CRP-361: e.g. Hidden for GUI starters
+					req.WindowStyle = ws
 				}
 			}
 		} else {
@@ -290,13 +296,16 @@ func handleExecute(w http.ResponseWriter, r *http.Request) {
 		// Record persistent log
 		recordActionLog(ActionLog{
 			Timestamp:  time.Now().Format("2006-01-02 15:04:05"),
-			Command:    cmdStr + " [CRP-343: " + decision + "]",
+			Command:    cmdStr,
 			ExitCode:   exitCode,
 			DurationMs: durMs,
 			Status:     status,
 			Elevated:   elevate,
 			Stdout:     stdout,
 			Stderr:     stderr,
+			Path:       routeDaemon,
+			Caller:     daemonCaller(r),
+			Decision:   decision,
 		})
 
 		writeJSON(w, http.StatusOK, resp)
@@ -323,11 +332,14 @@ func handleExecute(w http.ResponseWriter, r *http.Request) {
 
 	recordActionLog(ActionLog{
 		Timestamp:  time.Now().Format("2006-01-02 15:04:05"),
-		Command:    cmdStr + " [CRP-343: " + decision + "]",
+		Command:    cmdStr,
 		ExitCode:   0,
 		DurationMs: 0,
 		Status:     "DISPATCHED",
 		Elevated:   elevate,
+		Path:       routeDaemon,
+		Caller:     daemonCaller(r),
+		Decision:   decision,
 	})
 
 	writeJSON(w, http.StatusOK, resp)
@@ -347,12 +359,15 @@ func resolveProgram(trimmed string, psArgs []string) (string, []string) {
 	return "cmd.exe", []string{"/c", trimmed}
 }
 
-func executeSynchronous(ctx context.Context, cmdStr string, wsRoot string, elevate bool, timeout time.Duration) (int, string, string, int64) {
+// executeSynchronous runs cmdStr and captures its output. ownToken = true runs it with this process's own
+// token: the daemon passes its elevation decision (its own token is elevated), the client's local path
+// passes true (its own token is the caller's, CRP-361 T3); false starts it with the explorer token.
+func executeSynchronous(ctx context.Context, cmdStr string, wsRoot string, ownToken bool, timeout time.Duration) (int, string, string, int64) {
 	start := time.Now()
 	trimmed := strings.TrimSpace(cmdStr)
 	program, args := resolveProgram(trimmed, []string{"-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass"})
 
-	if !elevate { // CRP-343 D1: explorer token, medium integrity
+	if !ownToken { // CRP-343 D1: explorer token, medium integrity
 		if p, err := exec.LookPath(program); err == nil {
 			program = p
 		}
@@ -391,7 +406,8 @@ func executeSynchronous(ctx context.Context, cmdStr string, wsRoot string, eleva
 	return exitCode, stdoutBuf.String(), stderrBuf.String(), dur
 }
 
-func executeAsynchronous(cmdStr string, elevate bool, noExit bool, windowStyle string, wsRoot string) (string, error) {
+// executeAsynchronous starts cmdStr detached; ownToken as for executeSynchronous (CRP-361).
+func executeAsynchronous(cmdStr string, ownToken bool, noExit bool, windowStyle string, wsRoot string) (string, error) {
 	trimmed := strings.TrimSpace(cmdStr)
 
 	var program string
@@ -428,7 +444,7 @@ func executeAsynchronous(cmdStr string, elevate bool, noExit bool, windowStyle s
 		flags = createNoWindow
 	}
 
-	if !elevate { // CRP-343 D1: explorer token, medium integrity
+	if !ownToken { // CRP-343 D1: explorer token, medium integrity
 		if p, err := exec.LookPath(program); err == nil {
 			program = p
 		}
@@ -710,39 +726,16 @@ func handleHubRefresh(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, map[string]interface{}{"status": "OK", "delivered": true})
 }
 
-func handleOpenEditor(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		writeJSON(w, http.StatusMethodNotAllowed, map[string]string{"error": "Method not allowed"})
-		return
+// daemonCaller describes the requester of a daemon call for the log (CRP-361 T4).
+func daemonCaller(r *http.Request) string {
+	switch {
+	case isBrowserRequest(r):
+		return "browser " + r.Header.Get("Origin")
+	case isAuthenticated(r):
+		return "authenticated client " + r.RemoteAddr
+	default:
+		return "unauthenticated client " + r.RemoteAddr
 	}
-
-	body, err := io.ReadAll(r.Body)
-	if err != nil {
-		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "Failed reading body"})
-		return
-	}
-
-	var req struct {
-		FilePath string `json:"filePath"`
-		Line     int    `json:"line"`
-	}
-	if err := json.Unmarshal(body, &req); err != nil {
-		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "Invalid payload: " + err.Error()})
-		return
-	}
-
-	target := req.FilePath
-	if req.Line > 0 {
-		target = fmt.Sprintf("%s:%d", target, req.Line)
-	}
-
-	// Editor starts non-elevated (CRP-343, anti-GUI-poisoning invariant)
-	if _, _, _, err := startUnelevated("C:\\Windows\\System32\\cmd.exe", []string{"/c", "code", "-g", target}, "", createNoWindow, false, 0); err != nil {
-		writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "Failed to launch editor: " + err.Error()})
-		return
-	}
-
-	writeJSON(w, http.StatusOK, map[string]string{"status": "OK", "target": target})
 }
 
 func recordActionLog(log ActionLog) {
@@ -764,17 +757,14 @@ func recordActionLog(log ActionLog) {
 		defer func() {
 			_ = f.Close()
 		}()
-		line := fmt.Sprintf("[%s] %s | Status: %s | ExitCode: %d | Duration: %dms | Elevated: %t\n",
-			log.Timestamp, log.Command, log.Status, log.ExitCode, log.DurationMs, log.Elevated)
+		line := fmt.Sprintf("[%s] %s | Path: %s | Caller: %s | Status: %s | ExitCode: %d | Duration: %dms | Elevated: %t | Decision: %s\n",
+			log.Timestamp, log.Command, log.Path, log.Caller, log.Status, log.ExitCode, log.DurationMs, log.Elevated, log.Decision)
 		_, _ = f.WriteString(line)
 	}
 }
 
 func handleDisplays(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Private-Network, X-Requested-With, X-LCM-Display-Revision")
-	w.Header().Set("Access-Control-Allow-Private-Network", "true")
+	// BUG-348: no cross-origin read access; only pages served by this daemon (same origin) read it.
 	w.Header().Set("Cache-Control", "no-store, no-cache, must-revalidate")
 
 	if r.Method == http.MethodOptions {
@@ -895,10 +885,7 @@ func handleDisplays(w http.ResponseWriter, r *http.Request) {
 
 func handleDisplayPage(artifactLeaf string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Private-Network, X-Requested-With, X-LCM-Display-Revision")
-		w.Header().Set("Access-Control-Allow-Private-Network", "true")
+		// BUG-348: no cross-origin read access; only pages served by this daemon (same origin) read it.
 		w.Header().Set("Cache-Control", "no-store, no-cache, must-revalidate")
 		w.Header().Set("X-Content-Type-Options", "nosniff")
 		w.Header().Set("Content-Security-Policy", "default-src 'self' vscode-webview:; script-src 'self' 'unsafe-inline' vscode-webview:; style-src 'self' 'unsafe-inline' vscode-webview:; connect-src 'self' http://127.0.0.1:* http://localhost:* vscode-webview:; font-src 'self' data: vscode-webview:; img-src 'self' data: vscode-webview:; frame-src 'self' vscode-webview:; frame-ancestors 'self' vscode-webview:; object-src 'none'; base-uri 'self'")
@@ -945,8 +932,7 @@ func handleDisplayPage(artifactLeaf string) http.HandlerFunc {
 }
 
 func handleAssets(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Private-Network", "true")
+	// BUG-348: no cross-origin read access; only pages served by this daemon (same origin) read it.
 	w.Header().Set("Cache-Control", "no-store, no-cache, must-revalidate")
 
 	if r.Method == http.MethodOptions {
@@ -991,8 +977,7 @@ func handleAssets(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleSnapshots(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Private-Network", "true")
+	// BUG-348: no cross-origin read access; only pages served by this daemon (same origin) read it.
 	w.Header().Set("Cache-Control", "no-store, no-cache, must-revalidate")
 
 	if r.Method == http.MethodOptions {

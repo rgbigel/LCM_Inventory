@@ -1,8 +1,8 @@
 # Walkthrough: CRP-308
 
-Module: CRP-308
-Path: docs/Proposals/308_CRP-GoodMorning-Baseline-Visibility-Default-BCR-Prepar/Walkthrough.md
-Authors: Rolf, LCM_AI Engine
+Module: CRP-308  
+Path: docs/Proposals/308_CRP-GoodMorning-Baseline-Visibility-Default-BCR-Prepar/Walkthrough.md  
+Authors: Rolf, LCM_AI Engine  
 Date: 2026-11-08 16:55:00
 
 ---

@@ -4,8 +4,8 @@ Module: docs/Proposals/356_BUG-Rules-Explorer-Has-No-Refresh-Button/Specificatio
 Purpose: Rules Explorer Has No Refresh Button  
 Path: LCM_Inventory/docs/Proposals/356_BUG-Rules-Explorer-Has-No-Refresh-Button/Specification BUG-356.md  
 Authors: Rolf, Claude  
-Version: 10.7.4
-Status: Suggested  
+Version: 10.7.4  
+Status: Pushed  
 Date: 2026-11-18 21:38:57
 
 ```yaml

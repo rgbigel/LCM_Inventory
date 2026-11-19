@@ -1,11 +1,11 @@
 # Implementation Plan — CRP-198: RollingCalendar New Repository Integration
 
-Module: LCM_Inventory/docs/Proposals/198_CRP-RollingCalendar-New-Repository-Integration/Implementation_Plan.md
-Purpose: Technical file breakdown and execution plan for CRP-198.
-Path: LCM_Inventory/docs/Proposals/198_CRP-RollingCalendar-New-Repository-Integration/Implementation_Plan.md
-Authors: rgbig, LCM_AI Governance
-Version: 10.2.0
-Status: Verification
+Module: LCM_Inventory/docs/Proposals/198_CRP-RollingCalendar-New-Repository-Integration/Implementation_Plan.md  
+Purpose: Technical file breakdown and execution plan for CRP-198.  
+Path: LCM_Inventory/docs/Proposals/198_CRP-RollingCalendar-New-Repository-Integration/Implementation_Plan.md  
+Authors: rgbig, LCM_AI Governance  
+Version: 10.2.0  
+Status: Verification  
 Date: 2026-10-13
 
 ---

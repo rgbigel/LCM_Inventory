@@ -2799,7 +2799,11 @@
         "Description": "Displays detailed information for each evaluated archived conversation."
       }
     ],
-    "Dependencies": "Python 3.x (with built-in sqlite3)",
+    "Dependencies": [
+      "Python 3.x (with built-in sqlite3)",
+      "LcmRuntimeAtoms.psm1",
+      "Module: (Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\\LcmRuntimeAtoms.psm1')"
+    ],
     "IntentElevated": null
   },
   {
@@ -2855,7 +2859,11 @@
         "Description": ""
       }
     ],
-    "Dependencies": "Python 3.x (with built-in sqlite3)",
+    "Dependencies": [
+      "Python 3.x (with built-in sqlite3)",
+      "LcmRuntimeAtoms.psm1",
+      "Module: (Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\\LcmRuntimeAtoms.psm1')"
+    ],
     "IntentElevated": null
   },
   {
@@ -5621,7 +5629,9 @@
     ],
     "Dependencies": [
       "Restore-SystemSettings.ps1",
-      "Invoke-InteractiveDesktop.ps1"
+      "LcmRuntimeAtoms.psm1",
+      "Invoke-InteractiveDesktop.ps1",
+      "Module: (Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\\LcmRuntimeAtoms.psm1')"
     ],
     "IntentElevated": null
   },
@@ -6601,6 +6611,26 @@
       }
     ],
     "Dependencies": "ProposalManager.psm1",
+    "IntentElevated": null
+  },
+  {
+    "Name": "Set-LcmWindowZone.py",
+    "ShortName": "SetLcmWindowZone",
+    "Aliases": null,
+    "Role": "Utility",
+    "Audience": "Developer",
+    "Admin": 0,
+    "AllowedAtoms": null,
+    "NoExit": true,
+    "Group": "LCM_Inventory",
+    "Domain": "LCM_Inventory",
+    "Type": "Python",
+    "Category": "Utility",
+    "Description": "Set-LcmWindowZone execution tool.",
+    "Example": "SetLcmWindowZone",
+    "RelativePath": "LCM_Inventory\\tools\\Set-LcmWindowZone.py",
+    "Parameters": [],
+    "Dependencies": null,
     "IntentElevated": null
   },
   {
@@ -7889,7 +7919,9 @@
       "LcmTokenVault.ps1",
       "LcmSecurityGateway.ps1",
       "DaemonActionController.ps1",
-      "BCompare"
+      "LcmRuntimeAtoms.psm1",
+      "BCompare",
+      "Module: (Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\\LcmRuntimeAtoms.psm1')"
     ],
     "IntentElevated": null
   },

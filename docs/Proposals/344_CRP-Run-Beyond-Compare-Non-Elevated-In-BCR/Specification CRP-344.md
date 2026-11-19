@@ -4,8 +4,8 @@ Module: docs/Proposals/344_CRP-Run-Beyond-Compare-Non-Elevated-In-BCR/Specificat
 Purpose: Run Beyond Compare Non-Elevated In BCR  
 Path: LCM_Inventory/docs/Proposals/344_CRP-Run-Beyond-Compare-Non-Elevated-In-BCR/Specification CRP-344.md  
 Authors: Rolf, Claude  
-Version: 10.6.4
-Status: Suggested  
+Version: 10.6.4  
+Status: Pushed  
 Date: 2026-11-18 18:31:34
 
 ```yaml

@@ -5,13 +5,14 @@ PACKAGE        : main
 DESCRIPTION    : Unified entrypoint routing between LCM DO CLI client and desktop daemon.
 AUTHOR         : Rolf
 DATE CREATED   : 2026-11-11
-LAST MODIFIED  : 2026-11-11
-VERSION        : 10.2.0
+LAST MODIFIED  : 2026-11-19
+VERSION        : 10.2.1
 GO VERSION     : 1.22+
 ENCODING       : ASCII (No BOM)
 ================================================================================
 CHANGE LOG:
 2026-11-11 - 10.0.0: Initial implementation.
+2026-11-19 - 10.2.1: BUG-348 item 7: gofmt (trailing blank line removed).
 ================================================================================
 */
 
@@ -52,4 +53,3 @@ func main() {
 	}
 	os.Exit(exitCode)
 }
-

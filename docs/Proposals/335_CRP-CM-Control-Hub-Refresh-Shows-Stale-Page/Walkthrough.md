@@ -4,7 +4,7 @@ Module: docs/Proposals/335_CRP-CM-Control-Hub-Refresh-Shows-Stale-Page/Walkthrou
 Purpose: Verification evidence for CRP-335 before Gate 2.  
 Path: LCM_Inventory/docs/Proposals/335_CRP-CM-Control-Hub-Refresh-Shows-Stale-Page/Walkthrough.md  
 Authors: Rolf, Claude (Anthropic)  
-Version: 10.6.4
+Version: 10.6.4  
 Status: Verified and deployed (Gate 2 pending)  
 Date: 2026-11-15 16:55:37
 

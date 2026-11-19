@@ -4,7 +4,7 @@ Module: docs/Proposals/332_CRP-Workspace-CRLF-Line-Ending-Enforcement/Implementa
 Purpose: Components and Gate 0 traceability of the CRLF enforcement implemented by Claude in DOIT.  
 Path: LCM_Inventory/docs/Proposals/332_CRP-Workspace-CRLF-Line-Ending-Enforcement/Implementation Plan CRP-332.md  
 Authors: Rolf, Claude (Anthropic)  
-Version: 10.6.4
+Version: 10.6.4  
 Status: Implemented (DOIT, awaiting Gate 2)  
 Date: 2026-11-15 15:56:40
 

@@ -6,7 +6,7 @@ Path: LCM_Inventory/docs/README.md
 Authors: Rolf, LCM_AI Engine  
 Version: 10.0.1  
 Status: Authoritative Reference  
-Updated: 2026-11-19 12:02:06  
+Updated: 2026-11-19 17:51:03  
 
 ---
 
@@ -284,6 +284,7 @@ TestWorkspaceReadiness
 | **SetLcmActionProgress** | [Set-LcmActionProgress.ps1](file:///LCM_Inventory/tools/Set-LcmActionProgress.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Set-LcmActionProgress execution tool. | SetLcmActionProgress |
 | **SetLcmMachineRegistry** | [Set-LcmMachineRegistry.ps1](file:///LCM_Inventory/tools/Set-LcmMachineRegistry.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Set-LcmMachineRegistry execution tool. | SetLcmMachineRegistry |
 | **SetLcmReliefMode** | [Set-LcmReliefMode.ps1](file:///LCM_Inventory/tools/Set-LcmReliefMode.ps1) | Utility | LCM_Inventory | PowerShell | Utility | Set-LcmReliefMode execution tool. | SetLcmReliefMode |
+| **SetLcmWindowZone** | [Set-LcmWindowZone.py](file:///LCM_Inventory/tools/Set-LcmWindowZone.py) | Utility | LCM_Inventory | Python | Utility | Set-LcmWindowZone execution tool. | SetLcmWindowZone |
 | **SetMachineWideExecutionPolicy** | [Set-MachineWideExecutionPolicy.ps1](file:///LCM_Tools/tools/Set-MachineWideExecutionPolicy.ps1) | Utility | LCM_Tools | PowerShell | Utility | Set-MachineWideExecutionPolicy execution tool. | SetMachineWideExecutionPolicy |
 | **SetOneDriveGitExclusions** | [Set-OneDriveGitExclusions.ps1](file:///SystemConfiguration/Source/Set-OneDriveGitExclusions.ps1) | Utility | SystemConfiguration | PowerShell | Utility | Set-OneDriveGitExclusions execution tool. | SetOneDriveGitExclusions |
 | **SetPSEnvMachine** | [Set_PS_Env_Machine.ps1](file:///LCM_Tools/tools/Set_PS_Env_Machine.ps1) | Utility | LCM_Tools | PowerShell | Utility | Set_PS_Env_Machine execution tool. | SetPSEnvMachine |

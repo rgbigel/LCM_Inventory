@@ -4,8 +4,8 @@ Module: docs/Proposals/362_CRP-Macrium-Backup-Type-Parameter-Defaulting-To-Diffe
 Purpose: Macrium Backup Type Parameter Defaulting To Incremental  
 Path: LCM_Inventory/docs/Proposals/362_CRP-Macrium-Backup-Type-Parameter-Defaulting-To-Differ/Specification CRP-362.md  
 Authors: Rolf, Claude  
-Version: 10.7.4
-Status: Suggested  
+Version: 10.7.4  
+Status: Pushed  
 Date: 2026-11-18 23:49:34
 
 ```yaml

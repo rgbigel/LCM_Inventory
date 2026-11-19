@@ -4,8 +4,8 @@ Module: docs/Proposals/338_BUG-Repository-Agents-Folders-Not-Junctioned/Specific
 Purpose: Every repository's `.agents` must be a junction to `LCM_AI\.agents`; replace the real folders (holding only a `rules` junction) and delete the stale tracked `LCM_Inventory/.agents/ACTIVE_SESSION.md`.  
 Path: LCM_Inventory/docs/Proposals/338_BUG-Repository-Agents-Folders-Not-Junctioned/Specification.md  
 Authors: Rolf, Claude (Anthropic)  
-Version: 10.7.4
-Status: Registered (DOIT)  
+Version: 10.7.4  
+Status: Pushed  
 Date: 2026-11-16 17:16:26
 
 ```yaml

@@ -4,8 +4,8 @@ Module: docs/Proposals/352_BUG-Tool-Explorer-Run-Selection-Admin-Filter-And-Tool
 Purpose: Tool Explorer Run Selection Admin Filter And ToolHelp Fail  
 Path: LCM_Inventory/docs/Proposals/352_BUG-Tool-Explorer-Run-Selection-Admin-Filter-And-ToolH/Specification BUG-352.md  
 Authors: Rolf, Claude  
-Version: 10.6.4
-Status: In Progress (DOIT)  
+Version: 10.6.4  
+Status: Pushed  
 Date: 2026-11-18 16:01:00
 
 ```yaml

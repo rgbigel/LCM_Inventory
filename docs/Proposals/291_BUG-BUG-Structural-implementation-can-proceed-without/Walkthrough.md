@@ -1,11 +1,11 @@
 # Walkthrough: BUG-291
 
-Module: docs/Proposals/291_BUG-BUG-Structural-implementation-can-proceed-without/Walkthrough.md
-Purpose: Record the completed BUG-291 remediation evidence and closure control.
-Path: D:\Git_Repositories\LCM_Inventory\docs\Proposals\291_BUG-BUG-Structural-implementation-can-proceed-without\Walkthrough.md
-Authors: Rolf, Copilot
-Version: 1.0.1
-Status: Completed success walkthrough; closed by accepted BCR and commit ea3e886
+Module: docs/Proposals/291_BUG-BUG-Structural-implementation-can-proceed-without/Walkthrough.md  
+Purpose: Record the completed BUG-291 remediation evidence and closure control.  
+Path: D:\Git_Repositories\LCM_Inventory\docs\Proposals\291_BUG-BUG-Structural-implementation-can-proceed-without\Walkthrough.md  
+Authors: Rolf, Copilot  
+Version: 1.0.1  
+Status: Completed success walkthrough; closed by accepted BCR and commit ea3e886  
 Date: 2026-10-18
 
 ## 1. Reproduction Evidence

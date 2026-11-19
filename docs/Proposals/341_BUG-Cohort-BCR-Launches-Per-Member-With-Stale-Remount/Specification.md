@@ -4,8 +4,8 @@ Module: docs/Proposals/341_BUG-Cohort-BCR-Launches-Per-Member-With-Stale-Remount
 Purpose: Cohort BCR Launches Per Member With Stale Remount  
 Path: LCM_Inventory/docs/Proposals/341_BUG-Cohort-BCR-Launches-Per-Member-With-Stale-Remount/Specification.md  
 Authors: Rolf, Claude  
-Version: 10.6.4
-Status: In Progress  
+Version: 10.6.4  
+Status: Pushed  
 Date: 2026-11-17 12:03:50
 
 ```yaml

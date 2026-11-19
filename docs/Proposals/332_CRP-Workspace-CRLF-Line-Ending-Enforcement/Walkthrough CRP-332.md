@@ -4,7 +4,7 @@ Module: docs/Proposals/332_CRP-Workspace-CRLF-Line-Ending-Enforcement/Walkthroug
 Purpose: Verification evidence for CRP-332 (Claude, DOIT) before Gate 2.  
 Path: LCM_Inventory/docs/Proposals/332_CRP-Workspace-CRLF-Line-Ending-Enforcement/Walkthrough CRP-332.md  
 Authors: Rolf, Claude (Anthropic)  
-Version: 10.6.4
+Version: 10.6.4  
 Status: Verified by automated pre-tests (Gate 2 pending)  
 Date: 2026-11-15 15:56:40
 

@@ -1,9 +1,9 @@
 # Implementation Plan: CRP-304 - Atomized failure analysis report viewer
 
-Module: CRP-304 Implementation Plan
-Purpose: Record the accepted implementation scope and verified delivery evidence.
-Authors: Rolf, Copilot
-Version: 10.2.1
+Module: CRP-304 Implementation Plan  
+Purpose: Record the accepted implementation scope and verified delivery evidence.  
+Authors: Rolf, Copilot  
+Version: 10.2.1  
 Date: 2026-10-21
 
 ## 1. Executive Summary & Problem Context

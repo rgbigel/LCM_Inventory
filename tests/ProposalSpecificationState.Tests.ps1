@@ -5,6 +5,7 @@ Path: tests/ProposalSpecificationState.Tests.ps1
 Authors: Rolf, Copilot
 Version: 10.2.1
 Date: 2026-11-19
+Implementation Choices (BUG-376): a case with a DOX header above the YAML fence checks the header Status mirror.
 Implementation Choices (BUG-364): the cross-repository case uses a disjunct subsystem (HaSSD06, RULE-SUB-008); bundles of LCM_* repositories live only in LCM_Inventory (RULE-LCM-034).
 #>
 BeforeAll {
@@ -41,6 +42,16 @@ Describe 'Persisted specification lifecycle mirrors' {
     $text | Should -Match 'Status: In Progress\r\nPlan-State: in_progress\r\nProgress-State: in_progress'
     $text | Should -Match '## Contract\r\nStatus: Preserve this body example.'
     (Get-ProposalStore).proposals[0].state | Should -Be 'in_progress'
+  }
+
+  It 'mirrors the YAML Status into the DOX header line and keeps its line break (BUG-376)' {
+    $doxText = "# CRP-1`r`n`r`nModule: x  `r`nStatus: Suggested  `r`nDate: 2026-11-19`r`n`r`n" + '```yaml' + "`r`nStatus: Suggested`r`nPlan-State: suggested`r`nProgress-State: undecided`r`n" + '```' + "`r`n`r`n## Contract`r`nStatus: Preserve this body example.`r`n"
+    [IO.File]::WriteAllText($specs[0], $doxText, [Text.UTF8Encoding]::new($false))
+    Move-LcmProposalLifecycleState -Id 1 -State in_progress | Out-Null
+    $text = [IO.File]::ReadAllText($specs[0])
+    $text | Should -Match 'Module: x  \r\nStatus: In Progress  \r\nDate: 2026-11-19'
+    $text | Should -Match 'Status: In Progress\r\nPlan-State: in_progress'
+    $text | Should -Match '## Contract\r\nStatus: Preserve this body example.'
   }
 
   It 'does not write documents until a deferred batch is persisted, then synchronizes every member' {

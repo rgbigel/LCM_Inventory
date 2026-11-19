@@ -4,7 +4,7 @@ Module: docs/Proposals/364_BUG-Unit-Test-Failures-Surfaced-By-LCM-Inventory-Read
 Purpose: Path taken and test evidence.  
 Path: LCM_Inventory/docs/Proposals/364_BUG-Unit-Test-Failures-Surfaced-By-LCM-Inventory-Readi/Walkthrough BUG-364.md  
 Authors: Rolf, Claude  
-Version: 10.7.4
+Version: 10.7.4  
 Status: In Progress  
 Date: 2026-11-19 11:05:00
 
@@ -35,3 +35,11 @@ Date: 2026-11-19 11:05:00
 | `LEARNED_ADVICE.md`, `ACTIVE_CONTEXT.md`, bundles 311/312 after ContextAbsorption | unchanged (timestamps 2026-11-18 23:58:53 / 2026-11-10) |
 | Full run, clean session | 362 total, 1 failed (lifecycle matrix) |
 | `Test-RepoReadiness.ps1` full (gate) before / after the clean-process change | 6 failed / 1 failed (lifecycle matrix) |
+
+## Final Verification (2026-11-19 12:38:33)
+
+| Check | Result |
+|:---|:---|
+| `Test-RepoReadiness.ps1` (LCM_Inventory, clean child process for the unit tests) | all 4 gates PASSED; unit tests 356 passed, 0 failed in 48 files (362 - 9 retired line-ending tests + 3 runtime tests, BUG-365 / CRP-366) |
+| Callers of the removed direct transitions | none: Complete-Review, Submit-ReviewResult and Invoke-ProposalAction move verified -> in_review -> completed step by step; cohort synchronization checks every step and fails closed |
+| Ledger after the run | states unchanged (BUG-364 in_progress, BUG-365 / CRP-366 / BUG-367 completed) |

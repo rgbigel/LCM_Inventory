@@ -4,8 +4,8 @@ Module: docs/Proposals/360_BUG-Completion-Aborts-On-Tracked-File-Under-Ignored-D
 Purpose: Completion Aborts On Tracked File Under Ignored Directory  
 Path: LCM_Inventory/docs/Proposals/360_BUG-Completion-Aborts-On-Tracked-File-Under-Ignored-Di/Specification BUG-360.md  
 Authors: Rolf  
-Version: 10.7.4
-Status: Suggested  
+Version: 10.7.4  
+Status: Pushed  
 Date: 2026-11-18 18:35:11
 
 ```yaml

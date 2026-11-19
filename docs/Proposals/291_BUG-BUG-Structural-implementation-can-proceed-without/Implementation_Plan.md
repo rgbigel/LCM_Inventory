@@ -1,11 +1,11 @@
 # Implementation Plan: BUG-291
 
-Module: docs/Proposals/291_BUG-BUG-Structural-implementation-can-proceed-without/Implementation_Plan.md
-Purpose: Describe the planned enforcement repair for the proposal-first governance gap.
-Path: D:\Git_Repositories\LCM_Inventory\docs\Proposals\291_BUG-BUG-Structural-implementation-can-proceed-without\Implementation_Plan.md
-Authors: Rolf, Copilot
-Version: 1.0.1
-Status: Remediation implemented and accepted
+Module: docs/Proposals/291_BUG-BUG-Structural-implementation-can-proceed-without/Implementation_Plan.md  
+Purpose: Describe the planned enforcement repair for the proposal-first governance gap.  
+Path: D:\Git_Repositories\LCM_Inventory\docs\Proposals\291_BUG-BUG-Structural-implementation-can-proceed-without\Implementation_Plan.md  
+Authors: Rolf, Copilot  
+Version: 1.0.1  
+Status: Remediation implemented and accepted  
 Date: 2026-10-18
 
 ## 1. Root Cause

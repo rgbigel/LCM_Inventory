@@ -3,8 +3,10 @@ Module: LcmElevatedDaemon.Tests
 Purpose: Automated verification test suite for CRP-309 Unified Elevated Desktop Daemon, Universal Back Channel, and Security Gateway.
 Path: LCM_Inventory/tests/LcmElevatedDaemon.Tests.ps1
 Authors: Rolf, LCM_AI Engine
-Version: 10.2.2
-Date: 2026-11-09 19:05:00
+Version: 10.2.3
+Date: 2026-11-19 17:53:45
+Implementation Choices (BUG-375): the controller records intent statistics into an isolated copy
+(LCM_TOOL_INTENTS_PATH in TestDrive), never into the live config/tool_intents.json.
 #>
 
 BeforeAll {
@@ -19,6 +21,11 @@ BeforeAll {
 
   Import-Module -Name (Join-Path $script:repoRoot 'modules\LcmDisplayHttp.psm1') -Force
 
+  # BUG-375: intent statistics of the controller go to an isolated copy.
+  $script:intentsCopy = Join-Path $TestDrive 'tool_intents.json'
+  Copy-Item -LiteralPath (Join-Path $script:repoRoot 'config\tool_intents.json') -Destination $script:intentsCopy
+  $env:LCM_TOOL_INTENTS_PATH = $script:intentsCopy
+
   function New-TestDisplayResponse {
     $response = [pscustomobject]@{
       StatusCode      = 0
@@ -30,6 +37,10 @@ BeforeAll {
     $response | Add-Member -MemberType ScriptMethod -Name Close -Value {}
     return $response
   }
+}
+
+AfterAll {
+  Remove-Item -Path 'Env:LCM_TOOL_INTENTS_PATH' -ErrorAction SilentlyContinue
 }
 
 Describe 'CRP-309 Presentation & Delivery (CORS and Webview Hosting)' {

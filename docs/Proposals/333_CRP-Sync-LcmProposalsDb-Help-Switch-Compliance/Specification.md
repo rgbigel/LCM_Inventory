@@ -4,8 +4,8 @@ Module: docs/Proposals/333_CRP-Sync-LcmProposalsDb-Help-Switch-Compliance/Specif
 Purpose: Make Sync-LcmProposalsDb.ps1 print its own usage for -Help / -h / -? (RULE-PS-010).  
 Path: LCM_Inventory/docs/Proposals/333_CRP-Sync-LcmProposalsDb-Help-Switch-Compliance/Specification.md  
 Authors: Rolf, Claude (Anthropic)  
-Version: 10.6.4
-Status: Suggested (registered)  
+Version: 10.6.4  
+Status: Pushed  
 Date: 2026-11-15 15:44:55
 
 ```yaml

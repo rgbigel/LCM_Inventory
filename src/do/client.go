@@ -5,8 +5,8 @@ PACKAGE        : main
 DESCRIPTION    : CLI Client dispatcher connecting to the Port 9876 LCM Desktop Daemon.
 AUTHOR         : Rolf
 DATE CREATED   : 2026-11-11
-LAST MODIFIED  : 2026-11-17
-VERSION        : 10.2.4
+LAST MODIFIED  : 2026-11-19
+VERSION        : 10.2.8
 GO VERSION     : 1.22+
 ENCODING       : ASCII (No BOM)
 ================================================================================
@@ -14,6 +14,9 @@ CHANGE LOG:
 2026-11-11 - 10.0.0: Initial implementation.
 2026-11-17 - 10.2.4: CRP-343 sends the daemon key (X-LCM-Key) after verifying that the
                      port listener is this same do.exe binary (serverid.go).
+2026-11-19 - 10.2.8: CRP-361 DO-Little: routeDecision picks the local path (caller's own token) or
+                     the daemon; -explain shows the route without executing, -daemon forces it.
+                     GetGitRoot derives the root from the binary location (no fixed D: path).
 ================================================================================
 */
 
@@ -39,11 +42,13 @@ func RunClient(args []string) (int, error) {
 	daemonURL := fmt.Sprintf("http://127.0.0.1:%d", port)
 
 	var (
-		elevated   bool
-		syncMode   bool
-		noExit     bool
-		timeoutSec int = 30
-		cmdParts   []string
+		elevated    bool
+		syncMode    bool
+		noExit      bool
+		forceDaemon bool
+		explain     bool
+		timeoutSec  int = 30
+		cmdParts    []string
 	)
 
 	// Custom flag parsing to allow natural syntax: do "es.exe query" -sync or do -sync Get-Date
@@ -56,6 +61,10 @@ func RunClient(args []string) (int, error) {
 			syncMode = true
 		case "-noexit", "--noexit", "-k":
 			noExit = true
+		case "-daemon", "--daemon":
+			forceDaemon = true
+		case "-explain", "--explain":
+			explain = true
 		case "-timeout", "--timeout", "-t":
 			if i+1 < len(args) {
 				t, err := strconv.Atoi(args[i+1])
@@ -77,7 +86,7 @@ func RunClient(args []string) (int, error) {
 			PrintUsage()
 			return 0, nil
 		case "-v", "--version", "-version", "version":
-			fmt.Println("LCM DO Client/Daemon v10.2.0 (Go 1.22+ native single binary)")
+			fmt.Println("LCM DO Client/Daemon v10.2.8 (Go 1.22+ native single binary)")
 			return 0, nil
 		default:
 			cmdParts = append(cmdParts, arg)
@@ -88,6 +97,16 @@ func RunClient(args []string) (int, error) {
 	if commandStr == "" {
 		PrintUsage()
 		return 1, fmt.Errorf("no command provided")
+	}
+
+	// CRP-361 T2: local or daemon.
+	route, reason := routeDecision(clientRouteInput(commandStr, forceDaemon, elevated, syncMode, noExit, GetGitRoot()))
+	if explain {
+		fmt.Printf("route: %s (%s)\n", route, reason)
+		return 0, nil
+	}
+	if route == routeLocal {
+		return runLocal(commandStr, syncMode, noExit, timeoutSec, reason)
 	}
 
 	reqPayload := ExecuteRequest{
@@ -125,7 +144,7 @@ func RunClient(args []string) (int, error) {
 
 	resp, err := client.Do(httpReq)
 	if err != nil {
-		return 1, fmt.Errorf("desktop Daemon on port %d unreachable (%w). Is 'do daemon' running?", port, err)
+		return 1, fmt.Errorf("this call needs the daemon (%s), but the desktop daemon on port %d is unreachable (%w); it does not run locally instead", reason, port, err)
 	}
 	defer func() {
 		_ = resp.Body.Close()
@@ -251,9 +270,13 @@ func GetGitRoot() string {
 	if root != "" && dirExists(root) {
 		return root
 	}
-	defaultRoot := `D:\Git_Repositories`
-	if dirExists(defaultRoot) {
-		return defaultRoot
+	// The git root is derived from this binary's location (<root>/LCM_Inventory/DoT/do.exe), never a fixed
+	// drive path (operator 2026-11-19, CRP-253 sandboxing).
+	if exe, err := os.Executable(); err == nil {
+		candidate := filepath.Dir(filepath.Dir(filepath.Dir(exe)))
+		if dirExists(filepath.Join(candidate, "LCM_Inventory")) {
+			return candidate
+		}
 	}
 	cwd, err := os.Getwd()
 	if err == nil {
@@ -270,13 +293,14 @@ func dirExists(path string) bool {
 // PrintUsage displays interactive help for the do tool.
 func PrintUsage() {
 	fmt.Println("==========================================================================")
-	fmt.Println(" LCM DO / UNIFIED TOOL GATEWAY (do.exe v10.2.0)")
+	fmt.Println(" LCM DO / UNIFIED TOOL GATEWAY (do.exe v10.2.8)")
 	fmt.Println("==========================================================================")
 	fmt.Println("SYNOPSIS:")
-	fmt.Println("  Unified execution gateway connecting CLI callers to the Session 1 daemon.")
+	fmt.Println("  Unified execution gateway: simple calls run locally with the caller's rights,")
+	fmt.Println("  elevation, de-elevation and windows without a desktop go to the Session 1 daemon (CRP-361).")
 	fmt.Println("")
 	fmt.Println("USAGE:")
-	fmt.Println("  do <command> [-sync] [-elevated] [-noexit] [-timeout <sec>]")
+	fmt.Println("  do <command> [-sync] [-elevated] [-noexit] [-timeout <sec>] [-daemon] [-explain]")
 	fmt.Println("  do daemon [-port <port>]")
 	fmt.Println("  do status")
 	fmt.Println("  do log")
@@ -286,5 +310,7 @@ func PrintUsage() {
 	fmt.Println("  -elevated, -e  : Dispatches with Administrator elevation onto Session 1 desktop.")
 	fmt.Println("  -noexit, -k    : Keeps console window open upon completion.")
 	fmt.Println("  -timeout, -t   : Execution timeout in seconds (default: 30).")
+	fmt.Println("  -daemon        : Always use the daemon (no local path).")
+	fmt.Println("  -explain       : Print the route (local or daemon) and its reason; execute nothing.")
 	fmt.Println("==========================================================================")
 }

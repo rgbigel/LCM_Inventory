@@ -4,8 +4,8 @@ Module: docs/Proposals/335_CRP-CM-Control-Hub-Refresh-Shows-Stale-Page/Specifica
 Purpose: Record that the CM Control Hub (ShowCM) can show a stale page after ledger changes; observation only, no code analysis yet (operator 2026-11-15).  
 Path: LCM_Inventory/docs/Proposals/335_CRP-CM-Control-Hub-Refresh-Shows-Stale-Page/Specification.md  
 Authors: Rolf, Claude (Anthropic)  
-Version: 10.6.4
-Status: Suggested (registered)  
+Version: 10.6.4  
+Status: Pushed  
 Date: 2026-11-15 16:29:38
 
 ```yaml

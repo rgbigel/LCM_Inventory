@@ -5,8 +5,8 @@ PACKAGE        : main
 DESCRIPTION    : Data transfer objects and request/response models for LCM DO.
 AUTHOR         : Rolf
 DATE CREATED   : 2026-11-11
-LAST MODIFIED  : 2026-11-18
-VERSION        : 10.2.5
+LAST MODIFIED  : 2026-11-19
+VERSION        : 10.2.8
 GO VERSION     : 1.22+
 ENCODING       : ASCII (No BOM)
 ================================================================================
@@ -14,6 +14,8 @@ CHANGE LOG:
 2026-11-11 - 10.0.0: Initial implementation.
 2026-11-17 - 10.2.4: CRP-343 ExecuteResponse.ElevationDecision (why the command ran elevated or not).
 2026-11-18 - 10.2.5: CRP-354 ForegroundRequest.WaitMs.
+2026-11-19 - 10.2.8: CRP-361 ActionLog.Path / Caller / Decision (one log format for the local and the daemon path);
+                     the dead OpenRequest.Pane field is removed (T5).
 ================================================================================
 */
 
@@ -67,7 +69,6 @@ type OpenRequest struct {
 	Args       string `json:"args"`
 	Foreground bool   `json:"foreground"`
 	Title      string `json:"title"`
-	Pane       bool   `json:"pane"`
 }
 
 // ForegroundRequest defines the input payload for the /foreground endpoint.
@@ -87,4 +88,8 @@ type ActionLog struct {
 	Elevated   bool   `json:"elevated"`
 	Stdout     string `json:"stdout,omitempty"`
 	Stderr     string `json:"stderr,omitempty"`
+	// Path is "local" or "daemon", Caller who asked, Decision why (CRP-361 T4).
+	Path     string `json:"path,omitempty"`
+	Caller   string `json:"caller,omitempty"`
+	Decision string `json:"decision,omitempty"`
 }

@@ -1,8 +1,8 @@
 # Walkthrough: CRP-310
 
-Module: CRP-310
-Path: docs/Proposals/310_CRP-Workspace-Subsystem-Repository-Alignment/Walkthrough.md
-Authors: Rolf, LCM_AI Engine
+Module: CRP-310  
+Path: docs/Proposals/310_CRP-Workspace-Subsystem-Repository-Alignment/Walkthrough.md  
+Authors: Rolf, LCM_AI Engine  
 Date: 2026-11-08 17:47:00
 
 ---

@@ -1,11 +1,11 @@
 # Bug Proposal: BUG-291
 
-Module: docs/Proposals/291_BUG-BUG-Structural-implementation-can-proceed-without/Specification.md
-Purpose: Define the corrective guard for proposal-first governance bypasses.
-Path: D:\Git_Repositories\LCM_Inventory\docs\Proposals\291_BUG-BUG-Structural-implementation-can-proceed-without\Specification.md
-Authors: Rolf, Copilot
-Version: 1.0.1
-Status: Completed
+Module: docs/Proposals/291_BUG-BUG-Structural-implementation-can-proceed-without/Specification.md  
+Purpose: Define the corrective guard for proposal-first governance bypasses.  
+Path: D:\Git_Repositories\LCM_Inventory\docs\Proposals\291_BUG-BUG-Structural-implementation-can-proceed-without\Specification.md  
+Authors: Rolf, Copilot  
+Version: 1.0.1  
+Status: Completed  
 Date: 2026-10-18
 
 ```yaml

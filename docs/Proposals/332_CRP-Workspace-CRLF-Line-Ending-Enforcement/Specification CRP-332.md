@@ -4,8 +4,8 @@ Module: docs/Proposals/332_CRP-Workspace-CRLF-Line-Ending-Enforcement/Specificat
 Purpose: Enforce the operator's line-ending decision (Option A: CRLF everywhere, no mixed setup) across all governed LCM_* repositories and the workspace root; implemented by Claude in DOIT (operator 2026-11-15).  
 Path: LCM_Inventory/docs/Proposals/332_CRP-Workspace-CRLF-Line-Ending-Enforcement/Specification CRP-332.md  
 Authors: Rolf, Claude (Anthropic)  
-Version: 10.6.4
-Status: Draft (revised 2026-11-16: Option B)  
+Version: 10.6.4  
+Status: Pushed  
 Date: 2026-11-16 16:29:36
 
 ```yaml

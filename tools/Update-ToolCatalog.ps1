@@ -18,6 +18,7 @@
   Implementation Choices (CRP-366): Python launchers and examples name the registered interpreter
   (tools.db table runtimes via LcmRuntimeAtoms, RULE-PY-010) instead of a bare 'python' resolved through PATH;
   if the registry cannot be read, a warning is shown and the launchers keep 'python' (bookkeeping never aborts).
+  Implementation Choices (BUG-368): Python intents record the registered interpreter as executable (was pwsh.exe).
   Implementation Choices (CRP-345): tools/automation/*.ahk are scanned as type AutoHotkey and registered as intents with executable AutoHotkey64.exe and the declared IntentElevated flag; they get no .cmd trampoline (run only through Invoke-LcmAhkAtom).
 .PARAMETER Silent
   Suppresses non-error terminal output (useful in automated pipelines).
@@ -1461,7 +1462,7 @@ try {
       $m = if ($existingMetricsMap.ContainsKey($k)) { $existingMetricsMap[$k] } else { $null }
       $intentsDict[$k] = [ordered]@{
         goal              = $info.goal
-        executable        = if ($t.Type -eq "Batch") { "cmd.exe /c" } else { "pwsh.exe" }
+        executable        = if ($t.Type -eq "Batch") { "cmd.exe /c" } elseif ($t.Type -eq "Python") { $script:LcmPythonExe } else { "pwsh.exe" }
         script            = $t.RelativePath.Replace("\", "/")
         parameters        = [ordered]@{}
         trampoline        = $trampoline
@@ -1501,7 +1502,7 @@ try {
 
     $entry = [ordered]@{
       goal              = $t.Description
-      executable        = if ($t.Type -eq "Batch") { "cmd.exe /c" } elseif ($t.Type -eq "AutoHotkey") { "AutoHotkey64.exe" } else { "pwsh.exe" }
+      executable        = if ($t.Type -eq "Batch") { "cmd.exe /c" } elseif ($t.Type -eq "AutoHotkey") { "AutoHotkey64.exe" } elseif ($t.Type -eq "Python") { $script:LcmPythonExe } else { "pwsh.exe" }
       script            = $t.RelativePath.Replace("\", "/")
       parameters        = $params
       trampoline        = $trampoline

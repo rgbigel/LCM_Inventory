@@ -4,8 +4,8 @@ Module: docs/Proposals/340_BUG-New-LCM-Proposal-Placeholder-Slug-and-Version-Def
 Purpose: New-LCM_Proposal scaffolds unmarked placeholder documents, silently truncates the bundle slug and stamps a stale LCM version; fix all three.  
 Path: LCM_Inventory/docs/Proposals/340_BUG-New-LCM-Proposal-Placeholder-Slug-and-Version-Defe/Specification BUG-340.md  
 Authors: Rolf, Claude (Anthropic)  
-Version: 10.7.4
-Status: In Progress (DOIT)  
+Version: 10.7.4  
+Status: Pushed  
 Date: 2026-11-18 13:23:21
 
 ```yaml

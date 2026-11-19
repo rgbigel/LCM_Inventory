@@ -4,8 +4,8 @@ Module: docs/Proposals/353_BUG-Bundle-Scaffold-Repeats-Intake-Text-In-All-Three-
 Purpose: Bundle Scaffold Repeats Intake Text In All Three Documents  
 Path: LCM_Inventory/docs/Proposals/353_BUG-Bundle-Scaffold-Repeats-Intake-Text-In-All-Three-D/Specification.md  
 Authors: Rolf  
-Version: 10.6.4
-Status: Suggested  
+Version: 10.6.4  
+Status: Withdrawn  
 Date: 2026-11-18 12:51:57
 
 ```yaml

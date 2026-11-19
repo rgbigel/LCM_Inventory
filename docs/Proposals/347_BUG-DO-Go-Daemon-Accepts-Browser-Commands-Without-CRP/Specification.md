@@ -4,8 +4,8 @@ Module: docs/Proposals/347_BUG-DO-Go-Daemon-Accepts-Browser-Commands-Without-CRP
 Purpose: DO Go Daemon Accepts Browser Commands Without CRP-309 Guard  
 Path: LCM_Inventory/docs/Proposals/347_BUG-DO-Go-Daemon-Accepts-Browser-Commands-Without-CRP/Specification.md  
 Authors: Rolf, Claude  
-Version: 10.6.4
-Status: In Progress  
+Version: 10.6.4  
+Status: Pushed  
 Date: 2026-11-17 14:14:06
 
 ```yaml

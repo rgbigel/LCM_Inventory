@@ -4,8 +4,8 @@ Module: docs/Proposals/337_CRP-DO-Gateway-Elevation-Permits-per-Tool-Admin-State
 Purpose: Align the DO gateway with the operator's elevation model: elevated execution only for tools whose atomic admin state requires it, and only for users in the Administrators group.  
 Path: LCM_Inventory/docs/Proposals/337_CRP-DO-Gateway-Elevation-Permits-per-Tool-Admin-State/Specification.md  
 Authors: Rolf, Claude (Anthropic)  
-Version: 10.6.4
-Status: Suggested (registered)  
+Version: 10.6.4  
+Status: Superseded  
 Date: 2026-11-15 17:47:30
 
 ```yaml

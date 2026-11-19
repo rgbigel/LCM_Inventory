@@ -4,8 +4,8 @@ Module: docs/Proposals/331_CRP-Claude-Reingestion-Rule-Harmonization-Findings/Sp
 Purpose: Findings and change recommendations from Claude's re-ingestion of the canonical LCM rules at LCM_AI 2bebbaa, addressed to Antigravity for analysis and joint design of the corrections.  
 Path: LCM_Inventory/docs/Proposals/331_CRP-Claude-Reingestion-Rule-Harmonization-Findings/Specification.md  
 Authors: Rolf, Claude (Anthropic)  
-Version: 10.6.4
-Status: Draft (awaiting operator review before Antigravity instruction)  
+Version: 10.6.4  
+Status: Pushed  
 Date: 2026-11-14 21:03:53
 
 ```yaml

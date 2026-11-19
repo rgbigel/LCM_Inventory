@@ -4,7 +4,7 @@ Module: docs/Proposals/335_CRP-CM-Control-Hub-Refresh-Shows-Stale-Page/Implement
 Purpose: Root cause, change and Gate 0 traceability for CRP-335 (Claude, DOIT).  
 Path: LCM_Inventory/docs/Proposals/335_CRP-CM-Control-Hub-Refresh-Shows-Stale-Page/Implementation_Plan.md  
 Authors: Rolf, Claude (Anthropic)  
-Version: 10.6.4
+Version: 10.6.4  
 Status: Implemented (DOIT, awaiting Gate 2 incl. daemon redeploy)  
 Date: 2026-11-15 16:49:09
 

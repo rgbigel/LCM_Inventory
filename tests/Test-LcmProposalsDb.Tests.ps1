@@ -2,6 +2,8 @@
 .SYNOPSIS
     Unit and integration tests for CRP-322: SQLite Proposals Ledger Engine,
     Canonical SQL Projection, Git Auto-Hydration Hooks, and Version Grouping.
+    BUG-375 (2026-11-19): sync, verify, query and hydrate run on copies of the ledger files in TestDrive, never
+    on the live store; the active-horizon check no longer depends on the size of the live ledger.
 #>
 
 Describe 'CRP-322: SQLite Proposals Ledger Engine & Canonical SQL Projection' {
@@ -12,6 +14,15 @@ Describe 'CRP-322: SQLite Proposals Ledger Engine & Canonical SQL Projection' {
         $sqlPath  = Join-Path $repoRoot 'data\proposals\proposals.sql'
         $syncTool = Join-Path $repoRoot 'tools\Sync-LcmProposalsDb.ps1'
         $pyTool   = Join-Path $repoRoot 'tools\sync_proposals_db.py'
+        # BUG-375: isolated copies of the ledger files
+        $storeArgs = @{
+            JsonPath     = Join-Path $TestDrive 'proposals.json'
+            DatabasePath = Join-Path $TestDrive 'proposals.db'
+            SqlPath      = Join-Path $TestDrive 'proposals.sql'
+        }
+        Copy-Item -LiteralPath $jsonPath -Destination $storeArgs.JsonPath
+        Copy-Item -LiteralPath $dbPath -Destination $storeArgs.DatabasePath
+        Copy-Item -LiteralPath $sqlPath -Destination $storeArgs.SqlPath
     }
 
     It 'Should have the SQLite proposals database and canonical SQL text dump on disk' {
@@ -25,7 +36,7 @@ Describe 'CRP-322: SQLite Proposals Ledger Engine & Canonical SQL Projection' {
     }
 
     It 'Should verify 100% 3-way parity between JSON ledger, SQLite database, and SQL dump' {
-        $output = & $syncTool -Action Verify
+        $output = & $syncTool -Action Verify @storeArgs
         $LASTEXITCODE | Should -Be 0
         $joined = $output -join [Environment]::NewLine
         $joined | Should -Match '100% Dual-State Parity Verified'
@@ -33,7 +44,7 @@ Describe 'CRP-322: SQLite Proposals Ledger Engine & Canonical SQL Projection' {
     }
 
     It 'Should verify database metadata table and workspace identity binding' {
-        $output = & $syncTool -Action Verify
+        $output = & $syncTool -Action Verify @storeArgs
         $joined = $output -join [Environment]::NewLine
         $joined | Should -Match 'Metadata: Role=LIVE'
     }
@@ -47,12 +58,11 @@ Describe 'CRP-322: SQLite Proposals Ledger Engine & Canonical SQL Projection' {
     }
 
     It 'Should filter historical published proposals in active horizon query mode' {
-        $activeItems = & $syncTool -Action Query -Horizon active
-        $allItems    = & $syncTool -Action Query -Horizon all
+        $activeItems = & $syncTool -Action Query -Horizon active @storeArgs
+        $allItems    = & $syncTool -Action Query -Horizon all @storeArgs
 
         $allItems.Count | Should -BeGreaterThan 290
         $activeItems.Count | Should -BeLessThan $allItems.Count
-        $activeItems.Count | Should -BeLessThan 100
 
         foreach ($p in $activeItems) {
             if ($p.state -eq 'pushed') {
@@ -70,9 +80,9 @@ Describe 'CRP-322: SQLite Proposals Ledger Engine & Canonical SQL Projection' {
     }
 
     It 'Should cleanly re-hydrate SQLite database from canonical proposals.sql text dump' {
-        $output = & $syncTool -Action Hydrate -Silent
+        $output = & $syncTool -Action Hydrate -Silent @storeArgs
         $LASTEXITCODE | Should -Be 0
-        Test-Path -LiteralPath $dbPath | Should -BeTrue
+        Test-Path -LiteralPath $storeArgs.DatabasePath | Should -BeTrue
     }
 
     It 'Should have Git pre-push, post-merge, and post-checkout auto-hydration hooks installed' {

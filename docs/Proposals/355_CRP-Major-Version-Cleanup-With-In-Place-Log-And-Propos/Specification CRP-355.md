@@ -4,8 +4,8 @@ Module: docs/Proposals/355_CRP-Major-Version-Cleanup-With-In-Place-Log-And-Propo
 Purpose: Major Version Cleanup With In-Place Log And Proposal Ledger  
 Path: LCM_Inventory/docs/Proposals/355_CRP-Major-Version-Cleanup-With-In-Place-Log-And-Propos/Specification CRP-355.md  
 Authors: Rolf, Claude  
-Version: 10.7.4
-Status: Suggested  
+Version: 10.7.4  
+Status: Pushed  
 Date: 2026-11-18 23:30:27
 
 ```yaml

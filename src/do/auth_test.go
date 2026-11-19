@@ -223,3 +223,17 @@ func TestIsCompositeCommand(t *testing.T) {
 		}
 	}
 }
+
+// BUG-348: no handler grants cross-origin read access (only pages served by the daemon read it).
+func TestNoCORSWildcard(t *testing.T) {
+	for name, h := range map[string]http.HandlerFunc{
+		"displays": handleDisplays, "assets": handleAssets, "snapshots": handleSnapshots,
+		"page": handleDisplayPage("SHOW_RULES.html"),
+	} {
+		rec := httptest.NewRecorder()
+		h(rec, httptest.NewRequest(http.MethodGet, "/displays/none", nil))
+		if v := rec.Header().Get("Access-Control-Allow-Origin"); v != "" {
+			t.Errorf("%s: Access-Control-Allow-Origin = %q", name, v)
+		}
+	}
+}

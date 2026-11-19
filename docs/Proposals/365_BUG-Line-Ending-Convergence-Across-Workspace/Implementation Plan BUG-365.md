@@ -4,7 +4,7 @@ Module: docs/Proposals/365_BUG-Line-Ending-Convergence-Across-Workspace/Implemen
 Purpose: Concrete changes per file for BUG-365 and its open items.  
 Path: LCM_Inventory/docs/Proposals/365_BUG-Line-Ending-Convergence-Across-Workspace/Implementation Plan BUG-365.md  
 Authors: Rolf, Claude  
-Version: 10.7.4
+Version: 10.7.4  
 Status: In Progress  
 Date: 2026-11-19 11:47:30
 
@@ -23,7 +23,7 @@ Date: 2026-11-19 11:47:30
 | 7 | `.vscode/settings.json` (root and 7 repositories) | `files.eol` LF, `[bat]` CRLF |
 | 8 | Canonical rules (ADMINMODE on): `InvariantRules.md` 10.3.1 (`newline-crlf` -> `newline-lf`), `JsonRules.md` 10.2.1, `PowerShellRules.md` 10.2.2, `ProposalReviewFlowPolicy.md` 10.3.5 | Rule text; `CMDRules.md` `newline-crlf` stays (correct for cmd/bat) |
 | 9 | RULE-AUTH-002 sync: `LCM_AI/AGENTS.md`, root `AGENTS.md`, `LCM_AI/docs/LCM-Rules-Cross-Reference.md`, Claude adapter (InvariantRules, JsonRules, PowerShellRules, ProposalReviewFlowPolicy), `CANONICAL_HASHES.md` | Same wording; all 21 hashes renewed |
-| 10 | One-time conversion of `D:\Git_Repositories` | 1898 + 104 files converted; second pass found 0 left |
+| 10 | One-time conversion of the git root (`Git_Repositories`) | 1898 + 104 files converted; second pass found 0 left |
 | 11 | Tool catalog (`Update-ToolCatalog.ps1`) | Launcher `RepairLcmLineEndings` now points to the `.py` |
 
 ## 2. Open Items

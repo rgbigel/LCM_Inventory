@@ -4,7 +4,7 @@ Module: docs/Proposals/336_BUG-ProposalManager-Tests-Write-Into-Live-Workspace/W
 Purpose: Verification evidence for BUG-336 before Gate 2.  
 Path: LCM_Inventory/docs/Proposals/336_BUG-ProposalManager-Tests-Write-Into-Live-Workspace/Walkthrough.md  
 Authors: Rolf, Claude (Anthropic)  
-Version: 10.6.4
+Version: 10.6.4  
 Status: Verified by automated pre-tests (Gate 2 pending)  
 Date: 2026-11-15 16:42:43
 

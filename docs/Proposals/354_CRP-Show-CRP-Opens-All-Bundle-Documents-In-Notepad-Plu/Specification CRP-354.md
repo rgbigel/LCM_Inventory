@@ -1,11 +1,11 @@
 # Specification: CRP-354
 
-Module: docs/Proposals/354_CRP-Show-CRP-Opens-All-Bundle-Documents-In-Notepad-Plu/Specification CRP-354.md
-Purpose: Show CRP Opens All Bundle Documents In Notepad Plus Plus Tabs
-Path: LCM_Inventory/docs/Proposals/354_CRP-Show-CRP-Opens-All-Bundle-Documents-In-Notepad-Plu/Specification CRP-354.md
-Authors: Rolf, Claude
-Version: 10.7.4
-Status: Suggested
+Module: docs/Proposals/354_CRP-Show-CRP-Opens-All-Bundle-Documents-In-Notepad-Plu/Specification CRP-354.md  
+Purpose: Show CRP Opens All Bundle Documents In Notepad Plus Plus Tabs  
+Path: LCM_Inventory/docs/Proposals/354_CRP-Show-CRP-Opens-All-Bundle-Documents-In-Notepad-Plu/Specification CRP-354.md  
+Authors: Rolf, Claude  
+Version: 10.7.4  
+Status: Pushed  
 Date: 2026-11-18 21:26:19
 
 ```yaml

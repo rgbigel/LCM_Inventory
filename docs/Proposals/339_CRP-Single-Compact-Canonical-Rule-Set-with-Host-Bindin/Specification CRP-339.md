@@ -4,8 +4,8 @@ Module: docs/Proposals/339_CRP-Single-Compact-Canonical-Rule-Set-with-Host-Bindi
 Purpose: Replace the per-host rule projections by one compact canonical rule set in `LCM_AI/.agents/rules` (one MUST/MUST NOT line per rule, rationale and examples moved to `docs/`), loaded directly by every AI host, with host mechanics confined to one binding file per host.  
 Path: LCM_Inventory/docs/Proposals/339_CRP-Single-Compact-Canonical-Rule-Set-with-Host-Bindin/Specification CRP-339.md  
 Authors: Rolf, Claude (Anthropic)  
-Version: 10.7.4
-Status: Accepted (Gate 0, operator 2026-11-16)  
+Version: 10.7.4  
+Status: Suggested  
 Date: 2026-11-16 17:16:26
 
 ```yaml

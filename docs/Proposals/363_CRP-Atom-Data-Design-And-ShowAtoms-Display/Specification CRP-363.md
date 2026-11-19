@@ -4,8 +4,8 @@ Module: docs/Proposals/363_CRP-Atom-Data-Design-And-ShowAtoms-Display/Specificat
 Purpose: Atom Data Design And ShowAtoms Display  
 Path: LCM_Inventory/docs/Proposals/363_CRP-Atom-Data-Design-And-ShowAtoms-Display/Specification CRP-363.md  
 Authors: Rolf, Claude  
-Version: 10.7.4
-Status: Suggested  
+Version: 10.7.4  
+Status: In Progress  
 Date: 2026-11-19 10:34:00
 
 ```yaml
@@ -15,9 +15,9 @@ Scope: LCM_Inventory
 Baseline-Version: 10.7.4
 Author: Rolf
 Date: 2026-11-19 10:34:00
-Status: Suggested
-Plan-State: suggested
-Progress-State: undecided
+Status: In Progress
+Plan-State: in_progress
+Progress-State: in_progress
 Priority: 5
 App-ID: None
 ```
@@ -61,3 +61,10 @@ T4 `ShowToolIntents` shows the tool level as text (0..3) instead of ADMIN / USER
 ## 3. Origin
 
 - Operator remarks 2026-11-19 during CRP-343 segment 2 (Walkthrough CRP-343, sections 6 to 11): "the Atoms table defines the elevation, and i can't look at them directly, which is bad"; "the intents only show the privilege as ADMIN or USER which maps the old True/False cases ... there also is not elevation column at all, nor is there any linkage between the intents and the component-atoms"; option A (ShowAtoms) recommended, "definitely not within the scope of CRP 343 ... it will require a proper data design".
+
+## Operator Decisions (2026-11-19 17:29:38)
+
+1. A tool may own several atoms (1:n); an atom needs its own key.
+2. The permission list of a controlled tool (admin level 2) names atoms, not intent aliases.
+3. Atom calls are recorded for all scanned calls (full call graph), not only for elevated atoms.
+4. The required parameter switch of an atom gets its own field (e.g. `required_switch`; empty = none). (decided 2026-11-19 17:32:57)
