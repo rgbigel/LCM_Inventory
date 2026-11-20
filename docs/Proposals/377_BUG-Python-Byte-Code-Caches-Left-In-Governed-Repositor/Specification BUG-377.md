@@ -5,8 +5,8 @@ Purpose: Python Byte-Code Caches Left In Governed Repositories
 Path: LCM_Inventory/docs/Proposals/377_BUG-Python-Byte-Code-Caches-Left-In-Governed-Repositor/Specification BUG-377.md  
 Authors: Claude  
 Version: 10.7.4  
-Status: Suggested  
-Date: 2026-11-19 21:23:33
+Status: In Review  
+Date: 2026-11-20 16:51:15
 
 ```yaml
 CRP-ID: BUG-377
@@ -14,10 +14,10 @@ Title: Python Byte-Code Caches Left In Governed Repositories
 Scope: LCM_Inventory
 Baseline-Version: 10.7.4
 Author: Claude
-Date: 2026-11-19 21:23:33
-Status: Suggested
-Plan-State: suggested
-Progress-State: undecided
+Date: 2026-11-20 16:51:15
+Status: In Review
+Plan-State: in_review
+Progress-State: verification
 Priority: 5
 App-ID: None
 ```
@@ -30,12 +30,11 @@ The Claude line-ending hook (importing Repair-LcmLineEndings.py by file path) an
 
 ## 2. Gate 0 Contract
 ### Target State
-Define the observable completed state this proposal will achieve.
+No Python byte-code cache shows up as untracked content in an LCM repository: the Claude hooks run without writing byte-code, and `__pycache__/` is ignored in every LCM repository.
 
 ### Invariants and Exit Criteria
-Define the evidence that proves the target state while preserving applicable governance safeguards.
+- No other change; hooks behave as before.
 
 ### Explicit Non-Goals
-Define work intentionally excluded from this proposal. When this is ordinary,
-evidently scoped work, the default Non-Goal applies: Cause no havoc; ask rather
-than invent or infer, and avoid unnecessary complexity.
+- The py_compile syntax gate keeps writing caches (by design of py_compile); they are ignored now.
+- Default Non-Goal: Cause no havoc; ask rather than invent or infer, and avoid unnecessary complexity.
