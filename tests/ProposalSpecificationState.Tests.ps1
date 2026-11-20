@@ -3,9 +3,10 @@ Module: ProposalSpecificationState.Tests
 Purpose: Verify automatic lifecycle metadata mirroring and failed-write safeguards.
 Path: tests/ProposalSpecificationState.Tests.ps1
 Authors: Rolf, Copilot
-Version: 10.2.1
-Date: 2026-11-19
+Version: 10.2.2
+Date: 2026-11-20
 Implementation Choices (BUG-376): a case with a DOX header above the YAML fence checks the header Status mirror.
+Implementation Choices (BUG-380 B16): a priority change without a state change reaches the YAML Priority.
 Implementation Choices (BUG-364): the cross-repository case uses a disjunct subsystem (HaSSD06, RULE-SUB-008); bundles of LCM_* repositories live only in LCM_Inventory (RULE-LCM-034).
 #>
 BeforeAll {
@@ -51,6 +52,19 @@ Describe 'Persisted specification lifecycle mirrors' {
     $text = [IO.File]::ReadAllText($specs[0])
     $text | Should -Match 'Module: x  \r\nStatus: In Progress  \r\nDate: 2026-11-19'
     $text | Should -Match 'Status: In Progress\r\nPlan-State: in_progress'
+    $text | Should -Match '## Contract\r\nStatus: Preserve this body example.'
+  }
+
+  It 'mirrors a priority change without a state change (BUG-380 B16)' {
+    $prioText = "# CRP-1`r`n`r`n" + '```yaml' + "`r`nStatus: Suggested`r`nPlan-State: suggested`r`nProgress-State: undecided`r`nPriority: 5`r`n" + '```' + "`r`n`r`n## Contract`r`nStatus: Preserve this body example.`r`n"
+    [IO.File]::WriteAllText($specs[0], $prioText, [Text.UTF8Encoding]::new($false))
+    $current = Get-ProposalStore
+    $current.proposals[0] | Add-Member -NotePropertyName priority -NotePropertyValue 5 -Force
+    $current | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $env:LCM_PROPOSAL_STORE_PATH
+    Set-WorkspaceProposalPriority -Id 1 -Priority 7 | Out-Null
+    $text = [IO.File]::ReadAllText($specs[0])
+    $text | Should -Match 'Priority: 7'
+    $text | Should -Match 'Plan-State: suggested'
     $text | Should -Match '## Contract\r\nStatus: Preserve this body example.'
   }
 

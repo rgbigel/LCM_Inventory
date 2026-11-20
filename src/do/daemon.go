@@ -5,8 +5,8 @@ PACKAGE        : main
 DESCRIPTION    : HTTP daemon listener for Session 1 desktop execution and telemetry.
 AUTHOR         : Rolf, Claude
 DATE CREATED   : 2026-11-11
-LAST MODIFIED  : 2026-11-19
-VERSION        : 10.2.8
+LAST MODIFIED  : 2026-11-20
+VERSION        : 10.2.9
 GO VERSION     : 1.22+
 ENCODING       : ASCII (No BOM)
 ================================================================================
@@ -30,6 +30,9 @@ CHANGE LOG:
                      which now accepts options.windowStyle).
 2026-11-19 - 10.2.8: BUG-348 the Access-Control-Allow-Origin wildcard is removed from the display,
                      display-page, asset and snapshot routes (operator: only daemon pages read them).
+2026-11-20 - 10.2.9: BUG-380 B13 /api/action honours the options block (sync, elevated, windowStyle, noExit,
+                     timeoutMs) also when the command is given at the top level (parseExecuteBody); the
+                     ControlHub sync actions ran asynchronously and its refresh read the old ledger.
 ================================================================================
 */
 
@@ -201,7 +204,7 @@ func handleStatusOrPing(w http.ResponseWriter, r *http.Request) {
 		StandardDisplays: 1,
 		User:             GetCurrentUsername(),
 		WorkingSetMB:     workingSetMB,
-		Version:          "10.2.8",
+		Version:          "10.2.9",
 		SessionID:        GetCurrentSessionID(),
 		LogFile:          logPath,
 		Port:             GetDaemonPort(),
@@ -222,35 +225,10 @@ func handleExecute(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var req ExecuteRequest
-	if err := json.Unmarshal(body, &req); err == nil && strings.TrimSpace(req.Command) != "" {
-		// parsed directly as ExecuteRequest
-	} else {
-		// attempt parsing as ActionRequest (e.g. from ControlHub /api/action)
-		var act struct {
-			Action  string                 `json:"action"`
-			Target  string                 `json:"target"`
-			Command string                 `json:"command"`
-			Options map[string]interface{} `json:"options"`
-			Caller  string                 `json:"caller"`
-		}
-		if errAct := json.Unmarshal(body, &act); errAct == nil && strings.TrimSpace(act.Command) != "" {
-			req.Command = act.Command
-			if act.Options != nil {
-				if s, ok := act.Options["sync"].(bool); ok {
-					req.Sync = s
-				}
-				if e, ok := act.Options["elevated"].(bool); ok {
-					req.Elevated = e
-				}
-				if ws, ok := act.Options["windowStyle"].(string); ok { // CRP-361: e.g. Hidden for GUI starters
-					req.WindowStyle = ws
-				}
-			}
-		} else {
-			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "Missing or invalid command string"})
-			return
-		}
+	req, errParse := parseExecuteBody(body)
+	if errParse != nil {
+		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "Missing or invalid command string"})
+		return
 	}
 
 	cmdStr := strings.TrimSpace(req.Command)
@@ -343,6 +321,57 @@ func handleExecute(w http.ResponseWriter, r *http.Request) {
 	})
 
 	writeJSON(w, http.StatusOK, resp)
+}
+
+// parseExecuteBody reads an ExecuteRequest or a ControlHub ActionRequest (BUG-380 B13). The ActionRequest carries
+// "command" at the top level AND its switches in "options"; before, a body with a top-level command parsed as
+// ExecuteRequest and the options block was dropped, so {"options":{"sync":true}} ran asynchronously and the hub
+// re-read the ledger before the action had written it.
+func parseExecuteBody(body []byte) (ExecuteRequest, error) {
+	var req ExecuteRequest
+	var act struct {
+		Action  string                 `json:"action"`
+		Target  string                 `json:"target"`
+		Command string                 `json:"command"`
+		Options map[string]interface{} `json:"options"`
+		Caller  string                 `json:"caller"`
+	}
+	errReq := json.Unmarshal(body, &req)
+	errAct := json.Unmarshal(body, &act)
+	if errReq != nil || strings.TrimSpace(req.Command) == "" {
+		// attempt parsing as ActionRequest (e.g. from ControlHub /api/action)
+		if errAct != nil || strings.TrimSpace(act.Command) == "" {
+			return ExecuteRequest{}, fmt.Errorf("parse execute body: missing or invalid command string")
+		}
+		req.Command = act.Command
+	}
+	if errAct == nil {
+		applyActionOptions(&req, act.Options)
+	}
+	return req, nil
+}
+
+// applyActionOptions copies the switches of an ActionRequest "options" block onto the request (BUG-380 B13).
+// Present options win over top-level fields; absent options leave them unchanged.
+func applyActionOptions(req *ExecuteRequest, options map[string]interface{}) {
+	if options == nil {
+		return
+	}
+	if s, ok := options["sync"].(bool); ok {
+		req.Sync = s
+	}
+	if e, ok := options["elevated"].(bool); ok {
+		req.Elevated = e
+	}
+	if ws, ok := options["windowStyle"].(string); ok { // CRP-361: e.g. Hidden for GUI starters
+		req.WindowStyle = ws
+	}
+	if ne, ok := options["noExit"].(bool); ok {
+		req.NoExit = ne
+	}
+	if t, ok := options["timeoutMs"].(float64); ok && t > 0 { // JSON numbers decode as float64
+		req.TimeoutMs = int(t)
+	}
 }
 
 // resolveProgram maps a command string to program and arguments (unchanged routing rules).

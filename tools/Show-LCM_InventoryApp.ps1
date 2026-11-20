@@ -11,8 +11,10 @@
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
   Path: LCM_Inventory/tools/Show-LCM_InventoryApp.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.2.1
-  Date: 2026-11-08 17:34:00
+  Version: 10.2.2
+  Date: 2026-11-20
+  Implementation Choices (BUG-380 B1): the repositories whose documents the viewer embeds come from the
+  inventory (RepositoryName of every entry, plus the workspace root), no longer from a fixed list in code.
   ShortName: ShowLCMExplorer
 .PARAMETER NoLaunch
 Generates the HTML dashboard without opening the HTTP Standard Display.
@@ -82,7 +84,9 @@ $htmlTemplate = $htmlTemplate.Replace('{{DISPLAY_VERSION}}', $provenance.Label)
 
 # Load Repo Documentation for Universal Document Table
 $docsCache = @{}
-$governedRepos = @("LCM_Inventory", "LCM_Inventory", "Installation_LCD", "LCM_AI", "SystemConfiguration", "BackgroundModifier", "VolumeInventory", "HaSSD06", "HaSSD06_Inventory", "AuthorizeMasterUser", "LCM_Shared", "Git_Repositories")
+# BUG-380 B1: every repository the viewer lists offers its documents; the list belongs to the inventory.
+$inventoryRepositories = @(($invRaw | ConvertFrom-Json).repositories | Where-Object { $_.PSObject.Properties['RepositoryName'] -and $_.RepositoryName })
+$governedRepos = @(@($inventoryRepositories | ForEach-Object { [string]$_.RepositoryName }) + 'Git_Repositories' | Select-Object -Unique)
 $docNames = @("Architecture.md", "Requirements.md", "Implementation.md", "install/Installation.md", "Installation.md", "README.md", "docs/Architecture.md", "docs/Requirements.md", "docs/Implementation.md", "docs/CM_POLICIES.md")
 
 foreach ($r in $governedRepos) {

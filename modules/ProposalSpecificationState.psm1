@@ -3,10 +3,12 @@ Module: ProposalSpecificationState
 Purpose: Prepare specification-header mirrors for persisted lifecycle changes.
 Path: modules/ProposalSpecificationState.psm1
 Authors: Rolf, Copilot
-Version: 10.2.4
-Date: 2026-11-19
+Version: 10.2.5
+Date: 2026-11-20
 Implementation Choices (BUG-376): the DOX header line "Status:" above the YAML fence follows the YAML
 Status on every sync; its Markdown line break (two trailing spaces) is kept; body lines are never touched.
+Implementation Choices (BUG-380 B16): a priority change is mirrored too (YAML Priority); before, only state
+changes reached the Specification and its Priority went stale.
 #>
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
@@ -31,7 +33,9 @@ function Get-LcmSpecificationStateEdits {
     $old = @(if ($null -ne $previous) { $previous.proposals | Where-Object { $_.id -eq $proposal.id } })
     # New proposal templates already initialize the suggested-state metadata.
     if (-not $old.Count -and $proposal.state -eq 'suggested') { continue }
-    if ($old.Count -eq 1 -and $old[0].state -eq $proposal.state) { continue }
+    $oldPriority = if ($old.Count -eq 1 -and $old[0].PSObject.Properties['priority'] -and $null -ne $old[0].priority) { [string]$old[0].priority } else { '' }
+    $newPriority = if ($proposal.PSObject.Properties['priority'] -and $null -ne $proposal.priority) { [string]$proposal.priority } else { '' }
+    if ($old.Count -eq 1 -and $old[0].state -eq $proposal.state -and $oldPriority -eq $newPriority) { continue }
     $state = [string]$proposal.state
     if (-not $progress.ContainsKey($state)) { throw "Cannot mirror unsupported proposal state '$state' for #$($proposal.id)." }
     $repo = if ($proposal.PSObject.Properties['origin_repo'] -and $proposal.origin_repo -and ($proposal.origin_repo -notlike 'LCM_*')) { [string]$proposal.origin_repo } else { 'LCM_Inventory' }
@@ -66,6 +70,7 @@ function Get-LcmSpecificationStateEdits {
       'Plan-State' = $state
       'Progress-State' = $progress[$state]
     }
+    if ($newPriority) { $values['Priority'] = $newPriority }  # BUG-380 B16
 
     if (-not $header.Success) {
       # Silently construct and insert missing YAML metadata block per operator directive

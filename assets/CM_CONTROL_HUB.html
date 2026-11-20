@@ -1,7 +1,10 @@
 <!--
   Template: CM_CONTROL_HUB.html
-  Version: 10.2.10
-  Date: 2026-11-18 21:25:38
+  Version: 10.2.11
+  Date: 2026-11-20 14:04:40
+  Implementation Choices (BUG-380 B13): executeDaemonCommand passes options.timeoutMs (590 s, below the daemon
+  WriteTimeout of 600 s); the daemon now honours options.sync, so the refresh after an action reads the ledger
+  only after the action has written it (before: the action ran asynchronously and the refresh showed old states).
   Implementation Choices (CRP-359 revision 3): the proposal table shows item IDs as <nnn>_<Kind> (e.g. 365_BUG), like the
   bundle folders; ledger IDs, commands and document names keep CRP-nnn / BUG-nnn.
   Implementation Choices (CRP-354, operator Gate 2 changes 2026-11-18): the document window's "Edit in Notepad++" button starts
@@ -4025,7 +4028,7 @@
             action: "DO",
             target: commandStr,
             command: commandStr,
-            options: { sync: true },
+            options: { sync: true, timeoutMs: 590000 },  // BUG-380 B13: wait for the action before the refresh
             caller: "ControlHub"
           }),
           signal: currentActiveAbortController.signal

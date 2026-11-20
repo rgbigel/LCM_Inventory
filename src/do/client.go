@@ -5,8 +5,8 @@ PACKAGE        : main
 DESCRIPTION    : CLI Client dispatcher connecting to the Port 9876 LCM Desktop Daemon.
 AUTHOR         : Rolf
 DATE CREATED   : 2026-11-11
-LAST MODIFIED  : 2026-11-19
-VERSION        : 10.2.8
+LAST MODIFIED  : 2026-11-20
+VERSION        : 10.2.9
 GO VERSION     : 1.22+
 ENCODING       : ASCII (No BOM)
 ================================================================================
@@ -17,6 +17,7 @@ CHANGE LOG:
 2026-11-19 - 10.2.8: CRP-361 DO-Little: routeDecision picks the local path (caller's own token) or
                      the daemon; -explain shows the route without executing, -daemon forces it.
                      GetGitRoot derives the root from the binary location (no fixed D: path).
+2026-11-20 - 10.2.9: BUG-380 B13 version strings only (binary 10.2.9, daemon parseExecuteBody).
 ================================================================================
 */
 
@@ -86,7 +87,7 @@ func RunClient(args []string) (int, error) {
 			PrintUsage()
 			return 0, nil
 		case "-v", "--version", "-version", "version":
-			fmt.Println("LCM DO Client/Daemon v10.2.8 (Go 1.22+ native single binary)")
+			fmt.Println("LCM DO Client/Daemon v10.2.9 (Go 1.22+ native single binary)")
 			return 0, nil
 		default:
 			cmdParts = append(cmdParts, arg)
@@ -293,7 +294,7 @@ func dirExists(path string) bool {
 // PrintUsage displays interactive help for the do tool.
 func PrintUsage() {
 	fmt.Println("==========================================================================")
-	fmt.Println(" LCM DO / UNIFIED TOOL GATEWAY (do.exe v10.2.8)")
+	fmt.Println(" LCM DO / UNIFIED TOOL GATEWAY (do.exe v10.2.9)")
 	fmt.Println("==========================================================================")
 	fmt.Println("SYNOPSIS:")
 	fmt.Println("  Unified execution gateway: simple calls run locally with the caller's rights,")

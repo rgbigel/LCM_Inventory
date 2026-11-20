@@ -11,9 +11,16 @@
   separately (BundleRepository) and the HEAD check uses it. Repository stays the origin repository.
   A missing or unrecorded bundle is bookkeeping: it is reported as a warning and never aborts a
   push (RULE-EFF-002, operator 2026-11-17).
+  Implementation Choices (BUG-380 B12): the push targets every workspace repository with commits ahead of its
+  remote (Get-LCM_PushRepositoryStates), governed or not, instead of origin_repo / affected_repos of completed
+  proposals; origin_repo is the ledger home (RULE-LCM-034). Completed proposals only drive the pushed transition.
+  Implementation Choices (BUG-380 B12, operator review item 10 and its correction of 2026-11-20): governed = the LCM
+  core (LCM_* repositories, workspace root) plus the repositories the inventory classifies as governed; a governed
+  repository outside the core that is not converged to the active LCM version is held back (-HeldRepositories),
+  never pushed; LCM rules (lockstep preflight) apply to governed repositories only; non-governed ones are backup.
   Authors: GitHub Copilot, Claude
-  Version: 10.2.1
-  Date: 2026-11-17
+  Version: 10.2.2
+  Date: 2026-11-20
 #>
 
 Set-StrictMode -Version Latest
@@ -82,20 +89,140 @@ function Resolve-LCM_ProposalBundleRepository {
   return $name
 }
 
+function Test-LCM_CorePushRepository {
+  [CmdletBinding()]
+  param(
+    [Parameter(Mandatory = $true)]
+    [string]$RepositoryName
+  )
+
+  # The LCM core: the governed LCM_* repositories (RULE-LCM-034) and the root container (RULE-LCM-004).
+  $name = ConvertTo-WorkspacePushRepositoryName -RepositoryName $RepositoryName
+  return ($name -in @('LCM_AI', 'LCM_Inventory', 'LCM_Shared', 'LCM_Supervision', 'LCM_Tools', 'Git_Repositories'))
+}
+
+function Test-LCM_GovernedPushRepository {
+  [CmdletBinding()]
+  param(
+    [Parameter(Mandatory = $true)]
+    [string]$RepositoryName,
+
+    [Parameter(Mandatory = $false)]
+    [AllowEmptyCollection()]
+    [object[]]$InventoryRepositories = @()
+  )
+
+  # Operator review item 10 with the operator correction of 2026-11-20: governed = the LCM core plus every repository
+  # the inventory classifies as governed (e.g. BootEntryManager, VolumeInventory); every other repository is a plain
+  # Git repository and is pushed as backup without LCM rules.
+  if (Test-LCM_CorePushRepository -RepositoryName $RepositoryName) { return $true }
+  $name = ConvertTo-WorkspacePushRepositoryName -RepositoryName $RepositoryName
+  $entry = @($InventoryRepositories | Where-Object { $_.PSObject.Properties['RepositoryName'] -and [string]$_.RepositoryName -eq $name })
+  if ($entry.Count -eq 0) { return $false }
+  $status = if ($entry[0].PSObject.Properties['LCMStatus']) { [string]$entry[0].LCMStatus } else { '' }
+  return ($status -eq 'governed')
+}
+
+function Get-LCM_UnconvergedPushRepositories {
+  [CmdletBinding()]
+  param(
+    [Parameter(Mandatory = $true)]
+    [AllowEmptyCollection()]
+    [object[]]$InventoryRepositories,
+
+    [Parameter(Mandatory = $true)]
+    [string]$LcmVersion
+  )
+
+  # Operator 2026-11-20: a governed repository outside the LCM core is not pushed until it is brought to LCM
+  # convergence; converged = its inventory CurrentLCMVersion equals the active LCM version (.agents/version.json).
+  foreach ($entry in @($InventoryRepositories)) {
+    if (-not $entry.PSObject.Properties['RepositoryName'] -or -not $entry.RepositoryName) { continue }
+    $name = [string]$entry.RepositoryName
+    if (Test-LCM_CorePushRepository -RepositoryName $name) { continue }
+    if (-not (Test-LCM_GovernedPushRepository -RepositoryName $name -InventoryRepositories $InventoryRepositories)) { continue }
+    $version = if ($entry.PSObject.Properties['CurrentLCMVersion'] -and $entry.CurrentLCMVersion) { [string]$entry.CurrentLCMVersion } else { '' }
+    if ($version -ne $LcmVersion) {
+      [pscustomobject]@{ Name = $name; Version = $version; Reason = "not converged (LCM $version, active $LcmVersion)" }
+    }
+  }
+}
+
+function Get-LCM_PushRepositoryStates {
+  [CmdletBinding()]
+  param(
+    [Parameter(Mandatory = $true)]
+    [string]$WorkspaceRoot
+  )
+
+  # BUG-380 B12: every Git repository of the workspace (root and first-level children), governed or not.
+  $candidates = @([pscustomobject]@{ Name = 'Git_Repositories'; Path = $WorkspaceRoot })
+  $candidates += @(
+    Get-ChildItem -LiteralPath $WorkspaceRoot -Directory |
+      Where-Object { Test-Path -LiteralPath (Join-Path $_.FullName '.git') } |
+      Sort-Object -Property Name |
+      ForEach-Object { [pscustomobject]@{ Name = $_.Name; Path = $_.FullName } }
+  )
+
+  foreach ($candidate in $candidates) {
+    $repoPath = $candidate.Path
+    $hasGit = Test-Path -LiteralPath (Join-Path $repoPath '.git')
+    $hasRemote = $false
+    $hasUpstream = $false
+    $aheadCount = 0
+    $branch = ''
+    if ($hasGit) {
+      $remotes = @(git -C $repoPath remote 2>$null)
+      $hasRemote = $remotes.Count -gt 0
+      $branch = [string](git -C $repoPath rev-parse --abbrev-ref HEAD 2>$null)
+      $branch = $branch.Trim()
+      if ($hasRemote) {
+        $statusSummary = (@(git -C $repoPath status -sb 2>$null) -join "`n")
+        $hasUpstream = $statusSummary -match '^## [^\r\n]+\.\.\.'
+        if ($statusSummary -match 'ahead\s+(\d+)') {
+          $aheadCount = [int]$Matches[1]
+        }
+      }
+    }
+    [pscustomobject]@{
+      Name = $candidate.Name
+      Path = $repoPath
+      HasGit = $hasGit
+      HasRemote = $hasRemote
+      HasUpstream = $hasUpstream
+      AheadCount = $aheadCount
+      Branch = $branch
+    }
+  }
+}
+
 function Resolve-LCM_PushPlan {
   [CmdletBinding()]
   [Alias('Resolve-WorkspacePushPlan')]
   param(
     [Parameter(Mandatory = $true)]
+    [AllowEmptyCollection()]
     [object[]]$Proposals,
+
+    [Parameter(Mandatory = $true)]
+    [AllowEmptyCollection()]
+    [string[]]$AheadRepositories,
 
     [Parameter(Mandatory = $false)]
     [string[]]$RequestedRepositories = @(),
 
     [Parameter(Mandatory = $false)]
-    [int[]]$ProposalIds = @()
+    [int[]]$ProposalIds = @(),
+
+    [Parameter(Mandatory = $false)]
+    [AllowEmptyCollection()]
+    [string[]]$HeldRepositories = @()
   )
 
+  # BUG-380 B12 (operator rule 2026-11-20): everything that was changed is pushed once it is completed and
+  # committed: every repository ahead of its remote, governed or not; unchanged repositories are not pushed.
+  # origin_repo is the ledger home (RULE-LCM-034), not the push target. A push is administrative
+  # maintenance and backup; completed proposals only drive the completed -> pushed transition.
   $completedProposals = @(
     $Proposals | Where-Object {
       $_.state -eq 'completed' -and $_.progress_state -eq 'completed'
@@ -115,24 +242,17 @@ function Resolve-LCM_PushPlan {
     $completedProposals = @($completedProposals | Where-Object { [int]$_.id -in $ProposalIds })
   }
 
-  if ($completedProposals.Count -eq 0) {
-    throw 'PUSH requires at least one proposal with both state and progress_state set to completed.'
-  }
-
-  $completedRepositories = @(
-    $completedProposals |
-      ForEach-Object {
-        $proposal = $_
-        $proposalRepositories = @($proposal.origin_repo)
-        $affectedRepositoriesProperty = $proposal.PSObject.Properties['affected_repos']
-        if ($affectedRepositoriesProperty -and $affectedRepositoriesProperty.Value) {
-          $proposalRepositories += @($affectedRepositoriesProperty.Value)
-        }
-        $proposalRepositories | ForEach-Object {
-          ConvertTo-WorkspacePushRepositoryName -RepositoryName $_
-        }
-      } |
-      Where-Object { $_ -ne 'LCM_Inventory' } |
+  # Operator 2026-11-20: held repositories (governed, not converged) are never push targets.
+  $heldTargets = @(
+    $HeldRepositories |
+      Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
+      ForEach-Object { ConvertTo-WorkspacePushRepositoryName -RepositoryName $_ }
+  )
+  $aheadTargets = @(
+    $AheadRepositories |
+      Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
+      ForEach-Object { ConvertTo-WorkspacePushRepositoryName -RepositoryName $_ } |
+      Where-Object { $_ -notin $heldTargets } |
       Select-Object -Unique
   )
 
@@ -140,62 +260,35 @@ function Resolve-LCM_PushPlan {
     $RequestedRepositories |
       Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
       ForEach-Object { ConvertTo-WorkspacePushRepositoryName -RepositoryName $_ } |
-      Where-Object { $_ -ne 'LCM_Inventory' } |
       Select-Object -Unique
   )
 
-  $ineligibleRepositories = @($requestedTargets | Where-Object { $_ -notin $completedRepositories })
-  if ($ineligibleRepositories.Count -gt 0) {
-    throw "PUSH requires completed proposals for every requested repository. Ineligible repositories: $($ineligibleRepositories -join ', ')."
+  $heldRequested = @($requestedTargets | Where-Object { $_ -in $heldTargets })
+  if ($heldRequested.Count -gt 0) {
+    throw "PUSH: requested repositories are governed but not converged to the active LCM version: $($heldRequested -join ', ')."
+  }
+  $notAheadRepositories = @($requestedTargets | Where-Object { $_ -notin $aheadTargets })
+  if ($notAheadRepositories.Count -gt 0) {
+    throw "PUSH: requested repositories have no commits ahead of their remote: $($notAheadRepositories -join ', ')."
   }
 
-  $targetProposals = if ($requestedTargets.Count -gt 0) {
-    @(
-      $completedProposals | Where-Object {
-        $proposal = $_
-        $proposalRepositories = @($proposal.origin_repo)
-        $affectedRepositoriesProperty = $proposal.PSObject.Properties['affected_repos']
-        if ($affectedRepositoriesProperty -and $affectedRepositoriesProperty.Value) {
-          $proposalRepositories += @($affectedRepositoriesProperty.Value)
-        }
-        $normalizedRepositories = @(
-          $proposalRepositories | ForEach-Object {
-            ConvertTo-WorkspacePushRepositoryName -RepositoryName $_
-          }
-        )
-        @($normalizedRepositories | Where-Object { $_ -in $requestedTargets }).Count -gt 0
-      }
-    )
-  } else {
-    @($completedProposals)
-  }
-
-  $targetRepositories = @(
-    $targetProposals |
-      ForEach-Object {
-        $proposal = $_
-        $proposalRepositories = @($proposal.origin_repo)
-        $affectedRepositoriesProperty = $proposal.PSObject.Properties['affected_repos']
-        if ($affectedRepositoriesProperty -and $affectedRepositoriesProperty.Value) {
-          $proposalRepositories += @($affectedRepositoriesProperty.Value)
-        }
-        $proposalRepositories | ForEach-Object {
-          ConvertTo-WorkspacePushRepositoryName -RepositoryName $_
-        }
-      } |
-      Where-Object { $_ -ne 'LCM_Inventory' } |
-      Select-Object -Unique
-  )
+  $targetRepositories = @(if ($requestedTargets.Count -gt 0) { $requestedTargets } else { $aheadTargets })
   if ($targetRepositories.Count -eq 0) {
-    throw 'PUSH requires at least one completed proposal owned by a non-LCM_Inventory repository.'
+    throw 'PUSH: no repository has commits ahead of its remote; nothing to push.'
+  }
+
+  # RULE-LCM-005 lockstep: LCM_Inventory rides along whenever it has commits ahead.
+  $requiredRepositories = @($targetRepositories)
+  if ('LCM_Inventory' -in $aheadTargets) {
+    $requiredRepositories = @($requiredRepositories + 'LCM_Inventory' | Select-Object -Unique)
   }
 
   [pscustomobject]@{
     TargetRepositories = @($targetRepositories)
-    RequiredRepositories = @($targetRepositories + 'LCM_Inventory' | Select-Object -Unique)
-    CompletedProposalIds = @($targetProposals | Select-Object -ExpandProperty id)
+    RequiredRepositories = @($requiredRepositories)
+    CompletedProposalIds = @($completedProposals | ForEach-Object { $_.id })
     CompletedProposals = @(
-      $targetProposals | ForEach-Object {
+      $completedProposals | ForEach-Object {
         [pscustomobject]@{
           Id = [int]$_.id
           Repository = ConvertTo-WorkspacePushRepositoryName -RepositoryName $_.origin_repo
@@ -225,6 +318,10 @@ function Test-LCM_PushCohort {
   }
 
   foreach ($repositoryName in $PushPlan.RequiredRepositories) {
+    if (-not (Test-LCM_CorePushRepository -RepositoryName $repositoryName)) {
+      # Operator review item 10: the lockstep preflight is an LCM core rule; it never refuses another repository.
+      continue
+    }
     if (-not $statesByRepository.ContainsKey($repositoryName)) {
       throw "PUSH lockstep preflight missing repository state for '$repositoryName'."
     }
@@ -289,4 +386,4 @@ function Test-LCM_ProposalBundlesInHead {
   return $allPresent
 }
 
-Export-ModuleMember -Function Resolve-LCM_PushPlan, Resolve-WorkspacePushPlan, Test-LCM_PushCohort, Test-WorkspacePushCohort, Test-LCM_ProposalBundlesInHead, Test-WorkspaceProposalBundlesInHead -Alias Resolve-WorkspacePushPlan, Test-WorkspacePushCohort, Test-WorkspaceProposalBundlesInHead
+Export-ModuleMember -Function Test-LCM_CorePushRepository, Test-LCM_GovernedPushRepository, Get-LCM_UnconvergedPushRepositories, Get-LCM_PushRepositoryStates, Resolve-LCM_PushPlan, Resolve-WorkspacePushPlan, Test-LCM_PushCohort, Test-WorkspacePushCohort, Test-LCM_ProposalBundlesInHead, Test-WorkspaceProposalBundlesInHead -Alias Resolve-WorkspacePushPlan, Test-WorkspacePushCohort, Test-WorkspaceProposalBundlesInHead

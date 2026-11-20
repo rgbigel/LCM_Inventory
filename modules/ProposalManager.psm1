@@ -6,12 +6,13 @@
 #          batch operations, review granularity ('coarse' | 'tight'), repo review queue inspection,
 #          and persistent ledger storage in LCM_Inventory.
 # Authors: Rolf, Claude, LCM_AI Engine
-# Version: 10.2.11
+# Version: 10.2.12
 # Implementation Choices (CRP-355 revision C): Set-ProposalStore refuses a write in which a ledger row would lose a field it
 #          has in the stored version (only the transient status_note may go); archiving marks, never drops.
 # Implementation Choices (operator Gate 2 review 2026-11-19): the Specification header ends every line with the Markdown
 #          line break (two spaces), also 'Version:'.
-# Date: 2026-11-19 12:35:45
+# Implementation Choices (BUG-380 B14): New-LCM_Proposal gives a BUG priority 6 unless -Priority is passed.
+# Date: 2026-11-20
 # Implementation Choices (BUG-364): transitions and actions follow the flat state table of ProposalReviewFlowPolicy
 #          (CRP-261): Gate 2 acceptance walks verified -> in_review step by step (no direct in_progress/verified ->
 #          completed, no in_review -> verified); held resumes or is withdrawn (no supersede); withdrawn and rejected
@@ -297,6 +298,8 @@ function New-LCM_Proposal {
     $timestamp = (Get-Date).ToString('yyyy-MM-dd HH:mm:ss')
     $isBug = ($OriginRepo -eq 'bug') -or ($CrId -match '^BUG-') -or ($Title -match '\[BUG\]')
     $prefix = if ($isBug) { 'BUG' } else { 'CRP' }
+    # BUG-380 B14 (operator 2026-11-20): BUGs default to priority 6, CRPs to 5; an explicit -Priority wins.
+    if ($isBug -and -not $PSBoundParameters.ContainsKey('Priority')) { $Priority = 6 }
     $canonicalId = "{0}-{1:D3}" -f $prefix, $newId
     $cleanCrId = if ($CrId) { $CrId } else { $canonicalId }
 

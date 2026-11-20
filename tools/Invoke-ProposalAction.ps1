@@ -22,9 +22,10 @@
     repositories as obligations without a lifecycle change (R1).
     Implementation Choices (BUG-352): the BCR exclusion rule comes from modules/LcmReviewCompletionAtoms.psm1.
     Implementation Choices (CRP-359): bundle Specification paths come from Resolve-LcmBundleDocumentPath.
-    Version: 10.2.8
-    Date: 2026-11-19
+    Version: 10.2.9
+    Date: 2026-11-20
     Implementation Choices (CRP-366): the ledger sync runs on the registered interpreter (RULE-PY-010).
+    Implementation Choices (BUG-380 B15): -Priority accepts the ledger range 0-10 besides C/H/M/L/D.
 #>
 
 [CmdletBinding()]
@@ -57,8 +58,8 @@ param(
     [ValidateSet('undecided', 'queued', 'in_progress', 'verification', 'committed', 'completed', 'pushed', 'blocked', 'failed', 'deferred')]
     [string]$ProgressState,
 
-    [Parameter(Mandatory = $false, HelpMessage = 'Priority level to assign (C=Critical, H=High, M=Medium, L=Low, D=Deferred)')]
-    [ValidateSet('C', 'H', 'M', 'L', 'D')]
+    [Parameter(Mandatory = $false, HelpMessage = 'Priority level to assign: 0-10 (legacy aliases C=10, H=8, M=5, L=3, D=1)')]
+    [ValidatePattern('^(?i)([CHMLD]|10|[0-9])$')]  # BUG-380 B15: the ledger priority is 0-10
     [string]$Priority,
 
     [Parameter(Mandatory = $false, HelpMessage = 'Target repository for child regression proposal or App context')]
@@ -144,7 +145,7 @@ if ($Help) {
     Write-Host "  -TargetExpression : Target proposal expression (e.g. all, #1, 105, 100-105)"
     Write-Host "  -Details          : Additional details or notes for proposal transition"
     Write-Host "  -ProgressState    : Target progress state (undecided, queued, in_progress, completed, pushed, etc.)"
-    Write-Host "  -Priority         : Priority level (C, H, M, L, D)"
+    Write-Host "  -Priority         : Priority level 0-10 (legacy aliases: C=10, H=8, M=5, L=3, D=1)"
     Write-Host "  -Granularity      : Review granularity: coarse or tight"
     Write-Host "  -Force            : Visual-review confirmation exception only; lifecycle and preflight rules still apply"
     Write-Host "  -Immediately      : Emergency quality deferral; one CRP target becomes BUG, multi-target cohort requires BUG"
@@ -858,7 +859,7 @@ switch -Regex ($Action) {
             throw "TargetExpression (e.g. '79', 'all') is required for action 'priority'."
         }
         if ([string]::IsNullOrWhiteSpace($Priority)) {
-            throw "-Priority (one of 'C', 'H', 'M', 'L', 'D') is required."
+            throw "-Priority (0-10, or one of 'C', 'H', 'M', 'L', 'D') is required."
         }
         $targetIds = @(Resolve-ProposalIdExpression -Expression $TargetExpression)
         $updated = @()

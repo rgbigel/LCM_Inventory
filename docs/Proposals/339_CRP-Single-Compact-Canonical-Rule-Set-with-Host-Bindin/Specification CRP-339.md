@@ -5,8 +5,8 @@ Purpose: Replace the per-host rule projections by one compact canonical rule set
 Path: LCM_Inventory/docs/Proposals/339_CRP-Single-Compact-Canonical-Rule-Set-with-Host-Bindin/Specification CRP-339.md  
 Authors: Rolf, Claude (Anthropic)  
 Version: 10.7.4  
-Status: Suggested  
-Date: 2026-11-16 17:16:26
+Status: In Progress  
+Date: 2026-11-20 14:52:27
 
 ```yaml
 CRP-ID: CRP-339
@@ -17,10 +17,10 @@ Affected Version Range: 10.7.4
 Impacted Repositories: [LCM_AI, LCM_Inventory, Git_Repositories]
 Baseline-Version: 10.7.4
 Author: Rolf, Claude
-Date: 2026-11-16 17:16:26
-Status: Suggested
-Plan-State: suggested
-Progress-State: undecided
+Date: 2026-11-20 14:52:27
+Status: In Progress
+Plan-State: in_progress
+Progress-State: in_progress
 Priority: 8
 App-ID: None
 ```
@@ -73,6 +73,11 @@ See `Implementation_Plan.md` (moved there 2026-11-16; the Specification states w
 - Location and naming of the rationale docs (`LCM_AI/docs/Rules/` proposed).
 - Who writes which part: pilot by Claude; canonical edits require ADMINMODE (operator account).
 - `Update-Gemini.ps1` exports "21 files": does the Gemini mirror need the docs part too?
+- Hooks (operator Gate 2 review 2026-11-20, item 1: "should hooks not be consolidated so they also work in
+  Antigravity?"): per target 5 every hook's logic becomes a shared LCM tool, the host hook file only a thin
+  binding. Cases today: `.claude/hooks/invoke_claude_eol_hook.py` (line endings), `.claude/hooks/
+  invoke_claude_session_title_hook.py` (BUG-384; the session title is a Claude Code feature, Antigravity has no
+  known equivalent). Whether Antigravity offers hook points is checked in this CRP.
 
 ## 5. Acceptance
 

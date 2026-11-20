@@ -13,9 +13,17 @@
     Implementation Choices (BUG-348): -DryRun skips every mutating pre-push step (Update-Gemini export commit,
     tool catalog snapshot commit, the second full maintenance run); before, a dry run committed and deleted
     186 script logs.
-    Version: 10.2.6
-    Date: 2026-11-19
+    Version: 10.2.7
+    Date: 2026-11-20
     Implementation Choices (CRP-366): the ledger dump runs on the registered interpreter (RULE-PY-010).
+    Implementation Choices (BUG-380 B12): the push targets every workspace repository with commits ahead of its
+    remote, governed or not (operator rule 2026-11-20); repositories that become ahead through the pre-push
+    commits are added before the push; a remote without upstream tracking is reported, not pushed.
+    Implementation Choices (operator review item 10 and its correction, 2026-11-20): governed = LCM core plus the
+    repositories the inventory classifies as governed; a governed repository outside the core that is not converged
+    to the active LCM version is held back and reported, never pushed. A non-governed repository is pushed as backup
+    and never fails by LCM rules (an 'LCM Standard Pre-Push Hook' found there is not run); its failed push is reported
+    without blocking the governed cohort or the pushed transition.
 #>
 
 [CmdletBinding()]
@@ -132,7 +140,27 @@ Import-Module -Name (Join-Path $workspaceRoot 'LCM_Inventory\modules\ProposalMan
 $ledgerJson = Get-Content -LiteralPath $proposalsFile -Raw -Encoding UTF8 | ConvertFrom-Json
 $requestedProposalIds = @($targetProposalSet)
 $requestedRepositories = if ($null -eq $Repositories) { @() } else { @($Repositories | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }) }
-$pushPlan = Resolve-WorkspacePushPlan -Proposals @($ledgerJson.proposals) -RequestedRepositories $requestedRepositories -ProposalIds $requestedProposalIds
+# BUG-380 B12: push targets are the repositories with commits ahead of their remote, governed or not.
+$allRepositoryStates = @(Get-LCM_PushRepositoryStates -WorkspaceRoot $workspaceRoot)
+# Operator 2026-11-20: governed repositories outside the LCM core are pushed only once converged to the active LCM version.
+$inventoryRepositories = @()
+$inventoryFile = Join-Path $workspaceRoot 'LCM_Inventory\data\inventory.json'
+if (Test-Path -LiteralPath $inventoryFile) {
+    $inventoryRepositories = @((Get-Content -LiteralPath $inventoryFile -Raw -Encoding UTF8 | ConvertFrom-Json).repositories)
+}
+$activeLcmVersion = [string](Get-Content -LiteralPath (Join-Path $workspaceRoot 'LCM_AI\.agents\version.json') -Raw | ConvertFrom-Json).version
+$heldRepositories = @(Get-LCM_UnconvergedPushRepositories -InventoryRepositories $inventoryRepositories -LcmVersion $activeLcmVersion)
+foreach ($held in $heldRepositories) {
+    $heldState = @($allRepositoryStates | Where-Object { $_.Name -eq $held.Name -and $_.AheadCount -gt 0 })
+    if ($heldState.Count -gt 0) {
+        Write-Host "  [$($held.Name)] governed, $($held.Reason): held back, $($heldState[0].AheadCount) commit(s) stay local until LCM convergence." -ForegroundColor Yellow
+    }
+}
+$aheadRepositories = @($allRepositoryStates | Where-Object { $_.HasRemote -and $_.AheadCount -gt 0 } | ForEach-Object { $_.Name })
+foreach ($noUpstream in @($allRepositoryStates | Where-Object { $_.HasRemote -and -not $_.HasUpstream })) {
+    Write-Host "  [$($noUpstream.Name)] remote without upstream tracking branch: not pushed (set the upstream once by hand)." -ForegroundColor Yellow
+}
+$pushPlan = Resolve-WorkspacePushPlan -Proposals @($ledgerJson.proposals) -AheadRepositories $aheadRepositories -RequestedRepositories $requestedRepositories -ProposalIds $requestedProposalIds -HeldRepositories @($heldRepositories | ForEach-Object { $_.Name })
 
 # ------------------------------------------------------------------------------
 # RULE-DEC-005 Preflight: Stepwise Requalification & Dynamic Pre-Publish Triage
@@ -189,36 +217,7 @@ if ($preflightCheck.HasReliefOrDebt) {
     }
 }
 
-$repositoryStates = @(
-    foreach ($repoName in $pushPlan.RequiredRepositories) {
-        $repoPath = if ($repoName -eq 'Git_Repositories') { $workspaceRoot } else { Join-Path $workspaceRoot $repoName }
-        $hasGit = Test-Path -LiteralPath (Join-Path $repoPath '.git')
-        $hasRemote = $false
-        $aheadCount = 0
-        $branch = ''
-
-        if ($hasGit) {
-            $remotes = @(git -C $repoPath remote)
-            $hasRemote = $remotes.Count -gt 0
-            if ($hasRemote) {
-                $branch = (git -C $repoPath rev-parse --abbrev-ref HEAD).Trim()
-                $statusSummary = (git -C $repoPath status -sb) -join "`n"
-                if ($statusSummary -match 'ahead\s+(\d+)') {
-                    $aheadCount = [int]$Matches[1]
-                }
-            }
-        }
-
-        [pscustomobject]@{
-            Name = $repoName
-            Path = $repoPath
-            HasGit = $hasGit
-            HasRemote = $hasRemote
-            AheadCount = $aheadCount
-            Branch = $branch
-        }
-    }
-)
+$repositoryStates = @($allRepositoryStates | Where-Object { $_.Name -in $pushPlan.RequiredRepositories })
 
 Test-WorkspacePushCohort -PushPlan $pushPlan -RepositoryStates $repositoryStates | Out-Null
 Test-WorkspaceProposalBundlesInHead -PushPlan $pushPlan -RepositoryStates $repositoryStates | Out-Null
@@ -311,32 +310,28 @@ if (-not $DryRun -and (Test-Path -LiteralPath $maintenanceScript)) {
 }
 
 # ------------------------------------------------------------------------------
-# 4. Ensure LCM_AI (Governance & Copilot Authority) is Considered by Publish
+# 4. Refresh the cohort after the pre-push commits (BUG-380 B12; LCM_AI authority included as before)
 # ------------------------------------------------------------------------------
-$aiPath = Join-Path $workspaceRoot "LCM_AI"
-if (Test-Path -LiteralPath (Join-Path $aiPath '.git')) {
-    $aiBranch = (git -C $aiPath rev-parse --abbrev-ref HEAD).Trim()
-    $aiStatus = (git -C $aiPath status -sb) -join "`n"
-    $aiAhead = 0
-    if ($aiStatus -match 'ahead\s+(\d+)') {
-        $aiAhead = [int]$Matches[1]
+$refreshedStates = @(Get-LCM_PushRepositoryStates -WorkspaceRoot $workspaceRoot)
+foreach ($refreshed in @($refreshedStates | Where-Object { $_.HasRemote -and $_.AheadCount -gt 0 })) {
+    $existing = @($repositoryStates | Where-Object { $_.Name -eq $refreshed.Name })
+    if ($existing.Count -gt 0) {
+        $existing[0].AheadCount = $refreshed.AheadCount
+        continue
     }
-    if ($aiAhead -gt 0 -and (-not ($repositoryStates | Where-Object { $_.Name -eq 'LCM_AI' }))) {
-        $repositoryStates += [pscustomobject]@{
-            Name = 'LCM_AI'
-            Path = $aiPath
-            HasGit = $true
-            HasRemote = $true
-            AheadCount = $aiAhead
-            Branch = $aiBranch
-        }
-        Write-Host "  -> Included LCM_AI authority in push cohort ($aiAhead ahead commit(s))." -ForegroundColor Green
+    if ($refreshed.Name -in @($heldRepositories | ForEach-Object { $_.Name })) {
+        continue
+    }
+    if ($requestedRepositories.Count -eq 0 -or $refreshed.Name -eq 'LCM_AI') {
+        $repositoryStates += $refreshed
+        Write-Host "  -> Included $($refreshed.Name) in push cohort ($($refreshed.AheadCount) ahead commit(s))." -ForegroundColor Green
     }
 }
 
 $pushedRepos = @()
 $skippedRepos = @()
 $failedRepos = @()
+$failedNonGovernedRepos = @()
 
 foreach ($repositoryState in $repositoryStates) {
     $repoName = $repositoryState.Name
@@ -358,9 +353,23 @@ foreach ($repositoryState in $repositoryStates) {
 
     Write-Host "  [$repoName] PUSHING $aheadCount commit(s) on branch '$branch' to remote 'origin'..." -ForegroundColor Cyan
 
+    # Operator review item 10: a non-governed repository is pushed as plain backup; LCM hooks do not apply there.
+    $isGoverned = Test-LCM_GovernedPushRepository -RepositoryName $repoName -InventoryRepositories $inventoryRepositories
+    $pushArguments = @('-C', $repoPath, 'push', 'origin', $branch)
+    if (-not $isGoverned) {
+        $hooksDir = [string](git -C $repoPath rev-parse --git-path hooks 2>$null)
+        $hooksPathSetting = [string](git -C $repoPath config core.hooksPath 2>$null)
+        if (-not [string]::IsNullOrWhiteSpace($hooksPathSetting)) { $hooksDir = $hooksPathSetting }
+        $hookFile = if ([IO.Path]::IsPathRooted($hooksDir)) { Join-Path $hooksDir 'pre-push' } else { Join-Path (Join-Path $repoPath $hooksDir) 'pre-push' }
+        if ((Test-Path -LiteralPath $hookFile) -and (Select-String -LiteralPath $hookFile -Pattern 'LCM Standard Pre-Push Hook' -SimpleMatch -Quiet)) {
+            $pushArguments += '--no-verify'
+            Write-Host "    -> [$repoName] non-governed: LCM pre-push hook not applied (operator requirement 2026-11-20)." -ForegroundColor DarkGray
+        }
+    }
+
     $prevEAP = $ErrorActionPreference
     $ErrorActionPreference = 'Continue'
-    $pushOutput = git -C $repoPath push origin $branch 2>&1
+    $pushOutput = git @pushArguments 2>&1
     $pushExit = $LASTEXITCODE
     $ErrorActionPreference = $prevEAP
 
@@ -369,11 +378,18 @@ foreach ($repositoryState in $repositoryStates) {
         $pushedRepos += $repoName
     } else {
         Write-Host "    -> ERROR (Exit Code $pushExit): $pushOutput" -ForegroundColor Red
-        $failedRepos += $repoName
+        if ($isGoverned) {
+            $failedRepos += $repoName
+        } else {
+            # Operator review item 10: reported, never blocks the governed cohort.
+            $failedNonGovernedRepos += $repoName
+        }
     }
 }
 
-$cohortPushed = $failedRepos.Count -eq 0 -and $pushedRepos.Count -ge $pushPlan.RequiredRepositories.Count
+$governedRequired = @($pushPlan.RequiredRepositories | Where-Object { Test-LCM_GovernedPushRepository -RepositoryName $_ -InventoryRepositories $inventoryRepositories })
+$governedPushed = @($pushedRepos | Where-Object { Test-LCM_GovernedPushRepository -RepositoryName $_ -InventoryRepositories $inventoryRepositories })
+$cohortPushed = $failedRepos.Count -eq 0 -and $governedPushed.Count -ge $governedRequired.Count
 $pushTimestamp = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
 if (-not $cohortPushed) {
     Write-Host "`n  -> PUSH cohort did not complete. No proposal state will transition to 'pushed'." -ForegroundColor Red
@@ -463,4 +479,7 @@ Write-Host " [SUMMARY] Workspace Push Completed" -ForegroundColor Green
 Write-Host " Pushed Repos  : $($pushedRepos.Count) ($($pushedRepos -join ', '))"
 Write-Host " Skipped Repos : $($skippedRepos.Count)"
 Write-Host " Failed Repos  : $($failedRepos.Count)"
+if ($failedNonGovernedRepos.Count -gt 0) {
+    Write-Host " Not pushed (non-governed, not blocking): $($failedNonGovernedRepos -join ', ')" -ForegroundColor Yellow
+}
 Write-Host "==========================================================================" -ForegroundColor Cyan
