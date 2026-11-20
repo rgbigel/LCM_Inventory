@@ -7,8 +7,8 @@
            and logs caller provenance to security_gateway.log per CRP-309 Clause 10.
   Path: LCM_Inventory/modules/LcmDaemon/Classes/LcmSecurityGateway.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.2.1
-  Date: 2026-11-08 15:26:00
+  Version: 10.2.2
+  Date: 2026-11-20 17:29:46
 .NOTES
   Implementation Choices (CRP-309):
   1. Three-tier capability authorization protects against unauthorized outside execution.
@@ -50,12 +50,11 @@ class LcmSecurityGateway {
       }
     }
 
-    # Inspect tool_catalog.json if available
+    # Inspect the tool catalog (tools.db, CRP-358)
     try {
-      $catalogPath = [System.IO.Path]::Combine($WorkspaceRoot, "LCM_Inventory\config\tool_catalog.json")
-      if (Test-Path -LiteralPath $catalogPath) {
-        $raw = [System.IO.File]::ReadAllText($catalogPath, [System.Text.Encoding]::UTF8)
-        $catalog = $raw | ConvertFrom-Json
+      if (-not [string]::IsNullOrWhiteSpace($WorkspaceRoot)) {
+        Import-Module -Name ([System.IO.Path]::Combine($WorkspaceRoot, 'LCM_Inventory\modules\LcmToolCatalog.psm1'))
+        $catalog = @(Get-LcmToolStoreDocument -Store catalog)
         $toolsList = if ($catalog -is [System.Collections.IEnumerable] -and $catalog -isnot [PSCustomObject]) { $catalog } elseif ($catalog.PSObject.Properties['tools']) { $catalog.tools } else { @($catalog) }
         $normTarget = $Target -replace '^(?:tools/|tools\\)?', '' -replace '\.ps1$', ''
         $matchedTool = @($toolsList | Where-Object {

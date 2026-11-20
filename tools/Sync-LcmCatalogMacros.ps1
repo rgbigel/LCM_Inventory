@@ -3,16 +3,16 @@
   Synchronizes catalogued Show* tools into managed macros and provides macro maintenance.
 .DESCRIPTION
   Module: Sync-LcmCatalogMacros
-  Purpose: Automatically synchronizes eligible Show* tool definitions from config/tool_catalog.json
+  Purpose: Automatically synchronizes eligible Show* tool definitions from the tool catalog (tools.db)
            into a managed section within .agents/rules/macro-definitions.md while preserving all
            manual macros. Provides sub-actions (Sync, List, Add, Update, Retire, Validate) for
            macro lifecycle management conforming to CRP-280, RULE-PS-001 - 025, and RULE-LCM-021.
   Path: LCM_Inventory/tools/Sync-LcmCatalogMacros.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.2.0
-  Date: 2026-11-10
+  Version: 10.2.1
+  Date: 2026-11-20
 .PARAMETER CatalogPath
-  Path to tool_catalog.json. Defaults to 'LCM_Inventory/config/tool_catalog.json'.
+  Optional catalog document (test fixture). Default: the tool catalog in LCM_Inventory/data/tools/tools.db.
 .PARAMETER MacroFilePath
   Path to macro-definitions.md. Defaults to '.agents/rules/macro-definitions.md'.
 .PARAMETER SubAction
@@ -91,7 +91,7 @@ if ($Help) {
   Write-Host " LCM CATALOG MACRO SYNCHRONIZER & MAINTENANCE (v$($scriptVersion))" -ForegroundColor Cyan
   Write-Host "==========================================================================" -ForegroundColor Cyan
   Write-Host "SYNOPSIS:" -ForegroundColor Yellow
-  Write-Host "  Synchronizes Show* commands from tool_catalog.json to macro-definitions.md"
+  Write-Host "  Synchronizes Show* commands from the tool catalog (tools.db) to macro-definitions.md"
   Write-Host "  and maintains manual macro entries (CRP-280)."
   Write-Host ""
   Write-Host "USAGE:" -ForegroundColor Yellow
@@ -106,7 +106,7 @@ if ($Help) {
   Write-Host "  Validate  : Verify all macro targets exist and detect collisions."
   Write-Host ""
   Write-Host "PARAMETERS:" -ForegroundColor Yellow
-  Write-Host "  -CatalogPath <path>     : Path to tool_catalog.json."
+  Write-Host "  -CatalogPath <path>     : Optional catalog document (test fixture); default tools.db."
   Write-Host "  -MacroFilePath <path>   : Path to macro-definitions.md."
   Write-Host "  -DryRun                 : Render proposed changes without writing to disk."
   Write-Host "  -Name <string>          : Macro name for Add, Update, or Retire."
@@ -123,7 +123,7 @@ if ($Help) {
 # Resolve workspace root and file paths
 $workspaceRoot = 'D:\Git_Repositories'
 if ([string]::IsNullOrWhiteSpace($CatalogPath)) {
-  $CatalogPath = Join-Path $workspaceRoot 'LCM_Inventory\config\tool_catalog.json'
+  # CRP-358: empty = the tool store (tools.db); an explicit path is a test fixture document
 }
 if ([string]::IsNullOrWhiteSpace($MacroFilePath)) {
   $MacroFilePath = Join-Path $workspaceRoot '.agents\rules\macro-definitions.md'
@@ -266,7 +266,7 @@ function Build-ManagedShowSection {
 
   $sectionLines = @()
   $sectionLines += "## Managed Catalog Show* Command Macros (Auto-Synchronized by CRP-280)"
-  $sectionLines += "<!-- The entries below are synchronized from config/tool_catalog.json. Do not edit directly. -->"
+  $sectionLines += "<!-- The entries below are synchronized from the tool catalog (tools.db). Do not edit directly. -->"
   $sectionLines += ""
 
   foreach ($tool in $EligibleTools) {
@@ -512,11 +512,15 @@ switch ($SubAction) {
   'Sync' {
     Write-Host "[SYNC] Synchronizing Show* tool catalog entries to macro-definitions.md..." -ForegroundColor Cyan
 
-    if (-not (Test-Path -LiteralPath $CatalogPath)) {
-      throw "Tool catalog not found at: $CatalogPath"
+    if ([string]::IsNullOrWhiteSpace($CatalogPath)) {
+      Import-Module -Name (Join-Path $workspaceRoot 'LCM_Inventory\modules\LcmToolCatalog.psm1')
+      $catalog = @(Get-LcmToolStoreDocument -Store catalog)
+    } else {
+      if (-not (Test-Path -LiteralPath $CatalogPath)) {
+        throw "Tool catalog not found at: $CatalogPath"
+      }
+      $catalog = Get-Content -LiteralPath $CatalogPath -Raw -Encoding UTF8 | ConvertFrom-Json
     }
-
-    $catalog = Get-Content -LiteralPath $CatalogPath -Raw -Encoding UTF8 | ConvertFrom-Json
 
     # Build manual entries map
     $manualByName = @{}

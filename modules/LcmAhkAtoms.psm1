@@ -8,13 +8,15 @@
   and surface structured execution results.
   Path: LCM_Inventory/modules/LcmAhkAtoms.psm1
   Authors: Rolf, LCM_AI Engine, Claude
-  Version: 10.2.1
-  Date: 2026-11-18
+  Version: 10.2.2
+  Date: 2026-11-20
   Implementation Choices (CRP-345): AHK runs only as registered atoms. Invoke-LcmAhkAtom resolves
-  the intent in config/tool_intents.json (executable AutoHotkey64.exe, script *.ahk) and refuses
+  the intent in the tool store (tools.db table tool_intents, CRP-358; executable AutoHotkey64.exe, script *.ahk) and refuses
   anything else with a log line; it also refuses an intent whose elevated flag differs from the
   caller's elevation (CRP-343 border rule: change elevation only through the DO). Inline AHK code
   is no longer accepted, and the file runner Invoke-LcmAhkScript is module-internal.
+  Implementation Choices (CRP-358): the intents come from Get-LcmToolStoreDocument (modules/LcmToolCatalog.psm1);
+  -Registry / -WorkspaceRoot replace -IntentsPath (tests pass an isolated registry, never a JSON file).
 .NOTES
   Part of BUG-313 / LCM UI Automation Architecture.
 #>
@@ -274,15 +276,23 @@ function Get-LcmAhkAtomIntents {
   <#
   .SYNOPSIS
     Lists the registered AHK atoms (intents with an AutoHotkey executable and an .ahk script).
-  .PARAMETER IntentsPath
-    Path to tool_intents.json (default: LCM_Inventory/config/tool_intents.json).
+  .PARAMETER Registry
+    Intents document ({ intents = { key = { executable, script, elevated, goal } } }); default: the tool store.
   #>
   [CmdletBinding()]
   param(
-    [string]$IntentsPath = (Join-Path $PSScriptRoot '..\config\tool_intents.json')
+    [object]$Registry = $null
   )
 
-  $registry = Get-Content -LiteralPath $IntentsPath -Raw -Encoding UTF8 | ConvertFrom-Json
+  $registry = $Registry
+  if ($null -eq $registry) {
+    Import-Module -Name (Join-Path $PSScriptRoot 'LcmToolCatalog.psm1')
+    $registry = Get-LcmToolStoreDocument -Store intents
+  }
+  if ($registry -is [System.Collections.IDictionary]) { $registry = [pscustomobject]$registry }
+  $intentsNode = $registry.intents
+  if ($intentsNode -is [System.Collections.IDictionary]) { $intentsNode = [pscustomobject]$intentsNode }
+  $registry = [pscustomobject]@{ intents = $intentsNode }
   $atoms = foreach ($property in $registry.intents.PSObject.Properties) {
     $value = $property.Value
     if ([string]$value.executable -match '(?i)autohotkey' -and [string]$value.script -match '(?i)\.ahk$') {
@@ -297,13 +307,15 @@ function Invoke-LcmAhkAtom {
   .SYNOPSIS
     Runs one registered AHK atom by its intent name (CRP-345); unregistered AHK requests are refused and logged.
   .PARAMETER Intent
-    Intent key of the atom in tool_intents.json (e.g. select-beyondcomparetab).
+    Intent key of the atom in the tool store (e.g. select-beyondcomparetab).
   .PARAMETER ArgumentList
     Arguments passed to the atom.
   .PARAMETER TimeoutSeconds
     Maximum wait time in seconds (default: 60).
-  .PARAMETER IntentsPath
-    Path to tool_intents.json (default: LCM_Inventory/config/tool_intents.json).
+  .PARAMETER Registry
+    Intents document (default: the tool store).
+  .PARAMETER WorkspaceRoot
+    Git root the atom scripts are relative to (default: two levels above this module).
   #>
   [CmdletBinding()]
   param(
@@ -315,11 +327,13 @@ function Invoke-LcmAhkAtom {
     [ValidateRange(1, 600)]
     [int]$TimeoutSeconds = 60,
 
-    [string]$IntentsPath = (Join-Path $PSScriptRoot '..\config\tool_intents.json')
+    [object]$Registry = $null,
+
+    [string]$WorkspaceRoot = (Join-Path $PSScriptRoot '..\..')
   )
 
   $key = $Intent.ToLowerInvariant()
-  $atom = @(Get-LcmAhkAtomIntents -IntentsPath $IntentsPath | Where-Object { $_.Intent -eq $key }) | Select-Object -First 1
+  $atom = @(Get-LcmAhkAtomIntents -Registry $Registry | Where-Object { $_.Intent -eq $key }) | Select-Object -First 1
   if ($null -eq $atom) {
     Write-LcmAhkRefusal -Message "Refused AHK intent '$Intent': not a registered AHK atom (CRP-345)."
     throw "AHK intent '$Intent' is not a registered AHK atom; refused (CRP-345)."
@@ -332,7 +346,7 @@ function Invoke-LcmAhkAtom {
     throw "AHK intent '$Intent' runs with elevated=$($atom.Elevated) but the caller has elevated=$callerElevated; change elevation only through the DO (CRP-343)."
   }
 
-  $workspaceRoot = (Resolve-Path -LiteralPath (Join-Path (Split-Path -Parent $IntentsPath) '..\..')).Path
+  $workspaceRoot = (Resolve-Path -LiteralPath $WorkspaceRoot).Path
   $scriptPath = Join-Path $workspaceRoot $atom.Script.Replace('/', '\')
   return Invoke-LcmAhkScript -ScriptPath $scriptPath -ArgumentList $ArgumentList -TimeoutSeconds $TimeoutSeconds
 }

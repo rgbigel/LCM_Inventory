@@ -3,15 +3,15 @@
   Synchronizes in-process NTFS symbolic links for all LCM tools into D:\Git_Repositories\LCM_Tools dynamically from the tool catalog.
 .DESCRIPTION
   Module: Sync-ToolSymlinks
-  Purpose: Dynamically discovers all child repository tools via tool_catalog.json (and tools/modules/LcmToolCatalog.psm1),
+  Purpose: Dynamically discovers all child repository tools via the tool catalog in tools.db (and tools/modules/LcmToolCatalog.psm1),
            and creates/maintains direct NTFS symbolic links in D:\Git_Repositories\LCM_Tools pointing to their canonical locations.
            Automatically purges orphaned or stale symlinks, and keeps LCM_Inventory/Cmd/ trampolines synchronized.
            Zero static precompiled tables — fully dynamic, self-healing, and 100% catalog-driven.
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
   Path: D:\Git_Repositories\LCM_Tools\Sync-ToolSymlinks.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.2.0
-  Date: 2026-10-13
+  Version: 10.2.1
+  Date: 2026-11-20
 .PARAMETER Force
   Overwrites or replaces existing symbolic links without confirmation.
 .PARAMETER ShowAll
@@ -51,7 +51,7 @@ if ($Help) {
   Write-Host " DYNAMIC TOOL SYMLINK SYNCHRONIZER (v$($scriptVersion))" -ForegroundColor Cyan
   Write-Host "==========================================================================" -ForegroundColor Cyan
   Write-Host "SYNOPSIS:" -ForegroundColor Yellow
-  Write-Host "  Dynamically discovers child repository tools via tool_catalog.json and synchronizes"
+  Write-Host "  Dynamically discovers child repository tools via the tool catalog (tools.db) and synchronizes"
   Write-Host "  NTFS symbolic links directly into D:\Git_Repositories\LCM_Tools for instant shell access."
   Write-Host ""
   Write-Host "USAGE:" -ForegroundColor Yellow
@@ -140,11 +140,6 @@ $catalogData = $null
 if (Test-Path -LiteralPath $modulePath) {
   Import-Module -Name $modulePath -Force
   $catalogData = (Get-LcmToolCatalogData -ToolsDir $internalDir).Catalog
-} else {
-  $catalogJsonPath = Join-Path $configDir 'tool_catalog.json'
-  if (Test-Path -LiteralPath $catalogJsonPath) {
-    $catalogData = Get-Content -LiteralPath $catalogJsonPath -Raw -Encoding UTF8 | ConvertFrom-Json
-  }
 }
 
 if (-not $catalogData -or $catalogData.Count -eq 0) {
@@ -152,8 +147,7 @@ if (-not $catalogData -or $catalogData.Count -eq 0) {
   $updateScript = Join-Path $toolsDir 'Update-ToolCatalog.ps1'
   if (Test-Path -LiteralPath $updateScript) {
     & $updateScript -Silent
-    $catalogJsonPath = Join-Path $configDir 'tool_catalog.json'
-    $catalogData = Get-Content -LiteralPath $catalogJsonPath -Raw -Encoding UTF8 | ConvertFrom-Json
+    $catalogData = (Get-LcmToolCatalogData).Catalog  # CRP-358: tools.db
   }
 }
 

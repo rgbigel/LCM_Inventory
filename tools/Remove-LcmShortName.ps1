@@ -11,8 +11,8 @@
            Conforms to RULE-PS-001 through RULE-PS-014.
   Path: LCM_Inventory/tools/Remove-LcmShortName.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.2.1
-  Date: 2026-11-12
+  Version: 10.2.2
+  Date: 2026-11-20
 
 .PARAMETER ShortName
   The short-name command alias to remove (with or without .cmd extension).
@@ -206,14 +206,15 @@ if ($matchingLaunchers.Count -le 1) {
 
 
 
-  # Prune from tool_catalog.json caches
-  $catalogPaths = @(
-    (Join-Path $workspaceRoot 'LCM_Inventory\config\tool_catalog.json')
+  # Prune from the tool catalog (tools.db, CRP-358)
+  $catalogModules = @(
+    (Join-Path $workspaceRoot 'LCM_Inventory\modules\LcmToolCatalog.psm1')
   )
-  foreach ($cp in $catalogPaths) {
+  foreach ($cp in $catalogModules) {
     if (Test-Path -LiteralPath $cp) {
       try {
-        $catJson = Get-Content -LiteralPath $cp -Raw -Encoding UTF8 | ConvertFrom-Json
+        Import-Module -Name $cp
+        $catJson = @(Get-LcmToolStoreDocument -Store catalog)
         $modified = $false
         foreach ($item in $catJson) {
           $isTarget = ($item.Name -eq $targetLeafName -or [System.IO.Path]::GetFileName($item.Name) -eq $targetLeafName)
@@ -231,9 +232,9 @@ if ($matchingLaunchers.Count -le 1) {
           }
         }
         if ($modified) {
-          $newCatRaw = $catJson | ConvertTo-Json -Depth 6
-          [System.IO.File]::WriteAllText($cp, $newCatRaw, [System.Text.UTF8Encoding]::new($false))
-          Write-ToolLog -Message "Pruned alias '$cleanShortName' from $cp" -Level ACTION
+          $newCatRaw = ConvertTo-Json -InputObject @($catJson) -Depth 6
+          Save-LcmToolStoreDocument -Store catalog -Document $newCatRaw
+          Write-ToolLog -Message "Pruned alias '$cleanShortName' from the tool catalog (tools.db)" -Level ACTION
         }
       } catch {}
     }

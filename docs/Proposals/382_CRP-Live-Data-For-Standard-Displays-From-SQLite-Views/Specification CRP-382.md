@@ -5,7 +5,7 @@ Purpose: Live Data For Standard Displays From SQLite Views
 Path: LCM_Inventory/docs/Proposals/382_CRP-Live-Data-For-Standard-Displays-From-SQLite-Views/Specification CRP-382.md  
 Authors: Rolf, Claude  
 Version: 10.7.4  
-Status: Suggested  
+Status: In Progress  
 Date: 2026-11-20 14:52:27
 
 ```yaml
@@ -15,9 +15,9 @@ Scope: LCM_Inventory
 Baseline-Version: 10.7.4
 Author: Rolf
 Date: 2026-11-20 14:52:27
-Status: Suggested
-Plan-State: suggested
-Progress-State: undecided
+Status: In Progress
+Plan-State: in_progress
+Progress-State: in_progress
 Priority: 5
 App-ID: None
 ```
@@ -88,3 +88,18 @@ actions ran asynchronously) was fixed in BUG-380 on 2026-11-20 (operator Q-B13 A
 |:---|:---|:---|:---|:---|
 | B11 | `showtools` in the operator's terminal (live test 2026-11-20) | "Invoke-RestMethod: The request was canceled due to the configured HttpClient.Timeout of 5 seconds elapsing"; the Tool Explorer does not open | every open re-renders, unconditionally: `Open-LcmStandardDisplay` (`modules/LcmStandardDisplay.psm1`) always sends `POST /displays/refresh/<id>` and waits 5 s; the daemon (CRP-335) always runs `renderDisplay` and answers only after `Invoke-LcmDisplayRender.ps1` has finished (tools about 7 s, hub 2.7 s). The client's polling loop for state `Current` expects an immediate answer: client and daemon follow different designs. Root cause (operator 2026-11-20): data changes should need no rendering at all; addressed by CRP-382 (live data from SQLite views) | the ShowTools macro opens the Tool Explorer |
 | B13 | Control Hub after "accept" of CRP-339 (operator 2026-11-20 13:35) | CRP-339 shown as "1 - Review / undecided" | the hub render of 13:35:55 (`data/artifacts/CM_CONTROL_HUB.html`) carries `state: suggested`, three seconds after the accept (13:35:52); ledger and Specification say `in_progress`: the render read data older than the transition | the hub shows the ledger state; cohort with CRP-382 (live data, no baked render) |
+
+## Progress (2026-11-20 17:32:48)
+
+- Running task (operator 2026-11-20): set to in_progress (DOIT).
+- T3 for the tool displays done with CRP-358: ShowToolIntents, the Tool Explorer (`Get-LcmToolCatalogData`) and the display dependency lists read tools.db; no tool display reads a JSON store. Proposal displays follow with the `proposals.json` step of CRP-358.
+- Open item: `tests/ControlHubSafety.Tests.ps1` ("orders row action groups ...") expects `if (prio === 0) return false;`, which the Control Hub template accepted today under BUG-380 no longer contains (stale test, no defect); rebuild the check from the display requirements when the Control Hub moves to live data (T1/T2).
+- Data service (decision C, resident Python service next to the daemon) still to be built; it also carries CRP-387's long-running parts (operator: "permanently running task interface").
+
+## Open Items From The SQLite Search/Locking Review (2026-11-20 17:39:43, operator choice A)
+
+- WAL mode (`PRAGMA journal_mode = WAL`) plus explicit `busy_timeout` in the data service and the store engines, so the resident reader never blocks writers. Check first: WAL keeps `-wal` / `-shm` side files; a Macrium image taken without a checkpoint may hold the latest writes only in the side file - checkpoint (`PRAGMA wal_checkpoint(TRUNCATE)`) before backup, e.g. in GoodNight.
+- A read-only `query` action of the data service that returns JSON lines, for agents and research (token search with field context).
+- Not adopted (no need at about 1,000 rows; avoid unnecessary complexity): FTS5 index with triggers, jsonb storage, a separate SQLite MCP server. The committed `.sql` projections with full row documents keep ripgrep / Everything search.
+
+- Correction (status 2026-11-20 20:48:28, operator decision in CRP-358): the `.sql` files are publish projections only and are not a text-search mechanism; textual lookup goes through `.md` / small `.json` files linked two-way from the tables. The sentence "The committed `.sql` projections with full row documents keep ripgrep / Everything search" above no longer applies.

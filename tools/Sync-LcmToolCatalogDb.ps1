@@ -4,11 +4,11 @@
 .DESCRIPTION
     Module: tools/Sync-LcmToolCatalogDb.ps1
     Purpose: Provides high-speed SQLite synchronization, canonical SQL text projection (tools.sql),
-             and parity verification between config/tool_catalog.json, config/tool_intents.json,
+             and integrity verification of the tool store (CRP-358: no JSON input any more),
              data/tools/tools.db, and data/tools/tools.sql.
     Authors: Rolf, LCM_AI Engine
-    Version: 10.2.5
-    Date: 2026-11-19 12:04:28
+    Version: 10.2.6
+    Date: 2026-11-20 17:29:46
     Implementation Choices (CRP-366): the engine runs on the registered interpreter (RULE-PY-010).
 .PARAMETER Action
     Operation to perform:

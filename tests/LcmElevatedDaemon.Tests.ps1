@@ -3,10 +3,10 @@ Module: LcmElevatedDaemon.Tests
 Purpose: Automated verification test suite for CRP-309 Unified Elevated Desktop Daemon, Universal Back Channel, and Security Gateway.
 Path: LCM_Inventory/tests/LcmElevatedDaemon.Tests.ps1
 Authors: Rolf, LCM_AI Engine
-Version: 10.2.3
-Date: 2026-11-19 17:53:45
+Version: 10.2.4
+Date: 2026-11-20 17:29:46
 Implementation Choices (BUG-375): the controller records intent statistics into an isolated copy
-(LCM_TOOL_INTENTS_PATH in TestDrive), never into the live config/tool_intents.json.
+(LCM_TOOLS_DB_PATH, a copy of tools.db in TestDrive; CRP-358), never into the live store.
 #>
 
 BeforeAll {
@@ -22,9 +22,9 @@ BeforeAll {
   Import-Module -Name (Join-Path $script:repoRoot 'modules\LcmDisplayHttp.psm1') -Force
 
   # BUG-375: intent statistics of the controller go to an isolated copy.
-  $script:intentsCopy = Join-Path $TestDrive 'tool_intents.json'
-  Copy-Item -LiteralPath (Join-Path $script:repoRoot 'config\tool_intents.json') -Destination $script:intentsCopy
-  $env:LCM_TOOL_INTENTS_PATH = $script:intentsCopy
+  $script:intentsCopy = Join-Path $TestDrive 'tools.db'
+  Copy-Item -LiteralPath (Join-Path $script:repoRoot 'data\tools\tools.db') -Destination $script:intentsCopy
+  $env:LCM_TOOLS_DB_PATH = $script:intentsCopy
 
   function New-TestDisplayResponse {
     $response = [pscustomobject]@{
@@ -40,7 +40,7 @@ BeforeAll {
 }
 
 AfterAll {
-  Remove-Item -Path 'Env:LCM_TOOL_INTENTS_PATH' -ErrorAction SilentlyContinue
+  Remove-Item -Path 'Env:LCM_TOOLS_DB_PATH' -ErrorAction SilentlyContinue
 }
 
 Describe 'CRP-309 Presentation & Delivery (CORS and Webview Hosting)' {

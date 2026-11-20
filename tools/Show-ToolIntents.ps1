@@ -1,17 +1,17 @@
 <#
 .SYNOPSIS
-  Generates and opens the interactive HTML viewer for LCM Tool Intents (tool_intents.json).
+  Generates and opens the interactive HTML viewer for LCM Tool Intents (tools.db table tool_intents).
 .DESCRIPTION
   Module: Show-ToolIntents
   Purpose: Displays the comprehensive operational intent-to-command mappings defined in
-  LCM_Inventory/config/tool_intents.json. Conforms to the standard display aesthetic (IBM Plex,
+  LCM_Inventory/data/tools/tools.db (table tool_intents, CRP-358). Conforms to the standard display aesthetic (IBM Plex,
   light/dark mode, responsive filtering by intent keyword, goal, group, category, audience, privilege).
   Features frozen table headers, multi-column sorting, column dropdown filters, and one-click
   command line copying to Windows clipboard with toast notifications.
   Path: LCM_Inventory/tools/Show-ToolIntents.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.2.0
-  Date: 2026-11-09 19:35:00
+  Version: 10.2.1
+  Date: 2026-11-20 17:29:46
 .PARAMETER Filter
   Initial search keyword to filter intents upon launch.
 .PARAMETER NoLaunch
@@ -56,13 +56,9 @@ if ($Help) {
 
 $inventoryRoot = Split-Path $PSScriptRoot -Parent
 $workspaceRoot = Split-Path $inventoryRoot -Parent
-$intentsFile = Join-Path $inventoryRoot 'config\tool_intents.json'
-
-if (-not (Test-Path -LiteralPath $intentsFile -PathType Leaf)) {
-  throw "Tool intents store was not found: $intentsFile"
-}
-
-$intentsRaw = Get-Content -LiteralPath $intentsFile -Raw -Encoding UTF8
+# CRP-358 / CRP-382 T3: the intents come from tools.db, never from a JSON store
+Import-Module -Name (Join-Path $inventoryRoot 'modules\LcmToolCatalog.psm1')
+$intentsRaw = Get-LcmToolStoreDocument -Store intents -AsJson
 $intentsData = $intentsRaw | ConvertFrom-Json
 
 # CLI / Terminal Mode
@@ -527,7 +523,7 @@ $htmlContent = @"
                 <p>Clicking <strong>📋 Copy</strong> places the <strong>exact, ready-to-run command line</strong> directly into your Windows Clipboard. If a short-name trampoline is available (e.g., <code>BCR.cmd</code> or <code>ShowTools.cmd</code>), it copies the quick batch launcher. If not, it copies the full <code>pwsh.exe -File &lt;path&gt;</code> invocation. You can immediately paste it into PowerShell, Windows Command Prompt, or terminal sessions.</p>
 
                 <h4>Maintenance & Coupling: Who maintains this list?</h4>
-                <p>This ledger is <strong>100% synchronized and automated</strong>. It is maintained directly by <code>LCM_Inventory/tools/Update-ToolCatalog.ps1</code>. Whenever tools are added, modified, or re-scanned in the workspace, <code>Update-ToolCatalog.ps1</code> automatically keeps both <code>tool_catalog.json</code> and <code>tool_intents.json</code> fully synchronized in lockstep.</p>
+                <p>This ledger is <strong>100% synchronized and automated</strong>. It is maintained directly by <code>LCM_Inventory/tools/Update-ToolCatalog.ps1</code>. Whenever tools are added, modified, or re-scanned in the workspace, <code>Update-ToolCatalog.ps1</code> automatically keeps the tables <code>tools</code>, <code>tool_intents</code> and <code>atoms</code> of <code>data/tools/tools.db</code> fully synchronized in lockstep.</p>
 
                 <h4>Column Indicators & Badges</h4>
                 <ul>

@@ -67,3 +67,7 @@ T3 A ranked list of further oversized tools with the same method applied later, 
 
 - Language of the push chain atoms: Python (default) or Go (beside do.exe)?
 - Schedule (operator 2026-11-20): done during the next release work.
+
+## Operator Answer (2026-11-20 17:32:48)
+
+- Language: Python (already answered; operator 2026-11-20). Long-running parts use the resident Python data service of CRP-382 (decision C) instead of their own daemons.

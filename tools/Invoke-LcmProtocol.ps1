@@ -9,8 +9,8 @@
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
   Path: tools/Invoke-LcmProtocol.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.2.1
-  Date: 2026-11-19
+  Version: 10.2.2
+  Date: 2026-11-20
   Implementation Choices (CRP-366): .py targets start on the registered interpreter (RULE-PY-010).
 .PARAMETER Uri
   The incoming lcm:// URI string (e.g. lcm://run?tool=Kill-LogitechUpdate.ps1&elevated=true).
@@ -89,9 +89,10 @@ try {
   }
 
   $toolPath = Join-Path $toolsDir $toolName
-  $catalogPath = Join-Path $lcdRoot 'config\tool_catalog.json'
-  if (Test-Path -LiteralPath $catalogPath) {
-    $catalog = Get-Content -LiteralPath $catalogPath -Raw | ConvertFrom-Json
+  $catalogModule = Join-Path $lcdRoot 'modules\LcmToolCatalog.psm1'  # CRP-358: tools.db
+  if (Test-Path -LiteralPath $catalogModule) {
+    Import-Module -Name $catalogModule
+    $catalog = @(Get-LcmToolStoreDocument -Store catalog)
     $item = $catalog | Where-Object { $_.Name -eq $toolName } | Select-Object -First 1
     if ($item) {
       if (-not (Test-Path -LiteralPath $toolPath)) {

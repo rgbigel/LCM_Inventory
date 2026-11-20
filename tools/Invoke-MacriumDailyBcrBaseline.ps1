@@ -25,8 +25,8 @@
   a remount of a newer image on the same drive - refreshes its _LCM tab through the registered AHK tab atom
   instead of launching; a new window is launched only when no reusable window or no _LCM tab exists. Windows
   started before CRP-346 are adopted when exactly one window shows the _LCM tab.
-  Version: 10.2.10
-  Date: 2026-11-19
+  Version: 10.2.11
+  Date: 2026-11-20
   Implementation Choices (BUG-367): the check that required directory handling dirCompareFilesOnly in the _LCM profile
   was removed on operator instruction 2026-11-19 ("this check is not rq'd"); the value is only logged. The original
   purpose of the check is not documented. Left path, right path and content comparison stay checked.
@@ -755,16 +755,14 @@ if ($NewBaseline) {
 
     # Verify baseline currency against today's backup
     $isCandidateCurrent = $false
-    # BUG-341: the mounted image identity decides currency; the newest internal log date is only a fallback.
-    $mountedImagePath = [string](Get-LcmRegistryValue -KeyPath $MacriumRegistryKey -Name 'MRMImagePath')
-    $mountedImageDrive = [string](Get-LcmRegistryValue -KeyPath $MacriumRegistryKey -Name 'MRMdrive')
-    $isSameImage = $null -ne $completedToday -and
-      -not [string]::IsNullOrWhiteSpace($mountedImagePath) -and
-      [string]::Equals($mountedImagePath, [string]$completedToday.ImagePath, [System.StringComparison]::OrdinalIgnoreCase) -and
-      [string]::Equals($mountedImageDrive, [string]$chosen.MountedDrive, [System.StringComparison]::OrdinalIgnoreCase)
-    if ($isSameImage) {
+    # BUG-348 item 6: evidence from the mounted image itself (its cm_activity.log against the live log) decides
+    # currency; the registry values MRMImagePath / MRMdrive are LCM telemetry only and prove nothing.
+    $currency = if ($null -ne $completedToday) {
+      Test-MountedBaselineCurrency -MountedBaseline $chosen -LiveWorkspacePath (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) -CompletionTime $completedToday.CompletionTime
+    } else { $null }
+    if ($null -ne $currency -and $currency.IsCurrent) {
       $isCandidateCurrent = $true
-      Write-BaselineLog -Level INFO -Message "Mounted image at $($chosen.MountedDrive) is today's completed image '$mountedImagePath' (registry identity); no remount."
+      Write-BaselineLog -Level INFO -Message "Mounted image at $($chosen.MountedDrive) holds the state of today's completed backup (last activity entry $($currency.MountedLastEntry.ToString('yyyy-MM-dd HH:mm:ss')), no later live entry before completion); no remount."
     } elseif ($null -ne $completedToday -and $null -ne $chosen.NewestLogDate) {
       if ($chosen.NewestLogDate.Date -eq $completedToday.CompletionTime.Date) {
         $isCandidateCurrent = $true

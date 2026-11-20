@@ -8,8 +8,8 @@
   reparse points, source file encoding, AST parser syntax, and secrets isolation.
   Path: LCM_Inventory/tools/Test-GeneralReadiness.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.2.2
-  Date: 2026-11-19
+  Version: 10.2.3
+  Date: 2026-11-20
   Implementation Choices (CRP-366): Python runs on the registered interpreter (Get-LcmRuntimePath, RULE-PY-010).
 .PARAMETER RepositoryPath
   Target repository root path to audit. Defaults to current working directory.
@@ -181,14 +181,12 @@ if (-not (Test-Path -LiteralPath $gitignorePath)) {
 # Gate 6: Elevated Operations & Immutability Governance (RULE-ELEV-007)
 Write-Host "`n[Gate 6/7] Validating Elevated Operations & Immutability Governance (RULE-ELEV-007)..." -ForegroundColor Yellow
 $elevatedCheckFailures = [System.Collections.Generic.List[string]]::new()
-$catalogJsonPath = Join-Path $repoPath 'config\tool_catalog.json'
-if (-not (Test-Path -LiteralPath $catalogJsonPath)) {
-  $catalogJsonPath = Join-Path (Split-Path $repoPath -Parent) 'LCM_Inventory\config\tool_catalog.json'
-}
+$catalogModulePath = Join-Path (Split-Path $repoPath -Parent) 'LCM_Inventory\modules\LcmToolCatalog.psm1'  # CRP-358
 $catalogMap = @{}
-if (Test-Path -LiteralPath $catalogJsonPath) {
+if (Test-Path -LiteralPath $catalogModulePath) {
   try {
-    $rawCat = [System.IO.File]::ReadAllText($catalogJsonPath, [System.Text.Encoding]::UTF8) | ConvertFrom-Json
+    Import-Module -Name $catalogModulePath
+    $rawCat = @(Get-LcmToolStoreDocument -Store catalog)
     $items = if ($rawCat.tools) { $rawCat.tools } else { @($rawCat) }
     foreach ($item in $items) {
       if ($item.Name) { $catalogMap[$item.Name] = $item }
@@ -217,7 +215,7 @@ foreach ($psf in $psFiles) {
     if ($catalogMap.ContainsKey($leaf)) {
       $catEntry = $catalogMap[$leaf]
       if (-not ($catEntry.PSObject.Properties['ElevatedOperations']) -or $null -eq $catEntry.ElevatedOperations) {
-        $elevatedCheckFailures.Add("$leaf defines ElevatedOperations in code, but tool_catalog.json lacks matching 'ElevatedOperations'.")
+        $elevatedCheckFailures.Add("$leaf defines ElevatedOperations in code, but the tool catalog (tools.db) lacks matching 'ElevatedOperations'.")
       }
     }
   }

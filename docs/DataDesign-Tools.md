@@ -4,9 +4,9 @@ Module: docs/DataDesign-Tools.md
 Purpose: Authoritative data architecture, SQLite schema, constraints, views, and dual-state projection invariants for the LCM Tool Catalog.  
 Path: D:/Git_Repositories/LCM_Inventory/docs/DataDesign-Tools.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.2.4  
+Version: 10.2.6  
 Status: Authoritative Data Specification  
-Date: 2026-11-19 12:04:28  
+Date: 2026-11-20 20:48:28  
 
 ---
 
@@ -14,7 +14,7 @@ Date: 2026-11-19 12:04:28
 
 The **LCM Tool Catalog Database** (`tools.db`) serves as the structured relational catalog powering **`ShowTools`** (`ToolExplorer.html` / `Show-ToolIntents.ps1`), command trampolines (`DoT/`), and execution gateway lookups (`run.cmd`). Governed by `CRP-323`, this store replaces the heavy in-memory parsing of `tool_catalog.json` (~6,000 lines) with a high-performance SQLite engine operating under the **Dual-State Projection Architecture**:
 - **Binary Runtime Engine (`data/tools/tools.db`)**: Local, git-ignored SQLite database enabling microsecond filter preset execution and column filtering.
-- **Textual Baseline (`data/tools/tools.sql` & `config/tool_catalog.json`)**: Deterministic SQL and JSON ledger files committed to Git for transparent diffs, code reviews, and AST tracking.
+- **Publish Projection (`data/tools/tools.sql`)**: written only at push (`Invoke-LCM_Push.ps1` step 2a) so the pushed state can be rebuilt from the remote; rebuilt into `tools.db` at pull (`--action restore`, git hooks `post-checkout` / `post-merge`); no other use (operator 2026-11-20). Status (CRP-358, 2026-11-20 17:31:10): `config/tool_catalog.json` and `config/tool_intents.json` are retired and deleted; the tables are the only tool store.
 - **Go Engine Target**: Structured specifically for zero-copy memory mapping and native Go CLI compilation (`showtools.exe`).
 
 ---
@@ -77,6 +77,59 @@ CREATE TABLE IF NOT EXISTS runtimes (
 
 Tooling: `tools/Get-LcmRuntime.py get <key>` / `list` / `set <key> <path> --purpose` (set only on operator instruction); PowerShell callers `Get-LcmRuntimePath` (`modules/LcmRuntimeAtoms.psm1`); `Update-ToolCatalog.ps1` writes the resolved path into every Python trampoline.
 
+### 2.3 Store columns (CRP-358)
+
+Additive columns; no field was dropped.
+
+| Table | Column | Meaning |
+|:---|:---|:---|
+| `tools` | `role` TEXT, `domain` TEXT, `intent_elevated` INTEGER | catalog fields that had no column (reconciliation `data/analysis/CRP-358/tool_catalog.md`) |
+| `tools` | `parameters_json`, `dependencies_json` | legacy JSON text, kept (never drop) but no longer written; superseded by the child tables below |
+| `tool_intents` | `parameters` | legacy JSON text, kept but no longer written; superseded by `intent_parameters` |
+| `tool_intents` | `atom_id` INTEGER | the atom that runs the intent (`atoms.atom_id`) |
+| `_lcm_tools_db_metadata` | keys `intents_version`, `intents_description`, `intents_updated_at` | header of the intents document |
+
+No document blobs (operator 2026-11-20): lists are child tables; text belongs in `.md` / small `.json` files linked two-way from the tables.
+
+```sql
+CREATE TABLE IF NOT EXISTS tool_aliases (tool_id INTEGER NOT NULL, position INTEGER NOT NULL, alias TEXT NOT NULL,
+    PRIMARY KEY (tool_id, position));
+CREATE TABLE IF NOT EXISTS tool_parameters (tool_id INTEGER NOT NULL, position INTEGER NOT NULL, name TEXT NOT NULL,
+    type TEXT, mandatory INTEGER NOT NULL DEFAULT 0 CHECK (mandatory IN (0, 1)), default_value TEXT,
+    default_kind TEXT NOT NULL DEFAULT 'null' CHECK (default_kind IN ('null', 'text', 'bool', 'int', 'real')),
+    description TEXT, PRIMARY KEY (tool_id, position));
+CREATE TABLE IF NOT EXISTS tool_dependencies (tool_id INTEGER NOT NULL, position INTEGER NOT NULL,
+    dependency TEXT NOT NULL, PRIMARY KEY (tool_id, position));
+CREATE TABLE IF NOT EXISTS intent_parameters (intent_id INTEGER NOT NULL, position INTEGER NOT NULL, name TEXT NOT NULL,
+    value TEXT, value_kind TEXT NOT NULL DEFAULT 'text' CHECK (value_kind IN ('null', 'text', 'bool', 'int', 'real')),
+    PRIMARY KEY (intent_id, position));
+```
+
+### 2.4 Atoms (CRP-363, `data/analysis/CRP-363/DataDesign-Atoms-Draft.md`)
+
+```sql
+CREATE TABLE IF NOT EXISTS atoms (
+    atom_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    script_path TEXT NOT NULL,          -- relative to the git root, forward slashes, lower case
+    entry_point TEXT,                   -- NULL = the whole script
+    tool_id INTEGER NOT NULL,           -- owning tool (tools.id); a tool owns 1..n atoms
+    elevated INTEGER NOT NULL DEFAULT 0 CHECK (elevated IN (0, 1)),  -- the elevation authority (CRP-343)
+    required_switch TEXT,               -- explicit field; NULL until a catalog entry declares one
+    runtime_key TEXT,                   -- runtimes.runtime_key; 'python' for .py, NULL for native
+    archived_at TEXT,                   -- archive mark; rows are never deleted
+    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_atoms_script_entry ON atoms(script_path, COALESCE(entry_point, ''));
+CREATE TABLE IF NOT EXISTS atom_permissions (tool_id INTEGER NOT NULL, atom_id INTEGER NOT NULL, PRIMARY KEY (tool_id, atom_id));
+CREATE TABLE IF NOT EXISTS atom_calls (caller_tool_id INTEGER NOT NULL, atom_id INTEGER NOT NULL, source_path TEXT NOT NULL,
+    source_line INTEGER NOT NULL, PRIMARY KEY (caller_tool_id, atom_id, source_path, source_line));
+```
+
+- Derived on every store write (`rebuild_atoms`): one atom per intent script, owned by the `tools` row of the same file; an atom whose script disappeared is archived; `atom_permissions` maps the catalog list `tool_atom_permissions` (intent keyed, kept) to atoms.
+- `atom_calls` is filled by the call scan of the ShowAtoms step (CRP-363 T3); empty until then.
+- View `v_atoms`: one row per atom with owning tool, level (0 TBD, 1 granted, 2 controlled, 3 admin), intent keys, permitted callers and the conflict flag (`elevated = 1` while the owning tool is below level 3).
+- State at migration (2026-11-20): 330 atoms, 85 elevated, 6 permissions, 0 conflicts.
+
 ## 3. Indexing Strategy
 
 B-Tree indexes optimize single-click filter presets and interactive search across `ShowTools`:
@@ -136,7 +189,7 @@ ORDER BY subsystem ASC, short_name ASC;
 | Tool | Path | Responsibility |
 | :--- | :--- | :--- |
 | **`Update-ToolCatalog.ps1`** | [`tools/Update-ToolCatalog.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Update-ToolCatalog.ps1) | Primary AST scanner discovering scripts, extracting parameters, and generating `DoT/` trampolines. |
-| **`sync_tool_catalog_db.py`** | `tools/sync_tool_catalog_db.py` | High-speed synchronization between `tool_catalog.json`, `tools.db`, and `tools.sql`. |
+| **`sync_tool_catalog_db.py`** | `tools/sync_tool_catalog_db.py` | The only writer and reader of the tool store (CRP-358): `export` / `import` (`--store catalog\|intents`), `record-call`, `sync` (schema, atoms), `verify` (integrity), `dump` (`tools.sql`, at push only), `restore` (`tools.sql` -> `tools.db`, at pull), `migrate` (one-time JSON reconciliation from `--json-dir`, done 2026-11-20). `LCM_TOOLS_DB_PATH` redirects it to an isolated copy for tests. PowerShell callers use `Get-LcmToolStoreDocument` / `Save-LcmToolStoreDocument` (`modules/LcmToolCatalog.psm1`). |
 | **`Sync-LcmToolCatalogDb.ps1`** | `tools/Sync-LcmToolCatalogDb.ps1` | PowerShell quality gate and CI/CD wrapper for the tool catalog database. |
 | **`Show-ToolIntents.ps1`** | [`tools/Show-ToolIntents.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Show-ToolIntents.ps1) | CLI entrypoint querying `tools.db` directly to render text tables or launch `ToolExplorer.html`. |
 | **`Test-LcmToolCatalogDb.Tests.ps1`** | `tests/Test-LcmToolCatalogDb.Tests.ps1` | Pester test suite verifying schema constraints, dual-state sync, and view definitions. |

@@ -4,9 +4,9 @@ Module: docs/Implementation.md
 Purpose: Code-level catalog, data schemas, exported functions, tool parameters, and testing traceability for LCM_Inventory.  
 Path: D:/Git_Repositories/LCM_Inventory/docs/Implementation.md  
 Authors: Rolf, LCM_AI Engine  
-Version: 10.2.0
+Version: 10.2.1
 Status: Authoritative Implementation  
-Date: 2026-10-13
+Date: 2026-11-20 20:48:28
 
 ---
 
@@ -127,6 +127,23 @@ non-mutating cohort-and-switches draft; it cannot accept a review, transition
 lifecycle state, stage, commit, or publish.
 
 ---
+
+### 3.4 BCR Baseline Currency And Review Safety (BUG-348 item 6)
+
+`Invoke-MacriumDailyBcrBaseline.ps1` decides whether a mounted baseline is current with
+`Test-MountedBaselineCurrency` (`modules/LcmMacriumAtoms.psm1`): the last `cm_activity.log` entry inside the mounted
+image is compared with the append-only live log; the image is current when the live log has no entry after it up to
+the backup completion. The registry values `MRMImagePath` / `MRMdrive` are LCM telemetry only and prove nothing.
+
+Why the baseline is safe for reviews (operator, 2026-11-20):
+
+- The GoodNight precedes the baseline generation (the backup runs every morning) and is normally solid.
+- As soon as the backup starts, it has established its volume snapshot; work after that start is never in the image,
+  so the image is always exactly what the last night left over. The baseline is therefore never partially out of
+  step and can safely be used for reviews.
+- During BCR the operator intentionally copies every item checked (and commented where needed, but not changed) over
+  to the baseline side. Later changes of the D: version therefore show up as new differences: nothing can slip
+  through.
 
 ## 4. Data Models & JSON Schemas
 

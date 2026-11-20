@@ -10,62 +10,100 @@
   Purpose: Loads the governed tool catalog and generates the HTTP-backed Tool Explorer.
   Path: tools/modules/LcmToolCatalog.psm1
   Authors: Rolf, Copilot
-  Version: 10.2.6
-  Date: 2026-11-19 17:53:45
-  Implementation Choices (BUG-375): Update-LcmToolIntentCall writes to LCM_TOOL_INTENTS_PATH when it is set (tests use
-  an isolated copy, never the live store); otherwise to config/tool_intents.json relative to this module.
+  Version: 10.2.7
+  Date: 2026-11-20 17:22:18
+  Implementation Choices (BUG-375, superseded by CRP-358): Update-LcmToolIntentCall writes to an isolated store when
+  the test redirect is set (now LCM_TOOLS_DB_PATH), never to the live store.
   Implementation Choices (CRP-343 segment 2): Admin is a level 0..3 (TBD / granted / controlled / admin); the admin
   metric counts level 3; the filter offers the four words.
+  Implementation Choices (CRP-358): the tables of data/tools/tools.db are the only tool store; the JSON files
+  config/tool_catalog.json and config/tool_intents.json are retired. Get-LcmToolStoreDocument / Save-LcmToolStoreDocument
+  go through tools/sync_tool_catalog_db.py (PowerShell has no SQLite driver here) and keep the document shape the JSON
+  files had; Update-LcmToolIntentCall writes the statistics columns (record-call). LCM_TOOLS_DB_PATH redirects the store
+  for tests (an isolated copy, never the live store).
 #>
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 Import-Module -Name (Join-Path $PSScriptRoot 'LcmDisplayVersion.psm1') -Force
+function Invoke-LcmToolStoreEngine {
+  # CRP-358: runs tools/sync_tool_catalog_db.py on the registered interpreter (RULE-PY-010) and returns its stdout.
+  [CmdletBinding()]
+  param(
+    [Parameter(Mandatory = $true)]
+    [string[]]$Arguments,
+
+    [string]$InputText
+  )
+  Import-Module -Name (Join-Path $PSScriptRoot 'LcmRuntimeAtoms.psm1')  # loaded on use (fixtures copy this module alone)
+  $python = Get-LcmRuntimePath -Key 'python'
+  $engine = Join-Path (Split-Path -Path $PSScriptRoot -Parent) 'tools\sync_tool_catalog_db.py'
+  $previousEncoding = [Console]::OutputEncoding
+  $previousInput = $OutputEncoding
+  [Console]::OutputEncoding = [System.Text.UTF8Encoding]::new($false)
+  $OutputEncoding = [System.Text.UTF8Encoding]::new($false)
+  try {
+    if ($PSBoundParameters.ContainsKey('InputText')) {
+      $output = @($InputText | & $python -I $engine @Arguments 2>&1)
+    } else {
+      $output = @(& $python -I $engine @Arguments)
+    }
+    if (0 -ne $LASTEXITCODE) {
+      throw ('Tool store engine failed ({0}): {1}' -f ($Arguments -join ' '), ($output -join [Environment]::NewLine))
+    }
+    return ($output -join [Environment]::NewLine)
+  } finally {
+    [Console]::OutputEncoding = $previousEncoding
+    $OutputEncoding = $previousInput
+  }
+}
+
+function Get-LcmToolStoreDocument {
+  <#
+  .SYNOPSIS
+    CRP-358: reads the tool catalog (array of tools) or the intents document ({ ..., intents = {} }) from tools.db.
+  #>
+  [CmdletBinding()]
+  param(
+    [Parameter(Mandatory = $true)]
+    [ValidateSet('catalog', 'intents')]
+    [string]$Store,
+
+    [switch]$AsJson
+  )
+  $json = Invoke-LcmToolStoreEngine -Arguments @('--action', 'export', '--store', $Store)
+  if ($AsJson) { return $json }
+  if ('catalog' -eq $Store) { return @($json | ConvertFrom-Json) }
+  return ($json | ConvertFrom-Json)
+}
+
+function Save-LcmToolStoreDocument {
+  <#
+  .SYNOPSIS
+    CRP-358: the only writer of the tool store; replaces the catalog or the intents document in tools.db.
+  #>
+  [CmdletBinding()]
+  param(
+    [Parameter(Mandatory = $true)]
+    [ValidateSet('catalog', 'intents')]
+    [string]$Store,
+
+    [Parameter(Mandatory = $true)]
+    [object]$Document
+  )
+  $json = if ($Document -is [string]) { $Document } else { ConvertTo-Json -InputObject $Document -Depth 20 }
+  $null = Invoke-LcmToolStoreEngine -Arguments @('--action', 'import', '--store', $Store, '--silent') -InputText $json
+}
 
 function Get-LcmToolCatalogData {
   [CmdletBinding()]
   param(
+    # kept for caller compatibility; the catalog comes from tools.db (CRP-358)
     [Parameter(Mandatory = $false)]
-    [string]$ToolsDir = 'D:\Git_Repositories\LCM_Inventory\tools'
+    [string]$ToolsDir = ''
   )
 
-  $candidatePaths = @(
-    'D:\Git_Repositories\LCM_Inventory\config\tool_catalog.json',
-    'D:\Git_Repositories\LCM_Tools\tool_catalog.json'
-  )
-  $catalogPath = $null
-  foreach ($c in $candidatePaths) {
-    if (Test-Path -LiteralPath $c) {
-      $catalogPath = $c
-      break
-    }
-  }
-
-  if (-not $catalogPath) {
-    $updateCandidates = @(
-      (Join-Path $ToolsDir 'Update-ToolCatalog.ps1'),
-      'D:\Git_Repositories\LCM_Inventory\tools\Update-ToolCatalog.ps1',
-      'D:\Git_Repositories\LCM_Tools\Update-ToolCatalog.ps1'
-    )
-    foreach ($u in $updateCandidates) {
-      if (Test-Path -LiteralPath $u) {
-        & $u -Silent
-        break
-      }
-    }
-    foreach ($c in $candidatePaths) {
-      if (Test-Path -LiteralPath $c) {
-        $catalogPath = $c
-        break
-      }
-    }
-  }
-
-  if (-not $catalogPath) {
-    throw "Catalog file not found in candidate paths: $($candidatePaths -join ', ')"
-  }
-
-  $rawJson = Get-Content -LiteralPath $catalogPath -Raw -Encoding UTF8
+  $rawJson = Get-LcmToolStoreDocument -Store catalog -AsJson
   $catalog = $rawJson | ConvertFrom-Json
   return @{
     RawJson = $rawJson
@@ -832,7 +870,7 @@ function Build-LcmToolIndexHtml {
                     <div style="font-size: 12px; font-weight: 700; color: var(--accent); margin-bottom: 8px; text-transform: uppercase;">💾 Export Overrides & Persistence Engine</div>
                     <div style="display: flex; flex-direction: column; gap: 8px; font-size: 12px; line-height: 1.5;">
                         <div><strong>Client-Side Override Cache:</strong> Any edits made to tool properties (NoExit 🔴/🟢, Role badges, Audience, Categories, Descriptions) are immediately saved in your browser's persistent <code>localStorage</code> cache so they survive page reloads.</div>
-                        <div><strong>💾 Export Overrides Button:</strong> Generates and copies the full JSON dictionary of your custom client-side overrides directly to the Windows Clipboard so you can inspect, back up, or incorporate them into <code>tool_catalog.json</code>.</div>
+                        <div><strong>💾 Export Overrides Button:</strong> Generates and copies the full JSON dictionary of your custom client-side overrides directly to the Windows Clipboard so you can inspect, back up, or incorporate them into the tool catalog (<code>data/tools/tools.db</code>).</div>
                     </div>
                 </div>
             </div>
@@ -952,59 +990,14 @@ function Update-LcmToolIntentCall {
   )
 
   try {
-    # BUG-375: LCM_TOOL_INTENTS_PATH redirects the store (tests); default relative to the module, no fixed drive path.
-    $intentsPath = if (-not [string]::IsNullOrWhiteSpace($env:LCM_TOOL_INTENTS_PATH)) {
-      $env:LCM_TOOL_INTENTS_PATH
-    } else {
-      Join-Path (Split-Path -Path $PSScriptRoot -Parent) 'config\tool_intents.json'
-    }
-    if (-not (Test-Path -LiteralPath $intentsPath)) { return }
-
-    $jsonRaw = [System.IO.File]::ReadAllText($intentsPath)
-    $data = $jsonRaw | ConvertFrom-Json
-    if ($null -eq $data -or $null -eq $data.intents) { return }
-
-    $cleanTarget = $CommandOrPath.Trim()
-    $targetName = [System.IO.Path]::GetFileName($cleanTarget)
-    if ($cleanTarget -match '(?i)([A-Za-z0-9_\-\.]+\.(?:ps1|cmd|bat|py))') {
-      $targetName = $Matches[1]
-    }
-
-    $timeStr = $Timestamp.ToString("yyyy-MM-dd HH:mm:ss.fff")
-    $matched = $false
-
-    foreach ($prop in $data.intents.PSObject.Properties) {
-      $item = $prop.Value
-      $isMatch = $false
-      if ($prop.Name -ieq $cleanTarget -or $prop.Name -ieq $targetName) {
-        $isMatch = $true
-      } elseif ($item.script -and ($item.script -like "*$targetName*" -or $item.script -like "*$cleanTarget*")) {
-        $isMatch = $true
-      } elseif ($item.trampoline -and ($item.trampoline -ieq $targetName -or $item.trampoline -ieq $cleanTarget)) {
-        $isMatch = $true
-      }
-
-      if ($isMatch) {
-        $matched = $true
-        $curCount = if ($null -ne $item.call_count) { [int]$item.call_count } else { 0 }
-        $curTotal = if ($null -ne $item.total_duration_ms) { [double]$item.total_duration_ms } else { 0.0 }
-
-        $item | Add-Member -NotePropertyName 'call_count' -NotePropertyValue ($curCount + 1) -Force
-        $item | Add-Member -NotePropertyName 'last_called_at' -NotePropertyValue $timeStr -Force
-        $item | Add-Member -NotePropertyName 'last_duration_ms' -NotePropertyValue ([Math]::Round($DurationMs, 2)) -Force
-        $item | Add-Member -NotePropertyName 'total_duration_ms' -NotePropertyValue ([Math]::Round($curTotal + $DurationMs, 2)) -Force
-      }
-    }
-
-    if ($matched) {
-      $data.updated_at = $timeStr
-      $utf8NoBom = [System.Text.UTF8Encoding]::new($false)
-      $newJson = $data | ConvertTo-Json -Depth 6
-      [System.IO.File]::WriteAllText($intentsPath, $newJson, $utf8NoBom)
-    }
+    # CRP-358: statistics columns of tools.db (LCM_TOOLS_DB_PATH redirects the store for tests, BUG-375).
+    $arguments = @('--action', 'record-call', '--target', $CommandOrPath.Trim(),
+      '--duration-ms', ([Math]::Round($DurationMs, 2)).ToString([System.Globalization.CultureInfo]::InvariantCulture),
+      '--timestamp', $Timestamp.ToString('yyyy-MM-dd HH:mm:ss.fff'))
+    $null = Invoke-LcmToolStoreEngine -Arguments $arguments
   } catch {
     # Logging failure in telemetry tracking must never break the caller
   }
 }
 
-Export-ModuleMember -Function Get-LcmToolCatalogData, Measure-LcmToolCatalogMetrics, Format-LcmToolCatalogCli, Build-LcmToolIndexHtml, Send-LcmIncidentTelemetry, Update-LcmToolIntentCall
+Export-ModuleMember -Function Get-LcmToolStoreDocument, Save-LcmToolStoreDocument, Get-LcmToolCatalogData, Measure-LcmToolCatalogMetrics, Format-LcmToolCatalogCli, Build-LcmToolIndexHtml, Send-LcmIncidentTelemetry, Update-LcmToolIntentCall

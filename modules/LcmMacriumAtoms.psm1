@@ -7,8 +7,8 @@
   automation atoms for inspection, status querying, backup launching, mounting, and dismounting.
   Path: LCM_Inventory/modules/LcmMacriumAtoms.psm1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.2.3
-  Date: 2026-11-14 12:25:00
+  Version: 10.2.4
+  Date: 2026-11-20 17:29:46
 .NOTES
   Caveats: Drive mounting and dismounting require administrative elevation and Session 1
   interactive desktop access when automated through Macrium UI Automation. Telemetry and
@@ -551,10 +551,68 @@ function Get-MountedBaselineEvidence {
   }
 }
 
+function Get-LcmActivityLogTimes {
+  # BUG-348 item 6: timestamps of the append-only cm_activity.log entries ('[yyyy-MM-dd HH:mm:ss] ...').
+  param(
+    [Parameter(Mandatory)]
+    [string]$LogPath
+  )
+  $times = [System.Collections.Generic.List[datetime]]::new()
+  if (-not (Test-Path -LiteralPath $LogPath -PathType Leaf)) {
+    return @()
+  }
+  $stream = [System.IO.FileStream]::new($LogPath, [System.IO.FileMode]::Open, [System.IO.FileAccess]::Read, [System.IO.FileShare]::ReadWrite)
+  try {
+    $reader = [System.IO.StreamReader]::new($stream, [System.Text.Encoding]::UTF8)
+    while ($null -ne ($line = $reader.ReadLine())) {
+      $match = [regex]::Match($line, '^\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\]')
+      if ($match.Success) {
+        $times.Add([datetime]::ParseExact($match.Groups[1].Value, 'yyyy-MM-dd HH:mm:ss', [System.Globalization.CultureInfo]::InvariantCulture))
+      }
+    }
+  } finally {
+    $stream.Dispose()
+  }
+  return @($times)
+}
+
+function Test-MountedBaselineCurrency {
+  # BUG-348 item 6: proves from the mounted image itself that it holds the workspace state of the completed backup.
+  # The mounted cm_activity.log ends at entry Tm; the live log is append-only, so the image is current when the live
+  # log has no entry after Tm up to the backup completion (minus GraceMinutes for entries written while the backup ran).
+  param(
+    [Parameter(Mandatory)]
+    [PSCustomObject]$MountedBaseline,
+
+    [Parameter(Mandatory)]
+    [string]$LiveWorkspacePath,
+
+    [Parameter(Mandatory)]
+    [datetime]$CompletionTime,
+
+    [int]$GraceMinutes = 15
+  )
+  $mountedTimes = @(Get-LcmActivityLogTimes -LogPath (Join-Path $MountedBaseline.WorkspacePath 'LCM_Inventory\logs\cm_activity.log'))
+  if ($mountedTimes.Count -eq 0) {
+    return [pscustomobject]@{ IsCurrent = $false; MountedLastEntry = $null; MissingEntries = -1 }
+  }
+  $mountedLast = ($mountedTimes | Measure-Object -Maximum).Maximum
+  $limit = $CompletionTime.AddMinutes(-$GraceMinutes)
+  $liveTimes = @(Get-LcmActivityLogTimes -LogPath (Join-Path $LiveWorkspacePath 'LCM_Inventory\logs\cm_activity.log'))
+  $missing = @($liveTimes | Where-Object { $_ -gt $mountedLast -and $_ -le $limit }).Count
+  return [pscustomobject]@{
+    IsCurrent = ($missing -eq 0 -and $mountedLast -le $CompletionTime)
+    MountedLastEntry = $mountedLast
+    MissingEntries = $missing
+  }
+}
+
 Export-ModuleMember -Function @(
   'Find-MountedMacriumBaselineCandidates',
   'Find-MountedMacriumBaseline',
   'Get-MountedBaselineEvidence',
+  'Get-LcmActivityLogTimes',
+  'Test-MountedBaselineCurrency',
   'ConvertTo-LcmCandidateDrives',
   'Get-MacriumBaselineState',
   'Get-MacriumBackupStatus',

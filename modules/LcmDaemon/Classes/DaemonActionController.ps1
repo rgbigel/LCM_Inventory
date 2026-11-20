@@ -3,8 +3,8 @@ Module: LcmDaemon/Classes/DaemonActionController.ps1
 Purpose: Object-Oriented controller routing and executing daemon REST operations.
 Path: LCM_Inventory/modules/LcmDaemon/Classes/DaemonActionController.ps1
 Authors: Rolf, LCM_AI Engine
-Version: 10.2.3
-Date: 2026-11-19
+Version: 10.2.4
+Date: 2026-11-20
 Implementation Choices (CRP-366): Python runs on the registered interpreter (Get-LcmRuntimePath, RULE-PY-010).
 #>
 
@@ -434,13 +434,12 @@ class DaemonActionController {
       $trailingArgs = $Matches[2].Trim()
     }
 
-    # Check if target matches tool_catalog.json entry
-    $catalogPath = [System.IO.Path]::Combine($wsRoot, "LCM_Inventory\config\tool_catalog.json")
+    # Check if target matches a catalog entry (tools.db, CRP-358)
     $matchedCatalogTool = $null
-    if (Test-Path -LiteralPath $catalogPath) {
+    if (-not [string]::IsNullOrWhiteSpace($wsRoot)) {
       try {
-        $rawCat = [System.IO.File]::ReadAllText($catalogPath, [System.Text.Encoding]::UTF8)
-        $catalog = $rawCat | ConvertFrom-Json
+        Import-Module -Name ([System.IO.Path]::Combine($wsRoot, 'LCM_Inventory\modules\LcmToolCatalog.psm1'))
+        $catalog = @(Get-LcmToolStoreDocument -Store catalog)
         $toolsList = if ($catalog -is [System.Collections.IEnumerable] -and $catalog -isnot [PSCustomObject]) { $catalog } elseif ($catalog.PSObject.Properties['tools']) { $catalog.tools } else { @($catalog) }
         $normTarget = $baseTarget -replace '^(?:tools/|tools\\)?', '' -replace '\.ps1$', ''
         $matchedCatalogTool = @($toolsList | Where-Object {
@@ -864,11 +863,11 @@ public static class LcmFgDetect {
       }
     }
 
-    # Update ShortName directly in authoritative tool_catalog.json
-    $catalogPath = [System.IO.Path]::Combine($this.Env.WorkspaceRoot, 'LCM_Inventory\config\tool_catalog.json')
-    if (Test-Path -LiteralPath $catalogPath) {
+    # Update ShortName directly in the authoritative catalog (tools.db, CRP-358)
+    if (-not [string]::IsNullOrWhiteSpace($this.Env.WorkspaceRoot)) {
       try {
-        $cat = Get-Content -LiteralPath $catalogPath -Raw -Encoding UTF8 | ConvertFrom-Json
+        Import-Module -Name ([System.IO.Path]::Combine($this.Env.WorkspaceRoot, 'LCM_Inventory\modules\LcmToolCatalog.psm1'))
+        $cat = @(Get-LcmToolStoreDocument -Store catalog)
         $entry = $cat | Where-Object { $_.Name -eq $req.OldName -or $_.Name -eq $req.NewName }
         if ($entry) {
           $entry.Name = $req.NewName
@@ -877,7 +876,7 @@ public static class LcmFgDetect {
             $entry.Aliases = @($req.Aliases)
           }
         }
-        $cat | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $catalogPath -Encoding UTF8
+        Save-LcmToolStoreDocument -Store catalog -Document (ConvertTo-Json -InputObject @($cat) -Depth 5)
         $this.Env.Log("Updated authoritative catalog entry: $($req.NewName) -> $($req.NewShortName)", 'ACTION')
       } catch {}
     }
@@ -961,13 +960,13 @@ public static class LcmFgDetect {
     [System.IO.File]::WriteAllText($backupFile, $rawBody, [System.Text.Encoding]::UTF8)
     $this.Env.Log("Saved sync snapshot: $backupFile", 'ACTION')
 
-    # Maintain authoritative catalog directly in LCM_Inventory\config\tool_catalog.json
-    $catalogPath = [System.IO.Path]::Combine($this.Env.WorkspaceRoot, 'LCM_Inventory\config\tool_catalog.json')
+    # Maintain the authoritative catalog in tools.db (CRP-358)
+    Import-Module -Name ([System.IO.Path]::Combine($this.Env.WorkspaceRoot, 'LCM_Inventory\modules\LcmToolCatalog.psm1'))
     $mergedCount = 0
 
     if ($null -ne $req.Overrides) {
       try {
-        $cat = if (Test-Path $catalogPath) { Get-Content -LiteralPath $catalogPath -Raw -Encoding UTF8 | ConvertFrom-Json } else { @() }
+        $cat = @(Get-LcmToolStoreDocument -Store catalog)
         $overrides = $req.Overrides
 
         # Persist dynamic runtime overrides to LCM_Inventory\config\tool_catalog_overrides.json
@@ -1012,8 +1011,8 @@ public static class LcmFgDetect {
         }
 
         if ($mergedCount -gt 0) {
-          $cat | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $catalogPath -Encoding UTF8
-          $this.Env.Log("Merged $mergedCount overrides into authoritative catalog $catalogPath.", 'ACTION')
+          Save-LcmToolStoreDocument -Store catalog -Document (ConvertTo-Json -InputObject @($cat) -Depth 5)
+          $this.Env.Log("Merged $mergedCount overrides into the authoritative catalog (tools.db).", 'ACTION')
 
           # Regenerate trampolines and markdown docs
           $updateScript = [System.IO.Path]::Combine($this.Env.WorkspaceRoot, 'LCM_Inventory\tools\Update-ToolCatalog.ps1')

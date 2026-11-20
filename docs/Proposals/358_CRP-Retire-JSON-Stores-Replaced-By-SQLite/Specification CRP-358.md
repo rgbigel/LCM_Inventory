@@ -68,3 +68,17 @@ T3 After the reconciliation no tool reads or writes the JSON file again, and it 
 
 - "We must eliminate all" JSON stores: also `data/tools/elevation_policy.json` (generated from tools.db for the Go daemon, which has no SQLite driver); it goes when the daemon reads SQLite itself (CRP-382 driver decision).
 - Verified write direction (2026-11-20): JSON first, table copied from it - `Set-ProposalStore` writes proposals.json and syncs JSON to proposals.db; `Update-ToolCatalog.ps1` writes tool_catalog.json / tool_intents.json and `sync_tool_catalog_db.py` copies them into tools.db. CRP-358 reverses this: writers write the tables, the JSON files are deleted.
+
+## Absorbed From BUG-348 (2026-11-20 17:18:34)
+
+- BUG-348 item 1: the Go daemon lacks the routes `/set_priority` and `/query_all_short_names` (and `/print`, `/abort`) that pages call; the legacy PowerShell daemon served them from `proposals.json` / `tool_catalog.json`. Decision 2026-11-19: served through the governed tools and the tables, implemented with this CRP (no new JSON dependency).
+
+## Open Item (2026-11-20 17:39:43)
+
+- `proposals.json` step: write `proposals.sql` on every ledger write (as `tools.sql` is on every import), so text search (ripgrep, Everything) on the ledger never lags behind the database; today it is written at push only.
+
+## Operator Decisions (Gate 2 of the tools step, 2026-11-20 20:48:28: accepted with changes)
+
+1. No `.sql` writes outside a publish: the `.sql` files exist only so that a pushed state can be rebuilt from the remote; they are generated at push and rebuilt into the tables at pull (git hooks `post-checkout` / `post-merge`); no other use. Correction (status 2026-11-20 20:48:28): the open item "write `proposals.sql` on every ledger write" above is withdrawn; the proposals step follows this decision instead.
+2. No document blobs in the tables: tables hold scalar columns and child tables. Text belongs in normal `.md` (or small `.json`) files referenced from the tables in a two-way linkage (table row -> file path, file -> row key), so textual lookup works on the files (Obsidian may be considered). Binding for the proposals step (details, bundle texts).
+3. A function rebuilds the tables from `.sql` at pull.

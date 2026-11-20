@@ -10,11 +10,11 @@
               and .DEPENDENCIES documentation.
            2. Generates the companion <ShortName>.cmd trampoline launcher in LCM_Inventory/Cmd/.
            3. Creates the NTFS symbolic link in tools/ if located in a child repository.
-           4. Synchronizes tool_catalog.json, README.md, and SHOW_TOOLS.html automatically.
+           4. Synchronizes the tool catalog (tools.db), README.md, and SHOW_TOOLS.html automatically.
   Path: tools/Create-LcmTool.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.2.0
-  Date: 2026-10-13
+  Version: 10.2.1
+  Date: 2026-11-20
 .PARAMETER Name
   The canonical tool file name or base name (e.g. 'Test-NetworkAdapter.ps1' or 'Test-NetworkAdapter').
 .PARAMETER ShortName

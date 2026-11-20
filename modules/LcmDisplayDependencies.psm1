@@ -6,8 +6,8 @@
   Purpose: Declare and fingerprint the inputs of each live Standard Display.
   Path: modules/LcmDisplayDependencies.psm1
   Authors: Rolf, Copilot
-  Version: 10.2.1
-  Date: 2026-10-21
+  Version: 10.2.2
+  Date: 2026-11-20
 #>
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
@@ -28,7 +28,7 @@ function Get-LcmDisplayDefinitions {
   $definitions = @{
     tools = @{
       Renderer = 'Show-ToolsExplorer.ps1'; Artifact = Join-Path $root 'data\artifacts\SHOW_TOOLS.html'
-      Data = @('modules\*.psm1', 'Cmd\*.cmd', 'config\tool_catalog.json', 'config\tool_catalog_overrides.json', 'config\tool_explorer_options.json')
+      Data = @('modules\*.psm1', 'Cmd\*.cmd', 'data\tools\tools.db', 'config\tool_catalog_overrides.json', 'config\tool_explorer_options.json')
       Presentation = @('tools\Show-ToolsExplorer.ps1', 'modules\LcmToolCatalog.psm1', 'assets\lcm-tool-explorer.js', 'assets\LCMToolCatalog.css')
     }
     rules = @{
@@ -43,7 +43,7 @@ function Get-LcmDisplayDefinitions {
     }
     hub = @{
       Renderer = 'Show-LcmControl.ps1'; Artifact = Join-Path $root 'data\artifacts\CM_CONTROL_HUB.html'
-      Data = @('data\proposals\proposals.json', 'data\catalog\apps.json', 'docs\Proposals\*\*.md', 'data\reviews\*.json', 'config\tool_catalog.json', 'logs\cm_activity.log', 'logs\history\cm_activity_v5_v6_history.log')
+      Data = @('data\proposals\proposals.json', 'data\catalog\apps.json', 'docs\Proposals\*\*.md', 'data\reviews\*.json', 'data\tools\tools.db', 'logs\cm_activity.log', 'logs\history\cm_activity_v5_v6_history.log')
       Presentation = @('tools\Show-LcmControl.ps1', 'assets\CM_CONTROL_HUB.html')
     }
     dates = @{
@@ -53,12 +53,12 @@ function Get-LcmDisplayDefinitions {
     }
     tool_intents = @{
       Renderer = 'Show-ToolIntents.ps1'; Artifact = Join-Path $root 'data\artifacts\SHOW_TOOL_INTENTS.html'
-      Data = @('config\tool_intents.json', 'config\tool_catalog.json')
+      Data = @('data\tools\tools.db')
       Presentation = @('tools\Show-ToolIntents.ps1')
     }
     intents = @{
       Renderer = 'Show-ToolIntents.ps1'; Artifact = Join-Path $root 'data\artifacts\SHOW_TOOL_INTENTS.html'
-      Data = @('config\tool_intents.json', 'config\tool_catalog.json')
+      Data = @('data\tools\tools.db')
       Presentation = @('tools\Show-ToolIntents.ps1')
     }
   }
@@ -100,7 +100,7 @@ function Get-LcmDisplayDefinitions {
         }
       }
     }
-    $definition.Source = if ($id -eq 'tools') { @($definition.Data | Where-Object { $_ -notlike '*\config\tool_catalog.json' }) } else { $definition.Data }
+    $definition.Source = if ($id -eq 'tools') { @($definition.Data | Where-Object { $_ -notlike '*\data\tools\tools.db' }) } else { $definition.Data }
   }
   return $definitions
 }

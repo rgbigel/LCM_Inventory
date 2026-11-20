@@ -19,8 +19,8 @@
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
   Path: tools/LcmDesktopDaemon.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.2.1
-  Date: 2026-11-08 15:39:00
+  Version: 10.2.2
+  Date: 2026-11-20 17:29:46
 .NOTES
   Dependencies: tools/modules/LcmDaemonCore.psm1
 .PARAMETER Port
@@ -614,11 +614,12 @@ try {
 
       # Route: POST /query_all_short_names or GET /short_names_map
       if (($httpMethod -eq 'POST' -or $httpMethod -eq 'GET') -and ($rawUrl -eq '/query_all_short_names' -or $rawUrl -eq '/short_names_map')) {
-        $catalogPath = Join-Path $workspaceRoot 'LCM_Inventory\config\tool_catalog.json'
+        $catalogModule = Join-Path $workspaceRoot 'LCM_Inventory\modules\LcmToolCatalog.psm1'  # CRP-358: tools.db
         $map = @{}
-        if (Test-Path -LiteralPath $catalogPath) {
+        if (Test-Path -LiteralPath $catalogModule) {
           try {
-            $catalog = Get-Content -LiteralPath $catalogPath -Raw -Encoding UTF8 | ConvertFrom-Json
+            Import-Module -Name $catalogModule
+            $catalog = @(Get-LcmToolStoreDocument -Store catalog)
             foreach ($entry in $catalog) {
               $leaf = $entry.Name
               if (-not [string]::IsNullOrWhiteSpace($leaf)) {
@@ -648,11 +649,12 @@ try {
       if ($httpMethod -eq 'POST' -and $rawUrl -eq '/query_short_names') {
         $targetScript = if ($bodyJson.PSObject.Properties['targetScript']) { [string]$bodyJson.targetScript } else { '' }
         $targetLeaf = [System.IO.Path]::GetFileName($targetScript)
-        $catalogPath = Join-Path $workspaceRoot 'LCM_Inventory\config\tool_catalog.json'
+        $catalogModule = Join-Path $workspaceRoot 'LCM_Inventory\modules\LcmToolCatalog.psm1'  # CRP-358: tools.db
         $matching = [System.Collections.Generic.List[string]]::new()
-        if (Test-Path -LiteralPath $catalogPath) {
+        if (Test-Path -LiteralPath $catalogModule) {
           try {
-            $catalog = Get-Content -LiteralPath $catalogPath -Raw -Encoding UTF8 | ConvertFrom-Json
+            Import-Module -Name $catalogModule
+            $catalog = @(Get-LcmToolStoreDocument -Store catalog)
             foreach ($entry in $catalog) {
               if ($entry.Name -ieq $targetLeaf -or [System.IO.Path]::GetFileNameWithoutExtension($entry.Name) -ieq [System.IO.Path]::GetFileNameWithoutExtension($targetLeaf)) {
                 if (-not [string]::IsNullOrWhiteSpace($entry.ShortName) -and -not $matching.Contains($entry.ShortName)) {

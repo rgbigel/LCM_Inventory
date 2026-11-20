@@ -7,8 +7,8 @@
            Elevated Desktop Daemon and Security Authorization Gateway per CRP-309 Clause 9.
   Path: LCM_Inventory/tools/Invoke-LcmAction.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.2.2
-  Date: 2026-11-08 22:00:00
+  Version: 10.2.3
+  Date: 2026-11-20 17:29:46
 .NOTES
   Implementation Choices (CRP-309):
   1. Serializes CLI flags and arguments into a typed Interface Object (Action Intent DTO).
@@ -142,11 +142,11 @@ if (-not $daemonOnline) {
 # 3. Construct Interface Object (Action Intent DTO)
 $requiresElevation = [bool]$Elevated
 if (-not $requiresElevation -and -not [string]::IsNullOrWhiteSpace($Target)) {
-  $catalogPath = Join-Path $workspaceRoot 'LCM_Inventory\config\tool_catalog.json'
-  if (Test-Path -LiteralPath $catalogPath) {
+  $catalogModule = Join-Path $workspaceRoot 'LCM_Inventory\modules\LcmToolCatalog.psm1'  # CRP-358: tools.db
+  if (Test-Path -LiteralPath $catalogModule) {
     try {
-      $rawCat = [System.IO.File]::ReadAllText($catalogPath, [System.Text.Encoding]::UTF8)
-      $catList = $rawCat | ConvertFrom-Json
+      Import-Module -Name $catalogModule
+      $catList = @(Get-LcmToolStoreDocument -Store catalog)
       $tools = if ($catList -is [System.Collections.IEnumerable] -and $catList -isnot [PSCustomObject]) { $catList } elseif ($catList.PSObject.Properties['tools']) { $catList.tools } else { @($catList) }
       $cleanTarget = $Target.Trim()
       $match = @($tools | Where-Object {

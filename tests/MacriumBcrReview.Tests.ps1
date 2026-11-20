@@ -6,8 +6,8 @@
     Purpose: Verifies the governed Macrium BCR wrapper, baseline reuse, and lifecycle routing contracts.
     Path: LCM_Inventory/tests/MacriumBcrReview.Tests.ps1
     Authors: Rolf, LCM_AI Engine, Claude
-    Version: 10.2.2
-    Date: 2026-11-17
+    Version: 10.2.3
+    Date: 2026-11-20
 #>
 
 Describe 'Macrium-backed lifecycle BCR review' {
@@ -175,12 +175,12 @@ Describe 'Macrium-backed lifecycle BCR review' {
     $morningScript | Should -Match 'Baseline image file\s*:'
   }
 
-  It 'decides baseline currency by mounted image identity before the log-date heuristic (BUG-341)' {
+  It 'decides baseline currency by evidence from the mounted image before the log-date heuristic (BUG-341, BUG-348 item 6)' {
     $baselineScript = Get-Content -LiteralPath (Join-Path $repositoryRoot 'tools\Invoke-MacriumDailyBcrBaseline.ps1') -Raw -Encoding UTF8
 
-    $baselineScript | Should -Match ([regex]::Escape("`$mountedImagePath = [string](Get-LcmRegistryValue -KeyPath `$MacriumRegistryKey -Name 'MRMImagePath')"))
-    $baselineScript | Should -Match ([regex]::Escape("`$mountedImageDrive = [string](Get-LcmRegistryValue -KeyPath `$MacriumRegistryKey -Name 'MRMdrive')"))
-    $identityIndex = $baselineScript.IndexOf('if ($isSameImage) {')
+    $baselineScript | Should -Match ([regex]::Escape('Test-MountedBaselineCurrency -MountedBaseline $chosen'))
+    $baselineScript | Should -Not -Match ([regex]::Escape("`$mountedImagePath = [string](Get-LcmRegistryValue -KeyPath `$MacriumRegistryKey -Name 'MRMImagePath')"))
+    $identityIndex = $baselineScript.IndexOf('if ($null -ne $currency -and $currency.IsCurrent) {')
     $heuristicIndex = $baselineScript.IndexOf('} elseif ($null -ne $completedToday -and $null -ne $chosen.NewestLogDate) {')
     $identityIndex | Should -BeGreaterThan 0
     $heuristicIndex | Should -BeGreaterThan $identityIndex

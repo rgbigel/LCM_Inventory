@@ -16,14 +16,14 @@ param(
 .DESCRIPTION
   Module: tools/Test-LcmExternalToolDocumentation.ps1
   Purpose: Collects executable names (*.exe) from LCM code in the governed LCM_* repositories (tools, modules,
-           src, assets, Cmd, DoT; *.ps1, *.psm1, *.py, *.go, *.js, *.cmd, *.ahk) and from config/tool_intents.json,
+           src, assets, Cmd, DoT; *.ps1, *.psm1, *.py, *.go, *.js, *.cmd, *.ahk) and from tools.db table tool_intents,
            and compares them with the tables of the "External Tools" section of LCM_Inventory/install/Installation.md
            (third-party, Windows components, referenced-not-invoked, registered for documentation).
            Exit code 0 when every name is covered, 1 when undocumented names remain.
   Path: LCM_Inventory/tools/Test-LcmExternalToolDocumentation.ps1
   Authors: Rolf, Claude
-  Version: 10.7.5
-  Date: 2026-11-19
+  Version: 10.7.6
+  Date: 2026-11-20
   Implementation Choices (BUG-368): an intent executable is compared by its file name (the registered Python
            interpreter is recorded as a full path).
   Implementation Choices (CRP-345): a name counts as covered when it appears in any of the four tables;
@@ -39,7 +39,7 @@ $ErrorActionPreference = 'Stop'
 
 if ($Help) {
   Write-Host 'Test-LcmExternalToolDocumentation.ps1 [-WorkspaceRoot <path>] [-ShowAll] [-h]' -ForegroundColor Yellow
-  Write-Host '  Reports executables named in LCM code or tool_intents.json that install/Installation.md does not document.'
+  Write-Host '  Reports executables named in LCM code or the tool intents (tools.db) that install/Installation.md does not document.'
   Write-Host '  Exit code: 0 all covered, 1 undocumented names found.'
   return
 }
@@ -90,11 +90,11 @@ foreach ($root in $codeRoots) {
     }
   }
 }
-$intentsPath = Join-Path $inventoryRoot 'config\tool_intents.json'
-$registry = Get-Content -LiteralPath $intentsPath -Raw -Encoding UTF8 | ConvertFrom-Json
+Import-Module -Name (Join-Path $inventoryRoot 'modules\LcmToolCatalog.psm1')  # CRP-358: tools.db
+$registry = Get-LcmToolStoreDocument -Store intents
 foreach ($property in $registry.intents.PSObject.Properties) {
   $exe = [System.IO.Path]::GetFileName(([string]$property.Value.executable -split '\s+')[0]).ToLowerInvariant()  # BUG-368: full paths
-  if ($exe -match '\.exe$' -and -not $used.ContainsKey($exe)) { $used[$exe] = "config/tool_intents.json ($($property.Name))" }
+  if ($exe -match '\.exe$' -and -not $used.ContainsKey($exe)) { $used[$exe] = "tools.db tool_intents ($($property.Name))" }
 }
 
 # 3. compare

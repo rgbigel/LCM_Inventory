@@ -13,7 +13,7 @@
     Implementation Choices (BUG-348): -DryRun skips every mutating pre-push step (Update-Gemini export commit,
     tool catalog snapshot commit, the second full maintenance run); before, a dry run committed and deleted
     186 script logs.
-    Version: 10.2.8
+    Version: 10.2.9
     Date: 2026-11-20
     Implementation Choices (BUG-383): no learned-advice gate; learned advice is administrative data and a push is
     maintenance and backup (RULE-CTX-005 item 7).
@@ -270,11 +270,7 @@ $updateCatalogScript = Join-Path $workspaceRoot "LCM_Inventory\tools\Update-Tool
 if (-not $DryRun -and (Test-Path -LiteralPath $updateCatalogScript)) {
     Write-Host "`n[Pre-Push Pipeline] Synchronizing Tool Catalog snapshot..." -ForegroundColor Yellow
     & pwsh -File $updateCatalogScript -Silent
-    $rootDirty = git -C $workspaceRoot status --porcelain
-    if ($rootDirty -match 'LCM_Inventory[/\\]config[/\\]tool_catalog\.json') {
-        git -C $workspaceRoot add LCM_Inventory/config/tool_catalog.json
-        git -C $workspaceRoot commit -m "chore(lcm): pre-push snapshot synchronization of tool_catalog.json" | Out-Null
-    }
+    # CRP-358: the catalog lives in tools.db; its publish projection data/tools/tools.sql is written and committed in step 2a.
 }
 
 # ------------------------------------------------------------------------------
@@ -288,14 +284,16 @@ if (-not $DryRun -and (Test-Path -LiteralPath $ledgerDumpScript)) {
     try {
         Import-Module -Name (Join-Path $inventoryRepoPath 'modules\LcmRuntimeAtoms.psm1') -Force
         & (Get-LcmRuntimePath -Key 'python') $ledgerDumpScript --action dump --silent
+        # CRP-358: tools.sql is the publish projection of tools.db (written only here; restore after a pull)
+        & (Get-LcmRuntimePath -Key 'python') (Join-Path $inventoryRepoPath 'tools\sync_tool_catalog_db.py') --action dump --silent
     } finally {
         Pop-Location
     }
-    $ledgerPaths = @('data/proposals/proposals.sql', 'data/proposals/strategies.sql')
+    $ledgerPaths = @('data/proposals/proposals.sql', 'data/proposals/strategies.sql', 'data/tools/tools.sql')
     $ledgerDirty = @(git -C $inventoryRepoPath status --porcelain -- $ledgerPaths)
     if ($ledgerDirty.Count -gt 0) {
         git -C $inventoryRepoPath add -- $ledgerPaths
-        git -C $inventoryRepoPath commit --no-verify -m 'chore(ledger): pre-push SQL projection of proposals.db' -- $ledgerPaths | Out-Null
+        git -C $inventoryRepoPath commit --no-verify -m 'chore(ledger): pre-push SQL projections of proposals.db and tools.db' -- $ledgerPaths | Out-Null
         Write-Host '  -> Committed SQL ledger projections (bookkeeping, RULE-EFF-001).' -ForegroundColor Green
     }
 }

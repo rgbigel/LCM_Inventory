@@ -8,8 +8,8 @@
              granted tools against a fixture tools.db; the live catalog carries the Macrium BCR levels and atom lists.
     Path: LCM_Inventory/tests/ToolPermissionLevels.Tests.ps1
     Authors: Rolf, Claude
-    Version: 10.7.6
-    Date: 2026-11-19
+    Version: 10.7.7
+    Date: 2026-11-20
     Implementation Choices (CRP-366): Python runs on the registered interpreter (Get-LcmRuntimePath, RULE-PY-010).
 #>
 
@@ -66,7 +66,8 @@ c.commit()
   }
 
   It 'carries the Macrium BCR levels and atom lists in the live catalog' {
-    $catalog = Get-Content -LiteralPath (Join-Path $script:root 'config\tool_catalog.json') -Raw | ConvertFrom-Json
+    Import-Module -Name (Join-Path $script:root 'modules\LcmToolCatalog.psm1') -Force  # CRP-358: tools.db
+    $catalog = @(Get-LcmToolStoreDocument -Store catalog)
     $daily = @($catalog | Where-Object Name -eq 'Invoke-MacriumDailyBcrBaseline.ps1')[0]
     $daily.Admin | Should -Be 2
     @($daily.AllowedAtoms) | Should -Be @('invoke-macriummountworker', 'set-lcmmachineregistry')

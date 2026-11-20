@@ -4,14 +4,14 @@
 .DESCRIPTION
   Module: Invoke-PrivilegedTool
   Purpose: Intercepts CLI, terminal, and AI agent execution of workspace tools.
-           Inspects tool metadata in tool_catalog.json for administrative privilege requirements.
+           Inspects tool metadata in the tool catalog (tools.db) for administrative privilege requirements.
            If the caller is un-elevated and the tool requires elevation, routes execution to the
            interactive user desktop (Session 1) via the Desktop Daemon (Port 9876) or Invoke-InteractiveDesktop.ps1,
            preventing Session 0 hangs and silent invariant failures.
   Path: LCM_Inventory/tools/Invoke-PrivilegedTool.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.2.1
-  Date: 2026-11-19
+  Version: 10.2.2
+  Date: 2026-11-20
   Implementation Choices (CRP-366): Python runs on the registered interpreter (Get-LcmRuntimePath, RULE-PY-010).
 .PARAMETER Tool
   The tool Name, ShortName, or relative path to execute (e.g., 'RestoreSettings', 'Restore-SystemSettings.ps1', 'SetGitRoot').
@@ -102,24 +102,9 @@ if (-not (Test-Path -LiteralPath $workspaceRoot)) {
   $workspaceRoot = Split-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) -Parent
 }
 
-$catalogPathCandidates = @(
-  (Join-Path $workspaceRoot "LCM_Inventory\config\tool_catalog.json"),
-  (Join-Path $workspaceRoot "LCM_Inventory\tools\tool_catalog.json")
-)
-
-$catalogPath = $null
-foreach ($cand in $catalogPathCandidates) {
-  if (Test-Path -LiteralPath $cand) {
-    $catalogPath = $cand
-    break
-  }
-}
-
-if (-not $catalogPath) {
-  throw "Tool catalog not found in workspace candidate paths."
-}
-
-$catalogRaw = Get-Content -LiteralPath $catalogPath -Raw -Encoding UTF8 | ConvertFrom-Json
+# CRP-358: the catalog comes from tools.db
+Import-Module -Name (Join-Path $workspaceRoot 'LCM_Inventory\modules\LcmToolCatalog.psm1')
+$catalogRaw = @(Get-LcmToolStoreDocument -Store catalog)
 
 # ------------------------------------------------------------------------------
 # 2. Tool Lookup & Metadata Resolution
@@ -246,7 +231,7 @@ if (-not $scriptFullPath -or (-not (Test-Path -LiteralPath $scriptFullPath))) {
       $requiresAdmin = $true
     }
   } else {
-    throw "Target tool '$toolClean' could not be resolved in tool_catalog.json or filesystem."
+    throw "Target tool '$toolClean' could not be resolved in the tool catalog (tools.db) or filesystem."
   }
 }
 

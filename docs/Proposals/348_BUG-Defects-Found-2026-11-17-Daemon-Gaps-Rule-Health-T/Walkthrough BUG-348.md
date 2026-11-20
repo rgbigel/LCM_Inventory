@@ -29,3 +29,17 @@ Date: 2026-11-18 15:57:30
 | 5 Old task | `\LCM_Daemon_InteractiveStarter` deleted (no elevation needed); its definition kept in `scratch/task-LCM_Daemon_InteractiveStarter-before-bug348.xml` |
 | 6 Mount proof | read-only probe: Macrium's registry keys hold display settings only, no mount record; `MRMImagePath` / `MRMdrive` are LCM's own telemetry; the mounted volume is no Windows partition (`Get-Partition -DriveLetter F` finds none). Whether Macrium's command-line tools can list mounts is unverified: open |
 | 1 Missing routes | waits for CRP-358 (operator decision) |
+
+## 5. Closure (operator 2026-11-20, 2026-11-20 17:18:34)
+
+| Item | Result |
+|:---|:---|
+| 1 Missing routes | moved to CRP-358 (its owner by the 2026-11-19 decision; cheapest route); BUG-348 no longer carries it |
+| 4 Transition table | already aligned by BUG-364: `Test-LcmProposalLifecycleTransition` equals the flat state table; `ProposalLifecycle.Tests.ps1` 50 passed, 0 failed |
+| 6 Mount proof | `Test-MountedBaselineCurrency` (new, `modules/LcmMacriumAtoms.psm1`): the mounted image's `cm_activity.log` against the append-only live log (no live entry after the mounted last entry up to the backup completion, 15 min grace); `Invoke-MacriumDailyBcrBaseline.ps1` uses it instead of the registry comparison (`MRMImagePath` / `MRMdrive` stay telemetry). Live probe: G: current (last entry 2026-11-20 00:41:08, 0 missing), F: stale (139 missing). `MacriumBcrReview` + `MacriumBaselineAtoms` tests 19 passed, 0 failed. No BCR relaunch, no remount (operator: BC open on G:) |
+
+Caveat (item 6): an entry written while the backup was running but more than 15 minutes before its completion makes a current image look stale (then the existing log-date fallback still applies).
+
+## 6. Gate 2 (2026-11-20 20:48:28)
+
+- Operator: ACCEPTED, DOIT. The item-6 caveat of section 5 is resolved by the operator's explanation (backup snapshot at start, GoodNight before the backup, BCR copy-over practice), now in `docs/Implementation.md` section 3.4.

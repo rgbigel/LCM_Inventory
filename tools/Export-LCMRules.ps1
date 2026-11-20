@@ -10,8 +10,8 @@
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
   Path: tools/Export-LCMRules.ps1
   Authors: Rolf, LCM_AI Governance
-  Version: 10.2.0
-  Date: 2026-10-13
+  Version: 10.2.1
+  Date: 2026-11-20
 .PARAMETER OutputPath
   Target file path for the consolidated markdown artifact. Defaults to LCM_AI/docs/LCM_Rules_Gemini_Export.md.
 .PARAMETER ToClipboard
@@ -338,13 +338,14 @@ foreach ($cand in $candidateGDrives) {
       $mirroredPaths.Add($targetRulesTxt) | Out-Null
       Write-ToolLog -Message "Mirrored .md and .txt rules to: $cand" -Level ACTION
 
-      # Also mirror tool_catalog.json and tool_catalog.txt
-      $catalogSource = Join-Path $toolsDir "tool_catalog.json"
-      if (Test-Path -Path $catalogSource) {
+      # Also mirror the tool catalog as .json and .txt export (exported from tools.db, CRP-358; not a store)
+      Import-Module -Name (Join-Path $PSScriptRoot '..\modules\LcmToolCatalog.psm1')
+      $catalogExport = Get-LcmToolStoreDocument -Store catalog -AsJson
+      if (-not [string]::IsNullOrWhiteSpace($catalogExport)) {
         $targetCatalogJson = Join-Path $cand "tool_catalog.json"
         $targetCatalogTxt = Join-Path $cand "tool_catalog.txt"
-        Copy-Item -Path $catalogSource -Destination $targetCatalogJson -Force
-        Copy-Item -Path $catalogSource -Destination $targetCatalogTxt -Force
+        [System.IO.File]::WriteAllText($targetCatalogJson, $catalogExport, [System.Text.UTF8Encoding]::new($false))
+        [System.IO.File]::WriteAllText($targetCatalogTxt, $catalogExport, [System.Text.UTF8Encoding]::new($false))
         Write-ToolLog -Message "Mirrored tool_catalog (.json & .txt) to: $cand" -Level ACTION
       }
     } catch {

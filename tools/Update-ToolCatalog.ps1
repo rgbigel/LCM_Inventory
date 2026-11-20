@@ -3,18 +3,20 @@
   Scans and synchronizes all LCM Workspace & Subsystem tools into canonical catalog artifacts.
 .DESCRIPTION
   Module: Update-ToolCatalog
-  Purpose: Scans and synchronizes all LCM Workspace & Subsystem tools into a canonical JSON catalog
-           (LCM_Inventory/config/tool_catalog.json), documentation index (LCM_Inventory/docs/README.md), and standardizes
+  Purpose: Scans and synchronizes all LCM Workspace & Subsystem tools into the tool store
+           (LCM_Inventory/data/tools/tools.db: tools, tool_intents, atoms), documentation index (LCM_Inventory/docs/README.md), and standardizes
            clean short-name command trampolines in LCM_Inventory/Cmd/ adhering to the 4-category taxonomy
            (Setters, Showers, Getters, Action Runners).
            Extracts AST dependencies, enforces ShortName uniqueness, and cleans legacy long .cmd files.
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
   Path: D:\Git_Repositories\LCM_Inventory\tools\Update-ToolCatalog.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.2.13
+  Version: 10.2.14
   Implementation Choices (CRP-343 segment 2): Admin is a level 0..3 (TBD / granted / controlled / admin; legacy
   true -> 3, false -> 1); controlled tools carry AllowedAtoms; new tools land at 0 unless admin code is found.
   Date: 2026-11-20
+  Implementation Choices (CRP-358): the catalog and the intents are read from and written to tools.db through
+  Get-LcmToolStoreDocument / Save-LcmToolStoreDocument (modules/LcmToolCatalog.psm1); the JSON files are retired.
   Implementation Choices (BUG-388): generated trampolines never start pwsh with -NoExit.
   Implementation Choices (CRP-366): Python launchers and examples name the registered interpreter
   (tools.db table runtimes via LcmRuntimeAtoms, RULE-PY-010) instead of a bare 'python' resolved through PATH;
@@ -61,7 +63,7 @@ if ($Help) {
   Write-Host "==========================================================================" -ForegroundColor Cyan
   Write-Host "SYNOPSIS:" -ForegroundColor Yellow
   Write-Host "  Scans and synchronizes all LCM Workspace & Subsystem tools into"
-  Write-Host "  LCM_Inventory/config/tool_catalog.json, LCM_Inventory/docs/README.md, and standardizes short-name"
+  Write-Host "  LCM_Inventory/data/tools/tools.db, LCM_Inventory/docs/README.md, and standardizes short-name"
   Write-Host "  command trampolines in LCM_Inventory/Cmd/ with AST dependency tracking."
   Write-Host ""
   Write-Host "USAGE:" -ForegroundColor Yellow
@@ -150,7 +152,9 @@ Write-ToolLog -Message " Command Hub   : $cmdDir" -Level INFO
 Write-ToolLog -Message " Audit Log     : $LogFile" -Level INFO
 Write-ToolLog -Message "==========================================================================" -Level INFO
 
-$catalogJsonPath = Join-Path $configDir 'tool_catalog.json'
+# CRP-358: tools.db is the only tool store (no JSON catalog any more)
+$catalogStoreLabel = 'LCM_Inventory/data/tools/tools.db'
+Import-Module -Name (Join-Path $inventoryRoot 'modules\LcmToolCatalog.psm1') -Force
 $readmePath = Join-Path $docsDir 'README.md'
 
 # ------------------------------------------------------------------------------
@@ -764,13 +768,13 @@ $metadataOverrides = @{
 }
 
 # ------------------------------------------------------------------------------
-# 2. Authoritative Tool Catalog Baseline (LCM_Inventory/config/tool_catalog.json)
+# 2. Authoritative Tool Catalog Baseline (tools.db, CRP-358)
 # ------------------------------------------------------------------------------
 $authoritativeCatalog = @{}
 $authoritativeByPath = @{}  # CRP-343 (2026-11-19): metadata is inherited by path; a name match counts only for a moved file
-if (Test-Path -LiteralPath $catalogJsonPath) {
+if (-not [string]::IsNullOrWhiteSpace($catalogStoreLabel)) {
   try {
-    $existingCatalogList = Get-Content -LiteralPath $catalogJsonPath -Raw -Encoding UTF8 | ConvertFrom-Json
+    $existingCatalogList = @(Get-LcmToolStoreDocument -Store catalog)
     foreach ($entry in $existingCatalogList) {
       if (-not [string]::IsNullOrWhiteSpace($entry.Name)) {
         if ($entry.PSObject.Properties['RelativePath'] -and -not [string]::IsNullOrWhiteSpace($entry.RelativePath)) {
@@ -783,9 +787,9 @@ if (Test-Path -LiteralPath $catalogJsonPath) {
         }
       }
     }
-    Write-ToolLog -Message "Loaded authoritative catalog baseline ($($existingCatalogList.Count) tools) from $catalogJsonPath" -Level INFO
+    Write-ToolLog -Message "Loaded authoritative catalog baseline ($($existingCatalogList.Count) tools) from $catalogStoreLabel" -Level INFO
   } catch {
-    Write-ToolLog -Message "Warning: Failed to parse authoritative catalog from $catalogJsonPath : $_" -Level WARN
+    Write-ToolLog -Message "Warning: Failed to parse authoritative catalog from $catalogStoreLabel : $_" -Level WARN
   }
 }
 
@@ -1277,11 +1281,11 @@ try {
   # Sort tools: Group, Audience (User first), Role, ShortName ascending
   $sortedTools = @($toolsList | Sort-Object Group, @{Expression={if ($_.Audience -eq 'User') { 0 } else { 1 }}}, Role, ShortName)
 
-  # Write JSON Catalog (UTF-8 without BOM)
+  # Write the catalog into tools.db (CRP-358; same document shape as the retired JSON file)
   $utf8NoBom = [System.Text.UTF8Encoding]::new($false)
-  $jsonContent = $sortedTools | ConvertTo-Json -Depth 5
-  [System.IO.File]::WriteAllText($catalogJsonPath, $jsonContent, $utf8NoBom)
-  Write-ToolLog -Message "Persisted canonical catalog: $catalogJsonPath" -Level ACTION
+  $jsonContent = ConvertTo-Json -InputObject @($sortedTools) -Depth 5
+  Save-LcmToolStoreDocument -Store catalog -Document $jsonContent
+  Write-ToolLog -Message "Persisted canonical catalog: $catalogStoreLabel (tools)" -Level ACTION
 
   # ----------------------------------------------------------------------------
   # 5. Generate Short-Name Command Trampolines in LCM_Inventory/Cmd/
@@ -1411,16 +1415,15 @@ try {
   }
 
   # ----------------------------------------------------------------------------
-  # 6.5 Synchronize LCM Tool Intents Ledger (LCM_Inventory/config/tool_intents.json)
+  # 6.5 Synchronize LCM Tool Intents Ledger (tools.db table tool_intents, CRP-358)
   # ----------------------------------------------------------------------------
-  $toolIntentsJsonPath = Join-Path $configDir 'tool_intents.json'
   $intentsDict = [ordered]@{}
 
   # Load existing telemetry metrics to preserve across catalog regenerations (CRP-315)
   $existingMetricsMap = @{}
-  if (Test-Path -LiteralPath $toolIntentsJsonPath) {
+  if (-not [string]::IsNullOrWhiteSpace($catalogStoreLabel)) {
     try {
-      $existingRaw = Get-Content -LiteralPath $toolIntentsJsonPath -Raw -Encoding UTF8 | ConvertFrom-Json
+      $existingRaw = Get-LcmToolStoreDocument -Store intents
       if ($existingRaw -and $existingRaw.intents) {
         foreach ($prop in $existingRaw.intents.PSObject.Properties) {
           $val = $prop.Value
@@ -1549,8 +1552,8 @@ try {
   }
 
   $intentsJsonContent = $intentsPayload | ConvertTo-Json -Depth 6
-  [System.IO.File]::WriteAllText($toolIntentsJsonPath, $intentsJsonContent, $utf8NoBom)
-  Write-ToolLog -Message "Synchronized tool intents ledger ($($intentsDict.Count) intents): $toolIntentsJsonPath" -Level ACTION
+  Save-LcmToolStoreDocument -Store intents -Document $intentsJsonContent
+  Write-ToolLog -Message "Synchronized tool intents ledger ($($intentsDict.Count) intents): $catalogStoreLabel (tool_intents)" -Level ACTION
 
   # ----------------------------------------------------------------------------
   # 7. Generate README.md Reference
@@ -1608,7 +1611,7 @@ try {
   [System.IO.File]::WriteAllText($readmePath, $sb.ToString(), $utf8NoBom)
 
   Write-ToolLog -Message "Tool catalog synchronized successfully: $($sortedTools.Count) tools ($($userTools.Count) User, $($devTools.Count) Developer)." -Level ACTION
-  Write-ToolLog -Message "  Manifest : $catalogJsonPath" -Level INFO
+  Write-ToolLog -Message "  Manifest : $catalogStoreLabel" -Level INFO
   Write-ToolLog -Message "  Reference: $readmePath" -Level INFO
 
 } catch {

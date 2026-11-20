@@ -1,9 +1,16 @@
 #!/bin/sh
 # LCM Proposal Database Auto-Hydration Hook
-# Rebuilds local proposals.db whenever proposals.sql changes upon pull/merge/checkout.
+# Rebuilds local proposals.db / tools.db whenever proposals.sql / tools.sql change upon pull/merge/checkout.
 CHANGED=$(git diff-tree -r --name-only --no-commit-id HEAD@{1} HEAD 2>/dev/null | grep -E "proposals\.sql")
 
 if [ -n "$CHANGED" ]; then
     echo "[LCM] Pull/Checkout detected proposals.sql change. Rebuilding proposals.db..."
     python tools/sync_proposals_db.py --action hydrate --silent
+fi
+
+# CRP-358: tools.db is rebuilt from its publish projection tools.sql (written only at push)
+TOOLS_CHANGED=$(git diff-tree -r --name-only --no-commit-id HEAD@{1} HEAD 2>/dev/null | grep -E "data/tools/tools\.sql")
+if [ -n "$TOOLS_CHANGED" ]; then
+    echo "[LCM] Pull/Checkout detected tools.sql change. Rebuilding tools.db..."
+    python tools/sync_tool_catalog_db.py --action restore --silent
 fi

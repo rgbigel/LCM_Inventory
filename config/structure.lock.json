@@ -15,7 +15,6 @@
       "LCM_Inventory/config/lcm-path-map.json",
       "LCM_Inventory/config/guardrails.json",
       "LCM_Inventory/config/structure.lock.json",
-      "LCM_Inventory/config/tool_catalog.json",
       "LCM_Inventory/tools/Invoke-LcmPathMigration.ps1",
       "LCM_Inventory/tools/Set-GitRoot.ps1",
       "LCM_Inventory/tools/Test-Guardrail.ps1"

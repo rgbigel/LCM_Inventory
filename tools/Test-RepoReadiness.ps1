@@ -11,8 +11,8 @@
   Writes data/readiness/latest_readiness.json (CRP-152), read by Show-LCM_Readiness.ps1.
   Path: LCM_Inventory/tools/Test-RepoReadiness.ps1
   Authors: Rolf, Claude
-  Version: 10.7.4
-  Date: 2026-11-19
+  Version: 10.7.5
+  Date: 2026-11-20
   Implementation Choices (CRP-343, operator 2026-11-19 option 2A): replaces a content copy of
     HaSSD06/tools/Test-RepoReadiness.ps1 (HaSSD06 labels and gates, ingestion left-over); keeps the
     CRP-310 two-step layout and the CRP-152 receipt; the HaSSD06 subsystem identity gate does not apply
@@ -130,7 +130,7 @@ $t = [System.Diagnostics.Stopwatch]::StartNew()
 try {
   $problems = [System.Collections.Generic.List[string]]::new()
   if (-not (Test-Path -LiteralPath (Join-Path $repoRoot '.agents\rules'))) { $problems.Add('.agents/rules junction missing') }
-  foreach ($rel in @('config\tool_catalog.json', 'config\tool_intents.json', 'data\inventory.json')) {
+  foreach ($rel in @('data\inventory.json')) {  # CRP-358: tool catalog and intents live in tools.db (checked below)
     $p = Join-Path $repoRoot $rel
     if (-not (Test-Path -LiteralPath $p)) { $problems.Add($rel + ' missing'); continue }
     try { $null = Get-Content -LiteralPath $p -Raw -Encoding UTF8 | ConvertFrom-Json } catch { $problems.Add($rel + ' does not parse') }
