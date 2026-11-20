@@ -6,4 +6,4 @@ if %errorlevel% neq 0 (
   exit /b
 )
 echo # [LCM Launcher] %~nx0 - Goal: Terminates lingering or frozen background PowerShell 7 host processes.
-pwsh.exe -NoExit -NoProfile -ExecutionPolicy Bypass -File "%~dp0..\..\SystemConfiguration\Source\@15-PS7AppKiller.ps1" %*
+pwsh.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0..\..\SystemConfiguration\Source\@15-PS7AppKiller.ps1" %*

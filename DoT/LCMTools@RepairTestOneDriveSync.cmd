@@ -6,4 +6,4 @@ if %errorlevel% neq 0 (
   exit /b
 )
 echo # [LCM Launcher] %~nx0 - Goal: @Repair_Test-OneDriveSync execution tool.
-pwsh.exe -NoExit -NoProfile -ExecutionPolicy Bypass -File "%~dp0..\..\LCM_Tools\tools\@Repair_Test-OneDriveSync.ps1" %*
+pwsh.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0..\..\LCM_Tools\tools\@Repair_Test-OneDriveSync.ps1" %*

@@ -6,4 +6,4 @@ if %errorlevel% neq 0 (
   exit /b
 )
 echo # [LCM Launcher] %~nx0 - Goal: Lightweight high-performance HTTP/REST bridge daemon running in Session 1 for cross-session GUI dispatch.
-pwsh.exe -NoExit -NoProfile -ExecutionPolicy Bypass -File "%~dp0..\..\LCM_Inventory\tools\LcmDesktopDaemon.ps1" %*
+pwsh.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0..\..\LCM_Inventory\tools\LcmDesktopDaemon.ps1" %*

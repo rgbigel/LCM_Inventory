@@ -6,4 +6,4 @@ if %errorlevel% neq 0 (
   exit /b
 )
 echo # [LCM Launcher] %~nx0 - Goal: Make-Admin execution tool.
-pwsh.exe -NoExit -NoProfile -ExecutionPolicy Bypass -File "%~dp0..\..\LCM_Inventory\tools\Make-Admin.ps1" %*
+pwsh.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0..\..\LCM_Inventory\tools\Make-Admin.ps1" %*

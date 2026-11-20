@@ -6,4 +6,4 @@ if %errorlevel% neq 0 (
   exit /b
 )
 echo # [LCM Launcher] %~nx0 - Goal: Removes redundant removable drive duplicate icons from Explorer navigation tree.
-pwsh.exe -NoExit -NoProfile -ExecutionPolicy Bypass -File "%~dp0..\..\SystemConfiguration\Source\@04-Remove_Removable_Drive_Icon.reg" %*
+pwsh.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0..\..\SystemConfiguration\Source\@04-Remove_Removable_Drive_Icon.reg" %*

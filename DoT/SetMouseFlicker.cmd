@@ -6,4 +6,4 @@ if %errorlevel% neq 0 (
   exit /b
 )
 echo # [LCM Launcher] %~nx0 - Goal: Enforces AMD Radeon RX 580 ULPS disabled, DWM MPO OverlayTestMode=5, and PowerToys hook locks.
-pwsh.exe -NoExit -NoProfile -ExecutionPolicy Bypass -File "%~dp0..\..\SystemConfiguration\Source\Set-MouseFlickerInvariants.ps1" %*
+pwsh.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0..\..\SystemConfiguration\Source\Set-MouseFlickerInvariants.ps1" %*

@@ -6,4 +6,4 @@ if %errorlevel% neq 0 (
   exit /b
 )
 echo # [LCM Launcher] %~nx0 - Goal: Scaffolds new LCM PowerShell tools, derives short names, and generates trampolines in LCM_Inventory/Cmd/.
-pwsh.exe -NoExit -NoProfile -ExecutionPolicy Bypass -File "%~dp0..\..\LCM_Inventory\tools\Create-LcmTool.ps1" %*
+pwsh.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0..\..\LCM_Inventory\tools\Create-LcmTool.ps1" %*

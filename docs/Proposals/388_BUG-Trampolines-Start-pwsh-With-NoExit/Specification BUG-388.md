@@ -5,7 +5,7 @@ Purpose: Trampolines Start pwsh With NoExit
 Path: LCM_Inventory/docs/Proposals/388_BUG-Trampolines-Start-pwsh-With-NoExit/Specification BUG-388.md  
 Authors: Rolf, Claude  
 Version: 10.8.4  
-Status: Suggested  
+Status: In Review  
 Date: 2026-11-20 15:39:37
 
 ```yaml
@@ -15,9 +15,9 @@ Scope: LCM_Inventory
 Baseline-Version: 10.8.4
 Author: Rolf, Claude
 Date: 2026-11-20 15:39:37
-Status: Suggested
-Plan-State: suggested
-Progress-State: undecided
+Status: In Review
+Plan-State: in_review
+Progress-State: verification
 Priority: 6
 App-ID: None
 ```

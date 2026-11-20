@@ -6,4 +6,4 @@ if %errorlevel% neq 0 (
   exit /b
 )
 echo # [LCM Launcher] %~nx0 - Goal: Configures and switches GoAdm administrative privilege profiles.
-pwsh.exe -NoExit -NoProfile -ExecutionPolicy Bypass -File "%~dp0..\..\SystemConfiguration\Source\@16-GoAdm_changer.ps1" %*
+pwsh.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0..\..\SystemConfiguration\Source\@16-GoAdm_changer.ps1" %*

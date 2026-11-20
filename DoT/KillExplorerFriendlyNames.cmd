@@ -6,4 +6,4 @@ if %errorlevel% neq 0 (
   exit /b
 )
 echo # [LCM Launcher] %~nx0 - Goal: Disables friendly dates and abstracted filenames in Windows Explorer for raw canonical names.
-pwsh.exe -NoExit -NoProfile -ExecutionPolicy Bypass -File "%~dp0..\..\SystemConfiguration\Source\@05-Kill_Explorer_showing_friendly_names.reg" %*
+pwsh.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0..\..\SystemConfiguration\Source\@05-Kill_Explorer_showing_friendly_names.reg" %*

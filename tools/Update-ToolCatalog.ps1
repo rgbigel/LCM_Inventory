@@ -11,10 +11,11 @@
            Conforms to RULE-PS-008 (Metadata Headers), RULE-PS-009 (Audit Logging), and RULE-PS-010 (CLI Help).
   Path: D:\Git_Repositories\LCM_Inventory\tools\Update-ToolCatalog.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.2.12
+  Version: 10.2.13
   Implementation Choices (CRP-343 segment 2): Admin is a level 0..3 (TBD / granted / controlled / admin; legacy
   true -> 3, false -> 1); controlled tools carry AllowedAtoms; new tools land at 0 unless admin code is found.
-  Date: 2026-11-19 12:04:28
+  Date: 2026-11-20
+  Implementation Choices (BUG-388): generated trampolines never start pwsh with -NoExit.
   Implementation Choices (CRP-366): Python launchers and examples name the registered interpreter
   (tools.db table runtimes via LcmRuntimeAtoms, RULE-PY-010) instead of a bare 'python' resolved through PATH;
   if the registry cannot be read, a warning is shown and the launchers keep 'python' (bookkeeping never aborts).
@@ -1328,7 +1329,9 @@ try {
       # Format target relative path anchored to trampoline location (%~dp0..\..)
       $relPathBackslash = $t.RelativePath.Replace('/', '\')
       $targetRef = "%~dp0..\..\$relPathBackslash"
-      $noExitFlag = if ($t.NoExit) { "-NoExit " } else { "" }
+      # BUG-388 (operator 2026-11-20): trampolines hold no logic that needs debugging; never -NoExit (the NoExit
+      # catalog field is kept as metadata).
+      $noExitFlag = ''
 
       $cleanGoal = if (-not [string]::IsNullOrWhiteSpace($t.Description)) {
         ($t.Description -split "`r?`n")[0].Trim()

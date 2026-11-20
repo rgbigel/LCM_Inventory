@@ -6,4 +6,4 @@ if %errorlevel% neq 0 (
   exit /b
 )
 echo # [LCM Launcher] %~nx0 - Goal: Configures ISO-standard date/time format (yyyy-MM-dd HH:mm:ss) system-wide across all user profiles.
-pwsh.exe -NoExit -NoProfile -ExecutionPolicy Bypass -File "%~dp0..\..\SystemConfiguration\Source\@02-Set_the_date_and_time_format_(ADM_systemwide).ps1" %*
+pwsh.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0..\..\SystemConfiguration\Source\@02-Set_the_date_and_time_format_(ADM_systemwide).ps1" %*
