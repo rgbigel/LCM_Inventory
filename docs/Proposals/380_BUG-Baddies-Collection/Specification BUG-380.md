@@ -5,7 +5,7 @@ Purpose: Baddies Collection
 Path: LCM_Inventory/docs/Proposals/380_BUG-Baddies-Collection/Specification BUG-380.md  
 Authors: Rolf, Claude  
 Version: 10.7.4  
-Status: In Review  
+Status: Pushed  
 Date: 2026-11-20 14:06:01
 
 ```yaml
@@ -15,9 +15,9 @@ Scope: LCM_Inventory
 Baseline-Version: 10.7.4
 Author: Rolf
 Date: 2026-11-20 14:06:01
-Status: In Review
-Plan-State: in_review
-Progress-State: verification
+Status: Pushed
+Plan-State: pushed
+Progress-State: pushed
 Priority: 7
 App-ID: None
 ```

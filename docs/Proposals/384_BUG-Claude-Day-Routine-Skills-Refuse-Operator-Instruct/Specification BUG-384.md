@@ -5,7 +5,7 @@ Purpose: Claude Day Routine Skills Refuse Operator Instruction
 Path: LCM_Inventory/docs/Proposals/384_BUG-Claude-Day-Routine-Skills-Refuse-Operator-Instruct/Specification BUG-384.md  
 Authors: Rolf, Claude  
 Version: 10.7.4  
-Status: In Review  
+Status: Pushed  
 Date: 2026-11-20 12:01:10
 
 ```yaml
@@ -15,9 +15,9 @@ Scope: LCM_AI
 Baseline-Version: 10.7.4
 Author: Rolf, Claude
 Date: 2026-11-20 12:01:10
-Status: In Review
-Plan-State: in_review
-Progress-State: verification
+Status: Pushed
+Plan-State: pushed
+Progress-State: pushed
 Priority: 6
 App-ID: None
 ```

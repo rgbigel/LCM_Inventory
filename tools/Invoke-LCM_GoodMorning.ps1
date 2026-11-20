@@ -19,13 +19,17 @@
            5. Prints the confirmation the AI must give before working.
   Path: LCM_Inventory/tools/Invoke-LCM_GoodMorning.ps1
   Authors: Rolf, LCM_AI Engine
-  Version: 10.2.6
-  Date: 2026-11-17 15:40:19
+  Version: 10.2.7
+  Date: 2026-11-20 16:18:50
   Rule: RULE-CTX-006, RULE-LCM-030 (4)-(6)
   Implementation Choices (CRP-350): one GoodNight source (section 1 GoodNight Timestamp) for every host;
            host blocks parsed with the full field list by LcmSessionStateAtoms.psm1 and checked against the
            schema vocabulary; DO front-end checked on /health and started via the LCM_DesktopDaemon_<user>
            logon task; the run records Status Active and Resumption Timestamp in section 1 (not with -WhatIf).
+  Implementation Choices (BUG-383): pending candidates are reported for acceptance by their host, never as a push
+           condition; every learned-advice entry marked [CONTRADICTS: <source>] is listed as an attention item.
+  Implementation Choices (BUG-389): the last remote push is the newest PUSH_EXECUTED entry of cm_activity.log (the
+           CM ledger); the HKLM MRPushTimeStamp is only a fallback, because a non-elevated push cannot write it.
 .PARAMETER Auto
   Session-start mode: silent (one line) when the gap is below -GapHours and -NoBaseline is specified.
 .PARAMETER GapHours
@@ -170,9 +174,19 @@ if ($null -eq $goodNightAt) { $attention.Add('ACTIVE_SESSION.md section 1 has no
 if ($null -eq $savedAt) { $attention.Add('No Session Snapshot in ACTIVE_CONTEXT.md; "work in between" cannot be determined. Run Save-AllSessionMemory.ps1 at the end of each day.') }
 
 # Remote Push Synchronization Telemetry check
-$lastPushStr = try {
-    (Get-ItemProperty -Path 'HKLM:\SOFTWARE\LCM' -Name 'MRPushTimeStamp' -ErrorAction SilentlyContinue).MRPushTimeStamp
-} catch { $null }
+# BUG-389: the CM ledger (newest PUSH_EXECUTED line of cm_activity.log) is the authority; the registry value is a
+# fallback only (a non-elevated push cannot write HKLM, so it went stale).
+$lastPushStr = $null
+$cmLog = Join-Path $PSScriptRoot '..\logs\cm_activity.log'
+if (Test-Path -LiteralPath $cmLog) {
+    $pushLine = @(Select-String -LiteralPath $cmLog -Pattern '^\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\].*PUSH_EXECUTED' | Select-Object -Last 1)
+    if ($pushLine.Count -eq 1) { $lastPushStr = $pushLine[0].Matches[0].Groups[1].Value }
+}
+if ([string]::IsNullOrWhiteSpace($lastPushStr)) {
+    $lastPushStr = try {
+        (Get-ItemProperty -Path 'HKLM:\SOFTWARE\LCM' -Name 'MRPushTimeStamp' -ErrorAction SilentlyContinue).MRPushTimeStamp
+    } catch { $null }
+}
 if (-not [string]::IsNullOrWhiteSpace($lastPushStr)) {
     $lastPushDate = [datetime]::MinValue
     if ([datetime]::TryParse($lastPushStr, [ref]$lastPushDate)) {
@@ -358,7 +372,18 @@ $ci = [array]::FindIndex($learn, [Predicate[string]] { param($l) $l -like '## Ca
 $accepted = @($learn[0..($ci - 1)] | Where-Object { $_ -match '^- ' }).Count
 $pendingN = @($learn[$ci..($learn.Count - 1)] | Where-Object { $_ -match '^- \[ \] ' }).Count
 Write-Host "  Learned advice: $accepted accepted (binding), $pendingN candidate(s) pending review"
-if ($pendingN -gt 0) { $attention.Add("$pendingN learned-advice candidate(s) await review (needed before any push).") }
+if ($pendingN -gt 0) { $attention.Add("$pendingN learned-advice candidate(s) not yet accepted by their contributing host (no push condition, BUG-383).") }
+# BUG-383: entries contradicting an accepted decision or rule are marked and reported until resolved.
+# Only an entry that starts with the marker counts (the header explaining the syntax does not).
+$contradictions = @($learn | Where-Object { $_ -match '^-\s*\[CONTRADICTS:\s*([^\]]+)\]' })
+foreach ($c in $contradictions) {
+    $null = $c -match '\[CONTRADICTS:\s*([^\]]+)\]'
+    $source = $Matches[1].Trim()
+    $entryText = ($c -replace '^-\s*\[CONTRADICTS:[^\]]+\]\s*', '')
+    $short = if ($entryText.Length -gt 90) { $entryText.Substring(0, 90) + '...' } else { $entryText }
+    Write-Host "  Contradiction: $short (contradicts $source)" -ForegroundColor DarkYellow
+    $attention.Add("Learned advice contradicts ${source}: $short")
+}
 
 $guard = Join-Path $PSScriptRoot 'Test-Guardrail.ps1'
 if (Test-Path -LiteralPath $guard) {

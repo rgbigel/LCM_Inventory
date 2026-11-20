@@ -5783,7 +5783,7 @@
         "Type": "String",
         "Mandatory": false,
         "Default": "",
-        "Description": "Priority level to assign (C=Critical, H=High, M=Medium, L=Low, D=Deferred)"
+        "Description": "Priority level to assign: 0-10 (legacy aliases C=10, H=8, M=5, L=3, D=1)"
       },
       {
         "Name": "TargetRepo",

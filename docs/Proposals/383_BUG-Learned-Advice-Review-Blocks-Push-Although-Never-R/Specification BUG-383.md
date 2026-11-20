@@ -5,7 +5,7 @@ Purpose: Learned Advice Review Blocks Push Although Never Reviewed
 Path: LCM_Inventory/docs/Proposals/383_BUG-Learned-Advice-Review-Blocks-Push-Although-Never-R/Specification BUG-383.md  
 Authors: Rolf, Claude  
 Version: 10.7.4  
-Status: Suggested  
+Status: In Review  
 Date: 2026-11-20 14:52:27
 
 ```yaml
@@ -15,9 +15,9 @@ Scope: LCM_Inventory, LCM_AI
 Baseline-Version: 10.7.4
 Author: Rolf, Claude
 Date: 2026-11-20 14:52:27
-Status: Suggested
-Plan-State: suggested
-Progress-State: undecided
+Status: In Review
+Plan-State: in_review
+Progress-State: verification
 Priority: 5
 App-ID: None
 ```

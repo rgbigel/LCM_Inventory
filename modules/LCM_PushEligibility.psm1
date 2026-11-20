@@ -18,6 +18,9 @@
   core (LCM_* repositories, workspace root) plus the repositories the inventory classifies as governed; a governed
   repository outside the core that is not converged to the active LCM version is held back (-HeldRepositories),
   never pushed; LCM rules (lockstep preflight) apply to governed repositories only; non-governed ones are backup.
+  Implementation Choices (BUG-389, operator option A 2026-11-20): a governed repository outside the core is held by
+  default; the audited CurrentLCMVersion is no convergence evidence (the audit stamps the shared baseline on every
+  governed repository). A release needs an explicit convergence record, introduced with the first convergence CRP.
   Authors: GitHub Copilot, Claude
   Version: 10.2.2
   Date: 2026-11-20
@@ -135,16 +138,16 @@ function Get-LCM_UnconvergedPushRepositories {
   )
 
   # Operator 2026-11-20: a governed repository outside the LCM core is not pushed until it is brought to LCM
-  # convergence; converged = its inventory CurrentLCMVersion equals the active LCM version (.agents/version.json).
+  # convergence. BUG-389 (operator option A): held by default; the audited CurrentLCMVersion is no evidence, because
+  # Invoke-LCM_Audit stamps the shared baseline version on every governed repository. LcmVersion stays a parameter
+  # for the report text; the release record arrives with the first convergence CRP.
   foreach ($entry in @($InventoryRepositories)) {
     if (-not $entry.PSObject.Properties['RepositoryName'] -or -not $entry.RepositoryName) { continue }
     $name = [string]$entry.RepositoryName
     if (Test-LCM_CorePushRepository -RepositoryName $name) { continue }
     if (-not (Test-LCM_GovernedPushRepository -RepositoryName $name -InventoryRepositories $InventoryRepositories)) { continue }
     $version = if ($entry.PSObject.Properties['CurrentLCMVersion'] -and $entry.CurrentLCMVersion) { [string]$entry.CurrentLCMVersion } else { '' }
-    if ($version -ne $LcmVersion) {
-      [pscustomobject]@{ Name = $name; Version = $version; Reason = "not converged (LCM $version, active $LcmVersion)" }
-    }
+    [pscustomobject]@{ Name = $name; Version = $version; Reason = "held by default until a convergence record releases it (active LCM $LcmVersion)" }
   }
 }
 

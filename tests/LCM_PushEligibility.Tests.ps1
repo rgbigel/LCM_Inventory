@@ -10,7 +10,7 @@
   origin_repo / affected_repos" encoded the retired eligibility rule; they are replaced by cases derived from
   the operator rule of 2026-11-20 (everything changed and committed is pushed, governed or not).
   Authors: GitHub Copilot, Claude
-  Version: 10.2.3
+  Version: 10.2.4
   Date: 2026-11-20
 #>
 
@@ -173,7 +173,7 @@ Describe 'Workspace push eligibility' {
     Test-LCM_GovernedPushRepository -RepositoryName 'Unknown' -InventoryRepositories $inventory | Should -BeFalse
   }
 
-  It 'holds back governed repositories that are not converged and never pushes them (operator 2026-11-20)' {
+  It 'holds back every governed repository outside the core by default (operator 2026-11-20, BUG-389 option A)' {
     $inventory = @(
       [pscustomobject]@{ RepositoryName = 'BootEntryManager'; LCMStatus = 'governed'; CurrentLCMVersion = '10.6.3' },
       [pscustomobject]@{ RepositoryName = 'VolumeInventory'; LCMStatus = 'governed'; CurrentLCMVersion = '10.8.4' },
@@ -181,11 +181,12 @@ Describe 'Workspace push eligibility' {
       [pscustomobject]@{ RepositoryName = 'HaSSD06'; LCMStatus = 'not-lcm'; CurrentLCMVersion = $null }
     )
     $held = @(Get-LCM_UnconvergedPushRepositories -InventoryRepositories $inventory -LcmVersion '10.8.4')
-    @($held.Name) | Should -Be @('BootEntryManager')
+    # BUG-389: the audited version (10.8.4 for VolumeInventory) is no convergence evidence; both stay held.
+    @($held.Name) | Should -Be @('BootEntryManager', 'VolumeInventory')
 
     $plan = Resolve-WorkspacePushPlan -Proposals @() -AheadRepositories @('BootEntryManager', 'VolumeInventory', 'HaSSD06', 'LCM_Inventory') -HeldRepositories @($held.Name)
     $plan.TargetRepositories | Should -Not -Contain 'BootEntryManager'
-    $plan.TargetRepositories | Should -Contain 'VolumeInventory'
+    $plan.TargetRepositories | Should -Not -Contain 'VolumeInventory'
     $plan.TargetRepositories | Should -Contain 'HaSSD06'
     { Resolve-WorkspacePushPlan -Proposals @() -AheadRepositories @('BootEntryManager') -RequestedRepositories @('BootEntryManager') -HeldRepositories @('BootEntryManager') } | Should -Throw '*not converged*'
   }

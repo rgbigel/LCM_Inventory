@@ -13,8 +13,10 @@
     Implementation Choices (BUG-348): -DryRun skips every mutating pre-push step (Update-Gemini export commit,
     tool catalog snapshot commit, the second full maintenance run); before, a dry run committed and deleted
     186 script logs.
-    Version: 10.2.7
+    Version: 10.2.8
     Date: 2026-11-20
+    Implementation Choices (BUG-383): no learned-advice gate; learned advice is administrative data and a push is
+    maintenance and backup (RULE-CTX-005 item 7).
     Implementation Choices (CRP-366): the ledger dump runs on the registered interpreter (RULE-PY-010).
     Implementation Choices (BUG-380 B12): the push targets every workspace repository with commits ahead of its
     remote, governed or not (operator rule 2026-11-20); repositories that become ahead through the pre-push
@@ -116,14 +118,7 @@ Write-Host " Push Reason : $Reason$lastPushBanner"
 Write-Host " Timestamp   : $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
 Write-Host "==========================================================================" -ForegroundColor Cyan
 
-# Learned-advice review gate (RULE-CTX-005): no publish while candidates are pending.
-$learnReview = Join-Path $workspaceRoot 'LCM_Inventory\tools\Invoke-LearnedAdviceReview.ps1'
-if (Test-Path -LiteralPath $learnReview) {
-    & pwsh -NoProfile -File $learnReview -Check
-    if ($LASTEXITCODE -ne 0) {
-        throw 'PUSH refused: learned-advice candidates are pending review. Run Invoke-LearnedAdviceReview.ps1, decide each one, then push again.'
-    }
-}
+# Learned advice never blocks a push (BUG-383, RULE-CTX-005 item 7); the former review gate is removed.
 
 # ------------------------------------------------------------------------------
 # 0. Read-only completion and lockstep preflight. This must precede all mutation.
@@ -159,6 +154,11 @@ foreach ($held in $heldRepositories) {
 $aheadRepositories = @($allRepositoryStates | Where-Object { $_.HasRemote -and $_.AheadCount -gt 0 } | ForEach-Object { $_.Name })
 foreach ($noUpstream in @($allRepositoryStates | Where-Object { $_.HasRemote -and -not $_.HasUpstream })) {
     Write-Host "  [$($noUpstream.Name)] remote without upstream tracking branch: not pushed (set the upstream once by hand)." -ForegroundColor Yellow
+}
+if (@($aheadRepositories).Count -eq 0 -and @($requestedRepositories).Count -eq 0) {
+    # BUG-389: nothing ahead is no failure (a GoodNight -Push on a quiet day must not fail).
+    Write-Host '  -> No repository has commits ahead of its remote; nothing to push.' -ForegroundColor Green
+    return
 }
 $pushPlan = Resolve-WorkspacePushPlan -Proposals @($ledgerJson.proposals) -AheadRepositories $aheadRepositories -RequestedRepositories $requestedRepositories -ProposalIds $requestedProposalIds -HeldRepositories @($heldRepositories | ForEach-Object { $_.Name })
 
@@ -403,14 +403,9 @@ if ($cohortPushed) {
         }
         Write-Host "  -> [DRY RUN] Total $($pushPlan.CompletedProposalIds.Count) completed proposal(s) would transition to 'pushed'." -ForegroundColor Yellow
     } else {
-        $lcmVersion = "10.0.0"
-        $invFile = Join-Path $workspaceRoot "LCM_Inventory\data\inventory.json"
-        if (Test-Path -LiteralPath $invFile) {
-            try {
-                $invData = Get-Content -LiteralPath $invFile -Raw -Encoding UTF8 | ConvertFrom-Json
-                if ($invData.GlobalLCMVersion) { $lcmVersion = "v$($invData.GlobalLCMVersion.TrimStart('v'))" }
-            } catch { }
-        }
+        # BUG-389: the LCM version comes from LCM_AI/.agents/version.json (authority); before, the inventory lookup
+        # read a top-level GlobalLCMVersion that does not exist and logged the fallback 10.0.0.
+        $lcmVersion = "v$($activeLcmVersion.TrimStart('v'))"
         $logEntry = "[$pushTimestamp] [SUCCESS] [Target: MULTI] [Version: $lcmVersion] [PushDate: $pushTimestamp] [AffectedRepos: $($pushedRepos -join ', ')] PUSH_EXECUTED - Pushed $($pushedRepos.Count) repository/repositories to remote ($($pushedRepos -join ', ')). Reason: $Reason"
         Add-Content -LiteralPath $cmLogFile -Value $logEntry -Encoding UTF8
         Write-Host "`n  -> Appended PUSH_EXECUTED record to cm_activity.log" -ForegroundColor Green

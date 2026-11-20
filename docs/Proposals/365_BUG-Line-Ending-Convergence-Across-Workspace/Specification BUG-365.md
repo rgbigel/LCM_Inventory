@@ -5,7 +5,7 @@ Purpose: Line Ending Convergence Across Workspace
 Path: LCM_Inventory/docs/Proposals/365_BUG-Line-Ending-Convergence-Across-Workspace/Specification BUG-365.md  
 Authors: Rolf, Claude  
 Version: 10.7.4  
-Status: Completed  
+Status: Pushed  
 Date: 2026-11-19 11:47:30
 
 ```yaml
@@ -17,9 +17,9 @@ Version: 10.7.4
 Affected-Repos: LCM_Inventory, LCM_AI, Git_Repositories, AuthorizeMasterUser, BGMSAMVInv, BackgroundModifier, BootEntryManager, HaSSD06, HaSSD06_Inventory, InstallFonts, LCM_Shared, LCM_Supervision, LCM_Tools, MSG file conversion, MacriumTemplateUpdater, NextBootTray, OneDriveMaintenance, OutlookVBAConversion, ReEnableRadeonRx580, RollingCalendar, SystemConfiguration, TimeStamper, VolumeInventory
 Author: Claude
 Date: 2026-11-19 11:47:30
-Status: Completed
-Plan-State: completed
-Progress-State: completed
+Status: Pushed
+Plan-State: pushed
+Progress-State: pushed
 Severity: High
 Root-Cause: The operator decision Option B (2026-11-16) never reached the canonical rule; six enforcers applied three different policies.
 Priority: 5

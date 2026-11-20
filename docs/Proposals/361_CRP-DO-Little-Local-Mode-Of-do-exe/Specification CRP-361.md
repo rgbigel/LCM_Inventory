@@ -5,7 +5,7 @@ Purpose: DO-Little Local Mode Of do.exe
 Path: LCM_Inventory/docs/Proposals/361_CRP-DO-Little-Local-Mode-Of-do-exe/Specification CRP-361.md  
 Authors: Rolf, Claude  
 Version: 10.7.4  
-Status: Completed  
+Status: Pushed  
 Date: 2026-11-18 20:24:06
 
 ```yaml
@@ -15,10 +15,10 @@ Scope: LCM_Inventory
 Baseline-Version: 10.7.4
 Author: Rolf
 Date: 2026-11-18 20:24:06
-Status: Completed
-Plan-State: completed
-Progress-State: completed
-Priority: 5
+Status: Pushed
+Plan-State: pushed
+Progress-State: pushed
+Priority: 8
 App-ID: None
 ```
 

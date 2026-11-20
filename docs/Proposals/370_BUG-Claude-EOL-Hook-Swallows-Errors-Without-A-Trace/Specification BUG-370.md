@@ -5,7 +5,7 @@ Purpose: Claude EOL Hook Swallows Errors Without A Trace
 Path: LCM_Inventory/docs/Proposals/370_BUG-Claude-EOL-Hook-Swallows-Errors-Without-A-Trace/Specification BUG-370.md  
 Authors: Claude  
 Version: 10.7.4  
-Status: Completed  
+Status: Pushed  
 Date: 2026-11-19 16:24:42
 
 ```yaml
@@ -15,9 +15,9 @@ Scope: LCM_Inventory
 Baseline-Version: 10.7.4
 Author: Claude
 Date: 2026-11-19 16:24:42
-Status: Completed
-Plan-State: completed
-Progress-State: completed
+Status: Pushed
+Plan-State: pushed
+Progress-State: pushed
 Priority: 5
 App-ID: None
 ```

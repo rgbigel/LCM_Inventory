@@ -5,7 +5,7 @@ Purpose: BCR Preflight Rejects BC Profile Directory Handling
 Path: LCM_Inventory/docs/Proposals/367_BUG-BCR-Preflight-Rejects-BC-Profile-Directory-Handlin/Specification BUG-367.md  
 Authors: Rolf, Claude  
 Version: 10.7.4  
-Status: Completed  
+Status: Pushed  
 Date: 2026-11-19 12:16:42
 
 ```yaml
@@ -19,9 +19,9 @@ Severity: Medium
 Affected-Repos: LCM_Inventory
 Root-Cause: The BCR preflight enforced a Beyond Compare view setting (directory handling) that is the operator's choice.
 Date: 2026-11-19 12:15:53
-Status: Completed
-Plan-State: completed
-Progress-State: completed
+Status: Pushed
+Plan-State: pushed
+Progress-State: pushed
 Priority: 5
 App-ID: None
 ```
