@@ -6,7 +6,7 @@ Purpose: High-speed SQLite synchronization, canonical SQL text projection, and q
          for LCM Tool Catalog and Tool Intents under Dual-State Projection architecture.
 Path: LCM_Inventory/tools/sync_tool_catalog_db.py
 Authors: Rolf, LCM_AI Engine, Claude
-Version: 10.2.9
+Version: 10.2.10
 Status: Production Engine
 Date: 2026-11-20 17:21:19
 Implementation Choices (CRP-343 segment 2): tools.admin is a level 0 = TBD, 1 = granted, 2 = controlled, 3 = admin
@@ -24,6 +24,9 @@ shape the retired JSON files had; import is the only writer; reads open mode=ro,
 setup, busy_timeout 5000 ms. tools.sql is the publish projection only: dump runs at push, restore rebuilds
 tools.db from it after a pull; no other use. atoms / atom_permissions / atom_calls and v_atoms follow
 data/analysis/CRP-363/DataDesign-Atoms-Draft.md. LCM_TOOLS_DB_PATH redirects the store for tests.
+Restructuring backups (2026-11-20 22:12:42): open_store runs the schema setup through guarded_schema_setup
+(tools/lcm_db_backup.py): a schema change is preceded by a full backup in scratch/db-backups/; restore also
+writes one before replacing the database.
 """
 
 import argparse
@@ -36,6 +39,8 @@ import sqlite3
 import sys
 
 sys.stdout.reconfigure(encoding="utf-8")
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))  # RULE-PY-007: sibling helper also under -I
+from lcm_db_backup import guarded_schema_setup, write_backup  # noqa: E402  CRP-358 restructuring backups
 
 
 def admin_level(value):
@@ -586,10 +591,13 @@ def open_read(db_path):
 
 def open_store(db_path, workspace_root=None):
     """Write connection with schema setup; used only by import / sync / migrate."""
+    def setup(c):
+        init_db(c, workspace_root=workspace_root)
+        ensure_store_schema(c)
+
+    guarded_schema_setup(db_path, setup, "tools")
     conn = sqlite3.connect(db_path, timeout=BUSY_TIMEOUT_MS / 1000)
     conn.execute(f"PRAGMA busy_timeout = {BUSY_TIMEOUT_MS}")
-    init_db(conn, workspace_root=workspace_root)
-    ensure_store_schema(conn)
     return conn
 
 
@@ -827,6 +835,7 @@ def restore_from_sql(sql_path, db_path, silent=False):
         os.remove(temp_path)
         raise ValueError("restore refused: the projection holds no tools")
     if os.path.exists(db_path):
+        write_backup(db_path, "tools-before-restore")
         os.replace(db_path, db_path + ".before-restore")
     os.replace(temp_path, db_path)
     if not silent:

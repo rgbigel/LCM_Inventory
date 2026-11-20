@@ -5,10 +5,17 @@ Module: tools/sync_proposals_db.py
 Purpose: High-speed SQLite synchronization, canonical SQL text projection, and query engine
          for LCM Proposals Ledger under Dual-State Projection architecture.
 Path: LCM_Inventory/tools/sync_proposals_db.py
-Authors: Rolf, LCM_AI Engine
-Version: 10.2.3
+Authors: Rolf, LCM_AI Engine, Claude
+Version: 10.2.4
 Status: Production Engine
-Date: 2026-11-12 12:15:00
+Date: 2026-11-20 21:01:41
+Implementation Choices (CRP-358, strategies step): the tables strategies / strategy_crps are the only strategy
+store; strategies.json is retired (no sync from it any more). export-strategies returns the former document
+shape read-only; check-strategies is the referential check (formerly inline Python in
+Test-LcmStrategyConsistency.ps1). hydrate also rebuilds the strategies from strategies.sql (written at push).
+install-hooks writes the tools.db rebuild into the hydration hooks as well.
+Restructuring backups (CRP-358, 2026-11-20 22:12:42): the schema setup of sync runs through guarded_schema_setup
+(tools/lcm_db_backup.py); hydrate writes a backup before rebuilding an existing database.
 """
 
 import argparse
@@ -20,6 +27,8 @@ import subprocess
 import sys
 
 sys.stdout.reconfigure(encoding="utf-8")
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))  # RULE-PY-007: sibling helper also under -I
+from lcm_db_backup import guarded_schema_setup, write_backup  # noqa: E402  CRP-358 restructuring backups
 
 ACTIVE_SERIES_PREFIX = "10.2."
 
@@ -337,7 +346,9 @@ def hydrate_sql_to_db(sql_path, db_path, workspace_root=None, workspace_role="LI
     with open(sql_path, "r", encoding="utf-8") as f:
         sql_script = f.read()
 
-    # Reconstruct database
+    # Reconstruct database (CRP-358: backup of an existing database first)
+    if os.path.exists(db_path) and os.path.getsize(db_path) > 0:
+        write_backup(db_path, "proposals-before-hydrate")
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     cursor.executescript(sql_script)
@@ -355,6 +366,13 @@ def hydrate_sql_to_db(sql_path, db_path, workspace_root=None, workspace_role="LI
         meta_entries
     )
     conn.commit()
+
+    # CRP-358: the strategies come back from their own publish projection
+    strat_sql = os.path.join(os.path.dirname(sql_path), "strategies.sql")
+    if os.path.exists(strat_sql):
+        with open(strat_sql, "r", encoding="utf-8") as f:
+            cursor.executescript(f.read())
+        conn.commit()
 
     cursor.execute("SELECT COUNT(*) FROM proposals")
     count = cursor.fetchone()[0]
@@ -384,8 +402,13 @@ def sync_json_to_db(json_path, db_path, sql_path=None, workspace_root=None, work
         store = json.load(f)
 
     proposals = store.get("proposals", [])
+    guarded_schema_setup(
+        db_path,
+        lambda c: init_db(c, workspace_root=workspace_root, workspace_role=workspace_role, sandbox_id=sandbox_id,
+                          lcm_version=lcm_ver),
+        "proposals",
+    )
     conn = sqlite3.connect(db_path)
-    init_db(conn, workspace_root=workspace_root, workspace_role=workspace_role, sandbox_id=sandbox_id, lcm_version=lcm_ver)
 
     cursor = conn.cursor()
     cursor.execute("BEGIN TRANSACTION")
@@ -441,8 +464,7 @@ def sync_json_to_db(json_path, db_path, sql_path=None, workspace_root=None, work
     cursor.execute("SELECT COUNT(*) FROM proposals")
     total_db_rows = cursor.fetchone()[0]
 
-    strat_json = os.path.join(os.path.dirname(json_path), "strategies.json")
-    sync_strategies_json(conn, strat_json, silent=silent)
+    # CRP-358: strategies.json is retired; the strategies tables are the authority (no sync from JSON)
 
     conn.close()
 
@@ -565,6 +587,72 @@ def verify_parity(json_path, db_path, sql_path=None):
     return True
 
 
+def open_read(db_path):
+    """Read-only connection (mode=ro, busy_timeout 5000 ms): a reader never takes a write lock."""
+    from pathlib import Path
+    conn = sqlite3.connect(Path(db_path).resolve().as_uri() + "?mode=ro", uri=True, timeout=5)
+    conn.execute("PRAGMA busy_timeout = 5000")
+    return conn
+
+
+def export_strategies(db_path):
+    """CRP-358: strategies with their CRPs in the shape of the retired strategies.json."""
+    conn = open_read(db_path)
+    crps = {}
+    for strategy_id, crp_id, goal_role in conn.execute(
+        "SELECT strategy_id, crp_id, goal_role FROM strategy_crps ORDER BY rowid"
+    ):
+        crps.setdefault(strategy_id, []).append({"crp_id": crp_id, "goal_role": goal_role})
+    strategies = []
+    for strategy_id, title, description, state, created_at, updated_at in conn.execute(
+        "SELECT strategy_id, title, description, state, created_at, updated_at FROM strategies ORDER BY strategy_id"
+    ):
+        strategies.append({
+            "strategy_id": strategy_id, "title": title, "description": description, "state": state,
+            "created_at": created_at, "updated_at": updated_at, "crps": crps.get(strategy_id, []),
+        })
+    conn.close()
+    return {"strategies": strategies}
+
+
+def check_strategies(db_path):
+    """Referential integrity between strategies and proposals (moved from Test-LcmStrategyConsistency.ps1)."""
+    conn = open_read(db_path)
+    if not conn.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='strategies'").fetchone():
+        print("[FAIL] strategies table does not exist.")
+        return 1
+    rows = conn.execute(
+        "SELECT s.strategy_id, sc.crp_id, p.state FROM strategy_crps sc "
+        "JOIN strategies s ON sc.strategy_id = s.strategy_id "
+        "LEFT JOIN proposals p ON sc.crp_id = p.crp_id ORDER BY s.strategy_id, sc.crp_id"
+    ).fetchall()
+    errors = []
+    linked = {}
+    for strategy_id, crp_id, state in rows:
+        if state is None:
+            errors.append(f"Broken Reference: Strategy '{strategy_id}' references non-existent proposal '{crp_id}'")
+            continue
+        if state in ("rejected", "cancelled"):
+            errors.append(f"Invalid CRP State: Strategy '{strategy_id}' references '{crp_id}' which is {state.upper()}")
+        linked[strategy_id] = linked.get(strategy_id, 0) + 1
+    if errors:
+        print(f"[FAIL] Found {len(errors)} strategy referential integrity error(s):")
+        for err in errors:
+            print(f"  - {err}")
+        conn.close()
+        return 1
+    strategies = conn.execute("SELECT strategy_id, title, state FROM strategies ORDER BY strategy_id").fetchall()
+    conn.close()
+    print("=" * 80)
+    print("LCM STRATEGY INTEGRITY & CONSISTENCY AUDIT")
+    print("=" * 80)
+    for strategy_id, title, state in strategies:
+        print(f"[{state.upper()}] {strategy_id}: {title} ({linked.get(strategy_id, 0)} linked CRPs)")
+    print("=" * 80)
+    print(f"[PASS] 100% Referential Integrity Verified across {len(strategies)} strategies and {len(rows)} mappings.")
+    return 0
+
+
 def install_git_hooks(repo_root, silent=False):
     hooks_dir = None
     try:
@@ -619,6 +707,13 @@ if [ -n "$CHANGED" ]; then
     echo "[LCM] Pull/Checkout detected proposals.sql change. Rebuilding proposals.db..."
     python tools/sync_proposals_db.py --action hydrate --silent
 fi
+
+# CRP-358: tools.db is rebuilt from its publish projection tools.sql (written only at push)
+TOOLS_CHANGED=$(git diff-tree -r --name-only --no-commit-id HEAD@{1} HEAD 2>/dev/null | grep -E "data/tools/tools\\.sql")
+if [ -n "$TOOLS_CHANGED" ]; then
+    echo "[LCM] Pull/Checkout detected tools.sql change. Rebuilding tools.db..."
+    python tools/sync_tool_catalog_db.py --action restore --silent
+fi
 """
 
     with open(pre_push_path, "w", encoding="utf-8", newline="\n") as f:
@@ -640,7 +735,8 @@ fi
 def main():
     default_json, default_db, default_sql, default_ws = get_default_paths()
     parser = argparse.ArgumentParser(description="LCM Proposals SQLite Engine, SQL Text Projection, and Version Grouping")
-    parser.add_argument("--action", choices=["sync", "query", "verify", "dump", "hydrate", "install-hooks"], default="sync")
+    parser.add_argument("--action", choices=["sync", "query", "verify", "dump", "hydrate", "install-hooks",
+                                             "export-strategies", "check-strategies"], default="sync")
     parser.add_argument("--json-path", default=default_json)
     parser.add_argument("--db-path", default=default_db)
     parser.add_argument("--sql-path", default=default_sql)
@@ -682,6 +778,10 @@ def main():
     elif args.action == "verify":
         success = verify_parity(args.json_path, args.db_path, sql_path=args.sql_path)
         sys.exit(0 if success else 1)
+    elif args.action == "export-strategies":
+        print(json.dumps(export_strategies(args.db_path), ensure_ascii=False, indent=2))
+    elif args.action == "check-strategies":
+        sys.exit(check_strategies(args.db_path))
     elif args.action == "install-hooks":
         install_git_hooks(repo_root, silent=args.silent)
     elif args.action == "query":

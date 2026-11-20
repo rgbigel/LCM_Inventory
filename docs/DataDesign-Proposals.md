@@ -4,9 +4,9 @@ Module: docs/DataDesign-Proposals.md
 Purpose: Authoritative data architecture, SQLite schema, constraints, views, and dual-state projection invariants for the LCM Proposals ledger.  
 Path: D:/Git_Repositories/LCM_Inventory/docs/DataDesign-Proposals.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.2.3  
+Version: 10.2.4  
 Status: Authoritative Data Specification  
-Date: 2026-11-12  
+Date: 2026-11-20 21:35:08  
 
 ---
 
@@ -85,6 +85,175 @@ CREATE TABLE IF NOT EXISTS review_cohorts (
 ```
 
 ---
+
+### 2.3 Tables: `strategies`, `strategy_crps` (CRP-358 strategies step, 2026-11-20)
+
+```sql
+CREATE TABLE IF NOT EXISTS strategies (strategy_id TEXT PRIMARY KEY, title TEXT, description TEXT, state TEXT,
+    created_at TEXT, updated_at TEXT);
+CREATE TABLE IF NOT EXISTS strategy_crps (strategy_id TEXT, crp_id TEXT, goal_role TEXT);
+```
+
+- The tables are the only strategy store; `data/proposals/strategies.json` is retired and deleted.
+- `strategies.sql` is the publish projection (written at push with `proposals.sql`); `--action hydrate` rebuilds both after a pull (git hooks `post-checkout` / `post-merge`).
+- Readers: `Show-Strategies.ps1` (`--action export-strategies`, read-only), `Test-LcmStrategyConsistency.ps1` (`--action check-strategies`).
+
+### 2.4 Planned: Ledger Without Blobs (CRP-358 proposals step; accepted, not yet implemented)
+
+Design status: accepted by the operator 2026-11-20 21:35:08; column lists and DDL in
+`data/analysis/CRP-358/DataDesign-Proposals-NoBlob-Draft.md` section 5. Prose columns live as `.md` files under
+`docs/Proposals/_blobs/<nnn>_<CRP-ID>/`, linked both ways (`proposal_texts` row -> file; file frontmatter `CRP-ID` + `column_name` -> row).
+
+```mermaid
+erDiagram
+    proposals ||--o{ proposal_null_columns : "null columns"
+    proposals ||--o{ proposal_values : "list values"
+    proposals ||--o{ proposal_dates : "lifecycle dates"
+    proposals ||--o{ proposal_state_history : "history"
+    proposals ||--o{ proposal_documents : "document paths"
+    proposals ||--o{ proposal_events : "audit objects"
+    proposals ||--o{ proposal_texts : "prose files"
+    proposal_texts ||--|| BUNDLE_BLOB_FILE : "two-way link"
+    proposals ||--o{ review_cohorts : "prime of"
+    review_cohorts ||--o{ review_cohort_members : "members"
+    proposals ||--o{ review_cohort_members : "member in"
+    review_cohorts ||--o{ review_cohort_repositories : "repositories"
+    review_cohorts ||--o{ review_cohort_gates : "gate history"
+    review_cohort_gates ||--o{ review_cohort_gate_members : "member lists"
+    review_cohorts ||--o{ review_cohort_audit : "completion audit"
+    proposals ||--o{ review_obligations : "obligations"
+    review_obligations ||--o{ review_obligation_reasons : "observed reasons"
+    strategies ||--o{ strategy_crps : "links"
+    proposals ||--o{ strategy_crps : "linked by"
+
+    proposals {
+        INTEGER id PK
+        TEXT crp_id UK
+        TEXT title
+        TEXT state
+        TEXT progress_state
+        TEXT bundle_dir
+        TEXT created_at
+        TEXT pushed_at
+        TEXT more_scalars "about 50 typed columns"
+    }
+    proposal_null_columns {
+        TEXT crp_id PK,FK
+        TEXT column_name PK
+    }
+    proposal_values {
+        TEXT crp_id PK,FK
+        TEXT column_name PK
+        INTEGER seq PK
+        TEXT value
+    }
+    proposal_dates {
+        TEXT crp_id PK,FK
+        TEXT state PK
+        INTEGER seq
+        TEXT at
+    }
+    proposal_state_history {
+        TEXT crp_id PK,FK
+        INTEGER seq PK
+        TEXT state
+        TEXT timestamp
+        TEXT user
+        TEXT note
+    }
+    proposal_documents {
+        TEXT crp_id PK,FK
+        TEXT source PK
+        TEXT kind PK
+        TEXT path
+    }
+    proposal_events {
+        TEXT crp_id PK,FK
+        TEXT event PK
+        TEXT key PK
+        INTEGER seq
+        TEXT value
+        TEXT value_kind
+    }
+    proposal_texts {
+        TEXT crp_id PK,FK
+        TEXT column_name PK
+        TEXT file_path UK
+    }
+    BUNDLE_BLOB_FILE {
+        TEXT path "docs/Proposals/_blobs/nnn_CRP-ID/column_name.md"
+        TEXT frontmatter "CRP-ID, column_name"
+    }
+    ledger_settings {
+        TEXT key PK
+        TEXT value
+        TEXT value_kind
+        TEXT updated_at
+    }
+    review_cohorts {
+        TEXT cohort_id PK
+        INTEGER prime_proposal_id FK
+        TEXT state "one open"
+        TEXT created_at
+        TEXT closed_at
+    }
+    review_cohort_members {
+        TEXT cohort_id PK,FK
+        INTEGER proposal_id PK,FK
+        INTEGER seq
+    }
+    review_cohort_repositories {
+        TEXT cohort_id PK,FK
+        TEXT repository PK
+        INTEGER seq
+    }
+    review_cohort_gates {
+        TEXT cohort_id PK,FK
+        INTEGER gate_seq PK
+        TEXT gate
+        TEXT required_state
+        TEXT timestamp
+    }
+    review_cohort_gate_members {
+        TEXT cohort_id PK,FK
+        INTEGER gate_seq PK,FK
+        TEXT list PK
+        INTEGER seq PK
+        INTEGER proposal_id
+        TEXT detail
+    }
+    review_cohort_audit {
+        TEXT cohort_id PK,FK
+        TEXT key PK
+        INTEGER seq
+        TEXT value
+        TEXT value_kind
+    }
+    review_obligations {
+        TEXT obligation_id PK
+        INTEGER proposal_id FK
+        TEXT repository
+        TEXT status
+        TEXT bcr_identity
+    }
+    review_obligation_reasons {
+        TEXT obligation_id PK,FK
+        INTEGER seq PK
+        TEXT reason
+    }
+    strategies {
+        TEXT strategy_id PK
+        TEXT title
+        TEXT state
+    }
+    strategy_crps {
+        TEXT strategy_id FK
+        TEXT crp_id FK
+        TEXT goal_role
+    }
+```
+
+`ledger_settings` stands alone (ledger-wide values). `strategies` / `strategy_crps` are implemented (section 2.3).
 
 ## 3. Indexing Strategy
 

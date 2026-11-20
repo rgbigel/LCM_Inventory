@@ -10,8 +10,10 @@
              Items already completed only get their remaining repositories committed (CRP-346 R1).
     Path: LCM_Inventory/tools/Complete-Review.ps1
     Authors: Rolf, Claude
-    Version: 10.7.5
-    Date: 2026-11-18
+    Version: 10.7.6
+    Date: 2026-11-20
+    Implementation Choices (CRP-358): after a successful completion the restructuring backups of the SQLite stores
+             (scratch/db-backups/, tools/lcm_db_backup.py) are deleted; skipped when a test injects -SubmitScriptPath.
     Implementation Choices (CRP-357): Invoke-ProposalAction.ps1 (accept / complete / proceed) and Complete-ReviewCohort.ps1
              forward here; the changed-repository scan is Get-LcmChangedGovernedRepositories in
              modules/LcmReviewCompletionAtoms.psm1. Before, each item of a shared worktree was completed separately and the
@@ -182,4 +184,9 @@ foreach ($m in $open) {
     $null = Move-LcmProposalLifecycleState -Id $m.id -State 'completed' -Details ("Review completed together with {0} ({1})." -f ($identities -join ', '), $(if ($shaText) { $shaText } else { 'no repository change' }))
 }
 Write-Host ("Completed {0}; commits: {1}." -f ($identities -join ', '), $(if ($shaText) { $shaText } else { 'none' })) -ForegroundColor Green
+if (-not $PSBoundParameters.ContainsKey('SubmitScriptPath')) {
+    # CRP-358: restructuring backups are deleted once the completion checks passed (learned advice 2026-11-18)
+    Import-Module -Name (Join-Path (Split-Path $PSScriptRoot -Parent) 'modules\LcmRuntimeAtoms.psm1')
+    & (Get-LcmRuntimePath -Key 'python') -I (Join-Path $PSScriptRoot 'lcm_db_backup.py') --purge
+}
 return [pscustomobject]@{ Members = $identities; Commits = $commits }

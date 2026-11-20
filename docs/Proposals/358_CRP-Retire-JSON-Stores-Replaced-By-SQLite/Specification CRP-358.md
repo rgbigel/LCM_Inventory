@@ -5,8 +5,8 @@ Purpose: Retire JSON Stores Replaced By SQLite
 Path: LCM_Inventory/docs/Proposals/358_CRP-Retire-JSON-Stores-Replaced-By-SQLite/Specification CRP-358.md  
 Authors: Rolf  
 Version: 10.7.4  
-Status: In Progress  
-Date: 2026-11-19 17:18:18
+Status: In Review  
+Date: 2026-11-20 22:12:42
 
 ```yaml
 CRP-ID: CRP-358
@@ -15,9 +15,9 @@ Scope: LCM_Inventory
 Baseline-Version: 10.7.4
 Author: Rolf
 Date: 2026-11-18 15:41:02
-Status: In Progress
-Plan-State: in_progress
-Progress-State: in_progress
+Status: In Review
+Plan-State: in_review
+Progress-State: verification
 Priority: 5
 App-ID: None
 ```
@@ -37,7 +37,7 @@ T2 One-time reconciliation per JSON file against its table; in a dispute the tab
 T3 After the reconciliation no tool reads or writes the JSON file again, and it is physically deleted in the same change set as its last reader and writer ("as soon as possible", operator 2026-11-19).
 
 ### Invariants and Exit Criteria
-- No ledger or table field is dropped (archive by marking); an SQL dump is taken before any table restructuring.
+- No ledger or table column is dropped (archive by marking); a restructuring backup is taken before any table restructuring (see Storage Rules 1).
 - Every switched reader and writer passes its syntax gate and tests; the reconciliation report per file is kept under data/analysis.
 - Exit: none of the four JSON files exists; a search finds no code reading or writing them.
 
@@ -73,12 +73,30 @@ T3 After the reconciliation no tool reads or writes the JSON file again, and it 
 
 - BUG-348 item 1: the Go daemon lacks the routes `/set_priority` and `/query_all_short_names` (and `/print`, `/abort`) that pages call; the legacy PowerShell daemon served them from `proposals.json` / `tool_catalog.json`. Decision 2026-11-19: served through the governed tools and the tables, implemented with this CRP (no new JSON dependency).
 
-## Open Item (2026-11-20 17:39:43)
+## Operator Decisions 2026-11-20: Storage Rules (consolidated 2026-11-20 21:40:30)
 
-- `proposals.json` step: write `proposals.sql` on every ledger write (as `tools.sql` is on every import), so text search (ripgrep, Everything) on the ledger never lags behind the database; today it is written at push only.
+Consolidated by operator instruction from the decision entries of 2026-11-20 (17:39, 20:48, 20:52, 20:55, 20:59, 21:26, 21:35); superseded intermediate locations are left out, the earlier wording is in the Git history.
 
-## Operator Decisions (Gate 2 of the tools step, 2026-11-20 20:48:28: accepted with changes)
+### 1. SQL projections
 
-1. No `.sql` writes outside a publish: the `.sql` files exist only so that a pushed state can be rebuilt from the remote; they are generated at push and rebuilt into the tables at pull (git hooks `post-checkout` / `post-merge`); no other use. Correction (status 2026-11-20 20:48:28): the open item "write `proposals.sql` on every ledger write" above is withdrawn; the proposals step follows this decision instead.
-2. No document blobs in the tables: tables hold scalar columns and child tables. Text belongs in normal `.md` (or small `.json`) files referenced from the tables in a two-way linkage (table row -> file path, file -> row key), so textual lookup works on the files (Obsidian may be considered). Binding for the proposals step (details, bundle texts).
-3. A function rebuilds the tables from `.sql` at pull.
+- `.sql` files are publish projections only: they exist so a pushed state can be rebuilt from the remote. They are written at push (`Invoke-LCM_Push.ps1` step 2a) and rebuilt into the tables at pull (git hooks `post-checkout` / `post-merge`: `sync_proposals_db.py --action hydrate`, `sync_tool_catalog_db.py --action restore`); no other use.
+- An earlier open item to write `proposals.sql` on every ledger write (for text search) is withdrawn; text search goes through the text files of section 3.
+- Restructuring backups are a different thing (operator 2026-11-20): before any schema change and before a rebuild at pull, the store engine writes a full SQL backup to the git-ignored `scratch/db-backups/` (`tools/lcm_db_backup.py`; a failed backup stops the change); never committed; deleted by `COMPLETE` after a successful completion.
+
+### 2. No blobs in the tables
+
+- Tables hold scalar columns and child tables only; no document or JSON blobs.
+- Text lives in normal `.md` files (or small `.json` objects), linked both ways with its table row (row -> file path; file frontmatter -> row key), so textual lookup works on the files (Obsidian may be considered).
+
+### 3. Text storage
+
+- Texts of CRP/BUG items: one shared root next to the bundles, `docs/Proposals/_blobs/<nnn>_<CRP-ID>/<column_name>.md` (e.g. `docs/Proposals/_blobs/358_CRP-358/details.md`). No slug in the path, so renames never move files; the title is in the frontmatter.
+- Texts of tables not tied to an item (e.g. the tool store): `docs/DataDesign-<Domain>/blobs/`, next to the table's data design document.
+- Row key: the frontmatter names `CRP-ID` and `column_name`; tables with several rows per item add secondary key(s) (e.g. repository, cohort member). The combination `CRP-ID` + secondary key(s) + `column_name` is unique (normalized, usable as a join key in views). The table row names the file.
+- The `_` prefix sorts the root apart from the `<nnn>_...` bundle folders and keeps every bundle scan (resolver, purge, displays: names starting with a digit) from treating it as a bundle.
+- Both locations are under `docs/`: visible, never git-ignored (checked 2026-11-20), and part of the visual review.
+- Consequences: the bundle purge at push never touches item texts (no CRP-339 exception needed); the 149 records without a bundle keep their texts in the same root.
+
+### 4. Ledger data design
+
+- The blob-free ledger design is accepted: `docs/DataDesign-Proposals.md` section 2.4 and `data/analysis/CRP-358/DataDesign-Proposals-NoBlob-Draft.md` section 5 (columns named `column_name`). Implementation follows the migration order of the draft, section 4.

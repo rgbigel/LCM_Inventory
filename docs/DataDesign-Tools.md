@@ -4,9 +4,9 @@ Module: docs/DataDesign-Tools.md
 Purpose: Authoritative data architecture, SQLite schema, constraints, views, and dual-state projection invariants for the LCM Tool Catalog.  
 Path: D:/Git_Repositories/LCM_Inventory/docs/DataDesign-Tools.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.2.6  
+Version: 10.2.7  
 Status: Authoritative Data Specification  
-Date: 2026-11-20 20:48:28  
+Date: 2026-11-20 22:12:42  
 
 ---
 
@@ -130,6 +130,106 @@ CREATE TABLE IF NOT EXISTS atom_calls (caller_tool_id INTEGER NOT NULL, atom_id 
 - View `v_atoms`: one row per atom with owning tool, level (0 TBD, 1 granted, 2 controlled, 3 admin), intent keys, permitted callers and the conflict flag (`elevated = 1` while the owning tool is below level 3).
 - State at migration (2026-11-20): 330 atoms, 85 elevated, 6 permissions, 0 conflicts.
 
+### 2.5 Entity Relationship Diagram (implemented, CRP-358 / CRP-363)
+
+```mermaid
+erDiagram
+    tools ||--o{ tool_aliases : "has"
+    tools ||--o{ tool_parameters : "has"
+    tools ||--o{ tool_dependencies : "has"
+    tools ||--o{ atoms : "owns"
+    runtimes |o--o{ atoms : "runs"
+    atoms ||--o{ tool_intents : "started by"
+    tool_intents ||--o{ intent_parameters : "has"
+    tools ||--o{ atom_permissions : "may call"
+    atoms ||--o{ atom_permissions : "permitted"
+    tools ||--o{ atom_calls : "calls"
+    atoms ||--o{ atom_calls : "called"
+    tools ||--o{ tool_atom_permissions : "lists (by relative_path)"
+
+    tools {
+        INTEGER id PK
+        TEXT relative_path UK
+        TEXT name
+        TEXT short_name
+        TEXT subsystem
+        INTEGER admin "level 0..3"
+        TEXT role
+        TEXT domain
+        INTEGER intent_elevated
+    }
+    tool_aliases {
+        INTEGER tool_id PK,FK
+        INTEGER position PK
+        TEXT alias
+    }
+    tool_parameters {
+        INTEGER tool_id PK,FK
+        INTEGER position PK
+        TEXT name
+        TEXT type
+        INTEGER mandatory
+        TEXT default_value
+        TEXT default_kind
+        TEXT description
+    }
+    tool_dependencies {
+        INTEGER tool_id PK,FK
+        INTEGER position PK
+        TEXT dependency
+    }
+    atoms {
+        INTEGER atom_id PK
+        TEXT script_path UK
+        TEXT entry_point UK
+        INTEGER tool_id FK
+        INTEGER elevated
+        TEXT required_switch
+        TEXT runtime_key FK
+        TEXT archived_at
+    }
+    tool_intents {
+        INTEGER id PK
+        TEXT intent_key UK
+        INTEGER atom_id FK
+        TEXT script
+        TEXT trampoline
+        INTEGER elevated
+        INTEGER call_count
+        TEXT last_called_at
+    }
+    intent_parameters {
+        INTEGER intent_id PK,FK
+        INTEGER position PK
+        TEXT name
+        TEXT value
+        TEXT value_kind
+    }
+    atom_permissions {
+        INTEGER tool_id PK,FK
+        INTEGER atom_id PK,FK
+    }
+    atom_calls {
+        INTEGER caller_tool_id PK,FK
+        INTEGER atom_id PK,FK
+        TEXT source_path PK
+        INTEGER source_line PK
+    }
+    tool_atom_permissions {
+        INTEGER id PK
+        TEXT tool_relative_path UK
+        TEXT intent_key UK
+    }
+    runtimes {
+        TEXT runtime_key PK
+        TEXT executable_path
+        TEXT purpose
+    }
+```
+
+Not shown: `_lcm_tools_db_metadata` (key/value bookkeeping) and the legacy JSON-text columns kept per the
+never-drop rule (`tools.parameters_json`, `tools.dependencies_json`, `tool_intents.parameters`).
+
 ## 3. Indexing Strategy
 
 B-Tree indexes optimize single-click filter presets and interactive search across `ShowTools`:
@@ -190,6 +290,7 @@ ORDER BY subsystem ASC, short_name ASC;
 | :--- | :--- | :--- |
 | **`Update-ToolCatalog.ps1`** | [`tools/Update-ToolCatalog.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Update-ToolCatalog.ps1) | Primary AST scanner discovering scripts, extracting parameters, and generating `DoT/` trampolines. |
 | **`sync_tool_catalog_db.py`** | `tools/sync_tool_catalog_db.py` | The only writer and reader of the tool store (CRP-358): `export` / `import` (`--store catalog\|intents`), `record-call`, `sync` (schema, atoms), `verify` (integrity), `dump` (`tools.sql`, at push only), `restore` (`tools.sql` -> `tools.db`, at pull), `migrate` (one-time JSON reconciliation from `--json-dir`, done 2026-11-20). `LCM_TOOLS_DB_PATH` redirects it to an isolated copy for tests. PowerShell callers use `Get-LcmToolStoreDocument` / `Save-LcmToolStoreDocument` (`modules/LcmToolCatalog.psm1`). |
+| **`lcm_db_backup.py`** | `tools/lcm_db_backup.py` | Restructuring backups (CRP-358): full SQL backup to `scratch/db-backups/` before any schema change or rebuild; `--purge` (run by `COMPLETE`), `--list`, `--backup`. Not a publish projection. |
 | **`Sync-LcmToolCatalogDb.ps1`** | `tools/Sync-LcmToolCatalogDb.ps1` | PowerShell quality gate and CI/CD wrapper for the tool catalog database. |
 | **`Show-ToolIntents.ps1`** | [`tools/Show-ToolIntents.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Show-ToolIntents.ps1) | CLI entrypoint querying `tools.db` directly to render text tables or launch `ToolExplorer.html`. |
 | **`Test-LcmToolCatalogDb.Tests.ps1`** | `tests/Test-LcmToolCatalogDb.Tests.ps1` | Pester test suite verifying schema constraints, dual-state sync, and view definitions. |

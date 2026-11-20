@@ -96,3 +96,7 @@ Original rows quoted unchanged; they are closed with this CRP (RULE-LCM-031).
 | B7 | Inventory Explorer | contrast is low in some parts and not uniform (extends B2) | not analysed | uniform, readable contrast in both themes |
 | B8 | Inventory Explorer, Docs of LCM_AI | the document preview shows only about 10 lines, the space below stays mostly empty; one more line "0 of 4 selected" | not analysed | the preview uses the available height |
 | B10 | Inventory Explorer (live test 2026-11-20) | no button back to the Tools Explorer ("Back", in other displays sometimes "Close"), unlike the other displays | not analysed | uniform navigation to the parent display; the hierarchy itself is defined by CRP-381 |
+
+## Scope Change (2026-11-20 22:00:29, operator)
+
+- BUG-380 B2-B8 (contrast, frozen header, compact layout, theme switch, column filters, preview height) move to CRP-390 (UX Uniformity Of Standard Displays, priority 4). This CRP keeps the navigation hierarchy (T1-T4) and BUG-380 B10.
