@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-19 10:13:35",
+  "generated_at": "2026-11-20 17:30:04",
   "generator": "LCM_Inventory/tools/Export-LcmElevationPolicy.py",
   "source": "LCM_Inventory/data/tools/tools.db",
   "rule": "CRP-343: elevated only for atoms with tool_intents.elevated = 1 whose owning tool has admin level 3; callers: level 3, or level 2 with the atom in its list",
@@ -909,6 +909,7 @@
     "LCM_Inventory\\tools\\Generate-Log.ps1": 1,
     "LCM_Inventory\\tools\\Get-GeminiInboxStatus.ps1": 1,
     "LCM_Inventory\\tools\\Get-LCM_Repositories.ps1": 1,
+    "LCM_Inventory\\tools\\Get-LcmRuntime.py": 0,
     "LCM_Inventory\\tools\\Get-LcmTablePrintAtom.ps1": 1,
     "LCM_Inventory\\tools\\Get-OpenProposals.ps1": 1,
     "LCM_Inventory\\tools\\Get-RealRepoActionPlan.ps1": 1,
@@ -964,7 +965,7 @@
     "LCM_Inventory\\tools\\Register-LcmDesktopDaemon.ps1": 3,
     "LCM_Inventory\\tools\\Remove-LcmShortName.ps1": 1,
     "LCM_Inventory\\tools\\Repair-LCMRules.ps1": 1,
-    "LCM_Inventory\\tools\\Repair-LcmLineEndings.ps1": 1,
+    "LCM_Inventory\\tools\\Repair-LcmLineEndings.py": 1,
     "LCM_Inventory\\tools\\Repair-VolumeAcl.ps1": 3,
     "LCM_Inventory\\tools\\Restore-SystemSettings.ps1": 3,
     "LCM_Inventory\\tools\\Safe-Copy.ps1": 1,
@@ -975,6 +976,7 @@
     "LCM_Inventory\\tools\\Set-LcmActionProgress.ps1": 1,
     "LCM_Inventory\\tools\\Set-LcmMachineRegistry.ps1": 3,
     "LCM_Inventory\\tools\\Set-LcmReliefMode.ps1": 1,
+    "LCM_Inventory\\tools\\Set-LcmWindowZone.py": 0,
     "LCM_Inventory\\tools\\Set-RealRepoTestPlan.ps1": 1,
     "LCM_Inventory\\tools\\Show-Actions.ps1": 1,
     "LCM_Inventory\\tools\\Show-CmdFolderAnalysis.ps1": 3,
@@ -1242,13 +1244,13 @@
       "kind": "non-admin-tool-invokes-elevated-atom",
       "tool": "LCM_Inventory\\tools\\Invoke-LcmProtocol.ps1",
       "atom": "LCM_Inventory/tools/Invoke-InteractiveDesktop.ps1",
-      "detail": "admin level 1; line 132: $dispatcher = join-path $toolsdir 'invoke-interactivedesktop.ps1'"
+      "detail": "admin level 1; line 136: $dispatcher = join-path $toolsdir 'invoke-interactivedesktop.ps1'"
     },
     {
       "kind": "non-admin-tool-invokes-elevated-atom",
       "tool": "LCM_Inventory\\tools\\Invoke-PrivilegedTool.ps1",
       "atom": "LCM_Inventory/tools/Invoke-InteractiveDesktop.ps1",
-      "detail": "admin level 1; line 353: $desktopdispatcher = join-path $workspaceroot \"lcm_inventory\\tools\\invoke-interactivedesktop.ps1\""
+      "detail": "admin level 1; line 340: $desktopdispatcher = join-path $workspaceroot \"lcm_inventory\\tools\\invoke-interactivedesktop.ps1\""
     },
     {
       "kind": "non-admin-tool-invokes-elevated-atom",

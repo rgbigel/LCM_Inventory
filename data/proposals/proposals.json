@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LCM Workspace Proposals Ledger",
-  "updated_at": "2026-11-20T00:40:14+01:00",
+  "updated_at": "2026-11-20T22:17:23+01:00",
   "review_granularity": "tight",
   "lcm_mode": "active",
-  "last_proposal_id": 383,
+  "last_proposal_id": 390,
   "proposals": [
     {
       "id": 261,
@@ -19989,8 +19989,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "suggested",
-      "progress_state": "undecided",
+      "state": "in_progress",
       "bundle_id": "CRP-339",
       "bundle_dir": "docs/Proposals/339_CRP-Single-Compact-Canonical-Rule-Set-with-Host-Bindin",
       "docs": {
@@ -20003,11 +20002,27 @@
       "author": "Rolf, Claude",
       "details": "One compact canonical rule set in LCM_AI/.agents/rules (one MUST line per rule, rationale to docs), both frontmatter keys, host binding files, .claude/rules as junction; retires the Claude projection and convergence overhead.",
       "priority": 8,
-      "disposition": null,
       "flow_mode": "standard",
       "always_proceed": false,
       "plan_path": "docs/Proposals/339_CRP-Single-Compact-Canonical-Rule-Set-with-Host-Bindin/Implementation Plan CRP-339.md",
-      "walkthrough_path": "docs/Proposals/339_CRP-Single-Compact-Canonical-Rule-Set-with-Host-Bindin/Walkthrough CRP-339.md"
+      "walkthrough_path": "docs/Proposals/339_CRP-Single-Compact-Canonical-Rule-Set-with-Host-Bindin/Walkthrough CRP-339.md",
+      "progress_state": "in_progress",
+      "disposition": null,
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-11-20 13:35:52",
+          "user": "rgbig",
+          "note": "Gate 1 Acceptance: Specification accepted by operator",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "in_progress": "2026-11-20 13:35:52"
+      }
     },
     {
       "id": 340,
@@ -20849,7 +20864,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "in_progress",
+      "state": "completed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/348_BUG-Defects-Found-2026-11-17-Daemon-Gaps-Rule-Health-T",
       "docs": {
@@ -20861,26 +20876,64 @@
       "github_url": null,
       "author": "Rolf, Claude",
       "priority": 6,
-      "progress_state": "in_progress",
-      "disposition": null,
-      "state_history": {
-        "from_state": "suggested",
-        "state": "in_progress",
-        "timestamp": "2026-11-18 15:53:46",
-        "user": "rgbig",
-        "note": "From the CRP-355 analysis 2026-11-18 (operator choice 1.1): (a) Invoke-LCM_Push.ps1 calls Invoke-LCM_Maintenance a second time (around line 301, \"-TailLines 100\") without the -DryRun/-LogOnly guard, so a push dry run deletes script logs and junk (cause of the 186 deleted logs); (b) Invoke-LCM_Push does not purge pushed bundles (Remove-LcmProposalBundle is only reachable via purge-bundle), contrary to RULE-LCM-020, 130 pushed bundles remain; (c) the Control Hub Maintenance button calls Invoke-WorkspaceMaintenance.ps1, which does not exist.",
-        "cohort_id": "",
-        "cohort_gate": "",
-        "synchronization_outcome": ""
-      },
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-11-18 15:53:46",
+          "user": "rgbig",
+          "note": "From the CRP-355 analysis 2026-11-18 (operator choice 1.1): (a) Invoke-LCM_Push.ps1 calls Invoke-LCM_Maintenance a second time (around line 301, \"-TailLines 100\") without the -DryRun/-LogOnly guard, so a push dry run deletes script logs and junk (cause of the 186 deleted logs); (b) Invoke-LCM_Push does not purge pushed bundles (Remove-LcmProposalBundle is only reachable via purge-bundle), contrary to RULE-LCM-020, 130 pushed bundles remain; (c) the Control Hub Maintenance button calls Invoke-WorkspaceMaintenance.ps1, which does not exist.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-11-20 17:32:49",
+          "user": "rgbig",
+          "note": "Items 1 (moved to CRP-358), 4 (aligned by BUG-364), 6 (Test-MountedBaselineCurrency) closed; tests green",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-11-20 20:49:46",
+          "user": "rgbig",
+          "note": "Auto-transitioned to in_review for review completion (CRP-357)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_review",
+          "state": "completed",
+          "timestamp": "2026-11-20 20:50:08",
+          "user": "rgbig",
+          "note": "Review completed together with BUG-348 (Git_Repositories bd5967c, LCM_AI b4c2400, LCM_Inventory bbb4096).",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
       "dates": {
-        "in_progress": "2026-11-18 15:53:46"
+        "in_progress": "2026-11-18 15:53:46",
+        "verified": "2026-11-20 17:32:49",
+        "in_review": "2026-11-20 20:49:46",
+        "completed": "2026-11-20 20:50:08"
       },
       "flow_mode": "doit",
       "always_proceed": true,
       "plan_path": "docs/Proposals/348_BUG-Defects-Found-2026-11-17-Daemon-Gaps-Rule-Health-T/Implementation Plan BUG-348.md",
       "walkthrough_path": "docs/Proposals/348_BUG-Defects-Found-2026-11-17-Daemon-Gaps-Rule-Health-T/Walkthrough BUG-348.md",
-      "details": "Collected defects found 2026-11-17 (operator: own BUG, preferably one): (1) Go daemon port gaps: pages call /set_priority, /query_all_short_names, /print, /abort, which src/do does not register (fall to \"/\", POST -> 405). (2) Read-only display routes send Access-Control-Allow-Origin * (foreign pages can read displays, proposals, logs). (3) Test-LCMRuleHealth.ps1 reports Static Rule Copies for every child repo: it checks <repo>\\.agents\\rules, the junction is <repo>\\.agents since BUG-338 (false positive). (4) ProposalLifecycle.Tests.ps1: 3 failures (transition table held, missing logs/history/cm_activity_v5_v6_history.log, hold state blocked vs held). (5) Scheduled task \\LCM_Daemon_InteractiveStarter has a malformed action path (\\ ...do.exe daemon\\). (6) BCR post-mount check does not verify the mounted image identity (only volume label + Git_Repositories folder); registry MRMImagePath is written from the requested image. (7) gofmt deviations in src/do client.go, main.go, types.go, winutil.go. (8) do.exe status/version report a hard-coded 10.2.0.\r\n[merged 2026-11-18 15:53:44] From the CRP-355 analysis 2026-11-18 (operator choice 1.1): (a) Invoke-LCM_Push.ps1 calls Invoke-LCM_Maintenance a second time (around line 301, \"-TailLines 100\") without the -DryRun/-LogOnly guard, so a push dry run deletes script logs and junk (cause of the 186 deleted logs); (b) Invoke-LCM_Push does not purge pushed bundles (Remove-LcmProposalBundle is only reachable via purge-bundle), contrary to RULE-LCM-020, 130 pushed bundles remain; (c) the Control Hub Maintenance button calls Invoke-WorkspaceMaintenance.ps1, which does not exist.\r\n[merged 2026-11-18 23:11:44] Found 2026-11-18 23:05 (BCR for CRP-332 refused): Invoke-MacriumDailyBcrBaseline.ps1 rejects the _LCM profile when its folder handling is dirShowAll; the operator's new _LCM session uses dirShowAll and is the one that shows baseline orphans (the old tab with the implicit default hid deleted files on F:). Accept dirShowAll as well."
+      "details": "Collected defects found 2026-11-17 (operator: own BUG, preferably one): (1) Go daemon port gaps: pages call /set_priority, /query_all_short_names, /print, /abort, which src/do does not register (fall to \"/\", POST -> 405). (2) Read-only display routes send Access-Control-Allow-Origin * (foreign pages can read displays, proposals, logs). (3) Test-LCMRuleHealth.ps1 reports Static Rule Copies for every child repo: it checks <repo>\\.agents\\rules, the junction is <repo>\\.agents since BUG-338 (false positive). (4) ProposalLifecycle.Tests.ps1: 3 failures (transition table held, missing logs/history/cm_activity_v5_v6_history.log, hold state blocked vs held). (5) Scheduled task \\LCM_Daemon_InteractiveStarter has a malformed action path (\\ ...do.exe daemon\\). (6) BCR post-mount check does not verify the mounted image identity (only volume label + Git_Repositories folder); registry MRMImagePath is written from the requested image. (7) gofmt deviations in src/do client.go, main.go, types.go, winutil.go. (8) do.exe status/version report a hard-coded 10.2.0.\r\n[merged 2026-11-18 15:53:44] From the CRP-355 analysis 2026-11-18 (operator choice 1.1): (a) Invoke-LCM_Push.ps1 calls Invoke-LCM_Maintenance a second time (around line 301, \"-TailLines 100\") without the -DryRun/-LogOnly guard, so a push dry run deletes script logs and junk (cause of the 186 deleted logs); (b) Invoke-LCM_Push does not purge pushed bundles (Remove-LcmProposalBundle is only reachable via purge-bundle), contrary to RULE-LCM-020, 130 pushed bundles remain; (c) the Control Hub Maintenance button calls Invoke-WorkspaceMaintenance.ps1, which does not exist.\r\n[merged 2026-11-18 23:11:44] Found 2026-11-18 23:05 (BCR for CRP-332 refused): Invoke-MacriumDailyBcrBaseline.ps1 rejects the _LCM profile when its folder handling is dirShowAll; the operator's new _LCM session uses dirShowAll and is the one that shows baseline orphans (the old tab with the implicit default hid deleted files on F:). Accept dirShowAll as well.",
+      "bcr_disposition": "Completed",
+      "bcr_disposition_at": "2026-11-20 20:50:07",
+      "bcr_disposition_notes": "Operator 2026-11-20: BUG-348 accepted (DOIT): items 1 -> CRP-358, 4 (BUG-364), 6 Test-MountedBaselineCurrency, baseline safety in Implementation.md 3.4; CRP-358 tools step accepted with changes: tools.db only tool store (no blobs, child tables), JSON stores deleted, tools.sql only at push and restored at pull (hooks); CRP-363 atom tables; CRP-382 T3 tool displays",
+      "progress_state": "completed",
+      "disposition": "completed"
     },
     {
       "id": 349,
@@ -21972,7 +22025,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "in_progress",
+      "state": "in_review",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/358_CRP-Retire-JSON-Stores-Replaced-By-SQLite",
       "docs": {
@@ -21987,8 +22040,6 @@
       "priority": 5,
       "plan_path": "docs/Proposals/358_CRP-Retire-JSON-Stores-Replaced-By-SQLite/Implementation Plan CRP-358.md",
       "walkthrough_path": "docs/Proposals/358_CRP-Retire-JSON-Stores-Replaced-By-SQLite/Walkthrough CRP-358.md",
-      "progress_state": "in_progress",
-      "disposition": null,
       "state_history": [
         {
           "from_state": "suggested",
@@ -21999,13 +22050,37 @@
           "cohort_id": "",
           "cohort_gate": "",
           "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-11-20 22:17:21",
+          "user": "rgbig",
+          "note": "Auto-transitioned to verified for review submission",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-11-20 22:17:23",
+          "user": "rgbig",
+          "note": "Auto-transitioned to in_review for review submission",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "dates": {
-        "in_progress": "2026-11-19 17:19:59"
+        "in_progress": "2026-11-19 17:19:59",
+        "verified": "2026-11-20 22:17:21",
+        "in_review": "2026-11-20 22:17:23"
       },
       "flow_mode": "doit",
-      "always_proceed": true
+      "always_proceed": true,
+      "progress_state": "verification",
+      "disposition": null
     },
     {
       "id": 359,
@@ -22300,7 +22375,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/361_CRP-DO-Little-Local-Mode-Of-do-exe",
       "docs": {
@@ -22355,13 +22430,24 @@
           "cohort_id": "",
           "cohort_gate": "",
           "synchronization_outcome": ""
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-20 16:02:30",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, HaSSD06, HaSSD06_Inventory, LCM_AI, LCM_Inventory, LCM_Shared, LCM_Supervision, LCM_Tools, OneDriveMaintenance, RollingCalendar)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "dates": {
         "in_progress": "2026-11-19 16:04:01",
         "verified": "2026-11-19 16:04:05",
         "in_review": "2026-11-19 16:04:22",
-        "completed": "2026-11-19 21:21:49"
+        "completed": "2026-11-19 21:21:49",
+        "pushed": "2026-11-20 16:02:30"
       },
       "flow_mode": "doit",
       "always_proceed": true,
@@ -22370,8 +22456,9 @@
       "bcr_disposition": "Completed",
       "bcr_disposition_at": "2026-11-19 21:21:48",
       "bcr_disposition_notes": "Operator 2026-11-19: \"all has been reviewed and is accepted\" (Gate 2)",
-      "progress_state": "completed",
-      "disposition": "completed"
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-20 16:02:29"
     },
     {
       "id": 362,
@@ -22571,7 +22658,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/364_BUG-Unit-Test-Failures-Surfaced-By-LCM-Inventory-Readi",
       "docs": {
@@ -22626,13 +22713,24 @@
           "cohort_id": "",
           "cohort_gate": "",
           "synchronization_outcome": ""
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-20 16:02:32",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, HaSSD06, HaSSD06_Inventory, LCM_AI, LCM_Inventory, LCM_Shared, LCM_Supervision, LCM_Tools, OneDriveMaintenance, RollingCalendar)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "dates": {
         "in_progress": "2026-11-19 10:37:27",
         "verified": "2026-11-19 12:38:34",
         "in_review": "2026-11-19 16:04:22",
-        "completed": "2026-11-19 21:22:03"
+        "completed": "2026-11-19 21:22:03",
+        "pushed": "2026-11-20 16:02:32"
       },
       "flow_mode": "doit",
       "always_proceed": true,
@@ -22641,8 +22739,9 @@
       "bcr_disposition": "Completed",
       "bcr_disposition_at": "2026-11-19 21:22:02",
       "bcr_disposition_notes": "Operator 2026-11-19: \"all has been reviewed and is accepted\" (Gate 2)",
-      "progress_state": "completed",
-      "disposition": "completed"
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-20 16:02:29"
     },
     {
       "id": 365,
@@ -22655,7 +22754,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/365_BUG-Line-Ending-Convergence-Across-Workspace",
       "docs": {
@@ -22710,21 +22809,33 @@
           "cohort_id": "",
           "cohort_gate": "",
           "synchronization_outcome": ""
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-20 16:02:33",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, HaSSD06, HaSSD06_Inventory, LCM_AI, LCM_Inventory, LCM_Shared, LCM_Supervision, LCM_Tools, OneDriveMaintenance, RollingCalendar)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "dates": {
         "in_progress": "2026-11-19 11:36:25",
         "verified": "2026-11-19 11:47:47",
         "in_review": "2026-11-19 12:19:35",
-        "completed": "2026-11-19 12:22:27"
+        "completed": "2026-11-19 12:22:27",
+        "pushed": "2026-11-20 16:02:33"
       },
       "flow_mode": "doit",
       "always_proceed": true,
       "bcr_disposition": "Completed",
       "bcr_disposition_at": "2026-11-19 12:22:26",
       "bcr_disposition_notes": "[BUG-365, CRP-366, BUG-367] Operator 2026-11-19: COMPLETE CRP-366 BUG-367 BUG-365 (Gate 2 accepted in BC; BUG-365 IMMEDIATELY); LCM_AI version alignment to the 10.7.4 baseline",
-      "progress_state": "completed",
-      "disposition": "completed"
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-20 16:02:29"
     },
     {
       "id": 366,
@@ -22737,7 +22848,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/366_CRP-Central-Interpreter-Registry-In-Tools-Database",
       "docs": {
@@ -22792,13 +22903,24 @@
           "cohort_id": "",
           "cohort_gate": "",
           "synchronization_outcome": ""
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-20 16:02:35",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, HaSSD06, HaSSD06_Inventory, LCM_AI, LCM_Inventory, LCM_Shared, LCM_Supervision, LCM_Tools, OneDriveMaintenance, RollingCalendar)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "dates": {
         "in_progress": "2026-11-19 11:58:13",
         "verified": "2026-11-19 12:05:17",
         "in_review": "2026-11-19 12:17:00",
-        "completed": "2026-11-19 12:22:30"
+        "completed": "2026-11-19 12:22:30",
+        "pushed": "2026-11-20 16:02:35"
       },
       "flow_mode": "doit",
       "always_proceed": true,
@@ -22807,8 +22929,9 @@
       "bcr_disposition": "Completed",
       "bcr_disposition_at": "2026-11-19 12:22:29",
       "bcr_disposition_notes": "[BUG-365, CRP-366, BUG-367] Operator 2026-11-19: COMPLETE CRP-366 BUG-367 BUG-365 (Gate 2 accepted in BC; BUG-365 IMMEDIATELY); LCM_AI version alignment to the 10.7.4 baseline",
-      "progress_state": "completed",
-      "disposition": "completed"
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-20 16:02:29"
     },
     {
       "id": 367,
@@ -22821,7 +22944,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/367_BUG-BCR-Preflight-Rejects-BC-Profile-Directory-Handlin",
       "docs": {
@@ -22876,21 +22999,33 @@
           "cohort_id": "",
           "cohort_gate": "",
           "synchronization_outcome": ""
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-20 16:02:37",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, HaSSD06, HaSSD06_Inventory, LCM_AI, LCM_Inventory, LCM_Shared, LCM_Supervision, LCM_Tools, OneDriveMaintenance, RollingCalendar)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "dates": {
         "in_progress": "2026-11-19 12:15:56",
         "verified": "2026-11-19 12:16:43",
         "in_review": "2026-11-19 12:19:36",
-        "completed": "2026-11-19 12:22:34"
+        "completed": "2026-11-19 12:22:34",
+        "pushed": "2026-11-20 16:02:37"
       },
       "flow_mode": "doit",
       "always_proceed": true,
       "bcr_disposition": "Completed",
       "bcr_disposition_at": "2026-11-19 12:22:33",
       "bcr_disposition_notes": "[BUG-365, CRP-366, BUG-367] Operator 2026-11-19: COMPLETE CRP-366 BUG-367 BUG-365 (Gate 2 accepted in BC; BUG-365 IMMEDIATELY); LCM_AI version alignment to the 10.7.4 baseline",
-      "progress_state": "completed",
-      "disposition": "completed"
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-20 16:02:29"
     },
     {
       "id": 368,
@@ -22903,7 +23038,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/368_BUG-Python-Intents-Record-pwsh-As-Executable",
       "docs": {
@@ -22958,13 +23093,24 @@
           "cohort_id": "",
           "cohort_gate": "",
           "synchronization_outcome": ""
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-20 16:02:39",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, HaSSD06, HaSSD06_Inventory, LCM_AI, LCM_Inventory, LCM_Shared, LCM_Supervision, LCM_Tools, OneDriveMaintenance, RollingCalendar)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "dates": {
         "in_progress": "2026-11-19 15:59:37",
         "verified": "2026-11-19 16:03:48",
         "in_review": "2026-11-19 16:04:22",
-        "completed": "2026-11-19 21:22:19"
+        "completed": "2026-11-19 21:22:19",
+        "pushed": "2026-11-20 16:02:39"
       },
       "flow_mode": "doit",
       "always_proceed": true,
@@ -22973,8 +23119,9 @@
       "bcr_disposition": "Completed",
       "bcr_disposition_at": "2026-11-19 21:22:17",
       "bcr_disposition_notes": "[BUG-368, CRP-369, BUG-370] Operator 2026-11-19: \"all has been reviewed and is accepted\" (Gate 2)",
-      "progress_state": "completed",
-      "disposition": "completed"
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-20 16:02:29"
     },
     {
       "id": 369,
@@ -22987,7 +23134,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/369_CRP-Single-Source-For-VS-Code-Settings",
       "docs": {
@@ -23042,21 +23189,33 @@
           "cohort_id": "",
           "cohort_gate": "",
           "synchronization_outcome": ""
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-20 16:02:40",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, HaSSD06, HaSSD06_Inventory, LCM_AI, LCM_Inventory, LCM_Shared, LCM_Supervision, LCM_Tools, OneDriveMaintenance, RollingCalendar)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "dates": {
         "in_progress": "2026-11-19 17:43:15",
         "verified": "2026-11-19 17:43:46",
         "in_review": "2026-11-19 21:22:10",
-        "completed": "2026-11-19 21:22:22"
+        "completed": "2026-11-19 21:22:22",
+        "pushed": "2026-11-20 16:02:40"
       },
       "flow_mode": "doit",
       "always_proceed": true,
       "bcr_disposition": "Completed",
       "bcr_disposition_at": "2026-11-19 21:22:21",
       "bcr_disposition_notes": "[BUG-368, CRP-369, BUG-370] Operator 2026-11-19: \"all has been reviewed and is accepted\" (Gate 2)",
-      "progress_state": "completed",
-      "disposition": "completed"
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-20 16:02:29"
     },
     {
       "id": 370,
@@ -23069,7 +23228,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/370_BUG-Claude-EOL-Hook-Swallows-Errors-Without-A-Trace",
       "docs": {
@@ -23124,13 +23283,24 @@
           "cohort_id": "",
           "cohort_gate": "",
           "synchronization_outcome": ""
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-20 16:02:42",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, HaSSD06, HaSSD06_Inventory, LCM_AI, LCM_Inventory, LCM_Shared, LCM_Supervision, LCM_Tools, OneDriveMaintenance, RollingCalendar)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "dates": {
         "in_progress": "2026-11-19 16:24:45",
         "verified": "2026-11-19 16:26:02",
         "in_review": "2026-11-19 16:26:13",
-        "completed": "2026-11-19 21:22:26"
+        "completed": "2026-11-19 21:22:26",
+        "pushed": "2026-11-20 16:02:42"
       },
       "flow_mode": "doit",
       "always_proceed": true,
@@ -23139,8 +23309,9 @@
       "bcr_disposition": "Completed",
       "bcr_disposition_at": "2026-11-19 21:22:25",
       "bcr_disposition_notes": "[BUG-368, CRP-369, BUG-370] Operator 2026-11-19: \"all has been reviewed and is accepted\" (Gate 2)",
-      "progress_state": "completed",
-      "disposition": "completed"
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-20 16:02:29"
     },
     {
       "id": 371,
@@ -23277,7 +23448,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/375_BUG-Tests-Write-Intent-Statistics-Into-The-Live-Store",
       "docs": {
@@ -23332,21 +23503,33 @@
           "cohort_id": "",
           "cohort_gate": "",
           "synchronization_outcome": ""
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-20 16:02:44",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, HaSSD06, HaSSD06_Inventory, LCM_AI, LCM_Inventory, LCM_Shared, LCM_Supervision, LCM_Tools, OneDriveMaintenance, RollingCalendar)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "dates": {
         "in_progress": "2026-11-19 17:49:37",
         "verified": "2026-11-19 17:54:36",
         "in_review": "2026-11-19 21:22:32",
-        "completed": "2026-11-19 21:22:42"
+        "completed": "2026-11-19 21:22:42",
+        "pushed": "2026-11-20 16:02:44"
       },
       "flow_mode": "doit",
       "always_proceed": true,
       "bcr_disposition": "Completed",
       "bcr_disposition_at": "2026-11-19 21:22:41",
       "bcr_disposition_notes": "[BUG-375, BUG-376] Operator 2026-11-19: \"all has been reviewed and is accepted\" (Gate 2)",
-      "progress_state": "completed",
-      "disposition": "completed"
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-20 16:02:29"
     },
     {
       "id": 376,
@@ -23359,7 +23542,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "completed",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/376_BUG-Specification-Header-Status-Not-Synced-With-Lifecy",
       "docs": {
@@ -23414,21 +23597,33 @@
           "cohort_id": "",
           "cohort_gate": "",
           "synchronization_outcome": ""
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-20 16:02:45",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, HaSSD06, HaSSD06_Inventory, LCM_AI, LCM_Inventory, LCM_Shared, LCM_Supervision, LCM_Tools, OneDriveMaintenance, RollingCalendar)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
         }
       ],
       "dates": {
         "in_progress": "2026-11-19 17:54:39",
         "verified": "2026-11-19 17:57:01",
         "in_review": "2026-11-19 21:22:34",
-        "completed": "2026-11-19 21:22:45"
+        "completed": "2026-11-19 21:22:45",
+        "pushed": "2026-11-20 16:02:45"
       },
       "flow_mode": "doit",
       "always_proceed": true,
       "bcr_disposition": "Completed",
       "bcr_disposition_at": "2026-11-19 21:22:44",
       "bcr_disposition_notes": "[BUG-375, BUG-376] Operator 2026-11-19: \"all has been reviewed and is accepted\" (Gate 2)",
-      "progress_state": "completed",
-      "disposition": "completed"
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-20 16:02:29"
     },
     {
       "id": 377,
@@ -23441,8 +23636,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "suggested",
-      "progress_state": "undecided",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/377_BUG-Python-Byte-Code-Caches-Left-In-Governed-Repositor",
       "docs": {
@@ -23455,11 +23649,75 @@
       "author": "Claude",
       "details": "The Claude line-ending hook (importing Repair-LcmLineEndings.py by file path) and the py_compile gate write __pycache__ folders into governed repositories (LCM_AI/.claude/hooks, LCM_Tools/tools), which are not git-ignored there. Fix: no byte-code writing by the hook and the gate (sys.dont_write_bytecode / python -B), and __pycache__/ ignored in every LCM repository.",
       "priority": 5,
-      "disposition": null,
+      "plan_path": "docs/Proposals/377_BUG-Python-Byte-Code-Caches-Left-In-Governed-Repositor/Implementation Plan BUG-377.md",
+      "walkthrough_path": "docs/Proposals/377_BUG-Python-Byte-Code-Caches-Left-In-Governed-Repositor/Walkthrough BUG-377.md",
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-11-20 16:51:16",
+          "user": "rgbig",
+          "note": "",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-11-20 16:51:21",
+          "user": "rgbig",
+          "note": "hooks -B; pycache ignored in all LCM repos",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-11-20 16:59:19",
+          "user": "rgbig",
+          "note": "Auto-transitioned to in_review for review completion (CRP-357)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_review",
+          "state": "completed",
+          "timestamp": "2026-11-20 16:59:41",
+          "user": "rgbig",
+          "note": "Review completed together with BUG-377 (Git_Repositories 8a7ed73, LCM_AI d7eca53, LCM_Inventory 99fba38, LCM_Shared cce99be, LCM_Supervision 95af7db, LCM_Tools 97d3393).",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-20 17:01:14",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, LCM_AI, LCM_Inventory, LCM_Shared, LCM_Supervision, LCM_Tools)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "in_progress": "2026-11-20 16:51:16",
+        "verified": "2026-11-20 16:51:21",
+        "in_review": "2026-11-20 16:59:19",
+        "completed": "2026-11-20 16:59:41",
+        "pushed": "2026-11-20 17:01:14"
+      },
       "flow_mode": "doit",
       "always_proceed": true,
-      "plan_path": "docs/Proposals/377_BUG-Python-Byte-Code-Caches-Left-In-Governed-Repositor/Implementation Plan BUG-377.md",
-      "walkthrough_path": "docs/Proposals/377_BUG-Python-Byte-Code-Caches-Left-In-Governed-Repositor/Walkthrough BUG-377.md"
+      "bcr_disposition": "Completed",
+      "bcr_disposition_at": "2026-11-20 16:59:40",
+      "bcr_disposition_notes": "Operator 2026-11-20: publish (accepted); Python byte-code caches ignored in governed repositories; learned advice CRLF/BOM entry removed by operator (contradiction resolved)",
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-20 17:01:14"
     },
     {
       "id": 378,
@@ -23549,8 +23807,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "suggested",
-      "progress_state": "undecided",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/380_BUG-Baddies-Collection",
       "docs": {
@@ -23561,13 +23818,97 @@
       "commit_sha": null,
       "github_url": null,
       "author": "Rolf",
-      "details": "Collection of defects (\"baddies\") found by the operator in live tests (operator 2026-11-19/20). Items are listed in the Specification; fixed when the operator releases the list (no DOIT until then).",
-      "priority": 5,
-      "disposition": null,
+      "details": "Operator 2026-11-20 Q1 A: BUGs 6 or higher; B1/B12 stand-alone fixes.",
+      "plan_path": "docs/Proposals/380_BUG-Baddies-Collection/Implementation Plan BUG-380.md",
+      "walkthrough_path": "docs/Proposals/380_BUG-Baddies-Collection/Walkthrough BUG-380.md",
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-11-20 12:08:57",
+          "user": "rgbig",
+          "note": "Operator 2026-11-20: release B12 for fixing (next is 380 B12); B1-B11 stay open.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-11-20 13:57:11",
+          "user": "rgbig",
+          "note": "B1, B9, B12, B14-B16 done and tested (Walkthrough); B2-B8, B10 absorbed into CRP-381, B11, B13 into CRP-382.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "verified",
+          "state": "in_progress",
+          "timestamp": "2026-11-20 14:02:00",
+          "user": "rgbig",
+          "note": "Operator 2026-11-20 Q-B13 A: B13 fixed now in BUG-380 (priority 7), not in the CRP-382 cohort.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-11-20 14:06:02",
+          "user": "rgbig",
+          "note": "B13 fixed (daemon 10.2.9 parseExecuteBody, hub 10.2.11 timeoutMs); B1, B9, B12, B14-B16 unchanged; Walkthrough evidence.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-11-20 15:59:14",
+          "user": "rgbig",
+          "note": "Auto-transitioned to in_review for review completion (CRP-357)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_review",
+          "state": "completed",
+          "timestamp": "2026-11-20 16:00:27",
+          "user": "rgbig",
+          "note": "Review completed together with BUG-380, BUG-384 (Git_Repositories 24e3e16, LCM_AI fb8fa43, LCM_Inventory b0046df, LCM_Shared 79e319a, LCM_Supervision 9183767, LCM_Tools fa49874).",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-20 16:02:47",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, HaSSD06, HaSSD06_Inventory, LCM_AI, LCM_Inventory, LCM_Shared, LCM_Supervision, LCM_Tools, OneDriveMaintenance, RollingCalendar)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "in_progress": "2026-11-20 14:02:00",
+        "verified": "2026-11-20 14:06:02",
+        "in_review": "2026-11-20 15:59:14",
+        "completed": "2026-11-20 16:00:27",
+        "pushed": "2026-11-20 16:02:47"
+      },
       "flow_mode": "doit",
       "always_proceed": true,
-      "plan_path": "docs/Proposals/380_BUG-Baddies-Collection/Implementation Plan BUG-380.md",
-      "walkthrough_path": "docs/Proposals/380_BUG-Baddies-Collection/Walkthrough BUG-380.md"
+      "priority": 7,
+      "bcr_disposition": "Completed",
+      "bcr_disposition_at": "2026-11-20 16:00:26",
+      "bcr_disposition_notes": "[BUG-380, BUG-384] Operator 2026-11-20: Gate 2 accepted with changes (review items 1-10, D: <-> G: delta checked); live tests passed; LCM release alignment 10.8.4 (LCM_AI tripartite doc versions aligned, RULE-REV-007 (4))",
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-20 16:02:29"
     },
     {
       "id": 381,
@@ -23611,8 +23952,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "suggested",
-      "progress_state": "undecided",
+      "state": "in_progress",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/382_CRP-Live-Data-For-Standard-Displays-From-SQLite-Views",
       "docs": {
@@ -23625,11 +23965,27 @@
       "author": "Rolf",
       "details": "Operator 2026-11-20 (live test, B11): data changes must not require rendering, only a refresh. Today the renderers read the JSON stores and bake the data into multi-MB HTML artifacts, re-rendered on every open (CRP-335). Target: static page templates rendered only on format change; pages fetch their data from daemon data routes answered from SQLite views; refresh = reload data. Linked to CRP-358.",
       "priority": 5,
-      "disposition": null,
-      "flow_mode": "standard",
-      "always_proceed": false,
       "plan_path": "docs/Proposals/382_CRP-Live-Data-For-Standard-Displays-From-SQLite-Views/Implementation Plan CRP-382.md",
-      "walkthrough_path": "docs/Proposals/382_CRP-Live-Data-For-Standard-Displays-From-SQLite-Views/Walkthrough CRP-382.md"
+      "walkthrough_path": "docs/Proposals/382_CRP-Live-Data-For-Standard-Displays-From-SQLite-Views/Walkthrough CRP-382.md",
+      "progress_state": "in_progress",
+      "disposition": null,
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-11-20 17:22:26",
+          "user": "rgbig",
+          "note": "Operator 2026-11-20: running task (tools.db as the only tool store with CRP-358 / CRP-363)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "in_progress": "2026-11-20 17:22:26"
+      },
+      "flow_mode": "doit",
+      "always_proceed": true
     },
     {
       "id": 383,
@@ -23642,8 +23998,7 @@
       "app_id": null,
       "primary_app": null,
       "affected_apps": null,
-      "state": "suggested",
-      "progress_state": "undecided",
+      "state": "pushed",
       "bundle_id": "unassigned",
       "bundle_dir": "docs/Proposals/383_BUG-Learned-Advice-Review-Blocks-Push-Although-Never-R",
       "docs": {
@@ -23656,11 +24011,496 @@
       "author": "Rolf",
       "details": "Operator 2026-11-20: learned advice is administrative data / an artifact and is never reviewed; the push gate in Invoke-LCM_Push.ps1 (RULE-CTX-005 \"review candidates before publish\") refused the GoodNight push because one candidate was pending. Target: candidates no longer block a push and need no operator review (accepted by the contributing host); RULE-CTX-005 and the gate changed accordingly (rule change: ADMINMODE, RULE-AUTH-002 sync).",
       "priority": 5,
-      "disposition": null,
+      "plan_path": "docs/Proposals/383_BUG-Learned-Advice-Review-Blocks-Push-Although-Never-R/Implementation Plan BUG-383.md",
+      "walkthrough_path": "docs/Proposals/383_BUG-Learned-Advice-Review-Blocks-Push-Although-Never-R/Walkthrough BUG-383.md",
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-11-20 16:22:50",
+          "user": "rgbig",
+          "note": "Operator 2026-11-20: DOIT",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-11-20 16:22:55",
+          "user": "rgbig",
+          "note": "Walkthrough: parse, tests, dry run, GoodMorning check passed.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-11-20 16:29:07",
+          "user": "rgbig",
+          "note": "Auto-transitioned to in_review for review completion (CRP-357)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_review",
+          "state": "completed",
+          "timestamp": "2026-11-20 16:29:27",
+          "user": "rgbig",
+          "note": "Review completed together with BUG-383, BUG-389 (Git_Repositories 165ac78, LCM_AI 6c75833, LCM_Inventory da011fd).",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-20 16:30:31",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, LCM_AI, LCM_Inventory)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "in_progress": "2026-11-20 16:22:50",
+        "verified": "2026-11-20 16:22:55",
+        "in_review": "2026-11-20 16:29:07",
+        "completed": "2026-11-20 16:29:27",
+        "pushed": "2026-11-20 16:30:31"
+      },
       "flow_mode": "doit",
       "always_proceed": true,
-      "plan_path": "docs/Proposals/383_BUG-Learned-Advice-Review-Blocks-Push-Although-Never-R/Implementation Plan BUG-383.md",
-      "walkthrough_path": "docs/Proposals/383_BUG-Learned-Advice-Review-Blocks-Push-Although-Never-R/Walkthrough BUG-383.md"
+      "bcr_disposition": "Completed",
+      "bcr_disposition_at": "2026-11-20 16:29:25",
+      "bcr_disposition_notes": "[BUG-383, BUG-389] Operator 2026-11-20: DOIT and publish (accepted); learned advice never blocks a push (RULE-CTX-005 7/9); governed repositories held by default; push bookkeeping",
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-20 16:30:31"
+    },
+    {
+      "id": 384,
+      "crp_id": "BUG-384",
+      "lcm_version": "10.7.4",
+      "timestamp": "2026-11-20 11:59:59",
+      "title": "Claude Day Routine Skills Refuse Operator Instruction",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "BUG-",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "pushed",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/384_BUG-Claude-Day-Routine-Skills-Refuse-Operator-Instruct",
+      "docs": {
+        "specification": "Specification BUG-384.md",
+        "plan": "Implementation Plan BUG-384.md",
+        "walkthrough": "Walkthrough BUG-384.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "Rolf, Claude",
+      "details": "BUG-380 B15 live check: numeric priority via CLI",
+      "plan_path": "docs/Proposals/384_BUG-Claude-Day-Routine-Skills-Refuse-Operator-Instruct/Implementation Plan BUG-384.md",
+      "walkthrough_path": "docs/Proposals/384_BUG-Claude-Day-Routine-Skills-Refuse-Operator-Instruct/Walkthrough BUG-384.md",
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-11-20 12:08:52",
+          "user": "rgbig",
+          "note": "",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-11-20 12:09:29",
+          "user": "rgbig",
+          "note": "Walkthrough BUG-384: py_compile, JSON, hook and fresh-session tests passed.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-11-20 15:59:16",
+          "user": "rgbig",
+          "note": "Auto-transitioned to in_review for review completion (CRP-357)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_review",
+          "state": "completed",
+          "timestamp": "2026-11-20 16:00:30",
+          "user": "rgbig",
+          "note": "Review completed together with BUG-380, BUG-384 (Git_Repositories 24e3e16, LCM_AI fb8fa43, LCM_Inventory b0046df, LCM_Shared 79e319a, LCM_Supervision 9183767, LCM_Tools fa49874).",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-20 16:02:49",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, HaSSD06, HaSSD06_Inventory, LCM_AI, LCM_Inventory, LCM_Shared, LCM_Supervision, LCM_Tools, OneDriveMaintenance, RollingCalendar)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "in_progress": "2026-11-20 12:08:52",
+        "verified": "2026-11-20 12:09:29",
+        "in_review": "2026-11-20 15:59:16",
+        "completed": "2026-11-20 16:00:30",
+        "pushed": "2026-11-20 16:02:49"
+      },
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "priority": 6,
+      "bcr_disposition": "Completed",
+      "bcr_disposition_at": "2026-11-20 16:00:29",
+      "bcr_disposition_notes": "[BUG-380, BUG-384] Operator 2026-11-20: Gate 2 accepted with changes (review items 1-10, D: <-> G: delta checked); live tests passed; LCM release alignment 10.8.4 (LCM_AI tripartite doc versions aligned, RULE-REV-007 (4))",
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-20 16:02:29"
+    },
+    {
+      "id": 385,
+      "crp_id": "CRP-385",
+      "lcm_version": "10.7.4",
+      "timestamp": "2026-11-20 12:00:09",
+      "title": "Common Next Step Defined At GoodNight",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-385",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "suggested",
+      "progress_state": "undecided",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/385_CRP-Common-Next-Step-Defined-At-GoodNight",
+      "docs": {
+        "specification": "Specification CRP-385.md",
+        "plan": "Implementation Plan CRP-385.md",
+        "walkthrough": "Walkthrough CRP-385.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "Rolf, Claude",
+      "details": "Operator 2026-11-20 Q2 A: creation presets no priority.",
+      "disposition": null,
+      "flow_mode": "standard",
+      "always_proceed": false,
+      "plan_path": "docs/Proposals/385_CRP-Common-Next-Step-Defined-At-GoodNight/Implementation Plan CRP-385.md",
+      "walkthrough_path": "docs/Proposals/385_CRP-Common-Next-Step-Defined-At-GoodNight/Walkthrough CRP-385.md",
+      "priority": 5
+    },
+    {
+      "id": 386,
+      "crp_id": "CRP-386",
+      "lcm_version": "10.7.4",
+      "timestamp": "2026-11-20 12:00:11",
+      "title": "Formal Guided Live Review Step",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-386",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "in_progress",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/386_CRP-Formal-Guided-Live-Review-Step",
+      "docs": {
+        "specification": "Specification CRP-386.md",
+        "plan": "Implementation Plan CRP-386.md",
+        "walkthrough": "Walkthrough CRP-386.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "Rolf, Claude",
+      "details": "Operator 2026-11-20 Q2 A: creation presets no priority.",
+      "flow_mode": "standard",
+      "always_proceed": false,
+      "plan_path": "docs/Proposals/386_CRP-Formal-Guided-Live-Review-Step/Implementation Plan CRP-386.md",
+      "walkthrough_path": "docs/Proposals/386_CRP-Formal-Guided-Live-Review-Step/Walkthrough CRP-386.md",
+      "priority": 5,
+      "progress_state": "in_progress",
+      "disposition": null,
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-11-20 14:53:06",
+          "user": "rgbig",
+          "note": "Operator Gate 2 review 2026-11-20 item 8: no longer suggested (Gate 1 accepted); work deferred to after the 10.8.4 push.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "in_progress": "2026-11-20 14:53:06"
+      }
+    },
+    {
+      "id": 387,
+      "crp_id": "CRP-387",
+      "lcm_version": "10.8.4",
+      "timestamp": "2026-11-20 14:52:40",
+      "title": "Methodology Based Reimplementation Of Large Tools",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-387",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "suggested",
+      "progress_state": "undecided",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/387_CRP-Methodology-Based-Reimplementation-Of-Large-Tools",
+      "docs": {
+        "specification": "Specification CRP-387.md",
+        "plan": "Implementation Plan CRP-387.md",
+        "walkthrough": "Walkthrough CRP-387.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "Rolf, Claude",
+      "details": "BUG-380 B15/B16 live test",
+      "disposition": null,
+      "flow_mode": "standard",
+      "always_proceed": false,
+      "plan_path": "docs/Proposals/387_CRP-Methodology-Based-Reimplementation-Of-Large-Tools/Implementation Plan CRP-387.md",
+      "walkthrough_path": "docs/Proposals/387_CRP-Methodology-Based-Reimplementation-Of-Large-Tools/Walkthrough CRP-387.md",
+      "priority": 5
+    },
+    {
+      "id": 388,
+      "crp_id": "BUG-388",
+      "lcm_version": "10.8.4",
+      "timestamp": "2026-11-20 15:39:37",
+      "title": "Trampolines Start pwsh With NoExit",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "BUG-",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "pushed",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/388_BUG-Trampolines-Start-pwsh-With-NoExit",
+      "docs": {
+        "specification": "Specification BUG-388.md",
+        "plan": "Implementation Plan BUG-388.md",
+        "walkthrough": "Walkthrough BUG-388.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "Rolf, Claude",
+      "details": "Operator 2026-11-20 (live test): generated trampolines (Update-ToolCatalog, e.g. DoT/LCMPush.cmd, DoT/ProposalAction.cmd) start pwsh -NoExit, leaving a nested shell; trampolines hold no logic that needs debugging, so no -NoExit. Minor; fixed after the 10.8.4 push.",
+      "priority": 6,
+      "plan_path": "docs/Proposals/388_BUG-Trampolines-Start-pwsh-With-NoExit/Implementation Plan BUG-388.md",
+      "walkthrough_path": "docs/Proposals/388_BUG-Trampolines-Start-pwsh-With-NoExit/Walkthrough BUG-388.md",
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-11-20 16:44:16",
+          "user": "rgbig",
+          "note": "",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-11-20 16:44:22",
+          "user": "rgbig",
+          "note": "generator fixed, trampolines regenerated",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-11-20 16:47:30",
+          "user": "rgbig",
+          "note": "Auto-transitioned to in_review for review completion (CRP-357)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_review",
+          "state": "completed",
+          "timestamp": "2026-11-20 16:48:19",
+          "user": "rgbig",
+          "note": "Review completed together with BUG-388 (Git_Repositories 83e22fc, LCM_Inventory b6222c6).",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-20 16:49:58",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, LCM_AI, LCM_Inventory)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "in_progress": "2026-11-20 16:44:16",
+        "verified": "2026-11-20 16:44:22",
+        "in_review": "2026-11-20 16:47:30",
+        "completed": "2026-11-20 16:48:19",
+        "pushed": "2026-11-20 16:49:58"
+      },
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "bcr_disposition": "Completed",
+      "bcr_disposition_at": "2026-11-20 16:48:18",
+      "bcr_disposition_notes": "Operator 2026-11-20: publish; trampolines without -NoExit",
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-20 16:49:58"
+    },
+    {
+      "id": 389,
+      "crp_id": "BUG-389",
+      "lcm_version": "10.8.4",
+      "timestamp": "2026-11-20 16:03:50",
+      "title": "Push Convergence Test Uses Audited Version That Is Always Current",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "BUG-",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "pushed",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/389_BUG-Push-Convergence-Test-Uses-Audited-Version-That-Is",
+      "docs": {
+        "specification": "Specification BUG-389.md",
+        "plan": "Implementation Plan BUG-389.md",
+        "walkthrough": "Walkthrough BUG-389.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "Rolf, Claude",
+      "details": "Found 2026-11-20 after the 10.8.4 push: Get-LCM_UnconvergedPushRepositories (BUG-380 review item 10) treats a governed repository as converged when inventory CurrentLCMVersion equals the active LCM version; Invoke-LCM_Audit sets 10.8.4 for every governed repository (from the shared baseline), so the next push would push AuthorizeMasterUser, BackgroundModifier, BGMSAMVInv, BootEntryManager, VolumeInventory against the operator rule \"do not push if not brought to LCM convergence\". Convergence needs a real criterion (operator decision).",
+      "priority": 7,
+      "plan_path": "docs/Proposals/389_BUG-Push-Convergence-Test-Uses-Audited-Version-That-Is/Implementation Plan BUG-389.md",
+      "walkthrough_path": "docs/Proposals/389_BUG-Push-Convergence-Test-Uses-Audited-Version-That-Is/Walkthrough BUG-389.md",
+      "state_history": [
+        {
+          "from_state": "suggested",
+          "state": "in_progress",
+          "timestamp": "2026-11-20 16:22:59",
+          "user": "rgbig",
+          "note": "Operator 2026-11-20: DOIT",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_progress",
+          "state": "verified",
+          "timestamp": "2026-11-20 16:23:04",
+          "user": "rgbig",
+          "note": "Walkthrough: parse, tests, dry run, GoodMorning check passed.",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "verified",
+          "state": "in_review",
+          "timestamp": "2026-11-20 16:29:08",
+          "user": "rgbig",
+          "note": "Auto-transitioned to in_review for review completion (CRP-357)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "in_review",
+          "state": "completed",
+          "timestamp": "2026-11-20 16:29:30",
+          "user": "rgbig",
+          "note": "Review completed together with BUG-383, BUG-389 (Git_Repositories 165ac78, LCM_AI 6c75833, LCM_Inventory da011fd).",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        },
+        {
+          "from_state": "completed",
+          "state": "pushed",
+          "timestamp": "2026-11-20 16:30:33",
+          "user": "rgbig",
+          "note": "Pushed to remote (Git_Repositories, LCM_AI, LCM_Inventory)",
+          "cohort_id": "",
+          "cohort_gate": "",
+          "synchronization_outcome": ""
+        }
+      ],
+      "dates": {
+        "in_progress": "2026-11-20 16:22:59",
+        "verified": "2026-11-20 16:23:04",
+        "in_review": "2026-11-20 16:29:08",
+        "completed": "2026-11-20 16:29:30",
+        "pushed": "2026-11-20 16:30:33"
+      },
+      "flow_mode": "doit",
+      "always_proceed": true,
+      "bcr_disposition": "Completed",
+      "bcr_disposition_at": "2026-11-20 16:29:29",
+      "bcr_disposition_notes": "[BUG-383, BUG-389] Operator 2026-11-20: DOIT and publish (accepted); learned advice never blocks a push (RULE-CTX-005 7/9); governed repositories held by default; push bookkeeping",
+      "progress_state": "pushed",
+      "disposition": "published",
+      "pushed_at": "2026-11-20 16:30:31"
+    },
+    {
+      "id": 390,
+      "crp_id": "CRP-390",
+      "lcm_version": "10.8.4",
+      "timestamp": "2026-11-20 21:59:44",
+      "title": "UX Uniformity Of Standard Displays",
+      "origin_repo": "LCM_Inventory",
+      "cr_id": "CRP-390",
+      "app_id": null,
+      "primary_app": null,
+      "affected_apps": null,
+      "state": "suggested",
+      "progress_state": "undecided",
+      "bundle_id": "unassigned",
+      "bundle_dir": "docs/Proposals/390_CRP-UX-Uniformity-Of-Standard-Displays",
+      "docs": {
+        "specification": "Specification CRP-390.md",
+        "plan": "Implementation Plan CRP-390.md",
+        "walkthrough": "Walkthrough CRP-390.md"
+      },
+      "commit_sha": null,
+      "github_url": null,
+      "author": "Rolf, Claude",
+      "details": "Operator 2026-11-20: multiple instances of lacking UX uniformity in the standard displays; one common display contract (themes and contrast, frozen header, compact layout, theme switch, column filters, preview height, labels); takes over BUG-380 B2-B8 from CRP-381 (CRP-381 keeps navigation and B10).",
+      "priority": 4,
+      "disposition": null,
+      "flow_mode": "standard",
+      "always_proceed": false,
+      "plan_path": "docs/Proposals/390_CRP-UX-Uniformity-Of-Standard-Displays/Implementation Plan CRP-390.md",
+      "walkthrough_path": "docs/Proposals/390_CRP-UX-Uniformity-Of-Standard-Displays/Walkthrough CRP-390.md"
     }
   ],
   "testing_mode": "active",
